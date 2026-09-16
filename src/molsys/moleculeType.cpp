@@ -31,7 +31,7 @@ using namespace molsys;
  *
  * @param moltype
  */
-MoleculeType::MoleculeType(size_t moltype) : _moltype(moltype) {}
+MoleculeType::MoleculeType(MolType moltype) : _moltype(moltype) {}
 
 /**
  * @brief Construct a new Molecule Type:: Molecule Type object
@@ -71,7 +71,7 @@ void MoleculeType::addAtomName(const std::string &atomName)
  *
  * @param externalAtomType
  */
-void MoleculeType::addExternalAtomType(size_t externalAtomType)
+void MoleculeType::addExternalAtomType(ExtAtomType externalAtomType)
 {
     _externalAtomTypes.push_back(externalAtomType);
 }
@@ -103,8 +103,8 @@ void MoleculeType::addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType)
  * @param value
  */
 void MoleculeType::addExternalToInternalAtomTypeElement(
-    size_t key,
-    size_t value
+    ExtAtomType key,
+    AtomType    value
 )
 {
     _externalToInternalAtomTypes.try_emplace(key, value);
@@ -115,7 +115,7 @@ void MoleculeType::addExternalToInternalAtomTypeElement(
  *
  * @param atomType
  */
-void MoleculeType::addAtomType(size_t atomType)
+void MoleculeType::addAtomType(AtomType atomType)
 {
     _atomTypes.push_back(atomType);
 }
@@ -148,7 +148,7 @@ void MoleculeType::setNumberOfAtoms(size_t numberOfAtoms)
  *
  * @param moltype
  */
-void MoleculeType::setMoltype(size_t moltype) { _moltype = moltype; }
+void MoleculeType::setMoltype(MolType moltype) { _moltype = moltype; }
 
 /**
  * @brief sets the charge of the molecule
@@ -194,17 +194,17 @@ size_t MoleculeType::getNumberOfAtoms() const { return _numberOfAtoms; }
 /**
  * @brief get the moltype of the molecule
  *
- * @return size_t
+ * @return MolType
  */
-size_t MoleculeType::getMoltype() const { return _moltype; }
+MolType MoleculeType::getMoltype() const { return _moltype; }
 
 /**
  * @brief get the external atom type of an atom
  *
  * @param index
- * @return size_t
+ * @return ExtAtomType
  */
-size_t MoleculeType::getExternalAtomType(AtomIndex index) const
+ExtAtomType MoleculeType::getExternalAtomType(AtomIndex index) const
 {
     return _externalAtomTypes[index.get()];
 }
@@ -213,9 +213,9 @@ size_t MoleculeType::getExternalAtomType(AtomIndex index) const
  * @brief get the atom type of an atom
  *
  * @param index
- * @return size_t
+ * @return AtomType
  */
-size_t MoleculeType::getAtomType(AtomIndex index) const
+AtomType MoleculeType::getAtomType(AtomIndex index) const
 {
     return _atomTypes[index.get()];
 }
@@ -224,9 +224,9 @@ size_t MoleculeType::getAtomType(AtomIndex index) const
  * @brief get the internal atom type of an atom
  *
  * @param type
- * @return size_t
+ * @return AtomType
  */
-size_t MoleculeType::getInternalAtomType(size_t type) const
+AtomType MoleculeType::getInternalAtomType(ExtAtomType type) const
 {
     return _externalToInternalAtomTypes.at(type);
 }
@@ -280,9 +280,9 @@ std::vector<std::string> MoleculeType::getAtomNames() const
 /**
  * @brief get the external atom types of the molecule
  *
- * @return std::vector<size_t>&
+ * @return std::vector<ExtAtomType>&
  */
-std::vector<size_t> &MoleculeType::getExternalAtomTypes()
+std::vector<ExtAtomType> &MoleculeType::getExternalAtomTypes()
 {
     return _externalAtomTypes;
 }
@@ -310,9 +310,10 @@ std::vector<double> &MoleculeType::getPartialCharges()
 /**
  * @brief get the external to internal atom types of the molecule
  *
- * @return std::map<size_t, size_t>
+ * @return std::map<ExtAtomType, AtomType>
  */
-std::map<size_t, size_t> MoleculeType::getExternalToInternalAtomTypes() const
+const std::map<ExtAtomType, AtomType> &MoleculeType::
+    getExternalToInternalAtomTypes() const
 {
     return _externalToInternalAtomTypes;
 }

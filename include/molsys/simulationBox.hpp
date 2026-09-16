@@ -70,8 +70,8 @@ namespace molsys
     class SimulationBox : public SimulationBoxView<SimulationBox>
     {
        private:
-        std::optional<size_t> _waterType;
-        std::optional<size_t> _ammoniaType;
+        std::optional<MolType> _waterType;
+        std::optional<MolType> _ammoniaType;
 
         size_t _degreesOfFreedom = 0;
 
@@ -138,13 +138,16 @@ namespace molsys
         }
         [[nodiscard]] int calcActiveMolCharge() const;
 
-        [[nodiscard]] bool moleculeTypeExists(size_t) const;
-
-        [[nodiscard]] std::optional<Molecule> findMolecule(size_t);
-        [[nodiscard]] MoleculeType& findMoleculeType(size_t moleculeType);
-        [[nodiscard]] std::vector<MoleculeType> findNecessaryMoleculeTypes();
-
-        [[nodiscard]] std::optional<size_t> findMoleculeTypeByString(
+        [[nodiscard]]
+        bool moleculeTypeExists(MolType moleculeType) const;
+        [[nodiscard]]
+        std::optional<Molecule> findMolecule(MolType moleculeType);
+        [[nodiscard]]
+        MoleculeType& findMoleculeType(MolType molType);
+        [[nodiscard]]
+        std::vector<MoleculeType> findNecessaryMoleculeTypes();
+        [[nodiscard]]
+        std::optional<MolType> findMoleculeTypeByString(
             const std::string& moleculeType
         ) const;
         [[nodiscard]]
@@ -183,17 +186,17 @@ namespace molsys
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::optional<size_t> getWaterType() const;
-        [[nodiscard]] std::optional<size_t> getAmmoniaType() const;
-        [[nodiscard]] size_t                getNumberOfMolecules() const;
-        [[nodiscard]] size_t                getDegreesOfFreedom() const;
-        [[nodiscard]] size_t                getNumberOfAtoms() const;
-        [[nodiscard]] size_t                getNumberOfQMAtoms() const;
-        [[nodiscard]] double                getTotalMass() const;
-        [[nodiscard]] double                getTotalCharge() const;
-        [[nodiscard]] double                getDensity() const;
-        [[nodiscard]] linearAlgebra::Vec3D& getCenterOfMass();
-        [[nodiscard]] std::vector<int>      getInnerRegionCenterAtomIndices();
+        [[nodiscard]] std::optional<MolType> getWaterType() const;
+        [[nodiscard]] std::optional<MolType> getAmmoniaType() const;
+        [[nodiscard]] size_t                 getNumberOfMolecules() const;
+        [[nodiscard]] size_t                 getDegreesOfFreedom() const;
+        [[nodiscard]] size_t                 getNumberOfAtoms() const;
+        [[nodiscard]] size_t                 getNumberOfQMAtoms() const;
+        [[nodiscard]] double                 getTotalMass() const;
+        [[nodiscard]] double                 getTotalCharge() const;
+        [[nodiscard]] double                 getDensity() const;
+        [[nodiscard]] linearAlgebra::Vec3D&  getCenterOfMass();
+        [[nodiscard]] std::vector<int>       getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(size_t index);
         [[nodiscard]] Molecule&     getMolecule(size_t index);
@@ -233,8 +236,8 @@ namespace molsys
          * standard setter methods *
          ***************************/
 
-        void setWaterType(size_t waterType);
-        void setAmmoniaType(size_t ammoniaType);
+        void setWaterType(MolType waterType);
+        void setAmmoniaType(MolType ammoniaType);
         void setTotalMass(double totalMass);
         void setTotalCharge(double totalCharge);
         void setDensity(double density);

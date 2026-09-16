@@ -50,10 +50,10 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
 
     EXPECT_EQ(improperDihedralTypes.size(), 1);
     EXPECT_EQ(improperDihedralTypes[0].getId(), DihedralId{0});
-    EXPECT_EQ(improperDihedralTypes[0].getForceConstant(), 1.22);
-    EXPECT_EQ(improperDihedralTypes[0].getPeriodicity(), 234.3);
+    EXPECT_EQ(improperDihedralTypes[0].getParams().forceConstant, 1.22);
+    EXPECT_EQ(improperDihedralTypes[0].getParams().frequency, 234.3);
     EXPECT_EQ(
-        improperDihedralTypes[0].getPhaseShift(),
+        improperDihedralTypes[0].getParams().phaseShift,
         324.3 * constants::DEG_TO_RAD
     );
 

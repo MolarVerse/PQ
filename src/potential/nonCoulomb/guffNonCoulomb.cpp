@@ -90,14 +90,14 @@ void GuffNonCoulomb::resizeGuff(
  * @param nonCoulombPair
  */
 void GuffNonCoulomb::setGuffNonCoulPair(
-    const std::vector<size_t>             &indices,
-    const std::shared_ptr<NonCoulombPair> &nonCoulombPair
+    const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+    const std::shared_ptr<NonCoulombPair>                  &nonCoulombPair
 )
 {
-    const auto mol1  = getMolType1(indices) - 1;
-    const auto mol2  = getMolType2(indices) - 1;
-    const auto atom1 = getAtomType1(indices);
-    const auto atom2 = getAtomType2(indices);
+    const auto mol1  = std::get<0>(indices).get() - 1;
+    const auto mol2  = std::get<1>(indices).get() - 1;
+    const auto atom1 = std::get<2>(indices).get();
+    const auto atom2 = std::get<3>(indices).get();
 
     _guffNonCoulombPairs[mol1][mol2][atom1][atom2] = nonCoulombPair;
 }
@@ -115,14 +115,14 @@ void GuffNonCoulomb::setGuffNonCoulPair(
  * @return std::shared_ptr<NonCoulombPair>
  */
 std::shared_ptr<NonCoulombPair> GuffNonCoulomb::getNonCoulPair(
-    const std::vector<size_t> &indices,
+    const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
     const std::pair<VdwType, VdwType> & /*vdwTypes*/
 )
 {
-    const auto mol1  = getMolType1(indices) - 1;
-    const auto mol2  = getMolType2(indices) - 1;
-    const auto atom1 = getAtomType1(indices);
-    const auto atom2 = getAtomType2(indices);
+    const auto mol1  = std::get<0>(indices).get() - 1;
+    const auto mol2  = std::get<1>(indices).get() - 1;
+    const auto atom1 = std::get<2>(indices).get();
+    const auto atom2 = std::get<3>(indices).get();
 
     return _guffNonCoulombPairs[mol1][mol2][atom1][atom2];
 }

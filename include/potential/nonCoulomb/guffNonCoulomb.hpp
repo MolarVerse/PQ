@@ -55,7 +55,7 @@ namespace pot
          ***************************/
 
         void setGuffNonCoulPair(
-            const std::vector<size_t> &,
+            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
             const std::shared_ptr<NonCoulombPair> &
         );
 
@@ -65,8 +65,8 @@ namespace pot
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t>         &indices,
-            const std::pair<VdwType, VdwType> &vdwTypes
+            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+            const std::pair<VdwType, VdwType>                      &vdwTypes
         ) override;
 
         [[nodiscard]] std::vector<std::vector<

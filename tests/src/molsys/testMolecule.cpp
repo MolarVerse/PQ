@@ -170,9 +170,9 @@ TEST_F(TestMolecule, getNumberOfAtomTypesCountsNonAdjacentDuplicates)
     const auto atom2 = std::make_shared<molsys::Atom>();
     const auto atom3 = std::make_shared<molsys::Atom>();
 
-    atom1->setExternalAtomType(1);
-    atom2->setExternalAtomType(2);
-    atom3->setExternalAtomType(1);
+    atom1->setExternalAtomType(ExtAtomType{1});
+    atom2->setExternalAtomType(ExtAtomType{2});
+    atom3->setExternalAtomType(ExtAtomType{1});
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -185,9 +185,9 @@ TEST_F(TestMolecule, moleculeTypeCountsNonAdjacentDuplicates)
 {
     auto moleculeType = molsys::MoleculeType();
 
-    moleculeType.addAtomType(1);
-    moleculeType.addAtomType(2);
-    moleculeType.addAtomType(1);
+    moleculeType.addAtomType(AtomType{1});
+    moleculeType.addAtomType(AtomType{2});
+    moleculeType.addAtomType(AtomType{1});
 
     EXPECT_EQ(moleculeType.getNumberOfAtomTypes(), 2);
 }

@@ -41,38 +41,6 @@ using namespace molsys;
 using namespace utilities;
 using namespace exc;
 
-namespace
-{
-    /**
-     * @brief convert external to internal atom types
-     *
-     * @details In order to manage if user declares for example only atom type 1
-     * and 3 in the moldescriptor file, the internal atom types are the 0 and 1.
-     *
-     * @param molecule
-     */
-    void convertExternalToInternalAtomTypes(MoleculeType &molecule)
-    {
-        const size_t numberOfAtoms = molecule.getNumberOfAtoms();
-
-        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
-        {
-            const size_t externalAtomType = molecule.getExternalAtomType(i);
-            molecule.addExternalToInternalAtomTypeElement(
-                externalAtomType,
-                i.get()
-            );
-        }
-
-        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
-        {
-            const size_t externalAtomType = molecule.getExternalAtomType(i);
-            molecule.addAtomType(molecule.getInternalAtomType(externalAtomType)
-            );
-        }
-    }
-}   // namespace
-
 /**
  * @brief constructor
  *
@@ -138,11 +106,11 @@ void MoldescriptorReader::read()
             auto &simBox = _engine.getSimulationBox();
 
             if ("water_type" == toLowerAndReplaceDashesCopy(lineElements[0]))
-                simBox.setWaterType(stringToULL(lineElements[1]));
+                simBox.setWaterType(MolType{stringToULL(lineElements[1])});
 
             else if ("ammonia_type" ==
                      toLowerAndReplaceDashesCopy(lineElements[0]))
-                simBox.setAmmoniaType(stringToULL(lineElements[1]));
+                simBox.setAmmoniaType(MolType{stringToULL(lineElements[1])});
 
             else
                 processMolecule(lineElements);
@@ -221,7 +189,7 @@ void MoldescriptorReader::processMolecule(
         ));
     }
 
-    molecule.setMoltype(simBox.getMoleculeTypes().size() + 1);
+    molecule.setMoltype(MolType{simBox.getMoleculeTypes().size() + 1});
 
     std::string line;
     size_t      atomCount = 0;
@@ -248,7 +216,7 @@ void MoldescriptorReader::processMolecule(
         if ((3 == lineElements.size()) || (4 == lineElements.size()))
         {
             molecule.addAtomName(lineElements[0]);
-            molecule.addExternalAtomType(stoul(lineElements[1]));
+            molecule.addExternalAtomType(ExtAtomType{stoul(lineElements[1])});
             molecule.addPartialCharge(stod(lineElements[2]));
 
             ++atomCount;
@@ -288,4 +256,34 @@ void MoldescriptorReader::processMolecule(
     convertExternalToInternalAtomTypes(molecule);
 
     simBox.addMoleculeType(molecule);
+}
+
+/**
+ * @brief convert external to internal atom types
+ *
+ * @details In order to manage if user declares for example only atom type 1 and
+ * 3 in the moldescriptor file, the internal atom types are the 0 and 1.
+ *
+ * @param molecule
+ */
+void MoldescriptorReader::convertExternalToInternalAtomTypes(
+    MoleculeType &molecule
+)
+{
+    const size_t numberOfAtoms = molecule.getNumberOfAtoms();
+
+    for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
+    {
+        const auto externalAtomType = molecule.getExternalAtomType(i);
+        molecule.addExternalToInternalAtomTypeElement(
+            externalAtomType,
+            AtomType{i.get()}
+        );
+    }
+
+    for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
+    {
+        const auto externalAtomType = molecule.getExternalAtomType(i);
+        molecule.addAtomType(molecule.getInternalAtomType(externalAtomType));
+    }
 }

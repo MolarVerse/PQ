@@ -71,8 +71,8 @@ namespace
 
     struct Placement
     {
-        size_t molType;
-        Vec3D  position;
+        MolType molType;
+        Vec3D   position;
     };
 
     /*
@@ -90,28 +90,33 @@ namespace
         SimulationBox simBox;
         simBox.setBoxDimensions({kBoxEdge, kBoxEdge, kBoxEdge});
 
-        auto buildMoleculeType = [](const size_t molType, const double charge)
+        auto buildMoleculeType = [](MolType molType, double charge)
         {
             MoleculeType molType_;
             molType_.setMoltype(molType);
             molType_.setNumberOfAtoms(1);
-            molType_.addExternalAtomType(molType);
-            molType_.addExternalToInternalAtomTypeElement(molType, 0);
+            molType_.addExternalAtomType(ExtAtomType{molType.get()});
+            molType_.addExternalToInternalAtomTypeElement(
+                ExtAtomType{molType.get()},
+                AtomType{0}
+            );
             molType_.addPartialCharge(charge);
-            molType_.addAtomType(0);
+            molType_.addAtomType(AtomType{0});
             return molType_;
         };
 
-        simBox.addMoleculeType(buildMoleculeType(1, 0.5));
-        simBox.addMoleculeType(buildMoleculeType(2, -0.3));
+        simBox.addMoleculeType(buildMoleculeType(MolType{1}, 0.5));
+        simBox.addMoleculeType(buildMoleculeType(MolType{2}, -0.3));
 
         for (const auto &placement : placements)
         {
             auto atom = std::make_shared<Atom>();
             atom->setPosition(placement.position);
-            atom->setAtomType(0);
-            atom->setExternalAtomType(placement.molType);
-            atom->setPartialCharge(placement.molType == 1 ? 0.5 : -0.3);
+            atom->setAtomType(AtomType{0});
+            atom->setExternalAtomType(ExtAtomType{placement.molType.get()});
+            atom->setPartialCharge(
+                placement.molType == MolType{1} ? 0.5 : -0.3
+            );
             atom->setInternalGlobalVDWType(VdwType{0});
             atom->setForceToZero();
 
@@ -146,8 +151,15 @@ namespace
         );
 
         for (size_t m1 = 1; m1 <= 2; ++m1)
+        {
             for (size_t m2 = 1; m2 <= 2; ++m2)
-                guff->setGuffNonCoulPair({m1, m2, 0, 0}, pair);
+            {
+                guff->setGuffNonCoulPair(
+                    {MolType{m1}, MolType{m2}, AtomType{0}, AtomType{0}},
+                    pair
+                );
+            }
+        }
 
         return guff;
     }
@@ -167,12 +179,12 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     // cell, one in-cutoff pair across neighbouring cells (including across a
     // periodic boundary), and an out-of-cutoff pair both paths must skip.
     const std::vector<Placement> placements = {
-        {.molType = 1, .position = {-5.0, -5.0, -5.0}},
-        {.molType = 2, .position = {-3.0, -4.0, -3.5}},
-        {.molType = 1, .position = {1.0, 1.5, 2.0}},
-        {.molType = 2, .position = {2.0, 2.5, 3.5}},
-        {.molType = 1, .position = {-1.0, 3.0, 1.0}},
-        {.molType = 2, .position = {7.0, -7.0, 6.0}},
+        {.molType = MolType{1}, .position = {-5.0, -5.0, -5.0}},
+        {.molType = MolType{2}, .position = {-3.0, -4.0, -3.5}},
+        {.molType = MolType{1}, .position = {1.0, 1.5, 2.0}},
+        {.molType = MolType{2}, .position = {2.0, 2.5, 3.5}},
+        {.molType = MolType{1}, .position = {-1.0, 3.0, 1.0}},
+        {.molType = MolType{2}, .position = {7.0, -7.0, 6.0}},
     };
 
     auto simBoxBF = buildSimulationBox(placements);

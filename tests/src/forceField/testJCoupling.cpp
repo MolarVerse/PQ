@@ -36,11 +36,61 @@
  */
 TEST(TestJCouplingType, operatorEqual)
 {
-    const forceField::JCouplingType type1(0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
-    const forceField::JCouplingType t1_same(0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
-    const forceField::JCouplingType t1_otherId(1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
-    const forceField::JCouplingType t1_otherJ0(0, 9.0, 2.0, 3.0, 4.0, 5.0, 6.0);
-    const forceField::JCouplingType t1_otherK(0, 1.0, 9.0, 3.0, 4.0, 5.0, 6.0);
+    const forceField::JCouplingType type1(
+        0,
+        JCouplingParams{
+            .J0            = 1.0,
+            .forceConstant = 2.0,
+            .a             = 3.0,
+            .b             = 4.0,
+            .c             = 5.0,
+            .phaseShift    = 6.0
+        }
+    );
+    const forceField::JCouplingType t1_same(
+        0,
+        JCouplingParams{
+            .J0            = 1.0,
+            .forceConstant = 2.0,
+            .a             = 3.0,
+            .b             = 4.0,
+            .c             = 5.0,
+            .phaseShift    = 6.0
+        }
+    );
+    const forceField::JCouplingType t1_otherId(
+        1,
+        JCouplingParams{
+            .J0            = 1.0,
+            .forceConstant = 2.0,
+            .a             = 3.0,
+            .b             = 4.0,
+            .c             = 5.0,
+            .phaseShift    = 6.0
+        }
+    );
+    const forceField::JCouplingType t1_otherJ0(
+        0,
+        JCouplingParams{
+            .J0            = 9.0,
+            .forceConstant = 2.0,
+            .a             = 3.0,
+            .b             = 4.0,
+            .c             = 5.0,
+            .phaseShift    = 6.0
+        }
+    );
+    const forceField::JCouplingType t1_otherK(
+        0,
+        JCouplingParams{
+            .J0            = 1.0,
+            .forceConstant = 9.0,
+            .a             = 3.0,
+            .b             = 4.0,
+            .c             = 5.0,
+            .phaseShift    = 6.0
+        }
+    );
 
     EXPECT_TRUE(type1 == t1_same);
     EXPECT_FALSE(type1 == t1_otherId);
@@ -50,19 +100,39 @@ TEST(TestJCouplingType, operatorEqual)
 
 TEST(TestJCouplingType, getters)
 {
-    const forceField::JCouplingType type(7, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+    const forceField::JCouplingType type(
+        7,
+        JCouplingParams{
+            .J0            = 1.0,
+            .forceConstant = 2.0,
+            .a             = 3.0,
+            .b             = 4.0,
+            .c             = 5.0,
+            .phaseShift    = 6.0
+        }
+    );
     EXPECT_EQ(type.getId(), 7U);
-    EXPECT_DOUBLE_EQ(type.getJ0(), 1.0);
-    EXPECT_DOUBLE_EQ(type.getForceConstant(), 2.0);
-    EXPECT_DOUBLE_EQ(type.getA(), 3.0);
-    EXPECT_DOUBLE_EQ(type.getB(), 4.0);
-    EXPECT_DOUBLE_EQ(type.getC(), 5.0);
-    EXPECT_DOUBLE_EQ(type.getPhaseShift(), 6.0);
+    EXPECT_DOUBLE_EQ(type.getParams().J0, 1.0);
+    EXPECT_DOUBLE_EQ(type.getParams().forceConstant, 2.0);
+    EXPECT_DOUBLE_EQ(type.getParams().a, 3.0);
+    EXPECT_DOUBLE_EQ(type.getParams().b, 4.0);
+    EXPECT_DOUBLE_EQ(type.getParams().c, 5.0);
+    EXPECT_DOUBLE_EQ(type.getParams().phaseShift, 6.0);
 }
 
 TEST(TestJCouplingType, symmetryFlagSetters)
 {
-    forceField::JCouplingType type(0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+    forceField::JCouplingType type(
+        0,
+        JCouplingParams{
+            .J0            = 1.0,
+            .forceConstant = 2.0,
+            .a             = 3.0,
+            .b             = 4.0,
+            .c             = 5.0,
+            .phaseShift    = 6.0
+        }
+    );
 
     // Symmetry flags only have setters; verify they accept both bool values
     // without throwing and do not affect equality (covered by operatorEqual).

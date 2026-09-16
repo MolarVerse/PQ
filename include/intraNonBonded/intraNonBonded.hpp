@@ -24,9 +24,8 @@
 
 #define _INTRA_NON_BONDED_HPP_
 
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr
-#include <vector>    // for vector
+#include <memory>   // for shared_ptr
+#include <vector>   // for vector
 
 #include "coulombPotential.hpp"
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
@@ -73,7 +72,9 @@ namespace intraNonBonded
         void fillIntraNonBondedMaps(molsys::SimulationBox &);
 
         [[nodiscard]]
-        IntraNonBondedContainer *findIntraNonBondedContainerByMolType(size_t);
+        IntraNonBondedContainer *findIntraNonBondedContainerByMolType(
+            MolType molType
+        );
 
         /*************************
          * standard add methods  *

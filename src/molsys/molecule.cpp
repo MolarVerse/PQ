@@ -47,7 +47,7 @@ Molecule::Molecule(std::string_view name) : _name(name) {}
  *
  * @param moltype
  */
-Molecule::Molecule(size_t moltype) : _moltype(moltype) {}
+Molecule::Molecule(MolType moltype) : _moltype(moltype) {}
 
 /**
  * @brief finds number of different atom types in molecule
@@ -56,7 +56,7 @@ Molecule::Molecule(size_t moltype) : _moltype(moltype) {}
  */
 size_t Molecule::getNumberOfAtomTypes()
 {
-    std::vector<size_t> extAtomTypes;
+    std::vector<ExtAtomType> extAtomTypes;
 
     const auto fill                = std::back_inserter(extAtomTypes);
     auto       getExternalAtomType = [](const auto &atom)
@@ -516,9 +516,9 @@ double Molecule::getPartialCharge(AtomIndex index) const
  * @brief returns the atom type of the atom by index
  *
  * @param index
- * @return size_t
+ * @return AtomType
  */
-size_t Molecule::getAtomType(AtomIndex index) const
+AtomType Molecule::getAtomType(AtomIndex index) const
 {
     return _atoms[index.get()]->getAtomType();
 }
@@ -688,7 +688,7 @@ void Molecule::setNumberOfAtoms(size_t numberOfAtoms)
  *
  * @param moltype
  */
-void Molecule::setMoltype(size_t moltype) { _moltype = moltype; }
+void Molecule::setMoltype(MolType moltype) { _moltype = moltype; }
 
 /**
  * @brief set the charge of the molecule

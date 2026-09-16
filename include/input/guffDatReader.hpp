@@ -30,6 +30,7 @@
 #include <vector>        // for vector
 
 #include "defaults.hpp"   // for _GUFF_FILENAME_DEFAULT_
+#include "strongTypes.hpp"
 
 namespace engine
 {
@@ -69,44 +70,44 @@ namespace input::guffdat
         void calculatePartialCharges();
         void checkPartialCharges();
         void checkNecessaryGuffPairs();
-        bool bothMoltypesAreWaterType(size_t molType1, size_t molType2);
+        bool bothMoltypesAreWaterType(MolType molType1, MolType molType2);
         void addNonCoulombPair(
-            size_t                     molType1,
-            size_t                     molType2,
-            size_t                     atomType1,
-            size_t                     atomType2,
+            MolType                    molType1,
+            MolType                    molType2,
+            AtomType                   atomType1,
+            AtomType                   atomType2,
             const std::vector<double> &coefficients,
             double                     rncCutOff
         );
         void addLennardJonesPair(
-            size_t                     molType1,
-            size_t                     molType2,
-            size_t                     atomType1,
-            size_t                     atomType2,
+            MolType                    molType1,
+            MolType                    molType2,
+            AtomType                   atomType1,
+            AtomType                   atomType2,
             const std::vector<double> &coefficients,
             double                     rncCutOff
         );
         void addBuckinghamPair(
-            size_t                     molType1,
-            size_t                     molType2,
-            size_t                     atomType1,
-            size_t                     atomType2,
+            MolType                    molType1,
+            MolType                    molType2,
+            AtomType                   atomType1,
+            AtomType                   atomType2,
             const std::vector<double> &coefficients,
             double                     rncCutOff
         );
         void addMorsePair(
-            size_t                     molType1,
-            size_t                     molType2,
-            size_t                     atomType1,
-            size_t                     atomType2,
+            MolType                    molType1,
+            MolType                    molType2,
+            AtomType                   atomType1,
+            AtomType                   atomType2,
             const std::vector<double> &coefficients,
             double                     rncCutOff
         );
         void addGuffPair(
-            size_t molType1,
-            size_t molType2,
-            size_t atomType1,
-            size_t atomType2,
+            MolType  molType1,
+            MolType  molType2,
+            AtomType atomType1,
+            AtomType atomType2,
             const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>
                   &coefficients,
             double rncCutOff
@@ -118,18 +119,18 @@ namespace input::guffdat
 
         void setFilename(const std::string_view &filename);
         void setGuffCoulombCoefficients(
-            size_t molType1,
-            size_t molType2,
-            size_t atomType1,
-            size_t atomType2,
-            double coefficient
+            MolType  molType1,
+            MolType  molType2,
+            AtomType atomType1,
+            AtomType atomType2,
+            double   coefficient
         );
         void setIsGuffPairSet(
-            size_t molType1,
-            size_t molType2,
-            size_t atomType1,
-            size_t atomType2,
-            bool   isSet
+            MolType  molType1,
+            MolType  molType2,
+            AtomType atomType1,
+            AtomType atomType2,
+            bool     isSet
         );
 
         /********************

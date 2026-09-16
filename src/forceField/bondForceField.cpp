@@ -90,9 +90,9 @@ void BondForceField::calculateEnergyAndForces(
     box.applyPBC(dPosition);
 
     const auto distance      = norm(dPosition);
-    const auto deltaDistance = distance - _equilBondLength;
+    const auto deltaDistance = distance - _params.equilibrium;
 
-    auto forceMagnitude = -_forceConstant * deltaDistance;
+    auto forceMagnitude = -_params.forceConstant * deltaDistance;
 
     physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
@@ -142,24 +142,11 @@ void BondForceField::calculateEnergyAndForces(
 void BondForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
 
 /**
- * @brief set equilibrium bond length
+ * @brief set bond parameters
  *
- * @param equilibriumBondLength
+ * @param params
  */
-void BondForceField::setEquilibriumBondLength(double equilibriumBondLength)
-{
-    _equilBondLength = equilibriumBondLength;
-}
-
-/**
- * @brief set force constant
- *
- * @param forceConstant
- */
-void BondForceField::setForceConstant(double forceConstant)
-{
-    _forceConstant = forceConstant;
-}
+void BondForceField::setParams(const BondParams &params) { _params = params; }
 
 /***************************
  *                         *
@@ -183,18 +170,8 @@ bool BondForceField::isLinker() const { return _isLinker; }
 BondId BondForceField::getType() const { return _type; }
 
 /**
- * @brief get the equilibrium bond length
+ * @brief get the bond parameters
  *
- * @return double
+ * @return const BondParams&
  */
-double BondForceField::getEquilibriumBondLength() const
-{
-    return _equilBondLength;
-}
-
-/**
- * @brief get the force constant
- *
- * @return double
- */
-double BondForceField::getForceConstant() const { return _forceConstant; }
+const BondParams &BondForceField::getParams() const { return _params; }

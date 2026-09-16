@@ -107,8 +107,7 @@ void ForceFieldSetup::setupBonds()
     auto addForceFieldParameters = [&forceField](auto &bond)
     {
         const auto bondType = forceField->findBondTypeById(bond.getType());
-        bond.setEquilibriumBondLength(bondType.getEquilibriumBondLength());
-        bond.setForceConstant(bondType.getForceConstant());
+        bond.setParams(bondType.getParams());
     };
 
     std::ranges::for_each(forceField->getBonds(), addForceFieldParameters);
@@ -133,8 +132,7 @@ void ForceFieldSetup::setupAngles()
     auto addForceFieldParameters = [&forceField](auto &angle)
     {
         const auto angleType = forceField->findAngleTypeById(angle.getType());
-        angle.setEquilibriumAngle(angleType.getEquilibriumAngle());
-        angle.setForceConstant(angleType.getForceConstant());
+        angle.setParams(angleType.getParams());
     };
 
     std::ranges::for_each(forceField->getAngles(), addForceFieldParameters);
@@ -160,9 +158,7 @@ void ForceFieldSetup::setupDihedrals()
     {
         const auto dihedralType =
             forecField->findDihedralTypeById(dihedral.getType());
-        dihedral.setForceConstant(dihedralType.getForceConstant());
-        dihedral.setPhaseShift(dihedralType.getPhaseShift());
-        dihedral.setPeriodicity(dihedralType.getPeriodicity());
+        dihedral.setParams(dihedralType.getParams());
     };
 
     std::ranges::for_each(forecField->getDihedrals(), addForceFieldParameters);
@@ -188,9 +184,7 @@ void ForceFieldSetup::setupImproperDihedrals()
     {
         const auto improperType =
             forceField->findImproperTypeById(improper.getType());
-        improper.setForceConstant(improperType.getForceConstant());
-        improper.setPhaseShift(improperType.getPhaseShift());
-        improper.setPeriodicity(improperType.getPeriodicity());
+        improper.setParams(improperType.getParams());
     };
 
     std::ranges::for_each(

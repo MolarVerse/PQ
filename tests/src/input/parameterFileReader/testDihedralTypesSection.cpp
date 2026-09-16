@@ -49,9 +49,12 @@ TEST_F(TestParameterFileSection, processSectionDihedral)
 
     EXPECT_EQ(dihedralTypes.size(), 1);
     EXPECT_EQ(dihedralTypes[0].getId(), DihedralId{0});
-    EXPECT_EQ(dihedralTypes[0].getForceConstant(), 1.22);
-    EXPECT_EQ(dihedralTypes[0].getPeriodicity(), 234.3);
-    EXPECT_EQ(dihedralTypes[0].getPhaseShift(), 324.3 * constants::DEG_TO_RAD);
+    EXPECT_EQ(dihedralTypes[0].getParams().forceConstant, 1.22);
+    EXPECT_EQ(dihedralTypes[0].getParams().frequency, 234.3);
+    EXPECT_EQ(
+        dihedralTypes[0].getParams().phaseShift,
+        324.3 * constants::DEG_TO_RAD
+    );
 
     lineElements = {"1", "2", "1.0", "0", "2"};
     EXPECT_THROW(

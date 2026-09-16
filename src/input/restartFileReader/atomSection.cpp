@@ -166,7 +166,7 @@ void AtomSection::_processQMAtomLine(
 )
 {
     auto       atom     = std::make_shared<Atom>();
-    const auto molecule = make_unique<Molecule>(0);
+    const auto molecule = std::make_unique<Molecule>(MolType{0});
 
     molecule->setName("QM");
     molecule->setNumberOfAtoms(1);
@@ -210,9 +210,9 @@ void AtomSection::process(
      * find molecule by molecule type *
      *********************************/
 
-    size_t moltype = stoul(lineElements[2]);
+    MolType moltype{stoul(lineElements[2])};
 
-    if (0 == moltype)
+    if (MolType{0} == moltype)
     {
         _processQMAtomLine(lineElements, simBox);
         return;
@@ -281,7 +281,7 @@ void AtomSection::process(
 
         checkNumberOfLineArguments(lineElements);
 
-        moltype = stoul(lineElements[2]);
+        moltype = MolType{stoul(lineElements[2])};
 
         ++_lineNumber;
     }
