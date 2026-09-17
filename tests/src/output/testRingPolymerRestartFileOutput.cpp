@@ -27,7 +27,6 @@
 #include <iosfwd>   // for ifstream
 #include <string>   // for getline, string
 
-#include "gtest/gtest.h"             // for Message, TestPartResult
 #include "ringPolymerSettings.hpp"   // for RingPolymerSettings
 
 /**

@@ -30,7 +30,7 @@
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for ParameterFileException
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                 // for Message, TestPartResult
+                                         // for Message, TestPartResult
 #include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "moleculeType.hpp"              // for MoleculeType
@@ -125,7 +125,7 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
     _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
     PotentialSetup potentialSetup(*_engine);
 
-    auto molecule = molsys::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(MolType{1});
     molecule.addExternalGlobalVDWType(ExtVdwType{0});
     molecule.addExternalGlobalVDWType(ExtVdwType{1});
 

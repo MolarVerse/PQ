@@ -27,7 +27,7 @@
 using namespace settings;
 using namespace utilities;
 
-std::string settings::string(const HessianBuilderType builder)
+std::string settings::string(HessianBuilderType builder)
 {
     switch (builder)
     {
@@ -53,12 +53,12 @@ void HessianSettings::setHessianInfoFile(const std::string_view &filename)
     _hessianInfoFile = filename;
 }
 
-void HessianSettings::setDisplacement(const double displacement)
+void HessianSettings::setDisplacement(double displacement)
 {
     _displacement = displacement;
 }
 
-void HessianSettings::setOptimizeBeforeHessian(const bool optimize)
+void HessianSettings::setOptimizeBeforeHessian(bool optimize)
 {
     _optimizeBeforeHessian = optimize;
 }
@@ -85,7 +85,7 @@ void HessianSettings::setBuilder(const std::string_view &builder)
         setBuilder(NONE);
 }
 
-void HessianSettings::setBuilder(const HessianBuilderType builder)
+void HessianSettings::setBuilder(HessianBuilderType builder)
 {
     _builder = builder;
 }
@@ -96,9 +96,6 @@ std::string HessianSettings::getHessianInfoFile() { return _hessianInfoFile; }
 
 double HessianSettings::getDisplacement() { return _displacement; }
 
-bool HessianSettings::optimizeBeforeHessian()
-{
-    return _optimizeBeforeHessian;
-}
+bool HessianSettings::optimizeBeforeHessian() { return _optimizeBeforeHessian; }
 
 HessianBuilderType HessianSettings::getBuilder() { return _builder; }

@@ -41,7 +41,7 @@ using namespace settings;
  *
  * @param timeStep simulation timestep in fs
  */
-void EnergyOutput::writeHeader(const double timeStep)
+void EnergyOutput::writeHeader(double timeStep)
 {
     _fp << std::format("# timestep = {} fs\n", timeStep);
 }
@@ -62,7 +62,7 @@ void EnergyOutput::writeHeader(const double timeStep)
  * @param step
  * @param data
  */
-void EnergyOutput::write(const size_t step, const PhysicalData &data)
+void EnergyOutput::write(size_t step, const PhysicalData &data)
 {
     _fp << std::format("{:10d}\t", step);
     _fp << std::format("{:20.12f}\t", data.getTemperature());

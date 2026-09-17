@@ -20,6 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>
+
 #include <cmath>
 #include <memory>
 #include <vector>
@@ -27,7 +29,6 @@
 #include "atom.hpp"
 #include "constraintSettings.hpp"
 #include "exceptions.hpp"
-#include "gtest/gtest.h"
 #include "mShake.hpp"
 #include "mShakeReference.hpp"
 #include "molecule.hpp"
@@ -59,7 +60,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 {
     // --- reference shape: equilateral triangle in the xy plane ---
     auto moltype = MoleculeType();
-    moltype.setMoltype(1);
+    moltype.setMoltype(MolType{1});
     moltype.setName("triangle");
     moltype.setNumberOfAtoms(3);
 
@@ -87,40 +88,40 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
     auto molecule = Molecule();
-    molecule.setMoltype(1);
+    molecule.setMoltype(MolType{1});
     molecule.setNumberOfAtoms(3);
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
     const auto refPos2 = Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
 
-    auto a1 = std::make_shared<Atom>();
-    auto a2 = std::make_shared<Atom>();
-    auto a3 = std::make_shared<Atom>();
+    auto atom1 = std::make_shared<Atom>();
+    auto atom2 = std::make_shared<Atom>();
+    auto atom3 = std::make_shared<Atom>();
 
-    a1->setMass(1.0);
-    a2->setMass(1.0);
-    a3->setMass(1.0);
+    atom1->setMass(1.0);
+    atom2->setMass(1.0);
+    atom3->setMass(1.0);
 
     // Stretch bond 0-1 by a small amount; M-SHAKE must pull atom 1
     // back along the bond to restore the rigid triangle. The
     // perturbation is intentionally small so the algorithm converges
     // well within the iteration bound.
-    a1->setPosition(refPos0);
-    a2->setPosition({1.0001, 0.0, 0.0});
-    a3->setPosition(refPos2);
+    atom1->setPosition(refPos0);
+    atom2->setPosition({1.0001, 0.0, 0.0});
+    atom3->setPosition(refPos2);
 
-    a1->setPositionOld(refPos0);
-    a2->setPositionOld(refPos1);
-    a3->setPositionOld(refPos2);
+    atom1->setPositionOld(refPos0);
+    atom2->setPositionOld(refPos1);
+    atom3->setPositionOld(refPos2);
 
-    a1->setVelocity({0.0, 0.0, 0.0});
-    a2->setVelocity({0.0, 0.0, 0.0});
-    a3->setVelocity({0.0, 0.0, 0.0});
+    atom1->setVelocity({0.0, 0.0, 0.0});
+    atom2->setVelocity({0.0, 0.0, 0.0});
+    atom3->setVelocity({0.0, 0.0, 0.0});
 
-    molecule.addAtom(a1);
-    molecule.addAtom(a2);
-    molecule.addAtom(a3);
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+    molecule.addAtom(atom3);
 
     simBox.addMolecule(molecule);
 
@@ -145,7 +146,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 {
     auto moltype = MoleculeType();
-    moltype.setMoltype(1);
+    moltype.setMoltype(MolType{1});
     moltype.setName("triangle");
     moltype.setNumberOfAtoms(3);
 
@@ -169,32 +170,32 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
     auto molecule = Molecule();
-    molecule.setMoltype(1);
+    molecule.setMoltype(MolType{1});
     molecule.setNumberOfAtoms(3);
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
     const auto refPos2 = Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
 
-    auto a1 = std::make_shared<Atom>();
-    auto a2 = std::make_shared<Atom>();
-    auto a3 = std::make_shared<Atom>();
-    a1->setMass(1.0);
-    a2->setMass(1.0);
-    a3->setMass(1.0);
+    auto atom1 = std::make_shared<Atom>();
+    auto atom2 = std::make_shared<Atom>();
+    auto atom3 = std::make_shared<Atom>();
+    atom1->setMass(1.0);
+    atom2->setMass(1.0);
+    atom3->setMass(1.0);
     // Large perturbation so the solver cannot converge in 1 iteration.
-    a1->setPosition(refPos0);
-    a2->setPosition({1.5, 0.0, 0.0});
-    a3->setPosition(refPos2);
-    a1->setPositionOld(refPos0);
-    a2->setPositionOld(refPos1);
-    a3->setPositionOld(refPos2);
-    a1->setVelocity({0.0, 0.0, 0.0});
-    a2->setVelocity({0.0, 0.0, 0.0});
-    a3->setVelocity({0.0, 0.0, 0.0});
-    molecule.addAtom(a1);
-    molecule.addAtom(a2);
-    molecule.addAtom(a3);
+    atom1->setPosition(refPos0);
+    atom2->setPosition({1.5, 0.0, 0.0});
+    atom3->setPosition(refPos2);
+    atom1->setPositionOld(refPos0);
+    atom2->setPositionOld(refPos1);
+    atom3->setPositionOld(refPos2);
+    atom1->setVelocity({0.0, 0.0, 0.0});
+    atom2->setVelocity({0.0, 0.0, 0.0});
+    atom3->setVelocity({0.0, 0.0, 0.0});
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+    molecule.addAtom(atom3);
     simBox.addMolecule(molecule);
 
     settings::TimingsSettings::setTimeStep(0.5);

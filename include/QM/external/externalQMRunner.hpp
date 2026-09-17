@@ -29,6 +29,8 @@
 
 #include "qmRunner.hpp"
 
+class ExternalQMRunnerTest;   // forward declaration
+
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
@@ -70,7 +72,7 @@ namespace QM
 
         void run(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
+            physicalData::PhysicalData &physicalData,
             molsys::Periodicity         periodicity
         ) override;
 
@@ -91,21 +93,24 @@ namespace QM
         {
         }
 
-        void readForceFile(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &
-        );
-        void readChargeFile(molsys::SimulationBox &);
-
         /*******************************
          * standard getter and setters *
          *******************************/
 
         [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] std::string        getSingularity() const;
-        [[nodiscard]] std::string        getStaticBuild() const;
+        [[nodiscard]] static std::string getSingularity();
+        [[nodiscard]] static std::string getStaticBuild();
 
         void setScriptPath(const std::string_view &scriptPath);
+
+       private:
+        static void _readForceFile(
+            molsys::SimulationBox      &box,
+            physicalData::PhysicalData &physicalData
+        );
+        static void _readChargeFile(molsys::SimulationBox &box);
+
+        friend class ::ExternalQMRunnerTest;   // for testing private methods
     };
 }   // namespace QM
 

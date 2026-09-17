@@ -52,12 +52,12 @@ namespace benchmarkSetup
                 {
                     auto atom = std::make_shared<molsys::Atom>();
                     const linearAlgebra::Vec3D position{
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(x) + 0.5) * cellEdge,
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(y) + 0.5) * cellEdge,
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(z) + 0.5) * cellEdge,
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(x) + 0.5) * cellEdge),
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(y) + 0.5) * cellEdge),
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(z) + 0.5) * cellEdge),
                     };
                     atom->setPosition(position);
                     atom->setPositionOld(position);
@@ -68,13 +68,13 @@ namespace benchmarkSetup
                     });
                     atom->setForce({0.1, -0.2, 0.05});
                     atom->setMass(12.0);
-                    atom->setAtomType(0);
+                    atom->setAtomType(AtomType{0});
                     atom->setInternalGlobalVDWType(VdwType{0});
                     atom->setPartialCharge(atomIndex++ % 2 == 0 ? 0.4 : -0.4);
                     atom->setShiftForce({0.0, 0.0, 0.0});
 
                     molsys::Molecule molecule;
-                    molecule.setMoltype(1);
+                    molecule.setMoltype(MolType{1});
                     molecule.setNumberOfAtoms(1);
                     molecule.setMolMass(12.0);
                     molecule.addAtom(atom);

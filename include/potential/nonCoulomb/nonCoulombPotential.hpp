@@ -24,9 +24,7 @@
 
 #define _NON_COULOMB_POTENTIAL_HPP_
 
-#include <cstddef>   // for size_t
 #include <memory>
-#include <vector>   // for vector
 
 #include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"
@@ -41,7 +39,7 @@ namespace pot
      * TODO: implement the different mixing rules
      *
      */
-    enum class MixingRule : size_t
+    enum class MixingRule : std::uint8_t
     {
         NONE
     };
@@ -63,13 +61,13 @@ namespace pot
 
         [[nodiscard]]
         virtual std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t>         &indices,
-            const std::pair<VdwType, VdwType> &vdwTypes
+            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+            const std::pair<VdwType, VdwType>                      &vdwTypes
         ) = 0;
 
         [[nodiscard]] MixingRule getMixingRule() const;
 
-        void setMixingRule(const MixingRule mixingRule);
+        void setMixingRule(MixingRule mixingRule);
     };
 
 }   // namespace pot

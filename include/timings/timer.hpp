@@ -63,9 +63,8 @@ namespace timings
         [[nodiscard]] double calculateElapsedTime() const;
         [[nodiscard]] double calculateLoopTime() const;
 
-        [[nodiscard]] size_t findTimingsSectionIndex(
-            const std::string_view name
-        ) const;
+        [[nodiscard]]
+        size_t findTimingsSectionIndex(std::string_view name) const;
 
         void startTimingsSection();
         void stopTimingsSection();
@@ -82,20 +81,19 @@ namespace timings
          * standard getters *
          ********************/
 
-        [[nodiscard]] TimingsSection getTimingsSection(
-            const std::string_view
-        ) const;
+        [[nodiscard]]
+        TimingsSection getTimingsSection(std::string_view) const;
 
         [[nodiscard]] std::string getTimerName() const;
         [[nodiscard]] Timer       getTimer() const;
 
-        [[nodiscard]] TimingsSectionGuard scoped(const std::string_view name);
+        [[nodiscard]] TimingsSectionGuard scoped(std::string_view name);
 
        private:
         friend class TimingsSectionGuard;
 
-        void startTimingsSection(const std::string_view name);
-        void stopTimingsSection(const std::string_view name);
+        void startTimingsSection(std::string_view name);
+        void stopTimingsSection(std::string_view name);
     };
 
 }   // namespace timings

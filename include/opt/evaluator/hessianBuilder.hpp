@@ -59,32 +59,13 @@ namespace opt
        protected:
         double _displacement;
 
-        [[nodiscard]]
-        std::vector<double> evaluateForces(
-            Evaluator             &evaluator,
-            molsys::SimulationBox &simulationBox,
-            const size_t           coordinateIndex,
-            const double           displacement
-        ) const;
-
         static void restorePositions(
             molsys::SimulationBox                   &simulationBox,
             const std::vector<linearAlgebra::Vec3D> &positions
         );
 
-        static void displaceCoordinate(
-            molsys::SimulationBox &simulationBox,
-            const size_t           coordinateIndex,
-            const double           displacement
-        );
-
-        [[nodiscard]]
-        static std::vector<double> flattenForces(
-            const molsys::SimulationBox &simulationBox
-        );
-
        public:
-        explicit ForceDifferenceHessianBuilder(const double displacement);
+        explicit ForceDifferenceHessianBuilder(double displacement);
 
         static void symmetrize(HessianMatrix &hessian);
     };
@@ -140,8 +121,8 @@ namespace opt
 
     [[nodiscard]]
     std::shared_ptr<HessianBuilder> makeHessianBuilder(
-        const settings::HessianBuilderType builder,
-        const double                       displacement
+        settings::HessianBuilderType builder,
+        double                       displacement
     );
 
 }   // namespace opt

@@ -39,18 +39,18 @@ namespace out
        public:
         using Output::Output;
 
-        void writeInfo(const std::string &message) const;
+        static void writeInfo(const std::string &message);
 
-        void writeHeader() const;
-        void writeEndedNormally(const double elapsedTime) const;
+        static void writeHeader();
+        static void writeEndedNormally(double elapsedTime);
 
-        void writeDensityWarning() const;
-        void writeOptWarning(const std::string &message) const;
+        static void writeDensityWarning();
+        static void writeOptWarning(const std::string &message);
 
-        void writeSetup(const std::string &setup) const;
-        void writeSetupWarning(const std::string &setup) const;
-        void writeSetupCompleted() const;
-        void writeRead(const std::string &, const std::string &) const;
+        static void writeSetup(const std::string &setup);
+        static void writeSetupWarning(const std::string &warning);
+        static void writeSetupCompleted();
+        static void writeRead(const std::string &, const std::string &);
     };
 
 }   // namespace out

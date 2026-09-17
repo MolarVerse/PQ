@@ -58,7 +58,7 @@ namespace out
      * @brief write a message to the log file if the simulation ended normally
      *
      */
-    void LogOutput::writeEndedNormally(const double elapsedTime)
+    void LogOutput::writeEndedNormally(double elapsedTime)
     {
         _fp << elapsedTimeMessage(elapsedTime) << '\n';
         _fp << endedNormally() << '\n' << std::flush;
@@ -93,7 +93,7 @@ namespace out
      *
      * @param momentum
      */
-    void LogOutput::writeInitialMomentum(const double momentum)
+    void LogOutput::writeInitialMomentum(double momentum)
     {
         _fp << "\n" << std::flush;
 

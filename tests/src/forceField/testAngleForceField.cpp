@@ -32,7 +32,6 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "gmock/gmock.h"                 // for DoubleNear, ElementsAre
-#include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "matrix.hpp"                    // for Matrix
 #include "molecule.hpp"                  // for Molecule
@@ -70,7 +69,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
 
     auto molecule = molsys::Molecule();
 
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -89,9 +88,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     atom2->setInternalGlobalVDWType(VdwType{1});
     atom3->setInternalGlobalVDWType(VdwType{1});
 
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
-    atom3->setAtomType(1);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
+    atom3->setAtomType(AtomType{1});
 
     atom1->setPartialCharge(1.0);
     atom2->setPartialCharge(-0.5);
@@ -101,16 +100,19 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    auto bondForceField = forceField::AngleForceField(
+    auto angleFF = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    bondForceField.setEquilibriumAngle(90 * M_PI / 180.0);
-    bondForceField.setForceConstant(3.0);
-    bondForceField.setIsLinker(false);
+    const auto equilibrium   = 90 * M_PI / 180.0;
+    const auto forceConstant = 3.0;
+    angleFF.setParams(
+        AngleParams{.equilibrium = equilibrium, .forceConstant = forceConstant}
+    );
+    angleFF.setIsLinker(false);
 
-    bondForceField.calculateEnergyAndForces(
+    angleFF.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
@@ -175,9 +177,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     molecule.setAtomForce(2, {0.0, 0.0, 0.0});
     physicalData.reset();
 
-    bondForceField.setIsLinker(true);
+    angleFF.setIsLinker(true);
 
-    bondForceField.calculateEnergyAndForces(
+    angleFF.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
@@ -257,7 +259,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
     auto molecule = molsys::Molecule();
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -283,8 +285,9 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    angleForceField.setEquilibriumAngle(M_PI);   // linear equilibrium
-    angleForceField.setForceConstant(3.0);
+    angleForceField.setParams(
+        AngleParams{.equilibrium = M_PI, .forceConstant = 3.0}
+    );
     angleForceField.setIsLinker(false);
 
     angleForceField.calculateEnergyAndForces(
@@ -300,12 +303,12 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     // All per-atom forces must be finite. Without the guard these would
     // be NaN from dividing by sin(pi) == 0 in the cross-product block.
-    for (AtomIndex a{0}; a.get() < 3; ++a)
+    for (AtomIndex atomIdx{0}; atomIdx.get() < 3; ++atomIdx)
     {
         for (size_t i = 0; i < 3; ++i)
         {
-            EXPECT_FALSE(std::isnan(molecule.getAtomForce(a)[i]));
-            EXPECT_FALSE(std::isinf(molecule.getAtomForce(a)[i]));
+            EXPECT_FALSE(std::isnan(molecule.getAtomForce(atomIdx)[i]));
+            EXPECT_FALSE(std::isinf(molecule.getAtomForce(atomIdx)[i]));
         }
     }
 }

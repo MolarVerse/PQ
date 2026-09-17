@@ -27,7 +27,6 @@
 
 #include "atom.hpp"
 #include "exceptions.hpp"
-#include "gtest/gtest.h"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "resetKinetics.hpp"
@@ -46,32 +45,32 @@ namespace
         auto  molecule = molsys::Molecule();
         molecule.setNumberOfAtoms(2);
 
-        auto a1 = std::make_shared<molsys::Atom>();
-        auto a2 = std::make_shared<molsys::Atom>();
-        a1->setMass(1.0);
-        a2->setMass(1.0);
-        a1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        a2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        a1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        a2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
+        atom1->setMass(1.0);
+        atom2->setMass(1.0);
+        atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
+        atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         molecule.setMolMass(2.0);
-        molecule.addAtom(a1);
-        molecule.addAtom(a2);
+        molecule.addAtom(atom1);
+        molecule.addAtom(atom2);
 
         auto molecule2 = molsys::Molecule();
         molecule2.setNumberOfAtoms(1);
-        auto a3 = std::make_shared<molsys::Atom>();
-        a3->setMass(1.0);
-        a3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
-        a3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        auto atom3 = std::make_shared<molsys::Atom>();
+        atom3->setMass(1.0);
+        atom3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         molecule2.setMolMass(1.0);
-        molecule2.addAtom(a3);
+        molecule2.addAtom(atom3);
 
         box->addMolecule(molecule);
         box->addMolecule(molecule2);
-        box->addAtom(a1);
-        box->addAtom(a2);
-        box->addAtom(a3);
+        box->addAtom(atom1);
+        box->addAtom(atom2);
+        box->addAtom(atom3);
         box->setTotalMass(3.0);
         box->calculateDegreesOfFreedom();
 
@@ -81,21 +80,21 @@ namespace
 
 TEST(TestResetKinetics, constructorStoresStepAndFrequencyParameters)
 {
-    resetKinetics::ResetKinetics rk(1U, 2U, 3U, 4U, 50U, 100U, 11U);
-    EXPECT_EQ(rk.getNStepsTemperatureReset(), 1U);
-    EXPECT_EQ(rk.getFrequencyTemperatureReset(), 2U);
-    EXPECT_EQ(rk.getNStepsMomentumReset(), 3U);
-    EXPECT_EQ(rk.getFrequencyMomentumReset(), 4U);
-    EXPECT_EQ(rk.getNStepsForcesReset(), 11U);
+    resetKinetics::ResetKinetics reset(1U, 2U, 3U, 4U, 50U, 100U, 11U);
+    EXPECT_EQ(reset.getNStepsTemperatureReset(), 1U);
+    EXPECT_EQ(reset.getFrequencyTemperatureReset(), 2U);
+    EXPECT_EQ(reset.getNStepsMomentumReset(), 3U);
+    EXPECT_EQ(reset.getFrequencyMomentumReset(), 4U);
+    EXPECT_EQ(reset.getNStepsForcesReset(), 11U);
 }
 
 TEST(TestResetKinetics, settersAcceptValuesWithoutThrowing)
 {
-    resetKinetics::ResetKinetics rk;
+    resetKinetics::ResetKinetics reset;
 
-    rk.setTemperature(300.0);
-    rk.setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    rk.setAngularMomentum(linearAlgebra::Vec3D(0.5, -0.5, 0.0));
+    reset.setTemperature(300.0);
+    reset.setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    reset.setAngularMomentum(linearAlgebra::Vec3D(0.5, -0.5, 0.0));
 
     SUCCEED();
 }
@@ -104,7 +103,7 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
 {
     auto                        *box  = makeBox();
     auto                         data = physicalData::PhysicalData();
-    resetKinetics::ResetKinetics rk;
+    resetKinetics::ResetKinetics reset;
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
@@ -113,9 +112,9 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
     // data.getTemperature(); when calling resetTemperature directly the
     // setter must do the same.
     data.calculateTemperature(*box);
-    rk.setTemperature(data.getTemperature());
+    reset.setTemperature(data.getTemperature());
 
-    rk.resetTemperature(*box);
+    reset.resetTemperature(*box);
 
     data.calculateTemperature(*box);
     const auto T_after = data.getTemperature();
@@ -186,7 +185,7 @@ TEST(TestResetKinetics, rejectsPositiveTargetFromZeroTemperature)
 TEST(TestResetKinetics, resetMomentumZerosTotalLinearMomentum)
 {
     auto                        *box = makeBox();
-    resetKinetics::ResetKinetics rk;
+    resetKinetics::ResetKinetics reset;
 
     // resetMomentum subtracts (_momentum / totalMass) from every atom's
     // velocity; for the total to land at zero we have to seed _momentum
@@ -195,9 +194,9 @@ TEST(TestResetKinetics, resetMomentumZerosTotalLinearMomentum)
     linearAlgebra::Vec3D totalP{0.0, 0.0, 0.0};
     for (const auto &atom : box->getAtoms())
         totalP += atom->getMass() * atom->getVelocity();
-    rk.setMomentum(totalP);
+    reset.setMomentum(totalP);
 
-    rk.resetMomentum(*box);
+    reset.resetMomentum(*box);
 
     linearAlgebra::Vec3D totalPAfter{0.0, 0.0, 0.0};
     for (const auto &atom : box->getAtoms())
@@ -213,13 +212,13 @@ TEST(TestResetKinetics, resetMomentumZerosTotalLinearMomentum)
 TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
 {
     auto                        *box = makeBox();
-    resetKinetics::ResetKinetics rk;
+    resetKinetics::ResetKinetics reset;
 
     // Seed _angularMomentum the same way reset() does, so the routine
     // has well-defined input.
-    rk.setAngularMomentum(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    reset.setAngularMomentum(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
 
-    rk.resetAngularMomentum(*box);
+    reset.resetAngularMomentum(*box);
 
     for (const auto &atom : box->getAtoms())
     {
@@ -236,13 +235,13 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
 TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
 {
     auto                        *box = makeBox();
-    resetKinetics::ResetKinetics rk(0U, 0U, 0U, 0U, 0U, 0U, 1U);
+    resetKinetics::ResetKinetics reset(0U, 0U, 0U, 0U, 0U, 0U, 1U);
 
     // Seed atom forces with non-zero values.
     for (auto &atom : box->getAtoms())
         atom->setForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
 
-    rk.resetForces(0U, *box);
+    reset.resetForces(0U, *box);
 
     for (const auto &atom : box->getAtoms())
         for (size_t i = 0; i < 3; ++i)

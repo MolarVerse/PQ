@@ -29,7 +29,7 @@
 #include "berendsenManostat.hpp"                     // for BerendsenManostat
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "exceptions.hpp"                            // for ManostatException
-#include "gtest/gtest.h"           // for Message, TestPartResult
+// for Message, TestPartResult
 #include "manostatSettings.hpp"    // for ManostatType, Isotropy
 #include "mathUtilities.hpp"       // for compare
 #include "molecule.hpp"            // for Molecule
@@ -324,7 +324,8 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     const auto scaleFactors = linearAlgebra::Vec3D(
         ::pow(
-            1.0 - 4.5 * 0.5 / 0.1 * (1.0 - 3.0 * constants::PRESSURE_FACTOR),
+            1.0 -
+                (4.5 * 0.5 / 0.1 * (1.0 - (3.0 * constants::PRESSURE_FACTOR))),
             1.0 / 3.0
         )
     );
@@ -574,7 +575,7 @@ TEST_F(TestManostat, testRotateMu)
         {7.0, 8.0, 9.0},
     });
 
-    _manostat->rotateMu(mu);
+    manostat::Manostat::rotateMu(mu);
 
     EXPECT_EQ(
         mu,
@@ -590,29 +591,29 @@ TEST_F(TestManostat, testRotateMu)
 
 TEST_F(TestManostat, berendsenTauAndCompressibilityGetters)
 {
-    auto bm =
+    auto manostat =
         manostat::BerendsenManostat(1.0, 0.1, 4.5, settings::FixedAxis::NONE);
-    EXPECT_DOUBLE_EQ(bm.getTau(), 0.1);
-    EXPECT_DOUBLE_EQ(bm.getCompressibility(), 4.5);
+    EXPECT_DOUBLE_EQ(manostat.getTau(), 0.1);
+    EXPECT_DOUBLE_EQ(manostat.getCompressibility(), 4.5);
 }
 
 TEST_F(TestManostat, berendsenManostatType)
 {
-    auto bm =
+    auto manostat =
         manostat::BerendsenManostat(1.0, 0.1, 4.5, settings::FixedAxis::NONE);
-    EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
+    EXPECT_EQ(manostat.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
 TEST_F(TestManostat, berendsenIsotropy)
 {
-    auto bm =
+    auto manostat =
         manostat::BerendsenManostat(1.0, 0.1, 4.5, settings::FixedAxis::NONE);
-    EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::ISOTROPIC);
+    EXPECT_EQ(manostat.getIsotropy(), settings::Isotropy::ISOTROPIC);
 }
 
 TEST_F(TestManostat, semiIsotropicBerendsenIsotropy)
 {
-    auto bm = manostat::SemiIsotropicBerendsenManostat(
+    auto manostat = manostat::SemiIsotropicBerendsenManostat(
         1.0,
         0.1,
         4.5,
@@ -620,32 +621,32 @@ TEST_F(TestManostat, semiIsotropicBerendsenIsotropy)
         std::vector<size_t>{0U, 1U},
         settings::FixedAxis::NONE
     );
-    EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::SEMI_ISOTROPIC);
-    EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
+    EXPECT_EQ(manostat.getIsotropy(), settings::Isotropy::SEMI_ISOTROPIC);
+    EXPECT_EQ(manostat.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
 TEST_F(TestManostat, anisotropicBerendsenIsotropy)
 {
-    auto bm = manostat::AnisotropicBerendsenManostat(
+    auto manostat = manostat::AnisotropicBerendsenManostat(
         1.0,
         0.1,
         4.5,
         settings::FixedAxis::NONE
     );
-    EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::ANISOTROPIC);
-    EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
+    EXPECT_EQ(manostat.getIsotropy(), settings::Isotropy::ANISOTROPIC);
+    EXPECT_EQ(manostat.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
 TEST_F(TestManostat, fullAnisotropicBerendsenIsotropy)
 {
-    auto bm = manostat::FullAnisotropicBerendsenManostat(
+    auto manostat = manostat::FullAnisotropicBerendsenManostat(
         1.0,
         0.1,
         4.5,
         settings::FixedAxis::NONE
     );
-    EXPECT_EQ(bm.getIsotropy(), settings::Isotropy::FULL_ANISOTROPIC);
-    EXPECT_EQ(bm.getManostatType(), settings::ManostatType::BERENDSEN);
+    EXPECT_EQ(manostat.getIsotropy(), settings::Isotropy::FULL_ANISOTROPIC);
+    EXPECT_EQ(manostat.getManostatType(), settings::ManostatType::BERENDSEN);
 }
 
 TEST_F(TestManostat, berendsenFixedAxesMu)
@@ -654,12 +655,13 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
 
     // 1 fixed axis: X
     {
-        auto bm =
+        auto manostat =
             TestableBerendsenManostat(1.0, 0.5, 0.2, settings::FixedAxis::X);
-        bm.setPressureTensor(diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
         );
 
-        const auto mu = bm.calculateMu();
+        const auto mu = manostat.calculateMu();
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], ::sqrt(1.5));
         EXPECT_DOUBLE_EQ(mu[2][2], ::sqrt(1.5));
@@ -667,12 +669,13 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
 
     // 2 fixed axes: XY
     {
-        auto bm =
+        auto manostat =
             TestableBerendsenManostat(1.0, 0.5, 0.2, settings::FixedAxis::XY);
-        bm.setPressureTensor(diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
         );
 
-        const auto mu = bm.calculateMu();
+        const auto mu = manostat.calculateMu();
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
         EXPECT_DOUBLE_EQ(mu[2][2], 1.6);
@@ -680,12 +683,13 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
 
     // All fixed axes
     {
-        auto bm =
+        auto manostat =
             TestableBerendsenManostat(1.0, 0.5, 0.2, settings::FixedAxis::ALL);
-        bm.setPressureTensor(diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
         );
 
-        const auto mu = bm.calculateMu();
+        const auto mu = manostat.calculateMu();
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
         EXPECT_DOUBLE_EQ(mu[2][2], 1.0);
@@ -696,15 +700,17 @@ TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
 {
     settings::TimingsSettings::setTimeStep(0.5);
 
-    auto bm = TestableAnisotropicBerendsenManostat(
+    auto manostat = TestableAnisotropicBerendsenManostat(
         1.0,
         0.5,
         0.2,
         settings::FixedAxis::XZ
     );
-    bm.setPressureTensor(diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0)));
+    manostat.setPressureTensor(
+        diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
+    );
 
-    const auto mu = bm.calculateMu();
+    const auto mu = manostat.calculateMu();
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
     EXPECT_DOUBLE_EQ(mu[1][1], 1.4);
     EXPECT_DOUBLE_EQ(mu[2][2], 1.0);
@@ -714,7 +720,7 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
 {
     settings::TimingsSettings::setTimeStep(0.5);
 
-    auto bm = TestableFullAnisotropicBerendsenManostat(
+    auto manostat = TestableFullAnisotropicBerendsenManostat(
         1.0,
         0.5,
         0.2,
@@ -723,9 +729,9 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
     const auto pTensor = linearAlgebra::tensor3D(
         {{2.0, 0.5, 0.1}, {0.5, 3.0, 0.2}, {0.1, 0.2, 4.0}}
     );
-    bm.setPressureTensor(pTensor);
+    manostat.setPressureTensor(pTensor);
 
-    const auto mu = bm.calculateMu();
+    const auto mu = manostat.calculateMu();
     // Y row and column should be zeroed except diagonal which is 1.0
     EXPECT_DOUBLE_EQ(mu[1][0], 0.0);
     EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
@@ -851,7 +857,7 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
     settings::TimingsSettings::setTimeStep(0.5);
 
     // xy isotropic (axes 0, 1), z anisotropic (axis 2) with Z fixed
-    auto bm = TestableSemiIsotropicBerendsenManostat(
+    auto manostat = TestableSemiIsotropicBerendsenManostat(
         1.0,
         0.5,
         0.2,
@@ -859,9 +865,11 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
         std::vector<size_t>{0U, 1U},
         settings::FixedAxis::Z
     );
-    bm.setPressureTensor(diagonalMatrix(linearAlgebra::Vec3D(2.0, 4.0, 5.0)));
+    manostat.setPressureTensor(
+        diagonalMatrix(linearAlgebra::Vec3D(2.0, 4.0, 5.0))
+    );
 
-    const auto mu = bm.calculateMu();
+    const auto mu = manostat.calculateMu();
     // xy avg = 3.0, mu_xy = sqrt(1 - 0.2 * 0.5 / 0.5 * (1.0 - 3.0)) = sqrt(1.4)
     EXPECT_DOUBLE_EQ(mu[0][0], ::sqrt(1.4));
     EXPECT_DOUBLE_EQ(mu[1][1], ::sqrt(1.4));

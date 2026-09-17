@@ -24,7 +24,6 @@
 
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
-#include "gtest/gtest.h"
 #include "physicalData.hpp"
 #include "vector3d.hpp"
 
@@ -333,9 +332,9 @@ TEST_F(TestPhysicalData, addRingPolymerEnergyAccumulates)
 
 TEST_F(TestPhysicalData, addVirialAccumulates)
 {
-    const auto v0 = diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    const auto v1 = diagonalMatrix(linearAlgebra::Vec3D(0.5, 0.5, 0.5));
-    _physicalData->setVirial(v0);
-    _physicalData->addVirial(v1);
-    EXPECT_EQ(_physicalData->getVirial(), v0 + v1);
+    const auto virial0 = diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    const auto virial1 = diagonalMatrix(linearAlgebra::Vec3D(0.5, 0.5, 0.5));
+    _physicalData->setVirial(virial0);
+    _physicalData->addVirial(virial1);
+    EXPECT_EQ(_physicalData->getVirial(), virial0 + virial1);
 }

@@ -79,9 +79,9 @@ namespace stl
      * @return T dot product of a and b
      */
     template <typename T>
-    T dot(const std::vector<T> &a, const std::vector<T> &b)
+    T dot(const std::vector<T> &lhs, const std::vector<T> &rhs)
     {
-        return std::inner_product(a.begin(), a.end(), b.begin(), T());
+        return std::inner_product(lhs.begin(), lhs.end(), rhs.begin(), T());
     }
 
     /**
@@ -92,9 +92,9 @@ namespace stl
      * @return T root mean square of a
      */
     template <typename T>
-    T rms(const std::vector<T> &a)
+    T rms(const std::vector<T> &vec)
     {
-        return std::sqrt(dot(a, a) / a.size());
+        return std::sqrt(dot(vec, vec) / vec.size());
     }
 
 }   // namespace stl

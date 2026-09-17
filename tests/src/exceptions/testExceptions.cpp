@@ -26,7 +26,6 @@
 #include <string_view>   // for string_view
 
 #include "exceptions.hpp"         // for GuffDatException, InputFileException
-#include "gtest/gtest.h"          // for Message, TestPartResult
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 /**

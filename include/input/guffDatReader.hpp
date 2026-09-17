@@ -30,6 +30,7 @@
 #include <vector>        // for vector
 
 #include "defaults.hpp"   // for _GUFF_FILENAME_DEFAULT_
+#include "strongTypes.hpp"
 
 namespace engine
 {
@@ -69,50 +70,47 @@ namespace input::guffdat
         void calculatePartialCharges();
         void checkPartialCharges();
         void checkNecessaryGuffPairs();
-        bool bothMoltypesAreWaterType(
-            const size_t molType1,
-            const size_t molType2
-        );
+        bool bothMoltypesAreWaterType(MolType molType1, MolType molType2);
         void addNonCoulombPair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
+            MolType                    molType1,
+            MolType                    molType2,
+            AtomType                   atomType1,
+            AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            const double               rncCutOff
+            double                     rncCutOff
         );
         void addLennardJonesPair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
+            MolType                    molType1,
+            MolType                    molType2,
+            AtomType                   atomType1,
+            AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            const double               rncCutOff
+            double                     rncCutOff
         );
         void addBuckinghamPair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
+            MolType                    molType1,
+            MolType                    molType2,
+            AtomType                   atomType1,
+            AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            const double               rncCutOff
+            double                     rncCutOff
         );
         void addMorsePair(
-            const size_t               molType1,
-            const size_t               molType2,
-            const size_t               atomType1,
-            const size_t               atomType2,
+            MolType                    molType1,
+            MolType                    molType2,
+            AtomType                   atomType1,
+            AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            const double               rncCutOff
+            double                     rncCutOff
         );
         void addGuffPair(
-            const size_t molType1,
-            const size_t molType2,
-            const size_t atomType1,
-            const size_t atomType2,
+            MolType  molType1,
+            MolType  molType2,
+            AtomType atomType1,
+            AtomType atomType2,
             const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>
-                        &coefficients,
-            const double rncCutOff
+                  &coefficients,
+            double rncCutOff
         );
 
         /********************
@@ -121,18 +119,18 @@ namespace input::guffdat
 
         void setFilename(const std::string_view &filename);
         void setGuffCoulombCoefficients(
-            const size_t molType1,
-            const size_t molType2,
-            const size_t atomType1,
-            const size_t atomType2,
-            const double coefficient
+            MolType  molType1,
+            MolType  molType2,
+            AtomType atomType1,
+            AtomType atomType2,
+            double   coefficient
         );
         void setIsGuffPairSet(
-            const size_t molType1,
-            const size_t molType2,
-            const size_t atomType1,
-            const size_t atomType2,
-            const bool   isSet
+            MolType  molType1,
+            MolType  molType2,
+            AtomType atomType1,
+            AtomType atomType2,
+            bool     isSet
         );
 
         /********************

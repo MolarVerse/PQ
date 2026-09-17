@@ -26,7 +26,6 @@
 #include <vector>   // for vector
 
 #include "exceptions.hpp"   // for InputFileException, customException
-#include "gtest/gtest.h"    // for Message, TestPartResult
 #include "integratorInputParser.hpp"
 #include "mdEngine.hpp"              // for Engine
 #include "testInputFileReader.hpp"   // for TestInputFileReader
@@ -44,7 +43,7 @@ TEST_F(TestInputFileReader, testParseIntegrator)
 {
     IntegratorInputParser    parser;
     std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
-    parser.parseIntegrator(lineElements, 0);
+    input::IntegratorInputParser::parseIntegrator(lineElements, 0);
     EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
 
     lineElements = {"integrator", "=", "notValid"};

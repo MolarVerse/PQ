@@ -23,27 +23,15 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 #include <thread>
 
 #include "globalTimer.hpp"
+#include "testOutputBase.hpp"
 #include "timingsOutput.hpp"
 
 using namespace out;
 using namespace timings;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
 
 TEST(TestTimingsOutput, writeProducesHeaderAndTotalRow)
 {

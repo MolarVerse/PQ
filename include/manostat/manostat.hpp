@@ -53,7 +53,7 @@ namespace manostat
         double _targetPressure;   // no default value, must be set
 
        public:
-        explicit Manostat(const double targetPressure);
+        explicit Manostat(double targetPressure);
         Manostat()          = default;
         virtual ~Manostat() = default;
 
@@ -67,7 +67,7 @@ namespace manostat
             physicalData::PhysicalData &
         );
 
-        void rotateMu(linearAlgebra::tensor3D &mu) const;
+        static void rotateMu(linearAlgebra::tensor3D &mu);
 
         [[nodiscard]] virtual settings::ManostatType getManostatType() const;
         [[nodiscard]] virtual settings::Isotropy     getIsotropy() const;

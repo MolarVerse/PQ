@@ -107,7 +107,7 @@ ManostatInputParser::ManostatInputParser()
  */
 void ManostatInputParser::parseManostat(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -154,7 +154,7 @@ void ManostatInputParser::parseManostat(
  */
 void ManostatInputParser::parsePressure(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -175,7 +175,7 @@ void ManostatInputParser::parsePressure(
  */
 void ManostatInputParser::parseManostatRelaxationTime(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -209,7 +209,7 @@ void ManostatInputParser::parseManostatRelaxationTime(
  */
 void ManostatInputParser::parseCompressibility(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -238,7 +238,7 @@ void ManostatInputParser::parseCompressibility(
  */
 void ManostatInputParser::parseIsotropy(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

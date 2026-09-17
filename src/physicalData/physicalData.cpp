@@ -365,20 +365,20 @@ void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
 /**
  * @brief calculate the mean of a vector of physicalData
  *
- * @param dataVec - vector of physicalData
+ * @param physicalDataVector - vector of physicalData
  * @return PhysicalData
  */
-PhysicalData physicalData::mean(std::vector<PhysicalData>& dataVec)
+PhysicalData physicalData::mean(std::vector<PhysicalData>& physicalDataVector)
 {
     PhysicalData meanData;
 
     std::ranges::for_each(
-        dataVec,
+        physicalDataVector,
         [&meanData](auto& physicalData)
         { meanData.updateAverages(physicalData); }
     );
 
-    meanData.makeAverages(static_cast<double>(dataVec.size()));
+    meanData.makeAverages(static_cast<double>(physicalDataVector.size()));
 
     return meanData;
 }

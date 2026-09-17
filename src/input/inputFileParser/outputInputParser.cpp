@@ -218,7 +218,7 @@ OutputInputParser::OutputInputParser()
  */
 void OutputInputParser::parseOutputFreq(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -248,7 +248,7 @@ void OutputInputParser::parseOutputFreq(
  */
 void OutputInputParser::parseFilePrefix(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -264,7 +264,7 @@ void OutputInputParser::parseFilePrefix(
  */
 void OutputInputParser::parseLogFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -280,7 +280,7 @@ void OutputInputParser::parseLogFilename(
  */
 void OutputInputParser::parseRefFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -296,7 +296,7 @@ void OutputInputParser::parseRefFilename(
  */
 void OutputInputParser::parseInfoFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -312,7 +312,7 @@ void OutputInputParser::parseInfoFilename(
  */
 void OutputInputParser::parseEnergyFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -328,7 +328,7 @@ void OutputInputParser::parseEnergyFilename(
  */
 void OutputInputParser::parseInstantEnergyFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -344,7 +344,7 @@ void OutputInputParser::parseInstantEnergyFilename(
  */
 void OutputInputParser::parseTrajectoryFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -360,7 +360,7 @@ void OutputInputParser::parseTrajectoryFilename(
  */
 void OutputInputParser::parseHybridCenterFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -376,7 +376,7 @@ void OutputInputParser::parseHybridCenterFilename(
  */
 void OutputInputParser::parseVelocityFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -392,7 +392,7 @@ void OutputInputParser::parseVelocityFilename(
  */
 void OutputInputParser::parseForceFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -408,7 +408,7 @@ void OutputInputParser::parseForceFilename(
  */
 void OutputInputParser::parseRestartFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -424,7 +424,7 @@ void OutputInputParser::parseRestartFilename(
  */
 void OutputInputParser::parseChargeFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -440,7 +440,7 @@ void OutputInputParser::parseChargeFilename(
  */
 void OutputInputParser::parseMomentumFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -456,7 +456,7 @@ void OutputInputParser::parseMomentumFilename(
  */
 void OutputInputParser::parseVirialFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -472,7 +472,7 @@ void OutputInputParser::parseVirialFilename(
  */
 void OutputInputParser::parseStressFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -488,7 +488,7 @@ void OutputInputParser::parseStressFilename(
  */
 void OutputInputParser::parseBoxFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -504,7 +504,7 @@ void OutputInputParser::parseBoxFilename(
  */
 void OutputInputParser::parseTimingsFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -520,7 +520,7 @@ void OutputInputParser::parseTimingsFilename(
  */
 void OutputInputParser::parseOptFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -536,7 +536,7 @@ void OutputInputParser::parseOptFilename(
  */
 void OutputInputParser::parseRPMDRestartFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -552,7 +552,7 @@ void OutputInputParser::parseRPMDRestartFilename(
  */
 void OutputInputParser::parseRPMDTrajectoryFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -568,7 +568,7 @@ void OutputInputParser::parseRPMDTrajectoryFilename(
  */
 void OutputInputParser::parseRPMDVelocityFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -584,7 +584,7 @@ void OutputInputParser::parseRPMDVelocityFilename(
  */
 void OutputInputParser::parseRPMDForceFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -600,7 +600,7 @@ void OutputInputParser::parseRPMDForceFilename(
  */
 void OutputInputParser::parseRPMDChargeFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -616,7 +616,7 @@ void OutputInputParser::parseRPMDChargeFilename(
  */
 void OutputInputParser::parseRPMDEnergyFilename(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -631,7 +631,7 @@ void OutputInputParser::parseRPMDEnergyFilename(
  */
 void OutputInputParser::parseOverwriteOutput(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -647,7 +647,7 @@ void OutputInputParser::parseOverwriteOutput(
  */
 void OutputInputParser::parseIncludeOutputMetadata(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

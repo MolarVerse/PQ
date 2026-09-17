@@ -41,8 +41,7 @@ namespace linearAlgebra
      * @param cols
      */
     template <typename T>
-    Matrix<T>::Matrix(const size_t rows, const size_t cols)
-        : _rows(rows), _cols(cols)
+    Matrix<T>::Matrix(size_t rows, size_t cols) : _rows(rows), _cols(cols)
     {
         _data.resize(rows, cols);
     }
@@ -54,7 +53,7 @@ namespace linearAlgebra
      * @param rowsAndCols
      */
     template <typename T>
-    Matrix<T>::Matrix(const size_t rowsAndCols)
+    Matrix<T>::Matrix(size_t rowsAndCols)
         : _rows(rowsAndCols), _cols(rowsAndCols)
     {
         _data.resize(rowsAndCols, rowsAndCols);
@@ -77,11 +76,11 @@ namespace linearAlgebra
     /**
      * @brief index operator
      *
-     * @param const size_t index
+     * @param size_t index
      * @return std::vector<T> &
      */
     template <typename T>
-    T &Matrix<T>::operator()(const size_t index_i, const size_t index_j)
+    T &Matrix<T>::operator()(size_t index_i, size_t index_j)
     {
         return _data(index_i, index_j);
     }
@@ -89,11 +88,11 @@ namespace linearAlgebra
     /**
      * @brief index operator
      *
-     * @param const size_t index
+     * @param size_t index
      * @return std::vector<T> &
      */
     template <typename T>
-    std::vector<T> Matrix<T>::operator()(const size_t index)
+    std::vector<T> Matrix<T>::operator()(size_t index)
     {
         std::vector<T> row;
 
@@ -133,10 +132,10 @@ namespace linearAlgebra
      *
      */
     template <typename T>
-    std::vector<T> Matrix<T>::solve(const std::vector<T> &b)
+    std::vector<T> Matrix<T>::solve(const std::vector<T> &rhs)
     {
-        Eigen::Matrix<T, Eigen::Dynamic, 1> bEigen(b.size());
-        std::ranges::copy(b, bEigen.data());
+        Eigen::Matrix<T, Eigen::Dynamic, 1> bEigen(rhs.size());
+        std::ranges::copy(rhs, bEigen.data());
 
         Eigen::MatrixXd              matrix = _data.transpose() * _data;
         Eigen::LDLT<Eigen::MatrixXd> ldlt(matrix);

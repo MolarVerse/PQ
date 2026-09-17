@@ -23,10 +23,7 @@ add_library(molsys
 target_include_directories(molsys
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/molsys
-    ${PROJECT_SOURCE_DIR}/include/config
     ${PROJECT_SOURCE_DIR}/include/views
-    PRIVATE
-    ${PROJECT_SOURCE_DIR}/include/utilities
 )
 
 target_link_libraries(molsys
@@ -37,6 +34,8 @@ target_link_libraries(molsys
     settings
     timings
     randomNumberGenerator
+    config_headers
+    utilities
 )
 
 install(TARGETS molsys

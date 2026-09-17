@@ -7,3 +7,4 @@
 - add most important misc* clang-tidy warnings
 - add all important modernize clang-tidy warnings
 - fix all bugprone-easily-swappable-parameters in `apps/` directory
+- fix all straight forward fixable issues with clang-tidy warnings

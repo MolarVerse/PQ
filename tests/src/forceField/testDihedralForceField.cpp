@@ -20,6 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gmock/gmock.h>   // for DoubleNear, ElementsAre
 #include <gtest/gtest.h>   // for EXPECT_NEAR, Test, InitGoogleTest, RUN_ALL_TESTS
 
 #include <cmath>    // for sqrt
@@ -30,8 +31,6 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "dihedralForceField.hpp"        // for BondForceField
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gmock/gmock.h"                 // for DoubleNear, ElementsAre
-#include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "matrix.hpp"                    // for Matrix
 #include "molecule.hpp"                  // for Molecule
@@ -70,7 +69,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 
     auto molecule = molsys::Molecule();
 
-    molecule.setMoltype(0);
+    molecule.setMoltype(MolType{0});
     molecule.setNumberOfAtoms(4);
 
     auto atom1 = std::make_shared<molsys::Atom>();
@@ -93,10 +92,10 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     atom3->setInternalGlobalVDWType(VdwType{0});
     atom4->setInternalGlobalVDWType(VdwType{1});
 
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
-    atom3->setAtomType(0);
-    atom4->setAtomType(1);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
+    atom3->setAtomType(AtomType{0});
+    atom4->setAtomType(AtomType{1});
 
     atom1->setPartialCharge(1.0);
     atom2->setPartialCharge(-0.5);
@@ -113,9 +112,13 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
-    bondForceField.setPhaseShift(180.0 * M_PI / 180.0);
-    bondForceField.setPeriodicity(3);
-    bondForceField.setForceConstant(3.0);
+    bondForceField.setParams(
+        DihedralParams{
+            .forceConstant = 3.0,
+            .frequency     = 3,
+            .phaseShift    = 180.0 * M_PI / 180.0
+        }
+    );
     bondForceField.setIsLinker(false);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);

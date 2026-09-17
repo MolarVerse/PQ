@@ -42,21 +42,21 @@ namespace QM
 
         explicit AseDftbRunner(
             const std::string                             &slakosPath,
-            const bool                                     thirdOrder,
+            bool                                           thirdOrder,
             const std::unordered_map<std::string, double> &hubbardDerivs,
-            const bool                                     dispersion
+            bool                                           dispersion
         );
 
         /***************************
          * standard getter methods *
          ***************************/
-        const std::unordered_map<std::string, double> getHubbDerivDict() const;
+        const std::unordered_map<std::string, double> &getHubbDerivDict() const;
 
         /***************************
          * standard setter methods *
          ***************************/
         void setHubbDerivDict(
-            const std::unordered_map<std::string, double> slakosDict
+            const std::unordered_map<std::string, double> &slakosDict
         );
 
        private:

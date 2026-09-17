@@ -33,7 +33,6 @@
 #include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for RstFileException, customException
 #include "gmock/gmock.h"      // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"      // for Message, TestPartResult
 #include "molecule.hpp"       // for Molecule
 #include "moleculeType.hpp"   // for MoleculeType
 #include "restartFileReader/atomSection.hpp"
@@ -90,7 +89,7 @@ TEST_F(TestAtomSection, moltypeNotFound)
     ASSERT_THROW_MSG(
         _section->process(line, *_engine),
         exc::RstFileException,
-        "Molecule type 1 not found"
+        "Molecule type MolType(1) not found"
     );
 }
 
@@ -103,12 +102,12 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
 
     std::string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
 
-    auto molecule = molsys::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
-    std::ifstream fp(filename);
-    _section->_fp = &fp;
+    std::ifstream file(filename);
+    _section->_fp = &file;
 
     ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 
@@ -131,12 +130,12 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     std::string filename =
         "data/atomSection/testNumberOfArgumentsWithinMolecule.rst";
 
-    auto molecule = molsys::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
-    std::ifstream fp(filename);
-    _section->_fp = &fp;
+    std::ifstream file(filename);
+    _section->_fp = &file;
 
     ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
 }
@@ -149,16 +148,16 @@ TEST_F(TestAtomSection, testProcess)
 
     std::string filename = "data/atomSection/testProcess.rst";
 
-    auto molecule = molsys::MoleculeType(1);
+    auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
     _engine->getSimulationBox().addMoleculeType(molecule);
 
-    auto molecule2 = molsys::MoleculeType(2);
+    auto molecule2 = molsys::MoleculeType(MolType{2});
     molecule2.setNumberOfAtoms(4);
     _engine->getSimulationBox().addMoleculeType(molecule2);
 
-    std::ifstream fp(filename);
-    _section->_fp = &fp;
+    std::ifstream file(filename);
+    _section->_fp = &file;
 
     _section->process(line, *_engine);
 
@@ -178,19 +177,28 @@ TEST_F(TestAtomSection, testProcess)
 
     EXPECT_EQ(_engine->getSimulationBox().getMolecules().size(), 3);
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[0].getMoltype(), 1);
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[0].getMoltype(),
+        MolType{1}
+    );
     EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[0].getNumberOfAtoms(),
         3
     );
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[1].getMoltype(), 2);
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[1].getMoltype(),
+        MolType{2}
+    );
     EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[1].getNumberOfAtoms(),
         4
     );
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules()[2].getMoltype(), 1);
+    EXPECT_EQ(
+        _engine->getSimulationBox().getMolecules()[2].getMoltype(),
+        MolType{1}
+    );
     EXPECT_EQ(
         _engine->getSimulationBox().getMolecules()[2].getNumberOfAtoms(),
         3
@@ -203,18 +211,17 @@ TEST_F(TestAtomSection, testProcess)
 
 TEST_F(TestAtomSection, testProcessAtomLine)
 {
-    molsys::Molecule molecule(1);
+    molsys::Molecule molecule{MolType{1}};
 
     auto line = std::vector<std::string>(21);
     line[0]   = "Ar";
     for (size_t i = 3; i < 21; ++i)
     {
-        const auto i2 = static_cast<double>(i);
-        line[i]       = std::to_string(i2 + i2 / 10.0);
+        const auto iValue = static_cast<double>(i);
+        line[i]           = std::to_string(iValue + (iValue / 10.0));
     }
 
-    dynamic_cast<AtomSection *>(_section)
-        ->processAtomLine(line, _engine->getSimulationBox(), molecule);
+    processAtomLine(line, _engine->getSimulationBox(), molecule);
 
     ASSERT_THAT(
         molecule.getAtomPosition(AtomIndex{0}),
@@ -238,14 +245,11 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
     line[0]   = "Ar";
     for (size_t i = 3; i < 21; ++i)
     {
-        const auto i2 = static_cast<double>(i);
-        line[i]       = std::to_string(i2 + i2 / 10.0);
+        const auto iValue = static_cast<double>(i);
+        line[i]           = std::to_string(iValue + (iValue / 10.0));
     }
 
-    dynamic_cast<AtomSection *>(_section)->processQMAtomLine(
-        line,
-        _engine->getSimulationBox()
-    );
+    processQMAtomLine(line, _engine->getSimulationBox());
 
     settings::Settings::setJobtype(settings::JobType::QM_MD);
     auto atoms      = _engine->getSimulationBox().getQMAtoms();

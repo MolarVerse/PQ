@@ -47,7 +47,7 @@ namespace engine
         );
         void addScaledCurrentForcesToInnerAndReset(
             std::vector<std::shared_ptr<molsys::Atom>>& atoms,
-            const double                                globalSmF
+            double                                      globalSmF
         );
 
         void addCurrentForcesToOuterAndReset(
@@ -55,18 +55,20 @@ namespace engine
         );
         void addScaledCurrentForcesToOuterAndReset(
             std::vector<std::shared_ptr<molsys::Atom>>& atoms,
-            const double                                globalSmF
+            double                                      globalSmF
         );
 
         void scaleSmoothingMoleculeForcesInner();
         void scaleSmoothingMoleculeForcesOuter();
 
-        [[nodiscard]] std::unordered_set<size_t> generateInactiveSmoothingMoleculeSet(
+        [[nodiscard]]
+        static std::unordered_set<size_t> generateInactiveSmoothingMoleculeSet(
             size_t bitPattern,
             size_t totalMolecules
-        ) const;
+        );
 
-        [[nodiscard]] double calculateGlobalSmoothingFactor(
+        [[nodiscard]]
+        double calculateGlobalSmoothingFactor(
             const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
         ) const;
 

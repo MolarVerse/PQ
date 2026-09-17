@@ -26,7 +26,7 @@
 
 #include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
 #include "coulombWolf.hpp"                           // for CoulombWolf
-#include "gtest/gtest.h"   // for Message, TestPartResult
+// for Message, TestPartResult
 
 using namespace pot;
 
@@ -44,8 +44,8 @@ TEST(TestCoulombWolf, calculate)
     const auto constParam1     = ::erfc(kappa * rcCutoff) / rcCutoff;
     const auto constParam2     = 2.0 * kappa / ::sqrt(M_PI);
     const auto constParam3 =
-        constParam1 / rcCutoff +
-        constParam2 * ::exp(-kappa * kappa * rcCutoff * rcCutoff) / rcCutoff;
+        (constParam1 / rcCutoff) +
+        (constParam2 * ::exp(-kappa * kappa * rcCutoff * rcCutoff) / rcCutoff);
 
     auto distance = 2.0;
 

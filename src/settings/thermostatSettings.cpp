@@ -57,7 +57,7 @@ std::string settings::string(const ThermostatType &thermostatType)
  * @param chi
  * @return auto
  */
-auto ThermostatSettings::addChi(const size_t index, const double chi)
+auto ThermostatSettings::addChi(size_t index, double chi)
     -> decltype(_chi.try_emplace(index, chi))
 {
     return _chi.try_emplace(index, chi);
@@ -70,7 +70,7 @@ auto ThermostatSettings::addChi(const size_t index, const double chi)
  * @param zeta
  * @return auto
  */
-auto ThermostatSettings::addZeta(const size_t index, const double zeta)
+auto ThermostatSettings::addZeta(size_t index, double zeta)
     -> decltype(_zeta.try_emplace(index, zeta))
 {
     return _zeta.try_emplace(index, zeta);
@@ -92,7 +92,8 @@ void ThermostatSettings::setThermostatType(
 )
 {
     using enum ThermostatType;
-    const auto thermostatTypeToLower = toLowerAndReplaceDashesCopy(thermostatType);
+    const auto thermostatTypeToLower =
+        toLowerAndReplaceDashesCopy(thermostatType);
 
     if (thermostatTypeToLower == "berendsen")
         _thermostatType = BERENDSEN;
@@ -115,7 +116,7 @@ void ThermostatSettings::setThermostatType(
  *
  * @param thermostatType
  */
-void ThermostatSettings::setThermostatType(const ThermostatType &thermostatType)
+void ThermostatSettings::setThermostatType(ThermostatType thermostatType)
 {
     _thermostatType = thermostatType;
 }
@@ -125,7 +126,7 @@ void ThermostatSettings::setThermostatType(const ThermostatType &thermostatType)
  *
  * @param length
  */
-void ThermostatSettings::setNoseHooverChainLength(const size_t length)
+void ThermostatSettings::setNoseHooverChainLength(size_t length)
 {
     _nhChainLength = length;
 }
@@ -135,7 +136,7 @@ void ThermostatSettings::setNoseHooverChainLength(const size_t length)
  *
  * @param steps
  */
-void ThermostatSettings::setTemperatureRampSteps(const size_t steps)
+void ThermostatSettings::setTemperatureRampSteps(size_t steps)
 {
     _temperatureRampSteps = steps;
 }
@@ -145,7 +146,7 @@ void ThermostatSettings::setTemperatureRampSteps(const size_t steps)
  *
  * @param frequency
  */
-void ThermostatSettings::setTemperatureRampFrequency(const size_t frequency)
+void ThermostatSettings::setTemperatureRampFrequency(size_t frequency)
 {
     _temperatureRampFrequency = frequency;
 }
@@ -155,7 +156,7 @@ void ThermostatSettings::setTemperatureRampFrequency(const size_t frequency)
  *
  * @param temperatureSet
  */
-void ThermostatSettings::setTemperatureSet(const bool temperatureSet)
+void ThermostatSettings::setTemperatureSet(bool temperatureSet)
 {
     _isTemperatureSet = temperatureSet;
 }
@@ -165,7 +166,7 @@ void ThermostatSettings::setTemperatureSet(const bool temperatureSet)
  *
  * @param startTemperatureSet
  */
-void ThermostatSettings::setStartTemperatureSet(const bool startTemperatureSet)
+void ThermostatSettings::setStartTemperatureSet(bool startTemperatureSet)
 {
     _isStartTemperatureSet = startTemperatureSet;
 }
@@ -175,7 +176,7 @@ void ThermostatSettings::setStartTemperatureSet(const bool startTemperatureSet)
  *
  * @param endTemperatureSet
  */
-void ThermostatSettings::setEndTemperatureSet(const bool endTemperatureSet)
+void ThermostatSettings::setEndTemperatureSet(bool endTemperatureSet)
 {
     _isEndTemperatureSet = endTemperatureSet;
 }
@@ -185,7 +186,7 @@ void ThermostatSettings::setEndTemperatureSet(const bool endTemperatureSet)
  *
  * @param targetTemperature
  */
-void ThermostatSettings::setTargetTemperature(const double targetTemperature)
+void ThermostatSettings::setTargetTemperature(double targetTemperature)
 {
     _targetTemperature = targetTemperature;
     setTemperatureSet(true);
@@ -198,7 +199,7 @@ void ThermostatSettings::setTargetTemperature(const double targetTemperature)
  * @param actualTargetTemperature
  */
 void ThermostatSettings::setActualTargetTemperature(
-    const double actualTargetTemperature
+    double actualTargetTemperature
 )
 {
     _actualTargetTemperature = actualTargetTemperature;
@@ -209,7 +210,7 @@ void ThermostatSettings::setActualTargetTemperature(
  *
  * @param startTemperature
  */
-void ThermostatSettings::setStartTemperature(const double startTemperature)
+void ThermostatSettings::setStartTemperature(double startTemperature)
 {
     _startTemperature = startTemperature;
     setStartTemperatureSet(true);
@@ -220,7 +221,7 @@ void ThermostatSettings::setStartTemperature(const double startTemperature)
  *
  * @param endTemperature
  */
-void ThermostatSettings::setEndTemperature(const double endTemperature)
+void ThermostatSettings::setEndTemperature(double endTemperature)
 {
     _endTemperature = endTemperature;
     setEndTemperatureSet(true);
@@ -231,7 +232,7 @@ void ThermostatSettings::setEndTemperature(const double endTemperature)
  *
  * @param relaxationTime
  */
-void ThermostatSettings::setRelaxationTime(const double relaxationTime)
+void ThermostatSettings::setRelaxationTime(double relaxationTime)
 {
     _relaxationTime = relaxationTime;
 }
@@ -241,17 +242,14 @@ void ThermostatSettings::setRelaxationTime(const double relaxationTime)
  *
  * @param friction
  */
-void ThermostatSettings::setFriction(const double friction)
-{
-    _friction = friction;
-}
+void ThermostatSettings::setFriction(double friction) { _friction = friction; }
 
 /**
  * @brief set the nose hoover coupling frequency
  *
  * @param frequency
  */
-void ThermostatSettings::setNoseHooverCouplingFrequency(const double frequency)
+void ThermostatSettings::setNoseHooverCouplingFrequency(double frequency)
 {
     _nhCouplingFreq = frequency;
 }

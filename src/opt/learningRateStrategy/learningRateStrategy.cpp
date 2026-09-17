@@ -31,7 +31,7 @@ using namespace opt;
  *
  * @param initialLearningRate
  */
-LearningRateStrategy::LearningRateStrategy(const double initialLearningRate)
+LearningRateStrategy::LearningRateStrategy(double initialLearningRate)
     : _initialLearningRate(initialLearningRate),
       _learningRate(initialLearningRate)
 {
@@ -44,8 +44,8 @@ LearningRateStrategy::LearningRateStrategy(const double initialLearningRate)
  * @param frequency
  */
 LearningRateStrategy::LearningRateStrategy(
-    const double initialLearningRate,
-    const size_t frequency
+    double initialLearningRate,
+    size_t frequency
 )
     : _frequency(frequency),
       _initialLearningRate(initialLearningRate),
@@ -135,7 +135,7 @@ std::vector<std::string> LearningRateStrategy::getErrorMessages() const
  *
  */
 void LearningRateStrategy::setEvaluator(
-    const std::shared_ptr<Evaluator> evaluator
+    const std::shared_ptr<Evaluator>& evaluator
 )
 {
     _evaluator = evaluator;
@@ -147,7 +147,7 @@ void LearningRateStrategy::setEvaluator(
  * @param optimizer - std::shared_ptr<Optimizer>
  */
 void LearningRateStrategy::setOptimizer(
-    const std::shared_ptr<Optimizer> optimizer
+    const std::shared_ptr<Optimizer>& optimizer
 )
 {
     _optimizer = optimizer;
@@ -158,7 +158,7 @@ void LearningRateStrategy::setOptimizer(
  *
  * @param minLearningRate - double
  */
-void LearningRateStrategy::setMinLearningRate(const double minLearningRate)
+void LearningRateStrategy::setMinLearningRate(double minLearningRate)
 {
     _minLearningRate = minLearningRate;
 }
@@ -169,7 +169,7 @@ void LearningRateStrategy::setMinLearningRate(const double minLearningRate)
  * @param maxLearningRate - std::optional<double>
  */
 void LearningRateStrategy::setMaxLearningRate(
-    const std::optional<double> maxLearningRate
+    std::optional<double> maxLearningRate
 )
 {
     _maxLearningRate = maxLearningRate;

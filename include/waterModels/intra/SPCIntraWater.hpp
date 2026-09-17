@@ -44,7 +44,7 @@ namespace waterModel
        public:
         void calculate(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            physicalData::PhysicalData &physicalData
         ) final;
 
         // clang-format off

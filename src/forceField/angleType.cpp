@@ -22,68 +22,50 @@
 
 #include "angleType.hpp"
 
-#include "mathUtilities.hpp"
-
-using namespace forceField;
-using namespace utilities;
-
-/**
- * @brief Construct a new Angle Type:: Angle Type object
- *
- * @param id
- * @param equilibriumAngle
- * @param springConstant
- */
-AngleType::AngleType(
-    const AngleId id,
-    const double  equilibriumAngle,
-    const double  springConstant
-)
-    : _id(id),
-      _equilibriumAngle(equilibriumAngle),
-      _forceConstant(springConstant)
+namespace forceField
 {
-}
 
-/**
- * @brief operator overload for the comparison of two AngleType objects
- *
- * @param other
- * @return true
- * @return false
- */
-bool forceField::operator==(const AngleType &self, const AngleType &other)
-{
-    auto isEq = self._id == other._id;
-    isEq = isEq && compare(self._equilibriumAngle, other._equilibriumAngle);
-    isEq = isEq && compare(self._forceConstant, other._forceConstant);
+    /**
+     * @brief Construct a new Angle Type:: Angle Type object
+     *
+     * @param id
+     * @param params
+     */
+    AngleType::AngleType(const AngleId id, const AngleParams &params)
+        : _id(id), _params(params)
+    {
+    }
 
-    return isEq;
-}
+    /**
+     * @brief operator overload for the comparison of two AngleType objects
+     *
+     * @param other
+     * @return true
+     * @return false
+     */
+    bool operator==(const AngleType &self, const AngleType &other)
+    {
+        return self._id == other._id && self._params == other._params;
+    }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the id of the angle type
- *
- * @return AngleId
- */
-AngleId AngleType::getId() const { return _id; }
+    /**
+     * @brief get the id of the angle type
+     *
+     * @return AngleId
+     */
+    AngleId AngleType::getId() const { return _id; }
 
-/**
- * @brief get the equilibrium angle of the angle type
- *
- * @return double
- */
-double AngleType::getEquilibriumAngle() const { return _equilibriumAngle; }
+    /**
+     * @brief get the parameters of the angle type
+     *
+     * @return const AngleParams&
+     */
+    const AngleParams &AngleType::getParams() const { return _params; }
 
-/**
- * @brief get the force constant of the angle type
- *
- * @return double
- */
-double AngleType::getForceConstant() const { return _forceConstant; }
+}   // namespace forceField

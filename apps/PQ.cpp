@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 
     try
     {
-        driver::Driver().run(commandLineArgs.getInputFileName());
+        driver::Driver::run(commandLineArgs.getInputFileName());
     }
     catch (const exc::PQException &e)
     {

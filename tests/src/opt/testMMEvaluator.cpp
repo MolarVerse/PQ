@@ -56,21 +56,21 @@ namespace
         auto mol = Molecule();
         mol.setNumberOfAtoms(2);
 
-        auto a1 = std::make_shared<Atom>();
-        auto a2 = std::make_shared<Atom>();
-        a1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        a2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        a1->setForce(linearAlgebra::Vec3D(0.5, 0.0, 0.0));
-        a2->setForce(linearAlgebra::Vec3D(0.0, 0.5, 0.0));
-        a1->setMass(1.0);
-        a2->setMass(1.0);
+        auto atom1 = std::make_shared<Atom>();
+        auto atom2 = std::make_shared<Atom>();
+        atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom1->setForce(linearAlgebra::Vec3D(0.5, 0.0, 0.0));
+        atom2->setForce(linearAlgebra::Vec3D(0.0, 0.5, 0.0));
+        atom1->setMass(1.0);
+        atom2->setMass(1.0);
 
-        mol.addAtom(a1);
-        mol.addAtom(a2);
+        mol.addAtom(atom1);
+        mol.addAtom(atom2);
 
         box->addMolecule(mol);
-        box->addAtom(a1);
-        box->addAtom(a2);
+        box->addAtom(atom1);
+        box->addAtom(atom2);
 
         eval.setSimulationBox(box);
         eval.setCellList(std::make_shared<CellList>());
@@ -125,14 +125,14 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     auto mol = Molecule();
     mol.setNumberOfAtoms(1);
 
-    auto a = std::make_shared<Atom>();
-    a->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-    a->setForce(linearAlgebra::Vec3D(7.0, 7.0, 7.0));
-    a->setMass(1.0);
-    mol.addAtom(a);
+    auto atom = std::make_shared<Atom>();
+    atom->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    atom->setForce(linearAlgebra::Vec3D(7.0, 7.0, 7.0));
+    atom->setMass(1.0);
+    mol.addAtom(atom);
 
     box->addMolecule(mol);
-    box->addAtom(a);
+    box->addAtom(atom);
 
     MMEvaluator eval2;
     eval2.setSimulationBox(box);

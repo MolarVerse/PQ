@@ -25,7 +25,7 @@
 #include "exceptions.hpp"           // for InputFileException, TopologyException
 #include "fileSettings.hpp"         // for FileSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
+// for AssertionResult, Message, TestPartResult
 #include "topologyReader.hpp"   // for TopologyReader
 
 using namespace input::topology;

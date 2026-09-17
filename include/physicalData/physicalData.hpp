@@ -117,12 +117,12 @@ namespace physicalData
 
         void copy(const PhysicalData&);
         void updateAverages(const PhysicalData&);
-        void makeAverages(const double);
+        void makeAverages(double);
         void reset();
         void resetEnergies();
 
-        void addIntraCoulombEnergy(const double intraCoulombEnergy);
-        void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
+        void addIntraCoulombEnergy(double intraCoulombEnergy);
+        void addIntraNonCoulombEnergy(double intraNonCoulombEnergy);
 
         [[nodiscard]] double getTotalEnergy() const;
 
@@ -131,63 +131,63 @@ namespace physicalData
          *************************/
 
         void addVirial(const linearAlgebra::tensor3D& virial);
-        void addQMEnergy(const double qmEnergy);
-        void addCoulombEnergy(const double coulombEnergy);
-        void addNonCoulombEnergy(const double nonCoulombEnergy);
+        void addQMEnergy(double qmEnergy);
+        void addCoulombEnergy(double coulombEnergy);
+        void addNonCoulombEnergy(double nonCoulombEnergy);
 
-        void addBondEnergy(const double bondEnergy);
-        void addAngleEnergy(const double angleEnergy);
-        void addDihedralEnergy(const double dihedralEnergy);
-        void addImproperEnergy(const double improperEnergy);
+        void addBondEnergy(double bondEnergy);
+        void addAngleEnergy(double angleEnergy);
+        void addDihedralEnergy(double dihedralEnergy);
+        void addImproperEnergy(double improperEnergy);
 
-        void addRingPolymerEnergy(const double ringPolymerEnergy);
+        void addRingPolymerEnergy(double ringPolymerEnergy);
 
         /********************
          * standard setters *
          ********************/
 
-        void setNumberOfQMAtoms(const double nQMAtoms);
-        void setLoopTime(const double loopTime);
+        void setNumberOfQMAtoms(double nQMAtoms);
+        void setLoopTime(double loopTime);
 
-        void setVolume(const double volume);
-        void setDensity(const double density);
-        void setTemperature(const double temperature);
-        void setPressure(const double pressure);
+        void setVolume(double volume);
+        void setDensity(double density);
+        void setTemperature(double temperature);
+        void setPressure(double pressure);
         void setCoupledPressure(double coupledPressure);
 
         void setVirial(const linearAlgebra::tensor3D& virial);
         void setStressTensor(const linearAlgebra::tensor3D& stressTensor);
 
-        void setMomentum(const linearAlgebra::Vec3D& vec);
-        void setAngularMomentum(const linearAlgebra::Vec3D& vec);
+        void setMomentum(const linearAlgebra::Vec3D& momentum);
+        void setAngularMomentum(const linearAlgebra::Vec3D& angularMomentum);
 
-        void setKineticEnergy(const double kineticEnergy);
+        void setKineticEnergy(double kineticEnergy);
         void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D& vec);
         void setKineticEnergyMolecularVector(
             const linearAlgebra::tensor3D& vec
         );
 
-        void setCoulombEnergy(const double coulombEnergy);
-        void setNonCoulombEnergy(const double nonCoulombEnergy);
-        void setIntraCoulombEnergy(const double intraCoulombEnergy);
-        void setIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
+        void setCoulombEnergy(double coulombEnergy);
+        void setNonCoulombEnergy(double nonCoulombEnergy);
+        void setIntraCoulombEnergy(double intraCoulombEnergy);
+        void setIntraNonCoulombEnergy(double intraNonCoulombEnergy);
 
-        void setBondEnergy(const double bondEnergy);
-        void setAngleEnergy(const double angleEnergy);
-        void setDihedralEnergy(const double dihedralEnergy);
-        void setImproperEnergy(const double improperEnergy);
+        void setBondEnergy(double bondEnergy);
+        void setAngleEnergy(double angleEnergy);
+        void setDihedralEnergy(double dihedralEnergy);
+        void setImproperEnergy(double improperEnergy);
 
-        void setQMEnergy(const double qmEnergy);
+        void setQMEnergy(double qmEnergy);
 
-        void setNumberOfSmoothingMolecules(const double numberSmMol);
+        void setNumberOfSmoothingMolecules(double numberSmMol);
 
-        void setNoseHooverMomentumEnergy(const double momentumEnergy);
-        void setNoseHooverFrictionEnergy(const double frictionEnergy);
+        void setNoseHooverMomentumEnergy(double momentumEnergy);
+        void setNoseHooverFrictionEnergy(double frictionEnergy);
 
-        void setLowerDistanceConstraints(const double lowerDistanceConstraints);
-        void setUpperDistanceConstraints(const double upperDistanceConstraints);
+        void setLowerDistanceConstraints(double lowerDistanceConstraints);
+        void setUpperDistanceConstraints(double upperDistanceConstraints);
 
-        void setRingPolymerEnergy(const double ringPolymerEnergy);
+        void setRingPolymerEnergy(double ringPolymerEnergy);
 
         /********************
          * standard getters *

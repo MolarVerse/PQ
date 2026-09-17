@@ -26,26 +26,15 @@
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 
 #include "outputFileSettings.hpp"
 #include "referencesOutput.hpp"
+#include "testOutputBase.hpp"
 
 using references::ReferencesOutput;
 using namespace settings;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
 
 class ReferencesOutputTest : public ::testing::Test
 {

@@ -26,7 +26,6 @@
 #include <iosfwd>   // for stringstream
 #include <string>   // for allocator, string
 
-#include "gtest/gtest.h"        // for Message, TestPartResult
 #include "outputMessages.hpp"   // for _OUTPUT_
 #include "systemInfo.hpp"       // for _AUTHOR_, _EMAIL_
 
@@ -37,7 +36,7 @@
 TEST_F(TestStdoutOutput, writeHeader)
 {
     testing::internal::CaptureStdout();
-    _stdoutOutput->writeHeader();
+    out::StdoutOutput::writeHeader();
     std::string output = testing::internal::GetCapturedStdout();
 
     std::stringstream sstream(output);
@@ -129,7 +128,7 @@ TEST_F(TestStdoutOutput, writeHeader)
 TEST_F(TestStdoutOutput, writeEndedNormally)
 {
     testing::internal::CaptureStdout();
-    _stdoutOutput->writeEndedNormally(0.1);
+    out::StdoutOutput::writeEndedNormally(0.1);
     std::string output = testing::internal::GetCapturedStdout();
 
     std::stringstream sstream(output);
@@ -182,7 +181,7 @@ TEST_F(TestStdoutOutput, writeEndedNormally)
 TEST_F(TestStdoutOutput, writeDensityWarning)
 {
     testing::internal::CaptureStdout();
-    _stdoutOutput->writeDensityWarning();
+    out::StdoutOutput::writeDensityWarning();
     const std::string output = testing::internal::GetCapturedStdout();
 
     EXPECT_EQ(

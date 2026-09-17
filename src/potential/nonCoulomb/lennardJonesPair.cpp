@@ -35,10 +35,10 @@ using namespace pot;
  * @param params
  */
 LennardJonesPair::LennardJonesPair(
-    const ExtVdwType vanDerWaalsType1,
-    const ExtVdwType vanDerWaalsType2,
-    const double     cutOff,
-    const LJParams  &params
+    ExtVdwType      vanDerWaalsType1,
+    ExtVdwType      vanDerWaalsType2,
+    double          cutOff,
+    const LJParams &params
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
       _params(params)
@@ -52,7 +52,7 @@ LennardJonesPair::LennardJonesPair(
  * @param c6
  * @param c12
  */
-LennardJonesPair::LennardJonesPair(const double cutOff, const LJParams &params)
+LennardJonesPair::LennardJonesPair(double cutOff, const LJParams &params)
     : NonCoulombPair(cutOff), _params(params)
 {
 }
@@ -67,9 +67,9 @@ LennardJonesPair::LennardJonesPair(const double cutOff, const LJParams &params)
  * @param c12
  */
 LennardJonesPair::LennardJonesPair(
-    const double    cutOff,
-    const double    energyCutoff,
-    const double    forceCutoff,
+    double          cutOff,
+    double          energyCutoff,
+    double          forceCutoff,
     const LJParams &params
 )
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
@@ -85,7 +85,8 @@ LennardJonesPair::LennardJonesPair(
  */
 bool LennardJonesPair::operator==(const LennardJonesPair &other) const
 {
-    auto                                 isEqual = true;
+    auto isEqual = true;
+
     isEqual = isEqual && NonCoulombPair::operator==(other);
     isEqual = isEqual && _params == other._params;
 
@@ -98,9 +99,7 @@ bool LennardJonesPair::operator==(const LennardJonesPair &other) const
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> LennardJonesPair::calculate(
-    const double distance
-) const
+std::pair<double, double> LennardJonesPair::calculate(double distance) const
 {
     const auto distanceThird   = distance * distance * distance;
     const auto distanceSixth   = distanceThird * distanceThird;
@@ -111,11 +110,11 @@ std::pair<double, double> LennardJonesPair::calculate(
     energy      -= _energyCutOff;
     energy      -= _forceCutOff * (_radialCutOff - distance);
 
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     auto force  = 12.0 * _params.c12 / (distanceTwelfth * distance);
     force      += 6.0 * _params.c6 / (distanceSixth * distance);
     force      -= _forceCutOff;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     return {energy, force};
 }

@@ -24,7 +24,6 @@
 
 #include <limits>   // for numeric_limits
 
-#include "gtest/gtest.h"       // for AssertionResult, Message, TestPartResult
 #include "mathUtilities.hpp"   // for compare, sign, utilities
 #include "vector3d.hpp"        // IWYU pragma: keep - for Vec3D
 
@@ -36,19 +35,21 @@ using namespace utilities;
  */
 TEST(TestMathUtilities, compare)
 {
-    const double a = 1.0;
-    EXPECT_TRUE(compare(a, a));
-    EXPECT_FALSE(compare(a, a + std::numeric_limits<double>::epsilon()));
+    const double value1 = 1.0;
+    EXPECT_TRUE(compare(value1, value1));
+    EXPECT_FALSE(
+        compare(value1, value1 + std::numeric_limits<double>::epsilon())
+    );
 
-    const auto &b = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
-    EXPECT_TRUE(compare(b, b));
+    const auto &value2 = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
+    EXPECT_TRUE(compare(value2, value2));
     EXPECT_FALSE(compare(
-        b,
-        b + linearAlgebra::Vec3D(
-                b[0],
-                b[1],
-                std::numeric_limits<double>::epsilon()
-            )
+        value2,
+        value2 + linearAlgebra::Vec3D(
+                     value2[0],
+                     value2[1],
+                     std::numeric_limits<double>::epsilon()
+                 )
     ));
 }
 
@@ -84,10 +85,10 @@ TEST(TestMathUtilities, compareWithTolerance)
  */
 TEST(TestMathUtilities, compareVec3DWithTolerance)
 {
-    const auto a = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
-    const auto b = linearAlgebra::Vec3D(1.0 + 1e-9, 2.0, 3.0 - 1e-9);
-    EXPECT_TRUE(compare(a, b, 1e-8));
-    EXPECT_FALSE(compare(a, b, 1e-10));
+    const auto vec1 = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
+    const auto vec2 = linearAlgebra::Vec3D(1.0 + 1e-9, 2.0, 3.0 - 1e-9);
+    EXPECT_TRUE(compare(vec1, vec2, 1e-8));
+    EXPECT_FALSE(compare(vec1, vec2, 1e-10));
 }
 
 /**

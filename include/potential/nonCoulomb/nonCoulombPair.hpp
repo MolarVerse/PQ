@@ -53,31 +53,26 @@ namespace pot
         double _forceCutOff  = 0.0;
 
        public:
-        explicit NonCoulombPair(
-            const ExtVdwType,
-            const ExtVdwType,
-            const double
-        );
-        explicit NonCoulombPair(const double);
-        explicit NonCoulombPair(const double, const double, const double);
+        explicit NonCoulombPair(ExtVdwType, ExtVdwType, double);
+        explicit NonCoulombPair(double);
+        explicit NonCoulombPair(double, double, double);
 
         virtual ~NonCoulombPair() = default;
 
         [[nodiscard]] bool operator==(const NonCoulombPair &other) const;
 
-        [[nodiscard]] virtual std::pair<double, double> calculate(
-            const double distance
-        ) const = 0;
+        [[nodiscard]]
+        virtual std::pair<double, double> calculate(double distance) const = 0;
 
         /********************
          * standard setters *
          ********************/
 
-        void setInternalType1(const VdwType internalType1);
-        void setInternalType2(const VdwType internalType2);
-        void setRadialCutOff(const double radialCutoff);
-        void setEnergyCutOff(const double energyCutoff);
-        void setForceCutOff(const double forceCutoff);
+        void setInternalType1(VdwType internalType1);
+        void setInternalType2(VdwType internalType2);
+        void setRadialCutOff(double radialCutoff);
+        void setEnergyCutOff(double energyCutoff);
+        void setForceCutOff(double forceCutoff);
 
         /********************
          * standard getters *

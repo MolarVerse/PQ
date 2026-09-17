@@ -37,7 +37,7 @@ namespace opt
     class ConstantLRStrategy : public LearningRateStrategy
     {
        public:
-        explicit ConstantLRStrategy(const double initialLearningRate);
+        explicit ConstantLRStrategy(double initialLearningRate);
 
         ConstantLRStrategy()           = default;
         ~ConstantLRStrategy() override = default;
@@ -46,9 +46,11 @@ namespace opt
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
         void updateLearningRate(
-            const size_t /*currentStep*/,
-            const size_t /*totalSteps*/
-        ) override;
+            size_t /*currentStep*/,
+            size_t /*totalSteps*/
+        ) override
+        {
+        }
     };
 
 }   // namespace opt

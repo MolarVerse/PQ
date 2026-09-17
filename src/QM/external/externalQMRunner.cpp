@@ -51,116 +51,6 @@ using namespace exc;
 using namespace settings;
 using namespace constants;
 
-std::string QM::bundledQMScriptPath(const std::string_view script)
-{
-    const auto installedPath =
-        utilities::installedDataPath(std::filesystem::path("scripts") / script);
-    if (std::filesystem::is_regular_file(installedPath))
-        return installedPath.string();
-
-    return (std::filesystem::path(SCRIPT_PATH_) / script).string();
-}
-
-/**
- * @brief run the qm engine
- *
- * @param simBox SimulationBox reference
- * @param physicalData PhysicalData reference
- * @param per periodicity of the system
- */
-void ExternalQMRunner::run(
-    SimulationBox &simBox,
-    PhysicalData  &physicalData,
-    Periodicity    per
-)
-{
-    if (per != XYZ && per != NON_PERIODIC)
-    {
-        throw QMRunnerException(
-            "External QM runners only available for non- and 3D-periodic "
-            "calculations."
-        );
-    }
-
-    _periodicity = per;
-
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
-        writeCoordsFile(simBox);
-    }
-
-    if (Settings::isHybridJobtype())
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
-        writePointChargeFile(simBox);
-    }
-
-    const auto resultFiles = std::array{
-        FileSettings::getQMForcesTempFileName(),
-        FileSettings::getQMChargesTempFileName(),
-        FileSettings::getStressTensorTempFileName()
-    };
-    for (const auto &file : resultFiles) std::filesystem::remove(file);
-
-    std::jthread timeoutThread{[this](const std::stop_token stopToken)
-                               { throwAfterTimeout(stopToken); }};
-
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
-        execute(simBox);
-    }
-
-    timeoutThread.request_stop();
-
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
-        readForceFile(simBox, physicalData);
-    }
-
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
-        readChargeFile(simBox);
-    }
-
-    if (per != NON_PERIODIC)
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
-        readStressTensor(simBox.getBox(), physicalData);
-    }
-}
-
-std::string ExternalQMRunner::resolveScriptPath(
-    const std::string_view script
-) const
-{
-    if (_scriptPath.empty())
-        return std::string(script);
-
-    if (_scriptPath == SCRIPT_PATH_)
-        return bundledQMScriptPath(script);
-
-    return _scriptPath + std::string(script);
-}
-
-void ExternalQMRunner::executeCommand(
-    const std::string_view command,
-    const std::string_view program
-) const
-{
-#if defined(_WIN32)
-    static_cast<void>(command);
-    throw QMRunnerException(
-        std::format("{} command execution is not supported on Windows", program)
-    );
-#else
-    const auto status = std::system(std::string(command).c_str());
-    if (status != EXIT_SUCCESS)
-        throw QMRunnerException(
-            std::format("{} command failed with status {}", program, status)
-        );
-#endif
-}
-
 /**
  * @brief reads the force file (including qm energy) and sets the forces of
  * the atoms
@@ -172,7 +62,7 @@ void ExternalQMRunner::executeCommand(
  *  - if the force file cannot be opened
  *  - if the force file is empty
  */
-void ExternalQMRunner::readForceFile(
+void ExternalQMRunner::_readForceFile(
     SimulationBox &box,
     PhysicalData  &physicalData
 )
@@ -250,7 +140,8 @@ void ExternalQMRunner::readForceFile(
             {
                 throw QMRunnerException(
                     std::format(
-                        "Invalid QM force component (NaN/Inf) in {} force file "
+                        "Invalid QM force component (NaN/Inf) in {} force "
+                        "file "
                         "\"{}\"",
                         string(QMSettings::getQMMethod()),
                         forceFileName
@@ -271,7 +162,8 @@ void ExternalQMRunner::readForceFile(
 }
 
 /**
- * @brief reads the charge file (qm_charges) and sets the _qmCharge of the atoms
+ * @brief reads the charge file (qm_charges) and sets the _qmCharge of the
+ * atoms
  *
  * @param box
  *
@@ -279,7 +171,7 @@ void ExternalQMRunner::readForceFile(
  *  - if the charge file cannot be opened
  *  - if the charge file is empty
  */
-void ExternalQMRunner::readChargeFile(SimulationBox &box)
+void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &box)
 {
     const auto chargeFileName = FileSettings::getQMChargesTempFileName();
 
@@ -342,6 +234,116 @@ void ExternalQMRunner::readChargeFile(SimulationBox &box)
     chargeFile.close();
 }
 
+std::string QM::bundledQMScriptPath(const std::string_view script)
+{
+    const auto installedPath =
+        utilities::installedDataPath(std::filesystem::path("scripts") / script);
+    if (std::filesystem::is_regular_file(installedPath))
+        return installedPath.string();
+
+    return (std::filesystem::path(SCRIPT_PATH_) / script).string();
+}
+
+/**
+ * @brief run the qm engine
+ *
+ * @param simBox SimulationBox reference
+ * @param physicalData PhysicalData reference
+ * @param per periodicity of the system
+ */
+void ExternalQMRunner::run(
+    SimulationBox &simBox,
+    PhysicalData  &physicalData,
+    Periodicity    per
+)
+{
+    if (per != XYZ && per != NON_PERIODIC)
+    {
+        throw QMRunnerException(
+            "External QM runners only available for non- and 3D-periodic "
+            "calculations."
+        );
+    }
+
+    _periodicity = per;
+
+    {
+        auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
+        writeCoordsFile(simBox);
+    }
+
+    if (Settings::isHybridJobtype())
+    {
+        auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
+        writePointChargeFile(simBox);
+    }
+
+    const auto resultFiles = std::array{
+        FileSettings::getQMForcesTempFileName(),
+        FileSettings::getQMChargesTempFileName(),
+        FileSettings::getStressTensorTempFileName()
+    };
+    for (const auto &file : resultFiles) std::filesystem::remove(file);
+
+    std::jthread timeoutThread{[](const std::stop_token &stopToken)
+                               { throwAfterTimeout(stopToken); }};
+
+    {
+        auto _ = scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
+        execute(simBox);
+    }
+
+    timeoutThread.request_stop();
+
+    {
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
+        _readForceFile(simBox, physicalData);
+    }
+
+    {
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
+        _readChargeFile(simBox);
+    }
+
+    if (per != NON_PERIODIC)
+    {
+        auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
+        readStressTensor(simBox.getBox(), physicalData);
+    }
+}
+
+std::string ExternalQMRunner::resolveScriptPath(
+    const std::string_view script
+) const
+{
+    if (_scriptPath.empty())
+        return std::string(script);
+
+    if (_scriptPath == SCRIPT_PATH_)
+        return bundledQMScriptPath(script);
+
+    return _scriptPath + std::string(script);
+}
+
+void ExternalQMRunner::executeCommand(
+    const std::string_view command,
+    const std::string_view program
+) const
+{
+#if defined(_WIN32)
+    static_cast<void>(command);
+    throw QMRunnerException(
+        std::format("{} command execution is not supported on Windows", program)
+    );
+#else
+    const auto status = std::system(std::string(command).c_str());
+    if (status != EXIT_SUCCESS)
+        throw QMRunnerException(
+            std::format("{} command failed with status {}", program, status)
+        );
+#endif
+}
+
 /********************************
  *                              *
  * standard getters and setters *
@@ -361,16 +363,16 @@ const std::string &ExternalQMRunner::getScriptPath() const
 /**
  * @brief getter for the singularity path
  *
- * @return std::string
+ * @return  std::string
  */
-std::string ExternalQMRunner::getSingularity() const { return _singularity; }
+std::string ExternalQMRunner::getSingularity() { return _singularity; }
 
 /**
  * @brief getter for the static build path
  *
- * @return std::string
+ * @return  std::string
  */
-std::string ExternalQMRunner::getStaticBuild() const { return _staticBuild; }
+std::string ExternalQMRunner::getStaticBuild() { return _staticBuild; }
 
 /**
  * @brief setter for the script path

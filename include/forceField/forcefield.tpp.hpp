@@ -52,30 +52,32 @@ namespace forceField
      */
     template <typename T>
     double correctLinker(
-        const pot::CoulombPotential &coulPot,
-        pot::NonCoulombPotential    &nonCoulPot,
+        const pot::CoulombPotential &coulombPotential,
+        pot::NonCoulombPotential    &nonCoulombPotential,
         physicalData::PhysicalData  &physicalData,
         const molsys::Molecule      *molecule1,
         const molsys::Molecule      *molecule2,
         AtomIndex                    atomIndex1,
         AtomIndex                    atomIndex2,
-        const double                 distance
+        double                       distance
     )
     {
-        const auto q1 = molecule1->getPartialCharge(atomIndex1);
-        const auto q2 = molecule2->getPartialCharge(atomIndex2);
+        const auto charge1 = molecule1->getPartialCharge(atomIndex1);
+        const auto charge2 = molecule2->getPartialCharge(atomIndex2);
 
-        const auto chargeProduct = q1 * q2;
+        const auto chargeProduct = charge1 * charge2;
 
         auto [coulombEnergy, coulombForce] =
-            coulPot.calculate(distance, chargeProduct);
+            coulombPotential.calculate(distance, chargeProduct);
 
         if constexpr (std::is_same_v<T, DihedralForceField>)
         {
             const auto scale = settings::PotentialSettings::getScale14Coulomb();
 
+            // NOLINTBEGIN(readability-magic-numbers)
             coulombEnergy *= (1.0 - scale);
             coulombForce  *= (1.0 - scale);
+            // NOLINTEND(readability-magic-numbers)
         }
 
         auto forceMagnitude = -coulombForce;
@@ -88,10 +90,10 @@ namespace forceField
         const auto vdwType1  = molecule1->getInternalGlobalVDWType(atomIndex1);
         const auto vdwType2  = molecule2->getInternalGlobalVDWType(atomIndex2);
 
-        const auto indices = {molType1, molType2, atomType1, atomType2};
+        const std::tuple indices{molType1, molType2, atomType1, atomType2};
 
         const auto nonCoulombPair =
-            nonCoulPot.getNonCoulPair(indices, {vdwType1, vdwType2});
+            nonCoulombPotential.getNonCoulPair(indices, {vdwType1, vdwType2});
 
         if (distance < nonCoulombPair->getRadialCutOff())
         {
@@ -102,8 +104,10 @@ namespace forceField
             {
                 const auto scale = settings::PotentialSettings::getScale14VDW();
 
+                // NOLINTBEGIN(readability-magic-numbers)
                 nonCoulombEnergy *= (1.0 - scale);
                 nonCoulombForce  *= (1.0 - scale);
+                // NOLINTEND(readability-magic-numbers)
             }
 
             forceMagnitude -= nonCoulombForce;

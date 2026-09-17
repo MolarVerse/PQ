@@ -97,7 +97,7 @@ namespace constraints
         void applyDistanceConstraints(
             const molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const double
+            double
         );
 
         /*****************************
@@ -151,10 +151,10 @@ namespace constraints
          * standard setter methods *
          ***************************/
 
-        void setShakeMaxIter(const size_t shakeMaxIter);
-        void setRattleMaxIter(const size_t rattleMaxIter);
-        void setShakeTolerance(const double shakeTolerance);
-        void setRattleTolerance(const double rattleTolerance);
+        void setShakeMaxIter(size_t shakeMaxIter);
+        void setRattleMaxIter(size_t rattleMaxIter);
+        void setShakeTolerance(double shakeTolerance);
+        void setRattleTolerance(double rattleTolerance);
 
         void setStartTime(const double startTime) { _startTime = startTime; }
     };

@@ -59,14 +59,13 @@ namespace forceField
         AngleId _type;
         bool    _isLinker = false;
 
-        double _equilibriumAngle = 0.0;
-        double _forceConstant    = 0.0;
+        AngleParams _params;
 
        public:
         AngleForceField(
             const std::vector<molsys::Molecule *> &molecules,
             const std::vector<AtomIndex>          &atomIndices,
-            const AngleId                          type
+            AngleId                                type
         );
 
         void calculateEnergyAndForces(
@@ -80,18 +79,16 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
-        void setEquilibriumAngle(const double equilibriumAngle);
-        void setForceConstant(const double forceConstant);
+        void setIsLinker(bool isLinker);
+        void setParams(const AngleParams &params);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] AngleId getType() const;
-        [[nodiscard]] bool    isLinker() const;
-        [[nodiscard]] double  getEquilibriumAngle() const;
-        [[nodiscard]] double  getForceConstant() const;
+        [[nodiscard]] AngleId            getType() const;
+        [[nodiscard]] bool               isLinker() const;
+        [[nodiscard]] const AngleParams &getParams() const;
     };
 
 }   // namespace forceField

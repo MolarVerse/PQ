@@ -27,7 +27,6 @@
 #include <vector>   // for vector
 
 #include "exceptions.hpp"   // for InputFileException
-#include "gtest/gtest.h"    // for Message, TestPartResult, testing
 #include "manostatInputParser.hpp"
 #include "manostatSettings.hpp"      // for ManostatSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
@@ -43,7 +42,7 @@ TEST_F(TestInputFileReader, ParsePressure)
 {
     ManostatInputParser      parser;
     std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
-    parser.parsePressure(lineElements, 0);
+    input::ManostatInputParser::parsePressure(lineElements, 0);
 
     EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
 
@@ -66,7 +65,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 {
     ManostatInputParser      parser;
     std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
-    parser.parseManostatRelaxationTime(lineElements, 0);
+    input::ManostatInputParser::parseManostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
 
     lineElements = {"p_relaxation", "=", "-100.0"};
@@ -102,21 +101,21 @@ TEST_F(TestInputFileReader, ParseManostat)
 {
     ManostatInputParser      parser;
     std::vector<std::string> lineElements = {"manostat", "=", "none"};
-    parser.parseManostat(lineElements, 0);
+    input::ManostatInputParser::parseManostat(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
         settings::ManostatType::NONE
     );
 
     lineElements = {"manostat", "=", "berendsen"};
-    parser.parseManostat(lineElements, 0);
+    input::ManostatInputParser::parseManostat(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
         settings::ManostatType::BERENDSEN
     );
 
     lineElements = {"manostat", "=", "stochastic_rescaling"};
-    parser.parseManostat(lineElements, 0);
+    input::ManostatInputParser::parseManostat(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
         settings::ManostatType::STOCHASTIC_RESCALING
@@ -141,7 +140,7 @@ TEST_F(TestInputFileReader, ParseCompressibility)
 {
     ManostatInputParser      parser;
     std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
-    parser.parseCompressibility(lineElements, 0);
+    input::ManostatInputParser::parseCompressibility(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);
 
     lineElements = {"compressibility", "=", "-0.1"};
@@ -167,28 +166,28 @@ TEST_F(TestInputFileReader, ParseIsotropy)
 {
     ManostatInputParser      parser;
     std::vector<std::string> lineElements = {"isotropy", "=", "isotropic"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::ISOTROPIC
     );
 
     lineElements = {"isotropy", "=", "anisotropic"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::ANISOTROPIC
     );
 
     lineElements = {"isotropy", "=", "full_anisotropic"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::FULL_ANISOTROPIC
     );
 
     lineElements = {"isotropy", "=", "xz"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::SEMI_ISOTROPIC
@@ -198,7 +197,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 1);
 
     lineElements = {"isotropy", "=", "zx"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::SEMI_ISOTROPIC
@@ -208,7 +207,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 1);
 
     lineElements = {"isotropy", "=", "yz"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::SEMI_ISOTROPIC
@@ -218,7 +217,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 0);
 
     lineElements = {"isotropy", "=", "zy"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::SEMI_ISOTROPIC
@@ -228,7 +227,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 0);
 
     lineElements = {"isotropy", "=", "xy"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::SEMI_ISOTROPIC
@@ -238,7 +237,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2);
 
     lineElements = {"isotropy", "=", "yx"};
-    parser.parseIsotropy(lineElements, 0);
+    input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         settings::Isotropy::SEMI_ISOTROPIC

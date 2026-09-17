@@ -76,19 +76,18 @@ namespace molsys
         [[nodiscard]] const linearAlgebra::Vec3D   &getUpperBoundary() const;
         [[nodiscard]] const linearAlgebra::Vec3Dul &getCellIndex() const;
 
-        [[nodiscard]] Molecule *getMolecule(const size_t index) const
+        [[nodiscard]] Molecule *getMolecule(size_t index) const
         {
             return _molecules[index];
         }
         [[nodiscard]] const std::vector<Molecule *> &getMolecules() const;
         [[nodiscard]] std::vector<Molecule *>       &getMolecules();
 
-        [[nodiscard]] Cell *getNeighbourCell(const size_t index) const;
+        [[nodiscard]] Cell *getNeighbourCell(size_t index) const;
         [[nodiscard]] const std::vector<Cell *> &getNeighbourCells() const;
 
-        [[nodiscard]] const std::vector<Atom *> &getAtoms(
-            const size_t molIndex
-        ) const
+        [[nodiscard]]
+        const std::vector<Atom *> &getAtoms(size_t molIndex) const
         {
             return _atoms[molIndex];
         }

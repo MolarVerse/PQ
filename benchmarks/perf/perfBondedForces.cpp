@@ -67,25 +67,25 @@ int main()
         AtomIndex{1},
         BondId{0}
     );
-    bond.setEquilibriumBondLength(1.2);
-    bond.setForceConstant(3.0);
+    bond.setParams(BondParams{.equilibrium = 1.2, .forceConstant = 3.0});
 
     auto angle = forceField::AngleForceField(
         {&molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    angle.setEquilibriumAngle(M_PI / 2.0);
-    angle.setForceConstant(3.0);
+    angle.setParams(
+        AngleParams{.equilibrium = M_PI / 2.0, .forceConstant = 3.0}
+    );
 
     auto dihedral = forceField::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
-    dihedral.setPhaseShift(M_PI);
-    dihedral.setPeriodicity(3);
-    dihedral.setForceConstant(3.0);
+    dihedral.setParams(
+        DihedralParams{.forceConstant = 3.0, .frequency = 3, .phaseShift = M_PI}
+    );
     dihedral.setIsLinker(false);
 
     CALLGRIND_ZERO_STATS;

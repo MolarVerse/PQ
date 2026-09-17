@@ -39,59 +39,59 @@ namespace input
        public:
         ConvInputParser();
 
-        void parseEnergyConvergenceStrategy(
+        static void parseEnergyConvergenceStrategy(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseUseEnergyConvergence(
+        static void parseUseEnergyConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseUseForceConvergence(
+        static void parseUseForceConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseUseMaxForceConvergence(
+        static void parseUseMaxForceConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseUseRMSForceConvergence(
+        static void parseUseRMSForceConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseEnergyConvergence(
+        static void parseEnergyConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseRelativeEnergyConvergence(
+        static void parseRelativeEnergyConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseAbsoluteEnergyConvergence(
+        static void parseAbsoluteEnergyConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseForceConvergence(
+        static void parseForceConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseMaxForceConvergence(
+        static void parseMaxForceConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseRMSForceConvergence(
+        static void parseRMSForceConvergence(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
     };
 

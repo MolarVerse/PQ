@@ -102,10 +102,10 @@ void OptEngine::run()
             std::format("Optimizer converged after {} epochs.", _step);
 
         getLogOutput().writeInfo(msg);
-        getStdoutOutput().writeInfo(msg);
+        out::StdoutOutput::writeInfo(msg);
 
         getLogOutput().writeEndedNormally(elapsedTime);
-        getStdoutOutput().writeEndedNormally(elapsedTime);
+        out::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 }
 
@@ -140,12 +140,12 @@ void OptEngine::takeStep()
                 _optimizer->getNEpochs()
             );
             getLogOutput().writeOptWarning(headerMessage);
-            getStdoutOutput().writeOptWarning(headerMessage);
+            out::StdoutOutput::writeOptWarning(headerMessage);
 
             for (const auto &message : msg)
             {
                 getLogOutput().writeOptWarning(message);
-                getStdoutOutput().writeOptWarning(message);
+                out::StdoutOutput::writeOptWarning(message);
             }
         }
     }
@@ -223,7 +223,7 @@ void OptEngine::writeOutput()
  *
  * @param optimizer
  */
-void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> optimizer)
+void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> &optimizer)
 {
     _optimizer = optimizer;
 }
@@ -234,7 +234,7 @@ void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> optimizer)
  * @param learningRateStrategy
  */
 void OptEngine::setLearningRateStrategy(
-    const std::shared_ptr<LearningRateStrategy> learningRateStrategy
+    const std::shared_ptr<LearningRateStrategy> &learningRateStrategy
 )
 {
     _learningRateStrategy = learningRateStrategy;
@@ -245,7 +245,7 @@ void OptEngine::setLearningRateStrategy(
  *
  * @param evaluator
  */
-void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> evaluator)
+void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> &evaluator)
 {
     _evaluator = evaluator;
 }

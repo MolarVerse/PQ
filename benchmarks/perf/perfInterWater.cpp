@@ -55,8 +55,8 @@ using namespace pot;
 using namespace waterModel;
 using linearAlgebra::Vec3D;
 
-static constexpr std::uint64_t ITERATIONS             = 50;
-static constexpr size_t        WATER_TYPE             = 1;
+static constexpr std::uint64_t ITERATIONS = 50;
+static constexpr MolType       WATER_TYPE{1};
 static constexpr double        CUTOFF                 = 9.0;
 static constexpr auto          HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
 static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
@@ -91,7 +91,7 @@ int main()
         atom->setName(name);
         atom->setAtomicNumber(atomicNumber);
         atom->setPosition(pos);
-        atom->setAtomType(0);
+        atom->setAtomType(AtomType{0});
         atom->setInternalGlobalVDWType(VdwType{0});
         atom->setPartialCharge(charge);
         atom->setForceToZero();
@@ -104,25 +104,27 @@ int main()
         {
             for (size_t iz = 0; iz < perSide; ++iz)
             {
-                const Vec3D o{
-                    1.0 + spacing * static_cast<double>(ix),
-                    1.0 + spacing * static_cast<double>(iy),
-                    1.0 + spacing * static_cast<double>(iz)
+                const Vec3D oxygen{
+                    1.0 + (spacing * static_cast<double>(ix)),
+                    1.0 + (spacing * static_cast<double>(iy)),
+                    1.0 + (spacing * static_cast<double>(iz))
                 };
 
                 Molecule molecule;
                 molecule.setMoltype(WATER_TYPE);
                 molecule.setNumberOfAtoms(3);
-                molecule.addAtom(makeAtom("O", o, -0.82, OXYGEN_ATOMIC_NUMBER));
+                molecule.addAtom(
+                    makeAtom("O", oxygen, -0.82, OXYGEN_ATOMIC_NUMBER)
+                );
                 molecule.addAtom(makeAtom(
                     "H",
-                    o + Vec3D(0.9572, 0.0, 0.0),
+                    oxygen + Vec3D(0.9572, 0.0, 0.0),
                     0.41,
                     HYDROGEN_ATOMIC_NUMBER
                 ));
                 molecule.addAtom(makeAtom(
                     "H",
-                    o + Vec3D(-0.24, 0.927, 0.0),
+                    oxygen + Vec3D(-0.24, 0.927, 0.0),
                     0.41,
                     HYDROGEN_ATOMIC_NUMBER
                 ));

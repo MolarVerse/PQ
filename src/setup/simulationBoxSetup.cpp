@@ -63,7 +63,7 @@ using namespace out;
  */
 void setup::molsys::setupSimulationBox(Engine &engine)
 {
-    engine.getStdoutOutput().writeSetup("simulation box");
+    out::StdoutOutput::writeSetup("simulation box");
     engine.getLogOutput().writeSetup("simulation box");
 
     SimulationBoxSetup simulationBoxSetup(engine);
@@ -121,7 +121,7 @@ void SimulationBoxSetup::setAtomNames()
     auto setAtomNamesOfMolecule = [&simBox](auto &molecule)
     {
         const auto &molType = molecule.getMoltype();
-        if (molType == 0)
+        if (molType == MolType{0})
             return;
 
         const auto moleculeType  = simBox.findMoleculeType(molType);
@@ -153,7 +153,7 @@ void SimulationBoxSetup::setAtomTypes()
     {
         const auto &molType = molecule.getMoltype();
 
-        if (molType == 0)
+        if (molType == MolType{0})
             return;
 
         auto       moleculeType = simBox.findMoleculeType(molType);
@@ -182,7 +182,7 @@ void SimulationBoxSetup::setExternalVDWTypes()
     {
         const auto &molType = molecule.getMoltype();
 
-        if (molType == 0)
+        if (molType == MolType{0})
             return;
 
         auto       moleculeType = simBox.findMoleculeType(molType);
@@ -200,7 +200,7 @@ void SimulationBoxSetup::setExternalVDWTypes()
                     "of atoms ({}) in molecule type {}",
                     moleculeType.getExternalGlobalVDWTypes().size(),
                     nAtoms,
-                    molType
+                    molType.toString()
                 )
             );
         }
@@ -228,7 +228,7 @@ void SimulationBoxSetup::setPartialCharges()
     {
         const auto &molType = molecule.getMoltype();
 
-        if (molType == 0)
+        if (molType == MolType{0})
             return;
 
         auto        moleculeType = simBox.findMoleculeType(molType);
@@ -373,7 +373,7 @@ void SimulationBoxSetup::checkBoxSettings()
         simBox.setDensity(density);
 
         _engine.getLogOutput().writeDensityWarning();
-        _engine.getStdoutOutput().writeDensityWarning();
+        out::StdoutOutput::writeDensityWarning();
     }
 
     _engine.getPhysicalData().setVolume(simBox.getVolume());
@@ -389,11 +389,11 @@ void SimulationBoxSetup::checkBoxSettings()
  */
 void SimulationBoxSetup::checkRcCutoff()
 {
-    const auto &simBox = _engine.getSimulationBox();
-    const auto  rc     = PotentialSettings::getCoulombRadiusCutOff();
-    const auto  minDim = simBox.getMinimalBoxDimension();
+    const auto &simBox        = _engine.getSimulationBox();
+    const auto  coulombCutoff = PotentialSettings::getCoulombRadiusCutOff();
+    const auto  minDim        = simBox.getMinimalBoxDimension();
 
-    if (rc > minDim / 2.0)
+    if (coulombCutoff > minDim / 2.0)
     {
         throw InputFileException(
             std::format(
@@ -456,7 +456,6 @@ void SimulationBoxSetup::initVelocities()
 void SimulationBoxSetup::writeSetupInfo() const
 {
     auto &log    = _engine.getLogOutput();
-    auto &std    = _engine.getStdoutOutput();
     auto &simBox = _engine.getSimulationBox();
 
     const auto nAtoms = simBox.getNumberOfAtoms();
@@ -500,10 +499,11 @@ void SimulationBoxSetup::writeSetupInfo() const
     log.writeEmptyLine();
     // clang-format on
 
-    const auto rc    = PotentialSettings::getCoulombRadiusCutOff();
-    const auto rcStr = std::format("{:14.5f} {}", rc, ANGSTROM);
+    const auto coulombCutoff = PotentialSettings::getCoulombRadiusCutOff();
+    const auto coulombCutoffStr =
+        std::format("{:14.5f} {}", coulombCutoff, ANGSTROM);
 
-    log.writeSetupInfo(std::format("coulomb cutoff:  {}", rcStr));
+    log.writeSetupInfo(std::format("coulomb cutoff:  {}", coulombCutoffStr));
     log.writeEmptyLine();
 
     if (SimulationBoxSettings::getInitializeVelocities() ==
@@ -517,7 +517,7 @@ void SimulationBoxSetup::writeSetupInfo() const
                 FileSettings::getStartFileName()
             )
         );
-        std.writeSetupWarning(
+        out::StdoutOutput::writeSetupWarning(
             std::format(
                 "Ignoring 'init_velocities' because non-zero velocities in "
                 "\"{}\"",
@@ -558,7 +558,7 @@ void SimulationBoxSetup::writeSetupInfo() const
  * @brief sets if the velocities in the start file are zero
  *
  */
-void SimulationBoxSetup::setZeroVelocities(const bool zeroVelocities)
+void SimulationBoxSetup::setZeroVelocities(bool zeroVelocities)
 {
     _zeroVelocities = zeroVelocities;
 }

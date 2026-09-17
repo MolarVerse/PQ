@@ -25,7 +25,7 @@
 #include <vector>   // for vector, allocator
 
 #include "engine.hpp"                    // for Engine
-#include "gtest/gtest.h"                 // for Message, TestPartResult
+                                         // for Message, TestPartResult
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "intraNonBondedSetup.hpp"       // for setupIntraNonBonded
 #include "molecule.hpp"                  // for Molecule
@@ -37,9 +37,9 @@
  */
 TEST_F(TestSetup, setupIntraNonBonded)
 {
-    auto molecule = molsys::Molecule(1);
+    auto molecule = molsys::Molecule{MolType{1}};
     auto intraNonBondedContainer =
-        intraNonBonded::IntraNonBondedContainer(1, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
 
     const auto& intraNonBonded = _engine->getIntraNonBonded();
     intraNonBonded->addIntraNonBondedContainer(intraNonBondedContainer);

@@ -25,7 +25,6 @@
 #include "engine.hpp"                    // for Engine
 #include "exceptions.hpp"                // for MolDescriptorException
 #include "fileSettings.hpp"              // for FileSettings
-#include "gtest/gtest.h"                 // for Message, TestPartResult, testing
 #include "moldescriptorReader.hpp"       // for MoldescriptorReader
 #include "testMoldesctripotReader.hpp"   // for TestMoldescriptorReader
 #include "throwWithMessage.hpp"          // for ASSERT_THROW_MSG
@@ -125,8 +124,8 @@ TEST_F(TestMoldescriptorReader, specialTypes)
         "examples/setup/moldescriptor.dat"
     );
     readMolDescriptor(*_engine);
-    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), 1);
-    ASSERT_EQ(_engine->getSimulationBox().getAmmoniaType(), 2);
+    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), MolType{1});
+    ASSERT_EQ(_engine->getSimulationBox().getAmmoniaType(), MolType{2});
 }
 
 /**

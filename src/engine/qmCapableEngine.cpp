@@ -35,7 +35,7 @@ using std::shared_ptr;
  *
  * @param method The QM method to use
  */
-void QMCapableEngine::setQMRunner(const QMMethod method)
+void QMCapableEngine::setQMRunner(QMMethod method)
 {
     _qmRunner = QMRunnerManager::createQMRunner(method);
 }

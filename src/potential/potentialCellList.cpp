@@ -64,14 +64,14 @@ PotentialCellList::~PotentialCellList() = default;
  */
 void PotentialCellList::calculateForces(
     SimulationBox &simBox,
-    PhysicalData  &physicalData,
+    PhysicalData  &physData,
     CellList      &cellList
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
 
     const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
@@ -172,8 +172,8 @@ void PotentialCellList::calculateForces(
             }
         }
     }
-    physicalData.setCoulombEnergy(totalCoulombEnergy);
-    physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
+    physData.setCoulombEnergy(totalCoulombEnergy);
+    physData.setNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
@@ -191,7 +191,7 @@ void PotentialCellList::calculateForces(
  */
 void PotentialCellList::calculateCoreToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physicalData,
+    PhysicalData  &physData,
     CellList      &cellList
 )
 {
@@ -292,7 +292,7 @@ void PotentialCellList::calculateCoreToOuterForces(
         }
     }
 
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
 }
 
 /**
@@ -311,7 +311,7 @@ void PotentialCellList::calculateCoreToOuterForces(
  */
 void PotentialCellList::calculateLayerToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physicalData,
+    PhysicalData  &physData,
     CellList      &cellList
 )
 {
@@ -455,13 +455,13 @@ void PotentialCellList::calculateLayerToOuterForces(
         }
     }
 
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 void PotentialCellList::calculateOuterToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physicalData,
+    PhysicalData  &physData,
     CellList      &cellList
 )
 {
@@ -567,13 +567,13 @@ void PotentialCellList::calculateOuterToOuterForces(
         }
     }
 
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 void PotentialCellList::calculateHotspotSmoothingMMForces(
     SimulationBox &simBox,
-    PhysicalData  &physicalData,
+    PhysicalData  &physData,
     CellList      &cellList
 )
 {
@@ -908,8 +908,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
         }
     }
 
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physData.addCoulombEnergy(totalCoulombEnergy);
+    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**

@@ -31,10 +31,12 @@ using namespace intraNonBonded;
  * @param atomIndices
  */
 IntraNonBondedContainer::IntraNonBondedContainer(
-    const size_t                         molType,
+    MolType                              molType,
     const std::vector<std::vector<int>> &atomIndices
 )
-    : _molType(molType), _atomIndices(atomIndices){};
+    : _molType(molType), _atomIndices(atomIndices)
+{
+}
 
 /***************************
  *                         *
@@ -45,9 +47,9 @@ IntraNonBondedContainer::IntraNonBondedContainer(
 /**
  * @brief get the molType
  *
- * @return size_t
+ * @return MolType
  */
-size_t IntraNonBondedContainer::getMolType() const { return _molType; }
+MolType IntraNonBondedContainer::getMolType() const { return _molType; }
 
 /**
  * @brief get the atomIndices

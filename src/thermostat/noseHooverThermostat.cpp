@@ -48,10 +48,10 @@ using namespace physicalData;
  * @param couplingFrequency
  */
 NoseHooverThermostat::NoseHooverThermostat(
-    const double               targetTemp,
+    double                     targetTemp,
     const std::vector<double> &chi,
     const std::vector<double> &zeta,
-    const double               couplingFrequency
+    double                     couplingFrequency
 )
     : Thermostat(targetTemp),
       _chi(chi),
@@ -72,8 +72,8 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
 
-    const auto kB        = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-    const auto kT_target = kB * _targetTemperature;
+    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto kT_target         = boltzmannConstant * _targetTemperature;
 
     const auto degreesOfFreedom =
         static_cast<double>(simBox.getDegreesOfFreedom());
@@ -100,32 +100,33 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
  */
 void NoseHooverThermostat::applyThermostat(
     SimulationBox &simBox,
-    PhysicalData  &physicalData
+    PhysicalData  &data
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
-    physicalData.calculateTemperature(simBox);
+    data.calculateTemperature(simBox);
 
-    _temperature = physicalData.getTemperature();
+    _temperature = data.getTemperature();
 
     const auto degreesOfFreedom =
         static_cast<double>(simBox.getDegreesOfFreedom());
     const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
 
-    const auto dt = TimingsSettings::getTimeStep();
-    const auto kB = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto timeStep          = TimingsSettings::getTimeStep();
+    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-    const auto timestep  = dt * FS_TO_S;
-    const auto kT        = kB * _temperature;
-    const auto kT_target = kB * _targetTemperature;
+    const auto timestep            = timeStep * FS_TO_S;
+    const auto thermalEnergy       = boltzmannConstant * _temperature;
+    const auto thermalEnergyTarget = boltzmannConstant * _targetTemperature;
 
-    auto chi  = (kT - kT_target) * degreesOfFreedom;
-    chi      -= _chi[0] * _chi[1] / kT_target * couplingFreqSquared;
+    auto chi  = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
+    chi      -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
 
     _chi[0] += timestep * chi;
 
-    auto ratio = _chi[0] / (kT_target * degreesOfFreedom) * couplingFreqSquared;
+    auto ratio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
+                 couplingFreqSquared;
 
     _zeta[0] += ratio * timestep;
     ratio    *= _chi[0];
@@ -136,12 +137,13 @@ void NoseHooverThermostat::applyThermostat(
     for (size_t i = 1; i < _chi.size() - 1; ++i)
     {
         chi  = ratio;
-        chi -= kT_target;
-        chi -= _chi[i] * _chi[i + 1] / kT_target * couplingFreqSquared;
+        chi  -= thermalEnergyTarget;
+        chi -=
+            _chi[i] * _chi[i + 1] / thermalEnergyTarget * couplingFreqSquared;
 
         _chi[i] += timestep * chi;
 
-        ratio     = _chi[i] / kT_target * couplingFreqSquared;
+        ratio     = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
         _zeta[i] += ratio * timestep;
         ratio    *= _chi[i];
 
@@ -149,8 +151,8 @@ void NoseHooverThermostat::applyThermostat(
         energyFriction += _zeta[i];
     }
 
-    physicalData.setNoseHooverMomentumEnergy(energyMomentum);
-    physicalData.setNoseHooverFrictionEnergy(energyFriction);
+    data.setNoseHooverMomentumEnergy(energyMomentum);
+    data.setNoseHooverFrictionEnergy(energyFriction);
 }
 
 /***************************
@@ -195,7 +197,7 @@ double NoseHooverThermostat::getCouplingFrequency() const
  * @param index
  * @param chi
  */
-void NoseHooverThermostat::setChi(const unsigned int index, const double chi)
+void NoseHooverThermostat::setChi(unsigned int index, double chi)
 {
     _chi[index] = chi;
 }
@@ -216,7 +218,7 @@ void NoseHooverThermostat::setChi(const std::vector<double> &chi)
  * @param index
  * @param zeta
  */
-void NoseHooverThermostat::setZeta(const unsigned int index, const double zeta)
+void NoseHooverThermostat::setZeta(unsigned int index, double zeta)
 {
     _zeta[index] = zeta;
 }
@@ -236,7 +238,7 @@ void NoseHooverThermostat::setZeta(const std::vector<double> &zeta)
  *
  * @param couplingFrequency
  */
-void NoseHooverThermostat::setCouplingFrequency(const double couplingFrequency)
+void NoseHooverThermostat::setCouplingFrequency(double couplingFrequency)
 {
     _couplingFrequency = couplingFrequency;
 }

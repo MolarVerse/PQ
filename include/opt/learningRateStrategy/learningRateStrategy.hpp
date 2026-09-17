@@ -58,8 +58,8 @@ namespace opt
         std::vector<std::string> _errorMessages;
 
        public:
-        explicit LearningRateStrategy(const double);
-        explicit LearningRateStrategy(const double, const size_t);
+        explicit LearningRateStrategy(double);
+        explicit LearningRateStrategy(double, size_t);
 
         LearningRateStrategy()          = default;
         virtual ~LearningRateStrategy() = default;
@@ -67,10 +67,7 @@ namespace opt
         [[nodiscard]]
         virtual std::shared_ptr<LearningRateStrategy> clone() const = 0;
 
-        virtual void updateLearningRate(
-            const size_t step,
-            const size_t nEpochs
-        ) = 0;
+        virtual void updateLearningRate(size_t step, size_t nEpochs) = 0;
 
         void checkLearningRate();
 
@@ -86,11 +83,11 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setEvaluator(const std::shared_ptr<opt::Evaluator>);
-        void setOptimizer(const std::shared_ptr<opt::Optimizer>);
+        void setEvaluator(const std::shared_ptr<opt::Evaluator>&);
+        void setOptimizer(const std::shared_ptr<opt::Optimizer>&);
 
-        void setMinLearningRate(const double);
-        void setMaxLearningRate(const std::optional<double>);
+        void setMinLearningRate(double);
+        void setMaxLearningRate(std::optional<double>);
     };
 
 }   // namespace opt

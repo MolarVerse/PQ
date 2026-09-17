@@ -37,7 +37,7 @@ namespace utilities
 {
     std::string removeComments(std::string &, const std::string_view &);
 
-    std::vector<std::string> getLineCommands(const std::string &, const size_t);
+    std::vector<std::string> getLineCommands(const std::string &, size_t);
 
     std::vector<std::string> splitString(const std::string &);
 
@@ -48,7 +48,7 @@ namespace utilities
     std::string firstLetterToUpperCaseCopy(std::string);
     std::string shellQuote(std::string_view);
 
-    void addSpaces(std::string &, const std::string &, const size_t);
+    void addSpaces(std::string &, const std::string &, size_t);
 
     std::uint_fast32_t stringToUintFast32t(const std::string &);
     std::uint64_t      stringToULL(const std::string &str);

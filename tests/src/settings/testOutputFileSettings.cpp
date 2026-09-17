@@ -24,7 +24,6 @@
 
 #include <cstdint>
 
-#include "gtest/gtest.h"            // for Message, TestPartResult
 #include "outputFileSettings.hpp"   // for OutputFileSettings
 
 /**

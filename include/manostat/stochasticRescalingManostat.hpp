@@ -38,7 +38,7 @@ namespace manostat
     class StochasticRescalingManostat : public Manostat
     {
        protected:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator;
 
         double              _tau;
         double              _compressibility;
@@ -71,7 +71,7 @@ namespace manostat
             physicalData::PhysicalData &physData
         ) override;
 
-        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(const double);
+        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(double);
 
         [[nodiscard]] settings::ManostatType getManostatType() const override;
         [[nodiscard]] settings::Isotropy     getIsotropy() const override;
@@ -104,7 +104,7 @@ namespace manostat
         );
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(const double volume) override;
+        linearAlgebra::tensor3D calculateMu(double volume) override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
@@ -122,7 +122,7 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(const double volume) override;
+        linearAlgebra::tensor3D calculateMu(double volume) override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
@@ -140,7 +140,7 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(const double volume) override;
+        linearAlgebra::tensor3D calculateMu(double volume) override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };

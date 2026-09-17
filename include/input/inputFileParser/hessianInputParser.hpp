@@ -35,17 +35,17 @@ namespace input
        public:
         HessianInputParser();
 
-        void parseHessianFile(const std::vector<std::string> &, const size_t);
-        void parseHessianInfoFile(
+        static void parseHessianFile(const std::vector<std::string> &, size_t);
+        static void parseHessianInfoFile(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseDisplacement(const std::vector<std::string> &, const size_t);
-        void parseOptimizeBeforeHessian(
+        static void parseDisplacement(const std::vector<std::string> &, size_t);
+        static void parseOptimizeBeforeHessian(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseBuilder(const std::vector<std::string> &, const size_t);
+        static void parseBuilder(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

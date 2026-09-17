@@ -45,17 +45,17 @@ namespace pot
             _guffNonCoulombPairs;
 
        public:
-        void resizeGuff(const size_t);
-        void resizeGuff(const size_t, const size_t);
-        void resizeGuff(const size_t, const size_t, const size_t);
-        void resizeGuff(const size_t, const size_t, const size_t, const size_t);
+        void resizeGuff(size_t);
+        void resizeGuff(size_t, size_t);
+        void resizeGuff(size_t, size_t, size_t);
+        void resizeGuff(size_t, size_t, size_t, size_t);
 
         /***************************
          * standard setter methods *
          ***************************/
 
         void setGuffNonCoulPair(
-            const std::vector<size_t> &,
+            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
             const std::shared_ptr<NonCoulombPair> &
         );
 
@@ -65,18 +65,18 @@ namespace pot
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t>         &indices,
-            const std::pair<VdwType, VdwType> &vdwTypes
+            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+            const std::pair<VdwType, VdwType>                      &vdwTypes
         ) override;
 
         [[nodiscard]] std::vector<std::vector<
             std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>>
         getNonCoulombPairs() const;
 
-        [[nodiscard]] size_t getMolType1(const std::vector<size_t> &) const;
-        [[nodiscard]] size_t getMolType2(const std::vector<size_t> &) const;
-        [[nodiscard]] size_t getAtomType1(const std::vector<size_t> &) const;
-        [[nodiscard]] size_t getAtomType2(const std::vector<size_t> &) const;
+        [[nodiscard]] static size_t getMolType1(const std::vector<size_t> &);
+        [[nodiscard]] static size_t getMolType2(const std::vector<size_t> &);
+        [[nodiscard]] static size_t getAtomType1(const std::vector<size_t> &);
+        [[nodiscard]] static size_t getAtomType2(const std::vector<size_t> &);
     };
 
 }   // namespace pot

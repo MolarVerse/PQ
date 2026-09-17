@@ -64,7 +64,7 @@ class TestInputFileReader : public ::testing::Test
         removeFile();
     }
 
-    std::string _fileName = "";
+    std::string _fileName;
 
     engine::Engine         *_engine;
     input::InputFileReader *_inputFileReader;

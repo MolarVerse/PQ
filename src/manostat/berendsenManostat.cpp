@@ -92,12 +92,12 @@ SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
  */
 void BerendsenManostat::applyManostat(
     SimulationBox &simBox,
-    PhysicalData  &physicalData
+    PhysicalData  &physData
 )
 {
     auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
 
-    calculatePressure(simBox, physicalData);
+    calculatePressure(simBox, physData);
 
     const auto mu = calculateMu();
 
@@ -110,8 +110,8 @@ void BerendsenManostat::applyManostat(
 
     simBox.scaleBox(mu);
 
-    physicalData.setVolume(simBox.getVolume());
-    physicalData.setDensity(simBox.getDensity());
+    physData.setVolume(simBox.getVolume());
+    physData.setDensity(simBox.getDensity());
 
     simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
@@ -155,11 +155,11 @@ tensor3D BerendsenManostat::calculateMu() const
 
     double mu_scaled = 1.0;
     if (numFree == 3)
-        mu_scaled = ::cbrt(1.0 - preFactor * deltaP);
+        mu_scaled = ::cbrt(1.0 - (preFactor * deltaP));
     else if (numFree == 2)
-        mu_scaled = ::sqrt(1.0 - preFactor * deltaP);
+        mu_scaled = ::sqrt(1.0 - (preFactor * deltaP));
     else if (numFree == 1)
-        mu_scaled = 1.0 - preFactor * deltaP;
+        mu_scaled = 1.0 - (preFactor * deltaP);
 
     Vec3D mu = {1.0, 1.0, 1.0};
     for (size_t i = 0; i < 3; ++i)
@@ -190,10 +190,10 @@ tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
 
     const auto preFactor = _compressibility * _dt / _tau;
 
-    const double mu_xy = ::sqrt(1.0 - preFactor * (_targetPressure - p_xy));
+    const double mu_xy = ::sqrt(1.0 - (preFactor * (_targetPressure - p_xy)));
     const double mu_z  = isAxisFixed(_fixedAxis, _2DAnisotropicAxis)
                              ? 1.0
-                             : (1.0 - preFactor * (_targetPressure - p_z));
+                             : (1.0 - (preFactor * (_targetPressure - p_z)));
 
     linearAlgebra::Vec3D mu;
 

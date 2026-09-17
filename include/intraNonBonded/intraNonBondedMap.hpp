@@ -75,16 +75,16 @@ namespace intraNonBonded
         );
 
         void calculate(
-            const pot::CoulombPotential *coulPot,
-            pot::NonCoulombPotential    *nonCoulPot,
-            const molsys::SimulationBox &simBox,
-            physicalData::PhysicalData  &data
+            const pot::CoulombPotential *coulombPotential,
+            pot::NonCoulombPotential    *nonCoulombPotential,
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData
         ) const;
 
         [[nodiscard]]
         std::pair<double, double> calculateSingleInteraction(
-            const AtomIndex              atomIdx1,
-            const int                    atomIdx2,
+            AtomIndex                    atomIdx1,
+            int                          atomIdx2,
             const linearAlgebra::Vec3D  &box,
             physicalData::PhysicalData  &data,
             const pot::CoulombPotential *coulPot,

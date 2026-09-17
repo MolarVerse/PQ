@@ -25,7 +25,7 @@
 #include <cmath>    // for pow
 #include <vector>   // for vector
 
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+// for AssertionResult, Message, TestPartResult
 #include "lennardJonesPair.hpp"   // for LennardJonesPair
 
 using namespace pot;
@@ -93,13 +93,13 @@ TEST(TestLennardJonesPair, calculateEnergyAndForces)
 
     EXPECT_DOUBLE_EQ(
         energy,
-        coefficients[0] / ::pow(distance, 6) +
-            coefficients[1] / ::pow(distance, 12) - energyCutoff -
-            forceCutoff * (rncCutoff - distance)
+        (coefficients[0] / ::pow(distance, 6)) +
+            (coefficients[1] / ::pow(distance, 12)) - energyCutoff -
+            (forceCutoff * (rncCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
         force,
-        6 * coefficients[0] / ::pow(distance, 7) +
-            12 * coefficients[1] / ::pow(distance, 13) - forceCutoff
+        (6 * coefficients[0] / ::pow(distance, 7)) +
+            (12 * coefficients[1] / ::pow(distance, 13)) - forceCutoff
     );
 }

@@ -52,7 +52,7 @@ using enum HybridZone;
 AngleForceField::AngleForceField(
     const std::vector<Molecule *> &molecules,
     const std::vector<AtomIndex>  &atomIndices,
-    const AngleId                  type
+    AngleId                        type
 )
     : Angle(molecules, atomIndices), _type(type)
 {
@@ -99,9 +99,9 @@ void AngleForceField::calculateEnergyAndForces(
     const auto distance13 = ::sqrt(distance13Squared);
 
     const auto alpha      = angle(dPosition12, dPosition13);
-    const auto deltaAngle = alpha - _equilibriumAngle;
+    const auto deltaAngle = alpha - _params.equilibrium;
 
-    auto forceMagnitude = -_forceConstant * deltaAngle;
+    auto forceMagnitude = -_params.forceConstant * deltaAngle;
 
     physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
@@ -184,27 +184,14 @@ void AngleForceField::calculateEnergyAndForces(
  *
  * @param isLinker
  */
-void AngleForceField::setIsLinker(const bool isLinker) { _isLinker = isLinker; }
+void AngleForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
 
 /**
- * @brief set equilibrium angle
+ * @brief set angle parameters
  *
- * @param equilibriumAngle
+ * @param params
  */
-void AngleForceField::setEquilibriumAngle(const double equilibriumAngle)
-{
-    _equilibriumAngle = equilibriumAngle;
-}
-
-/**
- * @brief set force constant
- *
- * @param forceConstant
- */
-void AngleForceField::setForceConstant(const double forceConstant)
-{
-    _forceConstant = forceConstant;
-}
+void AngleForceField::setParams(const AngleParams &params) { _params = params; }
 
 /***************************
  *                         *
@@ -228,18 +215,8 @@ bool AngleForceField::isLinker() const { return _isLinker; }
 AngleId AngleForceField::getType() const { return _type; }
 
 /**
- * @brief get equilibrium angle
+ * @brief get angle parameters
  *
- * @return double
+ * @return const AngleParams&
  */
-double AngleForceField::getEquilibriumAngle() const
-{
-    return _equilibriumAngle;
-}
-
-/**
- * @brief get force constant
- *
- * @return double
- */
-double AngleForceField::getForceConstant() const { return _forceConstant; }
+const AngleParams &AngleForceField::getParams() const { return _params; }

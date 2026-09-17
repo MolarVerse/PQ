@@ -22,9 +22,10 @@
 
 #include "testConstraints.hpp"
 
+#include <gtest/gtest.h>
+
 #include "exceptions.hpp"         // for ShakeException
 #include "gmock/gmock.h"          // for DoubleNear, ElementsAre, MakePredica...
-#include "gtest/gtest.h"          // for Message, TestPartResult, InitGoogleTest
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 #include "timingsSettings.hpp"    // for TimingsSettings
 

@@ -137,9 +137,10 @@ void MShakeReader::processCommentLine(
             const auto molType = std::stoi(configElements[2]);
             try
             {
-                auto  simBox = _engine.getSimulationBox();
-                auto &moleculeType =
-                    simBox.findMoleculeType(static_cast<size_t>(molType));
+                auto  simBox       = _engine.getSimulationBox();
+                auto &moleculeType = simBox.findMoleculeType(
+                    MolType{static_cast<size_t>(molType)}
+                );
 
                 mShakeReference.setMoleculeType(moleculeType);
 
@@ -212,10 +213,10 @@ void MShakeReader::processAtomLines(
             );
         }
 
-        const auto atomName = lineElements[0];
-        const auto x        = std::stod(lineElements[1]);
-        const auto y        = std::stod(lineElements[2]);
-        const auto z        = std::stod(lineElements[3]);
+        const auto &atomName = lineElements[0];
+        const auto  x        = std::stod(lineElements[1]);
+        const auto  y        = std::stod(lineElements[2]);
+        const auto  z        = std::stod(lineElements[3]);
 
         auto atom = Atom();
 
@@ -234,9 +235,8 @@ void MShakeReader::processAtomLines(
         throw MShakeFileException(
             std::format(
                 "Molecule type {} has only one atom. M-Shake requires at least "
-                "two "
-                "atoms.",
-                molType.getMoltype()
+                "two atoms.",
+                molType.getMoltype().toString()
             )
         );
     }

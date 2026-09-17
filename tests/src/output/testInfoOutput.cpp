@@ -25,15 +25,14 @@
 #include <iosfwd>   // for ifstream
 #include <string>   // for getline, allocator, string
 
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "gtest/gtest.h"            // for Message, TestPartResult
+#include "forceFieldSettings.hpp"
 #include "infoOutput.hpp"           // for InfoOutput
 #include "manostatSettings.hpp"     // for ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
 #include "settings.hpp"             // for Settings
 #include "testEnergyOutput.hpp"     // for TestEnergyOutput
 #include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // IWYU pragma: keep - for Vec3D
+#include "vector3d.hpp"
 
 using namespace settings;
 using namespace linearAlgebra;

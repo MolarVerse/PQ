@@ -36,7 +36,7 @@ using namespace settings;
  *
  * @param targetTemperature
  */
-Thermostat::Thermostat(const double targetTemperature)
+Thermostat::Thermostat(double targetTemperature)
     : _targetTemperature(targetTemperature)
 {
 }
@@ -88,7 +88,7 @@ void Thermostat::applyTemperatureRamping()
  *
  * @param targetTemperature
  */
-void Thermostat::setTargetTemperature(const double targetTemperature)
+void Thermostat::setTargetTemperature(double targetTemperature)
 {
     _targetTemperature = targetTemperature;
 }
@@ -98,7 +98,7 @@ void Thermostat::setTargetTemperature(const double targetTemperature)
  *
  * @param temperatureIncrease
  */
-void Thermostat::setTemperatureIncrease(const double temperatureIncrease)
+void Thermostat::setTemperatureIncrease(double temperatureIncrease)
 {
     _temperatureIncrease = temperatureIncrease;
 }
@@ -108,7 +108,7 @@ void Thermostat::setTemperatureIncrease(const double temperatureIncrease)
  *
  * @param steps
  */
-void Thermostat::setTemperatureRampingSteps(const size_t steps)
+void Thermostat::setTemperatureRampingSteps(size_t steps)
 {
     _rampingStepsLeft = steps;
 }
@@ -118,7 +118,7 @@ void Thermostat::setTemperatureRampingSteps(const size_t steps)
  *
  * @param frequency
  */
-void Thermostat::setTemperatureRampingFrequency(const size_t frequency)
+void Thermostat::setTemperatureRampingFrequency(size_t frequency)
 {
     _rampingFrequency = frequency;
 }

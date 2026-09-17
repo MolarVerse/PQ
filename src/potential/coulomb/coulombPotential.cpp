@@ -34,7 +34,7 @@ using namespace pot;
  *
  * @param coulombRadiusCutOff
  */
-CoulombPotential::CoulombPotential(const double coulombRadiusCutOff)
+CoulombPotential::CoulombPotential(double coulombRadiusCutOff)
 {
     setCoulombRadiusCutOff(coulombRadiusCutOff);
 }
@@ -53,7 +53,7 @@ CoulombPotential::CoulombPotential(const double coulombRadiusCutOff)
  *
  * @param coulombRadiusCutOff
  */
-void CoulombPotential::setCoulombRadiusCutOff(const double coulombRadiusCutOff)
+void CoulombPotential::setCoulombRadiusCutOff(double coulombRadiusCutOff)
 {
     _coulombRadiusCutOff = coulombRadiusCutOff;
     _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
@@ -68,7 +68,7 @@ void CoulombPotential::setCoulombRadiusCutOff(const double coulombRadiusCutOff)
  *
  * @param coulombEnergyCutOff
  */
-void CoulombPotential::setCoulombEnergyCutOff(const double coulombEnergyCutOff)
+void CoulombPotential::setCoulombEnergyCutOff(double coulombEnergyCutOff)
 {
     _coulombEnergyCutOff = coulombEnergyCutOff;
 }
@@ -78,7 +78,7 @@ void CoulombPotential::setCoulombEnergyCutOff(const double coulombEnergyCutOff)
  *
  * @param coulombForceCutOff
  */
-void CoulombPotential::setCoulombForceCutOff(const double coulombForceCutOff)
+void CoulombPotential::setCoulombForceCutOff(double coulombForceCutOff)
 {
     _coulombForceCutOff = coulombForceCutOff;
 }

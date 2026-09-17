@@ -28,7 +28,6 @@
 #include <vector>   // for vector
 
 #include "mShakeReference.hpp"
-#include "vector3d.hpp"   // for Vec3D
 
 namespace molsys
 {
@@ -67,16 +66,11 @@ namespace constraints
         size_t calcNumberOfMShakeMolecules(molsys::SimulationBox &) const;
         [[nodiscard]]
         size_t calcNumberOfBondConstraints(molsys::SimulationBox &) const;
-        [[nodiscard]]
-        double calcMatrixElement(
-            const std::tuple<size_t, size_t, size_t, size_t> &indices,
-            const std::pair<double, double>                  &masses,
-            const std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> &pos
-        ) const;
 
-        [[nodiscard]] bool   isMShakeType(const size_t moltype) const;
-        [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
-        [[nodiscard]] const MShakeReference &findMShakeRef(const size_t) const;
+        [[nodiscard]] bool   isMShakeType(MolType molType) const;
+        [[nodiscard]] size_t findMShakeReferenceIndex(MolType molType) const;
+        [[nodiscard]]
+        const MShakeReference &findMShakeRef(MolType molType) const;
         [[nodiscard]]
         const std::vector<MShakeReference> &getMShakeReferences() const;
 

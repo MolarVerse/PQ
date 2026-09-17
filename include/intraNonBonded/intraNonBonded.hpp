@@ -24,9 +24,8 @@
 
 #define _INTRA_NON_BONDED_HPP_
 
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr
-#include <vector>    // for vector
+#include <memory>   // for shared_ptr
+#include <vector>   // for vector
 
 #include "coulombPotential.hpp"
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
@@ -39,7 +38,7 @@ namespace intraNonBonded
      * interactions
      *
      */
-    enum class IntraNonBondedType : size_t
+    enum class IntraNonBondedType : std::uint8_t
     {
         NONE,
         GUFF,
@@ -72,8 +71,9 @@ namespace intraNonBonded
         );
         void fillIntraNonBondedMaps(molsys::SimulationBox &);
 
-        [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(
-            const size_t
+        [[nodiscard]]
+        IntraNonBondedContainer *findIntraNonBondedContainerByMolType(
+            MolType molType
         );
 
         /*************************

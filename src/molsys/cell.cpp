@@ -127,7 +127,7 @@ void Cell::assignWaterMoleculeIndices(const SimulationBox &simBox)
     _waterMoleculeIndices.clear();
 
     const auto nMol           = getNumberOfMolecules();
-    const auto waterTypeValue = simBox.getWaterType().value_or(size_t{0});
+    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
 
     for (size_t mol = 0; mol < nMol; ++mol)
     {
@@ -202,7 +202,7 @@ std::vector<Molecule *> &Cell::getMolecules() { return _molecules; }
  * @param index
  * @return Cell*
  */
-Cell *Cell::getNeighbourCell(const size_t index) const
+Cell *Cell::getNeighbourCell(size_t index) const
 {
     return _neighbourCells[index];
 }

@@ -34,7 +34,7 @@ namespace driver
     class Driver
     {
        public:
-        void run(const std::string &inputFileName);
+        static void run(const std::string &inputFileName);
     };
 }   // namespace driver
 

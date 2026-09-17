@@ -58,7 +58,7 @@ RandomNumberGeneratorSetup::RandomNumberGeneratorSetup(Engine &engine)
  * @brief setup the random number generator
  *
  */
-void RandomNumberGeneratorSetup::setup() { setupWriteInfo(); }
+void RandomNumberGeneratorSetup::setup() const { setupWriteInfo(); }
 
 /**
  * @brief write info about the random number generator setup

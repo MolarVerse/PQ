@@ -46,9 +46,7 @@ using namespace physicalData;
  *
  * @param physicalData
  */
-void RingPolymerEngine::resizeRingPolymerBeadPhysicalData(
-    const size_t numberOfBeads
-)
+void RingPolymerEngine::resizeRingPolymerBeadPhysicalData(size_t numberOfBeads)
 {
     _ringPolymerBeadsPhysicalData.resize(numberOfBeads);
     _averageRingPolymerBeadsPhysicalData.resize(numberOfBeads);
@@ -105,9 +103,9 @@ void RingPolymerEngine::writeOutput()
         _physicalData->copy(mean(rpmdData));
         _averagePhysicalData = mean(averageRPMDData);
 
-        const auto dt            = TimingsSettings::getTimeStep();
+        const auto timeStep      = TimingsSettings::getTimeStep();
         const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * FS_TO_PS;
+        const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
 
         _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
         _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);

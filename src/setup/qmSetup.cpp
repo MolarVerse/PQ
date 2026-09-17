@@ -65,7 +65,7 @@ void setup::setupQM(Engine &engine)
     if (!Settings::isQMActivated())
         return;
 
-    engine.getStdoutOutput().writeSetup("QM runner");
+    out::StdoutOutput::writeSetup("QM runner");
     engine.getLogOutput().writeSetup("QM runner");
 
     // Try to cast to QMCapableEngine first (covers both QMMDEngine and
@@ -163,8 +163,8 @@ void QMSetup::setupQMScript() const
     auto &qmRunner         = *_qmCapableEngine.getQMRunner();
     auto &externalQMRunner = dynamic_cast<ExternalQMRunner &>(qmRunner);
 
-    const auto singularityString = externalQMRunner.getSingularity();
-    const auto staticBuildString = externalQMRunner.getStaticBuild();
+    const auto singularityString = QM::ExternalQMRunner::getSingularity();
+    const auto staticBuildString = QM::ExternalQMRunner::getStaticBuild();
 
     const auto singularity = toLowerCopy(singularityString) == "on";
     const auto staticBuild = toLowerCopy(staticBuildString) == "on";
@@ -241,7 +241,7 @@ void QMSetup::setupQMScript() const
  * @brief set coulomb radius cutoff to 0.0 for QM-MD, QM-RPMD
  *
  */
-void QMSetup::setupCoulombRadiusCutOff() const
+void QMSetup::setupCoulombRadiusCutOff()
 {
     using enum JobType;
 
@@ -262,7 +262,6 @@ void QMSetup::setupWriteInfo() const
     // Cast QMCapableEngine to Engine to access output methods
     auto &engine    = dynamic_cast<Engine &>(_qmCapableEngine);
     auto &logOutput = engine.getLogOutput();
-    auto &stdOut    = engine.getStdoutOutput();
 
     const auto qmMethod        = QMSettings::getQMMethod();
     const auto qmRunnerMessage = std::format("QM runner: {}", string(qmMethod));
@@ -280,11 +279,11 @@ void QMSetup::setupWriteInfo() const
 
     if (qmMethod == MACE)
     {
-        const auto        modelType = QMSettings::getMaceModelType();
-        const auto        modelSize = QMSettings::getMaceModel();
-        const auto        modelPath = QMSettings::getMaceModelPath();
-        const auto        fp        = Settings::getFloatingPointPybindString();
-        const auto        maceMode  = QMSettings::getMaceMode();
+        const auto modelType        = QMSettings::getMaceModelType();
+        const auto modelSize        = QMSettings::getMaceModel();
+        const auto modelPath        = QMSettings::getMaceModelPath();
+        const auto floatingPointStr = Settings::getFloatingPointPybindString();
+        const auto maceMode         = QMSettings::getMaceMode();
         const auto *const useDisp =
             QMSettings::useDispersionCorr() ? "on" : "off";
 
@@ -292,7 +291,7 @@ void QMSetup::setupWriteInfo() const
         const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
         const auto modelSizeMsg = std::format("Model size:            {}", string(modelSize));
         const auto modelPathMsg = std::format("Model path:            {}", modelPath);
-        const auto fpMsg        = std::format("Floating point type:   {}", fp);
+        const auto fpMsg        = std::format("Floating point type:   {}", floatingPointStr);
         const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
         const auto modeMsg      = std::format("Evaluation mode:       {}", string(maceMode));
         // clang-format on
@@ -370,14 +369,14 @@ void QMSetup::setupWriteInfo() const
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBThirdOrderMsg);
-            stdOut.writeSetupWarning(threeOBThirdOrderMsg);
+            out::StdoutOutput::writeSetupWarning(threeOBThirdOrderMsg);
         }
 
         if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
         {
             logOutput.writeEmptyLine();
             logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
-            stdOut.writeSetupWarning(threeOBHubbardDerivsMsg);
+            out::StdoutOutput::writeSetupWarning(threeOBHubbardDerivsMsg);
         }
     }
 

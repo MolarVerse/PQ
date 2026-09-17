@@ -24,26 +24,26 @@
 
 #include <vector>   // for allocator, vector
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
+// for Message, TestPartResult
 #include "stlVector.hpp"   // for max, mean, sum
 
 TEST(TestStlVector, sum)
 {
-    const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
+    const std::vector<double> vec = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(stl::sum(v1), 10.0);
+    EXPECT_EQ(stl::sum(vec), 10.0);
 }
 
 TEST(TestStlVector, mean)
 {
-    const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
+    const std::vector<double> vec = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(stl::mean(v1), 2.5);
+    EXPECT_EQ(stl::mean(vec), 2.5);
 }
 
 TEST(TestStlVector, max)
 {
-    const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
+    const std::vector<double> vec = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(stl::max(v1), 4.0);
+    EXPECT_EQ(stl::max(vec), 4.0);
 }

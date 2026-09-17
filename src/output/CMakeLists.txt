@@ -26,11 +26,11 @@ add_library(output
 target_include_directories(output
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/output
-    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(output
     PUBLIC
+    config_headers
     utilities
     hybridConfigurator
     physicalData

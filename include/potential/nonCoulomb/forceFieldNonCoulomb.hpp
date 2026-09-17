@@ -24,9 +24,9 @@
 
 #define _FORCE_FIELD_NON_COULOMB_HPP_
 
-#include <cstddef>   // for size_t
 #include <optional>
 #include <unordered_map>
+#include <vector>
 
 #include "nonCoulombPotential.hpp"
 #include "strongTypes.hpp"
@@ -64,8 +64,8 @@ namespace pot
         void fillDiagOfNonCoulPairsMatrix(
             std::vector<std::shared_ptr<NonCoulombPair>> &
         );
-        void fillOffDiagOfNonCoulPairsMatrix();
-        void sortNonCoulombicsPairs(
+        void        fillOffDiagOfNonCoulPairsMatrix();
+        static void sortNonCoulombicsPairs(
             std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
         );
         void setOffDiagonalElement(VdwType atomType1, VdwType atomType2);
@@ -77,8 +77,8 @@ namespace pot
         [[nodiscard]]
         std::
             optional<std::shared_ptr<NonCoulombPair>> findNonCoulPairByInternalTypes(
-                const VdwType intType1,
-                const VdwType intType2
+                VdwType intType1,
+                VdwType intType2
             ) const;
 
         void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair);
@@ -89,8 +89,8 @@ namespace pot
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t>         &indices,
-            const std::pair<VdwType, VdwType> &vdwTypes
+            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+            const std::pair<VdwType, VdwType>                      &vdwTypes
         ) override;
 
         [[nodiscard]]

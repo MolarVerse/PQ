@@ -90,14 +90,14 @@ class TestConstraints : public ::testing::Test
         _constraints = new constraints::Constraints();
 
         auto bondConstraint1 = constraints::BondConstraint(
-            &(_box->getMolecules()[0]),
-            &(_box->getMolecules()[0]),
+            _box->getMolecules().data(),
+            _box->getMolecules().data(),
             AtomIndex{0},
             AtomIndex{1},
             1.2
         );
         auto bondConstraint2 = constraints::BondConstraint(
-            &(_box->getMolecules()[0]),
+            _box->getMolecules().data(),
             &(_box->getMolecules()[1]),
             AtomIndex{2},
             AtomIndex{1},

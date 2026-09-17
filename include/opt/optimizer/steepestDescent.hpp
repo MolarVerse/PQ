@@ -40,7 +40,7 @@ namespace opt
         constexpr static size_t _maxHistoryLength = 2;
 
        public:
-        explicit SteepestDescent(const size_t nEpochs);
+        explicit SteepestDescent(size_t nEpochs);
 
         SteepestDescent()           = default;
         ~SteepestDescent() override = default;
@@ -48,7 +48,7 @@ namespace opt
         [[nodiscard]] std::shared_ptr<Optimizer> clone() const override;
         [[nodiscard]] size_t maxHistoryLength() const override;
 
-        void update(const double learningRate, const size_t step) override;
+        void update(double learningRate, size_t step) override;
     };
 
 }   // namespace opt

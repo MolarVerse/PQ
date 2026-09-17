@@ -57,7 +57,7 @@ IntraNonBondedMap::IntraNonBondedMap(
  *
  * @param coulombPotential
  * @param nonCoulombPotential
- * @param box
+ * @param simulationBox
  * @param physicalData
  */
 void IntraNonBondedMap::calculate(
@@ -103,18 +103,18 @@ void IntraNonBondedMap::calculate(
  * @brief calculate the intra non bonded interactions for a single atomic pair
  * within a single molecule
  *
- * @param atomIndex1
- * @param atomIndex2AsInt
+ * @param atomIdx1
+ * @param atomIdx2AsInt
  * @param box
- * @param coulombPotential
- * @param nonCoulombPotential
+ * @param coulPot
+ * @param nonCoulPot
  * @return std::pair<double, double> - the coulomb and non-coulomb energy for
  * the interaction
  */
 std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-    const AtomIndex atomIdx1,
-    const int       atomIndex2AsInt,
-    const Vec3D    &box,
+    AtomIndex    atomIdx1,
+    int          atomIdx2AsInt,
+    const Vec3D &box,
     PhysicalData & /*physicalData*/,
     const CoulombPotential *coulPot,
     NonCoulombPotential    *nonCoulPot
@@ -126,8 +126,8 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto atomIdx2 = static_cast<AtomIndex>(::abs(atomIndex2AsInt));
-    const bool scale    = atomIndex2AsInt < 0;
+    const auto atomIdx2 = static_cast<AtomIndex>(::abs(atomIdx2AsInt));
+    const bool scale    = atomIdx2AsInt < 0;
 
     const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
     const auto &pos2 = _molecule->getAtomPosition(atomIdx2);
@@ -156,8 +156,8 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
         }
         coulombEnergy = energy;
 
-        const size_t atomType1 = _molecule->getAtomType(atomIdx1);
-        const size_t atomType2 = _molecule->getAtomType(atomIdx2);
+        const auto atomType1 = _molecule->getAtomType(atomIdx1);
+        const auto atomType2 = _molecule->getAtomType(atomIdx2);
 
         // clang-format off
         const auto globalVdwType1 = _molecule->getInternalGlobalVDWType(atomIdx1);
@@ -166,7 +166,7 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
 
         const auto moltype = _molecule->getMoltype();
 
-        const auto combinedIdx = {moltype, moltype, atomType1, atomType2};
+        const std::tuple combinedIdx{moltype, moltype, atomType1, atomType2};
 
         const auto nonCoulombicPair = nonCoulPot->getNonCoulPair(
             combinedIdx,

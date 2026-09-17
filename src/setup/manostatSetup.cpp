@@ -51,7 +51,7 @@ void setup::setupManostat(Engine &engine)
     if (!Settings::isMDJobType())
         return;
 
-    engine.getStdoutOutput().writeSetup("Manostat");
+    out::StdoutOutput::writeSetup("Manostat");
     engine.getLogOutput().writeSetup("Manostat");
 
     ManostatSetup manostatSetup(dynamic_cast<MDEngine &>(engine));

@@ -28,7 +28,6 @@
 #include "angleSection.hpp"   // for AngleSection
 #include "engine.hpp"         // for Engine
 #include "exceptions.hpp"     // for TopologyException
-#include "gtest/gtest.h"      // for Message, TestPartResult
 #include "strongTypes.hpp"
 #include "testTopologySection.hpp"   // for TestTopologySection
 
@@ -42,13 +41,21 @@ TEST_F(TestTopologySection, processSectionAngle)
     input::topology::AngleSection angleSection;
     angleSection.processSection(lineElements, *_engine);
 
-    const auto &angles    = _engine->getForceField()->getAngles();
-    const auto &molecules = _engine->getSimulationBox().getMolecules();
+    const auto& angles = _engine->getForceField()->getAngles();
 
     EXPECT_EQ(angles.size(), 1);
-    EXPECT_EQ(angles[0].getMolecules()[0], &(molecules[0]));
-    EXPECT_EQ(angles[0].getMolecules()[1], &(molecules[1]));
-    EXPECT_EQ(angles[0].getMolecules()[2], &(molecules[1]));
+    EXPECT_EQ(
+        angles[0].getMolecules()[0],
+        _engine->getSimulationBox().getMolecules().data()
+    );
+    EXPECT_EQ(
+        angles[0].getMolecules()[1],
+        &(_engine->getSimulationBox().getMolecules()[1])
+    );
+    EXPECT_EQ(
+        angles[0].getMolecules()[2],
+        &(_engine->getSimulationBox().getMolecules()[1])
+    );
     EXPECT_EQ(angles[0].getAtomIndices()[0], AtomIndex{0});
     EXPECT_EQ(angles[0].getAtomIndices()[1], AtomIndex{0});
     EXPECT_EQ(angles[0].getAtomIndices()[2], AtomIndex{1});
@@ -57,7 +64,7 @@ TEST_F(TestTopologySection, processSectionAngle)
 
     lineElements = {"2", "1", "3", "7", "*"};
     angleSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField()->getAngles()[1].isLinker(), true);
+    EXPECT_EQ(angles[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3"};
     EXPECT_THROW(

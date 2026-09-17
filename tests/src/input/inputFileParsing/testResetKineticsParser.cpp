@@ -26,7 +26,6 @@
 #include <vector>   // for vector
 
 #include "exceptions.hpp"   // for InputFileException
-#include "gtest/gtest.h"    // for Message, TestPartResult
 #include "resetKineticsInputParser.hpp"
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
 #include "testInputFileReader.hpp"     // for TestInputFileReader
@@ -43,7 +42,7 @@ TEST_F(TestInputFileReader, testParseNScale)
 {
     ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"nscale", "=", "3"};
-    parser.parseNScale(lineElements, 0);
+    input::ResetKineticsInputParser::parseNScale(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNScale(), 3);
 
     lineElements = {"nscale", "=", "-1"};
@@ -63,7 +62,7 @@ TEST_F(TestInputFileReader, testParseFScale)
 {
     ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"fscale", "=", "3"};
-    parser.parseFScale(lineElements, 0);
+    input::ResetKineticsInputParser::parseFScale(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFScale(), 3);
 
     lineElements = {"fscale", "=", "-1"};
@@ -83,7 +82,7 @@ TEST_F(TestInputFileReader, testParseNReset)
 {
     ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"nreset", "=", "3"};
-    parser.parseNReset(lineElements, 0);
+    input::ResetKineticsInputParser::parseNReset(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNReset(), 3);
 
     lineElements = {"nreset", "=", "-1"};
@@ -103,7 +102,7 @@ TEST_F(TestInputFileReader, testParseFReset)
 {
     ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"freset", "=", "3"};
-    parser.parseFReset(lineElements, 0);
+    input::ResetKineticsInputParser::parseFReset(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFReset(), 3);
 
     lineElements = {"freset", "=", "-1"};
@@ -123,7 +122,7 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
 {
     ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"nreset_angular", "=", "3"};
-    parser.parseNResetAngular(lineElements, 0);
+    input::ResetKineticsInputParser::parseNResetAngular(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNResetAngular(), 3);
 
     lineElements = {"nreset_angular", "=", "-1"};
@@ -143,7 +142,7 @@ TEST_F(TestInputFileReader, testParseFResetAngular)
 {
     ResetKineticsInputParser parser;
     std::vector<std::string> lineElements = {"freset_angular", "=", "3"};
-    parser.parseFResetAngular(lineElements, 0);
+    input::ResetKineticsInputParser::parseFResetAngular(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFResetAngular(), 3);
 
     lineElements = {"freset_angular", "=", "-1"};

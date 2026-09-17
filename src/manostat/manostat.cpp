@@ -40,10 +40,7 @@ using namespace linearAlgebra;
  *
  * @param targetPressure
  */
-Manostat::Manostat(const double targetPressure)
-    : _targetPressure(targetPressure)
-{
-}
+Manostat::Manostat(double targetPressure) : _targetPressure(targetPressure) {}
 
 /**
  * @brief calculate the pressure of the system
@@ -62,8 +59,7 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
 
     _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
     _pressureTensor *= PRESSURE_FACTOR;
-
-    _pressure = trace(_pressureTensor) / _pressureTensor.size;
+    _pressure        = trace(_pressureTensor) / linearAlgebra::tensor3D::size;
 
     data.setPressure(_pressure);
 
@@ -102,7 +98,7 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
  *
  * @param mu
  */
-void Manostat::rotateMu(tensor3D& mu) const
+void Manostat::rotateMu(tensor3D& mu)
 {
     mu[0][1] += mu[1][0];
     mu[0][2] += mu[2][0];

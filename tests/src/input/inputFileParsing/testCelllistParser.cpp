@@ -28,7 +28,6 @@
 #include "cellListInputParser.hpp"   // for CellListInputParser
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, AssertionResult
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
@@ -44,11 +43,11 @@ TEST_F(TestInputFileReader, parseCellListActivated)
 {
     CellListInputParser      parser(_engine->getCellList());
     std::vector<std::string> lineElements = {"cell-list", "=", "off"};
-    parser.parseCellListActivated(lineElements, 0);
+    input::CellListInputParser::parseCellListActivated(lineElements, 0);
     EXPECT_FALSE(settings::Settings::isCellListActivated());
 
     lineElements = {"cell-list", "=", "on"};
-    parser.parseCellListActivated(lineElements, 0);
+    input::CellListInputParser::parseCellListActivated(lineElements, 0);
     EXPECT_TRUE(settings::Settings::isCellListActivated());
 
     lineElements = {"cell-list", "=", "notValid"};

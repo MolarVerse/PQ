@@ -35,11 +35,10 @@ using QM::AseDftbRunner;
  */
 AseDftbRunner::AseDftbRunner(
     const std::string                             &slakosPath,
-    const bool                                     thirdOrder,
+    bool                                           thirdOrder,
     const std::unordered_map<std::string, double> &hubbardDerivs,
-    const bool                                     dispersion
+    bool                                           dispersion
 )
-    : AseQMRunner()
 {
     try
     {
@@ -99,7 +98,7 @@ AseDftbRunner::AseDftbRunner(
  *
  * @return std::unordered_map<std::string, float>
  */
-const std::unordered_map<std::string, double> AseDftbRunner::getHubbDerivDict(
+const std::unordered_map<std::string, double> &AseDftbRunner::getHubbDerivDict(
 ) const
 {
     return _hubbardDerivDict;
@@ -115,7 +114,7 @@ const std::unordered_map<std::string, double> AseDftbRunner::getHubbDerivDict(
  * @brief set the 3ob Hubbard derivatives as dict
  */
 void AseDftbRunner::setHubbDerivDict(
-    const std::unordered_map<std::string, double> slakosDict
+    const std::unordered_map<std::string, double> &slakosDict
 )
 {
     _hubbardDerivDict = slakosDict;
