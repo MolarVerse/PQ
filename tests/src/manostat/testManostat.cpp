@@ -269,6 +269,14 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
         2.25 * constants::PRESSURE_FACTOR
     );
 
+    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::ALL);
+    _manostat->calculatePressure(*_box, *_data);
+
+    EXPECT_DOUBLE_EQ(
+        _data->getCoupledPressure(),
+        3.0 * constants::PRESSURE_FACTOR
+    );
+
     settings::ManostatSettings::setFixedAxis(settings::FixedAxis::NONE);
 }
 

@@ -82,7 +82,7 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
         }
     }
 
-    if (numFree > 0 && numFree < 3)
+    if (numFree > 0)
     {
         p_avg /= static_cast<double>(numFree);
         data.setCoupledPressure(p_avg);
