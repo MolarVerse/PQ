@@ -98,7 +98,8 @@ namespace settings
         size_t    axisIndex
     )
     {
-        return (static_cast<std::uint8_t>(fixedAxis) & (1U << axisIndex)) != 0U;
+        const auto axisToCheck = static_cast<FixedAxis>(1U << axisIndex);
+        return (fixedAxis & axisToCheck) == axisToCheck;
     }
 
     [[nodiscard]] std::string string(const ManostatType &manostatType);
