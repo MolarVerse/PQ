@@ -144,7 +144,6 @@ namespace settings
         static void setIsotropy(const std::string_view &isotropy);
         static void setIsotropy(const Isotropy &isotropy);
 
-        static void setFixedAxis(const std::string_view &fixedAxis);
         static void setFixedAxis(const FixedAxis &fixedAxis);
         static void setIsFixedAxisSet(const bool isSet);
 

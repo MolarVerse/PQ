@@ -171,37 +171,6 @@ void ManostatSettings::setIsotropy(const Isotropy &isotropy)
     _isotropy = isotropy;
 }
 
-void ManostatSettings::setFixedAxis(const std::string_view &fixedAxis)
-{
-    using enum FixedAxis;
-    const auto fixedAxisToLower =
-        utilities::toLowerAndReplaceDashesCopy(fixedAxis);
-
-    if (fixedAxisToLower == "none")
-        setFixedAxis(NONE);
-
-    else if (fixedAxisToLower == "x")
-        setFixedAxis(X);
-
-    else if (fixedAxisToLower == "y")
-        setFixedAxis(Y);
-
-    else if (fixedAxisToLower == "z")
-        setFixedAxis(Z);
-
-    else if (fixedAxisToLower == "xy" || fixedAxisToLower == "yx")
-        setFixedAxis(XY);
-
-    else if (fixedAxisToLower == "xz" || fixedAxisToLower == "zx")
-        setFixedAxis(XZ);
-
-    else if (fixedAxisToLower == "yz" || fixedAxisToLower == "zy")
-        setFixedAxis(YZ);
-
-    else if (fixedAxisToLower == "all" || fixedAxisToLower == "xyz")
-        setFixedAxis(ALL);
-}
-
 void ManostatSettings::setFixedAxis(const FixedAxis &fixedAxis)
 {
     _fixedAxis      = fixedAxis;

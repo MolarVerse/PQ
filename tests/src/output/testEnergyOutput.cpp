@@ -198,7 +198,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
 
     ForceFieldSettings::deactivate();
     ManostatSettings::setManostatType("Berendsen");
-    ManostatSettings::setFixedAxis("z");
+    ManostatSettings::setFixedAxis(FixedAxis::Z);
     Settings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
@@ -217,7 +217,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
         "      1.03923e+01\t     0.10000"
     );
 
-    ManostatSettings::setFixedAxis("none");
+    ManostatSettings::setFixedAxis(FixedAxis::NONE);
 }
 
 /**
