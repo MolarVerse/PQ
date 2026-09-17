@@ -79,7 +79,7 @@ std::string utilities::removeComments(
  */
 std::vector<std::string> utilities::getLineCommands(
     const std::string &line,
-    const size_t       lineNumber
+    size_t             lineNumber
 )
 {
     for (auto i = static_cast<int>(line.size() - 1); i >= 0; --i)
@@ -123,9 +123,9 @@ std::vector<std::string> utilities::splitString(const std::string &line)
     std::string              word;
     std::vector<std::string> lineElements = {};
 
-    std::stringstream ss(line);
+    std::stringstream stringStream(line);
 
-    while (ss >> word) lineElements.push_back(word);
+    while (stringStream >> word) lineElements.push_back(word);
 
     return lineElements;
 }
@@ -140,7 +140,8 @@ std::string utilities::toLowerCopy(std::string myString)
 {
     std::ranges::for_each(
         myString,
-        [](char &c) { c = static_cast<char>(::tolower(c)); }
+        [](char &character)
+        { character = static_cast<char>(::tolower(character)); }
     );
     return myString;
 }
@@ -164,13 +165,15 @@ std::string utilities::toLowerCopy(const std::string_view myString)
  */
 std::string utilities::toLowerAndReplaceDashesCopy(std::string myString)
 {
-    for (char &c : myString)
+    std::string result;
+    for (char &character : myString)
     {
-        c = static_cast<char>(::tolower(c));
-        if (c == '-')
-            c = '_';
+        character = static_cast<char>(::tolower(character));
+        if (character == '-')
+            character = '_';
+        result += character;
     }
-    return myString;
+    return result;
 }
 
 /**
@@ -199,7 +202,8 @@ std::string utilities::firstLetterToUpperCaseCopy(std::string myString)
 
     std::ranges::for_each(
         myString | std::views::drop(1),
-        [](char &c) { c = static_cast<char>(::tolower(c)); }
+        [](char &character)
+        { character = static_cast<char>(::tolower(character)); }
     );
 
     return myString;
@@ -287,7 +291,7 @@ bool utilities::keywordToBool(const std::vector<std::string> &lineElements)
 void utilities::addSpaces(
     std::string       &command,
     const std::string &stringToReplace,
-    const size_t       lineNumber
+    size_t             lineNumber
 )
 {
     const auto equalSignPos = command.find(stringToReplace);
@@ -330,7 +334,7 @@ std::uint_fast32_t utilities::stringToUintFast32t(const std::string &str)
 
     for (size_t i = startPos; i < str.length(); ++i)
     {
-        if (!std::isdigit(static_cast<unsigned char>(str[i])))
+        if (std::isdigit(static_cast<unsigned char>(str[i])) == 0)
         {
             throw std::invalid_argument(
                 std::format(
@@ -396,7 +400,7 @@ std::uint64_t utilities::stringToULL(const std::string &str)
 
     for (size_t i = startPos; i < str.length(); ++i)
     {
-        if (!std::isdigit(static_cast<unsigned char>(str[i])))
+        if (std::isdigit(static_cast<unsigned char>(str[i])) == 0)
         {
             throw std::invalid_argument(
                 std::format(

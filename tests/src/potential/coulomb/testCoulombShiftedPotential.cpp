@@ -24,7 +24,7 @@
 
 #include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "gtest/gtest.h"                 // for Message, TestPartResult
+                                         // for Message, TestPartResult
 
 using namespace pot;
 

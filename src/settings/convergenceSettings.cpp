@@ -22,6 +22,8 @@
 
 #include "convergenceSettings.hpp"
 
+#include <utility>
+
 #include "exceptions.hpp"
 
 using namespace settings;
@@ -33,7 +35,7 @@ using namespace exc;
  * @param strategy
  * @return std::string
  */
-std::string settings::string(const ConvStrategy strategy)
+std::string settings::string(ConvStrategy strategy)
 {
     switch (strategy)
     {
@@ -45,7 +47,7 @@ std::string settings::string(const ConvStrategy strategy)
         case RELATIVE: return "RELATIVE";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -96,7 +98,7 @@ ConvStrategy ConvSettings::getConvStrategy(const std::string_view &strategy)
  *
  * @param energyConv
  */
-void ConvSettings::setEnergyConv(const double energyConv)
+void ConvSettings::setEnergyConv(double energyConv)
 {
     _energyConv = energyConv;
 }
@@ -106,7 +108,7 @@ void ConvSettings::setEnergyConv(const double energyConv)
  *
  * @param relEnergyConv
  */
-void ConvSettings::setRelEnergyConv(const double relEnergyConv)
+void ConvSettings::setRelEnergyConv(double relEnergyConv)
 {
     _relEnergyConv = relEnergyConv;
 }
@@ -116,7 +118,7 @@ void ConvSettings::setRelEnergyConv(const double relEnergyConv)
  *
  * @param absEnergyConv
  */
-void ConvSettings::setAbsEnergyConv(const double absEnergyConv)
+void ConvSettings::setAbsEnergyConv(double absEnergyConv)
 {
     _absEnergyConv = absEnergyConv;
 }
@@ -130,10 +132,7 @@ void ConvSettings::setAbsEnergyConv(const double absEnergyConv)
  *
  * @param forceConv
  */
-void ConvSettings::setForceConv(const double forceConv)
-{
-    _forceConv = forceConv;
-}
+void ConvSettings::setForceConv(double forceConv) { _forceConv = forceConv; }
 
 /**
  * @brief set max force convergence
@@ -143,7 +142,7 @@ void ConvSettings::setForceConv(const double forceConv)
  *
  * @param maxForceConv
  */
-void ConvSettings::setMaxForceConv(const double maxForceConv)
+void ConvSettings::setMaxForceConv(double maxForceConv)
 {
     _maxForceConv = maxForceConv;
 }
@@ -156,7 +155,7 @@ void ConvSettings::setMaxForceConv(const double maxForceConv)
  *
  * @param rmsForceConv
  */
-void ConvSettings::setRMSForceConv(const double rmsForceConv)
+void ConvSettings::setRMSForceConv(double rmsForceConv)
 {
     _rmsForceConv = rmsForceConv;
 }
@@ -166,7 +165,7 @@ void ConvSettings::setRMSForceConv(const double rmsForceConv)
  *
  * @param useEnergyConvergence
  */
-void ConvSettings::setUseEnergyConv(const bool useEnergyConvergence)
+void ConvSettings::setUseEnergyConv(bool useEnergyConvergence)
 {
     _useEnergyConv = useEnergyConvergence;
 }
@@ -176,7 +175,7 @@ void ConvSettings::setUseEnergyConv(const bool useEnergyConvergence)
  *
  * @param useForceConvergence
  */
-void ConvSettings::setUseForceConv(const bool useForceConvergence)
+void ConvSettings::setUseForceConv(bool useForceConvergence)
 {
     _useForceConv = useForceConvergence;
 }
@@ -186,7 +185,7 @@ void ConvSettings::setUseForceConv(const bool useForceConvergence)
  *
  * @param useMaxForceConvergence
  */
-void ConvSettings::setUseMaxForceConv(const bool useMaxForceConvergence)
+void ConvSettings::setUseMaxForceConv(bool useMaxForceConvergence)
 {
     _useMaxForceConv = useMaxForceConvergence;
 }
@@ -196,7 +195,7 @@ void ConvSettings::setUseMaxForceConv(const bool useMaxForceConvergence)
  *
  * @param useRMSForceConvergence
  */
-void ConvSettings::setUseRMSForceConv(const bool useRMSForceConvergence)
+void ConvSettings::setUseRMSForceConv(bool useRMSForceConvergence)
 {
     _useRMSForceConv = useRMSForceConvergence;
 }
@@ -206,7 +205,7 @@ void ConvSettings::setUseRMSForceConv(const bool useRMSForceConvergence)
  *
  * @param strategy
  */
-void ConvSettings::setEnergyConvStrategy(const ConvStrategy strategy)
+void ConvSettings::setEnergyConvStrategy(ConvStrategy strategy)
 {
     _energyConvStrategy = strategy;
 }

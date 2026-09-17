@@ -86,7 +86,7 @@ void ParameterFileSection::process(
  * @throw ParameterFileException if section did not end
  * normally
  */
-void ParameterFileSection::endedNormally(const bool endedNormally)
+void ParameterFileSection::endedNormally(bool endedNormally)
 {
     if (!endedNormally)
         throw ParameterFileException(
@@ -99,7 +99,7 @@ void ParameterFileSection::endedNormally(const bool endedNormally)
  *
  * @param lineNumber
  */
-void ParameterFileSection::setLineNumber(const int lineNumber)
+void ParameterFileSection::setLineNumber(int lineNumber)
 {
     _lineNumber = lineNumber;
 }
@@ -107,9 +107,9 @@ void ParameterFileSection::setLineNumber(const int lineNumber)
 /**
  * @brief set file pointer
  *
- * @param fp
+ * @param file
  */
-void ParameterFileSection::setFp(std::ifstream *fp) { _fp = fp; }
+void ParameterFileSection::setFp(std::ifstream *file) { _fp = file; }
 
 /**
  * @brief get line number of section

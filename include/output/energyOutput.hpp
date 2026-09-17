@@ -46,8 +46,8 @@ namespace out
        public:
         using Output::Output;
 
-        void writeHeader(const double timeStep);
-        void write(const size_t step, const physicalData::PhysicalData &);
+        void writeHeader(double timeStep);
+        void write(size_t step, const physicalData::PhysicalData &);
     };
 
 }   // namespace out

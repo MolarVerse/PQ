@@ -35,7 +35,7 @@ using namespace connectivity;
 JCouplingForceField::JCouplingForceField(
     const std::vector<molsys::Molecule *> &molecules,
     const std::vector<AtomIndex>          &atomIndices,
-    const size_t                           type
+    size_t                                 type
 )
     : Dihedral(molecules, atomIndices), _type(type)
 {
@@ -52,7 +52,7 @@ JCouplingForceField::JCouplingForceField(
  *
  * @param boolean
  */
-void JCouplingForceField::setUpperSymmetry(const bool boolean)
+void JCouplingForceField::setUpperSymmetry(bool boolean)
 {
     _upperSymmetry = boolean;
 }
@@ -62,7 +62,7 @@ void JCouplingForceField::setUpperSymmetry(const bool boolean)
  *
  * @param boolean
  */
-void JCouplingForceField::setLowerSymmetry(const bool boolean)
+void JCouplingForceField::setLowerSymmetry(bool boolean)
 {
     _lowerSymmetry = boolean;
 }
@@ -72,45 +72,48 @@ void JCouplingForceField::setLowerSymmetry(const bool boolean)
  *
  * @param J0
  */
-void JCouplingForceField::setJ0(const double J0) { _j0 = J0; }
+void JCouplingForceField::setJ0(double J0) { _j0 = J0; }
 
 /**
  * @brief Set the force constant
  *
- * @param k
+ * @param forceConstant
  */
-void JCouplingForceField::setForceConstant(const double k)
+void JCouplingForceField::setForceConstant(double forceConstant)
 {
-    _forceConstant = k;
+    _forceConstant = forceConstant;
 }
 
 /**
- * @brief Set the a
+ * @brief Set the constant a
  *
- * @param a
+ * @param constA
  */
-void JCouplingForceField::setA(const double a) { _a = a; }
+void JCouplingForceField::setA(double constA) { _a = constA; }
 
 /**
- * @brief Set the b
+ * @brief Set the constant b
  *
- * @param b
+ * @param constB
  */
-void JCouplingForceField::setB(const double b) { _b = b; }
+void JCouplingForceField::setB(double constB) { _b = constB; }
 
 /**
- * @brief Set the c
+ * @brief Set the constant c
  *
- * @param c
+ * @param constC
  */
-void JCouplingForceField::setC(const double c) { _c = c; }
+void JCouplingForceField::setC(double constC) { _c = constC; }
 
 /**
  * @brief Set the phase shift
  *
- * @param phi
+ * @param phaseShift
  */
-void JCouplingForceField::setPhaseShift(const double phi) { _phaseShift = phi; }
+void JCouplingForceField::setPhaseShift(double phaseShift)
+{
+    _phaseShift = phaseShift;
+}
 
 /***************************
  *                         *

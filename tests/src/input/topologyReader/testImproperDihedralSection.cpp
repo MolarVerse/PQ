@@ -45,7 +45,7 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
     const auto &molecules = _engine->getSimulationBox().getMolecules();
 
     EXPECT_EQ(improperDihedrals.size(), 1);
-    EXPECT_EQ(improperDihedrals[0].getMolecules()[0], &(molecules[0]));
+    EXPECT_EQ(improperDihedrals[0].getMolecules()[0], molecules.data());
     EXPECT_EQ(improperDihedrals[0].getMolecules()[1], &(molecules[1]));
     EXPECT_EQ(improperDihedrals[0].getMolecules()[2], &(molecules[1]));
     EXPECT_EQ(improperDihedrals[0].getMolecules()[3], &(molecules[1]));

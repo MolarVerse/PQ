@@ -24,7 +24,8 @@
 
 #define _THERMOSTAT_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
+#include <cstddef>   // for size_t
+#include <cstdint>
 #include <map>           // for map
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -40,7 +41,7 @@ namespace settings
      * @brief enum class to store the type of thermostat
      *
      */
-    enum class ThermostatType
+    enum class ThermostatType : std::uint8_t
     {
         NONE,
         BERENDSEN,
@@ -49,7 +50,7 @@ namespace settings
         NOSE_HOOVER
     };
 
-    [[nodiscard]] std::string string(const ThermostatType &thermostatType);
+    [[nodiscard]] std::string string(const ThermostatType& thermostatType);
 
     /**
      * @class ThermostatSettings
@@ -90,33 +91,33 @@ namespace settings
         ThermostatSettings()  = default;
         ~ThermostatSettings() = default;
 
-        static auto addChi(const size_t index, const double chi)
+        static auto addChi(size_t index, double chi)
             -> decltype(_chi.try_emplace(index, chi));
-        static auto addZeta(const size_t index, const double zeta)
+        static auto addZeta(size_t index, double zeta)
             -> decltype(_zeta.try_emplace(index, zeta));
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        static void setThermostatType(const std::string_view &thermostatType);
-        static void setThermostatType(const ThermostatType &thermostatType);
+        static void setThermostatType(const std::string_view& thermostatType);
+        static void setThermostatType(ThermostatType thermostatType);
 
-        static void setTemperatureSet(const bool);
-        static void setStartTemperatureSet(const bool);
-        static void setEndTemperatureSet(const bool);
-        static void setTargetTemperature(const double);
-        static void setActualTargetTemperature(const double);
-        static void setStartTemperature(const double);
-        static void setEndTemperature(const double);
+        static void setTemperatureSet(bool);
+        static void setStartTemperatureSet(bool);
+        static void setEndTemperatureSet(bool);
+        static void setTargetTemperature(double);
+        static void setActualTargetTemperature(double);
+        static void setStartTemperature(double);
+        static void setEndTemperature(double);
 
-        static void setTemperatureRampSteps(const size_t);
-        static void setTemperatureRampFrequency(const size_t);
+        static void setTemperatureRampSteps(size_t);
+        static void setTemperatureRampFrequency(size_t);
 
-        static void setRelaxationTime(const double);
-        static void setFriction(const double);
-        static void setNoseHooverChainLength(const size_t);
-        static void setNoseHooverCouplingFrequency(const double);
+        static void setRelaxationTime(double);
+        static void setFriction(double);
+        static void setNoseHooverChainLength(size_t);
+        static void setNoseHooverCouplingFrequency(double);
 
         /***************************
          * standard getter methods *

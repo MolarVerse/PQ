@@ -84,7 +84,7 @@ namespace engine
      */
     void HybridMDEngine::addScaledCurrentForcesToInnerAndReset(
         std::vector<std::shared_ptr<molsys::Atom>>& atoms,
-        const double                                globalSmF
+        double                                      globalSmF
     )
     {
         for (auto& atom : atoms)
@@ -134,7 +134,7 @@ namespace engine
      */
     void HybridMDEngine::addScaledCurrentForcesToOuterAndReset(
         std::vector<std::shared_ptr<molsys::Atom>>& atoms,
-        const double                                globalSmF
+        double                                      globalSmF
     )
     {
         for (auto& atom : atoms)
@@ -203,12 +203,12 @@ namespace engine
         generateInactiveSmoothingMoleculeSet(
             size_t bitPattern,
             size_t totalMolecules
-        ) const
+        )
     {
         std::unordered_set<size_t> inactiveMolecules;
 
         for (size_t j = 0; j < totalMolecules; ++j)
-            if (bitPattern & (1U << j))
+            if (static_cast<bool>(bitPattern & (1U << j)))
                 inactiveMolecules.insert(j);
 
         return inactiveMolecules;
@@ -231,7 +231,7 @@ namespace engine
         const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
     ) const
     {
-        double globalSmoothingFactor = 1.0;
+        double globalSmoothingFactor = 1;
 
         size_t index = 0;
         for (const auto& mol :

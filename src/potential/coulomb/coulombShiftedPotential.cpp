@@ -34,8 +34,8 @@ namespace pot
      * @return std::pair<double, double>
      */
     std::pair<double, double> CoulombShiftedPotential::calculate(
-        const double distance,
-        const double chargeProduct
+        double distance,
+        double chargeProduct
     ) const
     {
         const auto prefactor   = chargeProduct * constants::COULOMB_PREFACTOR;
@@ -44,7 +44,7 @@ namespace pot
         const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
 
         auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;
-        auto force  = dInv * dInv - _coulombForceCutOff;
+        auto force  = (dInv * dInv) - _coulombForceCutOff;
 
         energy *= prefactor;
         force  *= prefactor;

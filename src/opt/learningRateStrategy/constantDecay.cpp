@@ -33,9 +33,9 @@ using namespace opt;
  * @param frequency
  */
 ConstantDecayLRStrategy::ConstantDecayLRStrategy(
-    const double initialLearningRate,
-    const double decay,
-    const size_t frequency
+    double initialLearningRate,
+    double decay,
+    size_t frequency
 )
     : LearningRateStrategy(initialLearningRate, frequency), _decay(decay)
 {
@@ -49,8 +49,8 @@ ConstantDecayLRStrategy::ConstantDecayLRStrategy(
  * @param decay
  */
 ConstantDecayLRStrategy::ConstantDecayLRStrategy(
-    const double initialLearningRate,
-    const double decay
+    double initialLearningRate,
+    double decay
 )
     : LearningRateStrategy(initialLearningRate), _decay(decay)
 {
@@ -70,8 +70,8 @@ std::shared_ptr<LearningRateStrategy> ConstantDecayLRStrategy::clone() const
  * @brief Update the learning rate
  */
 void ConstantDecayLRStrategy::updateLearningRate(
-    const size_t step,
-    const size_t /* totalSteps */
+    size_t step,
+    size_t /* totalSteps */
 )
 {
     if (step % _frequency == 0)

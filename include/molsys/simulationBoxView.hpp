@@ -56,11 +56,11 @@ namespace molsys
         auto getMMMolecules();
         auto getMMMolecules() const;
 
-        auto getMoleculesInsideZone(const HybridZone zone) const;
-        auto getMoleculesInsideZone(const HybridZone zone);
+        auto getMoleculesInsideZone(HybridZone zone) const;
+        auto getMoleculesInsideZone(HybridZone zone);
 
-        auto getMoleculesOutsideZone(const HybridZone zone) const;
-        auto getMoleculesOutsideZone(const HybridZone zone);
+        auto getMoleculesOutsideZone(HybridZone zone) const;
+        auto getMoleculesOutsideZone(HybridZone zone);
 
         auto getActiveMolecules();
         auto getActiveMolecules() const;
@@ -212,9 +212,7 @@ namespace molsys
      * from _molecules based on whether they are in the specified HybridZone
      */
     template <typename Derived>
-    auto SimulationBoxView<Derived>::getMoleculesInsideZone(
-        const HybridZone zone
-    )
+    auto SimulationBoxView<Derived>::getMoleculesInsideZone(HybridZone zone)
     {
         return getMolecules() |
                pqviews::filter([zone](auto& mol)
@@ -233,7 +231,7 @@ namespace molsys
      */
     template <typename Derived>
     auto SimulationBoxView<Derived>::getMoleculesInsideZone(
-        const HybridZone zone
+        HybridZone zone
     ) const
     {
         return getMolecules() |
@@ -253,9 +251,7 @@ namespace molsys
      * HybridZone
      */
     template <typename Derived>
-    auto SimulationBoxView<Derived>::getMoleculesOutsideZone(
-        const HybridZone zone
-    )
+    auto SimulationBoxView<Derived>::getMoleculesOutsideZone(HybridZone zone)
     {
         return getMolecules() |
                pqviews::filter([zone](auto& mol)
@@ -275,7 +271,7 @@ namespace molsys
      */
     template <typename Derived>
     auto SimulationBoxView<Derived>::getMoleculesOutsideZone(
-        const HybridZone zone
+        HybridZone zone
     ) const
     {
         return getMolecules() |

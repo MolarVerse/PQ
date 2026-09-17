@@ -35,35 +35,35 @@ using settings::ResetKineticsSettings;
  *
  * @param nScale
  */
-void ResetKineticsSettings::setNScale(const size_t nScale) { _nScale = nScale; }
+void ResetKineticsSettings::setNScale(size_t nScale) { _nScale = nScale; }
 
 /**
  * @brief set fScale
  *
  * @param fScale
  */
-void ResetKineticsSettings::setFScale(const size_t fScale) { _fScale = fScale; }
+void ResetKineticsSettings::setFScale(size_t fScale) { _fScale = fScale; }
 
 /**
  * @brief set nReset
  *
  * @param nReset
  */
-void ResetKineticsSettings::setNReset(const size_t nReset) { _nReset = nReset; }
+void ResetKineticsSettings::setNReset(size_t nReset) { _nReset = nReset; }
 
 /**
  * @brief set fReset
  *
  * @param fReset
  */
-void ResetKineticsSettings::setFReset(const size_t fReset) { _fReset = fReset; }
+void ResetKineticsSettings::setFReset(size_t fReset) { _fReset = fReset; }
 
 /**
  * @brief set nResetAngular
  *
  * @param nResetAngular
  */
-void ResetKineticsSettings::setNResetAngular(const size_t nResetAngular)
+void ResetKineticsSettings::setNResetAngular(size_t nResetAngular)
 {
     _nResetAngular = nResetAngular;
 }
@@ -73,7 +73,7 @@ void ResetKineticsSettings::setNResetAngular(const size_t nResetAngular)
  *
  * @param fResetAngular
  */
-void ResetKineticsSettings::setFResetAngular(const size_t fResetAngular)
+void ResetKineticsSettings::setFResetAngular(size_t fResetAngular)
 {
     _fResetAngular = fResetAngular;
 }
@@ -83,7 +83,7 @@ void ResetKineticsSettings::setFResetAngular(const size_t fResetAngular)
  *
  * @param fResetForces
  */
-void ResetKineticsSettings::setFResetForces(const size_t fResetForces)
+void ResetKineticsSettings::setFResetForces(size_t fResetForces)
 {
     _fResetForces = fResetForces;
 }

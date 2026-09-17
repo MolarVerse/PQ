@@ -43,18 +43,18 @@ namespace linearAlgebra
      * @brief move assignment operator
      *
      * @tparam T
-     * @param rhs
+     * @param vec
      * @return Vector3D<T>&
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &&rhs) noexcept
+    Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &&vec) noexcept
     {
-        if (this == &rhs)
+        if (this == &vec)
             return *this;
 
-        _x = rhs._x;
-        _y = rhs._y;
-        _z = rhs._z;
+        _x = vec._x;
+        _y = vec._y;
+        _z = vec._z;
         return *this;
     }
 
@@ -62,18 +62,18 @@ namespace linearAlgebra
      * @brief copy assignment operator
      *
      * @tparam T
-     * @param rhs
+     * @param vec
      * @return Vector3D<T>&
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator=(const Vector3D<T> &rhs)
+    Vector3D<T> &Vector3D<T>::operator=(const Vector3D<T> &vec)
     {
-        if (this == &rhs)
+        if (this == &vec)
             return *this;
 
-        _x = rhs._x;
-        _y = rhs._y;
-        _z = rhs._z;
+        _x = vec._x;
+        _y = vec._y;
+        _z = vec._z;
         return *this;
     }
 
@@ -84,30 +84,30 @@ namespace linearAlgebra
     /**
      * @brief operator += inplace
      *
-     * @param rhs
+     * @param vec
      */
     template <class T>
-    void Vector3D<T>::operator+=(const Vector3D<T> &rhs)
+    void Vector3D<T>::operator+=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        _x += rhs._x;
-        _y += rhs._y;
-        _z += rhs._z;
+        _x += vec._x;
+        _y += vec._y;
+        _z += vec._z;
     }
 
     /**
      * @brief += operator for two Vector3d objects
      *
-     * @param rhs
+     * @param vec
      * @return `Vector3D<T>&` (inplace addition)
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator+=(const T rhs)
+    Vector3D<T> &Vector3D<T>::operator+=(const T &vec)
     requires pq::Arithmetic<T>
     {
-        _x += rhs;
-        _y += rhs;
-        _z += rhs;
+        _x += vec;
+        _y += vec;
+        _z += vec;
         return *this;
     }
 
@@ -118,32 +118,32 @@ namespace linearAlgebra
     /**
      * @brief operator -=
      *
-     * @param rhs
+     * @param vec
      * @return `Vector3D<T>&` (inplace subtraction)
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &rhs)
+    Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        _x -= rhs._x;
-        _y -= rhs._y;
-        _z -= rhs._z;
+        _x -= vec._x;
+        _y -= vec._y;
+        _z -= vec._z;
         return *this;
     }
 
     /**
      * @brief operator -=
      *
-     * @param rhs
+     * @param vec
      * @return `Vector3D<T>&` (inplace subtraction)
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator-=(const T rhs)
+    Vector3D<T> &Vector3D<T>::operator-=(const T &vec)
     requires pq::Arithmetic<T>
     {
-        _x -= rhs;
-        _y -= rhs;
-        _z -= rhs;
+        _x -= vec;
+        _y -= vec;
+        _z -= vec;
         return *this;
     }
 
@@ -155,16 +155,16 @@ namespace linearAlgebra
      * @brief operator *=
      *
      * @tparam T
-     * @param rhs
+     * @param vec
      * @return `Vector3D<T>&` (inplace multiplication)
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &rhs)
+    Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        _x *= rhs._x;
-        _y *= rhs._y;
-        _z *= rhs._z;
+        _x *= vec._x;
+        _y *= vec._y;
+        _z *= vec._z;
         return *this;
     }
 
@@ -172,16 +172,16 @@ namespace linearAlgebra
      * @brief operator *=
      *
      * @tparam T
-     * @param rhs
+     * @param vec
      * @return `Vector3D<T>&` (inplace multiplication)
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator*=(const T rhs)
+    Vector3D<T> &Vector3D<T>::operator*=(const T &vec)
     requires pq::Arithmetic<T>
     {
-        _x *= rhs;
-        _y *= rhs;
-        _z *= rhs;
+        _x *= vec;
+        _y *= vec;
+        _z *= vec;
         return *this;
     }
 
@@ -193,16 +193,16 @@ namespace linearAlgebra
      * @brief operator /=
      *
      * @tparam T
-     * @param rhs
+     * @param vec
      * @return `Vector3D<T>&` (inplace division)
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &rhs)
+    Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        _x /= rhs._x;
-        _y /= rhs._y;
-        _z /= rhs._z;
+        _x /= vec._x;
+        _y /= vec._y;
+        _z /= vec._z;
         return *this;
     }
 
@@ -210,16 +210,16 @@ namespace linearAlgebra
      * @brief operator /=
      *
      * @tparam T
-     * @param rhs
+     * @param vec
      * @return `Vector3D<T>&` (inplace division)
      */
     template <class T>
-    Vector3D<T> &Vector3D<T>::operator/=(const T rhs)
+    Vector3D<T> &Vector3D<T>::operator/=(const T &vec)
     requires pq::Arithmetic<T>
     {
-        _x /= rhs;
-        _y /= rhs;
-        _z /= rhs;
+        _x /= vec;
+        _y /= vec;
+        _z /= vec;
         return *this;
     }
 
@@ -236,7 +236,7 @@ namespace linearAlgebra
      * @return T&
      */
     template <class T>
-    T &Vector3D<T>::operator[](const size_t index)
+    T &Vector3D<T>::operator[](size_t index)
     {
         return _xyz[index];
     }
@@ -248,7 +248,7 @@ namespace linearAlgebra
      * @return const T&
      */
     template <class T>
-    const T &Vector3D<T>::operator[](const size_t index) const
+    const T &Vector3D<T>::operator[](size_t index) const
     {
         return _xyz[index];
     }

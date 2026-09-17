@@ -24,14 +24,14 @@
 
 #define _SIMULATION_BOX_SETTINGS_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstdint>
 
 namespace settings
 {
     /**
      * @brief enum InitVelocities
      */
-    enum class InitVelocities : size_t
+    enum class InitVelocities : std::uint8_t
     {
         FALSE,
         TRUE,
@@ -67,10 +67,10 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setDensitySet(const bool densitySet);
-        static void setBoxSet(const bool boxSet);
+        static void setDensitySet(bool densitySet);
+        static void setBoxSet(bool boxSet);
         static void setInitializeVelocities(
-            const InitVelocities initializeVelocities
+            InitVelocities initializeVelocities
         );
 
         /********************

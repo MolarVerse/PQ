@@ -50,12 +50,12 @@ namespace setup
 
         void setup();
 
-        void setupTargetTemperature() const;
-        void setupTemperatureRamp();
-        void setupBerendsenThermostat();
-        void setupLangevinThermostat();
-        void setupNoseHooverThermostat();
-        void setupVelocityRescalingThermostat();
+        static void setupTargetTemperature();
+        void        setupTemperatureRamp();
+        void        setupBerendsenThermostat();
+        void        setupLangevinThermostat();
+        void        setupNoseHooverThermostat();
+        void        setupVelocityRescalingThermostat();
 
         void writeSetupInfo() const;
         void writeBerendsenInfo() const;

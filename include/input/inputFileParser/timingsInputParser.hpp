@@ -41,8 +41,11 @@ namespace input
        public:
         TimingsInputParser();
 
-        void parseTimeStep(const std::vector<std::string> &, const size_t);
-        void parseNumberOfSteps(const std::vector<std::string> &, const size_t);
+        static void parseTimeStep(const std::vector<std::string> &, size_t);
+        static void parseNumberOfSteps(
+            const std::vector<std::string> &,
+            size_t
+        );
     };
 
 }   // namespace input

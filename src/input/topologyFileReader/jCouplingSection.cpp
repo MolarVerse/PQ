@@ -59,7 +59,7 @@ void JCouplingSection::processSection(
     Engine                   &engine
 )
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 5)
     {
         throw TopologyException(
@@ -92,7 +92,7 @@ void JCouplingSection::processSection(
             )
         );
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     auto &simBox = engine.getSimulationBox();
 
@@ -123,7 +123,7 @@ std::string JCouplingSection::keyword() { return "j_couplings"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void JCouplingSection::endedNormally(const bool endedNormal) const
+void JCouplingSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

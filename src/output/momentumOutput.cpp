@@ -46,7 +46,7 @@ namespace out
      * @param data
      */
     void MomentumOutput::write(
-        const size_t                      step,
+        size_t                            step,
         const physicalData::PhysicalData &data
     )
     {
@@ -62,4 +62,5 @@ namespace out
 
         _fp << std::flush;
     }
+
 }   // namespace out

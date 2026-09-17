@@ -132,7 +132,7 @@ ConvInputParser::ConvInputParser()
  */
 void ConvInputParser::parseEnergyConvergenceStrategy(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -175,7 +175,7 @@ void ConvInputParser::parseEnergyConvergenceStrategy(
  */
 void ConvInputParser::parseUseEnergyConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -210,7 +210,7 @@ void ConvInputParser::parseUseEnergyConvergence(
  */
 void ConvInputParser::parseUseForceConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -245,7 +245,7 @@ void ConvInputParser::parseUseForceConvergence(
  */
 void ConvInputParser::parseUseMaxForceConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -280,7 +280,7 @@ void ConvInputParser::parseUseMaxForceConvergence(
  */
 void ConvInputParser::parseUseRMSForceConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -318,7 +318,7 @@ void ConvInputParser::parseUseRMSForceConvergence(
  */
 void ConvInputParser::parseEnergyConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -350,7 +350,7 @@ void ConvInputParser::parseEnergyConvergence(
  */
 void ConvInputParser::parseRelativeEnergyConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -384,7 +384,7 @@ void ConvInputParser::parseRelativeEnergyConvergence(
  */
 void ConvInputParser::parseAbsoluteEnergyConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -418,7 +418,7 @@ void ConvInputParser::parseAbsoluteEnergyConvergence(
  */
 void ConvInputParser::parseForceConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -450,7 +450,7 @@ void ConvInputParser::parseForceConvergence(
  */
 void ConvInputParser::parseMaxForceConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -482,7 +482,7 @@ void ConvInputParser::parseMaxForceConvergence(
  */
 void ConvInputParser::parseRMSForceConvergence(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);

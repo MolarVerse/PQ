@@ -39,7 +39,7 @@ using namespace exc;
  *
  * @param nEpochs
  */
-Optimizer::Optimizer(const size_t nEpochs) : _nEpochs(nEpochs) {}
+Optimizer::Optimizer(size_t nEpochs) : _nEpochs(nEpochs) {}
 
 /**
  * @brief update the optimizer history
@@ -97,7 +97,7 @@ bool Optimizer::hasConverged()
  *
  * @param convergence
  */
-void Optimizer::setConvergence(const Convergence convergence)
+void Optimizer::setConvergence(Convergence convergence)
 {
     _convergence = convergence;
 }
@@ -108,7 +108,7 @@ void Optimizer::setConvergence(const Convergence convergence)
  * @param simulationBox
  */
 void Optimizer::setSimulationBox(
-    const std::shared_ptr<SimulationBox> simulationBox
+    const std::shared_ptr<SimulationBox> &simulationBox
 )
 {
     _simulationBox = simulationBox;
@@ -120,7 +120,7 @@ void Optimizer::setSimulationBox(
  * @param physicalData
  */
 void Optimizer::setPhysicalData(
-    const std::shared_ptr<PhysicalData> physicalData
+    const std::shared_ptr<PhysicalData> &physicalData
 )
 {
     _physicalData = physicalData;
@@ -132,7 +132,7 @@ void Optimizer::setPhysicalData(
  * @param physicalData
  */
 void Optimizer::setPhysicalDataOld(
-    const std::shared_ptr<PhysicalData> physicalData
+    const std::shared_ptr<PhysicalData> &physicalData
 )
 {
     _physicalDataOld = physicalData;
@@ -156,7 +156,7 @@ size_t Optimizer::getNEpochs() const { return _nEpochs; }
  *
  * @return size_t
  */
-size_t Optimizer::getHistoryIndex(const int offset) const
+size_t Optimizer::getHistoryIndex(int offset) const
 {
     if (offset >= 0)
         throw OptException(
@@ -182,7 +182,7 @@ double Optimizer::getEnergy() const { return _energyHistory.back(); }
  * @param offset
  *
  */
-double Optimizer::getEnergy(const int offset) const
+double Optimizer::getEnergy(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 
@@ -202,7 +202,7 @@ double Optimizer::getRMSForce() const { return _rmsForceHistory.back(); }
  * @param offset
  *
  */
-double Optimizer::getRMSForce(const int offset) const
+double Optimizer::getRMSForce(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 
@@ -222,7 +222,7 @@ double Optimizer::getMaxForce() const { return _maxForceHistory.back(); }
  * @param offset
  *
  */
-double Optimizer::getMaxForce(const int offset) const
+double Optimizer::getMaxForce(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 
@@ -245,7 +245,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getForces() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getForces(const int offset) const
+std::vector<linearAlgebra::Vec3D> Optimizer::getForces(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 
@@ -268,9 +268,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getPositions() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(
-    const int offset
-) const
+std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 

@@ -46,9 +46,10 @@ namespace molsys
             const linearAlgebra::Vec3D &shiftVector
         ) const override;
 
-        [[nodiscard]] linearAlgebra::Vec3D calcBoxDimFromDensity(
-            const double totalMass,
-            const double density
+        [[nodiscard]]
+        linearAlgebra::Vec3D calcBoxDimFromDensity(
+            double totalMass,
+            double density
         );
 
         [[nodiscard]] linearAlgebra::Vec3D wrapPositionIntoBox(

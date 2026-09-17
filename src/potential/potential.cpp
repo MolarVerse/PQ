@@ -52,7 +52,7 @@ void Potential::calculateQMMMForces(
  * @param pot
  */
 void Potential::setNonCoulombPotential(
-    const std::shared_ptr<NonCoulombPotential> pot
+    const std::shared_ptr<NonCoulombPotential> &pot
 )
 {
     _nonCoulombPot = pot;

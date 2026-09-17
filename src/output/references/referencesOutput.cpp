@@ -40,7 +40,7 @@ namespace
 {
     std::filesystem::path referenceFilesPath()
     {
-        const auto installedPath = utilities::installedDataPath("references");
+        auto installedPath = utilities::installedDataPath("references");
         if (std::filesystem::is_directory(installedPath))
             return installedPath;
 

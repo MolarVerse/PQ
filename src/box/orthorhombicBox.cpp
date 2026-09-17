@@ -69,8 +69,8 @@ namespace molsys
      * @return vector<double>
      */
     Vec3D OrthorhombicBox::calcBoxDimFromDensity(
-        const double totalMass,
-        const double density
+        double totalMass,
+        double density
     )
     {
         _volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);

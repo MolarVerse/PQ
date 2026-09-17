@@ -214,10 +214,10 @@ void MShakeReader::processAtomLines(
             );
         }
 
-        const auto atomName = lineElements[0];
-        const auto x        = std::stod(lineElements[1]);
-        const auto y        = std::stod(lineElements[2]);
-        const auto z        = std::stod(lineElements[3]);
+        const auto &atomName = lineElements[0];
+        const auto  x        = std::stod(lineElements[1]);
+        const auto  y        = std::stod(lineElements[2]);
+        const auto  z        = std::stod(lineElements[3]);
 
         auto atom = Atom();
 

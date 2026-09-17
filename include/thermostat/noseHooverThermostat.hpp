@@ -47,10 +47,10 @@ namespace thermostat
        public:
         NoseHooverThermostat() = default;
         explicit NoseHooverThermostat(
-            const double               targetTemp,
+            double                     targetTemp,
             const std::vector<double> &chi,
             const std::vector<double> &zeta,
-            const double               couplingFrequency
+            double                     couplingFrequency
         );
 
         void applyThermostat(
@@ -75,11 +75,11 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        void setChi(const unsigned int index, const double chi);
+        void setChi(unsigned int index, double chi);
         void setChi(const std::vector<double> &chi);
-        void setZeta(const unsigned int index, const double zeta);
+        void setZeta(unsigned int index, double zeta);
         void setZeta(const std::vector<double> &zeta);
-        void setCouplingFrequency(const double couplingFrequency);
+        void setCouplingFrequency(double couplingFrequency);
     };
 }   // namespace thermostat
 

@@ -61,7 +61,7 @@ size_t CellList::getCellIndex(const Vec3Dul &cellIndices) const
 {
     const auto outerProduct = cellIndices[0] * _nCells[1] * _nCells[2];
 
-    return outerProduct + cellIndices[1] * _nCells[2] + cellIndices[2];
+    return outerProduct + (cellIndices[1] * _nCells[2]) + cellIndices[2];
 }
 
 /**
@@ -104,7 +104,7 @@ void CellList::determineCellSize(const Vec3D &box)
  *
  * @param coulombCutoff
  */
-void CellList::checkCoulombCutoff(const double coulombCutoff) const
+void CellList::checkCoulombCutoff(double coulombCutoff) const
 {
     if (coulombCutoff < maximum(_cellSize) / 2.0)
         throw CellListException(
@@ -145,7 +145,7 @@ void CellList::determineCellBoundaries(const Vec3D &box)
  *
  * @param coulombCutoff
  */
-void CellList::addNeighbouringCells(const double coulombCutoff)
+void CellList::addNeighbouringCells(double coulombCutoff)
 {
     _nNeighbourCells = Vec3Dul(ceil(coulombCutoff / _cellSize));
 
@@ -182,7 +182,7 @@ void CellList::addNeighbouringCells(const double coulombCutoff)
  */
 void CellList::addNeighbouringCellPointers(Cell &cell)
 {
-    const size_t totalCellNeighbours = prod(_nNeighbourCells * 2 + 1);
+    const auto totalCellNeighbours = prod(_nNeighbourCells * 2 + 1);
 
     const auto nNeighCells0 = static_cast<int>(_nNeighbourCells[0]);
     const auto nNeighCells1 = static_cast<int>(_nNeighbourCells[1]);
@@ -416,7 +416,7 @@ const std::vector<Cell> &CellList::getCells() const { return _cells; }
  * @param index
  * @return Cell&
  */
-Cell &CellList::getCell(const size_t index) { return _cells[index]; }
+Cell &CellList::getCell(size_t index) { return _cells[index]; }
 
 /***************************
  *                         *
@@ -429,7 +429,7 @@ Cell &CellList::getCell(const size_t index) { return _cells[index]; }
  *
  * @param nCells
  */
-void CellList::setNumberOfCells(const size_t nCells)
+void CellList::setNumberOfCells(size_t nCells)
 {
     _nCells = {nCells, nCells, nCells};
 }
@@ -439,7 +439,7 @@ void CellList::setNumberOfCells(const size_t nCells)
  *
  * @param nCells
  */
-void CellList::setNumberOfNeighbourCells(const size_t nCells)
+void CellList::setNumberOfNeighbourCells(size_t nCells)
 {
     _nNeighbourCells = Vec3Dul(nCells);
 }

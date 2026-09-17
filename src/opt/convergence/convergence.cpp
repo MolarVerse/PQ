@@ -42,14 +42,14 @@ using namespace settings;
  * @param energyConvStrategy
  */
 Convergence::Convergence(
-    const bool         enableEnergyConv,
-    const bool         enableMaxForceConv,
-    const bool         enableRMSForceConv,
-    const double       relEnergyConvThreshold,
-    const double       absEnergyConvThreshold,
-    const double       absMaxForceConvThreshold,
-    const double       absRMSForceConvThreshold,
-    const ConvStrategy energyConvStrategy
+    bool         enableEnergyConv,
+    bool         enableMaxForceConv,
+    bool         enableRMSForceConv,
+    double       relEnergyConvThreshold,
+    double       absEnergyConvThreshold,
+    double       absMaxForceConvThreshold,
+    double       absRMSForceConvThreshold,
+    ConvStrategy energyConvStrategy
 )
     : _enableEnergyConv(enableEnergyConv),
       _enableMaxForceConv(enableMaxForceConv),
@@ -97,10 +97,7 @@ bool Convergence::checkConvergence() const
  * @param energyOld
  * @param energyNew
  */
-void Convergence::calcEnergyConvergence(
-    const double energyOld,
-    const double energyNew
-)
+void Convergence::calcEnergyConvergence(double energyOld, double energyNew)
 {
     _absEnergy = std::abs(energyNew - energyOld);
     _relEnergy = _absEnergy / std::abs(energyOld);
@@ -118,10 +115,7 @@ void Convergence::calcEnergyConvergence(
  * @param maxForce
  * @param rmsForce
  */
-void Convergence::calcForceConvergence(
-    const double maxForce,
-    const double rmsForce
-)
+void Convergence::calcForceConvergence(double maxForce, double rmsForce)
 {
     _absMaxForce = std::abs(maxForce);
     _absRMSForce = std::abs(rmsForce);

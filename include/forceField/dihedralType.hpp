@@ -49,7 +49,7 @@ namespace forceField
         DihedralParams _params;
 
        public:
-        DihedralType(const DihedralId id, const DihedralParams &params);
+        DihedralType(DihedralId id, const DihedralParams &params);
 
         friend bool operator==(const DihedralType &, const DihedralType &);
 

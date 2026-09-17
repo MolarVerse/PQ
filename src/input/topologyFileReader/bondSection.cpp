@@ -131,7 +131,7 @@ std::string BondSection::keyword() { return "bonds"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void BondSection::endedNormally(const bool endedNormal) const
+void BondSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

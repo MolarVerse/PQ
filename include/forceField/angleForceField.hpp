@@ -65,7 +65,7 @@ namespace forceField
         AngleForceField(
             const std::vector<molsys::Molecule *> &molecules,
             const std::vector<AtomIndex>          &atomIndices,
-            const AngleId                          type
+            AngleId                                type
         );
 
         void calculateEnergyAndForces(
@@ -79,7 +79,7 @@ namespace forceField
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
+        void setIsLinker(bool isLinker);
         void setParams(const AngleParams &params);
 
         /***************************

@@ -54,7 +54,7 @@ namespace timings
         std::string _name;
 
        public:
-        explicit TimingsSectionGuard(Timer& timer, const std::string_view name);
+        explicit TimingsSectionGuard(Timer& timer, std::string_view name);
         ~TimingsSectionGuard();
 
         TimingsSectionGuard(const TimingsSectionGuard&)            = delete;

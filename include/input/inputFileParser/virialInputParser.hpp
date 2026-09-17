@@ -41,7 +41,7 @@ namespace input
        public:
         VirialInputParser();
 
-        void parseVirial(const std::vector<std::string> &, const size_t);
+        static void parseVirial(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

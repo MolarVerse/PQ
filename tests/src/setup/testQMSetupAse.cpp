@@ -32,7 +32,7 @@
 #include "pybind11/embed.h"      // for scoped_interpreter
 #endif
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
+// for Message, TestPartResult
 
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)

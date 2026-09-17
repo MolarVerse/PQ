@@ -44,13 +44,13 @@ namespace thermostat
     class VelocityRescalingThermostat : public Thermostat
     {
        private:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator;
 
         double _tau = 0.0;
 
        public:
         VelocityRescalingThermostat() = default;
-        explicit VelocityRescalingThermostat(const double, const double);
+        explicit VelocityRescalingThermostat(double, double);
         ~VelocityRescalingThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -69,7 +69,7 @@ namespace thermostat
             physicalData::PhysicalData &physicalData
         ) override;
 
-        void setTau(const double tau);
+        void setTau(double tau);
 
         [[nodiscard]]
         settings::ThermostatType getThermostatType() const override;

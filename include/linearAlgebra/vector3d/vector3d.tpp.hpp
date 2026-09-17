@@ -990,16 +990,16 @@ namespace linearAlgebra
      * std::vector
      *
      * @tparam U
-     * @param v
-     * @return decltype(max(v[0]))
+     * @param vec
+     * @return decltype(max(vec[0]))
      */
     template <pq::ArithmeticVector3D U>
-    auto max(const std::vector<U> &v) -> decltype(maximum(v[0]))
+    auto max(const std::vector<U> &vec) -> decltype(maximum(vec[0]))
     {
-        std::vector<decltype(maximum(v[0]))> maxs;
-        maxs.reserve(v.size());
+        std::vector<decltype(maximum(vec[0]))> maxs;
+        maxs.reserve(vec.size());
 
-        for (const auto &vec : v) maxs.push_back(maximum(vec));
+        for (const auto &value : vec) maxs.push_back(maximum(value));
 
         return *std::ranges::max_element(maxs.begin(), maxs.end());
     }
@@ -1008,16 +1008,16 @@ namespace linearAlgebra
      * @brief returns the maximum of the norms of all Vector3d objects in a
      *
      * @tparam U
-     * @param v
-     * @return decltype(norm(v[0]))
+     * @param vec
+     * @return decltype(norm(vec[0]))
      */
     template <pq::ArithmeticVector3D U>
-    auto maxNorm(const std::vector<U> &v) -> decltype(norm(v[0]))
+    auto maxNorm(const std::vector<U> &vec) -> decltype(norm(vec[0]))
     {
-        std::vector<decltype(norm(v[0]))> norms;
-        norms.reserve(v.size());
+        std::vector<decltype(norm(vec[0]))> norms;
+        norms.reserve(vec.size());
 
-        for (const auto &vec : v) norms.push_back(norm(vec));
+        for (const auto &value : vec) norms.push_back(norm(value));
 
         return *std::ranges::max_element(norms.begin(), norms.end());
     }
@@ -1070,16 +1070,16 @@ namespace linearAlgebra
      * @endcode
      *
      * @tparam U
-     * @param v
-     * @return std::vector<decltype(norm(v[0])>
+     * @param vec
+     * @return std::vector<decltype(norm(vec[0])>
      */
     template <pq::ArithmeticVector3D U>
-    auto norms(std::vector<U> v) -> std::vector<decltype(norm(v[0]))>
+    auto norms(std::vector<U> vec) -> std::vector<decltype(norm(vec[0]))>
     {
-        std::vector<decltype(norm(v[0]))> norms;
-        norms.reserve(v.size());
+        std::vector<decltype(norm(vec[0]))> norms;
+        norms.reserve(vec.size());
 
-        for (const auto &vec : v) norms.push_back(norm(vec));
+        for (const auto &value : vec) norms.push_back(norm(value));
 
         return norms;
     }
@@ -1088,21 +1088,21 @@ namespace linearAlgebra
      * @brief rms function for a std::vector of Vector3d objects
      *
      * @code
-     * rms(std::vector<Vector3D<double>>)
+     * rms(const std::vector<Vector3D<double>> &vec)
      * @endcode
      *
      * @tparam U
-     * @param v
-     * @return decltype(norm(v[0]) / v.size())
+     * @param vec
+     * @return decltype(norm(vec[0]) / vec.size())
      */
     template <pq::ArithmeticVector3D U>
-    auto rms(const std::vector<U> &v) -> decltype(norm(v[0]) / v.size())
+    auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]) / vec.size())
     {
         auto rms = 0.0;
 
-        for (const auto &vec : v) rms += normSquared(vec);
+        for (const auto &value : vec) rms += normSquared(value);
 
-        return std::sqrt(rms / v.size());
+        return std::sqrt(rms / vec.size());
     }
 
     /****************
@@ -1286,14 +1286,14 @@ namespace linearAlgebra
      *
      * @tparam U
      * @tparam V
-     * @param v1
-     * @param v2
-     * @return decltype(std::acos(cos(v1, v2)))
+     * @param lhs
+     * @param rhs
+     * @return decltype(std::acos(cos(lhs, rhs)))
      */
     template <pq::ArithmeticVector3D U>
-    auto angle(const U &v1, const U &v2) -> decltype(std::acos(cos(v1, v2)))
+    auto angle(const U &lhs, const U &rhs) -> decltype(std::acos(cos(lhs, rhs)))
     {
-        return std::acos(cos(v1, v2));
+        return std::acos(cos(lhs, rhs));
     }
 
     /**************
@@ -1306,14 +1306,14 @@ namespace linearAlgebra
      * @brief Operator << for a Vector3d object
      *
      * @tparam U
-     * @param os
-     * @param v
+     * @param ostream
+     * @param vec
      * @return std::ostream&
      */
     template <pq::ArithmeticVector3D U>
-    std::ostream &operator<<(std::ostream &os, const U &v)
+    std::ostream &operator<<(std::ostream &ostream, const U &vec)
     {
-        return os << v[0] << " " << v[1] << " " << v[2];
+        return ostream << vec[0] << " " << vec[1] << " " << vec[2];
     }
 
 }   // namespace linearAlgebra

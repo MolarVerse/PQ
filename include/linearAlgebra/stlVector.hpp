@@ -73,28 +73,28 @@ namespace stl
     /**
      * @brief dot product of two vectors
      *
-     * @param a std::vector<T>
-     * @param b std::vector<T>
+     * @param lhs std::vector<T>
+     * @param rhs std::vector<T>
      *
-     * @return T dot product of a and b
+     * @return T dot product of lhs and rhs
      */
     template <typename T>
-    T dot(const std::vector<T> &a, const std::vector<T> &b)
+    T dot(const std::vector<T> &lhs, const std::vector<T> &rhs)
     {
-        return std::inner_product(a.begin(), a.end(), b.begin(), T());
+        return std::inner_product(lhs.begin(), lhs.end(), rhs.begin(), T());
     }
 
     /**
      * @brief root mean square of a vector
      *
-     * @param a std::vector<T>
+     * @param vec std::vector<T>
      *
-     * @return T root mean square of a
+     * @return T root mean square of vec
      */
     template <typename T>
-    T rms(const std::vector<T> &a)
+    T rms(const std::vector<T> &vec)
     {
-        return std::sqrt(dot(a, a) / a.size());
+        return std::sqrt(dot(vec, vec) / vec.size());
     }
 
 }   // namespace stl

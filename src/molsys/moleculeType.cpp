@@ -81,7 +81,7 @@ void MoleculeType::addExternalAtomType(ExtAtomType externalAtomType)
  *
  * @param partialCharge
  */
-void MoleculeType::addPartialCharge(const double partialCharge)
+void MoleculeType::addPartialCharge(double partialCharge)
 {
     _partialCharges.push_back(partialCharge);
 }
@@ -91,9 +91,7 @@ void MoleculeType::addPartialCharge(const double partialCharge)
  *
  * @param externalGlobalVDWType
  */
-void MoleculeType::addExternalGlobalVDWType(
-    const ExtVdwType externalGlobalVDWType
-)
+void MoleculeType::addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType)
 {
     _externalGlobalVDWTypes.push_back(externalGlobalVDWType);
 }
@@ -140,7 +138,7 @@ void MoleculeType::setName(const std::string_view &name) { _name = name; }
  *
  * @param numberOfAtoms
  */
-void MoleculeType::setNumberOfAtoms(const size_t numberOfAtoms)
+void MoleculeType::setNumberOfAtoms(size_t numberOfAtoms)
 {
     _numberOfAtoms = numberOfAtoms;
 }
@@ -157,7 +155,7 @@ void MoleculeType::setMoltype(MolType moltype) { _moltype = moltype; }
  *
  * @param charge
  */
-void MoleculeType::setCharge(const int charge) { _charge = charge; }
+void MoleculeType::setCharge(int charge) { _charge = charge; }
 
 /**
  * @brief sets the partial charge of an atom
@@ -165,7 +163,7 @@ void MoleculeType::setCharge(const int charge) { _charge = charge; }
  * @param index
  * @param partialCharge
  */
-void MoleculeType::setPartialCharge(AtomIndex index, const double partialCharge)
+void MoleculeType::setPartialCharge(AtomIndex index, double partialCharge)
 {
     _partialCharges[index.get()] = partialCharge;
 }

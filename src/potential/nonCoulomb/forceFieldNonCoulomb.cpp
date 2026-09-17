@@ -46,8 +46,7 @@ using std::ranges::find_if;
  *
  **/
 ForceFieldNonCoulomb::ForceFieldNonCoulomb()
-    : _nonCoulPairsVec(std::vector<std::shared_ptr<NonCoulombPair>>()),
-      _nonCoulPairsMatPtr(std::make_unique<matrix>())
+    : _nonCoulPairsMatPtr(std::make_unique<matrix>())
 {
 }
 
@@ -133,13 +132,13 @@ void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(
 /**
  * @brief sorts the elements of a non-coulombic pairs vector
  *
- * @param nonCoulPairsVec
+ * @param diagonalElements
  *
  * @throw ParameterFileException if non-coulombic pairs with the same global van
  * der Waals types are defined twice
  */
 void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
-    std::vector<std::shared_ptr<NonCoulombPair>> &nonCoulPairsVec
+    std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
 )
 {
     auto isLess = [](const auto &nonCoulPair1, const auto &nonCoulPair2)
@@ -158,14 +157,14 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
         return false;
     };
 
-    std::ranges::sort(nonCoulPairsVec, isLess);
+    std::ranges::sort(diagonalElements, isLess);
 
     auto compareSharedPtrs = [](const auto &pair1, const auto &pair2)
     { return *pair1 == *pair2; };
 
-    const auto iter = adjacent_find(nonCoulPairsVec, compareSharedPtrs);
+    const auto iter = adjacent_find(diagonalElements, compareSharedPtrs);
 
-    if (iter != nonCoulPairsVec.end())
+    if (iter != diagonalElements.end())
     {
         throw ParameterFileException(
             std::format(
@@ -220,8 +219,8 @@ void ForceFieldNonCoulomb::fillDiagOfNonCoulPairsMatrix(
  * index combinations and it has different parameters
  */
 void ForceFieldNonCoulomb::setOffDiagonalElement(
-    const VdwType atomType1,
-    const VdwType atomType2
+    VdwType atomType1,
+    VdwType atomType2
 )
 {
     auto nonCoulPair1 = findNonCoulPairByInternalTypes(atomType1, atomType2);
@@ -329,10 +328,7 @@ std::vector<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
  * @throws if the non coulombic pair is found twice
  */
 std::optional<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
-    findNonCoulPairByInternalTypes(
-        const VdwType intType1,
-        const VdwType intType2
-    ) const
+    findNonCoulPairByInternalTypes(VdwType intType1, VdwType intType2) const
 {
     auto findByIntAtomTypes = [intType1, intType2](const auto &nonCoulPair)
     {

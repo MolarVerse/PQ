@@ -37,7 +37,6 @@
 #include "forceField.hpp"             // IWYU pragma: keep - for correctLinker
 #include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"              // for Message, TestPartResult
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "matrix.hpp"                 // for Matrix
 #include "molecule.hpp"               // for Molecule

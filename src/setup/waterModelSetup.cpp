@@ -64,7 +64,7 @@ using namespace waterModel;
  */
 void setup::setupWaterModel(Engine &engine)
 {
-    engine.getStdoutOutput().writeSetup("Water model");
+    out::StdoutOutput::writeSetup("Water model");
     engine.getLogOutput().writeSetup("Water model");
 
     WaterModelSetup waterModelSetup(dynamic_cast<MDEngine &>(engine));
@@ -180,8 +180,8 @@ void WaterModelSetup::checkTopologyFile()
         const auto *mol2 = bond.getMolecule2();
 
         const bool involvesWater =
-            (mol1 && waterMolecules.find(mol1) != waterMolecules.end()) ||
-            (mol2 && waterMolecules.find(mol2) != waterMolecules.end());
+            (mol1 != nullptr && waterMolecules.contains(mol1)) ||
+            (mol2 != nullptr && waterMolecules.contains(mol2));
 
         if (involvesWater)
         {
@@ -212,9 +212,9 @@ void WaterModelSetup::checkTopologyFile()
         const auto *mol3      = molecules[2];
 
         const bool involvesWater =
-            (mol1 && waterMolecules.find(mol1) != waterMolecules.end()) ||
-            (mol2 && waterMolecules.find(mol2) != waterMolecules.end()) ||
-            (mol3 && waterMolecules.find(mol3) != waterMolecules.end());
+            (mol1 != nullptr && waterMolecules.contains(mol1)) ||
+            (mol2 != nullptr && waterMolecules.contains(mol2)) ||
+            (mol3 != nullptr && waterMolecules.contains(mol3));
 
         if (involvesWater)
         {
@@ -295,7 +295,7 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
  * the model is not rigid.
  */
 std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
-    const WaterIntraModel intraModel
+    WaterIntraModel intraModel
 )
 {
     using enum WaterIntraModel;

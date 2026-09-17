@@ -47,22 +47,22 @@ namespace out
        private:
         void writeHeader();
         void writeLeft(
-            const double,
+            double,
             const std::string_view &,
             const std::string_view &
         );
         void writeLeftScientific(
-            const double,
+            double,
             const std::string_view &,
             const std::string_view &
         );
         void writeLeftInteger(
-            const double,
+            double,
             const std::string_view &,
             const std::string_view &
         );
         void writeRight(
-            const double,
+            double,
             const std::string_view &,
             const std::string_view &
         );
@@ -71,7 +71,7 @@ namespace out
        public:
         using Output::Output;
 
-        void write(const double, const physicalData::PhysicalData &);
+        void write(double, const physicalData::PhysicalData &);
     };
 
 }   // namespace out

@@ -46,35 +46,30 @@ namespace pot
 
        public:
         explicit MorsePair(
-            const ExtVdwType   vanDerWaalsType1,
-            const ExtVdwType   vanDerWaalsType2,
-            const double       cutOff,
+            ExtVdwType         vanDerWaalsType1,
+            ExtVdwType         vanDerWaalsType2,
+            double             cutOff,
             const MorseParams &params
         );
 
-        explicit MorsePair(const double cutOff, const MorseParams &params);
+        explicit MorsePair(double cutOff, const MorseParams &params);
 
         explicit MorsePair(
-            const double       cutOff,
-            const double       energyCutoff,
-            const double       forceCutoff,
+            double             cutOff,
+            double             energyCutoff,
+            double             forceCutoff,
             const MorseParams &params
         );
 
         // TODO: we need to explicitly delete it to not implicitly create it
         // with the wrong types!!! Needs cleanup
-        explicit MorsePair(
-            const size_t,
-            const size_t,
-            const double,
-            const MorseParams &
-        ) = delete;
+        explicit MorsePair(size_t, size_t, double, const MorseParams &) =
+            delete;
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
         friend struct ::TestMorsePairUtils;
     };

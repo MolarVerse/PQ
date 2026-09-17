@@ -32,7 +32,6 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
 #include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
 #include "gmock/gmock.h"                 // for DoubleNear, ElementsAre
-#include "gtest/gtest.h"                 // for Message, TestPartResult
 #include "lennardJonesPair.hpp"          // for LennardJonesPair
 #include "matrix.hpp"                    // for Matrix
 #include "molecule.hpp"                  // for Molecule
@@ -304,12 +303,12 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     // All per-atom forces must be finite. Without the guard these would
     // be NaN from dividing by sin(pi) == 0 in the cross-product block.
-    for (AtomIndex a{0}; a.get() < 3; ++a)
+    for (AtomIndex atomIdx{0}; atomIdx.get() < 3; ++atomIdx)
     {
         for (size_t i = 0; i < 3; ++i)
         {
-            EXPECT_FALSE(std::isnan(molecule.getAtomForce(a)[i]));
-            EXPECT_FALSE(std::isinf(molecule.getAtomForce(a)[i]));
+            EXPECT_FALSE(std::isnan(molecule.getAtomForce(atomIdx)[i]));
+            EXPECT_FALSE(std::isinf(molecule.getAtomForce(atomIdx)[i]));
         }
     }
 }

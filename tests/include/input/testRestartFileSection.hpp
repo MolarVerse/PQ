@@ -113,6 +113,30 @@ class TestStepCountSection : public ::testing::Test
 class TestAtomSection : public ::testing::Test
 {
    protected:
+    static void processAtomLine(
+        std::vector<std::string> &line,
+        molsys::SimulationBox    &simulationBox,
+        molsys::Molecule         &molecule
+    )
+    {
+        input::restartFile::AtomSection::_processAtomLine(
+            line,
+            simulationBox,
+            molecule
+        );
+    }
+
+    static void processQMAtomLine(
+        std::vector<std::string> &line,
+        molsys::SimulationBox    &simulationBox
+    )
+    {
+        input::restartFile::AtomSection::_processQMAtomLine(
+            line,
+            simulationBox
+        );
+    }
+
     void SetUp() override
     {
         _section = new input::restartFile::AtomSection;

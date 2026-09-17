@@ -42,39 +42,37 @@ namespace pot
     class CoulombWolf : public CoulombPotential
     {
        protected:
-        inline static double _kappa;
-        inline static double _wolfParam1;
-        inline static double _wolfParam2;
-        inline static double _wolfParam3;
+        static inline double _kappa;
+        static inline double _wolfParam1;
+        static inline double _wolfParam2;
+        static inline double _wolfParam3;
 
        public:
-        explicit CoulombWolf(
-            const double coulombRadiusCutOff,
-            const double kappa
-        );
+        explicit CoulombWolf(double coulombRadiusCutOff, double kappa);
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance,
-            const double chargeProduct
+        [[nodiscard]]
+        std::pair<double, double> calculate(
+            double distance,
+            double chargeProduct
         ) const override;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        static void setKappa(const double kappa);
-        static void setWolfParameter1(const double wolfParameter1);
-        static void setWolfParameter2(const double wolfParameter2);
-        static void setWolfParameter3(const double wolfParameter3);
+        static void setKappa(double kappa);
+        static void setWolfParameter1(double wolfParameter1);
+        static void setWolfParameter2(double wolfParameter2);
+        static void setWolfParameter3(double wolfParameter3);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double getKappa() const;
-        [[nodiscard]] double getWolfParameter1() const;
-        [[nodiscard]] double getWolfParameter2() const;
-        [[nodiscard]] double getWolfParameter3() const;
+        [[nodiscard]] static double getKappa();
+        [[nodiscard]] static double getWolfParameter1();
+        [[nodiscard]] static double getWolfParameter2();
+        [[nodiscard]] static double getWolfParameter3();
     };
 
 }   // namespace pot

@@ -45,8 +45,8 @@ void TimingsOutput::write()
         "Time [%]"
     );
 
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
-    // write a line consisting only of '-'
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+    // readability-magic-numbers) write a line consisting only of '-'
     _fp << std::format(
         "{:<30}\t{:>10}\t{:>10}\n",
         std::string(30, '-'),
@@ -65,7 +65,8 @@ void TimingsOutput::write()
         elapsedTime * constants::MS_TO_S,
         100.0
     );
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+    // readability-magic-numbers)
 
     _fp << "\n";
 
@@ -97,8 +98,8 @@ void TimingsOutput::write()
         "RelT [%]"
     );
 
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
-    // write a line consisting only of '-'
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+    // readability-magic-numbers) write a line consisting only of '-'
     _fp << std::format(
         "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
         std::string(30, '-'),
@@ -117,7 +118,8 @@ void TimingsOutput::write()
         100.0,
         100.0
     );
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+    // readability-magic-numbers)
 
     _fp << "\n";
 
@@ -133,7 +135,8 @@ void TimingsOutput::write()
         const auto time       = section.calculateElapsedTime();
         const auto percentage = (time / elapsedTime) * 100.0;
 
-        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+        // readability-magic-numbers)
         _fp << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
             name,
@@ -141,7 +144,8 @@ void TimingsOutput::write()
             percentage,
             100.0
         );
-        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+        // readability-magic-numbers)
 
         for (const auto &subSection : subsections)
         {

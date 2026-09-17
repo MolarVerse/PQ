@@ -23,7 +23,6 @@
 #include <gtest/gtest.h>
 
 #include "fileSettings.hpp"
-#include "gtest/gtest.h"
 
 TEST(FileSettingsTest, MolDescriptorRoundTrip)
 {
@@ -70,8 +69,5 @@ TEST(FileSettingsTest, MShakeAndDFTBRoundTrip)
 TEST(FileSettingsTest, IntraNonBondedRoundTrip)
 {
     settings::FileSettings::setIntraNonBondedFileName("intra.dat");
-    EXPECT_EQ(
-        settings::FileSettings::getIntraNonBondedFileName(),
-        "intra.dat"
-    );
+    EXPECT_EQ(settings::FileSettings::getIntraNonBondedFileName(), "intra.dat");
 }

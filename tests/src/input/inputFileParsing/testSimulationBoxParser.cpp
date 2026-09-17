@@ -27,7 +27,6 @@
 
 #include "engine.hpp"                     // for Engine
 #include "exceptions.hpp"                 // for InputFileException
-#include "gtest/gtest.h"                  // for Message, TestPartResult
 #include "potentialSettings.hpp"          // for PotentialSettings
 #include "simulationBoxInputParser.hpp"   // for InputFileParserSimulationBox
 #include "simulationBoxSettings.hpp"      // for SimulationBoxSettings
@@ -74,7 +73,7 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
 {
     SimulationBoxInputParser       parser(_engine->getSharedSimulationBox());
     const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
-    parser.parseCoulombRadius(lineElements, 0);
+    input::SimulationBoxInputParser::parseCoulombRadius(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
 
     const std::vector<std::string> lineElements2 = {"rcoulomb", "=", "-1.0"};
@@ -94,7 +93,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         "=",
         "true"
     };
-    parser.parseInitializeVelocities(lineElements, 0);
+    input::SimulationBoxInputParser::parseInitializeVelocities(lineElements, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
         InitVelocities::TRUE
@@ -106,7 +105,10 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         "false"
     };
 
-    parser.parseInitializeVelocities(lineElements2, 0);
+    input::SimulationBoxInputParser::parseInitializeVelocities(
+        lineElements2,
+        0
+    );
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
         InitVelocities::FALSE
@@ -117,7 +119,10 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         "=",
         "force"
     };
-    parser.parseInitializeVelocities(lineElements3, 0);
+    input::SimulationBoxInputParser::parseInitializeVelocities(
+        lineElements3,
+        0
+    );
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
         InitVelocities::FORCE

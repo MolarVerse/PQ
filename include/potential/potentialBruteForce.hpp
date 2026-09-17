@@ -41,31 +41,31 @@ namespace pot
 
         void calculateForces(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physicalData,
+            physicalData::PhysicalData &physData,
             molsys::CellList & /*cellList*/
         ) override;
 
         void calculateCoreToOuterForces(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physicalData,
+            physicalData::PhysicalData &physData,
             molsys::CellList & /*cellList*/
         ) override;
 
         void calculateLayerToOuterForces(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physicalData,
+            physicalData::PhysicalData &physData,
             molsys::CellList & /*cellList*/
         ) override;
 
         void calculateOuterToOuterForces(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physicalData,
+            physicalData::PhysicalData &physData,
             molsys::CellList           &cellList
         ) override;
 
         void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physicalData,
+            physicalData::PhysicalData &physData,
             molsys::CellList & /*cellList*/
         ) override;
 

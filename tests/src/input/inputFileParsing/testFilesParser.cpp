@@ -28,7 +28,6 @@
 #include "exceptions.hpp"     // for InputFileException
 #include "fileSettings.hpp"   // for FileSettings
 #include "filesInputParser.hpp"
-#include "gtest/gtest.h"             // for Message, TestPartResult, testing
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
@@ -322,7 +321,7 @@ TEST_F(TestInputFileReader, testTMFileName)
         "=",
         "data/turbomoleReader/tm_define.template"
     };
-    parser.parseTMFilename(lineElements, 0);
+    input::FilesInputParser::parseTMFilename(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getTMFileName(),
         "data/turbomoleReader/tm_define.template"

@@ -22,6 +22,7 @@
 
 #include "hybridSettings.hpp"
 
+#include <utility>
 #include <vector>
 
 using settings::HybridSettings;
@@ -31,7 +32,7 @@ using settings::HybridSettings;
  *
  * @param method
  */
-std::string settings::string(const SmoothingMethod method)
+std::string settings::string(SmoothingMethod method)
 {
     switch (method)
     {
@@ -41,7 +42,7 @@ std::string settings::string(const SmoothingMethod method)
         case EXACT: return "Exact";
     }
 
-    return "NONE";
+    std::unreachable();
 }
 
 /********************
@@ -109,7 +110,7 @@ void HybridSettings::setForcedOuterList(const std::vector<int> &list)
  *
  * @param useQMCharges
  */
-void HybridSettings::setUseQMCharges(const bool useQMCharges)
+void HybridSettings::setUseQMCharges(bool useQMCharges)
 {
     _useQMCharges = useQMCharges;
 }
@@ -121,10 +122,7 @@ void HybridSettings::setUseQMCharges(const bool useQMCharges)
  *
  * @param radius
  */
-void HybridSettings::setCoreRadius(const double radius)
-{
-    _coreRadius = radius;
-}
+void HybridSettings::setCoreRadius(double radius) { _coreRadius = radius; }
 
 /**
  * @brief set the layerRadius in the settings
@@ -133,17 +131,14 @@ void HybridSettings::setCoreRadius(const double radius)
  *
  * @param radius
  */
-void HybridSettings::setLayerRadius(const double radius)
-{
-    _layerRadius = radius;
-}
+void HybridSettings::setLayerRadius(double radius) { _layerRadius = radius; }
 
 /**
  * @brief set the smoothingRegionThickness in the settings
  *
  * @param thickness
  */
-void HybridSettings::setSmoothingRegionThickness(const double thickness)
+void HybridSettings::setSmoothingRegionThickness(double thickness)
 {
     _smoothingRegionThickness = thickness;
 }
@@ -156,7 +151,7 @@ void HybridSettings::setSmoothingRegionThickness(const double thickness)
  *
  * @param radius
  */
-void HybridSettings::setPointChargeThickness(const double radius)
+void HybridSettings::setPointChargeThickness(double radius)
 {
     _pointChargeThickness = radius;
 }
@@ -166,7 +161,7 @@ void HybridSettings::setPointChargeThickness(const double radius)
  *
  * @param method
  */
-void HybridSettings::setSmoothingMethod(const SmoothingMethod method)
+void HybridSettings::setSmoothingMethod(SmoothingMethod method)
 {
     _smoothing = method;
 }
@@ -176,7 +171,7 @@ void HybridSettings::setSmoothingMethod(const SmoothingMethod method)
  *
  * @param method
  */
-void HybridSettings::setQMForceDist(const QMForceDist method)
+void HybridSettings::setQMForceDist(QMForceDist method)
 {
     _qmForceDist = method;
 }

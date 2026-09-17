@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
 
-#include "gtest/gtest.h"               // for Message, TestPartResult
+// for Message, TestPartResult
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "settings.hpp"                // for Settings
 

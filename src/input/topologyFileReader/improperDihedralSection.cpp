@@ -59,7 +59,7 @@ void ImproperDihedralSection::processSection(
     Engine                   &engine
 )
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 5)
     {
         throw TopologyException(
@@ -71,7 +71,7 @@ void ImproperDihedralSection::processSection(
             )
         );
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     auto atom1                = stoul(lineElements[0]);
     auto atom2                = stoul(lineElements[1]);
@@ -125,7 +125,7 @@ std::string ImproperDihedralSection::keyword() { return "impropers"; }
  *
  * @throws TopologyException if endedNormal is false
  */
-void ImproperDihedralSection::endedNormally(const bool endedNormal) const
+void ImproperDihedralSection::endedNormally(bool endedNormal) const
 {
     if (!endedNormal)
     {

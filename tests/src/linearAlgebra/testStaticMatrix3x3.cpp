@@ -24,7 +24,7 @@
 
 #include <iosfwd>   // for stringstream, ostream
 
-#include "gtest/gtest.h"      // for Message, TestPartResult
+// for Message, TestPartResult
 #include "matrixNear.hpp"     // for EXPECT_MATRIX_NEAR
 #include "staticMatrix.hpp"   // IWYU pragma: keep - for diagonalMatrix, inverse, operator*
 
@@ -240,10 +240,10 @@ TEST(TestStaticMatrix3x3, outputStreamOperator)
         {7.0, 8.0, 9.0}
     };
 
-    std::stringstream ss;
-    ss << mat;
+    std::stringstream sstream;
+    sstream << mat;
 
-    EXPECT_EQ(ss.str(), "[[1 2 3]\n [4 5 6]\n [7 8 9]]");
+    EXPECT_EQ(sstream.str(), "[[1 2 3]\n [4 5 6]\n [7 8 9]]");
 }
 
 TEST(TestStaticMatrix3x3, cofactorMatrix)

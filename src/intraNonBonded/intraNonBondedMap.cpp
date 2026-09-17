@@ -104,7 +104,7 @@ void IntraNonBondedMap::calculate(
  * within a single molecule
  *
  * @param atomIdx1
- * @param atomIndex2AsInt
+ * @param atomIdx2AsInt
  * @param box
  * @param coulPot
  * @param nonCoulPot
@@ -112,9 +112,9 @@ void IntraNonBondedMap::calculate(
  * the interaction
  */
 std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-    const AtomIndex atomIdx1,
-    const int       atomIndex2AsInt,
-    const Vec3D    &box,
+    AtomIndex    atomIdx1,
+    int          atomIdx2AsInt,
+    const Vec3D &box,
     PhysicalData & /*physicalData*/,
     const CoulombPotential *coulPot,
     NonCoulombPotential    *nonCoulPot
@@ -126,8 +126,8 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto atomIdx2 = static_cast<AtomIndex>(::abs(atomIndex2AsInt));
-    const bool scale    = atomIndex2AsInt < 0;
+    const auto atomIdx2 = static_cast<AtomIndex>(::abs(atomIdx2AsInt));
+    const bool scale    = atomIdx2AsInt < 0;
 
     const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
     const auto &pos2 = _molecule->getAtomPosition(atomIdx2);

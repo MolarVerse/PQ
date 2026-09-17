@@ -40,10 +40,7 @@ using namespace utilities;
  *
  * @throw InputFileException if argument is not "="
  */
-void input::checkEqualSign(
-    const std::string_view &view,
-    const size_t            lineNumber
-)
+void input::checkEqualSign(const std::string_view &view, size_t lineNumber)
 {
     if (view != "=")
         throw InputFileException(
@@ -65,7 +62,7 @@ void input::checkEqualSign(
  */
 void input::checkCommandArray(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     if (lineElements.size() < 3)
@@ -92,7 +89,7 @@ void input::checkCommandArray(
  */
 void input::checkCommand(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     if (lineElements.size() != 3)

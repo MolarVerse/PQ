@@ -51,15 +51,18 @@ namespace input
             std::shared_ptr<molsys::SimulationBox>
         );
 
-        void parseCoulombRadius(const std::vector<std::string> &, const size_t);
-        void parseNonCoulombRadius(
+        static void parseCoulombRadius(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
-        void parseDensity(const std::vector<std::string> &, const size_t);
-        void parseInitializeVelocities(
+        static void parseNonCoulombRadius(
             const std::vector<std::string> &,
-            const size_t
+            size_t
+        );
+        void        parseDensity(const std::vector<std::string> &, size_t);
+        static void parseInitializeVelocities(
+            const std::vector<std::string> &,
+            size_t
         );
     };
 

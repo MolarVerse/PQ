@@ -31,7 +31,6 @@
 #include <vector>    // for vector, _Bit_iterator, _Bit_reference
 
 #include "exceptions.hpp"
-#include "gtest/gtest.h"
 #include "mmmdEngine.hpp"
 #include "potentialSettings.hpp"
 #include "settings.hpp"
@@ -55,8 +54,8 @@ namespace
         while (getline(inputFile, line))
         {
             std::string keyword;
-            std::string requiredString = "";
-            bool        requiredBool   = false;
+            std::string requiredString;
+            bool        requiredBool = false;
 
             if (std::istringstream(line).str().empty())
                 continue;
@@ -93,8 +92,8 @@ TEST_F(TestInputFileReader, testAddKeyword)
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        std::string keyword  = keywordsRef[i];
-        bool        required = requiredRef[i];
+        const std::string &keyword  = keywordsRef[i];
+        bool               required = requiredRef[i];
 
         EXPECT_EQ(_inputFileReader->getKeywordCount(keyword), 0);
         EXPECT_FALSE(_inputFileReader->getKeywordSet(keyword));
@@ -211,8 +210,8 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        std::string keyword  = keywordsRef[i];
-        bool        required = requiredRef[i];
+        const std::string &keyword  = keywordsRef[i];
+        bool               required = requiredRef[i];
 
         if (required)
         {

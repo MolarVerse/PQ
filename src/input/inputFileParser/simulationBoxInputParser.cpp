@@ -87,7 +87,7 @@ SimulationBoxInputParser::SimulationBoxInputParser(
  */
 void SimulationBoxInputParser::parseCoulombRadius(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -117,7 +117,7 @@ void SimulationBoxInputParser::parseCoulombRadius(
  */
 void SimulationBoxInputParser::parseNonCoulombRadius(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -150,7 +150,7 @@ void SimulationBoxInputParser::parseNonCoulombRadius(
  */
 void SimulationBoxInputParser::parseDensity(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -180,7 +180,7 @@ void SimulationBoxInputParser::parseDensity(
  */
 void SimulationBoxInputParser::parseInitializeVelocities(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum InitVelocities;

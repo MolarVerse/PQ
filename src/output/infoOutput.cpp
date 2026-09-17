@@ -52,7 +52,7 @@ using namespace settings;
  * @param simulationTime
  * @param data
  */
-void InfoOutput::write(const double simulationTime, const PhysicalData &data)
+void InfoOutput::write(double simulationTime, const PhysicalData &data)
 {
     _fp.close();
 
@@ -162,7 +162,7 @@ void InfoOutput::writeHeader()
  * @param unit
  */
 void InfoOutput::writeLeft(
-    const double            value,
+    double                  value,
     const std::string_view &name,
     const std::string_view &unit
 )
@@ -178,7 +178,7 @@ void InfoOutput::writeLeft(
  * @param unit
  */
 void InfoOutput::writeLeftInteger(
-    const double            value,
+    double                  value,
     const std::string_view &name,
     const std::string_view &unit
 )
@@ -199,7 +199,7 @@ void InfoOutput::writeLeftInteger(
  * @param unit
  */
 void InfoOutput::writeLeftScientific(
-    const double            value,
+    double                  value,
     const std::string_view &name,
     const std::string_view &unit
 )
@@ -215,7 +215,7 @@ void InfoOutput::writeLeftScientific(
  * @param unit
  */
 void InfoOutput::writeRight(
-    const double            value,
+    double                  value,
     const std::string_view &name,
     const std::string_view &unit
 )

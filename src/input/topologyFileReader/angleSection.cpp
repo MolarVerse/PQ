@@ -61,7 +61,7 @@ void AngleSection::processSection(
     Engine                   &engine
 )
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 4 && lineElements.size() != 5)
     {
         throw TopologyException(
@@ -96,7 +96,7 @@ void AngleSection::processSection(
             );
         }
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
     {

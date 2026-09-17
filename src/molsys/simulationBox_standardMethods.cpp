@@ -42,7 +42,7 @@ namespace molsys
      *
      * @param atom
      */
-    void SimulationBox::addAtom(const std::shared_ptr<Atom> atom)
+    void SimulationBox::addAtom(const std::shared_ptr<Atom> &atom)
     {
         _atoms.push_back(atom);
     }
@@ -223,6 +223,7 @@ namespace molsys
     std::vector<double> SimulationBox::getAtomicScalarForces() const
     {
         std::vector<double> atomicScalarForces;
+        atomicScalarForces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             atomicScalarForces.push_back(norm(atom->getForce()));
@@ -238,6 +239,7 @@ namespace molsys
     std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
     {
         std::vector<double> atomicScalarForces;
+        atomicScalarForces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             atomicScalarForces.push_back(norm(atom->getForceOld()));
@@ -349,6 +351,7 @@ namespace molsys
     std::vector<linearAlgebra::Vec3D> SimulationBox::getPositions() const
     {
         std::vector<linearAlgebra::Vec3D> positions;
+        positions.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             positions.push_back(atom->getPosition());
@@ -364,6 +367,7 @@ namespace molsys
     std::vector<linearAlgebra::Vec3D> SimulationBox::getVelocities() const
     {
         std::vector<linearAlgebra::Vec3D> velocities;
+        velocities.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             velocities.push_back(atom->getVelocity());
@@ -379,6 +383,7 @@ namespace molsys
     std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
     {
         std::vector<linearAlgebra::Vec3D> forces;
+        forces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms) forces.push_back(atom->getForce());
 
@@ -393,6 +398,7 @@ namespace molsys
     std::vector<AtomNumber> SimulationBox::getAtomicNumbers() const
     {
         std::vector<AtomNumber> atomicNumbers;
+        atomicNumbers.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             atomicNumbers.push_back(atom->getAtomicNumber());

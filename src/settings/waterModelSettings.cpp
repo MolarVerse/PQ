@@ -81,7 +81,7 @@ WaterInterModel WaterModelSettings::getWaterInterModel()
  *
  * @param isSet
  */
-void WaterModelSettings::setIsWaterModelSet(const bool isSet)
+void WaterModelSettings::setIsWaterModelSet(bool isSet)
 {
     _isWaterModelSet = isSet;
 }
@@ -91,7 +91,7 @@ void WaterModelSettings::setIsWaterModelSet(const bool isSet)
  *
  * @param isSet
  */
-void WaterModelSettings::setIsInterWaterModelSet(const bool isSet)
+void WaterModelSettings::setIsInterWaterModelSet(bool isSet)
 {
     _isInterWaterModelSet = isSet;
 }
@@ -135,7 +135,7 @@ void WaterModelSettings::setWaterIntraModel(const std::string_view &model)
  *
  * @param model
  */
-void WaterModelSettings::setWaterIntraModel(const WaterIntraModel model)
+void WaterModelSettings::setWaterIntraModel(WaterIntraModel model)
 {
     _waterIntraModel = model;
 }
@@ -181,7 +181,7 @@ void WaterModelSettings::setWaterInterModel(const std::string_view &model)
  *
  * @param model
  */
-void WaterModelSettings::setWaterInterModel(const WaterInterModel model)
+void WaterModelSettings::setWaterInterModel(WaterInterModel model)
 {
     _waterInterModel = model;
 }

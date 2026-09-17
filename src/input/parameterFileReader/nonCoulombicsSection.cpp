@@ -160,7 +160,7 @@ void NonCoulombicsSection::processLJ(
     Engine                   &engine
 ) const
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 4 && lineElements.size() != 5)
     {
         throw ParameterFileException(
@@ -179,7 +179,7 @@ void NonCoulombicsSection::processLJ(
     const auto c12       = stod(lineElements[3]);
 
     auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
@@ -219,7 +219,7 @@ void NonCoulombicsSection::processBuckingham(
     Engine                   &engine
 ) const
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
     {
         throw ParameterFileException(
@@ -234,12 +234,12 @@ void NonCoulombicsSection::processBuckingham(
 
     const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
     const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
-    const auto a         = stod(lineElements[2]);
+    const auto scale     = stod(lineElements[2]);
     const auto dRho      = stod(lineElements[3]);
     const auto c6        = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
@@ -247,7 +247,8 @@ void NonCoulombicsSection::processBuckingham(
 
     auto      &pot       = engine.getPotential()->getNonCoulombPotential();
     auto      &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
-    const auto params = BuckinghamParams{.scaling = a, .dRho = dRho, .c6 = c6};
+    const auto params =
+        BuckinghamParams{.scaling = scale, .dRho = dRho, .c6 = c6};
 
     potential.addNonCoulombicPair(
         std::make_shared<BuckinghamPair>(atomType1, atomType2, cutOff, params)
@@ -278,7 +279,7 @@ void NonCoulombicsSection::processMorse(
     Engine                   &engine
 ) const
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     if (lineElements.size() != 5 && lineElements.size() != 6)
     {
         throw ParameterFileException(
@@ -298,7 +299,7 @@ void NonCoulombicsSection::processMorse(
     const auto equilibriumDistance = stod(lineElements[4]);
 
     auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 

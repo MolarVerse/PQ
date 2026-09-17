@@ -53,14 +53,14 @@ namespace out
         using Output::Output;
 
         void writeHeader(const molsys::SimulationBox &);
-        void writeXyz(molsys::SimulationBox &, const size_t);
+        void writeXyz(molsys::SimulationBox &, size_t);
         void writeHybridCenterXyz(
             const configurator::HybridConfigurator &configurator,
-            const size_t                            step
+            size_t                                  step
         );
-        void writeVelocities(molsys::SimulationBox &, const size_t);
-        void writeForces(molsys::SimulationBox &, const size_t);
-        void writeCharges(molsys::SimulationBox &, const size_t);
+        void writeVelocities(molsys::SimulationBox &, size_t);
+        void writeForces(molsys::SimulationBox &, size_t);
+        void writeCharges(molsys::SimulationBox &, size_t);
     };
 
 }   // namespace out

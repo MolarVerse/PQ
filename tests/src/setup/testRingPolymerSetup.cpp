@@ -22,9 +22,9 @@
 
 #include <gtest/gtest.h>
 
-#include "ringPolymerqmmdEngine.hpp"
 #include "ringPolymerSettings.hpp"
 #include "ringPolymerSetup.hpp"
+#include "ringPolymerqmmdEngine.hpp"
 #include "settings.hpp"
 #include "testSetup.hpp"
 
@@ -42,8 +42,8 @@ TEST_F(TestSetup, ringPolymerSetupPhysicalDataResizesBeads)
     RingPolymerSettings::setNumberOfBeads(4);
     engine::RingPolymerQMMDEngine rpEngine;
 
-    RingPolymerSetup s(rpEngine);
-    EXPECT_NO_THROW(s.setupPhysicalData());
+    RingPolymerSetup setup(rpEngine);
+    EXPECT_NO_THROW(setup.setupPhysicalData());
 }
 
 TEST_F(TestSetup, ringPolymerSetupSimulationBoxAddsBeadsToEngine)
@@ -51,6 +51,6 @@ TEST_F(TestSetup, ringPolymerSetupSimulationBoxAddsBeadsToEngine)
     RingPolymerSettings::setNumberOfBeads(3);
     engine::RingPolymerQMMDEngine rpEngine;
 
-    RingPolymerSetup s(rpEngine);
-    EXPECT_NO_THROW(s.setupSimulationBox());
+    RingPolymerSetup setup(rpEngine);
+    EXPECT_NO_THROW(setup.setupSimulationBox());
 }

@@ -27,43 +27,43 @@
 /**
  * @brief specializing of template function compare with tolerance
  *
- * @param a
- * @param b
+ * @param lhs
+ * @param rhs
  * @param tolerance
  * @return true
  * @return false
  */
 bool utilities::compare(
-    const linearAlgebra::Vector3D<double> &a,
-    const linearAlgebra::Vector3D<double> &b,
+    const linearAlgebra::Vector3D<double> &lhs,
+    const linearAlgebra::Vector3D<double> &rhs,
     const double                          &tolerance
 )
 {
     auto isEq = true;
-    isEq      = isEq && compare<double>(a[0], b[0], tolerance);
-    isEq      = isEq && compare<double>(a[1], b[1], tolerance);
-    isEq      = isEq && compare<double>(a[2], b[2], tolerance);
+    isEq      = isEq && compare<double>(lhs[0], rhs[0], tolerance);
+    isEq      = isEq && compare<double>(lhs[1], rhs[1], tolerance);
+    isEq      = isEq && compare<double>(lhs[2], rhs[2], tolerance);
 
     return isEq;
 }
 
 /**
- * @brief specializing of template function compare
+ * @brief specializing of template function compare for Vector3D<double>
  *
- * @param a
- * @param b
+ * @param lhs
+ * @param rhs
  * @return true
  * @return false
  */
 bool utilities::compare(
-    const linearAlgebra::Vector3D<double> &a,
-    const linearAlgebra::Vector3D<double> &b
+    const linearAlgebra::Vector3D<double> &lhs,
+    const linearAlgebra::Vector3D<double> &rhs
 )
 {
     auto isEq = true;
-    isEq      = isEq && compare<double>(a[0], b[0]);
-    isEq      = isEq && compare<double>(a[1], b[1]);
-    isEq      = isEq && compare<double>(a[2], b[2]);
+    isEq      = isEq && compare<double>(lhs[0], rhs[0]);
+    isEq      = isEq && compare<double>(lhs[1], rhs[1]);
+    isEq      = isEq && compare<double>(lhs[2], rhs[2]);
 
     return isEq;
 }
@@ -71,11 +71,11 @@ bool utilities::compare(
 /**
  * @brief Kronecker delta function
  *
- * @param i
- * @param j
+ * @param lhs
+ * @param rhs
  * @return size_t
  */
-size_t utilities::kroneckerDelta(const size_t i, const size_t j)
+size_t utilities::kroneckerDelta(size_t lhs, size_t rhs)
 {
-    return i == j ? 1 : 0;
+    return lhs == rhs ? 1 : 0;
 }

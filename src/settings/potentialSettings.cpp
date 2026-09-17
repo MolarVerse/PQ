@@ -22,6 +22,8 @@
 
 #include "potentialSettings.hpp"
 
+#include <utility>
+
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"
 
@@ -35,7 +37,7 @@ using namespace exc;
  * @param nonCoulombType
  * @return std::string
  */
-std::string settings::string(const NonCoulombType nonCoulombType)
+std::string settings::string(NonCoulombType nonCoulombType)
 {
     switch (nonCoulombType)
     {
@@ -47,10 +49,10 @@ std::string settings::string(const NonCoulombType nonCoulombType)
         case MORSE: return "morse";
         case GUFF: return "guff";
 
-        case NONE: break;
+        case NONE: return "none";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -59,7 +61,7 @@ std::string settings::string(const NonCoulombType nonCoulombType)
  * @param coulombLongRangeType
  * @return std::string
  */
-std::string settings::string(const CoulombLongRangeType coulombLongRangeType)
+std::string settings::string(CoulombLongRangeType coulombLongRangeType)
 {
     switch (coulombLongRangeType)
     {
@@ -67,10 +69,10 @@ std::string settings::string(const CoulombLongRangeType coulombLongRangeType)
 
         case REACTION_FIELD: return "reaction-field";
         case WOLF: return "wolf";
-        case SHIFTED: break;
+        case SHIFTED: return "shifted";
     }
 
-    return "shifted";
+    std::unreachable();
 }
 
 /********************
@@ -114,7 +116,7 @@ void PotentialSettings::setNonCoulombType(const std::string_view &type)
  *
  * @param type
  */
-void PotentialSettings::setNonCoulombType(const NonCoulombType type)
+void PotentialSettings::setNonCoulombType(NonCoulombType type)
 {
     _nonCoulombType = type;
 }
@@ -144,9 +146,7 @@ void PotentialSettings::setCoulombLongRangeType(const std::string_view &type)
  *
  * @param type
  */
-void PotentialSettings::setCoulombLongRangeType(
-    const CoulombLongRangeType &type
-)
+void PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType type)
 {
     _coulombLRType = type;
 }
@@ -156,7 +156,7 @@ void PotentialSettings::setCoulombLongRangeType(
  *
  * @param coulombRadiusCutOff
  */
-void PotentialSettings::setCoulombRadiusCutOff(const double coulombRadiusCutOff)
+void PotentialSettings::setCoulombRadiusCutOff(double coulombRadiusCutOff)
 {
     _coulombRadiusCutOff = coulombRadiusCutOff;
 }
@@ -166,9 +166,7 @@ void PotentialSettings::setCoulombRadiusCutOff(const double coulombRadiusCutOff)
  *
  * @param nonCoulombRadiusCutOff
  */
-void PotentialSettings::setNonCoulombRadiusCutOff(
-    const double nonCoulombRadiusCutOff
-)
+void PotentialSettings::setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff)
 {
     _nonCoulombRadiusCutOff = nonCoulombRadiusCutOff;
 }
@@ -178,7 +176,7 @@ void PotentialSettings::setNonCoulombRadiusCutOff(
  *
  * @param scale14Coulomb
  */
-void PotentialSettings::setScale14Coulomb(const double scale14Coulomb)
+void PotentialSettings::setScale14Coulomb(double scale14Coulomb)
 {
     _scale14Coulomb = scale14Coulomb;
 }
@@ -189,7 +187,7 @@ void PotentialSettings::setScale14Coulomb(const double scale14Coulomb)
  *
  * @param scale14VanDerWaals
  */
-void PotentialSettings::setScale14VanDerWaals(const double scale14VanDerWaals)
+void PotentialSettings::setScale14VanDerWaals(double scale14VanDerWaals)
 {
     _scale14VanDerWaals = scale14VanDerWaals;
 }
@@ -199,7 +197,7 @@ void PotentialSettings::setScale14VanDerWaals(const double scale14VanDerWaals)
  *
  * @param epsilon
  */
-void PotentialSettings::setReactionFieldEpsilon(const double epsilon)
+void PotentialSettings::setReactionFieldEpsilon(double epsilon)
 {
     _reactionFieldEpsilon = epsilon;
 }
@@ -209,7 +207,7 @@ void PotentialSettings::setReactionFieldEpsilon(const double epsilon)
  *
  * @param wolfParameter
  */
-void PotentialSettings::setWolfParameter(const double wolfParameter)
+void PotentialSettings::setWolfParameter(double wolfParameter)
 {
     _wolfParameter = wolfParameter;
 }

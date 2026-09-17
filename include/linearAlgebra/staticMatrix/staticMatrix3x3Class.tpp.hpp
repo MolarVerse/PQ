@@ -73,14 +73,14 @@ namespace linearAlgebra
      * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
      *
      * @tparam T
-     * @param t
+     * @param mat
      */
     template <typename T>
-    StaticMatrix3x3<T>::StaticMatrix3x3(const T t)
+    StaticMatrix3x3<T>::StaticMatrix3x3(const T &mat)
     {
-        _data[0] = Vector3D<T>(t);
-        _data[1] = Vector3D<T>(t);
-        _data[2] = Vector3D<T>(t);
+        _data[0] = Vector3D<T>(mat);
+        _data[1] = Vector3D<T>(mat);
+        _data[2] = Vector3D<T>(mat);
     }
 
     /**
@@ -101,7 +101,7 @@ namespace linearAlgebra
         {
             for (size_t j = 0; j < 3; ++j)
             {
-                _data[i][j] = vector[i * 3 + j];
+                _data[i][j] = vector[(i * 3) + j];
             }
         }
     }
@@ -114,7 +114,7 @@ namespace linearAlgebra
      * @return `Vector3D<T> &`
      */
     template <typename T>
-    Vector3D<T> &StaticMatrix3x3<T>::operator[](const size_t index)
+    Vector3D<T> &StaticMatrix3x3<T>::operator[](size_t index)
     {
         return _data[index];
     }
@@ -127,7 +127,7 @@ namespace linearAlgebra
      * @return `const Vector3D<T> &`
      */
     template <typename T>
-    const Vector3D<T> &StaticMatrix3x3<T>::operator[](const size_t index) const
+    const Vector3D<T> &StaticMatrix3x3<T>::operator[](size_t index) const
     {
         return _data[index];
     }

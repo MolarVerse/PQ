@@ -20,33 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_SECTION_HPP_
+#include <fstream>
+#include <sstream>
 
-#define _BOND_SECTION_HPP_
-
-#include <string>   // for allocator, string
-
-#include "topologySection.hpp"   // for TopologySection
-
-namespace input::topology
+/**
+ * @brief Reads the entire contents of a file into a string.
+ *
+ * @param path The path to the file to read.
+ * @return A string containing the contents of the file.
+ */
+inline std::string slurp(const std::string &path)
 {
-    /**
-     * @class BondSection
-     *
-     * @brief reads bond section of topology file
-     *
-     */
-    class BondSection : public TopologySection
-    {
-       public:
-        void processSection(
-            std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) override;
-
-        [[nodiscard]] std::string keyword() override;
-        void endedNormally(bool endedNormal) const override;
-    };
-}   // namespace input::topology
-
-#endif   // _BOND_SECTION_HPP_
+    std::ifstream     fileStreamIn(path);
+    std::stringstream stringStream;
+    stringStream << fileStreamIn.rdbuf();
+    return stringStream.str();
+}

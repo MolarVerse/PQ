@@ -142,7 +142,7 @@ namespace pot
         ) const;
 
         template <typename T>
-        void makeCoulombPotential(T p);
+        void makeCoulombPotential(T potential);
 
         template <typename T>
         void makeNonCoulombPotential(const T &nonCoulombPot);
@@ -155,7 +155,7 @@ namespace pot
          ***************************/
 
         void setNonCoulombPotential(
-            const std::shared_ptr<NonCoulombPotential> pot
+            const std::shared_ptr<NonCoulombPotential> &pot
         );
 
         /***************************

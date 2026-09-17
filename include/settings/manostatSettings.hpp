@@ -24,6 +24,7 @@
 
 #define _MANOSTAT_SETTINGS_HPP_
 
+#include <cstdint>
 #include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
@@ -38,7 +39,7 @@ namespace settings
      * @brief enum class to store the type of the manostat
      *
      */
-    enum class ManostatType
+    enum class ManostatType : std::uint8_t
     {
         NONE,
         BERENDSEN,
@@ -51,7 +52,7 @@ namespace settings
      * @brief enum class to store the isotropy of the manostat
      *
      */
-    enum class Isotropy
+    enum class Isotropy : std::uint8_t
     {
         NONE,
         ISOTROPIC,
@@ -99,11 +100,11 @@ namespace settings
         static void setIsotropy(const std::string_view &isotropy);
         static void setIsotropy(const Isotropy &isotropy);
 
-        static void setTargetPressure(const double targetPressure);
-        static void setTauManostat(const double tauManostat);
-        static void setCompressibility(const double compressibility);
+        static void setTargetPressure(double targetPressure);
+        static void setTauManostat(double tauManostat);
+        static void setCompressibility(double compressibility);
         static void set2DIsotropicAxes(const std::vector<size_t> &indices);
-        static void set2DAnisotropicAxis(const size_t index);
+        static void set2DAnisotropicAxis(size_t index);
 
         /***************************
          * standard getter methods *

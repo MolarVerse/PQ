@@ -24,7 +24,8 @@
 
 #define _OPTIMIZER_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
+#include <cstddef>   // for size_t
+#include <cstdint>
 #include <optional>      // for optional
 #include <string>        // for string
 #include <string_view>   // for string_view
@@ -37,7 +38,7 @@ namespace settings
      * @brief enum OptimizerType
      *
      */
-    enum class OptimizerType : size_t
+    enum class OptimizerType : std::uint8_t
     {
         NONE,
         STEEPEST_DESCENT,
@@ -48,7 +49,7 @@ namespace settings
      * @brief enum LREnum
      *
      */
-    enum class LREnum : size_t
+    enum class LREnum : std::uint8_t
     {
         NONE,
         CONSTANT,
@@ -57,8 +58,8 @@ namespace settings
         LINESEARCH_WOLFE
     };
 
-    std::string string(const OptimizerType method);
-    std::string string(const LREnum method);
+    std::string string(OptimizerType method);
+    std::string string(LREnum method);
 
     /**
      * @brief OptimizerSettings
@@ -89,19 +90,19 @@ namespace settings
          ***************************/
 
         static void setOptimizer(const std::string_view &optimizer);
-        static void setOptimizer(const OptimizerType optimizer);
+        static void setOptimizer(OptimizerType optimizer);
 
         static void setLearningRateStrategy(const std::string_view &);
-        static void setLearningRateStrategy(const LREnum);
+        static void setLearningRateStrategy(LREnum);
 
-        static void setNumberOfEpochs(const size_t);
-        static void setLRUpdateFrequency(const size_t);
+        static void setNumberOfEpochs(size_t);
+        static void setLRUpdateFrequency(size_t);
 
-        static void setInitialLearningRate(const double);
-        static void setLearningRateDecay(const double);
+        static void setInitialLearningRate(double);
+        static void setLearningRateDecay(double);
 
-        static void setMaxLearningRate(const double);
-        static void setMinLearningRate(const double);
+        static void setMaxLearningRate(double);
+        static void setMinLearningRate(double);
 
         /******************************
          * validation helper methods *

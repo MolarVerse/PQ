@@ -82,17 +82,11 @@ const JCouplingParams &JCouplingType::getParams() const { return _params; }
  *
  * @param boolean
  */
-void JCouplingType::setUpperSymmetry(const bool boolean)
-{
-    _upperSymmetry = boolean;
-}
+void JCouplingType::setUpperSymmetry(bool boolean) { _upperSymmetry = boolean; }
 
 /**
  * @brief set if the lower symmetry should be used
  *
  * @param boolean
  */
-void JCouplingType::setLowerSymmetry(const bool boolean)
-{
-    _lowerSymmetry = boolean;
-}
+void JCouplingType::setLowerSymmetry(bool boolean) { _lowerSymmetry = boolean; }

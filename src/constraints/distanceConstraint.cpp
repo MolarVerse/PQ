@@ -44,14 +44,14 @@ using namespace connectivity;
  * @param dSpringConstantDt
  */
 DistanceConstraint::DistanceConstraint(
-    Molecule       *molecule1,
-    Molecule       *molecule2,
-    const AtomIndex atomIndex1,
-    const AtomIndex atomIndex2,
-    const double    lowerDistance,
-    const double    upperDistance,
-    const double    springConstant,
-    const double    dSpringConstantDt
+    Molecule *molecule1,
+    Molecule *molecule2,
+    AtomIndex atomIndex1,
+    AtomIndex atomIndex2,
+    double    lowerDistance,
+    double    upperDistance,
+    double    springConstant,
+    double    dSpringConstantDt
 )
     : Bond(molecule1, molecule2, atomIndex1, atomIndex2),
       _lowerDistance(lowerDistance),
@@ -65,19 +65,19 @@ DistanceConstraint::DistanceConstraint(
  * @brief calculates the reference distance of all distance constraints
  *
  * @param simulationBox
- * @param dt
+ * @param timeInterval the time interval over which the constraint is applied
  *
  */
 void DistanceConstraint::applyDistanceConstraint(
     const molsys::SimulationBox &simulationBox,
-    const double                 dt
+    double                       timeInterval
 )
 {
     _lowerEnergy = 0.0;
     _upperEnergy = 0.0;
     _force       = {0.0};
 
-    if (dt < 0.0)
+    if (timeInterval < 0.0)
         return;
 
     const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
@@ -86,8 +86,9 @@ void DistanceConstraint::applyDistanceConstraint(
     auto dPos = pos2 - pos1;
     simulationBox.applyPBC(dPos);
 
-    const auto distance       = norm(dPos);
-    const auto force_constant = _springConstant + _dSpringConstantDt * dt;
+    const auto distance = norm(dPos);
+    const auto force_constant =
+        _springConstant + (_dSpringConstantDt * timeInterval);
 
     if (distance < _lowerDistance)
     {

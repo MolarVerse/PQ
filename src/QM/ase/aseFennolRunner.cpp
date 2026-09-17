@@ -35,10 +35,9 @@ using QM::AseFennolRunner;
  */
 AseFennolRunner::AseFennolRunner(
     const std::string &modelPath,
-    const bool         gpuPreprocessing,
-    const bool         useFloat64
+    bool               gpuPreprocessing,
+    bool               useFloat64
 )
-    : AseQMRunner()
 {
     try
     {

@@ -56,7 +56,7 @@ namespace pqviews
         using sentinel       = Sentinel<end_t>;
         using const_sentinel = Sentinel<c_end_t>;
 
-        FilterView(Range r, Pred p);
+        FilterView(Range range, Pred predicate);
 
         iterator begin();
         sentinel end();
@@ -68,12 +68,12 @@ namespace pqviews
     /**
      * @brief Constructor for FilterView
      *
-     * @param r The range to be filtered
-     * @param p The predicate to be used for filtering
+     * @param range The range to be filtered
+     * @param predicate The predicate to be used for filtering
      */
     template <typename Range, typename Pred>
-    FilterView<Range, Pred>::FilterView(Range r, Pred p)
-        : _range(std::forward<Range>(r)), _pred(std::move(p))
+    FilterView<Range, Pred>::FilterView(Range range, Pred predicate)
+        : _range(std::forward<Range>(range)), _pred(std::move(predicate))
     {
     }
 

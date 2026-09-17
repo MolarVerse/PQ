@@ -35,9 +35,9 @@ using namespace pot;
  * @param params
  */
 BuckinghamPair::BuckinghamPair(
-    const ExtVdwType        vanDerWaalsType1,
-    const ExtVdwType        vanDerWaalsType2,
-    const double            cutOff,
+    ExtVdwType              vanDerWaalsType1,
+    ExtVdwType              vanDerWaalsType2,
+    double                  cutOff,
     const BuckinghamParams& params
 )
     : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
@@ -68,9 +68,9 @@ BuckinghamPair::BuckinghamPair(
  * @param params
  */
 BuckinghamPair::BuckinghamPair(
-    const double            cutOff,
-    const double            energyCutoff,
-    const double            forceCutoff,
+    double                  cutOff,
+    double                  energyCutoff,
+    double                  forceCutoff,
     const BuckinghamParams& params
 )
     : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
@@ -96,19 +96,22 @@ bool BuckinghamPair::operator==(const BuckinghamPair& other) const
  * @param distance
  * @return std::pair<double, double>
  */
-std::pair<double, double> BuckinghamPair::calculate(const double distance) const
+std::pair<double, double> BuckinghamPair::calculate(double distance) const
 {
     const auto distanceThird = distance * distance * distance;
     const auto distanceSixth = distanceThird * distanceThird;
     const auto expTerm       = _params.scaling * ::exp(_params.dRho * distance);
 
-    auto energy  = expTerm + _params.c6 / distanceSixth - _energyCutOff;
+    auto energy  = expTerm + (_params.c6 / distanceSixth) - _energyCutOff;
     energy      -= _forceCutOff * (_radialCutOff - distance);
 
     auto force = -_params.dRho * expTerm;
 
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
+    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+    // readability-magic-numbers)
     force += 6.0 * _params.c6 / (distanceSixth * distance) - _forceCutOff;
+    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+    // readability-magic-numbers)
 
     return {energy, force};
 }

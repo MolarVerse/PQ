@@ -64,7 +64,7 @@ void setup::setupOptimizer(Engine &engine)
     if (!Settings::isOptJobType())
         return;
 
-    engine.getStdoutOutput().writeSetup("Optimizer");
+    out::StdoutOutput::writeSetup("Optimizer");
     engine.getLogOutput().writeSetup("Optimizer");
 
     OptimizerSetup optimizerSetup(dynamic_cast<OptEngine &>(engine));
@@ -227,7 +227,6 @@ std::shared_ptr<Evaluator> OptimizerSetup::setupEvaluator()
 
     if (Settings::getJobtype() == JobType::MM_OPT)
         evaluator = std::make_shared<MMEvaluator>();
-
     else
     {
         throw UserInputException(
@@ -355,7 +354,7 @@ void OptimizerSetup::writeSetupInfo() const
 
     using enum LREnum;
 
-    std::string decayLRStr = "";
+    std::string decayLRStr;
 
     if (lrStrategy == CONSTANT_DECAY || lrStrategy == EXPONENTIAL_DECAY)
     {

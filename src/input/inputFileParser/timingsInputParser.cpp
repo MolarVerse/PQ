@@ -64,7 +64,7 @@ TimingsInputParser::TimingsInputParser()
  */
 void TimingsInputParser::parseTimeStep(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -88,7 +88,7 @@ void TimingsInputParser::parseTimeStep(
  */
 void TimingsInputParser::parseNumberOfSteps(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);

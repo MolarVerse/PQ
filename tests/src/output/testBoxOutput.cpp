@@ -23,27 +23,15 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 
 #include "boxOutput.hpp"
 #include "orthorhombicBox.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
+#include "testOutputBase.hpp"
+#include "vector3d.hpp"
 
 using namespace out;
 using molsys::OrthorhombicBox;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
 
 TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
 {
@@ -59,7 +47,7 @@ TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
     out.close();
 
     const auto content = slurp(path);
-    EXPECT_NE(content.find("7"), std::string::npos);
+    EXPECT_NE(content.find('7'), std::string::npos);
     EXPECT_NE(content.find("10.00000000"), std::string::npos);
     EXPECT_NE(content.find("20.00000000"), std::string::npos);
     EXPECT_NE(content.find("30.00000000"), std::string::npos);
@@ -87,8 +75,8 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
     const auto content = slurp(path);
     // Two newlines for two steps written.
     size_t newlines = 0;
-    for (auto c : content)
-        if (c == '\n')
+    for (auto character : content)
+        if (character == '\n')
             ++newlines;
     EXPECT_EQ(newlines, 2U);
 

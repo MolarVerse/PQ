@@ -241,22 +241,22 @@ namespace linearAlgebra
      ********************/
 
     template <pq::ArithmeticVector3D U>
-    auto minimum(const U &lhs) -> pq::InnerType_t<U>;
+    auto minimum(const U &vec) -> pq::InnerType_t<U>;
 
     template <pq::ArithmeticVector3D U>
-    auto maximum(const U &lhs) -> pq::InnerType_t<U>;
+    auto maximum(const U &vec) -> pq::InnerType_t<U>;
 
     template <pq::ArithmeticVector3D U>
-    auto min(const U &lhs) -> pq::InnerType_t<U>;
+    auto min(const U &vec) -> pq::InnerType_t<U>;
 
     template <pq::ArithmeticVector3D U>
-    auto max(const U &lhs) -> pq::InnerType_t<U>;
+    auto max(const U &vec) -> pq::InnerType_t<U>;
 
     template <pq::ArithmeticVector3D U>
-    auto max(const std::vector<U> &v) -> decltype(maximum(v[0]));
+    auto max(const std::vector<U> &vec) -> decltype(maximum(vec[0]));
 
     template <pq::ArithmeticVector3D U>
-    auto maxNorm(const std::vector<U> &v) -> decltype(max(norms(v)));
+    auto maxNorm(const std::vector<U> &vec) -> decltype(max(norms(vec)));
 
     /******************
      * norm functions *
@@ -269,10 +269,10 @@ namespace linearAlgebra
     auto normSquared(const U &vec) -> decltype(vec[0] * vec[0]);
 
     template <pq::ArithmeticVector3D U>
-    auto norms(std::vector<U> v) -> std::vector<decltype(norm(v[0]))>;
+    auto norms(std::vector<U> vec) -> std::vector<decltype(norm(vec[0]))>;
 
     template <pq::ArithmeticVector3D U>
-    auto rms(const std::vector<U> &v) -> decltype(norm(v[0]) / v.size());
+    auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]) / vec.size());
 
     /****************
      * sum function *
@@ -321,14 +321,15 @@ namespace linearAlgebra
     auto cos(const U &lhs, const U &rhs) -> decltype(dot(lhs, rhs));
 
     template <pq::ArithmeticVector3D U>
-    auto angle(const U &v1, const U &v2) -> decltype(std::acos(cos(v1, v2)));
+    auto angle(const U &lhs, const U &rhs)
+        -> decltype(std::acos(cos(lhs, rhs)));
 
     /**************
      * ostream << *
      **************/
 
     template <pq::ArithmeticVector3D U>
-    std::ostream &operator<<(std::ostream &os, const U &v);
+    std::ostream &operator<<(std::ostream &ostream, const U &vec);
 
 }   // namespace linearAlgebra
 

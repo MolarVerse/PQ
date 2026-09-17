@@ -56,7 +56,7 @@ namespace pqviews
         using sentinel       = Sentinel<end_t>;
         using const_sentinel = Sentinel<c_end_t>;
 
-        TransformView(Range r, Func f);
+        TransformView(Range range, Func func);
 
         iterator begin();
         sentinel end();
@@ -68,12 +68,12 @@ namespace pqviews
     /**
      * @brief Constructor for TransformView
      *
-     * @param r The range to be transformed
-     * @param f The function to be used for transformation
+     * @param range The range to be transformed
+     * @param func The function to be used for transformation
      */
     template <typename Range, typename Func>
-    TransformView<Range, Func>::TransformView(Range r, Func f)
-        : _range(std::move(r)), _func(std::move(f))
+    TransformView<Range, Func>::TransformView(Range range, Func func)
+        : _range(std::move(range)), _func(std::move(func))
     {
     }
 

@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>
 
-#include "gtest/gtest.h"
 #include "manostatSettings.hpp"
 
 TEST(ManostatSettingsTest, SetManostatTypeViaString)

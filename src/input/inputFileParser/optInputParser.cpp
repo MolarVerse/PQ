@@ -100,7 +100,7 @@ OptInputParser::OptInputParser()
  */
 void OptInputParser::parseOptimizer(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommand(lineElements, lineNumber);
@@ -140,7 +140,7 @@ void OptInputParser::parseOptimizer(
  */
 void OptInputParser::parseLearningRateStrategy(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     using enum LREnum;
@@ -186,7 +186,7 @@ void OptInputParser::parseLearningRateStrategy(
  */
 void OptInputParser::parseInitialLearningRate(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -218,7 +218,7 @@ void OptInputParser::parseInitialLearningRate(
  */
 void OptInputParser::parseLearningRateUpdateFreq(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -251,7 +251,7 @@ void OptInputParser::parseLearningRateUpdateFreq(
  */
 void OptInputParser::parseMinLearningRate(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -283,7 +283,7 @@ void OptInputParser::parseMinLearningRate(
  */
 void OptInputParser::parseMaxLearningRate(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);
@@ -315,7 +315,7 @@ void OptInputParser::parseMaxLearningRate(
  */
 void OptInputParser::parseLearningRateDecay(
     const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
+    size_t                          lineNumber
 )
 {
     checkCommandArray(lineElements, lineNumber);

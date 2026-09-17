@@ -49,7 +49,7 @@ namespace setup
 {
     void setupRequestedJob(const std::string &inputFileName, engine::Engine &);
 
-    void startSetup(engine::Engine &);
+    void startSetup();
     void endSetup(engine::Engine &);
 
     void readFiles(engine::Engine &);

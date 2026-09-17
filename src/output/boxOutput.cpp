@@ -36,7 +36,7 @@ namespace out
      * @param step
      * @param box
      */
-    void BoxFileOutput::write(const size_t step, const molsys::Box &box)
+    void BoxFileOutput::write(size_t step, const molsys::Box &box)
     {
         _fp << std::format("{:<5}\t", step);
 

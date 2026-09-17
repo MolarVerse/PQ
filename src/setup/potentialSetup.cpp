@@ -52,7 +52,7 @@ using namespace exc;
  */
 void setup::setupPotential(Engine &engine)
 {
-    engine.getStdoutOutput().writeSetup("MM potential");
+    out::StdoutOutput::writeSetup("MM potential");
     engine.getLogOutput().writeSetup("MM potential");
 
     PotentialSetup potentialSetup(engine);
@@ -156,8 +156,8 @@ void PotentialSetup::setupNonCoulomb()
  */
 void PotentialSetup::setupNonCoulombicPairs()
 {
-    auto &pot    = _engine.getPotential();
-    auto &simBox = _engine.getSimulationBox();
+    const auto &pot    = _engine.getPotential();
+    auto       &simBox = _engine.getSimulationBox();
 
     // clang-format off
     auto &nonCoulPot = dynamic_cast<pot::ForceFieldNonCoulomb&>(pot->getNonCoulombPotential());

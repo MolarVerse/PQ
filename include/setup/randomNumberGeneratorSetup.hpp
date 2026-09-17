@@ -47,7 +47,7 @@ namespace setup
        public:
         explicit RandomNumberGeneratorSetup(engine::Engine &engine);
 
-        void setup();
+        void setup() const;
         void setupWriteInfo() const;
     };
 

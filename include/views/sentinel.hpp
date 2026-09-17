@@ -92,40 +92,45 @@ namespace pqviews
          * @brief checks if the iterator is equal to the sentinel
          *
          * @param it the Iterator to compare with
+         * @param sentinel the Sentinel to compare with
          * @return true if they are equal, false otherwise
          */
         template <typename Iterator>
-        friend bool operator==(const Iterator& it, const Sentinel& s)
+        friend bool operator==(const Iterator& it, const Sentinel& sentinel)
         {
-            return it.current() == s._end;
+            return it.current() == sentinel._end;
         }
 
         /**
          * @brief checks if the sentinel is equal to the iterator
          *
          * @param it the Iterator to compare with
+         * @param sentinel the Sentinel to compare with
          * @return true if they are equal, false otherwise
          */
         template <typename Iterator>
-        friend bool operator!=(const Iterator& it, const Sentinel& s)
+        friend bool operator!=(const Iterator& it, const Sentinel& sentinel)
         {
-            return !(it == s);
+            return !(it == sentinel);
         }
 
         /**
          * @brief calculates the distance between the sentinel and the iterator
          *
-         * @param s the Sentinel to compare with
+         * @param sentinel the Sentinel to compare with
          * @param it the Iterator to compare with
          * @return difference_type the distance between the two
          */
         template <typename Iterator>
-        friend difference_type operator-(const Sentinel& s, const Iterator& it)
+        friend difference_type operator-(
+            const Sentinel& sentinel,
+            const Iterator& it
+        )
         {
             Iterator        temp  = it;
             difference_type count = 0;
 
-            while (temp != s)
+            while (temp != sentinel)
             {
                 ++temp;
                 ++count;
@@ -138,13 +143,16 @@ namespace pqviews
          * @brief calculates the distance between the iterator and the sentinel
          *
          * @param it the Iterator to compare with
-         * @param s the Sentinel to compare with
+         * @param sentinel the Sentinel to compare with
          * @return difference_type the distance between the two
          */
         template <typename Iterator>
-        friend difference_type operator-(const Iterator& it, const Sentinel& s)
+        friend difference_type operator-(
+            const Iterator& it,
+            const Sentinel& sentinel
+        )
         {
-            return -(s - it);
+            return -(sentinel - it);
         }
     };
 

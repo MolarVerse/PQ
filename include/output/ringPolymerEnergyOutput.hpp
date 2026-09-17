@@ -29,6 +29,8 @@
 
 #include "output.hpp"   // for Output
 
+class TestRingPolymerEnergyOutput;   // forward declaration
+
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
@@ -48,16 +50,22 @@ namespace out
         using Output::Output;
 
         void write(
-            const size_t step,
-            const std::vector<physicalData::PhysicalData>&
+            size_t step,
+            const std::vector<physicalData::PhysicalData> &
         );
 
-        double sumOfRingPolymerEnergies(
-            const std::vector<physicalData::PhysicalData>&
+       private:
+        [[nodiscard]]
+        static double _sumOfRingPolymerEnergies(
+            const std::vector<physicalData::PhysicalData> &dataVector
         );
-        double maxRingPolymerEnergy(
-            const std::vector<physicalData::PhysicalData>&
+
+        [[nodiscard]]
+        static double _maxRingPolymerEnergy(
+            const std::vector<physicalData::PhysicalData> &dataVector
         );
+
+        friend class ::TestRingPolymerEnergyOutput;   // for unit testing
     };
 
 }   // namespace out

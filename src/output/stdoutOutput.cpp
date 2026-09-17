@@ -37,7 +37,7 @@ namespace out
      *
      * @param message
      */
-    void StdoutOutput::writeInfo(const std::string &message) const
+    void StdoutOutput::writeInfo(const std::string &message)
     {
         std::cout << message << '\n' << std::flush;
     }
@@ -46,7 +46,7 @@ namespace out
      * @brief write header title
      *
      */
-    void StdoutOutput::writeHeader() const
+    void StdoutOutput::writeHeader()
     {
         std::cout << header() << '\n' << std::flush;
     }
@@ -56,7 +56,7 @@ namespace out
      *
      * @param elapsedTime
      */
-    void StdoutOutput::writeEndedNormally(const double elapsedTime) const
+    void StdoutOutput::writeEndedNormally(double elapsedTime)
     {
         std::cout << elapsedTimeMessage(elapsedTime) << '\n';
         std::cout << endedNormally() << '\n' << std::flush;
@@ -67,7 +67,7 @@ namespace out
      * dimensions are set
      *
      */
-    void StdoutOutput::writeDensityWarning() const
+    void StdoutOutput::writeDensityWarning()
     {
         try
         {
@@ -89,14 +89,14 @@ namespace out
      * @brief write a warning message to the stdout if the optimization did not
      * converge
      *
-     * @param msg
+     * @param message
      */
-    void StdoutOutput::writeOptWarning(const std::string &msg) const
+    void StdoutOutput::writeOptWarning(const std::string &message)
     {
         try
         {
             throw exc::UserInputExceptionWarning(
-                std::format("{}{}", WARNING, msg)
+                std::format("{}{}", WARNING, message)
             );
         }
         catch (const exc::UserInputExceptionWarning &e)
@@ -110,7 +110,7 @@ namespace out
      *
      * @param setup
      */
-    void StdoutOutput::writeSetup(const std::string &setup) const
+    void StdoutOutput::writeSetup(const std::string &setup)
     {
         std::cout << setupMessage(setup) << '\n' << std::flush;
     }
@@ -120,7 +120,7 @@ namespace out
      *
      * @param warning
      */
-    void StdoutOutput::writeSetupWarning(const std::string &warning) const
+    void StdoutOutput::writeSetupWarning(const std::string &warning)
     {
         std::cout << WARNING << (warning) << "\n\n" << std::flush;
     }
@@ -130,7 +130,7 @@ namespace out
      * completed
      *
      */
-    void StdoutOutput::writeSetupCompleted() const
+    void StdoutOutput::writeSetupCompleted()
     {
         std::cout << setupCompletedMessage() << '\n' << std::flush;
     }
@@ -144,7 +144,7 @@ namespace out
     void StdoutOutput::writeRead(
         const std::string &message,
         const std::string &file
-    ) const
+    )
     {
         std::cout << readMessage(message, file) << '\n' << std::flush;
     }

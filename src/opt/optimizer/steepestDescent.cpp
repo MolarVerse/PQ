@@ -31,7 +31,7 @@ using namespace opt;
  *
  * @param nEpochs
  */
-SteepestDescent::SteepestDescent(const size_t nEpochs) : Optimizer(nEpochs) {}
+SteepestDescent::SteepestDescent(size_t nEpochs) : Optimizer(nEpochs) {}
 
 /**
  * @brief clone the optimizer
@@ -55,12 +55,11 @@ size_t SteepestDescent::maxHistoryLength() const { return _maxHistoryLength; }
  *
  * @param learningRate
  */
-void SteepestDescent::
-    update(const double learningRate, const size_t /* totalSteps*/)
+void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
 {
     const auto& atoms = _simulationBox->getAtoms();
 
-    for (auto& atom : atoms)
+    for (const auto& atom : atoms)
     {
         const auto force = atom->getForce();
         const auto pos   = atom->getPosition();

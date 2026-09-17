@@ -145,7 +145,7 @@ void ManostatSettings::setIsotropy(const Isotropy &isotropy)
  *
  * @param targetPressure
  */
-void ManostatSettings::setTargetPressure(const double targetPressure)
+void ManostatSettings::setTargetPressure(double targetPressure)
 {
     _targetPressure = targetPressure;
 }
@@ -155,7 +155,7 @@ void ManostatSettings::setTargetPressure(const double targetPressure)
  *
  * @param tauManostat
  */
-void ManostatSettings::setTauManostat(const double tauManostat)
+void ManostatSettings::setTauManostat(double tauManostat)
 {
     _tauManostat = tauManostat;
 }
@@ -165,7 +165,7 @@ void ManostatSettings::setTauManostat(const double tauManostat)
  *
  * @param compressibility
  */
-void ManostatSettings::setCompressibility(const double compressibility)
+void ManostatSettings::setCompressibility(double compressibility)
 {
     _compressibility = compressibility;
 }

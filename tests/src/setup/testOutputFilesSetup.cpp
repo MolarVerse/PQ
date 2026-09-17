@@ -54,10 +54,11 @@ namespace
             ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
             ".rpmd.en",    ".opt",        ".ref"
         };
-        for (const auto &s : suffixes)
+
+        for (const auto &suffix : suffixes)
         {
             static_cast<void>(
-                std::filesystem::remove((std::string(PREFIX) + s).c_str())
+                std::filesystem::remove((std::string(PREFIX) + suffix).c_str())
             );
         }
     }
@@ -92,8 +93,8 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     Settings::setIsRingPolymerMDActivated(false);
     OutputFileSettings::setFilePrefix(PREFIX);
 
-    OutputFilesSetup s(*_mdEngine);
-    EXPECT_NO_THROW(s.setup());
+    OutputFilesSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
 
     EXPECT_EQ(
         _mdEngine->getXyzHybridCenterOutput().getFilename(),
@@ -113,8 +114,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     OutputFileSettings::setIncludeOutputMetadata(false);
     TimingsSettings::setTimeStep(0.5);
 
-    OutputFilesSetup s(*_mdEngine);
-    EXPECT_NO_THROW(s.setup());
+    OutputFilesSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
 
     _mdEngine->getEnergyOutput().close();
     _mdEngine->getInstantEnergyOutput().close();
@@ -138,8 +139,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     OutputFileSettings::setIncludeOutputMetadata(true);
     TimingsSettings::setTimeStep(0.5);
 
-    OutputFilesSetup s(*_mdEngine);
-    EXPECT_NO_THROW(s.setup());
+    OutputFilesSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
 
     _mdEngine->getEnergyOutput().close();
     _mdEngine->getInstantEnergyOutput().close();
@@ -164,8 +165,8 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     Settings::setIsRingPolymerMDActivated(true);
     OutputFileSettings::setFilePrefix(PREFIX);
 
-    OutputFilesSetup s(*_mdEngine);
-    EXPECT_NO_THROW(s.setup());
+    OutputFilesSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
 
     Settings::setIsRingPolymerMDActivated(false);
     cleanupPrefix();
