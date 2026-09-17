@@ -22,6 +22,8 @@
 
 #include "manostatSettings.hpp"
 
+#include <utility>
+
 #include "stringUtilities.hpp"
 
 using namespace settings;
@@ -39,10 +41,10 @@ std::string settings::string(const ManostatType &manostatType)
 
         case ManostatType::STOCHASTIC_RESCALING: return "stochastic_rescaling";
 
-        case ManostatType::NONE: break;
+        case ManostatType::NONE: return "none";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -88,7 +90,7 @@ std::string settings::string(const FixedAxis &fixedAxis)
         case ALL: return "all";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /***************************
