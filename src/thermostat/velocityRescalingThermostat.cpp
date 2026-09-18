@@ -92,15 +92,15 @@ VelocityRescalingThermostat &VelocityRescalingThermostat::operator=(
  * @param physicalData
  */
 void VelocityRescalingThermostat::applyThermostat(
-    SimulationBox &simBox,
-    PhysicalData  &physData
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Velocity Rescaling");
 
-    physData.calculateTemperature(simBox);
+    physicalData.calculateTemperature(simulationBox);
 
-    _temperature = physData.getTemperature();
+    _temperature = physicalData.getTemperature();
 
     if (isZero(_temperature))
     {
@@ -115,7 +115,7 @@ void VelocityRescalingThermostat::applyThermostat(
 
     const auto timeStep  = TimingsSettings::getTimeStep();
     const auto tempRatio = _targetTemperature / _temperature;
-    const auto dof       = static_cast<double>(simBox.getDegreesOfFreedom());
+    const auto dof = static_cast<double>(simulationBox.getDegreesOfFreedom());
 
     auto lambda = 1.0 + (timeStep / _tau * (tempRatio - 1.0));
 
@@ -138,12 +138,12 @@ void VelocityRescalingThermostat::applyThermostat(
 
     const auto berendsenFactor = ::sqrt(lambda);
 
-    for (const auto &atom : simBox.getAtoms())
+    for (const auto &atom : simulationBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);
 
     const auto temperature = _temperature * berendsenFactor * berendsenFactor;
 
-    physData.setTemperature(temperature);
+    physicalData.setTemperature(temperature);
 }
 
 /**

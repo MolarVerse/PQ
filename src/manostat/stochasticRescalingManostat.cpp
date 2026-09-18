@@ -179,8 +179,8 @@ tensor3D StochasticRescalingManostat::calculateMu(double volume)
 
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
-    auto stochasticFactor  = 2.0 * thermalEnergy * compress / volume;
-    stochasticFactor      *= PRESSURE_FACTOR;
+    auto stochasticFactor   = 2.0 * thermalEnergy * compress / volume;
+    stochasticFactor       *= PRESSURE_FACTOR;
     stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - _pressure;

@@ -100,7 +100,7 @@ namespace molsys
 
         const auto sumcos_2          = sum(cos(_boxAngles) * cos(_boxAngles));
         const auto prodcos           = prod(cos(_boxAngles));
-        _transformationMatrix[2][2]  = ::sqrt(1 - sumcos_2 + (2 * prodcos));
+        _transformationMatrix[2][2]   = ::sqrt(1 - sumcos_2 + (2 * prodcos));
         _transformationMatrix[2][2] /= sinGamma();
     }
 

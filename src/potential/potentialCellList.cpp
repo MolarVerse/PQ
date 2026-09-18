@@ -64,7 +64,7 @@ PotentialCellList::~PotentialCellList() = default;
  */
 void PotentialCellList::calculateForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -172,8 +172,8 @@ void PotentialCellList::calculateForces(
             }
         }
     }
-    physData.setCoulombEnergy(totalCoulombEnergy);
-    physData.setNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.setCoulombEnergy(totalCoulombEnergy);
+    physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
@@ -191,7 +191,7 @@ void PotentialCellList::calculateForces(
  */
 void PotentialCellList::calculateCoreToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -292,7 +292,7 @@ void PotentialCellList::calculateCoreToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
 }
 
 /**
@@ -311,7 +311,7 @@ void PotentialCellList::calculateCoreToOuterForces(
  */
 void PotentialCellList::calculateLayerToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -455,8 +455,8 @@ void PotentialCellList::calculateLayerToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
@@ -468,7 +468,7 @@ void PotentialCellList::calculateLayerToOuterForces(
  */
 void PotentialCellList::calculateOuterToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -574,8 +574,8 @@ void PotentialCellList::calculateOuterToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
@@ -587,7 +587,7 @@ void PotentialCellList::calculateOuterToOuterForces(
  */
 void PotentialCellList::calculateHotspotSmoothingMMForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -922,8 +922,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**

@@ -87,12 +87,12 @@ SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
  */
 void BerendsenManostat::applyManostat(
     SimulationBox &simBox,
-    PhysicalData  &physData
+    PhysicalData  &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
 
-    calculatePressure(simBox, physData);
+    calculatePressure(simBox, physicalData);
 
     const auto mu = calculateMu();
 
@@ -105,8 +105,8 @@ void BerendsenManostat::applyManostat(
 
     simBox.scaleBox(mu);
 
-    physData.setVolume(simBox.getVolume());
-    physData.setDensity(simBox.getDensity());
+    physicalData.setVolume(simBox.getVolume());
+    physicalData.setDensity(simBox.getDensity());
 
     simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
