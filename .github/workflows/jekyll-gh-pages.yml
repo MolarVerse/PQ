@@ -3,7 +3,7 @@ name: Docs
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ["main", "dev"]
     paths:
       - ".github/workflows/jekyll-gh-pages.yml"
       - "docs/**"
