@@ -23,7 +23,7 @@
 #include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
 
 #include "berendsenManostat.hpp"   // for BerendsenManostat
-                                   // for Message, TestPartResult
+#include "exceptions.hpp"          // for UserInputException
 #include "manostat.hpp"            // for BerendsenManostat, Manostat
 #include "manostatSettings.hpp"    // for ManostatSettings
 #include "manostatSetup.hpp"       // for ManostatSetup, setupManostat, setup
@@ -31,6 +31,7 @@
 #include "settings.hpp"            // for JobType, Settings
 #include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
 #include "testSetup.hpp"                     // for TestSetup
+#include "throwWithMessage.hpp"              // for EXPECT_THROW_MSG
 
 using namespace setup;
 using namespace settings;
@@ -229,4 +230,79 @@ TEST_F(TestSetup, setupManostatFullAnisotropicSStochasticRescaling)
     EXPECT_EQ(stochastic.getIsotropy(), Isotropy::FULL_ANISOTROPIC);
     EXPECT_EQ(stochastic.getTau(), 0.2 * 1000);
     EXPECT_EQ(stochastic.getCompressibility(), 4.0);
+}
+
+TEST_F(TestSetup, validateIsotropyFixedAxisCombinationSemiIsotropic)
+{
+    ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    ManostatSettings::setIsotropy(Isotropy::SEMI_ISOTROPIC);
+    // Default semi-isotropic axes in parser are xy (anisotropic axis = z)
+    ManostatSettings::set2DIsotropicAxes({0U, 1U});
+    ManostatSettings::set2DAnisotropicAxis(2U);
+
+    // Fixing Z (anisotropic axis) is allowed
+    ManostatSettings::setFixedAxis(FixedAxis::Z);
+    ManostatSetup manostatSetup(*_mdEngine);
+    EXPECT_NO_THROW(manostatSetup.setup());
+
+    // Fixing X or Y or XY should throw
+    ManostatSettings::setFixedAxis(FixedAxis::X);
+    EXPECT_THROW_MSG(
+        manostatSetup.setup(),
+        exc::UserInputException,
+        "Invalid combination: semi-isotropic pressure coupling only "
+        "allows fixing the anisotropic axis or none."
+    );
+
+    ManostatSettings::setFixedAxis(FixedAxis::XY);
+    EXPECT_THROW_MSG(
+        manostatSetup.setup(),
+        exc::UserInputException,
+        "Invalid combination: semi-isotropic pressure coupling only "
+        "allows fixing the anisotropic axis or none."
+    );
+
+    ManostatSettings::setFixedAxis(FixedAxis::NONE);
+}
+
+TEST_F(TestSetup, validateFixedAxisThrowsWhenAllAxesFixedWithManostat)
+{
+    ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
+    ManostatSettings::setFixedAxis(FixedAxis::ALL);
+
+    ManostatSetup manostatSetup(*_mdEngine);
+    EXPECT_THROW_MSG(
+        manostatSetup.setup(),
+        exc::UserInputException,
+        "Invalid combination: all axes cannot be fixed while a "
+        "manostat is selected."
+    );
+
+    ManostatSettings::setManostatType(ManostatType::STOCHASTIC_RESCALING);
+    EXPECT_THROW_MSG(
+        manostatSetup.setup(),
+        exc::UserInputException,
+        "Invalid combination: all axes cannot be fixed while a "
+        "manostat is selected."
+    );
+
+    ManostatSettings::setFixedAxis(FixedAxis::NONE);
+}
+
+TEST_F(TestSetup, setupManostatWithFixedAxis)
+{
+    ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
+    ManostatSettings::setFixedAxis(FixedAxis::XY);
+    ManostatSettings::setTargetPressure(300.0);
+    ManostatSettings::setTauManostat(0.2);
+    ManostatSettings::setCompressibility(4.0);
+
+    EXPECT_NO_THROW(setupManostat(*_mdEngine));
+
+    const auto &manostat = _mdEngine->getManostat();
+    EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
+
+    ManostatSettings::setFixedAxis(FixedAxis::NONE);
 }

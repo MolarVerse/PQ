@@ -59,11 +59,34 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
 
     _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
     _pressureTensor *= PRESSURE_FACTOR;
-
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
-    _pressure = trace(_pressureTensor) / linearAlgebra::tensor3D::size;
+    _pressure        = trace(_pressureTensor) / linearAlgebra::tensor3D::size;
 
     data.setPressure(_pressure);
+
+    const auto fixedAxis = ManostatSettings::getFixedAxis();
+    const auto p_xyz     = diagonal(_pressureTensor);
+
+    size_t numFree = 0;
+    double p_avg   = 0.0;
+
+    for (size_t axis = 0; axis < 3; ++axis)
+    {
+        if (!isAxisFixed(fixedAxis, axis))
+        {
+            p_avg += p_xyz[axis];
+            ++numFree;
+        }
+    }
+
+    if (numFree > 0)
+    {
+        p_avg /= static_cast<double>(numFree);
+        data.setCoupledPressure(p_avg);
+    }
+    else
+    {
+        data.setCoupledPressure(_pressure);
+    }
 }
 
 /**

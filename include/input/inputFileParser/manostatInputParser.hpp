@@ -56,6 +56,7 @@ namespace input
         );
 
         static void parseIsotropy(const std::vector<std::string> &, size_t);
+        static void parseFixedAxis(const std::vector<std::string> &, size_t);
     };
 
 }   // namespace input

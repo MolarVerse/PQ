@@ -22,6 +22,8 @@
 
 #include "manostatSettings.hpp"
 
+#include <utility>
+
 #include "stringUtilities.hpp"
 
 using namespace settings;
@@ -39,10 +41,10 @@ std::string settings::string(const ManostatType &manostatType)
 
         case ManostatType::STOCHASTIC_RESCALING: return "stochastic_rescaling";
 
-        case ManostatType::NONE: break;
+        case ManostatType::NONE: return "none";
     }
 
-    return "none";
+    std::unreachable();
 }
 
 /**
@@ -67,6 +69,30 @@ std::string settings::string(const Isotropy &isotropy)
     return "isotropic";
 }
 
+/**
+ * @brief return string of fixedAxis
+ *
+ * @param fixedAxis
+ */
+std::string settings::string(const FixedAxis &fixedAxis)
+{
+    switch (fixedAxis)
+    {
+        using enum FixedAxis;
+
+        case NONE: return "none";
+        case X: return "x";
+        case Y: return "y";
+        case Z: return "z";
+        case XY: return "xy";
+        case XZ: return "xz";
+        case YZ: return "yz";
+        case ALL: return "all";
+    }
+
+    std::unreachable();
+}
+
 /***************************
  *                         *
  * standard setter methods *
@@ -85,13 +111,13 @@ void ManostatSettings::setManostatType(const std::string_view &manostatType)
         utilities::toLowerAndReplaceDashesCopy(manostatType);
 
     if (manostatTypeToLower == "berendsen")
-        _manostatType = BERENDSEN;
+        setManostatType(BERENDSEN);
 
     else if (manostatTypeToLower == "stochastic_rescaling")
-        _manostatType = STOCHASTIC_RESCALING;
+        setManostatType(STOCHASTIC_RESCALING);
 
     else
-        _manostatType = NONE;
+        setManostatType(NONE);
 }
 
 /**
@@ -102,6 +128,11 @@ void ManostatSettings::setManostatType(const std::string_view &manostatType)
 void ManostatSettings::setManostatType(const ManostatType &manostatType)
 {
     _manostatType = manostatType;
+    if (!_isFixedAxisSet)
+    {
+        using enum ManostatType;
+        _fixedAxis = (_manostatType == NONE) ? FixedAxis::ALL : FixedAxis::NONE;
+    }
 }
 
 /**
@@ -138,6 +169,17 @@ void ManostatSettings::setIsotropy(const std::string_view &isotropy)
 void ManostatSettings::setIsotropy(const Isotropy &isotropy)
 {
     _isotropy = isotropy;
+}
+
+void ManostatSettings::setFixedAxis(const FixedAxis &fixedAxis)
+{
+    _fixedAxis      = fixedAxis;
+    _isFixedAxisSet = true;
+}
+
+void ManostatSettings::setIsFixedAxisSet(const bool isSet)
+{
+    _isFixedAxisSet = isSet;
 }
 
 /**
@@ -221,6 +263,20 @@ ManostatType ManostatSettings::getManostatType() { return _manostatType; }
  * @return Isotropy
  */
 Isotropy ManostatSettings::getIsotropy() { return _isotropy; }
+
+/**
+ * @brief get the FixedAxis
+ *
+ * @return FixedAxis
+ */
+FixedAxis ManostatSettings::getFixedAxis() { return _fixedAxis; }
+
+/**
+ * @brief get whether FixedAxis was explicitly set
+ *
+ * @return bool
+ */
+bool ManostatSettings::isFixedAxisSet() { return _isFixedAxisSet; }
 
 /**
  * @brief get the target pressure
