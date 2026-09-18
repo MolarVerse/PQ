@@ -51,7 +51,7 @@ jobs:
           && pip3 install m2r
 
       - name: configure
-        run: cmake -S . -B build -DBUILD_WITH_DOCS=ON
+        run: cmake -S . -B build -DBUILD_WITH_DOCS=ON -DBUILD_WITH_ASE=OFF -DBUILD_WITH_TESTS=OFF
 
       - name: build docs
         run: |
