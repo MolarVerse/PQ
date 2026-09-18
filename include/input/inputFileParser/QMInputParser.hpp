@@ -33,9 +33,9 @@
 namespace input
 {
     /**
-     * @class QMInputParser inherits from InputFileParser
+     * @brief QMInputParser inherits from InputFileParser
      *
-     * @brief Parses the general commands in the input file
+     * @details Parses the general commands in the input file
      *
      */
     class QMInputParser : public InputFileParser

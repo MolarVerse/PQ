@@ -38,7 +38,7 @@ using namespace engine;
  * section the endedNormally function is called, which checks if the "end"
  * keyword was found.
  *
- * @param line
+ * @param lineElements
  * @param engine
  */
 void TopologySection::process(
@@ -88,7 +88,7 @@ void TopologySection::setLineNumber(int lineNumber)
 /**
  * @brief set file pointer
  *
- * @param fp
+ * @param file
  */
 void TopologySection::setFp(std::ifstream *file) { _fp = file; }
 

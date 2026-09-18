@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class ThermostatInputParser inherits from InputFileParser
+     * @brief ThermostatInputParser inherits from InputFileParser
      *
-     * @brief Parses the thermostat commands in the input file
+     * @details Parses the thermostat commands in the input file
      *
      */
     class ThermostatInputParser : public InputFileParser

@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class OutputInputParser inherits from InputFileParser
+     * @brief OutputInputParser inherits from InputFileParser
      *
-     * @brief Parses the output commands in the input file
+     * @details Parses the output commands in the input file
      *
      */
     class OutputInputParser : public InputFileParser

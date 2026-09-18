@@ -37,8 +37,8 @@ namespace pqviews
      *
      * @tparam Range The type of the range to be adapted
      * @tparam Adaptor The type of the adaptor to be applied
-     * @param r The range to be adapted
-     * @param a The adaptor to be applied
+     * @param range The range to be adapted
+     * @param adaptor The adaptor to be applied
      * @return auto A view of the adapted range
      */
     template <typename Range, typename Adaptor>

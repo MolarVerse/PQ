@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class CoulombLongRangeInputParser inherits from InputFileParser
+     * @brief CoulombLongRangeInputParser inherits from InputFileParser
      *
-     * @brief Parses the Coulomb long range commands in the input file
+     * @details Parses the Coulomb long range commands in the input file
      *
      */
     class CoulombLongRangeInputParser : public InputFileParser

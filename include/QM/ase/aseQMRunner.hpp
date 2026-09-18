@@ -52,7 +52,7 @@ namespace QM
         void run(
             molsys::SimulationBox      &simBox,
             physicalData::PhysicalData &physicalData,
-            molsys::Periodicity         periodicity
+            molsys::Periodicity         per
         ) override;
         void buildAseAtoms(const molsys::SimulationBox &);
         void execute();

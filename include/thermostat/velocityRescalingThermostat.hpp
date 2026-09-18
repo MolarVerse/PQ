@@ -65,8 +65,8 @@ namespace thermostat
         ) noexcept = delete;
 
         void applyThermostat(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) override;
 
         void setTau(double tau);

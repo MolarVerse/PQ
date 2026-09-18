@@ -41,9 +41,9 @@ namespace molsys
 namespace out
 {
     /**
-     * @class RstFileOutput inherits from Output
+     * @brief RstFileOutput inherits from Output
      *
-     * @brief Output file for restart file
+     * @details Output file for restart file
      *
      */
     class RstFileOutput : public Output

@@ -32,9 +32,7 @@ using namespace pot;
  * @param vanDerWaalsType1
  * @param vanDerWaalsType2
  * @param cutOff
- * @param a
- * @param dRho
- * @param c6
+ * @param params
  */
 BuckinghamPair::BuckinghamPair(
     ExtVdwType              vanDerWaalsType1,
@@ -51,9 +49,7 @@ BuckinghamPair::BuckinghamPair(
  * @brief Construct a new Buckingham Pair:: Buckingham Pair object
  *
  * @param cutOff
- * @param a
- * @param dRho
- * @param c6
+ * @param params
  */
 BuckinghamPair::BuckinghamPair(
     const double            cutOff,
@@ -69,9 +65,7 @@ BuckinghamPair::BuckinghamPair(
  * @param cutOff
  * @param energyCutoff
  * @param forceCutoff
- * @param a
- * @param dRho
- * @param c6
+ * @param params
  */
 BuckinghamPair::BuckinghamPair(
     double                  cutOff,
@@ -96,9 +90,8 @@ bool BuckinghamPair::operator==(const BuckinghamPair& other) const
 }
 
 /**
- * @brief calculates the energy and force of a BuckinghamPair
- *
- * @link https://doi.org/10.1098/rspa.1938.0173
+ * @brief calculates the energy and force of a
+ * [BuckinghamPair](https://doi.org/10.1098/rspa.1938.0173)
  *
  * @param distance
  * @return std::pair<double, double>

@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class RingPolymerInputParser inherits from InputFileParser
+     * @brief RingPolymerInputParser inherits from InputFileParser
      *
-     * @brief Parses the general commands in the input file
+     * @details Parses the general commands in the input file
      *
      */
     class RingPolymerInputParser : public InputFileParser

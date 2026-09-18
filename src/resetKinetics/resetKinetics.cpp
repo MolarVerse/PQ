@@ -54,6 +54,7 @@ using namespace utilities;
  * @param frequencyMomentumReset
  * @param nStepsAngularReset
  * @param frequencyAngularReset
+ * @param nStepsForcesReset
  */
 ResetKinetics::ResetKinetics(
     size_t nStepsTemperatureReset,
@@ -126,7 +127,6 @@ void ResetKinetics::reset(
  * @details calculate hard scaling factor for target temperature and current
  * temperature and scale all velocities
  *
- * @param physicalData
  * @param simBox
  */
 void ResetKinetics::resetTemperature(SimulationBox &simBox)
@@ -159,7 +159,6 @@ void ResetKinetics::resetTemperature(SimulationBox &simBox)
  * @details subtract momentum correction from all velocities - correction is the
  * total momentum divided by the total mass
  *
- * @param physicalData
  * @param simBox
  */
 void ResetKinetics::resetMomentum(SimulationBox &simBox)
@@ -184,7 +183,6 @@ void ResetKinetics::resetMomentum(SimulationBox &simBox)
  * @details subtract angular momentum correction from all velocities -
  * correction is the total angular momentum divided by the total mass
  *
- * @param physicalData
  * @param simBox
  */
 void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)

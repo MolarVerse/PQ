@@ -39,9 +39,9 @@ namespace engine
 namespace input
 {
     /**
-     * @class GeneralInputParser inherits from InputFileParser
+     * @brief GeneralInputParser inherits from InputFileParser
      *
-     * @brief Parses the general commands in the input file
+     * @details Parses the general commands in the input file
      *
      */
     class GeneralInputParser : public InputFileParser

@@ -40,33 +40,31 @@ using namespace settings;
  *
  * @details following keywords are added to the _keywordFuncMap,
  * _keywordRequiredMap and _keywordCountMap:
- * 1)  output_freq <size_t>
- * 2)  file_prefix <string>
- * 3)  output_file <string>
- * 4)  ref_file <string>
- * 5)  info_file <string>
- * 6)  energy_file <string>
- * 7)  instant_energy_file <string>
- * 8)  traj_file <string>
- * 9)  vel_file <string>
- * 10) force_file <string>
- * 11) restart_file <string>
- * 12) charge_file <string>
- * 13) momentum_file <string>
- * 14) virial_file <string>
- * 15) stress_file <string>
- * 16) box_file <string>
- * 17) timings_file <string>
- * 18) opt_file <string>
- * 19) rpmd_restart_file <string>
- * 20) rpmd_traj_file <string>
- * 21) rpmd_vel_file <string>
- * 22) rpmd_force_file <string>
- * 23) rpmd_charge_file <string>
- * 24) rpmd_energy_file <string>
- * 25) include_output_metadata <bool>
- *
- * @param engine
+ * 1)  output_freq "<size_t>"
+ * 2)  file_prefix "<string>"
+ * 3)  output_file "<string>"
+ * 4)  ref_file "<string>"
+ * 5)  info_file "<string>"
+ * 6)  energy_file "<string>"
+ * 7)  instant_energy_file "<string>"
+ * 8)  traj_file "<string>"
+ * 9)  vel_file "<string>"
+ * 10) force_file "<string>"
+ * 11) restart_file "<string>"
+ * 12) charge_file "<string>"
+ * 13) momentum_file "<string>"
+ * 14) virial_file "<string>"
+ * 15) stress_file "<string>"
+ * 16) box_file "<string>"
+ * 17) timings_file "<string>"
+ * 18) opt_file "<string>"
+ * 19) rpmd_restart_file "<string>"
+ * 20) rpmd_traj_file "<string>"
+ * 21) rpmd_vel_file "<string>"
+ * 22) rpmd_force_file "<string>"
+ * 23) rpmd_charge_file "<string>"
+ * 24) rpmd_energy_file "<string>"
+ * 25) include_output_metadata "<bool>"
  */
 OutputInputParser::OutputInputParser()
 {
@@ -213,6 +211,7 @@ OutputInputParser::OutputInputParser()
  * @details default value is 1
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if output frequency is negative
  */
@@ -245,6 +244,7 @@ void OutputInputParser::parseOutputFreq(
  * @details default value is default
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseFilePrefix(
     const std::vector<std::string> &lineElements,
@@ -261,6 +261,7 @@ void OutputInputParser::parseFilePrefix(
  * @details default value is default.log
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseLogFilename(
     const std::vector<std::string> &lineElements,
@@ -277,6 +278,7 @@ void OutputInputParser::parseLogFilename(
  * @details default value is default.ref
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseRefFilename(
     const std::vector<std::string> &lineElements,
@@ -293,6 +295,7 @@ void OutputInputParser::parseRefFilename(
  * @details default value is default.info
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseInfoFilename(
     const std::vector<std::string> &lineElements,
@@ -309,6 +312,7 @@ void OutputInputParser::parseInfoFilename(
  * @details default value is default.en
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseEnergyFilename(
     const std::vector<std::string> &lineElements,
@@ -325,6 +329,7 @@ void OutputInputParser::parseEnergyFilename(
  * @details default value is default.inen
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseInstantEnergyFilename(
     const std::vector<std::string> &lineElements,
@@ -341,6 +346,7 @@ void OutputInputParser::parseInstantEnergyFilename(
  * @details default value is default.xyz
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseTrajectoryFilename(
     const std::vector<std::string> &lineElements,
@@ -357,6 +363,7 @@ void OutputInputParser::parseTrajectoryFilename(
  * @details default value is default.center.xyz
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseHybridCenterFilename(
     const std::vector<std::string> &lineElements,
@@ -373,6 +380,7 @@ void OutputInputParser::parseHybridCenterFilename(
  * @details default value is default.vel
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseVelocityFilename(
     const std::vector<std::string> &lineElements,
@@ -384,11 +392,12 @@ void OutputInputParser::parseVelocityFilename(
 }
 
 /**
- * @brief parse velocity filename of simulation and add it to output
+ * @brief parse force filename of simulation and add it to output
  *
  * @details default value is default.force
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseForceFilename(
     const std::vector<std::string> &lineElements,
@@ -405,6 +414,7 @@ void OutputInputParser::parseForceFilename(
  * @details default value is default.rst
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseRestartFilename(
     const std::vector<std::string> &lineElements,
@@ -421,6 +431,7 @@ void OutputInputParser::parseRestartFilename(
  * @details default value is default.chrg
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseChargeFilename(
     const std::vector<std::string> &lineElements,
@@ -437,6 +448,7 @@ void OutputInputParser::parseChargeFilename(
  * @details default value is default.mom
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseMomentumFilename(
     const std::vector<std::string> &lineElements,
@@ -453,6 +465,7 @@ void OutputInputParser::parseMomentumFilename(
  * @details default value is default.vir
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseVirialFilename(
     const std::vector<std::string> &lineElements,
@@ -469,6 +482,7 @@ void OutputInputParser::parseVirialFilename(
  * @details default value is default.stress
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseStressFilename(
     const std::vector<std::string> &lineElements,
@@ -485,6 +499,7 @@ void OutputInputParser::parseStressFilename(
  * @details default value is default.box
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseBoxFilename(
     const std::vector<std::string> &lineElements,
@@ -501,6 +516,7 @@ void OutputInputParser::parseBoxFilename(
  * @details default value is default.timings
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseTimingsFilename(
     const std::vector<std::string> &lineElements,
@@ -517,6 +533,7 @@ void OutputInputParser::parseTimingsFilename(
  * @details default value is default.opt
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseOptFilename(
     const std::vector<std::string> &lineElements,
@@ -533,6 +550,7 @@ void OutputInputParser::parseOptFilename(
  * @details default value is default.rpmd.rst
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseRPMDRestartFilename(
     const std::vector<std::string> &lineElements,
@@ -549,6 +567,7 @@ void OutputInputParser::parseRPMDRestartFilename(
  * @details default value is default.rpmd.xyz
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseRPMDTrajectoryFilename(
     const std::vector<std::string> &lineElements,
@@ -565,6 +584,7 @@ void OutputInputParser::parseRPMDTrajectoryFilename(
  * @details default value is default.rpmd.vel
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseRPMDVelocityFilename(
     const std::vector<std::string> &lineElements,
@@ -581,6 +601,7 @@ void OutputInputParser::parseRPMDVelocityFilename(
  * @details default value is default.rpmd.force
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseRPMDForceFilename(
     const std::vector<std::string> &lineElements,
@@ -597,6 +618,7 @@ void OutputInputParser::parseRPMDForceFilename(
  * @details default value is default.rpmd.chrg
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseRPMDChargeFilename(
     const std::vector<std::string> &lineElements,
@@ -613,6 +635,7 @@ void OutputInputParser::parseRPMDChargeFilename(
  * @details default value is default.rpmd.en
  *
  * @param lineElements
+ * @param lineNumber
  */
 void OutputInputParser::parseRPMDEnergyFilename(
     const std::vector<std::string> &lineElements,

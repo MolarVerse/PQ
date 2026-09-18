@@ -46,7 +46,7 @@ using namespace forceField;
  * 4. atom index 4
  * 5. j-coupling type
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throws TopologyException if number of elements in line

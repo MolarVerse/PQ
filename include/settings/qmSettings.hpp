@@ -34,7 +34,7 @@
 namespace settings
 {
     /**
-     * @class enum QMMethod
+     * @brief enum QMMethod
      *
      */
     enum class QMMethod : std::uint8_t
@@ -50,7 +50,7 @@ namespace settings
     };
 
     /**
-     * @class enum MaceModel
+     * @brief enum MaceModel
      *
      */
     enum class MaceModel : std::uint8_t
@@ -70,7 +70,7 @@ namespace settings
     };
 
     /**
-     * @class enum MaceModelType
+     * @brief enum MaceModelType
      */
     enum class MaceModelType : std::uint8_t
     {
@@ -80,9 +80,9 @@ namespace settings
     };
 
     /**
-     * @class enum MaceMode
+     * @brief enum MaceMode
      *
-     * @brief enum class for the MACE evaluation mode / kernel backend
+     * @details enum class for the MACE evaluation mode / kernel backend
      */
     enum class MaceMode : std::uint8_t
     {
@@ -91,7 +91,7 @@ namespace settings
     };
 
     /**
-     * @class enum xtbMethod
+     * @brief enum XtbMethod
      */
     enum class XtbMethod : std::uint8_t
     {
@@ -101,7 +101,7 @@ namespace settings
     };
 
     /**
-     * @class enum Slakos
+     * @brief enum SlakosType
      */
     enum class SlakosType : std::uint8_t
     {
@@ -122,9 +122,9 @@ namespace settings
     );
 
     /**
-     * @class QMSettings
+     * @brief QMSettings
      *
-     * @brief stores all information about the external qm runner
+     * @details stores all information about the external qm runner
      *
      */
     class QMSettings

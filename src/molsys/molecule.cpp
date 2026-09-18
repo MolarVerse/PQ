@@ -122,7 +122,8 @@ void Molecule::reconstructAtomsAroundCenterOfMass(const Box &box)
  * @details scaling has to be done in orthogonal space since pressure scaling is
  * done in orthogonal space
  *
- * @param shiftFactors
+ * @param shiftTensor
+ * @param box
  */
 void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
 {

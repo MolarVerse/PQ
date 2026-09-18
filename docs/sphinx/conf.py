@@ -6,8 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import os
 project = 'PQ'
-copyright = '2023, Jakob Gamper'
+copyright = '2023-now, Jakob Gamper'
 author = 'Jakob Gamper'
 release = '[]'
 
@@ -77,7 +78,7 @@ html_static_path = ['_static']
 # -- Breathe configuration -------------------------------------------------
 
 breathe_projects = {
-    "C++ Sphinx Doxygen Breathe": "_build/xml/"
+    "C++ Sphinx Doxygen Breathe": os.environ.get("PQ_DOXYGEN_XML_DIR", "_build/xml/")
 }
 breathe_default_project = "C++ Sphinx Doxygen Breathe"
 breathe_default_members = ('members', 'undoc-members')

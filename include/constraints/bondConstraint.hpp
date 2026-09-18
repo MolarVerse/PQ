@@ -36,9 +36,7 @@ namespace molsys
 namespace constraints
 {
     /**
-     * @class BondConstraint inherits from Bond
-     *
-     * @brief constraint object for single bond length
+     * @brief BondConstraint inherits from Bond
      *
      * @details it performs the shake and rattle algorithm on a bond constraint
      *
@@ -58,7 +56,7 @@ namespace constraints
             double            bondLength
         );
 
-        void calculateConstraintBondRef(const molsys::SimulationBox &);
+        void calculateConstraintBondRef(const molsys::SimulationBox &simBox);
 
         [[nodiscard]] double calculateDistanceDelta(
             const molsys::SimulationBox &

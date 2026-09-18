@@ -36,8 +36,7 @@ namespace out
     /**
      * @brief Write the restart file for all beads
      *
-     * @param simBox
-     * @param step
+     * @param beads
      */
     void RingPolymerRestartFileOutput::write(
         std::vector<molsys::SimulationBox> &beads

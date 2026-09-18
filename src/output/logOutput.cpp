@@ -50,7 +50,6 @@ namespace out
     /**
      * @brief write header title
      *
-     * @return string
      */
     void LogOutput::writeHeader() { _fp << header() << '\n' << std::flush; }
 
@@ -138,7 +137,6 @@ namespace out
      * @brief write a message to the stdout to inform that the setup is
      * completed
      *
-     * @param momentum
      */
     void LogOutput::writeSetupCompleted()
     {

@@ -110,7 +110,7 @@ void ForceFieldNonCoulomb::setupNonCoulombicCutoffs()
  * @brief determines internal global van der Waals types and sets them in the
  * NonCoulombPair objects
  *
- * @param _externalToInternalGlobalVDWTypes
+ * @param extToIntGlobalVDWTypes
  *
  */
 void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(
@@ -132,7 +132,7 @@ void ForceFieldNonCoulomb::determineInternalGlobalVdwTypes(
 /**
  * @brief sorts the elements of a non-coulombic pairs vector
  *
- * @param nonCoulombicPairsVector
+ * @param diagonalElements
  *
  * @throw ParameterFileException if non-coulombic pairs with the same global van
  * der Waals types are defined twice
@@ -181,7 +181,7 @@ void ForceFieldNonCoulomb::sortNonCoulombicsPairs(
 /**
  * @brief fills the diagonal elements of the non-coulombic pairs matrix
  *
- * @param diagonalElements
+ * @param diag
  */
 void ForceFieldNonCoulomb::fillDiagOfNonCoulPairsMatrix(
     std::vector<std::shared_ptr<NonCoulombPair>> &diag
@@ -321,8 +321,8 @@ std::vector<std::shared_ptr<NonCoulombPair>> ForceFieldNonCoulomb::
  * @details if the non coulombic pair is not found, an empty optional is
  * returned if the non coulombic pair is found twice an exception is thrown
  *
- * @param internalType1
- * @param internalType2
+ * @param intType1
+ * @param intType2
  * @return optional<std::shared_ptr<NonCoulombPair>>
  *
  * @throws if the non coulombic pair is found twice
@@ -397,7 +397,7 @@ void ForceFieldNonCoulomb::addNonCoulombicPair(
  * @details the indices vector contains the indices of the atoms in the system,
  * the last two indices are the global van der Waals
  *
- * @param indices
+ * @param vdwTypes
  * @return std::shared_ptr<NonCoulombPair>
  */
 std::shared_ptr<NonCoulombPair> ForceFieldNonCoulomb::getNonCoulPair(

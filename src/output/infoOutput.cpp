@@ -160,8 +160,6 @@ void InfoOutput::writeHeader()
  * @param value
  * @param name
  * @param unit
- * @param formatter
- * @param precision
  */
 void InfoOutput::writeLeft(
     double                  value,
@@ -178,8 +176,6 @@ void InfoOutput::writeLeft(
  * @param value
  * @param name
  * @param unit
- * @param formatter
- * @param precision
  */
 void InfoOutput::writeLeftInteger(
     double                  value,
@@ -201,8 +197,6 @@ void InfoOutput::writeLeftInteger(
  * @param value
  * @param name
  * @param unit
- * @param formatter
- * @param precision
  */
 void InfoOutput::writeLeftScientific(
     double                  value,
@@ -219,8 +213,6 @@ void InfoOutput::writeLeftScientific(
  * @param value
  * @param name
  * @param unit
- * @param formatter
- * @param precision
  */
 void InfoOutput::writeRight(
     double                  value,

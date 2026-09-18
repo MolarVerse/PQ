@@ -43,9 +43,7 @@ using namespace references;
  * Integrator object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) integrator <string>
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
  */
 IntegratorInputParser::IntegratorInputParser()
 {
@@ -63,6 +61,7 @@ IntegratorInputParser::IntegratorInputParser()
  * 1) "v-verlet"  - velocity verlet integrator is used (default)
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if integrator is not valid -
  * currently only velocity verlet is supported

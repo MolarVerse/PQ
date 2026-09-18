@@ -64,14 +64,16 @@ AngleForceField::AngleForceField(
  * @details if angle is a linker angle, correct coulomb and non-coulomb energy
  * and forces
  *
- * @param box
- * @param physicalData
+ * @param simBox the simulation box containing the system
+ * @param data the physical data of the system
+ * @param coulombPot the coulomb potential of the system
+ * @param nonCoulombPot the non-coulomb potential of the system
  */
 void AngleForceField::calculateEnergyAndForces(
-    const SimulationBox    &box,
-    PhysicalData           &physicalData,
-    const CoulombPotential &coulombPotential,
-    NonCoulombPotential    &nonCoulombPotential
+    const SimulationBox    &simBox,
+    PhysicalData           &data,
+    const CoulombPotential &coulombPot,
+    NonCoulombPotential    &nonCoulombPot
 )
 {
     const bool allInactive = !_molecules[0]->isActive() &&
@@ -89,8 +91,8 @@ void AngleForceField::calculateEnergyAndForces(
     auto dPosition12 = position1 - position2;
     auto dPosition13 = position1 - position3;
 
-    box.applyPBC(dPosition12);
-    box.applyPBC(dPosition13);
+    simBox.applyPBC(dPosition12);
+    simBox.applyPBC(dPosition13);
 
     const auto distance12Squared = normSquared(dPosition12);
     const auto distance13Squared = normSquared(dPosition13);
@@ -103,7 +105,7 @@ void AngleForceField::calculateEnergyAndForces(
 
     auto forceMagnitude = -_params.forceConstant * deltaAngle;
 
-    physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
+    data.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
     auto forcexyz = linearAlgebra::Vec3D{0.0, 0.0, 0.0};
 
@@ -133,16 +135,16 @@ void AngleForceField::calculateEnergyAndForces(
     if (_isLinker)
     {
         auto dPosition23 = position2 - position3;
-        box.applyPBC(dPosition23);
+        simBox.applyPBC(dPosition23);
 
         const auto distance23 = norm(dPosition23);
 
         if (distance23 < CoulombPotential::getCoulombRadiusCutOff())
         {
             forceMagnitude = correctLinker<AngleForceField>(
-                coulombPotential,
-                nonCoulombPotential,
-                physicalData,
+                coulombPot,
+                nonCoulombPot,
+                data,
                 _molecules[1],
                 _molecules[2],
                 _atomIndices[1],
@@ -163,9 +165,7 @@ void AngleForceField::calculateEnergyAndForces(
                 _molecules[0]->getHybridZone() == SMOOTHING)
                 smF = _molecules[0]->getSmoothingFactor();
 
-            physicalData.addVirial(
-                tensorProduct(dPosition23, forcexyz) * (1 - smF)
-            );
+            data.addVirial(tensorProduct(dPosition23, forcexyz) * (1 - smF));
 
             _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
             _molecules[2]->addAtomForce(_atomIndices[2], -forcexyz);

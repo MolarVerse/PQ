@@ -644,7 +644,7 @@ void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit = time; }
 /**
  * @brief sets the FeNNol model path
  *
- * @param script
+ * @param path
  */
 void QMSettings::setFennolModelPath(const std::string_view &path)
 {

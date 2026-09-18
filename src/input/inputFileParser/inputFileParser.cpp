@@ -36,7 +36,7 @@ using namespace utilities;
  * @brief check if parameter is "="
  *
  * @param view
- * @param _lineNumber
+ * @param lineNumber
  *
  * @throw InputFileException if argument is not "="
  */
@@ -52,7 +52,7 @@ void input::checkEqualSign(const std::string_view &view, size_t lineNumber)
  * @brief check if command array has at least 3 elements
  *
  * @param lineElements
- * @param _lineNumber
+ * @param lineNumber
  *
  * @throw InputFileException if command array has less than 3
  * elements
@@ -82,7 +82,7 @@ void input::checkCommandArray(
  * @brief check if command array has exactly 3 elements
  *
  * @param lineElements
- * @param _lineNumber
+ * @param lineNumber
  *
  * @throw InputFileException if command array has less or more
  * than 3 elements
@@ -110,7 +110,6 @@ void input::checkCommand(
  *
  * @param keyword
  * @param parserFunc
- * @param count
  * @param required
  *
  * @details

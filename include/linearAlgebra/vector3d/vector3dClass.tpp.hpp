@@ -43,7 +43,7 @@ namespace linearAlgebra
      * @brief move assignment operator
      *
      * @tparam T
-     * @param rhs
+     * @param vec
      * @return Vector3D<T>&
      */
     template <class T>
@@ -62,7 +62,7 @@ namespace linearAlgebra
      * @brief copy assignment operator
      *
      * @tparam T
-     * @param rhs
+     * @param vec
      * @return Vector3D<T>&
      */
     template <class T>
@@ -84,7 +84,7 @@ namespace linearAlgebra
     /**
      * @brief operator += inplace
      *
-     * @param const Vector3D<T> &rhs
+     * @param vec
      */
     template <class T>
     void Vector3D<T>::operator+=(const Vector3D<T> &vec)
@@ -98,8 +98,8 @@ namespace linearAlgebra
     /**
      * @brief += operator for two Vector3d objects
      *
-     * @param const Vector3D<T>&
-     * @return Vector3D
+     * @param vec
+     * @return `Vector3D<T>&` (inplace addition)
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator+=(const T &vec)
@@ -118,8 +118,8 @@ namespace linearAlgebra
     /**
      * @brief operator -=
      *
-     * @param const Vector3D<T> &rhs
-     * @return Vector3D<T>&
+     * @param vec
+     * @return `Vector3D<T>&` (inplace subtraction)
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &vec)
@@ -134,8 +134,8 @@ namespace linearAlgebra
     /**
      * @brief operator -=
      *
-     * @param const T &vec
-     * @return Vector3D<T>&
+     * @param vec
+     * @return `Vector3D<T>&` (inplace subtraction)
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator-=(const T &vec)
@@ -155,8 +155,8 @@ namespace linearAlgebra
      * @brief operator *=
      *
      * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
+     * @param vec
+     * @return `Vector3D<T>&` (inplace multiplication)
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &vec)
@@ -172,8 +172,8 @@ namespace linearAlgebra
      * @brief operator *=
      *
      * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
+     * @param vec
+     * @return `Vector3D<T>&` (inplace multiplication)
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator*=(const T &vec)
@@ -193,8 +193,8 @@ namespace linearAlgebra
      * @brief operator /=
      *
      * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
+     * @param vec
+     * @return `Vector3D<T>&` (inplace division)
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &vec)
@@ -210,8 +210,8 @@ namespace linearAlgebra
      * @brief operator /=
      *
      * @tparam T
-     * @param rhs
-     * @return Vector3D<T>&
+     * @param vec
+     * @return `Vector3D<T>&` (inplace division)
      */
     template <class T>
     Vector3D<T> &Vector3D<T>::operator/=(const T &vec)
@@ -232,7 +232,7 @@ namespace linearAlgebra
     /**
      * @brief index operator
      *
-     * @param size_t index
+     * @param index
      * @return T&
      */
     template <class T>
@@ -244,7 +244,7 @@ namespace linearAlgebra
     /**
      * @brief const index operator
      *
-     * @param size_t index
+     * @param index
      * @return const T&
      */
     template <class T>
@@ -308,7 +308,7 @@ namespace linearAlgebra
      * @brief static cast of all vector members
      *
      * @tparam U
-     * @return Vector3D<U>
+     * @return `Vector3D<U>`
      */
     template <class T>
     template <class U>

@@ -41,13 +41,12 @@ using namespace utilities;
  * Non Coulomb Type object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file <string> 2)
- * topology_file <string> 3) parameter_file <string> 4) start_file <string>
- * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string>
- * 7) guff_path <string> (deprecated) 8) guff_file <string>
- * 9) mshake_file <string> 10) dftb_file <string> 11) turbomole_file <string>
+ * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file "<string>"
+ * 2) topology_file "<string>" 3) parameter_file "<string>" 4) start_file
+ * "<string>" (required) 5) rpmd_start_file "<string>" 6) moldescriptor_file
+ * "<string>" 7) guff_path "<string>" (deprecated) 8) guff_file "<string>" 9)
+ * mshake_file "<string>" 10) dftb_file "<string>" 11) turbomole_file "<string>"
  *
- * @param engine
  * @param intraNonBonded
  */
 FilesInputParser::FilesInputParser(
@@ -62,13 +61,14 @@ FilesInputParser::FilesInputParser(
  * Non Coulomb Type object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file <string> 2)
- * topology_file <string> 3) parameter_file <string> 4) start_file <string>
- * (required) 5) rpmd_start_file <string> 6) moldescriptor_file <string>
- * 7) guff_path <string> (deprecated) 8) guff_file <string>
- * 9) mshake_file <string> 10) dftb_file <string> 11) turbomole_file <string>
+ * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file "<string>"
+ * 2) topology_file "<string>" 3) parameter_file "<string>" 4) start_file
+ * "<string>" (required) 5) rpmd_start_file "<string>" 6) moldescriptor_file
+ * "<string>" 7) guff_path "<string>" (deprecated) 8) guff_file "<string>" 9)
+ * mshake_file "<string>" 10) dftb_file "<string>" 11) turbomole_file "<string>"
  *
- * @param engine
+ * @param intraNonBonded
+ * @param validateFilePaths
  */
 FilesInputParser::FilesInputParser(
     std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
@@ -287,6 +287,7 @@ void FilesInputParser::parseRingPolymerStartFilename(
  * @details default is moldescriptor.dat
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if file does not exist
  */
@@ -338,6 +339,7 @@ void FilesInputParser::parseGuffPath(
  * @details default is guff.dat
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if file does not exist
  */
@@ -362,6 +364,7 @@ void FilesInputParser::parseGuffDatFilename(
  * @brief parse mshake file of simulation and set it in settings
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if file does not exist
  */
@@ -386,6 +389,7 @@ void FilesInputParser::parseMShakeFilename(
  * @brief parse dftb file of simulation and set it in settings
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if file does not exist
  */
@@ -410,6 +414,7 @@ void FilesInputParser::parseDFTBFilename(
  * @brief parse Turbomole file of simulation and set it in settings
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if file does not exist
  */

@@ -3,17 +3,21 @@ name: Docs
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ["main", "dev"]
     paths:
       - ".github/workflows/jekyll-gh-pages.yml"
-      - "docs/sphinx/**"
+      - "docs/**"
+      - "include/**"
+      - "src/**"
 
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
     paths:
       - ".github/workflows/jekyll-gh-pages.yml"
-      - "docs/sphinx/**"
+      - "docs/**"
+      - "include/**"
+      - "src/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,15 +34,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build job
-  build:
+  # Runs on every PR and push — confirms the docs actually build cleanly.
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Requirements
-        run: sudo apt-get install -y doxygen
+        run: sudo apt-get install -y doxygen graphviz
           && sudo apt-get install -y python3-sphinx
           && pip3 install sphinx-rtd-theme
           && pip3 install breathe
@@ -46,17 +50,37 @@ jobs:
           && pip3 install sphinx==7.2.6
           && pip3 install m2r
 
-      - name: build doxygen
+      - name: configure
+        run: cmake -S . -B build -DBUILD_WITH_DOCS=ON -DBUILD_WITH_ASE=OFF -DBUILD_WITH_TESTS=OFF
+
+      - name: build docs
         run: |
-          cd docs/sphinx
-          make html
-          cd _build/html
+          cmake --build build --target sphinx-docs
+          cd docs/sphinx/_build/html
           touch .nojekyll
 
-      # Deployment job
-      - name: deploy
+      - name: upload built site
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-site
+          path: docs/sphinx/_build/html
+          retention-days: 1
+
+  # Only runs on push to main, and only if validate succeeded.
+  deploy:
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: download built site
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-site
+          path: site
+
+      - name: deploy
         uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: docs/sphinx/_build/html # The folder the action should deploy.
+          folder: site # The folder the action should deploy.

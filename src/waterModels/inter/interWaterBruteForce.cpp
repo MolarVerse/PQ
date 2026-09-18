@@ -114,16 +114,15 @@ void InterWaterStrategyBruteForce::calculate(
 /**
  * @brief Compute core-to-outer Coulomb interactions by brute force.
  *
- * @param state Inter-water parameters.
  * @param simBox Simulation box containing molecules.
- * @param physicalData Physical data to store energy results.
+ * @param physData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
     const InterWaterState & /*state*/,
     molsys::SimulationBox                        &simBox,
     PhysicalData                                 &physData,
-    const std::shared_ptr<pot::CoulombPotential> &coulPot,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
 )
 {
@@ -156,7 +155,7 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
                 calculateSingleCoulombInteraction<QMChargeTag, MMChargeTag>(
                     atomA,
                     atomB,
-                    coulPot,
+                    coulombPotential,
                     rCutSquared,
                     simBox,
                     totalCoulombEnergy
@@ -188,15 +187,15 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
  *
  * @param state Inter-water parameters.
  * @param simBox Simulation box containing molecules.
- * @param physicalData Physical data to store energy results.
+ * @param physData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     const InterWaterState                        &state,
     molsys::SimulationBox                        &simBox,
-    PhysicalData                                 &physData,
-    const std::shared_ptr<pot::CoulombPotential> &coulPot,
-    CellList & /*cellList*/
+    physicalData::PhysicalData                   &physData,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+    molsys::CellList & /*cellList*/
 )
 {
     const auto rCut        = pot::CoulombPotential::getCoulombRadiusCutOff();
@@ -235,7 +234,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
                     calculateSingleInteraction<QMChargeTag, MMChargeTag>(
                         atomA,
                         atomB,
-                        coulPot,
+                        coulombPotential,
                         rCutSquared,
                         simBox,
                         *nonCoulPairPtr,
@@ -271,7 +270,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
  *
  * @param state Inter-water parameters.
  * @param simBox Simulation box containing molecules.
- * @param physicalData Physical data to store energy results.
+ * @param physData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  * @param cellList Cell list structure (unused).
  */
@@ -279,11 +278,11 @@ void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
     const InterWaterState                        &state,
     molsys::SimulationBox                        &simBox,
     PhysicalData                                 &physData,
-    const std::shared_ptr<pot::CoulombPotential> &coulPot,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList                                     &cellList
 )
 {
-    calculate(state, simBox, physData, coulPot, cellList);
+    calculate(state, simBox, physData, coulombPotential, cellList);
 }
 
 /**
@@ -291,14 +290,14 @@ void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
  *
  * @param state Inter-water parameters.
  * @param simBox Simulation box containing molecules.
- * @param physicalData Physical data to store energy results.
+ * @param physData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     const InterWaterState                        &state,
     molsys::SimulationBox                        &simBox,
-    PhysicalData                                 &physData,
-    const std::shared_ptr<pot::CoulombPotential> &coulPot,
+    physicalData::PhysicalData                   &physData,
+    const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
 )
 {
@@ -335,7 +334,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                     calculateSingleInteraction<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
-                        coulPot,
+                        coulombPotential,
                         rCutSquared,
                         simBox,
                         *nonCoulPairPtr,
@@ -401,7 +400,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                     calculateSingleInteractionOneWay<MMChargeTag, QMChargeTag>(
                         atomA,
                         atomB,
-                        coulPot,
+                        coulombPotential,
                         rCutSquared,
                         simBox,
                         *nonCoulPairPtr,

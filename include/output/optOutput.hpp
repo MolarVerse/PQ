@@ -36,9 +36,9 @@ namespace opt
 namespace out
 {
     /**
-     * @class OptOutput inherits from Output
+     * @brief OptOutput inherits from Output
      *
-     * @brief Output file for energy, temperature and pressure
+     * @details Output file for energy, temperature and pressure
      *
      */
     class OptOutput : public Output

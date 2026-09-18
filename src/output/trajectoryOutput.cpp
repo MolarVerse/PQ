@@ -84,7 +84,7 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox, size_t step)
 /**
  * @brief Write hybrid center xyz file
  *
- * @param simBox
+ * @param configurator
  * @param step
  */
 void TrajectoryOutput::writeHybridCenterXyz(

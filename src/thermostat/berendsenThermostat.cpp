@@ -51,21 +51,19 @@ BerendsenThermostat::BerendsenThermostat(double targetTemp, double tau)
 }
 
 /**
- * @brief apply thermostat - Berendsen
- *
- * @link https://doi.org/10.1063/1.448118
+ * @brief apply thermostat - [Berendsen](https://doi.org/10.1063/1.448118)
  *
  * @param simulationBox
  * @param data
  */
 void BerendsenThermostat::applyThermostat(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &data
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
 
-    data.calculateTemperature(simBox);
+    data.calculateTemperature(simulationBox);
 
     _temperature = data.getTemperature();
 
@@ -86,7 +84,7 @@ void BerendsenThermostat::applyThermostat(
     const auto berendsenFactor =
         ::sqrt(1.0 + (timeStep / _tau * (tempRatio - 1.0)));
 
-    for (const auto &atom : simBox.getAtoms())
+    for (const auto &atom : simulationBox.getAtoms())
         atom->scaleVelocity(berendsenFactor);
 
     data.setTemperature(_temperature * berendsenFactor * berendsenFactor);

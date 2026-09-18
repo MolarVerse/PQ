@@ -73,10 +73,10 @@ namespace stl
     /**
      * @brief dot product of two vectors
      *
-     * @param a std::vector<T>
-     * @param b std::vector<T>
+     * @param lhs std::vector<T>
+     * @param rhs std::vector<T>
      *
-     * @return T dot product of a and b
+     * @return T dot product of lhs and rhs
      */
     template <typename T>
     T dot(const std::vector<T> &lhs, const std::vector<T> &rhs)
@@ -87,9 +87,9 @@ namespace stl
     /**
      * @brief root mean square of a vector
      *
-     * @param a std::vector<T>
+     * @param vec std::vector<T>
      *
-     * @return T root mean square of a
+     * @return T root mean square of vec
      */
     template <typename T>
     T rms(const std::vector<T> &vec)

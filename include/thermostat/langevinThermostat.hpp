@@ -62,12 +62,12 @@ namespace thermostat
 
         void applyThermostat(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            physicalData::PhysicalData &data
         ) override;
 
         void applyThermostatHalfStep(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox &simBox,
+            physicalData::PhysicalData & /*physData*/
         ) override;
 
         /***************************

@@ -33,7 +33,6 @@ using namespace timings;
 /**
  * @brief Write the timings to the output file
  *
- * @param timer The timer object
  */
 void TimingsOutput::write()
 {
