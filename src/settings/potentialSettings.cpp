@@ -164,7 +164,7 @@ void PotentialSettings::setCoulombRadiusCutOff(double coulombRadiusCutOff)
 /**
  * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
  *
- * @param coulombRadiusCutOff
+ * @param nonCoulombRadiusCutOff
  */
 void PotentialSettings::setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff)
 {

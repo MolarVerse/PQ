@@ -27,7 +27,7 @@ using QM::AseXtbRunner;
 /**
  * @brief Construct a new AseXtbRunner::AseXtbRunner object
  *
- * @param slakos
+ * @param method
  *
  * @throw pybind11::error_already_set if the import of the mace module fails
  */

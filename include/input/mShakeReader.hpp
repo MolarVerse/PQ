@@ -64,11 +64,11 @@ namespace input::mShake
         void read();
         void processCommentLine(
             std::string                  &line,
-            constraints::MShakeReference &mShakeRef
+            constraints::MShakeReference &mShakeReference
         );
         void processAtomLines(
             std::vector<std::string>     &lines,
-            constraints::MShakeReference &mShakeRef
+            constraints::MShakeReference &mShakeReference
         );
 
         [[nodiscard]] std::string getFileName() const;

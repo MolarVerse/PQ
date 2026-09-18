@@ -164,7 +164,6 @@ void LangevinThermostat::applyThermostat(
  * @note no temperature calculation
  *
  * @param simBox
- * @param data
  */
 void LangevinThermostat::
     applyThermostatHalfStep(SimulationBox &simBox, PhysicalData & /*data*/)

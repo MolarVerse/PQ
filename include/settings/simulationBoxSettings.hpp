@@ -29,7 +29,7 @@
 namespace settings
 {
     /**
-     * @class enum InitVelocities
+     * @brief enum InitVelocities
      */
     enum class InitVelocities : std::uint8_t
     {
@@ -39,9 +39,9 @@ namespace settings
     };
 
     /**
-     * @class SimulationBoxSettings
+     * @brief SimulationBoxSettings
      *
-     * @brief static class to store settings of the simulation box
+     * @details static class to store settings of the simulation box
      *
      */
     class SimulationBoxSettings

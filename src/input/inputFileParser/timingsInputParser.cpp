@@ -38,10 +38,8 @@ using namespace utilities;
  * @brief Construct a new Input File Parser Timings object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) timestep <double> (required) 2)
- * nstep <size_t> (required)
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) timestep "<double>" (required)
+ * 2) nstep "<size_t>" (required)
  */
 TimingsInputParser::TimingsInputParser()
 {
@@ -62,6 +60,7 @@ TimingsInputParser::TimingsInputParser()
  * @brief parse timestep of simulation and set it in timings
  *
  * @param lineElements
+ * @param lineNumber
  */
 void TimingsInputParser::parseTimeStep(
     const std::vector<std::string> &lineElements,
@@ -83,6 +82,7 @@ void TimingsInputParser::parseTimeStep(
  * @brief parse number of steps of simulation and set it in timings
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if number of steps is negative
  */

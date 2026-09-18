@@ -39,15 +39,14 @@ namespace forceField
      * forces can be applied to dihedrals
      *
      * @tparam T
-     * @param coulPot
-     * @param nonCoulPot
+     * @param coulombPotential
+     * @param nonCoulombPotential
      * @param physicalData
      * @param molecule1
      * @param molecule2
      * @param atomIndex1
      * @param atomIndex2
      * @param distance
-     * @param isDihedral
      * @return double
      */
     template <typename T>

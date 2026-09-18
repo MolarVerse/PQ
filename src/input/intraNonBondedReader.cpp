@@ -197,8 +197,8 @@ MolType IntraNonBondedReader::findMoleculeType(const std::string &id) const
  * interaction and has to be scaled accordingly.
  *
  * Each line should have the following format:
- * <reference atom index> <atom index 1> <atom index 2> ... (negative atom index
- * means 1-4 interaction)
+ * `<reference atom index> <atom index 1> <atom index 2> ...`
+ * (negative atom index means 1-4 interaction)
  *
  * The molecule section should end with "END" (case insensitive)
  *

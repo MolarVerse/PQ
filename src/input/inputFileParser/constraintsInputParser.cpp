@@ -45,11 +45,10 @@ using namespace exc;
  * Constraints object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) shake <on/off> 2)
- * shake-tolerance <double> 3) shake-iter <size_t> 4) rattle-iter <size_t> 5)
- * rattle-tolerance <double>
+ * _keywordRequiredMap and _keywordCountMap: 1) shake "<on/off>" 2)
+ * shake-tolerance "<double>" 3) shake-iter "<size_t>" 4) rattle-iter "<size_t>"
+ * 5) rattle-tolerance "<double>"
  *
- * @param engine
  * @param constraints pointer to the constraints object
  */
 ConstraintsInputParser::ConstraintsInputParser(
@@ -111,6 +110,7 @@ ConstraintsInputParser::ConstraintsInputParser(
  * 2) "off" - shake is deactivated (default)
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if keyword is not valid -
  * currently only on and off are supported
@@ -159,6 +159,7 @@ void ConstraintsInputParser::parseShakeActivated(
  * @details default value is 1e-8
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if tolerance is negative
  */
@@ -183,6 +184,7 @@ void ConstraintsInputParser::parseShakeTolerance(
  * @details default value is 20
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if iteration is negative
  */
@@ -207,6 +209,7 @@ void ConstraintsInputParser::parseShakeIteration(
  * @details default value is 1e-8
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if tolerance is negative
  */
@@ -231,6 +234,7 @@ void ConstraintsInputParser::parseRattleTolerance(
  * @details default value is 20
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if iteration is negative
  */
@@ -255,6 +259,7 @@ void ConstraintsInputParser::parseRattleIteration(
  * @details default value is 1e-8
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if tolerance is negative
  */
@@ -279,6 +284,7 @@ void ConstraintsInputParser::parseMShakeTolerance(
  * @details default value is 20
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if iteration is negative
  */
@@ -305,6 +311,7 @@ void ConstraintsInputParser::parseMShakeIteration(
  * 2) "off" - distance constraint is deactivated (default)
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if keyword is not valid -
  * currently only on and off are supported

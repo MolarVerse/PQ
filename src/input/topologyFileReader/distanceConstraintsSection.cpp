@@ -45,7 +45,7 @@ using namespace constraints;
  * 5. spring constant
  * 6. dk/dt
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throws TopologyException if number of elements in line is

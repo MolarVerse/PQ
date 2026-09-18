@@ -30,9 +30,9 @@
 namespace manostat
 {
     /**
-     * @class StochasticRescalingManostat inherits from Manostat
+     * @brief StochasticRescalingManostat inherits from Manostat
      *
-     * @link https://doi.org/10.1063/5.0020514
+     * _(https://doi.org/10.1063/5.0020514)
      *
      */
     class StochasticRescalingManostat : public Manostat
@@ -79,9 +79,9 @@ namespace manostat
     };
 
     /**
-     * @class SemiIsotropicStochasticRescalingManostat inherits from Manostat
+     * @brief SemiIsotropicStochasticRescalingManostat inherits from Manostat
      *
-     * @link https://doi.org/10.1063/5.0020514
+     * _(https://doi.org/10.1063/5.0020514)
      *
      */
     class SemiIsotropicStochasticRescalingManostat
@@ -107,9 +107,9 @@ namespace manostat
     };
 
     /**
-     * @class AnisotropicStochasticRescalingManostat inherits from Manostat
+     * @brief AnisotropicStochasticRescalingManostat inherits from Manostat
      *
-     * @link https://doi.org/10.1063/5.0020514
+     * _(https://doi.org/10.1063/5.0020514)
      *
      */
     class AnisotropicStochasticRescalingManostat
@@ -125,9 +125,9 @@ namespace manostat
     };
 
     /**
-     * @class FullAnisotropicStochasticRescalingManostat inherits from Manostat
+     * @brief FullAnisotropicStochasticRescalingManostat inherits from Manostat
      *
-     * @link https://doi.org/10.1063/5.0020514
+     * _(https://doi.org/10.1063/5.0020514)
      *
      */
     class FullAnisotropicStochasticRescalingManostat

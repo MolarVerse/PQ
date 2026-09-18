@@ -32,9 +32,9 @@
 namespace out
 {
     /**
-     * @class LogOutput inherits from Output
+     * @brief LogOutput inherits from Output
      *
-     * @brief Output file for log file
+     * @details Output file for log file
      *
      */
     class LogOutput : public Output

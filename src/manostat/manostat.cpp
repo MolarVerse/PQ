@@ -45,6 +45,7 @@ Manostat::Manostat(double targetPressure) : _targetPressure(targetPressure) {}
 /**
  * @brief calculate the pressure of the system
  *
+ * @param box
  * @param data
  */
 void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
@@ -69,11 +70,11 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
 /**
  * @brief rotate mu back into upper diagonal space
  *
- * @details first order approximation of mu rotation according to gromacs
- * @link
- * https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html
- *
  * @param mu
+ *
+ * @details first order approximation of mu rotation according to
+ * [gromacs](https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html)
+ *
  */
 void Manostat::rotateMu(tensor3D& mu)
 {
@@ -89,6 +90,7 @@ void Manostat::rotateMu(tensor3D& mu)
 /**
  * @brief apply dummy manostat for NVT ensemble
  *
+ * @param box
  * @param data
  */
 void Manostat::applyManostat(SimulationBox& box, PhysicalData& data)

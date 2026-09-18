@@ -62,7 +62,7 @@ BondConstraint::BondConstraint(
 /**
  * @brief calculates the reference bond data of a bond constraint
  *
- * @param simulationBox
+ * @param simBox
  */
 void BondConstraint::calculateConstraintBondRef(
     const molsys::SimulationBox &simBox

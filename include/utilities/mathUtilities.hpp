@@ -41,8 +41,8 @@ namespace utilities
      * @brief compares two numbers with a tolerance
      *
      * @tparam T
-     * @param a
-     * @param b
+     * @param lhs
+     * @param rhs
      * @param tolerance
      * @return true
      * @return false
@@ -64,8 +64,8 @@ namespace utilities
      * @brief compares two numbers via machine precision
      *
      * @tparam T
-     * @param a
-     * @param b
+     * @param lhs
+     * @param rhs
      * @return true
      * @return false
      */
@@ -91,8 +91,8 @@ namespace utilities
      * `compare(a, T(0), tol)` overload when a tolerance is wanted.
      *
      * @tparam T
-     * @param a
-     * @return true if a == T(0), false otherwise
+     * @param value
+     * @return true if value == T(0), false otherwise
      */
     template <typename T>
     [[nodiscard]] bool isZero(const T &value)
@@ -104,7 +104,7 @@ namespace utilities
      * @brief calculates the sign of a number
      *
      * @tparam T
-     * @param a
+     * @param value
      * @return int
      */
     template <typename T>

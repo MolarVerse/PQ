@@ -27,8 +27,8 @@
 /**
  * @brief specializing of template function compare with tolerance
  *
- * @param a
- * @param b
+ * @param lhs
+ * @param rhs
  * @param tolerance
  * @return true
  * @return false
@@ -48,10 +48,10 @@ bool utilities::compare(
 }
 
 /**
- * @brief specializing of template function compare
+ * @brief specializing of template function compare for Vector3D<double>
  *
- * @param a
- * @param b
+ * @param lhs
+ * @param rhs
  * @return true
  * @return false
  */
@@ -71,8 +71,8 @@ bool utilities::compare(
 /**
  * @brief Kronecker delta function
  *
- * @param i
- * @param j
+ * @param lhs
+ * @param rhs
  * @return size_t
  */
 size_t utilities::kroneckerDelta(size_t lhs, size_t rhs)

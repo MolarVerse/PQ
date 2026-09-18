@@ -454,7 +454,7 @@ TEST_F(TestSetup, testCheckZeroVelocities)
 /**
  * @brief testing full setup of simulation box
  *
- * @TODO: this test is not complete, it only tests the functions that are called
+ * TODO: this test is not complete, it only tests the functions that are called
  * in the setup
  *
  */

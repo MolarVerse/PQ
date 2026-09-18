@@ -298,8 +298,6 @@ void ForceField::calculateImproperDihedralInteractions(
 /**
  * @brief calculates all j-coupling interactions
  *
- * @param box
- * @param physicalData
  */
 void ForceField::calculateJCouplingInteractions(
     const SimulationBox & /*box*/,

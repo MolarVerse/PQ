@@ -45,9 +45,9 @@ namespace molsys
     /**
      * @brief copy simulationBox object this
      *
-     * @details shared_ptrs are not copied but new ones are created
-     *
-     * @notes copy constructor is not used because it would break semantics here
+     * @details shared_ptrs are not copied but new ones are created,
+     * additionally, copy constructor is not used because it would break
+     * semantics here
      *
      * @param toCopy
      */
@@ -287,7 +287,7 @@ namespace molsys
     /**
      * @brief find moleculeType by moleculeType if size_t
      *
-     * @param moleculeType
+     * @param molType
      * @return Molecule
      *
      * @throw RstFileException if molecule type not found

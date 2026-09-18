@@ -38,9 +38,7 @@ using namespace settings;
  * RingPolymerInputParser object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) rpmd_n_replica <size_t>
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) rpmd_n_replica "<size_t>"
  */
 RingPolymerInputParser::RingPolymerInputParser()
 {

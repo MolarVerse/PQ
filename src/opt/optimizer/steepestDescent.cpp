@@ -29,8 +29,7 @@ using namespace opt;
 /**
  * @brief Constructor
  *
- * @param nIterations
- * @param learningRate
+ * @param nEpochs
  */
 SteepestDescent::SteepestDescent(size_t nEpochs) : Optimizer(nEpochs) {}
 

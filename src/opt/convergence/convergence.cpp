@@ -32,28 +32,28 @@ using namespace settings;
 /**
  * @brief Construct a new Convergence object
  *
- * @param absEnergyConv
- * @param relEnergyConv
- * @param absMaxForceConv
- * @param absEnergyConvThreshold
+ * @param enableEnergyConv
+ * @param enableMaxForceConv
+ * @param enableRMSForceConv
  * @param relEnergyConvThreshold
+ * @param absEnergyConvThreshold
  * @param absMaxForceConvThreshold
  * @param absRMSForceConvThreshold
  * @param energyConvStrategy
  */
 Convergence::Convergence(
-    bool         _enableEnergyConv,
-    bool         _enableMaxForceConv,
-    bool         _enableRMSForceConv,
+    bool         enableEnergyConv,
+    bool         enableMaxForceConv,
+    bool         enableRMSForceConv,
     double       relEnergyConvThreshold,
     double       absEnergyConvThreshold,
     double       absMaxForceConvThreshold,
     double       absRMSForceConvThreshold,
     ConvStrategy energyConvStrategy
 )
-    : _enableEnergyConv(_enableEnergyConv),
-      _enableMaxForceConv(_enableMaxForceConv),
-      _enableRMSForceConv(_enableRMSForceConv),
+    : _enableEnergyConv(enableEnergyConv),
+      _enableMaxForceConv(enableMaxForceConv),
+      _enableRMSForceConv(enableRMSForceConv),
       _relEnergyConvThreshold(relEnergyConvThreshold),
       _absEnergyConvThreshold(absEnergyConvThreshold),
       _absMaxForceConvThreshold(absMaxForceConvThreshold),
@@ -112,8 +112,8 @@ void Convergence::calcEnergyConvergence(double energyOld, double energyNew)
 /**
  * @brief calculate the force convergence
  *
- * @param forceOld
- * @param forceNew
+ * @param maxForce
+ * @param rmsForce
  */
 void Convergence::calcForceConvergence(double maxForce, double rmsForce)
 {

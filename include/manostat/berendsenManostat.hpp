@@ -32,9 +32,9 @@
 namespace manostat
 {
     /**
-     * @class BerendsenManostat inherits from Manostat
+     * @brief BerendsenManostat inherits from Manostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      */
     class BerendsenManostat : public Manostat
@@ -49,7 +49,7 @@ namespace manostat
 
         void applyManostat(
             molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            physicalData::PhysicalData &physicalData
         ) override;
 
         [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;
@@ -66,9 +66,9 @@ namespace manostat
     };
 
     /**
-     * @class SemiIsotropicBerendsenManostat inherits from BerendsenManostat
+     * @brief SemiIsotropicBerendsenManostat inherits from BerendsenManostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      */
     class SemiIsotropicBerendsenManostat : public BerendsenManostat
@@ -92,9 +92,9 @@ namespace manostat
     };
 
     /**
-     * @class AnisotropicBerendsenManostat inherits from BerendsenManostat
+     * @brief AnisotropicBerendsenManostat inherits from BerendsenManostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      */
     class AnisotropicBerendsenManostat : public BerendsenManostat
@@ -108,9 +108,9 @@ namespace manostat
     };
 
     /**
-     * @class FullAnisotropicBerendsenManostat inherits from BerendsenManostat
+     * @brief FullAnisotropicBerendsenManostat inherits from BerendsenManostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      * @details Full anisotropic means that also the angles between the axes are
      * scaled not only the lengths

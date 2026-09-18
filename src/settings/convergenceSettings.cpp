@@ -153,7 +153,7 @@ void ConvSettings::setMaxForceConv(double maxForceConv)
  * @details this method is used to set the rms force convergence
  * for the absolute and relative convergence
  *
- * @param relMaxForceConv
+ * @param rmsForceConv
  */
 void ConvSettings::setRMSForceConv(double rmsForceConv)
 {

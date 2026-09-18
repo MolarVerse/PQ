@@ -36,9 +36,9 @@ namespace physicalData
 namespace out
 {
     /**
-     * @class MomentumOutput inherits from Output
+     * @brief MomentumOutput inherits from Output
      *
-     * @brief Output file for momentum and angular momentum vectors
+     * @details Output file for momentum and angular momentum vectors
      *
      */
     class MomentumOutput : public Output

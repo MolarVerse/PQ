@@ -257,6 +257,7 @@ AseQMRunner::~AseQMRunner() = default;
  *
  * @param simBox
  * @param physicalData
+ * @param per
  *
  * @throw QMRunnerException if the calculation takes too long
  */
@@ -291,8 +292,6 @@ void AseQMRunner::run(
 
 /**
  * @brief execute the ASE QM calculation
- *
- * @param simBox
  *
  * @throw pybind11::error_already_set if the execution of the ASE QM calculation
  * fails
@@ -383,7 +382,7 @@ void AseQMRunner::collectEnergy(PhysicalData &physicalData) const
  * @brief collect the stress from the ASE QM calculation
  *
  * @param simBox
- * @param physicalData
+ * @param data
  *
  * @throw pybind11::error_already_set if the collection of the stress fails
  */

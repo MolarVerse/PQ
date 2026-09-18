@@ -77,7 +77,7 @@ void JCouplingForceField::setJ0(double J0) { _j0 = J0; }
 /**
  * @brief Set the force constant
  *
- * @param k
+ * @param forceConstant
  */
 void JCouplingForceField::setForceConstant(double forceConstant)
 {
@@ -85,30 +85,30 @@ void JCouplingForceField::setForceConstant(double forceConstant)
 }
 
 /**
- * @brief Set the a
+ * @brief Set the constant a
  *
- * @param a
+ * @param constA
  */
 void JCouplingForceField::setA(double constA) { _a = constA; }
 
 /**
- * @brief Set the b
+ * @brief Set the constant b
  *
- * @param b
+ * @param constB
  */
 void JCouplingForceField::setB(double constB) { _b = constB; }
 
 /**
- * @brief Set the c
+ * @brief Set the constant c
  *
- * @param c
+ * @param constC
  */
 void JCouplingForceField::setC(double constC) { _c = constC; }
 
 /**
  * @brief Set the phase shift
  *
- * @param phi
+ * @param phaseShift
  */
 void JCouplingForceField::setPhaseShift(double phaseShift)
 {

@@ -82,8 +82,7 @@ double RingPolymerEnergyOutput::_maxRingPolymerEnergy(
  * 3) ... 2+n) ring polymer spring energies
  *
  * @param step
- * @param loopTime
- * @param data
+ * @param dataVector
  */
 void RingPolymerEnergyOutput::write(
     size_t                           step,

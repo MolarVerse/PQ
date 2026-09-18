@@ -43,10 +43,9 @@ using namespace utilities;
  * Simulation Box object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) rcoulomb <double> 2) density
- * <double>
+ * _keywordRequiredMap and _keywordCountMap: 1) rcoulomb "<double>" 2) density
+ * "<double>"
  *
- * @param engine
  * @param simulationBox
  */
 SimulationBoxInputParser::SimulationBoxInputParser(
@@ -82,6 +81,7 @@ SimulationBoxInputParser::SimulationBoxInputParser(
  * @details default value is 12.5
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if the cutoff radius is negative
  */
@@ -111,6 +111,7 @@ void SimulationBoxInputParser::parseCoulombRadius(
  * @brief parses the non-coulomb cutoff radius
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if the cutoff radius is negative
  */
@@ -143,6 +144,7 @@ void SimulationBoxInputParser::parseNonCoulombRadius(
  * both density and box size are set
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throw InputFileException if the density is negative
  */

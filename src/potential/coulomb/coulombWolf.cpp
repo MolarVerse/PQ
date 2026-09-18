@@ -58,12 +58,11 @@ CoulombWolf::CoulombWolf(double coulombRadiusCutOff, double kappa)
 }
 
 /**
- * @brief calculate the energy and force of the Coulomb potential with Wolf
- * summation as long range correction
- *
- * @link https://doi.org/10.1063/1.478738
+ * @brief calculate the energy and force of the Coulomb potential with [Wolf
+ * summation](https://doi.org/10.1063/1.478738) as long range correction
  *
  * @param distance
+ * @param chargeProduct
  * @return std::pair<double, double>
  */
 std::pair<double, double> CoulombWolf::calculate(
@@ -106,7 +105,7 @@ void CoulombWolf::setKappa(double kappa) { _kappa = kappa; }
 /**
  * @brief set the wolf parameter 1
  *
- * @param wolfParam1
+ * @param wolfParameter1
  */
 void CoulombWolf::setWolfParameter1(double wolfParameter1)
 {
@@ -116,7 +115,7 @@ void CoulombWolf::setWolfParameter1(double wolfParameter1)
 /**
  * @brief set the wolf parameter 2
  *
- * @param wolfParam2
+ * @param wolfParameter2
  */
 void CoulombWolf::setWolfParameter2(double wolfParameter2)
 {
@@ -126,7 +125,7 @@ void CoulombWolf::setWolfParameter2(double wolfParameter2)
 /**
  * @brief set the wolf parameter 3
  *
- * @param wolfParam3
+ * @param wolfParameter3
  */
 void CoulombWolf::setWolfParameter3(double wolfParameter3)
 {

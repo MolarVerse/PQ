@@ -37,9 +37,9 @@ namespace molsys
 namespace out
 {
     /**
-     * @class RingPolymerTrajectoryOutput inherits from Output
+     * @brief RingPolymerTrajectoryOutput inherits from Output
      *
-     * @brief Output for xyz, vel, force, charges files for all ring polymer
+     * @details Output for xyz, vel, force, charges files for all ring polymer
      * beads
      *
      */

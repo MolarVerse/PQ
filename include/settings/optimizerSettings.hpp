@@ -35,7 +35,7 @@
 namespace settings
 {
     /**
-     * @class enum OptimizerType
+     * @brief enum OptimizerType
      *
      */
     enum class OptimizerType : std::uint8_t
@@ -46,7 +46,7 @@ namespace settings
     };
 
     /**
-     * @class enum LREnum
+     * @brief enum LREnum
      *
      */
     enum class LREnum : std::uint8_t
@@ -62,9 +62,9 @@ namespace settings
     std::string string(LREnum method);
 
     /**
-     * @class OptimizerSettings
+     * @brief OptimizerSettings
      *
-     * @brief stores all information about the optimizer
+     * @details stores all information about the optimizer
      *
      */
     class OptimizerSettings

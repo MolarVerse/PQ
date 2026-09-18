@@ -38,9 +38,7 @@ using namespace utilities;
  * object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) virial <molecular/atomic>
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) virial "<molecular/atomic>"
  */
 VirialInputParser::VirialInputParser()
 {
@@ -60,6 +58,7 @@ VirialInputParser::VirialInputParser()
  * physical data
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if invalid virial keyword
  */

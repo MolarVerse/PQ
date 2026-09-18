@@ -294,7 +294,6 @@ void AtomSection::process(
  * exception is thrown
  *
  * @param lineElements
- * @param line
  * @param molecule
  *
  * @throws RstFileException if the next line of the rst

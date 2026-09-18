@@ -106,7 +106,7 @@ void MShakeReader::read()
  * @details processes comment line
  *
  * @param line
- * @param mShakeReference (empty)
+ * @param mShakeReference
  *
  * @throws MShakeFileException - if no moltype definition is
  * found in the comment line
@@ -179,6 +179,7 @@ void MShakeReader::processCommentLine(
  * @details processes atom line
  *
  * @param lines
+ * @param mShakeReference
  *
  * @throws MShakeFileException - if a line does not contain
  * exactly 4 (1 str and 3 double) arguments

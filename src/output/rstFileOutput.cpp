@@ -72,6 +72,7 @@ namespace
  * @brief Write the restart file
  *
  * @param simBox
+ * @param thermostat
  * @param step
  */
 void RstFileOutput::write(

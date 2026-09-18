@@ -65,7 +65,7 @@ DistanceConstraint::DistanceConstraint(
  * @brief calculates the reference distance of all distance constraints
  *
  * @param simulationBox
- * @param dt
+ * @param timeInterval the time interval over which the constraint is applied
  *
  */
 void DistanceConstraint::applyDistanceConstraint(

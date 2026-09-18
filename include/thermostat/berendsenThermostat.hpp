@@ -29,11 +29,11 @@
 namespace thermostat
 {
     /**
-     * @class BerendsenThermostat
+     * @brief BerendsenThermostat
      *
-     * @brief BerendsenThermostat is a class for the Berendsen thermostat
+     * @details BerendsenThermostat is a class for the Berendsen thermostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      */
     class BerendsenThermostat : public Thermostat
@@ -46,8 +46,8 @@ namespace thermostat
         BerendsenThermostat() = default;
 
         void applyThermostat(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &data
         ) override;
 
         void setTau(double tau);
