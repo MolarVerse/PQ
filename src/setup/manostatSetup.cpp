@@ -178,7 +178,7 @@ void ManostatSetup::setupStochasticRescalingManostat()
  *
  * @throws SetupException if semi-isotropic mode conflicts with fixed_axis
  */
-void ManostatSetup::validateIsotropyFixedAxisCombination() const
+void ManostatSetup::validateIsotropyFixedAxisCombination()
 {
     using enum Isotropy;
 
