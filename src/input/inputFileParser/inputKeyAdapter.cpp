@@ -53,7 +53,7 @@ namespace input
     {
         return [&key](
                    const std::vector<std::string> &lineElements,
-                   const std::size_t               lineNumber
+                   size_t                          lineNumber
                ) { key.parse(lineElements, lineNumber); };
     }
 }   // namespace input
