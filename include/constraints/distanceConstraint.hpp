@@ -51,9 +51,8 @@ namespace constraints
         double _springConstant;
         double _dSpringConstantDt;
 
-        double               _lowerEnergy = 0.0;
-        double               _upperEnergy = 0.0;
-        linearAlgebra::Vec3D _force;
+        double _lowerEnergy = 0.0;
+        double _upperEnergy = 0.0;
 
        public:
         DistanceConstraint(

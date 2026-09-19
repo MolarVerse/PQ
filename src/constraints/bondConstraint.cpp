@@ -55,7 +55,8 @@ BondConstraint::BondConstraint(
     double    bondLength
 )
     : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
-      _targetBondLength(bondLength)
+      _targetBondLength(bondLength),
+      _shakeDistanceRef()
 {
 }
 
@@ -183,22 +184,6 @@ bool BondConstraint::applyRattle(double tolerance)
     }
 
     return true;
-}
-
-/***************************
- * standard setter methods *
- ***************************/
-
-/**
- * @brief set the shake distance reference
- *
- * @param shakeDistanceRef
- */
-void BondConstraint::setShakeDistanceRef(
-    const linearAlgebra::Vec3D &shakeDistanceRef
-)
-{
-    _shakeDistanceRef = shakeDistanceRef;
 }
 
 /***************************

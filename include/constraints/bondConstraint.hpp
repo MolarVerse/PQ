@@ -69,12 +69,6 @@ namespace constraints
         [[nodiscard]] bool applyRattle(double);
 
         /***************************
-         * standard setter methods *
-         ***************************/
-
-        void setShakeDistanceRef(const linearAlgebra::Vec3D &shakeDistanceRef);
-
-        /***************************
          * standard getter methods *
          ***************************/
 

@@ -75,7 +75,7 @@ void DistanceConstraint::applyDistanceConstraint(
 {
     _lowerEnergy = 0.0;
     _upperEnergy = 0.0;
-    _force       = {0.0};
+    linearAlgebra::Vec3D force;
 
     if (timeInterval < 0.0)
         return;
@@ -94,21 +94,21 @@ void DistanceConstraint::applyDistanceConstraint(
     {
         const auto delta = _lowerDistance - distance;
         _lowerEnergy     = 0.5 * force_constant * delta * delta;
-        _force           = -force_constant * delta * dPos / distance;
+        force            = -force_constant * delta * dPos / distance;
     }
     else if (distance > _upperDistance)
     {
         const auto delta = distance - _upperDistance;
         _upperEnergy     = 0.5 * force_constant * delta * delta;
-        _force           = +force_constant * delta * dPos / distance;
+        force            = +force_constant * delta * dPos / distance;
     }
     else
     {
         return;
     }
 
-    _molecules[0]->addAtomForce(_atomIndices[0], _force);
-    _molecules[1]->addAtomForce(_atomIndices[1], -_force);
+    _molecules[0]->addAtomForce(_atomIndices[0], force);
+    _molecules[1]->addAtomForce(_atomIndices[1], -force);
 }
 
 /***************************
