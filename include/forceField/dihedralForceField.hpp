@@ -46,6 +46,8 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
+struct TestForceFieldUtils;   // forward declaration
+
 namespace forceField
 {
     /**
@@ -56,11 +58,13 @@ namespace forceField
      */
     class DihedralForceField : public connectivity::Dihedral
     {
+        friend struct ::TestForceFieldUtils;
+
        private:
         DihedralId _type;
         bool       _isLinker = false;
 
-        DihedralParams _params;
+        std::optional<DihedralParams> _params;
 
        public:
         DihedralForceField(
@@ -88,10 +92,8 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] bool isLinker() const;
-
-        [[nodiscard]] DihedralId            getType() const;
-        [[nodiscard]] const DihedralParams &getParams() const;
+        [[nodiscard]] bool       isLinker() const;
+        [[nodiscard]] DihedralId getType() const;
     };
 
 }   // namespace forceField

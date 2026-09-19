@@ -54,7 +54,7 @@ AngleForceField::AngleForceField(
     const std::vector<AtomIndex>  &atomIndices,
     AngleId                        type
 )
-    : Angle(molecules, atomIndices), _type(type)
+    : Angle(molecules, atomIndices), _type(type), _params(std::nullopt)
 {
 }
 
@@ -83,6 +83,9 @@ void AngleForceField::calculateEnergyAndForces(
     if (allInactive)
         return;
 
+    if (!_params.has_value())
+        throw std::runtime_error("Angle parameters not set");
+
     // central position of alpha
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
@@ -101,9 +104,9 @@ void AngleForceField::calculateEnergyAndForces(
     const auto distance13 = ::sqrt(distance13Squared);
 
     const auto alpha      = angle(dPosition12, dPosition13);
-    const auto deltaAngle = alpha - _params.equilibrium;
+    const auto deltaAngle = alpha - _params->equilibrium;
 
-    auto forceMagnitude = -_params.forceConstant * deltaAngle;
+    auto forceMagnitude = -_params->forceConstant * deltaAngle;
 
     data.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
@@ -213,10 +216,3 @@ bool AngleForceField::isLinker() const { return _isLinker; }
  * @return AngleId
  */
 AngleId AngleForceField::getType() const { return _type; }
-
-/**
- * @brief get angle parameters
- *
- * @return const AngleParams&
- */
-const AngleParams &AngleForceField::getParams() const { return _params; }

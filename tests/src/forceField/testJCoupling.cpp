@@ -27,8 +27,7 @@
 #include "jCouplingForceField.hpp"
 #include "jCouplingType.hpp"
 #include "molecule.hpp"
-
-/* ---------- JCouplingType ---------- */
+#include "testForceFieldUtils.hpp"
 
 /**
  * @brief Verify operator== uses the id + (J0, k, a, b, c, phaseShift)
@@ -163,19 +162,41 @@ TEST(TestJCouplingForceField, settersAndGetters)
 
     EXPECT_EQ(forceField.getType(), 42U);
 
-    forceField.setJ0(1.5);
-    forceField.setForceConstant(2.5);
-    forceField.setA(3.5);
-    forceField.setB(4.5);
-    forceField.setC(5.5);
-    forceField.setPhaseShift(0.25);
+    forceField.setParams(
+        JCouplingParams{
+            .J0            = 1.5,
+            .forceConstant = 2.5,
+            .a             = 3.5,
+            .b             = 4.5,
+            .c             = 5.5,
+            .phaseShift    = 0.25
+        }
+    );
 
-    EXPECT_DOUBLE_EQ(forceField.getJ0(), 1.5);
-    EXPECT_DOUBLE_EQ(forceField.getForceConstant(), 2.5);
-    EXPECT_DOUBLE_EQ(forceField.getA(), 3.5);
-    EXPECT_DOUBLE_EQ(forceField.getB(), 4.5);
-    EXPECT_DOUBLE_EQ(forceField.getC(), 5.5);
-    EXPECT_DOUBLE_EQ(forceField.getPhaseShift(), 0.25);
+    EXPECT_DOUBLE_EQ(
+        TestForceFieldUtils::getJCouplingParams(forceField).J0,
+        1.5
+    );
+    EXPECT_DOUBLE_EQ(
+        TestForceFieldUtils::getJCouplingParams(forceField).forceConstant,
+        2.5
+    );
+    EXPECT_DOUBLE_EQ(
+        TestForceFieldUtils::getJCouplingParams(forceField).a,
+        3.5
+    );
+    EXPECT_DOUBLE_EQ(
+        TestForceFieldUtils::getJCouplingParams(forceField).b,
+        4.5
+    );
+    EXPECT_DOUBLE_EQ(
+        TestForceFieldUtils::getJCouplingParams(forceField).c,
+        5.5
+    );
+    EXPECT_DOUBLE_EQ(
+        TestForceFieldUtils::getJCouplingParams(forceField).phaseShift,
+        0.25
+    );
 }
 
 TEST(TestJCouplingForceField, symmetryFlagsDefaultTrue)

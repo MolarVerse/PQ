@@ -53,7 +53,7 @@ DihedralForceField::DihedralForceField(
     const std::vector<AtomIndex>  &atomIndices,
     DihedralId                     type
 )
-    : Dihedral(molecules, atomIndices), _type(type)
+    : Dihedral(molecules, atomIndices), _type(type), _params(std::nullopt)
 {
 }
 
@@ -84,6 +84,9 @@ void DihedralForceField::calculateEnergyAndForces(
     if (allInactive)
         return;
 
+    if (!_params.has_value())
+        throw std::runtime_error("Dihedral parameters not set.");
+
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
 
@@ -109,8 +112,8 @@ void DihedralForceField::calculateEnergyAndForces(
     auto phi = angle(crossPosition123, crossPosition432);
     phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
 
-    const auto cosine = ::cos((_params.frequency * phi) + _params.phaseShift);
-    const auto energy = _params.forceConstant * (1.0 + cosine);
+    const auto cosine = ::cos((_params->frequency * phi) + _params->phaseShift);
+    const auto energy = _params->forceConstant * (1.0 + cosine);
 
     if (isImproperDihedral)
         data.addImproperEnergy(energy);
@@ -131,8 +134,8 @@ void DihedralForceField::calculateEnergyAndForces(
     forceMagnitude            /= (distance432Squared * distance23);
     const auto forceVector432  = forceMagnitude * crossPosition432;
 
-    const auto sine = ::sin((_params.frequency * phi) + _params.phaseShift);
-    forceMagnitude  = _params.forceConstant * _params.frequency * sine;
+    const auto sine = ::sin((_params->frequency * phi) + _params->phaseShift);
+    forceMagnitude  = _params->forceConstant * _params->frequency * sine;
 
     const auto diffForce123_432 = forceVector123 - forceVector432;
 
@@ -233,10 +236,3 @@ bool DihedralForceField::isLinker() const { return _isLinker; }
  * @return DihedralId
  */
 DihedralId DihedralForceField::getType() const { return _type; }
-
-/**
- * @brief get dihedral parameters
-
- * @return const DihedralParams&
- */
-const DihedralParams &DihedralForceField::getParams() const { return _params; }

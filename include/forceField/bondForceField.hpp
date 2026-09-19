@@ -43,6 +43,8 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
+struct TestForceFieldUtils;
+
 namespace forceField
 {
     /**
@@ -53,11 +55,13 @@ namespace forceField
      */
     class BondForceField : public connectivity::Bond
     {
+        friend struct ::TestForceFieldUtils;
+
        private:
         BondId _type;
         bool   _isLinker = false;
 
-        BondParams _params;
+        std::optional<BondParams> _params;
 
        public:
         BondForceField(
@@ -86,9 +90,8 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] BondId            getType() const;
-        [[nodiscard]] bool              isLinker() const;
-        [[nodiscard]] const BondParams &getParams() const;
+        [[nodiscard]] BondId getType() const;
+        [[nodiscard]] bool   isLinker() const;
     };
 
 }   // namespace forceField

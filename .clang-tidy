@@ -11,14 +11,14 @@
 # llvmlibc-restrict-system-libc-headers: some more llvm garbage
 # llvmlibc-inline-function-decl: some more llvm garbage
 # llvm-include-order: has a different include order than we do
-#modernize-use-trailing-return-type: we do not want to enforce this, at least not for now
+# modernize-use-trailing-return-type: we do not want to enforce this, at least not for now
+# cert-env33-c: ::system as PQ is a purely Unix based program, we can safely ignore this warning
+# concurrency-mt-unsafe: same as cert-env33-c
 
 # Checks to be absolutely enabled:
-# cert-env33-c: ::system is not available on all platforms, and we do not want to use it anyway
 # cert-err58-cpp: needs a generalized implementation fix
 # bugprone-easily-swappable-parameters: we need to adopt the code base to it
 # cppcoreguidelines-avoid-const-or-ref-data-members: needs huge rework
-# concurrency-mt-unsafe: same as cert-env33-c, we do not want to use ::system anyway
 # cppcoreguidelines-non-private-member-variables-in-classes: needs huge rework
 # cppcoreguidelines-pro-type-union-access: should be possible to avoid this warning for Vector3D, but needs a rework of the code base
 # cppcoreguidelines-pro-type-member-init: needs a rework of the code base, but should be possible to fix it for all classes
@@ -49,7 +49,6 @@ Checks:
   -fuchsia-multiple-inheritance,
   -google-build-using-namespace,
   -google-readability-todo,
-  -hicpp-member-init,
   -misc-non-private-member-variables-in-classes,
   -readability-function-cognitive-complexity,
   -altera-struct-pack-align,

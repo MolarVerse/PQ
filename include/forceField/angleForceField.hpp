@@ -45,6 +45,8 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
+struct TestForceFieldUtils;
+
 namespace forceField
 {
     /**
@@ -55,11 +57,13 @@ namespace forceField
      */
     class AngleForceField : public connectivity::Angle
     {
+        friend struct ::TestForceFieldUtils;
+
        private:
         AngleId _type;
         bool    _isLinker = false;
 
-        AngleParams _params;
+        std::optional<AngleParams> _params;
 
        public:
         AngleForceField(
@@ -86,9 +90,8 @@ namespace forceField
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] AngleId            getType() const;
-        [[nodiscard]] bool               isLinker() const;
-        [[nodiscard]] const AngleParams &getParams() const;
+        [[nodiscard]] AngleId getType() const;
+        [[nodiscard]] bool    isLinker() const;
     };
 
 }   // namespace forceField

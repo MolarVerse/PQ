@@ -22,6 +22,8 @@
 
 #include "jCouplingForceField.hpp"
 
+#include "strongTypes.hpp"
+
 using namespace forceField;
 using namespace connectivity;
 
@@ -37,7 +39,7 @@ JCouplingForceField::JCouplingForceField(
     const std::vector<AtomIndex>          &atomIndices,
     size_t                                 type
 )
-    : Dihedral(molecules, atomIndices), _type(type)
+    : Dihedral(molecules, atomIndices), _type(type), _params(std::nullopt)
 {
 }
 
@@ -68,51 +70,13 @@ void JCouplingForceField::setLowerSymmetry(bool boolean)
 }
 
 /**
- * @brief Set the J0
+ * @brief Set the JCoupling parameters
  *
- * @param J0
+ * @param params
  */
-void JCouplingForceField::setJ0(double J0) { _j0 = J0; }
-
-/**
- * @brief Set the force constant
- *
- * @param forceConstant
- */
-void JCouplingForceField::setForceConstant(double forceConstant)
+void JCouplingForceField::setParams(const JCouplingParams &params)
 {
-    _forceConstant = forceConstant;
-}
-
-/**
- * @brief Set the constant a
- *
- * @param constA
- */
-void JCouplingForceField::setA(double constA) { _a = constA; }
-
-/**
- * @brief Set the constant b
- *
- * @param constB
- */
-void JCouplingForceField::setB(double constB) { _b = constB; }
-
-/**
- * @brief Set the constant c
- *
- * @param constC
- */
-void JCouplingForceField::setC(double constC) { _c = constC; }
-
-/**
- * @brief Set the phase shift
- *
- * @param phaseShift
- */
-void JCouplingForceField::setPhaseShift(double phaseShift)
-{
-    _phaseShift = phaseShift;
+    _params = params;
 }
 
 /***************************
@@ -141,45 +105,3 @@ bool JCouplingForceField::getUpperSymmetry() const { return _upperSymmetry; }
  * @return bool
  */
 bool JCouplingForceField::getLowerSymmetry() const { return _lowerSymmetry; }
-
-/**
- * @brief get the J0
- *
- * @return double
- */
-double JCouplingForceField::getJ0() const { return _j0; }
-
-/**
- * @brief get the force constant
- *
- * @return double
- */
-double JCouplingForceField::getForceConstant() const { return _forceConstant; }
-
-/**
- * @brief get the a
- *
- * @return double
- */
-double JCouplingForceField::getA() const { return _a; }
-
-/**
- * @brief get the b
- *
- * @return double
- */
-double JCouplingForceField::getB() const { return _b; }
-
-/**
- * @brief get the c
- *
- * @return double
- */
-double JCouplingForceField::getC() const { return _c; }
-
-/**
- * @brief get the phase shift
- *
- * @return double
- */
-double JCouplingForceField::getPhaseShift() const { return _phaseShift; }

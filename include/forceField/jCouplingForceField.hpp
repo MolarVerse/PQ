@@ -40,6 +40,8 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
+struct TestForceFieldUtils;   // forward declaration
+
 namespace forceField
 {
     /**
@@ -50,17 +52,14 @@ namespace forceField
      */
     class JCouplingForceField : public connectivity::Dihedral
     {
+        friend struct ::TestForceFieldUtils;
+
        private:
         size_t _type;
         bool   _upperSymmetry = true;
         bool   _lowerSymmetry = true;
 
-        double _j0;
-        double _forceConstant;
-        double _a;
-        double _b;
-        double _c;
-        double _phaseShift;
+        std::optional<JCouplingParams> _params;
 
        public:
         JCouplingForceField(
@@ -83,12 +82,7 @@ namespace forceField
         void setUpperSymmetry(bool boolean);
         void setLowerSymmetry(bool boolean);
 
-        void setJ0(double J0);
-        void setForceConstant(double forceConstant);
-        void setA(double constA);
-        void setB(double constB);
-        void setC(double constC);
-        void setPhaseShift(double phaseShift);
+        void setParams(const JCouplingParams &params);
 
         /***************************
          * standard getter methods *
@@ -98,13 +92,6 @@ namespace forceField
 
         [[nodiscard]] bool getUpperSymmetry() const;
         [[nodiscard]] bool getLowerSymmetry() const;
-
-        [[nodiscard]] double getJ0() const;
-        [[nodiscard]] double getForceConstant() const;
-        [[nodiscard]] double getA() const;
-        [[nodiscard]] double getB() const;
-        [[nodiscard]] double getC() const;
-        [[nodiscard]] double getPhaseShift() const;
     };
 
 }   // namespace forceField

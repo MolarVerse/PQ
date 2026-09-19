@@ -1,6 +1,7 @@
 add_library(testUtils
     testUtils.cpp
     testNonCoulombPairUtils.cpp
+    testForceFieldUtils.cpp
 )
 
 target_include_directories(testUtils

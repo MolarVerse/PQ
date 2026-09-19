@@ -57,7 +57,9 @@ BondForceField::BondForceField(
     AtomIndex atomIndex2,
     BondId    type
 )
-    : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
+    : Bond(molecule1, molecule2, atomIndex1, atomIndex2),
+      _type(type),
+      _params(std::nullopt)
 {
 }
 
@@ -85,6 +87,9 @@ void BondForceField::calculateEnergyAndForces(
     if (bothInactive)
         return;
 
+    if (!_params.has_value())
+        throw std::runtime_error("Bond parameters not set.");
+
     const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     auto       dPosition = position1 - position2;
@@ -92,9 +97,9 @@ void BondForceField::calculateEnergyAndForces(
     simBox.applyPBC(dPosition);
 
     const auto distance      = norm(dPosition);
-    const auto deltaDistance = distance - _params.equilibrium;
+    const auto deltaDistance = distance - _params->equilibrium;
 
-    auto forceMagnitude = -_params.forceConstant * deltaDistance;
+    auto forceMagnitude = -_params->forceConstant * deltaDistance;
 
     data.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
@@ -170,10 +175,3 @@ bool BondForceField::isLinker() const { return _isLinker; }
  * @return BondId
  */
 BondId BondForceField::getType() const { return _type; }
-
-/**
- * @brief get the bond parameters
- *
- * @return const BondParams&
- */
-const BondParams &BondForceField::getParams() const { return _params; }
