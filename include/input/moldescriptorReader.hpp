@@ -53,7 +53,6 @@ namespace input::molDescriptor
     class MoldescriptorReader
     {
        private:
-        int           _lineNumber;
         std::string   _fileName = defaults::MOLDESCRIPTOR_FILE_DEFAULT;
         std::ifstream _fp;
 
@@ -63,7 +62,10 @@ namespace input::molDescriptor
         explicit MoldescriptorReader(engine::Engine &engine);
 
         void read();
-        void processMolecule(std::vector<std::string> &lineElements);
+        void processMolecule(
+            std::vector<std::string> &lineElements,
+            size_t                    lineNumber
+        );
 
        private:
         static void convertExternalToInternalAtomTypes(

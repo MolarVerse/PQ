@@ -89,14 +89,14 @@ void MoldescriptorReader::read()
 {
     std::string line;
 
-    _lineNumber = 0;
+    auto lineNumber = 0;
 
     while (getline(_fp, line))
     {
         line              = removeComments(line, "#");
         auto lineElements = splitString(line);
 
-        ++_lineNumber;
+        ++lineNumber;
 
         if (lineElements.empty())
             continue;
@@ -113,14 +113,14 @@ void MoldescriptorReader::read()
                 simBox.setAmmoniaType(MolType{stringToULL(lineElements[1])});
 
             else
-                processMolecule(lineElements);
+                processMolecule(lineElements, lineNumber);
         }
         else
         {
             throw MolDescriptorException(
                 std::format(
                     "Error in moldescriptor file at line {}",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -151,7 +151,8 @@ void MoldescriptorReader::read()
  * but no global van der Waals parameter
  */
 void MoldescriptorReader::processMolecule(
-    std::vector<std::string> &lineElements
+    std::vector<std::string> &lineElements,
+    size_t                    lineNumber
 )
 {
     if (lineElements.size() < 3)
@@ -159,7 +160,7 @@ void MoldescriptorReader::processMolecule(
         throw MolDescriptorException(
             std::format(
                 "Not enough arguments in moldescriptor file at line {}",
-                _lineNumber
+                lineNumber
             )
         );
     }
@@ -178,7 +179,7 @@ void MoldescriptorReader::processMolecule(
         throw MolDescriptorException(format(
             "Invalid molecular charge \"{}\" at line \"{}\".\n",
             lineElements[2],
-            _lineNumber
+            lineNumber
         ));
     }
     catch (const std::out_of_range &)
@@ -186,7 +187,7 @@ void MoldescriptorReader::processMolecule(
         throw MolDescriptorException(format(
             "Invalid molecular charge \"{}\" at line \"{}\".\n",
             lineElements[2],
-            _lineNumber
+            lineNumber
         ));
     }
 
@@ -209,7 +210,7 @@ void MoldescriptorReader::processMolecule(
         line         = removeComments(line, "#");
         lineElements = splitString(line);
 
-        ++_lineNumber;
+        ++lineNumber;
 
         if (lineElements.empty())
             continue;
@@ -230,7 +231,7 @@ void MoldescriptorReader::processMolecule(
                     "Atom line in moldescriptor file at line {} has to have 3 "
                     "or 4 "
                     "elements",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -244,7 +245,7 @@ void MoldescriptorReader::processMolecule(
                         "Error in moldescriptor file at line {} - force field "
                         "noncoulombics is "
                         "activated but no global van der Waals parameter given",
-                        _lineNumber
+                        lineNumber
                     )
                 );
             }

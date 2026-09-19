@@ -378,7 +378,7 @@ void GuffDatReader::addNonCoulombPair(
         }
         case GUFF:
         {
-            std::array<double, defaults::NUM_GUFF_COEFFICIENTS> coeffs;
+            std::array<double, defaults::NUM_GUFF_COEFFICIENTS> coeffs{};
             for (size_t i = 0; i < coefficients.size(); ++i)
                 coeffs.at(i) = coefficients[i];
 
