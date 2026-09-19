@@ -35,7 +35,7 @@ jobs:
     needs: changes
     if: needs.changes.outputs.relevant == 'true'
     runs-on: ubuntu-24.04
-    name: Check Changed C++ Formatting
+    name: Check Changed C++ Files Formatting
 
     steps:
       - name: Checkout code
@@ -60,14 +60,46 @@ jobs:
             head_sha="HEAD"
           fi
 
+          # Make sure the .clang-format style file is parseable.
           clang-format --style=file --dump-config > /dev/null
-          git-clang-format \
-            --diff \
-            --binary "$(command -v clang-format)" \
-            --extensions c,cc,cpp,cxx,h,hh,hpp,hxx \
-            "$base_sha" \
-            "$head_sha" \
-            -- apps benchmarks include src tests
+
+          # Collect every C/C++ file touched by this PR (added, copied,
+          # modified, or renamed — deletions are skipped), restricted to the
+          # source trees we enforce and excluding the external submodules.
+          mapfile -t changed_files < <(
+            git diff --name-only --diff-filter=ACMR "$base_sha" "$head_sha" -- \
+              apps benchmarks include src tests \
+              | grep -E '\.(c|cc|cpp|cxx|h|hh|hpp|hxx)$' \
+              | grep -v '^external/' || true
+          )
+
+          if [[ ${#changed_files[@]} -eq 0 ]]; then
+            echo "No C/C++ files changed — nothing to check."
+            exit 0
+          fi
+
+          # Check the formatting of the *whole* file for every changed file,
+          # not just the changed lines: surrounding context (e.g. operator or
+          # argument alignment) can affect how a changed line must be
+          # formatted, which line-scoped checks miss (see issue #590).
+          fmt_status=0
+          for file in "${changed_files[@]}"; do
+            [[ -f "$file" ]] || continue
+            if ! file_diff=$(clang-format --style=file "$file" \
+                | diff -u --label "a/$file" --label "b/$file" "$file" -); then
+              echo "::error file=$file::File is not clang-format clean"
+              echo "$file_diff"
+              fmt_status=1
+            fi
+          done
+
+          if [[ $fmt_status -ne 0 ]]; then
+            echo ""
+            echo "Some changed files are not formatted. Fix them with:"
+            echo "  clang-format -i <file>"
+          fi
+
+          exit $fmt_status
 
   clang-format-gate:
     if: always()
