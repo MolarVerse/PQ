@@ -22,12 +22,45 @@ jobs:
           if [ -n "${{ github.event.pull_request.number }}" ]; then
             NUMBER="${{ github.event.pull_request.number }}"
             SHA="${{ github.event.pull_request.head.sha }}"
+            TITLE="${{ github.event.pull_request.title }}"
+            BODY="${{ github.event.pull_request.body }}"
           else
             NUMBER="${{ inputs.pr_number }}"
-            SHA=$(gh api "repos/$REPO/pulls/$NUMBER" --jq '.head.sha')
+            REPO_INPUT="${{ github.repository }}"
+            PR_DATA=$(gh api "repos/$REPO_INPUT/pulls/$NUMBER")
+            SHA=$(echo "$PR_DATA" | jq -r '.head.sha')
+            TITLE=$(echo "$PR_DATA" | jq -r '.title')
+            BODY=$(echo "$PR_DATA" | jq -r '.body // ""')
           fi
           echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+          echo "body=$BODY" >> "$GITHUB_OUTPUT"
+
+      - name: Extract and link issues from PR description
+        id: extract
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          FULL_TEXT="${{ steps.pr.outputs.title }}
+          ${{ steps.pr.outputs.body }}"
+
+          # Extract issue numbers using keywords: Closes, Fixes, Resolves, Related to
+          ISSUE_NUMBERS=$(echo "$FULL_TEXT" | grep -oiE '(closes|fixes|resolves|related to)\s+#([0-9]+)' | grep -oE '#[0-9]+' | tr -d '#' | sort -u)
+
+          echo "found_issues=$ISSUE_NUMBERS" >> "$GITHUB_OUTPUT"
+
+          # Link each found issue to this PR
+          if [ -n "$ISSUE_NUMBERS" ]; then
+            while IFS= read -r ISSUE_NUM; do
+              if [ -n "$ISSUE_NUM" ]; then
+                echo "Linking issue #$ISSUE_NUM to PR #$PR_NUMBER"
+                gh issue link "$ISSUE_NUM" --repo "$REPO" --pr "$PR_NUMBER" || true
+              fi
+            done <<< "$ISSUE_NUMBERS"
+          fi
 
       - name: Query issues linked to this PR
         id: check
