@@ -43,7 +43,7 @@ namespace waterModel
     {
        public:
         void calculate(
-            molsys::SimulationBox      &simBox,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
         ) final;
 

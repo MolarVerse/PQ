@@ -10,6 +10,7 @@ target_include_directories(testWaterModels
 target_link_libraries(testWaterModels
     PRIVATE
     interWater
+    intraWater
     potential
     molsys
     virial

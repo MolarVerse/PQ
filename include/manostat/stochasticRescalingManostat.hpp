@@ -67,8 +67,8 @@ namespace manostat
         ) noexcept = delete;
 
         void applyManostat(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) override;
 
         [[nodiscard]] virtual linalg::tensor3D calculateMu(double);

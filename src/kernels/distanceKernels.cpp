@@ -29,19 +29,19 @@
  *
  * @param pos_i
  * @param pos_j
- * @param simBox
+ * @param simulationBox
  *
  * @return double The squared distance between the two particles.
  */
 double kernel::distSquared(
     const linalg::Vec3D         &pos_i,
     const linalg::Vec3D         &pos_j,
-    const molsys::SimulationBox &simBox
+    const molsys::SimulationBox &simulationBox
 )
 {
     auto r_ij = pos_i - pos_j;
 
-    simBox.applyPBC(r_ij);
+    simulationBox.applyPBC(r_ij);
 
     return dot(r_ij, r_ij);
 }
@@ -67,19 +67,19 @@ linalg::Vec3D kernel::distVec(
  *
  * @param pos_i
  * @param pos_j
- * @param simBox
+ * @param simulationBox
  *
  * @return linalg::Vec3D The distance vector between the two particles.
  */
 linalg::Vec3D kernel::distVec(
     const linalg::Vec3D         &pos_i,
     const linalg::Vec3D         &pos_j,
-    const molsys::SimulationBox &simBox
+    const molsys::SimulationBox &simulationBox
 )
 {
     auto r_ij = pos_i - pos_j;
 
-    simBox.applyPBC(r_ij);
+    simulationBox.applyPBC(r_ij);
 
     return r_ij;
 }
@@ -112,7 +112,7 @@ std::pair<linalg::Vec3D, double> kernel::distVecAndDist2(
  *
  * @param pos_i
  * @param pos_j
- * @param simBox
+ * @param simulationBox
  *
  * @return std::pair<linalg::Vec3D, double> The distance vector and the
  * squared distance between the two particles.
@@ -120,12 +120,12 @@ std::pair<linalg::Vec3D, double> kernel::distVecAndDist2(
 std::pair<linalg::Vec3D, double> kernel::distVecAndDist2(
     const linalg::Vec3D         &pos_i,
     const linalg::Vec3D         &pos_j,
-    const molsys::SimulationBox &simBox
+    const molsys::SimulationBox &simulationBox
 )
 {
     auto r_ij = pos_i - pos_j;
 
-    simBox.applyPBC(r_ij);
+    simulationBox.applyPBC(r_ij);
 
     const auto rSquared = dot(r_ij, r_ij);
 

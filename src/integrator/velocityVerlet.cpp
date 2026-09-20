@@ -37,21 +37,21 @@ VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
 /**
  * @brief applies first half step of velocity verlet algorithm
  *
- * @param simBox
+ * @param simulationBox
  */
-void VelocityVerlet::firstStep(SimulationBox &simBox)
+void VelocityVerlet::firstStep(SimulationBox &simulationBox)
 {
     auto _ = scopedTimer(TimerId::Integrator, "Velocity Verlet - First Step");
 
-    auto integrate = [&simBox](auto &atom)
+    auto integrate = [&simulationBox](auto &atom)
     {
         integrateVelocities(atom.get());
-        integratePositions(atom.get(), simBox);
+        integratePositions(atom.get(), simulationBox);
     };
 
-    std::ranges::for_each(simBox.getAtoms(), integrate);
+    std::ranges::for_each(simulationBox.getAtoms(), integrate);
 
-    const auto box = simBox.getBoxPtr();
+    const auto box = simulationBox.getBoxPtr();
 
     auto calculateCOM = [&box](auto &molecule)
     {
@@ -59,20 +59,20 @@ void VelocityVerlet::firstStep(SimulationBox &simBox)
         molecule.setAtomForcesToZero();
     };
 
-    std::ranges::for_each(simBox.getMolecules(), calculateCOM);
+    std::ranges::for_each(simulationBox.getMolecules(), calculateCOM);
 }
 
 /**
  * @brief applies second half step of velocity verlet algorithm
  *
- * @param simBox
+ * @param simulationBox
  */
-void VelocityVerlet::secondStep(SimulationBox &simBox)
+void VelocityVerlet::secondStep(SimulationBox &simulationBox)
 {
     auto _ = scopedTimer(TimerId::Integrator, "Velocity Verlet - Second Step");
 
     std::ranges::for_each(
-        simBox.getAtoms(),
+        simulationBox.getAtoms(),
         [](const auto &atom) { integrateVelocities(atom.get()); }
     );
 }

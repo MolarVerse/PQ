@@ -192,14 +192,14 @@ void MShake::initMShakeReferences()
 /**
  * @brief applies the mShake algorithm to all bond constraints
  *
- * @param simBox
+ * @param simulationBox
  *
  */
-void MShake::applyMShake(SimulationBox &simBox)
+void MShake::applyMShake(SimulationBox &simulationBox)
 {
     const auto mShakeMaxIter   = ConstraintSettings::getMShakeMaxIter();
     const auto mShakeTolerance = ConstraintSettings::getMShakeTolerance();
-    auto      &molecules       = simBox.getMolecules();
+    auto      &molecules       = simulationBox.getMolecules();
 
     const auto timeStep    = TimingsSettings::getTimeStep() * FS_TO_S;
     const auto timeFactor  = 4.0 * timeStep * timeStep;
@@ -252,7 +252,7 @@ void MShake::applyMShake(SimulationBox &simBox)
                 const auto pos_j = atoms[j]->getPosition();
 
                 const auto [dxyz, rSquared] =
-                    distVecAndDist2(pos_i, pos_j, simBox);
+                    distVecAndDist2(pos_i, pos_j, simulationBox);
 
                 bondsUnconstrained[index_ij] = dxyz;
 
@@ -276,7 +276,8 @@ void MShake::applyMShake(SimulationBox &simBox)
                 const auto posOld_i = atoms[i]->getPositionOld();
                 const auto posOld_j = atoms[j]->getPositionOld();
 
-                const auto dxyz_prev = distVec(posOld_i, posOld_j, simBox);
+                const auto dxyz_prev =
+                    distVec(posOld_i, posOld_j, simulationBox);
 
                 bondsPrevious[index_ij] = dxyz_prev;
 
@@ -379,7 +380,7 @@ void MShake::applyMShake(SimulationBox &simBox)
                     const auto [dxyz, rSquared] = distVecAndDist2(
                         posUnconstrained[i],
                         posUnconstrained[j],
-                        simBox
+                        simulationBox
                     );
 
                     bondsUnconstrained[index_ij] = dxyz;
@@ -426,7 +427,7 @@ void MShake::applyMShake(SimulationBox &simBox)
         for (size_t i = 0; i < nAtoms; ++i)
             atoms[i]->setPosition(posUnconstrained[i]);
 
-        molecule.calculateCenterOfMass(simBox.getBox());
+        molecule.calculateCenterOfMass(simulationBox.getBox());
     }
 }
 
@@ -610,15 +611,15 @@ const std::vector<MShakeReference> &MShake::getMShakeReferences() const
 /**
  * @brief calculate number of M - Shake molecules
  *
- * @param simBox Simulation box containing the molecules
+ * @param simulationBox Simulation box containing the molecules
  *
  * @return size_t Number of M-Shake molecules
  */
-size_t MShake::calcNumberOfMShakeMolecules(SimulationBox &simBox) const
+size_t MShake::calcNumberOfMShakeMolecules(SimulationBox &simulationBox) const
 {
     size_t nMShakeMolecules = 0;
 
-    for (const auto &molecule : simBox.getMolecules())
+    for (const auto &molecule : simulationBox.getMolecules())
     {
         const auto moltype = molecule.getMoltype();
 
@@ -632,15 +633,15 @@ size_t MShake::calcNumberOfMShakeMolecules(SimulationBox &simBox) const
 /**
  * @brief calculate number of bond constraints for M-Shake molecules
  *
- * @param simBox Simulation box containing the molecules
+ * @param simulationBox Simulation box containing the molecules
  *
  * @return size_t Number of bond constraints for M-Shake molecules
  */
-size_t MShake::calcNumberOfBondConstraints(SimulationBox &simBox) const
+size_t MShake::calcNumberOfBondConstraints(SimulationBox &simulationBox) const
 {
     size_t nBondConstraints = 0;
 
-    for (const auto &molecule : simBox.getMolecules())
+    for (const auto &molecule : simulationBox.getMolecules())
     {
         const auto moltype = molecule.getMoltype();
 

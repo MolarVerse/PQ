@@ -1,0 +1,41 @@
+# DevOps Configuration File
+
+[exclude]
+#buggy_cpp_macros = []
+
+[git]
+#main_branch = "main"
+
+[cpp]
+check_dirs = ["src", "include", "tests", "benchmarks", "apps"]
+ast_check_compile_commands_db = ".build"
+incremental_state_file = ".build/.cpp_check_state.json"
+fail_fast = true
+#style_checks = true
+#license_header_check = true
+#license_header = <some file path>
+#check_only_staged_files = false
+#header_guards_according_to_filepath = false
+#ast_checks = true
+ast_check_compile_args = ["-std=c++23", "-Iinclude/concepts"]
+#ast_check_enabled_ids = []
+#ast_check_disabled_ids = []
+
+# Per-check configuration — one sub-table per check id.
+# The paramNameForType check has NO built-in defaults, so you must
+# declare every type→name mapping you want enforced here.
+[cpp.ast_check_config.paramNameForType]
+type_to_name = { "molsys::SimulationBox" = [
+    "simulationBox",
+    "other",
+], "physicalData::PhysicalData" = [
+    "physicalData",
+    "other",
+] }
+unseen_type_is_error = true
+
+[logging]
+cpp_level = "INFO"
+
+[file]
+#encoding = "utf-8"

@@ -71,13 +71,13 @@ namespace input::restartFile
        private:
         static void _processAtomLine(
             std::vector<std::string> &lineElements,
-            molsys::SimulationBox    &simBox,
+            molsys::SimulationBox    &simulationBox,
             molsys::Molecule         &molecule
         );
 
         static void _processQMAtomLine(
             std::vector<std::string> &lineElements,
-            molsys::SimulationBox    &simBox
+            molsys::SimulationBox    &simulationBox
         );
 
         friend class ::TestAtomSection;

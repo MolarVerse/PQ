@@ -136,42 +136,42 @@ StochasticRescalingManostat::StochasticRescalingManostat(
 /**
  * @brief apply Stochastic Rescaling manostat for NPT ensemble
  *
- * @param simBox
- * @param physData
+ * @param simulationBox
+ * @param physicalData
  */
 void StochasticRescalingManostat::applyManostat(
-    molsys::SimulationBox      &simBox,
-    physicalData::PhysicalData &physData
+    molsys::SimulationBox      &simulationBox,
+    physicalData::PhysicalData &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");
 
-    calculatePressure(simBox, physData);
+    calculatePressure(simulationBox, physicalData);
 
-    const auto mu = calculateMu(simBox.getVolume());
+    const auto mu = calculateMu(simulationBox.getVolume());
 
     // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
     // every position into the resized box.
-    auto reconstructMolecule = [&simBox](auto &molecule)
-    { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
+    auto reconstructMolecule = [&simulationBox](auto &molecule)
+    { molecule.reconstructAtomsAroundCenterOfMass(simulationBox.getBox()); };
 
-    std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
+    std::ranges::for_each(simulationBox.getMolecules(), reconstructMolecule);
 
-    simBox.scaleBox(mu);
+    simulationBox.scaleBox(mu);
 
-    physData.setVolume(simBox.getVolume());
-    physData.setDensity(simBox.getDensity());
+    physicalData.setVolume(simulationBox.getVolume());
+    physicalData.setDensity(simulationBox.getDensity());
 
-    simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
+    simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
-    auto scalePositions = [&mu, &simBox](auto &molecule)
-    { molecule.scale(mu, simBox.getBox()); };
+    auto scalePositions = [&mu, &simulationBox](auto &molecule)
+    { molecule.scale(mu, simulationBox.getBox()); };
 
-    auto scaleVelocities = [&mu, &simBox](auto &molecule)
-    { molecule.scaleVelocity(inverse(mu), simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simulationBox](auto &molecule)
+    { molecule.scaleVelocity(inverse(mu), simulationBox.getBox()); };
 
-    std::ranges::for_each(simBox.getMolecules(), scalePositions);
-    std::ranges::for_each(simBox.getMolecules(), scaleVelocities);
+    std::ranges::for_each(simulationBox.getMolecules(), scalePositions);
+    std::ranges::for_each(simulationBox.getMolecules(), scaleVelocities);
 }
 
 /**

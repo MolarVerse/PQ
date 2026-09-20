@@ -20,6 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifndef _TEST_RESTART_FILE_SECTION_HPP_
+#define _TEST_RESTART_FILE_SECTION_HPP_
+
 #include <gtest/gtest.h>
 
 #include "mmmdEngine.hpp"
@@ -152,3 +155,5 @@ class TestAtomSection : public ::testing::Test
     input::restartFile::RestartFileSection *_section;
     engine::Engine                         *_engine;
 };
+
+#endif   // _TEST_RESTART_FILE_SECTION_HPP_
