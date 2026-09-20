@@ -30,23 +30,23 @@
  */
 TEST(TestBondType, operatorEqual)
 {
-    forceField::BondType bondType1(
+    ff::BondType bondType1(
         BondId{0},
         BondParams{.equilibrium = 1.0, .forceConstant = 2.0}
     );
-    forceField::BondType bondType2(
+    ff::BondType bondType2(
         BondId{0},
         BondParams{.equilibrium = 1.0, .forceConstant = 2.0}
     );
-    forceField::BondType bondType3(
+    ff::BondType bondType3(
         BondId{1},
         BondParams{.equilibrium = 1.0, .forceConstant = 2.0}
     );
-    forceField::BondType bondType4(
+    ff::BondType bondType4(
         BondId{0},
         BondParams{.equilibrium = 2.0, .forceConstant = 2.0}
     );
-    forceField::BondType bondType5(
+    ff::BondType bondType5(
         BondId{0},
         BondParams{.equilibrium = 1.0, .forceConstant = 3.0}
     );

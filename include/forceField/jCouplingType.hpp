@@ -28,11 +28,9 @@
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class JCouplingType;   // forward declaration
-
-    bool operator==(const JCouplingType &self, const JCouplingType &other);
 
     /**
      * @class JCouplingType
@@ -55,7 +53,10 @@ namespace forceField
        public:
         JCouplingType(size_t id, const JCouplingParams &params);
 
-        friend bool operator==(const JCouplingType &, const JCouplingType &);
+        friend bool operator==(
+            const JCouplingType &self,
+            const JCouplingType &other
+        );
 
         /***************************
          * standard getter methods *
@@ -72,6 +73,6 @@ namespace forceField
         void setLowerSymmetry(bool boolean);
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _J_COUPLING_TYPE_HPP_

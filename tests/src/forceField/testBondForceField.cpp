@@ -88,7 +88,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
 
-    auto bondForceField = forceField::BondForceField(
+    auto bondForceField = ff::BondForceField(
         &molecule,
         &molecule,
         AtomIndex{0},

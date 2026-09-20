@@ -22,48 +22,51 @@
 
 #include "bondType.hpp"
 
-using namespace forceField;
-
-/**
- * @brief Construct a new Bond Type:: Bond Type object
- *
- * @param id
- * @param params
- */
-BondType::BondType(const BondId id, const BondParams &params)
-    : _id(id), _params(params)
+namespace ff
 {
-}
 
-/**
- * @brief operator overload for the comparison of two BondType objects
- *
- * @param self
- * @param other
- * @return true
- * @return false
- */
-bool forceField::operator==(const BondType &self, const BondType &other)
-{
-    return self._id == other._id && self._params == other._params;
-}
+    /**
+     * @brief Construct a new Bond Type:: Bond Type object
+     *
+     * @param id
+     * @param params
+     */
+    BondType::BondType(const BondId id, const BondParams &params)
+        : _id(id), _params(params)
+    {
+    }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief operator overload for the comparison of two BondType objects
+     *
+     * @param self
+     * @param other
+     * @return true
+     * @return false
+     */
+    bool operator==(const BondType &self, const BondType &other)
+    {
+        return self._id == other._id && self._params == other._params;
+    }
 
-/**
- * @brief get the id of the bond type
- *
- * @return BondId
- */
-BondId BondType::getId() const { return _id; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the parameters of the bond type
- *
- * @return const BondParams&
- */
-const BondParams &BondType::getParams() const { return _params; }
+    /**
+     * @brief get the id of the bond type
+     *
+     * @return BondId
+     */
+    BondId BondType::getId() const { return _id; }
+
+    /**
+     * @brief get the parameters of the bond type
+     *
+     * @return const BondParams&
+     */
+    const BondParams &BondType::getParams() const { return _params; }
+
+}   // namespace ff

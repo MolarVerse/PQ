@@ -28,7 +28,7 @@
 #include "dihedralType.hpp"
 #include "exceptions.hpp"
 
-using namespace forceField;
+using namespace ff;
 using namespace exc;
 using namespace molsys;
 using namespace physicalData;

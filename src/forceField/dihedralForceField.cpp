@@ -31,7 +31,7 @@
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
 
-using namespace forceField;
+using namespace ff;
 using namespace connectivity;
 using namespace linearAlgebra;
 using namespace physicalData;

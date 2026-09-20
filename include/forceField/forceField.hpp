@@ -29,7 +29,7 @@
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 #include "physicalData.hpp"          // for PhysicalData
 
-namespace forceField
+namespace ff
 {
     template <typename T>
     double correctLinker(
@@ -42,7 +42,7 @@ namespace forceField
         AtomIndex                    atomIndex2,
         double                       distance
     );
-}   // namespace forceField
+}   // namespace ff
 
 #ifndef _FORCE_FIELD_TPP_
 #include "forcefield.tpp.hpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE

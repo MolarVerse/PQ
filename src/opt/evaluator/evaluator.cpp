@@ -36,7 +36,7 @@ using namespace opt;
 using namespace pot;
 using namespace molsys;
 using namespace physicalData;
-using namespace forceField;
+using namespace ff;
 using namespace intraNonBonded;
 using namespace virial;
 using namespace constraints;

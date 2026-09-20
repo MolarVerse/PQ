@@ -100,7 +100,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    auto angleFF = forceField::AngleForceField(
+    auto angleFF = ff::AngleForceField(
         {&molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
@@ -280,7 +280,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    auto angleForceField = forceField::AngleForceField(
+    auto angleForceField = ff::AngleForceField(
         {&molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
