@@ -33,7 +33,7 @@
 
 using namespace constraints;
 using namespace molsys;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace kernel;
 using namespace settings;
 using namespace constants;
@@ -194,9 +194,7 @@ bool BondConstraint::applyRattle(double tolerance)
  *
  * @param shakeDistanceRef
  */
-void BondConstraint::setShakeDistanceRef(
-    const linearAlgebra::Vec3D &shakeDistanceRef
-)
+void BondConstraint::setShakeDistanceRef(const linalg::Vec3D &shakeDistanceRef)
 {
     _shakeDistanceRef = shakeDistanceRef;
 }
@@ -222,7 +220,7 @@ double BondConstraint::getTargetBondLength() const
  * @return shake distance reference
  */
 [[nodiscard]]
-linearAlgebra::Vec3D BondConstraint::getShakeDistanceRef() const
+linalg::Vec3D BondConstraint::getShakeDistanceRef() const
 {
     return _shakeDistanceRef;
 }

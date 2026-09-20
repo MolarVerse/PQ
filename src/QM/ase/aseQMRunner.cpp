@@ -391,7 +391,7 @@ void AseQMRunner::collectStress(
     PhysicalData        &data
 ) const
 {
-    linearAlgebra::tensor3D stress_;
+    linalg::tensor3D stress_;
 
     try
     {

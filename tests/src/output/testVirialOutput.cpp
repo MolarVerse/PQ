@@ -42,10 +42,10 @@ TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
 
     PhysicalData data;
     data.setVirial(
-        linearAlgebra::tensor3D{
-            linearAlgebra::Vec3D{0.1, 0.2, 0.3},
-            linearAlgebra::Vec3D{0.4, 0.5, 0.6},
-            linearAlgebra::Vec3D{0.7, 0.8, 0.9}
+        linalg::tensor3D{
+            linalg::Vec3D{0.1, 0.2, 0.3},
+            linalg::Vec3D{0.4, 0.5, 0.6},
+            linalg::Vec3D{0.7, 0.8, 0.9}
         }
     );
 

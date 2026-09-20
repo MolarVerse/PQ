@@ -62,7 +62,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
@@ -107,8 +107,8 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         *_nonCoulombPotential
     );
 
-    auto force = (::sqrt(14) - 1.2) * 3.0 / ::sqrt(14) *
-                 linearAlgebra::Vec3D(1.0, 2.0, 3.0);
+    auto force =
+        (::sqrt(14) - 1.2) * 3.0 / ::sqrt(14) * linalg::Vec3D(1.0, 2.0, 3.0);
 
     EXPECT_NEAR(
         physicalData.getBondEnergy(),
@@ -124,7 +124,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
 
-    auto virial = force * linearAlgebra::Vec3D{-1.0, -2.0, -3.0};
+    auto virial = force * linalg::Vec3D{-1.0, -2.0, -3.0};
     EXPECT_THAT(
         diagonal(physicalData.getVirial()),
         testing::ElementsAre(
@@ -167,7 +167,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         1e-6
     );
 
-    virial = force * linearAlgebra::Vec3D{-1.0, -2.0, -3.0};
+    virial = force * linalg::Vec3D{-1.0, -2.0, -3.0};
     EXPECT_THAT(
         diagonal(physicalData.getVirial()),
         testing::ElementsAre(

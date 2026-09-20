@@ -47,17 +47,17 @@ class TestMolecule : public ::testing::Test
         _atom2->setExternalAtomType(ExtAtomType{2});
         _atom3->setExternalAtomType(ExtAtomType{2});
 
-        _atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        _atom3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        _atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        _atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0));
+        _atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0));
 
-        _atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _atom2->setVelocity(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        _atom3->setVelocity(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        _atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        _atom2->setVelocity(linalg::Vec3D(1.0, 0.0, 0.0));
+        _atom3->setVelocity(linalg::Vec3D(0.0, 1.0, 0.0));
 
-        _atom1->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _atom2->setForce(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        _atom3->setForce(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        _atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+        _atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0));
+        _atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0));
 
         _atom1->setMass(1.0);
         _atom2->setMass(2.0);

@@ -35,8 +35,8 @@ using namespace molsys;
 
 TEST(TestTriclinicBox, setBoxDimensions)
 {
-    auto                       box           = TriclinicBox();
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    auto                box           = TriclinicBox();
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
 
@@ -44,7 +44,7 @@ TEST(TestTriclinicBox, setBoxDimensions)
     // set yet
     EXPECT_EQ(
         box.getBoxMatrix(),
-        linearAlgebra::StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 0.0, 0.0},
             {0.0, 0.0, 0.0}
@@ -54,16 +54,16 @@ TEST(TestTriclinicBox, setBoxDimensions)
 
 TEST(TestTriclinicBox, setBoxAngles)
 {
-    auto                       box           = TriclinicBox();
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    const linearAlgebra::Vec3D boxAngles     = {90.0, 90.0, 90.0};
+    auto                box           = TriclinicBox();
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    const linalg::Vec3D boxAngles     = {90.0, 90.0, 90.0};
     box.setBoxDimensions(boxDimensions);
     box.setBoxAngles(boxAngles);
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
     EXPECT_EQ(box.getBoxAngles(), boxAngles);
     EXPECT_MATRIX_NEAR(
         box.getBoxMatrix(),
-        linearAlgebra::StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 2.0, 0.0},
             {0.0, 0.0, 3.0}
@@ -72,7 +72,7 @@ TEST(TestTriclinicBox, setBoxAngles)
     );
     EXPECT_MATRIX_NEAR(
         box.getTransformationMatrix(),
-        linearAlgebra::StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 1.0, 0.0},
             {0.0, 0.0, 1.0}
@@ -88,7 +88,7 @@ TEST(TestTriclinicBox, setBoxAngles)
 
     EXPECT_MATRIX_NEAR(
         box.getTransformationMatrix(),
-        linearAlgebra::StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {1.0, sqrt(0.5), ::cos(beta)},
             {0.0,
              sqrt(0.5),
@@ -104,7 +104,7 @@ TEST(TestTriclinicBox, setBoxAngles)
         1e-15
     );
 
-    auto boxMatrix = linearAlgebra::StaticMatrix3x3<double>();
+    auto boxMatrix = linalg::StaticMatrix3x3<double>();
     boxMatrix[0] = {box.getTransformationMatrix()[0] * box.getBoxDimensions()};
     boxMatrix[1] = {box.getTransformationMatrix()[1] * box.getBoxDimensions()};
     boxMatrix[2] = {box.getTransformationMatrix()[2] * box.getBoxDimensions()};
@@ -138,13 +138,13 @@ TEST(TestTriclinicBox, applyPBC)
     box.setBoxDimensions({1.0, 2.0, 3.0});
     box.setBoxAngles({30.0, 60.0, 45.0});
 
-    auto position = linearAlgebra::Vec3D({1.3, 2.3, 3.3});
+    auto position = linalg::Vec3D({1.3, 2.3, 3.3});
 
     box.applyPBC(position);
 
     EXPECT_VECTOR_NEAR(
         position,
-        linearAlgebra::Vec3D(
+        linalg::Vec3D(
             {0.12842712474619078, 0.77995789639665647, 0.45556413851582972}
         ),
         1e-8
@@ -157,8 +157,8 @@ TEST(TestTriclinicBox, calculateShiftVectors)
     box.setBoxDimensions({1.0, 2.0, 3.0});
     box.setBoxAngles({30.0, 60.0, 45.0});
 
-    const auto position    = linearAlgebra::Vec3D({1.3, 2.3, 3.3});
-    const auto newPosition = linearAlgebra::Vec3D(
+    const auto position    = linalg::Vec3D({1.3, 2.3, 3.3});
+    const auto newPosition = linalg::Vec3D(
         {0.12842712474619078, 0.77995789639665647, 0.45556413851582972}
     );
 
@@ -173,19 +173,15 @@ TEST(TestTriclinicBox, wrapPositionIntoBox)
     box.setBoxDimensions({60.0, 60.0, 4.542});
     box.setBoxAngles({90.0, 90.0, 120.0});
 
-    auto outsidePos = linearAlgebra::Vec3D({5.0, -30.0, -0.1});
+    auto outsidePos = linalg::Vec3D({5.0, -30.0, -0.1});
 
     box.applyPBC(outsidePos);
-    EXPECT_VECTOR_NEAR(
-        outsidePos,
-        linearAlgebra::Vec3D(5.0, -30.0, -0.1),
-        1e-10
-    );
+    EXPECT_VECTOR_NEAR(outsidePos, linalg::Vec3D(5.0, -30.0, -0.1), 1e-10);
 
     const auto wrappedPos = box.wrapPositionIntoBox(outsidePos);
     EXPECT_VECTOR_NEAR(
         wrappedPos,
-        linearAlgebra::Vec3D(-25.0, 21.96152422706632, -0.1),
+        linalg::Vec3D(-25.0, 21.96152422706632, -0.1),
         1e-10
     );
 }
@@ -196,12 +192,9 @@ TEST(TestTriclinicBox, transformsRoundTrip)
     box.setBoxDimensions({4.0, 5.0, 6.0});
     box.setBoxAngles({80.0, 75.0, 70.0});
 
-    const linearAlgebra::Vec3D vector{1.0, 2.0, 3.0};
-    const auto                 tensor = linearAlgebra::tensor3D(
-        {1.0, 2.0, 3.0},
-        {4.0, 5.0, 6.0},
-        {7.0, 8.0, 9.0}
-    );
+    const linalg::Vec3D vector{1.0, 2.0, 3.0};
+    const auto          tensor =
+        linalg::tensor3D({1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0});
 
     EXPECT_VECTOR_NEAR(
         box.toSimSpace(box.toOrthoSpace(vector)),
@@ -249,10 +242,10 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     box.setBoxAngles({80.0, 75.0, 70.0});
 
     settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
-    box.scaleBox(diagonalMatrix(linearAlgebra::Vec3D{2.0, 2.0, 2.0}));
+    box.scaleBox(diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0}));
     EXPECT_VECTOR_NEAR(
         box.getBoxDimensions(),
-        linearAlgebra::Vec3D(8.0, 10.0, 12.0),
+        linalg::Vec3D(8.0, 10.0, 12.0),
         1.0e-12
     );
     EXPECT_NEAR(box.getVolume(), box.calculateVolume(), 1.0e-12);
@@ -261,10 +254,10 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
         settings::Isotropy::FULL_ANISOTROPIC
     );
     const auto originalAngles = box.getBoxAngles();
-    box.scaleBox(diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.5, 0.5}));
+    box.scaleBox(diagonalMatrix(linalg::Vec3D{0.5, 0.5, 0.5}));
     EXPECT_VECTOR_NEAR(
         box.getBoxDimensions(),
-        linearAlgebra::Vec3D(4.0, 5.0, 6.0),
+        linalg::Vec3D(4.0, 5.0, 6.0),
         1.0e-12
     );
     EXPECT_VECTOR_NEAR(box.getBoxAngles(), originalAngles, 1.0e-12);

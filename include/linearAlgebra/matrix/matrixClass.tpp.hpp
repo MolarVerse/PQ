@@ -30,7 +30,7 @@
 #include "exceptions.hpp"
 #include "matrixClass.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
 
     /**
@@ -156,6 +156,6 @@ namespace linearAlgebra
 
         return solution;
     }
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #endif   // _MATRIX_CLASS_TPP_

@@ -34,14 +34,14 @@
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "timingsSettings.hpp"      // for TimingsSettings
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace manostat;
 using namespace settings;
 using namespace molsys;
 using namespace physicalData;
 using namespace exc;
 using namespace constants;
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @brief copy constructor for Stochastic Rescaling Manostat
@@ -260,7 +260,7 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        1.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
+        1.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
 
     const auto stochasticFactor_xy = ::sqrt(4.0 * stochasticFactor) * random;
@@ -311,15 +311,14 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        2.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
+        2.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
     stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - diagonal(_pressureTensor);
 
     auto mu =
-        exp(-compress * (deltaP) / linearAlgebra::tensor3D::size +
-            stochasticFactor);
+        exp(-compress * (deltaP) / linalg::tensor3D::size + stochasticFactor);
 
     for (size_t i = 0; i < 3; ++i)
     {
@@ -350,14 +349,13 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        2.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
+        2.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
     stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;
-    auto       mu     = expPade(
-        -compress * deltaP / linearAlgebra::tensor3D::size + stochasticFactor
-    );
+    auto       mu =
+        expPade(-compress * deltaP / linalg::tensor3D::size + stochasticFactor);
 
     for (size_t k = 0; k < 3; ++k)
     {

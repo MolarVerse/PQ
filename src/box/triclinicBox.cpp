@@ -26,7 +26,7 @@
 #include "constants.hpp"          // for constants
 #include "manostatSettings.hpp"   // for ManostatSettings
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace settings;
 using namespace constants;
 

@@ -37,7 +37,7 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.5);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0);
     EXPECT_EQ(_physicalData->getTemperature(), 1.5);
-    EXPECT_EQ(_physicalData->getMomentum(), linearAlgebra::Vec3D(2.0));
+    EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(2.0));
     EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5);
     EXPECT_EQ(_physicalData->getVolume(), 3.0);
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
@@ -56,7 +56,7 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getCoulombEnergy(), 1.0);
     EXPECT_EQ(physicalData2.getNonCoulombEnergy(), 2.0);
     EXPECT_EQ(physicalData2.getTemperature(), 3.0);
-    EXPECT_EQ(physicalData2.getMomentum(), linearAlgebra::Vec3D(4.0));
+    EXPECT_EQ(physicalData2.getMomentum(), linalg::Vec3D(4.0));
     EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0);
     EXPECT_EQ(physicalData2.getVolume(), 6.0);
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
@@ -77,7 +77,7 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 2.0);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 4.0);
     EXPECT_EQ(_physicalData->getTemperature(), 6.0);
-    EXPECT_EQ(_physicalData->getMomentum(), linearAlgebra::Vec3D(8.0));
+    EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(8.0));
     EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0);
     EXPECT_EQ(_physicalData->getVolume(), 12.0);
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
@@ -191,13 +191,12 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setImproperEnergy(1.0);
 
     _physicalData->setTemperature(1.0);
-    _physicalData->setMomentum(linearAlgebra::Vec3D(1.0));
+    _physicalData->setMomentum(linalg::Vec3D(1.0));
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0);
     _physicalData->setCoupledPressure(1.0);
-    _physicalData->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
-    );
+    _physicalData->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)));
     _physicalData->setQMEnergy(1.0);
 
     _physicalData->reset();
@@ -214,12 +213,12 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getImproperEnergy(), 0.0);
 
     EXPECT_EQ(_physicalData->getTemperature(), 0.0);
-    EXPECT_EQ(_physicalData->getMomentum(), linearAlgebra::Vec3D(0.0));
+    EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(0.0));
     EXPECT_EQ(_physicalData->getVolume(), 0.0);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
     EXPECT_EQ(_physicalData->getPressure(), 0.0);
     EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0);
-    EXPECT_EQ(_physicalData->getVirial(), linearAlgebra::tensor3D(0.0));
+    EXPECT_EQ(_physicalData->getVirial(), linalg::tensor3D(0.0));
     EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
 }
 
@@ -332,8 +331,8 @@ TEST_F(TestPhysicalData, addRingPolymerEnergyAccumulates)
 
 TEST_F(TestPhysicalData, addVirialAccumulates)
 {
-    const auto virial0 = diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    const auto virial1 = diagonalMatrix(linearAlgebra::Vec3D(0.5, 0.5, 0.5));
+    const auto virial0 = diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0));
+    const auto virial1 = diagonalMatrix(linalg::Vec3D(0.5, 0.5, 0.5));
     _physicalData->setVirial(virial0);
     _physicalData->addVirial(virial1);
     EXPECT_EQ(_physicalData->getVirial(), virial0 + virial1);

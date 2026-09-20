@@ -29,11 +29,11 @@
 #include "../../../concepts/concepts.hpp"
 #include "vector3dDepth.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     template <class T>
     class Vector3D;
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 namespace pq
 {
@@ -44,7 +44,7 @@ namespace pq
      */
     template <class T>
     concept Vector3DConcept =
-        std::same_as<T, linearAlgebra::Vector3D<typename T::value_type>>;
+        std::same_as<T, linalg::Vector3D<typename T::value_type>>;
 
     /**
      * @brief Concept for Vector3D types with arithmetic value_type

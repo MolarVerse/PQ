@@ -38,7 +38,7 @@
 
 using namespace input::restartFile;
 using namespace exc;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace utilities;
 using namespace settings;
 using namespace molsys;

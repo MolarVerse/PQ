@@ -24,7 +24,7 @@
 
 #include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace constants;
 
 namespace molsys

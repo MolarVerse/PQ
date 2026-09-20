@@ -121,7 +121,7 @@ void ExternalQMRunner::_readForceFile(
 
     auto readForces = [&forceFile, &forceFileName](auto &atom)
     {
-        auto grad = linearAlgebra::Vec3D();
+        auto grad = linalg::Vec3D();
 
         if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
         {

@@ -34,8 +34,8 @@
  * @return double The squared distance between the two particles.
  */
 double kernel::distSquared(
-    const linearAlgebra::Vec3D  &pos_i,
-    const linearAlgebra::Vec3D  &pos_j,
+    const linalg::Vec3D         &pos_i,
+    const linalg::Vec3D         &pos_j,
     const molsys::SimulationBox &simBox
 )
 {
@@ -52,11 +52,11 @@ double kernel::distSquared(
  * @param pos_i
  * @param pos_j
  *
- * @return linearAlgebra::Vec3D The distance vector between the two particles.
+ * @return linalg::Vec3D The distance vector between the two particles.
  */
-linearAlgebra::Vec3D kernel::distVec(
-    const linearAlgebra::Vec3D &pos_i,
-    const linearAlgebra::Vec3D &pos_j
+linalg::Vec3D kernel::distVec(
+    const linalg::Vec3D &pos_i,
+    const linalg::Vec3D &pos_j
 )
 {
     return pos_i - pos_j;
@@ -69,11 +69,11 @@ linearAlgebra::Vec3D kernel::distVec(
  * @param pos_j
  * @param simBox
  *
- * @return linearAlgebra::Vec3D The distance vector between the two particles.
+ * @return linalg::Vec3D The distance vector between the two particles.
  */
-linearAlgebra::Vec3D kernel::distVec(
-    const linearAlgebra::Vec3D  &pos_i,
-    const linearAlgebra::Vec3D  &pos_j,
+linalg::Vec3D kernel::distVec(
+    const linalg::Vec3D         &pos_i,
+    const linalg::Vec3D         &pos_j,
     const molsys::SimulationBox &simBox
 )
 {
@@ -91,12 +91,12 @@ linearAlgebra::Vec3D kernel::distVec(
  * @param pos_i
  * @param pos_j
  *
- * @return std::pair<linearAlgebra::Vec3D, double> The distance vector and the
+ * @return std::pair<linalg::Vec3D, double> The distance vector and the
  * squared distance between the two particles.
  */
-std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
-    const linearAlgebra::Vec3D &pos_i,
-    const linearAlgebra::Vec3D &pos_j
+std::pair<linalg::Vec3D, double> kernel::distVecAndDist2(
+    const linalg::Vec3D &pos_i,
+    const linalg::Vec3D &pos_j
 )
 {
     const auto r_ij = pos_i - pos_j;
@@ -114,12 +114,12 @@ std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
  * @param pos_j
  * @param simBox
  *
- * @return std::pair<linearAlgebra::Vec3D, double> The distance vector and the
+ * @return std::pair<linalg::Vec3D, double> The distance vector and the
  * squared distance between the two particles.
  */
-std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
-    const linearAlgebra::Vec3D  &pos_i,
-    const linearAlgebra::Vec3D  &pos_j,
+std::pair<linalg::Vec3D, double> kernel::distVecAndDist2(
+    const linalg::Vec3D         &pos_i,
+    const linalg::Vec3D         &pos_j,
     const molsys::SimulationBox &simBox
 )
 {

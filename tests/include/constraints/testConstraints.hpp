@@ -52,12 +52,12 @@ class TestConstraints : public ::testing::Test
         auto atom2 = std::make_shared<molsys::Atom>();
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom3->setPosition(linearAlgebra::Vec3D(2.0, 0.0, 0.0));
-        atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setVelocity(linearAlgebra::Vec3D(2.0, 2.0, 2.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom3->setPosition(linalg::Vec3D(2.0, 0.0, 0.0));
+        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0));
         atom1->setMass(1.0);
         atom2->setMass(1.0);
         atom3->setMass(1.0);
@@ -72,10 +72,10 @@ class TestConstraints : public ::testing::Test
         auto atom4 = std::make_shared<molsys::Atom>();
         auto atom5 = std::make_shared<molsys::Atom>();
 
-        atom4->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom5->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom4->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom5->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom4->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         atom4->setMass(1.0);
         atom5->setMass(1.0);
 
@@ -85,7 +85,7 @@ class TestConstraints : public ::testing::Test
         _box = new molsys::SimulationBox();
         _box->addMolecule(molecule1);
         _box->addMolecule(molecule2);
-        _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
         _constraints = new constraints::Constraints();
 

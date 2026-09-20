@@ -50,21 +50,21 @@ class TestBondConstraint : public ::testing::Test
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
 
         atom1->setMass(1.0);
         atom2->setMass(2.0);
 
-        atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
 
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
         _box = new molsys::SimulationBox();
         _box->addMolecule(molecule1);
-        _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
         _bondConstraint = new constraints::BondConstraint(
             _box->getMolecules().data(),

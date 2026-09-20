@@ -44,8 +44,8 @@ namespace opt
         double _beta1 = _defaultBeta1;
         double _beta2 = _defaultBeta2;
 
-        std::vector<linearAlgebra::Vec3D> _momentum1;
-        std::vector<linearAlgebra::Vec3D> _momentum2;
+        std::vector<linalg::Vec3D> _momentum1;
+        std::vector<linalg::Vec3D> _momentum2;
 
        public:
         explicit Adam(size_t nEpochs, size_t nAtoms);
