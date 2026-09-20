@@ -376,11 +376,8 @@ void RingPolymerQMMDEngine::applyManostat()
             MPI_COMM_WORLD
         );
 
-        const auto boxDimensionsVec = Vec3D(
-            boxDimensions[0],
-            boxDimensions[1],
-            boxDimensions[2]
-        );
+        const auto boxDimensionsVec =
+            Vec3D(boxDimensions[0], boxDimensions[1], boxDimensions[2]);
 
         _ringPolymerBeads[i].deFlattenVelocities(velocities);
         _ringPolymerBeads[i].deFlattenPositions(positions);
