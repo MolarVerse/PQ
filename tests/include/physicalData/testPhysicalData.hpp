@@ -53,6 +53,7 @@ class TestPhysicalData : public ::testing::Test
         _physicalData->setVolume(6.0);
         _physicalData->setDensity(7.0);
         _physicalData->setPressure(8.0);
+        _physicalData->setCoupledPressure(8.5);
         _physicalData->setQMEnergy(9.0);
 
         _simulationBox = new molsys::SimulationBox();

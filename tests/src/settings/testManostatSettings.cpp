@@ -120,3 +120,122 @@ TEST(ManostatSettingsTest, StringRoundTripForIsotropy)
     );
     EXPECT_EQ(settings::string(settings::Isotropy::NONE), "isotropic");
 }
+
+TEST(ManostatSettingsTest, SetFixedAxisViaEnum)
+{
+    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::XY);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::XY
+    );
+}
+
+TEST(ManostatSettingsTest, StringRoundTripForFixedAxis)
+{
+    EXPECT_EQ(settings::string(settings::FixedAxis::NONE), "none");
+    EXPECT_EQ(settings::string(settings::FixedAxis::X), "x");
+    EXPECT_EQ(settings::string(settings::FixedAxis::Y), "y");
+    EXPECT_EQ(settings::string(settings::FixedAxis::Z), "z");
+    EXPECT_EQ(settings::string(settings::FixedAxis::XY), "xy");
+    EXPECT_EQ(settings::string(settings::FixedAxis::XZ), "xz");
+    EXPECT_EQ(settings::string(settings::FixedAxis::YZ), "yz");
+    EXPECT_EQ(settings::string(settings::FixedAxis::ALL), "all");
+}
+
+TEST(ManostatSettingsTest, FixedAxisBitwiseOperators)
+{
+    using enum settings::FixedAxis;
+
+    EXPECT_EQ(X | Y, XY);
+    EXPECT_EQ(X | Z, XZ);
+    EXPECT_EQ(Y | Z, YZ);
+    EXPECT_EQ(XY | Z, ALL);
+    EXPECT_EQ(X | Y | Z, ALL);
+
+    EXPECT_EQ((XY & X), X);
+    EXPECT_EQ((XY & Z), NONE);
+    EXPECT_EQ((ALL & XZ), XZ);
+
+    auto axis  = X;
+    axis      |= Y;
+    EXPECT_EQ(axis, XY);
+
+    axis &= X;
+    EXPECT_EQ(axis, X);
+
+    EXPECT_EQ(~NONE & ALL, ALL);
+    EXPECT_EQ(~ALL & ALL, NONE);
+    EXPECT_EQ(~X & ALL, YZ);
+    EXPECT_EQ(~XY & ALL, Z);
+}
+
+TEST(ManostatSettingsTest, FixedAxisHelperFunctions)
+{
+    using enum settings::FixedAxis;
+
+    EXPECT_TRUE(settings::isAxisFixed(X, 0));
+    EXPECT_FALSE(settings::isAxisFixed(X, 1));
+    EXPECT_FALSE(settings::isAxisFixed(X, 2));
+
+    EXPECT_TRUE(settings::isAxisFixed(XY, 0));
+    EXPECT_TRUE(settings::isAxisFixed(XY, 1));
+    EXPECT_FALSE(settings::isAxisFixed(XY, 2));
+
+    EXPECT_TRUE(settings::isAxisFixed(ALL, 0));
+    EXPECT_TRUE(settings::isAxisFixed(ALL, 1));
+    EXPECT_TRUE(settings::isAxisFixed(ALL, 2));
+
+    EXPECT_FALSE(settings::isAxisFixed(NONE, 0));
+    EXPECT_FALSE(settings::isAxisFixed(NONE, 1));
+    EXPECT_FALSE(settings::isAxisFixed(NONE, 2));
+}
+
+TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)
+{
+    // When no manostat is selected and fixed axis was not set, default is ALL
+    settings::ManostatSettings::setIsFixedAxisSet(false);
+    settings::ManostatSettings::setManostatType(settings::ManostatType::NONE);
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::ALL
+    );
+    EXPECT_FALSE(settings::ManostatSettings::isFixedAxisSet());
+
+    // When manostat is selected, default becomes NONE
+    settings::ManostatSettings::setManostatType(
+        settings::ManostatType::BERENDSEN
+    );
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::NONE
+    );
+
+    settings::ManostatSettings::setManostatType(
+        settings::ManostatType::STOCHASTIC_RESCALING
+    );
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::NONE
+    );
+
+    // When explicitly set, it overrides the default and remains set
+    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::Z);
+    EXPECT_TRUE(settings::ManostatSettings::isFixedAxisSet());
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::Z
+    );
+
+    // Changing manostat type does not override explicitly set fixed axis
+    settings::ManostatSettings::setManostatType(
+        settings::ManostatType::BERENDSEN
+    );
+    EXPECT_EQ(
+        settings::ManostatSettings::getFixedAxis(),
+        settings::FixedAxis::Z
+    );
+
+    // Reset back to unset for other tests
+    settings::ManostatSettings::setIsFixedAxisSet(false);
+    settings::ManostatSettings::setManostatType(settings::ManostatType::NONE);
+}
