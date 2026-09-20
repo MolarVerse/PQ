@@ -97,7 +97,7 @@ SemiIsotropicStochasticRescalingManostat::
         double                     compressibility,
         size_t                     anisotropicAxis,
         const std::vector<size_t> &isotropicAxes,
-        FixedAxis                  fixedAxis
+        settings::FixedAxis        fixedAxis
     )
     : StochasticRescalingManostat(
           targetPressure,
@@ -120,10 +120,10 @@ SemiIsotropicStochasticRescalingManostat::
  * @param fixedAxis
  */
 StochasticRescalingManostat::StochasticRescalingManostat(
-    double    targetPressure,
-    double    tau,
-    double    compressibility,
-    FixedAxis fixedAxis
+    double              targetPressure,
+    double              tau,
+    double              compressibility,
+    settings::FixedAxis fixedAxis
 )
     : Manostat(targetPressure),
       _tau(tau),
