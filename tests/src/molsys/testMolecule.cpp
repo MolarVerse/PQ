@@ -27,6 +27,7 @@
 #include "mathUtilities.hpp"      // for compare
 #include "moleculeType.hpp"       // for MoleculeType
 #include "orthorhombicBox.hpp"    // for OrthorhombicBox
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
@@ -189,4 +190,74 @@ TEST_F(TestMolecule, moleculeTypeCountsNonAdjacentDuplicates)
     moleculeType.addAtomType(AtomType{1});
 
     EXPECT_EQ(moleculeType.getNumberOfAtomTypes(), 2);
+}
+
+TEST_F(TestMolecule, getNumberOfAtomsIsDerivedFromAtoms)
+{
+    EXPECT_EQ(_molecule->getNumberOfAtoms(), 3);
+    EXPECT_EQ(_molecule->getDegreesOfFreedom(), 9);
+
+    _molecule->addAtom(std::make_shared<molsys::Atom>());
+
+    EXPECT_EQ(_molecule->getNumberOfAtoms(), 4);
+    EXPECT_EQ(_molecule->getDegreesOfFreedom(), 12);
+
+    EXPECT_EQ(molsys::Molecule().getNumberOfAtoms(), 0);
+}
+
+TEST_F(TestMolecule, getMolMassIsSumOfAtomMasses)
+{
+    EXPECT_DOUBLE_EQ(_molecule->getMolMass(), 6.0);
+
+    auto atom = std::make_shared<molsys::Atom>();
+    atom->setMass(4.5);
+    _molecule->addAtom(atom);
+
+    EXPECT_DOUBLE_EQ(_molecule->getMolMass(), 10.5);
+}
+
+TEST_F(TestMolecule, getMolMassOfEmptyMoleculeIsZero)
+{
+    EXPECT_DOUBLE_EQ(molsys::Molecule().getMolMass(), 0.0);
+}
+
+TEST_F(TestMolecule, getSmoothingFactor)
+{
+    _molecule->setSmoothingFactor(0.25);
+
+    EXPECT_DOUBLE_EQ(_molecule->getSmoothingFactor(), 0.25);
+}
+
+TEST_F(TestMolecule, getSmoothingFactorThrowsIfNotSet)
+{
+    EXPECT_THROW_MSG(
+        static_cast<void>(_molecule->getSmoothingFactor()),
+        std::runtime_error,
+        "Smoothing factor is not set for this molecule."
+    );
+}
+
+TEST_F(TestMolecule, moleculeTypeGetNumberOfAtoms)
+{
+    auto moleculeType = molsys::MoleculeType();
+
+    moleculeType.setNumberOfAtoms(5);
+
+    EXPECT_EQ(moleculeType.getNumberOfAtoms(), 5);
+}
+
+TEST_F(TestMolecule, moleculeTypeGetNumberOfAtomsThrowsIfNotSet)
+{
+    const auto moleculeType = molsys::MoleculeType();
+
+    EXPECT_THROW_MSG(
+        static_cast<void>(moleculeType.getNumberOfAtoms()),
+        std::runtime_error,
+        "Number of atoms is not set for this molecule."
+    );
+}
+
+TEST_F(TestMolecule, moleculeTypeChargeDefaultsToZero)
+{
+    EXPECT_EQ(molsys::MoleculeType().getCharge(), 0);
 }
