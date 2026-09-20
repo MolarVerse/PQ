@@ -137,16 +137,16 @@ StochasticRescalingManostat::StochasticRescalingManostat(
  * @brief apply Stochastic Rescaling manostat for NPT ensemble
  *
  * @param simulationBox
- * @param physData
+ * @param physicalData
  */
 void StochasticRescalingManostat::applyManostat(
     molsys::SimulationBox      &simulationBox,
-    physicalData::PhysicalData &physData
+    physicalData::PhysicalData &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");
 
-    calculatePressure(simulationBox, physData);
+    calculatePressure(simulationBox, physicalData);
 
     const auto mu = calculateMu(simulationBox.getVolume());
 
@@ -159,8 +159,8 @@ void StochasticRescalingManostat::applyManostat(
 
     simulationBox.scaleBox(mu);
 
-    physData.setVolume(simulationBox.getVolume());
-    physData.setDensity(simulationBox.getDensity());
+    physicalData.setVolume(simulationBox.getVolume());
+    physicalData.setDensity(simulationBox.getDensity());
 
     simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
