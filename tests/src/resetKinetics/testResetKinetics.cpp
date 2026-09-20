@@ -478,17 +478,17 @@ TEST(TestResetKinetics, resetTemperatureIsIdempotent)
 
 TEST(TestResetKinetics, resetTemperatureCanHeatAndCool)
 {
-    auto      *box  = makeBox();
-    auto       data = makeData(*box);
-    const auto T0   = data.getTemperature();
+    auto      *box   = makeBox();
+    auto       data  = makeData(*box);
+    const auto temp0 = data.getTemperature();
 
-    settings::ThermostatSettings::setTargetTemperature(2.0 * T0);
-    resetKinetics::ResetKinetics::resetTemperature(*box, T0);
-    EXPECT_NEAR(box->calculateTemperature(), 2.0 * T0, 1e-10 * T0);
+    settings::ThermostatSettings::setTargetTemperature(2.0 * temp0);
+    resetKinetics::ResetKinetics::resetTemperature(*box, temp0);
+    EXPECT_NEAR(box->calculateTemperature(), 2.0 * temp0, 1e-10 * temp0);
 
-    settings::ThermostatSettings::setTargetTemperature(0.25 * T0);
-    resetKinetics::ResetKinetics::resetTemperature(*box, 2.0 * T0);
-    EXPECT_NEAR(box->calculateTemperature(), 0.25 * T0, 1e-10 * T0);
+    settings::ThermostatSettings::setTargetTemperature(0.25 * temp0);
+    resetKinetics::ResetKinetics::resetTemperature(*box, 2.0 * temp0);
+    EXPECT_NEAR(box->calculateTemperature(), 0.25 * temp0, 1e-10 * temp0);
 
     delete box;
 }
@@ -692,15 +692,16 @@ TEST(TestResetKinetics, resetAngularMomentumPreservesLinearMomentum)
 
 TEST(TestResetKinetics, resetAngularMomentumSubtractsExactlyThePassedValue)
 {
-    const auto scaled = [](const Vec3D &L, double f) { return L * f; };
+    const auto scaled = [](const Vec3D &vec, double factor)
+    { return vec * factor; };
 
-    auto      *reference = makeBox();
-    const auto L0        = angularMomentumOf(*reference);
+    auto      *reference        = makeBox();
+    const auto angularMomentum0 = angularMomentumOf(*reference);
     delete reference;
 
     const std::vector<Vec3D> corrections = {
         Vec3D(0.0, 0.0, 0.0),
-        scaled(L0, 0.5),
+        scaled(angularMomentum0, 0.5),
         Vec3D(0.3, -0.2, 0.5),
     };
 
@@ -836,23 +837,23 @@ TEST(TestResetKinetics, resetWithoutScheduledResetLeavesBoxUntouched)
     const resetKinetics::ResetKinetics
         reset(0U, never, 0U, never, 0U, never, 1U);
 
-    const auto velocities = velocitiesOf(*box);
-    const auto T          = data.getTemperature();
-    const auto P          = data.getMomentum();
-    const auto L          = data.getAngularMomentum();
+    const auto velocities      = velocitiesOf(*box);
+    const auto temp            = data.getTemperature();
+    const auto momentum        = data.getMomentum();
+    const auto angularMomentum = data.getAngularMomentum();
 
     reset.reset(7U, data, *box);
 
     EXPECT_EQ(velocitiesOf(*box), velocities);
-    EXPECT_DOUBLE_EQ(data.getTemperature(), T);
+    EXPECT_DOUBLE_EQ(data.getTemperature(), temp);
     expectVec3DNear(
         data.getMomentum() * constants::S_TO_FS,
-        P * constants::S_TO_FS,
+        momentum * constants::S_TO_FS,
         1e-12
     );
     expectVec3DNear(
         data.getAngularMomentum() * constants::S_TO_FS,
-        L * constants::S_TO_FS,
+        angularMomentum * constants::S_TO_FS,
         1e-12
     );
 
@@ -912,11 +913,13 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
     // -> v_i' = lambda * (v_i - v_com)
     const auto after = velocitiesOf(*box);
     for (size_t i = 0; i < before.size(); ++i)
+    {
         expectVec3DNear(
             after[i],
             (before[i] - vCom) * lambda,
             velocityTolerance(*box)
         );
+    }
 
     expectVec3DNear(
         box->calculateMomentum(),
