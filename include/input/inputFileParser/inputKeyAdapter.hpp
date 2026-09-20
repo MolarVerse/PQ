@@ -20,24 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_
-#define _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_
+#ifndef _INPUT_KEY_ADAPTER_HPP_
+#define _INPUT_KEY_ADAPTER_HPP_
 
-#include "forceFieldNonCoulomb.hpp"
-#include "matrix.hpp"
+#include "inputFileParser.hpp"
+#include "inputParam.hpp"
 
-namespace pot
+namespace input
 {
-    class NonCoulombPair;   // forward declaration
-}   // namespace pot
+    [[nodiscard]]
+    InputFileParser::ParseFunc adapt(InputKeyBase &key);
 
-/**
- * @brief struct to hold the non-coulombic pairs matrix
- *
- */
-struct pot::ForceFieldNonCoulomb::matrix
-{
-    linalg::Matrix<std::shared_ptr<NonCoulombPair>> matrix;
-};
+}   // namespace input
 
-#endif   // _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_
+#endif   // _INPUT_KEY_ADAPTER_HPP_

@@ -26,11 +26,9 @@
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class BondType;   // forward declaration
-
-    bool operator==(const BondType &self, const BondType &other);
 
     /**
      * @class BondType
@@ -51,7 +49,7 @@ namespace forceField
        public:
         BondType(BondId, const BondParams &);
 
-        friend bool operator==(const BondType &, const BondType &);
+        friend bool operator==(const BondType &self, const BondType &other);
 
         /***************************
          * standard getter methods *
@@ -61,6 +59,6 @@ namespace forceField
         [[nodiscard]] const BondParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _BOND_TYPE_HPP_

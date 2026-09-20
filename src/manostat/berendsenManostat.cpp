@@ -31,7 +31,7 @@
 #include "simulationBox.hpp"      // for SimulationBox
 #include "timingsSettings.hpp"    // for TimingsSettings
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace settings;
 using namespace manostat;
 using namespace exc;
@@ -195,7 +195,7 @@ tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
                              ? 1.0
                              : (1.0 - (preFactor * (_targetPressure - p_z)));
 
-    linearAlgebra::Vec3D mu;
+    linalg::Vec3D mu;
 
     mu[_2DIsotropicAxes[0]] = mu_xy;
     mu[_2DIsotropicAxes[1]] = mu_xy;

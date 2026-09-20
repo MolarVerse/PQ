@@ -39,21 +39,18 @@ namespace molsys
        public:
         [[nodiscard]] double calculateVolume() override;
 
-        void applyPBC(linearAlgebra::Vec3D &position) const override;
-        void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
+        void applyPBC(linalg::Vec3D &position) const override;
+        void scaleBox(const linalg::tensor3D &scalingTensor) override;
 
-        [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &shiftVector
+        [[nodiscard]] linalg::Vec3D calcShiftVector(
+            const linalg::Vec3D &shiftVector
         ) const override;
 
         [[nodiscard]]
-        linearAlgebra::Vec3D calcBoxDimFromDensity(
-            double totalMass,
-            double density
-        );
+        linalg::Vec3D calcBoxDimFromDensity(double totalMass, double density);
 
-        [[nodiscard]] linearAlgebra::Vec3D wrapPositionIntoBox(
-            const linearAlgebra::Vec3D &pos
+        [[nodiscard]] linalg::Vec3D wrapPositionIntoBox(
+            const linalg::Vec3D &pos
         ) const override;
     };
 

@@ -32,10 +32,10 @@
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
 
-using namespace forceField;
+using namespace ff;
 using namespace molsys;
 using namespace connectivity;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace physicalData;
 using namespace pot;
 using namespace settings;
@@ -107,7 +107,7 @@ void AngleForceField::calculateEnergyAndForces(
 
     physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
-    auto forcexyz = linearAlgebra::Vec3D{0.0, 0.0, 0.0};
+    auto forcexyz = linalg::Vec3D{0.0, 0.0, 0.0};
 
     // Guard against near-collinear angles where division by sin(alpha) is
     // unstable.

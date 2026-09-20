@@ -31,7 +31,7 @@
 using namespace input::parameterFile;
 using namespace exc;
 using namespace engine;
-using namespace forceField;
+using namespace ff;
 
 /**
  * @brief returns the keyword of the bond section

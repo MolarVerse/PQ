@@ -30,7 +30,7 @@
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3d.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     /************************
      *                      *
@@ -1316,6 +1316,6 @@ namespace linearAlgebra
         return ostream << vec[0] << " " << vec[1] << " " << vec[2];
     }
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #endif   // _VECTOR3D_TPP_

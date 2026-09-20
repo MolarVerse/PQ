@@ -26,11 +26,9 @@
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class DihedralType;   // forward declaration
-
-    bool operator==(const DihedralType &, const DihedralType &);
 
     /**
      * @class DihedralType
@@ -51,7 +49,10 @@ namespace forceField
        public:
         DihedralType(DihedralId id, const DihedralParams &params);
 
-        friend bool operator==(const DihedralType &, const DihedralType &);
+        friend bool operator==(
+            const DihedralType &self,
+            const DihedralType &other
+        );
 
         /***************************
          * standard getter methods *
@@ -61,6 +62,6 @@ namespace forceField
         [[nodiscard]] const DihedralParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _DIHEDRAL_TYPE_HPP_

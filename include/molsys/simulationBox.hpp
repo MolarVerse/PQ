@@ -81,7 +81,7 @@ namespace molsys
 
         std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
 
-        linearAlgebra::Vec3D               _centerOfMass = {0.0, 0.0, 0.0};
+        linalg::Vec3D                      _centerOfMass = {0.0, 0.0, 0.0};
         std::vector<std::shared_ptr<Atom>> _atoms;
         std::vector<int>                   _innerRegionCenterAtomIndices;
         std::vector<Molecule>              _molecules;
@@ -118,20 +118,20 @@ namespace molsys
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(double displacement);
 
-        [[nodiscard]] double               calculateTemperature();
-        [[nodiscard]] double               calculateTotalForce() const;
-        [[nodiscard]] linearAlgebra::Vec3D calculateTotalForceVector() const;
-        [[nodiscard]] double               calculateRMSForce() const;
-        [[nodiscard]] double               calculateMaxForce() const;
-        [[nodiscard]] double               calculateRMSForceOld() const;
-        [[nodiscard]] double               calculateMaxForceOld() const;
-        [[nodiscard]] linearAlgebra::Vec3D calculateMomentum();
-        [[nodiscard]] linearAlgebra::Vec3D calculateAngularMomentum(
-            const linearAlgebra::Vec3D&
+        [[nodiscard]] double        calculateTemperature();
+        [[nodiscard]] double        calculateTotalForce() const;
+        [[nodiscard]] linalg::Vec3D calculateTotalForceVector() const;
+        [[nodiscard]] double        calculateRMSForce() const;
+        [[nodiscard]] double        calculateMaxForce() const;
+        [[nodiscard]] double        calculateRMSForceOld() const;
+        [[nodiscard]] double        calculateMaxForceOld() const;
+        [[nodiscard]] linalg::Vec3D calculateMomentum();
+        [[nodiscard]] linalg::Vec3D calculateAngularMomentum(
+            const linalg::Vec3D&
         );
-        [[nodiscard]] linearAlgebra::Vec3D calcBoxDimFromDensity() const;
-        [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D& position
+        [[nodiscard]] linalg::Vec3D calcBoxDimFromDensity() const;
+        [[nodiscard]] linalg::Vec3D calcShiftVector(
+            const linalg::Vec3D& position
         ) const
         {
             return _box->calcShiftVector(position);
@@ -195,7 +195,7 @@ namespace molsys
         [[nodiscard]] double                 getTotalMass() const;
         [[nodiscard]] double                 getTotalCharge() const;
         [[nodiscard]] double                 getDensity() const;
-        [[nodiscard]] linearAlgebra::Vec3D&  getCenterOfMass();
+        [[nodiscard]] linalg::Vec3D&         getCenterOfMass();
         [[nodiscard]] std::vector<int>       getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(size_t index);
@@ -224,13 +224,13 @@ namespace molsys
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
-        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getPositions() const;
-        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getVelocities() const;
-        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getForces() const;
-        [[nodiscard]] std::vector<AtomNumber> getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>     flattenPositions() const;
-        [[nodiscard]] std::set<std::string>   getUniqueQMAtomNames() const;
-        [[nodiscard]] std::vector<double>     getFlattenedQMPositions() const;
+        [[nodiscard]] std::vector<linalg::Vec3D> getPositions() const;
+        [[nodiscard]] std::vector<linalg::Vec3D> getVelocities() const;
+        [[nodiscard]] std::vector<linalg::Vec3D> getForces() const;
+        [[nodiscard]] std::vector<AtomNumber>    getAtomicNumbers() const;
+        [[nodiscard]] std::vector<double>        flattenPositions() const;
+        [[nodiscard]] std::set<std::string>      getUniqueQMAtomNames() const;
+        [[nodiscard]] std::vector<double> getFlattenedQMPositions() const;
 
         /***************************
          * standard setter methods *
@@ -250,8 +250,8 @@ namespace molsys
          * Forwards the box methods to the box object *
          **********************************************/
 
-        void applyPBC(linearAlgebra::Vec3D& position) const;
-        void scaleBox(const linearAlgebra::tensor3D& scalingTensor);
+        void applyPBC(linalg::Vec3D& position) const;
+        void scaleBox(const linalg::tensor3D& scalingTensor);
 
         [[nodiscard]] double calculateVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;
@@ -259,11 +259,11 @@ namespace molsys
 
         [[nodiscard]] bool getBoxSizeHasChanged() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getBoxDimensions() const;
-        [[nodiscard]] linearAlgebra::Vec3D getBoxAngles() const;
+        [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
+        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
 
         void setVolume(double volume) const;
-        void setBoxDimensions(const linearAlgebra::Vec3D& boxDimensions) const;
+        void setBoxDimensions(const linalg::Vec3D& boxDimensions) const;
         void setBoxSizeHasChanged(bool boxSizeHasChanged) const;
     };
 

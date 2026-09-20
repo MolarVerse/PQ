@@ -46,7 +46,7 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
-namespace forceField
+namespace ff
 {
     /**
      * @class DihedralForceField
@@ -94,6 +94,6 @@ namespace forceField
         [[nodiscard]] const DihedralParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _DIHEDRAL_FORCE_FIELD_HPP_

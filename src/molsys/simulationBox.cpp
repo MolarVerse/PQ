@@ -33,7 +33,7 @@
 #include "settings.hpp"                // for Settings
 #include "stlVector.hpp"               // for rms
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace exc;
 using namespace constants;
 using namespace settings;

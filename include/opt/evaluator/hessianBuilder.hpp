@@ -60,8 +60,8 @@ namespace opt
         double _displacement;
 
         static void restorePositions(
-            molsys::SimulationBox                   &simulationBox,
-            const std::vector<linearAlgebra::Vec3D> &positions
+            molsys::SimulationBox            &simulationBox,
+            const std::vector<linalg::Vec3D> &positions
         );
 
        public:

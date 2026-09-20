@@ -49,7 +49,7 @@ using enum molsys::Periodicity;
 using namespace configurator;
 using namespace constants;
 using namespace exc;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace physicalData;
 using namespace settings;
 using namespace molsys;

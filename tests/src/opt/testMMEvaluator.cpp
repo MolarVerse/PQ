@@ -49,7 +49,7 @@ namespace
     void wireUp(MMEvaluator &eval)
     {
         auto box = std::make_shared<SimulationBox>();
-        box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
@@ -58,10 +58,10 @@ namespace
 
         auto atom1 = std::make_shared<Atom>();
         auto atom2 = std::make_shared<Atom>();
-        atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom1->setForce(linearAlgebra::Vec3D(0.5, 0.0, 0.0));
-        atom2->setForce(linearAlgebra::Vec3D(0.0, 0.5, 0.0));
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom1->setForce(linalg::Vec3D(0.5, 0.0, 0.0));
+        atom2->setForce(linalg::Vec3D(0.0, 0.5, 0.0));
         atom1->setMass(1.0);
         atom2->setMass(1.0);
 
@@ -77,7 +77,7 @@ namespace
         eval.setPotential(std::make_shared<pot::PotentialBruteForce>());
         eval.setPhysicalData(std::make_shared<PhysicalData>());
         eval.setPhysicalDataOld(std::make_shared<PhysicalData>());
-        eval.setForceField(std::make_shared<forceField::ForceField>());
+        eval.setForceField(std::make_shared<ff::ForceField>());
         eval.setIntraNonBonded(
 
             std::make_shared<intraNonBonded::IntraNonBonded>()
@@ -120,14 +120,14 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     // We can't reach the box pointer through MMEvaluator's public API, so
     // re-wire a fresh evaluator with a known shared box and check the box.
     auto box = std::make_shared<SimulationBox>();
-    box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+    box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
     auto mol = Molecule();
     mol.setNumberOfAtoms(1);
 
     auto atom = std::make_shared<Atom>();
-    atom->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-    atom->setForce(linearAlgebra::Vec3D(7.0, 7.0, 7.0));
+    atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom->setForce(linalg::Vec3D(7.0, 7.0, 7.0));
     atom->setMass(1.0);
     mol.addAtom(atom);
 
@@ -140,7 +140,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     eval2.setPotential(std::make_shared<pot::PotentialBruteForce>());
     eval2.setPhysicalData(std::make_shared<PhysicalData>());
     eval2.setPhysicalDataOld(std::make_shared<PhysicalData>());
-    eval2.setForceField(std::make_shared<forceField::ForceField>());
+    eval2.setForceField(std::make_shared<ff::ForceField>());
     eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
     eval2.setConstraints(std::make_shared<constraints::Constraints>());
 
@@ -148,8 +148,5 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
 
     eval2.evaluate();
 
-    EXPECT_EQ(
-        box->getAtoms()[0]->getForce(),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0)
-    );
+    EXPECT_EQ(box->getAtoms()[0]->getForce(), linalg::Vec3D(0.0, 0.0, 0.0));
 }

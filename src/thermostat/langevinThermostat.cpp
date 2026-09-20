@@ -38,7 +38,7 @@ using namespace constants;
 using namespace physicalData;
 using namespace molsys;
 using namespace settings;
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @brief Constructor for Langevin Thermostat

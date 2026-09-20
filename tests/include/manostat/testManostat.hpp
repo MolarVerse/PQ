@@ -45,12 +45,12 @@ class TestManostat : public ::testing::Test
         _data     = new physicalData::PhysicalData();
 
         _data->setVolume(2.0);
-        _data->setVirial(diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0)));
+        _data->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)));
         _data->setKineticEnergyMolecularVector(
-            diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0))
+            diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
         );
         _data->setKineticEnergyAtomicVector(
-            diagonalMatrix(linearAlgebra::Vec3D(1.0, 1.0, 1.0))
+            diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0))
         );
 
         _box = new molsys::SimulationBox();

@@ -43,10 +43,10 @@ TEST(TestStressOutput, writeEmitsStepAndAllNineTensorComponents)
     PhysicalData data;
     // Distinct values per row so we can locate them in the output.
     data.setStressTensor(
-        linearAlgebra::tensor3D{
-            linearAlgebra::Vec3D{1.1, 2.2, 3.3},
-            linearAlgebra::Vec3D{4.4, 5.5, 6.6},
-            linearAlgebra::Vec3D{7.7, 8.8, 9.9}
+        linalg::tensor3D{
+            linalg::Vec3D{1.1, 2.2, 3.3},
+            linalg::Vec3D{4.4, 5.5, 6.6},
+            linalg::Vec3D{7.7, 8.8, 9.9}
         }
     );
 

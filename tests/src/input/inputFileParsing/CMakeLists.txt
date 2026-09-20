@@ -24,6 +24,7 @@ set(source_files
     testVirialParser.cpp
 
     testInputParam.cpp
+    testInputKeyAdapter.cpp
 )
 
 foreach(source_file ${source_files})

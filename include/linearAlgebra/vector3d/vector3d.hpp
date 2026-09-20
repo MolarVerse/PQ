@@ -30,7 +30,7 @@
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3dClass.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     /************************
      * comparison operators *
@@ -331,7 +331,7 @@ namespace linearAlgebra
     template <pq::ArithmeticVector3D U>
     std::ostream &operator<<(std::ostream &ostream, const U &vec);
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #ifndef _VECTOR3D_TPP_
 #include "vector3d.tpp.hpp"   // IWYU pragma: export

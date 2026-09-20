@@ -44,8 +44,8 @@ namespace constraints
     class BondConstraint : public connectivity::Bond
     {
        private:
-        double               _targetBondLength;
-        linearAlgebra::Vec3D _shakeDistanceRef;
+        double        _targetBondLength;
+        linalg::Vec3D _shakeDistanceRef;
 
        public:
         BondConstraint(
@@ -74,14 +74,14 @@ namespace constraints
          * standard setter methods *
          ***************************/
 
-        void setShakeDistanceRef(const linearAlgebra::Vec3D &shakeDistanceRef);
+        void setShakeDistanceRef(const linalg::Vec3D &shakeDistanceRef);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double               getTargetBondLength() const;
-        [[nodiscard]] linearAlgebra::Vec3D getShakeDistanceRef() const;
+        [[nodiscard]] double        getTargetBondLength() const;
+        [[nodiscard]] linalg::Vec3D getShakeDistanceRef() const;
     };
 
 }   // namespace constraints

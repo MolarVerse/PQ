@@ -30,7 +30,7 @@
 
 #include "concepts/vector3dConcepts.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     template <typename T>
     using iterator = typename std::array<T, 3>::iterator;
@@ -147,7 +147,7 @@ namespace linearAlgebra
         std::vector<T> toStdVector();
     };
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #ifndef _VECTOR3D_CLASS_TPP_
 #include "vector3dClass.tpp.hpp"   // IWYU pragma: export

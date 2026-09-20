@@ -26,7 +26,7 @@
 
 #include "vector3d.hpp"   // IWYU pragma: keep
 
-namespace linearAlgebra
+namespace linalg
 {
     template <typename T>
     class StaticMatrix3x3;
@@ -77,7 +77,7 @@ namespace linearAlgebra
         StaticMatrix3x3 operator-();
         std::vector<T>  toStdVector() const;
     };
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #ifndef _STATIC_MATRIX_CLASS_3x3_TPP_
 #include "staticMatrix3x3Class.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE

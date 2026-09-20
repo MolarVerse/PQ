@@ -36,7 +36,7 @@ TEST_F(TestIntegrator, integrateVelocities)
     integrator::Integrator::integrateVelocities(_box->getAtoms()[0].get());
     EXPECT_EQ(
         _molecule1->getAtomVelocity(AtomIndex{0}),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0)
     );
     integrator::Integrator::integrateVelocities(_box->getAtoms()[1].get());
 
@@ -67,7 +67,7 @@ TEST_F(TestIntegrator, integratePositions)
     );
     EXPECT_EQ(
         _molecule1->getAtomPosition(AtomIndex{0}),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0)
     );
     integrator::Integrator::integratePositions(
         _box->getAtoms()[1].get(),
@@ -90,11 +90,11 @@ TEST_F(TestIntegrator, firstStep)
     const auto molecule = _box->getMolecules()[0];
     EXPECT_EQ(
         molecule.getAtomVelocity(AtomIndex{0}),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0)
     );
 
-    auto velocities  = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
-    velocities      += 0.1 * linearAlgebra::Vec3D(0.5, 1.5, 2.5) *
+    auto velocities  = linalg::Vec3D(1.0, 2.0, 3.0);
+    velocities      += 0.1 * linalg::Vec3D(0.5, 1.5, 2.5) *
                   constants::V_VERLET_VELOCITY_FACTOR;
 
     const auto vel = molecule.getAtomVelocity(AtomIndex{1});
@@ -111,16 +111,14 @@ TEST_F(TestIntegrator, firstStep)
 
     EXPECT_EQ(
         molecule.getAtomForce(AtomIndex{0}),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0)
     );
     EXPECT_EQ(
         molecule.getAtomForce(AtomIndex{1}),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0)
     );
 
-    EXPECT_TRUE(
-        molecule.getCenterOfMass() != linearAlgebra::Vec3D(0.0, 0.0, 0.0)
-    );
+    EXPECT_TRUE(molecule.getCenterOfMass() != linalg::Vec3D(0.0, 0.0, 0.0));
 }
 
 /**
@@ -134,7 +132,7 @@ TEST_F(TestIntegrator, secondStep)
     const auto molecule = _box->getMolecules()[0];
     EXPECT_EQ(
         molecule.getAtomVelocity(AtomIndex{0}),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0)
     );
 
     const auto vel = molecule.getAtomVelocity(AtomIndex{1});
@@ -157,9 +155,9 @@ TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
     settings::TimingsSettings::setTimeStep(0.2);
 
     auto *atom = _box->getAtoms()[1].get();
-    atom->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    atom->setVelocity(linearAlgebra::Vec3D(2.0, -3.0, 4.0));
-    atom->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom->setVelocity(linalg::Vec3D(2.0, -3.0, 4.0));
+    atom->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
 
     const auto initialPosition = atom->getPosition();
     const auto initialVelocity = atom->getVelocity();

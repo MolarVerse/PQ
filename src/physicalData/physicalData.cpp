@@ -32,7 +32,7 @@
 
 using namespace physicalData;
 using namespace molsys;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace constants;
 
 /**
@@ -41,9 +41,9 @@ using namespace constants;
  *
  * @param virialType - the virial type to get the virial tensor for
  *
- * @return const linearAlgebra::tensor3D&
+ * @return const linalg::tensor3D&
  */
-const linearAlgebra::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
+const linalg::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
     settings::VirialType virialType
 ) const
 {

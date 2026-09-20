@@ -27,7 +27,7 @@
 #include "matrixNear.hpp"
 #include "staticMatrix.hpp"
 
-using namespace linearAlgebra;
+using namespace linalg;
 
 TEST(TestStaticMatrix3x3, unaryMinusOperator)
 {

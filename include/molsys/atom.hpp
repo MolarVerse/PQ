@@ -61,17 +61,17 @@ namespace molsys
         double                _partialCharge;
         std::optional<double> _qmCharge;
 
-        linearAlgebra::Vec3D _position;
-        linearAlgebra::Vec3D _positionOld;
+        linalg::Vec3D _position;
+        linalg::Vec3D _positionOld;
 
-        linearAlgebra::Vec3D _velocity;
-        linearAlgebra::Vec3D _velocityOld;
+        linalg::Vec3D _velocity;
+        linalg::Vec3D _velocityOld;
 
-        linearAlgebra::Vec3D _force;
-        linearAlgebra::Vec3D _forceOld;
-        linearAlgebra::Vec3D _forceInner;
-        linearAlgebra::Vec3D _forceOuter;
-        linearAlgebra::Vec3D _shiftForce;
+        linalg::Vec3D _force;
+        linalg::Vec3D _forceOld;
+        linalg::Vec3D _forceInner;
+        linalg::Vec3D _forceOuter;
+        linalg::Vec3D _shiftForce;
 
        public:
         Atom() = default;
@@ -87,25 +87,25 @@ namespace molsys
          *******************/
 
         void scaleVelocity(double scaleFactor);
-        void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor);
+        void scaleVelocity(const linalg::Vec3D &scaleFactor);
         void scaleVelocityOrthogonalSpace(
-            const linearAlgebra::tensor3D &,
+            const linalg::tensor3D &,
             const Box &
         );
         void scaleForce(double scaleFactor);
-        void scaleForce(const linearAlgebra::Vec3D &scaleFactor);
+        void scaleForce(const linalg::Vec3D &scaleFactor);
 
         /**************************
          * standard adder methods *
          **************************/
 
-        void addPosition(const linearAlgebra::Vec3D &position);
-        void addVelocity(const linearAlgebra::Vec3D &velocity);
-        void addForce(const linearAlgebra::Vec3D &force) { _force += force; }
+        void addPosition(const linalg::Vec3D &position);
+        void addVelocity(const linalg::Vec3D &velocity);
+        void addForce(const linalg::Vec3D &force) { _force += force; }
         void addForce(double, double, double);
-        void addForceInner(const linearAlgebra::Vec3D &force);
-        void addForceOuter(const linearAlgebra::Vec3D &force);
-        void addShiftForce(const linearAlgebra::Vec3D &shiftForce)
+        void addForceInner(const linalg::Vec3D &force);
+        void addForceOuter(const linalg::Vec3D &force);
+        void addShiftForce(const linalg::Vec3D &shiftForce)
         {
             _shiftForce += shiftForce;
         }
@@ -137,17 +137,17 @@ namespace molsys
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
-        [[nodiscard]] const linearAlgebra::Vec3D &getPosition() const
+        [[nodiscard]] const linalg::Vec3D &getPosition() const
         {
             return _position;
         }
-        [[nodiscard]] linearAlgebra::Vec3D getPositionOld() const;
-        [[nodiscard]] linearAlgebra::Vec3D getVelocity() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForce() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForceOld() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForceInner() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForceOuter() const;
-        [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const;
+        [[nodiscard]] linalg::Vec3D getPositionOld() const;
+        [[nodiscard]] linalg::Vec3D getVelocity() const;
+        [[nodiscard]] linalg::Vec3D getForce() const;
+        [[nodiscard]] linalg::Vec3D getForceOld() const;
+        [[nodiscard]] linalg::Vec3D getForceInner() const;
+        [[nodiscard]] linalg::Vec3D getForceOuter() const;
+        [[nodiscard]] linalg::Vec3D getShiftForce() const;
 
         /***************************
          * standard setter methods *
@@ -168,16 +168,16 @@ namespace molsys
         void setExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
         void setInternalGlobalVDWType(VdwType internalGlobalVDWType);
 
-        void setPosition(const linearAlgebra::Vec3D &position);
-        void setVelocity(const linearAlgebra::Vec3D &velocity);
-        void setForce(const linearAlgebra::Vec3D &force);
-        void setForceInner(const linearAlgebra::Vec3D &force);
-        void setForceOuter(const linearAlgebra::Vec3D &force);
-        void setShiftForce(const linearAlgebra::Vec3D &shiftForce);
+        void setPosition(const linalg::Vec3D &position);
+        void setVelocity(const linalg::Vec3D &velocity);
+        void setForce(const linalg::Vec3D &force);
+        void setForceInner(const linalg::Vec3D &force);
+        void setForceOuter(const linalg::Vec3D &force);
+        void setShiftForce(const linalg::Vec3D &shiftForce);
 
-        void setPositionOld(const linearAlgebra::Vec3D &positionOld);
-        void setVelocityOld(const linearAlgebra::Vec3D &velocityOld);
-        void setForceOld(const linearAlgebra::Vec3D &forceOld);
+        void setPositionOld(const linalg::Vec3D &positionOld);
+        void setVelocityOld(const linalg::Vec3D &velocityOld);
+        void setForceOld(const linalg::Vec3D &forceOld);
 
         void setForceToZero();
         void setInnerForceToZero();

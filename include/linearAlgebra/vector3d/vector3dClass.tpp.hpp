@@ -27,7 +27,7 @@
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3dClass.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     /********************
      *                  *
@@ -332,6 +332,6 @@ namespace linearAlgebra
         return std::vector<T>(_xyz.begin(), _xyz.end());
     }
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #endif   // _VECTOR3D_CLASS_TPP_

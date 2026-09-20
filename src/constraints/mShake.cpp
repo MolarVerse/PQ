@@ -38,7 +38,7 @@
 using namespace constants;
 using namespace constraints;
 using namespace kernel;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace settings;
 using namespace molsys;
 

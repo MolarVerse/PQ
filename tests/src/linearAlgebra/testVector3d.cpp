@@ -29,7 +29,7 @@
 // for Message, TestPartResult, AssertionResult
 #include "vector3d.hpp"   // IWYU pragma: keep - for Vec3D, Vec3Di, Vec3Dul, maximum, minimum
 
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @file testVector3d.cpp

@@ -30,23 +30,23 @@
  */
 TEST(TestAngleType, operatorEqual)
 {
-    forceField::AngleType angleType1(
+    ff::AngleType angleType1(
         AngleId{0},
         AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
     );
-    forceField::AngleType angleType2(
+    ff::AngleType angleType2(
         AngleId{0},
         AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
     );
-    forceField::AngleType angleType3(
+    ff::AngleType angleType3(
         AngleId{1},
         AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
     );
-    forceField::AngleType angleType4(
+    ff::AngleType angleType4(
         AngleId{0},
         AngleParams{.equilibrium = 2.0, .forceConstant = 2.0}
     );
-    forceField::AngleType angleType5(
+    ff::AngleType angleType5(
         AngleId{0},
         AngleParams{.equilibrium = 1.0, .forceConstant = 3.0}
     );

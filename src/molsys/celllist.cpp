@@ -38,7 +38,7 @@
 
 using namespace molsys;
 using namespace settings;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace exc;
 
 /**
