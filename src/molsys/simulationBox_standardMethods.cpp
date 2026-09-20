@@ -124,7 +124,7 @@ namespace molsys
      */
     size_t SimulationBox::getNumberOfQMAtoms() const
     {
-        return distance(getQMAtoms());
+        return static_cast<size_t>(distance(getQMAtoms()));
     }
 
     /**
@@ -172,9 +172,9 @@ namespace molsys
      * @brief get the indices of the atoms marking the center of the inner
      * region for hybrid type calculations
      *
-     * @return vector<int>
+     * @return vector<size_t>
      */
-    std::vector<int> SimulationBox::getInnerRegionCenterAtomIndices()
+    std::vector<size_t> SimulationBox::getInnerRegionCenterAtomIndices()
     {
         return _innerRegionCenterAtomIndices;
     }

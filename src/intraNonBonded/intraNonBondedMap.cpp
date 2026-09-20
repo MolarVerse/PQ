@@ -126,7 +126,7 @@ std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
     auto coulombEnergy    = 0.0;
     auto nonCoulombEnergy = 0.0;
 
-    const auto atomIdx2 = static_cast<AtomIndex>(::abs(atomIdx2AsInt));
+    const auto atomIdx2 = AtomIndex{static_cast<size_t>(::abs(atomIdx2AsInt))};
     const bool scale    = atomIdx2AsInt < 0;
 
     const auto &pos1 = _molecule->getAtomPosition(atomIdx1);

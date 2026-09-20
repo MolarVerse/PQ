@@ -54,7 +54,7 @@ namespace manostat
         );
 
         void applyManostat(
-            molsys::SimulationBox      &simBox,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
         ) override;
 

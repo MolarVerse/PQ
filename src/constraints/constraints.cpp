@@ -153,6 +153,8 @@ void Constraints::_applyMShake(SimulationBox &simulationBox)
  *
  * @throws ShakeException if rattle algorithm does not
  * converge
+ *
+ * @param simulationBox the simulation box to apply periodic boundary conditions
  */
 void Constraints::applyRattle(SimulationBox &simulationBox)
 {
@@ -229,13 +231,14 @@ void Constraints::_applyMRattle(SimulationBox &simulationBox)
  * @brief applies the distance constraints to all distance constraints
  *
  * @param simulationBox
- * @param data
+ * @param physicalData the physical data object to update with constraint
+ * energies
  * @param time
  *
  */
 void Constraints::applyDistanceConstraints(
     const SimulationBox        &simulationBox,
-    physicalData::PhysicalData &data,
+    physicalData::PhysicalData &physicalData,
     double                      time
 )
 {
@@ -272,8 +275,8 @@ void Constraints::applyDistanceConstraints(
         { upperEnergy += distanceConstraint.getUpperEnergy(); }
     );
 
-    data.setLowerDistanceConstraints(lowerEnergy);
-    data.setUpperDistanceConstraints(upperEnergy);
+    physicalData.setLowerDistanceConstraints(lowerEnergy);
+    physicalData.setUpperDistanceConstraints(upperEnergy);
 }
 
 /*****************************
@@ -436,11 +439,15 @@ size_t Constraints::getNumberOfBondConstraints() const
 /**
  * @brief returns the number of mShake constraints
  *
+ * @param simulationBox the simulation box to apply periodic boundary conditions
+ *
  * @return the number of mShake constraints
  */
-size_t Constraints::getNumberOfMShakeConstraints(SimulationBox &simBox) const
+size_t Constraints::getNumberOfMShakeConstraints(
+    SimulationBox &simulationBox
+) const
 {
-    return _mShake->calcNumberOfBondConstraints(simBox);
+    return _mShake->calcNumberOfBondConstraints(simulationBox);
 }
 
 /**

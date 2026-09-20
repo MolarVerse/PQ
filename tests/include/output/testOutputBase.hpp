@@ -20,6 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifndef _TEST_OUTPUT_BASE_HPP_
+#define _TEST_OUTPUT_BASE_HPP_
+
 #include <fstream>
 #include <sstream>
 
@@ -36,3 +39,5 @@ inline std::string slurp(const std::string &path)
     stringStream << fileStreamIn.rdbuf();
     return stringStream.str();
 }
+
+#endif   // _TEST_OUTPUT_BASE_HPP_

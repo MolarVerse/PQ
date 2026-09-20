@@ -114,9 +114,9 @@ void Cell::assignMoleculeHybridZoneIndices()
 /**
  * @brief assigns the indices of water molecules in the cell
  *
- * @param simBox
+ * @param simulationBox
  */
-void Cell::assignWaterMoleculeIndices(const SimulationBox &simBox)
+void Cell::assignWaterMoleculeIndices(const SimulationBox &simulationBox)
 {
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
@@ -126,8 +126,9 @@ void Cell::assignWaterMoleculeIndices(const SimulationBox &simBox)
 
     _waterMoleculeIndices.clear();
 
-    const auto nMol           = getNumberOfMolecules();
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto nMol = getNumberOfMolecules();
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
 
     for (size_t mol = 0; mol < nMol; ++mol)
     {

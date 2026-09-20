@@ -124,9 +124,27 @@ void HybridInputParser::parseInnerRegionCenter(
 )
 {
     checkCommand(lineElements, lineNumber);
-    HybridSettings::setInnerRegionCenter(
-        parseSelection(lineElements[2], lineElements[0])
-    );
+    const auto parsedIndices = parseSelection(lineElements[2], lineElements[0]);
+
+    std::vector<size_t> indices;
+
+    for (const auto &index : parsedIndices)
+    {
+        // check if indices are positive
+        if (index <= 0)
+        {
+            throw InputFileException(
+                std::format(
+                    "Invalid atom index \"{}\" in input file\n"
+                    "Atom indices must be positive",
+                    index
+                )
+            );
+        }
+        indices.push_back(static_cast<size_t>(index));
+    }
+
+    HybridSettings::setInnerRegionCenter(indices);
 }
 
 /**

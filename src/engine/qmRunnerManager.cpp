@@ -23,6 +23,7 @@
 #include "qmRunnerManager.hpp"
 
 #include <memory>
+#include <utility>
 
 #include "dftbplusRunner.hpp"    // for DFTBPlusRunner
 #include "exceptions.hpp"        // for InputFileException, CompileTimeException
@@ -79,6 +80,8 @@ shared_ptr<QMRunner> QMRunnerManager::createQMRunner(QMMethod method)
                 "program via \"qm_prog\" provided"
             );
     }
+
+    std::unreachable();
 }
 
 /**

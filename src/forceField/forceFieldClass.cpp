@@ -174,35 +174,36 @@ const JCouplingType &ForceField::findJCouplingTypeById(const size_t id) const
  * 3) dihedrals
  * 4) improper dihedrals
  *
- * @param box
+ * @param simulationBox
  * @param physicalData
  */
 void ForceField::calculateBondedInteractions(
-    const SimulationBox &box,
+    const SimulationBox &simulationBox,
     PhysicalData        &physicalData
 )
 {
-    calculateBondInteractions(box, physicalData);
-    calculateAngleInteractions(box, physicalData);
-    calculateDihedralInteractions(box, physicalData);
-    calculateImproperDihedralInteractions(box, physicalData);
+    calculateBondInteractions(simulationBox, physicalData);
+    calculateAngleInteractions(simulationBox, physicalData);
+    calculateDihedralInteractions(simulationBox, physicalData);
+    calculateImproperDihedralInteractions(simulationBox, physicalData);
 }
 
 /**
  * @brief calculates all bond interactions
  *
- * @param box
+ * @param simulationBox
  * @param physicalData
  */
 void ForceField::calculateBondInteractions(
-    const SimulationBox &box,
+    const SimulationBox &simulationBox,
     PhysicalData        &physicalData
 )
 {
-    auto calculateBondInteraction = [&box, &physicalData, this](auto &bond)
+    auto calculateBondInteraction =
+        [&simulationBox, &physicalData, this](auto &bond)
     {
         bond.calculateEnergyAndForces(
-            box,
+            simulationBox,
             physicalData,
             *_coulombPotential,
             *_nonCoulombPot
@@ -215,18 +216,19 @@ void ForceField::calculateBondInteractions(
 /**
  * @brief calculates all angle interactions
  *
- * @param box
+ * @param simulationBox
  * @param physicalData
  */
 void ForceField::calculateAngleInteractions(
-    const SimulationBox &box,
+    const SimulationBox &simulationBox,
     PhysicalData        &physicalData
 )
 {
-    auto calculateAngleInteraction = [&box, &physicalData, this](auto &angle)
+    auto calculateAngleInteraction =
+        [&simulationBox, &physicalData, this](auto &angle)
     {
         angle.calculateEnergyAndForces(
-            box,
+            simulationBox,
             physicalData,
             *_coulombPotential,
             *_nonCoulombPot
@@ -241,19 +243,19 @@ void ForceField::calculateAngleInteractions(
  *
  * @details set parameter isImproperDihedral to false
  *
- * @param box
+ * @param simulationBox
  * @param physicalData
  */
 void ForceField::calculateDihedralInteractions(
-    const SimulationBox &box,
+    const SimulationBox &simulationBox,
     PhysicalData        &physicalData
 )
 {
     auto calculateDihedralInteraction =
-        [&box, &physicalData, this](auto &dihedral)
+        [&simulationBox, &physicalData, this](auto &dihedral)
     {
         dihedral.calculateEnergyAndForces(
-            box,
+            simulationBox,
             physicalData,
             false,
             *_coulombPotential,
@@ -269,19 +271,19 @@ void ForceField::calculateDihedralInteractions(
  *
  * @details set parameter isImproperDihedral to true
  *
- * @param box
+ * @param simulationBox
  * @param physicalData
  */
 void ForceField::calculateImproperDihedralInteractions(
-    const SimulationBox &box,
+    const SimulationBox &simulationBox,
     PhysicalData        &physicalData
 )
 {
     auto calculateImproperDihedralInteraction =
-        [&box, &physicalData, this](auto &dihedral)
+        [&simulationBox, &physicalData, this](auto &dihedral)
     {
         dihedral.calculateEnergyAndForces(
-            box,
+            simulationBox,
             physicalData,
             true,
             *_coulombPotential,
@@ -300,7 +302,7 @@ void ForceField::calculateImproperDihedralInteractions(
  *
  */
 void ForceField::calculateJCouplingInteractions(
-    const SimulationBox & /*box*/,
+    const SimulationBox & /*simulationBox*/,
     PhysicalData & /*physicalData*/
 )
 {

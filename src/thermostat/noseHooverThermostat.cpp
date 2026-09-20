@@ -66,9 +66,9 @@ NoseHooverThermostat::NoseHooverThermostat(
  * @details the Nose-Hoover thermostat is applied on the forces of the atoms
  * after force calculation
  *
- * @param simBox simulation box
+ * @param simulationBox simulation box
  */
-void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
+void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simulationBox)
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
 
@@ -76,7 +76,7 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
     const auto kT_target         = boltzmannConstant * _targetTemperature;
 
     const auto degreesOfFreedom =
-        static_cast<double>(simBox.getDegreesOfFreedom());
+        static_cast<double>(simulationBox.getDegreesOfFreedom());
     const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
 
     auto factor  = _chi[0] * couplingFreqSquared;
@@ -86,7 +86,7 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
     auto applyNoseHoover = [factor](auto &atom)
     { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
 
-    std::ranges::for_each(simBox.getAtoms(), applyNoseHoover);
+    std::ranges::for_each(simulationBox.getAtoms(), applyNoseHoover);
 }
 
 /**
@@ -95,22 +95,22 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simBox)
  * @details the Nose-Hoover thermostat is applied on the velocities of the atoms
  * after velocity integration
  *
- * @param simBox simulation box
+ * @param simulationBox simulation box
  * @param physicalData physical data
  */
 void NoseHooverThermostat::applyThermostat(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &data
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
-    data.calculateTemperature(simBox);
+    data.calculateTemperature(simulationBox);
 
     _temperature = data.getTemperature();
 
     const auto degreesOfFreedom =
-        static_cast<double>(simBox.getDegreesOfFreedom());
+        static_cast<double>(simulationBox.getDegreesOfFreedom());
     const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
 
     const auto timeStep          = TimingsSettings::getTimeStep();
@@ -197,7 +197,7 @@ double NoseHooverThermostat::getCouplingFrequency() const
  * @param index
  * @param chi
  */
-void NoseHooverThermostat::setChi(unsigned int index, double chi)
+void NoseHooverThermostat::setChi(size_t index, double chi)
 {
     _chi[index] = chi;
 }
@@ -218,7 +218,7 @@ void NoseHooverThermostat::setChi(const std::vector<double> &chi)
  * @param index
  * @param zeta
  */
-void NoseHooverThermostat::setZeta(unsigned int index, double zeta)
+void NoseHooverThermostat::setZeta(size_t index, double zeta)
 {
     _zeta[index] = zeta;
 }

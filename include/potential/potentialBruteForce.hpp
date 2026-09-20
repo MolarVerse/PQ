@@ -40,32 +40,32 @@ namespace pot
         ~PotentialBruteForce() override;
 
         void calculateForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
             molsys::CellList & /*cellList*/
         ) override;
 
         void calculateCoreToOuterForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
             molsys::CellList & /*cellList*/
         ) override;
 
         void calculateLayerToOuterForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
             molsys::CellList & /*cellList*/
         ) override;
 
         void calculateOuterToOuterForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
             molsys::CellList           &cellList
         ) override;
 
         void calculateHotspotSmoothingMMForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
             molsys::CellList & /*cellList*/
         ) override;
 

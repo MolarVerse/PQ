@@ -56,6 +56,11 @@ namespace linalg
     class Vector3D
     {
        private:
+// this is to suppress the pedantic warning for the anonymous struct within the
+// union as Vector3D will be migrated to mstd in the future it will be cleaned
+// up there
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
         union
         {
             std::array<T, 3> _xyz;
@@ -66,6 +71,7 @@ namespace linalg
                 T _z;
             };
         };
+#pragma GCC diagnostic pop
 
        public:
         ~Vector3D() = default;

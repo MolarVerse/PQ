@@ -3,3 +3,4 @@
 - add mentioned issues in PR title or description as a linked issue
 - add 0.5% threshold for test coverage
 - fix CI issue if special characters like backticks are present in PR title
+- make all compiler warnings as errors

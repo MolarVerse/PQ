@@ -47,19 +47,20 @@ PotentialBruteForce::~PotentialBruteForce() = default;
  * @brief calculates forces, coulombic and non-coulombic energy for brute force
  * routine
  *
- * @param simBox
- * @param physData
+ * @param simulationBox
+ * @param physicalData
  */
 void PotentialBruteForce::calculateForces(
-    SimulationBox &simBox,
-    PhysicalData  &physData,
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData,
     CellList & /*cellList*/
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
 
-    const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto box = simulationBox.getBoxPtr();
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
@@ -67,12 +68,12 @@ void PotentialBruteForce::calculateForces(
     double totalNonCoulombEnergy = 0.0;
 
     size_t idxI = 0;
-    for (auto &mol1 : simBox.getMMMolecules())
+    for (auto &mol1 : simulationBox.getMMMolecules())
     {
         const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
         size_t idxJ = 0;
-        for (auto &mol2 : simBox.getMMMolecules())
+        for (auto &mol2 : simulationBox.getMMMolecules())
         {
             // avoid double counting and self interaction
             if (idxJ >= idxI)
@@ -107,38 +108,39 @@ void PotentialBruteForce::calculateForces(
         ++idxI;
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
  * @brief calculates Coulomb forces between core zone molecules and all
  * MM molecules
  *
- * @param simBox simulation box containing molecules
- * @param physData physical data to store energy results
+ * @param simulationBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
  */
 void PotentialBruteForce::calculateCoreToOuterForces(
-    SimulationBox &simBox,
-    PhysicalData  &physData,
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData,
     CellList & /*cellList*/
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
 
-    const auto box = simBox.getBoxPtr();
+    const auto box = simulationBox.getBoxPtr();
 
     double totalCoulombEnergy = 0.0;
 
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
-    for (auto &mol1 : simBox.getMoleculesInsideZone(CORE))
+    for (auto &mol1 : simulationBox.getMoleculesInsideZone(CORE))
     {
         const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
-        for (auto &mol2 : simBox.getMMMolecules())
+        for (auto &mol2 : simulationBox.getMMMolecules())
         {
             if (isWaterInterModelSet && isMol1Water &&
                 mol2.getMoltype() == waterTypeValue)
@@ -154,39 +156,40 @@ void PotentialBruteForce::calculateCoreToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
 }
 
 /**
  * @brief calculates forces between layer and outer molecules
  *
- * @param simBox simulation box containing molecules
- * @param physData physical data to store energy results
+ * @param simulationBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
  */
 void PotentialBruteForce::calculateLayerToOuterForces(
-    SimulationBox &simBox,
-    PhysicalData  &physData,
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData,
     CellList & /*cellList*/
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
 
-    const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto box = simulationBox.getBoxPtr();
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    for (auto &mol1 : simBox.getInactiveMolecules())
+    for (auto &mol1 : simulationBox.getInactiveMolecules())
     {
         if (mol1.getHybridZone() == CORE)
             continue;
 
         const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
-        for (auto &mol2 : simBox.getMMMolecules())
+        for (auto &mol2 : simulationBox.getMMMolecules())
         {
             if (isWaterInterModelSet && isMol1Water &&
                 mol2.getMoltype() == waterTypeValue)
@@ -211,53 +214,54 @@ void PotentialBruteForce::calculateLayerToOuterForces(
             }
         }
     }
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
  * @brief calculates forces between outer-zone molecules
  *
- * @param simBox simulation box containing molecules
- * @param physData physical data to store energy results
+ * @param simulationBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
  * @param cellList cell list (unused in brute force approach)
  */
 void PotentialBruteForce::calculateOuterToOuterForces(
-    SimulationBox &simBox,
-    PhysicalData  &physData,
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
-    calculateForces(simBox, physData, cellList);
+    calculateForces(simulationBox, physicalData, cellList);
 }
 
 /**
  * @brief calculates forces between smoothing-zone molecules and all others
  *
- * @param simBox simulation box containing molecules
- * @param physData physical data to store energy results
+ * @param simulationBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
  */
 void PotentialBruteForce::calculateHotspotSmoothingMMForces(
-    SimulationBox &simBox,
-    PhysicalData  &physData,
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData,
     CellList & /*cellList*/
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
 
-    const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto box = simulationBox.getBoxPtr();
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
     double totalCoulombEnergy    = 0.0;
     double totalNonCoulombEnergy = 0.0;
 
-    for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
+    for (auto &mol1 : simulationBox.getMoleculesInsideZone(SMOOTHING))
     {
         const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
-        for (auto &mol2 : simBox.getMoleculesOutsideZone(SMOOTHING))
+        for (auto &mol2 : simulationBox.getMoleculesOutsideZone(SMOOTHING))
         {
             if (isWaterInterModelSet && isMol1Water &&
                 mol2.getMoltype() == waterTypeValue)
@@ -297,12 +301,12 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
     }
 
     size_t idxI = 0;
-    for (auto &mol1 : simBox.getMoleculesInsideZone(SMOOTHING))
+    for (auto &mol1 : simulationBox.getMoleculesInsideZone(SMOOTHING))
     {
         const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
         size_t idxJ = 0;
-        for (auto &mol2 : simBox.getMoleculesInsideZone(SMOOTHING))
+        for (auto &mol2 : simulationBox.getMoleculesInsideZone(SMOOTHING))
         {
             if (idxI == idxJ)
             {
@@ -335,8 +339,8 @@ void PotentialBruteForce::calculateHotspotSmoothingMMForces(
         ++idxI;
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**

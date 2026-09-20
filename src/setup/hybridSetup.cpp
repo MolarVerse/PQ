@@ -130,7 +130,7 @@ void HybridSetup::setupInnerRegionCenter()
     const auto innerRegionCenter = HybridSettings::getInnerRegionCenter();
 
     _engine.getSimulationBox().addInnerRegionCenterAtoms(
-        innerRegionCenter ? innerRegionCenter.value() : std::vector<int>{0}
+        innerRegionCenter ? innerRegionCenter.value() : std::vector<size_t>{0}
     );
 }
 
@@ -284,7 +284,7 @@ void HybridSetup::setupWriteInfo() const
     const auto innerRegionCenterSettings =
         HybridSettings::getInnerRegionCenter();
     const auto innerRegionCenter =
-        innerRegionCenterSettings.value_or(std::vector<int>{0});
+        innerRegionCenterSettings.value_or(std::vector<size_t>{0});
     const auto forcedCoreList  = HybridSettings::getForcedCoreList();
     const auto forcedOuterList = HybridSettings::getForcedOuterList();
     const auto useQMCharges    = HybridSettings::getUseQMCharges();
@@ -294,7 +294,7 @@ void HybridSetup::setupWriteInfo() const
         HybridSettings::getSmoothingRegionThickness();
     const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
 
-    const auto formatIndexList = [](const std::vector<int> &indices)
+    const auto formatIndexList = []<typename T>(const std::vector<T> &indices)
     {
         if (indices.empty())
             return std::string("none");

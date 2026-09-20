@@ -133,12 +133,12 @@ namespace
  * velocities and forces are not used and also not read from the file
  *
  * @param lineElements
- * @param simBox
+ * @param simulationBox
  * @param molecule
  */
 void AtomSection::_processAtomLine(
     std::vector<std::string> &lineElements,
-    SimulationBox            &simBox,
+    SimulationBox            &simulationBox,
     Molecule                 &molecule
 )
 {
@@ -148,7 +148,7 @@ void AtomSection::_processAtomLine(
 
     setAtomPropertyVectors(lineElements, atom);
 
-    simBox.addAtom(atom);
+    simulationBox.addAtom(atom);
     molecule.addAtom(atom);
 }
 
@@ -158,11 +158,11 @@ void AtomSection::_processAtomLine(
  * @details for details how the line looks like see processAtomLine
  *
  * @param lineElements
- * @param simBox
+ * @param simulationBox
  */
 void AtomSection::_processQMAtomLine(
     std::vector<std::string> &lineElements,
-    SimulationBox            &simBox
+    SimulationBox            &simulationBox
 )
 {
     auto       atom     = std::make_shared<Atom>();
@@ -178,8 +178,8 @@ void AtomSection::_processQMAtomLine(
 
     molecule->addAtom(atom);
 
-    simBox.addAtom(atom);
-    simBox.addMolecule(*molecule);
+    simulationBox.addAtom(atom);
+    simulationBox.addMolecule(*molecule);
 }
 
 /**
@@ -202,7 +202,7 @@ void AtomSection::process(
     Engine                   &engine
 )
 {
-    auto &simBox = engine.getSimulationBox();
+    auto &simulationBox = engine.getSimulationBox();
 
     checkNumberOfLineArguments(lineElements);
 
@@ -214,7 +214,7 @@ void AtomSection::process(
 
     if (MolType{0} == moltype)
     {
-        _processQMAtomLine(lineElements, simBox);
+        _processQMAtomLine(lineElements, simulationBox);
         return;
     }
 
@@ -223,7 +223,7 @@ void AtomSection::process(
     try
     {
         // clang-format off
-        moleculeType = make_unique<MoleculeType>(simBox.findMoleculeType(moltype));
+        moleculeType = make_unique<MoleculeType>(simulationBox.findMoleculeType(moltype));
         // clang-format on
     }
     catch (const RstFileException &e)
@@ -261,7 +261,7 @@ void AtomSection::process(
             );
         }
 
-        _processAtomLine(lineElements, simBox, *molecule);
+        _processAtomLine(lineElements, simulationBox, *molecule);
 
         ++atomCounter;
 
@@ -286,7 +286,7 @@ void AtomSection::process(
         ++_lineNumber;
     }
 
-    simBox.addMolecule(*molecule);
+    simulationBox.addMolecule(*molecule);
 }
 
 /**

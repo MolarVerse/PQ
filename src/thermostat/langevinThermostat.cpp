@@ -112,9 +112,9 @@ void LangevinThermostat::calculateSigma(
  * @details calculates the friction and random factor for each atom and applies
  * the Langevin thermostat to the velocities
  *
- * @param simBox
+ * @param simulationBox
  */
-void LangevinThermostat::applyLangevin(SimulationBox &simBox)
+void LangevinThermostat::applyLangevin(SimulationBox &simulationBox)
 {
     auto applyFriction = [this](auto &atom)
     {
@@ -138,24 +138,24 @@ void LangevinThermostat::applyLangevin(SimulationBox &simBox)
         atom->addVelocity(deltaVelocity);
     };
 
-    std::ranges::for_each(simBox.getAtoms(), applyFriction);
+    std::ranges::for_each(simulationBox.getAtoms(), applyFriction);
 }
 
 /**
  * @brief apply thermostat - Langevin
  *
- * @param simBox
- * @param data
+ * @param simulationBox
+ * @param physicalData
  */
 void LangevinThermostat::applyThermostat(
-    SimulationBox &simBox,
-    PhysicalData  &data
+    SimulationBox &simulationBox,
+    PhysicalData  &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "LangevinThermostat - Full Step");
 
-    applyLangevin(simBox);
-    data.calculateTemperature(simBox);
+    applyLangevin(simulationBox);
+    physicalData.calculateTemperature(simulationBox);
 }
 
 /**
@@ -163,14 +163,16 @@ void LangevinThermostat::applyThermostat(
  *
  * @note no temperature calculation
  *
- * @param simBox
+ * @param simulationBox
  */
-void LangevinThermostat::
-    applyThermostatHalfStep(SimulationBox &simBox, PhysicalData & /*data*/)
+void LangevinThermostat::applyThermostatHalfStep(
+    SimulationBox &simulationBox,
+    PhysicalData & /*physicalData*/
+)
 {
     auto _ = scopedTimer(TimerId::Thermostat, "LangevinThermostat - Half Step");
 
-    applyLangevin(simBox);
+    applyLangevin(simulationBox);
 }
 
 /***************************

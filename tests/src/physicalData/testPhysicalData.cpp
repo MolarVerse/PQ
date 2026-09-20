@@ -168,7 +168,8 @@ TEST_F(TestPhysicalData, calculateTemperature)
 
     EXPECT_NEAR(
         _physicalData->getTemperature(),
-        sum(kineticEnergyAtomicVector) * constants::TEMPERATURE_FACTOR / (nDOF),
+        sum(kineticEnergyAtomicVector) * constants::TEMPERATURE_FACTOR /
+            static_cast<double>(nDOF),
         1e-15
     );
 }

@@ -71,7 +71,7 @@ namespace QM
         ~ExternalQMRunner() override = default;
 
         void run(
-            molsys::SimulationBox      &simBox,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             molsys::Periodicity         per
         ) override;
@@ -105,10 +105,10 @@ namespace QM
 
        private:
         static void _readForceFile(
-            molsys::SimulationBox      &box,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
         );
-        static void _readChargeFile(molsys::SimulationBox &box);
+        static void _readChargeFile(molsys::SimulationBox &simulationBox);
 
         friend class ::ExternalQMRunnerTest;   // for testing private methods
     };

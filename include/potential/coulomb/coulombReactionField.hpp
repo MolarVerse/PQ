@@ -42,19 +42,10 @@ namespace pot
     class CoulombReactionField : public CoulombPotential
     {
        private:
-        double _epsilon{};
         double _rfPrefactor{};
 
        public:
-        CoulombReactionField(
-            const double coulombRadiusCutOff,
-            const double epsilon
-        )
-            : CoulombPotential{coulombRadiusCutOff},
-              _epsilon{epsilon},
-              _rfPrefactor{(epsilon - 1) / (2.0 * epsilon + 1)}
-        {
-        }
+        CoulombReactionField(double coulombRadiusCutOff, double epsilon);
 
         [[nodiscard]]
         std::pair<double, double> calculate(

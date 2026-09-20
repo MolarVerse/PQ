@@ -164,9 +164,12 @@ size_t Optimizer::getHistoryIndex(int offset) const
         );
 
     const auto size  = _energyHistory.size();
-    const auto index = size + offset;
+    const auto index = static_cast<int>(size) + offset;
 
-    return index;
+    if (index < 0 || index >= static_cast<int>(size))
+        throw OptException("History index out of bounds");
+
+    return static_cast<size_t>(index);
 }
 
 /**
