@@ -99,6 +99,9 @@ void EnergyOutput::write(size_t step, const PhysicalData &data)
     {
         _fp << std::format("{:20.12f}\t", data.getVolume());
         _fp << std::format("{:20.12f}\t", data.getDensity());
+
+        if (ManostatSettings::getFixedAxis() != FixedAxis::NONE)
+            _fp << std::format("{:20.12f}\t", data.getCoupledPressure());
     }
 
     if (ThermostatSettings::getThermostatType() == ThermostatType::NOSE_HOOVER)
