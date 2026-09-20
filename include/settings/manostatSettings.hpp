@@ -79,20 +79,6 @@ namespace settings
 
 #undef FIXED_AXIS_LIST
 
-    [[nodiscard]] constexpr FixedAxis operator~(FixedAxis axis)
-    {
-        return static_cast<FixedAxis>(
-            static_cast<std::uint8_t>(axis) ^
-            static_cast<std::uint8_t>(FixedAxis::ALL)
-        );
-    }
-
-    constexpr FixedAxis &operator&=(FixedAxis &lhs, FixedAxis rhs)
-    {
-        lhs = lhs & rhs;
-        return lhs;
-    }
-
     [[nodiscard]] constexpr bool isAxisFixed(
         FixedAxis fixedAxis,
         size_t    axisIndex
