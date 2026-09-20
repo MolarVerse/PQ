@@ -33,7 +33,6 @@ using namespace input::parameterFile;
 using namespace engine;
 using namespace exc;
 using namespace ff;
-using namespace constants;
 
 /**
  * @brief returns the keyword of the improper dihedral section

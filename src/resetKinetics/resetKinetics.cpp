@@ -40,7 +40,7 @@ using namespace resetKinetics;
 using namespace linalg;
 using namespace physicalData;
 using namespace molsys;
-using namespace constants;
+
 using namespace exc;
 using namespace settings;
 using namespace utilities;

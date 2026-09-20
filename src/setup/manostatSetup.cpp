@@ -38,7 +38,7 @@ using namespace setup;
 using namespace engine;
 using namespace settings;
 using namespace manostat;
-using namespace constants;
+
 using namespace exc;
 
 /**

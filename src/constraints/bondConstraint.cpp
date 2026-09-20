@@ -36,7 +36,6 @@ using namespace molsys;
 using namespace linalg;
 using namespace kernel;
 using namespace settings;
-using namespace constants;
 
 /**
  * @brief Constructor

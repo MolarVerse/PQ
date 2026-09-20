@@ -81,7 +81,7 @@ TEST_F(TestBondConstraint, applyShake)
         linalg::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
     );
 
-    const auto expectedDeltaVel = dPos / (timestep * constants::FS_TO_S);
+    const auto expectedDeltaVel = dPos / (timestep * FS_TO_S);
     EXPECT_EQ(
         mol.getAtomVelocity(AtomIndex{0}),
         linalg::Vec3D(0.0, 0.0, 0.0) + expectedDeltaVel

@@ -33,7 +33,6 @@
 using namespace physicalData;
 using namespace molsys;
 using namespace linalg;
-using namespace constants;
 
 /**
  * @brief get the virial tensor, either atomic or molecular depending on the

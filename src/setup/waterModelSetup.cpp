@@ -44,7 +44,6 @@
 #include "settings.hpp"
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 
-using namespace constants;
 using namespace constraints;
 using namespace exc;
 using namespace engine;

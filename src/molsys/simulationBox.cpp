@@ -35,7 +35,7 @@
 
 using namespace linalg;
 using namespace exc;
-using namespace constants;
+
 using namespace settings;
 using namespace randomNumberGenerator;
 

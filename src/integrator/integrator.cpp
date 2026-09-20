@@ -31,7 +31,6 @@
 using namespace integrator;
 using namespace molsys;
 using namespace settings;
-using namespace constants;
 
 /**
  * @brief Construct a new Integrator:: Integrator object

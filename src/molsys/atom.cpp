@@ -31,7 +31,7 @@
 
 using namespace molsys;
 using namespace utilities;
-using namespace constants;
+
 using namespace exc;
 using namespace linalg;
 using namespace settings;

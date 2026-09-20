@@ -49,7 +49,6 @@ using namespace molsys;
 using namespace physicalData;
 using namespace exc;
 using namespace settings;
-using namespace constants;
 
 /**
  * @brief reads the force file (including qm energy) and sets the forces of

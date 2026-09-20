@@ -40,7 +40,7 @@
 
 using maxwellBoltzmann::MaxwellBoltzmann;
 using namespace molsys;
-using namespace constants;
+
 using namespace settings;
 using namespace resetKinetics;
 

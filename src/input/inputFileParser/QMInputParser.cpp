@@ -41,7 +41,6 @@ using namespace utilities;
 using namespace settings;
 using namespace exc;
 using namespace references;
-using namespace constants;
 
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object

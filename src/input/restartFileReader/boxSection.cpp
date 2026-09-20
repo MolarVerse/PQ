@@ -112,7 +112,7 @@ void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
     if (!compare(
             boxAngles,
             Vec3D{defaultAngle, defaultAngle, defaultAngle},
-            constants::TRICLINIC_BOX_ANGLE_THRESHOLD
+            TRICLINIC_BOX_ANGLE_THRESHOLD
         ))
     {
         auto box = TriclinicBox();

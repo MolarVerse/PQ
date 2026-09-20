@@ -82,9 +82,9 @@ TEST(TestTriclinicBox, setBoxAngles)
 
     box.setBoxAngles({30.0, 60.0, 45.0});
 
-    const auto alpha = 30.0 * constants::DEG_TO_RAD;
-    const auto beta  = 60.0 * constants::DEG_TO_RAD;
-    const auto gamma = 45.0 * constants::DEG_TO_RAD;
+    const auto alpha = 30.0 * DEG_TO_RAD;
+    const auto beta  = 60.0 * DEG_TO_RAD;
+    const auto gamma = 45.0 * DEG_TO_RAD;
 
     EXPECT_MATRIX_NEAR(
         box.getTransformationMatrix(),
@@ -117,9 +117,9 @@ TEST(TestTriclinicBox, calculateVolume)
     box.setBoxDimensions({1.0, 2.0, 3.0});
     box.setBoxAngles({30.0, 60.0, 45.0});
 
-    const auto alpha = 30.0 * constants::DEG_TO_RAD;
-    const auto beta  = 60.0 * constants::DEG_TO_RAD;
-    const auto gamma = 45.0 * constants::DEG_TO_RAD;
+    const auto alpha = 30.0 * DEG_TO_RAD;
+    const auto beta  = 60.0 * DEG_TO_RAD;
+    const auto gamma = 45.0 * DEG_TO_RAD;
 
     const auto volume =
         1.0 * 2.0 * 3.0 *
@@ -206,12 +206,12 @@ TEST(TestTriclinicBox, transformsRoundTrip)
         tensor,
         1.0e-12
     );
-    EXPECT_NEAR(box.cosAlpha(), std::cos(80.0 * constants::DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.cosBeta(), std::cos(75.0 * constants::DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.cosGamma(), std::cos(70.0 * constants::DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.sinAlpha(), std::sin(80.0 * constants::DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.sinBeta(), std::sin(75.0 * constants::DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.sinGamma(), std::sin(70.0 * constants::DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.cosAlpha(), std::cos(80.0 * DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.cosBeta(), std::cos(75.0 * DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.cosGamma(), std::cos(70.0 * DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.sinAlpha(), std::sin(80.0 * DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.sinBeta(), std::sin(75.0 * DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(box.sinGamma(), std::sin(70.0 * DEG_TO_RAD), 1e-15);
     EXPECT_GT(box.getMinimalBoxDimension(), 0.0);
 }
 

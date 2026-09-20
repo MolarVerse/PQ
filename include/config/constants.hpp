@@ -28,13 +28,8 @@
 #include "constants/internalConversionFactors.hpp"   // IWYU pragma: export
 #include "constants/natureConstants.hpp"             // IWYU pragma: export
 
-namespace constants
-{
-    constexpr auto COLINEAR_SINALPHA_THRESHOLD = 1.0e-10;
-
-    constexpr auto GUFF_DAT_COULOMB_PREFACTOR_THRESHOLD = 1.0e-6;
-
-    constexpr auto TRICLINIC_BOX_ANGLE_THRESHOLD = 1.0e-5;
-}   // namespace constants
+constexpr auto COLINEAR_SINALPHA_THRESHOLD          = 1.0e-10;
+constexpr auto GUFF_DAT_COULOMB_PREFACTOR_THRESHOLD = 1.0e-6;
+constexpr auto TRICLINIC_BOX_ANGLE_THRESHOLD        = 1.0e-5;
 
 #endif   // _CONSTANTS_HPP_
