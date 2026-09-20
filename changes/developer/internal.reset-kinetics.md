@@ -1,0 +1,1 @@
+- rework `ResetKinetics` internal `temperature`, `momentum` and `angularMomentum` state handling

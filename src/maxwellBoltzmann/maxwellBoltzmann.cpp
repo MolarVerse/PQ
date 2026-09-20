@@ -90,9 +90,10 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
     std::ranges::for_each(simBox.getAtoms(), generateVelocities);
 #endif
 
-    auto resetKinetics = ResetKinetics();
-    resetKinetics.setMomentum(simBox.calculateMomentum());
-    resetKinetics.resetMomentum(simBox);
-    resetKinetics.resetAngularMomentum(simBox);
-    resetKinetics.resetTemperature(simBox);
+    ResetKinetics::resetMomentum(simBox, simBox.calculateMomentum());
+    ResetKinetics::resetAngularMomentum(
+        simBox,
+        simBox.calculateAngularMomentum(simBox.calculateMomentum())
+    );
+    ResetKinetics::resetTemperature(simBox, simBox.calculateTemperature());
 }

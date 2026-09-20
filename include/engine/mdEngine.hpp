@@ -49,7 +49,7 @@ namespace engine
     class MDEngine : public Engine
     {
        protected:
-        resetKinetics::ResetKinetics     _resetKinetics;
+        resetKinetics::ResetKinetics     _resetKinetics{};
         configurator::HybridConfigurator _configurator{};
 
         std::unique_ptr<integrator::Integrator> _integrator;
