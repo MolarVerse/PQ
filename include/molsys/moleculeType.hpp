@@ -43,10 +43,10 @@ namespace molsys
        private:
         std::string _name;
 
-        MolType _moltype;
-        size_t  _numberOfAtoms;
+        MolType               _moltype;
+        std::optional<size_t> _numberOfAtoms;
 
-        int _charge;
+        int _charge = 0;
 
         std::vector<std::string> _atomNames;
         std::vector<AtomType>    _atomTypes;

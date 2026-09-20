@@ -26,6 +26,7 @@
 
 #include <gtest/gtest.h>   // for Test
 
+#include <memory>
 #include <string>   // for allocator
 
 #include "fileSettings.hpp"     // for FileSettings
@@ -47,11 +48,16 @@ class TestTopologyReader : public ::testing::Test
 
     void SetUp() override
     {
-        auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(1);
+        molsys::Molecule molecule1;
+        molsys::Molecule molecule2;
 
-        auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(2);
+        molsys::Atom atom1_1;
+        molsys::Atom atom2_1;
+        molsys::Atom atom2_2;
+
+        molecule1.addAtom(std::make_shared<molsys::Atom>(atom1_1));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_1));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_2));
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine

@@ -43,7 +43,6 @@ namespace
     {
         auto *box      = new molsys::SimulationBox();
         auto  molecule = molsys::Molecule();
-        molecule.setNumberOfAtoms(2);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
@@ -53,17 +52,14 @@ namespace
         atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
         atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule.setMolMass(2.0);
         molecule.addAtom(atom1);
         molecule.addAtom(atom2);
 
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(1);
-        auto atom3 = std::make_shared<molsys::Atom>();
+        auto atom3     = std::make_shared<molsys::Atom>();
         atom3->setMass(1.0);
         atom3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.setMolMass(1.0);
         molecule2.addAtom(atom3);
 
         box->addMolecule(molecule);

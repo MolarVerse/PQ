@@ -51,7 +51,6 @@ namespace
 
         molsys::Molecule molecule;
         molecule.setMoltype(molType);
-        molecule.setNumberOfAtoms(1);
         molecule.addAtom(atom);
 
         engine.getSimulationBox().addAtom(atom);

@@ -37,7 +37,6 @@ class TestMolecule : public ::testing::Test
     void SetUp() override
     {
         _molecule = new molsys::Molecule();
-        _molecule->setNumberOfAtoms(3);
 
         auto _atom1 = std::make_shared<molsys::Atom>();
         auto _atom2 = std::make_shared<molsys::Atom>();
@@ -62,8 +61,6 @@ class TestMolecule : public ::testing::Test
         _atom1->setMass(1.0);
         _atom2->setMass(2.0);
         _atom3->setMass(3.0);
-
-        _molecule->setMolMass(6.0);
 
         _molecule->addAtom(_atom1);
         _molecule->addAtom(_atom2);

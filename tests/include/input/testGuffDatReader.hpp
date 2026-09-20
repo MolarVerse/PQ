@@ -80,7 +80,6 @@ class TestGuffDatReader : public ::testing::Test
         moleculeType2.addAtomType(AtomType{0});
 
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(2);
         molecule1.setMoltype(MolType{1});
 
         auto atom1 = std::make_shared<molsys::Atom>();

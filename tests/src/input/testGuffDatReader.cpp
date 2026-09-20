@@ -622,10 +622,6 @@ TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
     molsys::MoleculeType moleculeType2(MolType{2});
     molsys::MoleculeType moleculeType3(MolType{3});
 
-    molecule1.setNumberOfAtoms(2);
-    molecule2.setNumberOfAtoms(1);
-    molecule2.setNumberOfAtoms(3);
-
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();

@@ -308,7 +308,6 @@ TEST_F(TestCellList, updateCellList)
     settings::Settings::activateCellList();
 
     auto molecule = molsys::Molecule();
-    molecule.setNumberOfAtoms(2);
 
     const auto atom1 = std::make_shared<molsys::Atom>();
     const auto atom2 = std::make_shared<molsys::Atom>();

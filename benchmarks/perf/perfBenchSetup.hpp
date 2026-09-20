@@ -86,9 +86,7 @@ namespace benchSetup
     {
         auto molecule = molsys::Molecule();
         molecule.setMoltype(MolType{1});
-        molecule.setNumberOfAtoms(params.nAtoms);
 
-        double molMass = 0.0;
         for (std::size_t i = 0; i < params.nAtoms; ++i)
         {
             auto atom = std::make_shared<molsys::Atom>();
@@ -114,9 +112,7 @@ namespace benchSetup
             atom->setPartialCharge((i % 2 == 0) ? 0.4 : -0.4);
 
             molecule.addAtom(atom);
-            molMass += 12.0;
         }
-        molecule.setMolMass(molMass);
 
         return molecule;
     }

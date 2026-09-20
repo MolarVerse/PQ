@@ -189,7 +189,13 @@ void MoleculeType::setPartialCharges(const std::vector<double> &partialCharges)
  *
  * @return size_t
  */
-size_t MoleculeType::getNumberOfAtoms() const { return _numberOfAtoms; }
+size_t MoleculeType::getNumberOfAtoms() const
+{
+    if (_numberOfAtoms.has_value())
+        return _numberOfAtoms.value();
+
+    throw std::runtime_error("Number of atoms is not set for this molecule.");
+}
 
 /**
  * @brief get the moltype of the molecule

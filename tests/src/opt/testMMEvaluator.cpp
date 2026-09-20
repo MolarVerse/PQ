@@ -54,7 +54,6 @@ namespace
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
         auto mol = Molecule();
-        mol.setNumberOfAtoms(2);
 
         auto atom1 = std::make_shared<Atom>();
         auto atom2 = std::make_shared<Atom>();
@@ -123,7 +122,6 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
     auto mol = Molecule();
-    mol.setNumberOfAtoms(1);
 
     auto atom = std::make_shared<Atom>();
     atom->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));

@@ -169,7 +169,6 @@ void AtomSection::_processQMAtomLine(
     const auto molecule = std::make_unique<Molecule>(MolType{0});
 
     molecule->setName("QM");
-    molecule->setNumberOfAtoms(1);
 
     atom->setAtomTypeName(lineElements[0]);
     atom->setName(lineElements[0]);
@@ -237,7 +236,6 @@ void AtomSection::process(
 
     auto molecule = make_unique<Molecule>(moleculeType->getMoltype());
 
-    molecule->setNumberOfAtoms(moleculeType->getNumberOfAtoms());
     molecule->setName(moleculeType->getName());
     molecule->setCharge(moleculeType->getCharge());
 

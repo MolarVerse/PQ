@@ -164,7 +164,6 @@ TEST_F(TestMolecule, getNumberOfAtomTypes)
 TEST_F(TestMolecule, getNumberOfAtomTypesCountsNonAdjacentDuplicates)
 {
     auto molecule = molsys::Molecule();
-    molecule.setNumberOfAtoms(3);
 
     const auto atom1 = std::make_shared<molsys::Atom>();
     const auto atom2 = std::make_shared<molsys::Atom>();

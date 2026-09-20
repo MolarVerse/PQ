@@ -64,9 +64,6 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         const auto atom1_2 = std::make_shared<molsys::Atom>();
         const auto atom2_2 = std::make_shared<molsys::Atom>();
 
-        molecule1_1.setNumberOfAtoms(2);
-        molecule1_2.setNumberOfAtoms(2);
-
         atom1_1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom2_1->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         atom1_1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -100,9 +97,6 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
 
         const auto atom3_1 = std::make_shared<molsys::Atom>();
         const auto atom3_2 = std::make_shared<molsys::Atom>();
-
-        molecule2_1.setNumberOfAtoms(1);
-        molecule2_2.setNumberOfAtoms(1);
 
         atom3_1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom3_1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
