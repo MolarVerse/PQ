@@ -61,8 +61,8 @@ namespace out
      * @param step
      */
     void RingPolymerTrajectoryOutput::writeXyz(
-        std::vector<molsys::SimulationBox> &beads,
-        size_t                              step
+        const std::vector<molsys::SimulationBox> &beads,
+        size_t                                    step
     )
     {
         std::ostringstream buffer;
@@ -105,8 +105,8 @@ namespace out
      * @param step
      */
     void RingPolymerTrajectoryOutput::writeVelocities(
-        std::vector<molsys::SimulationBox> &beads,
-        size_t                              step
+        const std::vector<molsys::SimulationBox> &beads,
+        size_t                                    step
     )
     {
         std::ostringstream buffer;
@@ -150,8 +150,8 @@ namespace out
      * @param step
      */
     void RingPolymerTrajectoryOutput::writeForces(
-        std::vector<molsys::SimulationBox> &beads,
-        size_t                              step
+        const std::vector<molsys::SimulationBox> &beads,
+        size_t                                    step
     )
     {
         std::ostringstream buffer;
@@ -203,8 +203,8 @@ namespace out
      * @param step
      */
     void RingPolymerTrajectoryOutput::writeCharges(
-        std::vector<molsys::SimulationBox> &beads,
-        size_t                              step
+        const std::vector<molsys::SimulationBox> &beads,
+        size_t                                    step
     )
     {
         std::ostringstream buffer;
