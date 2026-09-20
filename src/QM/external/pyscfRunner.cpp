@@ -40,16 +40,16 @@ using namespace utilities;
 /**
  * @brief writes the coords file in order to run the external qm program
  *
- * @param box
+ * @param simulationBox Simulation box containing molecules and atoms.
  */
-void PySCFRunner::writeCoordsFile(SimulationBox &box)
+void PySCFRunner::writeCoordsFile(SimulationBox &simulationBox)
 {
     const std::string fileName = "coords.xyz";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << box.getNumberOfQMAtoms() << "\n\n";
+    coordsFile << simulationBox.getNumberOfQMAtoms() << "\n\n";
 
-    for (const auto &atom : box.getQMAtoms())
+    for (const auto &atom : simulationBox.getQMAtoms())
     {
         coordsFile << std::format(
             "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",

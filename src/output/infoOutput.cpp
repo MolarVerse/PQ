@@ -50,9 +50,9 @@ using namespace settings;
  * hoover thermostat is active.
  *
  * @param simulationTime
- * @param data
+ * @param physicalData the physical data of the system
  */
-void InfoOutput::write(double simulationTime, const PhysicalData &data)
+void InfoOutput::write(double simulationTime, const PhysicalData &physicalData)
 {
     _fp.close();
 
@@ -65,55 +65,63 @@ void InfoOutput::write(double simulationTime, const PhysicalData &data)
     else
         writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
 
-    writeRight(data.getTemperature(), "TEMPERATURE", "K");
+    writeRight(physicalData.getTemperature(), "TEMPERATURE", "K");
 
-    writeLeft(data.getPressure(), "PRESSURE", "bar");
-    writeRight(data.getTotalEnergy(), "E(TOT)", "kcal/mol");
+    writeLeft(physicalData.getPressure(), "PRESSURE", "bar");
+    writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
 
     if (Settings::isQMActivated())
     {
-        writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
-        writeRight(data.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
+        writeLeft(physicalData.getQMEnergy(), "E(QM)", "kcal/mol");
+        writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
     }
 
-    writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");
-    writeRight(data.getIntraEnergy(), "E(INTRA)", "kcal/mol");
+    writeLeft(physicalData.getKineticEnergy(), "E(KIN)", "kcal/mol");
+    writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
     if (Settings::isMMActivated())
     {
-        writeLeft(data.getCoulombEnergy(), "E(COUL)", "kcal/mol");
-        writeRight(data.getNonCoulombEnergy(), "E(NON-COUL)", "kcal/mol");
+        writeLeft(physicalData.getCoulombEnergy(), "E(COUL)", "kcal/mol");
+        writeRight(
+            physicalData.getNonCoulombEnergy(),
+            "E(NON-COUL)",
+            "kcal/mol"
+        );
     }
 
     if (ForceFieldSettings::isActive())
     {
-        writeLeft(data.getBondEnergy(), "E(BOND)", "kcal/mol");
-        writeRight(data.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
-        writeLeft(data.getDihedralEnergy(), "E(DIHEDRAL)", "kcal/mol");
-        writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
+        writeLeft(physicalData.getBondEnergy(), "E(BOND)", "kcal/mol");
+        writeRight(physicalData.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
+        writeLeft(physicalData.getDihedralEnergy(), "E(DIHEDRAL)", "kcal/mol");
+        writeRight(physicalData.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
     }
 
     if (Settings::isHybridJobtype())
     {
-        writeLeft(data.getNumberOfSmoothingMolecules(), "N(SM-MOL)", "-");
+        writeLeft(
+            physicalData.getNumberOfSmoothingMolecules(),
+            "N(SM-MOL)",
+            "-"
+        );
         writeRight();
     }
 
     if (ManostatSettings::getManostatType() != ManostatType::NONE)
     {
-        writeLeft(data.getVolume(), "VOLUME", "A^3");
-        writeRight(data.getDensity(), "DENSITY", "g/cm^3");
+        writeLeft(physicalData.getVolume(), "VOLUME", "A^3");
+        writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
     }
 
     if (ThermostatSettings::getThermostatType() == ThermostatType::NOSE_HOOVER)
     {
         writeLeft(
-            data.getNoseHooverMomentumEnergy(),
+            physicalData.getNoseHooverMomentumEnergy(),
             "E(NH-MOMENTUM)",
             "kcal/mol"
         );
         writeRight(
-            data.getNoseHooverFrictionEnergy(),
+            physicalData.getNoseHooverFrictionEnergy(),
             "E(NH-FRICTION)",
             "kcal/mol"
         );
@@ -122,19 +130,23 @@ void InfoOutput::write(double simulationTime, const PhysicalData &data)
     if (ConstraintSettings::isDistanceConstraintsActivated())
     {
         writeLeft(
-            data.getLowerDistanceConstraints(),
+            physicalData.getLowerDistanceConstraints(),
             "LOWER-DIST-CONSTR",
             "kcal/mol"
         );
         writeRight(
-            data.getUpperDistanceConstraints(),
+            physicalData.getUpperDistanceConstraints(),
             "UPPER-DIST-CONSTR",
             "kcal/mol"
         );
     }
 
-    writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");
-    writeRight(data.getLoopTime(), "LOOPTIME", "s");
+    writeLeftScientific(
+        norm(physicalData.getMomentum()),
+        "MOMENTUM",
+        "amuA/fs"
+    );
+    writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
 
     _fp << std::format("{:-^89}", "") << "\n\n";
 

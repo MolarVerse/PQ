@@ -32,12 +32,12 @@ namespace
 {
     void setItemsProcessed(
         benchmark::State&            state,
-        const molsys::SimulationBox& simBox
+        const molsys::SimulationBox& simulationBox
     )
     {
         state.SetItemsProcessed(
             state.iterations() *
-            static_cast<std::int64_t>(simBox.getNumberOfAtoms())
+            static_cast<std::int64_t>(simulationBox.getNumberOfAtoms())
         );
     }
 

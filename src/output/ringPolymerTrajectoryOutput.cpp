@@ -44,14 +44,14 @@ namespace out
      * @param simBox
      */
     void RingPolymerTrajectoryOutput::writeHeader(
-        const molsys::SimulationBox &simBox
+        const molsys::SimulationBox &simulationBox
     )
     {
         const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
 
-        _fp << simBox.getNumberOfAtoms() * nBeads << "  ";
-        _fp << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles()
-            << '\n';
+        _fp << simulationBox.getNumberOfAtoms() * nBeads << "  ";
+        _fp << simulationBox.getBoxDimensions() << "  "
+            << simulationBox.getBoxAngles() << '\n';
     }
 
     /**

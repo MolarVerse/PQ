@@ -59,9 +59,9 @@ namespace engine
          * standard add methods *
          ************************/
 
-        void addRingPolymerBead(const molsys::SimulationBox &bead)
+        void addRingPolymerBead(const molsys::SimulationBox &simulationBox)
         {
-            _ringPolymerBeads.push_back(bead);
+            _ringPolymerBeads.push_back(simulationBox);
         }
 
         /***************************

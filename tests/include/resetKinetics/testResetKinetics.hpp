@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// #ifndef _TEST_RESET_KINETICS_HPP_
-
-// #define _TEST_RESET_KINETICS_HPP_
+#ifndef _TEST_RESET_KINETICS_HPP_
+#define _TEST_RESET_KINETICS_HPP_
 
 // #include "atom.hpp"                 // for Atom
 // #include "molecule.hpp"             // for Molecule
@@ -96,4 +95,4 @@
 //     resetKinetics::ResetKinetics *_resetKinetics;
 // };
 
-// #endif
+#endif   // _TEST_RESET_KINETICS_HPP_

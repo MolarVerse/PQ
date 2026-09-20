@@ -45,14 +45,14 @@ namespace out
      * - s_zz
      *
      * @param step
-     * @param data
+     * @param physicalData the physical data of the system
      */
     void StressOutput::write(
         size_t                            step,
-        const physicalData::PhysicalData &data
+        const physicalData::PhysicalData &physicalData
     )
     {
-        const auto &stress = data.getStressTensor();
+        const auto &stress = physicalData.getStressTensor();
 
         _fp << std::format("{:10d}\t", step);
         _fp << std::format("{:20.5e}\t", stress[0][0]);

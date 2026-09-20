@@ -70,13 +70,13 @@ void QMRunner::throwAfterTimeout(const std::stop_token &stopToken)
 /**
  * @brief run the qm engine with default periodicity XYZ (3d)
  *
- * @param simBox SimulationBox reference
- * @param physicalData PhysicalData reference
+ * @param simulationBox the simulation box to apply periodic boundary conditions
+ * @param physicalData the physical data associated with the simulation
  */
 void QMRunner::run(
-    molsys::SimulationBox      &simBox,
+    molsys::SimulationBox      &simulationBox,
     physicalData::PhysicalData &physicalData
 )
 {
-    run(simBox, physicalData, XYZ);
+    run(simulationBox, physicalData, XYZ);
 }

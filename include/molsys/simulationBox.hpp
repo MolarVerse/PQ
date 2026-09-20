@@ -119,8 +119,8 @@ namespace molsys
         void initPositions(double displacement);
 
         [[nodiscard]] double               calculateTemperature();
-        [[nodiscard]] double               calculateTotalForce();
-        [[nodiscard]] linearAlgebra::Vec3D calculateTotalForceVector();
+        [[nodiscard]] double               calculateTotalForce() const;
+        [[nodiscard]] linearAlgebra::Vec3D calculateTotalForceVector() const;
         [[nodiscard]] double               calculateRMSForce() const;
         [[nodiscard]] double               calculateMaxForce() const;
         [[nodiscard]] double               calculateRMSForceOld() const;

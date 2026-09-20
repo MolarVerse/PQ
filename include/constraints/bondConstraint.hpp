@@ -56,7 +56,9 @@ namespace constraints
             double            bondLength
         );
 
-        void calculateConstraintBondRef(const molsys::SimulationBox &simBox);
+        void calculateConstraintBondRef(
+            const molsys::SimulationBox &simulationBox
+        );
 
         [[nodiscard]] double calculateDistanceDelta(
             const molsys::SimulationBox &

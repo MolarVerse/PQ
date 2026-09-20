@@ -52,22 +52,22 @@ class TestableStochasticRescalingManostat
 namespace
 {
     void setupCutMolecule(
-        molsys::SimulationBox&      box,
-        physicalData::PhysicalData& data
+        molsys::SimulationBox&      simulationBox,
+        physicalData::PhysicalData& physicalData
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
         settings::TimingsSettings::setTimeStep(1.0);
 
-        box.setBoxDimensions({10.0, 10.0, 10.0});
-        box.setVolume(box.calculateVolume());
-        box.setTotalMass(2.0);
+        simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+        simulationBox.setVolume(simulationBox.calculateVolume());
+        simulationBox.setTotalMass(2.0);
 
-        data.setVirial(diagonalMatrix(linearAlgebra::Vec3D(0.0)));
-        data.setKineticEnergyMolecularVector(
+        physicalData.setVirial(diagonalMatrix(linearAlgebra::Vec3D(0.0)));
+        physicalData.setKineticEnergyMolecularVector(
             diagonalMatrix(linearAlgebra::Vec3D(0.0))
         );
-        data.setKineticEnergyAtomicVector(
+        physicalData.setKineticEnergyAtomicVector(
             diagonalMatrix(linearAlgebra::Vec3D(0.0))
         );
 
@@ -84,32 +84,36 @@ namespace
         molecule.setMolMass(2.0);
         molecule.addAtom(atom1);
         molecule.addAtom(atom2);
-        molecule.calculateCenterOfMass(box.getBox());
+        molecule.calculateCenterOfMass(simulationBox.getBox());
 
-        box.addAtom(atom1);
-        box.addAtom(atom2);
-        box.addMolecule(molecule);
+        simulationBox.addAtom(atom1);
+        simulationBox.addAtom(atom2);
+        simulationBox.addMolecule(molecule);
     }
 
-    linearAlgebra::Vec3D getMinimumImageDistance(molsys::SimulationBox& box)
+    linearAlgebra::Vec3D getMinimumImageDistance(
+        molsys::SimulationBox& simulationBox
+    )
     {
-        const auto mol = box.getMolecule(0);
+        const auto mol = simulationBox.getMolecule(0);
 
         auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
                          mol.getAtomPosition(AtomIndex{0});
-        box.applyPBC(dPosition);
+        simulationBox.applyPBC(dPosition);
 
         return dPosition;
     }
 
-    void expectCutMoleculeScaled(molsys::SimulationBox& box)
+    void expectCutMoleculeScaled(molsys::SimulationBox& simulationBox)
     {
-        const auto dPosition = getMinimumImageDistance(box);
+        const auto dPosition = getMinimumImageDistance(simulationBox);
 
-        box.getMolecule(0).calculateCenterOfMass(box.getBox());
-        const auto centerOfMass = box.getMolecule(0).getCenterOfMass();
+        simulationBox.getMolecule(0).calculateCenterOfMass(simulationBox.getBox(
+        ));
+        const auto centerOfMass =
+            simulationBox.getMolecule(0).getCenterOfMass();
 
-        EXPECT_NEAR(box.getBoxDimensions()[0], 9.8, 1e-12);
+        EXPECT_NEAR(simulationBox.getBoxDimensions()[0], 9.8, 1e-12);
         EXPECT_NEAR(centerOfMass[0], -4.851, 1e-12);
         EXPECT_NEAR(centerOfMass[1], 0.0, 1e-12);
         EXPECT_NEAR(centerOfMass[2], 0.0, 1e-12);
@@ -122,8 +126,11 @@ namespace
             for (size_t axis = 0; axis < 3; ++axis)
             {
                 const auto coordinate =
-                    box.getMolecule(0).getAtomPosition(atomIndex)[axis];
-                const auto halfBoxLength = box.getBoxDimensions()[axis] / 2.0;
+                    simulationBox.getMolecule(0).getAtomPosition(
+                        atomIndex
+                    )[axis];
+                const auto halfBoxLength =
+                    simulationBox.getBoxDimensions()[axis] / 2.0;
 
                 EXPECT_GE(coordinate, -halfBoxLength);
                 EXPECT_LT(coordinate, halfBoxLength);
@@ -132,16 +139,16 @@ namespace
     }
 
     double getMinimumImageDistance(
-        molsys::SimulationBox& box,
+        molsys::SimulationBox& simulationBox,
         const size_t           moleculeIndex
     )
     {
-        const auto mol = box.getMolecule(moleculeIndex);
+        const auto mol = simulationBox.getMolecule(moleculeIndex);
 
         auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
                          mol.getAtomPosition(AtomIndex{0});
 
-        box.applyPBC(dPosition);
+        simulationBox.applyPBC(dPosition);
 
         return norm(dPosition);
     }

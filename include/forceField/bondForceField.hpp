@@ -69,8 +69,8 @@ namespace forceField
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox &simBox,
-            physicalData::PhysicalData  &data,
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot
         );

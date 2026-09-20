@@ -29,19 +29,19 @@
  *
  * @param pos_i
  * @param pos_j
- * @param simBox
+ * @param simulationBox
  *
  * @return double The squared distance between the two particles.
  */
 double kernel::distSquared(
     const linearAlgebra::Vec3D  &pos_i,
     const linearAlgebra::Vec3D  &pos_j,
-    const molsys::SimulationBox &simBox
+    const molsys::SimulationBox &simulationBox
 )
 {
     auto r_ij = pos_i - pos_j;
 
-    simBox.applyPBC(r_ij);
+    simulationBox.applyPBC(r_ij);
 
     return dot(r_ij, r_ij);
 }
@@ -67,19 +67,19 @@ linearAlgebra::Vec3D kernel::distVec(
  *
  * @param pos_i
  * @param pos_j
- * @param simBox
+ * @param simulationBox
  *
  * @return linearAlgebra::Vec3D The distance vector between the two particles.
  */
 linearAlgebra::Vec3D kernel::distVec(
     const linearAlgebra::Vec3D  &pos_i,
     const linearAlgebra::Vec3D  &pos_j,
-    const molsys::SimulationBox &simBox
+    const molsys::SimulationBox &simulationBox
 )
 {
     auto r_ij = pos_i - pos_j;
 
-    simBox.applyPBC(r_ij);
+    simulationBox.applyPBC(r_ij);
 
     return r_ij;
 }
@@ -112,7 +112,7 @@ std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
  *
  * @param pos_i
  * @param pos_j
- * @param simBox
+ * @param simulationBox
  *
  * @return std::pair<linearAlgebra::Vec3D, double> The distance vector and the
  * squared distance between the two particles.
@@ -120,12 +120,12 @@ std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
 std::pair<linearAlgebra::Vec3D, double> kernel::distVecAndDist2(
     const linearAlgebra::Vec3D  &pos_i,
     const linearAlgebra::Vec3D  &pos_j,
-    const molsys::SimulationBox &simBox
+    const molsys::SimulationBox &simulationBox
 )
 {
     auto r_ij = pos_i - pos_j;
 
-    simBox.applyPBC(r_ij);
+    simulationBox.applyPBC(r_ij);
 
     const auto rSquared = dot(r_ij, r_ij);
 
