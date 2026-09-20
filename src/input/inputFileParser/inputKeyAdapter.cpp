@@ -25,28 +25,32 @@
 namespace input
 {
     /**
-     * @brief bridges an InputKeyBase onto the existing
-     * InputFileParser::ParseFunc / addKeyword mechanism
+     * @brief Adapts an InputKeyBase into an InputFileParser::ParseFunc.
      *
-     * @details this is the entire integration surface between the new
-     * InputKey<T>/InputRegistry design and InputFileParser/InputFileReader
-     * -- neither of those classes needs to change. InputFileParser::ParseFunc
-     * and InputKeyBase::parse are already structurally identical, so this
-     * is a thin forwarding wrapper, not new parsing logic.
+     * Provides integration between the InputKey<T>/InputRegistry design
+     * and the existing InputFileParser::ParseFunc callback mechanism,
+     * allowing InputKeyBase::parse (type-erased key handler) to be
+     * registered with InputFileParser::addKeyword without modifying
+     * InputFileParser or InputFileReader.
      *
-     * @details deliberately a plain capturing lambda, not std::bind_front:
-     * this project's parser infrastructure has hit a libc++ _Callable
-     * trait incompatibility with std::bind_front elsewhere, so binding
-     * utilities in this area use a plain lambda or the project's own
-     * bindMember helper instead.
+     * Creates a callback that forwards InputFileParser::ParseFunc calls
+     * to the corresponding InputKeyBase::parse method. Both signatures
+     * accept (const std::vector<std::string>&, size_t lineNumber) and
+     * are structurally identical, making this a simple forwarding wrapper.
      *
-     * @param key the InputKey<T> (type-erased via InputKeyBase) to adapt.
-     * Must outlive every call through the returned ParseFunc -- the
-     * registry that owns the key is expected to live for the lifetime of
-     * the InputFileParser subclass that registers it, exactly as
-     * InputKey<T> objects already do today.
+     * @param key The InputKeyBase instance to adapt. Typically obtained
+     * from an InputKey<T> that has been type-erased. Must remain valid
+     * for every invocation of the returned ParseFunc. The registry owning
+     * @p key is expected to outlive the InputFileParser instance that
+     * registers the adapted callback.
      *
-     * @return InputFileParser::ParseFunc
+     * @return InputFileParser::ParseFunc that delegates parse requests to
+     * @p key. The returned callable captures a reference to @p key and
+     * forwards (lineElements, lineNumber) arguments to key.parse().
+     *
+     * @note Implemented as a capturing lambda rather than std::bind_front
+     * to avoid libc++ _Callable trait incompatibility issues encountered
+     * elsewhere in the parser infrastructure.
      */
     [[nodiscard]]
     InputFileParser::ParseFunc adapt(InputKeyBase &key)
