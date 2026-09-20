@@ -76,9 +76,9 @@ namespace
  * @param step
  */
 void RstFileOutput::write(
-    SimulationBox    &simBox,
-    const Thermostat &thermostat,
-    size_t            step
+    const SimulationBox &simBox,
+    const Thermostat    &thermostat,
+    size_t               step
 )
 {
     std::ostringstream buffer;

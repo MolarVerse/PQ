@@ -622,7 +622,7 @@ namespace molsys
      *
      * @return double
      */
-    double SimulationBox::calculateTotalForce()
+    double SimulationBox::calculateTotalForce() const
     {
         const auto totalForce = calculateTotalForceVector();
 
@@ -634,7 +634,7 @@ namespace molsys
      *
      * @return Vec3D
      */
-    Vec3D SimulationBox::calculateTotalForceVector()
+    Vec3D SimulationBox::calculateTotalForceVector() const
     {
         Vec3D totalForce(0.0);
 

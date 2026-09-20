@@ -57,7 +57,7 @@ void TrajectoryOutput::writeHeader(const SimulationBox &simBox)
  * @param simBox
  * @param step
  */
-void TrajectoryOutput::writeXyz(SimulationBox &simBox, size_t step)
+void TrajectoryOutput::writeXyz(const SimulationBox &simBox, size_t step)
 {
     std::ostringstream buffer;
 
@@ -120,7 +120,7 @@ void TrajectoryOutput::writeHybridCenterXyz(
  * @param simBox
  * @param step
  */
-void TrajectoryOutput::writeVelocities(SimulationBox &simBox, size_t step)
+void TrajectoryOutput::writeVelocities(const SimulationBox &simBox, size_t step)
 {
     std::ostringstream buffer;
 
@@ -154,7 +154,7 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox, size_t step)
  * @param simBox
  * @param step
  */
-void TrajectoryOutput::writeForces(SimulationBox &simBox, size_t step)
+void TrajectoryOutput::writeForces(const SimulationBox &simBox, size_t step)
 {
     std::ostringstream buffer;
 
@@ -188,7 +188,7 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox, size_t step)
  * @param simBox
  * @param step
  */
-void TrajectoryOutput::writeCharges(SimulationBox &simBox, size_t step)
+void TrajectoryOutput::writeCharges(const SimulationBox &simBox, size_t step)
 {
     std::ostringstream buffer;
 
