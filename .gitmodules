@@ -6,4 +6,4 @@
 	url = https://github.com/97gamjak/mstd
 [submodule "external/devops"]
 	path = external/devops
-	url = git@github.com:97gamjak/devops.git
+    url = https://github.com/97gamjak/devops.git
