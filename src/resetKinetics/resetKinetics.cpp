@@ -86,39 +86,52 @@ void ResetKinetics::reset(
     size_t         step,
     PhysicalData  &data,
     SimulationBox &simBox
-)
+) const
 {
     auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
 
-    _momentum        = data.getMomentum() * S_TO_FS;
-    _angularMomentum = data.getAngularMomentum() * S_TO_FS;
-    _temperature     = data.getTemperature();
+    auto momentum        = data.getMomentum() * S_TO_FS;
+    auto angularMomentum = data.getAngularMomentum() * S_TO_FS;
+    auto temperature     = data.getTemperature();
 
     auto resetTemp = (step <= _nStepsTemperatureReset);
     resetTemp      = resetTemp || (0 == step % _frequencyTemperatureReset);
 
     auto resetMom = (step <= _nStepsMomentumReset);
     resetMom      = resetMom || (0 == step % _frequencyMomentumReset);
-    resetMom      = !resetTemp && resetMom;
 
     auto resetAngular = (step <= _nStepsAngularReset);
     resetAngular      = resetAngular || (0 == step % _frequencyAngularReset);
 
     if (resetTemp)
     {
-        ResetKinetics::resetTemperature(simBox);
-        ResetKinetics::resetMomentum(simBox);
+        resetTemperature(simBox, temperature);
+        momentum = simBox.calculateMomentum();
+        resetMomentum(simBox, momentum);
+        temperature     = simBox.calculateTemperature();
+        momentum        = simBox.calculateMomentum();
+        angularMomentum = simBox.calculateAngularMomentum(momentum);
+    }
+    else if (resetMom)
+    {
+        // temperature also needs reset of momentum, thus the else if
+        ResetKinetics::resetMomentum(simBox, momentum);
+        momentum        = simBox.calculateMomentum();
+        temperature     = simBox.calculateTemperature();
+        angularMomentum = simBox.calculateAngularMomentum(momentum);
     }
 
-    if (resetMom)
-        ResetKinetics::resetMomentum(simBox);
-
     if (resetAngular)
-        ResetKinetics::resetAngularMomentum(simBox);
+    {
+        ResetKinetics::resetAngularMomentum(simBox, angularMomentum);
+        temperature     = simBox.calculateTemperature();
+        momentum        = simBox.calculateMomentum();
+        angularMomentum = simBox.calculateAngularMomentum(momentum);
+    }
 
-    data.setTemperature(_temperature);
-    data.setMomentum(_momentum * FS_TO_S);
-    data.setAngularMomentum(_angularMomentum * FS_TO_S);
+    data.setTemperature(temperature);
+    data.setMomentum(momentum * FS_TO_S);
+    data.setAngularMomentum(angularMomentum * FS_TO_S);
 }
 
 /**
@@ -128,12 +141,13 @@ void ResetKinetics::reset(
  * temperature and scale all velocities
  *
  * @param simBox
+ * @param temperature
  */
-void ResetKinetics::resetTemperature(SimulationBox &simBox)
+void ResetKinetics::resetTemperature(SimulationBox &simBox, double temperature)
 {
     const auto targetTemp = ThermostatSettings::getActualTargetTemperature();
 
-    if (isZero(_temperature))
+    if (isZero(temperature))
     {
         throw UserInputException(
             "Cannot rescale a zero-temperature system. Initialize velocities "
@@ -141,16 +155,12 @@ void ResetKinetics::resetTemperature(SimulationBox &simBox)
         );
     }
 
-    const auto lambda = ::sqrt(targetTemp / _temperature);
+    const auto lambda = ::sqrt(targetTemp / temperature);
 
     std::ranges::for_each(
         simBox.getAtoms(),
         [lambda](auto &atom) { atom->scaleVelocity(lambda); }
     );
-
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
 }
 
 /**
@@ -161,20 +171,15 @@ void ResetKinetics::resetTemperature(SimulationBox &simBox)
  *
  * @param simBox
  */
-void ResetKinetics::resetMomentum(SimulationBox &simBox)
+void ResetKinetics::resetMomentum(SimulationBox &simBox, const Vec3D &momentum)
 {
-    const auto momentumVector     = _momentum;
-    const auto momentumCorrection = momentumVector / simBox.getTotalMass();
+    const auto momentumCorrection = momentum / simBox.getTotalMass();
 
     std::ranges::for_each(
         simBox.getAtoms(),
         [momentumCorrection](auto &atom)
         { atom->addVelocity(-momentumCorrection); }
     );
-
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
 }
 
 /**
@@ -185,12 +190,13 @@ void ResetKinetics::resetMomentum(SimulationBox &simBox)
  *
  * @param simBox
  */
-void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
+void ResetKinetics::resetAngularMomentum(
+    SimulationBox &simBox,
+    const Vec3D   &angularMomentum
+)
 {
     simBox.calculateCenterOfMass();
     const auto centerOfMass = simBox.getCenterOfMass();
-
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
 
     StaticMatrix3x3 helperMatrix{0.0};
 
@@ -205,7 +211,7 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
 
     const auto inertia = -helperMatrix + diagonalMatrix(trace(helperMatrix));
     const auto inverseInertia  = inverse(inertia);
-    const auto angularVelocity = inverseInertia * _angularMomentum;
+    const auto angularVelocity = inverseInertia * angularMomentum;
 
     auto correctVelocities = [&angularVelocity, &centerOfMass](auto &atom)
     {
@@ -214,10 +220,6 @@ void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
     };
 
     std::ranges::for_each(simBox.getAtoms(), correctVelocities);
-
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
 }
 
 /**
@@ -241,44 +243,6 @@ void ResetKinetics::resetForces(size_t step, SimulationBox &simBox) const
         simBox.getAtoms(),
         [forceCorrection](auto &atom) { atom->addForce(-forceCorrection); }
     );
-}
-
-/********************
- *                  *
- * standard setters *
- *                  *
- *******************/
-
-/**
- * @brief set the temperature
- *
- * @param temperature
- */
-void ResetKinetics::setTemperature(double temperature)
-{
-    _temperature = temperature;
-}
-
-/**
- * @brief set the momentum
- *
- * @param momentum
- */
-void ResetKinetics::setMomentum(const linearAlgebra::Vec3D &momentum)
-{
-    _momentum = momentum;
-}
-
-/**
- * @brief set the angular momentum
- *
- * @param angularMomentum
- */
-void ResetKinetics::setAngularMomentum(
-    const linearAlgebra::Vec3D &angularMomentum
-)
-{
-    _angularMomentum = angularMomentum;
 }
 
 /********************
