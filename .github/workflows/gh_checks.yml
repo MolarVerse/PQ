@@ -39,6 +39,10 @@ jobs:
 
       - name: Check for issues in PR title/description
         id: extract
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
           FULL_TEXT="${{ steps.pr.outputs.title }}
           ${{ steps.pr.outputs.body }}"
@@ -49,6 +53,18 @@ jobs:
           if [ -n "$ISSUE_NUMBERS" ]; then
             echo "found_in_description=true" >> "$GITHUB_OUTPUT"
             echo "Issues found in PR description: $ISSUE_NUMBERS"
+
+            # Link each extracted issue to this PR by adding a comment
+            while IFS= read -r ISSUE_NUM; do
+              if [ -n "$ISSUE_NUM" ]; then
+                echo "Linking issue #$ISSUE_NUM to PR #$PR_NUMBER"
+                # Check if we already linked this PR to this issue
+                EXISTING=$(gh issue view "$ISSUE_NUM" --repo "$REPO" --json comments --jq '.comments[].body' 2>/dev/null | grep -c "#$PR_NUMBER" || true)
+                if [ "$EXISTING" -eq 0 ]; then
+                  gh issue comment "$ISSUE_NUM" --repo "$REPO" --body "🔗 Linked from PR #$PR_NUMBER" 2>/dev/null || true
+                fi
+              fi
+            done <<< "$ISSUE_NUMBERS"
           else
             echo "found_in_description=false" >> "$GITHUB_OUTPUT"
           fi
