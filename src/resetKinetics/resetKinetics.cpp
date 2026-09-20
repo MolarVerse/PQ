@@ -170,6 +170,7 @@ void ResetKinetics::resetTemperature(SimulationBox &simBox, double temperature)
  * total momentum divided by the total mass
  *
  * @param simBox
+ * @param momentum the current momentum of the system
  */
 void ResetKinetics::resetMomentum(SimulationBox &simBox, const Vec3D &momentum)
 {
@@ -189,6 +190,7 @@ void ResetKinetics::resetMomentum(SimulationBox &simBox, const Vec3D &momentum)
  * correction is the total angular momentum divided by the total mass
  *
  * @param simBox
+ * @param angularMomentum the current angular momentum of the system
  */
 void ResetKinetics::resetAngularMomentum(
     SimulationBox &simBox,
