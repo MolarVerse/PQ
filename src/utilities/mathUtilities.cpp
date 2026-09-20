@@ -34,9 +34,9 @@
  * @return false
  */
 bool utilities::compare(
-    const linearAlgebra::Vector3D<double> &lhs,
-    const linearAlgebra::Vector3D<double> &rhs,
-    const double                          &tolerance
+    const linalg::Vector3D<double> &lhs,
+    const linalg::Vector3D<double> &rhs,
+    const double                   &tolerance
 )
 {
     auto isEq = true;
@@ -56,8 +56,8 @@ bool utilities::compare(
  * @return false
  */
 bool utilities::compare(
-    const linearAlgebra::Vector3D<double> &lhs,
-    const linearAlgebra::Vector3D<double> &rhs
+    const linalg::Vector3D<double> &lhs,
+    const linalg::Vector3D<double> &rhs
 )
 {
     auto isEq = true;

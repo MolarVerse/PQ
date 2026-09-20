@@ -234,7 +234,7 @@ double Optimizer::getMaxForce(int offset) const
  *
  * @return std::vector<pq::Vec3D>
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getForces() const
+std::vector<linalg::Vec3D> Optimizer::getForces() const
 {
     return _forceHistory.back();
 }
@@ -245,7 +245,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getForces() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getForces(int offset) const
+std::vector<linalg::Vec3D> Optimizer::getForces(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 
@@ -257,7 +257,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getForces(int offset) const
  *
  * @return std::vector<pq::Vec3D>
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getPositions() const
+std::vector<linalg::Vec3D> Optimizer::getPositions() const
 {
     return _positionHistory.back();
 }
@@ -268,7 +268,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getPositions() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(int offset) const
+std::vector<linalg::Vec3D> Optimizer::getPositions(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 

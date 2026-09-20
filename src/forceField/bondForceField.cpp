@@ -34,7 +34,7 @@
 using namespace ff;
 using namespace molsys;
 using namespace connectivity;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace physicalData;
 using namespace pot;
 using namespace settings;

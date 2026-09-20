@@ -24,7 +24,7 @@
 
 #include "defaults.hpp"
 
-using namespace linearAlgebra;
+using namespace linalg;
 
 namespace molsys
 {
@@ -179,10 +179,7 @@ namespace molsys
      *
      * @return Vec3D
      */
-    linearAlgebra::Vec3D Box::getBoxDimensions() const
-    {
-        return _boxDimensions;
-    }
+    linalg::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
 
     /********************
      * standard setters *

@@ -28,12 +28,12 @@
 #include <cstdlib>   // for abs
 #include <limits>    // for numeric_limits
 
-namespace linearAlgebra
+namespace linalg
 {
     template <typename T>
     class Vector3D;   // forward declaration
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 namespace utilities
 {
@@ -55,9 +55,9 @@ namespace utilities
     }
 
     [[nodiscard]] bool compare(
-        const linearAlgebra::Vector3D<double> &lhs,
-        const linearAlgebra::Vector3D<double> &rhs,
-        const double                          &tol
+        const linalg::Vector3D<double> &lhs,
+        const linalg::Vector3D<double> &rhs,
+        const double                   &tol
     );
 
     /**
@@ -78,8 +78,8 @@ namespace utilities
 
     [[nodiscard]]
     bool compare(
-        const linearAlgebra::Vector3D<double> &lhs,
-        const linearAlgebra::Vector3D<double> &rhs
+        const linalg::Vector3D<double> &lhs,
+        const linalg::Vector3D<double> &rhs
     );
 
     /**

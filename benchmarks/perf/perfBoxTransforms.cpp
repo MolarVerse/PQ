@@ -41,7 +41,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    using linearAlgebra::Vec3D;
+    using linalg::Vec3D;
 
     auto ortho = molsys::OrthorhombicBox();
     ortho.setBoxDimensions({20.0, 20.0, 20.0});

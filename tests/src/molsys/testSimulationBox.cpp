@@ -73,7 +73,7 @@ TEST_F(TestSimulationBox, calculateTotalForceVector)
 {
     auto totalForceVector = _simulationBox->calculateTotalForceVector();
 
-    EXPECT_EQ(totalForceVector, linearAlgebra::Vec3D({1.0, 1.0, 1.0}));
+    EXPECT_EQ(totalForceVector, linalg::Vec3D({1.0, 1.0, 1.0}));
 }
 
 /**
@@ -86,14 +86,8 @@ TEST_F(TestSimulationBox, centerOfMassOfMolecules)
 
     auto molecules = _simulationBox->getMolecules();
 
-    EXPECT_EQ(
-        molecules[0].getCenterOfMass(),
-        linearAlgebra::Vec3D(1 / 3.0, 0.5, 0.0)
-    );
-    EXPECT_EQ(
-        molecules[1].getCenterOfMass(),
-        linearAlgebra::Vec3D(2 / 3.0, 0.0, 0.0)
-    );
+    EXPECT_EQ(molecules[0].getCenterOfMass(), linalg::Vec3D(1 / 3.0, 0.5, 0.0));
+    EXPECT_EQ(molecules[1].getCenterOfMass(), linalg::Vec3D(2 / 3.0, 0.0, 0.0));
 }
 
 /**
@@ -393,7 +387,7 @@ TEST_F(
 TEST_F(TestSimulationBox, removeNetForce)
 {
     using namespace molsys;
-    using namespace linearAlgebra;
+    using namespace linalg;
 
     SimulationBox simBox;
     auto          atom1 = Atom();
@@ -446,7 +440,7 @@ TEST_F(TestSimulationBox, removeNetForce)
 TEST_F(TestSimulationBox, updateOldPositions)
 {
     using namespace molsys;
-    using namespace linearAlgebra;
+    using namespace linalg;
 
     _simulationBox->getAtoms()[0]->setPositionOld({9.0, 9.0, 9.0});
     _simulationBox->getAtoms()[1]->setPositionOld({9.0, 9.0, 9.0});
@@ -605,7 +599,7 @@ TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
 
 TEST_F(TestSimulationBox, forceMetricsAndAtomStateUpdates)
 {
-    using linearAlgebra::Vec3D;
+    using linalg::Vec3D;
 
     size_t index = 1;
     for (auto &atom : _simulationBox->getAtoms())

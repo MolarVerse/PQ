@@ -29,8 +29,8 @@
 
 namespace
 {
-    using linearAlgebra::tensor3D;
-    using linearAlgebra::Vec3D;
+    using linalg::tensor3D;
+    using linalg::Vec3D;
     using molsys::OrthorhombicBox;
     using molsys::TriclinicBox;
 

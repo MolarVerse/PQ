@@ -37,7 +37,7 @@ namespace pot
  */
 struct pot::ForceFieldNonCoulomb::matrix
 {
-    linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> matrix;
+    linalg::Matrix<std::shared_ptr<NonCoulombPair>> matrix;
 };
 
 #endif   // _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_

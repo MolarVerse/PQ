@@ -83,7 +83,7 @@ namespace
             const auto delta =
                 recipientMol.get().getCenterOfMass() - smoothingCOM;
 
-            const auto distance = linearAlgebra::norm(delta);
+            const auto distance = linalg::norm(delta);
 
             auto switchedWeight = 0.0;
             if (weightingRadius > 0.0)
@@ -176,10 +176,10 @@ namespace engine
         using enum Periodicity;
         using std::ranges::distance;
 
-        linearAlgebra::tensor3D virial     = {0.0};
-        auto                    numQMAtoms = 0.0;
-        auto                   &atoms      = _simulationBox->getAtoms();
-        const std::size_t       nSmMol =
+        linalg::tensor3D  virial     = {0.0};
+        auto              numQMAtoms = 0.0;
+        auto             &atoms      = _simulationBox->getAtoms();
+        const std::size_t nSmMol =
             distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
 
         // Loop over all combinations of smoothing molecules
@@ -297,8 +297,8 @@ namespace engine
     {
         using enum Periodicity;
 
-        auto                   &atoms  = _simulationBox->getAtoms();
-        linearAlgebra::tensor3D virial = {0.0};
+        auto            &atoms  = _simulationBox->getAtoms();
+        linalg::tensor3D virial = {0.0};
 
         // Set number of QM atoms in physical data for output purposes
         setNumberOfQMAtoms();
@@ -539,7 +539,7 @@ namespace engine
         {
             const auto smF = smoothingMol.getSmoothingFactor();
 
-            auto deficitForce = linearAlgebra::Vec3D{0.0};
+            auto deficitForce = linalg::Vec3D{0.0};
             for (auto &atom : smoothingMol.getAtoms())
             {
                 deficitForce += atom->getForce() * (1 - smF);

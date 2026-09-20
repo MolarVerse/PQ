@@ -34,8 +34,8 @@ using namespace molsys;
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
 {
-    auto                       box           = OrthorhombicBox();
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    auto                box           = OrthorhombicBox();
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
 }
@@ -45,28 +45,28 @@ TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
     auto         box       = OrthorhombicBox();
     const double density   = 1.0 / constants::KG_PER_L_TO_AMU_PER_ANGSTROM3;
     const double totalMass = 1.0;
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 1.0, 1.0};
+    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
     EXPECT_EQ(box.calcBoxDimFromDensity(totalMass, density), boxDimensions);
 }
 
 TEST(TestOrthoRhombicBox, calculateVolume)
 {
-    auto                       box           = OrthorhombicBox();
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    auto                box           = OrthorhombicBox();
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
     EXPECT_EQ(box.calculateVolume(), 6.0);
 }
 
 TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
 {
-    auto                       box           = OrthorhombicBox();
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    auto                box           = OrthorhombicBox();
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
 
-    linearAlgebra::Vec3D position = {0.5, 1.5, 2.5};
+    linalg::Vec3D position = {0.5, 1.5, 2.5};
     box.applyPBC(position);
 
-    const linearAlgebra::Vec3D expectedPosition = {0.5, -0.5, -0.5};
+    const linalg::Vec3D expectedPosition = {0.5, -0.5, -0.5};
     EXPECT_EQ(position, expectedPosition);
 }
 
@@ -74,21 +74,21 @@ TEST(TestOrthoRhombicBox, scaleBox)
 {
     auto box = OrthorhombicBox();
 
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
 
-    const linearAlgebra::tensor3D scaleFactors =
-        diagonalMatrix(linearAlgebra::Vec3D{2.0, 2.0, 2.0});
+    const linalg::tensor3D scaleFactors =
+        diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0});
     box.scaleBox(scaleFactors);
 
-    const linearAlgebra::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};
+    const linalg::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};
     EXPECT_EQ(box.getBoxDimensions(), expectedBoxDimensions);
 }
 
 TEST(TestOrthoRhombicBox, getMinimalBoxDimension)
 {
-    auto                       box           = OrthorhombicBox();
-    const linearAlgebra::Vec3D boxDimensions = {2.0, 1.0, 3.0};
+    auto                box           = OrthorhombicBox();
+    const linalg::Vec3D boxDimensions = {2.0, 1.0, 3.0};
     box.setBoxDimensions(boxDimensions);
 
     EXPECT_EQ(box.getMinimalBoxDimension(), 1.0);
@@ -99,7 +99,7 @@ TEST(TestOrthoRhombicBox, calculateShiftVector)
     auto box = OrthorhombicBox();
 
     box.setBoxDimensions({1.0, 1.0, 1.0});
-    const linearAlgebra::Vec3D vector{0.2, 1.2, -0.8};
+    const linalg::Vec3D vector{0.2, 1.2, -0.8};
 
     EXPECT_EQ(box.calcShiftVector(vector)[0], 0.0);
     EXPECT_EQ(box.calcShiftVector(vector)[1], 1.0);
@@ -112,11 +112,11 @@ TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
     constexpr double tolerance = 1e-10;
 
     box.setBoxDimensions({1.0, 1.0, 1.0});
-    const linearAlgebra::Vec3D vector{1.2, 1.7, -0.6};
+    const linalg::Vec3D vector{1.2, 1.7, -0.6};
 
     EXPECT_VECTOR_NEAR(
         box.wrapPositionIntoBox(vector),
-        linearAlgebra::Vec3D(0.2, -0.3, 0.4),
+        linalg::Vec3D(0.2, -0.3, 0.4),
         tolerance
     );
 }
@@ -157,10 +157,10 @@ TEST(TestOrthoRhombicBox, baseTransformsAndStateAccessors)
     OrthorhombicBox box;
     box.setBoxDimensions({2.0, 3.0, 4.0});
 
-    const linearAlgebra::Vec3D vector{1.0, 2.0, 3.0};
-    const auto tensor = diagonalMatrix(linearAlgebra::Vec3D{1.0, 2.0, 3.0});
+    const linalg::Vec3D vector{1.0, 2.0, 3.0};
+    const auto          tensor = diagonalMatrix(linalg::Vec3D{1.0, 2.0, 3.0});
 
-    EXPECT_EQ(box.getBoxAngles(), linearAlgebra::Vec3D(90.0));
+    EXPECT_EQ(box.getBoxAngles(), linalg::Vec3D(90.0));
     EXPECT_EQ(box.toOrthoSpace(vector), vector);
     EXPECT_EQ(box.toSimSpace(vector), vector);
     EXPECT_MATRIX_NEAR(box.toOrthoSpace(tensor), tensor, 0.0);

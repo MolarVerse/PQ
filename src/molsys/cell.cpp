@@ -28,7 +28,7 @@
 
 using namespace settings;
 using namespace molsys;
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @brief clears the molecules vector

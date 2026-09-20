@@ -34,7 +34,7 @@ using namespace intraNonBonded;
 using namespace pot;
 using namespace physicalData;
 using namespace molsys;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace settings;
 
 /**

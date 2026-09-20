@@ -27,7 +27,7 @@
 #include <Eigen/Dense>
 #include <cstddef>
 
-namespace linearAlgebra
+namespace linalg
 {
     /**
      * @class Matrix
@@ -61,7 +61,7 @@ namespace linearAlgebra
         std::vector<T> solve(const std::vector<T> &rhs);
     };
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #ifndef _MATRIX_CLASS_TPP_
 #include "matrixClass.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE

@@ -73,7 +73,7 @@ TEST_F(TestInputFileReader, numberOfCells)
     parser.parseNumberOfCells(lineElements, 0);
     EXPECT_EQ(
         _engine->getCellList()->getNumberOfCells(),
-        linearAlgebra::Vec3Dul(3, 3, 3)
+        linalg::Vec3Dul(3, 3, 3)
     );
 
     lineElements = {"cell-number", "=", "0"};
