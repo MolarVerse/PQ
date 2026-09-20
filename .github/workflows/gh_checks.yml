@@ -22,8 +22,8 @@ jobs:
           if [ -n "${{ github.event.pull_request.number }}" ]; then
             NUMBER="${{ github.event.pull_request.number }}"
             SHA="${{ github.event.pull_request.head.sha }}"
-            TITLE="${{ github.event.pull_request.title }}"
-            BODY="${{ github.event.pull_request.body }}"
+            TITLE='${{ github.event.pull_request.title }}'
+            BODY='${{ github.event.pull_request.body }}'
           else
             NUMBER="${{ inputs.pr_number }}"
             REPO_INPUT="${{ github.repository }}"
@@ -44,8 +44,8 @@ jobs:
           REPO: ${{ github.repository }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
-          FULL_TEXT="${{ steps.pr.outputs.title }}
-          ${{ steps.pr.outputs.body }}"
+          FULL_TEXT='${{ steps.pr.outputs.title }}
+          ${{ steps.pr.outputs.body }}'
 
           # Extract issue numbers using keywords: Closes, Fixes, Resolves, Related to
           ISSUE_NUMBERS=$(echo "$FULL_TEXT" | grep -oiE '(closes|fixes|resolves|related to)\s+#([0-9]+)' | grep -oE '#[0-9]+' | tr -d '#' | sort -u)
