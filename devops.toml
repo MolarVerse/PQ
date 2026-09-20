@@ -32,7 +32,6 @@ type_to_name = { "molsys::SimulationBox" = [
     "physicalData",
     "other",
 ] }
-unseen_type_is_error = true
 
 [logging]
 cpp_level = "INFO"
