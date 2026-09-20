@@ -25,7 +25,7 @@
 #include <iosfwd>   // for stringstream, ostream
 
 // for Message, TestPartResult
-#include "matrixNear.hpp"     // for EXPECT_MATRIX_NEAR
+#include "matrixNear.hpp"   // for EXPECT_MATRIX_NEAR
 #include "staticMatrix.hpp"   // IWYU pragma: keep - for diagonalMatrix, inverse, operator*
 
 using namespace linearAlgebra;
