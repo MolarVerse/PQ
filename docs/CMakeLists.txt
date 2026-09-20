@@ -17,6 +17,13 @@ if(DOXYGEN_FOUND)
         VERBATIM)
 else(DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
+
+    add_custom_target(docs
+        COMMAND ${CMAKE_COMMAND} -E echo
+                "Doxygen was not found at configure time - cannot build the 'docs' target. Install doxygen and re-run cmake."
+        COMMAND ${CMAKE_COMMAND} -E false
+        COMMENT "Doxygen not found"
+        VERBATIM)
 endif(DOXYGEN_FOUND)
 
 find_program(SPHINX_EXECUTABLE NAMES sphinx-build)
@@ -43,4 +50,11 @@ if(DOXYGEN_FOUND AND SPHINX_EXECUTABLE)
     add_dependencies(sphinx-docs docs)
 else()
     message("Doxygen and Sphinx (sphinx-build) are both required to build the Sphinx documentation")
+
+    add_custom_target(sphinx-docs
+        COMMAND ${CMAKE_COMMAND} -E echo
+                "Doxygen and/or Sphinx (sphinx-build) were not found at configure time - cannot build the 'sphinx-docs' target. Install both and re-run cmake."
+        COMMAND ${CMAKE_COMMAND} -E false
+        COMMENT "Doxygen and/or Sphinx not found"
+        VERBATIM)
 endif()
