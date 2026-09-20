@@ -22,11 +22,10 @@
 
 #include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST
 
-#include <iosfwd>   // for stringstream, ostream
+#include <iosfwd>
 
-// for Message, TestPartResult
-#include "matrixNear.hpp"   // for EXPECT_MATRIX_NEAR
-#include "staticMatrix.hpp"   // IWYU pragma: keep - for diagonalMatrix, inverse, operator*
+#include "matrixNear.hpp"
+#include "staticMatrix.hpp"
 
 using namespace linearAlgebra;
 
