@@ -9,14 +9,27 @@ if(DOXYGEN_FOUND)
     configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
     message("Doxygen build started")
 
+    set(DOXYGEN_WARN_LOGFILE ${CMAKE_CURRENT_BINARY_DIR}/doxygen_warnings.log)
+
     # note the option ALL which allows to build the docs together with the application
     add_custom_target(docs
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        COMMAND ${CMAKE_COMMAND}
+                -DDOXYGEN_EXECUTABLE=${DOXYGEN_EXECUTABLE}
+                -DDOXYGEN_OUT=${DOXYGEN_OUT}
+                -DWARN_LOGFILE=${DOXYGEN_WARN_LOGFILE}
+                -P ${CMAKE_CURRENT_SOURCE_DIR}/RunDoxygenWithLog.cmake
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
 else(DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
+
+    add_custom_target(docs
+        COMMAND ${CMAKE_COMMAND} -E echo
+                "Doxygen was not found at configure time - cannot build the 'docs' target. Install doxygen and re-run cmake."
+        COMMAND ${CMAKE_COMMAND} -E false
+        COMMENT "Doxygen not found"
+        VERBATIM)
 endif(DOXYGEN_FOUND)
 
 find_program(SPHINX_EXECUTABLE NAMES sphinx-build)
@@ -43,4 +56,11 @@ if(DOXYGEN_FOUND AND SPHINX_EXECUTABLE)
     add_dependencies(sphinx-docs docs)
 else()
     message("Doxygen and Sphinx (sphinx-build) are both required to build the Sphinx documentation")
+
+    add_custom_target(sphinx-docs
+        COMMAND ${CMAKE_COMMAND} -E echo
+                "Doxygen and/or Sphinx (sphinx-build) were not found at configure time - cannot build the 'sphinx-docs' target. Install both and re-run cmake."
+        COMMAND ${CMAKE_COMMAND} -E false
+        COMMENT "Doxygen and/or Sphinx not found"
+        VERBATIM)
 endif()
