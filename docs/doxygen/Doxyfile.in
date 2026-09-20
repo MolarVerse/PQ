@@ -23,3 +23,5 @@ WARN_LOGFILE          = @CMAKE_CURRENT_BINARY_DIR@/doxygen_warnings.log
 MACRO_EXPANSION        = YES
 EXPAND_ONLY_PREDEF     = YES
 PREDEFINED             = __attribute__(x)=
+INCLUDE_PATH           = @CMAKE_SOURCE_DIR@/external/mstd/include
+EXPAND_AS_DEFINED      = MSTD_ENUM MSTD_ENUM_BITFLAG

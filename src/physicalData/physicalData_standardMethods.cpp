@@ -180,6 +180,16 @@ void PhysicalData::setTemperature(double temperature)
 void PhysicalData::setPressure(double pressure) { _pressure = pressure; }
 
 /**
+ * @brief set the coupled pressure
+ *
+ * @param coupledPressure
+ */
+void PhysicalData::setCoupledPressure(double coupledPressure)
+{
+    _coupledPressure = coupledPressure;
+}
+
+/**
  * @brief set the virial
  *
  * @param virial
@@ -449,6 +459,13 @@ double PhysicalData::getTemperature() const { return _temperature; }
  * @return double
  */
 double PhysicalData::getPressure() const { return _pressure; }
+
+/**
+ * @brief get the coupled pressure
+ *
+ * @return double
+ */
+double PhysicalData::getCoupledPressure() const { return _coupledPressure; }
 
 /**
  * @brief get the kinetic energy
