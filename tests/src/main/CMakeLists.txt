@@ -7,3 +7,11 @@ target_link_libraries(pq_test_main
     gtest
     gmock
 )
+
+if(BUILD_WITH_MPI)
+    target_link_libraries(pq_test_main
+        PUBLIC
+        PQ_mpi
+        MPI::MPI_C
+    )
+endif()
