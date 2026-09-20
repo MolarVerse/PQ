@@ -22,12 +22,52 @@ jobs:
           if [ -n "${{ github.event.pull_request.number }}" ]; then
             NUMBER="${{ github.event.pull_request.number }}"
             SHA="${{ github.event.pull_request.head.sha }}"
+            TITLE='${{ github.event.pull_request.title }}'
+            BODY='${{ github.event.pull_request.body }}'
           else
             NUMBER="${{ inputs.pr_number }}"
-            SHA=$(gh api "repos/$REPO/pulls/$NUMBER" --jq '.head.sha')
+            REPO_INPUT="${{ github.repository }}"
+            PR_DATA=$(gh api "repos/$REPO_INPUT/pulls/$NUMBER")
+            SHA=$(echo "$PR_DATA" | jq -r '.head.sha')
+            TITLE=$(echo "$PR_DATA" | jq -r '.title')
+            BODY=$(echo "$PR_DATA" | jq -r '.body // ""')
           fi
           echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+          echo "body=$BODY" >> "$GITHUB_OUTPUT"
+
+      - name: Check for issues in PR title/description
+        id: extract
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          FULL_TEXT='${{ steps.pr.outputs.title }}
+          ${{ steps.pr.outputs.body }}'
+
+          # Extract issue numbers using keywords: Closes, Fixes, Resolves, Related to
+          ISSUE_NUMBERS=$(echo "$FULL_TEXT" | grep -oiE '(closes|fixes|resolves|related to)\s+#([0-9]+)' | grep -oE '#[0-9]+' | tr -d '#' | sort -u)
+
+          if [ -n "$ISSUE_NUMBERS" ]; then
+            echo "found_in_description=true" >> "$GITHUB_OUTPUT"
+            echo "Issues found in PR description: $ISSUE_NUMBERS"
+
+            # Link each extracted issue to this PR by adding a comment
+            while IFS= read -r ISSUE_NUM; do
+              if [ -n "$ISSUE_NUM" ]; then
+                echo "Linking issue #$ISSUE_NUM to PR #$PR_NUMBER"
+                # Check if we already linked this PR to this issue
+                EXISTING=$(gh issue view "$ISSUE_NUM" --repo "$REPO" --json comments --jq '.comments[].body' 2>/dev/null | grep -c "#$PR_NUMBER" || true)
+                if [ "$EXISTING" -eq 0 ]; then
+                  gh issue comment "$ISSUE_NUM" --repo "$REPO" --body "🔗 Linked from PR #$PR_NUMBER" 2>/dev/null || true
+                fi
+              fi
+            done <<< "$ISSUE_NUMBERS"
+          else
+            echo "found_in_description=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Query issues linked to this PR
         id: check
@@ -52,7 +92,11 @@ jobs:
             --jq '.data.repository.pullRequest.closingIssuesReferences.totalCount')
 
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
-          if [ "$COUNT" -eq 0 ]; then
+
+          # Check passes if either:
+          # 1. Issues are already linked via GitHub's automated processing, OR
+          # 2. Issues are mentioned in the PR title/description with keywords
+          if [ "$COUNT" -eq 0 ] && [ "${{ steps.extract.outputs.found_in_description }}" == "false" ]; then
             echo "state=failure" >> "$GITHUB_OUTPUT"
           else
             echo "state=success" >> "$GITHUB_OUTPUT"
@@ -72,5 +116,5 @@ jobs:
       - name: Fail job if unlinked
         if: steps.check.outputs.state == 'failure'
         run: |
-          echo "::error::PR #${{ steps.pr.outputs.number }} has no issue linked."
+          echo "::error::PR #${{ steps.pr.outputs.number }} has no issue linked. Add 'Closes #123', 'Fixes #456', 'Resolves #789', or 'Related to #999' in the PR title or description."
           exit 1

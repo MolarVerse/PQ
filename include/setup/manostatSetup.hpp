@@ -53,6 +53,8 @@ namespace setup
         void setupBerendsenManostat();
         void setupStochasticRescalingManostat();
 
+        static void validateIsotropyFixedAxisCombination();
+
         void writeSetupInfo() const;
         void writeManostatSelection() const;
         void writeBerendsenSetup() const;

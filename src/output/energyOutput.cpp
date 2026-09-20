@@ -93,15 +93,25 @@ void EnergyOutput::write(size_t step, const PhysicalData &physicalData)
     }
 
     if (Settings::isHybridJobtype())
+    {
         _fp << std::format(
             "{:20.12f}\t",
             physicalData.getNumberOfSmoothingMolecules()
         );
+    }
 
     if (ManostatSettings::getManostatType() != ManostatType::NONE)
     {
         _fp << std::format("{:20.12f}\t", physicalData.getVolume());
         _fp << std::format("{:20.12f}\t", physicalData.getDensity());
+
+        if (ManostatSettings::getFixedAxis() != FixedAxis::NONE)
+        {
+            _fp << std::format(
+                "{:20.12f}\t",
+                physicalData.getCoupledPressure()
+            );
+        }
     }
 
     if (ThermostatSettings::getThermostatType() == ThermostatType::NOSE_HOOVER)

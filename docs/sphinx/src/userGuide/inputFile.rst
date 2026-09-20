@@ -1041,6 +1041,53 @@ Possible options are:
 
    6. **full_anisotropic** - all axes are coupled in an anisotropic way and the box angles are also scaled
 
+.. _fixedAxisKey:
+
+Fixed Axis
+==========
+
+.. admonition:: Key
+    :class: tip
+
+    fixed_axis = {string} -> "none" (with manostat) / "all" (without manostat)
+
+With the ``fixed_axis`` keyword, individual cell axes can be kept fixed (*i.e.* not scaled by the manostat) during the simulation.
+
+Possible options are:
+
+   1. **none** - no axis is fixed (all axes are coupled according to the chosen isotropy)
+
+   2. **x** - fix the x-axis
+
+   3. **y** - fix the y-axis
+
+   4. **z** - fix the z-axis
+
+   5. **xy** / **yx** - fix the x- and y-axes (1D scaling along z)
+
+   6. **xz** / **zx** - fix the x- and z-axes (1D scaling along y)
+
+   7. **yz** / **zy** - fix the y- and z-axes (1D scaling along x)
+
+   8. **all** / **xyz** - fix all three axes
+
+.. Note::
+    **Default values:**
+
+    * When **no manostat** is selected (``manostat = none``), the default is ``all`` (*i.e.* all three axes remain fixed and no volume scaling occurs).
+    * When a **manostat is selected**, the default is ``none`` (*i.e.* all axes are free to scale unless explicitly specified otherwise).
+
+.. Note::
+    **Target Pressure and Energy Output:**
+
+    When one or more axes are fixed, the target pressure specified by :ref:`pressureKey` is applied exclusively to the remaining non-fixed (coupled) axes. In the :ref:`energyFile` (``.en``) and :ref:`infoFile` (``.info``), the instantaneous average pressure of the non-fixed axes is additionally reported as :math:`P_{\text{coupled}}` (or ``P(COUPLED)``), which is the quantity that approaches the target pressure. The total 3D scalar pressure :math:`P` continues to be reported as usual.
+
+.. Warning::
+    **Disallowed keyword combinations:**
+
+    * **Manostat with all axes fixed:** Setting ``fixed_axis = all`` (or ``xyz``) while a manostat is active is disallowed and throws an error, as fixing all axes contradicts active pressure coupling.
+    * **Semi-isotropic pressure coupling:** For semi-isotropic coupling (``isotropy = xy``, ``xz``, or ``yz``), the only allowed ``fixed_axis`` settings are ``none`` or the respective out-of-plane anisotropic axis. Fixing axes within the isotropically coupled 2D plane is disallowed.
+
 .. _resetKineticsKeys:
 
 *******************

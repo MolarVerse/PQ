@@ -22,8 +22,7 @@
 
 #include "infoOutput.hpp"
 
-#include <format>    // for format
-#include <ostream>   // for operator<<, basic_ostream, char_traits
+#include <format>   // for format
 
 #include "constraintSettings.hpp"   // for ConstraintSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
@@ -111,6 +110,12 @@ void InfoOutput::write(double simulationTime, const PhysicalData &physicalData)
     {
         writeLeft(physicalData.getVolume(), "VOLUME", "A^3");
         writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
+
+        if (ManostatSettings::getFixedAxis() != FixedAxis::NONE)
+        {
+            writeLeft(physicalData.getCoupledPressure(), "P(COUPLED)", "bar");
+            writeRight();
+        }
     }
 
     if (ThermostatSettings::getThermostatType() == ThermostatType::NOSE_HOOVER)

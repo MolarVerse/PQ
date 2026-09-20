@@ -1,0 +1,1 @@
+- Check clang-format compliance on the whole changed file instead of only the changed lines, so context-dependent formatting (e.g. operator or argument alignment) can no longer produce false positives or slip through (issue #590).

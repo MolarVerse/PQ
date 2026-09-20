@@ -148,12 +148,13 @@ void PhysicalData::updateAverages(const PhysicalData& other)
     _dihedralEnergy += other.getDihedralEnergy();
     _improperEnergy += other.getImproperEnergy();
 
-    _temperature   += other.getTemperature();
-    _kineticEnergy += other.getKineticEnergy();
-    _volume        += other.getVolume();
-    _density       += other.getDensity();
-    _virial        += other.getVirial();
-    _pressure      += other.getPressure();
+    _temperature     += other.getTemperature();
+    _kineticEnergy   += other.getKineticEnergy();
+    _volume          += other.getVolume();
+    _density         += other.getDensity();
+    _virial          += other.getVirial();
+    _pressure        += other.getPressure();
+    _coupledPressure += other.getCoupledPressure();
 
     _qmEnergy += other.getQMEnergy();
 
@@ -197,11 +198,12 @@ void PhysicalData::makeAverages(const double outputFrequency)
     _dihedralEnergy /= outputFrequency;
     _improperEnergy /= outputFrequency;
 
-    _temperature /= outputFrequency;
-    _volume      /= outputFrequency;
-    _density     /= outputFrequency;
-    _virial      /= outputFrequency;
-    _pressure    /= outputFrequency;
+    _temperature     /= outputFrequency;
+    _volume          /= outputFrequency;
+    _density         /= outputFrequency;
+    _virial          /= outputFrequency;
+    _pressure        /= outputFrequency;
+    _coupledPressure /= outputFrequency;
 
     _qmEnergy /= outputFrequency;
 
@@ -231,10 +233,11 @@ void PhysicalData::reset()
     _numberOfQMAtoms = 0.0;
     _loopTime        = 0.0;
 
-    _volume      = 0.0;
-    _density     = 0.0;
-    _temperature = 0.0;
-    _pressure    = 0.0;
+    _volume          = 0.0;
+    _density         = 0.0;
+    _temperature     = 0.0;
+    _pressure        = 0.0;
+    _coupledPressure = 0.0;
 
     _kineticEnergy         = 0.0;
     _coulombEnergy         = 0.0;

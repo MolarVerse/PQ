@@ -40,12 +40,18 @@ namespace manostat
     class BerendsenManostat : public Manostat
     {
        protected:
-        double _tau;
-        double _compressibility;
-        double _dt;
+        double              _tau;
+        double              _compressibility;
+        double              _dt;
+        settings::FixedAxis _fixedAxis;
 
        public:
-        explicit BerendsenManostat(double, double, double);
+        explicit BerendsenManostat(
+            double              targetPressure,
+            double              tau,
+            double              compressibility,
+            settings::FixedAxis fixedAxis
+        );
 
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
@@ -79,11 +85,12 @@ namespace manostat
 
        public:
         SemiIsotropicBerendsenManostat(
-            double,
-            double,
-            double,
-            size_t,
-            const std::vector<size_t> &
+            double                     targetPressure,
+            double                     tau,
+            double                     compressibility,
+            size_t                     anisotropicAxis,
+            const std::vector<size_t> &isotropicAxes,
+            settings::FixedAxis        fixedAxis
         );
 
         [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
