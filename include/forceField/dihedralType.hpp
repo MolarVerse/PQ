@@ -30,8 +30,6 @@ namespace ff
 {
     class DihedralType;   // forward declaration
 
-    bool operator==(const DihedralType &, const DihedralType &);
-
     /**
      * @class DihedralType
      *
@@ -51,7 +49,10 @@ namespace ff
        public:
         DihedralType(DihedralId id, const DihedralParams &params);
 
-        friend bool operator==(const DihedralType &, const DihedralType &);
+        friend bool operator==(
+            const DihedralType &self,
+            const DihedralType &other
+        );
 
         /***************************
          * standard getter methods *

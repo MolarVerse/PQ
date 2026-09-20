@@ -30,8 +30,6 @@ namespace ff
 {
     class BondType;   // forward declaration
 
-    bool operator==(const BondType &self, const BondType &other);
-
     /**
      * @class BondType
      *
@@ -51,7 +49,7 @@ namespace ff
        public:
         BondType(BondId, const BondParams &);
 
-        friend bool operator==(const BondType &, const BondType &);
+        friend bool operator==(const BondType &self, const BondType &other);
 
         /***************************
          * standard getter methods *
