@@ -22,18 +22,19 @@
 
 #include "QMInputParser.hpp"
 
-#include <format>          // for format
-#include <sstream>         // for stringstream
-#include <stdexcept>       // for invalid_argument, out_of_range
-#include <unordered_map>   // for unordered_map
+#include <format>
+#include <sstream>
+#include <stdexcept>
+#include <unordered_map>
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "hubbardDerivMap.hpp"   // for hubbardDerivMap3ob
+#include "exceptions.hpp"
+#include "hubbardDerivMap.hpp"
 #include "parserUtils.hpp"
-#include "qmSettings.hpp"         // for Settings
-#include "references.hpp"         // for ReferencesOutput
-#include "referencesOutput.hpp"   // for ReferencesOutput
-#include "stringUtilities.hpp"    // for toLowerCopy
+#include "qmSettings.hpp"
+#include "references.hpp"
+#include "referencesOutput.hpp"
+#include "stdoutOutput.hpp"
+#include "stringUtilities.hpp"
 
 using namespace input;
 using namespace utilities;
