@@ -51,7 +51,6 @@ using namespace constants;
  * "<string>"
  *
  * @param logOutput
- * @param stdoutOutput
  */
 QMInputParser::QMInputParser(out::LogOutput &logOutput)
     : QMInputParser(logOutput, true)
@@ -66,7 +65,6 @@ QMInputParser::QMInputParser(out::LogOutput &logOutput)
  * "<string>"
  *
  * @param logOutput
- * @param stdoutOutput
  * @param resolveBuiltInSlakosPath
  */
 QMInputParser::QMInputParser(
