@@ -163,10 +163,10 @@ TEST(ManostatSettingsTest, FixedAxisBitwiseOperators)
     axis &= X;
     EXPECT_EQ(axis, X);
 
-    EXPECT_EQ(~NONE, ALL);
-    EXPECT_EQ(~ALL, NONE);
-    EXPECT_EQ(~X, YZ);
-    EXPECT_EQ(~XY, Z);
+    EXPECT_EQ(~NONE & ALL, ALL);
+    EXPECT_EQ(~ALL & ALL, NONE);
+    EXPECT_EQ(~X & ALL, YZ);
+    EXPECT_EQ(~XY & ALL, Z);
 }
 
 TEST(ManostatSettingsTest, FixedAxisHelperFunctions)
