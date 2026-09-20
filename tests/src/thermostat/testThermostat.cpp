@@ -60,7 +60,8 @@ TEST_F(TestThermostat, calculateTemperature)
 
     EXPECT_EQ(
         _data->getTemperature(),
-        sum(kineticEnergyAtomicVector) * constants::TEMPERATURE_FACTOR / (nDOF)
+        sum(kineticEnergyAtomicVector) * constants::TEMPERATURE_FACTOR /
+            static_cast<double>(nDOF)
     );
 }
 

@@ -120,12 +120,12 @@ namespace molsys
      * @throw UserInputException if atom index out of range
      */
     void SimulationBox::addInnerRegionCenterAtoms(
-        const std::vector<int>& atomIndices
+        const std::vector<size_t>& atomIndices
     )
     {
         for (const auto index : atomIndices)
         {
-            if (index < 0 || index >= static_cast<int>(_atoms.size()))
+            if (index >= _atoms.size())
             {
                 throw UserInputException(
                     std::format(

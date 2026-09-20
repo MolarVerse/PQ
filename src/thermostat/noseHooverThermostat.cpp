@@ -197,7 +197,7 @@ double NoseHooverThermostat::getCouplingFrequency() const
  * @param index
  * @param chi
  */
-void NoseHooverThermostat::setChi(unsigned int index, double chi)
+void NoseHooverThermostat::setChi(size_t index, double chi)
 {
     _chi[index] = chi;
 }
@@ -218,7 +218,7 @@ void NoseHooverThermostat::setChi(const std::vector<double> &chi)
  * @param index
  * @param zeta
  */
-void NoseHooverThermostat::setZeta(unsigned int index, double zeta)
+void NoseHooverThermostat::setZeta(size_t index, double zeta)
 {
     _zeta[index] = zeta;
 }

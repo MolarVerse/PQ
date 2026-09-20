@@ -75,9 +75,9 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        void setChi(unsigned int index, double chi);
+        void setChi(size_t index, double chi);
         void setChi(const std::vector<double> &chi);
-        void setZeta(unsigned int index, double zeta);
+        void setZeta(size_t index, double zeta);
         void setZeta(const std::vector<double> &zeta);
         void setCouplingFrequency(double couplingFrequency);
     };

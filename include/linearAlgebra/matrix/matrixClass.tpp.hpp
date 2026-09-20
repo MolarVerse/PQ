@@ -25,6 +25,7 @@
 #define _MATRIX_CLASS_TPP_
 
 #include <cstddef>
+#include <cstdint>
 
 #include "Eigen/Dense"
 #include "exceptions.hpp"
@@ -43,7 +44,10 @@ namespace linalg
     template <typename T>
     Matrix<T>::Matrix(size_t rows, size_t cols) : _rows(rows), _cols(cols)
     {
-        _data.resize(rows, cols);
+        _data.resize(
+            static_cast<std::int64_t>(rows),
+            static_cast<std::int64_t>(cols)
+        );
     }
 
     /**
@@ -56,7 +60,10 @@ namespace linalg
     Matrix<T>::Matrix(size_t rowsAndCols)
         : _rows(rowsAndCols), _cols(rowsAndCols)
     {
-        _data.resize(rowsAndCols, rowsAndCols);
+        _data.resize(
+            static_cast<std::int64_t>(rowsAndCols),
+            static_cast<std::int64_t>(rowsAndCols)
+        );
     }
 
     /**
@@ -69,8 +76,8 @@ namespace linalg
     Matrix<T>::Matrix(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> data)
         : _data(data)
     {
-        _rows = _data.rows();
-        _cols = _data.cols();
+        _rows = static_cast<size_t>(_data.rows());
+        _cols = static_cast<size_t>(_data.cols());
     }
 
     /**
@@ -83,7 +90,10 @@ namespace linalg
     template <typename T>
     T &Matrix<T>::operator()(size_t index_i, size_t index_j)
     {
-        return _data(index_i, index_j);
+        return _data(
+            static_cast<std::int64_t>(index_i),
+            static_cast<std::int64_t>(index_j)
+        );
     }
 
     /**
@@ -97,7 +107,13 @@ namespace linalg
     {
         std::vector<T> row;
 
-        for (size_t i = 0; i < _cols; ++i) row.push_back(_data(index, i));
+        for (size_t i = 0; i < _cols; ++i)
+        {
+            row.push_back(_data(
+                static_cast<std::int64_t>(index),
+                static_cast<std::int64_t>(i)
+            ));
+        }
 
         return row;
     }
