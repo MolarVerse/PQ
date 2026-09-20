@@ -38,6 +38,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          # full history so the merge-base with the PR base commit resolves
+          fetch-depth: 0
 
       - name: Install GCC 13
         run: |
@@ -73,7 +75,15 @@ jobs:
         shell: bash
 
       - name: Run cpp_checks
-        run: cpp_checks
+        run: |
+          if [[ -n "${BASE_SHA}" ]]; then
+            cpp_checks --base-ref "${BASE_SHA}"
+          else
+            cpp_checks
+          fi
+        env:
+          # empty on workflow_dispatch -> check all files
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         shell: bash
 
   cpp-check-gate:

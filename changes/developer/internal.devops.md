@@ -1,1 +1,2 @@
 - introduce new devops cpp check rule for keeping a consistent naming convention for `SimulationBox` and `PhysicalData` parameters in source files
+- run the devops C++ check in CI only on files changed in the pull request via `--base-ref`
