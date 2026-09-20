@@ -1,2 +1,3 @@
 - enforce clean doxygen documentation for source code
 - add source code documentaion to sphinx github pages documentation
+- `make docs` fails now if no doxygen executable was found
