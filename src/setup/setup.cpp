@@ -94,7 +94,6 @@ void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
 /**
  * @brief start the setup
  *
- * @param engine
  */
 void setup::startSetup() { out::StdoutOutput::writeHeader(); }
 
@@ -112,7 +111,6 @@ void setup::endSetup(Engine& engine)
 /**
  * @brief reads all the files needed for the simulation
  *
- * @param inputFileName
  * @param engine
  */
 void setup::readFiles(Engine& engine)

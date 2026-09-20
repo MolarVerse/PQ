@@ -49,7 +49,7 @@ using namespace engine;
  * 5. dihedral type
  * 6. linker marked with a '*' (optional)
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throws TopologyException if number of elements in line is

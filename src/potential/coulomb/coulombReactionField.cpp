@@ -30,7 +30,8 @@ using namespace constants;
 /**
  * @brief calculate the energy and force of the reaction field Coulomb potential
  *
- * @param distance
+ * @param dist
+ * @param chargeProduct
  * @return std::pair<double, double>
  */
 std::pair<double, double> CoulombReactionField::calculate(

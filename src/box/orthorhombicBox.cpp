@@ -88,7 +88,7 @@ namespace molsys
     /**
      * @brief scales the cell dimensions and recalculates the volume
      *
-     * @param scalingFactors
+     * @param scalingTensor
      */
     void OrthorhombicBox::scaleBox(const tensor3D &scalingTensor)
     {

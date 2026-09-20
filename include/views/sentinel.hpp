@@ -92,18 +92,20 @@ namespace pqviews
          * @brief checks if the iterator is equal to the sentinel
          *
          * @param it the Iterator to compare with
+         * @param sentinel the Sentinel to compare with
          * @return true if they are equal, false otherwise
          */
         template <typename Iterator>
-        friend bool operator==(const Iterator& it, const Sentinel& ssentinel)
+        friend bool operator==(const Iterator& it, const Sentinel& sentinel)
         {
-            return it.current() == ssentinel._end;
+            return it.current() == sentinel._end;
         }
 
         /**
          * @brief checks if the sentinel is equal to the iterator
          *
          * @param it the Iterator to compare with
+         * @param sentinel the Sentinel to compare with
          * @return true if they are equal, false otherwise
          */
         template <typename Iterator>
@@ -115,7 +117,7 @@ namespace pqviews
         /**
          * @brief calculates the distance between the sentinel and the iterator
          *
-         * @param s the Sentinel to compare with
+         * @param sentinel the Sentinel to compare with
          * @param it the Iterator to compare with
          * @return difference_type the distance between the two
          */
@@ -141,7 +143,7 @@ namespace pqviews
          * @brief calculates the distance between the iterator and the sentinel
          *
          * @param it the Iterator to compare with
-         * @param s the Sentinel to compare with
+         * @param sentinel the Sentinel to compare with
          * @return difference_type the distance between the two
          */
         template <typename Iterator>

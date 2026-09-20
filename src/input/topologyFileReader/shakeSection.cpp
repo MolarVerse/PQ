@@ -43,7 +43,7 @@ using namespace constraints;
  * 3. target bond length
  * 4. linker (not used yet - not sure what it is for)
  *
- * @param line
+ * @param lineElements
  * @param engine
  *
  * @throws TopologyException if number of elements in line is

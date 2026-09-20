@@ -38,9 +38,7 @@ namespace constraints
 {
 
     /**
-     * @class DistanceConstraint inherits from Bond
-     *
-     * @brief constraint object for single bond length
+     * @brief DistanceConstraint inherits from Bond
      *
      * @details it performs the shake and rattle algorithm on a bond constraint
      *

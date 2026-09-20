@@ -45,8 +45,8 @@ namespace linearAlgebra
     /**
      * @brief operator ==
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<U>&
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U>
@@ -59,8 +59,8 @@ namespace linearAlgebra
     /**
      * @brief operator !=
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<U>&
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U>
@@ -77,8 +77,8 @@ namespace linearAlgebra
     /**
      * @brief operator <
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U, class V>
@@ -91,8 +91,8 @@ namespace linearAlgebra
     /**
      * @brief operator <
      *
-     * @param const Vector3D<U>&
-     * @param const V
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U, class V>
@@ -109,8 +109,8 @@ namespace linearAlgebra
     /**
      * @brief operator <=
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U, class V>
@@ -123,8 +123,8 @@ namespace linearAlgebra
     /**
      * @brief operator <=
      *
-     * @param const Vector3D<U>&
-     * @param const V
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U, class V>
@@ -141,8 +141,8 @@ namespace linearAlgebra
     /**
      * @brief operator >
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U, class V>
@@ -155,8 +155,8 @@ namespace linearAlgebra
     /**
      * @brief operator >
      *
-     * @param const Vector3D<U>&
-     * @param const V
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U, class V>
@@ -173,8 +173,8 @@ namespace linearAlgebra
     /**
      * @brief operator >=
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U, class V>
@@ -187,8 +187,8 @@ namespace linearAlgebra
     /**
      * @brief operator >=
      *
-     * @param const Vector3D<U>&
-     * @param const V
+     * @param lhs
+     * @param rhs
      * @return bool
      */
     template <class U, class V>
@@ -207,7 +207,9 @@ namespace linearAlgebra
     /**
      * @brief unary + operator for a Vector3d object
      *
-     * @example +Vector3D<int>
+     * @code
+     * +Vector3D<int>
+     * @endcode
      *
      * @tparam U
      * @param vec
@@ -222,11 +224,13 @@ namespace linearAlgebra
     /**
      * @brief unary - operator for a Vector3d object
      *
-     * @example -Vector3D<int>
+     * @code
+     * -Vector3D<int>
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(-vec[0])>
+     * @return `Vector3D<decltype(-vec[0])>`
      */
     template <pq::ArithmeticVector3D U>
     auto operator-(const U &vec) -> Vector3D<decltype(-vec[0])>
@@ -245,11 +249,13 @@ namespace linearAlgebra
     /**
      * @brief + operator special case for two Vector3d objects
      *
-     * @example Vector3D<int> + Vector3D<double>
+     * @code
+     * Vector3D<int> + Vector3D<double>
+     * @endcode
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
-     * @return Vector3D<decltype(lhs.x + rhs.x)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs[0] + rhs[0])>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == 0)
@@ -268,11 +274,13 @@ namespace linearAlgebra
     /**
      * @brief + operator special case for nested Vector3d objects
      *
-     * @example Vector3D<Vector3D<int>> + Vector3D<double>
+     * @code
+     * Vector3D<Vector3D<int>> + Vector3D<double>
+     * @endcode
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
-     * @return Vector3D<decltype(lhs.x + rhs.x)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs[0] + rhs)>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == 1)
@@ -287,11 +295,13 @@ namespace linearAlgebra
     /**
      * @brief + operator special case for nested Vector3d objects
      *
-     * @example Vector3D<int> + Vector3D<Vector3D<double>>
+     * @code
+     * Vector3D<int> + Vector3D<Vector3D<double>>
+     * @endcode
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
-     * @return Vector3D<decltype(lhs.x + rhs.x)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs + rhs[0])>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == -1)
@@ -306,11 +316,13 @@ namespace linearAlgebra
     /**
      * @brief + operator for a Vector3d object and a scalar
      *
-     * @example Vector3D<int> + double
+     * @code
+     * Vector3D<int> + double
+     * @endcode
      *
-     * @param const Vector3D<U>&
-     * @param const V
-     * @return Vector3D<decltype(vec[0] + scalar)>
+     * @param vec
+     * @param scalar
+     * @return `Vector3D<decltype(vec[0] + scalar)>`
      */
     template <pq::ArithmeticVector3D U, pq::Arithmetic V>
     auto operator+(const U &vec, const V &scalar)
@@ -328,11 +340,11 @@ namespace linearAlgebra
     /**
      * @brief + operator for a Vector3d object and a scalar
      *
-     * @example double + Vector3D<int>
+     * @code
+     * const double& + const Vector3D<int>&
+     * @endcode
      *
-     * @param const V
-     * @param const Vector3D<U>&
-     * @return Vector3D<decltype(vec[0] + scalar)>
+     * @overload
      */
     template <pq::Arithmetic U, pq::ArithmeticVector3D V>
     auto operator+(const U &scalar, const V &vec)
@@ -356,11 +368,13 @@ namespace linearAlgebra
     /**
      * @brief - operator special case for two Vector3d objects
      *
-     * @example Vector3D<int> - Vector3D<double>
+     * @code
+     * const Vector3D<int>& - const Vector3D<double>&
+     * @endcode
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
-     * @return Vector3D<decltype(lhs.x - rhs.x)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs[0] - rhs[0])>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == 0)
@@ -379,11 +393,13 @@ namespace linearAlgebra
     /**
      * @brief - operator special case for nested Vector3d objects
      *
-     * @example Vector3D<Vector3D<int>> - Vector3D<double>
+     * @code
+     * const Vector3D<Vector3D<int>>& - const Vector3D<double>&
+     * @endcode
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
-     * @return Vector3D<decltype(lhs.x - rhs.x)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs[0] - rhs)>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == 1)
@@ -398,11 +414,13 @@ namespace linearAlgebra
     /**
      * @brief - operator special case for nested Vector3d objects
      *
-     * @example Vector3D<int> - Vector3D<Vector3D<double>>
+     * @code
+     * const Vector3D<int>& - const Vector3D<Vector3D<double>>&
+     * @endcode
      *
-     * @param const Vector3D<U>&
-     * @param const Vector3D<V>&
-     * @return Vector3D<decltype(lhs.x - rhs.x)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs - rhs[0])>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == -1)
@@ -417,11 +435,13 @@ namespace linearAlgebra
     /**
      * @brief - operator for a Vector3d object and a scalar
      *
-     * @example Vector3D<int> - double
+     * @code
+     * Vector3D<int> - double
+     * @endcode
      *
-     * @param const Vector3D<U>&
-     * @param const V
-     * @return Vector3D<decltype(vec[0] - scalar)>
+     * @param vec
+     * @param scalar
+     * @return `Vector3D<decltype(vec[0] - scalar)>`
      */
     template <pq::ArithmeticVector3D U, pq::Arithmetic V>
     auto operator-(const U &vec, const V &scalar)
@@ -439,11 +459,11 @@ namespace linearAlgebra
     /**
      * @brief - operator for a Vector3d object and a scalar
      *
-     * @example double - Vector3D<int>
+     * @code
+     * const double& - const Vector3D<int>&
+     * @endcode
      *
-     * @param const V
-     * @param const Vector3D<U>&
-     * @return Vector3D<decltype(vec[0] - scalar)>
+     * @overload
      */
     template <pq::Arithmetic U, pq::ArithmeticVector3D V>
     auto operator-(const U &scalar, const V &vec)
@@ -467,11 +487,13 @@ namespace linearAlgebra
     /**
      * @brief * operator for two Vector3d objects
      *
-     * @example Vector3D<int> * Vector3D<double>
+     * @code
+     * Vector3D<int> * Vector3D<double>
+     * @endcode
      *
-     * @param const U
-     * @param const V
-     * @return Vector3D<decltype(lhs.x * rhs.x)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs[0] * rhs[0])>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == 0)
@@ -490,11 +512,13 @@ namespace linearAlgebra
     /**
      * @brief * operator for a Vector3d object and a scalar
      *
-     * @example Vector3D<int> * double
+     * @code
+     * Vector3D<int> * double (scalar multiplication)
+     * @endcode
      *
-     * @param const U
-     * @param const V
-     * @return Vector3D<decltype(lhs.x * rhs)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs[0] * rhs)>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == 1)
@@ -509,11 +533,13 @@ namespace linearAlgebra
     /**
      * @brief * operator for a Vector3d object and a scalar
      *
-     * @example Vector3D<int> * double
+     * @code
+     * Vector3D<int> * double
+     * @endcode
      *
-     * @param const U
-     * @param const V
-     * @return Vector3D<decltype(lhs * rhs.x)>
+     * @param lhs
+     * @param rhs
+     * @return `Vector3D<decltype(lhs * rhs.x)>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == -1)
@@ -528,13 +554,15 @@ namespace linearAlgebra
     /**
      * @brief Operator * for a Vector3d object and a scalar
      *
-     * @example Vector3D<int> * double
+     * @code
+     * Vector3D<int> * double
+     * @endcode
      *
      * @tparam U
      * @tparam V
      * @param vec
      * @param scalar
-     * @return Vector3D<decltype(vec[0] * scalar)>
+     * @return `Vector3D<decltype(vec[0] * scalar)>`
      */
     template <pq::ArithmeticVector3D U, pq::Arithmetic V>
     auto operator*(const U &vec, const V &scalar)
@@ -552,13 +580,11 @@ namespace linearAlgebra
     /**
      * @brief Operator * for a scalar and a Vector3d object
      *
-     * @example double * Vector3D<int>
+     * @code
+     * const double& * const Vector3D<int>&
+     * @endcode
      *
-     * @tparam U
-     * @tparam V
-     * @param scalar
-     * @param vec
-     * @return Vector3D<decltype(vec[0] * scalar)>
+     * @overload
      */
     template <pq::Arithmetic U, pq::ArithmeticVector3D V>
     auto operator*(const U &scalar, const V &vec)
@@ -582,13 +608,15 @@ namespace linearAlgebra
     /**
      * @brief / operator for two Vector3d objects
      *
-     * @example Vector3D<int> / Vector3D<double>
+     * @code
+     * Vector3D<int> / Vector3D<double>
+     * @endcode
      *
      * @tparam U
      * @tparam V
      * @param lhs
      * @param rhs
-     * @return Vector3D<decltype(lhs.x / rhs.x)>
+     * @return `Vector3D<decltype(lhs.x / rhs.x)>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == 0)
@@ -607,13 +635,15 @@ namespace linearAlgebra
     /**
      * @brief / operator for a Vector3d object and a scalar
      *
-     * @example Vector3D<int> / double
+     * @code
+     * Vector3D<int> / double
+     * @endcode
      *
      * @tparam U
      * @tparam V
      * @param lhs
      * @param rhs
-     * @return Vector3D<decltype(lhs.x / rhs)>
+     * @return `Vector3D<decltype(lhs.x / rhs)>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == 1)
@@ -628,13 +658,15 @@ namespace linearAlgebra
     /**
      * @brief / operator for a Vector3d object and a scalar
      *
-     * @example Vector3D<int> / double
+     * @code
+     * Vector3D<int> / double
+     * @endcode
      *
      * @tparam U
      * @tparam V
      * @param lhs
      * @param rhs
-     * @return Vector3D<decltype(lhs / rhs.x)>
+     * @return `Vector3D<decltype(lhs / rhs.x)>`
      */
     template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
     requires(pq::Vector3DDepthDifference_v<U, V> == -1)
@@ -649,13 +681,15 @@ namespace linearAlgebra
     /**
      * @brief / operator for a Vector3d object and a scalar
      *
-     * @example Vector3D<int> / double
+     * @code
+     * Vector3D<int> / double
+     * @endcode
      *
      * @tparam U
      * @tparam V
      * @param vec
      * @param scalar
-     * @return Vector3D<decltype(vec[0] / scalar)>
+     * @return `Vector3D<decltype(vec[0] / scalar)>`
      */
     template <pq::ArithmeticVector3D U, pq::Arithmetic V>
     auto operator/(const U &vec, const V &scalar)
@@ -673,13 +707,11 @@ namespace linearAlgebra
     /**
      * @brief / operator for a scalar and a Vector3d object
      *
-     * @example double / Vector3D<int>
+     * @code
+     * const double& / const Vector3D<int>&
+     * @endcode
      *
-     * @tparam U
-     * @tparam V
-     * @param scalar
-     * @param vec
-     * @return Vector3D<decltype(vec[0] / scalar)>
+     * @overload
      */
     template <pq::Arithmetic U, pq::ArithmeticVector3D V>
     auto operator/(const U &scalar, const V &vec)
@@ -703,11 +735,13 @@ namespace linearAlgebra
     /**
      * @brief fabs function for a Vector3d object
      *
-     * @example fabs(Vector3D<int>)
+     * @code
+     * fabs(Vector3D<int>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(std::fabs(vec[0]))>
+     * @return `Vector3D<decltype(std::fabs(vec[0]))>`
      */
     template <pq::ArithmeticVector3D U>
     auto fabs(const U &vec) -> Vector3D<decltype(std::fabs(vec[0]))>
@@ -730,11 +764,13 @@ namespace linearAlgebra
     /**
      * @brief exp function for a Vector3d object
      *
-     * @example exp(Vector3D<double>)
+     * @code
+     * exp(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(std::exp(vec[0]))>
+     * @return `Vector3D<decltype(std::exp(vec[0]))>`
      */
     template <pq::ArithmeticVector3D U>
     auto exp(const U &vec) -> Vector3D<decltype(std::exp(vec[0]))>
@@ -757,11 +793,13 @@ namespace linearAlgebra
     /**
      * @brief sqrt function for a Vector3d object
      *
-     * @example sqrt(Vector3D<double>)
+     * @code
+     * sqrt(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(std::sqrt(vec[0]))>
+     * @return `Vector3D<decltype(std::sqrt(vec[0]))>`
      */
     template <pq::ArithmeticVector3D U>
     auto sqrt(const U &vec) -> Vector3D<decltype(std::sqrt(vec[0]))>
@@ -784,11 +822,13 @@ namespace linearAlgebra
     /**
      * @brief round function for a Vector3d object
      *
-     * @example round(Vector3D<double>)
+     * @code
+     * round(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(std::round(vec[0]))>
+     * @return `Vector3D<decltype(std::round(vec[0]))>`
      */
     template <pq::ArithmeticVector3D U>
     auto round(const U &vec) -> Vector3D<decltype(std::rint(vec[0]))>
@@ -805,11 +845,13 @@ namespace linearAlgebra
     /**
      * @brief floor function for a Vector3d object
      *
-     * @example floor(Vector3D<double>)
+     * @code
+     * floor(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(std::floor(vec[0]))>
+     * @return `Vector3D<decltype(std::floor(vec[0]))>`
      */
     template <pq::ArithmeticVector3D U>
     auto floor(const U &vec) -> Vector3D<decltype(std::floor(vec[0]))>
@@ -826,11 +868,13 @@ namespace linearAlgebra
     /**
      * @brief ceil function for a Vector3d object
      *
-     * @example ceil(Vector3D<double>)
+     * @code
+     * ceil(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(std::ceil(vec[0]))>
+     * @return `Vector3D<decltype(std::ceil(vec[0]))>`
      */
     template <pq::ArithmeticVector3D U>
     auto ceil(const U &vec) -> Vector3D<decltype(std::ceil(vec[0]))>
@@ -847,11 +891,13 @@ namespace linearAlgebra
     /**
      * @brief rint function for a Vector3d object
      *
-     * @example rint(Vector3D<double>)
+     * @code
+     * rint(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(std::rint(vec[0]))>
+     * @return `Vector3D<decltype(std::rint(vec[0]))>`
      */
     template <pq::ArithmeticVector3D U>
     auto rint(const U &vec) -> Vector3D<decltype(std::rint(vec[0]))>
@@ -874,11 +920,13 @@ namespace linearAlgebra
     /**
      * @brief minimum function for a Vector3d object
      *
-     * @example minimum(Vector3D<int>)
+     * @code
+     * minimum(Vector3D<int>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return InnerType_t<U>
+     * @return `InnerType_t<U>`
      */
     template <pq::ArithmeticVector3D U>
     auto minimum(const U &vec) -> pq::InnerType_t<U>
@@ -889,11 +937,13 @@ namespace linearAlgebra
     /**
      * @brief maximum function for a Vector3d object
      *
-     * @example maximum(Vector3D<int>)
+     * @code
+     * maximum(Vector3D<int>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return InnerType_t<U>
+     * @return `InnerType_t<U>`
      */
     template <pq::ArithmeticVector3D U>
     auto maximum(const U &vec) -> pq::InnerType_t<U>
@@ -904,11 +954,13 @@ namespace linearAlgebra
     /**
      * @brief minimum function for a Vector3d object
      *
-     * @example minimum(Vector3D<int>)
+     * @code
+     * minimum(Vector3D<int>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return InnerType_t<U>
+     * @return `InnerType_t<U>`
      */
     template <pq::ArithmeticVector3D U>
     auto min(const U &vec) -> pq::InnerType_t<U>
@@ -919,11 +971,13 @@ namespace linearAlgebra
     /**
      * @brief maximum function for a Vector3d object
      *
-     * @example maximum(Vector3D<int>)
+     * @code
+     * maximum(Vector3D<int>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return InnerType_t<U>
+     * @return `InnerType_t<U>`
      */
     template <pq::ArithmeticVector3D U>
     auto max(const U &vec) -> pq::InnerType_t<U>
@@ -936,8 +990,8 @@ namespace linearAlgebra
      * std::vector
      *
      * @tparam U
-     * @param v
-     * @return decltype(max(v[0]))
+     * @param vec
+     * @return decltype(max(vec[0]))
      */
     template <pq::ArithmeticVector3D U>
     auto max(const std::vector<U> &vec) -> decltype(maximum(vec[0]))
@@ -954,8 +1008,8 @@ namespace linearAlgebra
      * @brief returns the maximum of the norms of all Vector3d objects in a
      *
      * @tparam U
-     * @param v
-     * @return decltype(norm(v[0]))
+     * @param vec
+     * @return decltype(norm(vec[0]))
      */
     template <pq::ArithmeticVector3D U>
     auto maxNorm(const std::vector<U> &vec) -> decltype(norm(vec[0]))
@@ -977,7 +1031,9 @@ namespace linearAlgebra
     /**
      * @brief norm function for a Vector3d object
      *
-     * @example norm(Vector3D<double>)
+     * @code
+     * norm(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
@@ -992,7 +1048,9 @@ namespace linearAlgebra
     /**
      * @brief normSquared function for a Vector3d object
      *
-     * @example normSquared(Vector3D<double>)
+     * @code
+     * normSquared(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
@@ -1007,11 +1065,13 @@ namespace linearAlgebra
     /**
      * @brief norms function for a std::vector of Vector3d objects
      *
-     * @example norms(std::vector<Vector3D<double>>)
+     * @code
+     * norms(std::vector<Vector3D<double>>)
+     * @endcode
      *
      * @tparam U
-     * @param v
-     * @return std::vector<decltype(norm(v[0])>
+     * @param vec
+     * @return std::vector<decltype(norm(vec[0])>
      */
     template <pq::ArithmeticVector3D U>
     auto norms(std::vector<U> vec) -> std::vector<decltype(norm(vec[0]))>
@@ -1027,11 +1087,13 @@ namespace linearAlgebra
     /**
      * @brief rms function for a std::vector of Vector3d objects
      *
-     * @example rms(std::vector<Vector3D<double>>)
+     * @code
+     * rms(const std::vector<Vector3D<double>> &vec)
+     * @endcode
      *
      * @tparam U
-     * @param v
-     * @return decltype(norm(v[0]) / v.size())
+     * @param vec
+     * @return decltype(norm(vec[0]) / vec.size())
      */
     template <pq::ArithmeticVector3D U>
     auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]) / vec.size())
@@ -1052,7 +1114,9 @@ namespace linearAlgebra
     /**
      * @brief sum function for a Vector3d object
      *
-     * @example sum(Vector3D<int>)
+     * @code
+     * sum(Vector3D<int>)
+     * @endcode
      *
      * @tparam U
      * @param vec
@@ -1073,7 +1137,9 @@ namespace linearAlgebra
     /**
      * @brief prod function for a Vector3d object
      *
-     * @example prod(Vector3D<int>)
+     * @code
+     * prod(Vector3D<int>)
+     * @endcode
      *
      * @tparam U
      * @param vec
@@ -1094,7 +1160,9 @@ namespace linearAlgebra
     /**
      * @brief mean function for a Vector3d object
      *
-     * @example mean(Vector3D<int>)
+     * @code
+     * mean(Vector3D<int>)
+     * @endcode
      *
      * @tparam U
      * @param vec
@@ -1115,7 +1183,9 @@ namespace linearAlgebra
     /**
      * @brief dot product for two Vector3d objects
      *
-     * @example dot(Vector3D<int>, Vector3D<double>)
+     * @code
+     * dot(Vector3D<int>, Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @tparam V
@@ -1138,13 +1208,15 @@ namespace linearAlgebra
     /**
      * @brief cross product for two Vector3d objects
      *
-     * @example cross(Vector3D<int>, Vector3D<double>)
+     * @code
+     * cross(Vector3D<int>, Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @tparam V
      * @param lhs
      * @param rhs
-     * @return Vector3D<decltype(lhs.x * rhs.x)>
+     * @return `Vector3D<decltype(lhs.x * rhs.x)>`
      */
     template <pq::ArithmeticVector3D U>
     auto cross(const U &lhs, const U &rhs)
@@ -1166,11 +1238,13 @@ namespace linearAlgebra
     /**
      * @brief cos function for a Vector3d object
      *
-     * @example cos(Vector3D<double>)
+     * @code
+     * cos(Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @param vec
-     * @return Vector3D<decltype(std::cos(vec[0]))>
+     * @return `Vector3D<decltype(std::cos(vec[0]))>`
      */
     template <pq::ArithmeticVector3D U>
     auto cos(const U &vec) -> Vector3D<decltype(std::cos(vec[0]))>
@@ -1185,12 +1259,14 @@ namespace linearAlgebra
     /**
      * @brief cos function for two Vector3d objects
      *
-     * @example cos(Vector3D<int>, Vector3D<double>)
+     * @code
+     * cos(Vector3D<int>, Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @tparam V
-     * @param v1
-     * @param v2
+     * @param lhs
+     * @param rhs
      * @return decltype(std::acos(cos(v1, v2)))
      */
     template <pq::ArithmeticVector3D U>
@@ -1204,13 +1280,15 @@ namespace linearAlgebra
     /**
      * @brief angle function for two Vector3d objects
      *
-     * @example angle(Vector3D<int>, Vector3D<double>)
+     * @code
+     * angle(Vector3D<int>, Vector3D<double>)
+     * @endcode
      *
      * @tparam U
      * @tparam V
-     * @param v1
-     * @param v2
-     * @return decltype(std::acos(cos(v1, v2)))
+     * @param lhs
+     * @param rhs
+     * @return decltype(std::acos(cos(lhs, rhs)))
      */
     template <pq::ArithmeticVector3D U>
     auto angle(const U &lhs, const U &rhs) -> decltype(std::acos(cos(lhs, rhs)))
@@ -1228,8 +1306,8 @@ namespace linearAlgebra
      * @brief Operator << for a Vector3d object
      *
      * @tparam U
-     * @param os
-     * @param v
+     * @param ostream
+     * @param vec
      * @return std::ostream&
      */
     template <pq::ArithmeticVector3D U>

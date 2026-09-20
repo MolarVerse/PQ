@@ -40,10 +40,8 @@ using namespace utilities;
  * Parser Coulomb Long Range object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) long_range <string> 2)
- * wolf_param <double>
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) long_range "<string>" 2)
+ * wolf_param "<double>"
  */
 CoulombLongRangeInputParser::CoulombLongRangeInputParser()
 {
@@ -75,9 +73,10 @@ CoulombLongRangeInputParser::CoulombLongRangeInputParser()
  * @details Possible options are:
  * 1) "none" - no long-range correction is used (default) = shifted potential
  * 2) "reaction_field" - reaction field long-range correction is used
- * 2) "wolf" - wolf long-range correction is used
+ * 3) "wolf" - wolf long-range correction is used
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if coulombic long-range
  * correction is not valid - currently only none and wolf are supported
@@ -120,6 +119,7 @@ void CoulombLongRangeInputParser::parseCoulombLongRange(
  * @details default value is 0.25
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if wolf parameter is negative
  */
@@ -142,6 +142,7 @@ void CoulombLongRangeInputParser::parseWolfParameter(
  * @brief parse the reaction field epsilon used in the simulation
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if epsilon is negative
  */

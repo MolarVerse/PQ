@@ -81,7 +81,7 @@ void Output::openFile()
  *
  * @param step simulation step
  */
-void Output::writeComment(const size_t step)
+void Output::writeComment(size_t step)
 {
     if (OutputFileSettings::getIncludeOutputMetadata())
         _fp << format("# step = {}\n", step);
@@ -95,7 +95,7 @@ void Output::writeComment(const size_t step)
  * @param step simulation step
  * @param totalForce total force acting on the system
  */
-void Output::writeForceComment(const size_t step, const double totalForce)
+void Output::writeForceComment(size_t step, double totalForce)
 {
     _fp << formatForceComment(step, totalForce);
 }

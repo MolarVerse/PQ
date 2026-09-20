@@ -29,7 +29,10 @@ using QM::AseDftbRunner;
 /**
  * @brief Construct a new AseDftbRunner::AseDftbRunner object
  *
- * @param slakos
+ * @param slakosPath
+ * @param thirdOrder
+ * @param hubbardDerivs
+ * @param dispersion
  *
  * @throw pybind11::error_already_set if the import of the mace module fails
  */

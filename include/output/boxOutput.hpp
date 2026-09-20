@@ -36,9 +36,10 @@ namespace molsys
 namespace out
 {
     /**
-     * @class BoxFileOutput inherits from Output
+     * @brief BoxFileOutput inherits from Output
      *
-     * @brief Output file for lattice parameter data a, b, c, alpha, beta, gamma
+     * @details Output file for lattice parameter data a, b, c, alpha, beta,
+     * gamma
      *
      */
     class BoxFileOutput : public Output

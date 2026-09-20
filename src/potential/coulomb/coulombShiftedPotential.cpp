@@ -30,6 +30,7 @@ namespace pot
      * @brief calculate the energy and force of the shifted Coulomb potential
      *
      * @param distance
+     * @param chargeProduct
      * @return std::pair<double, double>
      */
     std::pair<double, double> CoulombShiftedPotential::calculate(

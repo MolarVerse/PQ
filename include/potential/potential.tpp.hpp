@@ -308,7 +308,7 @@ namespace pot
      * @brief make shared pointer of the Coulomb potential
      *
      * @tparam T
-     * @param p
+     * @param potential
      */
     template <typename T>
     void Potential::makeCoulombPotential(T potential)

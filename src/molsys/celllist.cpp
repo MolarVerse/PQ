@@ -89,7 +89,7 @@ void CellList::setup(const SimulationBox &simulationBox)
 /**
  * @brief determine cell size
  *
- * @param simulationBox
+ * @param box
  */
 void CellList::determineCellSize(const Vec3D &box)
 {
@@ -115,7 +115,7 @@ void CellList::checkCoulombCutoff(double coulombCutoff) const
 /**
  * @brief determine cell boundaries
  *
- * @param simulationBox
+ * @param box
  */
 void CellList::determineCellBoundaries(const Vec3D &box)
 {
@@ -143,7 +143,7 @@ void CellList::determineCellBoundaries(const Vec3D &box)
 /**
  * @brief add neighbouring cells
  *
- * @param simulationBox
+ * @param coulombCutoff
  */
 void CellList::addNeighbouringCells(double coulombCutoff)
 {
@@ -323,7 +323,7 @@ void CellList::assignWaterMoleculeIndices(SimulationBox &simBox)
 /**
  * @brief get cell index of atom
  *
- * @param simulationBox
+ * @param box
  * @param position
  * @return Vec3Dul
  */

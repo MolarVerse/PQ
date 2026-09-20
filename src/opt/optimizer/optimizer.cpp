@@ -38,14 +38,12 @@ using namespace exc;
  * @brief Construct a new Optimizer object
  *
  * @param nEpochs
- * @param initialLearningRate
  */
 Optimizer::Optimizer(size_t nEpochs) : _nEpochs(nEpochs) {}
 
 /**
  * @brief update the optimizer history
  *
- * @param learningRate
  */
 void Optimizer::updateHistory()
 {

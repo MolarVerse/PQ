@@ -207,6 +207,13 @@ Doxygen
 **PQ** includes comprehensive API documentation generated using `Doxygen <https://www.doxygen.nl/>`__. 
 This documentation provides detailed information about all classes, functions, methods, and their usage throughout the codebase.
 The documentation is automatically extracted from specially formatted comments in the source code using Doxygen markup syntax.
+
+On the project website, this API reference is built automatically as part of
+``make html`` in ``docs/sphinx/`` — no separate step is required.
+
+The steps below build a standalone copy independently of the website, useful
+for a quick local look without running the full Sphinx build:
+
 To generate the Doxygen documentation, you need to have Doxygen installed on your system.
 The documentation can be built as follows:
 
@@ -214,7 +221,7 @@ The documentation can be built as follows:
 
         .. code:: bash
 
-            $ cmake .. -DBUILD_WITH_DOC=ON
+            $ cmake .. -DBUILD_WITH_DOCS=ON
 
     #. Build the documentation:
 

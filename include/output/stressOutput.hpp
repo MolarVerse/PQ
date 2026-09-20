@@ -36,9 +36,9 @@ namespace physicalData
 namespace out
 {
     /**
-     * @class StressOutput inherits from Output
+     * @brief StressOutput inherits from Output
      *
-     * @brief Output file for stress tensor
+     * @details Output file for stress tensor
      *
      */
     class StressOutput : public Output

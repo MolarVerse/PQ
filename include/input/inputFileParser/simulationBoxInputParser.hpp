@@ -36,9 +36,9 @@ namespace molsys
 namespace input
 {
     /**
-     * @class SimulationBoxInputParser inherits from InputFileParser
+     * @brief SimulationBoxInputParser inherits from InputFileParser
      *
-     * @brief Parses the simulation box commands in the input file
+     * @details Parses the simulation box commands in the input file
      *
      */
     class SimulationBoxInputParser : public InputFileParser

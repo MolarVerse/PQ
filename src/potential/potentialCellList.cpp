@@ -64,7 +64,7 @@ PotentialCellList::~PotentialCellList() = default;
  */
 void PotentialCellList::calculateForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -172,8 +172,8 @@ void PotentialCellList::calculateForces(
             }
         }
     }
-    physData.setCoulombEnergy(totalCoulombEnergy);
-    physData.setNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.setCoulombEnergy(totalCoulombEnergy);
+    physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
@@ -191,7 +191,7 @@ void PotentialCellList::calculateForces(
  */
 void PotentialCellList::calculateCoreToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -292,7 +292,7 @@ void PotentialCellList::calculateCoreToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
 }
 
 /**
@@ -311,7 +311,7 @@ void PotentialCellList::calculateCoreToOuterForces(
  */
 void PotentialCellList::calculateLayerToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -455,13 +455,20 @@ void PotentialCellList::calculateLayerToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
+/**
+ * @brief calculates forces between outer-zone molecules
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param cellList cell list containing outer-zone molecules
+ */
 void PotentialCellList::calculateOuterToOuterForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -567,13 +574,20 @@ void PotentialCellList::calculateOuterToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
+/**
+ * @brief calculates forces between smoothing-zone molecules and all others
+ *
+ * @param simBox simulation box containing molecules
+ * @param physicalData physical data to store energy results
+ * @param cellList cell list containing smoothing-zone molecules
+ */
 void PotentialCellList::calculateHotspotSmoothingMMForces(
     SimulationBox &simBox,
-    PhysicalData  &physData,
+    PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
@@ -908,8 +922,8 @@ void PotentialCellList::calculateHotspotSmoothingMMForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**

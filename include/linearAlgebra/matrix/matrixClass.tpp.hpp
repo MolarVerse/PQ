@@ -76,8 +76,9 @@ namespace linearAlgebra
     /**
      * @brief index operator
      *
-     * @param size_t index
-     * @return std::vector<T> &
+     * @param index_i
+     * @param index_j
+     * @return `T &`
      */
     template <typename T>
     T &Matrix<T>::operator()(size_t index_i, size_t index_j)
@@ -88,8 +89,8 @@ namespace linearAlgebra
     /**
      * @brief index operator
      *
-     * @param size_t index
-     * @return std::vector<T> &
+     * @param index
+     * @return `std::vector<T> &`
      */
     template <typename T>
     std::vector<T> Matrix<T>::operator()(size_t index)

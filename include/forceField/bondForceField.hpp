@@ -46,9 +46,9 @@ namespace pot
 namespace forceField
 {
     /**
-     * @class BondForceField inherits from Bond
+     * @brief BondForceField inherits from Bond
      *
-     * @brief force field object for single bond length
+     * @details force field object for single bond length
      *
      */
     class BondForceField : public connectivity::Bond

@@ -39,7 +39,7 @@ using namespace engine;
  * processSection for each line in the section. If the "end" keyword is found,
  * the section is ended normally.
  *
- * @param line
+ * @param lineElements
  * @param engine
  */
 void ParameterFileSection::process(
@@ -107,7 +107,7 @@ void ParameterFileSection::setLineNumber(int lineNumber)
 /**
  * @brief set file pointer
  *
- * @param fp
+ * @param file
  */
 void ParameterFileSection::setFp(std::ifstream *file) { _fp = file; }
 

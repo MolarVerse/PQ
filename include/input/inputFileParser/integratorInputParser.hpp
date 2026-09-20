@@ -31,9 +31,9 @@
 namespace input
 {
     /**
-     * @class IntegratorInputParser inherits from InputFileParser
+     * @brief IntegratorInputParser inherits from InputFileParser
      *
-     * @brief Parses the integrator commands in the input file
+     * @details Parses the integrator commands in the input file
      *
      */
     class IntegratorInputParser : public InputFileParser

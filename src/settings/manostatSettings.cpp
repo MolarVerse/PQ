@@ -185,7 +185,7 @@ void ManostatSettings::setIsFixedAxisSet(const bool isSet)
 /**
  * @brief sets the targetPressure to double in settings
  *
- * @param target
+ * @param targetPressure
  */
 void ManostatSettings::setTargetPressure(double targetPressure)
 {

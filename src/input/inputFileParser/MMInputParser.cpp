@@ -47,9 +47,8 @@ using namespace pot;
  * Force Field object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) force-field <on/off/bonded>
+ * _keywordRequiredMap and _keywordCountMap: 1) force-field "<on/off/bonded>"
  *
- * @param engine
  * @param forceField
  * @param potential
  */
@@ -90,6 +89,7 @@ MMInputParser::MMInputParser(
  * 3) "bonded" - only bonded interactions are activated
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if force-field is not valid - currently only on,
  * off and bonded are supported
@@ -141,6 +141,7 @@ void MMInputParser::parseForceFieldType(
  * 4) "morse"
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if invalid nonCoulomb type
  */

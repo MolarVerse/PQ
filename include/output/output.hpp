@@ -48,9 +48,9 @@ namespace out
         int           _rank;
 
         void               openFile();
-        void               writeComment(std::size_t);
-        void               writeForceComment(std::size_t, double);
-        static std::string formatForceComment(std::size_t, double);
+        void               writeComment(size_t);
+        void               writeForceComment(size_t, double);
+        static std::string formatForceComment(size_t step, double totalForce);
 
        public:
         explicit Output(std::string filename) : _fileName(std::move(filename))

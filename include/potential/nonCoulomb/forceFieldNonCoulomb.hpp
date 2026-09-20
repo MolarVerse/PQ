@@ -89,8 +89,9 @@ namespace pot
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
-            const std::pair<VdwType, VdwType>                      &vdwTypes
+            const std::tuple<MolType, MolType, AtomType, AtomType>
+                & /*indices*/,
+            const std::pair<VdwType, VdwType> &vdwTypes
         ) override;
 
         [[nodiscard]]

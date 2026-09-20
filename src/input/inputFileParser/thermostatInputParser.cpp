@@ -48,11 +48,9 @@ using namespace constants;
  * Thermostat object
  *
  * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) thermostat <string> 2) temp
- * <double> 3) t_relaxation <double> 4) friction <double> 5) nh-chain_length
- * <size_t> 6) coupling_frequency <double>
- *
- * @param engine
+ * _keywordRequiredMap and _keywordCountMap: 1) thermostat "<string>" 2) temp
+ * "<double>" 3) t_relaxation "<double>" 4) friction "<double>" 5)
+ * nh-chain_length "<size_t>" 6) coupling_frequency "<double>"
  */
 ThermostatInputParser::ThermostatInputParser()
 {
@@ -121,6 +119,7 @@ ThermostatInputParser::ThermostatInputParser()
  * 4) langevin           - langevin thermostat
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if thermostat is not "none" or
  * "berendsen"
@@ -181,6 +180,7 @@ void ThermostatInputParser::parseThermostat(
  * @details Temperature is needs to be set if thermostat is not "none"
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if temperature is negative
  */
@@ -205,6 +205,7 @@ void ThermostatInputParser::parseTemperature(
  * @details Start temperature is needs to be set if thermostat is not "none"
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if start temperature is negative
  */
@@ -231,6 +232,7 @@ void ThermostatInputParser::parseStartTemperature(
  * @details End temperature is needs to be set if thermostat is not "none"
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if end temperature is negative
  */
@@ -259,6 +261,7 @@ void ThermostatInputParser::parseEndTemperature(
  * end_temp over the full simulation time.
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if temperature ramp steps is
  * negative
@@ -286,6 +289,7 @@ void ThermostatInputParser::parseTemperatureRampSteps(
  * @details default value is 1
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if temperature ramp frequency is
  * negative
@@ -315,6 +319,7 @@ void ThermostatInputParser::parseTemperatureRampFrequency(
  * @details default value is 0.1
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if relaxation time is negative
  */
@@ -349,6 +354,7 @@ void ThermostatInputParser::parseThermostatRelaxationTime(
  * @details default value is 1,0e11
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if friction is negative
  */
@@ -386,6 +392,7 @@ void ThermostatInputParser::parseThermostatFriction(
  * @details default value is 3
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if chain length is negative
  */
@@ -414,6 +421,7 @@ void ThermostatInputParser::parseThermostatChainLength(
  * @details default value is 1.0e3 cm⁻¹
  *
  * @param lineElements
+ * @param lineNumber
  *
  * @throws InputFileException if coupling frequency is negative
  */

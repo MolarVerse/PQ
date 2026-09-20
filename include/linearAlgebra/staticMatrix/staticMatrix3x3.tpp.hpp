@@ -31,10 +31,10 @@
 namespace linearAlgebra
 {
     /**
-     * @brief ostream operator for vector3d
+     * @brief ostream operator for StaticMatrix3x3
      *
-     * @param os
-     * @param v
+     * @param ostream
+     * @param mat
      * @return std::ostream&
      */
     template <typename T>
@@ -57,7 +57,8 @@ namespace linearAlgebra
     /**
      * @brief operator+ for two StaticMatrix3x3's
      *
-     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
+     * @param lhs
+     * @param rhs
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
@@ -76,7 +77,8 @@ namespace linearAlgebra
     /**
      * @brief operator+ for two StaticMatrix3x3's
      *
-     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
+     * @param lhs
+     * @param rhs
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
@@ -112,7 +114,8 @@ namespace linearAlgebra
     /**
      * @brief operator- for two StaticMatrix3x3's
      *
-     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
+     * @param lhs
+     * @param rhs
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
@@ -151,8 +154,9 @@ namespace linearAlgebra
     /**
      * @brief operator* for two StaticMatrix3x3's
      *
-     * @param StaticMatrix3x3<T> lhs, StaticMatrix3x3<T> rhs
-     * @return StaticMatrix3x3<T>
+     * @param lhs Left-hand side matrix
+     * @param rhs Right-hand side matrix
+     * @return `StaticMatrix3x3<T>`
      */
     template <typename T>
     StaticMatrix3x3<T> operator*(
@@ -173,8 +177,9 @@ namespace linearAlgebra
     /**
      * @brief operator* for StaticMatrix3x3 and scalar
      *
-     * @param StaticMatrix3x3<T> mat, T t
-     * @return StaticMatrix3x3<T>
+     * @param mat
+     * @param scalar
+     * @return `StaticMatrix3x3<T>`
      */
     template <typename T>
     StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &mat, const T &scalar)
@@ -189,8 +194,9 @@ namespace linearAlgebra
     /**
      * @brief operator* for StaticMatrix3x3 and scalar
      *
-     * @param T t, StaticMatrix3x3<T> mat
-     * @return StaticMatrix3x3<T>
+     * @param scalar
+     * @param mat
+     * @return `StaticMatrix3x3<T>`
      */
     template <typename T>
     StaticMatrix3x3<T> operator*(const T &scalar, const StaticMatrix3x3<T> &mat)
@@ -226,7 +232,7 @@ namespace linearAlgebra
      * @brief operator*= for a StaticMatrix3x3 and a scalar
      *
      * @param lhs
-     * @param rhs
+     * @param scalar
      */
     template <typename T>
     void operator*=(StaticMatrix3x3<T> &lhs, const T &scalar)
@@ -245,8 +251,9 @@ namespace linearAlgebra
     /**
      * @brief operator/ for StaticMatrix3x3 and scalar
      *
-     * @param StaticMatrix3x3<T> mat, const U &t
-     * @return StaticMatrix3x3<T>
+     * @param mat
+     * @param scalar
+     * @return `StaticMatrix3x3<T>`
      */
     template <typename T, typename U>
     requires std::convertible_to<U, T>
@@ -262,8 +269,9 @@ namespace linearAlgebra
     /**
      * @brief operator/ for scalar and StaticMatrix3x3
      *
-     * @param const U &t, const StaticMatrix3x3<T> &mat
-     * @return StaticMatrix3x3<T>
+     * @param scalar
+     * @param mat
+     * @return `StaticMatrix3x3<T>`
      */
     template <typename T, typename U>
     requires std::convertible_to<U, T>
@@ -280,7 +288,7 @@ namespace linearAlgebra
      * @brief operator/= for a StaticMatrix3x3 and a scalar
      *
      * @param lhs
-     * @param rhs
+     * @param scalar
      */
     template <typename T>
     void operator/=(StaticMatrix3x3<T> &lhs, const T &scalar)
@@ -432,7 +440,7 @@ namespace linearAlgebra
     /**
      * @brief build diagonalMatrix from a scalar
      *
-     * @param t
+     * @param scalar
      */
     template <typename T>
     StaticMatrix3x3<T> diagonalMatrix(const T &scalar)
@@ -489,11 +497,10 @@ namespace linearAlgebra
     /**
      * @brief Pade approximation of the exponential of a StaticMatrix3x3
      *
-     * @link https://en.wikipedia.org/wiki/Matrix_exponential
-     * @link https://en.wikipedia.org/wiki/Pad%C3%A9_table
-     * @link https://en.wikipedia.org/wiki/Pad%C3%A9_approximant
-     * @link
-     * https://github.com/bussilab/crescale/blob/master/simplemd_anisotropic/simplemd.cpp#L351
+     * _(https://en.wikipedia.org/wiki/Matrix_exponential)
+     * _(https://en.wikipedia.org/wiki/Pad%C3%A9_table)
+     * _(https://en.wikipedia.org/wiki/Pad%C3%A9_approximant)
+     * _(https://github.com/bussilab/crescale/blob/master/simplemd_anisotropic/simplemd.cpp#L351)
      */
     template <typename T>
     [[nodiscard]] StaticMatrix3x3<T> expPade(const StaticMatrix3x3<T> &mat)

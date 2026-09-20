@@ -89,7 +89,6 @@ StochasticRescalingManostat &StochasticRescalingManostat::operator=(
  * @param anisotropicAxis
  * @param isotropicAxes
  * @param fixedAxis
- * @return SemiIsotropicStochasticRescalingManostat::
  */
 SemiIsotropicStochasticRescalingManostat::
     SemiIsotropicStochasticRescalingManostat(
@@ -138,7 +137,7 @@ StochasticRescalingManostat::StochasticRescalingManostat(
  * @brief apply Stochastic Rescaling manostat for NPT ensemble
  *
  * @param simBox
- * @param physicalData
+ * @param physData
  */
 void StochasticRescalingManostat::applyManostat(
     molsys::SimulationBox      &simBox,
