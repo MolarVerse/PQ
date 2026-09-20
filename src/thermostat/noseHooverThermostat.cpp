@@ -34,7 +34,7 @@
 #include "timingsSettings.hpp"                       // for TimingsSettings
 
 using thermostat::NoseHooverThermostat;
-using namespace constants;
+
 using namespace settings;
 using namespace molsys;
 using namespace physicalData;

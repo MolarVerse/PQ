@@ -47,12 +47,12 @@ TEST(TestCoulombShiftedPotential, calculate)
 
     EXPECT_DOUBLE_EQ(
         energy,
-        chargeProduct * constants::COULOMB_PREFACTOR *
+        chargeProduct * COULOMB_PREFACTOR *
             (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
         force,
-        chargeProduct * constants::COULOMB_PREFACTOR *
+        chargeProduct * COULOMB_PREFACTOR *
             (1 / (distance * distance) - forceCutoff)
     );
 }

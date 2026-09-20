@@ -56,7 +56,6 @@ using namespace defaults;
 using namespace exc;
 using namespace molsys;
 using namespace pot;
-using namespace constants;
 
 /**
  * @brief Construct a new Guff Dat Reader:: Guff Dat Reader object
@@ -707,7 +706,7 @@ void GuffDatReader::checkPartialCharges()
                     if (!compare(
                             prefactor,
                             coeff,
-                            constants::GUFF_DAT_COULOMB_PREFACTOR_THRESHOLD
+                            GUFF_DAT_COULOMB_PREFACTOR_THRESHOLD
                         ))
                     {
                         throw GuffDatException(

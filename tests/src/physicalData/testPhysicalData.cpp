@@ -123,21 +123,18 @@ TEST_F(TestPhysicalData, calculateKinetics)
          velocity_mol2_atom1) /
             mass_mol2_atom1;
 
-    EXPECT_EQ(
-        _physicalData->getMomentum(),
-        momentumVector * constants::FS_TO_S
-    );
+    EXPECT_EQ(_physicalData->getMomentum(), momentumVector * FS_TO_S);
     EXPECT_EQ(
         diagonal(_physicalData->getKinEnergyAtomTensor()),
-        kineticEnergyAtomicVector * constants::KINETIC_ENERGY_FACTOR
+        kineticEnergyAtomicVector * KINETIC_ENERGY_FACTOR
     );
     EXPECT_EQ(
         diagonal(_physicalData->getKinEnergyMolTensor()),
-        kineticEnergyMolecularVector * constants::KINETIC_ENERGY_FACTOR
+        kineticEnergyMolecularVector * KINETIC_ENERGY_FACTOR
     );
     EXPECT_EQ(
         _physicalData->getKineticEnergy(),
-        sum(kineticEnergyAtomicVector) * constants::KINETIC_ENERGY_FACTOR
+        sum(kineticEnergyAtomicVector) * KINETIC_ENERGY_FACTOR
     );
 }
 
@@ -168,7 +165,7 @@ TEST_F(TestPhysicalData, calculateTemperature)
 
     EXPECT_NEAR(
         _physicalData->getTemperature(),
-        sum(kineticEnergyAtomicVector) * constants::TEMPERATURE_FACTOR /
+        sum(kineticEnergyAtomicVector) * TEMPERATURE_FACTOR /
             static_cast<double>(nDOF),
         1e-15
     );

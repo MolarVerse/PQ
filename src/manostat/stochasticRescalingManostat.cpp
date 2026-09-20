@@ -40,7 +40,7 @@ using namespace settings;
 using namespace molsys;
 using namespace physicalData;
 using namespace exc;
-using namespace constants;
+
 using namespace linalg;
 
 /**

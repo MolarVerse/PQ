@@ -25,7 +25,6 @@
 #include "constants/internalConversionFactors.hpp"
 
 using namespace pot;
-using namespace constants;
 
 /**
  * @brief Construct a new Coulomb Reaction Field object

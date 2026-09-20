@@ -112,7 +112,7 @@ void AngleForceField::calculateEnergyAndForces(
     // Guard against near-collinear angles where division by sin(alpha) is
     // unstable.
     const auto sinAlpha = ::sin(alpha);
-    if (std::fabs(sinAlpha) >= constants::COLINEAR_SINALPHA_THRESHOLD)
+    if (std::fabs(sinAlpha) >= COLINEAR_SINALPHA_THRESHOLD)
     {
         const auto normalDistance = distance12 * distance13 * sinAlpha;
 

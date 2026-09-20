@@ -44,7 +44,6 @@ using namespace settings;
 using namespace engine;
 using namespace thermostat;
 using namespace exc;
-using namespace constants;
 
 /**
  * @brief wrapper for thermostat setup

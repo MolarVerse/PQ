@@ -230,13 +230,10 @@ namespace
             "ps"
         );
         json.value("exclusive_minimum", 0);
-        json.value(
-            "maximum",
-            std::numeric_limits<double>::max() / constants::PS_TO_FS
-        );
+        json.value("maximum", std::numeric_limits<double>::max() / PS_TO_FS);
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
-        json.value("factor", constants::FS_TO_PS);
+        json.value("factor", FS_TO_PS);
         json.endObject();
         json.value("default", defaults::BERENDSEN_THERMOSTAT_RELAX_TIME);
         json.endObject();
@@ -276,8 +273,7 @@ namespace
         json.value("minimum", 0);
         json.value(
             "maximum",
-            std::sqrt(std::numeric_limits<double>::max()) /
-                constants::PER_CM_TO_HZ
+            std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ
         );
         json.value("default", defaults::NH_COUPLING_FREQ);
         json.endObject();
@@ -295,13 +291,10 @@ namespace
             "ps"
         );
         json.value("exclusive_minimum", 0);
-        json.value(
-            "maximum",
-            std::numeric_limits<double>::max() / constants::PS_TO_FS
-        );
+        json.value("maximum", std::numeric_limits<double>::max() / PS_TO_FS);
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
-        json.value("factor", constants::FS_TO_PS);
+        json.value("factor", FS_TO_PS);
         json.endObject();
         json.value("default", defaults::BERENDSEN_MANOSTAT_RELAX_TIME);
         json.endObject();

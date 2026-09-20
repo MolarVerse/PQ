@@ -41,7 +41,7 @@ using enum molsys::Periodicity;
 using QM::AseQMRunner;
 using namespace molsys;
 using namespace physicalData;
-using namespace constants;
+
 using namespace settings;
 
 using array_d = pybind11::array_t<double>;

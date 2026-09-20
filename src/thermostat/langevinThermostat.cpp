@@ -34,7 +34,7 @@
 #include "timingsSettings.hpp"               // for TimingsSettings
 
 using thermostat::LangevinThermostat;
-using namespace constants;
+
 using namespace physicalData;
 using namespace molsys;
 using namespace settings;

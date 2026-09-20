@@ -47,7 +47,7 @@ using QM::DFTBPlusRunner;
 using enum molsys::Periodicity;
 
 using namespace configurator;
-using namespace constants;
+
 using namespace exc;
 using namespace linalg;
 using namespace physicalData;

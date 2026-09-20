@@ -42,9 +42,9 @@ TEST(TestOrthoRhombicBox, setBoxDimensions)
 
 TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 {
-    auto         box       = OrthorhombicBox();
-    const double density   = 1.0 / constants::KG_PER_L_TO_AMU_PER_ANGSTROM3;
-    const double totalMass = 1.0;
+    auto                box           = OrthorhombicBox();
+    const double        density       = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
+    const double        totalMass     = 1.0;
     const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
     EXPECT_EQ(box.calcBoxDimFromDensity(totalMass, density), boxDimensions);
 }

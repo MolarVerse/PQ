@@ -30,7 +30,6 @@
 #include "physicalData.hpp"
 #include "potential.hpp"   // for ChargeTag
 
-using namespace constants;
 using namespace pot;
 using namespace pq;
 using namespace waterModel;

@@ -55,13 +55,13 @@ TEST(TestCoulombWolf, calculate)
 
     EXPECT_DOUBLE_EQ(
         energy,
-        chargeProduct * constants::COULOMB_PREFACTOR *
+        chargeProduct * COULOMB_PREFACTOR *
             (param1 / distance - constParam1 +
              constParam3 * (distance - rcCutoff))
     );
     EXPECT_DOUBLE_EQ(
         force,
-        chargeProduct * constants::COULOMB_PREFACTOR *
+        chargeProduct * COULOMB_PREFACTOR *
             (param1 / (distance * distance) +
              constParam2 * ::exp(-kappa * kappa * distance * distance) /
                  distance -

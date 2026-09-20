@@ -35,7 +35,6 @@
 #include "timingsSettings.hpp"      // for settings
 #include "vector3d.hpp"
 
-using namespace constants;
 using namespace constraints;
 using namespace kernel;
 using namespace linalg;

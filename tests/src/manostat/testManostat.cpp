@@ -251,11 +251,8 @@ TEST_F(TestManostat, CalculatePressure)
 {
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
-    EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure(),
-        3.0 * constants::PRESSURE_FACTOR
-    );
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 3.0 * PRESSURE_FACTOR);
 }
 
 TEST_F(TestManostat, CalculatePressureWithFixedAxis)
@@ -268,19 +265,13 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
     // avg = (1.5 + 3.0) / 2 = 2.25 * PRESSURE_FACTOR
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
-    EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure(),
-        2.25 * constants::PRESSURE_FACTOR
-    );
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 2.25 * PRESSURE_FACTOR);
 
     settings::ManostatSettings::setFixedAxis(settings::FixedAxis::ALL);
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure(),
-        3.0 * constants::PRESSURE_FACTOR
-    );
+    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 3.0 * PRESSURE_FACTOR);
 
     settings::ManostatSettings::setFixedAxis(settings::FixedAxis::NONE);
 }
@@ -294,7 +285,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
     settings::Settings::setVirialType(settings::VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * PRESSURE_FACTOR);
 
     // set virial type back to molecular for other tests
     settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
@@ -329,8 +320,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     const auto scaleFactors = linalg::Vec3D(
         ::pow(
-            1.0 -
-                (4.5 * 0.5 / 0.1 * (1.0 - (3.0 * constants::PRESSURE_FACTOR))),
+            1.0 - (4.5 * 0.5 / 0.1 * (1.0 - (3.0 * PRESSURE_FACTOR))),
             1.0 / 3.0
         )
     );
@@ -338,7 +328,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _manostat->applyManostat(*_box, *_data);
     auto boxNew = _box->getBoxDimensions();
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
     EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
     EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
@@ -452,7 +442,7 @@ TEST_F(
 
     settings::TimingsSettings::setTimeStep(0.5);
     _manostat = new manostat::BerendsenManostat(
-        3.0 * constants::PRESSURE_FACTOR,
+        3.0 * PRESSURE_FACTOR,
         0.1,
         4.5,
         settings::FixedAxis::NONE
@@ -474,7 +464,7 @@ TEST_F(TestManostat, applyNoneManostat)
 {
     _manostat->applyManostat(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
 }
 
 TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)

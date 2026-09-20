@@ -31,7 +31,7 @@
 using namespace manostat;
 using namespace molsys;
 using namespace physicalData;
-using namespace constants;
+
 using namespace settings;
 using namespace linalg;
 
