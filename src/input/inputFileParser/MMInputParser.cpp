@@ -53,8 +53,8 @@ using namespace pot;
  * @param potential
  */
 MMInputParser::MMInputParser(
-    std::shared_ptr<forceField::ForceField> forceField,
-    std::shared_ptr<pot::Potential>         potential
+    std::shared_ptr<ff::ForceField> forceField,
+    std::shared_ptr<pot::Potential> potential
 )
     : _forceField(std::move(forceField)), _potential(std::move(potential))
 {

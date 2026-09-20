@@ -107,7 +107,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     molecule.addAtom(atom3);
     molecule.addAtom(atom4);
 
-    auto bondForceField = forceField::DihedralForceField(
+    auto bondForceField = ff::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}

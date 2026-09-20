@@ -53,21 +53,21 @@ TEST_F(TestSetup, forceFieldSetupSetupBonds)
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
     auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
 
-    auto bond1 = forceField::BondForceField(
+    auto bond1 = ff::BondForceField(
         molecule1Ptr,
         molecule2Ptr,
         AtomIndex{0},
         AtomIndex{1},
         BondId{0}
     );
-    auto bond2 = forceField::BondForceField(
+    auto bond2 = ff::BondForceField(
         molecule1Ptr,
         molecule1Ptr,
         AtomIndex{0},
         AtomIndex{1},
         BondId{1}
     );
-    auto bond3 = forceField::BondForceField(
+    auto bond3 = ff::BondForceField(
         molecule1Ptr,
         molecule2Ptr,
         AtomIndex{0},
@@ -79,11 +79,11 @@ TEST_F(TestSetup, forceFieldSetupSetupBonds)
     _engine->getForceField()->addBond(bond2);
     _engine->getForceField()->addBond(bond3);
 
-    auto bondType1 = forceField::BondType(
+    auto bondType1 = ff::BondType(
         BondId{0},
         BondParams{.equilibrium = 1.0, .forceConstant = 1.0}
     );
-    auto bondType2 = forceField::BondType(
+    auto bondType2 = ff::BondType(
         BondId{1},
         BondParams{.equilibrium = 2.0, .forceConstant = 2.0}
     );
@@ -126,17 +126,17 @@ TEST_F(TestSetup, forceFieldSetupSetupAngles)
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
     auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
 
-    auto angle1 = forceField::AngleForceField(
+    auto angle1 = ff::AngleForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    auto angle2 = forceField::AngleForceField(
+    auto angle2 = ff::AngleForceField(
         {molecule1Ptr, molecule1Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{1}
     );
-    auto angle3 = forceField::AngleForceField(
+    auto angle3 = ff::AngleForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
@@ -146,11 +146,11 @@ TEST_F(TestSetup, forceFieldSetupSetupAngles)
     _engine->getForceField()->addAngle(angle2);
     _engine->getForceField()->addAngle(angle3);
 
-    auto angleType1 = forceField::AngleType(
+    auto angleType1 = ff::AngleType(
         AngleId{0},
         AngleParams{.equilibrium = 1.0, .forceConstant = 1.0}
     );
-    auto angleType2 = forceField::AngleType(
+    auto angleType2 = ff::AngleType(
         AngleId{1},
         AngleParams{.equilibrium = 2.0, .forceConstant = 2.0}
     );
@@ -193,17 +193,17 @@ TEST_F(TestSetup, forceFieldSetupSetupDihedrals)
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
     auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
 
-    auto dihedral1 = forceField::DihedralForceField(
+    auto dihedral1 = ff::DihedralForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
-    auto dihedral2 = forceField::DihedralForceField(
+    auto dihedral2 = ff::DihedralForceField(
         {molecule1Ptr, molecule1Ptr, molecule2Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{1}
     );
-    auto dihedral3 = forceField::DihedralForceField(
+    auto dihedral3 = ff::DihedralForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
@@ -213,7 +213,7 @@ TEST_F(TestSetup, forceFieldSetupSetupDihedrals)
     _engine->getForceField()->addDihedral(dihedral2);
     _engine->getForceField()->addDihedral(dihedral3);
 
-    auto dihedralType1 = forceField::DihedralType(
+    auto dihedralType1 = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 1.0,
@@ -221,7 +221,7 @@ TEST_F(TestSetup, forceFieldSetupSetupDihedrals)
             .phaseShift    = 1.0
         }
     );
-    auto dihedralType2 = forceField::DihedralType(
+    auto dihedralType2 = ff::DihedralType(
         DihedralId{1},
         DihedralParams{
             .forceConstant = 2.0,
@@ -271,17 +271,17 @@ TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
     auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
 
-    auto dihedral1 = forceField::DihedralForceField(
+    auto dihedral1 = ff::DihedralForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
-    auto dihedral2 = forceField::DihedralForceField(
+    auto dihedral2 = ff::DihedralForceField(
         {molecule1Ptr, molecule1Ptr, molecule2Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{1}
     );
-    auto dihedral3 = forceField::DihedralForceField(
+    auto dihedral3 = ff::DihedralForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr, molecule2Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
@@ -291,7 +291,7 @@ TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
     _engine->getForceField()->addImproperDihedral(dihedral2);
     _engine->getForceField()->addImproperDihedral(dihedral3);
 
-    auto dihedralType1 = forceField::DihedralType(
+    auto dihedralType1 = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 1.0,
@@ -299,7 +299,7 @@ TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
             .phaseShift    = 1.0
         }
     );
-    auto dihedralType2 = forceField::DihedralType(
+    auto dihedralType2 = ff::DihedralType(
         DihedralId{1},
         DihedralParams{
             .forceConstant = 2.0,
@@ -347,24 +347,24 @@ TEST_F(TestSetup, forceFieldSetupSetupForceField)
     _engine->getSimulationBox().addMolecule(molecule1);
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
 
-    auto bond = forceField::BondForceField(
+    auto bond = ff::BondForceField(
         molecule1Ptr,
         molecule1Ptr,
         AtomIndex{0},
         AtomIndex{1},
         BondId{0}
     );
-    auto angle = forceField::AngleForceField(
+    auto angle = ff::AngleForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    auto dihedral = forceField::DihedralForceField(
+    auto dihedral = ff::DihedralForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
-    auto improperDihedral = forceField::DihedralForceField(
+    auto improperDihedral = ff::DihedralForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
@@ -375,15 +375,15 @@ TEST_F(TestSetup, forceFieldSetupSetupForceField)
     _engine->getForceField()->addDihedral(dihedral);
     _engine->getForceField()->addImproperDihedral(improperDihedral);
 
-    auto bondType = forceField::BondType(
+    auto bondType = ff::BondType(
         BondId{0},
         BondParams{.equilibrium = 1.0, .forceConstant = 2.0}
     );
-    auto angleType = forceField::AngleType(
+    auto angleType = ff::AngleType(
         AngleId{0},
         AngleParams{.equilibrium = 2.0, .forceConstant = 3.0}
     );
-    auto dihedralType = forceField::DihedralType(
+    auto dihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 3.0,
@@ -391,7 +391,7 @@ TEST_F(TestSetup, forceFieldSetupSetupForceField)
             .phaseShift    = 5.0
         }
     );
-    auto improperDihedralType = forceField::DihedralType(
+    auto improperDihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 4.0,
@@ -444,24 +444,24 @@ TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
     _engine->getSimulationBox().addMolecule(molecule1);
     auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
 
-    auto bond = forceField::BondForceField(
+    auto bond = ff::BondForceField(
         molecule1Ptr,
         molecule1Ptr,
         AtomIndex{0},
         AtomIndex{1},
         BondId{0}
     );
-    auto angle = forceField::AngleForceField(
+    auto angle = ff::AngleForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    auto dihedral = forceField::DihedralForceField(
+    auto dihedral = ff::DihedralForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
     );
-    auto improperDihedral = forceField::DihedralForceField(
+    auto improperDihedral = ff::DihedralForceField(
         {molecule1Ptr, molecule1Ptr, molecule1Ptr, molecule1Ptr},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
@@ -472,15 +472,15 @@ TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
     _engine->getForceField()->addDihedral(dihedral);
     _engine->getForceField()->addImproperDihedral(improperDihedral);
 
-    auto bondType = forceField::BondType(
+    auto bondType = ff::BondType(
         BondId{0},
         BondParams{.equilibrium = 1.0, .forceConstant = 2.0}
     );
-    auto angleType = forceField::AngleType(
+    auto angleType = ff::AngleType(
         AngleId{0},
         AngleParams{.equilibrium = 2.0, .forceConstant = 3.0}
     );
-    auto dihedralType = forceField::DihedralType(
+    auto dihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 3.0,
@@ -488,7 +488,7 @@ TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
             .phaseShift    = 5.0
         }
     );
-    auto improperDihedralType = forceField::DihedralType(
+    auto improperDihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 4.0,

@@ -28,7 +28,7 @@
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class JCouplingType;   // forward declaration
 
@@ -72,6 +72,6 @@ namespace forceField
         void setLowerSymmetry(bool boolean);
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _J_COUPLING_TYPE_HPP_

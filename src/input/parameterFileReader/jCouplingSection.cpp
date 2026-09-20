@@ -32,7 +32,7 @@
 using namespace input::parameterFile;
 using namespace engine;
 using namespace exc;
-using namespace forceField;
+using namespace ff;
 using namespace constants;
 
 /**

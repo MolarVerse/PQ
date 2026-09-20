@@ -45,7 +45,7 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
-namespace forceField
+namespace ff
 {
     /**
      * @brief BondForceField inherits from Bond
@@ -91,6 +91,6 @@ namespace forceField
         [[nodiscard]] const AngleParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _ANGLE_FORCE_FIELD_HPP_

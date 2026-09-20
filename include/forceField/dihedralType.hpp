@@ -26,7 +26,7 @@
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class DihedralType;   // forward declaration
 
@@ -61,6 +61,6 @@ namespace forceField
         [[nodiscard]] const DihedralParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _DIHEDRAL_TYPE_HPP_

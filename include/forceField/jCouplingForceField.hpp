@@ -40,7 +40,7 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace forceField
+namespace ff
 {
     /**
      * @class DihedralForceField
@@ -107,6 +107,6 @@ namespace forceField
         [[nodiscard]] double getPhaseShift() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _J_COUPLING_FORCE_FIELD_HPP_

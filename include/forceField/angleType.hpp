@@ -26,7 +26,7 @@
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class AngleType;   // forward declaration
 
@@ -58,6 +58,6 @@ namespace forceField
         [[nodiscard]] const AngleParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _ANGLE_TYPE_HPP_

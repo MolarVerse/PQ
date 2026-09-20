@@ -77,7 +77,7 @@ namespace
         eval.setPotential(std::make_shared<pot::PotentialBruteForce>());
         eval.setPhysicalData(std::make_shared<PhysicalData>());
         eval.setPhysicalDataOld(std::make_shared<PhysicalData>());
-        eval.setForceField(std::make_shared<forceField::ForceField>());
+        eval.setForceField(std::make_shared<ff::ForceField>());
         eval.setIntraNonBonded(
 
             std::make_shared<intraNonBonded::IntraNonBonded>()
@@ -140,7 +140,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     eval2.setPotential(std::make_shared<pot::PotentialBruteForce>());
     eval2.setPhysicalData(std::make_shared<PhysicalData>());
     eval2.setPhysicalDataOld(std::make_shared<PhysicalData>());
-    eval2.setForceField(std::make_shared<forceField::ForceField>());
+    eval2.setForceField(std::make_shared<ff::ForceField>());
     eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
     eval2.setConstraints(std::make_shared<constraints::Constraints>());
 

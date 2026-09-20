@@ -26,7 +26,7 @@
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class BondType;   // forward declaration
 
@@ -61,6 +61,6 @@ namespace forceField
         [[nodiscard]] const BondParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _BOND_TYPE_HPP_

@@ -22,48 +22,54 @@
 
 #include "dihedralType.hpp"
 
-using namespace forceField;
-
-/**
- * @brief Construct a new Dihedral Type:: Dihedral Type object
- *
- * @param id
- * @param params
- */
-DihedralType::DihedralType(const DihedralId id, const DihedralParams &params)
-    : _id(id), _params(params)
+namespace ff
 {
-}
 
-/**
- * @brief operator overload for the comparison of two DihedralType objects
- *
- * @param self
- * @param other
- * @return true
- * @return false
- */
-bool forceField::operator==(const DihedralType &self, const DihedralType &other)
-{
-    return self._id == other._id && self._params == other._params;
-}
+    /**
+     * @brief Construct a new Dihedral Type:: Dihedral Type object
+     *
+     * @param id
+     * @param params
+     */
+    DihedralType::DihedralType(
+        const DihedralId      id,
+        const DihedralParams &params
+    )
+        : _id(id), _params(params)
+    {
+    }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief operator overload for the comparison of two DihedralType objects
+     *
+     * @param self
+     * @param other
+     * @return true
+     * @return false
+     */
+    bool operator==(const DihedralType &self, const DihedralType &other)
+    {
+        return self._id == other._id && self._params == other._params;
+    }
 
-/**
- * @brief get the id of the dihedral type
- *
- * @return DihedralId
- */
-DihedralId DihedralType::getId() const { return _id; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the parameters of the dihedral type
- *
- * @return const DihedralParams&
- */
-const DihedralParams &DihedralType::getParams() const { return _params; }
+    /**
+     * @brief get the id of the dihedral type
+     *
+     * @return DihedralId
+     */
+    DihedralId DihedralType::getId() const { return _id; }
+
+    /**
+     * @brief get the parameters of the dihedral type
+     *
+     * @return const DihedralParams&
+     */
+    const DihedralParams &DihedralType::getParams() const { return _params; }
+
+}   // namespace ff
