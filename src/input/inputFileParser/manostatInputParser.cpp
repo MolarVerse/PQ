@@ -82,6 +82,12 @@ ManostatInputParser::ManostatInputParser()
         bindMember(&ManostatInputParser::parseIsotropy, this),
         false
     );
+
+    addKeyword(
+        std::string("fixed_axis"),
+        bindMember(&ManostatInputParser::parseFixedAxis, this),
+        false
+    );
 }
 
 /**
@@ -283,6 +289,54 @@ void ManostatInputParser::parseIsotropy(
                 "Invalid isotropy \"{}\" at line {} in input file.\n"
                 "Possible options are: isotropic, xy, xz, yz, "
                 "anisotropic and full_anisotropic",
+                lineElements[2],
+                lineNumber
+            )
+        );
+    }
+}
+
+void ManostatInputParser::parseFixedAxis(
+    const std::vector<std::string> &lineElements,
+    const size_t                    lineNumber
+)
+{
+    checkCommand(lineElements, lineNumber);
+
+    const auto fixed_axis = toLowerAndReplaceDashesCopy(lineElements[2]);
+
+    using enum FixedAxis;
+
+    if (fixed_axis == "none")
+        ManostatSettings::setFixedAxis(NONE);
+
+    else if (fixed_axis == "x")
+        ManostatSettings::setFixedAxis(X);
+
+    else if (fixed_axis == "y")
+        ManostatSettings::setFixedAxis(Y);
+
+    else if (fixed_axis == "z")
+        ManostatSettings::setFixedAxis(Z);
+
+    else if (fixed_axis == "xy" || fixed_axis == "yx")
+        ManostatSettings::setFixedAxis(XY);
+
+    else if (fixed_axis == "xz" || fixed_axis == "zx")
+        ManostatSettings::setFixedAxis(XZ);
+
+    else if (fixed_axis == "yz" || fixed_axis == "zy")
+        ManostatSettings::setFixedAxis(YZ);
+
+    else if (fixed_axis == "all" || fixed_axis == "xyz")
+        ManostatSettings::setFixedAxis(ALL);
+
+    else
+    {
+        throw InputFileException(
+            std::format(
+                "Invalid fixed_axis \"{}\" at line {} in input file.\n"
+                "Possible options are: none, x, y, z, xy, xz, yz, all",
                 lineElements[2],
                 lineNumber
             )

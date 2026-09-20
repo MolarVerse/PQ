@@ -174,6 +174,52 @@ TEST_F(TestEnergyOutput, manostatActive)
 }
 
 /**
+ * @brief tests writing energy output file with fixed axis
+ *
+ * @details manostat and fixed_axis are set
+ *
+ */
+TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
+{
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setCoupledPressure(2.5);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setCoulombEnergy(4.0);
+    _physicalData->setNonCoulombEnergy(5.0);
+    _physicalData->setMomentum(Vec3D(6.0));
+    _physicalData->setIntraCoulombEnergy(9.0);
+    _physicalData->setIntraNonCoulombEnergy(10.0);
+
+    _physicalData->setVolume(19.0);
+    _physicalData->setDensity(20.0);
+    _physicalData->setLoopTime(0.1);
+
+    ForceFieldSettings::deactivate();
+    ManostatSettings::setManostatType("Berendsen");
+    ManostatSettings::setFixedAxis(FixedAxis::Z);
+    Settings::setJobtype(JobType::MM_MD);
+
+    _energyOutput->setFilename("default.en");
+    _energyOutput->write(100.0, *_physicalData);
+    _energyOutput->close();
+
+    std::ifstream file("default.en");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(
+        line,
+        "       100\t      1.000000000000\t      2.000000000000\t     "
+        "12.000000000000\t      3.000000000000\t     "
+        "19.000000000000\t      4.000000000000\t      5.000000000000\t     "
+        "19.000000000000\t     20.000000000000\t      2.500000000000\t   "
+        "      1.03923e+01\t     0.10000"
+    );
+
+    ManostatSettings::setFixedAxis(FixedAxis::NONE);
+}
+
+/**
  * @brief tests writing energy output file
  *
  * @details qm is active is set
