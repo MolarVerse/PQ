@@ -22,6 +22,8 @@ add_library(inputFileParser
     thermostatInputParser.cpp
     timingsInputParser.cpp
     virialInputParser.cpp
+
+    inputKeyAdapter.cpp
 )
 
 target_include_directories(inputFileParser
