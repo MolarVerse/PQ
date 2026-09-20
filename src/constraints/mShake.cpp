@@ -401,7 +401,7 @@ void MShake::applyMShake(SimulationBox &simulationBox)
                      * reference value is larger than the tolerance value *
                      ******************************************************/
 
-                    if (::abs(r2Deviation) / (2.0 * r2Ref) > mShakeTolerance)
+                    if (::fabs(r2Deviation) / (2.0 * r2Ref) > mShakeTolerance)
                         converged = false;
 
                     ++index_ij;

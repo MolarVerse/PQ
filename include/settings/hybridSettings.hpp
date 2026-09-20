@@ -70,10 +70,10 @@ namespace settings
     class HybridSettings
     {
        private:
-        static inline std::optional<std::vector<int>> _innerRegionCenter;
-        static inline std::vector<int>                _forcedCoreList;
-        static inline std::vector<int>                _forcedLayerList;
-        static inline std::vector<int>                _forcedOuterList;
+        static inline std::optional<std::vector<size_t>> _innerRegionCenter;
+        static inline std::vector<int>                   _forcedCoreList;
+        static inline std::vector<int>                   _forcedLayerList;
+        static inline std::vector<int>                   _forcedOuterList;
 
         static inline bool _useQMCharges = true;
 
@@ -90,7 +90,7 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setInnerRegionCenter(const std::vector<int> &);
+        static void setInnerRegionCenter(const std::vector<size_t> &);
         static void setForcedCoreList(const std::vector<int> &);
         static void setForcedLayerList(const std::vector<int> &);
         static void setForcedOuterList(const std::vector<int> &);
@@ -109,7 +109,7 @@ namespace settings
          * standard getters *
          ********************/
 
-        [[nodiscard]] static std::optional<std::vector<int>> getInnerRegionCenter(
+        [[nodiscard]] static std::optional<std::vector<size_t>> getInnerRegionCenter(
         );
         [[nodiscard]] static std::vector<int> getForcedCoreList();
         [[nodiscard]] static std::vector<int> getForcedLayerList();

@@ -187,7 +187,7 @@ TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
     EXPECT_NO_THROW(setupHybrid(*_engine));
     EXPECT_EQ(
         _engine->getSimulationBox().getInnerRegionCenterAtomIndices(),
-        std::vector<int>{0}
+        std::vector<size_t>{0}
     );
 }
 

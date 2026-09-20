@@ -476,11 +476,7 @@ TEST_F(TestSimulationBox, validatesHybridIndexLists)
     _simulationBox->addInnerRegionCenterAtoms({0, 4});
     EXPECT_EQ(
         _simulationBox->getInnerRegionCenterAtomIndices(),
-        std::vector<int>({0, 4})
-    );
-    EXPECT_THROW(
-        _simulationBox->addInnerRegionCenterAtoms({-1}),
-        exc::UserInputException
+        std::vector<size_t>({0, 4})
     );
     EXPECT_THROW(
         _simulationBox->addInnerRegionCenterAtoms({5}),

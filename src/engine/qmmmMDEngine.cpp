@@ -176,11 +176,12 @@ namespace engine
         using enum Periodicity;
         using std::ranges::distance;
 
-        linalg::tensor3D  virial     = {0.0};
-        auto              numQMAtoms = 0.0;
-        auto             &atoms      = _simulationBox->getAtoms();
-        const std::size_t nSmMol =
-            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
+        linalg::tensor3D virial     = {0.0};
+        auto             numQMAtoms = 0.0;
+        auto            &atoms      = _simulationBox->getAtoms();
+        const auto       nSmMol     = static_cast<size_t>(
+            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING))
+        );
 
         // Loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1U << nSmMol); ++i)

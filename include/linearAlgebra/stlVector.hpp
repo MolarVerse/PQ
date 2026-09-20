@@ -94,7 +94,7 @@ namespace stl
     template <typename T>
     T rms(const std::vector<T> &vec)
     {
-        return std::sqrt(dot(vec, vec) / vec.size());
+        return std::sqrt(dot(vec, vec) / static_cast<T>(vec.size()));
     }
 
 }   // namespace stl

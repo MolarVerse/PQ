@@ -44,7 +44,7 @@ TEST(HybridSettingsTest, InnerRegionCenterRoundTrip)
     ASSERT_TRUE(HybridSettings::getInnerRegionCenter().has_value());
     EXPECT_EQ(
         HybridSettings::getInnerRegionCenter(),
-        std::optional<std::vector<int>>({4, 2, 9})
+        std::optional<std::vector<size_t>>({4, 2, 9})
     );
 }
 
