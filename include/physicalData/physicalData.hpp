@@ -72,10 +72,11 @@ namespace physicalData
         double _numberOfQMAtoms = 0.0;
         double _loopTime        = 0.0;
 
-        double _volume      = 0.0;
-        double _density     = 0.0;
-        double _temperature = 0.0;
-        double _pressure    = 0.0;
+        double _volume          = 0.0;
+        double _density         = 0.0;
+        double _temperature     = 0.0;
+        double _pressure        = 0.0;
+        double _coupledPressure = 0.0;
 
         double _kineticEnergy         = 0.0;
         double _coulombEnergy         = 0.0;
@@ -152,6 +153,7 @@ namespace physicalData
         void setDensity(double density);
         void setTemperature(double temperature);
         void setPressure(double pressure);
+        void setCoupledPressure(double coupledPressure);
 
         void setVirial(const linearAlgebra::tensor3D& virial);
         void setStressTensor(const linearAlgebra::tensor3D& stressTensor);
@@ -198,6 +200,7 @@ namespace physicalData
         [[nodiscard]] double getDensity() const;
         [[nodiscard]] double getTemperature() const;
         [[nodiscard]] double getPressure() const;
+        [[nodiscard]] double getCoupledPressure() const;
 
         [[nodiscard]] double getKineticEnergy() const;
         [[nodiscard]] double getNonCoulombEnergy() const;
