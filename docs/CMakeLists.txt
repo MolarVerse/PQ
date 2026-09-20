@@ -9,9 +9,15 @@ if(DOXYGEN_FOUND)
     configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
     message("Doxygen build started")
 
+    set(DOXYGEN_WARN_LOGFILE ${CMAKE_CURRENT_BINARY_DIR}/doxygen_warnings.log)
+
     # note the option ALL which allows to build the docs together with the application
     add_custom_target(docs
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        COMMAND ${CMAKE_COMMAND}
+                -DDOXYGEN_EXECUTABLE=${DOXYGEN_EXECUTABLE}
+                -DDOXYGEN_OUT=${DOXYGEN_OUT}
+                -DWARN_LOGFILE=${DOXYGEN_WARN_LOGFILE}
+                -P ${CMAKE_CURRENT_SOURCE_DIR}/RunDoxygenWithLog.cmake
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
