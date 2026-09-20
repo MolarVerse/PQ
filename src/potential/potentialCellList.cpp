@@ -463,7 +463,7 @@ void PotentialCellList::calculateLayerToOuterForces(
 /**
  * @brief calculates forces between outer-zone molecules
  *
- * @param simBox simulation box containing molecules
+ * @param simulationBox simulation box containing molecules
  * @param physicalData physical data to store energy results
  * @param cellList cell list containing outer-zone molecules
  */
@@ -582,7 +582,7 @@ void PotentialCellList::calculateOuterToOuterForces(
 /**
  * @brief calculates forces between smoothing-zone molecules and all others
  *
- * @param simBox simulation box containing molecules
+ * @param simulationBox simulation box containing molecules
  * @param physicalData physical data to store energy results
  * @param cellList cell list containing smoothing-zone molecules
  */

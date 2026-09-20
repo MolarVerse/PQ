@@ -41,7 +41,7 @@ namespace out
      * @details number of atoms is multiplied by the number of beads - box
      * dimensions and angles are the same for all beads
      *
-     * @param simBox
+     * @param simulationBox the simulation box to write the header for
      */
     void RingPolymerTrajectoryOutput::writeHeader(
         const molsys::SimulationBox &simulationBox

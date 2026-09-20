@@ -62,7 +62,7 @@ BondConstraint::BondConstraint(
 /**
  * @brief calculates the reference bond data of a bond constraint
  *
- * @param simBox
+ * @param simulationBox the simulation box to apply periodic boundary conditions
  */
 void BondConstraint::calculateConstraintBondRef(
     const molsys::SimulationBox &simulationBox
