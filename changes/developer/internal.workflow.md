@@ -2,3 +2,4 @@
 - add CI to check if a pull request has a linked issue
 - add mentioned issues in PR title or description as a linked issue
 - add 0.5% threshold for test coverage
+- fix CI issue if special characters like backticks are present in PR title
