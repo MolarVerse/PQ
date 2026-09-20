@@ -54,8 +54,6 @@ class TestTrajectoryOutput : public ::testing::Test
         const auto atom1 = std::make_shared<molsys::Atom>();
         const auto atom2 = std::make_shared<molsys::Atom>();
 
-        molecule1.setNumberOfAtoms(2);
-
         atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         atom1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -73,8 +71,6 @@ class TestTrajectoryOutput : public ::testing::Test
         auto molecule2 = molsys::Molecule();
 
         auto atom3 = std::make_shared<molsys::Atom>();
-
-        molecule2.setNumberOfAtoms(1);
 
         atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom3->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));

@@ -75,8 +75,6 @@ namespace benchmarkSetup
 
                     molsys::Molecule molecule;
                     molecule.setMoltype(MolType{1});
-                    molecule.setNumberOfAtoms(1);
-                    molecule.setMolMass(12.0);
                     molecule.addAtom(atom);
 
                     simulationBox.addAtom(atom);

@@ -50,7 +50,6 @@ class TestIntegrator : public ::testing::Test
         settings::TimingsSettings::setTimeStep(0.1);
 
         _molecule1 = new molsys::Molecule();
-        _molecule1->setNumberOfAtoms(2);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
@@ -69,8 +68,6 @@ class TestIntegrator : public ::testing::Test
 
         _molecule1->addAtom(atom1);
         _molecule1->addAtom(atom2);
-
-        _molecule1->setMolMass(3.0);
 
         _box = new molsys::SimulationBox();
         _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));

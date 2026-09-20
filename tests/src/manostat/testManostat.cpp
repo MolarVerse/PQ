@@ -171,8 +171,6 @@ namespace
         atom2->setMass(1.0);
 
         auto molecule = molsys::Molecule();
-        molecule.setNumberOfAtoms(2);
-        molecule.setMolMass(2.0);
         molecule.addAtom(atom1);
         molecule.addAtom(atom2);
         molecule.calculateCenterOfMass(box.getBox());
@@ -310,7 +308,6 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     atom->setPosition({1.0, 0.0, 0.0});
     molecule.addAtom(atom);
     molecule.setCenterOfMass({1.0, 0.0, 0.0});
-    molecule.setNumberOfAtoms(1);
 
     _box->addMolecule(molecule);
 
@@ -405,8 +402,6 @@ TEST_F(
     atom2->setMass(1.0);
 
     auto molecule = molsys::Molecule();
-    molecule.setNumberOfAtoms(2);
-    molecule.setMolMass(2.0);
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.calculateCenterOfMass(_box->getBox());
@@ -507,8 +502,6 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     _data->setKineticEnergyMolecularVector(linearAlgebra::tensor3D(0.0));
 
     auto molecule = molsys::Molecule();
-    molecule.setNumberOfAtoms(2);
-    molecule.setMolMass(2.0);
 
     const auto addAtom = [this, &molecule](
                              const linearAlgebra::Vec3D& position,

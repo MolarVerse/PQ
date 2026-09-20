@@ -47,10 +47,19 @@ class TestTopologySection : public ::testing::Test
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(1);
-
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(3);
+
+        molsys::Atom atom1_1;
+        molsys::Atom atom2_1;
+        molsys::Atom atom2_2;
+        molsys::Atom atom2_3;
+        molsys::Atom atom2_4;
+
+        molecule1.addAtom(std::make_shared<molsys::Atom>(atom1_1));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_1));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_2));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_3));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_4));
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine

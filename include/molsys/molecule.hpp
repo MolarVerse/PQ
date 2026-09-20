@@ -78,25 +78,23 @@ namespace molsys
        private:
         std::string _name;
         MolType     _moltype;
-        size_t      _numberOfAtoms;
 
         // set via molDescriptor not sum of partial charges!!!
         // 0 (neutral) as default when molecule has no moltype
         int _charge = 0;
-
-        double _molMass;
 
         linearAlgebra::Vec3D _centerOfMass{0.0, 0.0, 0.0};
 
         std::vector<std::shared_ptr<Atom>> _atoms;
 
         // hybrid calculation related member variables
-        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
-        bool       _isActive   = true;
-        double     _smoothingFactor;
+        HybridZone _hybridZone    = HybridZone::NOT_HYBRID;
+        bool       _isActive      = true;
         bool       _isForcedCore  = false;
         bool       _isForcedLayer = false;
         bool       _isForcedOuter = false;
+
+        std::optional<double> _smoothingFactor;
 
        public:
         Molecule() = default;
@@ -112,6 +110,7 @@ namespace molsys
         [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
 
         [[nodiscard]] std::vector<double> getAtomMasses() const;
+        [[nodiscard]] double              getMolMass() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
 
         [[nodiscard]] bool isMMMolecule() const;
@@ -194,9 +193,7 @@ namespace molsys
         [[nodiscard]] size_t  getNumberOfAtoms() const;
         [[nodiscard]] size_t  getDegreesOfFreedom() const;
 
-        [[nodiscard]] int    getCharge() const;
-        [[nodiscard]] double getMolMass() const;
-
+        [[nodiscard]] int         getCharge() const;
         [[nodiscard]] std::string getName() const;
 
         [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const;
@@ -218,12 +215,9 @@ namespace molsys
          ***************************/
 
         void setName(std::string_view name);
-
-        void setNumberOfAtoms(size_t numberOfAtoms);
         void setMoltype(MolType moltype);
 
         void setCharge(int charge);
-        void setMolMass(double molMass);
         void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass);
         void setHybridZone(HybridZone hybridZone);
         void setSmoothingFactor(double factor);

@@ -329,10 +329,6 @@ TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
     molsys::Molecule molecule4(MolType{2});
     molsys::Molecule molecule5(MolType{1});
 
-    molecule3.setNumberOfAtoms(3);
-    molecule4.setNumberOfAtoms(2);
-    molecule5.setNumberOfAtoms(3);
-
     molecule3.addAtom(atom1);
     molecule3.addAtom(atom2);
     molecule3.addAtom(atom3);
@@ -585,7 +581,6 @@ TEST_F(TestSimulationBox, assignsInternalVdwTypesToAtoms)
     atom2->setExternalGlobalVDWType(ExtVdwType{9});
 
     molsys::Molecule molecule(MolType{1});
-    molecule.setNumberOfAtoms(2);
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     simBox.addMolecule(molecule);

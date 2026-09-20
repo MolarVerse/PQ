@@ -47,8 +47,6 @@ class TestVirial : public ::testing::Test
         const auto atom1 = std::make_shared<molsys::Atom>();
         const auto atom2 = std::make_shared<molsys::Atom>();
 
-        molecule1.setNumberOfAtoms(2);
-
         atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
         atom1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
@@ -63,7 +61,6 @@ class TestVirial : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        molecule2.setNumberOfAtoms(1);
         atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom3->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom3->setShiftForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));

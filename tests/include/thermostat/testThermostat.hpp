@@ -45,7 +45,6 @@ class TestThermostat : public ::testing::Test
         _simulationBox = new molsys::SimulationBox();
 
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(2);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
@@ -54,18 +53,15 @@ class TestThermostat : public ::testing::Test
         atom2->setMass(1.0);
         atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
         atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule1.setMolMass(2.0);
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(1);
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
         atom3->setMass(1.0);
         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.setMolMass(1.0);
 
         molecule2.addAtom(atom3);
 
