@@ -43,17 +43,17 @@ TEST(TestInputKeyAdapter, adaptedParseFuncMatchesDirectParse)
     double captured = 0.0;
 
     InputKey<double> key(
-        KeyMetadata{
-            .name         = "timestep",
-            .title        = "Timestep",
-            .description  = "The timestep for the simulation",
-            .unit         = "fs",
-            .errorMessage = "Invalid timestep value",
-        },
-        std::nullopt,
-        std::nullopt,
-        nullptr,
-        [&captured](const double &value) { captured = value; }
+        KeyRegistry<double>{
+            .metadata =
+                KeyMetadata{
+                    .name         = "timestep",
+                    .title        = "Timestep",
+                    .description  = "The timestep for the simulation",
+                    .unit         = "fs",
+                    .errorMessage = "Invalid timestep value",
+                },
+            .onSet = [&captured](const double &value) { captured = value; }
+        }
     );
 
     const InputFileParser::ParseFunc parseFunc = adapt(key);
@@ -72,12 +72,15 @@ TEST(TestInputKeyAdapter, adaptedParseFuncMatchesDirectParse)
 TEST(TestInputKeyAdapter, exceptionsPropagateThroughAdapter)
 {
     InputKey<double> key(
-        KeyMetadata{
-            .name         = "timestep",
-            .title        = "Timestep",
-            .description  = "The timestep for the simulation",
-            .unit         = "fs",
-            .errorMessage = "Invalid timestep value",
+        KeyRegistry<double>{
+            .metadata =
+                KeyMetadata{
+                    .name         = "timestep",
+                    .title        = "Timestep",
+                    .description  = "The timestep for the simulation",
+                    .unit         = "fs",
+                    .errorMessage = "Invalid timestep value",
+                }
         }
     );
 
@@ -101,16 +104,17 @@ TEST(TestInputKeyAdapter, wiresIntoRealInputFileParserAddKeyword)
     InputFileParser parser;
     InputRegistry   registry;
 
-    auto &timestepKey = registry.registerKey<double>(
-        KeyMetadata{
-            .name         = "timestep",
-            .title        = "Timestep",
-            .description  = "The timestep for the simulation",
-            .unit         = "fs",
-            .errorMessage = "Invalid timestep value",
-        },
-        /*defaultValue=*/1.0
-    );
+    auto &timestepKey = registry.registerKey<double>(KeyRegistry<double>{
+        .metadata =
+            KeyMetadata{
+                .name         = "timestep",
+                .title        = "Timestep",
+                .description  = "The timestep for the simulation",
+                .unit         = "fs",
+                .errorMessage = "Invalid timestep value",
+            },
+        .defaultValue = 1.0
+    });
 
     parser.addKeyword(
         "timestep",
@@ -140,12 +144,15 @@ TEST(TestInputKeyAdapter, adaptWiresSingleKeyIntoAddKeyword)
     InputFileParser parser;
 
     InputKey<bool> key(
-        KeyMetadata{
-            .name         = "verbose",
-            .title        = "Verbose",
-            .description  = "Enable verbose output",
-            .unit         = "",
-            .errorMessage = "Invalid verbose value",
+        KeyRegistry<bool>{
+            .metadata =
+                KeyMetadata{
+                    .name         = "verbose",
+                    .title        = "Verbose",
+                    .description  = "Enable verbose output",
+                    .unit         = "",
+                    .errorMessage = "Invalid verbose value",
+                }
         }
     );
 

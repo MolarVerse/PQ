@@ -27,8 +27,9 @@
 #include <string>
 #include <vector>
 
-#include "exceptions.hpp"         // for InputFileException
-#include "inputParam.hpp"         // for InputKey, InputRegistry, KeyMetadata
+#include "exceptions.hpp"   // for InputFileException
+#include "inputParam.hpp"   // for InputKey, InputRegistry, KeyMetadata
+#include "inputRegistry.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
 using namespace input;
@@ -97,13 +98,16 @@ TEST(TestConverter, tryParseEnum)
 TEST(TestInputKey, defaultValueBeforeParsing)
 {
     InputKey<double> key(
-        KeyMetadata{
-            .name        = "timestep",
-            .title       = "Timestep",
-            .description = "",
-            .unit        = ""
-        },
-        1.0
+        KeyRegistry<double>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "timestep",
+                    .title       = "Timestep",
+                    .description = "",
+                    .unit        = ""
+                },
+            .defaultValue = 1.0
+        }
     );
 
     EXPECT_FALSE(key.isSet());
@@ -120,13 +124,16 @@ TEST(TestInputKey, defaultValueBeforeParsing)
 TEST(TestInputKey, explicitValueOverridesDefault)
 {
     InputKey<double> key(
-        KeyMetadata{
-            .name        = "timestep",
-            .title       = "Timestep",
-            .description = "",
-            .unit        = ""
-        },
-        1.0
+        KeyRegistry<double>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "timestep",
+                    .title       = "Timestep",
+                    .description = "",
+                    .unit        = ""
+                },
+            .defaultValue = 1.0
+        }
     );
 
     key.parse({"timestep", "=", "0.5"}, 1);
@@ -145,11 +152,14 @@ TEST(TestInputKey, explicitValueOverridesDefault)
 TEST(TestInputKey, valueThrowsWithoutDefaultOrExplicit)
 {
     InputKey<TestJobType> key(
-        KeyMetadata{
-            .name        = "jobtype",
-            .title       = "Job Type",
-            .description = "",
-            .unit        = ""
+        KeyRegistry<TestJobType>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "jobtype",
+                    .title       = "Job Type",
+                    .description = "",
+                    .unit        = ""
+                }
         }
     );
 
@@ -166,11 +176,14 @@ TEST(TestInputKey, valueThrowsWithoutDefaultOrExplicit)
 TEST(TestInputKey, invalidEnumTokenThrows)
 {
     InputKey<TestJobType> key(
-        KeyMetadata{
-            .name        = "jobtype",
-            .title       = "Job Type",
-            .description = "",
-            .unit        = ""
+        KeyRegistry<TestJobType>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "jobtype",
+                    .title       = "Job Type",
+                    .description = "",
+                    .unit        = ""
+                }
         }
     );
 
@@ -190,12 +203,15 @@ TEST(TestInputKey, invalidEnumTokenThrows)
 TEST(TestInputKey, customErrorMessageOverridesGenerated)
 {
     InputKey<TestJobType> key(
-        KeyMetadata{
-            .name         = "jobtype",
-            .title        = "Job Type",
-            .description  = "",
-            .unit         = "",
-            .errorMessage = "Unrecognized job type"
+        KeyRegistry<TestJobType>{
+            .metadata =
+                KeyMetadata{
+                    .name         = "jobtype",
+                    .title        = "Job Type",
+                    .description  = "",
+                    .unit         = "",
+                    .errorMessage = "Unrecognized job type"
+                }
         }
     );
 
@@ -214,14 +230,17 @@ TEST(TestInputKey, customErrorMessageOverridesGenerated)
 TEST(TestInputKey, allowedSubsetRejectsOutOfRangeValue)
 {
     InputKey<TestJobType> key(
-        KeyMetadata{
-            .name        = "jobtype",
-            .title       = "Job Type",
-            .description = "",
-            .unit        = ""
-        },
-        std::nullopt,
-        std::vector<TestJobType>{TestJobType::mm, TestJobType::qm}
+        KeyRegistry<TestJobType>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "jobtype",
+                    .title       = "Job Type",
+                    .description = "",
+                    .unit        = ""
+                },
+            .allowed =
+                std::vector<TestJobType>{TestJobType::mm, TestJobType::qm}
+        }
     );
 
     key.parse({"jobtype", "=", "mm"}, 1);
@@ -237,7 +256,7 @@ TEST(TestInputKey, allowedSubsetRejectsOutOfRangeValue)
  */
 TEST(TestInputKey, customParserAliasResolvesUnknownToken)
 {
-    InputKey<TestJobType>::CustomParser aliasParser =
+    KeyRegistry<TestJobType>::CustomParser aliasParser =
         [](std::string_view raw) -> std::optional<TestJobType>
     {
         if (raw == "molecular_dynamics")
@@ -247,17 +266,16 @@ TEST(TestInputKey, customParserAliasResolvesUnknownToken)
 
     auto createKey = [&aliasParser]() -> InputKey<TestJobType>
     {
-        return InputKey<TestJobType>(
-            KeyMetadata{
-                .name        = "jobtype",
-                .title       = "Job Type",
-                .description = "",
-                .unit        = ""
-            },
-            std::nullopt,
-            std::nullopt,
-            aliasParser
-        );
+        return InputKey<TestJobType>(KeyRegistry<TestJobType>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "jobtype",
+                    .title       = "Job Type",
+                    .description = "",
+                    .unit        = ""
+                },
+            .customParser = aliasParser
+        });
     };
 
     auto key = createKey();
@@ -278,16 +296,16 @@ TEST(TestInputKey, onSetCallbackInvoked)
     double captured = 0.0;
 
     InputKey<double> key(
-        KeyMetadata{
-            .name        = "timestep",
-            .title       = "Timestep",
-            .description = "",
-            .unit        = ""
-        },
-        std::nullopt,
-        std::nullopt,
-        nullptr,
-        [&captured](const double &value) { captured = value; }
+        KeyRegistry<double>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "timestep",
+                    .title       = "Timestep",
+                    .description = "",
+                    .unit        = ""
+                },
+            .onSet = [&captured](const double &value) { captured = value; }
+        }
     );
 
     key.parse({"timestep", "=", "2.5"}, 1);
@@ -302,13 +320,16 @@ TEST(TestInputKey, onSetCallbackInvoked)
 TEST(TestInputKey, describeReflectsState)
 {
     InputKey<double> key(
-        KeyMetadata{
-            .name        = "timestep",
-            .title       = "Timestep",
-            .description = "Integration timestep for the MD run",
-            .unit        = "fs"
-        },
-        1.0
+        KeyRegistry<double>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "timestep",
+                    .title       = "Timestep",
+                    .description = "Integration timestep for the MD run",
+                    .unit        = "fs"
+                },
+            .defaultValue = 1.0
+        }
     );
 
     EXPECT_EQ(
@@ -333,14 +354,17 @@ TEST(TestInputKey, describeReflectsState)
 TEST(TestInputKey, describeIncludesAllowedList)
 {
     InputKey<TestJobType> key(
-        KeyMetadata{
-            .name        = "jobtype",
-            .title       = "Job Type",
-            .description = "",
-            .unit        = ""
-        },
-        std::nullopt,
-        std::vector<TestJobType>{TestJobType::mm, TestJobType::qm}
+        KeyRegistry<TestJobType>{
+            .metadata =
+                KeyMetadata{
+                    .name        = "jobtype",
+                    .title       = "Job Type",
+                    .description = "",
+                    .unit        = ""
+                },
+            .allowed =
+                std::vector<TestJobType>{TestJobType::mm, TestJobType::qm},
+        }
     );
 
     EXPECT_EQ(key.describe(), "jobtype (Job Type) = <unset> [allowed: mm, qm]");
@@ -355,22 +379,26 @@ TEST(TestInputRegistry, registerParseAndDescribeAll)
 {
     InputRegistry registry;
 
-    auto &timestepKey = registry.registerKey<double>(
-        KeyMetadata{
-            .name        = "timestep",
-            .title       = "Timestep",
-            .description = "",
-            .unit        = "fs"
-        },
-        1.0
-    );
-
-    auto &jobTypeKey = registry.registerKey<TestJobType>(KeyMetadata{
-        .name        = "jobtype",
-        .title       = "Job Type",
-        .description = "",
-        .unit        = ""
+    auto &timestepKey = registry.registerKey<double>(KeyRegistry<double>{
+        .metadata =
+            KeyMetadata{
+                .name        = "timestep",
+                .title       = "Timestep",
+                .description = "",
+                .unit        = "fs"
+            },
+        .defaultValue = 1.0
     });
+
+    auto &jobTypeKey =
+        registry.registerKey<TestJobType>(KeyRegistry<TestJobType>{
+            .metadata = KeyMetadata{
+                .name        = "jobtype",
+                .title       = "Job Type",
+                .description = "",
+                .unit        = ""
+            }
+        });
 
     registry.parseLine({"timestep", "=", "0.5"}, 1);
     registry.parseLine({"jobtype", "=", "qm"}, 2);

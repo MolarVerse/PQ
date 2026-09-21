@@ -20,28 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARSER_UTILS_HPP_
-
-#define _PARSER_UTILS_HPP_
+#ifndef _KEY_VALIDATOR_BASE_HPP_
+#define _KEY_VALIDATOR_BASE_HPP_
 
 namespace input
 {
-    // somewhere central, e.g. a small "functional utils" header
-    template <typename T, typename Ret, typename... Args>
-    auto bindMember(Ret (T::*method)(Args...), T *obj);
+    template <typename T>
+    class KeyValidator
+    {
+       public:
+        virtual ~KeyValidator() = default;
 
-    // const-qualified overload, for const member functions
-    template <typename T, typename Ret, typename... Args>
-    auto bindMember(Ret (T::*method)(Args...) const, const T *obj);
+        [[nodiscard]]
+        virtual bool validate(const T &value) const = 0;
 
-    void checkEqualSign(const std::string_view &, size_t);
-    void checkCommandArray(const std::vector<std::string> &, size_t);
-    void checkCommand(const std::vector<std::string> &, size_t);
-
+        [[nodiscard]]
+        virtual std::string errorMessage() const = 0;
+    };
 }   // namespace input
 
-#ifndef _PARSER_UTILS_TPP_
-#include "parserUtils.tpp"   // IWYU pragma: export
-#endif
-
-#endif   // _PARSER_UTILS_HPP_
+#endif   // _KEY_VALIDATOR_BASE_HPP_

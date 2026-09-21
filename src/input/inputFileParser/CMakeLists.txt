@@ -24,6 +24,9 @@ add_library(inputFileParser
     virialInputParser.cpp
 
     inputKeyAdapter.cpp
+    inputRegistry.cpp
+    inputConverter.cpp
+    parserUtils.cpp
 )
 
 target_include_directories(inputFileParser

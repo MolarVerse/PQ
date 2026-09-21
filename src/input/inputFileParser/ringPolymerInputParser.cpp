@@ -22,57 +22,46 @@
 
 #include "ringPolymerInputParser.hpp"
 
-#include <format>   // for format
-
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "stringUtilities.hpp"       // for stringToInt
+#include "inputKeyAdapter.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
+#include "ringPolymerSettings.hpp"
 
 using namespace input;
-using namespace exc;
 using namespace settings;
 
 /**
  * @brief Construct a new RingPolymerInputParser::
  * RingPolymerInputParser object
  *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) rpmd_n_replica "<size_t>"
- */
-RingPolymerInputParser::RingPolymerInputParser()
-{
-    addKeyword(
-        std::string("rpmd_n_replica"),
-        bindMember(&RingPolymerInputParser::parseNumberOfBeads, this),
-        false
-    );
-}
-
-/**
- * @brief parse number of beads for ring polymer md
+ * @details following keywords are registered: 1) rpmd_n_replica `<size_t>`,
+ * must be at least 2
  *
- * @param lineElements
- * @param lineNumber
  */
-void RingPolymerInputParser::parseNumberOfBeads(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+RingPolymerInputParser::RingPolymerInputParser() { addNumberOfBeadsKeyword(); }
+
+void RingPolymerInputParser::addNumberOfBeadsKeyword()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "rpmd_n_replica",
+        .title = "Number of Ring-Polymer Replicas",
+        .description =
+            "Number of beads (replicas) used in ring-polymer "
+            "molecular dynamics"
+    };
 
-    auto numberOfBeads = utilities::stringToInt(lineElements[2]);
+    const RangeValidator<size_t> rangeValidator{2, std::nullopt};
 
-    if (numberOfBeads < 2)
-    {
-        throw InputFileException(
-            std::format(
-                "Number of beads must be at least 2 - in input file in line {}",
-                lineNumber
-            )
-        );
-    }
+    const auto setValue = [](const size_t &nBeads)
+    { RingPolymerSettings::setNumberOfBeads(nBeads); };
 
-    RingPolymerSettings::setNumberOfBeads(static_cast<size_t>(numberOfBeads));
+    auto &numberOfBeadsKey =
+        _getRegistry().registerKey<size_t>(KeyRegistry<size_t>{
+            .metadata = metaData,
+            .onSet    = setValue,
+            .validator =
+                std::make_shared<RangeValidator<size_t>>(rangeValidator),
+        });
+
+    addKeyword("rpmd_n_replica", adapt(numberOfBeadsKey), false);
 }

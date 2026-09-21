@@ -20,28 +20,36 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARSER_UTILS_HPP_
+#ifndef _RANGE_VALIDATOR_HPP_
+#define _RANGE_VALIDATOR_HPP_
 
-#define _PARSER_UTILS_HPP_
+#include "keyValidatorBase.hpp"
 
 namespace input
 {
-    // somewhere central, e.g. a small "functional utils" header
-    template <typename T, typename Ret, typename... Args>
-    auto bindMember(Ret (T::*method)(Args...), T *obj);
+    template <typename T>
+    class RangeValidator : public KeyValidator<T>
+    {
+       private:
+        std::optional<T> _min;
+        std::optional<T> _max;
 
-    // const-qualified overload, for const member functions
-    template <typename T, typename Ret, typename... Args>
-    auto bindMember(Ret (T::*method)(Args...) const, const T *obj);
+       public:
+        RangeValidator(
+            const std::optional<T> &min,
+            const std::optional<T> &max
+        );
 
-    void checkEqualSign(const std::string_view &, size_t);
-    void checkCommandArray(const std::vector<std::string> &, size_t);
-    void checkCommand(const std::vector<std::string> &, size_t);
+        [[nodiscard]]
+        bool validate(const T &value) const override;
 
+        [[nodiscard]]
+        std::string errorMessage() const override;
+    };
 }   // namespace input
 
-#ifndef _PARSER_UTILS_TPP_
-#include "parserUtils.tpp"   // IWYU pragma: export
+#ifndef _RANGE_VALIDATOR_TPP_
+#include "rangeValidator.tpp"
 #endif
 
-#endif   // _PARSER_UTILS_HPP_
+#endif   // _RANGE_VALIDATOR_HPP_
