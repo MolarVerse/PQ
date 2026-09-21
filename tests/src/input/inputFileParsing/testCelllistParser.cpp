@@ -41,22 +41,29 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    CellListInputParser      parser(_engine->getCellList());
+    CellListInputParser parser(_engine->getCellList());
+    const auto          funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("cell_list"));
+    const auto& parseFunc = funcMap.at("cell_list");
+
     std::vector<std::string> lineElements = {"cell-list", "=", "off"};
-    input::CellListInputParser::parseCellListActivated(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_FALSE(settings::Settings::isCellListActivated());
 
+    clearParser(parser);
+
     lineElements = {"cell-list", "=", "on"};
-    input::CellListInputParser::parseCellListActivated(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_TRUE(settings::Settings::isCellListActivated());
+
+    clearParser(parser);
 
     lineElements = {"cell-list", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseCellListActivated(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid cell-list keyword \"notValid\" at line 0 "
-        "in input file\n"
-        "Possible keywords are \"on\" and \"off\""
+        "Invalid value \"notValid\" for key \"cell-list\" at line 0 "
+        "in input file. Possible options are: on|off|true|false|yes|no"
     );
 }
 
@@ -68,18 +75,26 @@ TEST_F(TestInputFileReader, parseCellListActivated)
  */
 TEST_F(TestInputFileReader, numberOfCells)
 {
-    CellListInputParser      parser(_engine->getCellList());
+    CellListInputParser parser(_engine->getCellList());
+    const auto          funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("cell_number"));
+    const auto& parseFunc = funcMap.at("cell_number");
+
     std::vector<std::string> lineElements = {"cell-number", "=", "3"};
-    parser.parseNumberOfCells(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         _engine->getCellList()->getNumberOfCells(),
         linalg::Vec3Dul(3, 3, 3)
     );
 
+    clearParser(parser);
+
     lineElements = {"cell-number", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseNumberOfCells(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Number of cells must be positive - number of cells = 0"
+        "Invalid value \"0\" for key \"cell-number\" at line 0 in input file: "
+        "failed validation with message Value must be greater than or equal to "
+        "1"
     );
 }
