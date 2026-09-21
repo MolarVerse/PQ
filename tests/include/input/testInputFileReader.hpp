@@ -29,6 +29,7 @@
 #include <cstdio>   // for remove
 #include <string>   // for allocator, string
 
+#include "inputFileParser.hpp"
 #include "inputFileReader.hpp"   // for InputFileReader
 #include "mmmdEngine.hpp"        // for MDEngine
 #include "optEngine.hpp"         // for MDEngine
@@ -63,6 +64,8 @@ class TestInputFileReader : public ::testing::Test
         delete _mdEngine;
         removeFile();
     }
+
+    static void clearParser(input::InputFileParser &parser) { parser._clear(); }
 
     std::string _fileName;
 

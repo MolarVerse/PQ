@@ -20,28 +20,47 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_INPUT_PARSER_HPP_
+#ifndef _INPUT_REGISTRY_HPP_
+#define _INPUT_REGISTRY_HPP_
 
-#define _RING_POLYMER_INPUT_PARSER_HPP_
-
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputParam.hpp"
 
 namespace input
 {
     /**
-     * @class RingPolymerInputParser inherits from InputFileParser
+     * @class InputRegistry
      *
-     * @brief Parses the general commands in the input file
+     * @brief owns a set of InputKey<T> instances for one InputFileParser
+     * subclass: register once with defaults, parse lines, query later
      *
      */
-    class RingPolymerInputParser : public InputFileParser
+    class InputRegistry
     {
+       private:
+        std::unordered_map<std::string, std::unique_ptr<InputKeyBase>> _keys;
+
        public:
-        RingPolymerInputParser();
+        template <typename T>
+        InputKey<T> &registerKey(const KeyRegistry<T> &keyRegistry);
 
-        void addNumberOfBeadsKeyword();
+        void parseLine(
+            const std::vector<std::string> &lineElements,
+            size_t                          lineNumber
+        );
+
+        template <typename T>
+        [[nodiscard]]
+        const InputKey<T> &get(const std::string &name) const;
+
+        [[nodiscard]]
+        std::vector<std::string> describeAll() const;
+
+        void clearValues();
     };
-
 }   // namespace input
 
-#endif   // _RING_POLYMER_INPUT_PARSER_HPP_
+#ifndef _INPUT_REGISTRY_TPP_
+#include "inputRegistry.tpp"
+#endif
+
+#endif   // _INPUT_REGISTRY_HPP_

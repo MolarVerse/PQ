@@ -5,3 +5,4 @@
 - remove engine member of all input file parser and the input file reader
 - start refactoring input file parser approach with a clean generalized interface using `InputKey<T>` and `InputRegistry` (no changes of existing code yet)
 - implement `input key adapter` for a smooth transitioning to the new approach
+- add `KeyValidator` strategy and implement new strategy for input file parser

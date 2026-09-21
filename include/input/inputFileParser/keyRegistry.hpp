@@ -20,28 +20,30 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARSER_UTILS_HPP_
+#ifndef _KEY_REGISTRY_HPP_
+#define _KEY_REGISTRY_HPP_
 
-#define _PARSER_UTILS_HPP_
+#include "keyMetaData.hpp"
+#include "keyValidatorBase.hpp"
 
 namespace input
 {
-    // somewhere central, e.g. a small "functional utils" header
-    template <typename T, typename Ret, typename... Args>
-    auto bindMember(Ret (T::*method)(Args...), T *obj);
+    template <typename T>
+    struct KeyRegistry
+    {
+        using CustomParser = std::function<std::optional<T>(std::string_view)>;
 
-    // const-qualified overload, for const member functions
-    template <typename T, typename Ret, typename... Args>
-    auto bindMember(Ret (T::*method)(Args...) const, const T *obj);
+        KeyMetadata                    metadata;
+        std::optional<T>               defaultValue = std::nullopt;
+        std::optional<std::vector<T>>  allowed      = std::nullopt;
+        CustomParser                   customParser = nullptr;
+        std::function<void(const T &)> onSet        = nullptr;
 
-    void checkEqualSign(const std::string_view &, size_t);
-    void checkCommandArray(const std::vector<std::string> &, size_t);
-    void checkCommand(const std::vector<std::string> &, size_t);
-
+        // shared + const: validators are immutable, so sharing one instance
+        // between the registry description and the key is safe and keeps
+        // KeyRegistry copyable
+        std::shared_ptr<const KeyValidator<T>> validator = nullptr;
+    };
 }   // namespace input
 
-#ifndef _PARSER_UTILS_TPP_
-#include "parserUtils.tpp"   // IWYU pragma: export
-#endif
-
-#endif   // _PARSER_UTILS_HPP_
+#endif   // _KEY_REGISTRY_HPP_

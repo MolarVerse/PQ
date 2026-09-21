@@ -26,15 +26,15 @@
 
 #include <cstddef>   // for size_t
 #include <functional>
-#include <map>           // for map
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <map>      // for map
+#include <string>   // for string
+
+#include "inputRegistry.hpp"
+
+class TestInputFileReader;
 
 namespace input
 {
-    void checkEqualSign(const std::string_view &, size_t);
-    void checkCommand(const std::vector<std::string> &, size_t);
-    void checkCommandArray(const std::vector<std::string> &, size_t);
 
     /**
      * @class InputFileParser
@@ -44,6 +44,8 @@ namespace input
      */
     class InputFileParser
     {
+        friend class ::TestInputFileReader;
+
        public:
         using ParseFunc =
             std::function<void(const std::vector<std::string> &, const size_t)>;
@@ -53,6 +55,9 @@ namespace input
         std::map<std::string, bool>      _keywordRequiredMap;
         std::map<std::string, int>       _keywordCountMap;
 
+       private:
+        InputRegistry _registry;
+
        public:
         void addKeyword(const std::string &, ParseFunc, bool);
 
@@ -60,6 +65,13 @@ namespace input
         [[nodiscard]] std::map<std::string, int>  getKeywordCountMap() const;
         [[nodiscard]] std::map<std::string, ParseFunc> getKeywordFuncMap(
         ) const;
+
+       protected:
+        [[nodiscard]]
+        InputRegistry &_getRegistry();
+
+       private:
+        void _clear();
     };
 
 }   // namespace input
