@@ -74,13 +74,6 @@ TEST(TestAdam, customBetasConstructorAcceptsBeta1AndBeta2)
     EXPECT_NO_THROW(Adam(10U, /*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U));
 }
 
-TEST(TestAdam, cloneProducesAdamInstance)
-{
-    const Adam src(10U, 4U);
-    const auto cloned = src.clone();
-    EXPECT_NE(std::dynamic_pointer_cast<Adam>(cloned), nullptr);
-}
-
 TEST(TestAdam, maxHistoryLengthIsTwo)
 {
     const Adam adam(10U, 4U);

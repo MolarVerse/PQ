@@ -1,1 +1,2 @@
 - make all function parameters in `output` lib const correct
+- make `Optimizer` cleaner by using PIMPL

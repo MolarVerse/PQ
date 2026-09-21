@@ -35,11 +35,27 @@ using namespace settings;
 using namespace exc;
 
 /**
+ * @brief Implementation struct for the Optimizer class (PIMPL idiom)
+ *
+ */
+struct Optimizer::Impl
+{
+    std::shared_ptr<SimulationBox> simulationBox;
+    std::shared_ptr<PhysicalData>  physicalData;
+    std::shared_ptr<PhysicalData>  physicalDataOld;
+};
+
+/**
  * @brief Construct a new Optimizer object
  *
  * @param nEpochs
  */
-Optimizer::Optimizer(size_t nEpochs) : _nEpochs(nEpochs) {}
+Optimizer::Optimizer(size_t nEpochs)
+    : _impl(std::make_unique<Impl>()), _nEpochs(nEpochs)
+{
+}
+
+Optimizer::~Optimizer() = default;
 
 /**
  * @brief update the optimizer history
@@ -47,12 +63,12 @@ Optimizer::Optimizer(size_t nEpochs) : _nEpochs(nEpochs) {}
  */
 void Optimizer::updateHistory()
 {
-    _energyHistory.push_back(_physicalData->getTotalEnergy());
-    _forceHistory.push_back(_simulationBox->getForces());
-    _positionHistory.push_back(_simulationBox->getPositions());
+    _energyHistory.push_back(_impl->physicalData->getTotalEnergy());
+    _forceHistory.push_back(_impl->simulationBox->getForces());
+    _positionHistory.push_back(_impl->simulationBox->getPositions());
 
-    const auto rmsForce = rms(_simulationBox->getForces());
-    const auto maxForce = max(_simulationBox->getForces());
+    const auto rmsForce = rms(_impl->simulationBox->getForces());
+    const auto maxForce = max(_impl->simulationBox->getForces());
 
     _rmsForceHistory.push_back(rmsForce);
     _maxForceHistory.push_back(maxForce);
@@ -111,7 +127,7 @@ void Optimizer::setSimulationBox(
     const std::shared_ptr<SimulationBox> &simulationBox
 )
 {
-    _simulationBox = simulationBox;
+    _impl->simulationBox = simulationBox;
 }
 
 /**
@@ -123,7 +139,7 @@ void Optimizer::setPhysicalData(
     const std::shared_ptr<PhysicalData> &physicalData
 )
 {
-    _physicalData = physicalData;
+    _impl->physicalData = physicalData;
 }
 
 /**
@@ -135,7 +151,7 @@ void Optimizer::setPhysicalDataOld(
     const std::shared_ptr<PhysicalData> &physicalData
 )
 {
-    _physicalDataOld = physicalData;
+    _impl->physicalDataOld = physicalData;
 }
 
 /***************************
@@ -291,3 +307,13 @@ Convergence Optimizer::getConvergence() const { return _convergence; }
  * @return opt::Convergence
  */
 Convergence &Optimizer::getConvergence() { return _convergence; }
+
+/**
+ * @brief get the simulation box member
+ *
+ * @return SimulationBox&
+ */
+SimulationBox &Optimizer::_getSimulationBox() const
+{
+    return *_impl->simulationBox;
+}
