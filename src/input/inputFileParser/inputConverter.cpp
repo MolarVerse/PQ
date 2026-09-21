@@ -22,7 +22,7 @@
 
 #include "inputConverter.hpp"
 
-#include <unordered_set>
+#include <ranges>
 
 #include "stringUtilities.hpp"
 
@@ -58,13 +58,12 @@ namespace input
     {
         const auto rawTransformed = utilities::toLowerCopy(raw);
 
-        if (std::unordered_set<std::string_view>{"true", "on", "yes"}.contains(
-                rawTransformed
-            ))
+        const auto& keys   = std::views::keys(boolKeywords);
+        const auto& values = std::views::values(boolKeywords);
+
+        if (std::ranges::find(keys, rawTransformed) != keys.end())
             return true;
-        if (std::unordered_set<std::string_view>{"false", "off", "no"}.contains(
-                rawTransformed
-            ))
+        if (std::ranges::find(values, rawTransformed) != values.end())
             return false;
 
         return std::nullopt;
