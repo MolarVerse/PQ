@@ -24,6 +24,7 @@
 #define _INPUT_CONVERTER_HPP_
 
 #include <concepts>
+#include <map>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -38,6 +39,13 @@
  */
 namespace input
 {
+
+    static const std::map<std::string, std::string> boolKeywords = {
+        {"on", "off"},
+        {"true", "false"},
+        {"yes", "no"}
+    };
+
     /**
      * @class Converter
      *

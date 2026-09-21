@@ -98,9 +98,23 @@ namespace input
         if constexpr (mstd::has_enum_meta<T>)
             return Converter<T>::describeDomain();
         else if constexpr (std::same_as<T, bool>)
-            return "on|off|true|false";
+        {
+            std::string options;
+            for (const auto& [positive, negative] : boolKeywords)
+            {
+                if (!options.empty())
+                    options += "|";
+
+                options += positive;
+                options += "|";
+                options += negative;
+            }
+            return options;
+        }
         else
+        {
             return "<value>";
+        }
     }
 }   // namespace input
 

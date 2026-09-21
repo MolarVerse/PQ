@@ -48,11 +48,8 @@ namespace input
             std::shared_ptr<molsys::CellList> cellListPtr
         );
 
-        static void parseCellListActivated(
-            const std::vector<std::string> &,
-            size_t
-        );
-        void parseNumberOfCells(const std::vector<std::string> &, size_t);
+        void addCellListActivated();
+        void addNumberOfCells();
     };
 
 }   // namespace input
