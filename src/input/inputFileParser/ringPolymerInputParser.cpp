@@ -34,7 +34,7 @@ using namespace settings;
  * @brief Construct a new RingPolymerInputParser::
  * RingPolymerInputParser object
  *
- * @details following keywords are registered: 1) rpmd_n_replica <size_t>,
+ * @details following keywords are registered: 1) rpmd_n_replica `<size_t>`,
  * must be at least 2
  *
  */
