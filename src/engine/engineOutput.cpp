@@ -204,13 +204,16 @@ void EngineOutput::writeChargeFile(SimulationBox &simulationBox, size_t step)
 /**
  * @brief wrapper for info file output function
  *
- * @param time
+ * @param simulationTime
  * @param physicalData
  */
-void EngineOutput::writeInfoFile(double time, const PhysicalData &physicalData)
+void EngineOutput::writeInfoFile(
+    double              simulationTime,
+    const PhysicalData &physicalData
+)
 {
     auto _ = scopedTimer(TimerId::Output, "InfoOutput");
-    _infoOutput->write(time, physicalData);
+    _infoOutput->write(simulationTime, physicalData);
 }
 
 /**

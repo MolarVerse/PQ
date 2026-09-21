@@ -221,7 +221,7 @@ void Constraints::_applyRattle()
  *
  * @param simulationBox
  */
-void Constraints::_applyMRattle(SimulationBox &simulationBox)
+void Constraints::_applyMRattle(SimulationBox &simulationBox) const
 {
     auto _ = scopedTimer(TimerId::Constraints, "MShake - Rattle");
     _mShake->applyMRattle(simulationBox);

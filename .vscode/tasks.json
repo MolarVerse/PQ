@@ -2,6 +2,46 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "cppcheck",
+            "type": "process",
+            "command": "cppcheck",
+            "args": [
+                "--project=${workspaceFolder}/.build/compile_commands.json",
+                "--file-filter=${workspaceFolder}/src/*",
+                "--quiet",
+                "--enable=all",
+                "--enable=performance",
+                "--enable=style",
+                "--enable=information",
+                "--enable=portability",
+                "--error-exitcode=1",
+                "--suppressions-list=${workspaceFolder}/.cppcheck",
+                "--inline-suppr",
+                "--inconclusive",
+                "--library=qt",
+                "-I${workspaceFolder}/external/mstd/include",
+                "-I${workspaceFolder}/src"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": {
+                "owner": "cppcheck",
+                "fileLocation": [
+                    "absolute"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s*(error|warning|style|performance|portability):\\s*(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            },
+            "group": "build"
+        },
+        {
             "label": "clangd-tidy (changed)",
             "type": "shell",
             "command": "bash",

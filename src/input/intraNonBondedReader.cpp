@@ -150,8 +150,8 @@ void IntraNonBondedReader::read()
  */
 MolType IntraNonBondedReader::findMoleculeType(const std::string &id) const
 {
-    auto &simBox            = _engine.getSimulationBox();
-    auto  molTypeFromString = simBox.findMoleculeTypeByString(id);
+    const auto &simBox            = _engine.getSimulationBox();
+    auto        molTypeFromString = simBox.findMoleculeTypeByString(id);
 
     if (molTypeFromString.has_value())
         return molTypeFromString.value();
@@ -215,7 +215,8 @@ void IntraNonBondedReader::processMolecule(MolType moleculeType)
     std::string line;
     auto        endedNormal = false;
 
-    auto &molType = _engine.getSimulationBox().findMoleculeType(moleculeType);
+    const auto &molType =
+        _engine.getSimulationBox().findMoleculeType(moleculeType);
 
     const auto nAtoms = molType.getNumberOfAtoms();
 

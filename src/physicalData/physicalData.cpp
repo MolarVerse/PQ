@@ -262,9 +262,6 @@ void PhysicalData::reset()
     _lowerDistanceConstraints = 0.0;
     _upperDistanceConstraints = 0.0;
 
-    _momentum        = {0.0, 0.0, 0.0};
-    _angularMomentum = {0.0, 0.0, 0.0};
-
     _virial       = {0.0};
     _stressTensor = {0.0};
 
@@ -373,7 +370,7 @@ PhysicalData physicalData::mean(std::vector<PhysicalData>& physicalDataVector)
 
     std::ranges::for_each(
         physicalDataVector,
-        [&meanData](auto& physicalData)
+        [&meanData](const auto& physicalData)
         { meanData.updateAverages(physicalData); }
     );
 

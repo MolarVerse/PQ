@@ -43,9 +43,9 @@ namespace configurator
         static inline bool _molChangedZone    = false;
 
        public:
-        void        calculateInnerRegionCenter(molsys::SimulationBox &);
-        void        shiftAtomsToInnerRegionCenter(molsys::SimulationBox &);
-        void        shiftAtomsBackToInitialPositions(molsys::SimulationBox &);
+        void calculateInnerRegionCenter(molsys::SimulationBox &);
+        void shiftAtomsToInnerRegionCenter(molsys::SimulationBox &) const;
+        void shiftAtomsBackToInitialPositions(molsys::SimulationBox &) const;
         static void assignHybridZones(molsys::SimulationBox &);
         static void activateMolecules(molsys::SimulationBox &);
         static void deactivateOuterMolecules(molsys::SimulationBox &);

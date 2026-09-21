@@ -182,9 +182,9 @@ namespace settings
         static void setSlakosType(SlakosType slakos);
         static void setSlakosPath(const std::string_view &path);
 
-        static void setUseDispersionCorrection(bool use);
+        static void setUseDispersionCorrection(bool useDispersionCorr);
         static void setRemoveNetForce(bool removeNetForce);
-        static void setUseThirdOrderDftb(bool use);
+        static void setUseThirdOrderDftb(bool useThirdOrderDftb);
         static void setIsThirdOrderDftbSet(bool isThirdOrderDftbSet);
         static void setHubbardDerivs(
             const std::unordered_map<std::string, double> &hubbardDerivs
@@ -195,7 +195,7 @@ namespace settings
         static void setXtbMethod(XtbMethod method);
 
         static void setFennolModelPath(const std::string_view &path);
-        static void setUseGPUPreprocessing(bool use);
+        static void setUseGPUPreprocessing(bool useGPUPreprocessing);
 
         static void setQMLoopTimeLimit(double time);
 

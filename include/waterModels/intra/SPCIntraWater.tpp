@@ -43,7 +43,8 @@
  * - Accumulates bond energy, angle energy, and virial contributions.
  * - Handles hybrid-zone smoothing factors if applicable.
  *
- * @param box The simulation box containing water molecules and PBC settings.
+ * @param simulationBox The simulation box containing water molecules and PBC
+ * settings.
  * @param physicalData The physical data container to accumulate energies and
  * virial.
  *
@@ -53,7 +54,7 @@
  * @note Inactive molecules are skipped.
  */
 void waterModel::SPCIntraWater::calculate(
-    molsys::SimulationBox&      box,
+    molsys::SimulationBox&      simulationBox,
     physicalData::PhysicalData& physicalData
 )
 {
@@ -64,7 +65,7 @@ void waterModel::SPCIntraWater::calculate(
     const auto kOHBond      = getForceConstantOHBond();
     const auto kHOHAngle    = getForceConstantHOHAngle();
 
-    for (auto& water : box.getWaterTypeMolecules())
+    for (auto& water : simulationBox.getWaterTypeMolecules())
     {
         auto& oxygen    = water.getAtom(AtomIndex{0});
         auto& hydrogen1 = water.getAtom(AtomIndex{1});
@@ -76,7 +77,7 @@ void waterModel::SPCIntraWater::calculate(
 
         auto dOH1 = posO - posH1;
 
-        box.applyPBC(dOH1);
+        simulationBox.applyPBC(dOH1);
 
         const auto distOH1          = norm(dOH1);
         const auto deltaDistanceOH1 = distOH1 - eqOHDistance;
@@ -93,7 +94,7 @@ void waterModel::SPCIntraWater::calculate(
 
         auto dOH2 = posO - posH2;
 
-        box.applyPBC(dOH2);
+        simulationBox.applyPBC(dOH2);
 
         const auto distOH2          = norm(dOH2);
         const auto deltaDistanceOH2 = distOH2 - eqOHDistance;

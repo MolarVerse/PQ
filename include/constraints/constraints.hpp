@@ -92,7 +92,7 @@ namespace constraints
 
         void applyRattle(molsys::SimulationBox &simulationBox);
         void _applyRattle();
-        void _applyMRattle(molsys::SimulationBox &simulationBox);
+        void _applyMRattle(molsys::SimulationBox &simulationBox) const;
 
         void applyDistanceConstraints(
             const molsys::SimulationBox &,
@@ -122,7 +122,9 @@ namespace constraints
          ************************/
 
         void addBondConstraint(const BondConstraint &bondConstraint);
-        void addDistanceConstraint(const DistanceConstraint &distanceConst);
+        void addDistanceConstraint(
+            const DistanceConstraint &distanceConstraint
+        );
         void addMShakeReference(const MShakeReference &mShakeReference);
 
         /***************************

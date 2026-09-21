@@ -93,7 +93,7 @@ void PotentialSetup::setup()
  * 2) wolf long range correction
  *
  */
-void PotentialSetup::setupCoulomb()
+void PotentialSetup::setupCoulomb() const
 {
     const auto  coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
     const auto  wolfParam = PotentialSettings::getWolfParameter();
@@ -126,7 +126,7 @@ void PotentialSetup::setupCoulomb()
  * @details decides wether to use Guff or ForceFieldNonCoulomb potential
  *
  */
-void PotentialSetup::setupNonCoulomb()
+void PotentialSetup::setupNonCoulomb() const
 {
     const auto &potential = _engine.getPotential();
 

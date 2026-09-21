@@ -304,7 +304,7 @@ void ForceField::calculateImproperDihedralInteractions(
 void ForceField::calculateJCouplingInteractions(
     const SimulationBox & /*simulationBox*/,
     PhysicalData & /*physicalData*/
-)
+) const
 {
     if (!_jCouplings.empty())
         throw UserInputException(

@@ -60,7 +60,7 @@ namespace constraints
         void initMShake();
         void initMShakeReferences();
         void applyMShake(molsys::SimulationBox &simulationBox);
-        void applyMRattle(molsys::SimulationBox &);
+        void applyMRattle(molsys::SimulationBox &) const;
 
         [[nodiscard]]
         size_t calcNumberOfMShakeMolecules(molsys::SimulationBox &) const;

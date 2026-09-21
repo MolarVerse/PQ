@@ -61,7 +61,7 @@ namespace molsys
         explicit MoleculeType(MolType moltype);
         explicit MoleculeType(const std::string_view &name);
 
-        [[nodiscard]] size_t getNumberOfAtomTypes();
+        [[nodiscard]] size_t getNumberOfAtomTypes() const;
 
         /**************************
          * standard adder methods *

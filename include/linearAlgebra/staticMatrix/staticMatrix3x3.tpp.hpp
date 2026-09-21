@@ -517,9 +517,7 @@ namespace linalg
         auto den = diagonalMatrix(T{1}) - padeMat + padeMat2 - padeMat3;
         auto num = diagonalMatrix(T{1}) + padeMat + padeMat2 + padeMat3;
 
-        result = inverse(den) * num;
-
-        return result;
+        return inverse(den) * num;
     }
 }   // namespace linalg
 

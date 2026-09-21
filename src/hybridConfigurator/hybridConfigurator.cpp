@@ -63,13 +63,13 @@ void HybridConfigurator::calculateInnerRegionCenter(
 
     linalg::Vec3D center        = {0.0, 0.0, 0.0};
     double        total_mass    = 0.0;
-    const auto    positionAtom1 = simBox.getAtom(indices.at(0)).getPosition();
+    const auto&   positionAtom1 = simBox.getAtom(indices.at(0)).getPosition();
 
     for (const auto index : indices)
     {
         const auto& atom     = simBox.getAtom(index);
         const auto  mass     = atom.getMass();
-        const auto  position = atom.getPosition();
+        const auto& position = atom.getPosition();
         const auto  deltaPos = position - positionAtom1;
 
         center     += mass * (position - simBox.calcShiftVector(deltaPos));
@@ -94,7 +94,7 @@ void HybridConfigurator::calculateInnerRegionCenter(
  */
 void HybridConfigurator::shiftAtomsToInnerRegionCenter(
     molsys::SimulationBox& simBox
-)
+) const
 {
     for (auto& atom : simBox.getAtoms())
     {
@@ -120,7 +120,7 @@ void HybridConfigurator::shiftAtomsToInnerRegionCenter(
  */
 void HybridConfigurator::shiftAtomsBackToInitialPositions(
     molsys::SimulationBox& simBox
-)
+) const
 {
     for (auto& atom : simBox.getAtoms())
     {

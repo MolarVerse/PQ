@@ -45,7 +45,7 @@ MoleculeType::MoleculeType(const std::string_view &name) : _name(name) {}
  *
  * @return size_t
  */
-size_t MoleculeType::getNumberOfAtomTypes()
+size_t MoleculeType::getNumberOfAtomTypes() const
 {
     return utilities::getUniqueElements(_atomTypes).size();
 }

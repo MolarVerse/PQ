@@ -70,7 +70,7 @@ RestartFileReader::RestartFileReader(
  * @return RestartFileSection*
  */
 RestartFileSection *RestartFileReader::determineSection(
-    std::vector<std::string> &lineElements
+    const std::vector<std::string> &lineElements
 )
 {
     for (const auto &section : _sections)

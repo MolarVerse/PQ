@@ -97,7 +97,7 @@ void input::guffdat::readGuffDat(engine::Engine &engine)
  * @return true
  * @return false
  */
-bool input::guffdat::isNeeded(engine::Engine &engine)
+bool input::guffdat::isNeeded(const engine::Engine &engine)
 {
     if (!Settings::isMMActivated())
         return false;
@@ -113,9 +113,9 @@ bool input::guffdat::isNeeded(engine::Engine &engine)
  *
  * @param engine
  */
-GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
+GuffDatReader::GuffDatReader(engine::Engine &engine)
+    : _fileName(FileSettings::getGuffDatFileName()), _engine(engine)
 {
-    _fileName = FileSettings::getGuffDatFileName();
 }
 
 /**
@@ -809,8 +809,8 @@ void GuffDatReader::checkNecessaryGuffPairs()
  */
 bool GuffDatReader::bothMoltypesAreWaterType(MolType molType1, MolType molType2)
 {
-    auto      &simBox    = _engine.getSimulationBox();
-    const auto waterType = simBox.getWaterType();
+    const auto &simBox    = _engine.getSimulationBox();
+    const auto  waterType = simBox.getWaterType();
 
     return WaterModelSettings::isInterWaterModelSet() &&
            waterType.has_value() && molType1 == waterType.value() &&

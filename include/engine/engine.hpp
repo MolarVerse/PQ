@@ -149,7 +149,7 @@ namespace engine
         template <typename T>
         void makePotential(T potential);
         template <typename T>
-        void makeIntraWater(T &&intraWater);
+        void makeIntraWater(T &&intraWaterModel);
 
         /********************************
          * standard getters and setters *

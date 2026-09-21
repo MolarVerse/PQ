@@ -1,0 +1,6 @@
+# ---- Style rules we intentionally violate ----
+useStlAlgorithm
+unusedFunction
+
+# ---- Qt / system noise ----
+missingIncludeSystem

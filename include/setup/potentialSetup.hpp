@@ -48,8 +48,8 @@ namespace setup
         explicit PotentialSetup(engine::Engine &engine);
 
         void setup();
-        void setupCoulomb();
-        void setupNonCoulomb();
+        void setupCoulomb() const;
+        void setupNonCoulomb() const;
         void setupNonCoulombicPairs();
 
         void writeSetupInfo() const;

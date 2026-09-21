@@ -55,8 +55,8 @@ namespace
      * @param atom
      */
     void setAtomPropertyVectors(
-        std::vector<std::string> &lineElements,
-        std::shared_ptr<Atom>    &atom
+        const std::vector<std::string> &lineElements,
+        std::shared_ptr<Atom>          &atom
     )
     {
         try
@@ -67,51 +67,88 @@ namespace
 
             atom->setPosition({x, y, z});
 
+            const auto elemSize = lineElements.size();
+
             // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-            if (lineElements.size() > 6)
-            {
-                const auto velX = stringToFiniteDouble(lineElements[6]);
-                const auto velY = stringToFiniteDouble(lineElements[7]);
-                const auto velZ = stringToFiniteDouble(lineElements[8]);
+            if (elemSize <= 6)
+                return;
 
-                atom->setVelocity({velX, velY, velZ});
+            if (elemSize < 9)
+            {
+                throw RstFileException(
+                    "Insufficient velocity components in atom line."
+                );
             }
 
-            if (lineElements.size() > 9)
-            {
-                const auto forceX = stringToFiniteDouble(lineElements[9]);
-                const auto forceY = stringToFiniteDouble(lineElements[10]);
-                const auto forceZ = stringToFiniteDouble(lineElements[11]);
+            const auto velX = stringToFiniteDouble(lineElements[6]);
+            const auto velY = stringToFiniteDouble(lineElements[7]);
+            const auto velZ = stringToFiniteDouble(lineElements[8]);
 
-                atom->setForce({forceX, forceY, forceZ});
+            atom->setVelocity({velX, velY, velZ});
+
+            if (elemSize <= 9)
+                return;
+
+            if (elemSize < 12)
+            {
+                throw RstFileException(
+                    "Insufficient force components in atom line."
+                );
             }
 
-            if (lineElements.size() > 12)
-            {
-                const auto oldX = stringToFiniteDouble(lineElements[12]);
-                const auto oldY = stringToFiniteDouble(lineElements[13]);
-                const auto oldZ = stringToFiniteDouble(lineElements[14]);
+            const auto forceX = stringToFiniteDouble(lineElements[9]);
+            const auto forceY = stringToFiniteDouble(lineElements[10]);
+            const auto forceZ = stringToFiniteDouble(lineElements[11]);
 
-                atom->setPositionOld({oldX, oldY, oldZ});
+            atom->setForce({forceX, forceY, forceZ});
+
+            if (elemSize <= 12)
+                return;
+
+            if (elemSize < 15)
+            {
+                throw RstFileException(
+                    "Insufficient old position components in atom line."
+                );
             }
 
-            if (lineElements.size() > 15)
-            {
-                const auto oldVx = stringToFiniteDouble(lineElements[15]);
-                const auto oldVy = stringToFiniteDouble(lineElements[16]);
-                const auto oldVz = stringToFiniteDouble(lineElements[17]);
+            const auto oldX = stringToFiniteDouble(lineElements[12]);
+            const auto oldY = stringToFiniteDouble(lineElements[13]);
+            const auto oldZ = stringToFiniteDouble(lineElements[14]);
 
-                atom->setVelocityOld({oldVx, oldVy, oldVz});
+            atom->setPositionOld({oldX, oldY, oldZ});
+
+            if (elemSize <= 15)
+                return;
+
+            if (elemSize < 18)
+            {
+                throw RstFileException(
+                    "Insufficient old velocity components in atom line."
+                );
             }
 
-            if (lineElements.size() > 18)
-            {
-                const auto oldFx = stringToFiniteDouble(lineElements[18]);
-                const auto oldFy = stringToFiniteDouble(lineElements[19]);
-                const auto oldFz = stringToFiniteDouble(lineElements[20]);
+            const auto oldVx = stringToFiniteDouble(lineElements[15]);
+            const auto oldVy = stringToFiniteDouble(lineElements[16]);
+            const auto oldVz = stringToFiniteDouble(lineElements[17]);
 
-                atom->setForceOld({oldFx, oldFy, oldFz});
+            atom->setVelocityOld({oldVx, oldVy, oldVz});
+
+            if (elemSize <= 18)
+                return;
+
+            if (elemSize < 21)
+            {
+                throw RstFileException(
+                    "Insufficient old force components in atom line."
+                );
             }
+
+            const auto oldFx = stringToFiniteDouble(lineElements[18]);
+            const auto oldFy = stringToFiniteDouble(lineElements[19]);
+            const auto oldFz = stringToFiniteDouble(lineElements[20]);
+
+            atom->setForceOld({oldFx, oldFy, oldFz});
             // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         }
         catch (const std::exception &e)
@@ -332,7 +369,7 @@ void AtomSection::checkAtomLine(
  * the line is not 12 or 21
  */
 void AtomSection::checkNumberOfLineArguments(
-    std::vector<std::string> &lineElements
+    const std::vector<std::string> &lineElements
 ) const
 {
     const auto lineSize = lineElements.size();

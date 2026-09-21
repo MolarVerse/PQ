@@ -76,8 +76,8 @@ size_t Molecule::getNumberOfAtomTypes()
  */
 void Molecule::calculateCenterOfMass(const Box &box)
 {
-    _centerOfMass            = {0.0, 0.0, 0.0};
-    const auto positionAtom1 = _atoms[0]->getPosition();
+    _centerOfMass             = {0.0, 0.0, 0.0};
+    const auto &positionAtom1 = _atoms[0]->getPosition();
 
     for (const auto &atom : _atoms)
     {

@@ -44,23 +44,23 @@ CoulombReactionField::CoulombReactionField(
 /**
  * @brief calculate the energy and force of the reaction field Coulomb potential
  *
- * @param dist
+ * @param distance
  * @param chargeProduct
  * @return std::pair<double, double>
  */
 std::pair<double, double> CoulombReactionField::calculate(
-    double dist,
+    double distance,
     double chargeProduct
 ) const
 {
     const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
-    const auto dInv             = 1.0 / dist;
-    const auto deltaCutOff      = _coulombRadiusCutOff - dist;
+    const auto dInv             = 1.0 / distance;
+    const auto deltaCutOff      = _coulombRadiusCutOff - distance;
     const auto rCutEnergy       = _coulombEnergyCutOff;
     const auto rCutForce        = _coulombForceCutOff;
     const auto rfCutOffCubed    = _rfPrefactor * _coulombCutOffCubedInverse;
 
-    auto energy  = dInv - (2.0 * rCutEnergy) + (dist * rCutForce);
+    auto energy  = dInv - (2.0 * rCutEnergy) + (distance * rCutForce);
     energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;
 
     auto force  = (dInv * dInv) - rCutForce;

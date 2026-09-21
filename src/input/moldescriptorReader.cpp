@@ -50,9 +50,9 @@ using namespace exc;
  *
  * @throw InputFileException if file not found
  */
-MoldescriptorReader::MoldescriptorReader(Engine &engine) : _engine(engine)
+MoldescriptorReader::MoldescriptorReader(Engine &engine)
+    : _fileName(FileSettings::getMolDescriptorFileName()), _engine(engine)
 {
-    _fileName = FileSettings::getMolDescriptorFileName();
     _fp.open(_fileName);
 }
 

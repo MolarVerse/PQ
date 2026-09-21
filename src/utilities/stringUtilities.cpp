@@ -61,7 +61,7 @@ std::string utilities::removeComments(
     const auto commentPos = line.find(commentChar);
 
     if (commentPos != std::string::npos)
-        line = line.substr(0, commentPos);
+        line.resize(commentPos);
 
     return line;
 }

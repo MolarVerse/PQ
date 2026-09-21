@@ -136,7 +136,7 @@ namespace waterModel
         );
 
         template <typename T>
-        double getPartialCharge(molsys::Atom &atom) const;
+        static double getPartialCharge(molsys::Atom &atom);
     };
 
     class InterWater
@@ -176,7 +176,7 @@ namespace waterModel
 
         void setNonCoulombCutOffRadii() const;
         void initNonCoulombPairs() const;
-        void initState()
+        void initState() const
         {
             setNonCoulombCutOffRadii();
             initNonCoulombPairs();

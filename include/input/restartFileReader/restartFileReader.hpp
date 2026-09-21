@@ -61,7 +61,7 @@ namespace input::restartFile
 
         void                read();
         RestartFileSection *determineSection(
-            std::vector<std::string> &lineElements
+            const std::vector<std::string> &lineElements
         );
     };
 

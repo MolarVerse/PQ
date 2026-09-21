@@ -80,7 +80,7 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setConvergence(opt::Convergence);
+        void setConvergence(const Convergence&);
 
         void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
 

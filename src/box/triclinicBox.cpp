@@ -120,13 +120,14 @@ namespace molsys
 
         const auto distance = norm(position);
 
-        Vec3D  analyticPosition   = position;
-        double analyticalDistance = distance;
+        Vec3D analyticPosition = position;
 
         const auto minimalBoxDimensionHalf = getMinimalBoxDimension() / 2.0;
 
         if (distance > minimalBoxDimensionHalf)
         {
+            double analyticalDistance = distance;
+
             for (int i = -1; i <= 1; ++i)
             {
                 for (int j = -1; j <= 1; ++j)
@@ -374,13 +375,13 @@ namespace molsys
      *
      * @return tensor3D
      */
-    tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
+    tensor3D TriclinicBox::getBoxMatrix(Periodicity periodicity) const
     {
         using namespace defaults;
 
         auto boxMatrix = getBoxMatrix();
 
-        switch (per)
+        switch (periodicity)
         {
             case Periodicity::NON_PERIODIC:
                 boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension

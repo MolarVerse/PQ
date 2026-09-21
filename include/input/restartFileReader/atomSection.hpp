@@ -59,7 +59,7 @@ namespace input::restartFile
         );
 
        public:
-        void checkNumberOfLineArguments(std::vector<std::string> &) const;
+        void checkNumberOfLineArguments(const std::vector<std::string> &) const;
         void process(
             std::vector<std::string> &lineElements,
             engine::Engine           &engine

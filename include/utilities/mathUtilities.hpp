@@ -54,10 +54,11 @@ namespace utilities
         return std::abs(lhs - rhs) < tolerance;
     }
 
-    [[nodiscard]] bool compare(
+    [[nodiscard]]
+    bool compare(
         const linalg::Vector3D<double> &lhs,
         const linalg::Vector3D<double> &rhs,
-        const double                   &tol
+        const double                   &tolerance
     );
 
     /**

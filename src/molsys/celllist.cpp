@@ -170,9 +170,10 @@ void CellList::addNeighbouringCells(double coulombCutoff)
         }
     }
 
-    auto addCell = [this](auto &cell) { addNeighbouringCellPointers(cell); };
+    auto addCellLambda = [this](auto &cell)
+    { addNeighbouringCellPointers(cell); };
 
-    std::ranges::for_each(_cells, addCell);
+    std::ranges::for_each(_cells, addCellLambda);
 }
 
 /**
@@ -290,7 +291,8 @@ void CellList::addMoleculesToCells(SimulationBox &simulationBox)
             mapCellIndexToAtomPointers[cellIndexScalar].push_back(atom);
         }
 
-        auto addMoleculeAndAtomPointersToCell = [this, molecule](auto &pair)
+        auto addMoleculeAndAtomPointersToCell =
+            [this, molecule](const auto &pair)
         {
             const auto &[cellIndex, atomPointers] = pair;
             _cells[cellIndex].addMolecule(molecule);
@@ -317,7 +319,7 @@ void CellList::assignMoleculeHybridZoneIndices()
  *
  * @param simulationBox simulation box containing molecules
  */
-void CellList::assignWaterMoleculeIndices(SimulationBox &simulationBox)
+void CellList::assignWaterMoleculeIndices(const SimulationBox &simulationBox)
 {
     for (auto &cell : _cells) cell.assignWaterMoleculeIndices(simulationBox);
 }

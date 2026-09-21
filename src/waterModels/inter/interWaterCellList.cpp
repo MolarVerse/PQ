@@ -85,14 +85,14 @@ void InterWaterStrategyCellList::calculate(
 
         for (size_t mol_i = 0; mol_i < nMols; ++mol_i)
         {
-            auto *molecule_i = cell_i.getMolecule(mol_i);
+            const auto *molecule_i = cell_i.getMolecule(mol_i);
             if (molecule_i->getMoltype() != waterType ||
                 !molecule_i->isActive())
                 continue;
 
             for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
             {
-                auto *molecule_j = cell_i.getMolecule(mol_j);
+                const auto *molecule_j = cell_i.getMolecule(mol_j);
                 if (molecule_j->getMoltype() != waterType ||
                     !molecule_j->isActive())
                     continue;
@@ -149,7 +149,7 @@ void InterWaterStrategyCellList::calculate(
 
             for (size_t mol_i = 0; mol_i < nMolsInCell_i; ++mol_i)
             {
-                auto *molecule_i = cell_i.getMolecule(mol_i);
+                const auto *molecule_i = cell_i.getMolecule(mol_i);
                 if (molecule_i->getMoltype() != waterType ||
                     !molecule_i->isActive())
                     continue;
@@ -160,7 +160,7 @@ void InterWaterStrategyCellList::calculate(
                         atom_i->getAtomicNumber() == oxygenAtomicNumber;
                     for (size_t mol_j = 0; mol_j < nMolsInCell_j; ++mol_j)
                     {
-                        auto *molecule_j = cell_j->getMolecule(mol_j);
+                        const auto *molecule_j = cell_j->getMolecule(mol_j);
                         if (molecule_j->getMoltype() != waterType ||
                             !molecule_j->isActive())
                             continue;
@@ -692,7 +692,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
                             continue;
 
-                        auto *molecule_j = cell_j->getMolecule(mol_j);
+                        const auto *molecule_j = cell_j->getMolecule(mol_j);
 
                         if (molecule_i == molecule_j)
                             continue;
@@ -1070,7 +1070,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         if (isNonWaterMolecule(waterMolecules_j, mol_j))
                             continue;
 
-                        auto *molecule_j = cell_j->getMolecule(mol_j);
+                        const auto *molecule_j = cell_j->getMolecule(mol_j);
 
                         if (molecule_i == molecule_j)
                             continue;
@@ -1139,7 +1139,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                         if (isNonWaterMolecule(waterMolecules_i, mol_j))
                             continue;
 
-                        auto *molecule_j = cell_i.getMolecule(mol_j);
+                        const auto *molecule_j = cell_i.getMolecule(mol_j);
 
                         if (molecule_i == molecule_j)
                             continue;

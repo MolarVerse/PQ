@@ -174,7 +174,7 @@ namespace molsys
      *
      * @return vector<size_t>
      */
-    std::vector<size_t> SimulationBox::getInnerRegionCenterAtomIndices()
+    std::vector<size_t> SimulationBox::getInnerRegionCenterAtomIndices() const
     {
         return _innerRegionCenterAtomIndices;
     }

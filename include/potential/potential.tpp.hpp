@@ -343,7 +343,7 @@ namespace pot
      * @throws std::abort() Always aborts as this should never be called
      */
     template <typename T>
-    double Potential::getPartialCharge(molsys::Atom & /*atom*/) const
+    double Potential::getPartialCharge(molsys::Atom & /*atom*/)
     {
         std::abort();
     }
@@ -363,7 +363,7 @@ namespace pot
     template <>
     inline double Potential::getPartialCharge<QMChargeTag>(
         molsys::Atom &atom
-    ) const
+    )
     {
         const auto useQMCharges = settings::HybridSettings::getUseQMCharges();
 
@@ -385,7 +385,7 @@ namespace pot
     template <>
     inline double Potential::getPartialCharge<MMChargeTag>(
         molsys::Atom &atom
-    ) const
+    )
     {
         return atom.getPartialCharge();
     }

@@ -99,7 +99,7 @@ namespace ff
         void calculateJCouplingInteractions(
             const molsys::SimulationBox &,
             physicalData::PhysicalData &
-        );
+        ) const;
 
         [[nodiscard]] const BondType     &findBondTypeById(BondId id) const;
         [[nodiscard]] const AngleType    &findAngleTypeById(AngleId id) const;

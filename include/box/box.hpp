@@ -86,7 +86,7 @@ namespace molsys
         [[nodiscard]] virtual linalg::Vec3D    getBoxAngles() const;
         [[nodiscard]] virtual linalg::tensor3D getBoxMatrix() const;
         [[nodiscard]]
-        virtual linalg::tensor3D getBoxMatrix(Periodicity per) const;
+        virtual linalg::tensor3D getBoxMatrix(Periodicity periodicity) const;
 
         [[nodiscard]]
         virtual linalg::Vec3D toOrthoSpace(const linalg::Vec3D &) const;

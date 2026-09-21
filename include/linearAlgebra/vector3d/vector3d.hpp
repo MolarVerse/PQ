@@ -269,7 +269,8 @@ namespace linalg
     auto normSquared(const U &vec) -> decltype(vec[0] * vec[0]);
 
     template <pq::ArithmeticVector3D U>
-    auto norms(std::vector<U> vec) -> std::vector<decltype(norm(vec[0]))>;
+    auto norms(const std::vector<U> &vec)
+        -> std::vector<decltype(norm(vec[0]))>;
 
     template <pq::ArithmeticVector3D U>
     auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]) / vec.size());

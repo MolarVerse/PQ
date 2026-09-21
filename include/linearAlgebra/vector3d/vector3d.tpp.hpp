@@ -1018,12 +1018,12 @@ namespace linalg
     template <pq::ArithmeticVector3D U>
     auto maxNorm(const std::vector<U> &vec) -> decltype(norm(vec[0]))
     {
-        std::vector<decltype(norm(vec[0]))> norms;
-        norms.reserve(vec.size());
+        std::vector<decltype(norm(vec[0]))> normPerVec;
+        normPerVec.reserve(vec.size());
 
-        for (const auto &value : vec) norms.push_back(norm(value));
+        for (const auto &value : vec) normPerVec.push_back(norm(value));
 
-        return *std::ranges::max_element(norms.begin(), norms.end());
+        return *std::ranges::max_element(normPerVec.begin(), normPerVec.end());
     }
 
     /******************
@@ -1078,7 +1078,7 @@ namespace linalg
      * @return std::vector<decltype(norm(vec[0])>
      */
     template <pq::ArithmeticVector3D U>
-    auto norms(std::vector<U> vec) -> std::vector<decltype(norm(vec[0]))>
+    auto norms(const std::vector<U> &vec) -> std::vector<decltype(norm(vec[0]))>
     {
         std::vector<decltype(norm(vec[0]))> norms;
         norms.reserve(vec.size());

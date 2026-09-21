@@ -69,7 +69,7 @@ namespace ff
             size_t                                 type
         );
 
-        void calculateEnergyAndForces(
+        static void calculateEnergyAndForces(
             const molsys::SimulationBox & /*simulationBox*/,
             physicalData::PhysicalData & /*physData*/
         )

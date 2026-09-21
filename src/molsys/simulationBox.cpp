@@ -842,14 +842,14 @@ namespace molsys
      */
     void SimulationBox::resetAllForces()
     {
-        auto resetForces = [](const auto& atom)
+        auto reset = [](const auto& atom)
         {
             atom->setForceToZero();
             atom->setInnerForceToZero();
             atom->setOuterForceToZero();
         };
 
-        std::ranges::for_each(_atoms, resetForces);
+        std::ranges::for_each(_atoms, reset);
     }
 
     /**
@@ -869,10 +869,9 @@ namespace molsys
      */
     void SimulationBox::resetForcesInner()
     {
-        auto resetForces = [](const auto& atom)
-        { atom->setInnerForceToZero(); };
+        auto reset = [](const auto& atom) { atom->setInnerForceToZero(); };
 
-        std::ranges::for_each(_atoms, resetForces);
+        std::ranges::for_each(_atoms, reset);
     }
 
     /**
@@ -881,10 +880,9 @@ namespace molsys
      */
     void SimulationBox::resetForcesOuter()
     {
-        auto resetForces = [](const auto& atom)
-        { atom->setOuterForceToZero(); };
+        auto reset = [](const auto& atom) { atom->setOuterForceToZero(); };
 
-        std::ranges::for_each(_atoms, resetForces);
+        std::ranges::for_each(_atoms, reset);
     }
 
     /**

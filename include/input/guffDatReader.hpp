@@ -40,7 +40,7 @@ namespace engine
 namespace input::guffdat
 {
     void               readGuffDat(engine::Engine &);
-    [[nodiscard]] bool isNeeded(engine::Engine &);
+    [[nodiscard]] bool isNeeded(const engine::Engine &);
 
     /**
      * @class GuffDatReader

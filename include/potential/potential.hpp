@@ -145,10 +145,10 @@ namespace pot
         void makeCoulombPotential(T potential);
 
         template <typename T>
-        void makeNonCoulombPotential(const T &nonCoulombPot);
+        void makeNonCoulombPotential(const T &nonCoulombPotential);
 
         template <typename T>
-        double getPartialCharge(molsys::Atom &atom) const;
+        static double getPartialCharge(molsys::Atom &atom);
 
         /***************************
          * standard setter methods *

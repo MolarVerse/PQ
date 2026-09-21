@@ -137,9 +137,9 @@ void MShake::initMShakeReferences()
 
             for (size_t j = i + 1; j < nAtoms; ++j)
             {
-                const auto mass_j = atoms[j].getMass();
-                const auto pos_i  = atoms[i].getPosition();
-                const auto pos_j  = atoms[j].getPosition();
+                const auto  mass_j = atoms[j].getMass();
+                const auto &pos_i  = atoms[i].getPosition();
+                const auto &pos_j  = atoms[j].getPosition();
 
                 const auto [dxyz_ij, r2_ij] = distVecAndDist2(pos_i, pos_j);
 
@@ -150,8 +150,8 @@ void MShake::initMShakeReferences()
                 {
                     for (size_t l = k + 1; l < nAtoms; ++l)
                     {
-                        const auto pos_k = atoms[k].getPosition();
-                        const auto pos_l = atoms[l].getPosition();
+                        const auto &pos_k = atoms[k].getPosition();
+                        const auto &pos_l = atoms[l].getPosition();
 
                         const auto dxyz_kl = distVec(pos_k, pos_l);
 
@@ -247,8 +247,8 @@ void MShake::applyMShake(SimulationBox &simulationBox)
                  * determine bond vector of integrated positions *
                  *************************************************/
 
-                const auto pos_i = atoms[i]->getPosition();
-                const auto pos_j = atoms[j]->getPosition();
+                const auto &pos_i = atoms[i]->getPosition();
+                const auto &pos_j = atoms[j]->getPosition();
 
                 const auto [dxyz, rSquared] =
                     distVecAndDist2(pos_i, pos_j, simulationBox);
@@ -436,7 +436,7 @@ void MShake::applyMShake(SimulationBox &simulationBox)
  * @param simulationBox
  *
  */
-void MShake::applyMRattle(SimulationBox &simulationBox)
+void MShake::applyMRattle(SimulationBox &simulationBox) const
 {
     auto &molecules = simulationBox.getMolecules();
 
@@ -447,8 +447,7 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
         if (!isMShakeType(moltype))
             continue;
 
-        const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
-        const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
+        const auto mShakeIndex = findMShakeReferenceIndex(moltype);
         auto mShakeMatrix = _mShakeMatrices->mShakeInvMatrices[mShakeIndex];
         const auto nAtoms = molecule.getNumberOfAtoms();
         const auto nBonds = mShakeMatrix.rows();
@@ -506,11 +505,11 @@ void MShake::applyMRattle(SimulationBox &simulationBox)
 /**
  * @brief check if molecule type is M - Shake type
  *
- * @param moltype
+ * @param molType
  *
  * @return bool
  */
-bool MShake::isMShakeType(MolType moltype) const
+bool MShake::isMShakeType(MolType molType) const
 {
     bool isMShake = false;
 
@@ -518,7 +517,7 @@ bool MShake::isMShakeType(MolType moltype) const
     {
         const auto &moleculeType = mShakeReference.getMoleculeType();
 
-        if (moleculeType.getMoltype() == moltype)
+        if (moleculeType.getMoltype() == molType)
         {
             isMShake = true;
             break;
@@ -531,27 +530,27 @@ bool MShake::isMShakeType(MolType moltype) const
 /**
  * @brief find M - Shake reference by molecule type
  *
- * @param moltype
+ * @param molType
  *
  * @return bool
  *
  * @throw exc::MShakeException if no M - Shake reference is
  * found
  */
-const MShakeReference &MShake::findMShakeRef(MolType moltype) const
+const MShakeReference &MShake::findMShakeRef(MolType molType) const
 {
     for (const auto &mShakeReference : _mShakeReferences)
     {
         const auto &moleculeType = mShakeReference.getMoleculeType();
 
-        if (moleculeType.getMoltype() == moltype)
+        if (moleculeType.getMoltype() == molType)
             return mShakeReference;
     }
 
     throw exc::MShakeException(
         std::format(
             "No M-Shake reference found for molecule type {}",
-            moltype.toString()
+            molType.toString()
         )
     );
 }
@@ -559,14 +558,14 @@ const MShakeReference &MShake::findMShakeRef(MolType moltype) const
 /**
  * @brief find M - Shake reference index by molecule type
  *
- * @param moltype
+ * @param molType
  *
  * @return size_t
  *
  * @throw exc::MShakeException if no M - Shake reference is
  * found
  */
-size_t MShake::findMShakeReferenceIndex(MolType moltype) const
+size_t MShake::findMShakeReferenceIndex(MolType molType) const
 {
     size_t index = 0;
 
@@ -574,7 +573,7 @@ size_t MShake::findMShakeReferenceIndex(MolType moltype) const
     {
         const auto &moleculeType = mShakeReference.getMoleculeType();
 
-        if (moleculeType.getMoltype() == moltype)
+        if (moleculeType.getMoltype() == molType)
             return index;
 
         ++index;
@@ -583,7 +582,7 @@ size_t MShake::findMShakeReferenceIndex(MolType moltype) const
     throw exc::MShakeException(
         std::format(
             "No M-Shake reference found for molecule type {}",
-            moltype.toString()
+            molType.toString()
         )
     );
 }

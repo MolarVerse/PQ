@@ -196,7 +196,8 @@ namespace molsys
         [[nodiscard]] double                 getTotalCharge() const;
         [[nodiscard]] double                 getDensity() const;
         [[nodiscard]] linalg::Vec3D&         getCenterOfMass();
-        [[nodiscard]] std::vector<size_t>    getInnerRegionCenterAtomIndices();
+        [[nodiscard]]
+        std::vector<size_t> getInnerRegionCenterAtomIndices() const;
 
         [[nodiscard]] Atom&         getAtom(size_t index);
         [[nodiscard]] Molecule&     getMolecule(size_t index);

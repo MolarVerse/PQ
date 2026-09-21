@@ -82,9 +82,8 @@ namespace molsys
 
         [[nodiscard]] linalg::Vec3D    getBoxAngles() const override;
         [[nodiscard]] linalg::tensor3D getBoxMatrix() const override;
-        [[nodiscard]] linalg::tensor3D getBoxMatrix(
-            Periodicity periodicity
-        ) const override;
+        [[nodiscard]]
+        linalg::tensor3D getBoxMatrix(Periodicity periodicity) const override;
         [[nodiscard]] linalg::tensor3D getTransformationMatrix() const;
         [[nodiscard]] linalg::Vec3D    wrapPositionIntoBox(
                const linalg::Vec3D &pos

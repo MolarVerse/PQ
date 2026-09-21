@@ -481,6 +481,8 @@ std::vector<int> HybridInputParser::parseSelection(
 
     if (needsPython)
         selectionVec = pq_python::select(selection, restartFile, moldescFile);
+    else
+        selectionVec = parseSelectionNoPython(selection, key);
 #else
 
     // check if string contains any characters that are not digits or commas
@@ -503,10 +505,9 @@ std::vector<int> HybridInputParser::parseSelection(
             )
         );
     }
-#endif
 
-    if (!needsPython)
-        selectionVec = parseSelectionNoPython(selection, key);
+    selectionVec = parseSelectionNoPython(selection, key);
+#endif
 
     std::ranges::sort(selectionVec);
     auto ret = std::ranges::unique(selectionVec);

@@ -62,6 +62,7 @@ namespace linalg
         );
 
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
+        // cppcheck-suppress noExplicitConstructor
         StaticMatrix3x3(const T &mat);
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
         explicit StaticMatrix3x3(const std::vector<T> &vector);

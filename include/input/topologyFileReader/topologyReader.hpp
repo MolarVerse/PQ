@@ -35,7 +35,7 @@
 namespace input::topology
 {
     void               readTopologyFile(engine::Engine &);
-    [[nodiscard]] bool isNeeded(engine::Engine &engine);
+    [[nodiscard]] bool isNeeded(const engine::Engine &engine);
 
     /**
      * @class TopologyReader

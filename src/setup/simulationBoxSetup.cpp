@@ -414,7 +414,7 @@ void SimulationBoxSetup::checkRcCutoff()
 void SimulationBoxSetup::checkZeroVelocities()
 {
     constexpr double epsilon    = 1e-10;
-    auto            &simBox     = _engine.getSimulationBox();
+    const auto      &simBox     = _engine.getSimulationBox();
     const auto       velocities = simBox.getVelocities();
 
     if ((std::ranges::any_of(

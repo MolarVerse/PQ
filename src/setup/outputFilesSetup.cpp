@@ -68,8 +68,8 @@ OutputFilesSetup::OutputFilesSetup(Engine &engine) : _engine(engine) {}
  */
 void OutputFilesSetup::setup()
 {
-    const auto isPrefixSet = OutputFileSettings::isFilePrefixSet();
-    auto       prefix      = std::string();
+    const auto  isPrefixSet = OutputFileSettings::isFilePrefixSet();
+    std::string prefix;
 
     if (isPrefixSet)
         prefix = OutputFileSettings::getFilePrefix();

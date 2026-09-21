@@ -56,9 +56,9 @@ void input::mShake::readMShake(Engine &engine)
  *
  * @param engine
  */
-MShakeReader::MShakeReader(Engine &engine) : _engine(engine)
+MShakeReader::MShakeReader(Engine &engine)
+    : _fileName(FileSettings::getMShakeFileName()), _engine(engine)
 {
-    _fileName = FileSettings::getMShakeFileName();
     _fp.open(_fileName);
 }
 
@@ -118,11 +118,9 @@ void MShakeReader::processCommentLine(
 {
     auto lineCommands = removeComments(line, "#");
 
-    auto configs = std::vector<std::string>();
+    std::vector<std::string> configs;
 
-    if (lineCommands.empty())
-        configs = {};
-    else
+    if (!lineCommands.empty())
         configs = getLineCommands(lineCommands, _lineNumber);
 
     auto foundMolType = false;

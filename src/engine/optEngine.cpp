@@ -62,16 +62,6 @@ void OptEngine::run()
         deleteTmpFiles();
     }
 
-    if (!_converged)
-    {
-        throw exc::OptException(
-            std::format(
-                "Optimizer did not converge after {} epochs.",
-                _optimizer->getNEpochs()
-            )
-        );
-    }
-
     if (_optStopped)
     {
         auto msg = std::format(
@@ -106,6 +96,15 @@ void OptEngine::run()
 
         getLogOutput().writeEndedNormally(elapsedTime);
         out::StdoutOutput::writeEndedNormally(elapsedTime);
+    }
+    else
+    {
+        throw exc::OptException(
+            std::format(
+                "Optimizer did not converge after {} epochs.",
+                _optimizer->getNEpochs()
+            )
+        );
     }
 }
 

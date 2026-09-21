@@ -77,9 +77,8 @@ TopologyReader::TopologyReader(const std::string &filename, Engine &engine)
  */
 void TopologyReader::read()
 {
-    std::string              line;
-    std::vector<std::string> lineElements;
-    int                      lineNumber = 1;
+    std::string line;
+    int         lineNumber = 1;
 
     if (!FileSettings::isTopologyFileNameSet())
         throw InputFileException(
@@ -88,8 +87,8 @@ void TopologyReader::read()
 
     while (getline(_fp, line))
     {
-        line         = removeComments(line, "#");
-        lineElements = splitString(line);
+        line              = removeComments(line, "#");
+        auto lineElements = splitString(line);
 
         if (lineElements.empty())
         {
@@ -162,7 +161,7 @@ void input::topology::readTopologyFile(Engine &engine)
  * @return true if force field is activated
  * @return false
  */
-bool input::topology::isNeeded(Engine &engine)
+bool input::topology::isNeeded(const Engine &engine)
 {
     if (engine.getConstraints()->isActive())
         return true;
