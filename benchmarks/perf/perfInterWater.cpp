@@ -53,7 +53,7 @@
 using namespace molsys;
 using namespace pot;
 using namespace waterModel;
-using linearAlgebra::Vec3D;
+using linalg::Vec3D;
 
 static constexpr std::uint64_t ITERATIONS = 50;
 static constexpr MolType       WATER_TYPE{1};

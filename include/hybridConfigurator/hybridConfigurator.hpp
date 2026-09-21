@@ -39,8 +39,8 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        linearAlgebra::Vec3D _innerRegionCenter = {0.0};
-        static inline bool   _molChangedZone    = false;
+        linalg::Vec3D      _innerRegionCenter = {0.0};
+        static inline bool _molChangedZone    = false;
 
        public:
         void        calculateInnerRegionCenter(molsys::SimulationBox &);
@@ -61,8 +61,8 @@ namespace configurator
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] linearAlgebra::Vec3D getInnerRegionCenter() const;
-        [[nodiscard]] static bool          getMoleculeChangedZone();
+        [[nodiscard]] linalg::Vec3D getInnerRegionCenter() const;
+        [[nodiscard]] static bool   getMoleculeChangedZone();
 
         static void setMoleculeChangedZone(bool);
     };

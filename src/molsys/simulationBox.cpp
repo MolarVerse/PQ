@@ -33,9 +33,9 @@
 #include "settings.hpp"                // for Settings
 #include "stlVector.hpp"               // for rms
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace exc;
-using namespace constants;
+
 using namespace settings;
 using namespace randomNumberGenerator;
 
@@ -49,15 +49,15 @@ namespace molsys
      * additionally, copy constructor is not used because it would break
      * semantics here
      *
-     * @param toCopy
+     * @param other
      */
-    void SimulationBox::copy(const SimulationBox& toCopy)
+    void SimulationBox::copy(const SimulationBox& other)
     {
-        *this = toCopy;
+        *this = other;
 
         this->_atoms.clear();
 
-        for (const auto& _atom : toCopy._atoms)
+        for (const auto& _atom : other._atoms)
         {
             const auto atom = std::make_shared<Atom>(*_atom);
             this->_atoms.push_back(atom);
@@ -120,12 +120,12 @@ namespace molsys
      * @throw UserInputException if atom index out of range
      */
     void SimulationBox::addInnerRegionCenterAtoms(
-        const std::vector<int>& atomIndices
+        const std::vector<size_t>& atomIndices
     )
     {
         for (const auto index : atomIndices)
         {
-            if (index < 0 || index >= static_cast<int>(_atoms.size()))
+            if (index >= _atoms.size())
             {
                 throw UserInputException(
                     std::format(
@@ -622,7 +622,7 @@ namespace molsys
      *
      * @return double
      */
-    double SimulationBox::calculateTotalForce()
+    double SimulationBox::calculateTotalForce() const
     {
         const auto totalForce = calculateTotalForceVector();
 
@@ -634,7 +634,7 @@ namespace molsys
      *
      * @return Vec3D
      */
-    Vec3D SimulationBox::calculateTotalForceVector()
+    Vec3D SimulationBox::calculateTotalForceVector() const
     {
         Vec3D totalForce(0.0);
 

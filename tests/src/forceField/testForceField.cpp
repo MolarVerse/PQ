@@ -217,7 +217,7 @@ TEST_F(TestForceField, calculateBondedInteractions)
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
@@ -331,7 +331,7 @@ TEST_F(TestForceField, calculateBondedInteractions)
     EXPECT_NE(physicalData.getImproperEnergy(), 0.0);
     EXPECT_NE(physicalData.getCoulombEnergy(), 0.0);
     EXPECT_NE(physicalData.getNonCoulombEnergy(), 0.0);
-    EXPECT_NE(physicalData.getVirial(), linearAlgebra::tensor3D(0.0));
+    EXPECT_NE(physicalData.getVirial(), linalg::tensor3D(0.0));
 }
 
 /**
@@ -349,7 +349,7 @@ TEST_F(TestForceField, correctLinker)
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 

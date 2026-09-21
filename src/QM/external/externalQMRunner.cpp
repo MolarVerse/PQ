@@ -49,13 +49,12 @@ using namespace molsys;
 using namespace physicalData;
 using namespace exc;
 using namespace settings;
-using namespace constants;
 
 /**
  * @brief reads the force file (including qm energy) and sets the forces of
  * the atoms
  *
- * @param box
+ * @param simulationBox Simulation box containing molecules and atoms.
  * @param physicalData
  *
  * @throw QMRunnerException
@@ -63,7 +62,7 @@ using namespace constants;
  *  - if the force file is empty
  */
 void ExternalQMRunner::_readForceFile(
-    SimulationBox &box,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData
 )
 {
@@ -121,7 +120,7 @@ void ExternalQMRunner::_readForceFile(
 
     auto readForces = [&forceFile, &forceFileName](auto &atom)
     {
-        auto grad = linearAlgebra::Vec3D();
+        auto grad = linalg::Vec3D();
 
         if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
         {
@@ -153,25 +152,25 @@ void ExternalQMRunner::_readForceFile(
         atom->setForce(-grad * HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM);
     };
 
-    std::ranges::for_each(box.getQMAtoms(), readForces);
+    std::ranges::for_each(simulationBox.getQMAtoms(), readForces);
 
     forceFile.close();
 
     if (QMSettings::getRemoveNetForce())
-        box.removeNetForce();
+        simulationBox.removeNetForce();
 }
 
 /**
  * @brief reads the charge file (qm_charges) and sets the _qmCharge of the
  * atoms
  *
- * @param box
+ * @param simulationBox Simulation box containing molecules and atoms.
  *
  * @throw QMRunnerException
  *  - if the charge file cannot be opened
  *  - if the charge file is empty
  */
-void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &box)
+void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &simulationBox)
 {
     const auto chargeFileName = FileSettings::getQMChargesTempFileName();
 
@@ -199,7 +198,7 @@ void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &box)
         );
     }
 
-    box.resetQMCharges();
+    simulationBox.resetQMCharges();
 
     auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
     {
@@ -229,7 +228,7 @@ void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &box)
         atom->setQMCharge(charge);
     };
 
-    std::ranges::for_each(box.getQMAtoms(), readCharges);
+    std::ranges::for_each(simulationBox.getQMAtoms(), readCharges);
 
     chargeFile.close();
 }
@@ -247,12 +246,12 @@ std::string QM::bundledQMScriptPath(const std::string_view script)
 /**
  * @brief run the qm engine
  *
- * @param simBox SimulationBox reference
+ * @param simulationBox SimulationBox reference
  * @param physicalData PhysicalData reference
  * @param per periodicity of the system
  */
 void ExternalQMRunner::run(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData,
     Periodicity    per
 )
@@ -269,13 +268,13 @@ void ExternalQMRunner::run(
 
     {
         auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
-        writeCoordsFile(simBox);
+        writeCoordsFile(simulationBox);
     }
 
     if (Settings::isHybridJobtype())
     {
         auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
-        writePointChargeFile(simBox);
+        writePointChargeFile(simulationBox);
     }
 
     const auto resultFiles = std::array{
@@ -290,25 +289,25 @@ void ExternalQMRunner::run(
 
     {
         auto _ = scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
-        execute(simBox);
+        execute(simulationBox);
     }
 
     timeoutThread.request_stop();
 
     {
         auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
-        _readForceFile(simBox, physicalData);
+        _readForceFile(simulationBox, physicalData);
     }
 
     {
         auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
-        _readChargeFile(simBox);
+        _readChargeFile(simulationBox);
     }
 
     if (per != NON_PERIODIC)
     {
         auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
-        readStressTensor(simBox.getBox(), physicalData);
+        readStressTensor(simulationBox.getBox(), physicalData);
     }
 }
 

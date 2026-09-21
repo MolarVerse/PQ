@@ -29,15 +29,23 @@ using namespace pot;
 using namespace molsys;
 using namespace physicalData;
 
+/**
+ * @brief calculates QMMM forces by invoking core-to-outer, layer-to-outer, and
+ * outer-to-outer force calculations
+ *
+ * @param simulationBox
+ * @param physicalData
+ * @param cellList
+ */
 void Potential::calculateQMMMForces(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
-    calculateCoreToOuterForces(simBox, physicalData, cellList);
-    calculateLayerToOuterForces(simBox, physicalData, cellList);
-    calculateOuterToOuterForces(simBox, physicalData, cellList);
+    calculateCoreToOuterForces(simulationBox, physicalData, cellList);
+    calculateLayerToOuterForces(simulationBox, physicalData, cellList);
+    calculateOuterToOuterForces(simulationBox, physicalData, cellList);
 }
 
 /***************************

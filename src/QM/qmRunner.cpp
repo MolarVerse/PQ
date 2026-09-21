@@ -56,7 +56,7 @@ void QMRunner::throwAfterTimeout(const std::stop_token &stopToken)
 
     const auto timeout = static_cast<int>(::ceil(qmLoopTimeLimit));
 
-    for (int i = 0; i < timeout * constants::S_TO_MS; ++i)
+    for (int i = 0; i < timeout * S_TO_MS; ++i)
     {
         if (stopToken.stop_requested())
             return;
@@ -70,13 +70,13 @@ void QMRunner::throwAfterTimeout(const std::stop_token &stopToken)
 /**
  * @brief run the qm engine with default periodicity XYZ (3d)
  *
- * @param simBox SimulationBox reference
- * @param physicalData PhysicalData reference
+ * @param simulationBox the simulation box to apply periodic boundary conditions
+ * @param physicalData the physical data associated with the simulation
  */
 void QMRunner::run(
-    molsys::SimulationBox      &simBox,
+    molsys::SimulationBox      &simulationBox,
     physicalData::PhysicalData &physicalData
 )
 {
-    run(simBox, physicalData, XYZ);
+    run(simulationBox, physicalData, XYZ);
 }

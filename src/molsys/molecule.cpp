@@ -32,7 +32,7 @@
 #include "strongTypes.hpp"
 
 using namespace molsys;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace settings;
 
 /**

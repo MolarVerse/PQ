@@ -41,23 +41,23 @@ using QM::TurbomoleRunner;
 using namespace molsys;
 using namespace exc;
 using namespace configurator;
-using namespace constants;
+
 using namespace settings;
 using namespace utilities;
 
 /**
  * @brief writes the coords file in turbomole format
  *
- * @param box
+ * @param simulationBox
  */
-void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
+void TurbomoleRunner::writeCoordsFile(SimulationBox &simulationBox)
 {
     const std::string fileName = "coord";
     std::ofstream     coordsFile(fileName);
 
     coordsFile << "$coord\n";
 
-    for (const auto &atom : box.getQMAtoms())
+    for (const auto &atom : simulationBox.getQMAtoms())
     {
         const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
 
@@ -75,13 +75,18 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
     coordsFile.close();
 }
 
-void TurbomoleRunner::writePointChargeFile(molsys::SimulationBox &box)
+/**
+ * @brief writes the point charge file in turbomole format
+ *
+ * @param simulationBox
+ */
+void TurbomoleRunner::writePointChargeFile(molsys::SimulationBox &simulationBox)
 {
     const std::string fileName = FileSettings::getPointChargeFileName();
     std::ofstream     pcFile(fileName);
 
     using enum HybridZone;
-    for (const auto &mol : box.getInactiveMolecules())
+    for (const auto &mol : simulationBox.getInactiveMolecules())
     {
         const auto zone = mol.getHybridZone();
 
@@ -110,8 +115,10 @@ void TurbomoleRunner::writePointChargeFile(molsys::SimulationBox &box)
 /**
  * @brief executes the external qm program
  *
+ * @param simulationBox the simulation box to apply periodic boundary conditions
+ *
  */
-void TurbomoleRunner::execute(SimulationBox &box)
+void TurbomoleRunner::execute(SimulationBox &simulationBox)
 {
     using enum settings::SmoothingMethod;
 
@@ -127,7 +134,7 @@ void TurbomoleRunner::execute(SimulationBox &box)
         );
     }
 
-    auto charge         = box.calcActiveMolCharge();
+    auto charge         = simulationBox.calcActiveMolCharge();
     auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
 
     // TODO: https://github.com/MolarVerse/PQ/issues/200

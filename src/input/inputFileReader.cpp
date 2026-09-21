@@ -135,7 +135,6 @@ InputFileReader::InputFileReader(
     _parsers.push_back(
         make_unique<QMInputParser>(
             engine.getLogOutput(),
-            engine.getStdoutOutput(),
             resolveBuiltInSlakosPath
         )
     );

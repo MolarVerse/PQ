@@ -55,11 +55,11 @@ namespace opt
         std::shared_ptr<physicalData::PhysicalData>
             _physicalDataOld;   // TODO(97gamjak): remove this via pimpl
 
-        std::deque<double>                            _energyHistory;
-        std::deque<double>                            _maxForceHistory;
-        std::deque<double>                            _rmsForceHistory;
-        std::deque<std::vector<linearAlgebra::Vec3D>> _forceHistory;
-        std::deque<std::vector<linearAlgebra::Vec3D>> _positionHistory;
+        std::deque<double>                     _energyHistory;
+        std::deque<double>                     _maxForceHistory;
+        std::deque<double>                     _rmsForceHistory;
+        std::deque<std::vector<linalg::Vec3D>> _forceHistory;
+        std::deque<std::vector<linalg::Vec3D>> _positionHistory;
 
        public:
         explicit Optimizer(size_t);
@@ -110,14 +110,14 @@ namespace opt
         [[nodiscard]] double getMaxForce(int) const;
 
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getForces() const;
+        std::vector<linalg::Vec3D> getForces() const;
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getForces(int) const;
+        std::vector<linalg::Vec3D> getForces(int) const;
 
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getPositions() const;
+        std::vector<linalg::Vec3D> getPositions() const;
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getPositions(int) const;
+        std::vector<linalg::Vec3D> getPositions(int) const;
 
         [[nodiscard]] opt::Convergence& getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;

@@ -31,9 +31,9 @@
 
 using namespace molsys;
 using namespace utilities;
-using namespace constants;
+
 using namespace exc;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace settings;
 
 using std::optional;

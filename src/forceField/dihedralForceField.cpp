@@ -33,7 +33,7 @@
 
 using namespace ff;
 using namespace connectivity;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace physicalData;
 using namespace pot;
 using namespace settings;
@@ -63,15 +63,15 @@ DihedralForceField::DihedralForceField(
  * @details if dihedral is a linker dihedral, correct coulomb and non-coulomb
  * energy and forces (only for non improper dihedrals)
  *
- * @param simBox the simulation box containing the system
- * @param data the physical data of the system
+ * @param simulationBox the simulation simulationBox containing the system
+ * @param physicalData the physical data of the system
  * @param isImproperDihedral true if the dihedral is improper, false otherwise
  * @param coulombPot the coulomb potential of the system
  * @param nonCoulombPot the non-coulomb potential of the system
  */
 void DihedralForceField::calculateEnergyAndForces(
-    const SimulationBox    &simBox,
-    PhysicalData           &data,
+    const SimulationBox    &simulationBox,
+    PhysicalData           &physicalData,
     bool                    isImproperDihedral,
     const CoulombPotential &coulombPot,
     NonCoulombPotential    &nonCoulombPot
@@ -94,9 +94,9 @@ void DihedralForceField::calculateEnergyAndForces(
     auto dPosition23 = position2 - position3;
     auto dPosition43 = position4 - position3;
 
-    simBox.applyPBC(dPosition12);
-    simBox.applyPBC(dPosition23);
-    simBox.applyPBC(dPosition43);
+    simulationBox.applyPBC(dPosition12);
+    simulationBox.applyPBC(dPosition23);
+    simulationBox.applyPBC(dPosition43);
 
     const auto crossPosition123 = cross(dPosition12, dPosition23);
     const auto crossPosition432 = cross(dPosition43, dPosition23);
@@ -113,9 +113,9 @@ void DihedralForceField::calculateEnergyAndForces(
     const auto energy = _params.forceConstant * (1.0 + cosine);
 
     if (isImproperDihedral)
-        data.addImproperEnergy(energy);
+        physicalData.addImproperEnergy(energy);
     else
-        data.addDihedralEnergy(energy);
+        physicalData.addDihedralEnergy(energy);
 
     auto       forceMagnitude = distance23 / distance123Squared;
     const auto forceVector12  = forceMagnitude * crossPosition123;
@@ -149,7 +149,7 @@ void DihedralForceField::calculateEnergyAndForces(
     if (_isLinker)
     {
         auto dPosition14 = position1 - position4;
-        simBox.applyPBC(dPosition14);
+        simulationBox.applyPBC(dPosition14);
 
         const auto distance14 = norm(dPosition14);
 
@@ -158,7 +158,7 @@ void DihedralForceField::calculateEnergyAndForces(
             forceMagnitude = correctLinker<DihedralForceField>(
                 coulombPot,
                 nonCoulombPot,
-                data,
+                physicalData,
                 _molecules[0],
                 _molecules[3],
                 _atomIndices[0],
@@ -180,7 +180,7 @@ void DihedralForceField::calculateEnergyAndForces(
                 smF = _molecules[0]->getSmoothingFactor();
 
             if (!isImproperDihedral)
-                data.addVirial(
+                physicalData.addVirial(
                     tensorProduct(dPosition14, forcexyz) * (1 - smF)
                 );
 

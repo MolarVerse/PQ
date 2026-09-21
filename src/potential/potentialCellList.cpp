@@ -58,20 +58,21 @@ PotentialCellList::~PotentialCellList() = default;
  * criterion which is based on atoms a molecule can be found in more than only
  * one cell.
  *
- * @param simBox
+ * @param simulationBox
  * @param physicalData
  * @param cellList
  */
 void PotentialCellList::calculateForces(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
 
-    const auto box            = simBox.getBoxPtr();
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto box = simulationBox.getBoxPtr();
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
     const auto isWaterInterModelSet =
         WaterModelSettings::isInterWaterModelSet();
 
@@ -185,19 +186,19 @@ void PotentialCellList::calculateForces(
  * molecules in one cell and MM molecules in neighboring cells. Uses cell list
  * structure for efficient neighbor searching.
  *
- * @param simBox simulation box containing molecules
+ * @param simulationBox simulation box containing molecules
  * @param physicalData physical data to store energy results
  * @param cellList cell list structure for efficient neighbor searching
  */
 void PotentialCellList::calculateCoreToOuterForces(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
 
-    const auto box             = simBox.getBoxPtr();
+    const auto box             = simulationBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
@@ -305,19 +306,19 @@ void PotentialCellList::calculateCoreToOuterForces(
  * interactions with core zone molecules. Uses cell list structure for efficient
  * neighbor searching.
  *
- * @param simBox simulation box containing molecules
+ * @param simulationBox simulation box containing molecules
  * @param physicalData physical data to store energy results
  * @param cellList cell list structure for efficient neighbor searching
  */
 void PotentialCellList::calculateLayerToOuterForces(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
 
-    const auto box             = simBox.getBoxPtr();
+    const auto box             = simulationBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
@@ -462,19 +463,19 @@ void PotentialCellList::calculateLayerToOuterForces(
 /**
  * @brief calculates forces between outer-zone molecules
  *
- * @param simBox simulation box containing molecules
+ * @param simulationBox simulation box containing molecules
  * @param physicalData physical data to store energy results
  * @param cellList cell list containing outer-zone molecules
  */
 void PotentialCellList::calculateOuterToOuterForces(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedOuterToOuter");
 
-    const auto box             = simBox.getBoxPtr();
+    const auto box             = simulationBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {
@@ -581,19 +582,19 @@ void PotentialCellList::calculateOuterToOuterForces(
 /**
  * @brief calculates forces between smoothing-zone molecules and all others
  *
- * @param simBox simulation box containing molecules
+ * @param simulationBox simulation box containing molecules
  * @param physicalData physical data to store energy results
  * @param cellList cell list containing smoothing-zone molecules
  */
 void PotentialCellList::calculateHotspotSmoothingMMForces(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData,
     CellList      &cellList
 )
 {
     auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
 
-    const auto box             = simBox.getBoxPtr();
+    const auto box             = simulationBox.getBoxPtr();
     const auto isWaterMolecule = [](const std::vector<size_t> &waterMolecules,
                                     const size_t               molIndex) -> bool
     {

@@ -38,7 +38,7 @@
 using engine::RingPolymerEngine;
 
 using namespace settings;
-using namespace constants;
+
 using namespace physicalData;
 
 /**

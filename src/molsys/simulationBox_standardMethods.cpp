@@ -124,7 +124,7 @@ namespace molsys
      */
     size_t SimulationBox::getNumberOfQMAtoms() const
     {
-        return distance(getQMAtoms());
+        return static_cast<size_t>(distance(getQMAtoms()));
     }
 
     /**
@@ -164,20 +164,17 @@ namespace molsys
     /**
      * @brief get the center of mass
      *
-     * @return linearAlgebra::Vec3D&
+     * @return linalg::Vec3D&
      */
-    linearAlgebra::Vec3D &SimulationBox::getCenterOfMass()
-    {
-        return _centerOfMass;
-    }
+    linalg::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
 
     /**
      * @brief get the indices of the atoms marking the center of the inner
      * region for hybrid type calculations
      *
-     * @return vector<int>
+     * @return vector<size_t>
      */
-    std::vector<int> SimulationBox::getInnerRegionCenterAtomIndices()
+    std::vector<size_t> SimulationBox::getInnerRegionCenterAtomIndices()
     {
         return _innerRegionCenterAtomIndices;
     }
@@ -346,11 +343,11 @@ namespace molsys
     /**
      * @brief get all positions of all atoms
      *
-     * @return std::vector<linearAlgebra::Vec3D>
+     * @return std::vector<linalg::Vec3D>
      */
-    std::vector<linearAlgebra::Vec3D> SimulationBox::getPositions() const
+    std::vector<linalg::Vec3D> SimulationBox::getPositions() const
     {
-        std::vector<linearAlgebra::Vec3D> positions;
+        std::vector<linalg::Vec3D> positions;
         positions.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -362,11 +359,11 @@ namespace molsys
     /**
      * @brief get all velocities of all atoms
      *
-     * @return std::vector<linearAlgebra::Vec3D>
+     * @return std::vector<linalg::Vec3D>
      */
-    std::vector<linearAlgebra::Vec3D> SimulationBox::getVelocities() const
+    std::vector<linalg::Vec3D> SimulationBox::getVelocities() const
     {
-        std::vector<linearAlgebra::Vec3D> velocities;
+        std::vector<linalg::Vec3D> velocities;
         velocities.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -378,11 +375,11 @@ namespace molsys
     /**
      * @brief get all forces of all atoms
      *
-     * @return std::vector<linearAlgebra::Vec3D>
+     * @return std::vector<linalg::Vec3D>
      */
-    std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
+    std::vector<linalg::Vec3D> SimulationBox::getForces() const
     {
-        std::vector<linearAlgebra::Vec3D> forces;
+        std::vector<linalg::Vec3D> forces;
         forces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms) forces.push_back(atom->getForce());
@@ -503,7 +500,7 @@ namespace molsys
      *
      * @param position
      */
-    void SimulationBox::applyPBC(linearAlgebra::Vec3D &position) const
+    void SimulationBox::applyPBC(linalg::Vec3D &position) const
     {
         _box->applyPBC(position);
     }
@@ -513,7 +510,7 @@ namespace molsys
      *
      * @param scalingTensor
      */
-    void SimulationBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
+    void SimulationBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
         _box->scaleBox(scalingTensor);
         calculateDensity();
@@ -559,9 +556,9 @@ namespace molsys
     /**
      * @brief gets the box dimensions
      *
-     * @return linearAlgebra::Vec3D
+     * @return linalg::Vec3D
      */
-    linearAlgebra::Vec3D SimulationBox::getBoxDimensions() const
+    linalg::Vec3D SimulationBox::getBoxDimensions() const
     {
         return _box->getBoxDimensions();
     }
@@ -569,9 +566,9 @@ namespace molsys
     /**
      * @brief gets the box angles
      *
-     * @return linearAlgebra::Vec3D
+     * @return linalg::Vec3D
      */
-    linearAlgebra::Vec3D SimulationBox::getBoxAngles() const
+    linalg::Vec3D SimulationBox::getBoxAngles() const
     {
         return _box->getBoxAngles();
     }
@@ -592,7 +589,7 @@ namespace molsys
      * @param boxDimensions
      */
     void SimulationBox::setBoxDimensions(
-        const linearAlgebra::Vec3D &boxDimensions
+        const linalg::Vec3D &boxDimensions
     ) const
     {
         _box->setBoxDimensions(boxDimensions);

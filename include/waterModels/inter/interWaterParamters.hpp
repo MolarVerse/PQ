@@ -76,7 +76,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::SPC_LJ_PARAMS_OO
+            SPC_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -91,7 +91,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::SPC_E_LJ_PARAMS_OO
+            SPC_E_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -106,7 +106,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::SPC_FW_LJ_PARAMS_OO
+            SPC_FW_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -121,7 +121,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::QSPC_FW_LJ_PARAMS_OO
+            QSPC_FW_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -136,7 +136,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::SPC_DC_LJ_PARAMS_OO
+            SPC_DC_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -151,7 +151,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::H2O_DC_LJ_PARAMS_OO
+            H2O_DC_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -166,7 +166,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::TIP3P_LJ_PARAMS_OO
+            TIP3P_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -181,7 +181,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::OPC3_LJ_PARAMS_OO
+            OPC3_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -196,7 +196,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::SPC_MTR_LJ_PARAMS_OO
+            SPC_MTR_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});
@@ -211,7 +211,7 @@ namespace waterModel
         static constexpr bool    _oxygenOnlyNonCoulomb = true;
         inline static const auto _nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
-            constants::TIP3P_MTR_LJ_PARAMS_OO
+            TIP3P_MTR_LJ_PARAMS_OO
         );
         inline static const auto _nonCoulombPairOH =
             pot::LennardJonesPair(0.01, LJParams{});

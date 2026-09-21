@@ -46,9 +46,9 @@ namespace out
        public:
         using Output::Output;
 
-        void write(std::vector<molsys::SimulationBox> &);
+        void write(const std::vector<molsys::SimulationBox> &);
     };
 
 }   // namespace out
 
-#endif   // _RST_FILE_OUTPUT_HPP_
+#endif   // _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_

@@ -84,7 +84,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
 
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
 
     auto nonCoulombPair = pot::LennardJonesPair(

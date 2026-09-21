@@ -30,7 +30,6 @@
 #include "physicalData.hpp"
 #include "potential.hpp"   // for ChargeTag
 
-using namespace constants;
 using namespace pot;
 using namespace pq;
 using namespace waterModel;
@@ -48,8 +47,8 @@ namespace
  */
 void InterWaterStrategyCellList::calculate(
     const InterWaterState                        &state,
-    molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physData,
+    molsys::SimulationBox                        &simulationBox,
+    physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulPot,
     molsys::CellList                             &cellList
 )
@@ -60,7 +59,7 @@ void InterWaterStrategyCellList::calculate(
     auto totalCoulombEnergy    = 0.0;
     auto totalNonCoulombEnergy = 0.0;
 
-    const auto waterType = simBox.getWaterType();
+    const auto waterType = simulationBox.getWaterType();
 
     const auto singleInteraction =
         [&](Atom &atomA, Atom &atomB, const auto &nonCoulPairPtr)
@@ -72,7 +71,7 @@ void InterWaterStrategyCellList::calculate(
                 atomB,
                 coulPot,
                 rCutSquared,
-                simBox,
+                simulationBox,
                 *nonCoulPairPtr,
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
@@ -207,22 +206,22 @@ void InterWaterStrategyCellList::calculate(
             }
         }
     }
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
  * @brief Compute core-to-outer Coulomb interactions using the cell list.
  *
- * @param simBox Simulation box containing molecules.
- * @param physData Physical data to store energy results.
+ * @param simulationBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateCoreToOuterForces(
     const InterWaterState & /*state*/,
-    molsys::SimulationBox                        &simBox,
-    PhysicalData                                 &physData,
+    molsys::SimulationBox                        &simulationBox,
+    PhysicalData                                 &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     molsys::CellList                             &cellList
 )
@@ -239,7 +238,7 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
             atomB,
             coulombPotential,
             rCutSquared,
-            simBox,
+            simulationBox,
             totalCoulombEnergy
         );
     };
@@ -328,22 +327,22 @@ void InterWaterStrategyCellList::calculateCoreToOuterForces(
             }
         }
     }
-    physData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
 }
 
 /**
  * @brief Compute layer-to-outer interactions using the cell list.
  *
  * @param state Inter-water parameters.
- * @param simBox Simulation box containing molecules.
- * @param physData Physical data to store energy results.
+ * @param simulationBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateLayerToOuterForces(
     const InterWaterState                        &state,
-    molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physData,
+    molsys::SimulationBox                        &simulationBox,
+    physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     molsys::CellList                             &cellList
 )
@@ -364,7 +363,7 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
                 atomB,
                 coulombPotential,
                 rCutSquared,
-                simBox,
+                simulationBox,
                 *nonCoulPairPtr,
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
@@ -557,23 +556,23 @@ void InterWaterStrategyCellList::calculateLayerToOuterForces(
             }
         }
     }
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
  * @brief Compute outer-to-outer interactions using the cell list.
  *
  * @param state Inter-water parameters.
- * @param simBox Simulation box containing molecules.
- * @param physData Physical data to store energy results.
+ * @param simulationBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
  * @param coulPot Coulomb potential evaluator.
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateOuterToOuterForces(
     const InterWaterState                        &state,
-    molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physData,
+    molsys::SimulationBox                        &simulationBox,
+    physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulPot,
     molsys::CellList                             &cellList
 )
@@ -594,7 +593,7 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
                 atomB,
                 coulPot,
                 rCutSquared,
-                simBox,
+                simulationBox,
                 *nonCoulPairPtr,
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
@@ -736,23 +735,23 @@ void InterWaterStrategyCellList::calculateOuterToOuterForces(
             }
         }
     }
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
  * @brief Compute smoothing-zone interactions against MM molecules.
  *
  * @param state Inter-water parameters.
- * @param simBox Simulation box containing molecules.
- * @param physData Physical data to store energy results.
+ * @param simulationBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
  * @param coulPot Coulomb potential evaluator.
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
     const InterWaterState                        &state,
-    molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physData,
+    molsys::SimulationBox                        &simulationBox,
+    physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulPot,
     molsys::CellList                             &cellList
 )
@@ -773,7 +772,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 atomB,
                 coulPot,
                 rCutSquared,
-                simBox,
+                simulationBox,
                 *nonCoulPairPtr,
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
@@ -791,7 +790,7 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
                 atomB,
                 coulPot,
                 rCutSquared,
-                simBox,
+                simulationBox,
                 *nonCoulPairPtr,
                 totalCoulombEnergy,
                 totalNonCoulombEnergy
@@ -1183,6 +1182,6 @@ void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
             }
         }
     }
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }

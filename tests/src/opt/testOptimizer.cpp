@@ -42,11 +42,11 @@ namespace
 {
     struct Sample
     {
-        double               energy;
-        linearAlgebra::Vec3D force0;
-        linearAlgebra::Vec3D force1;
-        linearAlgebra::Vec3D pos0;
-        linearAlgebra::Vec3D pos1;
+        double        energy;
+        linalg::Vec3D force0;
+        linalg::Vec3D force1;
+        linalg::Vec3D pos0;
+        linalg::Vec3D pos1;
     };
 
     // Build a fresh box+physData pair, set the sample state on them, and call
@@ -131,8 +131,8 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
     const auto positions = opt.getPositions();
     ASSERT_EQ(forces.size(), 2U);
     ASSERT_EQ(positions.size(), 2U);
-    EXPECT_EQ(forces[0], linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-    EXPECT_EQ(positions[1], linearAlgebra::Vec3D(0.4, 0.5, 0.6));
+    EXPECT_EQ(forces[0], linalg::Vec3D(1.0, 0.0, 0.0));
+    EXPECT_EQ(positions[1], linalg::Vec3D(0.4, 0.5, 0.6));
 
     const auto forcesOff    = opt.getForces(-1);
     const auto positionsOff = opt.getPositions(-1);

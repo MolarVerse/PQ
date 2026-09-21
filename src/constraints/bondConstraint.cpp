@@ -33,10 +33,9 @@
 
 using namespace constraints;
 using namespace molsys;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace kernel;
 using namespace settings;
-using namespace constants;
 
 /**
  * @brief Constructor
@@ -62,18 +61,18 @@ BondConstraint::BondConstraint(
 /**
  * @brief calculates the reference bond data of a bond constraint
  *
- * @param simBox
+ * @param simulationBox the simulation box to apply periodic boundary conditions
  */
 void BondConstraint::calculateConstraintBondRef(
-    const molsys::SimulationBox &simBox
+    const molsys::SimulationBox &simulationBox
 )
 {
-    simBox.applyPBC(_shakeDistanceRef);
+    simulationBox.applyPBC(_shakeDistanceRef);
 
     const auto dxyz = distVec(
         _molecules[0]->getAtomPosition(_atomIndices[0]),
         _molecules[1]->getAtomPosition(_atomIndices[1]),
-        simBox
+        simulationBox
     );
 
     _shakeDistanceRef = dxyz;
@@ -82,14 +81,18 @@ void BondConstraint::calculateConstraintBondRef(
 /**
  * @brief calculates the distance delta of a bond constraint
  *
+ * @param simulationBox
+ *
  */
-double BondConstraint::calculateDistanceDelta(const SimulationBox &simBox) const
+double BondConstraint::calculateDistanceDelta(
+    const SimulationBox &simulationBox
+) const
 {
     const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
     const auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
 
     auto dPosition = pos1 - pos2;
-    simBox.applyPBC(dPosition);
+    simulationBox.applyPBC(dPosition);
 
     const auto distanceSquared       = normSquared(dPosition);
     const auto targetDistanceSquared = _targetBondLength * _targetBondLength;
@@ -105,10 +108,18 @@ double BondConstraint::calculateDistanceDelta(const SimulationBox &simBox) const
  * @details if delta is not smaller than tolerance, the shake algorithm is
  * applied
  *
+ * @param simulationBox the simulation box to apply periodic boundary conditions
+ * @param tolerance
+ * @return true if the bond constraint is satisfied within the tolerance, false
+ * otherwise
+ *
  */
-bool BondConstraint::applyShake(const SimulationBox &simBox, double tolerance)
+bool BondConstraint::applyShake(
+    const SimulationBox &simulationBox,
+    double               tolerance
+)
 {
-    const auto delta = calculateDistanceDelta(simBox);
+    const auto delta = calculateDistanceDelta(simulationBox);
 
     if (std::fabs(delta / (_targetBondLength * _targetBondLength)) > tolerance)
     {
@@ -194,9 +205,7 @@ bool BondConstraint::applyRattle(double tolerance)
  *
  * @param shakeDistanceRef
  */
-void BondConstraint::setShakeDistanceRef(
-    const linearAlgebra::Vec3D &shakeDistanceRef
-)
+void BondConstraint::setShakeDistanceRef(const linalg::Vec3D &shakeDistanceRef)
 {
     _shakeDistanceRef = shakeDistanceRef;
 }
@@ -222,7 +231,7 @@ double BondConstraint::getTargetBondLength() const
  * @return shake distance reference
  */
 [[nodiscard]]
-linearAlgebra::Vec3D BondConstraint::getShakeDistanceRef() const
+linalg::Vec3D BondConstraint::getShakeDistanceRef() const
 {
     return _shakeDistanceRef;
 }

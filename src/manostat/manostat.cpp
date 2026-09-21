@@ -31,9 +31,9 @@
 using namespace manostat;
 using namespace molsys;
 using namespace physicalData;
-using namespace constants;
+
 using namespace settings;
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @brief Construct a new Manostat:: Manostat object
@@ -60,7 +60,7 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
 
     _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
     _pressureTensor *= PRESSURE_FACTOR;
-    _pressure        = trace(_pressureTensor) / linearAlgebra::tensor3D::size;
+    _pressure        = trace(_pressureTensor) / linalg::tensor3D::size;
 
     data.setPressure(_pressure);
 

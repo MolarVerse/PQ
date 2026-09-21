@@ -51,7 +51,7 @@ jobs:
       - name: install gcc13
         run: |
           sudo apt update
-          sudo apt install gcc-13 g++-13 mold
+          sudo apt install gcc-14 g++-14 mold
         shell: bash
 
       # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects)
@@ -86,8 +86,8 @@ jobs:
           make -j$(nproc)
           make test
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
 
       - name: Build and Test Project with coverage
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' }}
@@ -98,8 +98,8 @@ jobs:
           make -j$(nproc)
           make coverage_xml
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
 
       - name: Upload coverage to Codecov
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' }}
@@ -107,7 +107,7 @@ jobs:
         with:
           fail_ci_if_error: true # optional (default = false)
           gcov: true
-          gcov_executable: gcov-13
+          gcov_executable: gcov-14
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -148,10 +148,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install gcc13
+      - name: install gcc14
         run: |
           sudo apt update
-          sudo apt install gcc-13 g++-13
+          sudo apt install gcc-14 g++-14
         shell: bash
 
       - name: Build benchmark suite
@@ -165,8 +165,8 @@ jobs:
             -DBUILD_WITH_NATIVE=Off
           cmake --build build-benchmark --target google_benchmarks -j$(nproc)
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
 
       - name: Run benchmark smoke tests
         run: |
@@ -180,10 +180,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install GCC 13
+      - name: Install GCC 14
         run: |
           sudo apt update
-          sudo apt install gcc-13 g++-13 mold ninja-build
+          sudo apt install gcc-14 g++-14 mold ninja-build
 
       - name: Build and test static LTO
         run: |
@@ -196,8 +196,8 @@ jobs:
           cmake --build build --parallel
           ctest --test-dir build --output-on-failure -j1
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
 
   static-singularity-build:
     if: >-
@@ -211,7 +211,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt update
-          sudo apt install gcc-13 g++-13 mold
+          sudo apt install gcc-14 g++-14 mold
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -229,8 +229,8 @@ jobs:
             -DBUILD_WITH_NATIVE=OFF
           cmake --build build --parallel "$(nproc)"
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
@@ -247,8 +247,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install \
-            gcc-13 \
-            g++-13 \
+            gcc-14 \
+            g++-14 \
             mold \
             openmpi-bin \
             libopenmpi-dev \
@@ -269,8 +269,8 @@ jobs:
             -DBUILD_WITH_TESTS=ON
           cmake --build build --parallel "$(nproc)"
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1

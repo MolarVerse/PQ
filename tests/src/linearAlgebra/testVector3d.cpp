@@ -29,7 +29,7 @@
 // for Message, TestPartResult, AssertionResult
 #include "vector3d.hpp"   // IWYU pragma: keep - for Vec3D, Vec3Di, Vec3Dul, maximum, minimum
 
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @file testVector3d.cpp
@@ -191,7 +191,14 @@ TEST(TestVector3d, subtractionOperator)
 
     EXPECT_EQ(vec6 - vec5, Vec3Dul(1, 1, 1));
     EXPECT_EQ(vec6 - 1, Vec3Dul(1, 2, 3));
-    EXPECT_EQ(-vec5, Vec3Dul(-1, -2, -3));
+    EXPECT_EQ(
+        -vec5,
+        Vec3Dul(
+            static_cast<size_t>(-1),
+            static_cast<size_t>(-2),
+            static_cast<size_t>(-3)
+        )
+    );
 
     const auto vec7 = Vector3D<Vec3D>{vec1, vec2, vec1};
     const auto vec8 = Vector3D<Vec3D>{vec2, vec1, vec2};
@@ -301,8 +308,8 @@ TEST(TestVector3d, isLessOperator)
 
     const auto vec3 = Vec3Dul(0, 1, 2);
 
-    EXPECT_TRUE(vec3 < 3);
-    EXPECT_FALSE(vec3 < 2);
+    EXPECT_TRUE(vec3 < 3U);
+    EXPECT_FALSE(vec3 < 2U);
 }
 
 /**
@@ -323,8 +330,8 @@ TEST(TestVector3d, isGreaterOperator)
 
     const auto vec3 = Vec3Dul(1, 2, 3);
 
-    EXPECT_TRUE(vec3 > 0);
-    EXPECT_FALSE(vec3 > 1);
+    EXPECT_TRUE(vec3 > 0U);
+    EXPECT_FALSE(vec3 > 1U);
 }
 
 /**
@@ -706,7 +713,14 @@ TEST(TestVector3d, subtractionAssignmentOperator)
     vec3      -= Vec3Dul(1, 2, 3);
     EXPECT_EQ(vec3, Vec3Dul(0, 0, 0));
     vec3 -= 1;
-    EXPECT_EQ(vec3, Vec3Dul(-1, -1, -1));
+    EXPECT_EQ(
+        vec3,
+        Vec3Dul(
+            static_cast<unsigned long>(-1),
+            static_cast<unsigned long>(-1),
+            static_cast<unsigned long>(-1)
+        )
+    );
 
     auto subVec  = Vec3D(1.0, 1.0, 1.0);
     auto vec4    = Vector3D<Vec3D>{vec, subVec, vec};

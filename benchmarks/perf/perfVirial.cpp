@@ -50,7 +50,7 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
-    linearAlgebra::tensor3D result{0.0};
+    linalg::tensor3D result{0.0};
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {

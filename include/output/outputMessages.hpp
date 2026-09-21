@@ -22,6 +22,9 @@
 
 #include <string>   // for operator==
 
+#ifndef _OUTPUT_MESSAGES_HPP_
+#define _OUTPUT_MESSAGES_HPP_
+
 namespace out
 {
     static constexpr auto* WARNING  = "WARNING: ";
@@ -39,3 +42,5 @@ namespace out
     std::string readMessage(const std::string&, const std::string&);
 
 }   // namespace out
+
+#endif   // _OUTPUT_MESSAGES_HPP_

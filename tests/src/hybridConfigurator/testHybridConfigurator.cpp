@@ -37,7 +37,7 @@
 
 using namespace configurator;
 using namespace exc;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace pq;
 using namespace settings;
 using namespace molsys;

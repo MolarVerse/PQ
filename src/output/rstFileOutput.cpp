@@ -71,14 +71,14 @@ namespace
 /**
  * @brief Write the restart file
  *
- * @param simBox
+ * @param simulationBox
  * @param thermostat
  * @param step
  */
 void RstFileOutput::write(
-    SimulationBox    &simBox,
-    const Thermostat &thermostat,
-    size_t            step
+    const SimulationBox &simulationBox,
+    const Thermostat    &thermostat,
+    size_t               step
 )
 {
     std::ostringstream buffer;
@@ -89,15 +89,15 @@ void RstFileOutput::write(
 
     buffer << "Step " << step << '\n';
 
-    const auto &boxDim = simBox.getBoxDimensions();
-    const auto &boxAng = simBox.getBoxAngles();
+    const auto &boxDim = simulationBox.getBoxDimensions();
+    const auto &boxAng = simulationBox.getBoxAngles();
 
     buffer << "Box   " << boxDim << "  " << boxAng << '\n';
 
     if (thermostat.getThermostatType() == ThermostatType::NOSE_HOOVER)
         writeNHChain(thermostat, buffer);
 
-    for (const auto &molecule : simBox.getMolecules())
+    for (const auto &molecule : simulationBox.getMolecules())
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
 

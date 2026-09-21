@@ -37,10 +37,10 @@
 #include "vector3d.hpp"             // for Vec3D, Vector3D, cross
 
 using namespace resetKinetics;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace physicalData;
 using namespace molsys;
-using namespace constants;
+
 using namespace exc;
 using namespace settings;
 using namespace utilities;
@@ -264,7 +264,7 @@ void ResetKinetics::setTemperature(double temperature)
  *
  * @param momentum
  */
-void ResetKinetics::setMomentum(const linearAlgebra::Vec3D &momentum)
+void ResetKinetics::setMomentum(const linalg::Vec3D &momentum)
 {
     _momentum = momentum;
 }
@@ -274,9 +274,7 @@ void ResetKinetics::setMomentum(const linearAlgebra::Vec3D &momentum)
  *
  * @param angularMomentum
  */
-void ResetKinetics::setAngularMomentum(
-    const linearAlgebra::Vec3D &angularMomentum
-)
+void ResetKinetics::setAngularMomentum(const linalg::Vec3D &angularMomentum)
 {
     _angularMomentum = angularMomentum;
 }

@@ -55,14 +55,14 @@ class TestIntegrator : public ::testing::Test
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
 
-        atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
 
-        atom1->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setForce(linearAlgebra::Vec3D(1.0, 3.0, 5.0));
+        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0));
 
         atom1->setMass(1.0);
         atom2->setMass(2.0);
@@ -73,7 +73,7 @@ class TestIntegrator : public ::testing::Test
         _molecule1->setMolMass(3.0);
 
         _box = new molsys::SimulationBox();
-        _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
         _box->addMolecule(*_molecule1);
         _box->addAtom(atom1);

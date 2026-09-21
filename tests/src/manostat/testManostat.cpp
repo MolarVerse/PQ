@@ -49,7 +49,7 @@ namespace
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         void setPressure(const double pressure) { _pressure = pressure; }
-        void setPressureTensor(const linearAlgebra::tensor3D& pTensor)
+        void setPressureTensor(const linalg::tensor3D& pTensor)
         {
             _pressureTensor = pTensor;
         }
@@ -62,7 +62,7 @@ namespace
         using AnisotropicStochasticRescalingManostat::
             AnisotropicStochasticRescalingManostat;
 
-        void setPressureTensor(const linearAlgebra::tensor3D& pTensor)
+        void setPressureTensor(const linalg::tensor3D& pTensor)
         {
             _pressureTensor = pTensor;
         }
@@ -75,7 +75,7 @@ namespace
         using SemiIsotropicStochasticRescalingManostat::
             SemiIsotropicStochasticRescalingManostat;
 
-        void setPressureTensor(const linearAlgebra::tensor3D& pTensor)
+        void setPressureTensor(const linalg::tensor3D& pTensor)
         {
             _pressureTensor = pTensor;
         }
@@ -88,7 +88,7 @@ namespace
         using FullAnisotropicStochasticRescalingManostat::
             FullAnisotropicStochasticRescalingManostat;
 
-        void setPressureTensor(const linearAlgebra::tensor3D& pTensor)
+        void setPressureTensor(const linalg::tensor3D& pTensor)
         {
             _pressureTensor = pTensor;
         }
@@ -99,7 +99,7 @@ namespace
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        void setPressureTensor(const linearAlgebra::tensor3D& pTensor)
+        void setPressureTensor(const linalg::tensor3D& pTensor)
         {
             _pressureTensor = pTensor;
         }
@@ -111,7 +111,7 @@ namespace
        public:
         using SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat;
 
-        void setPressureTensor(const linearAlgebra::tensor3D& pTensor)
+        void setPressureTensor(const linalg::tensor3D& pTensor)
         {
             _pressureTensor = pTensor;
         }
@@ -123,7 +123,7 @@ namespace
        public:
         using AnisotropicBerendsenManostat::AnisotropicBerendsenManostat;
 
-        void setPressureTensor(const linearAlgebra::tensor3D& pTensor)
+        void setPressureTensor(const linalg::tensor3D& pTensor)
         {
             _pressureTensor = pTensor;
         }
@@ -136,30 +136,30 @@ namespace
         using FullAnisotropicBerendsenManostat::
             FullAnisotropicBerendsenManostat;
 
-        void setPressureTensor(const linearAlgebra::tensor3D& pTensor)
+        void setPressureTensor(const linalg::tensor3D& pTensor)
         {
             _pressureTensor = pTensor;
         }
     };
 
     void setupCutMolecule(
-        molsys::SimulationBox&      box,
-        physicalData::PhysicalData& data
+        molsys::SimulationBox&      simulationBox,
+        physicalData::PhysicalData& physicalData
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
         settings::TimingsSettings::setTimeStep(1.0);
 
-        box.setBoxDimensions({10.0, 10.0, 10.0});
-        box.setVolume(box.calculateVolume());
-        box.setTotalMass(2.0);
+        simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+        simulationBox.setVolume(simulationBox.calculateVolume());
+        simulationBox.setTotalMass(2.0);
 
-        data.setVirial(diagonalMatrix(linearAlgebra::Vec3D(0.0)));
-        data.setKineticEnergyMolecularVector(
-            diagonalMatrix(linearAlgebra::Vec3D(0.0))
+        physicalData.setVirial(diagonalMatrix(linalg::Vec3D(0.0)));
+        physicalData.setKineticEnergyMolecularVector(
+            diagonalMatrix(linalg::Vec3D(0.0))
         );
-        data.setKineticEnergyAtomicVector(
-            diagonalMatrix(linearAlgebra::Vec3D(0.0))
+        physicalData.setKineticEnergyAtomicVector(
+            diagonalMatrix(linalg::Vec3D(0.0))
         );
 
         auto atom1 = std::make_shared<molsys::Atom>();
@@ -175,32 +175,34 @@ namespace
         molecule.setMolMass(2.0);
         molecule.addAtom(atom1);
         molecule.addAtom(atom2);
-        molecule.calculateCenterOfMass(box.getBox());
+        molecule.calculateCenterOfMass(simulationBox.getBox());
 
-        box.addAtom(atom1);
-        box.addAtom(atom2);
-        box.addMolecule(molecule);
+        simulationBox.addAtom(atom1);
+        simulationBox.addAtom(atom2);
+        simulationBox.addMolecule(molecule);
     }
 
-    linearAlgebra::Vec3D getMinimumImageDistance(molsys::SimulationBox& box)
+    linalg::Vec3D getMinimumImageDistance(molsys::SimulationBox& simulationBox)
     {
-        const auto mol = box.getMolecule(0);
+        const auto mol = simulationBox.getMolecule(0);
 
         auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
                          mol.getAtomPosition(AtomIndex{0});
-        box.applyPBC(dPosition);
+        simulationBox.applyPBC(dPosition);
 
         return dPosition;
     }
 
-    void expectCutMoleculeScaled(molsys::SimulationBox& box)
+    void expectCutMoleculeScaled(molsys::SimulationBox& simulationBox)
     {
-        const auto dPosition = getMinimumImageDistance(box);
+        const auto dPosition = getMinimumImageDistance(simulationBox);
 
-        box.getMolecule(0).calculateCenterOfMass(box.getBox());
-        const auto centerOfMass = box.getMolecule(0).getCenterOfMass();
+        simulationBox.getMolecule(0).calculateCenterOfMass(simulationBox.getBox(
+        ));
+        const auto centerOfMass =
+            simulationBox.getMolecule(0).getCenterOfMass();
 
-        EXPECT_NEAR(box.getBoxDimensions()[0], 9.8, 1e-12);
+        EXPECT_NEAR(simulationBox.getBoxDimensions()[0], 9.8, 1e-12);
         EXPECT_NEAR(centerOfMass[0], -4.851, 1e-12);
         EXPECT_NEAR(centerOfMass[1], 0.0, 1e-12);
         EXPECT_NEAR(centerOfMass[2], 0.0, 1e-12);
@@ -213,8 +215,11 @@ namespace
             for (size_t axis = 0; axis < 3; ++axis)
             {
                 const auto coordinate =
-                    box.getMolecule(0).getAtomPosition(atomIndex)[axis];
-                const auto halfBoxLength = box.getBoxDimensions()[axis] / 2.0;
+                    simulationBox.getMolecule(0).getAtomPosition(
+                        atomIndex
+                    )[axis];
+                const auto halfBoxLength =
+                    simulationBox.getBoxDimensions()[axis] / 2.0;
 
                 EXPECT_GE(coordinate, -halfBoxLength);
                 EXPECT_LT(coordinate, halfBoxLength);
@@ -223,16 +228,16 @@ namespace
     }
 
     double getMinimumImageDistance(
-        molsys::SimulationBox& box,
+        molsys::SimulationBox& simulationBox,
         const size_t           moleculeIndex
     )
     {
-        const auto mol = box.getMolecule(moleculeIndex);
+        const auto mol = simulationBox.getMolecule(moleculeIndex);
 
         auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
                          mol.getAtomPosition(AtomIndex{0});
 
-        box.applyPBC(dPosition);
+        simulationBox.applyPBC(dPosition);
 
         return norm(dPosition);
     }
@@ -246,11 +251,8 @@ TEST_F(TestManostat, CalculatePressure)
 {
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
-    EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure(),
-        3.0 * constants::PRESSURE_FACTOR
-    );
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 3.0 * PRESSURE_FACTOR);
 }
 
 TEST_F(TestManostat, CalculatePressureWithFixedAxis)
@@ -263,19 +265,13 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
     // avg = (1.5 + 3.0) / 2 = 2.25 * PRESSURE_FACTOR
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
-    EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure(),
-        2.25 * constants::PRESSURE_FACTOR
-    );
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 2.25 * PRESSURE_FACTOR);
 
     settings::ManostatSettings::setFixedAxis(settings::FixedAxis::ALL);
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure(),
-        3.0 * constants::PRESSURE_FACTOR
-    );
+    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 3.0 * PRESSURE_FACTOR);
 
     settings::ManostatSettings::setFixedAxis(settings::FixedAxis::NONE);
 }
@@ -289,7 +285,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
     settings::Settings::setVirialType(settings::VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * constants::PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * PRESSURE_FACTOR);
 
     // set virial type back to molecular for other tests
     settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
@@ -322,10 +318,9 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
         settings::FixedAxis::NONE
     );
 
-    const auto scaleFactors = linearAlgebra::Vec3D(
+    const auto scaleFactors = linalg::Vec3D(
         ::pow(
-            1.0 -
-                (4.5 * 0.5 / 0.1 * (1.0 - (3.0 * constants::PRESSURE_FACTOR))),
+            1.0 - (4.5 * 0.5 / 0.1 * (1.0 - (3.0 * PRESSURE_FACTOR))),
             1.0 / 3.0
         )
     );
@@ -333,14 +328,14 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _manostat->applyManostat(*_box, *_data);
     auto boxNew = _box->getBoxDimensions();
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
     EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
     EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
     EXPECT_TRUE(
         utilities::compare(
             _box->getMolecule(0).getAtomPosition(AtomIndex{0}),
-            linearAlgebra::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
+            linalg::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
             1e-9
         )
     );
@@ -447,7 +442,7 @@ TEST_F(
 
     settings::TimingsSettings::setTimeStep(0.5);
     _manostat = new manostat::BerendsenManostat(
-        3.0 * constants::PRESSURE_FACTOR,
+        3.0 * PRESSURE_FACTOR,
         0.1,
         4.5,
         settings::FixedAxis::NONE
@@ -469,7 +464,7 @@ TEST_F(TestManostat, applyNoneManostat)
 {
     _manostat->applyManostat(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * constants::PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
 }
 
 TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
@@ -503,16 +498,16 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     _box->setBoxDimensions({10.0, 10.0, 10.0});
     _box->setVolume(1000.0);
 
-    _data->setVirial(linearAlgebra::tensor3D(0.0));
-    _data->setKineticEnergyMolecularVector(linearAlgebra::tensor3D(0.0));
+    _data->setVirial(linalg::tensor3D(0.0));
+    _data->setKineticEnergyMolecularVector(linalg::tensor3D(0.0));
 
     auto molecule = molsys::Molecule();
     molecule.setNumberOfAtoms(2);
     molecule.setMolMass(2.0);
 
     const auto addAtom = [this, &molecule](
-                             const linearAlgebra::Vec3D& position,
-                             const linearAlgebra::Vec3D& velocity
+                             const linalg::Vec3D& position,
+                             const linalg::Vec3D& velocity
                          )
     {
         auto atom = std::make_shared<molsys::Atom>();
@@ -537,9 +532,8 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     );
 
     const auto mu = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 0.0) / 3.0);
-    const auto expectedCenterOfMassVelocity =
-        linearAlgebra::Vec3D(3.0 / mu, 0.0, 0.0);
-    const auto expectedRelativeVelocity = linearAlgebra::Vec3D(2.0, 0.0, 0.0);
+    const auto expectedCenterOfMassVelocity = linalg::Vec3D(3.0 / mu, 0.0, 0.0);
+    const auto expectedRelativeVelocity     = linalg::Vec3D(2.0, 0.0, 0.0);
 
     _manostat->applyManostat(*_box, *_data);
 
@@ -569,7 +563,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
  */
 TEST_F(TestManostat, testRotateMu)
 {
-    auto mu = linearAlgebra::tensor3D({
+    auto mu = linalg::tensor3D({
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0},
@@ -579,7 +573,7 @@ TEST_F(TestManostat, testRotateMu)
 
     EXPECT_EQ(
         mu,
-        linearAlgebra::tensor3D({
+        linalg::tensor3D({
             {1.0, 6.0, 10.0},
             {0.0, 5.0, 14.0},
             {0.0, 0.0, 9.0},
@@ -657,8 +651,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
     {
         auto manostat =
             TestableBerendsenManostat(1.0, 0.5, 0.2, settings::FixedAxis::X);
-        manostat.setPressureTensor(
-            diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
         );
 
         const auto mu = manostat.calculateMu();
@@ -671,8 +664,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
     {
         auto manostat =
             TestableBerendsenManostat(1.0, 0.5, 0.2, settings::FixedAxis::XY);
-        manostat.setPressureTensor(
-            diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
         );
 
         const auto mu = manostat.calculateMu();
@@ -685,8 +677,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
     {
         auto manostat =
             TestableBerendsenManostat(1.0, 0.5, 0.2, settings::FixedAxis::ALL);
-        manostat.setPressureTensor(
-            diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
         );
 
         const auto mu = manostat.calculateMu();
@@ -706,9 +697,7 @@ TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
         0.2,
         settings::FixedAxis::XZ
     );
-    manostat.setPressureTensor(
-        diagonalMatrix(linearAlgebra::Vec3D(2.0, 3.0, 4.0))
-    );
+    manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)));
 
     const auto mu = manostat.calculateMu();
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
@@ -726,9 +715,8 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
         0.2,
         settings::FixedAxis::Y
     );
-    const auto pTensor = linearAlgebra::tensor3D(
-        {{2.0, 0.5, 0.1}, {0.5, 3.0, 0.2}, {0.1, 0.2, 4.0}}
-    );
+    const auto pTensor =
+        linalg::tensor3D({{2.0, 0.5, 0.1}, {0.5, 3.0, 0.2}, {0.1, 0.2, 4.0}});
     manostat.setPressureTensor(pTensor);
 
     const auto mu = manostat.calculateMu();
@@ -753,8 +741,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             0.12,
             settings::FixedAxis::Z
         );
-        manostat.setPressureTensor(
-            diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0))
+        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
         );
 
         const auto mu       = manostat.calculateMu(10.0);
@@ -773,8 +760,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             0.12,
             settings::FixedAxis::XY
         );
-        manostat.setPressureTensor(
-            diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0))
+        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
         );
 
         const auto mu       = manostat.calculateMu(10.0);
@@ -793,8 +779,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             0.12,
             settings::FixedAxis::ALL
         );
-        manostat.setPressureTensor(
-            diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0))
+        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
         );
 
         const auto mu = manostat.calculateMu(10.0);
@@ -816,9 +801,7 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
         0.12,
         settings::FixedAxis::YZ
     );
-    manostat.setPressureTensor(
-        diagonalMatrix(linearAlgebra::Vec3D(1.0, 2.0, 3.0))
-    );
+    manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)));
 
     const auto mu       = manostat.calculateMu(10.0);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
@@ -839,9 +822,8 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
         0.12,
         settings::FixedAxis::X
     );
-    const auto pTensor = linearAlgebra::tensor3D(
-        {{1.0, 0.2, 0.3}, {0.2, 2.0, 0.4}, {0.3, 0.4, 3.0}}
-    );
+    const auto pTensor =
+        linalg::tensor3D({{1.0, 0.2, 0.3}, {0.2, 2.0, 0.4}, {0.3, 0.4, 3.0}});
     manostat.setPressureTensor(pTensor);
 
     const auto mu = manostat.calculateMu(10.0);
@@ -865,9 +847,7 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
         std::vector<size_t>{0U, 1U},
         settings::FixedAxis::Z
     );
-    manostat.setPressureTensor(
-        diagonalMatrix(linearAlgebra::Vec3D(2.0, 4.0, 5.0))
-    );
+    manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 4.0, 5.0)));
 
     const auto mu = manostat.calculateMu();
     // xy avg = 3.0, mu_xy = sqrt(1 - 0.2 * 0.5 / 0.5 * (1.0 - 3.0)) = sqrt(1.4)
@@ -890,9 +870,7 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
         std::vector<size_t>{0U, 2U},
         settings::FixedAxis::Y
     );
-    manostat.setPressureTensor(
-        diagonalMatrix(linearAlgebra::Vec3D(1.0, 5.0, 3.0))
-    );
+    manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 5.0, 3.0)));
 
     const auto mu = manostat.calculateMu(10.0);
     // xz avg = 2.0, deltaPxy = 7.0 - 2.0 = 5.0

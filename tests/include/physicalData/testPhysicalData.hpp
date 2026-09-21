@@ -48,7 +48,7 @@ class TestPhysicalData : public ::testing::Test
         _physicalData->setCoulombEnergy(1.0);
         _physicalData->setNonCoulombEnergy(2.0);
         _physicalData->setTemperature(3.0);
-        _physicalData->setMomentum(linearAlgebra::Vec3D(4.0));
+        _physicalData->setMomentum(linalg::Vec3D(4.0));
         _physicalData->setKineticEnergy(5.0);
         _physicalData->setVolume(6.0);
         _physicalData->setDensity(7.0);
@@ -67,8 +67,8 @@ class TestPhysicalData : public ::testing::Test
 
         atom1->setMass(1.0);
         atom2->setMass(1.0);
-        atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
         molecule1.setMolMass(2.0);
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
@@ -78,7 +78,7 @@ class TestPhysicalData : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
         atom3->setMass(1.0);
-        atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         molecule2.setMolMass(1.0);
         molecule2.addAtom(atom3);
 

@@ -103,7 +103,7 @@ namespace molsys
 
         auto setPositions = [&positions, &index](auto &atom)
         {
-            linearAlgebra::Vec3D position;
+            linalg::Vec3D position;
 
             position[0] = positions[index++];
             position[1] = positions[index++];
@@ -129,7 +129,7 @@ namespace molsys
 
         auto setVelocities = [&velocities, &index](auto &atom)
         {
-            linearAlgebra::Vec3D velocity;
+            linalg::Vec3D velocity;
 
             velocity[0] = velocities[index++];
             velocity[1] = velocities[index++];
@@ -152,7 +152,7 @@ namespace molsys
 
         auto setForces = [&forces, &index](auto &atom)
         {
-            linearAlgebra::Vec3D force;
+            linalg::Vec3D force;
 
             force[0] = forces[index++];
             force[1] = forces[index++];

@@ -35,7 +35,7 @@
 using namespace ff;
 using namespace molsys;
 using namespace connectivity;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace physicalData;
 using namespace pot;
 using namespace settings;
@@ -64,14 +64,14 @@ AngleForceField::AngleForceField(
  * @details if angle is a linker angle, correct coulomb and non-coulomb energy
  * and forces
  *
- * @param simBox the simulation box containing the system
- * @param data the physical data of the system
+ * @param simulationBox the simulation simulationBox containing the system
+ * @param physicalData the physical data of the system
  * @param coulombPot the coulomb potential of the system
  * @param nonCoulombPot the non-coulomb potential of the system
  */
 void AngleForceField::calculateEnergyAndForces(
-    const SimulationBox    &simBox,
-    PhysicalData           &data,
+    const SimulationBox    &simulationBox,
+    PhysicalData           &physicalData,
     const CoulombPotential &coulombPot,
     NonCoulombPotential    &nonCoulombPot
 )
@@ -91,8 +91,8 @@ void AngleForceField::calculateEnergyAndForces(
     auto dPosition12 = position1 - position2;
     auto dPosition13 = position1 - position3;
 
-    simBox.applyPBC(dPosition12);
-    simBox.applyPBC(dPosition13);
+    simulationBox.applyPBC(dPosition12);
+    simulationBox.applyPBC(dPosition13);
 
     const auto distance12Squared = normSquared(dPosition12);
     const auto distance13Squared = normSquared(dPosition13);
@@ -105,14 +105,14 @@ void AngleForceField::calculateEnergyAndForces(
 
     auto forceMagnitude = -_params.forceConstant * deltaAngle;
 
-    data.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
+    physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
-    auto forcexyz = linearAlgebra::Vec3D{0.0, 0.0, 0.0};
+    auto forcexyz = linalg::Vec3D{0.0, 0.0, 0.0};
 
     // Guard against near-collinear angles where division by sin(alpha) is
     // unstable.
     const auto sinAlpha = ::sin(alpha);
-    if (std::fabs(sinAlpha) >= constants::COLINEAR_SINALPHA_THRESHOLD)
+    if (std::fabs(sinAlpha) >= COLINEAR_SINALPHA_THRESHOLD)
     {
         const auto normalDistance = distance12 * distance13 * sinAlpha;
 
@@ -135,7 +135,7 @@ void AngleForceField::calculateEnergyAndForces(
     if (_isLinker)
     {
         auto dPosition23 = position2 - position3;
-        simBox.applyPBC(dPosition23);
+        simulationBox.applyPBC(dPosition23);
 
         const auto distance23 = norm(dPosition23);
 
@@ -144,7 +144,7 @@ void AngleForceField::calculateEnergyAndForces(
             forceMagnitude = correctLinker<AngleForceField>(
                 coulombPot,
                 nonCoulombPot,
-                data,
+                physicalData,
                 _molecules[1],
                 _molecules[2],
                 _atomIndices[1],
@@ -165,7 +165,9 @@ void AngleForceField::calculateEnergyAndForces(
                 _molecules[0]->getHybridZone() == SMOOTHING)
                 smF = _molecules[0]->getSmoothingFactor();
 
-            data.addVirial(tensorProduct(dPosition23, forcexyz) * (1 - smF));
+            physicalData.addVirial(
+                tensorProduct(dPosition23, forcexyz) * (1 - smF)
+            );
 
             _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
             _molecules[2]->addAtomForce(_atomIndices[2], -forcexyz);

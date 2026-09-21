@@ -54,11 +54,11 @@ namespace manostat
         );
 
         void applyManostat(
-            molsys::SimulationBox      &simBox,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
         ) override;
 
-        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;
+        [[nodiscard]] virtual linalg::tensor3D calculateMu() const;
 
         /********************
          * standard getters *
@@ -93,7 +93,7 @@ namespace manostat
             settings::FixedAxis        fixedAxis
         );
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] linalg::tensor3D calculateMu() const override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
@@ -109,7 +109,7 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] linalg::tensor3D calculateMu() const override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
@@ -128,7 +128,7 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
+        [[nodiscard]] linalg::tensor3D calculateMu() const override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };

@@ -37,7 +37,7 @@
 
 using engine::RingPolymerQMMDEngine;
 
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @brief Takes one step in a ring polymer QM MD simulation.

@@ -52,7 +52,7 @@ namespace out
         using Output::Output;
 
         void write(
-            molsys::SimulationBox &,
+            const molsys::SimulationBox &,
             const thermostat::Thermostat &,
             size_t
         );

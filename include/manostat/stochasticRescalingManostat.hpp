@@ -67,11 +67,11 @@ namespace manostat
         ) noexcept = delete;
 
         void applyManostat(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) override;
 
-        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(double);
+        [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
 
         [[nodiscard]] settings::ManostatType getManostatType() const override;
         [[nodiscard]] settings::Isotropy     getIsotropy() const override;
@@ -104,7 +104,7 @@ namespace manostat
         );
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(double volume) override;
+        linalg::tensor3D calculateMu(double volume) override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
@@ -122,7 +122,7 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(double volume) override;
+        linalg::tensor3D calculateMu(double volume) override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
@@ -140,7 +140,7 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(double volume) override;
+        linalg::tensor3D calculateMu(double volume) override;
 
         [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };

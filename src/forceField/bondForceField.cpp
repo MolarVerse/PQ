@@ -34,7 +34,7 @@
 using namespace ff;
 using namespace molsys;
 using namespace connectivity;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace physicalData;
 using namespace pot;
 using namespace settings;
@@ -67,14 +67,14 @@ BondForceField::BondForceField(
  * @details if bond is a linker bond, correct coulomb and non-coulomb energy and
  * forces
  *
- * @param simBox the simulation box containing the system
- * @param data the physical data of the system
+ * @param simulationBox the simulation simulationBox containing the system
+ * @param physicalData the physical data of the system
  * @param coulombPot the coulomb potential of the system
  * @param nonCoulombPot the non-coulomb potential of the system
  */
 void BondForceField::calculateEnergyAndForces(
-    const SimulationBox    &simBox,
-    PhysicalData           &data,
+    const SimulationBox    &simulationBox,
+    PhysicalData           &physicalData,
     const CoulombPotential &coulombPot,
     NonCoulombPotential    &nonCoulombPot
 )
@@ -89,21 +89,21 @@ void BondForceField::calculateEnergyAndForces(
     const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
     auto       dPosition = position1 - position2;
 
-    simBox.applyPBC(dPosition);
+    simulationBox.applyPBC(dPosition);
 
     const auto distance      = norm(dPosition);
     const auto deltaDistance = distance - _params.equilibrium;
 
     auto forceMagnitude = -_params.forceConstant * deltaDistance;
 
-    data.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
+    physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
     if (_isLinker && distance < CoulombPotential::getCoulombRadiusCutOff())
     {
         forceMagnitude += correctLinker<BondForceField>(
             coulombPot,
             nonCoulombPot,
-            data,
+            physicalData,
             _molecules[0],
             _molecules[1],
             _atomIndices[0],
@@ -127,7 +127,7 @@ void BondForceField::calculateEnergyAndForces(
     if (smoothing == HOTSPOT && _molecules[0]->getHybridZone() == SMOOTHING)
         smF = _molecules[0]->getSmoothingFactor();
 
-    data.addVirial(tensorProduct(dPosition, force) * (1 - smF));
+    physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
 }
 
 /***************************

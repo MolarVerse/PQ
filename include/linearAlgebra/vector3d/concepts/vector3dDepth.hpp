@@ -24,11 +24,11 @@
 
 #define _VECTOR3D_DEPTH_HPP_
 
-namespace linearAlgebra
+namespace linalg
 {
     template <class T>
     class Vector3D;
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 namespace pq
 {
@@ -51,7 +51,7 @@ namespace pq
      * @tparam T
      */
     template <class T>
-    struct Vector3DDepth<linearAlgebra::Vector3D<T>>
+    struct Vector3DDepth<linalg::Vector3D<T>>
     {
         static constexpr int value = 1 + Vector3DDepth<T>::value;
     };

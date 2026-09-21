@@ -49,13 +49,13 @@ class TestVirial : public ::testing::Test
 
         molecule1.setNumberOfAtoms(2);
 
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom1->setShiftForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setShiftForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule1.setCenterOfMass(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setShiftForce(linalg::Vec3D(1.0, 2.0, 3.0));
+        molecule1.setCenterOfMass(linalg::Vec3D(1.0, 1.0, 1.0));
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
@@ -64,10 +64,10 @@ class TestVirial : public ::testing::Test
         auto atom3 = std::make_shared<molsys::Atom>();
 
         molecule2.setNumberOfAtoms(1);
-        atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setShiftForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.setCenterOfMass(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        molecule2.setCenterOfMass(linalg::Vec3D(0.0, 0.0, 0.0));
         molecule2.addAtom(atom3);
 
         _simBox->addMolecule(molecule1);
@@ -77,7 +77,7 @@ class TestVirial : public ::testing::Test
         _simBox->addAtom(atom2);
         _simBox->addAtom(atom3);
 
-        _simBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        _simBox->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
     }
 
     void TearDown() override { delete _simBox; }

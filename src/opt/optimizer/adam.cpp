@@ -34,8 +34,8 @@ using namespace opt;
  */
 Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
 {
-    _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-    _momentum2.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+    _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
 }
 
 /**
@@ -49,8 +49,8 @@ Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
 Adam::Adam(size_t nEpochs, double beta1, double beta2, size_t nAtoms)
     : Optimizer(nEpochs), _beta1(beta1), _beta2(beta2)
 {
-    _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-    _momentum2.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+    _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
 }
 
 /**

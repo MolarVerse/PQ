@@ -164,9 +164,12 @@ size_t Optimizer::getHistoryIndex(int offset) const
         );
 
     const auto size  = _energyHistory.size();
-    const auto index = size + offset;
+    const auto index = static_cast<int>(size) + offset;
 
-    return index;
+    if (index < 0 || index >= static_cast<int>(size))
+        throw OptException("History index out of bounds");
+
+    return static_cast<size_t>(index);
 }
 
 /**
@@ -234,7 +237,7 @@ double Optimizer::getMaxForce(int offset) const
  *
  * @return std::vector<pq::Vec3D>
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getForces() const
+std::vector<linalg::Vec3D> Optimizer::getForces() const
 {
     return _forceHistory.back();
 }
@@ -245,7 +248,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getForces() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getForces(int offset) const
+std::vector<linalg::Vec3D> Optimizer::getForces(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 
@@ -257,7 +260,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getForces(int offset) const
  *
  * @return std::vector<pq::Vec3D>
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getPositions() const
+std::vector<linalg::Vec3D> Optimizer::getPositions() const
 {
     return _positionHistory.back();
 }
@@ -268,7 +271,7 @@ std::vector<linearAlgebra::Vec3D> Optimizer::getPositions() const
  * @param offset
  *
  */
-std::vector<linearAlgebra::Vec3D> Optimizer::getPositions(int offset) const
+std::vector<linalg::Vec3D> Optimizer::getPositions(int offset) const
 {
     const auto index = getHistoryIndex(offset);
 

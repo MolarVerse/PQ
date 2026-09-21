@@ -63,7 +63,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
 

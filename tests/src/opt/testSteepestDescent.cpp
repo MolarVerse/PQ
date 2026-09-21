@@ -36,11 +36,11 @@ using molsys::SimulationBox;
 namespace
 {
     std::shared_ptr<SimulationBox> makeBoxWithTwoAtoms(
-        const linearAlgebra::Vec3D &pos0,
-        const linearAlgebra::Vec3D &pos1,
-        const linearAlgebra::Vec3D &force0,
-        const linearAlgebra::Vec3D &force1,
-        const linearAlgebra::Vec3D &boxDims
+        const linalg::Vec3D &pos0,
+        const linalg::Vec3D &pos1,
+        const linalg::Vec3D &force0,
+        const linalg::Vec3D &force1,
+        const linalg::Vec3D &boxDims
     )
     {
         auto box = std::make_shared<SimulationBox>();
@@ -60,10 +60,10 @@ namespace
     }
 
     std::shared_ptr<SimulationBox> makeBoxWithTwoAtoms(
-        const linearAlgebra::Vec3D &pos0,
-        const linearAlgebra::Vec3D &pos1,
-        const linearAlgebra::Vec3D &force0,
-        const linearAlgebra::Vec3D &force1
+        const linalg::Vec3D &pos0,
+        const linalg::Vec3D &pos1,
+        const linalg::Vec3D &force0,
+        const linalg::Vec3D &force1
     )
     {
         return makeBoxWithTwoAtoms(
@@ -135,11 +135,11 @@ TEST(TestSteepestDescent, updateStoresOldPosition)
 
     EXPECT_EQ(
         box->getAtoms()[0]->getPositionOld(),
-        linearAlgebra::Vec3D(1.0, 2.0, 3.0)
+        linalg::Vec3D(1.0, 2.0, 3.0)
     );
     EXPECT_EQ(
         box->getAtoms()[1]->getPositionOld(),
-        linearAlgebra::Vec3D(4.0, 5.0, 6.0)
+        linalg::Vec3D(4.0, 5.0, 6.0)
     );
 }
 
@@ -175,12 +175,6 @@ TEST(TestSteepestDescent, updateIsNoOpWithZeroLearningRate)
     opt.setSimulationBox(box);
     opt.update(0.0, 1U);
 
-    EXPECT_EQ(
-        box->getAtoms()[0]->getPosition(),
-        linearAlgebra::Vec3D(1.0, 2.0, 3.0)
-    );
-    EXPECT_EQ(
-        box->getAtoms()[1]->getPosition(),
-        linearAlgebra::Vec3D(4.0, 5.0, 6.0)
-    );
+    EXPECT_EQ(box->getAtoms()[0]->getPosition(), linalg::Vec3D(1.0, 2.0, 3.0));
+    EXPECT_EQ(box->getAtoms()[1]->getPosition(), linalg::Vec3D(4.0, 5.0, 6.0));
 }
