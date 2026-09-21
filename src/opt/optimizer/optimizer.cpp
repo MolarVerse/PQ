@@ -51,9 +51,11 @@ struct Optimizer::Impl
  * @param nEpochs
  */
 Optimizer::Optimizer(size_t nEpochs)
-    : _nEpochs(nEpochs), _impl(std::make_unique<Impl>())
+    : _impl(std::make_unique<Impl>()), _nEpochs(nEpochs)
 {
 }
+
+Optimizer::~Optimizer() = default;
 
 /**
  * @brief update the optimizer history
@@ -305,3 +307,13 @@ Convergence Optimizer::getConvergence() const { return _convergence; }
  * @return opt::Convergence
  */
 Convergence &Optimizer::getConvergence() { return _convergence; }
+
+/**
+ * @brief get the simulation box member
+ *
+ * @return SimulationBox&
+ */
+SimulationBox &Optimizer::_getSimulationBox() const
+{
+    return *_impl->simulationBox;
+}

@@ -51,13 +51,14 @@ namespace opt
      */
     class Optimizer
     {
+       private:
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
+
        protected:
         size_t _nEpochs = 0;
 
         opt::Convergence _convergence;
-
-        struct Impl;
-        std::unique_ptr<Impl> _impl;
 
         std::deque<double>                     _energyHistory;
         std::deque<double>                     _maxForceHistory;
@@ -68,12 +69,10 @@ namespace opt
        public:
         explicit Optimizer(size_t);
 
-        Optimizer()          = default;
-        virtual ~Optimizer() = default;
+        Optimizer() = default;
+        virtual ~Optimizer();
 
-        [[nodiscard]]
-        virtual std::shared_ptr<Optimizer> clone() const          = 0;
-        virtual void                       update(double, size_t) = 0;
+        virtual void update(double, size_t) = 0;
         [[nodiscard]]
         virtual size_t maxHistoryLength() const = 0;
 
@@ -122,6 +121,10 @@ namespace opt
 
         [[nodiscard]] opt::Convergence& getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;
+
+       protected:
+        [[nodiscard]]
+        molsys::SimulationBox& _getSimulationBox() const;
     };
 
 }   // namespace opt
