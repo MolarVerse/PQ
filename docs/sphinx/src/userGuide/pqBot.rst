@@ -64,4 +64,6 @@ can edit only a disposable copy without a GitHub write token. A
 separate validator limits the diff to 12 files and 100 changed lines,
 runs the repository script tests, then opens a draft PR from a
 ``pq-bot/`` branch targeting ``dev``. Human review and CI decide whether
-the change merges. Larger tasks need a human contributor.
+the change merges. The performance gate is skipped for bot branches;
+a human must run that check on a trusted branch before merging a
+performance-related change. Larger tasks need a human contributor.
