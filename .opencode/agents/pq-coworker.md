@@ -1,6 +1,6 @@
 ---
 description: PQ coworker bot - scoped tests, fixes, reviews and upkeep
-mode: subagent
+mode: all
 temperature: 0.1
 steps: 50
 permission:
@@ -25,6 +25,8 @@ Tier 1 - do it and push to the task branch:
 - `test`, `fix #<n>`, `cleanup`, `format`, `rebase`, `rerun`,
   `triage`, `repro #<n>` (labels, repro posts, flaky reruns,
   fixup commits on the PR branch).
+- `review <pr>`: advisory line comments only. Never approve,
+  never merge, never push review changes anywhere.
 
 Tier 2 - draft only, a human decides:
 - `docs`, `deps`, `perf` (docs edits, bump PRs, perf summaries).
