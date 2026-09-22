@@ -5,6 +5,7 @@ import json
 import sys
 import tempfile
 import unittest
+import urllib.error
 from pathlib import Path
 from unittest import mock
 
@@ -49,6 +50,36 @@ class ReviewTriggerTests(unittest.TestCase):
             self.assertIsNone(review.selected_review("issue_comment", comment(body), ""))
         self.assertIsNone(review.selected_review("issue_comment", comment("/pq-bot review", "NONE"), ""))
         self.assertIsNone(review.selected_review("issue_comment", comment("/pq-bot review", is_pr=False), ""))
+
+    def test_actual_repository_permission_controls_review(self):
+        with mock.patch.object(review, "api", return_value={"permission": "read"}):
+            self.assertFalse(review.repository_writer("MolarVerse/PQ", "reader", "token"))
+        with mock.patch.object(review, "api", return_value={"permission": "write"}) as api:
+            self.assertTrue(review.repository_writer("MolarVerse/PQ", "writer", "token"))
+            self.assertEqual("MolarVerse/PQ/collaborators/writer/permission", api.call_args.args[1])
+        with mock.patch.object(review, "api", side_effect=urllib.error.HTTPError("", 404, "", {}, None)):
+            self.assertFalse(review.repository_writer("MolarVerse/PQ", "outsider", "token"))
+
+    def test_prepare_skips_read_only_member_before_fetching_diff(self):
+        with tempfile.TemporaryDirectory() as directory:
+            event = comment("/pq-bot review")
+            event["sender"] = {"login": "reader"}
+            event_path = Path(directory, "event.json")
+            event_path.write_text(json.dumps(event), encoding="utf-8")
+            output_path = Path(directory, "output")
+            env = {
+                "GITHUB_EVENT_NAME": "issue_comment",
+                "GITHUB_EVENT_PATH": str(event_path),
+                "GITHUB_OUTPUT": str(output_path),
+                "GITHUB_REPOSITORY": "MolarVerse/PQ",
+                "GH_TOKEN": "token",
+            }
+            with mock.patch.dict("os.environ", env), mock.patch.object(
+                review, "repository_writer", return_value=False
+            ), mock.patch.object(review, "review_payload") as payload:
+                review.prepare(directory)
+            self.assertEqual("run=false\n", output_path.read_text(encoding="utf-8"))
+            payload.assert_not_called()
 
 
 class ReviewOutputTests(unittest.TestCase):

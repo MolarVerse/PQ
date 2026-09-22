@@ -28,8 +28,8 @@ Pull request reviews
 ********************
 
 On a pull request, start a comment line with ``/pq-bot review`` or
-``@pq-bot review``. Repository collaborators, members, and owners can
-request a review. PQ Bot reads a bounded text diff and posts an
+``@pq-bot review``. Requesters need write access to the repository.
+PQ Bot reads a bounded text diff and posts an
 advisory ``COMMENT`` review from the existing GitHub App account. It
 does not approve, request changes, or alter the pull request branch.
 The review uses the repository's ``PQ_BOT_MODEL_REVIEW`` model.

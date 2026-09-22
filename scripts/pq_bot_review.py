@@ -6,6 +6,7 @@ import os
 import re
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -68,6 +69,19 @@ def selected_review(event_name, event, machine_login):
     if not found:
         return None
     return event["issue"]["number"], False
+
+
+def repository_writer(repo, actor, token):
+    if not actor:
+        return False
+    username = urllib.parse.quote(actor, safe="")
+    try:
+        access = api("GET", f"{repo}/collaborators/{username}/permission", token)
+    except urllib.error.HTTPError as error:
+        if error.code == 404:
+            return False
+        raise
+    return access.get("permission") in {"admin", "write"}
 
 
 def added_lines(patch):
@@ -190,7 +204,11 @@ def prepare(outdir):
         os.environ["GITHUB_EVENT_NAME"], event, os.environ.get("PQ_BOT_MACHINE_USER", "")
     )
     output = Path(os.environ["GITHUB_OUTPUT"])
-    if not chosen:
+    if not chosen or not repository_writer(
+        os.environ["GITHUB_REPOSITORY"],
+        (event.get("sender") or {}).get("login"),
+        os.environ["GH_TOKEN"],
+    ):
         with output.open("a", encoding="utf-8") as handle:
             handle.write("run=false\n")
         return
