@@ -33,16 +33,12 @@ namespace input
     {
         using CustomParser = std::function<std::optional<T>(std::string_view)>;
 
-        KeyMetadata                    metadata;
-        std::optional<T>               defaultValue = std::nullopt;
-        std::optional<std::vector<T>>  allowed      = std::nullopt;
-        CustomParser                   customParser = nullptr;
-        std::function<void(const T &)> onSet        = nullptr;
-
-        // shared + const: validators are immutable, so sharing one instance
-        // between the registry description and the key is safe and keeps
-        // KeyRegistry copyable
-        std::shared_ptr<const KeyValidator<T>> validator = nullptr;
+        KeyMetadata                      metadata;
+        std::optional<T>                 defaultValue = std::nullopt;
+        std::optional<std::vector<T>>    allowed      = std::nullopt;
+        CustomParser                     customParser = nullptr;
+        std::function<void(const T &)>   onSet        = nullptr;
+        std::shared_ptr<KeyValidator<T>> validator    = nullptr;
     };
 }   // namespace input
 

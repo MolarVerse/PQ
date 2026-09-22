@@ -23,16 +23,46 @@
 #ifndef _RANGE_VALIDATOR_HPP_
 #define _RANGE_VALIDATOR_HPP_
 
+#include <string>
+
 #include "keyValidatorBase.hpp"
 
 namespace input
 {
-    template <typename T>
+    /**
+     * @brief Specifies whether a value should be greater than or greater than
+     * or equal to another value
+     *
+     */
+    enum class Greater : std::uint8_t
+    {
+        GE,
+        GT,
+    };
+
+    /**
+     * @brief Specifies whether a value should be less than or less than
+     * or equal to another value
+     *
+     */
+    enum class Less : std::uint8_t
+    {
+        LE,
+        LT,
+    };
+
+    template <typename T, Greater G = Greater::GE, Less L = Less::LE>
     class RangeValidator : public KeyValidator<T>
     {
        private:
         std::optional<T> _min;
         std::optional<T> _max;
+
+        bool _allowNaN = false;
+        bool _allowInf = false;
+
+        bool _nanCheckFailed = false;
+        bool _infCheckFailed = false;
 
        public:
         RangeValidator(
@@ -41,10 +71,39 @@ namespace input
         );
 
         [[nodiscard]]
-        bool validate(const T &value) const override;
+        bool validate(const T &value) override;
 
         [[nodiscard]]
-        std::string errorMessage() const override;
+        std::string errorMessage() override;
+
+       private:
+        [[nodiscard]]
+        constexpr bool _isGreater(const T &value) const
+        requires(G == Greater::GE);
+        [[nodiscard]]
+        constexpr bool _isGreater(const T &value) const
+        requires(G == Greater::GT);
+
+        [[nodiscard]]
+        constexpr bool _isLess(const T &value) const
+        requires(L == Less::LE);
+        [[nodiscard]]
+        constexpr bool _isLess(const T &value) const
+        requires(L == Less::LT);
+
+        [[nodiscard]]
+        std::string _isGreaterMsg() const
+        requires(G == Greater::GE);
+        [[nodiscard]]
+        std::string _isGreaterMsg() const
+        requires(G == Greater::GT);
+
+        [[nodiscard]]
+        std::string _isLessMsg() const
+        requires(L == Less::LE);
+        [[nodiscard]]
+        std::string _isLessMsg() const
+        requires(L == Less::LT);
     };
 }   // namespace input
 

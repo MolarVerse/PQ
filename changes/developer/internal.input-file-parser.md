@@ -7,3 +7,4 @@
 - implement `input key adapter` for a smooth transitioning to the new approach
 - add `KeyValidator` strategy and implement new strategy for input file parser
 - migrate `RingPolymerInputParser` and `CellListInputParser`
+- migrate `TimingsInputParser`
