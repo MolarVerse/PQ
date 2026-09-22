@@ -40,6 +40,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PQ_BOT_MACHINE_USER: ${{ vars.PQ_BOT_MACHINE_USER }}
+          PQ_BOT_MODEL_CHEAP: ${{ vars.PQ_BOT_MODEL_CHEAP }}
+          PQ_BOT_MODEL_FAST: ${{ vars.PQ_BOT_MODEL_FAST }}
+          PQ_BOT_MODEL_SMART: ${{ vars.PQ_BOT_MODEL_SMART }}
+          PQ_BOT_MODEL_REVIEW: ${{ vars.PQ_BOT_MODEL_REVIEW }}
         run: python3 scripts/pq_bot_review.py prepare "$RUNNER_TEMP"
 
       - name: Install pinned OpenCode
@@ -50,7 +54,7 @@ jobs:
         if: steps.prepare.outputs.run == 'true'
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          MODEL: ${{ vars.PQ_BOT_MODEL_REVIEW }}
+          MODEL: ${{ steps.prepare.outputs.model }}
         run: |
           test -n "$OPENCODE_API_KEY"
           test -n "$MODEL"

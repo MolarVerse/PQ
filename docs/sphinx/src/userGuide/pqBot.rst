@@ -32,7 +32,7 @@ On a pull request, start a comment line with ``/pq-bot review`` or
 PQ Bot reads a bounded text diff and posts an
 advisory ``COMMENT`` review from the existing GitHub App account. It
 does not approve, request changes, or alter the pull request branch.
-The review uses the repository's ``PQ_BOT_MODEL_REVIEW`` model.
+Reviews use ``PQ_BOT_MODEL_REVIEW`` by default.
 
 A separate machine user is optional. If one is configured as
 ``PQ_BOT_MACHINE_USER``, requesting that user as a reviewer also starts
@@ -44,8 +44,8 @@ Model choice
 ************
 
 Append ``with <name>`` to pick a model, e.g.
-``@pq-bot fix #123 with smart``. Names map to repository variables;
-without a name the account default is used. Reviews always use
+``@pq-bot fix #123 with smart`` or ``/pq-bot review with smart``.
+Names map to repository variables. Reviews without a model name use
 ``PQ_BOT_MODEL_REVIEW``.
 
 What to expect

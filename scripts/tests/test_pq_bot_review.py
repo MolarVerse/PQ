@@ -23,12 +23,12 @@ def comment(body, association="MEMBER", is_pr=True):
 
 class ReviewTriggerTests(unittest.TestCase):
     def test_slash_and_literal_mentions_work_without_machine_user(self):
-        self.assertEqual((12, False), review.selected_review("issue_comment", comment("/pq-bot review"), ""))
-        self.assertEqual((12, False), review.selected_review("issue_comment", comment("@pq-bot review"), ""))
+        self.assertEqual((12, False, "/pq-bot review"), review.selected_review("issue_comment", comment("/pq-bot review"), ""))
+        self.assertEqual((12, False, "@pq-bot review"), review.selected_review("issue_comment", comment("@pq-bot review"), ""))
 
     def test_machine_user_mention_and_review_request(self):
         self.assertEqual(
-            (12, False),
+            (12, False, "@molarverse-pq-bot review"),
             review.selected_review("issue_comment", comment("@molarverse-pq-bot review"), "molarverse-pq-bot"),
         )
         event = {
@@ -36,7 +36,7 @@ class ReviewTriggerTests(unittest.TestCase):
             "requested_reviewer": {"login": "molarverse-pq-bot"},
             "pull_request": {"number": 23},
         }
-        self.assertEqual((23, True), review.selected_review("pull_request_target", event, "molarverse-pq-bot"))
+        self.assertEqual((23, True, ""), review.selected_review("pull_request_target", event, "molarverse-pq-bot"))
         self.assertIsNone(review.selected_review("pull_request_target", event, ""))
 
     def test_quotes_outsiders_and_other_commands_do_not_run(self):
@@ -59,6 +59,19 @@ class ReviewTriggerTests(unittest.TestCase):
             self.assertEqual("MolarVerse/PQ/collaborators/writer/permission", api.call_args.args[1])
         with mock.patch.object(review, "api", side_effect=urllib.error.HTTPError("", 404, "", {}, None)):
             self.assertFalse(review.repository_writer("MolarVerse/PQ", "outsider", "token"))
+
+    def test_review_model_uses_only_configured_aliases(self):
+        models = {
+            "PQ_BOT_MODEL_REVIEW": "opencode-go/review",
+            "PQ_BOT_MODEL_SMART": "opencode-go/smart",
+        }
+        with mock.patch.dict("os.environ", models):
+            self.assertEqual("opencode-go/review", review.review_model(""))
+            self.assertEqual("opencode-go/smart", review.review_model("@pq-bot review with smart"))
+            self.assertEqual("opencode-go/review", review.review_model("/pq-bot review with unknown"))
+        with mock.patch.dict("os.environ", {"PQ_BOT_MODEL_REVIEW": ""}):
+            with self.assertRaisesRegex(ValueError, "not configured"):
+                review.review_model("/pq-bot review")
 
     def test_prepare_skips_read_only_member_before_fetching_diff(self):
         with tempfile.TemporaryDirectory() as directory:

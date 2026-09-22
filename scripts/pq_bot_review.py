@@ -43,7 +43,7 @@ def selected_review(event_name, event, machine_login):
             return None
         if reviewer.get("login", "").lower() != machine_login.lower():
             return None
-        return event["pull_request"]["number"], True
+        return event["pull_request"]["number"], True, ""
     if event_name != "issue_comment" or event.get("issue", {}).get("pull_request") is None:
         return None
     comment = event.get("comment") or {}
@@ -54,7 +54,7 @@ def selected_review(event_name, event, machine_login):
         triggers.append("@" + re.escape(machine_login))
     mention = re.compile(rf"^[ \t]{{0,3}}(?:{'|'.join(triggers)})[ \t]+review\b", re.I)
     fence_marker = None
-    found = False
+    command_line = None
     for line in comment.get("body", "").splitlines():
         fence = re.match(r"^[ \t]{0,3}(`{3,}|~{3,})", line)
         if fence:
@@ -64,11 +64,26 @@ def selected_review(event_name, event, machine_login):
             elif fence_marker == marker:
                 fence_marker = None
         elif fence_marker is None and mention.match(line):
-            found = True
+            command_line = line
             break
-    if not found:
+    if command_line is None:
         return None
-    return event["issue"]["number"], False
+    return event["issue"]["number"], False, command_line
+
+
+def review_model(command_line):
+    models = {
+        "cheap": os.environ.get("PQ_BOT_MODEL_CHEAP", ""),
+        "fast": os.environ.get("PQ_BOT_MODEL_FAST", ""),
+        "smart": os.environ.get("PQ_BOT_MODEL_SMART", ""),
+        "review": os.environ.get("PQ_BOT_MODEL_REVIEW", ""),
+    }
+    choice = re.search(r"\bwith[ \t]+([A-Za-z0-9_]+)\b", command_line, re.I)
+    alias = choice.group(1).lower() if choice else "review"
+    model = models.get(alias) or models["review"]
+    if not re.fullmatch(r"[A-Za-z0-9._:-]+/[A-Za-z0-9._:/-]+", model):
+        raise ValueError("The selected review model is not configured")
+    return model
 
 
 def repository_writer(repo, actor, token):
@@ -212,7 +227,8 @@ def prepare(outdir):
         with output.open("a", encoding="utf-8") as handle:
             handle.write("run=false\n")
         return
-    number, requested = chosen
+    number, requested, command_line = chosen
+    model = review_model(command_line)
     context, prompt = review_payload(
         os.environ["GITHUB_REPOSITORY"], number, os.environ["GH_TOKEN"]
     )
@@ -221,6 +237,7 @@ def prepare(outdir):
     Path(outdir, "pq-review-prompt.txt").write_text(prompt, encoding="utf-8")
     with output.open("a", encoding="utf-8") as handle:
         handle.write("run=true\n")
+        handle.write(f"model={model}\n")
 
 
 def publish(outdir):
