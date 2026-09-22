@@ -285,6 +285,28 @@ TEST_F(TestCellList, getCellIndexOfAtomWrapsEscapedPositions)
     );
 }
 
+TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
+{
+    auto cellList = molsys::CellList();
+    cellList.determineCellSize(_simulationBox->getBoxDimensions());
+
+    auto molecule = molsys::Molecule();
+    molecule.setNumberOfAtoms(1);
+
+    const auto atom = std::make_shared<molsys::Atom>();
+    atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+
+    molecule.addAtom(atom);
+    _simulationBox->addMolecule(molecule);
+
+    EXPECT_THROW_MSG(
+        cellList.addMoleculesToCells(*_simulationBox),
+        exc::CellListException,
+        "Invalid cell index during cell-list update - the cell "
+        "list is inconsistent, the simulation has become unstable"
+    );
+}
+
 /**
  * @brief testing updateCellList and setup method
  *
