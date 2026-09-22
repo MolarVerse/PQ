@@ -80,6 +80,8 @@ def command_line(body):
 
 
 def selected_task(event):
+    if (event.get("repository") or {}).get("private", False):
+        return None
     comment = event.get("comment") or {}
     if comment.get("author_association") not in ASSOCIATIONS:
         return None

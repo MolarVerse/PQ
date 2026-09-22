@@ -50,6 +50,9 @@ class ReviewTriggerTests(unittest.TestCase):
             self.assertIsNone(review.selected_review("issue_comment", comment(body), ""))
         self.assertIsNone(review.selected_review("issue_comment", comment("/pq-bot review", "NONE"), ""))
         self.assertIsNone(review.selected_review("issue_comment", comment("/pq-bot review", is_pr=False), ""))
+        private = comment("/pq-bot review")
+        private["repository"] = {"private": True}
+        self.assertIsNone(review.selected_review("issue_comment", private, ""))
 
     def test_actual_repository_permission_controls_review(self):
         with mock.patch.object(review, "api", return_value={"permission": "read"}):

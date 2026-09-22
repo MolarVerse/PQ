@@ -10,7 +10,8 @@ offer this App account in the ``@`` autocomplete list; typing the text
 still works.
 
 Requesters must have repository write access. Coworker changes arrive
-as draft pull requests for human review. The bot never merges.
+as draft pull requests for human review. PQ Bot runs only while the
+repository is public. The bot never merges.
 
 Commands
 ********

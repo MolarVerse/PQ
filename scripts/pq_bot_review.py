@@ -35,6 +35,8 @@ def api(method, path, token, payload=None):
 
 
 def selected_review(event_name, event, machine_login):
+    if (event.get("repository") or {}).get("private", False):
+        return None
     if event_name == "pull_request_target":
         if not machine_login:
             return None

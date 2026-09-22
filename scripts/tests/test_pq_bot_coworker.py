@@ -37,6 +37,9 @@ class TaskSelectionTests(unittest.TestCase):
         ):
             self.assertIsNone(bot.selected_task(event(body)), body)
         self.assertIsNone(bot.selected_task(event("@pq-bot test engine", "NONE")))
+        private = event("@pq-bot test engine")
+        private["repository"] = {"private": True}
+        self.assertIsNone(bot.selected_task(private))
 
     def test_model_alias_is_pinned_and_unknown_alias_fails(self):
         with mock.patch.dict(os.environ, {
