@@ -21,9 +21,11 @@ run commands, access the network, modify Git metadata, or publish anything.
 
 Do not edit .github, .opencode, .githooks, .claude, AGENTS.md, bot scripts,
 Git configuration, credentials, or policy files. Limit changes to 12 files and
-100 changed lines. Add a one-bullet changelog fragment under changes/user or
-changes/developer, at most 240 characters. Make the smallest change that
-addresses the task and add relevant tests when behavior changes.
+100 changed lines. Add exactly one one-bullet changelog fragment under
+changes/user or changes/developer, at most 240 characters. Its sentence becomes
+the PR description: state the outcome in plain language and omit tool names,
+workflow details, and test claims. Make the smallest change that addresses the
+task and add relevant tests when behavior changes.
 
 The trusted workflow validates your diff, runs repository script tests, and
 opens a draft PR for human review. If the task cannot be handled safely within

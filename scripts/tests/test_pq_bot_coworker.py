@@ -164,14 +164,36 @@ class ChangeValidationTests(unittest.TestCase):
 
     def test_change_without_fragment_is_rejected(self):
         self.write(self.model, "docs/note.rst", "new\n")
-        with self.assertRaisesRegex(ValueError, "no changelog"):
+        with self.assertRaisesRegex(ValueError, "exactly one changelog"):
+            bot.changed_content(self.base, self.model)
+
+    def test_fragment_is_the_plain_language_pr_summary(self):
+        self.fragment()
+        changes = bot.changed_content(self.base, self.model)
+        self.assertEqual("Address a focused issue.", bot.change_summary(changes, set()))
+
+    def test_multiple_or_multiline_fragments_are_rejected(self):
+        self.fragment()
+        self.write(self.model, "changes/user/fix.second.md", "- Another summary.\n")
+        with self.assertRaisesRegex(ValueError, "exactly one changelog"):
+            bot.changed_content(self.base, self.model)
+        (self.model / "changes/user/fix.second.md").unlink()
+        self.write(
+            self.model,
+            "changes/developer/internal.bot-task.md",
+            "- Address a focused issue.\n- Include another bullet.\n",
+        )
+        with self.assertRaisesRegex(ValueError, "Invalid changelog fragment"):
             bot.changed_content(self.base, self.model)
 
 
 class PublicationTests(unittest.TestCase):
     def test_moving_dev_aborts_before_push(self):
         with tempfile.TemporaryDirectory() as directory:
-            context = {"repo": "MolarVerse/PQ", "base_sha": "old", "thread": 42, "run_id": "987"}
+            context = {
+                "repo": "MolarVerse/PQ", "base_sha": "old", "thread": 42,
+                "run_id": "987", "summary": "Address a focused issue.",
+            }
             Path(directory, "pq-coworker-context.json").write_text(json.dumps(context), encoding="utf-8")
             with mock.patch.dict(os.environ, {"GH_TOKEN": "write-token"}), mock.patch.object(
                 bot, "api", return_value={"object": {"sha": "new"}}
@@ -185,6 +207,7 @@ class PublicationTests(unittest.TestCase):
             context = {
                 "repo": "MolarVerse/PQ", "base_sha": "abc", "thread": 42,
                 "issue": 123, "run_id": "987", "command": "fix", "actor": "maintainer",
+                "summary": "Prevent escaped atoms from indexing outside the cell list.",
             }
             Path(directory, "pq-coworker-context.json").write_text(json.dumps(context), encoding="utf-8")
             responses = [{"object": {"sha": "abc"}}, {"number": 77, "html_url": "https://github.com/MolarVerse/PQ/pull/77"}, {}, {}]
@@ -197,7 +220,11 @@ class PublicationTests(unittest.TestCase):
             self.assertEqual("dev", pr_request.args[4]["base"])
             self.assertTrue(pr_request.args[4]["draft"])
             self.assertEqual("pq-bot/42-987", pr_request.args[4]["head"])
-            self.assertEqual("Related to #123", pr_request.args[4]["body"])
+            self.assertEqual(
+                "Prevent escaped atoms from indexing outside the cell list. "
+                "Initial validation: repository script checks passed. Related to #123.",
+                pr_request.args[4]["body"],
+            )
             self.assertEqual("pulls/77/requested_reviewers", api.call_args_list[2].args[2])
             self.assertEqual("maintainer", api.call_args_list[2].args[4]["reviewers"][0])
             push = [call for call in git.call_args_list if call.args and call.args[0] == "push"]
