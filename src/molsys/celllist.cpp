@@ -24,7 +24,6 @@
 
 #include <algorithm>     // for ranges::for_each
 #include <array>         // for array
-#include <cmath>         // for isfinite
 #include <format>        // for format
 #include <map>           // for map
 #include <string_view>   // for string_view
@@ -351,8 +350,7 @@ Vec3Dul CellList::getCellIndexOfAtom(
     const Vec3D &position
 ) const
 {
-    if (!std::isfinite(position[0]) || !std::isfinite(position[1]) ||
-        !std::isfinite(position[2]))
+    if (!isFinite(position))
     {
         throw CellListException(
             "Invalid atom position during cell-list update - coordinates "
