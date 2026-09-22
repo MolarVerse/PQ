@@ -73,5 +73,5 @@ jobs:
           source "$RUNNER_TEMP/pq-model.env"
           EXTRA=()
           if [ -n "${MODEL:-}" ]; then EXTRA=(-m "$MODEL"); fi
-          opencode run --agent pq-coworker "${EXTRA[@]}" \
+          opencode run --auto --agent pq-coworker "${EXTRA[@]}" \
             "$(cat "$RUNNER_TEMP/pq-task.txt")"
