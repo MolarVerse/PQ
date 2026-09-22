@@ -1,0 +1,77 @@
+name: PQ Bot
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: pq-bot-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  coworker:
+    # NOTE: contents:write is needed so the bot can push task branches
+    # and open PRs. It must never push to main/dev and never merge;
+    # merging stays human-only.
+    # Trigger word plus MolarVerse members and owners only. Outside
+    # collaborators and the public are ignored silently.
+    if: |
+      contains(github.event.comment.body, '@pq-bot') &&
+      (github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'OWNER')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      # Pinned by SHA. Never float tags for actions this bot uses.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: dev
+          submodules: recursive
+
+      - name: Install OpenCode
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      # Short-lived token minted from the PQ Bot app. Dies with the run.
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.PQ_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_BOT_PRIVATE_KEY }}
+
+      - name: Parse mention
+        id: task
+        env:
+          # Friendly model names map to provider/model IDs set as repo
+          # variables. Pin these to cheap/free models on your plan.
+          # Empty value = account default model.
+          PQ_BOT_MODEL_CHEAP: ${{ vars.PQ_BOT_MODEL_CHEAP }}
+          PQ_BOT_MODEL_FAST: ${{ vars.PQ_BOT_MODEL_FAST }}
+          PQ_BOT_MODEL_SMART: ${{ vars.PQ_BOT_MODEL_SMART }}
+          PQ_BOT_MODEL_REVIEW: ${{ vars.PQ_BOT_MODEL_REVIEW }}
+          # Passed via env (never interpolated) so quotes in the
+          # mention cannot break the shell.
+          PQ_BOT_THREAD: ${{ github.event.issue.number }}
+          PQ_BOT_BODY: ${{ github.event.comment.body }}
+          PQ_BOT_AUTHOR: ${{ github.event.comment.user.login }}
+        run: |
+          python3 scripts/pq_bot_parse.py \
+            "$PQ_BOT_THREAD" "$PQ_BOT_BODY" "$PQ_BOT_AUTHOR" \
+            "$RUNNER_TEMP" | tee "$RUNNER_TEMP/pq-model.env"
+
+      - name: Run coworker
+        env:
+          # Auth for the bot account (repo secret, never echoed).
+          OPENCODE_API_KEY: ${{ secrets.PQ_BOT_API_KEY }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # shellcheck disable=SC1090
+          source "$RUNNER_TEMP/pq-model.env"
+          EXTRA=()
+          if [ -n "${MODEL:-}" ]; then EXTRA=(-m "$MODEL"); fi
+          opencode run --agent pq-coworker "${EXTRA[@]}" \
+            "$(cat "$RUNNER_TEMP/pq-task.txt")"
