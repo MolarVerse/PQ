@@ -62,7 +62,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
         "failed validation with message Value must be greater than 0"
     );
 
-    for (const std::string &invalid : {"nan", "inf"})
+    for (const std::string &invalid : {std::string("nan"), std::string("inf")})
     {
         clearParser(parser);
         lineElements = {"timestep", "=", invalid};
