@@ -33,16 +33,6 @@ jobs:
           ref: dev
           submodules: recursive
 
-      - name: Install OpenCode
-        run: curl -fsSL https://opencode.ai/install | bash
-
-      # Short-lived token minted from the PQ Bot app. Dies with the run.
-      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v2
-        id: app-token
-        with:
-          app-id: ${{ secrets.PQ_BOT_APP_ID }}
-          private-key: ${{ secrets.PQ_BOT_PRIVATE_KEY }}
-
       - name: Parse mention
         id: task
         env:
@@ -61,9 +51,22 @@ jobs:
         run: |
           python3 scripts/pq_bot_parse.py \
             "$PQ_BOT_THREAD" "$PQ_BOT_BODY" "$PQ_BOT_AUTHOR" \
-            "$RUNNER_TEMP" | tee "$RUNNER_TEMP/pq-model.env"
+            "$RUNNER_TEMP" | tee "$RUNNER_TEMP/pq-model.env" >> "$GITHUB_OUTPUT"
+
+      - name: Install OpenCode
+        if: steps.task.outputs.COMMAND != 'review'
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      # Short-lived token minted from the PQ Bot app. Dies with the run.
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v2
+        if: steps.task.outputs.COMMAND != 'review'
+        id: app-token
+        with:
+          app-id: ${{ secrets.PQ_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_BOT_PRIVATE_KEY }}
 
       - name: Run coworker
+        if: steps.task.outputs.COMMAND != 'review'
         env:
           # Auth for the bot account (repo secret, never echoed).
           OPENCODE_API_KEY: ${{ secrets.PQ_BOT_API_KEY }}

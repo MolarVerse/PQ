@@ -1,0 +1,72 @@
+name: PQ Bot Review
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [review_requested]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+concurrency:
+  group: pq-bot-review-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    if: >-
+      (github.event_name == 'pull_request_target' &&
+         vars.PQ_BOT_MACHINE_USER != '' &&
+         github.event.requested_reviewer.login == vars.PQ_BOT_MACHINE_USER) ||
+      (github.event_name == 'issue_comment' &&
+         github.event.issue.pull_request &&
+         (contains(github.event.comment.body, '@pq-bot') ||
+          contains(github.event.comment.body, '/pq-bot') ||
+          (vars.PQ_BOT_MACHINE_USER != '' &&
+           contains(github.event.comment.body, vars.PQ_BOT_MACHINE_USER))))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+
+      - name: Prepare bounded review
+        id: prepare
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PQ_BOT_MACHINE_USER: ${{ vars.PQ_BOT_MACHINE_USER }}
+        run: python3 scripts/pq_bot_review.py prepare "$RUNNER_TEMP"
+
+      - name: Install pinned OpenCode
+        if: steps.prepare.outputs.run == 'true'
+        run: npm install --global opencode-ai@1.18.31
+
+      - name: Review diff
+        if: steps.prepare.outputs.run == 'true'
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          MODEL: ${{ vars.PQ_BOT_MODEL_REVIEW }}
+        run: |
+          test -n "$OPENCODE_API_KEY"
+          test -n "$MODEL"
+          opencode run --format json --agent pq-reviewer --model "$MODEL" \
+            "$(cat "$RUNNER_TEMP/pq-review-prompt.txt")" \
+            > "$RUNNER_TEMP/pq-review-events.jsonl"
+
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v2
+        if: steps.prepare.outputs.run == 'true'
+        id: app-token
+        with:
+          app-id: ${{ secrets.PQ_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_BOT_PRIVATE_KEY }}
+
+      - name: Publish advisory comments
+        if: steps.prepare.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: python3 scripts/pq_bot_review.py publish "$RUNNER_TEMP"

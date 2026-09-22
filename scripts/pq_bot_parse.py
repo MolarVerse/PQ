@@ -4,7 +4,8 @@
 Usage: pq_bot_parse.py <issue-or-pr-number> <comment-body> <author> <outdir>
 
 Writes <outdir>/pq-task.txt (task text, may be multi-line) and prints a
-single `MODEL=<provider/model>` line (empty value = account default).
+`MODEL=<provider/model>` and `COMMAND=<command>` lines (empty model value =
+account default).
 Only models on the allowlist below are ever honored; anything else
 falls back to the default. Model IDs come from the environment so no
 plan-specific names are hardcoded here.
@@ -66,6 +67,7 @@ def main() -> int:
         handle.write(task)
 
     print(f"MODEL={model}")
+    print(f"COMMAND={command}")
     return 0
 
 
