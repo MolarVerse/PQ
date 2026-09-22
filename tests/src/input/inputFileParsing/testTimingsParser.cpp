@@ -22,8 +22,6 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
-#include <format>   // for format
-#include <stdexcept>
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
