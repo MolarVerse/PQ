@@ -221,8 +221,11 @@ class PublicationTests(unittest.TestCase):
             self.assertTrue(pr_request.args[4]["draft"])
             self.assertEqual("pq-bot/42-987", pr_request.args[4]["head"])
             self.assertEqual(
-                "Prevent escaped atoms from indexing outside the cell list. "
-                "Initial validation: repository script checks passed. Related to #123.",
+                "## Summary\n\n"
+                "- Prevent escaped atoms from indexing outside the cell list.\n\n"
+                "## Validation\n\n"
+                "- Repository script checks passed\n\n"
+                "Related to #123",
                 pr_request.args[4]["body"],
             )
             self.assertEqual("pulls/77/requested_reviewers", api.call_args_list[2].args[2])

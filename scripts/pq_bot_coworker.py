@@ -352,8 +352,11 @@ def publish(outdir):
         "head": branch,
         "base": "dev",
         "body": (
-            f"{summary} Initial validation: repository script checks passed. "
-            f"Related to #{context['issue']}."
+            "## Summary\n\n"
+            f"- {summary}\n\n"
+            "## Validation\n\n"
+            "- Repository script checks passed\n\n"
+            f"Related to #{context['issue']}"
         ),
         "draft": draft,
         "maintainer_can_modify": True,

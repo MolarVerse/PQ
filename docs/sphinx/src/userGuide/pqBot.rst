@@ -68,4 +68,5 @@ runs the repository script tests, then opens a draft PR from a
 the change merges. The performance gate is skipped for bot branches;
 a human must run that check on a trusted branch before merging a
 performance-related change. The required changelog fragment supplies the
-plain-language PR description. Larger tasks need a human contributor.
+plain-language summary in a short, structured PR description. Larger tasks
+need a human contributor.

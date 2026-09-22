@@ -17,25 +17,26 @@ jobs:
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_NUMBER: ${{ inputs.pr_number }}
           REPO: ${{ github.repository }}
         run: |
-          if [ -n "${{ github.event.pull_request.number }}" ]; then
-            NUMBER="${{ github.event.pull_request.number }}"
-            SHA="${{ github.event.pull_request.head.sha }}"
-            TITLE='${{ github.event.pull_request.title }}'
-            BODY='${{ github.event.pull_request.body }}'
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            NUMBER=$(jq -r '.pull_request.number' "$GITHUB_EVENT_PATH")
+            SHA=$(jq -r '.pull_request.head.sha' "$GITHUB_EVENT_PATH")
+            jq -r '.pull_request | [.title, (.body // "")] | .[]' \
+              "$GITHUB_EVENT_PATH" > "$RUNNER_TEMP/pq-pr-text.txt"
           else
-            NUMBER="${{ inputs.pr_number }}"
-            REPO_INPUT="${{ github.repository }}"
-            PR_DATA=$(gh api "repos/$REPO_INPUT/pulls/$NUMBER")
-            SHA=$(echo "$PR_DATA" | jq -r '.head.sha')
-            TITLE=$(echo "$PR_DATA" | jq -r '.title')
-            BODY=$(echo "$PR_DATA" | jq -r '.body // ""')
+            NUMBER="$INPUT_NUMBER"
+            [[ "$NUMBER" =~ ^[1-9][0-9]*$ ]] || exit 1
+            gh api "repos/$REPO/pulls/$NUMBER" > "$RUNNER_TEMP/pq-pr.json"
+            SHA=$(jq -r '.head.sha' "$RUNNER_TEMP/pq-pr.json")
+            jq -r '[.title, (.body // "")] | .[]' \
+              "$RUNNER_TEMP/pq-pr.json" > "$RUNNER_TEMP/pq-pr-text.txt"
           fi
+          [[ "$NUMBER" =~ ^[1-9][0-9]*$ ]] || exit 1
+          [[ "$SHA" =~ ^[0-9a-f]{40,64}$ ]] || exit 1
           echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
-          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
-          echo "body=$BODY" >> "$GITHUB_OUTPUT"
 
       - name: Check for issues in PR title/description
         id: extract
@@ -44,11 +45,12 @@ jobs:
           REPO: ${{ github.repository }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
-          FULL_TEXT='${{ steps.pr.outputs.title }}
-          ${{ steps.pr.outputs.body }}'
-
           # Extract issue numbers using keywords: Closes, Fixes, Resolves, Related to
-          ISSUE_NUMBERS=$(echo "$FULL_TEXT" | grep -oiE '(closes|fixes|resolves|related to)\s+#([0-9]+)' | grep -oE '#[0-9]+' | tr -d '#' | sort -u)
+          ISSUE_NUMBERS=$(
+            grep -oiE '(closes|fixes|resolves|related to)\s+#[0-9]+' \
+              "$RUNNER_TEMP/pq-pr-text.txt" |
+            grep -oE '#[0-9]+' | tr -d '#' | sort -u || true
+          )
 
           if [ -n "$ISSUE_NUMBERS" ]; then
             echo "found_in_description=true" >> "$GITHUB_OUTPUT"
