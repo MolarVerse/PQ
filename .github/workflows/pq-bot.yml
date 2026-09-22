@@ -19,10 +19,11 @@ jobs:
     # NOTE: contents:write is needed so the bot can push task branches
     # and open PRs. It must never push to main/dev and never merge;
     # merging stays human-only.
+    # Trigger word plus MolarVerse members and owners only. Outside
+    # collaborators and the public are ignored silently.
     if: |
       contains(github.event.comment.body, '@pq-bot') &&
-      (github.event.comment.author_association == 'COLLABORATOR' ||
-       github.event.comment.author_association == 'MEMBER' ||
+      (github.event.comment.author_association == 'MEMBER' ||
        github.event.comment.author_association == 'OWNER')
     runs-on: ubuntu-24.04
     timeout-minutes: 25
