@@ -1,1 +1,1 @@
-- Add bounded advisory pull request reviews for PQ Bot, with optional machine-user review requests.
+- Add bounded advisory reviews and draft coworker PRs for PQ Bot, with optional machine-user review requests.
