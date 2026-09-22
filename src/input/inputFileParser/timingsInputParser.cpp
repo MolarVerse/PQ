@@ -22,17 +22,15 @@
 
 #include "timingsInputParser.hpp"
 
-#include <string_view>   // for string_view
-
-#include "exceptions.hpp"   // for InputFileException
-#include "parserUtils.hpp"
-#include "stringUtilities.hpp"   // for stringToFiniteDouble, stringToInt
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 using namespace input;
 using namespace exc;
 using namespace settings;
-using namespace utilities;
 
 /**
  * @brief Construct a new Input File Parser Timings object
@@ -43,60 +41,69 @@ using namespace utilities;
  */
 TimingsInputParser::TimingsInputParser()
 {
-    addKeyword(
-        std::string("timestep"),
-        bindMember(&TimingsInputParser::parseTimeStep, this),
-        false
-    );
-
-    addKeyword(
-        std::string("nstep"),
-        bindMember(&TimingsInputParser::parseNumberOfSteps, this),
-        false
-    );
+    addTimeStep();
+    addNumberOfSteps();
 }
 
 /**
- * @brief parse timestep of simulation and set it in timings
+ * @brief Add the timestep key to the input parser
  *
- * @param lineElements
- * @param lineNumber
+ * @details This function registers the "timestep" keyword with the input
+ * parser, including its metadata, validation, and callback to set the value in
+ * TimingsSettings.
  */
-void TimingsInputParser::parseTimeStep(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void TimingsInputParser::addTimeStep()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name        = "timestep",
+        .title       = "Timestep of the simulation",
+        .description = "The time step used in the simulation",
+        .unit        = "fs"
+    };
 
-    const auto timeStep = stringToFiniteDouble(lineElements[2]);
-    if (timeStep <= 0.0)
-        throw InputFileException(
-            "Time step must be finite and greater than zero"
-        );
+    const RangeValidator<double, Greater::GT> validator{0.0, std::nullopt};
 
-    TimingsSettings::setTimeStep(timeStep);
+    const auto setTimeStep = [&](double value)
+    { TimingsSettings::setTimeStep(value); };
+
+    auto &timeStep = _getRegistry().registerKey(
+        KeyRegistry<double>{
+            .metadata  = metaData,
+            .onSet     = setTimeStep,
+            .validator = makeShared(validator)
+        }
+    );
+
+    addKeyword(std::string("timestep"), adapt(timeStep), false);
 }
 
 /**
- * @brief parse number of steps of simulation and set it in timings
+ * @brief Add the number of steps key to the input parser
  *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if number of steps is negative
+ * @details This function registers the "nstep" keyword with the input parser,
+ * including its metadata, validation, and callback to set the value in
+ * TimingsSettings.
  */
-void TimingsInputParser::parseNumberOfSteps(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void TimingsInputParser::addNumberOfSteps()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name        = "nstep",
+        .title       = "Number of steps of the simulation",
+        .description = "The total number of steps in the simulation"
+    };
 
-    const auto numberOfSteps = stringToInt(lineElements[2]);
+    const RangeValidator<int> validator{1, std::nullopt};
 
-    if (numberOfSteps < 1)
-        throw InputFileException("Number of steps must be greater than zero");
+    const auto setNumberOfSteps = [&](int value)
+    { TimingsSettings::setNumberOfSteps(static_cast<size_t>(value)); };
 
-    TimingsSettings::setNumberOfSteps(static_cast<size_t>(numberOfSteps));
+    auto &numberOfSteps = _getRegistry().registerKey(
+        KeyRegistry<int>{
+            .metadata  = metaData,
+            .onSet     = setNumberOfSteps,
+            .validator = std::make_shared<RangeValidator<int>>(validator)
+        }
+    );
+
+    addKeyword(std::string("nstep"), adapt(numberOfSteps), false);
 }
