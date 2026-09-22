@@ -137,6 +137,20 @@ class ChangeValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "configuration changed"):
             bot.changed_content(self.base, self.model)
 
+    def test_opencode_runtime_cache_is_ignored_but_new_config_is_rejected(self):
+        self.fragment()
+        self.write(self.model, ".opencode/package.json", json.dumps({"dependencies": {"@opencode-ai/plugin": bot.OPENCODE_VERSION}}))
+        self.write(self.model, ".opencode/package-lock.json", "{}")
+        self.write(self.model, ".opencode/node_modules/example/index.js", "runtime only\n")
+        self.assertEqual(["changes/developer/internal.bot-task.md"], list(bot.changed_content(self.base, self.model)))
+        self.write(self.model, ".opencode/plugins/hostile.js", "console.log('bad')\n")
+        with self.assertRaisesRegex(ValueError, "configuration changed"):
+            bot.changed_content(self.base, self.model)
+        (self.model / ".opencode/plugins/hostile.js").unlink()
+        self.write(self.model, ".opencode/package.json", json.dumps({"dependencies": {"hostile": "1"}}))
+        with self.assertRaisesRegex(ValueError, "runtime package changed"):
+            bot.changed_content(self.base, self.model)
+
     def test_symlink_and_oversized_diff_are_rejected(self):
         self.fragment()
         (self.model / "docs").mkdir()

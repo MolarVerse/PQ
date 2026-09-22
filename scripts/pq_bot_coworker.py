@@ -20,6 +20,7 @@ ASSOCIATIONS = {"OWNER", "MEMBER", "COLLABORATOR"}
 MAX_FILES = 12
 MAX_CHANGED_LINES = 100
 MAX_FILE_BYTES = 100_000
+OPENCODE_VERSION = "1.18.31"
 PROTECTED = (
     ".github/", ".opencode/", ".githooks/", ".claude/", ".git/",
     "scripts/pq_bot_", "scripts/tests/test_pq_bot_", "AGENTS.md",
@@ -198,12 +199,14 @@ def stage(outdir):
     context_path.write_text(json.dumps(context), encoding="utf-8")
 
 
-def files(root):
+def files(root, *, exclude_opencode=True, exclude_root_config=True):
     found = {}
     for folder, dirs, names in os.walk(root, followlinks=False):
-        dirs[:] = [d for d in dirs if d not in {".git", ".opencode"}]
+        dirs[:] = [d for d in dirs if d != ".git" and (not exclude_opencode or d != ".opencode")]
         for name in names:
-            if name in {".git", "opencode.json", "opencode.jsonc"}:
+            if name == ".git" or (
+                exclude_root_config and Path(folder) == root and name in {"opencode.json", "opencode.jsonc"}
+            ):
                 continue
             path = Path(folder, name)
             found[path.relative_to(root).as_posix()] = path
@@ -221,10 +224,20 @@ def protected(path):
 def changed_content(base, model):
     agent = model / ".opencode/agents/pq-coworker.md"
     expected = Path.cwd() / ".opencode/agents/pq-coworker.md"
-    config_files = files(model / ".opencode")
-    if (set(config_files) != {"agents/pq-coworker.md"} or agent.is_symlink()
+    config_files = files(model / ".opencode", exclude_opencode=False, exclude_root_config=False)
+    runtime_files = {".gitignore", "package.json", "package-lock.json", "bun.lock", "bun.lockb"}
+    unexpected = set(config_files) - runtime_files - {"agents/pq-coworker.md"}
+    unexpected = {path for path in unexpected if not path.startswith("node_modules/")}
+    if (unexpected or agent.is_symlink()
             or agent.read_bytes() != expected.read_bytes()):
         raise ValueError("OpenCode configuration changed")
+    package = model / ".opencode/package.json"
+    if package.exists() and (
+        package.is_symlink()
+        or json.loads(package.read_text(encoding="utf-8"))
+        != {"dependencies": {"@opencode-ai/plugin": OPENCODE_VERSION}}
+    ):
+        raise ValueError("OpenCode runtime package changed")
     if (model / "opencode.json").exists() or (model / "opencode.jsonc").exists():
         raise ValueError("OpenCode project configuration changed")
     before, after = files(base), files(model)

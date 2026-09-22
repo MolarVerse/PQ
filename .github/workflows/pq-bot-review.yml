@@ -55,10 +55,13 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           MODEL: ${{ steps.prepare.outputs.model }}
+          OPENCODE_DISABLE_AUTOUPDATE: "true"
+          OPENCODE_DISABLE_DEFAULT_PLUGINS: "true"
+          OPENCODE_DISABLE_CLAUDE_CODE: "true"
         run: |
           test -n "$OPENCODE_API_KEY"
           test -n "$MODEL"
-          opencode run --format json --agent pq-reviewer --model "$MODEL" \
+          opencode --pure run --format json --agent pq-reviewer --model "$MODEL" \
             "$(cat "$RUNNER_TEMP/pq-review-prompt.txt")" \
             > "$RUNNER_TEMP/pq-review-events.jsonl"
 
