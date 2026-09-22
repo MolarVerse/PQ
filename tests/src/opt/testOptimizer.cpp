@@ -89,13 +89,6 @@ TEST(TestOptimizer, maxHistoryLengthIsTwoForSteepestDescent)
     EXPECT_EQ(opt.maxHistoryLength(), 2U);
 }
 
-TEST(TestOptimizer, cloneProducesEquivalentObject)
-{
-    const SteepestDescent opt(7U);
-    const auto            cloned = opt.clone();
-    EXPECT_EQ(cloned->getNEpochs(), 7U);
-}
-
 /* ---------- getHistoryIndex ---------- */
 
 TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)

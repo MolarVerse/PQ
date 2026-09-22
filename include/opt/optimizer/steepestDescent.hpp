@@ -45,7 +45,6 @@ namespace opt
         SteepestDescent()           = default;
         ~SteepestDescent() override = default;
 
-        [[nodiscard]] std::shared_ptr<Optimizer> clone() const override;
         [[nodiscard]] size_t maxHistoryLength() const override;
 
         void update(double learningRate, size_t /*step*/) override;
