@@ -31,7 +31,8 @@
 #include <stdexcept>   // for out_of_range and invalid_argument
 #include <string>      // for string, allocator
 
-#include "exceptions.hpp"        // for InputFileException
+#include "exceptions.hpp"   // for InputFileException
+#include "file.hpp"
 #include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
 #include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
@@ -178,9 +179,9 @@ TEST(TestStringUtilities, fileExists)
     std::ofstream out(file);
     out.close();
     std::filesystem::create_directory(directory);
-    EXPECT_TRUE(utilities::fileExists(file));
-    EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
-    EXPECT_FALSE(utilities::fileExists(directory));
+    EXPECT_TRUE(File(file).exists());
+    EXPECT_FALSE(File("testFile2.txt").exists());
+    EXPECT_FALSE(File(directory).exists());
     std::filesystem::remove(file);
     std::filesystem::remove(directory);
 }

@@ -26,7 +26,8 @@
 #include <fstream>   // for ofstream, operator<<, basic_ostream
 #include <string>    // for allocator, string, operator+, operator<<
 
-#include "exceptions.hpp"        // for InputFileException
+#include "exceptions.hpp"   // for InputFileException
+#include "file.hpp"
 #include "qmSettings.hpp"        // for QMSettings
 #include "simulationBox.hpp"     // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists
@@ -71,7 +72,7 @@ void PySCFRunner::execute(SimulationBox & /*simBox*/)
 {
     const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
 
-    if (!fileExists(scriptFileName))
+    if (!File(scriptFileName).exists())
     {
         throw InputFileException(
             std::format(

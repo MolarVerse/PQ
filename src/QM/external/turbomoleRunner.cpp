@@ -27,8 +27,9 @@
 #include <fstream>      // for ofstream
 #include <string>       // for string
 
-#include "constants.hpp"            // for constants
-#include "exceptions.hpp"           // for InputFileException
+#include "constants.hpp"    // for constants
+#include "exceptions.hpp"   // for InputFileException
+#include "file.hpp"
 #include "fileSettings.hpp"         // for FileSettings
 #include "hybridConfigurator.hpp"   // for HybridConfigurator
 #include "hybridSettings.hpp"       // for SmoothingMethod
@@ -124,7 +125,7 @@ void TurbomoleRunner::execute(SimulationBox &simulationBox)
 
     const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
-    if (!fileExists(scriptFile))
+    if (!File(scriptFile).exists())
     {
         throw InputFileException(
             std::format(
