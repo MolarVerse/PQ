@@ -8,3 +8,4 @@
 - add `KeyValidator` strategy and implement new strategy for input file parser
 - migrate `RingPolymerInputParser` and `CellListInputParser`
 - migrate `TimingsInputParser`
+- migrate `ConstraintsInputParser`

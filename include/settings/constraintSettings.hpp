@@ -25,11 +25,22 @@
 #define _CONSTRAINT_SETTINGS_HPP_
 
 #include <cstddef>   // for size_t
+#include <cstdint>
+#include <mstd/enum.hpp>
 
 #include "defaults.hpp"
 
 namespace settings
 {
+
+#define SHAKE_TYPE_LIST(X) \
+    X(OFF)                 \
+    X(ON)                  \
+    X(SHAKE)               \
+    X(MSHAKE)
+
+    MSTD_ENUM(ShakeType, std::uint8_t, SHAKE_TYPE_LIST)
+
     /**
      * @class ConstraintSettings
      *

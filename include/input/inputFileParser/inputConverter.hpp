@@ -91,12 +91,33 @@ namespace input
      *
      * @tparam T
      */
-    template <std::integral T>
+    template <std::signed_integral T>
     requires(!std::same_as<T, bool>)
     struct Converter<T>
     {
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
+    };
+
+    /**
+     * @brief Converter specialization for plain integral types (size_t,
+     * int, unsigned, ...), excluding bool
+     *
+     * @details covers keys with no natural enum/double/bool representation
+     * (e.g. counts, indices) without requiring a per-key customParser for
+     * the common case
+     *
+     * @tparam T
+     */
+    template <std::unsigned_integral T>
+    requires(!std::same_as<T, bool>)
+    struct Converter<T>
+    {
+        [[nodiscard]]
+        static std::optional<T> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        static std::string describeDomain();
     };
 
     /**
