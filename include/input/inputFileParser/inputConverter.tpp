@@ -28,8 +28,7 @@
 namespace input
 {
     /**
-     * @brief attempts to parse an integral value from a raw input-file
-     * token
+     * @brief attempts to parse an integral value from a raw input-file token
      *
      * @param raw the raw input-file token
      * @return an optional containing the parsed value if successful,
@@ -37,7 +36,7 @@ namespace input
      */
     template <std::integral T>
     requires(!std::same_as<T, bool>)
-    std::optional<T> Converter<T>::tryParse(std::string_view raw)
+    static std::optional<T> _tryParse(std::string_view raw)
     {
         T          value{};
         const auto result =
@@ -47,6 +46,36 @@ namespace input
             return std::nullopt;
 
         return value;
+    }
+
+    /**
+     * @brief attempts to parse a signed integral value from a raw input-file
+     * token
+     *
+     * @param raw the raw input-file token
+     * @return an optional containing the parsed value if successful,
+     *         std::nullopt otherwise
+     */
+    template <std::signed_integral T>
+    requires(!std::same_as<T, bool>)
+    std::optional<T> Converter<T>::tryParse(std::string_view raw)
+    {
+        return _tryParse<T>(raw);
+    }
+
+    /**
+     * @brief attempts to parse an unsigned integral value from a raw input-file
+     * token
+     *
+     * @param raw the raw input-file token
+     * @return an optional containing the parsed value if successful,
+     *         std::nullopt otherwise
+     */
+    template <std::unsigned_integral T>
+    requires(!std::same_as<T, bool>)
+    std::optional<T> Converter<T>::tryParse(std::string_view raw)
+    {
+        return _tryParse<T>(raw);
     }
 
     /**
@@ -60,7 +89,7 @@ namespace input
     std::optional<T> Converter<T>::tryParse(std::string_view raw)
     {
         using Meta = mstd::enum_meta_t<T>;
-        return Meta::from_string(raw);
+        return Meta::from_stringCaseInsensitive(raw);
     }
 
     /**
@@ -82,6 +111,19 @@ namespace input
         }
 
         return allowed;
+    }
+
+    /**
+     * @brief describes the valid domain of the unsigned integral type for error
+     * messages
+     *
+     * @return a string describing the valid domain
+     */
+    template <std::unsigned_integral T>
+    requires(!std::same_as<T, bool>)
+    std::string Converter<T>::describeDomain()
+    {
+        return "positive integer";
     }
 
     /**
@@ -110,6 +152,10 @@ namespace input
                 options += negative;
             }
             return options;
+        }
+        else if constexpr (std::unsigned_integral<T>)
+        {
+            return Converter<T>::describeDomain();
         }
         else
         {

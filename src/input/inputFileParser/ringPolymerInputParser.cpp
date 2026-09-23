@@ -57,10 +57,9 @@ void RingPolymerInputParser::addNumberOfBeadsKeyword()
 
     auto &numberOfBeadsKey =
         _getRegistry().registerKey<size_t>(KeyRegistry<size_t>{
-            .metadata = metaData,
-            .onSet    = setValue,
-            .validator =
-                std::make_shared<RangeValidator<size_t>>(rangeValidator),
+            .metadata  = metaData,
+            .onSet     = setValue,
+            .validator = makeShared(rangeValidator),
         });
 
     addKeyword("rpmd_n_replica", adapt(numberOfBeadsKey), false);
