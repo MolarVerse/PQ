@@ -24,8 +24,6 @@
 
 #define _RESET_KINETICS_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "inputFileParser.hpp"
 
 namespace input
@@ -41,19 +39,13 @@ namespace input
        public:
         ResetKineticsInputParser();
 
-        static void parseNScale(const std::vector<std::string> &, size_t);
-        static void parseFScale(const std::vector<std::string> &, size_t);
-        static void parseNReset(const std::vector<std::string> &, size_t);
-        static void parseFReset(const std::vector<std::string> &, size_t);
-        static void parseNResetAngular(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseFResetAngular(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseFResetForces(const std::vector<std::string> &, size_t);
+        void addNScaleKeyword();
+        void addFScaleKeyword();
+        void addNResetKeyword();
+        void addFResetKeyword();
+        void addNResetAngularKeyword();
+        void addFResetAngularKeyword();
+        void addFResetForcesKeyword();
     };
 
 }   // namespace input

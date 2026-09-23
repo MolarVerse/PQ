@@ -9,3 +9,4 @@
 - migrate `RingPolymerInputParser` and `CellListInputParser`
 - migrate `TimingsInputParser`
 - migrate `ConstraintsInputParser`
+- migrate `ResetKineticsInputParser`

@@ -41,15 +41,22 @@ using namespace input;
 TEST_F(TestInputFileReader, testParseNScale)
 {
     ResetKineticsInputParser parser;
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("nscale"));
+    const auto &parseFunc = funcMap.at("nscale");
+
     std::vector<std::string> lineElements = {"nscale", "=", "3"};
-    input::ResetKineticsInputParser::parseNScale(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNScale(), 3);
+
+    clearParser(parser);
 
     lineElements = {"nscale", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseNScale(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Nscale must be positive"
+        "Invalid value \"-1\" for key \"nscale\" at line 0 in input file. "
+        "Possible options are: positive integer"
     );
 }
 
@@ -61,15 +68,22 @@ TEST_F(TestInputFileReader, testParseNScale)
 TEST_F(TestInputFileReader, testParseFScale)
 {
     ResetKineticsInputParser parser;
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("fscale"));
+    const auto &parseFunc = funcMap.at("fscale");
+
     std::vector<std::string> lineElements = {"fscale", "=", "3"};
-    input::ResetKineticsInputParser::parseFScale(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFScale(), 3);
+
+    clearParser(parser);
 
     lineElements = {"fscale", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseFScale(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Fscale must be positive"
+        "Invalid value \"-1\" for key \"fscale\" at line 0 in input file. "
+        "Possible options are: positive integer"
     );
 }
 
@@ -81,15 +95,22 @@ TEST_F(TestInputFileReader, testParseFScale)
 TEST_F(TestInputFileReader, testParseNReset)
 {
     ResetKineticsInputParser parser;
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("nreset"));
+    const auto &parseFunc = funcMap.at("nreset");
+
     std::vector<std::string> lineElements = {"nreset", "=", "3"};
-    input::ResetKineticsInputParser::parseNReset(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNReset(), 3);
+
+    clearParser(parser);
 
     lineElements = {"nreset", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseNReset(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Nreset must be positive"
+        "Invalid value \"-1\" for key \"nreset\" at line 0 in input file. "
+        "Possible options are: positive integer"
     );
 }
 
@@ -101,15 +122,22 @@ TEST_F(TestInputFileReader, testParseNReset)
 TEST_F(TestInputFileReader, testParseFReset)
 {
     ResetKineticsInputParser parser;
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("freset"));
+    const auto &parseFunc = funcMap.at("freset");
+
     std::vector<std::string> lineElements = {"freset", "=", "3"};
-    input::ResetKineticsInputParser::parseFReset(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFReset(), 3);
+
+    clearParser(parser);
 
     lineElements = {"freset", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseFReset(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Freset must be positive"
+        "Invalid value \"-1\" for key \"freset\" at line 0 in input file. "
+        "Possible options are: positive integer"
     );
 }
 
@@ -121,15 +149,22 @@ TEST_F(TestInputFileReader, testParseFReset)
 TEST_F(TestInputFileReader, testParseNResetAngular)
 {
     ResetKineticsInputParser parser;
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("nreset_angular"));
+    const auto &parseFunc = funcMap.at("nreset_angular");
+
     std::vector<std::string> lineElements = {"nreset_angular", "=", "3"};
-    input::ResetKineticsInputParser::parseNResetAngular(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNResetAngular(), 3);
+
+    clearParser(parser);
 
     lineElements = {"nreset_angular", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseNResetAngular(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Nreset_angular must be positive"
+        "Invalid value \"-1\" for key \"nreset_angular\" at line 0 in input "
+        "file. Possible options are: positive integer"
     );
 }
 
@@ -141,14 +176,21 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
 TEST_F(TestInputFileReader, testParseFResetAngular)
 {
     ResetKineticsInputParser parser;
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("freset_angular"));
+    const auto &parseFunc = funcMap.at("freset_angular");
+
     std::vector<std::string> lineElements = {"freset_angular", "=", "3"};
-    input::ResetKineticsInputParser::parseFResetAngular(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFResetAngular(), 3);
+
+    clearParser(parser);
 
     lineElements = {"freset_angular", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseFResetAngular(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Freset_angular must be positive"
+        "Invalid value \"-1\" for key \"freset_angular\" at line 0 in input "
+        "file. Possible options are: positive integer"
     );
 }
