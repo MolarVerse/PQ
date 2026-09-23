@@ -33,6 +33,7 @@
 namespace settings
 {
 
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define SHAKE_TYPE_LIST(X) \
     X(OFF)                 \
     X(ON)                  \
