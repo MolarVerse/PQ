@@ -93,7 +93,21 @@ jobs:
             -DBUILD_WITH_BENCHMARKING=On \
             -DBUILD_WITH_PERF_BENCH=On \
             -DBUILD_WITH_DOCS=Off
-          cmake --build build --parallel "$(nproc)"
+
+          # Best-effort build: this step only needs compile_commands.json to
+          # resolve real headers for clangd-tidy to re-parse (fetched deps
+          # like Eigen/googletest/google-benchmark, and any generated
+          # headers), not a fully successful build — ci_build.yml is the
+          # authoritative "the whole project builds warning-free" gate. Debug
+          # + -Werror is known to occasionally hit a GCC/Eigen
+          # -Wmaybe-uninitialized false positive inside inlined SSE
+          # intrinsics (e.g. src/constraints/mShake.cpp via Eigen's
+          # InnerProduct.h) unrelated to whatever this PR touches, so don't
+          # let that fail this job. `-k 0` keeps Ninja building past
+          # failures instead of stopping at the first one, to maximize how
+          # much of the compile database has real build output behind it.
+          cmake --build build --parallel "$(nproc)" -- -k 0 || \
+            echo "::warning::Full project build had errors (see log) — continuing, since this job only needs a usable compile_commands.json and ci_build.yml is the build/warnings gate."
         env:
           CC: gcc-13
           CXX: g++-13
