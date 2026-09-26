@@ -57,9 +57,9 @@ void HybridConfigurator::calculateInnerRegionCenter(
     const auto& indices = simBox.getInnerRegionCenterAtomIndices();
 
     if (indices.empty())
-        throw(HybridConfiguratorException(
+        throw HybridConfiguratorException(
             "Cannot calculate inner region center: no center atoms specified"
-        ));
+        );
 
     linalg::Vec3D center        = {0.0, 0.0, 0.0};
     double        total_mass    = 0.0;
@@ -345,10 +345,10 @@ void HybridConfigurator::calculateSmoothingFactors(
 
         if (distanceFactor < 0.0 || distanceFactor > 1)
         {
-            throw(HybridConfiguratorException(
+            throw HybridConfiguratorException(
                 "Cannot calculate smoothing factor for molecule outside the "
                 "smoothing region"
-            ));
+            );
         }
 
         distanceFactor       -= 0.5;
