@@ -41,7 +41,6 @@ using namespace exc;
 using namespace settings;
 using namespace utilities;
 using namespace references;
-using namespace constants;
 
 /**
  * @brief Construct a new Input File Parser Thermostat:: Input File Parser
@@ -382,7 +381,7 @@ void ThermostatInputParser::parseThermostatFriction(
     }
 
     ThermostatSettings::setFriction(
-        friction * constants::NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+        friction * NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
     );
 }
 

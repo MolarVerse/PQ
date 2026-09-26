@@ -28,8 +28,8 @@
 
 namespace molsys
 {
-    std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
-        const linearAlgebra::tensor3D &
+    std::pair<linalg::Vec3D, linalg::Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
+        const linalg::tensor3D &
     );
 
     /**
@@ -41,9 +41,9 @@ namespace molsys
     class TriclinicBox : public Box
     {
        private:
-        linearAlgebra::Vec3D    _boxAngles;
-        linearAlgebra::tensor3D _boxMatrix{0.0};
-        linearAlgebra::tensor3D _transformationMatrix{0.0};
+        linalg::Vec3D    _boxAngles;
+        linalg::tensor3D _boxMatrix{0.0};
+        linalg::tensor3D _transformationMatrix{0.0};
 
         void calculateBoxMatrix();
         void calculateTransformationMatrix();
@@ -51,35 +51,25 @@ namespace molsys
        public:
         [[nodiscard]] double calculateVolume() override;
         [[nodiscard]]
-        linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &vec
+        linalg::Vec3D calcShiftVector(const linalg::Vec3D &vec) const override;
+
+        [[nodiscard]]
+        linalg::Vec3D toOrthoSpace(const linalg::Vec3D &vec) const override;
+        [[nodiscard]]
+        linalg::tensor3D toOrthoSpace(
+            const linalg::tensor3D &mat
         ) const override;
 
         [[nodiscard]]
-        linearAlgebra::Vec3D toOrthoSpace(
-            const linearAlgebra::Vec3D &vec
-        ) const override;
+        linalg::Vec3D toSimSpace(const linalg::Vec3D &vec) const override;
         [[nodiscard]]
-        linearAlgebra::tensor3D toOrthoSpace(
-            const linearAlgebra::tensor3D &mat
-        ) const override;
+        linalg::tensor3D toSimSpace(const linalg::tensor3D &mat) const override;
 
-        [[nodiscard]]
-        linearAlgebra::Vec3D toSimSpace(
-            const linearAlgebra::Vec3D &vec
-        ) const override;
-        [[nodiscard]]
-        linearAlgebra::tensor3D toSimSpace(
-            const linearAlgebra::tensor3D &mat
-        ) const override;
+        void applyPBC(linalg::Vec3D &position) const override;
+        void scaleBox(const linalg::tensor3D &scalingTensor) override;
 
-        void applyPBC(linearAlgebra::Vec3D &position) const override;
-        void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
-
-        void setBoxAngles(const linearAlgebra::Vec3D &boxAngles);
-        void setBoxDimensions(
-            const linearAlgebra::Vec3D &boxDimensions
-        ) override;
+        void setBoxAngles(const linalg::Vec3D &boxAngles);
+        void setBoxDimensions(const linalg::Vec3D &boxDimensions) override;
 
         [[nodiscard]] double getMinimalBoxDimension() const override;
 
@@ -90,14 +80,14 @@ namespace molsys
         [[nodiscard]] double sinBeta() const;
         [[nodiscard]] double sinGamma() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D    getBoxAngles() const override;
-        [[nodiscard]] linearAlgebra::tensor3D getBoxMatrix() const override;
-        [[nodiscard]] linearAlgebra::tensor3D getBoxMatrix(
+        [[nodiscard]] linalg::Vec3D    getBoxAngles() const override;
+        [[nodiscard]] linalg::tensor3D getBoxMatrix() const override;
+        [[nodiscard]] linalg::tensor3D getBoxMatrix(
             Periodicity periodicity
         ) const override;
-        [[nodiscard]] linearAlgebra::tensor3D getTransformationMatrix() const;
-        [[nodiscard]] linearAlgebra::Vec3D    wrapPositionIntoBox(
-               const linearAlgebra::Vec3D &pos
+        [[nodiscard]] linalg::tensor3D getTransformationMatrix() const;
+        [[nodiscard]] linalg::Vec3D    wrapPositionIntoBox(
+               const linalg::Vec3D &pos
            ) const override;
     };
 

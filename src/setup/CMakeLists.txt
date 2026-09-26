@@ -45,6 +45,8 @@ target_link_libraries(setup
     maxwellBoltzmann
     optimization
     config_headers
+    PRIVATE
+    intraWater
 )
 
 if(BUILD_WITH_MPI)

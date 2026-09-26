@@ -58,9 +58,9 @@ namespace resetKinetics
         size_t _frequencyAngularReset;
         size_t _nStepsForcesReset;
 
-        double               _temperature = 0.0;
-        linearAlgebra::Vec3D _momentum;
-        linearAlgebra::Vec3D _angularMomentum;
+        double        _temperature = 0.0;
+        linalg::Vec3D _momentum;
+        linalg::Vec3D _angularMomentum;
 
        public:
         ResetKinetics() = default;
@@ -89,8 +89,8 @@ namespace resetKinetics
          *******************/
 
         void setTemperature(double temperature);
-        void setMomentum(const linearAlgebra::Vec3D &momentum);
-        void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum);
+        void setMomentum(const linalg::Vec3D &momentum);
+        void setAngularMomentum(const linalg::Vec3D &angularMomentum);
 
         /********************
          * standard getters *

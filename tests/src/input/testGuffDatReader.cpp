@@ -48,7 +48,7 @@
 using namespace input::guffdat;
 using namespace pot;
 using namespace settings;
-using namespace constants;
+
 using namespace exc;
 
 /**

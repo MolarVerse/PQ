@@ -37,7 +37,7 @@ using namespace physicalData;
  *
  * @param virial
  */
-void PhysicalData::addVirial(const linearAlgebra::tensor3D& virial)
+void PhysicalData::addVirial(const linalg::tensor3D& virial)
 {
     _virial += virial;
 }
@@ -194,7 +194,7 @@ void PhysicalData::setCoupledPressure(double coupledPressure)
  *
  * @param virial
  */
-void PhysicalData::setVirial(const linearAlgebra::tensor3D& virial)
+void PhysicalData::setVirial(const linalg::tensor3D& virial)
 {
     _virial = virial;
 }
@@ -204,7 +204,7 @@ void PhysicalData::setVirial(const linearAlgebra::tensor3D& virial)
  *
  * @param stressTensor
  */
-void PhysicalData::setStressTensor(const linearAlgebra::tensor3D& stressTensor)
+void PhysicalData::setStressTensor(const linalg::tensor3D& stressTensor)
 {
     _stressTensor = stressTensor;
 }
@@ -214,7 +214,7 @@ void PhysicalData::setStressTensor(const linearAlgebra::tensor3D& stressTensor)
  *
  * @param momentum
  */
-void PhysicalData::setMomentum(const linearAlgebra::Vec3D& momentum)
+void PhysicalData::setMomentum(const linalg::Vec3D& momentum)
 {
     _momentum = momentum;
 }
@@ -224,9 +224,7 @@ void PhysicalData::setMomentum(const linearAlgebra::Vec3D& momentum)
  *
  * @param angularMomentum
  */
-void PhysicalData::setAngularMomentum(
-    const linearAlgebra::Vec3D& angularMomentum
-)
+void PhysicalData::setAngularMomentum(const linalg::Vec3D& angularMomentum)
 {
     _angularMomentum = angularMomentum;
 }
@@ -246,9 +244,7 @@ void PhysicalData::setKineticEnergy(double kineticEnergy)
  *
  * @param vec
  */
-void PhysicalData::setKineticEnergyAtomicVector(
-    const linearAlgebra::tensor3D& vec
-)
+void PhysicalData::setKineticEnergyAtomicVector(const linalg::tensor3D& vec)
 {
     _kinEnergyVirialTensor.atomic = vec;
 }
@@ -258,9 +254,7 @@ void PhysicalData::setKineticEnergyAtomicVector(
  *
  * @param vec
  */
-void PhysicalData::setKineticEnergyMolecularVector(
-    const linearAlgebra::tensor3D& vec
-)
+void PhysicalData::setKineticEnergyMolecularVector(const linalg::tensor3D& vec)
 {
     _kinEnergyVirialTensor.molecular = vec;
 }
@@ -613,9 +607,9 @@ double PhysicalData::getRingPolymerEnergy() const { return _ringPolymerEnergy; }
 /**
  * @brief get the kinetic energy atomic vector
  *
- * @return linearAlgebra::tensor3D
+ * @return linalg::tensor3D
  */
-linearAlgebra::tensor3D PhysicalData::getKinEnergyAtomTensor() const
+linalg::tensor3D PhysicalData::getKinEnergyAtomTensor() const
 {
     return _kinEnergyVirialTensor.atomic;
 }
@@ -623,9 +617,9 @@ linearAlgebra::tensor3D PhysicalData::getKinEnergyAtomTensor() const
 /**
  * @brief get the kinetic energy molecular vector
  *
- * @return linearAlgebra::tensor3D
+ * @return linalg::tensor3D
  */
-linearAlgebra::tensor3D PhysicalData::getKinEnergyMolTensor() const
+linalg::tensor3D PhysicalData::getKinEnergyMolTensor() const
 {
     return _kinEnergyVirialTensor.molecular;
 }
@@ -636,9 +630,9 @@ linearAlgebra::tensor3D PhysicalData::getKinEnergyMolTensor() const
  * @param virialType - the virial type to get the kinetic energy virial tensor
  * for
  *
- * @return const linearAlgebra::tensor3D&
+ * @return const linalg::tensor3D&
  */
-const linearAlgebra::tensor3D& PhysicalData::getKinEnergyVirialTensor(
+const linalg::tensor3D& PhysicalData::getKinEnergyVirialTensor(
     settings::VirialType virialType
 ) const
 {
@@ -648,33 +642,30 @@ const linearAlgebra::tensor3D& PhysicalData::getKinEnergyVirialTensor(
 /**
  * @brief get the virial
  *
- * @return linearAlgebra::tensor3D
+ * @return linalg::tensor3D
  */
-linearAlgebra::tensor3D PhysicalData::getVirial() const { return _virial; }
+linalg::tensor3D PhysicalData::getVirial() const { return _virial; }
 
 /**
  * @brief get the stress tensor
  *
- * @return linearAlgebra::tensor3D
+ * @return linalg::tensor3D
  */
-linearAlgebra::tensor3D PhysicalData::getStressTensor() const
-{
-    return _stressTensor;
-}
+linalg::tensor3D PhysicalData::getStressTensor() const { return _stressTensor; }
 
 /**
  * @brief get the linear momentum
  *
- * @return linearAlgebra::Vec3D
+ * @return linalg::Vec3D
  */
-linearAlgebra::Vec3D PhysicalData::getMomentum() const { return _momentum; }
+linalg::Vec3D PhysicalData::getMomentum() const { return _momentum; }
 
 /**
  * @brief get the angular momentum
  *
- * @return linearAlgebra::Vec3D
+ * @return linalg::Vec3D
  */
-linearAlgebra::Vec3D PhysicalData::getAngularMomentum() const
+linalg::Vec3D PhysicalData::getAngularMomentum() const
 {
     return _angularMomentum;
 }

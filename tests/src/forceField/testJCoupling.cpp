@@ -36,7 +36,7 @@
  */
 TEST(TestJCouplingType, operatorEqual)
 {
-    const forceField::JCouplingType type1(
+    const ff::JCouplingType type1(
         0,
         JCouplingParams{
             .J0            = 1.0,
@@ -47,7 +47,7 @@ TEST(TestJCouplingType, operatorEqual)
             .phaseShift    = 6.0
         }
     );
-    const forceField::JCouplingType t1_same(
+    const ff::JCouplingType t1_same(
         0,
         JCouplingParams{
             .J0            = 1.0,
@@ -58,7 +58,7 @@ TEST(TestJCouplingType, operatorEqual)
             .phaseShift    = 6.0
         }
     );
-    const forceField::JCouplingType t1_otherId(
+    const ff::JCouplingType t1_otherId(
         1,
         JCouplingParams{
             .J0            = 1.0,
@@ -69,7 +69,7 @@ TEST(TestJCouplingType, operatorEqual)
             .phaseShift    = 6.0
         }
     );
-    const forceField::JCouplingType t1_otherJ0(
+    const ff::JCouplingType t1_otherJ0(
         0,
         JCouplingParams{
             .J0            = 9.0,
@@ -80,7 +80,7 @@ TEST(TestJCouplingType, operatorEqual)
             .phaseShift    = 6.0
         }
     );
-    const forceField::JCouplingType t1_otherK(
+    const ff::JCouplingType t1_otherK(
         0,
         JCouplingParams{
             .J0            = 1.0,
@@ -100,7 +100,7 @@ TEST(TestJCouplingType, operatorEqual)
 
 TEST(TestJCouplingType, getters)
 {
-    const forceField::JCouplingType type(
+    const ff::JCouplingType type(
         7,
         JCouplingParams{
             .J0            = 1.0,
@@ -122,7 +122,7 @@ TEST(TestJCouplingType, getters)
 
 TEST(TestJCouplingType, symmetryFlagSetters)
 {
-    forceField::JCouplingType type(
+    ff::JCouplingType type(
         0,
         JCouplingParams{
             .J0            = 1.0,
@@ -148,8 +148,8 @@ TEST(TestJCouplingType, symmetryFlagSetters)
 
 TEST(TestJCouplingForceField, settersAndGetters)
 {
-    molsys::Molecule                molecule;
-    forceField::JCouplingForceField forceField(
+    molsys::Molecule        molecule;
+    ff::JCouplingForceField forceField(
         std::vector<molsys::Molecule *>{
             &molecule,
             &molecule,
@@ -180,8 +180,8 @@ TEST(TestJCouplingForceField, settersAndGetters)
 
 TEST(TestJCouplingForceField, symmetryFlagsDefaultTrue)
 {
-    molsys::Molecule                molecule;
-    forceField::JCouplingForceField forceField(
+    molsys::Molecule        molecule;
+    ff::JCouplingForceField forceField(
         std::vector<molsys::Molecule *>{
             &molecule,
             &molecule,

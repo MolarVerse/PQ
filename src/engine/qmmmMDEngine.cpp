@@ -83,7 +83,7 @@ namespace
             const auto delta =
                 recipientMol.get().getCenterOfMass() - smoothingCOM;
 
-            const auto distance = linearAlgebra::norm(delta);
+            const auto distance = linalg::norm(delta);
 
             auto switchedWeight = 0.0;
             if (weightingRadius > 0.0)
@@ -176,11 +176,12 @@ namespace engine
         using enum Periodicity;
         using std::ranges::distance;
 
-        linearAlgebra::tensor3D virial     = {0.0};
-        auto                    numQMAtoms = 0.0;
-        auto                   &atoms      = _simulationBox->getAtoms();
-        const std::size_t       nSmMol =
-            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING));
+        linalg::tensor3D virial     = {0.0};
+        auto             numQMAtoms = 0.0;
+        auto            &atoms      = _simulationBox->getAtoms();
+        const auto       nSmMol     = static_cast<size_t>(
+            distance(_simulationBox->getMoleculesInsideZone(SMOOTHING))
+        );
 
         // Loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1U << nSmMol); ++i)
@@ -297,8 +298,8 @@ namespace engine
     {
         using enum Periodicity;
 
-        auto                   &atoms  = _simulationBox->getAtoms();
-        linearAlgebra::tensor3D virial = {0.0};
+        auto            &atoms  = _simulationBox->getAtoms();
+        linalg::tensor3D virial = {0.0};
 
         // Set number of QM atoms in physical data for output purposes
         setNumberOfQMAtoms();
@@ -439,14 +440,14 @@ namespace engine
         {
             if (mol.getMoltype() == MolType{0} && mol.getHybridZone() != CORE)
             {
-                throw(HybridMDEngineException(
+                throw HybridMDEngineException(
                     std::format(
                         "Molecule number {} is outside the QM core and has "
                         "moltype 0. All molecules outside the QM core must "
                         "have a non-zero moltype assigned.",
                         count
                     )
-                ));
+                );
             }
             ++count;
         }
@@ -539,7 +540,7 @@ namespace engine
         {
             const auto smF = smoothingMol.getSmoothingFactor();
 
-            auto deficitForce = linearAlgebra::Vec3D{0.0};
+            auto deficitForce = linalg::Vec3D{0.0};
             for (auto &atom : smoothingMol.getAtoms())
             {
                 deficitForce += atom->getForce() * (1 - smF);

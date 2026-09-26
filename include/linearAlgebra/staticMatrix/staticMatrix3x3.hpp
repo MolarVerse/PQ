@@ -28,7 +28,7 @@
 
 #include "staticMatrix3x3Class.hpp"   // for StaticMatrix3x3
 
-namespace linearAlgebra
+namespace linalg
 {
 
     template <typename T>
@@ -161,7 +161,7 @@ namespace linearAlgebra
     template <typename T>
     [[nodiscard]] StaticMatrix3x3<T> expPade(const StaticMatrix3x3<T> &mat);
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #ifndef _STATIC_MATRIX_3X3_TPP_
 #include "staticMatrix3x3.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE

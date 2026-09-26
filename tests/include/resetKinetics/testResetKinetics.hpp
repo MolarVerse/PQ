@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// #ifndef _TEST_RESET_KINETICS_HPP_
-
-// #define _TEST_RESET_KINETICS_HPP_
+#ifndef _TEST_RESET_KINETICS_HPP_
+#define _TEST_RESET_KINETICS_HPP_
 
 // #include "atom.hpp"                 // for Atom
 // #include "molecule.hpp"             // for Molecule
@@ -60,8 +59,8 @@
 
 //         molecule1.setNumberOfAtoms(2);
 
-//         atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-//         atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+//         atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+//         atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
 //         atom1->setMass(1.0);
 //         atom2->setMass(1.0);
 //         molecule1.addAtom(atom1);
@@ -72,7 +71,7 @@
 //         const auto atom3 = std::make_shared<molsys::Atom>();
 
 //         molecule2.setNumberOfAtoms(1);
-//         atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+//         atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
 //         atom3->setMass(1.0);
 //         molecule2.addAtom(atom3);
 
@@ -96,4 +95,4 @@
 //     resetKinetics::ResetKinetics *_resetKinetics;
 // };
 
-// #endif
+#endif   // _TEST_RESET_KINETICS_HPP_

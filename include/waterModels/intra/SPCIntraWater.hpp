@@ -43,7 +43,7 @@ namespace waterModel
     {
        public:
         void calculate(
-            molsys::SimulationBox      &simBox,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
         ) final;
 
@@ -60,7 +60,7 @@ namespace waterModel
         // clang-format off
        private:
         static constexpr double _eqOHDistance          = 1.012;                 // Angström
-        static constexpr double _eqHOHAngle            = 113.24 * constants::DEG_TO_RAD;
+        static constexpr double _eqHOHAngle            = 113.24 * DEG_TO_RAD;
         static constexpr double _forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
         static constexpr double _forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
 
@@ -77,7 +77,7 @@ namespace waterModel
         // clang-format off
        private:
         static constexpr double _eqOHDistance          = 1.0;                  // Angström
-        static constexpr double _eqHOHAngle            = 112.0 * constants::DEG_TO_RAD;
+        static constexpr double _eqHOHAngle            = 112.0 * DEG_TO_RAD;
         static constexpr double _forceConstantOHBond   = 1059.162;             // kcal mol^-1 Angström^-2
         static constexpr double _forceConstantHOHAngle = 75.9;                 // kcal mol^-1 rad^-2
 

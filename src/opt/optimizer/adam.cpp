@@ -22,7 +22,9 @@
 
 #include "adam.hpp"
 
-#include <cmath>   // for pow, sqrt
+#include <cmath>
+
+#include "simulationBox.hpp"
 
 using namespace opt;
 
@@ -34,8 +36,8 @@ using namespace opt;
  */
 Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
 {
-    _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-    _momentum2.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+    _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
 }
 
 /**
@@ -49,18 +51,8 @@ Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
 Adam::Adam(size_t nEpochs, double beta1, double beta2, size_t nAtoms)
     : Optimizer(nEpochs), _beta1(beta1), _beta2(beta2)
 {
-    _momentum1.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-    _momentum2.resize(nAtoms, linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-}
-
-/**
- * @brief clone the optimizer
- *
- * @return std::shared_ptr<Optimizer>
- */
-std::shared_ptr<Optimizer> Adam::clone() const
-{
-    return std::make_shared<Adam>(*this);
+    _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+    _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
 }
 
 /**
@@ -78,10 +70,13 @@ size_t Adam::maxHistoryLength() const { return _maxHistoryLength; }
  */
 void Adam::update(double learningRate, size_t step)
 {
-    for (size_t i = 0; i < _simulationBox->getNumberOfAtoms(); ++i)
+    auto& simulationBox = _getSimulationBox();
+
+    for (size_t i = 0; i < simulationBox.getNumberOfAtoms(); ++i)
     {
-        const auto force = _simulationBox->getAtoms()[i]->getForce();
-        const auto pos   = _simulationBox->getAtoms()[i]->getPosition();
+        auto&      atom  = simulationBox.getAtoms()[i];
+        const auto force = atom->getForce();
+        const auto pos   = atom->getPosition();
 
         _momentum1[i] = _beta1 * _momentum1[i] - (1.0 - _beta1) * force;
         _momentum2[i] = _beta2 * _momentum2[i] + (1.0 - _beta2) * force * force;
@@ -92,9 +87,9 @@ void Adam::update(double learningRate, size_t step)
         constexpr auto epsilon = 1e-8;
         auto pos_new = pos - learningRate * mom1 / (sqrt(mom2 + epsilon));
 
-        _simulationBox->applyPBC(pos_new);
+        simulationBox.applyPBC(pos_new);
 
-        _simulationBox->getAtoms()[i]->setPositionOld(pos);
-        _simulationBox->getAtoms()[i]->setPosition(pos_new);
+        atom->setPositionOld(pos);
+        atom->setPosition(pos_new);
     }
 }

@@ -30,7 +30,7 @@
 
 #include "concepts/vector3dConcepts.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     template <typename T>
     using iterator = typename std::array<T, 3>::iterator;
@@ -56,6 +56,11 @@ namespace linearAlgebra
     class Vector3D
     {
        private:
+// this is to suppress the pedantic warning for the anonymous struct within the
+// union as Vector3D will be migrated to mstd in the future it will be cleaned
+// up there
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
         union
         {
             std::array<T, 3> _xyz;
@@ -66,6 +71,7 @@ namespace linearAlgebra
                 T _z;
             };
         };
+#pragma GCC diagnostic pop
 
        public:
         ~Vector3D() = default;
@@ -147,7 +153,7 @@ namespace linearAlgebra
         std::vector<T> toStdVector();
     };
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #ifndef _VECTOR3D_CLASS_TPP_
 #include "vector3dClass.tpp.hpp"   // IWYU pragma: export

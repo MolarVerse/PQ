@@ -62,7 +62,7 @@ void TimingsOutput::write()
     _fp << std::format(
         "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
         "Total",
-        elapsedTime * constants::MS_TO_S,
+        elapsedTime * MS_TO_S,
         100.0
     );
     // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
@@ -80,7 +80,7 @@ void TimingsOutput::write()
         _fp << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
             name,
-            time * constants::MS_TO_S,
+            time * MS_TO_S,
             percentage
         );
     }
@@ -114,7 +114,7 @@ void TimingsOutput::write()
     _fp << std::format(
         "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
         "Total",
-        elapsedTime * constants::MS_TO_S,
+        elapsedTime * MS_TO_S,
         100.0,
         100.0
     );
@@ -140,7 +140,7 @@ void TimingsOutput::write()
         _fp << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
             name,
-            time * constants::MS_TO_S,
+            time * MS_TO_S,
             percentage,
             100.0
         );
@@ -157,7 +157,7 @@ void TimingsOutput::write()
             _fp << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
                 subName,
-                subTime * constants::MS_TO_S,
+                subTime * MS_TO_S,
                 subTotPercentage,
                 subPercentage
             );

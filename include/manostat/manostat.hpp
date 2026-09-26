@@ -48,9 +48,9 @@ namespace manostat
     class Manostat
     {
        protected:
-        linearAlgebra::tensor3D _pressureTensor = {0.0};
-        double                  _pressure;
-        double _targetPressure;   // no default value, must be set
+        linalg::tensor3D _pressureTensor = {0.0};
+        double           _pressure;
+        double           _targetPressure;   // no default value, must be set
 
        public:
         explicit Manostat(double targetPressure);
@@ -67,7 +67,7 @@ namespace manostat
             physicalData::PhysicalData &
         );
 
-        static void rotateMu(linearAlgebra::tensor3D &mu);
+        static void rotateMu(linalg::tensor3D &mu);
 
         [[nodiscard]] virtual settings::ManostatType getManostatType() const;
         [[nodiscard]] virtual settings::Isotropy     getIsotropy() const;

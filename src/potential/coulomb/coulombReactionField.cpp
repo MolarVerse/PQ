@@ -25,7 +25,21 @@
 #include "constants/internalConversionFactors.hpp"
 
 using namespace pot;
-using namespace constants;
+
+/**
+ * @brief Construct a new Coulomb Reaction Field object
+ *
+ * @param coulombRadiusCutOff
+ * @param epsilon
+ */
+CoulombReactionField::CoulombReactionField(
+    double coulombRadiusCutOff,
+    double epsilon
+)
+    : CoulombPotential{coulombRadiusCutOff},
+      _rfPrefactor{(epsilon - 1) / (2.0 * epsilon + 1)}
+{
+}
 
 /**
  * @brief calculate the energy and force of the reaction field Coulomb potential

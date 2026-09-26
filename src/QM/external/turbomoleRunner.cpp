@@ -25,39 +25,40 @@
 #include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
-#include <string>       // for string
+#include <mstd/file.hpp>
+#include <string>   // for string
 
-#include "constants.hpp"            // for constants
-#include "exceptions.hpp"           // for InputFileException
-#include "fileSettings.hpp"         // for FileSettings
-#include "hybridConfigurator.hpp"   // for HybridConfigurator
-#include "hybridSettings.hpp"       // for SmoothingMethod
-#include "qmSettings.hpp"           // for QMSettings
-#include "simulationBox.hpp"        // for SimulationBox
-#include "stringUtilities.hpp"      // for fileExists
+#include "constants.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "hybridConfigurator.hpp"
+#include "hybridSettings.hpp"
+#include "qmSettings.hpp"
+#include "simulationBox.hpp"
+#include "stringUtilities.hpp"
 
 using QM::TurbomoleRunner;
 
 using namespace molsys;
 using namespace exc;
 using namespace configurator;
-using namespace constants;
+
 using namespace settings;
 using namespace utilities;
 
 /**
  * @brief writes the coords file in turbomole format
  *
- * @param box
+ * @param simulationBox
  */
-void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
+void TurbomoleRunner::writeCoordsFile(SimulationBox &simulationBox)
 {
     const std::string fileName = "coord";
     std::ofstream     coordsFile(fileName);
 
     coordsFile << "$coord\n";
 
-    for (const auto &atom : box.getQMAtoms())
+    for (const auto &atom : simulationBox.getQMAtoms())
     {
         const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
 
@@ -75,13 +76,18 @@ void TurbomoleRunner::writeCoordsFile(SimulationBox &box)
     coordsFile.close();
 }
 
-void TurbomoleRunner::writePointChargeFile(molsys::SimulationBox &box)
+/**
+ * @brief writes the point charge file in turbomole format
+ *
+ * @param simulationBox
+ */
+void TurbomoleRunner::writePointChargeFile(molsys::SimulationBox &simulationBox)
 {
     const std::string fileName = FileSettings::getPointChargeFileName();
     std::ofstream     pcFile(fileName);
 
     using enum HybridZone;
-    for (const auto &mol : box.getInactiveMolecules())
+    for (const auto &mol : simulationBox.getInactiveMolecules())
     {
         const auto zone = mol.getHybridZone();
 
@@ -110,14 +116,16 @@ void TurbomoleRunner::writePointChargeFile(molsys::SimulationBox &box)
 /**
  * @brief executes the external qm program
  *
+ * @param simulationBox the simulation box to apply periodic boundary conditions
+ *
  */
-void TurbomoleRunner::execute(SimulationBox &box)
+void TurbomoleRunner::execute(SimulationBox &simulationBox)
 {
     using enum settings::SmoothingMethod;
 
     const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
-    if (!fileExists(scriptFile))
+    if (!mstd::File(scriptFile).exists())
     {
         throw InputFileException(
             std::format(
@@ -127,7 +135,7 @@ void TurbomoleRunner::execute(SimulationBox &box)
         );
     }
 
-    auto charge         = box.calcActiveMolCharge();
+    auto charge         = simulationBox.calcActiveMolCharge();
     auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
 
     // TODO: https://github.com/MolarVerse/PQ/issues/200

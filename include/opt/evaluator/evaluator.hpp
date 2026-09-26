@@ -52,7 +52,7 @@ namespace opt
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
         std::shared_ptr<constraints::Constraints>       _constraints;
         std::shared_ptr<molsys::CellList>               _cellList;
-        std::shared_ptr<forceField::ForceField>         _forceField;
+        std::shared_ptr<ff::ForceField>                 _forceField;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
@@ -83,7 +83,7 @@ namespace opt
             const std::shared_ptr<physicalData::PhysicalData>&
         );
 
-        void setForceField(const std::shared_ptr<forceField::ForceField>&);
+        void setForceField(const std::shared_ptr<ff::ForceField>&);
         void setIntraNonBonded(
             const std::shared_ptr<intraNonBonded::IntraNonBonded>&
         );

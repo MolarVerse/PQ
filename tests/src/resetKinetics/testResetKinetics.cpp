@@ -48,18 +48,18 @@ namespace
         auto atom2 = std::make_shared<molsys::Atom>();
         atom1->setMass(1.0);
         atom2->setMass(1.0);
-        atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0));
+        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
         molecule.addAtom(atom1);
         molecule.addAtom(atom2);
 
         auto molecule2 = molsys::Molecule();
         auto atom3     = std::make_shared<molsys::Atom>();
         atom3->setMass(1.0);
-        atom3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
-        atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0));
+        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         molecule2.addAtom(atom3);
 
         box->addMolecule(molecule);
@@ -89,8 +89,8 @@ TEST(TestResetKinetics, settersAcceptValuesWithoutThrowing)
     resetKinetics::ResetKinetics reset;
 
     reset.setTemperature(300.0);
-    reset.setMomentum(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    reset.setAngularMomentum(linearAlgebra::Vec3D(0.5, -0.5, 0.0));
+    reset.setMomentum(linalg::Vec3D(1.0, 2.0, 3.0));
+    reset.setAngularMomentum(linalg::Vec3D(0.5, -0.5, 0.0));
 
     SUCCEED();
 }
@@ -135,7 +135,7 @@ TEST(TestResetKinetics, resetTemperatureScalesFiniteTemperatureToZero)
     data.calculateTemperature(*box);
     EXPECT_DOUBLE_EQ(data.getTemperature(), 0.0);
     for (const auto &atom : box->getAtoms())
-        EXPECT_EQ(atom->getVelocity(), linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        EXPECT_EQ(atom->getVelocity(), linalg::Vec3D(0.0, 0.0, 0.0));
 
     delete box;
 }
@@ -187,14 +187,14 @@ TEST(TestResetKinetics, resetMomentumZerosTotalLinearMomentum)
     // velocity; for the total to land at zero we have to seed _momentum
     // with the current total p = sum m_i v_i first (the reset() entry
     // does this from data.getMomentum()).
-    linearAlgebra::Vec3D totalP{0.0, 0.0, 0.0};
+    linalg::Vec3D totalP{0.0, 0.0, 0.0};
     for (const auto &atom : box->getAtoms())
         totalP += atom->getMass() * atom->getVelocity();
     reset.setMomentum(totalP);
 
     reset.resetMomentum(*box);
 
-    linearAlgebra::Vec3D totalPAfter{0.0, 0.0, 0.0};
+    linalg::Vec3D totalPAfter{0.0, 0.0, 0.0};
     for (const auto &atom : box->getAtoms())
         totalPAfter += atom->getMass() * atom->getVelocity();
 
@@ -212,7 +212,7 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
 
     // Seed _angularMomentum the same way reset() does, so the routine
     // has well-defined input.
-    reset.setAngularMomentum(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+    reset.setAngularMomentum(linalg::Vec3D(0.0, 0.0, 0.0));
 
     reset.resetAngularMomentum(*box);
 
@@ -235,7 +235,7 @@ TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
 
     // Seed atom forces with non-zero values.
     for (auto &atom : box->getAtoms())
-        atom->setForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
 
     reset.resetForces(0U, *box);
 

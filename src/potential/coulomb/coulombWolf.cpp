@@ -31,7 +31,6 @@
 #endif
 
 using namespace pot;
-using namespace constants;
 
 /**
  * @brief Construct a new Coulomb Wolf:: Coulomb Wolf object

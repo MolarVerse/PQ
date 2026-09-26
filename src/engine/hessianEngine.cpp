@@ -279,7 +279,7 @@ void HessianEngine::run()
     _engineOutput.writeTimingsFile();
 
     const auto elapsedTime =
-        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
+        timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
     _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
     out::StdoutOutput::writeEndedNormally(elapsedTime);

@@ -40,13 +40,13 @@ using namespace molsys;
 /**
  * @brief Write the header of a trajectory files
  *
- * @param simBox
+ * @param simulationBox Simulation box containing molecules and atoms.
  */
-void TrajectoryOutput::writeHeader(const SimulationBox &simBox)
+void TrajectoryOutput::writeHeader(const SimulationBox &simulationBox)
 {
-    const auto  nAtoms    = simBox.getNumberOfAtoms();
-    const auto &boxDims   = simBox.getBoxDimensions();
-    const auto &boxAngles = simBox.getBoxAngles();
+    const auto  nAtoms    = simulationBox.getNumberOfAtoms();
+    const auto &boxDims   = simulationBox.getBoxDimensions();
+    const auto &boxAngles = simulationBox.getBoxAngles();
 
     _fp << nAtoms << "  " << boxDims << "  " << boxAngles << '\n';
 }
@@ -54,22 +54,22 @@ void TrajectoryOutput::writeHeader(const SimulationBox &simBox)
 /**
  * @brief Write xyz file
  *
- * @param simBox
+ * @param simulationBox Simulation box containing molecules and atoms.
  * @param step
  */
-void TrajectoryOutput::writeXyz(SimulationBox &simBox, size_t step)
+void TrajectoryOutput::writeXyz(const SimulationBox &simulationBox, size_t step)
 {
     std::ostringstream buffer;
 
-    writeHeader(simBox);
+    writeHeader(simulationBox);
     writeComment(step);
 
-    for (const auto &atom : simBox.getAtoms())
+    for (const auto &atom : simulationBox.getAtoms())
     {
         buffer << std::format("{:<5}\t", atom->getName());
 
         const auto &pos =
-            simBox.getBox().wrapPositionIntoBox(atom->getPosition());
+            simulationBox.getBox().wrapPositionIntoBox(atom->getPosition());
 
         buffer << std::format("{:15.8f}\t", pos[0]);
         buffer << std::format("{:15.8f}\t", pos[1]);
@@ -84,7 +84,7 @@ void TrajectoryOutput::writeXyz(SimulationBox &simBox, size_t step)
 /**
  * @brief Write hybrid center xyz file
  *
- * @param configurator
+ * @param configurator Hybrid configurator containing the inner region center.
  * @param step
  */
 void TrajectoryOutput::writeHybridCenterXyz(
@@ -117,17 +117,20 @@ void TrajectoryOutput::writeHybridCenterXyz(
 /**
  * @brief Write velocities file
  *
- * @param simBox
+ * @param simulationBox Simulation box containing molecules and atoms.
  * @param step
  */
-void TrajectoryOutput::writeVelocities(SimulationBox &simBox, size_t step)
+void TrajectoryOutput::writeVelocities(
+    const SimulationBox &simulationBox,
+    size_t               step
+)
 {
     std::ostringstream buffer;
 
-    writeHeader(simBox);
+    writeHeader(simulationBox);
     writeComment(step);
 
-    for (const auto &molecule : simBox.getMolecules())
+    for (const auto &molecule : simulationBox.getMolecules())
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
 
@@ -151,17 +154,20 @@ void TrajectoryOutput::writeVelocities(SimulationBox &simBox, size_t step)
 /**
  * @brief Write forces file
  *
- * @param simBox
+ * @param simulationBox Simulation box containing molecules and atoms.
  * @param step
  */
-void TrajectoryOutput::writeForces(SimulationBox &simBox, size_t step)
+void TrajectoryOutput::writeForces(
+    const SimulationBox &simulationBox,
+    size_t               step
+)
 {
     std::ostringstream buffer;
 
-    writeHeader(simBox);
-    writeForceComment(step, simBox.calculateTotalForce());
+    writeHeader(simulationBox);
+    writeForceComment(step, simulationBox.calculateTotalForce());
 
-    for (const auto &molecule : simBox.getMolecules())
+    for (const auto &molecule : simulationBox.getMolecules())
     {
         const auto nAtoms = molecule.getNumberOfAtoms();
 
@@ -185,17 +191,20 @@ void TrajectoryOutput::writeForces(SimulationBox &simBox, size_t step)
 /**
  * @brief Write charges file
  *
- * @param simBox
+ * @param simulationBox Simulation box containing molecules and atoms.
  * @param step
  */
-void TrajectoryOutput::writeCharges(SimulationBox &simBox, size_t step)
+void TrajectoryOutput::writeCharges(
+    const SimulationBox &simulationBox,
+    size_t               step
+)
 {
     std::ostringstream buffer;
 
-    writeHeader(simBox);
+    writeHeader(simulationBox);
     writeComment(step);
 
-    for (const auto &atom : simBox.getAtoms())
+    for (const auto &atom : simulationBox.getAtoms())
     {
         const auto charge =
             atom->getQMCharge().value_or(atom->getPartialCharge());

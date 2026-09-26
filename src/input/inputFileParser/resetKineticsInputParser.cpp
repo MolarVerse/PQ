@@ -22,13 +22,10 @@
 
 #include "resetKineticsInputParser.hpp"
 
-#include <cstddef>       // for size_t, std
-#include <string_view>   // for string_view
+#include <cstddef>   // for size_t, std
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
+#include "inputKeyAdapter.hpp"
 #include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
-#include "stringUtilities.hpp"         // for stringToInt
 
 using namespace input;
 using namespace exc;
@@ -44,214 +41,213 @@ using namespace settings;
  */
 ResetKineticsInputParser::ResetKineticsInputParser()
 {
-    addKeyword(
-        std::string("nscale"),
-        bindMember(&ResetKineticsInputParser::parseNScale, this),
-        false
-    );
-    addKeyword(
-        std::string("fscale"),
-        bindMember(&ResetKineticsInputParser::parseFScale, this),
-        false
-    );
-    addKeyword(
-        std::string("nreset"),
-        bindMember(&ResetKineticsInputParser::parseNReset, this),
-        false
-    );
-    addKeyword(
-        std::string("freset"),
-        bindMember(&ResetKineticsInputParser::parseFReset, this),
-        false
-    );
-    addKeyword(
-        std::string("nreset_angular"),
-        bindMember(&ResetKineticsInputParser::parseNResetAngular, this),
-        false
-    );
-    addKeyword(
-        std::string("freset_angular"),
-        bindMember(&ResetKineticsInputParser::parseFResetAngular, this),
-        false
-    );
-    addKeyword(
-        std::string("freset_forces"),
-        bindMember(&ResetKineticsInputParser::parseFResetForces, this),
-        false
-    );
+    addNScaleKeyword();
+    addFScaleKeyword();
+    addNResetKeyword();
+    addFResetKeyword();
+    addNResetAngularKeyword();
+    addFResetAngularKeyword();
+    addFResetForcesKeyword();
 }
 
 /**
- * @brief parse nscale and set it in settings
+ * @brief add nscale keyword to the registry
  *
  * @details default value is 0
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if nscale is negative
  */
-void ResetKineticsInputParser::parseNScale(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void ResetKineticsInputParser::addNScaleKeyword()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "nscale",
+        .title = "Number of steps for temperature reset",
+        .description =
+            "Specifies for how many steps at the beginning of the simulation "
+            "the temperature is reset"
+    };
 
-    const auto nScale = utilities::stringToInt(lineElements[2]);
+    const auto setValue = [](size_t value)
+    { ResetKineticsSettings::setNScale(value); };
 
-    if (nScale < 0)
-        throw InputFileException("Nscale must be positive");
+    auto &keyword = _getRegistry().registerKey(
+        KeyRegistry<size_t>{
+            .metadata     = metaData,
+            .defaultValue = 0,
+            .onSet        = setValue,
+        }
+    );
 
-    ResetKineticsSettings::setNScale(static_cast<size_t>(nScale));
+    addKeyword(metaData.name, adapt(keyword), false);
 }
 
 /**
- * @brief parse fscale and set it in settings
+ * @brief add fscale keyword to the registry
  *
  * @details default value is 0 but then set to UINT_MAX in setup
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if fscale is negative
  */
-void ResetKineticsInputParser::parseFScale(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void ResetKineticsInputParser::addFScaleKeyword()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "fscale",
+        .title = "Frequency of temperature reset",
+        .description =
+            "Specifies how frequently the temperature is reset during the "
+            "simulation"
+    };
 
-    const auto fScale = utilities::stringToInt(lineElements[2]);
+    const auto setValue = [](size_t value)
+    { ResetKineticsSettings::setFScale(value); };
 
-    if (fScale < 0)
-        throw InputFileException("Fscale must be positive");
+    auto &keyword = _getRegistry().registerKey(
+        KeyRegistry<size_t>{
+            .metadata     = metaData,
+            .defaultValue = 0,
+            .onSet        = setValue,
+        }
+    );
 
-    ResetKineticsSettings::setFScale(static_cast<size_t>(fScale));
+    addKeyword(metaData.name, adapt(keyword), false);
 }
 
 /**
- * @brief parse nreset and set it in settings
+ * @brief add nreset keyword to the registry
  *
  * @details default value is 0
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if nreset is negative
  */
-void ResetKineticsInputParser::parseNReset(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void ResetKineticsInputParser::addNResetKeyword()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "nreset",
+        .title = "Number of steps for momentum reset",
+        .description =
+            "Specifies for how many steps at the beginning of the simulation "
+            "the momentum is reset"
+    };
 
-    const auto nReset = utilities::stringToInt(lineElements[2]);
+    const auto setValue = [](size_t value)
+    { ResetKineticsSettings::setNReset(value); };
 
-    if (nReset < 0)
-        throw InputFileException("Nreset must be positive");
+    auto &keyword = _getRegistry().registerKey(
+        KeyRegistry<size_t>{
+            .metadata     = metaData,
+            .defaultValue = 0,
+            .onSet        = setValue,
+        }
+    );
 
-    ResetKineticsSettings::setNReset(static_cast<size_t>(nReset));
+    addKeyword(metaData.name, adapt(keyword), false);
 }
 
 /**
- * @brief parse freset and set it in settings
+ * @brief add freset keyword to the registry
  *
  * @details default value is 0 but then set to UINT_MAX in setup
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if freset is negative
  */
-void ResetKineticsInputParser::parseFReset(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void ResetKineticsInputParser::addFResetKeyword()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "freset",
+        .title = "Frequency of momentum reset",
+        .description =
+            "Specifies how frequently the momentum is reset during the "
+            "simulation"
+    };
 
-    const auto fReset = utilities::stringToInt(lineElements[2]);
+    const auto setValue = [](size_t value)
+    { ResetKineticsSettings::setFReset(value); };
 
-    if (fReset < 0)
-        throw InputFileException("Freset must be positive");
+    auto &keyword = _getRegistry().registerKey(
+        KeyRegistry<size_t>{
+            .metadata     = metaData,
+            .defaultValue = 0,
+            .onSet        = setValue,
+        }
+    );
 
-    ResetKineticsSettings::setFReset(static_cast<size_t>(fReset));
+    addKeyword(metaData.name, adapt(keyword), false);
 }
 
 /**
- * @brief parse nreset_angular and set it in settings
+ * @brief add nreset_angular keyword to the registry
  *
  * @details default value is 0
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if nreset_angular is negative
  */
-void ResetKineticsInputParser::parseNResetAngular(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void ResetKineticsInputParser::addNResetAngularKeyword()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "nreset_angular",
+        .title = "Number of steps for angular momentum reset",
+        .description =
+            "Specifies for how many steps at the beginning of the simulation "
+            "the angular momentum is reset"
+    };
 
-    const auto nResetAngular = utilities::stringToInt(lineElements[2]);
+    const auto setValue = [](size_t value)
+    { ResetKineticsSettings::setNResetAngular(value); };
 
-    if (nResetAngular < 0)
-        throw InputFileException("Nreset_angular must be positive");
+    auto &keyword = _getRegistry().registerKey(
+        KeyRegistry<size_t>{
+            .metadata     = metaData,
+            .defaultValue = 0,
+            .onSet        = setValue,
+        }
+    );
 
-    ResetKineticsSettings::setNResetAngular(static_cast<size_t>(nResetAngular));
+    addKeyword(metaData.name, adapt(keyword), false);
 }
 
 /**
- * @brief parse freset_angular and set it in settings
+ * @brief add freset_angular keyword to the registry
  *
- * @details default value is 0 but then set to UINT_MAX in setup
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if freset_angular is negative
+ * @details default value is 0
  */
-void ResetKineticsInputParser::parseFResetAngular(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void ResetKineticsInputParser::addFResetAngularKeyword()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "freset_angular",
+        .title = "Frequency of angular momentum reset",
+        .description =
+            "Specifies how frequently the angular momentum is reset during the "
+            "simulation"
+    };
 
-    const auto fResetAngular = utilities::stringToInt(lineElements[2]);
+    const auto setValue = [](size_t value)
+    { ResetKineticsSettings::setFResetAngular(value); };
 
-    if (fResetAngular < 0)
-        throw InputFileException("Freset_angular must be positive");
+    auto &keyword = _getRegistry().registerKey(
+        KeyRegistry<size_t>{
+            .metadata     = metaData,
+            .defaultValue = 0,
+            .onSet        = setValue,
+        }
+    );
 
-    ResetKineticsSettings::setFResetAngular(static_cast<size_t>(fResetAngular));
+    addKeyword(metaData.name, adapt(keyword), false);
 }
 
 /**
- * @brief parse freset_force and set it in settings
+ * @brief add freset_force keyword to the registry
  *
- * @details default value is 0 but then set to UINT_MAX in setup
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if freset_force is negative
+ * @details default value is 0
  */
-void ResetKineticsInputParser::parseFResetForces(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void ResetKineticsInputParser::addFResetForcesKeyword()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "freset_forces",
+        .title = "Frequency of force reset",
+        .description =
+            "Specifies how frequently the force is reset during the simulation"
+    };
 
-    const auto fResetForces = utilities::stringToInt(lineElements[2]);
+    const auto setValue = [](size_t value)
+    { ResetKineticsSettings::setFResetForces(value); };
 
-    if (fResetForces < 0)
-        throw InputFileException("Freset_force must be positive");
+    auto &keyword = _getRegistry().registerKey(
+        KeyRegistry<size_t>{
+            .metadata     = metaData,
+            .defaultValue = 0,
+            .onSet        = setValue,
+        }
+    );
 
-    ResetKineticsSettings::setFResetForces(static_cast<size_t>(fResetForces));
+    addKeyword(metaData.name, adapt(keyword), false);
 }

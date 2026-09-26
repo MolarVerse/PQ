@@ -45,14 +45,14 @@ namespace out
      * - v_zz
      *
      * @param step
-     * @param data
+     * @param physicalData the physical data of the system
      */
     void VirialOutput::write(
         size_t                            step,
-        const physicalData::PhysicalData &data
+        const physicalData::PhysicalData &physicalData
     )
     {
-        const auto virial = data.getVirial();
+        const auto virial = physicalData.getVirial();
 
         _fp << std::format("{:10d}\t", step);
         _fp << std::format("{:20.5e}\t", virial[0][0]);

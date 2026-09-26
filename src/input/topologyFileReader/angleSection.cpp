@@ -33,7 +33,7 @@
 
 using namespace input::topology;
 using namespace molsys;
-using namespace forceField;
+using namespace ff;
 using namespace exc;
 using namespace engine;
 

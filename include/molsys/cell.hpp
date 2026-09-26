@@ -51,9 +51,9 @@ namespace molsys
         std::vector<size_t>              _inactiveNonCoreMoleculeIndices;
         std::vector<size_t>              _waterMoleculeIndices;
 
-        linearAlgebra::Vec3D   _lowerBoundary = {0, 0, 0};
-        linearAlgebra::Vec3D   _upperBoundary = {0, 0, 0};
-        linearAlgebra::Vec3Dul _cellIndex     = {0, 0, 0};
+        linalg::Vec3D   _lowerBoundary = {0, 0, 0};
+        linalg::Vec3D   _upperBoundary = {0, 0, 0};
+        linalg::Vec3Dul _cellIndex     = {0, 0, 0};
 
        public:
         void clearMolecules();
@@ -70,11 +70,11 @@ namespace molsys
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getNumberOfMolecules() const;
-        [[nodiscard]] size_t getNumberOfNeighbourCells() const;
-        [[nodiscard]] const linearAlgebra::Vec3D   &getLowerBoundary() const;
-        [[nodiscard]] const linearAlgebra::Vec3D   &getUpperBoundary() const;
-        [[nodiscard]] const linearAlgebra::Vec3Dul &getCellIndex() const;
+        [[nodiscard]] size_t                 getNumberOfMolecules() const;
+        [[nodiscard]] size_t                 getNumberOfNeighbourCells() const;
+        [[nodiscard]] const linalg::Vec3D   &getLowerBoundary() const;
+        [[nodiscard]] const linalg::Vec3D   &getUpperBoundary() const;
+        [[nodiscard]] const linalg::Vec3Dul &getCellIndex() const;
 
         [[nodiscard]] Molecule *getMolecule(size_t index) const
         {
@@ -108,9 +108,9 @@ namespace molsys
          * standard setter methods *
          ***************************/
 
-        void setLowerBoundary(const linearAlgebra::Vec3D &lowerBoundary);
-        void setUpperBoundary(const linearAlgebra::Vec3D &upperBoundary);
-        void setCellIndex(const linearAlgebra::Vec3Dul &cellIndex);
+        void setLowerBoundary(const linalg::Vec3D &lowerBoundary);
+        void setUpperBoundary(const linalg::Vec3D &upperBoundary);
+        void setCellIndex(const linalg::Vec3Dul &cellIndex);
     };
 
 }   // namespace molsys

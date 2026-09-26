@@ -22,7 +22,7 @@
 
 #include "steepestDescent.hpp"
 
-#include "optimizer.hpp"
+#include "simulationBox.hpp"
 
 using namespace opt;
 
@@ -32,16 +32,6 @@ using namespace opt;
  * @param nEpochs
  */
 SteepestDescent::SteepestDescent(size_t nEpochs) : Optimizer(nEpochs) {}
-
-/**
- * @brief clone the optimizer
- *
- * @return std::shared_ptr<Optimizer>
- */
-std::shared_ptr<Optimizer> SteepestDescent::clone() const
-{
-    return std::make_shared<SteepestDescent>(*this);
-}
 
 /**
  * @brief get the maximum history length
@@ -57,7 +47,7 @@ size_t SteepestDescent::maxHistoryLength() const { return _maxHistoryLength; }
  */
 void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
 {
-    const auto& atoms = _simulationBox->getAtoms();
+    const auto& atoms = _getSimulationBox().getAtoms();
 
     for (const auto& atom : atoms)
     {
@@ -65,7 +55,7 @@ void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
         const auto pos   = atom->getPosition();
 
         auto pos_new = pos + learningRate * force;
-        _simulationBox->applyPBC(pos_new);
+        _getSimulationBox().applyPBC(pos_new);
 
         atom->setPositionOld(pos);
         atom->setPosition(pos_new);

@@ -32,8 +32,7 @@
 
 using namespace physicalData;
 using namespace molsys;
-using namespace linearAlgebra;
-using namespace constants;
+using namespace linalg;
 
 /**
  * @brief get the virial tensor, either atomic or molecular depending on the
@@ -41,9 +40,9 @@ using namespace constants;
  *
  * @param virialType - the virial type to get the virial tensor for
  *
- * @return const linearAlgebra::tensor3D&
+ * @return const linalg::tensor3D&
  */
-const linearAlgebra::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
+const linalg::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
     settings::VirialType virialType
 ) const
 {
@@ -119,59 +118,59 @@ std::shared_ptr<PhysicalData> PhysicalData::clone() const
 /**
  * @brief copies one physicalData to another
  *
- * @param data - physicalData to copy from
+ * @param other - physicalData to copy from
  */
-void PhysicalData::copy(const PhysicalData& data)
+void PhysicalData::copy(const PhysicalData& other)
 {
     reset();
 
-    updateAverages(data);
+    updateAverages(other);
 }
 
 /**
  * @brief calculates the sum of all physicalData of last steps
  *
- * @param physicalData
+ * @param other - physicalData to update averages from
  */
-void PhysicalData::updateAverages(const PhysicalData& physicalData)
+void PhysicalData::updateAverages(const PhysicalData& other)
 {
-    _numberOfQMAtoms += physicalData.getNumberOfQMAtoms();
-    _loopTime        += physicalData.getLoopTime();
+    _numberOfQMAtoms += other.getNumberOfQMAtoms();
+    _loopTime        += other.getLoopTime();
 
-    _coulombEnergy         += physicalData.getCoulombEnergy();
-    _nonCoulombEnergy      += physicalData.getNonCoulombEnergy();
-    _intraCoulombEnergy    += physicalData.getIntraCoulombEnergy();
-    _intraNonCoulombEnergy += physicalData.getIntraNonCoulombEnergy();
+    _coulombEnergy         += other.getCoulombEnergy();
+    _nonCoulombEnergy      += other.getNonCoulombEnergy();
+    _intraCoulombEnergy    += other.getIntraCoulombEnergy();
+    _intraNonCoulombEnergy += other.getIntraNonCoulombEnergy();
 
-    _bondEnergy     += physicalData.getBondEnergy();
-    _angleEnergy    += physicalData.getAngleEnergy();
-    _dihedralEnergy += physicalData.getDihedralEnergy();
-    _improperEnergy += physicalData.getImproperEnergy();
+    _bondEnergy     += other.getBondEnergy();
+    _angleEnergy    += other.getAngleEnergy();
+    _dihedralEnergy += other.getDihedralEnergy();
+    _improperEnergy += other.getImproperEnergy();
 
-    _temperature     += physicalData.getTemperature();
-    _kineticEnergy   += physicalData.getKineticEnergy();
-    _volume          += physicalData.getVolume();
-    _density         += physicalData.getDensity();
-    _virial          += physicalData.getVirial();
-    _pressure        += physicalData.getPressure();
-    _coupledPressure += physicalData.getCoupledPressure();
+    _temperature     += other.getTemperature();
+    _kineticEnergy   += other.getKineticEnergy();
+    _volume          += other.getVolume();
+    _density         += other.getDensity();
+    _virial          += other.getVirial();
+    _pressure        += other.getPressure();
+    _coupledPressure += other.getCoupledPressure();
 
-    _qmEnergy += physicalData.getQMEnergy();
+    _qmEnergy += other.getQMEnergy();
 
-    _numberOfSmoothingMol += physicalData.getNumberOfSmoothingMolecules();
+    _numberOfSmoothingMol += other.getNumberOfSmoothingMolecules();
 
-    _momentum        += physicalData.getMomentum();
-    _angularMomentum += physicalData.getAngularMomentum();
+    _momentum        += other.getMomentum();
+    _angularMomentum += other.getAngularMomentum();
 
-    _noseHooverMomentumEnergy += physicalData.getNoseHooverMomentumEnergy();
-    _noseHooverFrictionEnergy += physicalData.getNoseHooverFrictionEnergy();
+    _noseHooverMomentumEnergy += other.getNoseHooverMomentumEnergy();
+    _noseHooverFrictionEnergy += other.getNoseHooverFrictionEnergy();
 
-    _lowerDistanceConstraints += physicalData.getLowerDistanceConstraints();
-    _upperDistanceConstraints += physicalData.getUpperDistanceConstraints();
+    _lowerDistanceConstraints += other.getLowerDistanceConstraints();
+    _upperDistanceConstraints += other.getUpperDistanceConstraints();
 
-    _ringPolymerEnergy += physicalData.getRingPolymerEnergy();
+    _ringPolymerEnergy += other.getRingPolymerEnergy();
 
-    const auto& kinEnergyVirialTensor = physicalData._kinEnergyVirialTensor;
+    const auto& kinEnergyVirialTensor = other._kinEnergyVirialTensor;
 
     _kinEnergyVirialTensor.atomic    += kinEnergyVirialTensor.atomic;
     _kinEnergyVirialTensor.molecular += kinEnergyVirialTensor.molecular;

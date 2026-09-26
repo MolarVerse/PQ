@@ -35,7 +35,7 @@
 #include "vector3d.hpp"
 
 using namespace settings;
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @brief tests writing info file

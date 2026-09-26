@@ -59,7 +59,7 @@ namespace constraints
 
         void initMShake();
         void initMShakeReferences();
-        void applyMShake(molsys::SimulationBox &simBox);
+        void applyMShake(molsys::SimulationBox &simulationBox);
         void applyMRattle(molsys::SimulationBox &);
 
         [[nodiscard]]

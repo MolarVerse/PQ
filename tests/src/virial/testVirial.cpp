@@ -26,7 +26,7 @@
 
 #include "virial.hpp"
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace physicalData;
 using namespace virial;
 

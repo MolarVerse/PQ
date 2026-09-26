@@ -28,7 +28,6 @@
 
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "logOutput.hpp"
-#include "stdoutOutput.hpp"
 
 namespace input
 {
@@ -41,18 +40,13 @@ namespace input
     class QMInputParser : public InputFileParser
     {
        private:
-        out::LogOutput    *_logOutput;
-        out::StdoutOutput *_stdoutOutput;
+        out::LogOutput *_logOutput;
 
         bool _resolveBuiltInSlakosPath;
 
        public:
-        explicit QMInputParser(
-            out::LogOutput &,
-            out::StdoutOutput &,
-            bool resolveBuiltInSlakosPath
-        );
-        explicit QMInputParser(out::LogOutput &, out::StdoutOutput &);
+        explicit QMInputParser(out::LogOutput &, bool resolveBuiltInSlakosPath);
+        explicit QMInputParser(out::LogOutput &);
 
         static void parseQMMethod(const std::vector<std::string> &, size_t);
         static void parseQMScript(const std::vector<std::string> &, size_t);

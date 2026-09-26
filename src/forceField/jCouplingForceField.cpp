@@ -22,7 +22,7 @@
 
 #include "jCouplingForceField.hpp"
 
-using namespace forceField;
+using namespace ff;
 using namespace connectivity;
 
 /**

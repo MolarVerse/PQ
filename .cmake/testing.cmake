@@ -1,15 +1,6 @@
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# Suppress project warning policy for googletest library
-set(_CMAKE_CXX_FLAGS_BACKUP "${CMAKE_CXX_FLAGS}")
-foreach(flag IN ITEMS "-Wdouble-promotion" "-Wswitch-enum" "-Werror=switch-enum")
-    string(REPLACE "${flag}" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-endforeach()
-
 add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
-
-# Restore original flags
-set(CMAKE_CXX_FLAGS "${_CMAKE_CXX_FLAGS_BACKUP}")
 
 enable_testing()
 option(INSTALL_GMOCK "install Googletest's GMock?" OFF)

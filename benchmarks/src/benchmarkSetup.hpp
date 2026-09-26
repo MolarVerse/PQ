@@ -50,8 +50,8 @@ namespace benchmarkSetup
             {
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
-                    auto atom = std::make_shared<molsys::Atom>();
-                    const linearAlgebra::Vec3D position{
+                    auto                atom = std::make_shared<molsys::Atom>();
+                    const linalg::Vec3D position{
                         (-boxEdge / 2.0) +
                             ((static_cast<double>(x) + 0.5) * cellEdge),
                         (-boxEdge / 2.0) +

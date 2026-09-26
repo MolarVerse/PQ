@@ -31,8 +31,11 @@ jobs:
               - 'tests/**'
               - 'benchmarks/CMakeLists.txt'
               - 'benchmarks/src/**'
+              - 'benchmarks/perf/**'
               - 'CMakeLists.txt'
               - '.clang-tidy'
+              - 'tests/.clang-tidy'
+              - 'benchmarks/.clang-tidy'
               - 'scripts/clang_tidy.sh'
               - '.github/workflows/lint.yml'
 
@@ -43,6 +46,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history so the base and head commits of the PR (or the
+          # previous commit on a push) are both present for the changed-file
+          # diff below.
+          fetch-depth: 0
 
       - name: Install build tools
         run: |
@@ -50,6 +58,11 @@ jobs:
           sudo apt install -y gcc-13 g++-13 mold ninja-build clangd-20
           sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
         shell: bash
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: lint
 
       - name: Setup python
         uses: actions/setup-python@v3
@@ -65,19 +78,50 @@ jobs:
         run: python -m pip install clangd-tidy
         shell: bash
 
-      - name: Configure (generate compile_commands.json)
+      - name: Configure and build (generate compile_commands.json)
         run: |
+          # Enable tests and both benchmark suites so their sources are part
+          # of the compile database and actually compile with their deps
+          # (googletest, google benchmark, the perf harness) — otherwise
+          # clangd-tidy has no compile command for a changed tests/ or
+          # benchmarks/ file and silently can't check it (issue #620).
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DBUILD_WITH_NATIVE=Off
+            -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_TESTS=On \
+            -DBUILD_WITH_BENCHMARKING=On \
+            -DBUILD_WITH_PERF_BENCH=On \
+            -DBUILD_WITH_DOCS=Off
+
+          # Best-effort build: this step only needs compile_commands.json to
+          # resolve real headers for clangd-tidy to re-parse (fetched deps
+          # like Eigen/googletest/google-benchmark, and any generated
+          # headers), not a fully successful build — ci_build.yml is the
+          # authoritative "the whole project builds warning-free" gate. Debug
+          # + -Werror is known to occasionally hit a GCC/Eigen
+          # -Wmaybe-uninitialized false positive inside inlined SSE
+          # intrinsics (e.g. src/constraints/mShake.cpp via Eigen's
+          # InnerProduct.h) unrelated to whatever this PR touches, so don't
+          # let that fail this job. `-k 0` keeps Ninja building past
+          # failures instead of stopping at the first one, to maximize how
+          # much of the compile database has real build output behind it.
+          cmake --build build --parallel "$(nproc)" -- -k 0 || \
+            echo "::warning::Full project build had errors (see log) — continuing, since this job only needs a usable compile_commands.json and ci_build.yml is the build/warnings gate."
         env:
           CC: gcc-13
           CXX: g++-13
 
-      - name: Run clangd-tidy
+      - name: Run clangd-tidy on changed files
         run: |
-          clangd-tidy --fail-on-severity=hint $(find src/ apps/ include/ -name "*.cpp" -o -name "*.hpp" -o -name "*.tpp" 2>/dev/null) -p=build
+          base_sha="${{ github.event.pull_request.base.sha }}"
+          head_sha="${{ github.event.pull_request.head.sha }}"
+          if [[ -z "$base_sha" ]]; then
+            base_sha="HEAD^"
+            head_sha="HEAD"
+          fi
+
+          scripts/clang_tidy.sh --base "$base_sha" --head "$head_sha" -p build
 
   lint-gate:
     if: always()

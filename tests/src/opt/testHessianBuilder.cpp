@@ -129,14 +129,8 @@ namespace
 
     void expectPositionsRestored(SimulationBox &box)
     {
-        EXPECT_EQ(
-            box.getAtom(0).getPosition(),
-            linearAlgebra::Vec3D(1.0, -2.0, 3.0)
-        );
-        EXPECT_EQ(
-            box.getAtom(1).getPosition(),
-            linearAlgebra::Vec3D(-4.0, 5.0, -6.0)
-        );
+        EXPECT_EQ(box.getAtom(0).getPosition(), linalg::Vec3D(1.0, -2.0, 3.0));
+        EXPECT_EQ(box.getAtom(1).getPosition(), linalg::Vec3D(-4.0, 5.0, -6.0));
     }
 }   // namespace
 
@@ -165,14 +159,8 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
 
         expectDiagonalHessian(hessian, diagonal);
         expectPositionsRestored(*box);
-        EXPECT_EQ(
-            box->getAtom(0).getForce(),
-            linearAlgebra::Vec3D(-1.0, 4.0, -9.0)
-        );
-        EXPECT_EQ(
-            box->getAtom(1).getForce(),
-            linearAlgebra::Vec3D(16.0, -25.0, 36.0)
-        );
+        EXPECT_EQ(box->getAtom(0).getForce(), linalg::Vec3D(-1.0, 4.0, -9.0));
+        EXPECT_EQ(box->getAtom(1).getForce(), linalg::Vec3D(16.0, -25.0, 36.0));
     }
 }
 

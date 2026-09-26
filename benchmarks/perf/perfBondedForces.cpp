@@ -60,7 +60,7 @@ int main()
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
 
-    auto bond = forceField::BondForceField(
+    auto bond = ff::BondForceField(
         &molecule,
         &molecule,
         AtomIndex{0},
@@ -69,7 +69,7 @@ int main()
     );
     bond.setParams(BondParams{.equilibrium = 1.2, .forceConstant = 3.0});
 
-    auto angle = forceField::AngleForceField(
+    auto angle = ff::AngleForceField(
         {&molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
@@ -78,7 +78,7 @@ int main()
         AngleParams{.equilibrium = M_PI / 2.0, .forceConstant = 3.0}
     );
 
-    auto dihedral = forceField::DihedralForceField(
+    auto dihedral = ff::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}

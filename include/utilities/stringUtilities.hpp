@@ -55,7 +55,6 @@ namespace utilities
     int                stringToInt(const std::string &);
     double             stringToFiniteDouble(const std::string &);
 
-    bool fileExists(const std::string &);
     bool keywordToBool(const std::vector<std::string> &);
 
 }   // namespace utilities

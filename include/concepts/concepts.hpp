@@ -21,7 +21,6 @@
 ******************************************************************************/
 
 #ifndef _CONCEPTS_HPP_
-
 #define _CONCEPTS_HPP_
 
 #include "base.hpp"        // IWYU pragma: export

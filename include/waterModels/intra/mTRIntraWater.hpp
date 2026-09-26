@@ -32,7 +32,7 @@ namespace waterModel
     {
        public:
         void calculate(
-            molsys::SimulationBox      &simBox,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
         ) final;
 
@@ -116,9 +116,5 @@ namespace waterModel
     };
 
 }   // namespace waterModel
-
-#ifndef _MTR_INTRA_WATER_TPP_
-#include "mTRIntraWater.tpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
-#endif
 
 #endif   //  _MTR_INTRA_WATER_HPP_

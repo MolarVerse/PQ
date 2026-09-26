@@ -24,8 +24,6 @@
 
 #define _CONSTRAINTS_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "inputFileParser.hpp"   // for InputFileParser
 
 namespace constraints
@@ -51,35 +49,14 @@ namespace input
             std::shared_ptr<constraints::Constraints> constraints
         );
 
-        void parseShakeActivated(const std::vector<std::string> &, size_t);
-        static void parseShakeTolerance(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseShakeIteration(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseRattleTolerance(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseRattleIteration(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseMShakeTolerance(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseMShakeIteration(
-            const std::vector<std::string> &,
-            size_t
-        );
-        void parseDistanceConstraintActivated(
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addShakeActivatedKeyword();
+        void addShakeToleranceKeyword();
+        void addShakeIterationKeyword();
+        void addRattleToleranceKeyword();
+        void addRattleIterationKeyword();
+        void addMShakeToleranceKeyword();
+        void addMShakeIterationKeyword();
+        void addDistanceConstraintActivatedKeyword();
     };
 
 }   // namespace input

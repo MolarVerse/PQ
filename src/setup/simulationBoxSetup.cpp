@@ -51,7 +51,7 @@ using setup::molsys::SimulationBoxSetup;
 using namespace engine;
 using namespace settings;
 using namespace utilities;
-using namespace constants;
+
 using namespace exc;
 using namespace maxwellBoltzmann;
 using namespace out;

@@ -38,7 +38,7 @@
 
 using namespace molsys;
 using namespace settings;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace exc;
 
 /**
@@ -314,10 +314,12 @@ void CellList::assignMoleculeHybridZoneIndices()
 
 /**
  * @brief Assign water molecule indices for all cells.
+ *
+ * @param simulationBox simulation box containing molecules
  */
-void CellList::assignWaterMoleculeIndices(SimulationBox &simBox)
+void CellList::assignWaterMoleculeIndices(SimulationBox &simulationBox)
 {
-    for (auto &cell : _cells) cell.assignWaterMoleculeIndices(simBox);
+    for (auto &cell : _cells) cell.assignWaterMoleculeIndices(simulationBox);
 }
 
 /**

@@ -54,12 +54,12 @@ class TestTrajectoryOutput : public ::testing::Test
         const auto atom1 = std::make_shared<molsys::Atom>();
         const auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linearAlgebra::Vec3D(2.0, 3.0, 4.0));
-        atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(3.0, 4.0, 5.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
+        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
         atom1->setName("H");
         atom2->setName("O");
         atom1->setPartialCharge(1.0);
@@ -72,9 +72,9 @@ class TestTrajectoryOutput : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         atom3->setName("Ar");
         atom3->setPartialCharge(0.0);
         molecule2.setMoltype(MolType{2});

@@ -34,7 +34,7 @@
 using namespace input::topology;
 using namespace exc;
 using namespace engine;
-using namespace forceField;
+using namespace ff;
 
 /**
  * @brief processes the j-coupling section of the topology file

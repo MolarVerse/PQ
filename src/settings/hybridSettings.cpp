@@ -22,6 +22,7 @@
 
 #include "hybridSettings.hpp"
 
+#include <cstddef>
 #include <utility>
 #include <vector>
 
@@ -60,7 +61,7 @@ std::string settings::string(SmoothingMethod method)
  * @param innerRegionCenter
  */
 void HybridSettings::setInnerRegionCenter(
-    const std::vector<int> &innerRegionCenter
+    const std::vector<size_t> &innerRegionCenter
 )
 {
     _innerRegionCenter = innerRegionCenter;
@@ -185,9 +186,9 @@ void HybridSettings::setQMForceDist(QMForceDist method)
 /**
  * @brief get the innerRegionCenter as list of int
  *
- * @return vector<int>
+ * @return std::optional<std::vector<size_t>>
  */
-std::optional<std::vector<int>> HybridSettings::getInnerRegionCenter()
+std::optional<std::vector<size_t>> HybridSettings::getInnerRegionCenter()
 {
     return _innerRegionCenter;
 }

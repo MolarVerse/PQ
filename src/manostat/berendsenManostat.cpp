@@ -31,7 +31,7 @@
 #include "simulationBox.hpp"      // for SimulationBox
 #include "timingsSettings.hpp"    // for TimingsSettings
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace settings;
 using namespace manostat;
 using namespace exc;
@@ -87,38 +87,38 @@ SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
 /**
  * @brief apply Berendsen manostat for NPT ensemble
  *
- * @param simBox
+ * @param simulationBox
  * @param physicalData
  */
 void BerendsenManostat::applyManostat(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
 
-    calculatePressure(simBox, physicalData);
+    calculatePressure(simulationBox, physicalData);
 
     const auto mu = calculateMu();
 
     // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
     // every position into the resized box.
-    auto reconstructMolecule = [&simBox](auto &molecule)
-    { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
+    auto reconstructMolecule = [&simulationBox](auto &molecule)
+    { molecule.reconstructAtomsAroundCenterOfMass(simulationBox.getBox()); };
 
-    std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
+    std::ranges::for_each(simulationBox.getMolecules(), reconstructMolecule);
 
-    simBox.scaleBox(mu);
+    simulationBox.scaleBox(mu);
 
-    physicalData.setVolume(simBox.getVolume());
-    physicalData.setDensity(simBox.getDensity());
+    physicalData.setVolume(simulationBox.getVolume());
+    physicalData.setDensity(simulationBox.getDensity());
 
-    simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
+    simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
-    auto scaleMolecule = [&mu, &simBox](auto &molecule)
-    { molecule.scale(mu, simBox.getBox()); };
+    auto scaleMolecule = [&mu, &simulationBox](auto &molecule)
+    { molecule.scale(mu, simulationBox.getBox()); };
 
-    std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
+    std::ranges::for_each(simulationBox.getMolecules(), scaleMolecule);
 }
 
 /**
@@ -195,7 +195,7 @@ tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
                              ? 1.0
                              : (1.0 - (preFactor * (_targetPressure - p_z)));
 
-    linearAlgebra::Vec3D mu;
+    linalg::Vec3D mu;
 
     mu[_2DIsotropicAxes[0]] = mu_xy;
     mu[_2DIsotropicAxes[1]] = mu_xy;

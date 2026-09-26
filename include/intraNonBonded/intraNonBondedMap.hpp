@@ -46,13 +46,13 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
-namespace linearAlgebra
+namespace linalg
 {
     template <typename T>
     class Vector3D;   // forward declaration
 
     using Vec3D = Vector3D<double>;
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 namespace intraNonBonded
 {
@@ -83,9 +83,9 @@ namespace intraNonBonded
 
         [[nodiscard]]
         std::pair<double, double> calculateSingleInteraction(
-            AtomIndex                   atomIdx1,
-            int                         atomIdx2,
-            const linearAlgebra::Vec3D &box,
+            AtomIndex            atomIdx1,
+            int                  atomIdx2,
+            const linalg::Vec3D &box,
             physicalData::PhysicalData & /*data*/,
             const pot::CoulombPotential *coulPot,
             pot::NonCoulombPotential    *nonCoulPot

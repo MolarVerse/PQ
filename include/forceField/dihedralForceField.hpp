@@ -46,7 +46,7 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
-namespace forceField
+namespace ff
 {
     /**
      * @class DihedralForceField
@@ -70,8 +70,8 @@ namespace forceField
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox &simBox,
-            physicalData::PhysicalData  &data,
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData,
             bool                         isImproperDihedral,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot
@@ -94,6 +94,6 @@ namespace forceField
         [[nodiscard]] const DihedralParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _DIHEDRAL_FORCE_FIELD_HPP_

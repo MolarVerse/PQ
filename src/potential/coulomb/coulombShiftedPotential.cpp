@@ -38,9 +38,9 @@ namespace pot
         double chargeProduct
     ) const
     {
-        const auto prefactor   = chargeProduct * constants::COULOMB_PREFACTOR;
-        const auto dInv        = 1 / distance;
-        const auto deltaCutOff = _coulombRadiusCutOff - distance;
+        const auto prefactor           = chargeProduct * COULOMB_PREFACTOR;
+        const auto dInv                = 1 / distance;
+        const auto deltaCutOff         = _coulombRadiusCutOff - distance;
         const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
 
         auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;

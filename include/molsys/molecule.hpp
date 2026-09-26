@@ -83,7 +83,7 @@ namespace molsys
         // 0 (neutral) as default when molecule has no moltype
         int _charge = 0;
 
-        linearAlgebra::Vec3D _centerOfMass{0.0, 0.0, 0.0};
+        linalg::Vec3D _centerOfMass{0.0, 0.0, 0.0};
 
         std::vector<std::shared_ptr<Atom>> _atoms;
 
@@ -103,8 +103,8 @@ namespace molsys
 
         void calculateCenterOfMass(const Box &);
         void reconstructAtomsAroundCenterOfMass(const Box &);
-        void scale(const linearAlgebra::tensor3D &, const Box &);
-        void scaleVelocity(const linearAlgebra::tensor3D &, const Box &);
+        void scale(const linalg::tensor3D &, const Box &);
+        void scaleVelocity(const linalg::tensor3D &, const Box &);
 
         [[nodiscard]] size_t                  getNumberOfAtomTypes();
         [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
@@ -125,57 +125,40 @@ namespace molsys
          *****************************************/
 
         void addAtom(const std::shared_ptr<Atom> &atom);
-        void addAtomPosition(
-            AtomIndex                   index,
-            const linearAlgebra::Vec3D &position
-        );
-        void addAtomVelocity(
-            AtomIndex                   index,
-            const linearAlgebra::Vec3D &velocity
-        );
-        void addAtomForce(AtomIndex index, const linearAlgebra::Vec3D &force);
+        void addAtomPosition(AtomIndex index, const linalg::Vec3D &position);
+        void addAtomVelocity(AtomIndex index, const linalg::Vec3D &velocity);
+        void addAtomForce(AtomIndex index, const linalg::Vec3D &force);
         void addAtomShiftForce(
-            AtomIndex                   index,
-            const linearAlgebra::Vec3D &shiftForce
+            AtomIndex            index,
+            const linalg::Vec3D &shiftForce
         );
 
         /*****************************************
          * standard setter methods for atom data *
          ****************************************/
 
-        void setAtomPosition(
-            size_t                      index,
-            const linearAlgebra::Vec3D &position
-        );
-        void setAtomVelocity(
-            size_t                      index,
-            const linearAlgebra::Vec3D &velocity
-        );
-        void setAtomForce(size_t index, const linearAlgebra::Vec3D &force);
-        void setAtomShiftForce(
-            size_t                      index,
-            const linearAlgebra::Vec3D &shiftForce
-        );
+        void setAtomPosition(size_t index, const linalg::Vec3D &position);
+        void setAtomVelocity(size_t index, const linalg::Vec3D &velocity);
+        void setAtomForce(size_t index, const linalg::Vec3D &force);
+        void setAtomShiftForce(size_t index, const linalg::Vec3D &shiftForce);
 
         /****************************************
          * standard getters for atom properties *
          *****************************************/
 
         [[nodiscard]]
-        linearAlgebra::Vec3D getAtomPosition(AtomIndex index) const;
+        linalg::Vec3D getAtomPosition(AtomIndex index) const;
 
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getAtomPositions() const;
+        std::vector<linalg::Vec3D> getAtomPositions() const;
 
         [[nodiscard]]
-        linearAlgebra::Vec3D getAtomVelocity(AtomIndex index) const;
+        linalg::Vec3D getAtomVelocity(AtomIndex index) const;
 
         [[nodiscard]]
-        linearAlgebra::Vec3D getAtomForce(AtomIndex) const;
+        linalg::Vec3D getAtomForce(AtomIndex) const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(
-            size_t index
-        ) const;
+        [[nodiscard]] linalg::Vec3D getAtomShiftForce(size_t index) const;
 
         [[nodiscard]] AtomNumber  getAtomicNumber(size_t index) const;
         [[nodiscard]] double      getAtomMass(AtomIndex index) const;
@@ -196,10 +179,10 @@ namespace molsys
         [[nodiscard]] int         getCharge() const;
         [[nodiscard]] std::string getName() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const;
-        [[nodiscard]] HybridZone           getHybridZone() const;
-        [[nodiscard]] bool   isActive() const { return _isActive; }
-        [[nodiscard]] double getSmoothingFactor() const;
+        [[nodiscard]] linalg::Vec3D getCenterOfMass() const;
+        [[nodiscard]] HybridZone    getHybridZone() const;
+        [[nodiscard]] bool          isActive() const { return _isActive; }
+        [[nodiscard]] double        getSmoothingFactor() const;
 
         [[nodiscard]] Atom &getAtom(AtomIndex index);
         [[nodiscard]] std::vector<std::shared_ptr<Atom>>       &getAtoms();
@@ -218,7 +201,7 @@ namespace molsys
         void setMoltype(MolType moltype);
 
         void setCharge(int charge);
-        void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass);
+        void setCenterOfMass(const linalg::Vec3D &centerOfMass);
         void setHybridZone(HybridZone hybridZone);
         void setSmoothingFactor(double factor);
 

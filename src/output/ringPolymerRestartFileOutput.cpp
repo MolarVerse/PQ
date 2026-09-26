@@ -39,7 +39,7 @@ namespace out
      * @param beads
      */
     void RingPolymerRestartFileOutput::write(
-        std::vector<molsys::SimulationBox> &beads
+        const std::vector<molsys::SimulationBox> &beads
     )
     {
         std::ostringstream buffer;

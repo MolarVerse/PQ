@@ -25,7 +25,7 @@
 // for Message, TestPartResult
 #include "matrix.hpp"   // for Matrix, linearAlgebra
 
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @brief tests constructors for Matrix

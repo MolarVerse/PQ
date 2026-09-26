@@ -27,8 +27,8 @@
 
 namespace
 {
-    using linearAlgebra::StaticMatrix3x3;
-    using linearAlgebra::Vec3D;
+    using linalg::StaticMatrix3x3;
+    using linalg::Vec3D;
 
     void BM_VectorArithmetic(benchmark::State& state)
     {

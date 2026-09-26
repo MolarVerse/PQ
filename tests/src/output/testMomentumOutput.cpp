@@ -30,7 +30,7 @@
 #include "testEnergyOutput.hpp"   // for TestEnergyOutput
 #include "vector3d.hpp"
 
-using namespace linearAlgebra;
+using namespace linalg;
 
 /**
  * @brief tests writing momentum output file

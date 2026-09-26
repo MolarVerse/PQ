@@ -122,8 +122,8 @@ ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
  * @param positions
  */
 void ForceDifferenceHessianBuilder::restorePositions(
-    molsys::SimulationBox                   &simulationBox,
-    const std::vector<linearAlgebra::Vec3D> &positions
+    molsys::SimulationBox            &simulationBox,
+    const std::vector<linalg::Vec3D> &positions
 )
 {
     for (size_t atomIndex = 0; atomIndex < positions.size(); ++atomIndex)

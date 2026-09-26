@@ -28,7 +28,7 @@
 
 #include "staticMatrix3x3.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     /**
      * @brief ostream operator for StaticMatrix3x3
@@ -521,6 +521,6 @@ namespace linearAlgebra
 
         return result;
     }
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #endif   // _STATIC_MATRIX_3X3_TPP_

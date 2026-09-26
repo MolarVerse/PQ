@@ -92,7 +92,7 @@ void OptEngine::run()
     timings::GlobalTimer::get().stopSimulationTimer();
 
     const auto elapsedTime =
-        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
+        timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
     _engineOutput.writeTimingsFile();
 

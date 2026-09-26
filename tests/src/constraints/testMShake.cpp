@@ -37,7 +37,7 @@
 #include "timingsSettings.hpp"
 
 using namespace constraints;
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace molsys;
 
 /**

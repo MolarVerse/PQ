@@ -41,7 +41,7 @@ using enum molsys::Periodicity;
 using QM::AseQMRunner;
 using namespace molsys;
 using namespace physicalData;
-using namespace constants;
+
 using namespace settings;
 
 using array_d = pybind11::array_t<double>;
@@ -51,17 +51,18 @@ namespace
     /**
      * @brief get the positions of the atoms in the ASE Atoms object
      *
-     * @param simBox
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
      *
      * @return py::array
      *
      * @throw py::error_already_set if the construction of the array fails
      */
     [[nodiscard]]
-    pybind11::array asePositions(const SimulationBox &simBox)
+    pybind11::array asePositions(const SimulationBox &simulationBox)
     {
-        const auto nAtoms = simBox.getNumberOfQMAtoms();
-        const auto pos    = simBox.getFlattenedQMPositions();
+        const auto nAtoms = simulationBox.getNumberOfQMAtoms();
+        const auto pos    = simulationBox.getFlattenedQMPositions();
 
         const auto shape      = std::vector<size_t>{nAtoms, 3};
         const auto sizeDouble = sizeof(double);
@@ -96,17 +97,18 @@ namespace
     /**
      * @brief get the cell of the ASE Atoms object
      *
-     * @param simBox
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
      *
      * @return pybind11::array_t<double>
      *
      * @throw pybind11::error_already_set if the construction of the array fails
      */
     [[nodiscard]]
-    pybind11::array_t<double> aseCell(const SimulationBox &simBox)
+    pybind11::array_t<double> aseCell(const SimulationBox &simulationBox)
     {
-        const auto boxDimension = simBox.getBoxDimensions();
-        const auto boxAngles    = simBox.getBoxAngles();
+        const auto boxDimension = simulationBox.getBoxDimensions();
+        const auto boxAngles    = simulationBox.getBoxAngles();
 
         constexpr auto                   boxArraySize = 6;
         std::array<double, boxArraySize> box_array    = {
@@ -169,17 +171,18 @@ namespace
     /**
      * @brief get the atomic numbers of the atoms in the ASE Atoms object
      *
-     * @param simBox
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
      *
      * @return pybind11::array_t<int>
      *
      * @throw pybind11::error_already_set if the construction of the array fails
      */
     [[nodiscard]]
-    pybind11::array_t<int> aseAtomicNumbers(const SimulationBox &simBox)
+    pybind11::array_t<int> aseAtomicNumbers(const SimulationBox &simulationBox)
     {
-        const auto atomicNumbers = simBox.getAtomicNumbers();
-        const auto nAtoms        = simBox.getNumberOfAtoms();
+        const auto atomicNumbers = simulationBox.getAtomicNumbers();
+        const auto nAtoms        = simulationBox.getNumberOfAtoms();
 
         std::vector<int> atomicNumbersInt;
         atomicNumbersInt.reserve(nAtoms);
@@ -255,14 +258,14 @@ AseQMRunner::~AseQMRunner() = default;
 /**
  * @brief run the ASE QM calculation
  *
- * @param simBox
+ * @param simulationBox the simulation box to apply periodic boundary conditions
  * @param physicalData
- * @param per
+ * @param per the periodicity to apply to the simulation box
  *
  * @throw QMRunnerException if the calculation takes too long
  */
 void AseQMRunner::run(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData,
     Periodicity    per
 )
@@ -274,7 +277,7 @@ void AseQMRunner::run(
 
     {
         auto _ = scopedTimer(TimerId::QMEngine, "Build ASE Atoms");
-        buildAseAtoms(simBox);
+        buildAseAtoms(simulationBox);
     }
 
     {
@@ -284,7 +287,7 @@ void AseQMRunner::run(
 
     {
         auto _ = scopedTimer(TimerId::QMEngine, "Collect ASE Data");
-        collectData(simBox, physicalData);
+        collectData(simulationBox, physicalData);
     }
 
     timeoutThread.request_stop();
@@ -321,29 +324,29 @@ void AseQMRunner::execute()
 /**
  * @brief collect the data from the ASE QM calculation
  *
- * @param simBox
+ * @param simulationBox the simulation box to apply periodic boundary conditions
  * @param physicalData
  */
 void AseQMRunner::collectData(
-    SimulationBox &simBox,
+    SimulationBox &simulationBox,
     PhysicalData  &physicalData
 ) const
 {
-    collectForces(simBox);
+    collectForces(simulationBox);
     collectEnergy(physicalData);
-    collectStress(simBox, physicalData);
+    collectStress(simulationBox, physicalData);
 }
 
 /**
  * @brief collect the forces from the ASE QM calculation
  *
- * @param simBox
+ * @param simulationBox the simulation box to apply periodic boundary conditions
  *
  * @throw pybind11::error_already_set if the collection of the forces fails
  */
-void AseQMRunner::collectForces(SimulationBox &simBox) const
+void AseQMRunner::collectForces(SimulationBox &simulationBox) const
 {
-    const auto nAtoms = simBox.getNumberOfAtoms();
+    const auto nAtoms = simulationBox.getNumberOfAtoms();
 
     try
     {
@@ -351,7 +354,7 @@ void AseQMRunner::collectForces(SimulationBox &simBox) const
 
         for (size_t i = 0; i < nAtoms; ++i)
         {
-            simBox.getAtoms()[i]->setForce(
+            simulationBox.getAtoms()[i]->setForce(
                 {forces(i, 0) * EV_TO_KCAL_PER_MOL,
                  forces(i, 1) * EV_TO_KCAL_PER_MOL,
                  forces(i, 2) * EV_TO_KCAL_PER_MOL}
@@ -365,7 +368,7 @@ void AseQMRunner::collectForces(SimulationBox &simBox) const
     }
 
     if (QMSettings::getRemoveNetForce())
-        simBox.removeNetForce();
+        simulationBox.removeNetForce();
 }
 
 /**
@@ -381,17 +384,17 @@ void AseQMRunner::collectEnergy(PhysicalData &physicalData) const
 /**
  * @brief collect the stress from the ASE QM calculation
  *
- * @param simBox
- * @param data
+ * @param simulationBox the simulation box to apply periodic boundary conditions
+ * @param physicalData
  *
  * @throw pybind11::error_already_set if the collection of the stress fails
  */
 void AseQMRunner::collectStress(
-    const SimulationBox &simBox,
-    PhysicalData        &data
+    const SimulationBox &simulationBox,
+    PhysicalData        &physicalData
 ) const
 {
-    linearAlgebra::tensor3D stress_;
+    linalg::tensor3D stress_;
 
     try
     {
@@ -408,28 +411,28 @@ void AseQMRunner::collectStress(
 
     stress_ = stress_ * EV_TO_KCAL_PER_MOL;
 
-    const auto virial = stress_ * simBox.getVolume();
+    const auto virial = stress_ * simulationBox.getVolume();
 
-    data.setStressTensor(stress_);
-    data.addVirial(virial);
+    physicalData.setStressTensor(stress_);
+    physicalData.addVirial(virial);
 }
 
 /**
  * @brief build the ASE Atoms object
  *
- * @param simBox
+ * @param simulationBox the simulation box to apply periodic boundary conditions
  *
  * @throw pybind11::error_already_set if the construction of the Atoms object
  * fails
  */
-void AseQMRunner::buildAseAtoms(const SimulationBox &simBox)
+void AseQMRunner::buildAseAtoms(const SimulationBox &simulationBox)
 {
     try
     {
-        const auto positions     = asePositions(simBox);
-        const auto cell          = aseCell(simBox);
+        const auto positions     = asePositions(simulationBox);
+        const auto cell          = aseCell(simulationBox);
         const auto pbc           = asePBC(_periodicity);
-        const auto atomicNumbers = aseAtomicNumbers(simBox);
+        const auto atomicNumbers = aseAtomicNumbers(simulationBox);
 
         _ase->atoms = _ase->atomsModule.attr("Atoms")(
             pybind11::arg("positions") = positions,

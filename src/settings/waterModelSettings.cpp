@@ -23,6 +23,7 @@
 #include "waterModelSettings.hpp"
 
 #include <format>
+#include <utility>
 
 #include "exceptions.hpp"        // for customException
 #include "stringUtilities.hpp"   // for toLowerCopy
@@ -213,6 +214,8 @@ std::string settings::string(const WaterIntraModel &waterIntraModel)
         case TIP3P_MTR: return "TIP3P-mTR";
         case NONE: return "none";
     }
+
+    std::unreachable();
 }
 
 /**
@@ -242,4 +245,6 @@ std::string settings::string(const WaterInterModel &waterInterModel)
         case TIP3P_MTR: return "TIP3P-mTR";
         case NONE: return "none";
     }
+
+    std::unreachable();
 }

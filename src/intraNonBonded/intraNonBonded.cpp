@@ -77,9 +77,9 @@ IntraNonBondedContainer *IntraNonBonded::findIntraNonBondedContainerByMolType(
 /**
  * @brief fill the _intraNonBondedMaps vector with IntraNonBondedMap objects
  *
- * @param box
+ * @param simulationBox Simulation box containing molecules.
  */
-void IntraNonBonded::fillIntraNonBondedMaps(SimulationBox &box)
+void IntraNonBonded::fillIntraNonBondedMaps(SimulationBox &simulationBox)
 {
     auto fillSingleMap = [this](auto &molecule)
     {
@@ -93,28 +93,29 @@ void IntraNonBonded::fillIntraNonBondedMaps(SimulationBox &box)
         );
     };
 
-    std::ranges::for_each(box.getMolecules(), fillSingleMap);
+    std::ranges::for_each(simulationBox.getMolecules(), fillSingleMap);
 }
 
 /**
  * @brief calculate the intra non bonded interactions for each intraNonBondedMap
  *
- * @param box
+ * @param simulationBox Simulation box containing molecules.
  * @param physicalData
  */
 void IntraNonBonded::calculate(
-    const SimulationBox &box,
+    const SimulationBox &simulationBox,
     PhysicalData        &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::IntraNonBonded, "IntraNonBonded");
 
-    auto calculateSingleContr = [this, &box, &physicalData](auto &intraMap)
+    auto calculateSingleContr =
+        [this, &simulationBox, &physicalData](auto &intraMap)
     {
         intraMap.calculate(
             _coulombPotential.get(),
             _nonCoulombPot.get(),
-            box,
+            simulationBox,
             physicalData
         );
     };

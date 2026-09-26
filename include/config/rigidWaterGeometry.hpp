@@ -24,26 +24,22 @@
 
 #define _RIGID_WATER_GEOMETRY_HPP_
 
-namespace constants
-{
-    static constexpr double SPC_OH_DIST = 1.0;           // Angström
-    static constexpr double SPC_HH_DIST = 1.632993162;   // Angström
+static constexpr double SPC_OH_DIST = 1.0;           // Angström
+static constexpr double SPC_HH_DIST = 1.632993162;   // Angström
 
-    static constexpr double SPC_E_OH_DIST = SPC_OH_DIST;   // Angström
-    static constexpr double SPC_E_HH_DIST = SPC_HH_DIST;   // Angström
+static constexpr double SPC_E_OH_DIST = SPC_OH_DIST;   // Angström
+static constexpr double SPC_E_HH_DIST = SPC_HH_DIST;   // Angström
 
-    static constexpr double SPC_DC_OH_DIST = SPC_OH_DIST;   // Angström
-    static constexpr double SPC_DC_HH_DIST = SPC_HH_DIST;   // Angström
+static constexpr double SPC_DC_OH_DIST = SPC_OH_DIST;   // Angström
+static constexpr double SPC_DC_HH_DIST = SPC_HH_DIST;   // Angström
 
-    static constexpr double H2O_DC_OH_DIST = 0.958;     // Angström
-    static constexpr double H2O_DC_HH_DIST = 1.56441;   // Angström
+static constexpr double H2O_DC_OH_DIST = 0.958;     // Angström
+static constexpr double H2O_DC_HH_DIST = 1.56441;   // Angström
 
-    static constexpr double TIP3P_OH_DIST = 0.9572;   // Angström
-    static constexpr double TIP3P_HH_DIST = 1.5139;   // Angström
+static constexpr double TIP3P_OH_DIST = 0.9572;   // Angström
+static constexpr double TIP3P_HH_DIST = 1.5139;   // Angström
 
-    static constexpr double OPC3_OH_DIST = 0.97888;       // Angström
-    static constexpr double OPC3_HH_DIST = 1.598492306;   // Angström
-
-}   // namespace constants
+static constexpr double OPC3_OH_DIST = 0.97888;       // Angström
+static constexpr double OPC3_HH_DIST = 1.598492306;   // Angström
 
 #endif   // _RIGID_WATER_GEOMETRY_HPP_

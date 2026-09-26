@@ -22,25 +22,25 @@
 
 #include "QMInputParser.hpp"
 
-#include <format>          // for format
-#include <sstream>         // for stringstream
-#include <stdexcept>       // for invalid_argument, out_of_range
-#include <unordered_map>   // for unordered_map
+#include <format>
+#include <sstream>
+#include <stdexcept>
+#include <unordered_map>
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "hubbardDerivMap.hpp"   // for hubbardDerivMap3ob
+#include "exceptions.hpp"
+#include "hubbardDerivMap.hpp"
 #include "parserUtils.hpp"
-#include "qmSettings.hpp"         // for Settings
-#include "references.hpp"         // for ReferencesOutput
-#include "referencesOutput.hpp"   // for ReferencesOutput
-#include "stringUtilities.hpp"    // for toLowerCopy
+#include "qmSettings.hpp"
+#include "references.hpp"
+#include "referencesOutput.hpp"
+#include "stdoutOutput.hpp"
+#include "stringUtilities.hpp"
 
 using namespace input;
 using namespace utilities;
 using namespace settings;
 using namespace exc;
 using namespace references;
-using namespace constants;
 
 /**
  * @brief Construct a new QMInputParser:: QMInputParser object
@@ -50,13 +50,9 @@ using namespace constants;
  * "<string>"
  *
  * @param logOutput
- * @param stdoutOutput
  */
-QMInputParser::QMInputParser(
-    out::LogOutput    &logOutput,
-    out::StdoutOutput &stdoutOutput
-)
-    : QMInputParser(logOutput, stdoutOutput, true)
+QMInputParser::QMInputParser(out::LogOutput &logOutput)
+    : QMInputParser(logOutput, true)
 {
 }
 
@@ -68,16 +64,13 @@ QMInputParser::QMInputParser(
  * "<string>"
  *
  * @param logOutput
- * @param stdoutOutput
  * @param resolveBuiltInSlakosPath
  */
 QMInputParser::QMInputParser(
-    out::LogOutput    &logOutput,
-    out::StdoutOutput &stdoutOutput,
-    const bool         resolveBuiltInSlakosPath
+    out::LogOutput &logOutput,
+    const bool      resolveBuiltInSlakosPath
 )
     : _logOutput(&logOutput),
-      _stdoutOutput(&stdoutOutput),
       _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
 {
     addKeyword(

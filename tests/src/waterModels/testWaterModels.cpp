@@ -48,7 +48,7 @@
 #include "strongTypes.hpp"
 #include "waterModelSettings.hpp"
 
-using linearAlgebra::Vec3D;
+using linalg::Vec3D;
 using molsys::Atom;
 using molsys::CellList;
 using molsys::HybridZone;
