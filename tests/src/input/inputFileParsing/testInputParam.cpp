@@ -189,7 +189,7 @@ TEST(TestInputKey, invalidEnumTokenThrows)
         key.parse({"jobtype", "=", "bogus"}, 3),
         exc::InputFileException,
         "Invalid value \"bogus\" for key \"jobtype\" at line 3 in input "
-        "file. Possible options are: mm, qm, md"
+        "file. Allowed values: mm, qm, md"
     );
 }
 

@@ -92,7 +92,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"1\" for key \"shake\" at line 0 in input file. "
-        "Possible options are: OFF, ON, SHAKE, MSHAKE"
+        "Allowed values: OFF, ON, SHAKE, MSHAKE"
     );
 }
 
@@ -159,7 +159,7 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-100\" for key \"shake-iter\" at line 0 in input "
-        "file. Possible options are: positive integer"
+        "file. Value must be a positive integer"
     );
 
     clearParser(parser);
@@ -237,7 +237,7 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-100\" for key \"rattle-iter\" at line 0 in input "
-        "file. Possible options are: positive integer"
+        "file. Value must be a positive integer"
     );
 
     clearParser(parser);
@@ -315,7 +315,7 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-100\" for key \"mshake-iter\" at line 0 in input "
-        "file. Possible options are: positive integer"
+        "file. Value must be a positive integer"
     );
 
     clearParser(parser);
@@ -365,6 +365,6 @@ TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"1\" for key \"distance-constraints\" at line 0 in "
-        "input file. Possible options are: on|off|true|false|yes|no"
+        "input file. Allowed values: on|off|true|false|yes|no"
     );
 }
