@@ -31,207 +31,237 @@
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
 
-using namespace constraints;
-using namespace molsys;
-using namespace linalg;
-using namespace kernel;
-using namespace settings;
-
-/**
- * @brief Constructor
- *
- * @param molecule1
- * @param molecule2
- * @param atomIndex1
- * @param atomIndex2
- * @param bondLength
- */
-BondConstraint::BondConstraint(
-    Molecule *molecule1,
-    Molecule *molecule2,
-    AtomIndex atomIndex1,
-    AtomIndex atomIndex2,
-    double    bondLength
-)
-    : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
-      _targetBondLength(bondLength)
+namespace constraints
 {
-}
 
-/**
- * @brief calculates the reference bond data of a bond constraint
- *
- * @param simulationBox the simulation box to apply periodic boundary conditions
- */
-void BondConstraint::calculateConstraintBondRef(
-    const molsys::SimulationBox &simulationBox
-)
-{
-    simulationBox.applyPBC(_shakeDistanceRef);
-
-    const auto dxyz = distVec(
-        _molecules[0]->getAtomPosition(_atomIndices[0]),
-        _molecules[1]->getAtomPosition(_atomIndices[1]),
-        simulationBox
-    );
-
-    _shakeDistanceRef = dxyz;
-}
-
-/**
- * @brief calculates the distance delta of a bond constraint
- *
- * @param simulationBox
- *
- */
-double BondConstraint::calculateDistanceDelta(
-    const SimulationBox &simulationBox
-) const
-{
-    const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-    const auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
-
-    auto dPosition = pos1 - pos2;
-    simulationBox.applyPBC(dPosition);
-
-    const auto distanceSquared       = normSquared(dPosition);
-    const auto targetDistanceSquared = _targetBondLength * _targetBondLength;
-
-    const auto delta = 0.5 * (targetDistanceSquared - distanceSquared);
-
-    return delta;
-}
-
-/**
- * @brief applies the shake algorithm to a bond constraint
- *
- * @details if delta is not smaller than tolerance, the shake algorithm is
- * applied
- *
- * @param simulationBox the simulation box to apply periodic boundary conditions
- * @param tolerance
- * @return true if the bond constraint is satisfied within the tolerance, false
- * otherwise
- *
- */
-bool BondConstraint::applyShake(
-    const SimulationBox &simulationBox,
-    double               tolerance
-)
-{
-    const auto delta = calculateDistanceDelta(simulationBox);
-
-    if (std::fabs(delta / (_targetBondLength * _targetBondLength)) > tolerance)
+    /**
+     * @brief Constructor
+     *
+     * @param molecule1
+     * @param molecule2
+     * @param atomIndex1
+     * @param atomIndex2
+     * @param bondLength
+     */
+    BondConstraint::BondConstraint(
+        molsys::Molecule *molecule1,
+        molsys::Molecule *molecule2,
+        AtomIndex         atomIndex1,
+        AtomIndex         atomIndex2,
+        double            bondLength
+    )
+        : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
+          _targetBondLength(bondLength)
     {
+    }
+
+    /**
+     * @brief calculates the reference bond data of a bond constraint
+     *
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
+     */
+    void BondConstraint::calculateConstraintBondRef(
+        const molsys::SimulationBox &simulationBox
+    )
+    {
+        simulationBox.applyPBC(_shakeDistanceRef);
+
+        const auto dxyz = kernel::distVec(
+            _molecules[0]->getAtomPosition(_atomIndices[0]),
+            _molecules[1]->getAtomPosition(_atomIndices[1]),
+            simulationBox
+        );
+
+        _shakeDistanceRef = dxyz;
+    }
+
+    /**
+     * @brief calculates the distance delta of a bond constraint
+     *
+     * @param simulationBox
+     *
+     */
+    double BondConstraint::calculateDistanceDelta(
+        const molsys::SimulationBox &simulationBox
+    ) const
+    {
+        const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
+        const auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+
+        auto dPosition = pos1 - pos2;
+        simulationBox.applyPBC(dPosition);
+
+        const auto distanceSquared = normSquared(dPosition);
+        const auto targetDistanceSquared =
+            _targetBondLength * _targetBondLength;
+
+        const auto delta = 0.5 * (targetDistanceSquared - distanceSquared);
+
+        return delta;
+    }
+
+    /**
+     * @brief applies the shake algorithm to a bond constraint
+     *
+     * @details if delta is not smaller than tolerance, the shake algorithm is
+     * applied
+     *
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
+     * @param tolerance
+     * @return true if the bond constraint is satisfied within the tolerance,
+     * false otherwise
+     *
+     */
+    bool BondConstraint::applyShake(
+        const molsys::SimulationBox &simulationBox,
+        double                       tolerance
+    )
+    {
+        const auto delta = calculateDistanceDelta(simulationBox);
+
+        if (std::fabs(delta / (_targetBondLength * _targetBondLength)) >
+            tolerance)
+        {
+            const auto invMass1 =
+                1 / _molecules[0]->getAtomMass(_atomIndices[0]);
+            const auto invMass2 =
+                1 / _molecules[1]->getAtomMass(_atomIndices[1]);
+
+            const auto sumInvMass              = invMass1 + invMass2;
+            const auto shakeDistanceRefSquared = normSquared(_shakeDistanceRef);
+
+            const auto shakeForce =
+                delta / (sumInvMass) / shakeDistanceRefSquared;
+            const auto dPosition = shakeForce * _shakeDistanceRef;
+
+            _molecules[0]->addAtomPosition(
+                _atomIndices[0],
+                +invMass1 * dPosition
+            );
+            _molecules[1]->addAtomPosition(
+                _atomIndices[1],
+                -invMass2 * dPosition
+            );
+
+            const auto timeStep =
+                settings::TimingsSettings::getTimeStep() * FS_TO_S;
+            const auto dVelocity = dPosition / timeStep;
+
+            _molecules[0]->addAtomVelocity(
+                _atomIndices[0],
+                +invMass1 * dVelocity
+            );
+            _molecules[1]->addAtomVelocity(
+                _atomIndices[1],
+                -invMass2 * dVelocity
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @brief calculates the velocity delta of a bond constraint
+     *
+     */
+    [[nodiscard]] double BondConstraint::calculateVelocityDelta() const
+    {
+        const auto dVelocity = _molecules[0]->getAtomVelocity(_atomIndices[0]) -
+                               _molecules[1]->getAtomVelocity(_atomIndices[1]);
+
+        const auto scalarProduct = dot(dVelocity, _shakeDistanceRef);
+
         const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
         const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
 
         const auto sumInvMass              = invMass1 + invMass2;
         const auto shakeDistanceRefSquared = normSquared(_shakeDistanceRef);
 
-        const auto shakeForce = delta / (sumInvMass) / shakeDistanceRefSquared;
-        const auto dPosition  = shakeForce * _shakeDistanceRef;
+        const auto delta =
+            -scalarProduct / (sumInvMass) / shakeDistanceRefSquared;
 
-        _molecules[0]->addAtomPosition(_atomIndices[0], +invMass1 * dPosition);
-        _molecules[1]->addAtomPosition(_atomIndices[1], -invMass2 * dPosition);
-
-        const auto timeStep  = TimingsSettings::getTimeStep() * FS_TO_S;
-        const auto dVelocity = dPosition / timeStep;
-
-        _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dVelocity);
-        _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dVelocity);
-
-        return false;
+        return delta;
     }
 
-    return true;
-}
-
-/**
- * @brief calculates the velocity delta of a bond constraint
- *
- */
-[[nodiscard]] double BondConstraint::calculateVelocityDelta() const
-{
-    const auto dVelocity = _molecules[0]->getAtomVelocity(_atomIndices[0]) -
-                           _molecules[1]->getAtomVelocity(_atomIndices[1]);
-
-    const auto scalarProduct = dot(dVelocity, _shakeDistanceRef);
-
-    const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
-    const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
-
-    const auto sumInvMass              = invMass1 + invMass2;
-    const auto shakeDistanceRefSquared = normSquared(_shakeDistanceRef);
-
-    const auto delta = -scalarProduct / (sumInvMass) / shakeDistanceRefSquared;
-
-    return delta;
-}
-
-/**
- * @brief applies the rattle algorithm to a bond constraint
- *
- * @details if delta is not smaller than tolerance, the rattle algorithm is
- * applied
- *
- */
-bool BondConstraint::applyRattle(double tolerance)
-{
-    const auto delta = calculateVelocityDelta();
-
-    if (std::fabs(delta) > tolerance)
+    /**
+     * @brief applies the rattle algorithm to a bond constraint
+     *
+     * @details if delta is not smaller than tolerance, the rattle algorithm is
+     * applied
+     *
+     */
+    bool BondConstraint::applyRattle(double tolerance)
     {
-        const auto dVelocity = delta * _shakeDistanceRef;
+        const auto delta = calculateVelocityDelta();
 
-        const auto invMass1 = 1 / _molecules[0]->getAtomMass(_atomIndices[0]);
-        const auto invMass2 = 1 / _molecules[1]->getAtomMass(_atomIndices[1]);
+        if (std::fabs(delta) > tolerance)
+        {
+            const auto dVelocity = delta * _shakeDistanceRef;
 
-        _molecules[0]->addAtomVelocity(_atomIndices[0], +invMass1 * dVelocity);
-        _molecules[1]->addAtomVelocity(_atomIndices[1], -invMass2 * dVelocity);
+            const auto invMass1 =
+                1 / _molecules[0]->getAtomMass(_atomIndices[0]);
+            const auto invMass2 =
+                1 / _molecules[1]->getAtomMass(_atomIndices[1]);
 
-        return false;
+            _molecules[0]->addAtomVelocity(
+                _atomIndices[0],
+                +invMass1 * dVelocity
+            );
+            _molecules[1]->addAtomVelocity(
+                _atomIndices[1],
+                -invMass2 * dVelocity
+            );
+
+            return false;
+        }
+
+        return true;
     }
 
-    return true;
-}
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-/***************************
- * standard setter methods *
- ***************************/
+    /**
+     * @brief set the shake distance reference
+     *
+     * @param shakeDistanceRef
+     */
+    void BondConstraint::setShakeDistanceRef(
+        const linalg::Vec3D &shakeDistanceRef
+    )
+    {
+        _shakeDistanceRef = shakeDistanceRef;
+    }
 
-/**
- * @brief set the shake distance reference
- *
- * @param shakeDistanceRef
- */
-void BondConstraint::setShakeDistanceRef(const linalg::Vec3D &shakeDistanceRef)
-{
-    _shakeDistanceRef = shakeDistanceRef;
-}
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-/***************************
- * standard getter methods *
- ***************************/
+    /**
+     * @brief get the target bond length
+     *
+     * @return target bond length
+     */
+    [[nodiscard]]
+    double BondConstraint::getTargetBondLength() const
+    {
+        return _targetBondLength;
+    }
 
-/**
- * @brief get the target bond length
- *
- * @return target bond length
- */
-[[nodiscard]]
-double BondConstraint::getTargetBondLength() const
-{
-    return _targetBondLength;
-}
+    /**
+     * @brief get the shake distance reference
+     *
+     * @return shake distance reference
+     */
+    [[nodiscard]]
+    linalg::Vec3D BondConstraint::getShakeDistanceRef() const
+    {
+        return _shakeDistanceRef;
+    }
 
-/**
- * @brief get the shake distance reference
- *
- * @return shake distance reference
- */
-[[nodiscard]]
-linalg::Vec3D BondConstraint::getShakeDistanceRef() const
-{
-    return _shakeDistanceRef;
-}
+}   // namespace constraints

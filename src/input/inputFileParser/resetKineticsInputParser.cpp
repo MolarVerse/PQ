@@ -25,229 +25,234 @@
 #include <cstddef>   // for size_t, std
 
 #include "inputKeyAdapter.hpp"
-#include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
+#include "resetKineticsSettings.hpp"   // for settings::ResetKineticsSettings
 
-using namespace input;
-using namespace exc;
-using namespace settings;
-
-/**
- * @brief Construct a new Input File Parser Reset Kinetics:: Input File Parser
- * Reset Kinetics object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) nscale "<size_t>" 2) fscale
- * "<size_t>" 3) nreset "<size_t>" 4) freset "<size_t>"
- */
-ResetKineticsInputParser::ResetKineticsInputParser()
+namespace input
 {
-    addNScaleKeyword();
-    addFScaleKeyword();
-    addNResetKeyword();
-    addFResetKeyword();
-    addNResetAngularKeyword();
-    addFResetAngularKeyword();
-    addFResetForcesKeyword();
-}
 
-/**
- * @brief add nscale keyword to the registry
- *
- * @details default value is 0
- */
-void ResetKineticsInputParser::addNScaleKeyword()
-{
-    const auto metaData = KeyMetadata{
-        .name  = "nscale",
-        .title = "Number of steps for temperature reset",
-        .description =
-            "Specifies for how many steps at the beginning of the simulation "
-            "the temperature is reset"
-    };
+    /**
+     * @brief Construct a new Input File Parser Reset Kinetics:: Input File
+     * Parser Reset Kinetics object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) nscale "<size_t>" 2) fscale
+     * "<size_t>" 3) nreset "<size_t>" 4) freset "<size_t>"
+     */
+    ResetKineticsInputParser::ResetKineticsInputParser()
+    {
+        addNScaleKeyword();
+        addFScaleKeyword();
+        addNResetKeyword();
+        addFResetKeyword();
+        addNResetAngularKeyword();
+        addFResetAngularKeyword();
+        addFResetForcesKeyword();
+    }
 
-    const auto setValue = [](size_t value)
-    { ResetKineticsSettings::setNScale(value); };
+    /**
+     * @brief add nscale keyword to the registry
+     *
+     * @details default value is 0
+     */
+    void ResetKineticsInputParser::addNScaleKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "nscale",
+            .title = "Number of steps for temperature reset",
+            .description =
+                "Specifies for how many steps at the beginning of the "
+                "simulation "
+                "the temperature is reset"
+        };
 
-    auto &keyword = _getRegistry().registerKey(
-        KeyRegistry<size_t>{
-            .metadata     = metaData,
-            .defaultValue = 0,
-            .onSet        = setValue,
-        }
-    );
+        const auto setValue = [](size_t value)
+        { settings::ResetKineticsSettings::setNScale(value); };
 
-    addKeyword(metaData.name, adapt(keyword), false);
-}
+        auto &keyword = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = 0,
+                .onSet        = setValue,
+            }
+        );
 
-/**
- * @brief add fscale keyword to the registry
- *
- * @details default value is 0 but then set to UINT_MAX in setup
- */
-void ResetKineticsInputParser::addFScaleKeyword()
-{
-    const auto metaData = KeyMetadata{
-        .name  = "fscale",
-        .title = "Frequency of temperature reset",
-        .description =
-            "Specifies how frequently the temperature is reset during the "
-            "simulation"
-    };
+        addKeyword(metaData.name, adapt(keyword), false);
+    }
 
-    const auto setValue = [](size_t value)
-    { ResetKineticsSettings::setFScale(value); };
+    /**
+     * @brief add fscale keyword to the registry
+     *
+     * @details default value is 0 but then set to UINT_MAX in setup
+     */
+    void ResetKineticsInputParser::addFScaleKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "fscale",
+            .title = "Frequency of temperature reset",
+            .description =
+                "Specifies how frequently the temperature is reset during the "
+                "simulation"
+        };
 
-    auto &keyword = _getRegistry().registerKey(
-        KeyRegistry<size_t>{
-            .metadata     = metaData,
-            .defaultValue = 0,
-            .onSet        = setValue,
-        }
-    );
+        const auto setValue = [](size_t value)
+        { settings::ResetKineticsSettings::setFScale(value); };
 
-    addKeyword(metaData.name, adapt(keyword), false);
-}
+        auto &keyword = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = 0,
+                .onSet        = setValue,
+            }
+        );
 
-/**
- * @brief add nreset keyword to the registry
- *
- * @details default value is 0
- */
-void ResetKineticsInputParser::addNResetKeyword()
-{
-    const auto metaData = KeyMetadata{
-        .name  = "nreset",
-        .title = "Number of steps for momentum reset",
-        .description =
-            "Specifies for how many steps at the beginning of the simulation "
-            "the momentum is reset"
-    };
+        addKeyword(metaData.name, adapt(keyword), false);
+    }
 
-    const auto setValue = [](size_t value)
-    { ResetKineticsSettings::setNReset(value); };
+    /**
+     * @brief add nreset keyword to the registry
+     *
+     * @details default value is 0
+     */
+    void ResetKineticsInputParser::addNResetKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "nreset",
+            .title = "Number of steps for momentum reset",
+            .description =
+                "Specifies for how many steps at the beginning of the "
+                "simulation "
+                "the momentum is reset"
+        };
 
-    auto &keyword = _getRegistry().registerKey(
-        KeyRegistry<size_t>{
-            .metadata     = metaData,
-            .defaultValue = 0,
-            .onSet        = setValue,
-        }
-    );
+        const auto setValue = [](size_t value)
+        { settings::ResetKineticsSettings::setNReset(value); };
 
-    addKeyword(metaData.name, adapt(keyword), false);
-}
+        auto &keyword = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = 0,
+                .onSet        = setValue,
+            }
+        );
 
-/**
- * @brief add freset keyword to the registry
- *
- * @details default value is 0 but then set to UINT_MAX in setup
- */
-void ResetKineticsInputParser::addFResetKeyword()
-{
-    const auto metaData = KeyMetadata{
-        .name  = "freset",
-        .title = "Frequency of momentum reset",
-        .description =
-            "Specifies how frequently the momentum is reset during the "
-            "simulation"
-    };
+        addKeyword(metaData.name, adapt(keyword), false);
+    }
 
-    const auto setValue = [](size_t value)
-    { ResetKineticsSettings::setFReset(value); };
+    /**
+     * @brief add freset keyword to the registry
+     *
+     * @details default value is 0 but then set to UINT_MAX in setup
+     */
+    void ResetKineticsInputParser::addFResetKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "freset",
+            .title = "Frequency of momentum reset",
+            .description =
+                "Specifies how frequently the momentum is reset during the "
+                "simulation"
+        };
 
-    auto &keyword = _getRegistry().registerKey(
-        KeyRegistry<size_t>{
-            .metadata     = metaData,
-            .defaultValue = 0,
-            .onSet        = setValue,
-        }
-    );
+        const auto setValue = [](size_t value)
+        { settings::ResetKineticsSettings::setFReset(value); };
 
-    addKeyword(metaData.name, adapt(keyword), false);
-}
+        auto &keyword = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = 0,
+                .onSet        = setValue,
+            }
+        );
 
-/**
- * @brief add nreset_angular keyword to the registry
- *
- * @details default value is 0
- */
-void ResetKineticsInputParser::addNResetAngularKeyword()
-{
-    const auto metaData = KeyMetadata{
-        .name  = "nreset_angular",
-        .title = "Number of steps for angular momentum reset",
-        .description =
-            "Specifies for how many steps at the beginning of the simulation "
-            "the angular momentum is reset"
-    };
+        addKeyword(metaData.name, adapt(keyword), false);
+    }
 
-    const auto setValue = [](size_t value)
-    { ResetKineticsSettings::setNResetAngular(value); };
+    /**
+     * @brief add nreset_angular keyword to the registry
+     *
+     * @details default value is 0
+     */
+    void ResetKineticsInputParser::addNResetAngularKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "nreset_angular",
+            .title = "Number of steps for angular momentum reset",
+            .description =
+                "Specifies for how many steps at the beginning of the "
+                "simulation "
+                "the angular momentum is reset"
+        };
 
-    auto &keyword = _getRegistry().registerKey(
-        KeyRegistry<size_t>{
-            .metadata     = metaData,
-            .defaultValue = 0,
-            .onSet        = setValue,
-        }
-    );
+        const auto setValue = [](size_t value)
+        { settings::ResetKineticsSettings::setNResetAngular(value); };
 
-    addKeyword(metaData.name, adapt(keyword), false);
-}
+        auto &keyword = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = 0,
+                .onSet        = setValue,
+            }
+        );
 
-/**
- * @brief add freset_angular keyword to the registry
- *
- * @details default value is 0
- */
-void ResetKineticsInputParser::addFResetAngularKeyword()
-{
-    const auto metaData = KeyMetadata{
-        .name  = "freset_angular",
-        .title = "Frequency of angular momentum reset",
-        .description =
-            "Specifies how frequently the angular momentum is reset during the "
-            "simulation"
-    };
+        addKeyword(metaData.name, adapt(keyword), false);
+    }
 
-    const auto setValue = [](size_t value)
-    { ResetKineticsSettings::setFResetAngular(value); };
+    /**
+     * @brief add freset_angular keyword to the registry
+     *
+     * @details default value is 0
+     */
+    void ResetKineticsInputParser::addFResetAngularKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "freset_angular",
+            .title = "Frequency of angular momentum reset",
+            .description =
+                "Specifies how frequently the angular momentum is reset during "
+                "the "
+                "simulation"
+        };
 
-    auto &keyword = _getRegistry().registerKey(
-        KeyRegistry<size_t>{
-            .metadata     = metaData,
-            .defaultValue = 0,
-            .onSet        = setValue,
-        }
-    );
+        const auto setValue = [](size_t value)
+        { settings::ResetKineticsSettings::setFResetAngular(value); };
 
-    addKeyword(metaData.name, adapt(keyword), false);
-}
+        auto &keyword = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = 0,
+                .onSet        = setValue,
+            }
+        );
 
-/**
- * @brief add freset_force keyword to the registry
- *
- * @details default value is 0
- */
-void ResetKineticsInputParser::addFResetForcesKeyword()
-{
-    const auto metaData = KeyMetadata{
-        .name  = "freset_forces",
-        .title = "Frequency of force reset",
-        .description =
-            "Specifies how frequently the force is reset during the simulation"
-    };
+        addKeyword(metaData.name, adapt(keyword), false);
+    }
 
-    const auto setValue = [](size_t value)
-    { ResetKineticsSettings::setFResetForces(value); };
+    /**
+     * @brief add freset_force keyword to the registry
+     *
+     * @details default value is 0
+     */
+    void ResetKineticsInputParser::addFResetForcesKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "freset_forces",
+            .title = "Frequency of force reset",
+            .description =
+                "Specifies how frequently the force is reset during the "
+                "simulation"
+        };
 
-    auto &keyword = _getRegistry().registerKey(
-        KeyRegistry<size_t>{
-            .metadata     = metaData,
-            .defaultValue = 0,
-            .onSet        = setValue,
-        }
-    );
+        const auto setValue = [](size_t value)
+        { settings::ResetKineticsSettings::setFResetForces(value); };
 
-    addKeyword(metaData.name, adapt(keyword), false);
-}
+        auto &keyword = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = 0,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(keyword), false);
+    }
+}   // namespace input

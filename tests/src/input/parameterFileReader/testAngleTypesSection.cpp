@@ -33,8 +33,6 @@
 #include "testParameterFileSection.hpp"      // for TestParameterFileSection
 #include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
 
-using namespace input::parameterFile;
-
 /**
  * @brief test bonds section processing one line
  *
@@ -61,7 +59,7 @@ TEST_F(TestParameterFileSection, processSectionAngle)
 
 TEST_F(TestParameterFileSection, endedNormallyAngle)
 {
-    auto angleSection = AngleSection();
+    auto angleSection = input::parameterFile::AngleSection();
     ASSERT_NO_THROW(angleSection.endedNormally(true));
 
     ASSERT_THROW_MSG(

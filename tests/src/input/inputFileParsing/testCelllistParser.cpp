@@ -25,13 +25,11 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "cellListInputParser.hpp"   // for CellListInputParser
+#include "cellListInputParser.hpp"   // for input::CellListInputParser
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for InputFileException
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
-
-using namespace input;
 
 /**
  * @brief tests parsing the "cell-list" command
@@ -41,8 +39,8 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    CellListInputParser parser(_engine->getCellList());
-    const auto          funcMap = parser.getKeywordFuncMap();
+    input::CellListInputParser parser(_engine->getCellList());
+    const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("cell_list"));
     const auto& parseFunc = funcMap.at("cell_list");
 
@@ -75,8 +73,8 @@ TEST_F(TestInputFileReader, parseCellListActivated)
  */
 TEST_F(TestInputFileReader, numberOfCells)
 {
-    CellListInputParser parser(_engine->getCellList());
-    const auto          funcMap = parser.getKeywordFuncMap();
+    input::CellListInputParser parser(_engine->getCellList());
+    const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("cell_number"));
     const auto& parseFunc = funcMap.at("cell_number");
 

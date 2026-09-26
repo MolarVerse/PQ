@@ -33,15 +33,13 @@
 #include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
 #include "testSetup.hpp"                     // for TestSetup
 #include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "thermostatSetup.hpp"   // for ThermostatSetup, setupThermostat
+#include "thermostatSetup.hpp"   // for setup::ThermostatSetup, setupThermostat
 #include "timingsSettings.hpp"   // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
-using namespace setup;
-
 TEST_F(TestSetup, setupThermostatNoThermostat)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::TimingsSettings::setTimeStep(0.1);
     EXPECT_NO_THROW(thermostatSetup.setup());
@@ -49,7 +47,7 @@ TEST_F(TestSetup, setupThermostatNoThermostat)
 
 TEST_F(TestSetup, setupThermostatTempRamping)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::TimingsSettings::setNumberOfSteps(100);
 
@@ -103,7 +101,7 @@ TEST_F(TestSetup, setupThermostatTempRamping)
 
 TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
 {
-    ThermostatSetup        thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
     input::InputFileReader reader("input.in", *_mdEngine);
 
     reader.process({"nstep", "=", "10"});
@@ -134,7 +132,7 @@ TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
 
 TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::TimingsSettings::setNumberOfSteps(0);
     settings::ThermostatSettings::setThermostatType("berendsen");
@@ -147,7 +145,7 @@ TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
 
 TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::TimingsSettings::setNumberOfSteps(10);
     settings::ThermostatSettings::setThermostatType("berendsen");
@@ -164,7 +162,7 @@ TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
 
 TEST_F(TestSetup, setupThermostatOnlyEndTempDefined)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::ThermostatSettings::setEndTemperature(300);
     settings::ThermostatSettings::setThermostatType("berendsen");
@@ -177,7 +175,7 @@ TEST_F(TestSetup, setupThermostatOnlyEndTempDefined)
 
 TEST_F(TestSetup, setupThermostatBerendsen)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::ThermostatSettings::setTargetTemperature(300);
     settings::ThermostatSettings::setTemperatureSet(true);
@@ -215,7 +213,7 @@ TEST_F(TestSetup, setupThermostatBerendsen)
 
 TEST_F(TestSetup, setupThermostatVelocityRescaling)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::ThermostatSettings::setThermostatType("velocity_rescaling");
     settings::ThermostatSettings::setTargetTemperature(300);
@@ -230,7 +228,7 @@ TEST_F(TestSetup, setupThermostatVelocityRescaling)
 
 TEST_F(TestSetup, setupThermostatLangevin)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::ThermostatSettings::setThermostatType("langevin");
     settings::ThermostatSettings::setTargetTemperature(300);
@@ -257,12 +255,12 @@ TEST_F(TestSetup, setupThermostatLangevin)
 
     EXPECT_EQ(langevinThermostat.getSigma(), sigma);
 
-    EXPECT_NO_THROW(setupThermostat(*_mdEngine));
+    EXPECT_NO_THROW(setup::setupThermostat(*_mdEngine));
 }
 
 TEST_F(TestSetup, setupThermostatNhChain)
 {
-    ThermostatSetup thermostatSetup(*_mdEngine);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::ThermostatSettings::setThermostatType("nh-chain");
     settings::ThermostatSettings::setNoseHooverChainLength(5);

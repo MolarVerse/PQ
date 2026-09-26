@@ -29,196 +29,195 @@
 #include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
 #include "hybridSettings.hpp"     // for HybridSettings
 #include "molecule.hpp"           // for Molecule
-#include "physicalData.hpp"       // for PhysicalData
+#include "physicalData.hpp"       // for physicalData::PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
 
-using namespace ff;
-using namespace molsys;
-using namespace connectivity;
-using namespace linalg;
-using namespace physicalData;
-using namespace pot;
-using namespace settings;
-
-using enum HybridZone;
-
-/**
- * @brief constructor
- *
- * @param molecules
- * @param atomIndices
- * @param type
- */
-AngleForceField::AngleForceField(
-    const std::vector<Molecule *> &molecules,
-    const std::vector<AtomIndex>  &atomIndices,
-    AngleId                        type
-)
-    : Angle(molecules, atomIndices), _type(type)
+namespace ff
 {
-}
 
-/**
- * @brief calculate energy and forces for a single alpha
- *
- * @details if angle is a linker angle, correct coulomb and non-coulomb energy
- * and forces
- *
- * @param simulationBox the simulation simulationBox containing the system
- * @param physicalData the physical data of the system
- * @param coulombPot the coulomb potential of the system
- * @param nonCoulombPot the non-coulomb potential of the system
- */
-void AngleForceField::calculateEnergyAndForces(
-    const SimulationBox    &simulationBox,
-    PhysicalData           &physicalData,
-    const CoulombPotential &coulombPot,
-    NonCoulombPotential    &nonCoulombPot
-)
-{
-    const bool allInactive = !_molecules[0]->isActive() &&
-                             !_molecules[1]->isActive() &&
-                             !_molecules[2]->isActive();
-
-    if (allInactive)
-        return;
-
-    // central position of alpha
-    const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-    const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
-    const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
-
-    auto dPosition12 = position1 - position2;
-    auto dPosition13 = position1 - position3;
-
-    simulationBox.applyPBC(dPosition12);
-    simulationBox.applyPBC(dPosition13);
-
-    const auto distance12Squared = normSquared(dPosition12);
-    const auto distance13Squared = normSquared(dPosition13);
-
-    const auto distance12 = ::sqrt(distance12Squared);
-    const auto distance13 = ::sqrt(distance13Squared);
-
-    const auto alpha      = angle(dPosition12, dPosition13);
-    const auto deltaAngle = alpha - _params.equilibrium;
-
-    auto forceMagnitude = -_params.forceConstant * deltaAngle;
-
-    physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
-
-    auto forcexyz = linalg::Vec3D{0.0, 0.0, 0.0};
-
-    // Guard against near-collinear angles where division by sin(alpha) is
-    // unstable.
-    const auto sinAlpha = ::sin(alpha);
-    if (std::fabs(sinAlpha) >= COLINEAR_SINALPHA_THRESHOLD)
+    /**
+     * @brief constructor
+     *
+     * @param molecules
+     * @param atomIndices
+     * @param type
+     */
+    AngleForceField::AngleForceField(
+        const std::vector<molsys::Molecule *> &molecules,
+        const std::vector<AtomIndex>          &atomIndices,
+        AngleId                                type
+    )
+        : Angle(molecules, atomIndices), _type(type)
     {
-        const auto normalDistance = distance12 * distance13 * sinAlpha;
-
-        auto normalPosition  = cross(dPosition13, dPosition12);
-        normalPosition      /= normalDistance;
-
-        auto force = forceMagnitude / distance12Squared;
-        forcexyz   = force * cross(dPosition12, normalPosition);
-
-        _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-        _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
-
-        force    = forceMagnitude / distance13Squared;
-        forcexyz = force * cross(normalPosition, dPosition13);
-
-        _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-        _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
     }
 
-    if (_isLinker)
+    /**
+     * @brief calculate energy and forces for a single alpha
+     *
+     * @details if angle is a linker angle, correct coulomb and non-coulomb
+     * energy and forces
+     *
+     * @param simulationBox the simulation simulationBox containing the system
+     * @param physicalData the physical data of the system
+     * @param coulombPot the coulomb potential of the system
+     * @param nonCoulombPot the non-coulomb potential of the system
+     */
+    void AngleForceField::calculateEnergyAndForces(
+        const molsys::SimulationBox &simulationBox,
+        physicalData::PhysicalData  &physicalData,
+        const pot::CoulombPotential &coulombPot,
+        pot::NonCoulombPotential    &nonCoulombPot
+    )
     {
-        auto dPosition23 = position2 - position3;
-        simulationBox.applyPBC(dPosition23);
+        const bool allInactive = !_molecules[0]->isActive() &&
+                                 !_molecules[1]->isActive() &&
+                                 !_molecules[2]->isActive();
 
-        const auto distance23 = norm(dPosition23);
+        if (allInactive)
+            return;
 
-        if (distance23 < CoulombPotential::getCoulombRadiusCutOff())
+        // central position of alpha
+        const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
+        const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+        const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
+
+        auto dPosition12 = position1 - position2;
+        auto dPosition13 = position1 - position3;
+
+        simulationBox.applyPBC(dPosition12);
+        simulationBox.applyPBC(dPosition13);
+
+        const auto distance12Squared = normSquared(dPosition12);
+        const auto distance13Squared = normSquared(dPosition13);
+
+        const auto distance12 = ::sqrt(distance12Squared);
+        const auto distance13 = ::sqrt(distance13Squared);
+
+        const auto alpha      = angle(dPosition12, dPosition13);
+        const auto deltaAngle = alpha - _params.equilibrium;
+
+        auto forceMagnitude = -_params.forceConstant * deltaAngle;
+
+        physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
+
+        auto forcexyz = linalg::Vec3D{0.0, 0.0, 0.0};
+
+        // Guard against near-collinear angles where division by sin(alpha) is
+        // unstable.
+        const auto sinAlpha = ::sin(alpha);
+        if (std::fabs(sinAlpha) >= COLINEAR_SINALPHA_THRESHOLD)
         {
-            forceMagnitude = correctLinker<AngleForceField>(
-                coulombPot,
-                nonCoulombPot,
-                physicalData,
-                _molecules[1],
-                _molecules[2],
-                _atomIndices[1],
-                _atomIndices[2],
-                distance23
-            );
+            const auto normalDistance = distance12 * distance13 * sinAlpha;
 
-            forceMagnitude /= distance23;
+            auto normalPosition  = cross(dPosition13, dPosition12);
+            normalPosition      /= normalDistance;
 
-            forcexyz = forceMagnitude * dPosition23;
+            auto force = forceMagnitude / distance12Squared;
+            forcexyz   = force * cross(dPosition12, normalPosition);
 
-            using enum SmoothingMethod;
-
-            auto       smF       = 0.0;
-            const auto smoothing = HybridSettings::getSmoothingMethod();
-
-            if (smoothing == HOTSPOT &&
-                _molecules[0]->getHybridZone() == SMOOTHING)
-                smF = _molecules[0]->getSmoothingFactor();
-
-            physicalData.addVirial(
-                tensorProduct(dPosition23, forcexyz) * (1 - smF)
-            );
-
+            _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
             _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
-            _molecules[2]->addAtomForce(_atomIndices[2], -forcexyz);
+
+            force    = forceMagnitude / distance13Squared;
+            forcexyz = force * cross(normalPosition, dPosition13);
+
+            _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
+            _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
+        }
+
+        if (_isLinker)
+        {
+            auto dPosition23 = position2 - position3;
+            simulationBox.applyPBC(dPosition23);
+
+            const auto distance23 = norm(dPosition23);
+
+            if (distance23 < pot::CoulombPotential::getCoulombRadiusCutOff())
+            {
+                forceMagnitude = correctLinker<AngleForceField>(
+                    coulombPot,
+                    nonCoulombPot,
+                    physicalData,
+                    _molecules[1],
+                    _molecules[2],
+                    _atomIndices[1],
+                    _atomIndices[2],
+                    distance23
+                );
+
+                forceMagnitude /= distance23;
+
+                forcexyz = forceMagnitude * dPosition23;
+
+                using enum settings::SmoothingMethod;
+
+                auto       smF = 0.0;
+                const auto smoothing =
+                    settings::HybridSettings::getSmoothingMethod();
+
+                if (smoothing == HOTSPOT && _molecules[0]->getHybridZone() ==
+                                                molsys::HybridZone::SMOOTHING)
+                    smF = _molecules[0]->getSmoothingFactor();
+
+                physicalData.addVirial(
+                    tensorProduct(dPosition23, forcexyz) * (1 - smF)
+                );
+
+                _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
+                _molecules[2]->addAtomForce(_atomIndices[2], -forcexyz);
+            }
         }
     }
-}
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set if angle is a linker angle
- *
- * @param isLinker
- */
-void AngleForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
+    /**
+     * @brief set if angle is a linker angle
+     *
+     * @param isLinker
+     */
+    void AngleForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
 
-/**
- * @brief set angle parameters
- *
- * @param params
- */
-void AngleForceField::setParams(const AngleParams &params) { _params = params; }
+    /**
+     * @brief set angle parameters
+     *
+     * @param params
+     */
+    void AngleForceField::setParams(const AngleParams &params)
+    {
+        _params = params;
+    }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get if angle is a linker angle
- *
- * @return true
- * @return false
- */
-bool AngleForceField::isLinker() const { return _isLinker; }
+    /**
+     * @brief get if angle is a linker angle
+     *
+     * @return true
+     * @return false
+     */
+    bool AngleForceField::isLinker() const { return _isLinker; }
 
-/**
- * @brief get type of angle
- *
- * @return AngleId
- */
-AngleId AngleForceField::getType() const { return _type; }
+    /**
+     * @brief get type of angle
+     *
+     * @return AngleId
+     */
+    AngleId AngleForceField::getType() const { return _type; }
 
-/**
- * @brief get angle parameters
- *
- * @return const AngleParams&
- */
-const AngleParams &AngleForceField::getParams() const { return _params; }
+    /**
+     * @brief get angle parameters
+     *
+     * @return const AngleParams&
+     */
+    const AngleParams &AngleForceField::getParams() const { return _params; }
+
+}   // namespace ff

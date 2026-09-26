@@ -28,111 +28,123 @@
 #include "physicalData.hpp"       // for PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
 
-using namespace manostat;
-using namespace molsys;
-using namespace physicalData;
-
-using namespace settings;
-using namespace linalg;
-
-/**
- * @brief Construct a new Manostat:: Manostat object
- *
- * @param targetPressure
- */
-Manostat::Manostat(double targetPressure) : _targetPressure(targetPressure) {}
-
-/**
- * @brief calculate the pressure of the system
- *
- * @param box
- * @param data
- */
-void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
+namespace manostat
 {
-    auto ekinVirial =
-        data.getKinEnergyVirialTensor(settings::Settings::getVirialType());
-    auto       forceVirial = data.getVirial();
-    const auto volume      = box.getVolume();
 
-    ekinVirial  = box.getBox().toOrthoSpace(ekinVirial);
-    forceVirial = box.getBox().toOrthoSpace(forceVirial);
-
-    _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
-    _pressureTensor *= PRESSURE_FACTOR;
-    _pressure        = trace(_pressureTensor) / linalg::tensor3D::size;
-
-    data.setPressure(_pressure);
-
-    const auto fixedAxis = ManostatSettings::getFixedAxis();
-    const auto p_xyz     = diagonal(_pressureTensor);
-
-    size_t numFree = 0;
-    double p_avg   = 0.0;
-
-    for (size_t axis = 0; axis < 3; ++axis)
+    /**
+     * @brief Construct a new Manostat:: Manostat object
+     *
+     * @param targetPressure
+     */
+    Manostat::Manostat(double targetPressure) : _targetPressure(targetPressure)
     {
-        if (!isAxisFixed(fixedAxis, axis))
+    }
+
+    /**
+     * @brief calculate the pressure of the system
+     *
+     * @param box
+     * @param data
+     */
+    void Manostat::calculatePressure(
+        const molsys::SimulationBox& box,
+        physicalData::PhysicalData&  data
+    )
+    {
+        auto ekinVirial =
+            data.getKinEnergyVirialTensor(settings::Settings::getVirialType());
+        auto       forceVirial = data.getVirial();
+        const auto volume      = box.getVolume();
+
+        ekinVirial  = box.getBox().toOrthoSpace(ekinVirial);
+        forceVirial = box.getBox().toOrthoSpace(forceVirial);
+
+        _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
+        _pressureTensor *= PRESSURE_FACTOR;
+        _pressure        = trace(_pressureTensor) / linalg::tensor3D::size;
+
+        data.setPressure(_pressure);
+
+        const auto fixedAxis = settings::ManostatSettings::getFixedAxis();
+        const auto p_xyz     = diagonal(_pressureTensor);
+
+        size_t numFree = 0;
+        double p_avg   = 0.0;
+
+        for (size_t axis = 0; axis < 3; ++axis)
         {
-            p_avg += p_xyz[axis];
-            ++numFree;
+            if (!isAxisFixed(fixedAxis, axis))
+            {
+                p_avg += p_xyz[axis];
+                ++numFree;
+            }
+        }
+
+        if (numFree > 0)
+        {
+            p_avg /= static_cast<double>(numFree);
+            data.setCoupledPressure(p_avg);
+        }
+        else
+        {
+            data.setCoupledPressure(_pressure);
         }
     }
 
-    if (numFree > 0)
+    /**
+     * @brief rotate mu back into upper diagonal space
+     *
+     * @param mu
+     *
+     * @details first order approximation of mu rotation according to
+     * [gromacs](https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html)
+     *
+     */
+    void Manostat::rotateMu(linalg::tensor3D& mu)
     {
-        p_avg /= static_cast<double>(numFree);
-        data.setCoupledPressure(p_avg);
+        mu[0][1] += mu[1][0];
+        mu[0][2] += mu[2][0];
+        mu[1][2] += mu[2][1];
+
+        mu[1][0] = 0.0;
+        mu[2][0] = 0.0;
+        mu[2][1] = 0.0;
     }
-    else
+
+    /**
+     * @brief apply dummy manostat for NVT ensemble
+     *
+     * @param box
+     * @param data
+     */
+    void Manostat::applyManostat(
+        molsys::SimulationBox&      box,
+        physicalData::PhysicalData& data
+    )
     {
-        data.setCoupledPressure(_pressure);
+        auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");
+
+        calculatePressure(box, data);
     }
-}
 
-/**
- * @brief rotate mu back into upper diagonal space
- *
- * @param mu
- *
- * @details first order approximation of mu rotation according to
- * [gromacs](https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html)
- *
- */
-void Manostat::rotateMu(tensor3D& mu)
-{
-    mu[0][1] += mu[1][0];
-    mu[0][2] += mu[2][0];
-    mu[1][2] += mu[2][1];
+    /**
+     * @brief get the manostat type
+     *
+     * @return ManostatType
+     */
+    settings::ManostatType Manostat::getManostatType() const
+    {
+        return settings::ManostatType::NONE;
+    }
 
-    mu[1][0] = 0.0;
-    mu[2][0] = 0.0;
-    mu[2][1] = 0.0;
-}
+    /**
+     * @brief get the isotropy of the manostat
+     *
+     * @return Isotropy
+     */
+    settings::Isotropy Manostat::getIsotropy() const
+    {
+        return settings::Isotropy::NONE;
+    }
 
-/**
- * @brief apply dummy manostat for NVT ensemble
- *
- * @param box
- * @param data
- */
-void Manostat::applyManostat(SimulationBox& box, PhysicalData& data)
-{
-    auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");
-
-    calculatePressure(box, data);
-}
-
-/**
- * @brief get the manostat type
- *
- * @return ManostatType
- */
-ManostatType Manostat::getManostatType() const { return ManostatType::NONE; }
-
-/**
- * @brief get the isotropy of the manostat
- *
- * @return Isotropy
- */
-Isotropy Manostat::getIsotropy() const { return Isotropy::NONE; }
+}   // namespace manostat

@@ -24,33 +24,36 @@
 
 #include <limits>   // for numeric_limits
 
-#include "mathUtilities.hpp"   // for compare, sign, utilities
+#include "mathUtilities.hpp"   // for utilities::compare, sign, utilities
 #include "vector3d.hpp"        // IWYU pragma: keep - for Vec3D
 
-using namespace utilities;
-
 /**
- * @brief tests compare function for double type
+ * @brief tests utilities::compare function for double type
  *
  */
 TEST(TestMathUtilities, compare)
 {
     const double value1 = 1.0;
-    EXPECT_TRUE(compare(value1, value1));
+    EXPECT_TRUE(utilities::compare(value1, value1));
     EXPECT_FALSE(
-        compare(value1, value1 + std::numeric_limits<double>::epsilon())
+        utilities::compare(
+            value1,
+            value1 + std::numeric_limits<double>::epsilon()
+        )
     );
 
     const auto &value2 = linalg::Vec3D(1.0, 2.0, 3.0);
-    EXPECT_TRUE(compare(value2, value2));
-    EXPECT_FALSE(compare(
-        value2,
-        value2 + linalg::Vec3D(
-                     value2[0],
-                     value2[1],
-                     std::numeric_limits<double>::epsilon()
-                 )
-    ));
+    EXPECT_TRUE(utilities::compare(value2, value2));
+    EXPECT_FALSE(
+        utilities::compare(
+            value2,
+            value2 + linalg::Vec3D(
+                         value2[0],
+                         value2[1],
+                         std::numeric_limits<double>::epsilon()
+                     )
+        )
+    );
 }
 
 /**
@@ -59,36 +62,36 @@ TEST(TestMathUtilities, compare)
  */
 TEST(TestMathUtilities, sign)
 {
-    EXPECT_EQ(sign(2.0), 1);
-    EXPECT_EQ(sign(-2.0), -1);
-    EXPECT_EQ(sign(0.0), 0);
+    EXPECT_EQ(utilities::sign(2.0), 1);
+    EXPECT_EQ(utilities::sign(-2.0), -1);
+    EXPECT_EQ(utilities::sign(0.0), 0);
 }
 
 /**
- * @brief tests compare<T>(a, b, tolerance) — 3-arg overload with a
+ * @brief tests utilities::compare<T>(a, b, tolerance) — 3-arg overload with a
  * user-supplied tolerance.
  */
 TEST(TestMathUtilities, compareWithTolerance)
 {
-    // compare uses strict `<`, so a == b only compares equal when the
-    // tolerance is strictly positive.
-    EXPECT_TRUE(compare(1.0, 1.0 + 1e-9, 1e-8));
-    EXPECT_FALSE(compare(1.0, 1.0 + 1e-7, 1e-8));
-    EXPECT_FALSE(compare(0.0, 0.0, 0.0));
-    EXPECT_TRUE(compare(0.0, 0.0, 1e-12));
-    EXPECT_FALSE(compare(1.0, 2.0, 0.5));
+    // utilities::compare uses strict `<`, so a == b only compares equal when
+    // the tolerance is strictly positive.
+    EXPECT_TRUE(utilities::compare(1.0, 1.0 + 1e-9, 1e-8));
+    EXPECT_FALSE(utilities::compare(1.0, 1.0 + 1e-7, 1e-8));
+    EXPECT_FALSE(utilities::compare(0.0, 0.0, 0.0));
+    EXPECT_TRUE(utilities::compare(0.0, 0.0, 1e-12));
+    EXPECT_FALSE(utilities::compare(1.0, 2.0, 0.5));
 }
 
 /**
- * @brief tests compare(Vec3D, Vec3D, tolerance) — Vec3D compare with
- * a user-supplied tolerance.
+ * @brief tests utilities::compare(Vec3D, Vec3D, tolerance) — Vec3D
+ * utilities::compare with a user-supplied tolerance.
  */
 TEST(TestMathUtilities, compareVec3DWithTolerance)
 {
     const auto vec1 = linalg::Vec3D(1.0, 2.0, 3.0);
     const auto vec2 = linalg::Vec3D(1.0 + 1e-9, 2.0, 3.0 - 1e-9);
-    EXPECT_TRUE(compare(vec1, vec2, 1e-8));
-    EXPECT_FALSE(compare(vec1, vec2, 1e-10));
+    EXPECT_TRUE(utilities::compare(vec1, vec2, 1e-8));
+    EXPECT_FALSE(utilities::compare(vec1, vec2, 1e-10));
 }
 
 /**
@@ -96,10 +99,10 @@ TEST(TestMathUtilities, compareVec3DWithTolerance)
  */
 TEST(TestMathUtilities, kroneckerDelta)
 {
-    EXPECT_EQ(kroneckerDelta(0U, 0U), 1U);
-    EXPECT_EQ(kroneckerDelta(1U, 1U), 1U);
-    EXPECT_EQ(kroneckerDelta(0U, 1U), 0U);
-    EXPECT_EQ(kroneckerDelta(5U, 7U), 0U);
+    EXPECT_EQ(utilities::kroneckerDelta(0U, 0U), 1U);
+    EXPECT_EQ(utilities::kroneckerDelta(1U, 1U), 1U);
+    EXPECT_EQ(utilities::kroneckerDelta(0U, 1U), 0U);
+    EXPECT_EQ(utilities::kroneckerDelta(5U, 7U), 0U);
 }
 
 /**
@@ -108,9 +111,9 @@ TEST(TestMathUtilities, kroneckerDelta)
  */
 TEST(TestMathUtilities, isZero)
 {
-    EXPECT_TRUE(isZero(0.0));
-    EXPECT_TRUE(isZero(-0.0));
-    EXPECT_FALSE(isZero(1.0));
-    EXPECT_FALSE(isZero(std::numeric_limits<double>::epsilon()));
-    EXPECT_FALSE(isZero(std::numeric_limits<double>::min()));
+    EXPECT_TRUE(utilities::isZero(0.0));
+    EXPECT_TRUE(utilities::isZero(-0.0));
+    EXPECT_FALSE(utilities::isZero(1.0));
+    EXPECT_FALSE(utilities::isZero(std::numeric_limits<double>::epsilon()));
+    EXPECT_FALSE(utilities::isZero(std::numeric_limits<double>::min()));
 }

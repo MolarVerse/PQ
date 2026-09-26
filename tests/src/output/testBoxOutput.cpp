@@ -30,17 +30,14 @@
 #include "testOutputBase.hpp"
 #include "vector3d.hpp"
 
-using namespace out;
-using molsys::OrthorhombicBox;
-
 TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
 {
     const std::string path = "default.box.test";
 
-    BoxFileOutput out(path);
+    out::BoxFileOutput out(path);
     out.setFilename(path);
 
-    OrthorhombicBox box;
+    molsys::OrthorhombicBox box;
     box.setBoxDimensions(linalg::Vec3D(10.0, 20.0, 30.0));
 
     out.write(7, box);
@@ -62,10 +59,10 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
 {
     const std::string path = "default.box.test";
 
-    BoxFileOutput out(path);
+    out::BoxFileOutput out(path);
     out.setFilename(path);
 
-    OrthorhombicBox box;
+    molsys::OrthorhombicBox box;
     box.setBoxDimensions(linalg::Vec3D(1.0, 2.0, 3.0));
 
     out.write(1, box);

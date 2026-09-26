@@ -29,15 +29,13 @@
                               // for Message, TestPartResult
 #include "shakeSection.hpp"   // for ShakeSection
 
-using namespace input::topology;
-
 /**
  * @brief tests full process function
  *
  */
 TEST_F(TestTopologySection, processShakeSection)
 {
-    ShakeSection shakeSection;
+    input::topology::ShakeSection shakeSection;
 
     std::ofstream outputStream(_topologyFileName.c_str());
 
@@ -106,7 +104,7 @@ TEST_F(TestTopologySection, processShakeSection)
  */
 TEST_F(TestTopologySection, processShakeSectionIncorrectNumberOfElements)
 {
-    ShakeSection shakeSection;
+    input::topology::ShakeSection shakeSection;
 
     std::ofstream outputStream(_topologyFileName.c_str());
 
@@ -133,7 +131,7 @@ TEST_F(TestTopologySection, processShakeSectionIncorrectNumberOfElements)
  */
 TEST_F(TestTopologySection, processShakeSectionSameAtomTwice)
 {
-    ShakeSection shakeSection;
+    input::topology::ShakeSection shakeSection;
 
     std::ofstream outputStream(_topologyFileName.c_str());
 
@@ -160,7 +158,7 @@ TEST_F(TestTopologySection, processShakeSectionSameAtomTwice)
  */
 TEST_F(TestTopologySection, processShakeSectionMissingEnd)
 {
-    ShakeSection shakeSection;
+    input::topology::ShakeSection shakeSection;
 
     std::ofstream outputStream(_topologyFileName.c_str());
 

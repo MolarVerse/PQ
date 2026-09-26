@@ -26,70 +26,74 @@
 
 #include "simulationBox.hpp"
 
-using namespace opt;
-
-/**
- * @brief Constructor
- *
- * @param nEpochs
- * @param nAtoms
- */
-Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
+namespace opt
 {
-    _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
-    _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
-}
 
-/**
- * @brief Constructor
- *
- * @param nEpochs
- * @param beta1
- * @param beta2
- * @param nAtoms
- */
-Adam::Adam(size_t nEpochs, double beta1, double beta2, size_t nAtoms)
-    : Optimizer(nEpochs), _beta1(beta1), _beta2(beta2)
-{
-    _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
-    _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
-}
-
-/**
- * @brief get the maximum history length
- *
- * @return size_t
- */
-size_t Adam::maxHistoryLength() const { return _maxHistoryLength; }
-
-/**
- * @brief update the optimizer
- *
- * @param learningRate
- * @param step
- */
-void Adam::update(double learningRate, size_t step)
-{
-    auto& simulationBox = _getSimulationBox();
-
-    for (size_t i = 0; i < simulationBox.getNumberOfAtoms(); ++i)
+    /**
+     * @brief Constructor
+     *
+     * @param nEpochs
+     * @param nAtoms
+     */
+    Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
     {
-        auto&      atom  = simulationBox.getAtoms()[i];
-        const auto force = atom->getForce();
-        const auto pos   = atom->getPosition();
-
-        _momentum1[i] = _beta1 * _momentum1[i] - (1.0 - _beta1) * force;
-        _momentum2[i] = _beta2 * _momentum2[i] + (1.0 - _beta2) * force * force;
-
-        const auto mom1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
-        const auto mom2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
-
-        constexpr auto epsilon = 1e-8;
-        auto pos_new = pos - learningRate * mom1 / (sqrt(mom2 + epsilon));
-
-        simulationBox.applyPBC(pos_new);
-
-        atom->setPositionOld(pos);
-        atom->setPosition(pos_new);
+        _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+        _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
     }
-}
+
+    /**
+     * @brief Constructor
+     *
+     * @param nEpochs
+     * @param beta1
+     * @param beta2
+     * @param nAtoms
+     */
+    Adam::Adam(size_t nEpochs, double beta1, double beta2, size_t nAtoms)
+        : Optimizer(nEpochs), _beta1(beta1), _beta2(beta2)
+    {
+        _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+        _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+    }
+
+    /**
+     * @brief get the maximum history length
+     *
+     * @return size_t
+     */
+    size_t Adam::maxHistoryLength() const { return _maxHistoryLength; }
+
+    /**
+     * @brief update the optimizer
+     *
+     * @param learningRate
+     * @param step
+     */
+    void Adam::update(double learningRate, size_t step)
+    {
+        auto& simulationBox = _getSimulationBox();
+
+        for (size_t i = 0; i < simulationBox.getNumberOfAtoms(); ++i)
+        {
+            auto&      atom  = simulationBox.getAtoms()[i];
+            const auto force = atom->getForce();
+            const auto pos   = atom->getPosition();
+
+            _momentum1[i] = _beta1 * _momentum1[i] - (1.0 - _beta1) * force;
+            _momentum2[i] =
+                _beta2 * _momentum2[i] + (1.0 - _beta2) * force * force;
+
+            const auto mom1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
+            const auto mom2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
+
+            constexpr auto epsilon = 1e-8;
+            auto pos_new = pos - learningRate * mom1 / (sqrt(mom2 + epsilon));
+
+            simulationBox.applyPBC(pos_new);
+
+            atom->setPositionOld(pos);
+            atom->setPosition(pos_new);
+        }
+    }
+
+}   // namespace opt

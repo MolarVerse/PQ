@@ -30,29 +30,23 @@
 #include <string>   // for string, basic_string, char_traits
 #include <vector>   // for vector
 
-#include "buckinghamPair.hpp"      // for BuckinghamPair
-#include "constants.hpp"           // for _COULOMB_PREFACTOR_
-#include "defaults.hpp"            // for _NUMBER_OF_GUFF_ENTRIES_
-#include "engine.hpp"              // for Engine
-#include "exceptions.hpp"          // for GuffDatException, UserInputException
-#include "gmock/gmock.h"           // for ElementsAre, MakePredicateFormatter
-#include "guffPair.hpp"            // for GuffPair
-#include "lennardJonesPair.hpp"    // for LennardJonesPair
-#include "morsePair.hpp"           // for MorsePair
-#include "potentialSettings.hpp"   // for PotentialSettings, string
+#include "buckinghamPair.hpp"   // for pot::BuckinghamPair
+#include "constants.hpp"        // for _COULOMB_PREFACTOR_
+#include "defaults.hpp"         // for _NUMBER_OF_GUFF_ENTRIES_
+#include "engine.hpp"           // for Engine
+#include "exceptions.hpp"   // for exc::GuffDatException, exc::UserInputException
+#include "gmock/gmock.h"    // for ElementsAre, MakePredicateFormatter
+#include "guffPair.hpp"     // for pot::GuffPair
+#include "lennardJonesPair.hpp"    // for pot::LennardJonesPair
+#include "morsePair.hpp"           // for pot::MorsePair
+#include "potentialSettings.hpp"   // for settings::PotentialSettings, string
 #include "settings.hpp"            // for Settings
 #include "strongTypes.hpp"
 #include "testNonCoulombPairUtils.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 
-using namespace input::guffdat;
-using namespace pot;
-using namespace settings;
-
-using namespace exc;
-
 /**
- * @brief tests parseLine function of GuffDatReader
+ * @brief tests parseLine function of input::guffdat::GuffDatReader
  *
  * @details expects throw if mol types are not found
  *
@@ -62,20 +56,20 @@ TEST_F(TestGuffDatReader, parseLineErrorMoltypeNotFound)
     auto line = std::vector<std::string>{"3", "1", "1"};
     EXPECT_THROW_MSG(
         _guffDatReader->parseLine(line),
-        GuffDatException,
+        exc::GuffDatException,
         "Invalid molecule type in line 1"
     );
 
     line = std::vector<std::string>{"1", "1", "3"};
     EXPECT_THROW_MSG(
         _guffDatReader->parseLine(line),
-        GuffDatException,
+        exc::GuffDatException,
         "Invalid molecule type in line 1"
     );
 }
 
 /**
- * @brief tests parseLine function of GuffDatReader
+ * @brief tests parseLine function of input::guffdat::GuffDatReader
  *
  * @details expects throw if atom types are not found
  *
@@ -85,20 +79,20 @@ TEST_F(TestGuffDatReader, parseLineErrorAtomTypeNotFound)
     auto line = std::vector<std::string>{"1", "0", "2", "3"};
     EXPECT_THROW_MSG(
         _guffDatReader->parseLine(line),
-        GuffDatException,
+        exc::GuffDatException,
         "Invalid atom type in line 1"
     );
 
     line = std::vector<std::string>{"1", "1", "2", "1"};
     EXPECT_THROW_MSG(
         _guffDatReader->parseLine(line),
-        GuffDatException,
+        exc::GuffDatException,
         "Invalid atom type in line 1"
     );
 }
 
 /**
- * @brief tests setupGuffMaps function of GuffDatReader
+ * @brief tests setupGuffMaps function of input::guffdat::GuffDatReader
  *
  */
 TEST_F(TestGuffDatReader, setupGuffMaps)
@@ -107,7 +101,7 @@ TEST_F(TestGuffDatReader, setupGuffMaps)
 
     auto &pot = _engine->getPotential()->getNonCoulombPotential();
 
-    const auto &potential = dynamic_cast<GuffNonCoulomb &>(pot);
+    const auto &potential = dynamic_cast<pot::GuffNonCoulomb &>(pot);
 
     const auto &nonCoulombPairs = potential.getNonCoulombPairs();
 
@@ -171,7 +165,7 @@ TEST_F(TestGuffDatReader, parseLine)
         "2.0", "2.0", "2.0", "2.0", "2.0",  "2.0",  "2.0", "2.0"
     };
     _guffDatReader->setupGuffMaps();
-    PotentialSettings::setNonCoulombType("lj");
+    settings::PotentialSettings::setNonCoulombType("lj");
     EXPECT_NO_THROW(_guffDatReader->parseLine(line));
 
     EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][1][1][0], 10.0);
@@ -179,19 +173,19 @@ TEST_F(TestGuffDatReader, parseLine)
     EXPECT_TRUE(_guffDatReader->getIsGuffPairSet()[0][1][1][0]);
     EXPECT_TRUE(_guffDatReader->getIsGuffPairSet()[1][0][0][1]);
 
-    auto &potential = dynamic_cast<GuffNonCoulomb &>(
+    auto &potential = dynamic_cast<pot::GuffNonCoulomb &>(
         _engine->getPotential()->getNonCoulombPotential()
     );
     const auto &pair =
-        dynamic_cast<LennardJonesPair &>(*potential.getNonCoulPair(
+        dynamic_cast<pot::LennardJonesPair &>(*potential.getNonCoulPair(
             {MolType{1}, MolType{2}, AtomType{1}, AtomType{0}},
             {VdwType{1}, VdwType{0}}
         ));
 
     EXPECT_EQ(
         pair,
-        LennardJonesPair(
-            PotentialSettings::getCoulombRadiusCutOff(),
+        pot::LennardJonesPair(
+            settings::PotentialSettings::getCoulombRadiusCutOff(),
             LJParams{2.0, 3.0}
         )
     );
@@ -210,7 +204,7 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
         10.0
     );
 
-    const auto &pair = dynamic_cast<LennardJonesPair &>(
+    const auto &pair = dynamic_cast<pot::LennardJonesPair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
             {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
             {VdwType{0}, VdwType{0}}
@@ -232,7 +226,7 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
         (6.0 / ::pow(10.0, 7)) + (12.0 * 3.0 / ::pow(10.0, 13))
     );
 
-    const auto &pair2 = dynamic_cast<LennardJonesPair &>(
+    const auto &pair2 = dynamic_cast<pot::LennardJonesPair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
             {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
             {VdwType{0}, VdwType{1}}
@@ -255,7 +249,7 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
         10.0
     );
 
-    const auto &pair = dynamic_cast<BuckinghamPair &>(
+    const auto &pair = dynamic_cast<pot::BuckinghamPair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
             {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
             {VdwType{0}, VdwType{0}}
@@ -275,7 +269,7 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
         (-2.0 * ::exp(10.0 * 2.0)) + (6.0 * 3.0 / ::pow(10.0, 7))
     );
 
-    const auto &pair2 = dynamic_cast<BuckinghamPair &>(
+    const auto &pair2 = dynamic_cast<pot::BuckinghamPair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
             {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
             {VdwType{0}, VdwType{1}}
@@ -298,7 +292,7 @@ TEST_F(TestGuffDatReader, addMorsePair)
         10.0
     );
 
-    const auto &pair = dynamic_cast<MorsePair &>(
+    const auto &pair = dynamic_cast<pot::MorsePair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
             {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
             {VdwType{0}, VdwType{0}}
@@ -321,7 +315,7 @@ TEST_F(TestGuffDatReader, addMorsePair)
             2.0
     );
 
-    const auto &pair2 = dynamic_cast<MorsePair &>(
+    const auto &pair2 = dynamic_cast<pot::MorsePair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
             {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
             {VdwType{0}, VdwType{1}}
@@ -344,7 +338,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
         10.0
     );
 
-    const auto &pair = dynamic_cast<GuffPair &>(
+    const auto &pair = dynamic_cast<pot::GuffPair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
             {MolType{1}, MolType{2}, AtomType{0}, AtomType{0}},
             {VdwType{0}, VdwType{0}}
@@ -382,7 +376,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
     EXPECT_EQ(pair.getEnergyCutOff(), 3.0121946291700612e+35);
     EXPECT_EQ(pair.getForceCutOff(), -5.4219503325061099e+36);
 
-    const auto &pair2 = dynamic_cast<GuffPair &>(
+    const auto &pair2 = dynamic_cast<pot::GuffPair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
             {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
             {VdwType{0}, VdwType{1}}
@@ -429,7 +423,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         };
     _guffDatReader->setupGuffMaps();
 
-    PotentialSettings::setNonCoulombType("lj");
+    settings::PotentialSettings::setNonCoulombType("lj");
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -440,7 +434,53 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
     );
 
     EXPECT_NO_THROW(
-        [[maybe_unused]] const auto &dummy = dynamic_cast<LennardJonesPair &>(
+        [[maybe_unused]] const auto &dummy =
+            dynamic_cast<pot::LennardJonesPair &>(
+                *(_engine->getPotential()
+                      ->getNonCoulombPotential()
+                      .getNonCoulPair(
+                          {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
+                          {VdwType{0}, VdwType{1}}
+                      )
+                      .get())
+            )
+    );
+
+    settings::PotentialSettings::setNonCoulombType("buck");
+    _guffDatReader->addNonCoulombPair(
+        MolType{1},
+        MolType{2},
+        AtomType{0},
+        AtomType{0},
+        {guffCoefficients.begin(), guffCoefficients.end()},
+        10.0
+    );
+
+    EXPECT_NO_THROW(
+        [[maybe_unused]] const auto &dummy =
+            dynamic_cast<pot::BuckinghamPair &>(
+                *(_engine->getPotential()
+                      ->getNonCoulombPotential()
+                      .getNonCoulPair(
+                          {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
+                          {VdwType{0}, VdwType{1}}
+                      )
+                      .get())
+            )
+    );
+
+    settings::PotentialSettings::setNonCoulombType("morse");
+    _guffDatReader->addNonCoulombPair(
+        MolType{1},
+        MolType{2},
+        AtomType{0},
+        AtomType{0},
+        {guffCoefficients.begin(), guffCoefficients.end()},
+        10.0
+    );
+
+    EXPECT_NO_THROW(
+        [[maybe_unused]] const auto &dummy = dynamic_cast<pot::MorsePair &>(
             *(_engine->getPotential()
                   ->getNonCoulombPotential()
                   .getNonCoulPair(
@@ -451,7 +491,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         )
     );
 
-    PotentialSettings::setNonCoulombType("buck");
+    settings::PotentialSettings::setNonCoulombType("guff");
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -462,51 +502,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
     );
 
     EXPECT_NO_THROW(
-        [[maybe_unused]] const auto &dummy = dynamic_cast<BuckinghamPair &>(
-            *(_engine->getPotential()
-                  ->getNonCoulombPotential()
-                  .getNonCoulPair(
-                      {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
-                      {VdwType{0}, VdwType{1}}
-                  )
-                  .get())
-        )
-    );
-
-    PotentialSettings::setNonCoulombType("morse");
-    _guffDatReader->addNonCoulombPair(
-        MolType{1},
-        MolType{2},
-        AtomType{0},
-        AtomType{0},
-        {guffCoefficients.begin(), guffCoefficients.end()},
-        10.0
-    );
-
-    EXPECT_NO_THROW(
-        [[maybe_unused]] const auto &dummy = dynamic_cast<MorsePair &>(
-            *(_engine->getPotential()
-                  ->getNonCoulombPotential()
-                  .getNonCoulPair(
-                      {MolType{2}, MolType{1}, AtomType{0}, AtomType{0}},
-                      {VdwType{0}, VdwType{1}}
-                  )
-                  .get())
-        )
-    );
-
-    PotentialSettings::setNonCoulombType("guff");
-    _guffDatReader->addNonCoulombPair(
-        MolType{1},
-        MolType{2},
-        AtomType{0},
-        AtomType{0},
-        {guffCoefficients.begin(), guffCoefficients.end()},
-        10.0
-    );
-
-    EXPECT_NO_THROW(
-        [[maybe_unused]] const auto &dummy = dynamic_cast<GuffPair &>(
+        [[maybe_unused]] const auto &dummy = dynamic_cast<pot::GuffPair &>(
             *(_engine->getPotential()
                   ->getNonCoulombPotential()
                   .getNonCoulPair(
@@ -517,7 +513,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         )
     );
 
-    PotentialSettings::setNonCoulombType("lj_9_12");
+    settings::PotentialSettings::setNonCoulombType("lj_9_12");
 
     EXPECT_THROW_MSG(
         _guffDatReader->addNonCoulombPair(
@@ -528,10 +524,10 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
             {guffCoefficients.begin(), guffCoefficients.end()},
             10.0
         ),
-        UserInputException,
+        exc::UserInputException,
         std::format(
             "Invalid nonCoulombic type {} given",
-            string(PotentialSettings::getNonCoulombType())
+            string(settings::PotentialSettings::getNonCoulombType())
         )
     );
 }
@@ -549,7 +545,7 @@ TEST_F(TestGuffDatReader, readErrorNumberOfLineArguments)
     );
     EXPECT_THROW_MSG(
         _guffDatReader->read(),
-        GuffDatException,
+        exc::GuffDatException,
         "Invalid number of commands (5) in line 3 - " +
             std::to_string(defaults::NUMBER_OF_GUFF_ENTRIES) + " are allowed"
     );
@@ -569,7 +565,7 @@ TEST_F(TestGuffDatReader, checkPartialChargesNotMatchingCoefficients)
 
     EXPECT_THROW_MSG(
         _guffDatReader->checkPartialCharges(),
-        GuffDatException,
+        exc::GuffDatException,
         "Invalid coulomb coefficient guff file for molecule "
         "types 1 and 1 and the 1. and the 1. atom type. The coulomb "
         "coefficient should "
@@ -665,10 +661,10 @@ TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
     engine.getSimulationBox().addMoleculeType(moleculeType2);
     engine.getSimulationBox().addMoleculeType(moleculeType3);
 
-    GuffDatReader guffDatReader(engine);
+    input::guffdat::GuffDatReader guffDatReader(engine);
 
     engine.getPotential()->setNonCoulombPotential(
-        std::make_shared<GuffNonCoulomb>()
+        std::make_shared<pot::GuffNonCoulomb>()
     );
 
     guffDatReader.setupGuffMaps();
@@ -732,7 +728,7 @@ TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
 
     EXPECT_THROW_MSG(
         guffDatReader.checkNecessaryGuffPairs(),
-        GuffDatException,
+        exc::GuffDatException,
         "No guff pair set for molecule types MolType(2) and MolType(2) and "
         "atom types ExtAtomType(2) and the ExtAtomType(2)"
     );
@@ -782,24 +778,24 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
-    Settings::setJobtype(JobType::MM_MD);
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
-    FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
-    EXPECT_NO_THROW(readGuffDat(*_engine));
+    settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
+    EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
-    Settings::setJobtype(JobType::MM_MD);
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
-    EXPECT_NO_THROW(readGuffDat(*_engine));
+    EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
-    Settings::setJobtype(JobType::MM_MD);
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
-    EXPECT_NO_THROW(readGuffDat(*_engine));
+    EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }

@@ -29,136 +29,139 @@
 
 #include "dihedralForceField.hpp"   // for BondForceField
 #include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for TopologyException
+#include "exceptions.hpp"           // for exc::TopologyException
 #include "strongTypes.hpp"
 
-using namespace input::topology;
-using namespace molsys;
-using namespace ff;
-using namespace exc;
-using namespace engine;
-
-/**
- * @brief processes the dihedral section of the topology file
- *
- * @details one line consists of 5 or 6 elements:
- * 1. atom index 1
- * 2. atom index 2
- * 3. atom index 3
- * 4. atom index 4
- * 5. dihedral type
- * 6. linker marked with a '*' (optional)
- *
- * @param lineElements
- * @param engine
- *
- * @throws TopologyException if number of elements in line is
- * not 5 or 6
- * @throws TopologyException if atom indices are the same
- * (=same atoms)
- * @throws TopologyException if sixth element is not a '*'
- */
-void DihedralSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::topology
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if (lineElements.size() != 5 && lineElements.size() != 6)
+
+    /**
+     * @brief processes the dihedral section of the topology file
+     *
+     * @details one line consists of 5 or 6 elements:
+     * 1. atom index 1
+     * 2. atom index 2
+     * 3. atom index 3
+     * 4. atom index 4
+     * 5. dihedral type
+     * 6. linker marked with a '*' (optional)
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throws exc::TopologyException if number of elements in line is
+     * not 5 or 6
+     * @throws exc::TopologyException if atom indices are the same
+     * (=same atoms)
+     * @throws exc::TopologyException if sixth element is not a '*'
+     */
+    void DihedralSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    )
     {
-        throw TopologyException(
-            std::format(
-                "Wrong number of arguments in topology file dihedral section "
-                "at "
-                "line {} - number of elements has to be 5 or 6!",
-                _lineNumber
-            )
-        );
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 5 && lineElements.size() != 6)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Wrong number of arguments in topology file dihedral "
+                    "section "
+                    "at "
+                    "line {} - number of elements has to be 5 or 6!",
+                    _lineNumber
+                )
+            );
+        }
+
+        auto atom1        = stoul(lineElements[0]);
+        auto atom2        = stoul(lineElements[1]);
+        auto atom3        = stoul(lineElements[2]);
+        auto atom4        = stoul(lineElements[3]);
+        auto dihedralType = DihedralId{stoul(lineElements[4])};
+        auto isLinker     = false;
+
+        if (6 == lineElements.size())
+        {
+            if (lineElements[5] == "*")
+                isLinker = true;
+
+            else
+            {
+                throw exc::TopologyException(
+                    std::format(
+                        "Sixth entry in topology file in dihedral section has "
+                        "to "
+                        "be a "
+                        "\'*\' or empty at line {}!",
+                        _lineNumber
+                    )
+                );
+            }
+        }
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        auto atoms = std::vector{atom1, atom2, atom3, atom4};
+        std::ranges::sort(atoms);
+        const auto [it, end] = std::ranges::unique(atoms);
+        atoms.erase(it, end);
+
+        if (4 != atoms.size())
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file dihedral section at line {} - atoms cannot "
+                    "be "
+                    "the "
+                    "same!",
+                    _lineNumber
+                )
+            );
+        }
+
+        auto &simBox = engine.getSimulationBox();
+
+        const auto [mol1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
+        const auto [mol2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
+        const auto [mol3, idx3] = simBox.findMoleculeByGlobalAtomIndex(atom3);
+        const auto [mol4, idx4] = simBox.findMoleculeByGlobalAtomIndex(atom4);
+
+        const auto mols     = {mol1, mol2, mol3, mol4};
+        const auto atomIdxs = {idx1, idx2, idx3, idx4};
+
+        auto dihedralFF = ff::DihedralForceField(mols, atomIdxs, dihedralType);
+        dihedralFF.setIsLinker(isLinker);
+
+        engine.getForceField()->addDihedral(dihedralFF);
     }
 
-    auto atom1        = stoul(lineElements[0]);
-    auto atom2        = stoul(lineElements[1]);
-    auto atom3        = stoul(lineElements[2]);
-    auto atom4        = stoul(lineElements[3]);
-    auto dihedralType = DihedralId{stoul(lineElements[4])};
-    auto isLinker     = false;
+    /**
+     * @brief returns the keyword of the dihedral section
+     *
+     * @return "dihedrals"
+     */
+    std::string DihedralSection::keyword() { return "dihedrals"; }
 
-    if (6 == lineElements.size())
+    /**
+     * @brief checks if dihedral sections ends normally
+     *
+     * @param endedNormal
+     *
+     * @throws exc::TopologyException if endedNormal is false
+     */
+    void DihedralSection::endedNormally(bool endedNormal) const
     {
-        if (lineElements[5] == "*")
-            isLinker = true;
-
-        else
+        if (!endedNormal)
         {
-            throw TopologyException(
+            throw exc::TopologyException(
                 std::format(
-                    "Sixth entry in topology file in dihedral section has to "
-                    "be a "
-                    "\'*\' or empty at line {}!",
+                    "Topology file dihedral section at line {} - no end of "
+                    "section "
+                    "found!",
                     _lineNumber
                 )
             );
         }
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    auto atoms = std::vector{atom1, atom2, atom3, atom4};
-    std::ranges::sort(atoms);
-    const auto [it, end] = std::ranges::unique(atoms);
-    atoms.erase(it, end);
-
-    if (4 != atoms.size())
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file dihedral section at line {} - atoms cannot be "
-                "the "
-                "same!",
-                _lineNumber
-            )
-        );
-    }
-
-    auto &simBox = engine.getSimulationBox();
-
-    const auto [mol1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
-    const auto [mol2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
-    const auto [mol3, idx3] = simBox.findMoleculeByGlobalAtomIndex(atom3);
-    const auto [mol4, idx4] = simBox.findMoleculeByGlobalAtomIndex(atom4);
-
-    const auto mols     = std::vector<Molecule *>{mol1, mol2, mol3, mol4};
-    const auto atomIdxs = {idx1, idx2, idx3, idx4};
-
-    auto dihedralFF = DihedralForceField(mols, atomIdxs, dihedralType);
-    dihedralFF.setIsLinker(isLinker);
-
-    engine.getForceField()->addDihedral(dihedralFF);
-}
-
-/**
- * @brief returns the keyword of the dihedral section
- *
- * @return "dihedrals"
- */
-std::string DihedralSection::keyword() { return "dihedrals"; }
-
-/**
- * @brief checks if dihedral sections ends normally
- *
- * @param endedNormal
- *
- * @throws TopologyException if endedNormal is false
- */
-void DihedralSection::endedNormally(bool endedNormal) const
-{
-    if (!endedNormal)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file dihedral section at line {} - no end of section "
-                "found!",
-                _lineNumber
-            )
-        );
-    }
-}
+}   // namespace input::topology

@@ -31,736 +31,770 @@
 #include "settings.hpp"           // for Settings
 #include "strongTypes.hpp"
 
-using namespace molsys;
-using namespace linalg;
-using namespace settings;
-
-/**
- * @brief Construct a new Molecule:: Molecule object
- *
- * @param name
- */
-Molecule::Molecule(std::string_view name) : _name(name) {}
-
-/**
- * @brief Construct a new Molecule:: Molecule object
- *
- * @param moltype
- */
-Molecule::Molecule(MolType moltype) : _moltype(moltype) {}
-
-/**
- * @brief finds number of different atom types in molecule
- *
- * @return int
- */
-size_t Molecule::getNumberOfAtomTypes()
+namespace molsys
 {
-    std::vector<ExtAtomType> extAtomTypes;
 
-    const auto fill                = std::back_inserter(extAtomTypes);
-    auto       getExternalAtomType = [](const auto &atom)
-    { return atom->getExternalAtomType(); };
+    /**
+     * @brief Construct a new Molecule:: Molecule object
+     *
+     * @param name
+     */
+    Molecule::Molecule(std::string_view name) : _name(name) {}
 
-    std::ranges::transform(_atoms, fill, getExternalAtomType);
+    /**
+     * @brief Construct a new Molecule:: Molecule object
+     *
+     * @param moltype
+     */
+    Molecule::Molecule(MolType moltype) : _moltype(moltype) {}
 
-    return utilities::getUniqueElements(extAtomTypes).size();
-}
-
-/**
- * @brief calculates the center of mass of the molecule
- *
- * @details distances are calculated relative to the first atom
- *
- * @param box
- */
-void Molecule::calculateCenterOfMass(const Box &box)
-{
-    _centerOfMass            = {0.0, 0.0, 0.0};
-    const auto positionAtom1 = _atoms[0]->getPosition();
-
-    for (const auto &atom : _atoms)
+    /**
+     * @brief finds number of different atom types in molecule
+     *
+     * @return int
+     */
+    size_t Molecule::getNumberOfAtomTypes()
     {
-        const auto mass     = atom->getMass();
-        const auto position = atom->getPosition();
-        const auto deltaPos = position - positionAtom1;
+        std::vector<ExtAtomType> extAtomTypes;
 
-        _centerOfMass += mass * (position - box.calcShiftVector(deltaPos));
+        const auto fill                = std::back_inserter(extAtomTypes);
+        auto       getExternalAtomType = [](const auto &atom)
+        { return atom->getExternalAtomType(); };
+
+        std::ranges::transform(_atoms, fill, getExternalAtomType);
+
+        return utilities::getUniqueElements(extAtomTypes).size();
     }
 
-    _centerOfMass /= getMolMass();
-
-    _centerOfMass -= box.calcShiftVector(_centerOfMass);
-}
-
-/**
- * @brief reconstructs atom positions around the current center-of-mass image
- *
- * @details Molecules cut by the periodic box carry raw coordinate jumps from
- * the current box. Before a manostat changes the box, these jumps have to be
- * converted back to molecular internal vectors around the cached molecular
- * center of mass, otherwise the old box length leaks into constrained
- * intramolecular distances after the resize.
- *
- * @param box current simulation box
- */
-void Molecule::reconstructAtomsAroundCenterOfMass(const Box &box)
-{
-    auto reconstructAtom = [&box, this](const auto &atom)
+    /**
+     * @brief calculates the center of mass of the molecule
+     *
+     * @details distances are calculated relative to the first atom
+     *
+     * @param box
+     */
+    void Molecule::calculateCenterOfMass(const Box &box)
     {
-        auto position  = atom->getPosition();
-        position      -= box.calcShiftVector(position - _centerOfMass);
-        atom->setPosition(position);
-    };
+        _centerOfMass            = {0.0, 0.0, 0.0};
+        const auto positionAtom1 = _atoms[0]->getPosition();
 
-    std::ranges::for_each(_atoms, reconstructAtom);
-}
+        for (const auto &atom : _atoms)
+        {
+            const auto mass     = atom->getMass();
+            const auto position = atom->getPosition();
+            const auto deltaPos = position - positionAtom1;
 
-/**
- * @brief scales the positions of the molecule by shifting the center of mass
- *
- * @details scaling has to be done in orthogonal space since pressure scaling is
- * done in orthogonal space
- *
- * @param shiftTensor
- * @param box
- */
-void Molecule::scale(const tensor3D &shiftTensor, const Box &box)
-{
-    auto centerOfMass = _centerOfMass;
+            _centerOfMass += mass * (position - box.calcShiftVector(deltaPos));
+        }
 
-    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
-        centerOfMass = box.toOrthoSpace(_centerOfMass);
+        _centerOfMass /= getMolMass();
 
-    const auto shift = shiftTensor * centerOfMass - centerOfMass;
+        _centerOfMass -= box.calcShiftVector(_centerOfMass);
+    }
 
-    auto scaleAtomPosition = [&box, shift](const auto &atom)
+    /**
+     * @brief reconstructs atom positions around the current center-of-mass
+     * image
+     *
+     * @details Molecules cut by the periodic box carry raw coordinate jumps
+     * from the current box. Before a manostat changes the box, these jumps have
+     * to be converted back to molecular internal vectors around the cached
+     * molecular center of mass, otherwise the old box length leaks into
+     * constrained intramolecular distances after the resize.
+     *
+     * @param box current simulation box
+     */
+    void Molecule::reconstructAtomsAroundCenterOfMass(const Box &box)
     {
-        auto position = atom->getPosition();
+        auto reconstructAtom = [&box, this](const auto &atom)
+        {
+            auto position  = atom->getPosition();
+            position      -= box.calcShiftVector(position - _centerOfMass);
+            atom->setPosition(position);
+        };
 
-        if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
-            position = box.toOrthoSpace(position);
+        std::ranges::for_each(_atoms, reconstructAtom);
+    }
 
-        position += shift;
+    /**
+     * @brief scales the positions of the molecule by shifting the center of
+     * mass
+     *
+     * @details scaling has to be done in orthogonal space since pressure
+     * scaling is done in orthogonal space
+     *
+     * @param shiftTensor
+     * @param box
+     */
+    void Molecule::scale(const linalg::tensor3D &shiftTensor, const Box &box)
+    {
+        auto centerOfMass = _centerOfMass;
 
-        if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
-            position = box.toSimSpace(position);
+        if (settings::ManostatSettings::getIsotropy() !=
+            settings::Isotropy::FULL_ANISOTROPIC)
+            centerOfMass = box.toOrthoSpace(_centerOfMass);
 
-        box.applyPBC(position);
+        const auto shift = shiftTensor * centerOfMass - centerOfMass;
 
-        atom->setPosition(position);
-    };
+        auto scaleAtomPosition = [&box, shift](const auto &atom)
+        {
+            auto position = atom->getPosition();
 
-    std::ranges::for_each(_atoms, scaleAtomPosition);
-}
+            if (settings::ManostatSettings::getIsotropy() !=
+                settings::Isotropy::FULL_ANISOTROPIC)
+                position = box.toOrthoSpace(position);
 
-/**
- * @brief scales the center-of-mass velocity of the molecule
- *
- * @details pressure scaling moves molecules by their center of mass. The
- * matching velocity scaling must not change the internal molecular velocities.
- *
- * @param scalingTensor
- * @param box
- */
-void Molecule::scaleVelocity(const tensor3D &scalingTensor, const Box &box)
-{
-    auto centerOfMassVelocity = Vec3D(0.0);
+            position += shift;
 
-    for (const auto &atom : _atoms)
-        centerOfMassVelocity += atom->getMass() * atom->getVelocity();
+            if (settings::ManostatSettings::getIsotropy() !=
+                settings::Isotropy::FULL_ANISOTROPIC)
+                position = box.toSimSpace(position);
 
-    centerOfMassVelocity /= getMolMass();
+            box.applyPBC(position);
 
-    auto scaledCenterOfMassVelocity = centerOfMassVelocity;
+            atom->setPosition(position);
+        };
 
-    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
-        scaledCenterOfMassVelocity =
-            box.toOrthoSpace(scaledCenterOfMassVelocity);
+        std::ranges::for_each(_atoms, scaleAtomPosition);
+    }
 
-    scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
+    /**
+     * @brief scales the center-of-mass velocity of the molecule
+     *
+     * @details pressure scaling moves molecules by their center of mass. The
+     * matching velocity scaling must not change the internal molecular
+     * velocities.
+     *
+     * @param scalingTensor
+     * @param box
+     */
+    void Molecule::scaleVelocity(
+        const linalg::tensor3D &scalingTensor,
+        const Box              &box
+    )
+    {
+        auto centerOfMassVelocity = linalg::Vec3D(0.0);
 
-    if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
-        scaledCenterOfMassVelocity = box.toSimSpace(scaledCenterOfMassVelocity);
+        for (const auto &atom : _atoms)
+            centerOfMassVelocity += atom->getMass() * atom->getVelocity();
 
-    const auto velocityShift =
-        scaledCenterOfMassVelocity - centerOfMassVelocity;
+        centerOfMassVelocity /= getMolMass();
 
-    auto shiftAtomVelocity = [velocityShift](const auto &atom)
-    { atom->addVelocity(velocityShift); };
+        auto scaledCenterOfMassVelocity = centerOfMassVelocity;
 
-    std::ranges::for_each(_atoms, shiftAtomVelocity);
-}
+        if (settings::ManostatSettings::getIsotropy() !=
+            settings::Isotropy::FULL_ANISOTROPIC)
+            scaledCenterOfMassVelocity =
+                box.toOrthoSpace(scaledCenterOfMassVelocity);
 
-/**
- * @brief returns the external global vdw types of the atoms in the molecule
- *
- * @return std::vector<ExtVdwType>
- */
-std::vector<ExtVdwType> Molecule::getExternalGlobalVDWTypes() const
-{
-    std::vector<ExtVdwType> externalGlobalVDWTypes;
+        scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
 
-    externalGlobalVDWTypes.reserve(_atoms.size());
-    for (const auto &atom : _atoms)
-        externalGlobalVDWTypes.push_back(atom->getExternalGlobalVDWType());
+        if (settings::ManostatSettings::getIsotropy() !=
+            settings::Isotropy::FULL_ANISOTROPIC)
+            scaledCenterOfMassVelocity =
+                box.toSimSpace(scaledCenterOfMassVelocity);
 
-    return externalGlobalVDWTypes;
-}
+        const auto velocityShift =
+            scaledCenterOfMassVelocity - centerOfMassVelocity;
 
-/**
- * @brief returns the atom masses of the atoms in the molecule
- *
- * @return std::vector<double>
- */
-std::vector<double> Molecule::getAtomMasses() const
-{
-    std::vector<double> atomMasses(getNumberOfAtoms());
+        auto shiftAtomVelocity = [velocityShift](const auto &atom)
+        { atom->addVelocity(velocityShift); };
 
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        atomMasses[i] = _atoms[i]->getMass();
+        std::ranges::for_each(_atoms, shiftAtomVelocity);
+    }
 
-    return atomMasses;
-}
+    /**
+     * @brief returns the external global vdw types of the atoms in the molecule
+     *
+     * @return std::vector<ExtVdwType>
+     */
+    std::vector<ExtVdwType> Molecule::getExternalGlobalVDWTypes() const
+    {
+        std::vector<ExtVdwType> externalGlobalVDWTypes;
 
-/**
- * @brief returns the partial charges of the atoms in the molecule
- *
- * @return std::vector<double>
- */
-std::vector<double> Molecule::getPartialCharges() const
-{
-    std::vector<double> partialCharges(getNumberOfAtoms());
+        externalGlobalVDWTypes.reserve(_atoms.size());
+        for (const auto &atom : _atoms)
+            externalGlobalVDWTypes.push_back(atom->getExternalGlobalVDWType());
 
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        partialCharges[i] = _atoms[i]->getPartialCharge();
+        return externalGlobalVDWTypes;
+    }
 
-    return partialCharges;
-}
+    /**
+     * @brief returns the atom masses of the atoms in the molecule
+     *
+     * @return std::vector<double>
+     */
+    std::vector<double> Molecule::getAtomMasses() const
+    {
+        std::vector<double> atomMasses(getNumberOfAtoms());
 
-/**
- * @brief Determines if this molecule should be treated as a MM molecule
- *
- * @details The classification logic is as follows:
- * - For MM-only simulations: all molecules are MM molecules
- * - For QM-only simulations: no molecules are MM molecules
- * - For hybrid QM/MM simulations: active molecules are MM molecules
- *
- * @return true if the molecule should be treated with MM methods, false
- * otherwise
- */
-bool Molecule::isMMMolecule() const
-{
-    if (Settings::isMMOnlyJobtype())
-        return true;
+        for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+            atomMasses[i] = _atoms[i]->getMass();
 
-    if (Settings::isQMOnlyJobtype())
+        return atomMasses;
+    }
+
+    /**
+     * @brief returns the partial charges of the atoms in the molecule
+     *
+     * @return std::vector<double>
+     */
+    std::vector<double> Molecule::getPartialCharges() const
+    {
+        std::vector<double> partialCharges(getNumberOfAtoms());
+
+        for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+            partialCharges[i] = _atoms[i]->getPartialCharge();
+
+        return partialCharges;
+    }
+
+    /**
+     * @brief Determines if this molecule should be treated as a MM molecule
+     *
+     * @details The classification logic is as follows:
+     * - For MM-only simulations: all molecules are MM molecules
+     * - For QM-only simulations: no molecules are MM molecules
+     * - For hybrid QM/MM simulations: active molecules are MM molecules
+     *
+     * @return true if the molecule should be treated with MM methods, false
+     * otherwise
+     */
+    bool Molecule::isMMMolecule() const
+    {
+        if (settings::Settings::isMMOnlyJobtype())
+            return true;
+
+        if (settings::Settings::isQMOnlyJobtype())
+            return false;
+
+        if (isActive())
+            return true;
+
         return false;
+    }
 
-    if (isActive())
-        return true;
+    /**
+     * @brief sets the partial charges of the atoms in the molecule
+     *
+     * @param partialCharges
+     */
+    void Molecule::setPartialCharges(const std::vector<double> &partialCharges)
+    {
+        for (size_t i = 0; i < getNumberOfAtoms(); ++i)
+            _atoms[i]->setPartialCharge(partialCharges[i]);
+    }
 
-    return false;
-}
+    /**
+     * @brief sets the forces of the atoms in the molecule to zero
+     *
+     */
+    void Molecule::setAtomForcesToZero()
+    {
+        std::ranges::for_each(
+            _atoms,
+            [](const auto &atom) { atom->setForceToZero(); }
+        );
+    }
 
-/**
- * @brief sets the partial charges of the atoms in the molecule
- *
- * @param partialCharges
- */
-void Molecule::setPartialCharges(const std::vector<double> &partialCharges)
-{
-    for (size_t i = 0; i < getNumberOfAtoms(); ++i)
-        _atoms[i]->setPartialCharge(partialCharges[i]);
-}
+    /**
+     * @brief activates the molecule and it's atoms for hybrid calculations
+     *
+     */
+    void Molecule::activateMolecule()
+    {
+        _isActive = true;
+        for (auto &atom : getAtoms()) atom->setActive(true);
+    }
 
-/**
- * @brief sets the forces of the atoms in the molecule to zero
- *
- */
-void Molecule::setAtomForcesToZero()
-{
-    std::ranges::for_each(
-        _atoms,
-        [](const auto &atom) { atom->setForceToZero(); }
-    );
-}
+    /**
+     * @brief deactivates the molecule and it's atoms for hybrid calculations
+     *
+     */
+    void Molecule::deactivateMolecule()
+    {
+        _isActive = false;
+        for (auto &atom : getAtoms()) atom->setActive(false);
+    }
 
-/**
- * @brief activates the molecule and it's atoms for hybrid calculations
- *
- */
-void Molecule::activateMolecule()
-{
-    _isActive = true;
-    for (auto &atom : getAtoms()) atom->setActive(true);
-}
+    /****************************************
+     *                                      *
+     * standard adder methods for atom data *
+     *                                      *
+     *****************************************/
 
-/**
- * @brief deactivates the molecule and it's atoms for hybrid calculations
- *
- */
-void Molecule::deactivateMolecule()
-{
-    _isActive = false;
-    for (auto &atom : getAtoms()) atom->setActive(false);
-}
+    /**
+     * @brief adds an atom to the molecule
+     *
+     * @param atom
+     */
+    void Molecule::addAtom(const std::shared_ptr<Atom> &atom)
+    {
+        _atoms.push_back(atom);
+    }
 
-/****************************************
- *                                      *
- * standard adder methods for atom data *
- *                                      *
- *****************************************/
+    /**
+     * @brief add a linalg::Vec3D to the current position of the atom by index
+     *
+     * @param index
+     * @param position
+     */
+    void Molecule::addAtomPosition(
+        AtomIndex            index,
+        const linalg::Vec3D &position
+    )
+    {
+        _atoms[index.get()]->addPosition(position);
+    }
 
-/**
- * @brief adds an atom to the molecule
- *
- * @param atom
- */
-void Molecule::addAtom(const std::shared_ptr<Atom> &atom)
-{
-    _atoms.push_back(atom);
-}
+    /**
+     * @brief  add a linalg::Vec3D to the current velocity of the atom by index
+     *
+     * @param index
+     * @param velocity
+     */
+    void Molecule::addAtomVelocity(
+        AtomIndex            index,
+        const linalg::Vec3D &velocity
+    )
+    {
+        _atoms[index.get()]->addVelocity(velocity);
+    }
 
-/**
- * @brief add a Vec3D to the current position of the atom by index
- *
- * @param index
- * @param position
- */
-void Molecule::addAtomPosition(AtomIndex index, const Vec3D &position)
-{
-    _atoms[index.get()]->addPosition(position);
-}
+    /**
+     * @brief add a linalg::Vec3D to the current force of the atom by index
+     *
+     * @param index
+     * @param force
+     */
+    void Molecule::addAtomForce(AtomIndex index, const linalg::Vec3D &force)
+    {
+        _atoms[index.get()]->addForce(force);
+    }
 
-/**
- * @brief  add a Vec3D to the current velocity of the atom by index
- *
- * @param index
- * @param velocity
- */
-void Molecule::addAtomVelocity(AtomIndex index, const Vec3D &velocity)
-{
-    _atoms[index.get()]->addVelocity(velocity);
-}
+    /**
+     * @brief add a linalg::Vec3D to the current shift force of the atom by
+     * index
+     *
+     * @param index
+     * @param shiftForce
+     */
+    void Molecule::addAtomShiftForce(
+        AtomIndex            index,
+        const linalg::Vec3D &shiftForce
+    )
+    {
+        _atoms[index.get()]->addShiftForce(shiftForce);
+    }
 
-/**
- * @brief add a Vec3D to the current force of the atom by index
- *
- * @param index
- * @param force
- */
-void Molecule::addAtomForce(AtomIndex index, const Vec3D &force)
-{
-    _atoms[index.get()]->addForce(force);
-}
+    /*****************************************
+     *                                       *
+     * standard setter methods for atom data *
+     *                                       *
+     ****************************************/
 
-/**
- * @brief add a Vec3D to the current shift force of the atom by index
- *
- * @param index
- * @param shiftForce
- */
-void Molecule::addAtomShiftForce(AtomIndex index, const Vec3D &shiftForce)
-{
-    _atoms[index.get()]->addShiftForce(shiftForce);
-}
+    /**
+     * @brief set the position of the atom by index
+     *
+     * @param index
+     * @param position
+     */
+    void Molecule::setAtomPosition(size_t index, const linalg::Vec3D &position)
+    {
+        _atoms[index]->setPosition(position);
+    }
 
-/*****************************************
- *                                       *
- * standard setter methods for atom data *
- *                                       *
- ****************************************/
+    /**
+     * @brief set the velocity of the atom by index
+     *
+     * @param index
+     * @param velocity
+     */
+    void Molecule::setAtomVelocity(size_t index, const linalg::Vec3D &velocity)
+    {
+        _atoms[index]->setVelocity(velocity);
+    }
 
-/**
- * @brief set the position of the atom by index
- *
- * @param index
- * @param position
- */
-void Molecule::setAtomPosition(size_t index, const Vec3D &position)
-{
-    _atoms[index]->setPosition(position);
-}
+    /**
+     * @brief set the force of the atom by index
+     *
+     * @param index
+     * @param force
+     */
+    void Molecule::setAtomForce(size_t index, const linalg::Vec3D &force)
+    {
+        _atoms[index]->setForce(force);
+    }
 
-/**
- * @brief set the velocity of the atom by index
- *
- * @param index
- * @param velocity
- */
-void Molecule::setAtomVelocity(size_t index, const Vec3D &velocity)
-{
-    _atoms[index]->setVelocity(velocity);
-}
+    /**
+     * @brief set the shift force of the atom by index
+     *
+     * @param index
+     * @param shiftForce
+     */
+    void Molecule::setAtomShiftForce(
+        size_t               index,
+        const linalg::Vec3D &shiftForce
+    )
+    {
+        _atoms[index]->setShiftForce(shiftForce);
+    }
 
-/**
- * @brief set the force of the atom by index
- *
- * @param index
- * @param force
- */
-void Molecule::setAtomForce(size_t index, const Vec3D &force)
-{
-    _atoms[index]->setForce(force);
-}
+    /****************************************
+     *                                      *
+     * standard getters for atom properties *
+     *                                      *
+     *****************************************/
 
-/**
- * @brief set the shift force of the atom by index
- *
- * @param index
- * @param shiftForce
- */
-void Molecule::setAtomShiftForce(size_t index, const Vec3D &shiftForce)
-{
-    _atoms[index]->setShiftForce(shiftForce);
-}
+    /**
+     * @brief returns the position of the atom by index
+     *
+     * @param index
+     * @return linalg::Vec3D
+     */
+    linalg::Vec3D Molecule::getAtomPosition(AtomIndex index) const
+    {
+        return _atoms[index.get()]->getPosition();
+    }
 
-/****************************************
- *                                      *
- * standard getters for atom properties *
- *                                      *
- *****************************************/
+    /**
+     * @brief returns the positions of all atoms
+     *
+     * @return std::vector<linalg::Vec3D>
+     */
+    std::vector<linalg::Vec3D> Molecule::getAtomPositions() const
+    {
+        std::vector<linalg::Vec3D> positions;
+        positions.reserve(_atoms.size());
+        for (const auto &atom : _atoms)
+            positions.push_back(atom->getPosition());
 
-/**
- * @brief returns the position of the atom by index
- *
- * @param index
- * @return Vec3D
- */
-Vec3D Molecule::getAtomPosition(AtomIndex index) const
-{
-    return _atoms[index.get()]->getPosition();
-}
+        return positions;
+    }
 
-/**
- * @brief returns the positions of all atoms
- *
- * @return std::vector<Vec3D>
- */
-std::vector<Vec3D> Molecule::getAtomPositions() const
-{
-    std::vector<Vec3D> positions;
-    positions.reserve(_atoms.size());
-    for (const auto &atom : _atoms) positions.push_back(atom->getPosition());
+    /**
+     * @brief returns the velocity of the atom by index
+     *
+     * @param index
+     * @return linalg::Vec3D
+     */
+    linalg::Vec3D Molecule::getAtomVelocity(AtomIndex index) const
+    {
+        return _atoms[index.get()]->getVelocity();
+    }
 
-    return positions;
-}
+    /**
+     * @brief returns the force of the atom by index
+     *
+     * @param index
+     * @return linalg::Vec3D
+     */
+    linalg::Vec3D Molecule::getAtomForce(AtomIndex index) const
+    {
+        return _atoms[index.get()]->getForce();
+    }
 
-/**
- * @brief returns the velocity of the atom by index
- *
- * @param index
- * @return Vec3D
- */
-Vec3D Molecule::getAtomVelocity(AtomIndex index) const
-{
-    return _atoms[index.get()]->getVelocity();
-}
+    /**
+     * @brief returns the shift force of the atom by index
+     *
+     * @param index
+     * @return linalg::Vec3D
+     */
+    linalg::Vec3D Molecule::getAtomShiftForce(size_t index) const
+    {
+        return _atoms[index]->getShiftForce();
+    }
 
-/**
- * @brief returns the force of the atom by index
- *
- * @param index
- * @return Vec3D
- */
-Vec3D Molecule::getAtomForce(AtomIndex index) const
-{
-    return _atoms[index.get()]->getForce();
-}
+    /**
+     * @brief returns the atomic number of the atom by index
+     *
+     * @param index
+     * @return AtomNumber
+     */
+    AtomNumber Molecule::getAtomicNumber(size_t index) const
+    {
+        return _atoms[index]->getAtomicNumber();
+    }
 
-/**
- * @brief returns the shift force of the atom by index
- *
- * @param index
- * @return Vec3D
- */
-Vec3D Molecule::getAtomShiftForce(size_t index) const
-{
-    return _atoms[index]->getShiftForce();
-}
+    /**
+     * @brief returns the mass of the atom by index
+     *
+     * @param index
+     * @return double
+     */
+    double Molecule::getAtomMass(AtomIndex index) const
+    {
+        return _atoms[index.get()]->getMass();
+    }
 
-/**
- * @brief returns the atomic number of the atom by index
- *
- * @param index
- * @return AtomNumber
- */
-AtomNumber Molecule::getAtomicNumber(size_t index) const
-{
-    return _atoms[index]->getAtomicNumber();
-}
+    /**
+     * @brief returns the partial charge of the atom by index
+     *
+     * @param index
+     * @return double
+     */
+    double Molecule::getPartialCharge(AtomIndex index) const
+    {
+        return _atoms[index.get()]->getPartialCharge();
+    }
 
-/**
- * @brief returns the mass of the atom by index
- *
- * @param index
- * @return double
- */
-double Molecule::getAtomMass(AtomIndex index) const
-{
-    return _atoms[index.get()]->getMass();
-}
+    /**
+     * @brief returns the atom type of the atom by index
+     *
+     * @param index
+     * @return AtomType
+     */
+    AtomType Molecule::getAtomType(AtomIndex index) const
+    {
+        return _atoms[index.get()]->getAtomType();
+    }
 
-/**
- * @brief returns the partial charge of the atom by index
- *
- * @param index
- * @return double
- */
-double Molecule::getPartialCharge(AtomIndex index) const
-{
-    return _atoms[index.get()]->getPartialCharge();
-}
+    /**
+     * @brief returns the internal global vdw type of the atom by index
+     *
+     * @param index
+     * @return VdwType
+     */
+    VdwType Molecule::getInternalGlobalVDWType(AtomIndex index) const
+    {
+        return _atoms[index.get()]->getInternalGlobalVDWType();
+    }
 
-/**
- * @brief returns the atom type of the atom by index
- *
- * @param index
- * @return AtomType
- */
-AtomType Molecule::getAtomType(AtomIndex index) const
-{
-    return _atoms[index.get()]->getAtomType();
-}
+    /**
+     * @brief returns the atom name of the atom by index
+     *
+     * @param index
+     * @return std::string
+     */
+    std::string Molecule::getAtomName(AtomIndex index) const
+    {
+        return _atoms[index.get()]->getName();
+    }
 
-/**
- * @brief returns the internal global vdw type of the atom by index
- *
- * @param index
- * @return VdwType
- */
-VdwType Molecule::getInternalGlobalVDWType(AtomIndex index) const
-{
-    return _atoms[index.get()]->getInternalGlobalVDWType();
-}
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief returns the atom name of the atom by index
- *
- * @param index
- * @return std::string
- */
-std::string Molecule::getAtomName(AtomIndex index) const
-{
-    return _atoms[index.get()]->getName();
-}
+    /**
+     * @brief returns the number of atoms in the molecule
+     *
+     * @return size_t
+     */
+    size_t Molecule::getNumberOfAtoms() const { return _numberOfAtoms; }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief returns the number of degrees of freedom of the molecule
+     *
+     * @return size_t
+     */
+    size_t Molecule::getDegreesOfFreedom() const
+    {
+        return 3 * getNumberOfAtoms();
+    }
 
-/**
- * @brief returns the number of atoms in the molecule
- *
- * @return size_t
- */
-size_t Molecule::getNumberOfAtoms() const { return _numberOfAtoms; }
+    /**
+     * @brief returns the charge of the molecule
+     *
+     * @return int
+     */
 
-/**
- * @brief returns the number of degrees of freedom of the molecule
- *
- * @return size_t
- */
-size_t Molecule::getDegreesOfFreedom() const { return 3 * getNumberOfAtoms(); }
+    int Molecule::getCharge() const { return _charge; }
 
-/**
- * @brief returns the charge of the molecule
- *
- * @return int
- */
+    /**
+     * @brief returns the molecular mass of the molecule
+     *
+     * @return double
+     */
+    double Molecule::getMolMass() const { return _molMass; }
 
-int Molecule::getCharge() const { return _charge; }
+    /**
+     * @brief returns the name of the molecule
+     *
+     * @return std::string
+     */
+    std::string Molecule::getName() const { return _name; }
 
-/**
- * @brief returns the molecular mass of the molecule
- *
- * @return double
- */
-double Molecule::getMolMass() const { return _molMass; }
+    /**
+     * @brief returns the center of mass of the molecule
+     *
+     * @return linalg::Vec3D
+     */
+    linalg::Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
 
-/**
- * @brief returns the name of the molecule
- *
- * @return std::string
- */
-std::string Molecule::getName() const { return _name; }
+    /**
+     * @brief return the Hybrid zone of the molecule
+     *
+     * @return HybridZone
+     */
+    HybridZone Molecule::getHybridZone() const { return _hybridZone; }
 
-/**
- * @brief returns the center of mass of the molecule
- *
- * @return Vec3D
- */
-Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
+    /**
+     * @brief return the smoothing factor of the molecule for hybrid
+     * calculations
+     *
+     * @return double
+     */
+    double Molecule::getSmoothingFactor() const { return _smoothingFactor; }
 
-/**
- * @brief return the Hybrid zone of the molecule
- *
- * @return HybridZone
- */
-HybridZone Molecule::getHybridZone() const { return _hybridZone; }
+    /**
+     * @brief returns the atom by index
+     *
+     * @param index
+     * @return Atom
+     */
+    Atom &Molecule::getAtom(AtomIndex index) { return *(_atoms[index.get()]); }
 
-/**
- * @brief return the smoothing factor of the molecule for hybrid calculations
- *
- * @return double
- */
-double Molecule::getSmoothingFactor() const { return _smoothingFactor; }
+    /**
+     * @brief returns the atoms of the molecule
+     *
+     * @return std::vector<Atom>
+     */
+    std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() { return _atoms; }
 
-/**
- * @brief returns the atom by index
- *
- * @param index
- * @return Atom
- */
-Atom &Molecule::getAtom(AtomIndex index) { return *(_atoms[index.get()]); }
+    /**
+     * @brief returns the atoms of the molecule
+     *
+     * @return std::vector<Atom>
+     */
+    const std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() const
+    {
+        return _atoms;
+    }
 
-/**
- * @brief returns the atoms of the molecule
- *
- * @return std::vector<Atom>
- */
-std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() { return _atoms; }
+    /**
+     * @brief return if the molecule is forced to be in the CORE region for
+     * hybrid calculations
+     *
+     * @return true
+     * @return false
+     */
+    bool Molecule::isForcedCore() const { return _isForcedCore; }
 
-/**
- * @brief returns the atoms of the molecule
- *
- * @return std::vector<Atom>
- */
-const std::vector<std::shared_ptr<Atom>> &Molecule::getAtoms() const
-{
-    return _atoms;
-}
+    /**
+     * @brief return if the molecule is forced to be in the LAYER region for
+     * hybrid calculations
+     *
+     * @return true
+     * @return false
+     */
+    bool Molecule::isForcedLayer() const { return _isForcedLayer; }
 
-/**
- * @brief return if the molecule is forced to be in the CORE region for hybrid
- * calculations
- *
- * @return true
- * @return false
- */
-bool Molecule::isForcedCore() const { return _isForcedCore; }
+    /**
+     * @brief return if the molecule is forced to be in the outer region for
+     * hybrid calculations
+     *
+     * @return true
+     * @return false
+     */
+    bool Molecule::isForcedOuter() const { return _isForcedOuter; }
 
-/**
- * @brief return if the molecule is forced to be in the LAYER region for hybrid
- * calculations
- *
- * @return true
- * @return false
- */
-bool Molecule::isForcedLayer() const { return _isForcedLayer; }
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief return if the molecule is forced to be in the outer region for hybrid
- * calculations
- *
- * @return true
- * @return false
- */
-bool Molecule::isForcedOuter() const { return _isForcedOuter; }
+    /**
+     * @brief set the name of the molecule
+     *
+     * @param name
+     */
+    void Molecule::setName(std::string_view name) { _name = name; }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief set the number of atoms in the molecule
+     *
+     * @param numberOfAtoms
+     */
+    void Molecule::setNumberOfAtoms(size_t numberOfAtoms)
+    {
+        _numberOfAtoms = numberOfAtoms;
+    }
 
-/**
- * @brief set the name of the molecule
- *
- * @param name
- */
-void Molecule::setName(std::string_view name) { _name = name; }
+    /**
+     * @brief set the moltype of the molecule
+     *
+     * @param moltype
+     */
+    void Molecule::setMoltype(MolType moltype) { _moltype = moltype; }
 
-/**
- * @brief set the number of atoms in the molecule
- *
- * @param numberOfAtoms
- */
-void Molecule::setNumberOfAtoms(size_t numberOfAtoms)
-{
-    _numberOfAtoms = numberOfAtoms;
-}
+    /**
+     * @brief set the charge of the molecule
+     *
+     * @param charge
+     */
+    void Molecule::setCharge(int charge) { _charge = charge; }
 
-/**
- * @brief set the moltype of the molecule
- *
- * @param moltype
- */
-void Molecule::setMoltype(MolType moltype) { _moltype = moltype; }
+    /**
+     * @brief set the molecular mass of the molecule
+     *
+     * @param molMass
+     */
+    void Molecule::setMolMass(double molMass) { _molMass = molMass; }
 
-/**
- * @brief set the charge of the molecule
- *
- * @param charge
- */
-void Molecule::setCharge(int charge) { _charge = charge; }
+    /**
+     * @brief set the center of mass of the molecule
+     *
+     * @param centerOfMass
+     */
+    void Molecule::setCenterOfMass(const linalg::Vec3D &centerOfMass)
+    {
+        _centerOfMass = centerOfMass;
+    }
 
-/**
- * @brief set the molecular mass of the molecule
- *
- * @param molMass
- */
-void Molecule::setMolMass(double molMass) { _molMass = molMass; }
+    /**
+     * @brief set the Hybrid zone of the molecule
+     *
+     * @param hybridZone
+     */
+    void Molecule::setHybridZone(HybridZone hybridZone)
+    {
+        _hybridZone = hybridZone;
+    }
 
-/**
- * @brief set the center of mass of the molecule
- *
- * @param centerOfMass
- */
-void Molecule::setCenterOfMass(const Vec3D &centerOfMass)
-{
-    _centerOfMass = centerOfMass;
-}
+    /**
+     * @brief set the smoothing factor of the molecule for hybrid calculations
+     *
+     * @param factor
+     */
+    void Molecule::setSmoothingFactor(double factor)
+    {
+        _smoothingFactor = factor;
+    }
 
-/**
- * @brief set the Hybrid zone of the molecule
- *
- * @param hybridZone
- */
-void Molecule::setHybridZone(HybridZone hybridZone)
-{
-    _hybridZone = hybridZone;
-}
+    /**
+     * @brief set if the molecule is forced to be in the CORE region for hybrid
+     * calculations
+     *
+     * @param isForcedCore
+     */
+    void Molecule::setForcedCore(bool isForcedCore)
+    {
+        _isForcedCore = isForcedCore;
+    }
 
-/**
- * @brief set the smoothing factor of the molecule for hybrid calculations
- *
- * @param factor
- */
-void Molecule::setSmoothingFactor(double factor) { _smoothingFactor = factor; }
+    /**
+     * @brief set if the molecule is forced to be in the LAYER region for hybrid
+     * calculations
+     *
+     * @param isForcedLayer
+     */
+    void Molecule::setForcedLayer(bool isForcedLayer)
+    {
+        _isForcedLayer = isForcedLayer;
+    }
 
-/**
- * @brief set if the molecule is forced to be in the CORE region for hybrid
- * calculations
- *
- * @param isForcedCore
- */
-void Molecule::setForcedCore(bool isForcedCore)
-{
-    _isForcedCore = isForcedCore;
-}
+    /**
+     * @brief set if the molecule is forced to be in the outer region for hybrid
+     * calculations
+     *
+     * @param isForcedOuter
+     */
+    void Molecule::setForcedOuter(bool isForcedOuter)
+    {
+        _isForcedOuter = isForcedOuter;
+    }
 
-/**
- * @brief set if the molecule is forced to be in the LAYER region for hybrid
- * calculations
- *
- * @param isForcedLayer
- */
-void Molecule::setForcedLayer(bool isForcedLayer)
-{
-    _isForcedLayer = isForcedLayer;
-}
-
-/**
- * @brief set if the molecule is forced to be in the outer region for hybrid
- * calculations
- *
- * @param isForcedOuter
- */
-void Molecule::setForcedOuter(bool isForcedOuter)
-{
-    _isForcedOuter = isForcedOuter;
-}
+}   // namespace molsys

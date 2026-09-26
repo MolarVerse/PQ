@@ -26,59 +26,60 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"   // for PotentialCellList
 
-using namespace setup;
-using namespace engine;
-using namespace pot;
-
-/**
- * @brief wrapper to build SetupCellList object and call setup
- *
- * @param engine
- */
-void setup::setupCellList(Engine &engine)
+namespace setup
 {
-    if (settings::Settings::isCellListActivated())
+
+    /**
+     * @brief wrapper to build SetupCellList object and call setup
+     *
+     * @param engine
+     */
+    void setupCellList(engine::Engine &engine)
     {
-        out::StdoutOutput::writeSetup("Cell List");
-        engine.getLogOutput().writeSetup("Cell List");
+        if (settings::Settings::isCellListActivated())
+        {
+            out::StdoutOutput::writeSetup("Cell List");
+            engine.getLogOutput().writeSetup("Cell List");
+        }
+
+        CellListSetup cellListSetup(engine);
+        cellListSetup.setup();
     }
 
-    CellListSetup cellListSetup(engine);
-    cellListSetup.setup();
-}
+    /**
+     * @brief constructor
+     *
+     * @param engine
+     */
+    CellListSetup::CellListSetup(engine::Engine &engine) : _engine(engine) {}
 
-/**
- * @brief constructor
- *
- * @param engine
- */
-CellListSetup::CellListSetup(Engine &engine) : _engine(engine) {}
-
-/**
- * @brief setup cell list
- *
- * @details if cell list is activated, resize cells, setup cell list and set
- * potential to cell list potential, otherwise set potential to brute force
- * potential. The nonCoulombPotential is stored and set again to new potential
- * object.
- *
- */
-void CellListSetup::setup()
-{
-    const auto &potential     = _engine.getPotential();
-    const auto  nonCoulombPot = potential->getNonCoulombPotSharedPtr();
-
-    if (settings::Settings::isCellListActivated())
+    /**
+     * @brief setup cell list
+     *
+     * @details if cell list is activated, resize cells, setup cell list and set
+     * potential to cell list potential, otherwise set potential to brute force
+     * potential. The nonCoulombPotential is stored and set again to new
+     * potential object.
+     *
+     */
+    void CellListSetup::setup()
     {
-        const auto &cellList = _engine.getCellList();
-        cellList->resizeCells();
-        cellList->setup(_engine.getSimulationBox());
-        _engine.makePotential(PotentialCellList());
-    }
-    else
-    {
-        _engine.makePotential(PotentialBruteForce());
+        const auto &potential     = _engine.getPotential();
+        const auto  nonCoulombPot = potential->getNonCoulombPotSharedPtr();
+
+        if (settings::Settings::isCellListActivated())
+        {
+            const auto &cellList = _engine.getCellList();
+            cellList->resizeCells();
+            cellList->setup(_engine.getSimulationBox());
+            _engine.makePotential(pot::PotentialCellList());
+        }
+        else
+        {
+            _engine.makePotential(pot::PotentialBruteForce());
+        }
+
+        _engine.getPotential()->setNonCoulombPotential(nonCoulombPot);
     }
 
-    _engine.getPotential()->setNonCoulombPotential(nonCoulombPot);
-}
+}   // namespace setup

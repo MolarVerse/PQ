@@ -28,76 +28,75 @@
 
 #include "engine.hpp"           // for Engine
 #include "exceptions.hpp"       // for InputFileException
-#include "hybridSettings.hpp"   // for HybridSettings
+#include "hybridSettings.hpp"   // for settings::HybridSettings
 #include "qmSettings.hpp"       // for QMSettings
-#include "settings.hpp"         // for Settings
+#include "settings.hpp"         // for settings::Settings
 
-using setup::HybridSetup;
-using namespace settings;
-using namespace engine;
-using namespace exc;
-
-/**
- * @brief wrapper to build HybridSetup object and call setup
- *
- * @param engine
- */
-void setup::setupHybrid(Engine &engine)
+namespace setup
 {
-    if (!Settings::isHybridJobtype())
-        return;
 
-    out::StdoutOutput::writeSetup("Hybrid Configuration");
-    engine.getLogOutput().writeSetup("Hybrid Configuration");
+    /**
+     * @brief wrapper to build HybridSetup object and call setup
+     *
+     * @param engine
+     */
+    void setupHybrid(engine::Engine &engine)
+    {
+        if (!settings::Settings::isHybridJobtype())
+            return;
 
-    HybridSetup hybridSetup(engine);
-    hybridSetup.setup();
-}
+        out::StdoutOutput::writeSetup("Hybrid Configuration");
+        engine.getLogOutput().writeSetup("Hybrid Configuration");
 
-/**
- * @brief Construct a new HybridSetup object
- *
- * @param engine
- */
-HybridSetup::HybridSetup(Engine &engine) : _engine(engine) {}
+        HybridSetup hybridSetup(engine);
+        hybridSetup.setup();
+    }
 
-/**
- * @brief setup Hybrid-MD
- *
- */
-void HybridSetup::setup()
-{
-    validateQMMethod();
-    setupInnerRegionCenter();
-    setupForcedCoreList();
-    setupForcedLayerList();
-    setupForcedOuterList();
-    validateQMChargeSettings();
-    checkZoneRadii();
+    /**
+     * @brief Construct a new HybridSetup object
+     *
+     * @param engine
+     */
+    HybridSetup::HybridSetup(engine::Engine &engine) : _engine(engine) {}
 
-    setupWriteInfo();
-}
+    /**
+     * @brief setup Hybrid-MD
+     *
+     */
+    void HybridSetup::setup()
+    {
+        validateQMMethod();
+        setupInnerRegionCenter();
+        setupForcedCoreList();
+        setupForcedLayerList();
+        setupForcedOuterList();
+        validateQMChargeSettings();
+        checkZoneRadii();
 
-/**
- * @brief Check if chosen QM method is available for hybrid type calculations
- *
- * @throws exc::InputFileException if the QM method is not supported
- * for hybrid type calculations
- */
-void HybridSetup::validateQMMethod()
-{
-    using enum QMMethod;
+        setupWriteInfo();
+    }
 
-    const auto qmMethod = QMSettings::getQMMethod();
-    const auto errorMsg = std::format(
-        "QM method \"{}\" is not supported for hybrid type "
-        "calculations. Supported QM methods are \"dftbplus\" and "
-        "\"turbomole\".",
-        string(qmMethod)
+    /**
+     * @brief Check if chosen QM method is available for hybrid type
+     * calculations
+     *
+     * @throws exc::InputFileException if the QM method is not supported
+     * for hybrid type calculations
+     */
+    void HybridSetup::validateQMMethod()
+    {
+        using enum settings::QMMethod;
 
-    );
+        const auto qmMethod = settings::QMSettings::getQMMethod();
+        const auto errorMsg = std::format(
+            "QM method \"{}\" is not supported for hybrid type "
+            "calculations. Supported QM methods are \"dftbplus\" and "
+            "\"turbomole\".",
+            string(qmMethod)
 
-    // clang-format off
+        );
+
+        // clang-format off
     switch (qmMethod)
     {
         case DFTBPLUS:
@@ -109,214 +108,231 @@ void HybridSetup::validateQMMethod()
         case MACE:
         case FENNOL:
         case NONE:
-            throw(InputFileException(errorMsg));
+            throw(exc::InputFileException(errorMsg));
     }
-    // clang-format on
-}
-
-/**
- * @brief setup inner region center
- *
- * @details This function determines the indices of the atoms that mark the
- * center of the inner region of hybrid type calculations. If inner region
- * center atoms are specified in the settings, those atom indices are used.
- * If no inner region center is specified, atom 0 (e.g. the first atom) is used
- * as the default center. All determined atom indices are added to the inner
- * region center list in the simulation box.
- *
- */
-void HybridSetup::setupInnerRegionCenter()
-{
-    const auto innerRegionCenter = HybridSettings::getInnerRegionCenter();
-
-    _engine.getSimulationBox().addInnerRegionCenterAtoms(
-        innerRegionCenter ? innerRegionCenter.value() : std::vector<size_t>{0}
-    );
-}
-
-/**
- * @brief setup forced core list
- *
- */
-void HybridSetup::setupForcedCoreList()
-{
-    _engine.getSimulationBox().setupForcedCoreMolecules(
-        HybridSettings::getForcedCoreList()
-    );
-}
-
-/**
- * @brief setup forced layer list
- *
- */
-void HybridSetup::setupForcedLayerList()
-{
-    _engine.getSimulationBox().setupForcedLayerMolecules(
-        HybridSettings::getForcedLayerList()
-    );
-}
-
-/**
- * @brief setup forced outer list
- *
- */
-void HybridSetup::setupForcedOuterList()
-{
-    _engine.getSimulationBox().setupForcedOuterMolecules(
-        HybridSettings::getForcedOuterList()
-    );
-}
-
-/**
- * @brief Validate zone radii configuration for hybrid calculations
- *
- * @throws exc::InputFileException if the core radius is larger than
- * the layer radius
- * @throws exc::InputFileException if the smoothing region is too
- * thick for the chosen combination of core and layer radius
- * @throws exc::InputFileException if the layer radius exceeds one
- quarter of the smallest box dimension (minimum image convention)
- * @throws exc::InputFileException if the sum of layer radius and
- point charge thickness exceeds three quarters of the smallest box dimension
- (includes point charges from beyond immediate neighboring cells)
- */
-void HybridSetup::checkZoneRadii()
-{
-    const auto coreRadius  = HybridSettings::getCoreRadius();
-    const auto layerRadius = HybridSettings::getLayerRadius();
-    const auto smoothingRegionThickness =
-        HybridSettings::getSmoothingRegionThickness();
-    const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
-    const auto minimalBoxDimension =
-        _engine.getSimulationBox().getMinimalBoxDimension();
-
-    if (coreRadius > layerRadius)
-    {
-        throw(InputFileException(
-            std::format(
-                "Core radius ({} Å) cannot be larger than layer radius ({} Å)",
-                coreRadius,
-                layerRadius
-            )
-        ));
-    }
-
-    if (coreRadius > (layerRadius - smoothingRegionThickness))
-    {
-        throw(InputFileException(
-            std::format(
-                "Smoothing region is too thick ({} Å) for the chosen "
-                "combination of core ({} Å) and layer radius ({} Å)",
-                smoothingRegionThickness,
-                coreRadius,
-                layerRadius
-            )
-        ));
-    }
-
-    if (layerRadius > (minimalBoxDimension / 4))
-    {
-        throw(InputFileException(
-            std::format(
-                "Layer radius ({} Å) exceeds one quarter of the smallest box "
-                "dimension ({} Å). This configuration is not allowed to ensure "
-                "compliance with the minimum image convention.",
-                layerRadius,
-                minimalBoxDimension
-            )
-        ));
-    }
-
-    if ((layerRadius + pointChargeThickness) > (minimalBoxDimension * 3 / 2))
-    {
-        throw(InputFileException(
-            std::format(
-                "Layer radius ({} Å) plus point charge thickness ({} Å) "
-                "exceeds three halves of the smallest box dimension ({} Å). "
-                "This configuration is not allowed, as it would include point "
-                "charges from beyond the immediate neighboring cells.",
-                layerRadius,
-                pointChargeThickness,
-                minimalBoxDimension
-            )
-        ));
-    }
-}
-
-/**
- * @brief Validate the compatibility between QM charge settings and moltype 0
- * presence
- *
- * @details This function checks for a configuration conflict in hybrid QM/MM
- * calculations where MM charges are requested (qm_charges = mm) but QM atoms
- * (moltype 0) are present in the system.
- *
- * @throws exc::InputFileException if MM charges are requested but
- * atoms without moltype are present in the simulation box
- */
-void HybridSetup::validateQMChargeSettings()
-{
-    const auto mmChargesRequested = !HybridSettings::getUseQMCharges();
-    const auto qmAtomsPresent =
-        _engine.getSimulationBox().moleculeTypeExists(MolType{0});
-
-    if (mmChargesRequested && qmAtomsPresent)
-    {
-        throw(InputFileException(
-            "Invalid configuration: MM charges requested (qm_charges = mm) in "
-            "input file but atoms with moltype \"0\" are present in the "
-            "system. Either set \"qm_charges = qm\" or ensure all atoms have a"
-            "non-zero moltype."
-        ));
-    }
-}
-
-/**
- * @brief write info about the hybrid setup
- *
- */
-void HybridSetup::setupWriteInfo() const
-{
-    auto &logOutput = _engine.getLogOutput();
-
-    const auto jobtype         = Settings::getJobtype();
-    const auto smoothingMethod = HybridSettings::getSmoothingMethod();
-    const auto innerRegionCenterSettings =
-        HybridSettings::getInnerRegionCenter();
-    const auto innerRegionCenter =
-        innerRegionCenterSettings.value_or(std::vector<size_t>{0});
-    const auto forcedCoreList  = HybridSettings::getForcedCoreList();
-    const auto forcedOuterList = HybridSettings::getForcedOuterList();
-    const auto useQMCharges    = HybridSettings::getUseQMCharges();
-    const auto coreRadius      = HybridSettings::getCoreRadius();
-    const auto layerRadius     = HybridSettings::getLayerRadius();
-    const auto smoothingRegionThickness =
-        HybridSettings::getSmoothingRegionThickness();
-    const auto pointChargeThickness = HybridSettings::getPointChargeThickness();
-
-    const auto formatIndexList = []<typename T>(const std::vector<T> &indices)
-    {
-        if (indices.empty())
-            return std::string("none");
-
-        auto formatted = std::to_string(indices.front());
-
-        for (size_t i = 1; i < indices.size(); ++i)
-            formatted += std::format(", {}", indices[i]);
-
-        return formatted;
-    };
-
-    if (jobtype == JobType::QMMM_MD)
-    {
-        // clang-format off
-        const auto *const jobtypeMsg =                 "Hybrid type:                 QM/MM";
         // clang-format on
-
-        logOutput.writeSetupInfo(jobtypeMsg);
     }
 
-    // clang-format off
+    /**
+     * @brief setup inner region center
+     *
+     * @details This function determines the indices of the atoms that mark the
+     * center of the inner region of hybrid type calculations. If inner region
+     * center atoms are specified in the settings, those atom indices are used.
+     * If no inner region center is specified, atom 0 (e.g. the first atom) is
+     * used as the default center. All determined atom indices are added to the
+     * inner region center list in the simulation box.
+     *
+     */
+    void HybridSetup::setupInnerRegionCenter()
+    {
+        const auto innerRegionCenter =
+            settings::HybridSettings::getInnerRegionCenter();
+
+        _engine.getSimulationBox().addInnerRegionCenterAtoms(
+            innerRegionCenter ? innerRegionCenter.value()
+                              : std::vector<size_t>{0}
+        );
+    }
+
+    /**
+     * @brief setup forced core list
+     *
+     */
+    void HybridSetup::setupForcedCoreList()
+    {
+        _engine.getSimulationBox().setupForcedCoreMolecules(
+            settings::HybridSettings::getForcedCoreList()
+        );
+    }
+
+    /**
+     * @brief setup forced layer list
+     *
+     */
+    void HybridSetup::setupForcedLayerList()
+    {
+        _engine.getSimulationBox().setupForcedLayerMolecules(
+            settings::HybridSettings::getForcedLayerList()
+        );
+    }
+
+    /**
+     * @brief setup forced outer list
+     *
+     */
+    void HybridSetup::setupForcedOuterList()
+    {
+        _engine.getSimulationBox().setupForcedOuterMolecules(
+            settings::HybridSettings::getForcedOuterList()
+        );
+    }
+
+    /**
+     * @brief Validate zone radii configuration for hybrid calculations
+     *
+     * @throws exc::InputFileException if the core radius is larger than
+     * the layer radius
+     * @throws exc::InputFileException if the smoothing region is too
+     * thick for the chosen combination of core and layer radius
+     * @throws exc::InputFileException if the layer radius exceeds one
+     quarter of the smallest box dimension (minimum image convention)
+     * @throws exc::InputFileException if the sum of layer radius and
+     point charge thickness exceeds three quarters of the smallest box dimension
+     (includes point charges from beyond immediate neighboring cells)
+     */
+    void HybridSetup::checkZoneRadii()
+    {
+        const auto coreRadius  = settings::HybridSettings::getCoreRadius();
+        const auto layerRadius = settings::HybridSettings::getLayerRadius();
+        const auto smoothingRegionThickness =
+            settings::HybridSettings::getSmoothingRegionThickness();
+        const auto pointChargeThickness =
+            settings::HybridSettings::getPointChargeThickness();
+        const auto minimalBoxDimension =
+            _engine.getSimulationBox().getMinimalBoxDimension();
+
+        if (coreRadius > layerRadius)
+        {
+            throw(exc::InputFileException(
+                std::format(
+                    "Core radius ({} Å) cannot be larger than layer radius ({} "
+                    "Å)",
+                    coreRadius,
+                    layerRadius
+                )
+            ));
+        }
+
+        if (coreRadius > (layerRadius - smoothingRegionThickness))
+        {
+            throw(exc::InputFileException(
+                std::format(
+                    "Smoothing region is too thick ({} Å) for the chosen "
+                    "combination of core ({} Å) and layer radius ({} Å)",
+                    smoothingRegionThickness,
+                    coreRadius,
+                    layerRadius
+                )
+            ));
+        }
+
+        if (layerRadius > (minimalBoxDimension / 4))
+        {
+            throw(exc::InputFileException(
+                std::format(
+                    "Layer radius ({} Å) exceeds one quarter of the smallest "
+                    "box "
+                    "dimension ({} Å). This configuration is not allowed to "
+                    "ensure "
+                    "compliance with the minimum image convention.",
+                    layerRadius,
+                    minimalBoxDimension
+                )
+            ));
+        }
+
+        if ((layerRadius + pointChargeThickness) >
+            (minimalBoxDimension * 3 / 2))
+        {
+            throw(exc::InputFileException(
+                std::format(
+                    "Layer radius ({} Å) plus point charge thickness ({} Å) "
+                    "exceeds three halves of the smallest box dimension ({} "
+                    "Å). "
+                    "This configuration is not allowed, as it would include "
+                    "point "
+                    "charges from beyond the immediate neighboring cells.",
+                    layerRadius,
+                    pointChargeThickness,
+                    minimalBoxDimension
+                )
+            ));
+        }
+    }
+
+    /**
+     * @brief Validate the compatibility between QM charge settings and moltype
+     * 0 presence
+     *
+     * @details This function checks for a configuration conflict in hybrid
+     * QM/MM calculations where MM charges are requested (qm_charges = mm) but
+     * QM atoms (moltype 0) are present in the system.
+     *
+     * @throws exc::InputFileException if MM charges are requested but
+     * atoms without moltype are present in the simulation box
+     */
+    void HybridSetup::validateQMChargeSettings()
+    {
+        const auto mmChargesRequested =
+            !settings::HybridSettings::getUseQMCharges();
+        const auto qmAtomsPresent =
+            _engine.getSimulationBox().moleculeTypeExists(MolType{0});
+
+        if (mmChargesRequested && qmAtomsPresent)
+        {
+            throw(exc::InputFileException(
+                "Invalid configuration: MM charges requested (qm_charges = mm) "
+                "in "
+                "input file but atoms with moltype \"0\" are present in the "
+                "system. Either set \"qm_charges = qm\" or ensure all atoms "
+                "have a"
+                "non-zero moltype."
+            ));
+        }
+    }
+
+    /**
+     * @brief write info about the hybrid setup
+     *
+     */
+    void HybridSetup::setupWriteInfo() const
+    {
+        auto &logOutput = _engine.getLogOutput();
+
+        const auto jobtype = settings::Settings::getJobtype();
+        const auto smoothingMethod =
+            settings::HybridSettings::getSmoothingMethod();
+        const auto innerRegionCenterSettings =
+            settings::HybridSettings::getInnerRegionCenter();
+        const auto innerRegionCenter =
+            innerRegionCenterSettings.value_or(std::vector<size_t>{0});
+        const auto forcedCoreList =
+            settings::HybridSettings::getForcedCoreList();
+        const auto forcedOuterList =
+            settings::HybridSettings::getForcedOuterList();
+        const auto useQMCharges = settings::HybridSettings::getUseQMCharges();
+        const auto coreRadius   = settings::HybridSettings::getCoreRadius();
+        const auto layerRadius  = settings::HybridSettings::getLayerRadius();
+        const auto smoothingRegionThickness =
+            settings::HybridSettings::getSmoothingRegionThickness();
+        const auto pointChargeThickness =
+            settings::HybridSettings::getPointChargeThickness();
+
+        const auto formatIndexList =
+            []<typename T>(const std::vector<T> &indices)
+        {
+            if (indices.empty())
+                return std::string("none");
+
+            auto formatted = std::to_string(indices.front());
+
+            for (size_t i = 1; i < indices.size(); ++i)
+                formatted += std::format(", {}", indices[i]);
+
+            return formatted;
+        };
+
+        if (jobtype == settings::JobType::QMMM_MD)
+        {
+            // clang-format off
+        const auto *const jobtypeMsg =                 "Hybrid type:                 QM/MM";
+            // clang-format on
+
+            logOutput.writeSetupInfo(jobtypeMsg);
+        }
+
+        // clang-format off
     const auto smoothingMethodMsg          = std::format("Smoothing method:            {}", string(smoothingMethod));
     const auto innerRegionCenterMsg        = std::format("Inner region center atoms:   {}", formatIndexList(innerRegionCenter));
     const auto forcedCoreListMsg           = std::format("Forced inner molecules:      {}", formatIndexList(forcedCoreList));
@@ -326,19 +342,21 @@ void HybridSetup::setupWriteInfo() const
     const auto layerRadiusMsg              = std::format("Layer radius:                {} Å", layerRadius);
     const auto smoothingRegionThicknessMsg = std::format("Smoothing region thickness:  {} Å", smoothingRegionThickness);
     const auto pointChargeThicknessMsg     = std::format("Point charge thickness:      {} Å", pointChargeThickness);
-    // clang-format on
+        // clang-format on
 
-    logOutput.writeSetupInfo(smoothingMethodMsg);
-    logOutput.writeSetupInfo(innerRegionCenterMsg);
-    logOutput.writeSetupInfo(forcedCoreListMsg);
-    logOutput.writeSetupInfo(forcedOuterListMsg);
-    logOutput.writeSetupInfo(qmChargesSourceMsg);
-    logOutput.writeEmptyLine();
+        logOutput.writeSetupInfo(smoothingMethodMsg);
+        logOutput.writeSetupInfo(innerRegionCenterMsg);
+        logOutput.writeSetupInfo(forcedCoreListMsg);
+        logOutput.writeSetupInfo(forcedOuterListMsg);
+        logOutput.writeSetupInfo(qmChargesSourceMsg);
+        logOutput.writeEmptyLine();
 
-    logOutput.writeSetupInfo(coreRadiusMsg);
-    logOutput.writeSetupInfo(layerRadiusMsg);
-    logOutput.writeSetupInfo(smoothingRegionThicknessMsg);
-    logOutput.writeSetupInfo(pointChargeThicknessMsg);
+        logOutput.writeSetupInfo(coreRadiusMsg);
+        logOutput.writeSetupInfo(layerRadiusMsg);
+        logOutput.writeSetupInfo(smoothingRegionThicknessMsg);
+        logOutput.writeSetupInfo(pointChargeThicknessMsg);
 
-    logOutput.writeEmptyLine();
-}
+        logOutput.writeEmptyLine();
+    }
+
+}   // namespace setup

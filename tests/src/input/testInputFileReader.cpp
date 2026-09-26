@@ -37,9 +37,6 @@
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"
 
-using namespace input;
-using namespace settings;
-
 namespace
 {
     void readKeywordList(
@@ -146,7 +143,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(readInputFile(filename, *_mdEngine));
+    ASSERT_NO_THROW(input::readInputFile(filename, *_mdEngine));
 }
 
 TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
@@ -164,7 +161,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
     }
 
     ASSERT_THROW_MSG(
-        readInputFile(_fileName, *_mdEngine),
+        input::readInputFile(_fileName, *_mdEngine),
         exc::InputFileException,
         "Missing required keyword \"rf_epsilon\" in input file: it must be "
         "set when the Coulomb long-range correction is set to "
@@ -187,12 +184,12 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
-    ASSERT_NO_THROW(readInputFile(_fileName, *_mdEngine));
+    ASSERT_NO_THROW(input::readInputFile(_fileName, *_mdEngine));
     EXPECT_EQ(
-        PotentialSettings::getCoulombLongRangeType(),
-        CoulombLongRangeType::REACTION_FIELD
+        settings::PotentialSettings::getCoulombLongRangeType(),
+        settings::CoulombLongRangeType::REACTION_FIELD
     );
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 80.0);
+    EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)

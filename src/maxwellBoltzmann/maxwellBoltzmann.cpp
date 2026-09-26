@@ -38,61 +38,60 @@
 #include "mpi.hpp"   // for MPI
 #endif
 
-using maxwellBoltzmann::MaxwellBoltzmann;
-using namespace molsys;
-
-using namespace settings;
-using namespace resetKinetics;
-
-/**
- * @brief generate boltzmann distributed velocities for all atoms in the
- * simulation box
- *
- * @details using a standard deviation of sqrt(kb*T/m) for each component of the
- * velocity vector
- *
- * @param simBox
- */
-void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
+namespace maxwellBoltzmann
 {
-    auto generateVelocities = [this](auto &atom)
+    /**
+     * @brief generate boltzmann distributed velocities for all atoms in the
+     * simulation box
+     *
+     * @details using a standard deviation of sqrt(kb*T/m) for each component of
+     * the velocity vector
+     *
+     * @param simBox
+     */
+    void MaxwellBoltzmann::initializeVelocities(molsys::SimulationBox &simBox)
     {
-        const auto mass              = atom->getMass() * AMU_TO_KG;
-        const auto boltzmannConstant = BOLTZMANN_CONSTANT;
-        const auto temp = ThermostatSettings::getActualTargetTemperature();
+        auto generateVelocities = [this](auto &atom)
+        {
+            const auto mass              = atom->getMass() * AMU_TO_KG;
+            const auto boltzmannConstant = BOLTZMANN_CONSTANT;
+            const auto temp =
+                settings::ThermostatSettings::getActualTargetTemperature();
 
-        const auto stddev =
-            ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
+            const auto stddev =
+                ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
 
-        atom->setVelocity(
-            {_randomNumberGenerator.getNormalDistribution(0.0, stddev),
-             _randomNumberGenerator.getNormalDistribution(0.0, stddev),
-             _randomNumberGenerator.getNormalDistribution(0.0, stddev)}
-        );
-    };
+            atom->setVelocity(
+                {_randomNumberGenerator.getNormalDistribution(0.0, stddev),
+                 _randomNumberGenerator.getNormalDistribution(0.0, stddev),
+                 _randomNumberGenerator.getNormalDistribution(0.0, stddev)}
+            );
+        };
 
 #ifdef WITH_MPI
-    if (mpi::MPI::isRoot())
-        std::ranges::for_each(simBox.getAtoms(), generateVelocities);
+        if (mpi::MPI::isRoot())
+            std::ranges::for_each(simBox.getAtoms(), generateVelocities);
 
-    auto velocities = simBox.flattenVelocities();
+        auto velocities = simBox.flattenVelocities();
 
-    ::MPI_Bcast(
-        velocities.data(),
-        velocities.size(),
-        MPI_DOUBLE,
-        0,
-        MPI_COMM_WORLD
-    );
+        ::MPI_Bcast(
+            velocities.data(),
+            velocities.size(),
+            MPI_DOUBLE,
+            0,
+            MPI_COMM_WORLD
+        );
 
-    simBox.deFlattenVelocities(velocities);
+        simBox.deFlattenVelocities(velocities);
 #else
-    std::ranges::for_each(simBox.getAtoms(), generateVelocities);
+        std::ranges::for_each(simBox.getAtoms(), generateVelocities);
 #endif
 
-    auto resetKinetics = ResetKinetics();
-    resetKinetics.setMomentum(simBox.calculateMomentum());
-    resetKinetics.resetMomentum(simBox);
-    resetKinetics.resetAngularMomentum(simBox);
-    resetKinetics.resetTemperature(simBox);
-}
+        auto resetKinetics = resetKinetics::ResetKinetics();
+        resetKinetics.setMomentum(simBox.calculateMomentum());
+        resetKinetics.resetMomentum(simBox);
+        resetKinetics.resetAngularMomentum(simBox);
+        resetKinetics.resetTemperature(simBox);
+    }
+
+}   // namespace maxwellBoltzmann

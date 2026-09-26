@@ -24,48 +24,44 @@
 
 #include <string>   // for string, allocator
 
-#include "QMInputParser.hpp"         // for InputFileParserQM
-#include "exceptions.hpp"            // for InputFileException, customException
-#include "qmSettings.hpp"            // for QMSettings
+#include "QMInputParser.hpp"   // for InputFileParserQM
+#include "exceptions.hpp"      // for exc::InputFileException, customException
+#include "qmSettings.hpp"      // for settings::QMSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
-using namespace input;
-using namespace settings;
-using namespace exc;
-
 TEST_F(TestInputFileReader, parseQMMethod)
 {
-    using enum QMMethod;
-    EXPECT_EQ(QMSettings::getQMMethod(), NONE);
+    using enum settings::QMMethod;
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), NONE);
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "dftbplus"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), DFTBPLUS);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), DFTBPLUS);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "pyscf"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), PYSCF);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), PYSCF);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "turbomole"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), TURBOMOLE);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), TURBOMOLE);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "mace"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "ase_dftbplus"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), ASEDFTBPLUS);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), ASEDFTBPLUS);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "ase_xtb"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), ASEXTB);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), ASEXTB);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "fennol"}, 0);
-    EXPECT_EQ(QMSettings::getQMMethod(), FENNOL);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), FENNOL);
 
     // the more detailed mace parser is tested in TestMaceParser
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid qm_prog \"notAMethod\" in input file.\n"
         "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
         "turbomole, fennol, mace, mace_mp, mace_off"
@@ -74,63 +70,66 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
 TEST_F(TestInputFileReader, parseQMScript)
 {
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     input::QMInputParser::parseQMScript({"qm_script", "=", "script.sh"}, 0);
-    EXPECT_EQ(QMSettings::getQMScript(), "script.sh");
+    EXPECT_EQ(settings::QMSettings::getQMScript(), "script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMScriptFullPath)
 {
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     input::QMInputParser::parseQMScriptFullPath(
         {"qm_script_full_path", "=", "/path/to/QM/Script.sh"},
         0
     );
-    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/QM/Script.sh");
+    EXPECT_EQ(
+        settings::QMSettings::getQMScriptFullPath(),
+        "/path/to/QM/Script.sh"
+    );
 }
 
 TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
 {
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     input::QMInputParser::parseQMLoopTimeLimit(
         {"qm_loop_time_limit", "=", "10"},
         0
     );
-    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), 10);
+    EXPECT_EQ(settings::QMSettings::getQMLoopTimeLimit(), 10);
 
     input::QMInputParser::parseQMLoopTimeLimit(
         {"qm_loop_time_limit", "=", "-1"},
         0
     );
-    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), -1);
+    EXPECT_EQ(settings::QMSettings::getQMLoopTimeLimit(), -1);
 }
 
 TEST_F(TestInputFileReader, parseDispersion)
 {
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
+    EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     input::QMInputParser::parseDispersion({"dispersion", "=", "true"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
+    EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
 
     input::QMInputParser::parseDispersion({"dispersion", "=", "yes"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
+    EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
 
     input::QMInputParser::parseDispersion({"dispersion", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
+    EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
 
     input::QMInputParser::parseDispersion({"dispersion", "=", "false"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
+    EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
 
     input::QMInputParser::parseDispersion({"dispersion", "=", "no"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
+    EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
 
     input::QMInputParser::parseDispersion({"dispersion", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
+    EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
 
     ASSERT_THROW_MSG(
         parser.parseDispersion({"dispersion", "=", "notABool"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid boolean option \"notABool\" for keyword \"dispersion\" in "
         "input file.\n"
         "Possible values are: on, yes, true, off, no, false."
@@ -139,48 +138,48 @@ TEST_F(TestInputFileReader, parseDispersion)
 
 TEST_F(TestInputFileReader, parseRemoveNetForce)
 {
-    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     input::QMInputParser::parseRemoveNetForce(
         {"remove_net_force", "=", "true"},
         0
     );
-    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
 
     input::QMInputParser::parseRemoveNetForce(
         {"remove_net_force", "=", "yes"},
         0
     );
-    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
 
     input::QMInputParser::parseRemoveNetForce(
         {"remove_net_force", "=", "on"},
         0
     );
-    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
 
     input::QMInputParser::parseRemoveNetForce(
         {"remove_net_force", "=", "false"},
         0
     );
-    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
 
     input::QMInputParser::parseRemoveNetForce(
         {"remove_net_force", "=", "no"},
         0
     );
-    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
 
     input::QMInputParser::parseRemoveNetForce(
         {"remove_net_force", "=", "off"},
         0
     );
-    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
 
     ASSERT_THROW_MSG(
         parser.parseRemoveNetForce({"remove_net_force", "=", "notABool"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid boolean option \"notABool\" for keyword \"remove_net_force\" "
         "in input file.\n"
         "Possible values are: on, yes, true, off, no, false."
@@ -189,38 +188,38 @@ TEST_F(TestInputFileReader, parseRemoveNetForce)
 
 TEST_F(TestInputFileReader, parseMaceQMMethod)
 {
-    using enum QMMethod;
-    using enum MaceModelType;
+    using enum settings::QMMethod;
+    using enum settings::MaceModelType;
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
 
     input::QMInputParser::parseMaceQMMethod("mace");
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
 
     input::QMInputParser::parseMaceQMMethod("mace_mp");
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
 
     input::QMInputParser::parseMaceQMMethod("mace_off");
-    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_OFF);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_OFF);
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("mace_ani"),
-        InputFileException,
+        exc::InputFileException,
         "The mace ani model is not supported in this version of PQ.\n"
     )
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("mace_anicc"),
-        InputFileException,
+        exc::InputFileException,
         "The mace ani model is not supported in this version of PQ.\n"
     )
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("notAMaceModel"),
-        InputFileException,
+        exc::InputFileException,
         "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
         "Possible values are: mace (mace_mp), mace_off"
     )
@@ -228,48 +227,48 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
 
 TEST_F(TestInputFileReader, parseMaceModel)
 {
-    using enum MaceModel;
+    using enum settings::MaceModel;
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     parser.parseMaceModel({"mace_model", "=", "small"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), SMALL);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL);
 
     parser.parseMaceModel({"mace_model", "=", "medium"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM);
 
     parser.parseMaceModel({"mace_model", "=", "large"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), LARGE);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE);
 
     parser.parseMaceModel({"mace_model", "=", "small_0b"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), SMALL0B);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL0B);
 
     parser.parseMaceModel({"mace_model", "=", "medium_0b"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM0B);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM0B);
 
     parser.parseMaceModel({"mace_model", "=", "small_0b2"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), SMALL0B2);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL0B2);
 
     parser.parseMaceModel({"mace_model", "=", "medium_0b2"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM0B2);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM0B2);
 
     parser.parseMaceModel({"mace_model", "=", "large_0b2"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), LARGE0B2);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE0B2);
 
     parser.parseMaceModel({"mace_model", "=", "medium_0b3"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM0B3);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM0B3);
 
     parser.parseMaceModel({"mace_model", "=", "medium_mpa_0"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUMMPA0);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUMMPA0);
 
     parser.parseMaceModel({"mace_model", "=", "medium_omat_0"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUMOMAT0);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUMOMAT0);
 
     parser.parseMaceModel({"mace_model", "=", "custom"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModel(), CUSTOM);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), CUSTOM);
 
     ASSERT_THROW_MSG(
         parser.parseMaceModel({"mace_model", "=", "notASize"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid mace_model \"notASize\" in input file.\n"
         "Possible values are: small, medium, large, small-0b,\n"
         "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
@@ -279,19 +278,19 @@ TEST_F(TestInputFileReader, parseMaceModel)
 
 TEST_F(TestInputFileReader, parseMaceMode)
 {
-    using enum MaceMode;
+    using enum settings::MaceMode;
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
 
     input::QMInputParser::parseMaceMode({"mace_mode", "=", "accurate"}, 0);
-    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
+    EXPECT_EQ(settings::QMSettings::getMaceMode(), ACCURATE);
 
     input::QMInputParser::parseMaceMode({"mace_mode", "=", "fast"}, 0);
-    EXPECT_EQ(QMSettings::getMaceMode(), FAST);
+    EXPECT_EQ(settings::QMSettings::getMaceMode(), FAST);
 
     ASSERT_THROW_MSG(
         parser.parseMaceMode({"mace_mode", "=", "notAMode"}, 0),
-        UserInputException,
+        exc::UserInputException,
         "Unknown mace_mode \"notAMode\". Valid values are \"accurate\" (exact "
         "e3nn reference) or \"fast\" (cuequivariance-accelerated)."
     )
@@ -299,51 +298,60 @@ TEST_F(TestInputFileReader, parseMaceMode)
 
 TEST_F(TestInputFileReader, parseMaceModelPath)
 {
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
 
-    QMSettings::setMaceModelPath("");
-    EXPECT_EQ(QMSettings::getMaceModelPath(), "");
+    settings::QMSettings::setMaceModelPath("");
+    EXPECT_EQ(settings::QMSettings::getMaceModelPath(), "");
     input::QMInputParser::parseMaceModelPath(
         {"mace_model_path", "=", "/pAth/to/mace.model"},
         0
     );
-    EXPECT_EQ(QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
+    EXPECT_EQ(settings::QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
 }
 
 TEST_F(TestInputFileReader, parseSlakosType)
 {
-    using enum QMMethod;
+    using enum settings::QMMethod;
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
 
 #ifdef WITH_ASE
     parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_EQ(
+        settings::QMSettings::getSlakosType(),
+        settings::SlakosType::THREEOB
+    );
 
     parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+    EXPECT_EQ(
+        settings::QMSettings::getSlakosType(),
+        settings::SlakosType::MATSCI
+    );
 #else
     ASSERT_THROW_MSG(
         parser.parseSlakosType({"slakos", "=", "3ob"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
 
     ASSERT_THROW_MSG(
         parser.parseSlakosType({"slakos", "=", "matsci"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
 #endif
 
     parser.parseSlakosType({"slakos", "=", "custom"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+    EXPECT_EQ(
+        settings::QMSettings::getSlakosType(),
+        settings::SlakosType::CUSTOM
+    );
 
     ASSERT_THROW_MSG(
         parser.parseSlakosType({"slakos", "=", "notASlakosType"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid slakos type \"notASlakosType\" in input file.\n"
         "Possible values are: 3ob, matsci, custom"
     )
@@ -352,63 +360,69 @@ TEST_F(TestInputFileReader, parseSlakosType)
 #ifdef WITH_ASE
 TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 {
-    using enum QMMethod;
+    using enum settings::QMMethod;
 
-    auto parser1 = QMInputParser(_engine->getLogOutput());
+    auto parser1 = input::QMInputParser(_engine->getLogOutput());
 
     input::QMInputParser::parseThirdOrder({"third_order", "=", "off"}, 0);
     parser1.parseSlakosType({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_EQ(
+        settings::QMSettings::getSlakosType(),
+        settings::SlakosType::THREEOB
+    );
+    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
-    auto parser2 = QMInputParser(_engine->getLogOutput());
+    auto parser2 = input::QMInputParser(_engine->getLogOutput());
     parser2.parseSlakosType({"slakos", "=", "3ob"}, 0);
     input::QMInputParser::parseThirdOrder({"third_order", "=", "off"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_EQ(
+        settings::QMSettings::getSlakosType(),
+        settings::SlakosType::THREEOB
+    );
+    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 }
 #endif
 
 TEST_F(TestInputFileReader, parseSlakosPath)
 {
-    using enum QMMethod;
+    using enum settings::QMMethod;
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     parser.parseSlakosType({"slakos", "=", "custom"}, 0);
     input::QMInputParser::parseSlakosPath(
         {"slakos_path", "=", "/path/to/slakos"},
         0
     );
-    EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
+    EXPECT_EQ(settings::QMSettings::getSlakosPath(), "/path/to/slakos");
 }
 
 TEST_F(TestInputFileReader, parseThirdOrder)
 {
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
     input::QMInputParser::parseThirdOrder({"third_order", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
 
     input::QMInputParser::parseThirdOrder({"third_order", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
     input::QMInputParser::parseThirdOrder({"third_order", "=", "true"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
 
     input::QMInputParser::parseThirdOrder({"third_order", "=", "false"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
     input::QMInputParser::parseThirdOrder({"third_order", "=", "yes"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
 
     input::QMInputParser::parseThirdOrder({"third_order", "=", "no"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
-    EXPECT_TRUE(QMSettings::isThirdOrderDftbSet());
+    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings::QMSettings::isThirdOrderDftbSet());
 
     ASSERT_THROW_MSG(
         parser.parseThirdOrder({"third_order", "=", "notABool"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid boolean option \"notABool\" for keyword \"third_order\" in "
         "input file.\n"
         "Possible values are: on, yes, true, off, no, false."
@@ -417,55 +431,55 @@ TEST_F(TestInputFileReader, parseThirdOrder)
 
 TEST_F(TestInputFileReader, parseHubbardDerivs)
 {
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
 
     input::QMInputParser::parseHubbardDerivs(
         {"hubbard_derivs", "=", "H:1.0,He:2.0"},
         0
     );
 
-    const auto hubbardDerivs = QMSettings::getHubbardDerivs();
+    const auto hubbardDerivs = settings::QMSettings::getHubbardDerivs();
     EXPECT_EQ(hubbardDerivs.size(), 2);
     EXPECT_EQ(hubbardDerivs.at("H"), 1.0);
     EXPECT_EQ(hubbardDerivs.at("He"), 2.0);
 
     ASSERT_THROW_MSG(
         parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
     )
 
     ASSERT_THROW_MSG(
         parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:0.1junk"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid hubbard_derivs format \"H:0.1junk\" in input file."
     )
 
     ASSERT_THROW_MSG(
         parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:nan"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid hubbard_derivs format \"H:nan\" in input file."
     )
 }
 
 TEST_F(TestInputFileReader, parseXtbMethod)
 {
-    using enum QMMethod;
+    using enum settings::QMMethod;
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
 
     input::QMInputParser::parseXtbMethod({"xtb_method", "=", "Gfn1-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+    EXPECT_EQ(settings::QMSettings::getXtbMethod(), settings::XtbMethod::GFN1);
 
     input::QMInputParser::parseXtbMethod({"xtb_method", "=", "gfN2-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+    EXPECT_EQ(settings::QMSettings::getXtbMethod(), settings::XtbMethod::GFN2);
 
     input::QMInputParser::parseXtbMethod({"xtb_method", "=", "iPEa1-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+    EXPECT_EQ(settings::QMSettings::getXtbMethod(), settings::XtbMethod::IPEA1);
 
     ASSERT_THROW_MSG(
         parser.parseXtbMethod({"xtb_method", "=", "notAnXtbMethod"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid xTB method \"notAnXtbMethod\" in input file.\n"
         "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB"
     )
@@ -473,14 +487,14 @@ TEST_F(TestInputFileReader, parseXtbMethod)
 
 TEST_F(TestInputFileReader, parseFennolModelPath)
 {
-    using enum QMMethod;
+    using enum settings::QMMethod;
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
 
     // clang-format off
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "");
+    EXPECT_EQ(settings::QMSettings::getFennolModelPath(), "");
     input::QMInputParser::parseFennolModelPath({"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"}, 0);
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
+    EXPECT_EQ(settings::QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
     // clang-format on
 
     ASSERT_THROW_MSG(
@@ -488,33 +502,33 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
             {"fennol_model_path", "=", "/path/to/model.fnx", "extra"},
             42
         ),
-        InputFileException,
+        exc::InputFileException,
         "Invalid number of arguments at line 42 in input file"
     )
 }
 
 TEST_F(TestInputFileReader, parseGPUPreprocessing)
 {
-    using enum QMMethod;
+    using enum settings::QMMethod;
 
-    auto parser = QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser(_engine->getLogOutput());
 
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), true);
     input::QMInputParser::parseGPUPreprocessing(
         {"GPU-Preprocessing", "=", "false"},
         0
     );
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), false);
 
     input::QMInputParser::parseGPUPreprocessing(
         {"gpu_preprocessing", "=", "on"},
         0
     );
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), true);
 
     ASSERT_THROW_MSG(
         parser.parseGPUPreprocessing({"gpu_preprocessing", "=", "notABool"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid boolean option \"notABool\" for keyword \"gpu_preprocessing\" "
         "in input file.\n"
         "Possible values are: on, yes, true, off, no, false."
@@ -524,10 +538,10 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
 TEST_F(TestInputFileReader, processFennolKeywords)
 {
     _inputFileReader->process({"fennol-model-path", "=", "model.fnx"});
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "model.fnx");
+    EXPECT_EQ(settings::QMSettings::getFennolModelPath(), "model.fnx");
     EXPECT_EQ(_inputFileReader->getKeywordCount("fennol_model_path"), 1);
 
     _inputFileReader->process({"GPU-Preprocessing", "=", "off"});
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), false);
     EXPECT_EQ(_inputFileReader->getKeywordCount("gpu_preprocessing"), 1);
 }

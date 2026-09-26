@@ -31,8 +31,6 @@
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "integrator" command
  *
@@ -41,8 +39,8 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    IntegratorInputParser    parser;
-    std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
+    input::IntegratorInputParser parser;
+    std::vector<std::string>     lineElements = {"integrator", "=", "v-verlet"};
     input::IntegratorInputParser::parseIntegrator(lineElements, 0);
     EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
 

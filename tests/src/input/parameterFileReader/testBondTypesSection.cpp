@@ -31,8 +31,6 @@
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
-using namespace input::parameterFile;
-
 /**
  * @brief test bonds section processing one line
  *
@@ -63,7 +61,7 @@ TEST_F(TestParameterFileSection, processSectionBonds)
 
 TEST_F(TestParameterFileSection, endedNormallyBonds)
 {
-    auto bondSection = BondSection();
+    auto bondSection = input::parameterFile::BondSection();
     ASSERT_NO_THROW(bondSection.endedNormally(true));
 
     ASSERT_THROW_MSG(

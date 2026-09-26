@@ -30,13 +30,10 @@
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
-using namespace input;
-using namespace settings;
-
 TEST_F(TestInputFileReader, parseHessianFile)
 {
-    HessianInputParser       parser;
-    std::vector<std::string> lineElements = {
+    input::HessianInputParser parser;
+    std::vector<std::string>  lineElements = {
         "hessian_file",
         "=",
         "water.hessian"
@@ -44,13 +41,13 @@ TEST_F(TestInputFileReader, parseHessianFile)
 
     input::HessianInputParser::parseHessianFile(lineElements, 0);
 
-    EXPECT_EQ(HessianSettings::getHessianFile(), "water.hessian");
+    EXPECT_EQ(settings::HessianSettings::getHessianFile(), "water.hessian");
 }
 
 TEST_F(TestInputFileReader, parseHessianDisplacement)
 {
-    HessianInputParser       parser;
-    std::vector<std::string> lineElements = {
+    input::HessianInputParser parser;
+    std::vector<std::string>  lineElements = {
         "hessian_displacement",
         "=",
         "0.001"
@@ -58,7 +55,7 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
 
     input::HessianInputParser::parseDisplacement(lineElements, 0);
 
-    EXPECT_EQ(HessianSettings::getDisplacement(), 0.001);
+    EXPECT_EQ(settings::HessianSettings::getDisplacement(), 0.001);
 
     lineElements = {"hessian_displacement", "=", "0.0"};
 
@@ -71,8 +68,8 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
 
 TEST_F(TestInputFileReader, parseHessianBuilder)
 {
-    HessianInputParser       parser;
-    std::vector<std::string> lineElements = {
+    input::HessianInputParser parser;
+    std::vector<std::string>  lineElements = {
         "hessian_builder",
         "=",
         "five-point"
@@ -81,8 +78,8 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
     input::HessianInputParser::parseBuilder(lineElements, 0);
 
     EXPECT_EQ(
-        HessianSettings::getBuilder(),
-        HessianBuilderType::FINITE_DIFFERENCE_FORCES_FIVE_POINT
+        settings::HessianSettings::getBuilder(),
+        settings::HessianBuilderType::FINITE_DIFFERENCE_FORCES_FIVE_POINT
     );
 
     lineElements = {"hessian_builder", "=", "unknown"};
@@ -97,18 +94,18 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
 
 TEST_F(TestInputFileReader, parseOptimizeBeforeHessian)
 {
-    HessianInputParser       parser;
-    std::vector<std::string> lineElements = {
+    input::HessianInputParser parser;
+    std::vector<std::string>  lineElements = {
         "optimize_before_hessian",
         "=",
         "off"
     };
 
     input::HessianInputParser::parseOptimizeBeforeHessian(lineElements, 0);
-    EXPECT_FALSE(HessianSettings::optimizeBeforeHessian());
+    EXPECT_FALSE(settings::HessianSettings::optimizeBeforeHessian());
 
     lineElements = {"optimize_before_hessian", "=", "on"};
 
     input::HessianInputParser::parseOptimizeBeforeHessian(lineElements, 0);
-    EXPECT_TRUE(HessianSettings::optimizeBeforeHessian());
+    EXPECT_TRUE(settings::HessianSettings::optimizeBeforeHessian());
 }

@@ -31,111 +31,115 @@
 #include "engine.hpp"               // for Engine
 #include "exceptions.hpp"           // for TopologyException
 
-using namespace input::topology;
-using namespace ff;
-using namespace exc;
-using namespace engine;
-
-/**
- * @brief processes the improper section of the topology file
- *
- * @details one line consists of 5 elements (cannot be linker!):
- * 1. atom index 1
- * 2. atom index 2
- * 3. atom index 3
- * 4. atom index 4
- * 5. improper dihedral type
- *
- * @param lineElements
- * @param engine
- *
- * @throws TopologyException if number of elements in line is
- * not 5
- * @throws TopologyException if atom indices are the same
- * (=same atoms)
- */
-void ImproperDihedralSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::topology
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if (lineElements.size() != 5)
+
+    /**
+     * @brief processes the improper section of the topology file
+     *
+     * @details one line consists of 5 elements (cannot be linker!):
+     * 1. atom index 1
+     * 2. atom index 2
+     * 3. atom index 3
+     * 4. atom index 4
+     * 5. improper dihedral type
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throws TopologyException if number of elements in line is
+     * not 5
+     * @throws TopologyException if atom indices are the same
+     * (=same atoms)
+     */
+    void ImproperDihedralSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    )
     {
-        throw TopologyException(
-            std::format(
-                "Wrong number of arguments in topology file improper dihedral "
-                "section at "
-                "line {} - number of elements has to be 5!",
-                _lineNumber
-            )
-        );
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 5)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Wrong number of arguments in topology file improper "
+                    "dihedral "
+                    "section at "
+                    "line {} - number of elements has to be 5!",
+                    _lineNumber
+                )
+            );
+        }
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        auto atom1                = stoul(lineElements[0]);
+        auto atom2                = stoul(lineElements[1]);
+        auto atom3                = stoul(lineElements[2]);
+        auto atom4                = stoul(lineElements[3]);
+        auto improperDihedralType = DihedralId{stoul(lineElements[4])};
+
+        auto atoms = std::vector{atom1, atom2, atom3, atom4};
+        std::ranges::sort(atoms);
+        const auto [it, end] = std::ranges::unique(atoms);
+        atoms.erase(it, end);
+
+        if (4 != atoms.size())
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file improper dihedral section at line {} - "
+                    "atoms "
+                    "cannot "
+                    "be the same!",
+                    _lineNumber
+                )
+            );
+        }
+
+        auto &simBox = engine.getSimulationBox();
+
+        const auto [mol1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
+        const auto [mol2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
+        const auto [mol3, idx3] = simBox.findMoleculeByGlobalAtomIndex(atom3);
+        const auto [mol4, idx4] = simBox.findMoleculeByGlobalAtomIndex(atom4);
+
+        const auto mols     = {mol1, mol2, mol3, mol4};
+        const auto atomIdxs = {idx1, idx2, idx3, idx4};
+
+        auto improperFF =
+            ff::DihedralForceField(mols, atomIdxs, improperDihedralType);
+
+        engine.getForceField()->addImproperDihedral(improperFF);
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    auto atom1                = stoul(lineElements[0]);
-    auto atom2                = stoul(lineElements[1]);
-    auto atom3                = stoul(lineElements[2]);
-    auto atom4                = stoul(lineElements[3]);
-    auto improperDihedralType = DihedralId{stoul(lineElements[4])};
+    /**
+     * @brief returns the keyword of the improper dihedral section
+     *
+     * @return "impropers"
+     */
+    std::string ImproperDihedralSection::keyword() { return "impropers"; }
 
-    auto atoms = std::vector{atom1, atom2, atom3, atom4};
-    std::ranges::sort(atoms);
-    const auto [it, end] = std::ranges::unique(atoms);
-    atoms.erase(it, end);
-
-    if (4 != atoms.size())
+    /**
+     * @brief checks if improper dihedral sections ends normally
+     *
+     * @param endedNormal
+     *
+     * @throws TopologyException if endedNormal is false
+     */
+    void ImproperDihedralSection::endedNormally(bool endedNormal) const
     {
-        throw TopologyException(
-            std::format(
-                "Topology file improper dihedral section at line {} - atoms "
-                "cannot "
-                "be the same!",
-                _lineNumber
-            )
-        );
+        if (!endedNormal)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file improper dihedral section at line {} - no "
+                    "end "
+                    "of "
+                    "section found!",
+                    _lineNumber
+                )
+            );
+        }
     }
 
-    auto &simBox = engine.getSimulationBox();
-
-    const auto [mol1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
-    const auto [mol2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
-    const auto [mol3, idx3] = simBox.findMoleculeByGlobalAtomIndex(atom3);
-    const auto [mol4, idx4] = simBox.findMoleculeByGlobalAtomIndex(atom4);
-
-    const auto mols     = {mol1, mol2, mol3, mol4};
-    const auto atomIdxs = {idx1, idx2, idx3, idx4};
-
-    auto improperFF = DihedralForceField(mols, atomIdxs, improperDihedralType);
-
-    engine.getForceField()->addImproperDihedral(improperFF);
-}
-
-/**
- * @brief returns the keyword of the improper dihedral section
- *
- * @return "impropers"
- */
-std::string ImproperDihedralSection::keyword() { return "impropers"; }
-
-/**
- * @brief checks if improper dihedral sections ends normally
- *
- * @param endedNormal
- *
- * @throws TopologyException if endedNormal is false
- */
-void ImproperDihedralSection::endedNormally(bool endedNormal) const
-{
-    if (!endedNormal)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file improper dihedral section at line {} - no end "
-                "of "
-                "section found!",
-                _lineNumber
-            )
-        );
-    }
-}
+}   // namespace input::topology

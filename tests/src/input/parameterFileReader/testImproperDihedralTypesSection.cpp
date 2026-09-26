@@ -29,11 +29,9 @@
 #include "engine.hpp"                        // for Engine
 #include "exceptions.hpp"                    // for ParameterFileException
                                              // for Message, TestPartResult
-#include "improperDihedralSection.hpp"       // for ImproperDihedralSection
-#include "testParameterFileSection.hpp"      // for TestParameterFileSection
-#include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
-
-using namespace input::parameterFile;
+#include "improperDihedralSection.hpp"   // for input::parameterFile::ImproperDihedralSection
+#include "testParameterFileSection.hpp"   // for TestParameterFileSection
+#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
 /**
  * @brief test bonds section processing one line
@@ -42,7 +40,7 @@ using namespace input::parameterFile;
 TEST_F(TestParameterFileSection, processSectionImproperDihedral)
 {
     std::vector<std::string> lineElements = {"0", "1.22", "234.3", "324.3"};
-    ImproperDihedralSection  improperDihedralSection;
+    input::parameterFile::ImproperDihedralSection improperDihedralSection;
     improperDihedralSection.processSection(lineElements, *_engine);
 
     const auto &improperDihedralTypes =
@@ -72,7 +70,8 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
 
 TEST_F(TestParameterFileSection, endedNormallyDihedral)
 {
-    auto improperDihedralSection = ImproperDihedralSection();
+    auto improperDihedralSection =
+        input::parameterFile::ImproperDihedralSection();
     ASSERT_NO_THROW(improperDihedralSection.endedNormally(true));
 
     ASSERT_THROW_MSG(

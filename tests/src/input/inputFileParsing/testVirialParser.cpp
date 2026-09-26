@@ -30,10 +30,6 @@
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 #include "virialInputParser.hpp"
 
-using namespace std;
-using namespace input;
-using namespace ::testing;
-
 /**
  * @brief tests parsing the "virial" command
  *
@@ -43,7 +39,7 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseVirial)
 {
-    VirialInputParser        parser;
+    input::VirialInputParser parser;
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
     input::VirialInputParser::parseVirial(lineElements, 0);
     EXPECT_EQ(

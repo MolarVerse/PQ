@@ -21,12 +21,9 @@
 ******************************************************************************/
 
 #include <algorithm>   // for std::ranges:find
-#include <optional>    // for optional
+#include <optional>    // for std::optional
 
 #include "simulationBox.hpp"
-
-using std::optional;
-using std::ranges::distance;
 
 namespace molsys
 {
@@ -78,14 +75,17 @@ namespace molsys
      *
      * @return std::optional<MolType>
      */
-    optional<MolType> SimulationBox::getWaterType() const { return _waterType; }
+    std::optional<MolType> SimulationBox::getWaterType() const
+    {
+        return _waterType;
+    }
 
     /**
      * @brief Get the ammonia type
      *
      * @return std::optional<MolType>
      */
-    optional<MolType> SimulationBox::getAmmoniaType() const
+    std::optional<MolType> SimulationBox::getAmmoniaType() const
     {
         return _ammoniaType;
     }
@@ -124,7 +124,7 @@ namespace molsys
      */
     size_t SimulationBox::getNumberOfQMAtoms() const
     {
-        return static_cast<size_t>(distance(getQMAtoms()));
+        return static_cast<size_t>(std::ranges::distance(getQMAtoms()));
     }
 
     /**

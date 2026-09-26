@@ -26,154 +26,154 @@
 
 #include "coulombPotential.hpp"   // for CoulombPotential
 #include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
-#include "hybridSettings.hpp"     // for HybridSettings
+#include "hybridSettings.hpp"     // for settings::HybridSettings
 #include "molecule.hpp"           // for Molecule
-#include "physicalData.hpp"       // for PhysicalData
+#include "physicalData.hpp"       // for physicalData::PhysicalData
 #include "simulationBox.hpp"      // for SimulationBox
 
-using namespace ff;
-using namespace molsys;
-using namespace connectivity;
-using namespace linalg;
-using namespace physicalData;
-using namespace pot;
-using namespace settings;
-
-using enum HybridZone;
-
-/**
- * @brief constructor
- *
- * @param molecule1
- * @param molecule2
- * @param atomIndex1
- * @param atomIndex2
- * @param type
- */
-BondForceField::BondForceField(
-    Molecule *molecule1,
-    Molecule *molecule2,
-    AtomIndex atomIndex1,
-    AtomIndex atomIndex2,
-    BondId    type
-)
-    : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
+namespace ff
 {
-}
 
-/**
- * @brief calculate energy and forces for a single bond
- *
- * @details if bond is a linker bond, correct coulomb and non-coulomb energy and
- * forces
- *
- * @param simulationBox the simulation simulationBox containing the system
- * @param physicalData the physical data of the system
- * @param coulombPot the coulomb potential of the system
- * @param nonCoulombPot the non-coulomb potential of the system
- */
-void BondForceField::calculateEnergyAndForces(
-    const SimulationBox    &simulationBox,
-    PhysicalData           &physicalData,
-    const CoulombPotential &coulombPot,
-    NonCoulombPotential    &nonCoulombPot
-)
-{
-    const bool bothInactive =
-        !_molecules[0]->isActive() && !_molecules[1]->isActive();
-
-    if (bothInactive)
-        return;
-
-    const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-    const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
-    auto       dPosition = position1 - position2;
-
-    simulationBox.applyPBC(dPosition);
-
-    const auto distance      = norm(dPosition);
-    const auto deltaDistance = distance - _params.equilibrium;
-
-    auto forceMagnitude = -_params.forceConstant * deltaDistance;
-
-    physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
-
-    if (_isLinker && distance < CoulombPotential::getCoulombRadiusCutOff())
+    /**
+     * @brief constructor
+     *
+     * @param molecule1
+     * @param molecule2
+     * @param atomIndex1
+     * @param atomIndex2
+     * @param type
+     */
+    BondForceField::BondForceField(
+        molsys::Molecule *molecule1,
+        molsys::Molecule *molecule2,
+        AtomIndex         atomIndex1,
+        AtomIndex         atomIndex2,
+        BondId            type
+    )
+        : Bond(molecule1, molecule2, atomIndex1, atomIndex2), _type(type)
     {
-        forceMagnitude += correctLinker<BondForceField>(
-            coulombPot,
-            nonCoulombPot,
-            physicalData,
-            _molecules[0],
-            _molecules[1],
-            _atomIndices[0],
-            _atomIndices[1],
-            distance
-        );
     }
 
-    forceMagnitude /= distance;
+    /**
+     * @brief calculate energy and forces for a single bond
+     *
+     * @details if bond is a linker bond, correct coulomb and non-coulomb energy
+     * and forces
+     *
+     * @param simulationBox the simulation simulationBox containing the system
+     * @param physicalData the physical data of the system
+     * @param coulombPot the coulomb potential of the system
+     * @param nonCoulombPot the non-coulomb potential of the system
+     */
+    void BondForceField::calculateEnergyAndForces(
+        const molsys::SimulationBox &simulationBox,
+        physicalData::PhysicalData  &physicalData,
+        const pot::CoulombPotential &coulombPot,
+        pot::NonCoulombPotential    &nonCoulombPot
+    )
+    {
+        const bool bothInactive =
+            !_molecules[0]->isActive() && !_molecules[1]->isActive();
 
-    const auto force = forceMagnitude * dPosition;
+        if (bothInactive)
+            return;
 
-    _molecules[0]->addAtomForce(_atomIndices[0], force);
-    _molecules[1]->addAtomForce(_atomIndices[1], -force);
+        const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
+        const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+        auto       dPosition = position1 - position2;
 
-    using enum SmoothingMethod;
+        simulationBox.applyPBC(dPosition);
 
-    auto       smF       = 0.0;
-    const auto smoothing = HybridSettings::getSmoothingMethod();
+        const auto distance      = norm(dPosition);
+        const auto deltaDistance = distance - _params.equilibrium;
 
-    if (smoothing == HOTSPOT && _molecules[0]->getHybridZone() == SMOOTHING)
-        smF = _molecules[0]->getSmoothingFactor();
+        auto forceMagnitude = -_params.forceConstant * deltaDistance;
 
-    physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
-}
+        physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+        if (_isLinker &&
+            distance < pot::CoulombPotential::getCoulombRadiusCutOff())
+        {
+            forceMagnitude += correctLinker<BondForceField>(
+                coulombPot,
+                nonCoulombPot,
+                physicalData,
+                _molecules[0],
+                _molecules[1],
+                _atomIndices[0],
+                _atomIndices[1],
+                distance
+            );
+        }
 
-/**
- * @brief set if bond is a linker bond
- *
- * @param isLinker
- */
-void BondForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
+        forceMagnitude /= distance;
 
-/**
- * @brief set bond parameters
- *
- * @param params
- */
-void BondForceField::setParams(const BondParams &params) { _params = params; }
+        const auto force = forceMagnitude * dPosition;
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+        _molecules[0]->addAtomForce(_atomIndices[0], force);
+        _molecules[1]->addAtomForce(_atomIndices[1], -force);
 
-/**
- * @brief get if bond is a linker bond
- *
- * @return true
- * @return false
- */
-bool BondForceField::isLinker() const { return _isLinker; }
+        using enum settings::SmoothingMethod;
 
-/**
- * @brief get the type of the bond
- *
- * @return BondId
- */
-BondId BondForceField::getType() const { return _type; }
+        auto       smF       = 0.0;
+        const auto smoothing = settings::HybridSettings::getSmoothingMethod();
 
-/**
- * @brief get the bond parameters
- *
- * @return const BondParams&
- */
-const BondParams &BondForceField::getParams() const { return _params; }
+        if (smoothing == HOTSPOT &&
+            _molecules[0]->getHybridZone() == molsys::HybridZone::SMOOTHING)
+            smF = _molecules[0]->getSmoothingFactor();
+
+        physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
+    }
+
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief set if bond is a linker bond
+     *
+     * @param isLinker
+     */
+    void BondForceField::setIsLinker(bool isLinker) { _isLinker = isLinker; }
+
+    /**
+     * @brief set bond parameters
+     *
+     * @param params
+     */
+    void BondForceField::setParams(const BondParams &params)
+    {
+        _params = params;
+    }
+
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief get if bond is a linker bond
+     *
+     * @return true
+     * @return false
+     */
+    bool BondForceField::isLinker() const { return _isLinker; }
+
+    /**
+     * @brief get the type of the bond
+     *
+     * @return BondId
+     */
+    BondId BondForceField::getType() const { return _type; }
+
+    /**
+     * @brief get the bond parameters
+     *
+     * @return const BondParams&
+     */
+    const BondParams &BondForceField::getParams() const { return _params; }
+
+}   // namespace ff

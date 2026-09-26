@@ -30,17 +30,14 @@
 #include "testOutputBase.hpp"
 #include "vector3d.hpp"
 
-using namespace out;
-using physicalData::PhysicalData;
-
 TEST(TestStressOutput, writeEmitsStepAndAllNineTensorComponents)
 {
     const std::string path = "default.stress.test";
 
-    StressOutput out(path);
+    out::StressOutput out(path);
     out.setFilename(path);
 
-    PhysicalData data;
+    physicalData::PhysicalData data;
     // Distinct values per row so we can locate them in the output.
     data.setStressTensor(
         linalg::tensor3D{
@@ -67,10 +64,10 @@ TEST(TestStressOutput, writeEmitsOneLinePerCall)
 {
     const std::string path = "default.stress.test";
 
-    StressOutput out(path);
+    out::StressOutput out(path);
     out.setFilename(path);
 
-    PhysicalData data;
+    physicalData::PhysicalData data;
 
     out.write(1, data);
     out.write(2, data);

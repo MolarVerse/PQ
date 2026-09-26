@@ -22,14 +22,14 @@
 
 #include "qmmdEngine.hpp"
 
-using engine::QMMDEngine;
-using namespace QM;
-
-/**
- * @brief calculate QM forces
- *
- */
-void QMMDEngine::calculateForces()
+namespace engine
 {
-    _qmRunner->run(*_simulationBox, *_physicalData);
-}
+    /**
+     * @brief calculate QM forces
+     *
+     */
+    void QMMDEngine::calculateForces()
+    {
+        _qmRunner->run(*_simulationBox, *_physicalData);
+    }
+}   // namespace engine

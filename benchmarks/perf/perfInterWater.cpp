@@ -50,11 +50,6 @@
 #include "vector3d.hpp"
 #include "waterModelSettings.hpp"
 
-using namespace molsys;
-using namespace pot;
-using namespace waterModel;
-using linalg::Vec3D;
-
 static constexpr std::uint64_t ITERATIONS = 50;
 static constexpr MolType       WATER_TYPE{1};
 static constexpr double        CUTOFF                 = 9.0;
@@ -64,30 +59,30 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 int main()
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
-    CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-    CoulombPotential::setCoulombEnergyCutOff(0.0);
-    CoulombPotential::setCoulombForceCutOff(0.0);
+    pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
+    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
+    pot::CoulombPotential::setCoulombForceCutOff(0.0);
     settings::WaterModelSettings::setIsInterWaterModelSet(true);
 
     // ~6x6x6 = 216 water molecules (648 atoms) on a 3 Å grid in a 30 Å box.
     constexpr size_t perSide = 6;
     constexpr double spacing = 4.5;
 
-    SimulationBox simBox;
+    molsys::SimulationBox simBox;
     simBox.setBoxDimensions({30.0, 30.0, 30.0});
     simBox.setWaterType(WATER_TYPE);
 
-    MoleculeType waterType;
+    molsys::MoleculeType waterType;
     waterType.setMoltype(WATER_TYPE);
     waterType.setNumberOfAtoms(3);
     simBox.addMoleculeType(waterType);
 
     const auto makeAtom = [](const std::string_view name,
-                             const Vec3D           &pos,
+                             const linalg::Vec3D   &pos,
                              const double           charge,
                              const AtomNumber       atomicNumber)
     {
-        auto atom = std::make_shared<Atom>();
+        auto atom = std::make_shared<molsys::Atom>();
         atom->setName(name);
         atom->setAtomicNumber(atomicNumber);
         atom->setPosition(pos);
@@ -104,13 +99,13 @@ int main()
         {
             for (size_t iz = 0; iz < perSide; ++iz)
             {
-                const Vec3D oxygen{
+                const linalg::Vec3D oxygen{
                     1.0 + (spacing * static_cast<double>(ix)),
                     1.0 + (spacing * static_cast<double>(iy)),
                     1.0 + (spacing * static_cast<double>(iz))
                 };
 
-                Molecule molecule;
+                molsys::Molecule molecule;
                 molecule.setMoltype(WATER_TYPE);
                 molecule.setNumberOfAtoms(3);
                 molecule.addAtom(
@@ -118,13 +113,13 @@ int main()
                 );
                 molecule.addAtom(makeAtom(
                     "H",
-                    oxygen + Vec3D(0.9572, 0.0, 0.0),
+                    oxygen + linalg::Vec3D(0.9572, 0.0, 0.0),
                     0.41,
                     HYDROGEN_ATOMIC_NUMBER
                 ));
                 molecule.addAtom(makeAtom(
                     "H",
-                    oxygen + Vec3D(-0.24, 0.927, 0.0),
+                    oxygen + linalg::Vec3D(-0.24, 0.927, 0.0),
                     0.41,
                     HYDROGEN_ATOMIC_NUMBER
                 ));
@@ -133,32 +128,32 @@ int main()
         }
     }
 
-    InterWaterState state;
+    waterModel::InterWaterState state;
     state._oxygenCharge     = -0.82;
     state._hydrogenCharge   = 0.41;
-    state._nonCoulombPairOO = std::make_unique<LennardJonesPair>(
+    state._nonCoulombPairOO = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
-    state._nonCoulombPairOH = std::make_unique<LennardJonesPair>(
+    state._nonCoulombPairOH = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
         LJParams{.c6 = 0.5, .c12 = 1.5}
     );
-    state._nonCoulombPairHH = std::make_unique<LennardJonesPair>(
+    state._nonCoulombPairHH = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
         LJParams{.c6 = 0.2, .c12 = 0.8}
     );
 
-    InterWater interWater(
+    waterModel::InterWater interWater(
         std::move(state),
-        std::make_unique<InterWaterStrategyCellList>()
+        std::make_unique<waterModel::InterWaterStrategyCellList>()
     );
 
-    auto coulombPot = std::make_shared<CoulombShiftedPotential>(CUTOFF);
+    auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
 
     settings::Settings::activateCellList();
 
-    CellList cellList;
+    molsys::CellList cellList;
     cellList.setNumberOfCells(3);
     cellList.resizeCells();
     cellList.setup(simBox);

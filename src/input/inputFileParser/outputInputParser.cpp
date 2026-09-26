@@ -24,656 +24,674 @@
 
 #include <format>   // for format
 
-#include "exceptions.hpp"           // for InputFileException
-#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "exceptions.hpp"           // for exc::InputFileException
+#include "outputFileSettings.hpp"   // for settings::OutputFileSettings
 #include "parserUtils.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
-using namespace input;
-using namespace utilities;
-using namespace exc;
-using namespace settings;
-
-/**
- * @brief Construct a new Input File Parser Output:: Input File Parser Output
- * object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap:
- * 1)  output_freq "<size_t>"
- * 2)  file_prefix "<string>"
- * 3)  output_file "<string>"
- * 4)  ref_file "<string>"
- * 5)  info_file "<string>"
- * 6)  energy_file "<string>"
- * 7)  instant_energy_file "<string>"
- * 8)  traj_file "<string>"
- * 9)  vel_file "<string>"
- * 10) force_file "<string>"
- * 11) restart_file "<string>"
- * 12) charge_file "<string>"
- * 13) momentum_file "<string>"
- * 14) virial_file "<string>"
- * 15) stress_file "<string>"
- * 16) box_file "<string>"
- * 17) timings_file "<string>"
- * 18) opt_file "<string>"
- * 19) rpmd_restart_file "<string>"
- * 20) rpmd_traj_file "<string>"
- * 21) rpmd_vel_file "<string>"
- * 22) rpmd_force_file "<string>"
- * 23) rpmd_charge_file "<string>"
- * 24) rpmd_energy_file "<string>"
- * 25) include_output_metadata "<bool>"
- */
-OutputInputParser::OutputInputParser()
+namespace input
 {
-    addKeyword(
-        std::string("output_freq"),
-        bindMember(&OutputInputParser::parseOutputFreq, this),
-        false
-    );
-    addKeyword(
-        std::string("file_prefix"),
-        bindMember(&OutputInputParser::parseFilePrefix, this),
-        false
-    );
-    addKeyword(
-        std::string("output_file"),
-        bindMember(&OutputInputParser::parseLogFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("reference_file"),
-        bindMember(&OutputInputParser::parseRefFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("info_file"),
-        bindMember(&OutputInputParser::parseInfoFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("energy_file"),
-        bindMember(&OutputInputParser::parseEnergyFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("instant_energy_file"),
-        bindMember(&OutputInputParser::parseInstantEnergyFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("traj_file"),
-        bindMember(&OutputInputParser::parseTrajectoryFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("hybrid_center_file"),
-        bindMember(&OutputInputParser::parseHybridCenterFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("vel_file"),
-        bindMember(&OutputInputParser::parseVelocityFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("force_file"),
-        bindMember(&OutputInputParser::parseForceFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("restart_file"),
-        bindMember(&OutputInputParser::parseRestartFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("charge_file"),
-        bindMember(&OutputInputParser::parseChargeFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("momentum_file"),
-        bindMember(&OutputInputParser::parseMomentumFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("virial_file"),
-        bindMember(&OutputInputParser::parseVirialFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("stress_file"),
-        bindMember(&OutputInputParser::parseStressFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("box_file"),
-        bindMember(&OutputInputParser::parseBoxFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("timings_file"),
-        bindMember(&OutputInputParser::parseTimingsFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("opt_file"),
-        bindMember(&OutputInputParser::parseOptFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("rpmd_restart_file"),
-        bindMember(&OutputInputParser::parseRPMDRestartFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("rpmd_traj_file"),
-        bindMember(&OutputInputParser::parseRPMDTrajectoryFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("rpmd_vel_file"),
-        bindMember(&OutputInputParser::parseRPMDVelocityFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("rpmd_force_file"),
-        bindMember(&OutputInputParser::parseRPMDForceFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("rpmd_charge_file"),
-        bindMember(&OutputInputParser::parseRPMDChargeFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("rpmd_energy_file"),
-        bindMember(&OutputInputParser::parseRPMDEnergyFilename, this),
-        false
-    );
-    addKeyword(
-        std::string("overwrite_output"),
-        bindMember(&OutputInputParser::parseOverwriteOutput, this),
-        false
-    );
-    addKeyword(
-        std::string("include_output_metadata"),
-        bindMember(&OutputInputParser::parseIncludeOutputMetadata, this),
-        false
-    );
-}
 
-/**
- * @brief parse output frequency of simulation and set it in output statically
- *
- * @details default value is 1
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if output frequency is negative
- */
-void OutputInputParser::parseOutputFreq(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto outputFrequency = stringToInt(lineElements[2]);
-    if (outputFrequency < 0)
+    /**
+     * @brief Construct a new Input File Parser Output:: Input File Parser
+     * Output object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap:
+     * 1)  output_freq "<size_t>"
+     * 2)  file_prefix "<string>"
+     * 3)  output_file "<string>"
+     * 4)  ref_file "<string>"
+     * 5)  info_file "<string>"
+     * 6)  energy_file "<string>"
+     * 7)  instant_energy_file "<string>"
+     * 8)  traj_file "<string>"
+     * 9)  vel_file "<string>"
+     * 10) force_file "<string>"
+     * 11) restart_file "<string>"
+     * 12) charge_file "<string>"
+     * 13) momentum_file "<string>"
+     * 14) virial_file "<string>"
+     * 15) stress_file "<string>"
+     * 16) box_file "<string>"
+     * 17) timings_file "<string>"
+     * 18) opt_file "<string>"
+     * 19) rpmd_restart_file "<string>"
+     * 20) rpmd_traj_file "<string>"
+     * 21) rpmd_vel_file "<string>"
+     * 22) rpmd_force_file "<string>"
+     * 23) rpmd_charge_file "<string>"
+     * 24) rpmd_energy_file "<string>"
+     * 25) include_output_metadata "<bool>"
+     */
+    OutputInputParser::OutputInputParser()
     {
-        throw InputFileException(format(
-            "Output frequency cannot be negative - \"{}\" at line {} in input "
-            "file",
-            lineElements[2],
-            lineNumber
-        ));
+        addKeyword(
+            std::string("output_freq"),
+            bindMember(&OutputInputParser::parseOutputFreq, this),
+            false
+        );
+        addKeyword(
+            std::string("file_prefix"),
+            bindMember(&OutputInputParser::parseFilePrefix, this),
+            false
+        );
+        addKeyword(
+            std::string("output_file"),
+            bindMember(&OutputInputParser::parseLogFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("reference_file"),
+            bindMember(&OutputInputParser::parseRefFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("info_file"),
+            bindMember(&OutputInputParser::parseInfoFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("energy_file"),
+            bindMember(&OutputInputParser::parseEnergyFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("instant_energy_file"),
+            bindMember(&OutputInputParser::parseInstantEnergyFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("traj_file"),
+            bindMember(&OutputInputParser::parseTrajectoryFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("hybrid_center_file"),
+            bindMember(&OutputInputParser::parseHybridCenterFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("vel_file"),
+            bindMember(&OutputInputParser::parseVelocityFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("force_file"),
+            bindMember(&OutputInputParser::parseForceFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("restart_file"),
+            bindMember(&OutputInputParser::parseRestartFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("charge_file"),
+            bindMember(&OutputInputParser::parseChargeFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("momentum_file"),
+            bindMember(&OutputInputParser::parseMomentumFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("virial_file"),
+            bindMember(&OutputInputParser::parseVirialFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("stress_file"),
+            bindMember(&OutputInputParser::parseStressFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("box_file"),
+            bindMember(&OutputInputParser::parseBoxFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("timings_file"),
+            bindMember(&OutputInputParser::parseTimingsFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("opt_file"),
+            bindMember(&OutputInputParser::parseOptFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("rpmd_restart_file"),
+            bindMember(&OutputInputParser::parseRPMDRestartFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("rpmd_traj_file"),
+            bindMember(&OutputInputParser::parseRPMDTrajectoryFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("rpmd_vel_file"),
+            bindMember(&OutputInputParser::parseRPMDVelocityFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("rpmd_force_file"),
+            bindMember(&OutputInputParser::parseRPMDForceFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("rpmd_charge_file"),
+            bindMember(&OutputInputParser::parseRPMDChargeFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("rpmd_energy_file"),
+            bindMember(&OutputInputParser::parseRPMDEnergyFilename, this),
+            false
+        );
+        addKeyword(
+            std::string("overwrite_output"),
+            bindMember(&OutputInputParser::parseOverwriteOutput, this),
+            false
+        );
+        addKeyword(
+            std::string("include_output_metadata"),
+            bindMember(&OutputInputParser::parseIncludeOutputMetadata, this),
+            false
+        );
     }
 
-    OutputFileSettings::setOutputFrequency(
-        static_cast<size_t>(outputFrequency)
-    );
-}
+    /**
+     * @brief parse output frequency of simulation and set it in output
+     * statically
+     *
+     * @details default value is 1
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws exc::InputFileException if output frequency is negative
+     */
+    void OutputInputParser::parseOutputFreq(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
 
-/**
- * @brief parse file prefix of simulation and set it in output statically
- *
- * @details default value is default
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseFilePrefix(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setFilePrefix(lineElements[2]);
-}
+        const auto outputFrequency = utilities::stringToInt(lineElements[2]);
+        if (outputFrequency < 0)
+        {
+            throw exc::InputFileException(format(
+                "Output frequency cannot be negative - \"{}\" at line {} in "
+                "input "
+                "file",
+                lineElements[2],
+                lineNumber
+            ));
+        }
 
-/**
- * @brief parse log filename of simulation and add it to output
- *
- * @details default value is default.log
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseLogFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setLogFileName(lineElements[2]);
-}
+        settings::OutputFileSettings::setOutputFrequency(
+            static_cast<size_t>(outputFrequency)
+        );
+    }
 
-/**
- * @brief parse ref filename of simulation and add it to output
- *
- * @details default value is default.ref
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseRefFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setRefFileName(lineElements[2]);
-}
+    /**
+     * @brief parse file prefix of simulation and set it in output statically
+     *
+     * @details default value is default
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseFilePrefix(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setFilePrefix(lineElements[2]);
+    }
 
-/**
- * @brief parse info filename of simulation and add it to output
- *
- * @details default value is default.info
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseInfoFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setInfoFileName(lineElements[2]);
-}
+    /**
+     * @brief parse log filename of simulation and add it to output
+     *
+     * @details default value is default.log
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseLogFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setLogFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse energy filename of simulation and add it to output
- *
- * @details default value is default.en
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseEnergyFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setEnergyFileName(lineElements[2]);
-}
+    /**
+     * @brief parse ref filename of simulation and add it to output
+     *
+     * @details default value is default.ref
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseRefFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setRefFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse instant energy filename of simulation and add it to output
- *
- * @details default value is default.inen
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseInstantEnergyFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setInstantEnergyFileName(lineElements[2]);
-}
+    /**
+     * @brief parse info filename of simulation and add it to output
+     *
+     * @details default value is default.info
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseInfoFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setInfoFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse trajectory filename of simulation and add it to output
- *
- * @details default value is default.xyz
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseTrajectoryFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setTrajectoryFileName(lineElements[2]);
-}
+    /**
+     * @brief parse energy filename of simulation and add it to output
+     *
+     * @details default value is default.en
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseEnergyFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setEnergyFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse hybrid center filename of simulation and add it to output
- *
- * @details default value is default.center.xyz
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseHybridCenterFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setHybridCenterFileName(lineElements[2]);
-}
+    /**
+     * @brief parse instant energy filename of simulation and add it to output
+     *
+     * @details default value is default.inen
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseInstantEnergyFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setInstantEnergyFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse velocity filename of simulation and add it to output
- *
- * @details default value is default.vel
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseVelocityFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setVelocityFileName(lineElements[2]);
-}
+    /**
+     * @brief parse trajectory filename of simulation and add it to output
+     *
+     * @details default value is default.xyz
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseTrajectoryFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setTrajectoryFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse force filename of simulation and add it to output
- *
- * @details default value is default.force
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseForceFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setForceFileName(lineElements[2]);
-}
+    /**
+     * @brief parse hybrid center filename of simulation and add it to output
+     *
+     * @details default value is default.center.xyz
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseHybridCenterFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setHybridCenterFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse restart filename of simulation and add it to output
- *
- * @details default value is default.rst
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseRestartFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setRestartFileName(lineElements[2]);
-}
+    /**
+     * @brief parse velocity filename of simulation and add it to output
+     *
+     * @details default value is default.vel
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseVelocityFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setVelocityFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse charge filename of simulation and add it to output
- *
- * @details default value is default.chrg
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseChargeFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setChargeFileName(lineElements[2]);
-}
+    /**
+     * @brief parse force filename of simulation and add it to output
+     *
+     * @details default value is default.force
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseForceFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setForceFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse momentum filename of simulation and add it to output
- *
- * @details default value is default.mom
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseMomentumFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setMomentumFileName(lineElements[2]);
-}
+    /**
+     * @brief parse restart filename of simulation and add it to output
+     *
+     * @details default value is default.rst
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseRestartFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setRestartFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse virial filename of simulation and add it to output
- *
- * @details default value is default.vir
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseVirialFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setVirialFileName(lineElements[2]);
-}
+    /**
+     * @brief parse charge filename of simulation and add it to output
+     *
+     * @details default value is default.chrg
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseChargeFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setChargeFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse stress filename of simulation and add it to output
- *
- * @details default value is default.stress
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseStressFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setStressFileName(lineElements[2]);
-}
+    /**
+     * @brief parse momentum filename of simulation and add it to output
+     *
+     * @details default value is default.mom
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseMomentumFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setMomentumFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse box filename of simulation and add it to output
- *
- * @details default value is default.box
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseBoxFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setBoxFileName(lineElements[2]);
-}
+    /**
+     * @brief parse virial filename of simulation and add it to output
+     *
+     * @details default value is default.vir
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseVirialFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setVirialFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse timings filename of simulation and add it to output
- *
- * @details default value is default.timings
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseTimingsFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setTimingsFileName(lineElements[2]);
-}
+    /**
+     * @brief parse stress filename of simulation and add it to output
+     *
+     * @details default value is default.stress
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseStressFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setStressFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse optimization filename of simulation and add it to output
- *
- * @details default value is default.opt
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseOptFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setOptFileName(lineElements[2]);
-}
+    /**
+     * @brief parse box filename of simulation and add it to output
+     *
+     * @details default value is default.box
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseBoxFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setBoxFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse RPMD restart filename of simulation and add it to output
- *
- * @details default value is default.rpmd.rst
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseRPMDRestartFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setRingPolymerRestartFileName(lineElements[2]);
-}
+    /**
+     * @brief parse timings filename of simulation and add it to output
+     *
+     * @details default value is default.timings
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseTimingsFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setTimingsFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse RPMD trajectory filename of simulation and add it to output
- *
- * @details default value is default.rpmd.xyz
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseRPMDTrajectoryFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setRingPolymerTrajectoryFileName(lineElements[2]);
-}
+    /**
+     * @brief parse optimization filename of simulation and add it to output
+     *
+     * @details default value is default.opt
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseOptFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setOptFileName(lineElements[2]);
+    }
 
-/**
- * @brief parse RPMD velocity filename of simulation and add it to output
- *
- * @details default value is default.rpmd.vel
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseRPMDVelocityFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setRingPolymerVelocityFileName(lineElements[2]);
-}
+    /**
+     * @brief parse RPMD restart filename of simulation and add it to output
+     *
+     * @details default value is default.rpmd.rst
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseRPMDRestartFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setRingPolymerRestartFileName(
+            lineElements[2]
+        );
+    }
 
-/**
- * @brief parse RPMD force filename of simulation and add it to output
- *
- * @details default value is default.rpmd.force
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseRPMDForceFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setRingPolymerForceFileName(lineElements[2]);
-}
+    /**
+     * @brief parse RPMD trajectory filename of simulation and add it to output
+     *
+     * @details default value is default.rpmd.xyz
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseRPMDTrajectoryFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setRingPolymerTrajectoryFileName(
+            lineElements[2]
+        );
+    }
 
-/**
- * @brief parse RPMD charge filename of simulation and add it to output
- *
- * @details default value is default.rpmd.chrg
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseRPMDChargeFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setRingPolymerChargeFileName(lineElements[2]);
-}
+    /**
+     * @brief parse RPMD velocity filename of simulation and add it to output
+     *
+     * @details default value is default.rpmd.vel
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseRPMDVelocityFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setRingPolymerVelocityFileName(
+            lineElements[2]
+        );
+    }
 
-/**
- * @brief parse RPMD energy filename of simulation and add it to output
- *
- * @details default value is default.rpmd.en
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseRPMDEnergyFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    OutputFileSettings::setRingPolymerEnergyFileName(lineElements[2]);
-}
+    /**
+     * @brief parse RPMD force filename of simulation and add it to output
+     *
+     * @details default value is default.rpmd.force
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseRPMDForceFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setRingPolymerForceFileName(
+            lineElements[2]
+        );
+    }
 
-/**
- * @brief parse if existing output files should be overwritten
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseOverwriteOutput(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
+    /**
+     * @brief parse RPMD charge filename of simulation and add it to output
+     *
+     * @details default value is default.rpmd.chrg
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseRPMDChargeFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setRingPolymerChargeFileName(
+            lineElements[2]
+        );
+    }
 
-    OutputFileSettings::setOverwriteOutputFiles(keywordToBool(lineElements));
-}
+    /**
+     * @brief parse RPMD energy filename of simulation and add it to output
+     *
+     * @details default value is default.rpmd.en
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseRPMDEnergyFilename(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+        settings::OutputFileSettings::setRingPolymerEnergyFileName(
+            lineElements[2]
+        );
+    }
 
-/**
- * @brief parse if output files should include metadata
- *
- * @param lineElements
- * @param lineNumber
- */
-void OutputInputParser::parseIncludeOutputMetadata(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
+    /**
+     * @brief parse if existing output files should be overwritten
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseOverwriteOutput(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
 
-    OutputFileSettings::setIncludeOutputMetadata(keywordToBool(lineElements));
-}
+        settings::OutputFileSettings::setOverwriteOutputFiles(
+            utilities::keywordToBool(lineElements)
+        );
+    }
+
+    /**
+     * @brief parse if output files should include metadata
+     *
+     * @param lineElements
+     * @param lineNumber
+     */
+    void OutputInputParser::parseIncludeOutputMetadata(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        settings::OutputFileSettings::setIncludeOutputMetadata(
+            utilities::keywordToBool(lineElements)
+        );
+    }
+
+}   // namespace input

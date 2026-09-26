@@ -144,15 +144,15 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
     EXPECT_EQ(atoms[0].getName(), "H");
     EXPECT_EQ(atoms[1].getName(), "O");
     EXPECT_EQ(atoms[2].getName(), "C");
-    EXPECT_EQ(atoms[0].getPosition()[0], 0.0);
-    EXPECT_EQ(atoms[0].getPosition()[1], 0.0);
-    EXPECT_EQ(atoms[0].getPosition()[2], 0.0);
-    EXPECT_EQ(atoms[1].getPosition()[0], 1.0);
-    EXPECT_EQ(atoms[1].getPosition()[1], 1.0);
-    EXPECT_EQ(atoms[1].getPosition()[2], 1.0);
-    EXPECT_EQ(atoms[2].getPosition()[0], 2.0);
-    EXPECT_EQ(atoms[2].getPosition()[1], 2.0);
-    EXPECT_EQ(atoms[2].getPosition()[2], 2.0);
+    EXPECT_NEAR(atoms[0].getPosition()[0], 0.0, 1e-15);
+    EXPECT_NEAR(atoms[0].getPosition()[1], 0.0, 1e-15);
+    EXPECT_NEAR(atoms[0].getPosition()[2], 0.0, 1e-15);
+    EXPECT_NEAR(atoms[1].getPosition()[0], 1.0, 1e-15);
+    EXPECT_NEAR(atoms[1].getPosition()[1], 1.0, 1e-15);
+    EXPECT_NEAR(atoms[1].getPosition()[2], 1.0, 1e-15);
+    EXPECT_NEAR(atoms[2].getPosition()[0], 2.0, 1e-15);
+    EXPECT_NEAR(atoms[2].getPosition()[1], 2.0, 1e-15);
+    EXPECT_NEAR(atoms[2].getPosition()[2], 2.0, 1e-15);
 }
 
 TEST_F(TestMShakeReader, testReadMemberFunction)

@@ -22,74 +22,76 @@
 
 #include "simulationBoxSettings.hpp"
 
-using settings::InitVelocities;
-using settings::SimulationBoxSettings;
-
-/********************
- *                  *
- * standard setters *
- *                  *
- ********************/
-
-/**
- * @brief Set the density set
- *
- * @param densitySet
- */
-void SimulationBoxSettings::setDensitySet(bool densitySet)
+namespace settings
 {
-    _isDensitySet = densitySet;
-}
 
-/**
- * @brief Set the box set
- *
- * @param boxSet
- */
-void SimulationBoxSettings::setBoxSet(bool boxSet) { _isBoxSet = boxSet; }
+    /********************
+     *                  *
+     * standard setters *
+     *                  *
+     ********************/
 
-/**
- * @brief Set the initialize velocities
- *
- * @param initializeVelocities
- */
-void SimulationBoxSettings::setInitializeVelocities(
-    InitVelocities initializeVelocities
-)
-{
-    _initializeVelocities = initializeVelocities;
-}
+    /**
+     * @brief Set the density set
+     *
+     * @param densitySet
+     */
+    void SimulationBoxSettings::setDensitySet(bool densitySet)
+    {
+        _isDensitySet = densitySet;
+    }
 
-/********************
- *                  *
- * standard getters *
- *                  *
- ********************/
+    /**
+     * @brief Set the box set
+     *
+     * @param boxSet
+     */
+    void SimulationBoxSettings::setBoxSet(bool boxSet) { _isBoxSet = boxSet; }
 
-/**
- * @brief get if the density is set
- *
- * @return true
- * @return false
- */
-bool SimulationBoxSettings::getDensitySet() { return _isDensitySet; }
+    /**
+     * @brief Set the initialize velocities
+     *
+     * @param initializeVelocities
+     */
+    void SimulationBoxSettings::setInitializeVelocities(
+        InitVelocities initializeVelocities
+    )
+    {
+        _initializeVelocities = initializeVelocities;
+    }
 
-/**
- * @brief get if the box is set
- *
- * @return true
- * @return false
- */
-bool SimulationBoxSettings::getBoxSet() { return _isBoxSet; }
+    /********************
+     *                  *
+     * standard getters *
+     *                  *
+     ********************/
 
-/**
- * @brief get if the velocities are initialized
- *
- * @return TRUE
- * @return FALSE
- * @return FORCE
- */
-InitVelocities SimulationBoxSettings::getInitializeVelocities()
-{
-    return _initializeVelocities;
-}
+    /**
+     * @brief get if the density is set
+     *
+     * @return true
+     * @return false
+     */
+    bool SimulationBoxSettings::getDensitySet() { return _isDensitySet; }
+
+    /**
+     * @brief get if the box is set
+     *
+     * @return true
+     * @return false
+     */
+    bool SimulationBoxSettings::getBoxSet() { return _isBoxSet; }
+
+    /**
+     * @brief get if the velocities are initialized
+     *
+     * @return TRUE
+     * @return FALSE
+     * @return FORCE
+     */
+    InitVelocities SimulationBoxSettings::getInitializeVelocities()
+    {
+        return _initializeVelocities;
+    }
+
+}   // namespace settings

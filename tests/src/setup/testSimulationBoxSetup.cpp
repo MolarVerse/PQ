@@ -39,11 +39,9 @@
 #include "potentialSettings.hpp"       // for PotentialSettings
 #include "simulationBox.hpp"           // for SimulationBox
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "simulationBoxSetup.hpp"   // for SimulationBoxSetup, setupSimulationBox
+#include "simulationBoxSetup.hpp"   // for setup::SimulationBoxSetup, setupSimulationBox
 #include "strongTypes.hpp"
 #include "testSetup.hpp"   // for TestSetup
-
-using setup::molsys::SimulationBoxSetup;
 
 TEST_F(TestSetup, setAtomNames)
 {
@@ -72,7 +70,7 @@ TEST_F(TestSetup, setAtomNames)
     _engine->getSimulationBox().addAtom(atom2);
     _engine->getSimulationBox().addAtom(atom3);
 
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomNames();
 
     const auto mol = _engine->getSimulationBox().getMolecules()[0];
@@ -111,7 +109,7 @@ TEST_F(TestSetup, setAtomTypes)
     _engine->getSimulationBox().addAtom(atom2);
     _engine->getSimulationBox().addAtom(atom3);
 
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomTypes();
 
     auto mol = _engine->getSimulationBox().getMolecules()[0];
@@ -150,7 +148,7 @@ TEST_F(TestSetup, setExternalVDWTypes)
     _engine->getSimulationBox().addAtom(atom2);
     _engine->getSimulationBox().addAtom(atom3);
 
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setExternalVDWTypes();
 
     const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
@@ -187,7 +185,7 @@ TEST_F(TestSetup, setPartialCharges)
     _engine->getSimulationBox().addAtom(atom2);
     _engine->getSimulationBox().addAtom(atom3);
 
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setPartialCharges();
 
     const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
@@ -212,7 +210,7 @@ TEST_F(TestSetup, testSetAtomMasses)
     molecule.addAtom(atom3);
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomMasses();
 
     const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
@@ -237,7 +235,7 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
     molecule.addAtom(atom3);
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW(
         simulationBoxSetup.setAtomMasses(),
         exc::MolDescriptorException
@@ -259,7 +257,7 @@ TEST_F(TestSetup, testSetAtomicNumbers)
     molecule.addAtom(atom3);
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomicNumbers();
 
     const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
@@ -284,7 +282,7 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
     molecule.addAtom(atom3);
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW(
         simulationBoxSetup.setAtomicNumbers(),
         exc::MolDescriptorException
@@ -316,7 +314,7 @@ TEST_F(TestSetup, testSetMolMass)
 
     _engine->getSimulationBox().getMolecules().push_back(molecule1);
     _engine->getSimulationBox().getMolecules().push_back(molecule2);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomMasses();
     simulationBoxSetup.calculateMolMasses();
 
@@ -343,7 +341,7 @@ TEST_F(TestSetup, testSetTotalCharge)
     molecule.setPartialCharges({0.1, 0.2, -0.4});
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.calculateTotalCharge();
 
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getTotalCharge(), -0.1);
@@ -353,7 +351,7 @@ TEST_F(TestSetup, noDensityNoBox)
 {
     settings::SimulationBoxSettings::setDensitySet(false);
     settings::SimulationBoxSettings::setBoxSet(false);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW(
         simulationBoxSetup.checkBoxSettings(),
         exc::UserInputException
@@ -366,7 +364,7 @@ TEST_F(TestSetup, noDensity)
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::SimulationBoxSettings::setDensitySet(false);
     settings::SimulationBoxSettings::setBoxSet(true);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
@@ -382,7 +380,7 @@ TEST_F(TestSetup, testNoBox)
     _engine->getSimulationBox().setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
     settings::SimulationBoxSettings::setBoxSet(false);
     settings::SimulationBoxSettings::setDensitySet(true);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
@@ -401,7 +399,7 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::SimulationBoxSettings::setDensitySet(true);
     settings::SimulationBoxSettings::setBoxSet(true);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
@@ -415,18 +413,18 @@ TEST_F(TestSetup, testCheckRcCutoff)
 {
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
-    SimulationBoxSetup simulationBoxSetup(*_engine);
+    setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     EXPECT_THROW(simulationBoxSetup.checkRcCutoff(), exc::InputFileException);
 
-    SimulationBoxSetup simulationBox2Setup(*_engine);
+    setup::SimulationBoxSetup simulationBox2Setup(*_engine);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
     EXPECT_NO_THROW(simulationBox2Setup.checkRcCutoff());
 }
 
 TEST_F(TestSetup, testCheckZeroVelocities)
 {
-    SimulationBoxSetup simBoxSetup(*_engine);
-    auto              &simBox = _engine->getSimulationBox();
+    setup::SimulationBoxSetup simBoxSetup(*_engine);
+    auto                     &simBox = _engine->getSimulationBox();
 
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -436,17 +434,17 @@ TEST_F(TestSetup, testCheckZeroVelocities)
     simBox.getAtoms().push_back(atom2);
     simBoxSetup.checkZeroVelocities();
 
-    EXPECT_FALSE(SimulationBoxSetup::getZeroVelocities());
+    EXPECT_FALSE(setup::SimulationBoxSetup::getZeroVelocities());
 
     atom2->setVelocity({0.0, 0.0, 0.0});
     simBoxSetup.checkZeroVelocities();
 
-    EXPECT_FALSE(SimulationBoxSetup::getZeroVelocities());
+    EXPECT_FALSE(setup::SimulationBoxSetup::getZeroVelocities());
 
     atom1->setVelocity({0.0, 0.0, 0.0});
     simBoxSetup.checkZeroVelocities();
 
-    EXPECT_TRUE(SimulationBoxSetup::getZeroVelocities());
+    EXPECT_TRUE(setup::SimulationBoxSetup::getZeroVelocities());
 }
 
 /**
@@ -530,7 +528,7 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
-    EXPECT_NO_THROW(setup::molsys::setupSimulationBox(*_engine));
+    EXPECT_NO_THROW(setup::setupSimulationBox(*_engine));
 }
 
 TEST_F(TestSetup, testWriteSetupInfo)
@@ -554,7 +552,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
     settings::FileSettings::setStartFileName("input.rst");
 
-    SimulationBoxSetup(*_engine).writeSetupInfo();
+    setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
@@ -599,10 +597,10 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
     settings::SimulationBoxSettings::setInitializeVelocities(
         settings::InitVelocities::TRUE
     );
-    SimulationBoxSetup::setZeroVelocities(false);
+    setup::SimulationBoxSetup::setZeroVelocities(false);
     settings::FileSettings::setStartFileName("input.rst");
 
-    SimulationBoxSetup(*_engine).writeSetupInfo();
+    setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
     std::string   line;
     for (int i = 0; i < 13; i++)
@@ -629,9 +627,9 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
     settings::SimulationBoxSettings::setInitializeVelocities(
         settings::InitVelocities::TRUE
     );
-    SimulationBoxSetup::setZeroVelocities(true);
+    setup::SimulationBoxSetup::setZeroVelocities(true);
 
-    SimulationBoxSetup(*_engine).writeSetupInfo();
+    setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
     std::string   line;
     for (int i = 0; i < 13; i++)
@@ -655,9 +653,9 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
     settings::SimulationBoxSettings::setInitializeVelocities(
         settings::InitVelocities::FORCE
     );
-    SimulationBoxSetup::setZeroVelocities(false);
+    setup::SimulationBoxSetup::setZeroVelocities(false);
 
-    SimulationBoxSetup(*_engine).writeSetupInfo();
+    setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
     std::string   line;
     for (int i = 0; i < 13; i++)

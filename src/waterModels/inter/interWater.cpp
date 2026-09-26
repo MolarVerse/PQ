@@ -27,202 +27,212 @@
 #include "globalTimer.hpp"         // for GlobalTimer
 #include "potentialSettings.hpp"   // for PotentialSettings
 
-using namespace pot;
-using namespace pq;
-using namespace settings;
-using namespace waterModel;
-
-/**
- * @brief Construct an inert inter-water handler.
- *
- * @details Creates a default state and installs the null strategy so an
- * InterWater object can exist before a real water model is configured.
- */
-InterWater::InterWater()
-    : _state{}, _strategy{std::make_unique<InterWaterStrategyNull>()}
+namespace waterModel
 {
-}
 
-/**
- * @brief Dispatch inter-water calculations via the active strategy.
- *
- * @param simulationBox Simulation box containing molecules.
- * @param physicalData Physical data to store energy results.
- * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
- * @param cellList Cell list structure used for neighbor searching.
- */
-void InterWater::calculate(
-    molsys::SimulationBox                        &simulationBox,
-    physicalData::PhysicalData                   &physicalData,
-    const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-    molsys::CellList                             &cellList
-)
-{
-    if (_strategy == nullptr)
-        return;
-
-    auto _ = scopedTimer(TimerId::WaterInterPotential, "Calculate");
-    _strategy->calculate(
-        _state,
-        simulationBox,
-        physicalData,
-        sharedCoulombPot,
-        cellList
-    );
-}
-
-/**
- * @brief Dispatch inter-water QMMM force calculations via the active strategy.
- *
- * @param simulationBox Simulation box containing molecules.
- * @param physicalData Physical data to store energy results.
- * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
- * @param cellList Cell list structure used for neighbor searching.
- */
-void InterWater::calculateQMMMForces(
-    molsys::SimulationBox                        &simulationBox,
-    physicalData::PhysicalData                   &physicalData,
-    const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-    molsys::CellList                             &cellList
-)
-{
-    if (_strategy == nullptr)
-        return;
-
+    /**
+     * @brief Construct an inert inter-water handler.
+     *
+     * @details Creates a default state and installs the null strategy so an
+     * InterWater object can exist before a real water model is configured.
+     */
+    InterWater::InterWater()
+        : _state{}, _strategy{std::make_unique<InterWaterStrategyNull>()}
     {
-        auto _ =
-            scopedTimer(TimerId::WaterInterPotential, "QM/MM Core to Outer");
-        _strategy->calculateCoreToOuterForces(
-            _state,
-            simulationBox,
-            physicalData,
-            sharedCoulombPot,
-            cellList
-        );
     }
 
+    /**
+     * @brief Dispatch inter-water calculations via the active strategy.
+     *
+     * @param simulationBox Simulation box containing molecules.
+     * @param physicalData Physical data to store energy results.
+     * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
+     * @param cellList Cell list structure used for neighbor searching.
+     */
+    void InterWater::calculate(
+        molsys::SimulationBox                        &simulationBox,
+        physicalData::PhysicalData                   &physicalData,
+        const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+        molsys::CellList                             &cellList
+    )
     {
-        auto _ =
-            scopedTimer(TimerId::WaterInterPotential, "QM/MM Layer to Outer");
-        _strategy->calculateLayerToOuterForces(
-            _state,
-            simulationBox,
-            physicalData,
-            sharedCoulombPot,
-            cellList
-        );
-    }
-
-    {
-        auto _ =
-            scopedTimer(TimerId::WaterInterPotential, "QM/MM Outer to Outer");
-        _strategy->calculateOuterToOuterForces(
-            _state,
-            simulationBox,
-            physicalData,
-            sharedCoulombPot,
-            cellList
-        );
-    }
-}
-
-/**
- * @brief Dispatch inter-water hotspot smoothing force calculations.
- *
- * @param simulationBox Simulation box containing molecules.
- * @param physicalData Physical data to store energy results.
- * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
- * @param cellList Cell list structure used for neighbor searching.
- */
-void InterWater::calculateHotspotSmoothingMMForces(
-    molsys::SimulationBox                        &simulationBox,
-    physicalData::PhysicalData                   &physicalData,
-    const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-    molsys::CellList                             &cellList
-)
-{
-    if (_strategy == nullptr)
-        return;
-
-    auto _ = scopedTimer(TimerId::WaterInterPotential, "QM/MM Smoothing MM");
-    _strategy->calculateHotspotSmoothingMMForces(
-        _state,
-        simulationBox,
-        physicalData,
-        sharedCoulombPot,
-        cellList
-    );
-}
-
-/**
- * @brief Construct an inter-water handler from a state and a strategy.
- *
- * @details Takes ownership of the supplied strategy, stores the provided
- * state, and initializes the non-Coulomb pairs for the configured water
- * model.
- *
- * @param state The inter-water parameters.
- * @param strategy The strategy object used to evaluate the interaction.
- */
-InterWater::InterWater(
-    InterWaterState                     state,
-    std::unique_ptr<InterWaterStrategy> strategy
-)
-    : _state{std::move(state)}, _strategy{std::move(strategy)}
-{
-    initState();
-}
-
-/**
- * @brief Apply radial cutoffs to configured inter-water non-Coulomb pairs.
- *
- * @details Uses the explicit non-Coulomb cutoff when configured, otherwise
- * falls back to the Coulomb cutoff. O-O is always updated, while O-H and H-H
- * are only updated when oxygen-only non-Coulomb interactions are disabled.
- */
-void InterWater::setNonCoulombCutOffRadii() const
-{
-    const auto radialCutOff =
-        PotentialSettings::getNonCoulombRadiusCutOff().value_or(
-            PotentialSettings::getCoulombRadiusCutOff()
-        );
-
-    const auto setCutOff = [radialCutOff](const auto &nonCoulombPair)
-    {
-        if (nonCoulombPair != nullptr)
-            nonCoulombPair->setRadialCutOff(radialCutOff);
-    };
-
-    setCutOff(_state._nonCoulombPairOO);
-
-    if (!_state._oxygenOnlyNonCoulomb)
-    {
-        setCutOff(_state._nonCoulombPairOH);
-        setCutOff(_state._nonCoulombPairHH);
-    }
-}
-
-/**
- * @brief Initialize the non-Coulomb pairs for the configured inter-water model.
- *
- * @details Sets up energy and force cutoff values for the three inter-water
- * non-Coulomb pairs (OO, OH, HH) by evaluating them at their radial cutoff
- * distances.
- */
-void InterWater::initNonCoulombPairs() const
-{
-    const auto setForceAndEnergyCutOff = [](const auto &nonCoulombPair)
-    {
-        if (nonCoulombPair == nullptr)
+        if (_strategy == nullptr)
             return;
 
-        const auto [energyCutOff, forceCutOff] =
-            nonCoulombPair->calculate(nonCoulombPair->getRadialCutOff());
-        nonCoulombPair->setEnergyCutOff(energyCutOff);
-        nonCoulombPair->setForceCutOff(forceCutOff);
-    };
+        auto _ = scopedTimer(TimerId::WaterInterPotential, "Calculate");
+        _strategy->calculate(
+            _state,
+            simulationBox,
+            physicalData,
+            sharedCoulombPot,
+            cellList
+        );
+    }
 
-    setForceAndEnergyCutOff(_state._nonCoulombPairOO);
-    setForceAndEnergyCutOff(_state._nonCoulombPairOH);
-    setForceAndEnergyCutOff(_state._nonCoulombPairHH);
-}
+    /**
+     * @brief Dispatch inter-water QMMM force calculations via the active
+     * strategy.
+     *
+     * @param simulationBox Simulation box containing molecules.
+     * @param physicalData Physical data to store energy results.
+     * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
+     * @param cellList Cell list structure used for neighbor searching.
+     */
+    void InterWater::calculateQMMMForces(
+        molsys::SimulationBox                        &simulationBox,
+        physicalData::PhysicalData                   &physicalData,
+        const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+        molsys::CellList                             &cellList
+    )
+    {
+        if (_strategy == nullptr)
+            return;
+
+        {
+            auto _ = scopedTimer(
+                TimerId::WaterInterPotential,
+                "QM/MM Core to Outer"
+            );
+            _strategy->calculateCoreToOuterForces(
+                _state,
+                simulationBox,
+                physicalData,
+                sharedCoulombPot,
+                cellList
+            );
+        }
+
+        {
+            auto _ = scopedTimer(
+                TimerId::WaterInterPotential,
+                "QM/MM Layer to Outer"
+            );
+            _strategy->calculateLayerToOuterForces(
+                _state,
+                simulationBox,
+                physicalData,
+                sharedCoulombPot,
+                cellList
+            );
+        }
+
+        {
+            auto _ = scopedTimer(
+                TimerId::WaterInterPotential,
+                "QM/MM Outer to Outer"
+            );
+            _strategy->calculateOuterToOuterForces(
+                _state,
+                simulationBox,
+                physicalData,
+                sharedCoulombPot,
+                cellList
+            );
+        }
+    }
+
+    /**
+     * @brief Dispatch inter-water hotspot smoothing force calculations.
+     *
+     * @param simulationBox Simulation box containing molecules.
+     * @param physicalData Physical data to store energy results.
+     * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
+     * @param cellList Cell list structure used for neighbor searching.
+     */
+    void InterWater::calculateHotspotSmoothingMMForces(
+        molsys::SimulationBox                        &simulationBox,
+        physicalData::PhysicalData                   &physicalData,
+        const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
+        molsys::CellList                             &cellList
+    )
+    {
+        if (_strategy == nullptr)
+            return;
+
+        auto _ =
+            scopedTimer(TimerId::WaterInterPotential, "QM/MM Smoothing MM");
+        _strategy->calculateHotspotSmoothingMMForces(
+            _state,
+            simulationBox,
+            physicalData,
+            sharedCoulombPot,
+            cellList
+        );
+    }
+
+    /**
+     * @brief Construct an inter-water handler from a state and a strategy.
+     *
+     * @details Takes ownership of the supplied strategy, stores the provided
+     * state, and initializes the non-Coulomb pairs for the configured water
+     * model.
+     *
+     * @param state The inter-water parameters.
+     * @param strategy The strategy object used to evaluate the interaction.
+     */
+    InterWater::InterWater(
+        InterWaterState                     state,
+        std::unique_ptr<InterWaterStrategy> strategy
+    )
+        : _state{std::move(state)}, _strategy{std::move(strategy)}
+    {
+        initState();
+    }
+
+    /**
+     * @brief Apply radial cutoffs to configured inter-water non-Coulomb pairs.
+     *
+     * @details Uses the explicit non-Coulomb cutoff when configured, otherwise
+     * falls back to the Coulomb cutoff. O-O is always updated, while O-H and
+     * H-H are only updated when oxygen-only non-Coulomb interactions are
+     * disabled.
+     */
+    void InterWater::setNonCoulombCutOffRadii() const
+    {
+        const auto radialCutOff =
+            settings::PotentialSettings::getNonCoulombRadiusCutOff().value_or(
+                settings::PotentialSettings::getCoulombRadiusCutOff()
+            );
+
+        const auto setCutOff = [radialCutOff](const auto &nonCoulombPair)
+        {
+            if (nonCoulombPair != nullptr)
+                nonCoulombPair->setRadialCutOff(radialCutOff);
+        };
+
+        setCutOff(_state._nonCoulombPairOO);
+
+        if (!_state._oxygenOnlyNonCoulomb)
+        {
+            setCutOff(_state._nonCoulombPairOH);
+            setCutOff(_state._nonCoulombPairHH);
+        }
+    }
+
+    /**
+     * @brief Initialize the non-Coulomb pairs for the configured inter-water
+     * model.
+     *
+     * @details Sets up energy and force cutoff values for the three inter-water
+     * non-Coulomb pairs (OO, OH, HH) by evaluating them at their radial cutoff
+     * distances.
+     */
+    void InterWater::initNonCoulombPairs() const
+    {
+        const auto setForceAndEnergyCutOff = [](const auto &nonCoulombPair)
+        {
+            if (nonCoulombPair == nullptr)
+                return;
+
+            const auto [energyCutOff, forceCutOff] =
+                nonCoulombPair->calculate(nonCoulombPair->getRadialCutOff());
+            nonCoulombPair->setEnergyCutOff(energyCutOff);
+            nonCoulombPair->setForceCutOff(forceCutOff);
+        };
+
+        setForceAndEnergyCutOff(_state._nonCoulombPairOO);
+        setForceAndEnergyCutOff(_state._nonCoulombPairOH);
+        setForceAndEnergyCutOff(_state._nonCoulombPairHH);
+    }
+
+}   // namespace waterModel
