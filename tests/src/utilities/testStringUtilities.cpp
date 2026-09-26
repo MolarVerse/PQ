@@ -27,7 +27,8 @@
 #include <cstdio>       // for remove
 #include <filesystem>   // for create_directory
 #include <format>
-#include <fstream>     // for ofstream
+#include <fstream>   // for ofstream
+#include <mstd/file.hpp>
 #include <stdexcept>   // for out_of_range and invalid_argument
 #include <string>      // for string, allocator
 
@@ -178,9 +179,9 @@ TEST(TestStringUtilities, fileExists)
     std::ofstream out(file);
     out.close();
     std::filesystem::create_directory(directory);
-    EXPECT_TRUE(utilities::fileExists(file));
-    EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
-    EXPECT_FALSE(utilities::fileExists(directory));
+    EXPECT_TRUE(mstd::File(file).exists());
+    EXPECT_FALSE(mstd::File("testFile2.txt").exists());
+    EXPECT_FALSE(mstd::File(directory).exists());
     std::filesystem::remove(file);
     std::filesystem::remove(directory);
 }

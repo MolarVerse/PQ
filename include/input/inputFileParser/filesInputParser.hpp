@@ -24,9 +24,7 @@
 
 #define _FILES_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 #include "intraNonBonded.hpp"
 
 namespace input
@@ -53,37 +51,17 @@ namespace input
             std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
         );
 
-        void parseIntraNonBondedFile(const std::vector<std::string> &, size_t);
-        void parseTopologyFilename(
-            const std::vector<std::string> &,
-            size_t
-        ) const;
-        void parseParameterFilename(
-            const std::vector<std::string> &,
-            size_t
-        ) const;
-        void parseStartFilename(const std::vector<std::string> &, size_t) const;
-        void parseRingPolymerStartFilename(
-            const std::vector<std::string> &,
-            size_t
-        ) const;
-
-        void parseMoldescriptorFilename(
-            const std::vector<std::string> &,
-            size_t
-        ) const;
-
-        void parseGuffDatFilename(
-            const std::vector<std::string> &,
-            size_t
-        ) const;
-        static void parseGuffPath(const std::vector<std::string> &, size_t);
-        void        parseMShakeFilename(
-                   const std::vector<std::string> &,
-                   size_t
-               ) const;
-        void parseDFTBFilename(const std::vector<std::string> &, size_t) const;
-        static void parseTMFilename(const std::vector<std::string> &, size_t);
+        void addIntraNonBondedFileKey();
+        void addTopologyFileKey();
+        void addParameterFileKey();
+        void addStartFileKey();
+        void addRingPolymerStartFileKey();
+        void addMoldescriptorFileKey();
+        void addGuffDatFileKey();
+        void addGuffPathKey();
+        void addMShakeFileKey();
+        void addDFTBFileKey();
+        void addTMFileKey();
     };
 
 }   // namespace input

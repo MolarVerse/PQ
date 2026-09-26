@@ -43,6 +43,9 @@ using namespace input;
 TEST_F(TestInputFileReader, testParseTopologyFilename)
 {
     FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("topology_file"));
+    const auto &parseFunc = funcMap.at("topology_file");
 
     std::vector<std::string> lineElements = {
         "topology_file",
@@ -50,13 +53,16 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
         "topology.txt"
     };
     EXPECT_THROW_MSG(
-        parser.parseTopologyFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open topology file - filename = topology.txt"
+        "Invalid value \"topology.txt\" for key \"topology_file\" at line 0 in "
+        "input file. Possible options are: existing file path"
     );
 
+    clearParser(parser);
+
     lineElements = {"topology_file", "=", "data/topologyReader/topology.top"};
-    parser.parseTopologyFilename(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getTopologyFileName(),
         "data/topologyReader/topology.top"
@@ -73,6 +79,9 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
 TEST_F(TestInputFileReader, testParseParameterFilename)
 {
     FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("parameter_file"));
+    const auto &parseFunc = funcMap.at("parameter_file");
 
     std::vector<std::string> lineElements = {
         "parameter_file",
@@ -80,17 +89,20 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
         "param.txt"
     };
     EXPECT_THROW_MSG(
-        parser.parseParameterFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open parameter file - filename = param.txt"
+        "Invalid value \"param.txt\" for key \"parameter_file\" at line 0 in "
+        "input file. Possible options are: existing file path"
     );
+
+    clearParser(parser);
 
     lineElements = {
         "parameter_file",
         "=",
         "data/parameterFileReader/param.param"
     };
-    parser.parseParameterFilename(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getParameterFilename(),
         "data/parameterFileReader/param.param"
@@ -103,24 +115,31 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
  */
 TEST_F(TestInputFileReader, parseIntraNonBondedFile)
 {
-    FilesInputParser         parser(_engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("intra_nonbonded_file"));
+    const auto &parseFunc = funcMap.at("intra_nonbonded_file");
+
     std::vector<std::string> lineElements = {
         "intra-nonBonded_file",
         "=",
         "intra.dat"
     };
     EXPECT_THROW_MSG(
-        parser.parseIntraNonBondedFile(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Intra non bonded file \"intra.dat\" File not found"
+        "Invalid value \"intra.dat\" for key \"intra-nonBonded_file\" at line "
+        "0 in input file. Possible options are: existing file path"
     );
+
+    clearParser(parser);
 
     lineElements = {
         "intra-nonBonded_file",
         "=",
         "data/intraNonBondedReader/intraNonBonded.dat"
     };
-    parser.parseIntraNonBondedFile(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getIntraNonBondedFileName(),
         "data/intraNonBondedReader/intraNonBonded.dat"
@@ -133,20 +152,23 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
  */
 TEST_F(TestInputFileReader, testStartFileName)
 {
-    FilesInputParser         parser(_engine->getIntraNonBonded());
-    std::vector<std::string> lineElements = {
-        "startFile_name",
-        "=",
-        "start.xyz"
-    };
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("start_file"));
+    const auto &parseFunc = funcMap.at("start_file");
+
+    std::vector<std::string> lineElements = {"start_file", "=", "start.xyz"};
     EXPECT_THROW_MSG(
-        parser.parseStartFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open start file - filename = start.xyz"
+        "Invalid value \"start.xyz\" for key \"start_file\" at line 0 in "
+        "input file. Possible options are: existing file path"
     );
 
-    lineElements = {"startFile_name", "=", "data/atomSection/testProcess.rst"};
-    parser.parseStartFilename(lineElements, 0);
+    clearParser(parser);
+
+    lineElements = {"start_file", "=", "data/atomSection/testProcess.rst"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getStartFileName(),
         "data/atomSection/testProcess.rst"
@@ -159,25 +181,32 @@ TEST_F(TestInputFileReader, testStartFileName)
  */
 TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
-    FilesInputParser         parser(_engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("moldescriptorfile_name"));
+    const auto &parseFunc = funcMap.at("moldescriptorfile_name");
+
     std::vector<std::string> lineElements = {
         "moldescriptorFile_name",
         "=",
         "moldescriptor.txt"
     };
     EXPECT_THROW_MSG(
-        parser.parseMoldescriptorFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open moldescriptor file - filename = \"moldescriptor.txt\" - "
-        "file not found"
+        "Invalid value \"moldescriptor.txt\" for key "
+        "\"moldescriptorFile_name\" at line 0 in "
+        "input file. Possible options are: existing file path"
     );
+
+    clearParser(parser);
 
     lineElements = {
         "moldescriptorFile_name",
         "=",
         "data/moldescriptorReader/moldescriptor.dat"
     };
-    parser.parseMoldescriptorFilename(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getMolDescriptorFileName(),
         "data/moldescriptorReader/moldescriptor.dat"
@@ -190,12 +219,16 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    FilesInputParser               parser(_engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("guff_path"));
+    const auto                    &parseFunc    = funcMap.at("guff_path");
     const std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
     EXPECT_THROW_MSG(
-        parser.parseGuffPath(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        R"(The "guff_path" keyword id deprecated. Please use "guffdat_file" instead.)"
+        "Deprecated key 'guff_path' used at line 0.\n"
+        R"(The "guff_path" keyword is deprecated. Please use "guffdat_file" instead.)"
     );
 }
 
@@ -205,16 +238,23 @@ TEST_F(TestInputFileReader, testGuffPath)
  */
 TEST_F(TestInputFileReader, guffDatFilename)
 {
-    FilesInputParser         parser(_engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("guffdat_file"));
+    const auto &parseFunc = funcMap.at("guffdat_file");
+
     std::vector<std::string> lineElements = {"guffdat_file", "=", "guff.dat"};
     EXPECT_THROW_MSG(
-        parser.parseGuffDatFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open guff file - filename = guff.dat"
+        "Invalid value \"guff.dat\" for key \"guffdat_file\" at line 0 in "
+        "input file. Possible options are: existing file path"
     );
 
+    clearParser(parser);
+
     lineElements = {"guffdat_file", "=", "data/guffDatReader/guff.dat"};
-    parser.parseGuffDatFilename(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getGuffDatFileName(),
         "data/guffDatReader/guff.dat"
@@ -226,24 +266,31 @@ TEST_F(TestInputFileReader, guffDatFilename)
  */
 TEST_F(TestInputFileReader, testRpmdStartFileName)
 {
-    FilesInputParser         parser(_engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("rpmd_start_file"));
+    const auto &parseFunc = funcMap.at("rpmd_start_file");
+
     std::vector<std::string> lineElements = {
         "rpmd_start_file",
         "=",
         "rpmd_start.xyz"
     };
     EXPECT_THROW_MSG(
-        parser.parseRingPolymerStartFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open ring polymer start file - filename = rpmd_start.xyz"
+        "Invalid value \"rpmd_start.xyz\" for key \"rpmd_start_file\" "
+        "at line 0 in input file. Possible options are: existing file path"
     );
+
+    clearParser(parser);
 
     lineElements = {
         "rpmd_start_file",
         "=",
         "data/inputFileReader/inputFile.txt"
     };
-    parser.parseRingPolymerStartFilename(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getRingPolymerStartFileName(),
         "data/inputFileReader/inputFile.txt"
@@ -255,17 +302,24 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
  */
 TEST_F(TestInputFileReader, testMShakeFileName)
 {
-    FilesInputParser         parser(_engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("mshake_file"));
+    const auto &parseFunc = funcMap.at("mshake_file");
+
     std::vector<std::string> lineElements = {"mshake_file", "=", "mshake.dat"};
 
     EXPECT_THROW_MSG(
-        parser.parseMShakeFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open mshake file - filename = mshake.dat"
+        "Invalid value \"mshake.dat\" for key \"mshake_file\" at line 0 in "
+        "input file. Possible options are: existing file path"
     );
 
+    clearParser(parser);
+
     lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
-    parser.parseMShakeFilename(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getMShakeFileName(),
         "data/mshakeReader/mshake.dat"
@@ -277,7 +331,11 @@ TEST_F(TestInputFileReader, testMShakeFileName)
  */
 TEST_F(TestInputFileReader, testDFTBFileName)
 {
-    FilesInputParser         parser(_engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("dftb_file"));
+    const auto &parseFunc = funcMap.at("dftb_file");
+
     std::vector<std::string> lineElements = {
         "dftb_file",
         "=",
@@ -285,13 +343,16 @@ TEST_F(TestInputFileReader, testDFTBFileName)
     };
 
     EXPECT_THROW_MSG(
-        parser.parseDFTBFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open DFTB setup file - filename = dftb_in.template"
+        "Invalid value \"dftb_in.template\" for key \"dftb_file\" at line 0 in "
+        "input file. Possible options are: existing file path"
     );
 
+    clearParser(parser);
+
     lineElements = {"dftb_file", "=", "data/dftbReader/dftb_in.template"};
-    parser.parseDFTBFilename(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getDFTBFileName(),
         "data/dftbReader/dftb_in.template"
@@ -303,7 +364,11 @@ TEST_F(TestInputFileReader, testDFTBFileName)
  */
 TEST_F(TestInputFileReader, testTMFileName)
 {
-    FilesInputParser         parser(_engine->getIntraNonBonded());
+    FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto       funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("turbomole_file"));
+    const auto &parseFunc = funcMap.at("turbomole_file");
+
     std::vector<std::string> lineElements = {
         "turbomole_file",
         "=",
@@ -311,17 +376,21 @@ TEST_F(TestInputFileReader, testTMFileName)
     };
 
     EXPECT_THROW_MSG(
-        parser.parseTMFilename(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Cannot open TURBOMOLE setup file - filename = tm_define.template"
+        "Invalid value \"tm_define.template\" for key \"turbomole_file\" at "
+        "line 0 in "
+        "input file. Possible options are: existing file path"
     );
+
+    clearParser(parser);
 
     lineElements = {
         "turbomole_file",
         "=",
         "data/turbomoleReader/tm_define.template"
     };
-    input::FilesInputParser::parseTMFilename(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getTMFileName(),
         "data/turbomoleReader/tm_define.template"

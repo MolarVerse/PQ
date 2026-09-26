@@ -157,6 +157,10 @@ namespace input
         {
             return Converter<T>::describeDomain();
         }
+        else if constexpr (std::same_as<T, mstd::File>)
+        {
+            return Converter<T>::describeDomain();
+        }
         else
         {
             return "<value>";

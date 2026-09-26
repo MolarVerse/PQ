@@ -10,3 +10,4 @@
 - migrate `TimingsInputParser`
 - migrate `ConstraintsInputParser`
 - migrate `ResetKineticsInputParser`
+- migrate `FilesInputParser`
