@@ -71,7 +71,6 @@ namespace
 
         Molecule water;
         water.setMoltype(kWaterType);
-        water.setNumberOfAtoms(3);
 
         for (size_t i = 0; i < 3; ++i)
         {

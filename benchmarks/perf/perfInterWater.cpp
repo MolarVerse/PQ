@@ -112,7 +112,6 @@ int main()
 
                 Molecule molecule;
                 molecule.setMoltype(WATER_TYPE);
-                molecule.setNumberOfAtoms(3);
                 molecule.addAtom(
                     makeAtom("O", oxygen, -0.82, OXYGEN_ATOMIC_NUMBER)
                 );
