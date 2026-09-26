@@ -11,3 +11,4 @@
 - migrate `ConstraintsInputParser`
 - migrate `ResetKineticsInputParser`
 - migrate `FilesInputParser`
+- rework error messages when `tryParse` fails

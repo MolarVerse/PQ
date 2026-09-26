@@ -56,7 +56,7 @@ TEST_F(TestInputFileReader, testParseNScale)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-1\" for key \"nscale\" at line 0 in input file. "
-        "Possible options are: positive integer"
+        "Value must be a positive integer"
     );
 }
 
@@ -83,7 +83,7 @@ TEST_F(TestInputFileReader, testParseFScale)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-1\" for key \"fscale\" at line 0 in input file. "
-        "Possible options are: positive integer"
+        "Value must be a positive integer"
     );
 }
 
@@ -110,7 +110,7 @@ TEST_F(TestInputFileReader, testParseNReset)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-1\" for key \"nreset\" at line 0 in input file. "
-        "Possible options are: positive integer"
+        "Value must be a positive integer"
     );
 }
 
@@ -137,7 +137,7 @@ TEST_F(TestInputFileReader, testParseFReset)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-1\" for key \"freset\" at line 0 in input file. "
-        "Possible options are: positive integer"
+        "Value must be a positive integer"
     );
 }
 
@@ -164,7 +164,7 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-1\" for key \"nreset_angular\" at line 0 in input "
-        "file. Possible options are: positive integer"
+        "file. Value must be a positive integer"
     );
 }
 
@@ -191,6 +191,6 @@ TEST_F(TestInputFileReader, testParseFResetAngular)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-1\" for key \"freset_angular\" at line 0 in input "
-        "file. Possible options are: positive integer"
+        "file. Value must be a positive integer"
     );
 }
