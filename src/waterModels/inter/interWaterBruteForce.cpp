@@ -40,8 +40,8 @@ using enum molsys::HybridZone;
  */
 void InterWaterStrategyBruteForce::calculate(
     const InterWaterState                        &state,
-    molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physData,
+    molsys::SimulationBox                        &simulationBox,
+    physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulPot,
     CellList & /*cellList*/
 )
@@ -53,10 +53,10 @@ void InterWaterStrategyBruteForce::calculate(
     auto totalNonCoulombEnergy = 0.0;
 
     size_t idxI = 0;
-    for (auto &water1 : simBox.getWaterTypeMolecules())
+    for (auto &water1 : simulationBox.getWaterTypeMolecules())
     {
         size_t idxJ = 0;
-        for (auto &water2 : simBox.getWaterTypeMolecules())
+        for (auto &water2 : simulationBox.getWaterTypeMolecules())
         {
             // avoid double counting and self interaction
             if (idxJ >= idxI)
@@ -79,7 +79,7 @@ void InterWaterStrategyBruteForce::calculate(
                         atomB,
                         coulPot,
                         rCutSquared,
-                        simBox,
+                        simulationBox,
                         *nonCoulPairPtr,
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
@@ -107,21 +107,21 @@ void InterWaterStrategyBruteForce::calculate(
         ++idxI;
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
  * @brief Compute core-to-outer Coulomb interactions by brute force.
  *
- * @param simBox Simulation box containing molecules.
- * @param physData Physical data to store energy results.
+ * @param simulationBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
     const InterWaterState & /*state*/,
-    molsys::SimulationBox                        &simBox,
-    PhysicalData                                 &physData,
+    molsys::SimulationBox                        &simulationBox,
+    PhysicalData                                 &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
 )
@@ -131,14 +131,15 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
 
     auto totalCoulombEnergy = 0.0;
 
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
 
-    for (auto &water1 : simBox.getMoleculesInsideZone(CORE))
+    for (auto &water1 : simulationBox.getMoleculesInsideZone(CORE))
     {
         if (water1.getMoltype() != waterTypeValue)
             continue;
 
-        for (auto &water2 : simBox.getMMMolecules())
+        for (auto &water2 : simulationBox.getMMMolecules())
         {
             if (water2.getMoltype() != waterTypeValue)
                 continue;
@@ -157,7 +158,7 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
                     atomB,
                     coulombPotential,
                     rCutSquared,
-                    simBox,
+                    simulationBox,
                     totalCoulombEnergy
                 );
             };
@@ -179,21 +180,21 @@ void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
 }
 
 /**
  * @brief Compute layer-to-outer Coulomb and non-Coulomb interactions.
  *
  * @param state Inter-water parameters.
- * @param simBox Simulation box containing molecules.
- * @param physData Physical data to store energy results.
+ * @param simulationBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     const InterWaterState                        &state,
-    molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physData,
+    molsys::SimulationBox                        &simulationBox,
+    physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     molsys::CellList & /*cellList*/
 )
@@ -204,9 +205,10 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
     auto totalCoulombEnergy    = 0.0;
     auto totalNonCoulombEnergy = 0.0;
 
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
 
-    for (auto &water1 : simBox.getInactiveMolecules())
+    for (auto &water1 : simulationBox.getInactiveMolecules())
     {
         if (water1.getHybridZone() == CORE)
             continue;
@@ -214,7 +216,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
         if (water1.getMoltype() != waterTypeValue)
             continue;
 
-        for (auto &water2 : simBox.getMMMolecules())
+        for (auto &water2 : simulationBox.getMMMolecules())
         {
             if (water2.getMoltype() != waterTypeValue)
                 continue;
@@ -236,7 +238,7 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
                         atomB,
                         coulombPotential,
                         rCutSquared,
-                        simBox,
+                        simulationBox,
                         *nonCoulPairPtr,
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
@@ -261,42 +263,42 @@ void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
         }
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }
 
 /**
  * @brief Compute outer-to-outer interactions by brute force.
  *
  * @param state Inter-water parameters.
- * @param simBox Simulation box containing molecules.
- * @param physData Physical data to store energy results.
+ * @param simulationBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  * @param cellList Cell list structure (unused).
  */
 void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
     const InterWaterState                        &state,
-    molsys::SimulationBox                        &simBox,
-    PhysicalData                                 &physData,
+    molsys::SimulationBox                        &simulationBox,
+    PhysicalData                                 &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList                                     &cellList
 )
 {
-    calculate(state, simBox, physData, coulombPotential, cellList);
+    calculate(state, simulationBox, physicalData, coulombPotential, cellList);
 }
 
 /**
  * @brief Compute smoothing-zone interactions against MM molecules.
  *
  * @param state Inter-water parameters.
- * @param simBox Simulation box containing molecules.
- * @param physData Physical data to store energy results.
+ * @param simulationBox Simulation box containing molecules.
+ * @param physicalData Physical data to store energy results.
  * @param coulombPotential Coulomb potential evaluator.
  */
 void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     const InterWaterState                        &state,
-    molsys::SimulationBox                        &simBox,
-    physicalData::PhysicalData                   &physData,
+    molsys::SimulationBox                        &simulationBox,
+    physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
     CellList & /*cellList*/
 )
@@ -307,14 +309,15 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     auto totalCoulombEnergy    = 0.0;
     auto totalNonCoulombEnergy = 0.0;
 
-    const auto waterTypeValue = simBox.getWaterType().value_or(MolType{0});
+    const auto waterTypeValue =
+        simulationBox.getWaterType().value_or(MolType{0});
 
-    for (auto &water1 : simBox.getMoleculesInsideZone(SMOOTHING))
+    for (auto &water1 : simulationBox.getMoleculesInsideZone(SMOOTHING))
     {
         if (water1.getMoltype() != waterTypeValue)
             continue;
 
-        for (auto &water2 : simBox.getMoleculesOutsideZone(SMOOTHING))
+        for (auto &water2 : simulationBox.getMoleculesOutsideZone(SMOOTHING))
         {
             if (water2.getMoltype() != waterTypeValue)
                 continue;
@@ -336,7 +339,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                         atomB,
                         coulombPotential,
                         rCutSquared,
-                        simBox,
+                        simulationBox,
                         *nonCoulPairPtr,
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
@@ -362,7 +365,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
     }
 
     size_t idxI = 0;
-    for (auto &water1 : simBox.getMoleculesInsideZone(SMOOTHING))
+    for (auto &water1 : simulationBox.getMoleculesInsideZone(SMOOTHING))
     {
         if (water1.getMoltype() != waterTypeValue)
         {
@@ -371,7 +374,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
         }
 
         size_t idxJ = 0;
-        for (auto &water2 : simBox.getMoleculesInsideZone(SMOOTHING))
+        for (auto &water2 : simulationBox.getMoleculesInsideZone(SMOOTHING))
         {
             if (water2.getMoltype() != waterTypeValue)
             {
@@ -402,7 +405,7 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
                         atomB,
                         coulombPotential,
                         rCutSquared,
-                        simBox,
+                        simulationBox,
                         *nonCoulPairPtr,
                         totalCoulombEnergy,
                         totalNonCoulombEnergy
@@ -432,6 +435,6 @@ void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
         ++idxI;
     }
 
-    physData.addCoulombEnergy(totalCoulombEnergy);
-    physData.addNonCoulombEnergy(totalNonCoulombEnergy);
+    physicalData.addCoulombEnergy(totalCoulombEnergy);
+    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
 }

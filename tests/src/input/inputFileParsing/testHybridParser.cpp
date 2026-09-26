@@ -48,7 +48,7 @@ TEST_F(TestInputFileReader, parseInnerRegionCenter)
     ASSERT_TRUE(HybridSettings::getInnerRegionCenter().has_value());
     EXPECT_EQ(
         HybridSettings::getInnerRegionCenter(),
-        std::optional<std::vector<int>>({2, 4})
+        std::optional<std::vector<size_t>>({2, 4})
     );
 }
 

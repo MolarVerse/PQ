@@ -83,11 +83,11 @@ namespace resetKinetics
         );
         static void resetMomentum(
             molsys::SimulationBox &,
-            const linearAlgebra::Vec3D &momentum
+            const linalg::Vec3D &momentum
         );
         static void resetAngularMomentum(
             molsys::SimulationBox &,
-            const linearAlgebra::Vec3D &angularMomentum
+            const linalg::Vec3D &angularMomentum
         );
 
         /********************

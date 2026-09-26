@@ -19,3 +19,27 @@
 
 <GPL_HEADER>
 ******************************************************************************/
+
+#ifndef _KEY_REGISTRY_HPP_
+#define _KEY_REGISTRY_HPP_
+
+#include "keyMetaData.hpp"
+#include "keyValidatorBase.hpp"
+
+namespace input
+{
+    template <typename T>
+    struct KeyRegistry
+    {
+        using CustomParser = std::function<std::optional<T>(std::string_view)>;
+
+        KeyMetadata                      metadata;
+        std::optional<T>                 defaultValue = std::nullopt;
+        std::optional<std::vector<T>>    allowed      = std::nullopt;
+        CustomParser                     customParser = nullptr;
+        std::function<void(const T &)>   onSet        = nullptr;
+        std::shared_ptr<KeyValidator<T>> validator    = nullptr;
+    };
+}   // namespace input
+
+#endif   // _KEY_REGISTRY_HPP_

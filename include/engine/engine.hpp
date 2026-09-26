@@ -63,7 +63,7 @@ namespace engine
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
         std::shared_ptr<molsys::CellList>               _cellList;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
-        std::shared_ptr<forceField::ForceField>         _forceField;
+        std::shared_ptr<ff::ForceField>                 _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
 
         std::unique_ptr<waterModel::IntraWater> _intraWater =
@@ -102,7 +102,7 @@ namespace engine
         const std::shared_ptr<
             intraNonBonded::IntraNonBonded> &getIntraNonBonded() const;
         [[nodiscard]]
-        const std::shared_ptr<forceField::ForceField> &getForceField() const;
+        const std::shared_ptr<ff::ForceField> &getForceField() const;
         [[nodiscard]]
         const std::shared_ptr<pot::Potential> &getPotential() const;
 

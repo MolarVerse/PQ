@@ -34,13 +34,13 @@ namespace molsys
 namespace virial
 {
     [[nodiscard]]
-    linearAlgebra::tensor3D calculateQMVirial(const molsys::SimulationBox&);
+    linalg::tensor3D calculateQMVirial(const molsys::SimulationBox&);
 
     [[nodiscard]]
-    linearAlgebra::tensor3D calculateVirial(molsys::SimulationBox&);
+    linalg::tensor3D calculateVirial(molsys::SimulationBox&);
 
     [[nodiscard]]
-    linearAlgebra::tensor3D intraMolecularVirialCorrection(
+    linalg::tensor3D intraMolecularVirialCorrection(
         const molsys::SimulationBox&
     );
 }   // namespace virial

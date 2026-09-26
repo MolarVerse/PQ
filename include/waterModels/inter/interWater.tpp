@@ -45,7 +45,7 @@ namespace waterModel
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
         double                                        rCutSquared,
-        const molsys::SimulationBox                  &simBox,
+        const molsys::SimulationBox                  &simulationBox,
         const pot::NonCoulombPair                    &nonCoulPair,
         double                                       &coulombEnergy,
         double                                       &nonCoulombEnergy
@@ -56,7 +56,7 @@ namespace waterModel
 
         auto dxyz = xyz_i - xyz_j;
 
-        const auto txyz = -simBox.calcShiftVector(dxyz);
+        const auto txyz = -simulationBox.calcShiftVector(dxyz);
 
         dxyz += txyz;
 
@@ -106,7 +106,7 @@ namespace waterModel
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
         double                                        rCutSquared,
-        const molsys::SimulationBox                  &simBox,
+        const molsys::SimulationBox                  &simulationBox,
         double                                       &coulombEnergy
     )
     {
@@ -115,7 +115,7 @@ namespace waterModel
 
         auto dxyz = xyz_i - xyz_j;
 
-        const auto txyz = -simBox.calcShiftVector(dxyz);
+        const auto txyz = -simulationBox.calcShiftVector(dxyz);
 
         dxyz += txyz;
 
@@ -157,7 +157,7 @@ namespace waterModel
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
         double                                        rCutSquared,
-        const molsys::SimulationBox                  &simBox,
+        const molsys::SimulationBox                  &simulationBox,
         const pot::NonCoulombPair                    &nonCoulPair,
         double                                       &coulombEnergy,
         double                                       &nonCoulombEnergy
@@ -168,7 +168,7 @@ namespace waterModel
 
         auto dxyz = xyz_i - xyz_j;
 
-        const auto txyz = -simBox.calcShiftVector(dxyz);
+        const auto txyz = -simulationBox.calcShiftVector(dxyz);
 
         dxyz += txyz;
 

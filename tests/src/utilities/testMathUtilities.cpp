@@ -41,11 +41,11 @@ TEST(TestMathUtilities, compare)
         compare(value1, value1 + std::numeric_limits<double>::epsilon())
     );
 
-    const auto &value2 = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
+    const auto &value2 = linalg::Vec3D(1.0, 2.0, 3.0);
     EXPECT_TRUE(compare(value2, value2));
     EXPECT_FALSE(compare(
         value2,
-        value2 + linearAlgebra::Vec3D(
+        value2 + linalg::Vec3D(
                      value2[0],
                      value2[1],
                      std::numeric_limits<double>::epsilon()
@@ -85,8 +85,8 @@ TEST(TestMathUtilities, compareWithTolerance)
  */
 TEST(TestMathUtilities, compareVec3DWithTolerance)
 {
-    const auto vec1 = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
-    const auto vec2 = linearAlgebra::Vec3D(1.0 + 1e-9, 2.0, 3.0 - 1e-9);
+    const auto vec1 = linalg::Vec3D(1.0, 2.0, 3.0);
+    const auto vec2 = linalg::Vec3D(1.0 + 1e-9, 2.0, 3.0 - 1e-9);
     EXPECT_TRUE(compare(vec1, vec2, 1e-8));
     EXPECT_FALSE(compare(vec1, vec2, 1e-10));
 }

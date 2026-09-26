@@ -34,7 +34,7 @@
 using namespace engine;
 using namespace molsys;
 using namespace physicalData;
-using namespace forceField;
+using namespace ff;
 using namespace intraNonBonded;
 using namespace virial;
 using namespace pot;
@@ -55,7 +55,7 @@ Engine::Engine()
       _simulationBox{std::make_shared<molsys::SimulationBox>()},
       _cellList{std::make_shared<molsys::CellList>()},
       _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
-      _forceField{std::make_shared<forceField::ForceField>()},
+      _forceField{std::make_shared<ff::ForceField>()},
       _constraints{std::make_shared<constraints::Constraints>()}
 {
 }
@@ -161,9 +161,9 @@ PhysicalData &Engine::getAveragePhysicalData() { return _averagePhysicalData; }
 /**
  * @brief get the reference to the force field
  *
- * @return const std::shared_ptr<forceField::ForceField>&
+ * @return const std::shared_ptr<ff::ForceField>&
  */
-const std::shared_ptr<forceField::ForceField> &Engine::getForceField() const
+const std::shared_ptr<ff::ForceField> &Engine::getForceField() const
 {
     return _forceField;
 }

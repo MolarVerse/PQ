@@ -22,71 +22,77 @@
 
 #include "jCouplingType.hpp"
 
-using namespace forceField;
-
-/**
- * @brief Construct a new JCouplingType::JCouplingType object
- *
- * @param id
- * @param params
- */
-JCouplingType::JCouplingType(const size_t id, const JCouplingParams &params)
-    : _id(id), _params(params)
+namespace ff
 {
-}
 
-/**
- * @brief operator overload for the comparison of two JCouplingType objects
- *
- * @param self
- * @param other
- * @return true
- * @return false
- */
-bool forceField::operator==(
-    const JCouplingType &self,
-    const JCouplingType &other
-)
-{
-    return self._id == other._id && self._params == other._params;
-}
+    /**
+     * @brief Construct a new JCouplingType::JCouplingType object
+     *
+     * @param id
+     * @param params
+     */
+    JCouplingType::JCouplingType(const size_t id, const JCouplingParams &params)
+        : _id(id), _params(params)
+    {
+    }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief operator overload for the comparison of two JCouplingType objects
+     *
+     * @param self
+     * @param other
+     * @return true
+     * @return false
+     */
+    bool operator==(const JCouplingType &self, const JCouplingType &other)
+    {
+        return self._id == other._id && self._params == other._params;
+    }
 
-/**
- * @brief get the id
- *
- * @return size_t
- */
-size_t JCouplingType::getId() const { return _id; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the JCouplingParams
- *
- * @return const JCouplingParams&
- */
-const JCouplingParams &JCouplingType::getParams() const { return _params; }
+    /**
+     * @brief get the id
+     *
+     * @return size_t
+     */
+    size_t JCouplingType::getId() const { return _id; }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief get the JCouplingParams
+     *
+     * @return const JCouplingParams&
+     */
+    const JCouplingParams &JCouplingType::getParams() const { return _params; }
 
-/**
- * @brief set if the upper symmetry should be used
- *
- * @param boolean
- */
-void JCouplingType::setUpperSymmetry(bool boolean) { _upperSymmetry = boolean; }
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set if the lower symmetry should be used
- *
- * @param boolean
- */
-void JCouplingType::setLowerSymmetry(bool boolean) { _lowerSymmetry = boolean; }
+    /**
+     * @brief set if the upper symmetry should be used
+     *
+     * @param boolean
+     */
+    void JCouplingType::setUpperSymmetry(bool boolean)
+    {
+        _upperSymmetry = boolean;
+    }
+
+    /**
+     * @brief set if the lower symmetry should be used
+     *
+     * @param boolean
+     */
+    void JCouplingType::setLowerSymmetry(bool boolean)
+    {
+        _lowerSymmetry = boolean;
+    }
+
+}   // namespace ff

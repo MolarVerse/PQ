@@ -41,7 +41,7 @@ TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
     out.setFilename(path);
 
     OrthorhombicBox box;
-    box.setBoxDimensions(linearAlgebra::Vec3D(10.0, 20.0, 30.0));
+    box.setBoxDimensions(linalg::Vec3D(10.0, 20.0, 30.0));
 
     out.write(7, box);
     out.close();
@@ -66,7 +66,7 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
     out.setFilename(path);
 
     OrthorhombicBox box;
-    box.setBoxDimensions(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    box.setBoxDimensions(linalg::Vec3D(1.0, 2.0, 3.0));
 
     out.write(1, box);
     out.write(2, box);

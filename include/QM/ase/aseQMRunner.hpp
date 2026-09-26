@@ -50,7 +50,7 @@ namespace QM
         ~AseQMRunner() override;
 
         void run(
-            molsys::SimulationBox      &simBox,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             molsys::Periodicity         per
         ) override;

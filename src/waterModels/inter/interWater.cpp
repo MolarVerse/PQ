@@ -46,13 +46,13 @@ InterWater::InterWater()
 /**
  * @brief Dispatch inter-water calculations via the active strategy.
  *
- * @param simBox Simulation box containing molecules.
+ * @param simulationBox Simulation box containing molecules.
  * @param physicalData Physical data to store energy results.
  * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculate(
-    molsys::SimulationBox                        &simBox,
+    molsys::SimulationBox                        &simulationBox,
     physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
     molsys::CellList                             &cellList
@@ -62,20 +62,25 @@ void InterWater::calculate(
         return;
 
     auto _ = scopedTimer(TimerId::WaterInterPotential, "Calculate");
-    _strategy
-        ->calculate(_state, simBox, physicalData, sharedCoulombPot, cellList);
+    _strategy->calculate(
+        _state,
+        simulationBox,
+        physicalData,
+        sharedCoulombPot,
+        cellList
+    );
 }
 
 /**
  * @brief Dispatch inter-water QMMM force calculations via the active strategy.
  *
- * @param simBox Simulation box containing molecules.
+ * @param simulationBox Simulation box containing molecules.
  * @param physicalData Physical data to store energy results.
  * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculateQMMMForces(
-    molsys::SimulationBox                        &simBox,
+    molsys::SimulationBox                        &simulationBox,
     physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
     molsys::CellList                             &cellList
@@ -89,7 +94,7 @@ void InterWater::calculateQMMMForces(
             scopedTimer(TimerId::WaterInterPotential, "QM/MM Core to Outer");
         _strategy->calculateCoreToOuterForces(
             _state,
-            simBox,
+            simulationBox,
             physicalData,
             sharedCoulombPot,
             cellList
@@ -101,7 +106,7 @@ void InterWater::calculateQMMMForces(
             scopedTimer(TimerId::WaterInterPotential, "QM/MM Layer to Outer");
         _strategy->calculateLayerToOuterForces(
             _state,
-            simBox,
+            simulationBox,
             physicalData,
             sharedCoulombPot,
             cellList
@@ -113,7 +118,7 @@ void InterWater::calculateQMMMForces(
             scopedTimer(TimerId::WaterInterPotential, "QM/MM Outer to Outer");
         _strategy->calculateOuterToOuterForces(
             _state,
-            simBox,
+            simulationBox,
             physicalData,
             sharedCoulombPot,
             cellList
@@ -124,13 +129,13 @@ void InterWater::calculateQMMMForces(
 /**
  * @brief Dispatch inter-water hotspot smoothing force calculations.
  *
- * @param simBox Simulation box containing molecules.
+ * @param simulationBox Simulation box containing molecules.
  * @param physicalData Physical data to store energy results.
  * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
  * @param cellList Cell list structure used for neighbor searching.
  */
 void InterWater::calculateHotspotSmoothingMMForces(
-    molsys::SimulationBox                        &simBox,
+    molsys::SimulationBox                        &simulationBox,
     physicalData::PhysicalData                   &physicalData,
     const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
     molsys::CellList                             &cellList
@@ -142,7 +147,7 @@ void InterWater::calculateHotspotSmoothingMMForces(
     auto _ = scopedTimer(TimerId::WaterInterPotential, "QM/MM Smoothing MM");
     _strategy->calculateHotspotSmoothingMMForces(
         _state,
-        simBox,
+        simulationBox,
         physicalData,
         sharedCoulombPot,
         cellList

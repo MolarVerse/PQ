@@ -51,7 +51,6 @@ namespace
 
         molsys::Molecule molecule;
         molecule.setMoltype(molType);
-        molecule.setNumberOfAtoms(1);
         molecule.addAtom(atom);
 
         engine.getSimulationBox().addAtom(atom);
@@ -187,7 +186,7 @@ TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
     EXPECT_NO_THROW(setupHybrid(*_engine));
     EXPECT_EQ(
         _engine->getSimulationBox().getInnerRegionCenterAtomIndices(),
-        std::vector<int>{0}
+        std::vector<size_t>{0}
     );
 }
 

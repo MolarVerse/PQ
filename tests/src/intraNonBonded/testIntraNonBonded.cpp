@@ -172,7 +172,6 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
 TEST_F(TestIntraNonBonded, calculate)
 {
     auto molecule = molsys::Molecule{MolType{0}};
-    molecule.setNumberOfAtoms(2);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -201,7 +200,7 @@ TEST_F(TestIntraNonBonded, calculate)
 
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
 
     auto nonCoulombPair = pot::LennardJonesPair(

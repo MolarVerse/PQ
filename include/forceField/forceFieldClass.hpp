@@ -40,7 +40,7 @@
 #include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 
-namespace forceField
+namespace ff
 {
     /**
      * @class ForceField
@@ -179,6 +179,6 @@ namespace forceField
         [[nodiscard]] const std::vector<JCouplingType> &getJCouplTypes() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _Force_FIELD_CLASS_HPP_

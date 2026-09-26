@@ -44,7 +44,6 @@ using namespace settings;
 using namespace engine;
 using namespace thermostat;
 using namespace exc;
-using namespace constants;
 
 /**
  * @brief wrapper for thermostat setup
@@ -265,7 +264,7 @@ void ThermostatSetup::setupTemperatureRamp()
 
     const auto targetTemp   = ThermostatSettings::getTargetTemperature();
     const auto tempDelta    = targetTemp - startTemp;
-    const auto remainder    = steps % frequency == 0 ? 0 : 1;
+    const auto remainder    = steps % frequency == 0 ? 0U : 1U;
     const auto updates      = (steps / frequency) + remainder;
     const auto tempIncrease = tempDelta / static_cast<double>(updates);
 

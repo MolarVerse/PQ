@@ -1,0 +1,99 @@
+name: DevOps C++ Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - '**/*.cpp'
+              - '**/*.hpp'
+              - '**/*.c'
+              - '**/*.h'
+              - 'devops.toml'
+              - '.github/workflows/devops_cpp_check.yml'
+              - '!external/**'
+
+  cpp-check:
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
+    runs-on: ubuntu-24.04
+    name: Run DevOps C++ Checks
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          # full history so the merge-base with the PR base commit resolves
+          fetch-depth: 0
+
+      - name: Install GCC 13
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-13 g++-13
+        shell: bash
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install devops package with AST support
+        run: |
+          pip install --upgrade pip 
+          pip install -e "external/devops[ast]"
+          pip install ase
+        shell: bash
+
+      - name: Configure CMake (generate compile_commands.json)
+        run: |
+          cmake -S . -B .build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=ON \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_PERF_BENCH=ON \
+            -DBUILD_WITH_BENCHMARKING=ON
+        env:
+          CC: gcc-13
+          CXX: g++-13
+        shell: bash
+
+      - name: Run cpp_checks
+        run: |
+          if [[ -n "${BASE_SHA}" ]]; then
+            cpp_checks --base-ref "${BASE_SHA}"
+          else
+            cpp_checks
+          fi
+        env:
+          # empty on workflow_dispatch -> check all files
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+
+  cpp-check-gate:
+    if: always()
+    needs: [changes, cpp-check]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check cpp-check result
+        run: |
+          if [[ "${{ needs.cpp-check.result }}" == "failure" ]]; then
+            exit 1
+          fi
+          echo "OK — devops cpp_checks passed or was skipped (no relevant paths changed)"

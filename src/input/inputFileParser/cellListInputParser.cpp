@@ -24,19 +24,17 @@
 
 #include <cstddef>   // for size_t
 #include <format>    // for format
-#include <string>    // for allocator, operator==, string
+#include <optional>
+#include <string>   // for allocator, operator==, string
 #include <utility>
-#include <vector>   // for vector
 
 #include "celllist.hpp"
-#include "exceptions.hpp"        // for InputFileException
-#include "inputFileParser.hpp"   // for checkCommand, InputFileParser
-#include "parserUtils.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
 #include "settings.hpp"
-#include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
-using namespace utilities;
 using namespace exc;
 
 /**
@@ -54,85 +52,75 @@ CellListInputParser::CellListInputParser(
 )
     : _cellListPtr(std::move(cellListPtr))
 {
-    addKeyword(
-        std::string("cell-list"),
-        bindMember(&CellListInputParser::parseCellListActivated, this),
-        false
-    );
-    addKeyword(
-        std::string("cell-number"),
-        bindMember(&CellListInputParser::parseNumberOfCells, this),
-        false
-    );
+    addCellListActivated();
+    addNumberOfCells();
 }
 
 /**
- * @brief Parses if cell-list should be used in simulation
+ * @brief Adds the keyword for activating the cell list
  *
- * @details Possible options are:
- * 1) "on"  - cell-list is activated
- * 2) "off" - cell-list is deactivated (default)
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if cell-list keyword is not "on"
- * or "off"
+ * @details default value is "off"
  */
-void CellListInputParser::parseCellListActivated(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void CellListInputParser::addCellListActivated()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto defaultValue = false;
+    const auto metaData     = KeyMetadata{
+            .name        = "cell-list",
+            .title       = "Activation of Cell List",
+            .description = std::format(
+            "Specifies whether the cell list is activated or the brute force "
+                "method is used - default is {}",
+            defaultValue ? "on" : "off"
+        )
+    };
 
-    const auto cellListActivated = toLowerCopy(lineElements[2]);
-
-    if (cellListActivated == "on")
-        settings::Settings::activateCellList();
-    else if (cellListActivated == "off")
-        settings::Settings::deactivateCellList();
-    else
+    const auto setValue = [](bool isActivated)
     {
-        throw InputFileException(
-            std::format(
-                "Invalid cell-list keyword \"{}\" "
-                "at line {} in input file\n"
-                "Possible keywords are \"on\" and \"off\"",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
+        if (isActivated)
+            settings::Settings::activateCellList();
+        else
+            settings::Settings::deactivateCellList();
+    };
+
+    auto &key = _getRegistry().registerKey<bool>(KeyRegistry<bool>{
+        .metadata     = metaData,
+        .defaultValue = defaultValue,
+        .onSet        = setValue
+    });
+
+    addKeyword(std::string("cell-list"), adapt(key), false);
 }
 
 /**
- * @brief Parses the number of cells used for each dimension
+ * @brief Adds the keyword for specifying the number of cells
  *
  * @details default value is 7
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if number of cells is not
- * positive
  */
-void CellListInputParser::parseNumberOfCells(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void CellListInputParser::addNumberOfCells()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto defaultValue = 7UL;
 
-    const auto cellNumber = stringToInt(lineElements[2]);
+    const auto metaData = KeyMetadata{
+        .name        = "cell-number",
+        .title       = "Number of Cells",
+        .description = std::format(
+            "Specifies the number of cells used for each dimension - default "
+            "is {}",
+            defaultValue
+        )
+    };
 
-    if (cellNumber <= 0)
-    {
-        throw InputFileException(
-            "Number of cells must be positive - number of cells = " +
-            lineElements[2]
-        );
-    }
+    const auto setValue = [this](size_t numberOfCells)
+    { _cellListPtr->setNumberOfCells(numberOfCells); };
 
-    _cellListPtr->setNumberOfCells(static_cast<size_t>(cellNumber));
+    const auto validator = RangeValidator<size_t>(1, std::nullopt);
+
+    auto &key = _getRegistry().registerKey<size_t>(KeyRegistry<size_t>{
+        .metadata     = metaData,
+        .defaultValue = defaultValue,
+        .onSet        = setValue,
+        .validator    = std::make_shared<RangeValidator<size_t>>(validator)
+    });
+
+    addKeyword(std::string("cell-number"), adapt(key), false);
 }

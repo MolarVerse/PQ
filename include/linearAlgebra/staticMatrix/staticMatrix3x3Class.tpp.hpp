@@ -27,7 +27,7 @@
 #include "exceptions.hpp"
 #include "staticMatrix3x3Class.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     /**
      * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
@@ -164,6 +164,6 @@ namespace linearAlgebra
         }
         return result;
     }
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #endif   // _STATIC_MATRIX_CLASS_3x3_TPP_

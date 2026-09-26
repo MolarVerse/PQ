@@ -63,14 +63,13 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
 
     auto molecule = molsys::Molecule();
 
     molecule.setMoltype(MolType{0});
-    molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -100,7 +99,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    auto angleFF = forceField::AngleForceField(
+    auto angleFF = ff::AngleForceField(
         {&molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
@@ -260,7 +259,6 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{0});
-    molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -280,7 +278,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    auto angleForceField = forceField::AngleForceField(
+    auto angleForceField = ff::AngleForceField(
         {&molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}

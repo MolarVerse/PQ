@@ -36,7 +36,7 @@
 
 using namespace pot;
 using namespace exc;
-using namespace linearAlgebra;
+using namespace linalg;
 
 using std::ranges::adjacent_find;
 using std::ranges::find_if;

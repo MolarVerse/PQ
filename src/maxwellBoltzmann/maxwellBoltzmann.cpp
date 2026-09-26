@@ -40,7 +40,7 @@
 
 using maxwellBoltzmann::MaxwellBoltzmann;
 using namespace molsys;
-using namespace constants;
+
 using namespace settings;
 using namespace resetKinetics;
 
@@ -51,9 +51,9 @@ using namespace resetKinetics;
  * @details using a standard deviation of sqrt(kb*T/m) for each component of the
  * velocity vector
  *
- * @param simBox
+ * @param simulationBox
  */
-void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
+void MaxwellBoltzmann::initializeVelocities(SimulationBox &simulationBox)
 {
     auto generateVelocities = [this](auto &atom)
     {
@@ -73,9 +73,9 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 
 #ifdef WITH_MPI
     if (mpi::MPI::isRoot())
-        std::ranges::for_each(simBox.getAtoms(), generateVelocities);
+        std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 
-    auto velocities = simBox.flattenVelocities();
+    auto velocities = simulationBox.flattenVelocities();
 
     ::MPI_Bcast(
         velocities.data(),
@@ -85,15 +85,22 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
         MPI_COMM_WORLD
     );
 
-    simBox.deFlattenVelocities(velocities);
+    simulationBox.deFlattenVelocities(velocities);
 #else
-    std::ranges::for_each(simBox.getAtoms(), generateVelocities);
+    std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 #endif
 
-    ResetKinetics::resetMomentum(simBox, simBox.calculateMomentum());
-    ResetKinetics::resetAngularMomentum(
-        simBox,
-        simBox.calculateAngularMomentum(simBox.calculateMomentum())
+    ResetKinetics::resetMomentum(
+        simulationBox,
+        simulationBox.calculateMomentum()
     );
-    ResetKinetics::resetTemperature(simBox, simBox.calculateTemperature());
+    ResetKinetics::resetAngularMomentum(
+        simulationBox,
+        simulationBox.calculateAngularMomentum(simulationBox.calculateMomentum()
+        )
+    );
+    ResetKinetics::resetTemperature(
+        simulationBox,
+        simulationBox.calculateTemperature()
+    );
 }

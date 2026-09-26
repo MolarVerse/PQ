@@ -22,88 +22,11 @@
 
 #include "inputFileParser.hpp"
 
-#include <format>        // for format
-#include <string_view>   // for string_view
-
-#include "exceptions.hpp"        // for InputFileException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
 using namespace input;
 using namespace exc;
 using namespace utilities;
-
-/**
- * @brief check if parameter is "="
- *
- * @param view
- * @param lineNumber
- *
- * @throw InputFileException if argument is not "="
- */
-void input::checkEqualSign(const std::string_view &view, size_t lineNumber)
-{
-    if (view != "=")
-        throw InputFileException(
-            std::format("Invalid command at line {} in input file", lineNumber)
-        );
-}
-
-/**
- * @brief check if command array has at least 3 elements
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if command array has less than 3
- * elements
- *
- * @note this function is used for commands that have an array as their third
- * argument
- */
-void input::checkCommandArray(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    if (lineElements.size() < 3)
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid number of arguments at line {} in input file",
-                lineNumber
-            )
-        );
-    }
-
-    checkEqualSign(lineElements[1], lineNumber);
-}
-
-/**
- * @brief check if command array has exactly 3 elements
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if command array has less or more
- * than 3 elements
- */
-void input::checkCommand(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    if (lineElements.size() != 3)
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid number of arguments at line {} in input file",
-                lineNumber
-            )
-        );
-    }
-
-    checkEqualSign(lineElements[1], lineNumber);
-}
 
 /**
  * @brief add keyword to different keyword maps
@@ -161,3 +84,27 @@ std::map<std::string, int> InputFileParser::getKeywordCountMap() const
 {
     return _keywordCountMap;
 }
+
+/**
+ * @brief clear all keyword maps
+ *
+ * @details
+ *
+ * This function clears all the keyword maps, effectively resetting the parser
+ * state.
+ */
+void InputFileParser::_clear()
+{
+    _keywordFuncMap.clear();
+    _keywordRequiredMap.clear();
+    _keywordCountMap.clear();
+
+    _registry.clearValues();
+}
+
+/**
+ * @brief get the input registry
+ *
+ * @return the input registry
+ */
+InputRegistry &InputFileParser::_getRegistry() { return _registry; }

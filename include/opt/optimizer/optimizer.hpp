@@ -29,9 +29,17 @@
 #include <memory>
 
 #include "convergence.hpp"   // for Convergence
-#include "physicalData.hpp"
-#include "simulationBox.hpp"
 #include "vector3d.hpp"
+
+namespace molsys
+{
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
+
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
 
 namespace opt
 {
@@ -43,33 +51,28 @@ namespace opt
      */
     class Optimizer
     {
+       private:
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
+
        protected:
         size_t _nEpochs = 0;
 
         opt::Convergence _convergence;
 
-        std::shared_ptr<molsys::SimulationBox>
-            _simulationBox;   // TODO(97gamjak): remove this via pimpl
-        std::shared_ptr<physicalData::PhysicalData>
-            _physicalData;   // TODO(97gamjak): remove this via pimpl
-        std::shared_ptr<physicalData::PhysicalData>
-            _physicalDataOld;   // TODO(97gamjak): remove this via pimpl
-
-        std::deque<double>                            _energyHistory;
-        std::deque<double>                            _maxForceHistory;
-        std::deque<double>                            _rmsForceHistory;
-        std::deque<std::vector<linearAlgebra::Vec3D>> _forceHistory;
-        std::deque<std::vector<linearAlgebra::Vec3D>> _positionHistory;
+        std::deque<double>                     _energyHistory;
+        std::deque<double>                     _maxForceHistory;
+        std::deque<double>                     _rmsForceHistory;
+        std::deque<std::vector<linalg::Vec3D>> _forceHistory;
+        std::deque<std::vector<linalg::Vec3D>> _positionHistory;
 
        public:
         explicit Optimizer(size_t);
 
-        Optimizer()          = default;
-        virtual ~Optimizer() = default;
+        Optimizer() = default;
+        virtual ~Optimizer();
 
-        [[nodiscard]]
-        virtual std::shared_ptr<Optimizer> clone() const          = 0;
-        virtual void                       update(double, size_t) = 0;
+        virtual void update(double, size_t) = 0;
         [[nodiscard]]
         virtual size_t maxHistoryLength() const = 0;
 
@@ -83,11 +86,9 @@ namespace opt
         void setConvergence(opt::Convergence);
 
         void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
-
         void setPhysicalData(
             const std::shared_ptr<physicalData::PhysicalData>&
         );
-
         void setPhysicalDataOld(
             const std::shared_ptr<physicalData::PhysicalData>&
         );
@@ -97,7 +98,6 @@ namespace opt
          ***************************/
 
         [[nodiscard]] size_t getNEpochs() const;
-
         [[nodiscard]] size_t getHistoryIndex(int offset) const;
 
         [[nodiscard]] double getEnergy() const;
@@ -110,17 +110,21 @@ namespace opt
         [[nodiscard]] double getMaxForce(int) const;
 
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getForces() const;
+        std::vector<linalg::Vec3D> getForces() const;
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getForces(int) const;
+        std::vector<linalg::Vec3D> getForces(int) const;
 
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getPositions() const;
+        std::vector<linalg::Vec3D> getPositions() const;
         [[nodiscard]]
-        std::vector<linearAlgebra::Vec3D> getPositions(int) const;
+        std::vector<linalg::Vec3D> getPositions(int) const;
 
         [[nodiscard]] opt::Convergence& getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;
+
+       protected:
+        [[nodiscard]]
+        molsys::SimulationBox& _getSimulationBox() const;
     };
 
 }   // namespace opt

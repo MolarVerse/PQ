@@ -27,7 +27,7 @@
 #include "forceField.hpp"
 #include "potentialSettings.hpp"
 
-namespace forceField
+namespace ff
 {
     class DihedralForceField;   // forward declaration
 
@@ -115,6 +115,6 @@ namespace forceField
 
         return forceMagnitude;
     }
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _FORCE_FIELD_TPP_

@@ -26,9 +26,8 @@
 #include "constants.hpp"          // for constants
 #include "manostatSettings.hpp"   // for ManostatSettings
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace settings;
-using namespace constants;
 
 namespace molsys
 {
@@ -300,7 +299,7 @@ namespace molsys
 
         return std::make_pair(
             Vec3D{box_x, box_y, box_z},
-            Vec3D{alpha, beta, gamma} * constants::RAD_TO_DEG
+            Vec3D{alpha, beta, gamma} * RAD_TO_DEG
         );
     }
 
@@ -361,10 +360,7 @@ namespace molsys
      *
      * @return Vec3D
      */
-    Vec3D TriclinicBox::getBoxAngles() const
-    {
-        return _boxAngles * constants::RAD_TO_DEG;
-    }
+    Vec3D TriclinicBox::getBoxAngles() const { return _boxAngles * RAD_TO_DEG; }
 
     /**
      * @brief get the box matrix

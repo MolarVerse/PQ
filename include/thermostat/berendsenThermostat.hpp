@@ -47,7 +47,7 @@ namespace thermostat
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &data
+            physicalData::PhysicalData &physicalData
         ) override;
 
         void setTau(double tau);

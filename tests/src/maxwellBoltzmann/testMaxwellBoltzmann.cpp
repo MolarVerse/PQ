@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>
 
-#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <memory>
@@ -40,7 +39,6 @@
 
 namespace
 {
-    using linearAlgebra::Vec3D;
 
     // Build a 3x3x3 block of 27 atoms with different masses on a slightly
     // distorted lattice (deterministic - no random numbers needed).
@@ -53,16 +51,21 @@ namespace
         auto totalMass = 0.0;
         for (size_t i = 0; i < 27; ++i)
         {
-            const auto x = static_cast<double>(i % 3);
-            const auto y = static_cast<double>((i / 3) % 3);
-            const auto z = static_cast<double>(i / 9);
-            const auto d = 0.1 * std::sin(static_cast<double>(i));
+            const auto x      = static_cast<double>(i % 3);
+            const auto y      = static_cast<double>((i / 3) % 3);
+            const auto z      = static_cast<double>(static_cast<double>(i) / 9);
+            const auto scalar = 0.1 * std::sin(static_cast<double>(i));
 
             auto atom = std::make_shared<molsys::Atom>();
             atom->setMass(masses[i % masses.size()]);
-            atom->setPosition(Vec3D(1.5 * x + d, 1.5 * y - d, 1.5 * z + 0.5 * d)
+            atom->setPosition(
+                linalg::Vec3D(
+                    (1.5 * x) + scalar,
+                    (1.5 * y) - scalar,
+                    (1.5 * z) + (0.5 * scalar)
+                )
             );
-            atom->setVelocity(Vec3D(0.0, 0.0, 0.0));
+            atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
 
             totalMass += atom->getMass();
             box->addAtom(atom);
@@ -78,6 +81,8 @@ namespace
     // fixes the random seed for the lifetime of the guard
     struct SeedGuard
     {
+        SeedGuard(SeedGuard &&)            = delete;
+        SeedGuard &operator=(SeedGuard &&) = delete;
         explicit SeedGuard(uint_fast32_t seed)
         {
             settings::Settings::setRandomSeed(seed);
@@ -90,9 +95,9 @@ namespace
         SeedGuard &operator=(const SeedGuard &) = delete;
     };
 
-    std::vector<Vec3D> velocitiesOf(molsys::SimulationBox &box)
+    std::vector<linalg::Vec3D> velocitiesOf(molsys::SimulationBox &box)
     {
-        std::vector<Vec3D> velocities;
+        std::vector<linalg::Vec3D> velocities;
         for (const auto &atom : box.getAtoms())
             velocities.push_back(atom->getVelocity());
         return velocities;
@@ -123,7 +128,7 @@ namespace
         return scale;
     }
 
-    Vec3D angularMomentumOf(molsys::SimulationBox &box)
+    linalg::Vec3D angularMomentumOf(molsys::SimulationBox &box)
     {
         box.calculateCenterOfMass();
         return box.calculateAngularMomentum(box.calculateMomentum());
@@ -263,9 +268,9 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesIsReproducibleForFixedSeed)
 {
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    std::vector<Vec3D> first;
-    std::vector<Vec3D> second;
-    std::vector<Vec3D> other;
+    std::vector<linalg::Vec3D> first;
+    std::vector<linalg::Vec3D> second;
+    std::vector<linalg::Vec3D> other;
 
     {
         const SeedGuard guard(4711);

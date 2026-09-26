@@ -54,11 +54,13 @@ namespace thermostat
         );
 
         void applyThermostat(
-            molsys::SimulationBox      &simBox,
+            molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
         ) override;
 
-        void applyThermostatOnForces(molsys::SimulationBox &simBox) override;
+        void applyThermostatOnForces(
+            molsys::SimulationBox &simulationBox
+        ) override;
 
         /***************************
          * standard getter methods *
@@ -75,9 +77,9 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        void setChi(unsigned int index, double chi);
+        void setChi(size_t index, double chi);
         void setChi(const std::vector<double> &chi);
-        void setZeta(unsigned int index, double zeta);
+        void setZeta(size_t index, double zeta);
         void setZeta(const std::vector<double> &zeta);
         void setCouplingFrequency(double couplingFrequency);
     };

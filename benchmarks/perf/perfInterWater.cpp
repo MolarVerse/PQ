@@ -53,7 +53,7 @@
 using namespace molsys;
 using namespace pot;
 using namespace waterModel;
-using linearAlgebra::Vec3D;
+using linalg::Vec3D;
 
 static constexpr std::uint64_t ITERATIONS = 50;
 static constexpr MolType       WATER_TYPE{1};
@@ -112,7 +112,6 @@ int main()
 
                 Molecule molecule;
                 molecule.setMoltype(WATER_TYPE);
-                molecule.setNumberOfAtoms(3);
                 molecule.addAtom(
                     makeAtom("O", oxygen, -0.82, OXYGEN_ATOMIC_NUMBER)
                 );

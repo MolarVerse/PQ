@@ -43,7 +43,7 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
-namespace forceField
+namespace ff
 {
     /**
      * @brief BondForceField inherits from Bond
@@ -69,8 +69,8 @@ namespace forceField
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox &simBox,
-            physicalData::PhysicalData  &data,
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot
         );
@@ -91,6 +91,6 @@ namespace forceField
         [[nodiscard]] const BondParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
 #endif   // _BOND_FORCE_FIELD_HPP_

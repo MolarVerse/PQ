@@ -54,7 +54,7 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
     EXPECT_EQ(improperDihedralTypes[0].getParams().frequency, 234.3);
     EXPECT_EQ(
         improperDihedralTypes[0].getParams().phaseShift,
-        324.3 * constants::DEG_TO_RAD
+        324.3 * DEG_TO_RAD
     );
 
     lineElements = {"1", "2", "1.0", "0", "2"};

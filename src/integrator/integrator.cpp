@@ -31,7 +31,6 @@
 using namespace integrator;
 using namespace molsys;
 using namespace settings;
-using namespace constants;
 
 /**
  * @brief Construct a new Integrator:: Integrator object
@@ -64,16 +63,19 @@ void Integrator::integrateVelocities(Atom *atom)
  * @brief integrates the positions of a single atom
  *
  * @param atom
- * @param simBox
+ * @param simulationBox
  */
-void Integrator::integratePositions(Atom *atom, const SimulationBox &simBox)
+void Integrator::integratePositions(
+    Atom                *atom,
+    const SimulationBox &simulationBox
+)
 {
     auto       position = atom->getPosition();
     const auto velocity = atom->getVelocity();
 
     position += TimingsSettings::getTimeStep() * velocity * FS_TO_S;
 
-    simBox.applyPBC(position);
+    simulationBox.applyPBC(position);
 
     atom->setPosition(position);
 }

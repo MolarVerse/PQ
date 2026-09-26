@@ -62,8 +62,7 @@ namespace benchSetup
         }
 
         void setNonCoulombPairsMatrix(
-            const linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>&
-                matrix
+            const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>& matrix
         )
         {
             nonCoulomb._nonCoulPairsMatPtr->matrix = matrix;
@@ -86,9 +85,7 @@ namespace benchSetup
     {
         auto molecule = molsys::Molecule();
         molecule.setMoltype(MolType{1});
-        molecule.setNumberOfAtoms(params.nAtoms);
 
-        double molMass = 0.0;
         for (std::size_t i = 0; i < params.nAtoms; ++i)
         {
             auto atom = std::make_shared<molsys::Atom>();
@@ -96,7 +93,7 @@ namespace benchSetup
             const auto deviation = static_cast<double>(i);
             // Quadratic y-term keeps atoms non-collinear so the bend-force
             // and dihedral kernels exercise their hot path (sin(alpha) != 0).
-            const linearAlgebra::Vec3D pos{
+            const linalg::Vec3D pos{
                 params.origin + 1.0 + (0.7 * deviation),
                 (0.4 * deviation) + (0.1 * deviation * deviation),
                 0.25 * deviation
@@ -114,9 +111,7 @@ namespace benchSetup
             atom->setPartialCharge((i % 2 == 0) ? 0.4 : -0.4);
 
             molecule.addAtom(atom);
-            molMass += 12.0;
         }
-        molecule.setMolMass(molMass);
 
         return molecule;
     }
@@ -126,7 +121,7 @@ namespace benchSetup
     {
         benchSetup::BenchNonCoulombFFPot potential;
         potential.setNonCoulombPairsMatrix(
-            linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+            linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
         );
 
         auto pair = pot::LennardJonesPair(

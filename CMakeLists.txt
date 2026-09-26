@@ -77,10 +77,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # set default flags
-string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
+# Warning flags are collected in PQ_WARNING_FLAGS and only applied later via
+# add_compile_options(), after all third-party code (googletest, benchmark,
+# pybind11, ...) has been added. This keeps them out of external targets.
+set(PQ_WARNING_FLAGS -Wall -Wextra)
 
 if(PQ_COMPILER_IS_GNU)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wswitch-enum -Werror=switch-enum")
+    list(APPEND PQ_WARNING_FLAGS -Wswitch-enum -Werror=switch-enum)
 endif()
 
 if(WIN32)
@@ -114,27 +117,60 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease")
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Rr]el[Ww]ith[Dd]ebug")
     message("\n   Release with Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -coverage -fprofile-arcs -ftest-coverage")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wshadow -Wdouble-promotion -Wformat=2 -Wundef")
+    list(APPEND PQ_WARNING_FLAGS -Wshadow -Wdouble-promotion -Wformat=2 -Wundef)
     if(PQ_COMPILER_IS_GNU)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
     endif()
 elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
     message("\n   Debug build   \n")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Og -coverage -fprofile-arcs -ftest-coverage")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wshadow -Wdouble-promotion -Wformat=2 -Wundef")
+    list(APPEND PQ_WARNING_FLAGS
+        -Wpedantic -Werror
+        -Wundef
+        -Wshadow
+        -Wconversion
+        -Wsign-conversion
+        -Wcast-align
+        -Wformat=2
+        -Wnull-dereference
+        -Wdouble-promotion
+        -Wimplicit-fallthrough
+        -Woverloaded-virtual
+        -Wnon-virtual-dtor
+        -Wold-style-cast
+        -Wmisleading-indentation
+        # lifetime / safety
+        -Wuninitialized
+        -Winit-self
+    )
+
+    # list(APPEND PQ_WARNING_FLAGS -Wno-error=deprecated-declarations)
+    # list(APPEND PQ_WARNING_FLAGS -Wno-unknown-warning-option)
+    # list(APPEND PQ_WARNING_FLAGS -Wno-c2y-extensions)
     if(PQ_COMPILER_IS_GNU)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+        add_compile_options(-pg)
+        # GNU specific warnings
+        list(APPEND PQ_WARNING_FLAGS
+            -Wuseless-cast
+            -Wduplicated-cond
+            -Wduplicated-branches
+            -Wlogical-op
+            -Wmaybe-uninitialized
+        )
     endif()
     if(PQ_COMPILER_IS_CLANG)
         message(STATUS ">>> PQ: adding -ftime-trace")
         add_compile_options(-ftime-trace)
+        #TODO: these should be removed as soon as linearalgebra is migrated to mstd
+        list(APPEND PQ_WARNING_FLAGS -Wno-gnu-anonymous-struct -Wno-nested-anon-types)
     endif()
 else()
     message(FATAL_ERROR "Unknown build type: ${CMAKE_BUILD_TYPE}")
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_COMPILE_VERSION_=\\\"${GIT_VERSION}\\\"")
-message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}\n")
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+message(STATUS "PQ_WARNING_FLAGS: ${PQ_WARNING_FLAGS}\n")
 
 # *********************************
 # optional build-speed accelerators
@@ -202,8 +238,26 @@ if(BUILD_WITH_TESTS)
     include(testing)
 endif()
 
+if(BUILD_WITH_BENCHMARKING)
+    include(benchmarking)
+endif()
+
+# ******************************************************
+# project warning policy - applied to PQ targets only
+# all third-party code has to be added above this line
+# ******************************************************
+foreach(flag IN LISTS PQ_WARNING_FLAGS)
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:${flag}>")
+endforeach()
+
+# external headers are marked SYSTEM to suppress their warnings
+set_target_properties(eigen PROPERTIES
+    INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
+    "$<TARGET_PROPERTY:eigen,INTERFACE_INCLUDE_DIRECTORIES>"
+)
+
 add_library(mstd INTERFACE)
-target_include_directories(mstd INTERFACE ${PROJECT_SOURCE_DIR}/external/mstd/include)
+target_include_directories(mstd SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/external/mstd/include)
 
 add_subdirectory(src)
 
@@ -226,7 +280,6 @@ if(BUILD_WITH_IWYU)
 endif()
 
 if(BUILD_WITH_BENCHMARKING)
-    include(benchmarking)
     enable_testing()
     add_subdirectory(benchmarks)
 endif()

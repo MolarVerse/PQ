@@ -39,13 +39,13 @@ class TestNonCoulombPotentialFF : public ::testing::Test
     }
 
     [[nodiscard]]
-    linearAlgebra::Matrix<
+    linalg::Matrix<
         std::shared_ptr<pot::NonCoulombPair>> getNonCoulombPairsMatrix() const
     {
         return getNonCoulombPairsMatrix(*_nonCoulombPotential);
     }
 
-    [[nodiscard]] static linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>> getNonCoulombPairsMatrix(
+    [[nodiscard]] static linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>> getNonCoulombPairsMatrix(
         const pot::ForceFieldNonCoulomb &potential
     )
     {
@@ -53,17 +53,15 @@ class TestNonCoulombPotentialFF : public ::testing::Test
     }
 
     void setNonCoulombPairsMatrix(
-        const linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>
-            &matrix
+        const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>> &matrix
     )
     {
         setNonCoulombPairsMatrix(*_nonCoulombPotential, matrix);
     }
 
     static void setNonCoulombPairsMatrix(
-        pot::ForceFieldNonCoulomb &potential,
-        const linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>
-            &matrix
+        pot::ForceFieldNonCoulomb                                  &potential,
+        const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>> &matrix
     )
     {
         potential._nonCoulPairsMatPtr->matrix = matrix;

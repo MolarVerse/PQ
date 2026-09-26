@@ -22,7 +22,7 @@
 
 #include "angleType.hpp"
 
-namespace forceField
+namespace ff
 {
 
     /**
@@ -69,4 +69,4 @@ namespace forceField
      */
     const AngleParams &AngleType::getParams() const { return _params; }
 
-}   // namespace forceField
+}   // namespace ff

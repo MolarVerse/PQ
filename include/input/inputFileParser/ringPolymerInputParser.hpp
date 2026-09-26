@@ -24,8 +24,6 @@
 
 #define _RING_POLYMER_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "inputFileParser.hpp"   // for InputFileParser
 
 namespace input
@@ -33,7 +31,7 @@ namespace input
     /**
      * @brief RingPolymerInputParser inherits from InputFileParser
      *
-     * @details Parses the general commands in the input file
+     * Parses the general commands in the input file
      *
      */
     class RingPolymerInputParser : public InputFileParser
@@ -41,10 +39,7 @@ namespace input
        public:
         RingPolymerInputParser();
 
-        static void parseNumberOfBeads(
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addNumberOfBeadsKeyword();
     };
 
 }   // namespace input

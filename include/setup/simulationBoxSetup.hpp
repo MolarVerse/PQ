@@ -58,7 +58,6 @@ namespace setup::molsys
         void setAtomMasses();
         void setAtomicNumbers();
 
-        void calculateMolMasses();
         void calculateTotalCharge();
 
         void checkBoxSettings();

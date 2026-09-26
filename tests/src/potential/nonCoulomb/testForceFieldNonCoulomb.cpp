@@ -41,7 +41,7 @@
 TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 {
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
     const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
@@ -78,7 +78,7 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 {
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
     const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
@@ -100,7 +100,7 @@ TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
 {
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
     const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
@@ -381,7 +381,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
 
     EXPECT_THROW_MSG(
@@ -438,7 +438,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
@@ -494,7 +494,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
@@ -558,7 +558,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
@@ -606,7 +606,7 @@ TEST_F(
         externalToInternalTypes
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
 
     EXPECT_THROW_MSG(

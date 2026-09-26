@@ -37,9 +37,9 @@ using molsys::SimulationBox;
 namespace
 {
     std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
-        const linearAlgebra::Vec3D &pos,
-        const linearAlgebra::Vec3D &force,
-        const linearAlgebra::Vec3D &boxDims
+        const linalg::Vec3D &pos,
+        const linalg::Vec3D &force,
+        const linalg::Vec3D &boxDims
     )
     {
         auto box = std::make_shared<SimulationBox>();
@@ -54,8 +54,8 @@ namespace
     }
 
     std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
-        const linearAlgebra::Vec3D &pos,
-        const linearAlgebra::Vec3D &force
+        const linalg::Vec3D &pos,
+        const linalg::Vec3D &force
     )
     {
         return makeBoxWithOneAtom(pos, force, {100.0, 100.0, 100.0});
@@ -72,13 +72,6 @@ TEST(TestAdam, defaultBetasConstructorAcceptsNAtoms)
 TEST(TestAdam, customBetasConstructorAcceptsBeta1AndBeta2)
 {
     EXPECT_NO_THROW(Adam(10U, /*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U));
-}
-
-TEST(TestAdam, cloneProducesAdamInstance)
-{
-    const Adam src(10U, 4U);
-    const auto cloned = src.clone();
-    EXPECT_NE(std::dynamic_pointer_cast<Adam>(cloned), nullptr);
 }
 
 TEST(TestAdam, maxHistoryLengthIsTwo)
@@ -126,7 +119,7 @@ TEST(TestAdam, updateStoresOldPosition)
 
     EXPECT_EQ(
         box->getAtoms()[0]->getPositionOld(),
-        linearAlgebra::Vec3D(3.0, 4.0, 5.0)
+        linalg::Vec3D(3.0, 4.0, 5.0)
     );
 }
 
@@ -157,8 +150,5 @@ TEST(TestAdam, updateLeavesPositionUnchangedWhenForceIsZero)
     adam.setSimulationBox(box);
     adam.update(0.1, 1U);
 
-    EXPECT_EQ(
-        box->getAtoms()[0]->getPosition(),
-        linearAlgebra::Vec3D(1.0, 2.0, 3.0)
-    );
+    EXPECT_EQ(box->getAtoms()[0]->getPosition(), linalg::Vec3D(1.0, 2.0, 3.0));
 }

@@ -48,7 +48,7 @@
 #include "strongTypes.hpp"
 #include "waterModelSettings.hpp"
 
-using linearAlgebra::Vec3D;
+using linalg::Vec3D;
 using molsys::Atom;
 using molsys::CellList;
 using molsys::HybridZone;
@@ -131,7 +131,6 @@ namespace
 
         Molecule water;
         water.setMoltype(molType);
-        water.setNumberOfAtoms(3);
         water.setHybridZone(zone);
         water.setSmoothingFactor(0.25);
         water.addAtom(oxygen);

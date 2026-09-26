@@ -22,14 +22,15 @@
 
 #include "pyscfRunner.hpp"
 
-#include <format>    // for format
-#include <fstream>   // for ofstream, operator<<, basic_ostream
-#include <string>    // for allocator, string, operator+, operator<<
+#include <format>
+#include <fstream>
+#include <mstd/file.hpp>
+#include <string>
 
-#include "exceptions.hpp"        // for InputFileException
-#include "qmSettings.hpp"        // for QMSettings
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists
+#include "exceptions.hpp"
+#include "qmSettings.hpp"
+#include "simulationBox.hpp"
+#include "stringUtilities.hpp"
 
 using QM::PySCFRunner;
 using namespace molsys;
@@ -40,16 +41,16 @@ using namespace utilities;
 /**
  * @brief writes the coords file in order to run the external qm program
  *
- * @param box
+ * @param simulationBox Simulation box containing molecules and atoms.
  */
-void PySCFRunner::writeCoordsFile(SimulationBox &box)
+void PySCFRunner::writeCoordsFile(SimulationBox &simulationBox)
 {
     const std::string fileName = "coords.xyz";
     std::ofstream     coordsFile(fileName);
 
-    coordsFile << box.getNumberOfQMAtoms() << "\n\n";
+    coordsFile << simulationBox.getNumberOfQMAtoms() << "\n\n";
 
-    for (const auto &atom : box.getQMAtoms())
+    for (const auto &atom : simulationBox.getQMAtoms())
     {
         coordsFile << std::format(
             "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
@@ -71,7 +72,7 @@ void PySCFRunner::execute(SimulationBox & /*simBox*/)
 {
     const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
 
-    if (!fileExists(scriptFileName))
+    if (!mstd::File(scriptFileName).exists())
     {
         throw InputFileException(
             std::format(

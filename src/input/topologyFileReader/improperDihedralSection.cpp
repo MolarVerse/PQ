@@ -32,7 +32,7 @@
 #include "exceptions.hpp"           // for TopologyException
 
 using namespace input::topology;
-using namespace forceField;
+using namespace ff;
 using namespace exc;
 using namespace engine;
 

@@ -30,7 +30,7 @@
  */
 TEST(TestDihedralType, operatorEqual)
 {
-    forceField::DihedralType dihedralType1(
+    ff::DihedralType dihedralType1(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 1.0,
@@ -38,7 +38,7 @@ TEST(TestDihedralType, operatorEqual)
             .phaseShift    = 3.0
         }
     );
-    forceField::DihedralType dihedralType2(
+    ff::DihedralType dihedralType2(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 1.0,
@@ -46,7 +46,7 @@ TEST(TestDihedralType, operatorEqual)
             .phaseShift    = 3.0
         }
     );
-    forceField::DihedralType dihedralType3(
+    ff::DihedralType dihedralType3(
         DihedralId{1},
         DihedralParams{
             .forceConstant = 1.0,
@@ -54,7 +54,7 @@ TEST(TestDihedralType, operatorEqual)
             .phaseShift    = 3.0
         }
     );
-    forceField::DihedralType dihedralType4(
+    ff::DihedralType dihedralType4(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 2.0,
@@ -62,7 +62,7 @@ TEST(TestDihedralType, operatorEqual)
             .phaseShift    = 3.0
         }
     );
-    forceField::DihedralType dihedralType5(
+    ff::DihedralType dihedralType5(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 1.0,
@@ -70,7 +70,7 @@ TEST(TestDihedralType, operatorEqual)
             .phaseShift    = 3.0
         }
     );
-    forceField::DihedralType dihedralType6(
+    ff::DihedralType dihedralType6(
         DihedralId{0},
         DihedralParams{
             .forceConstant = 1.0,

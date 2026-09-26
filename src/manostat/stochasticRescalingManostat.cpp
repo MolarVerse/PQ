@@ -34,14 +34,14 @@
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "timingsSettings.hpp"      // for TimingsSettings
 
-using namespace linearAlgebra;
+using namespace linalg;
 using namespace manostat;
 using namespace settings;
 using namespace molsys;
 using namespace physicalData;
 using namespace exc;
-using namespace constants;
-using namespace linearAlgebra;
+
+using namespace linalg;
 
 /**
  * @brief copy constructor for Stochastic Rescaling Manostat
@@ -136,42 +136,42 @@ StochasticRescalingManostat::StochasticRescalingManostat(
 /**
  * @brief apply Stochastic Rescaling manostat for NPT ensemble
  *
- * @param simBox
- * @param physData
+ * @param simulationBox
+ * @param physicalData
  */
 void StochasticRescalingManostat::applyManostat(
-    molsys::SimulationBox      &simBox,
-    physicalData::PhysicalData &physData
+    molsys::SimulationBox      &simulationBox,
+    physicalData::PhysicalData &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");
 
-    calculatePressure(simBox, physData);
+    calculatePressure(simulationBox, physicalData);
 
-    const auto mu = calculateMu(simBox.getVolume());
+    const auto mu = calculateMu(simulationBox.getVolume());
 
     // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
     // every position into the resized box.
-    auto reconstructMolecule = [&simBox](auto &molecule)
-    { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
+    auto reconstructMolecule = [&simulationBox](auto &molecule)
+    { molecule.reconstructAtomsAroundCenterOfMass(simulationBox.getBox()); };
 
-    std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
+    std::ranges::for_each(simulationBox.getMolecules(), reconstructMolecule);
 
-    simBox.scaleBox(mu);
+    simulationBox.scaleBox(mu);
 
-    physData.setVolume(simBox.getVolume());
-    physData.setDensity(simBox.getDensity());
+    physicalData.setVolume(simulationBox.getVolume());
+    physicalData.setDensity(simulationBox.getDensity());
 
-    simBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
+    simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
-    auto scalePositions = [&mu, &simBox](auto &molecule)
-    { molecule.scale(mu, simBox.getBox()); };
+    auto scalePositions = [&mu, &simulationBox](auto &molecule)
+    { molecule.scale(mu, simulationBox.getBox()); };
 
-    auto scaleVelocities = [&mu, &simBox](auto &molecule)
-    { molecule.scaleVelocity(inverse(mu), simBox.getBox()); };
+    auto scaleVelocities = [&mu, &simulationBox](auto &molecule)
+    { molecule.scaleVelocity(inverse(mu), simulationBox.getBox()); };
 
-    std::ranges::for_each(simBox.getMolecules(), scalePositions);
-    std::ranges::for_each(simBox.getMolecules(), scaleVelocities);
+    std::ranges::for_each(simulationBox.getMolecules(), scalePositions);
+    std::ranges::for_each(simulationBox.getMolecules(), scaleVelocities);
 }
 
 /**
@@ -260,7 +260,7 @@ tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        1.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
+        1.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
 
     const auto stochasticFactor_xy = ::sqrt(4.0 * stochasticFactor) * random;
@@ -311,15 +311,14 @@ tensor3D AnisotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        2.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
+        2.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
     stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = _targetPressure - diagonal(_pressureTensor);
 
     auto mu =
-        exp(-compress * (deltaP) / linearAlgebra::tensor3D::size +
-            stochasticFactor);
+        exp(-compress * (deltaP) / linalg::tensor3D::size + stochasticFactor);
 
     for (size_t i = 0; i < 3; ++i)
     {
@@ -350,14 +349,13 @@ tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(double volume)
     const auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
     auto stochasticFactor =
-        2.0 / linearAlgebra::tensor3D::size * thermalEnergy * compress / volume;
+        2.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
     stochasticFactor *= PRESSURE_FACTOR;
     stochasticFactor  = ::sqrt(stochasticFactor) * random;
 
     const auto deltaP = diagonalMatrix(_targetPressure) - _pressureTensor;
-    auto       mu     = expPade(
-        -compress * deltaP / linearAlgebra::tensor3D::size + stochasticFactor
-    );
+    auto       mu =
+        expPade(-compress * deltaP / linalg::tensor3D::size + stochasticFactor);
 
     for (size_t k = 0; k < 3; ++k)
     {

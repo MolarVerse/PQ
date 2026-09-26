@@ -30,7 +30,7 @@
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3d.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     /************************
      *                      *
@@ -331,9 +331,9 @@ namespace linearAlgebra
         using ResultType = decltype(vec[0] + scalar);
 
         return Vector3D<ResultType>(
-            vec[0] + scalar,
-            vec[1] + scalar,
-            vec[2] + scalar
+            static_cast<ResultType>(vec[0]) + static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[1]) + static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[2]) + static_cast<ResultType>(scalar)
         );
     }
 
@@ -353,9 +353,9 @@ namespace linearAlgebra
         using ResultType = decltype(vec[0] + scalar);
 
         return Vector3D<ResultType>(
-            vec[0] + scalar,
-            vec[1] + scalar,
-            vec[2] + scalar
+            static_cast<ResultType>(vec[0]) + static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[1]) + static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[2]) + static_cast<ResultType>(scalar)
         );
     }
 
@@ -384,9 +384,9 @@ namespace linearAlgebra
         using ResultType = decltype(lhs[0] - rhs[0]);
 
         return Vector3D<ResultType>(
-            lhs[0] - rhs[0],
-            lhs[1] - rhs[1],
-            lhs[2] - rhs[2]
+            static_cast<ResultType>(lhs[0]) - static_cast<ResultType>(rhs[0]),
+            static_cast<ResultType>(lhs[1]) - static_cast<ResultType>(rhs[1]),
+            static_cast<ResultType>(lhs[2]) - static_cast<ResultType>(rhs[2])
         );
     }
 
@@ -408,7 +408,11 @@ namespace linearAlgebra
     {
         using ResultType = decltype(lhs[0] - rhs);
 
-        return Vector3D<ResultType>(lhs[0] - rhs, lhs[1] - rhs, lhs[2] - rhs);
+        return Vector3D<ResultType>(
+            static_cast<ResultType>(lhs[0]) - static_cast<ResultType>(rhs),
+            static_cast<ResultType>(lhs[1]) - static_cast<ResultType>(rhs),
+            static_cast<ResultType>(lhs[2]) - static_cast<ResultType>(rhs)
+        );
     }
 
     /**
@@ -450,9 +454,9 @@ namespace linearAlgebra
         using ResultType = decltype(vec[0] - scalar);
 
         return Vector3D<ResultType>(
-            vec[0] - scalar,
-            vec[1] - scalar,
-            vec[2] - scalar
+            static_cast<ResultType>(vec[0]) - static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[1]) - static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[2]) - static_cast<ResultType>(scalar)
         );
     }
 
@@ -472,9 +476,9 @@ namespace linearAlgebra
         using ResultType = decltype(scalar - vec[0]);
 
         return Vector3D<ResultType>(
-            scalar - vec[0],
-            scalar - vec[1],
-            scalar - vec[2]
+            static_cast<ResultType>(scalar) - static_cast<ResultType>(vec[0]),
+            static_cast<ResultType>(scalar) - static_cast<ResultType>(vec[1]),
+            static_cast<ResultType>(scalar) - static_cast<ResultType>(vec[2])
         );
     }
 
@@ -571,9 +575,9 @@ namespace linearAlgebra
         using ResultType = decltype(vec[0] * scalar);
 
         return Vector3D<ResultType>(
-            vec[0] * scalar,
-            vec[1] * scalar,
-            vec[2] * scalar
+            static_cast<ResultType>(vec[0]) * static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[1]) * static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[2]) * static_cast<ResultType>(scalar)
         );
     }
 
@@ -593,9 +597,9 @@ namespace linearAlgebra
         using ResultType = decltype(vec[0] * scalar);
 
         return Vector3D<ResultType>(
-            vec[0] * scalar,
-            vec[1] * scalar,
-            vec[2] * scalar
+            static_cast<ResultType>(vec[0]) * static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[1]) * static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[2]) * static_cast<ResultType>(scalar)
         );
     }
 
@@ -698,9 +702,9 @@ namespace linearAlgebra
         using ResultType = decltype(vec[0] / scalar);
 
         return Vector3D<ResultType>(
-            vec[0] / scalar,
-            vec[1] / scalar,
-            vec[2] / scalar
+            static_cast<ResultType>(vec[0]) / static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[1]) / static_cast<ResultType>(scalar),
+            static_cast<ResultType>(vec[2]) / static_cast<ResultType>(scalar)
         );
     }
 
@@ -720,9 +724,9 @@ namespace linearAlgebra
         using ResultType = decltype(scalar / vec[0]);
 
         return Vector3D<ResultType>(
-            scalar / vec[0],
-            scalar / vec[1],
-            scalar / vec[2]
+            static_cast<ResultType>(scalar) / static_cast<ResultType>(vec[0]),
+            static_cast<ResultType>(scalar) / static_cast<ResultType>(vec[1]),
+            static_cast<ResultType>(scalar) / static_cast<ResultType>(vec[2])
         );
     }
 
@@ -1102,7 +1106,7 @@ namespace linearAlgebra
 
         for (const auto &value : vec) rms += normSquared(value);
 
-        return std::sqrt(rms / vec.size());
+        return std::sqrt(rms / static_cast<double>(vec.size()));
     }
 
     /****************
@@ -1316,6 +1320,6 @@ namespace linearAlgebra
         return ostream << vec[0] << " " << vec[1] << " " << vec[2];
     }
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 #endif   // _VECTOR3D_TPP_

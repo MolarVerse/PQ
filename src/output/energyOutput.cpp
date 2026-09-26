@@ -60,64 +60,86 @@ void EnergyOutput::writeHeader(double timeStep)
  * hoover thermostat is active.
  *
  * @param step
- * @param data
+ * @param physicalData the physical data of the system
  */
-void EnergyOutput::write(size_t step, const PhysicalData &data)
+void EnergyOutput::write(size_t step, const PhysicalData &physicalData)
 {
     _fp << std::format("{:10d}\t", step);
-    _fp << std::format("{:20.12f}\t", data.getTemperature());
-    _fp << std::format("{:20.12f}\t", data.getPressure());
-    _fp << std::format("{:20.12f}\t", data.getTotalEnergy());
+    _fp << std::format("{:20.12f}\t", physicalData.getTemperature());
+    _fp << std::format("{:20.12f}\t", physicalData.getPressure());
+    _fp << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
 
     if (Settings::isQMActivated())
     {
-        _fp << std::format("{:20.12f}\t", data.getQMEnergy());
-        _fp << std::format("{:20.12f}\t", data.getNumberOfQMAtoms());
+        _fp << std::format("{:20.12f}\t", physicalData.getQMEnergy());
+        _fp << std::format("{:20.12f}\t", physicalData.getNumberOfQMAtoms());
     }
 
-    _fp << std::format("{:20.12f}\t", data.getKineticEnergy());
-    _fp << std::format("{:20.12f}\t", data.getIntraEnergy());
+    _fp << std::format("{:20.12f}\t", physicalData.getKineticEnergy());
+    _fp << std::format("{:20.12f}\t", physicalData.getIntraEnergy());
 
     if (Settings::isMMActivated())
     {
-        _fp << std::format("{:20.12f}\t", data.getCoulombEnergy());
-        _fp << std::format("{:20.12f}\t", data.getNonCoulombEnergy());
+        _fp << std::format("{:20.12f}\t", physicalData.getCoulombEnergy());
+        _fp << std::format("{:20.12f}\t", physicalData.getNonCoulombEnergy());
     }
 
     if (ForceFieldSettings::isActive())
     {
-        _fp << std::format("{:20.12f}\t", data.getBondEnergy());
-        _fp << std::format("{:20.12f}\t", data.getAngleEnergy());
-        _fp << std::format("{:20.12f}\t", data.getDihedralEnergy());
-        _fp << std::format("{:20.12f}\t", data.getImproperEnergy());
+        _fp << std::format("{:20.12f}\t", physicalData.getBondEnergy());
+        _fp << std::format("{:20.12f}\t", physicalData.getAngleEnergy());
+        _fp << std::format("{:20.12f}\t", physicalData.getDihedralEnergy());
+        _fp << std::format("{:20.12f}\t", physicalData.getImproperEnergy());
     }
 
     if (Settings::isHybridJobtype())
-        _fp << std::format("{:20.12f}\t", data.getNumberOfSmoothingMolecules());
+    {
+        _fp << std::format(
+            "{:20.12f}\t",
+            physicalData.getNumberOfSmoothingMolecules()
+        );
+    }
 
     if (ManostatSettings::getManostatType() != ManostatType::NONE)
     {
-        _fp << std::format("{:20.12f}\t", data.getVolume());
-        _fp << std::format("{:20.12f}\t", data.getDensity());
+        _fp << std::format("{:20.12f}\t", physicalData.getVolume());
+        _fp << std::format("{:20.12f}\t", physicalData.getDensity());
 
         if (ManostatSettings::getFixedAxis() != FixedAxis::NONE)
-            _fp << std::format("{:20.12f}\t", data.getCoupledPressure());
+        {
+            _fp << std::format(
+                "{:20.12f}\t",
+                physicalData.getCoupledPressure()
+            );
+        }
     }
 
     if (ThermostatSettings::getThermostatType() == ThermostatType::NOSE_HOOVER)
     {
-        _fp << std::format("{:20.12f}\t", data.getNoseHooverMomentumEnergy());
-        _fp << std::format("{:20.12f}\t", data.getNoseHooverFrictionEnergy());
+        _fp << std::format(
+            "{:20.12f}\t",
+            physicalData.getNoseHooverMomentumEnergy()
+        );
+        _fp << std::format(
+            "{:20.12f}\t",
+            physicalData.getNoseHooverFrictionEnergy()
+        );
     }
 
     if (ConstraintSettings::isDistanceConstraintsActivated())
     {
-        _fp << std::format("{:20.12f}\t", data.getLowerDistanceConstraints());
-        _fp << std::format("{:20.12f}\t", data.getUpperDistanceConstraints());
+        _fp << std::format(
+            "{:20.12f}\t",
+            physicalData.getLowerDistanceConstraints()
+        );
+        _fp << std::format(
+            "{:20.12f}\t",
+            physicalData.getUpperDistanceConstraints()
+        );
     }
 
-    _fp << std::format("{:20.5e}\t", norm(data.getMomentum()));
-    _fp << std::format("{:12.5f}\n", data.getLoopTime());
+    _fp << std::format("{:20.5e}\t", norm(physicalData.getMomentum()));
+    _fp << std::format("{:12.5f}\n", physicalData.getLoopTime());
 
     _fp << std::flush;
 }

@@ -34,7 +34,7 @@
 using namespace engine;
 using namespace out;
 using namespace settings;
-using namespace constants;
+
 using namespace physicalData;
 
 using virial::intraMolecularVirialCorrection;
@@ -78,7 +78,7 @@ void MDEngine::run()
     timings::GlobalTimer::get().stopSimulationTimer();
 
     const auto elapsedTime =
-        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
+        timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
     references::ReferencesOutput::writeReferencesFile();
 

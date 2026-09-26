@@ -41,7 +41,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    using namespace linearAlgebra;
+    using namespace linalg;
 
     const Vec3D vec1{1.1, 2.2, 3.3};
     const Vec3D vec2{0.7, -1.3, 2.1};

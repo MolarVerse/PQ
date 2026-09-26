@@ -71,7 +71,6 @@ namespace
 
         Molecule water;
         water.setMoltype(kWaterType);
-        water.setNumberOfAtoms(3);
 
         for (size_t i = 0; i < 3; ++i)
         {
@@ -232,13 +231,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addBond(
-        forceField::BondForceField(
-            water,
-            water,
-            AtomIndex{0},
-            AtomIndex{1},
-            BondId{0}
-        )
+        ff::BondForceField(water, water, AtomIndex{0}, AtomIndex{1}, BondId{0})
     );
 
     EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
@@ -251,7 +244,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addAngle(
-        forceField::AngleForceField(
+        ff::AngleForceField(
             {water, water, water},
             {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
             AngleId{0}

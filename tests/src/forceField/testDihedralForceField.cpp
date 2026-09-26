@@ -63,14 +63,13 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
     setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = molsys::Molecule();
 
     molecule.setMoltype(MolType{0});
-    molecule.setNumberOfAtoms(4);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -107,7 +106,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     molecule.addAtom(atom3);
     molecule.addAtom(atom4);
 
-    auto bondForceField = forceField::DihedralForceField(
+    auto bondForceField = ff::DihedralForceField(
         {&molecule, &molecule, &molecule, &molecule},
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}, AtomIndex{3}},
         DihedralId{0}
