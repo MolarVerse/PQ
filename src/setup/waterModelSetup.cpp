@@ -97,10 +97,10 @@ void WaterModelSetup::setup()
 
     if (!waterType.has_value())
     {
-        throw(UserInputException(
+        throw UserInputException(
             "Use of water model has been requested in the input file, but "
             "no water type is specified in the moldescriptor file."
-        ));
+        );
     }
 
     const auto water =
@@ -109,16 +109,16 @@ void WaterModelSetup::setup()
     // water atoms have to be in this order for calculation
     if (water.getAtomNames() != std::vector<std::string>{"O", "H", "H"})
     {
-        throw(MolDescriptorException(
+        throw MolDescriptorException(
             "Water molecule type must have exactly 3 atoms in the following "
             "order: O (oxygen), H (hydrogen), H (hydrogen)."
-        ));
+        );
     }
 
     if (Settings::isQMOnlyJobtype())
-        throw(UserInputException(
+        throw UserInputException(
             "Water models are not supported for QM-only job types."
-        ));
+        );
 
     makeIntraWater();
 
@@ -184,7 +184,7 @@ void WaterModelSetup::checkTopologyFile()
 
         if (involvesWater)
         {
-            throw(UserInputException(
+            throw UserInputException(
                 std::format(
                     "A water type molecule is included in the bond list of the "
                     "topology file \"{}\" at entry number {}. Requesting the "
@@ -195,7 +195,7 @@ void WaterModelSetup::checkTopologyFile()
                     bondIndex,
                     string(WaterModelSettings::getWaterIntraModel())
                 )
-            ));
+            );
         }
 
         ++bondIndex;
@@ -217,7 +217,7 @@ void WaterModelSetup::checkTopologyFile()
 
         if (involvesWater)
         {
-            throw(UserInputException(
+            throw UserInputException(
                 std::format(
                     "A water type molecule is included in the angle list of "
                     "the topology file \"{}\" at entry number {}. Requesting "
@@ -228,7 +228,7 @@ void WaterModelSetup::checkTopologyFile()
                     angleIndex,
                     string(WaterModelSettings::getWaterIntraModel())
                 )
-            ));
+            );
         }
 
         ++angleIndex;
@@ -259,7 +259,7 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
         const auto       actual = water.getPartialCharge(atomIndex);
         if (std::abs(actual - expected) > tol)
         {
-            throw(UserInputException(
+            throw UserInputException(
                 std::format(
                     "Water molecule partial charge mismatch for atom {}: "
                     "expected {} (according to {} water model), got {}.",
@@ -268,7 +268,7 @@ void WaterModelSetup::checkMoldescriptorWaterCharge(
                     modelName,
                     actual
                 )
-            ));
+            );
         }
     };
 
