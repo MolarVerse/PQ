@@ -440,14 +440,14 @@ namespace engine
         {
             if (mol.getMoltype() == MolType{0} && mol.getHybridZone() != CORE)
             {
-                throw(HybridMDEngineException(
+                throw HybridMDEngineException(
                     std::format(
                         "Molecule number {} is outside the QM core and has "
                         "moltype 0. All molecules outside the QM core must "
                         "have a non-zero moltype assigned.",
                         count
                     )
-                ));
+                );
             }
             ++count;
         }

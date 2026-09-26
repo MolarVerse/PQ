@@ -109,7 +109,7 @@ void HybridSetup::validateQMMethod()
         case MACE:
         case FENNOL:
         case NONE:
-            throw(InputFileException(errorMsg));
+            throw InputFileException(errorMsg);
     }
     // clang-format on
 }
@@ -192,18 +192,18 @@ void HybridSetup::checkZoneRadii()
 
     if (coreRadius > layerRadius)
     {
-        throw(InputFileException(
+        throw InputFileException(
             std::format(
                 "Core radius ({} Å) cannot be larger than layer radius ({} Å)",
                 coreRadius,
                 layerRadius
             )
-        ));
+        );
     }
 
     if (coreRadius > (layerRadius - smoothingRegionThickness))
     {
-        throw(InputFileException(
+        throw InputFileException(
             std::format(
                 "Smoothing region is too thick ({} Å) for the chosen "
                 "combination of core ({} Å) and layer radius ({} Å)",
@@ -211,12 +211,12 @@ void HybridSetup::checkZoneRadii()
                 coreRadius,
                 layerRadius
             )
-        ));
+        );
     }
 
     if (layerRadius > (minimalBoxDimension / 4))
     {
-        throw(InputFileException(
+        throw InputFileException(
             std::format(
                 "Layer radius ({} Å) exceeds one quarter of the smallest box "
                 "dimension ({} Å). This configuration is not allowed to ensure "
@@ -224,12 +224,12 @@ void HybridSetup::checkZoneRadii()
                 layerRadius,
                 minimalBoxDimension
             )
-        ));
+        );
     }
 
     if ((layerRadius + pointChargeThickness) > (minimalBoxDimension * 3 / 2))
     {
-        throw(InputFileException(
+        throw InputFileException(
             std::format(
                 "Layer radius ({} Å) plus point charge thickness ({} Å) "
                 "exceeds three halves of the smallest box dimension ({} Å). "
@@ -239,7 +239,7 @@ void HybridSetup::checkZoneRadii()
                 pointChargeThickness,
                 minimalBoxDimension
             )
-        ));
+        );
     }
 }
 
@@ -262,12 +262,12 @@ void HybridSetup::validateQMChargeSettings()
 
     if (mmChargesRequested && qmAtomsPresent)
     {
-        throw(InputFileException(
+        throw InputFileException(
             "Invalid configuration: MM charges requested (qm_charges = mm) in "
             "input file but atoms with moltype \"0\" are present in the "
             "system. Either set \"qm_charges = qm\" or ensure all atoms have a"
             "non-zero moltype."
-        ));
+        );
     }
 }
 
