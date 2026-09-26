@@ -108,7 +108,27 @@ namespace input
      */
     std::string Converter<mstd::File>::describeDomain()
     {
-        return "existing file path";
+        return "Value must be an existing file path.";
+    }
+
+    /**
+     * @brief describes the domain of valid std::string inputs
+     *
+     * @return a string describing the domain
+     */
+    std::string Converter<bool>::describeDomain()
+    {
+        std::string options;
+        for (const auto& [positive, negative] : boolKeywords)
+        {
+            if (!options.empty())
+                options += "|";
+
+            options += positive;
+            options += "|";
+            options += negative;
+        }
+        return "Allowed values: " + options;
     }
 
 }   // namespace input

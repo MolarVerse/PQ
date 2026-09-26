@@ -63,7 +63,7 @@ TEST_F(TestInputFileReader, parseCellListActivated)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"cell-list\" at line 0 "
-        "in input file. Possible options are: on|off|true|false|yes|no"
+        "in input file. Allowed values: on|off|true|false|yes|no"
     );
 }
 

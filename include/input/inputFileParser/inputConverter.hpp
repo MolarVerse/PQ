@@ -47,6 +47,18 @@ namespace input
     };
 
     /**
+     * @brief Base class for all Converter specializations
+     *
+     * @tparam T
+     */
+    template <typename T>
+    struct ConverterBase
+    {
+        [[nodiscard]]
+        static std::string describeDomain();
+    };
+
+    /**
      * @class Converter
      *
      * @brief pure, non-throwing conversion from a raw input-file token to a
@@ -57,14 +69,16 @@ namespace input
      * @tparam T
      */
     template <typename T>
-    struct Converter;
+    struct Converter : public ConverterBase<T>
+    {
+    };
 
     /**
      * @brief Converter specialization for double
      *
      */
     template <>
-    struct Converter<double>
+    struct Converter<double> : public ConverterBase<double>
     {
         [[nodiscard]]
         static std::optional<double> tryParse(std::string_view raw);
@@ -75,10 +89,13 @@ namespace input
      *
      */
     template <>
-    struct Converter<bool>
+    struct Converter<bool> : public ConverterBase<bool>
     {
         [[nodiscard]]
         static std::optional<bool> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        static std::string describeDomain();
     };
 
     /**
@@ -93,7 +110,7 @@ namespace input
      */
     template <std::signed_integral T>
     requires(!std::same_as<T, bool>)
-    struct Converter<T>
+    struct Converter<T> : public ConverterBase<T>
     {
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
@@ -111,7 +128,7 @@ namespace input
      */
     template <std::unsigned_integral T>
     requires(!std::same_as<T, bool>)
-    struct Converter<T>
+    struct Converter<T> : public ConverterBase<T>
     {
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
@@ -132,7 +149,7 @@ namespace input
      * @tparam T
      */
     template <mstd::has_enum_meta T>
-    struct Converter<T>
+    struct Converter<T> : public ConverterBase<T>
     {
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
@@ -146,7 +163,7 @@ namespace input
      *
      */
     template <>
-    struct Converter<mstd::File>
+    struct Converter<mstd::File> : public ConverterBase<mstd::File>
     {
         [[nodiscard]]
         static std::optional<mstd::File> tryParse(std::string_view raw);
@@ -160,14 +177,11 @@ namespace input
      *
      */
     template <>
-    struct Converter<std::string>
+    struct Converter<std::string> : public ConverterBase<std::string>
     {
         [[nodiscard]]
         static std::optional<std::string> tryParse(std::string_view raw);
     };
-
-    template <typename T>
-    [[nodiscard]] std::string describeDomain();
 
 }   // namespace input
 
