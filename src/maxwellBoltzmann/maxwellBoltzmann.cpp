@@ -51,9 +51,9 @@ using namespace resetKinetics;
  * @details using a standard deviation of sqrt(kb*T/m) for each component of the
  * velocity vector
  *
- * @param simBox
+ * @param simulationBox
  */
-void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
+void MaxwellBoltzmann::initializeVelocities(SimulationBox &simulationBox)
 {
     auto generateVelocities = [this](auto &atom)
     {
@@ -87,12 +87,12 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simBox)
 
     simBox.deFlattenVelocities(velocities);
 #else
-    std::ranges::for_each(simBox.getAtoms(), generateVelocities);
+    std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 #endif
 
     auto resetKinetics = ResetKinetics();
-    resetKinetics.setMomentum(simBox.calculateMomentum());
-    resetKinetics.resetMomentum(simBox);
-    resetKinetics.resetAngularMomentum(simBox);
-    resetKinetics.resetTemperature(simBox);
+    resetKinetics.setMomentum(simulationBox.calculateMomentum());
+    resetKinetics.resetMomentum(simulationBox);
+    resetKinetics.resetAngularMomentum(simulationBox);
+    resetKinetics.resetTemperature(simulationBox);
 }

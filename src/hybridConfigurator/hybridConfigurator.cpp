@@ -41,7 +41,7 @@ using namespace molsys;
 /**
  * @brief Calculate the center of mass of the inner region center atoms
  *
- * @param simBox The simulation box containing all atoms
+ * @param simulationBox The simulation box containing all atoms
  *
  * @details This function calculates the mass-weighted center of the
  * atoms specified by the inner region center atom indices. The calculated
@@ -51,39 +51,40 @@ using namespace molsys;
  * indices list)
  */
 void HybridConfigurator::calculateInnerRegionCenter(
-    molsys::SimulationBox& simBox
+    molsys::SimulationBox& simulationBox
 )
 {
-    const auto& indices = simBox.getInnerRegionCenterAtomIndices();
+    const auto& indices = simulationBox.getInnerRegionCenterAtomIndices();
 
     if (indices.empty())
         throw HybridConfiguratorException(
             "Cannot calculate inner region center: no center atoms specified"
         );
 
-    linalg::Vec3D center        = {0.0, 0.0, 0.0};
-    double        total_mass    = 0.0;
-    const auto    positionAtom1 = simBox.getAtom(indices.at(0)).getPosition();
+    linalg::Vec3D center     = {0.0, 0.0, 0.0};
+    double        total_mass = 0.0;
+    const auto    positionAtom1 =
+        simulationBox.getAtom(indices.at(0)).getPosition();
 
     for (const auto index : indices)
     {
-        const auto& atom     = simBox.getAtom(index);
+        const auto& atom     = simulationBox.getAtom(index);
         const auto  mass     = atom.getMass();
         const auto  position = atom.getPosition();
         const auto  deltaPos = position - positionAtom1;
 
-        center     += mass * (position - simBox.calcShiftVector(deltaPos));
+        center += mass * (position - simulationBox.calcShiftVector(deltaPos));
         total_mass += mass;
     }
 
     center             /= total_mass;
-    _innerRegionCenter  = center - simBox.calcShiftVector(center);
+    _innerRegionCenter  = center - simulationBox.calcShiftVector(center);
 }   // TODO: https://github.com/MolarVerse/PQ/issues/196
 
 /**
  * @brief Shift all atoms so that the inner region center is at the origin
  *
- * @param simBox The simulation box containing all atoms to be shifted
+ * @param simulationBox The simulation box containing all atoms to be shifted
  *
  * @details This function translates all atoms in the simulation box by
  * subtracting the inner region center position from each atom's coordinates.
@@ -93,13 +94,13 @@ void HybridConfigurator::calculateInnerRegionCenter(
  * @note The inner region center must be calculated before calling this function
  */
 void HybridConfigurator::shiftAtomsToInnerRegionCenter(
-    molsys::SimulationBox& simBox
+    molsys::SimulationBox& simulationBox
 )
 {
-    for (auto& atom : simBox.getAtoms())
+    for (auto& atom : simulationBox.getAtoms())
     {
         auto position = atom->getPosition() - _innerRegionCenter;
-        simBox.applyPBC(position);
+        simulationBox.applyPBC(position);
         atom->setPosition(position);
     }
 }
@@ -107,7 +108,8 @@ void HybridConfigurator::shiftAtomsToInnerRegionCenter(
 /**
  * @brief Shift all atoms back to their original positions before centering
  *
- * @param simBox The simulation box containing all atoms to be shifted back
+ * @param simulationBox The simulation box containing all atoms to be shifted
+ * back
  *
  * @details This function reverses the translation applied by
  *          shiftAtomsToInnerRegionCenter() by adding the inner region center
@@ -119,13 +121,13 @@ void HybridConfigurator::shiftAtomsToInnerRegionCenter(
  *       to restore the original atomic positions
  */
 void HybridConfigurator::shiftAtomsBackToInitialPositions(
-    molsys::SimulationBox& simBox
+    molsys::SimulationBox& simulationBox
 )
 {
-    for (auto& atom : simBox.getAtoms())
+    for (auto& atom : simulationBox.getAtoms())
     {
         auto position = atom->getPosition() + _innerRegionCenter;
-        simBox.applyPBC(position);
+        simulationBox.applyPBC(position);
         atom->setPosition(position);
     }
 }
@@ -134,7 +136,8 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(
  * @brief Assign hybrid zones to all molecules based on their distance from the
  * inner region center
  *
- * @param simBox The simulation box containing molecules to be assigned to zones
+ * @param simulationBox The simulation box containing molecules to be assigned
+ * to zones
  *
  * @details This function assigns each molecule in the simulation box to one of
  * four hybrid zones based on the distance of the molecule's center of mass from
@@ -157,7 +160,7 @@ void HybridConfigurator::shiftAtomsBackToInitialPositions(
  *       shiftAtomsToInnerRegionCenter) before calling this function for
  *       accurate distance calculations
  */
-void HybridConfigurator::assignHybridZones(molsys::SimulationBox& simBox)
+void HybridConfigurator::assignHybridZones(molsys::SimulationBox& simulationBox)
 {
     const auto coreRadius  = HybridSettings::getCoreRadius();
     const auto layerRadius = HybridSettings::getLayerRadius();
@@ -179,9 +182,9 @@ void HybridConfigurator::assignHybridZones(molsys::SimulationBox& simBox)
         }
     };
 
-    for (auto& mol : simBox.getMolecules())
+    for (auto& mol : simulationBox.getMolecules())
     {
-        mol.calculateCenterOfMass(simBox.getBox());
+        mol.calculateCenterOfMass(simulationBox.getBox());
 
         if (mol.isForcedCore())
         {
@@ -223,29 +226,32 @@ void HybridConfigurator::assignHybridZones(molsys::SimulationBox& simBox)
 /**
  * @brief Activate all molecules in the simulation box
  *
- * @param simBox The simulation box containing molecules to be activated
+ * @param simulationBox The simulation box containing molecules to be activated
  *
  * @details This function activates all molecules regardless of their hybrid
  * zone assignment. This is typically used to reset the activation state before
  * applying selective activation/deactivation patterns.
  */
-void HybridConfigurator::activateMolecules(molsys::SimulationBox& simBox)
+void HybridConfigurator::activateMolecules(molsys::SimulationBox& simulationBox)
 {
-    for (auto& mol : simBox.getMolecules()) mol.activateMolecule();
+    for (auto& mol : simulationBox.getMolecules()) mol.activateMolecule();
 }
 
 /**
  * @brief Deactivate molecules in the outer regions (POINT_CHARGE, OUTER)
  *
- * @param simBox The simulation box containing molecules to be deactivated
+ * @param simulationBox The simulation box containing molecules to be
+ * deactivated
  *
  * @details This function deactivates molecules in the outer hybrid zones:
  * POINT_CHARGE and OUTER regions. This is typically used during inner
  * region calculations where only the inner molecules should be active.
  */
-void HybridConfigurator::deactivateOuterMolecules(molsys::SimulationBox& simBox)
+void HybridConfigurator::deactivateOuterMolecules(
+    molsys::SimulationBox& simulationBox
+)
 {
-    for (auto& mol : simBox.getMolecules())
+    for (auto& mol : simulationBox.getMolecules())
     {
         const auto zone = mol.getHybridZone();
 
@@ -257,13 +263,13 @@ void HybridConfigurator::deactivateOuterMolecules(molsys::SimulationBox& simBox)
 /**
  * @brief Activate molecules within hybrid zone SMOOTHING
  *
- * @param simBox The simulation box containing the molecules
+ * @param simulationBox The simulation box containing the molecules
  */
 void HybridConfigurator::activateSmoothingMolecules(
-    molsys::SimulationBox& simBox
+    molsys::SimulationBox& simulationBox
 )
 {
-    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
+    for (auto& mol : simulationBox.getMoleculesInsideZone(SMOOTHING))
         mol.activateMolecule();
 }
 
@@ -272,7 +278,7 @@ void HybridConfigurator::activateSmoothingMolecules(
  *
  * @param inactiveMolecules Set of smoothing molecule indices (0-based within
  * smoothing zone) to be deactivated
- * @param simBox The simulation box containing the molecules
+ * @param simulationBox The simulation box containing the molecules
  *
  * @details This function deactivates only the smoothing molecules specified
  * in the inactiveMolecules set. The indices refer to the position within
@@ -280,11 +286,11 @@ void HybridConfigurator::activateSmoothingMolecules(
  */
 void HybridConfigurator::deactivateSmoothingMolecules(
     const std::unordered_set<size_t>& inactiveMolecules,
-    molsys::SimulationBox&            simBox
+    molsys::SimulationBox&            simulationBox
 )
 {
     size_t count{0};
-    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
+    for (auto& mol : simulationBox.getMoleculesInsideZone(SMOOTHING))
     {
         if (inactiveMolecules.contains(count))
             mol.deactivateMolecule();
@@ -296,17 +302,19 @@ void HybridConfigurator::deactivateSmoothingMolecules(
 /**
  * @brief Toggle the activation state of all molecules in the simulation box
  *
- * @param simBox The simulation box containing molecules with their activation
- * state to be toggled
+ * @param simulationBox The simulation box containing molecules with their
+ * activation state to be toggled
  *
  * @details This function toggles the activation state of each molecule in the
  * simulation box: active molecules are deactivated and inactive molecules are
  * activated. This operation is performed regardless of the molecules' hybrid
  * zone assignments and is useful for implementing complementary calculations.
  */
-void HybridConfigurator::toggleMoleculeActivation(molsys::SimulationBox& simBox)
+void HybridConfigurator::toggleMoleculeActivation(
+    molsys::SimulationBox& simulationBox
+)
 {
-    for (auto& mol : simBox.getMolecules())
+    for (auto& mol : simulationBox.getMolecules())
     {
         if (mol.isActive())
             mol.deactivateMolecule();
@@ -324,21 +332,21 @@ void HybridConfigurator::toggleMoleculeActivation(molsys::SimulationBox& simBox)
  * normalized by the smoothing region thickness. The formula used ensures a
  * smooth transition of the factor within the region.
  *
- * @param simBox Simulation box containing the molecules
+ * @param simulationBox Simulation box containing the molecules
  *
  * @throw HybridConfiguratorException if a molecule is outside the smoothing
  * region
  */
 void HybridConfigurator::calculateSmoothingFactors(
-    molsys::SimulationBox& simBox
+    molsys::SimulationBox& simulationBox
 )
 {
     const auto layer     = HybridSettings::getLayerRadius();
     const auto thickness = HybridSettings::getSmoothingRegionThickness();
 
-    for (auto& mol : simBox.getMoleculesInsideZone(SMOOTHING))
+    for (auto& mol : simulationBox.getMoleculesInsideZone(SMOOTHING))
     {
-        mol.calculateCenterOfMass(simBox.getBox());
+        mol.calculateCenterOfMass(simulationBox.getBox());
         const auto com = norm(mol.getCenterOfMass());
 
         auto distanceFactor = (com - (layer - thickness)) / thickness;

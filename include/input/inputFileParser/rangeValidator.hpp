@@ -51,6 +51,13 @@ namespace input
         LT,
     };
 
+    /**
+     * @brief Validates that a value falls within a specified range.
+     *
+     * @tparam T The type of the value to validate.
+     * @tparam G The type of the greater-than constraint (GE or GT).
+     * @tparam L The type of the less-than constraint (LE or LT).
+     */
     template <typename T, Greater G = Greater::GE, Less L = Less::LE>
     class RangeValidator : public KeyValidator<T>
     {

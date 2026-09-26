@@ -45,24 +45,28 @@ Manostat::Manostat(double targetPressure) : _targetPressure(targetPressure) {}
 /**
  * @brief calculate the pressure of the system
  *
- * @param box
- * @param data
+ * @param simulationBox The simulation box containing the system
+ * @param physicalData The physical data of the system
  */
-void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
+void Manostat::calculatePressure(
+    const SimulationBox& simulationBox,
+    PhysicalData&        physicalData
+)
 {
-    auto ekinVirial =
-        data.getKinEnergyVirialTensor(settings::Settings::getVirialType());
-    auto       forceVirial = data.getVirial();
-    const auto volume      = box.getVolume();
+    auto ekinVirial = physicalData.getKinEnergyVirialTensor(
+        settings::Settings::getVirialType()
+    );
+    auto       forceVirial = physicalData.getVirial();
+    const auto volume      = simulationBox.getVolume();
 
-    ekinVirial  = box.getBox().toOrthoSpace(ekinVirial);
-    forceVirial = box.getBox().toOrthoSpace(forceVirial);
+    ekinVirial  = simulationBox.getBox().toOrthoSpace(ekinVirial);
+    forceVirial = simulationBox.getBox().toOrthoSpace(forceVirial);
 
     _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
     _pressureTensor *= PRESSURE_FACTOR;
     _pressure        = trace(_pressureTensor) / linalg::tensor3D::size;
 
-    data.setPressure(_pressure);
+    physicalData.setPressure(_pressure);
 
     const auto fixedAxis = ManostatSettings::getFixedAxis();
     const auto p_xyz     = diagonal(_pressureTensor);
@@ -82,11 +86,11 @@ void Manostat::calculatePressure(const SimulationBox& box, PhysicalData& data)
     if (numFree > 0)
     {
         p_avg /= static_cast<double>(numFree);
-        data.setCoupledPressure(p_avg);
+        physicalData.setCoupledPressure(p_avg);
     }
     else
     {
-        data.setCoupledPressure(_pressure);
+        physicalData.setCoupledPressure(_pressure);
     }
 }
 
@@ -113,14 +117,17 @@ void Manostat::rotateMu(tensor3D& mu)
 /**
  * @brief apply dummy manostat for NVT ensemble
  *
- * @param box
- * @param data
+ * @param simulationBox The simulation box containing the system
+ * @param physicalData The physical data of the system
  */
-void Manostat::applyManostat(SimulationBox& box, PhysicalData& data)
+void Manostat::applyManostat(
+    SimulationBox& simulationBox,
+    PhysicalData&  physicalData
+)
 {
     auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");
 
-    calculatePressure(box, data);
+    calculatePressure(simulationBox, physicalData);
 }
 
 /**
