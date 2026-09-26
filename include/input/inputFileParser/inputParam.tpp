@@ -28,6 +28,7 @@
 #include "exceptions.hpp"
 #include "inputConverter.hpp"
 #include "inputParam.hpp"
+#include "stringUtilities.hpp"
 
 namespace input
 {
@@ -285,6 +286,8 @@ namespace input
             return mstd::enum_meta_t<T>::toString(value);
         else if constexpr (std::same_as<T, bool>)
             return value ? "true" : "false";
+        else if constexpr (std::same_as<T, mstd::File>)
+            return value.fileName();
         else
             return std::format("{}", value);
     }

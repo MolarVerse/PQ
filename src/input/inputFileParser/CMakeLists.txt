@@ -27,6 +27,7 @@ add_library(inputFileParser
     inputRegistry.cpp
     inputConverter.cpp
     parserUtils.cpp
+    inputKeyBase.cpp
 )
 
 target_include_directories(inputFileParser

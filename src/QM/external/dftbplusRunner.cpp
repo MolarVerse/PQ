@@ -29,8 +29,9 @@
 #include <format>       // for format
 #include <fstream>      // for ofstream
 #include <iterator>     // for std::ranges::distance
-#include <set>          // for set
-#include <string>       // for string
+#include <mstd/file.hpp>
+#include <set>      // for set
+#include <string>   // for string
 
 #include "box.hpp"   // for molsys::Periodicity
 #include "constants.hpp"
@@ -186,7 +187,7 @@ void DFTBPlusRunner::execute(SimulationBox &simulationBox)
 {
     const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
-    if (!fileExists(scriptFile))
+    if (!mstd::File(scriptFile).exists())
         throw InputFileException(
             std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
         );

@@ -38,10 +38,14 @@ namespace input
     {
        private:
         std::unordered_map<std::string, std::unique_ptr<InputKeyBase>> _keys;
+        std::unordered_map<std::string, std::unique_ptr<DeprecatedInputKey>>
+            _deprecatedKeys;
 
        public:
         template <typename T>
         InputKey<T> &registerKey(const KeyRegistry<T> &keyRegistry);
+
+        void registerDeprecatedKey(const DeprecatedInputKey &deprecatedKey);
 
         void parseLine(
             const std::vector<std::string> &lineElements,

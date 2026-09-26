@@ -25,16 +25,17 @@
 #include <filesystem>   // for remove
 #include <format>       // for format
 #include <fstream>      // for ofstream
-#include <string>       // for string
+#include <mstd/file.hpp>
+#include <string>   // for string
 
-#include "constants.hpp"            // for constants
-#include "exceptions.hpp"           // for InputFileException
-#include "fileSettings.hpp"         // for FileSettings
-#include "hybridConfigurator.hpp"   // for HybridConfigurator
-#include "hybridSettings.hpp"       // for SmoothingMethod
-#include "qmSettings.hpp"           // for QMSettings
-#include "simulationBox.hpp"        // for SimulationBox
-#include "stringUtilities.hpp"      // for fileExists
+#include "constants.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "hybridConfigurator.hpp"
+#include "hybridSettings.hpp"
+#include "qmSettings.hpp"
+#include "simulationBox.hpp"
+#include "stringUtilities.hpp"
 
 using QM::TurbomoleRunner;
 
@@ -124,7 +125,7 @@ void TurbomoleRunner::execute(SimulationBox &simulationBox)
 
     const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
 
-    if (!fileExists(scriptFile))
+    if (!mstd::File(scriptFile).exists())
     {
         throw InputFileException(
             std::format(

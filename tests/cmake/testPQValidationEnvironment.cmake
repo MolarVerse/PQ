@@ -86,7 +86,7 @@ file(
 assert_invalid(
     "directory-reference.in"
     installed
-    "Cannot open start file.*start-directory"
+    "Invalid value.*start-directory.*start_file.*existing file path"
 )
 
 file(MAKE_DIRECTORY "${VALIDATION_WORK_DIR}/topology-directory")
@@ -104,14 +104,14 @@ file(
 assert_invalid(
     "force-field.in"
     installed
-    "Cannot open topology file.*topology-directory"
+    "Invalid value.*topology-directory.*topology_file.*existing file path"
 )
 file(REMOVE_RECURSE "${VALIDATION_WORK_DIR}/topology-directory")
 file(WRITE "${VALIDATION_WORK_DIR}/topology-directory" "")
 assert_invalid(
     "force-field.in"
     installed
-    "Cannot open parameter file.*parameter-directory"
+    "Invalid value.*parameter-directory.*parameter_file.*existing file path"
 )
 file(REMOVE_RECURSE "${VALIDATION_WORK_DIR}/parameter-directory")
 file(WRITE "${VALIDATION_WORK_DIR}/parameter-directory" "")

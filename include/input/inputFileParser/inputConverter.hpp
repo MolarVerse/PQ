@@ -25,11 +25,11 @@
 
 #include <concepts>
 #include <map>
+#include <mstd/file.hpp>
+#include <mstd/type_traits.hpp>
 #include <optional>
 #include <string>
 #include <string_view>
-
-#include "mstd/type_traits/enum_traits.hpp"
 
 /**
  * @namespace input
@@ -139,6 +139,31 @@ namespace input
 
         [[nodiscard]]
         static std::string describeDomain();
+    };
+
+    /**
+     * @brief Converter specialization for File
+     *
+     */
+    template <>
+    struct Converter<mstd::File>
+    {
+        [[nodiscard]]
+        static std::optional<mstd::File> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        static std::string describeDomain();
+    };
+
+    /**
+     * @brief Converter specialization for std::string
+     *
+     */
+    template <>
+    struct Converter<std::string>
+    {
+        [[nodiscard]]
+        static std::optional<std::string> tryParse(std::string_view raw);
     };
 
     template <typename T>
