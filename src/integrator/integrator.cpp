@@ -61,11 +61,13 @@ namespace integrator
      * @brief integrates the positions of a single atom
      *
      * @param atom
-     * @param simBox
+     * @param simulationBox
      */
     void Integrator::integratePositions(
-        molsys::Atom                *atom,
-        const molsys::SimulationBox &simBox
+        molsys::Atom *atom,
+
+        const molsys::SimulationBox &simulationBox
+
     )
     {
         auto       position = atom->getPosition();
@@ -74,7 +76,7 @@ namespace integrator
         position +=
             settings::TimingsSettings::getTimeStep() * velocity * FS_TO_S;
 
-        simBox.applyPBC(position);
+        simulationBox.applyPBC(position);
 
         atom->setPosition(position);
     }

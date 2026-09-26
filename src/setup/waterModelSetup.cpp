@@ -96,10 +96,10 @@ namespace setup
 
         if (!waterType.has_value())
         {
-            throw(exc::UserInputException(
+            throw exc::UserInputException(
                 "Use of water model has been requested in the input file, but "
                 "no water type is specified in the moldescriptor file."
-            ));
+            );
         }
 
         const auto water =
@@ -108,17 +108,17 @@ namespace setup
         // water atoms have to be in this order for calculation
         if (water.getAtomNames() != std::vector<std::string>{"O", "H", "H"})
         {
-            throw(exc::MolDescriptorException(
+            throw exc::MolDescriptorException(
                 "Water molecule type must have exactly 3 atoms in the "
                 "following "
                 "order: O (oxygen), H (hydrogen), H (hydrogen)."
-            ));
+            );
         }
 
         if (settings::Settings::isQMOnlyJobtype())
-            throw(exc::UserInputException(
+            throw exc::UserInputException(
                 "Water models are not supported for QM-only job types."
-            ));
+            );
 
         makeIntraWater();
 
@@ -187,7 +187,7 @@ namespace setup
 
             if (involvesWater)
             {
-                throw(exc::UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "A water type molecule is included in the bond list of "
                         "the "
@@ -203,7 +203,7 @@ namespace setup
                             settings::WaterModelSettings::getWaterIntraModel()
                         )
                     )
-                ));
+                );
             }
 
             ++bondIndex;
@@ -225,7 +225,7 @@ namespace setup
 
             if (involvesWater)
             {
-                throw(exc::UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "A water type molecule is included in the angle list "
                         "of "
@@ -241,7 +241,7 @@ namespace setup
                             settings::WaterModelSettings::getWaterIntraModel()
                         )
                     )
-                ));
+                );
             }
 
             ++angleIndex;
@@ -275,7 +275,7 @@ namespace setup
             const auto       actual = water.getPartialCharge(atomIndex);
             if (std::abs(actual - expected) > tol)
             {
-                throw(exc::UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Water molecule partial charge mismatch for atom {}: "
                         "expected {} (according to {} water model), got {}.",
@@ -284,7 +284,7 @@ namespace setup
                         modelName,
                         actual
                     )
-                ));
+                );
             }
         };
 

@@ -101,14 +101,14 @@ namespace thermostat
      */
     void NoseHooverThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &data
+        physicalData::PhysicalData &physicalData
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
-        data.calculateTemperature(simulationBox);
+        physicalData.calculateTemperature(simulationBox);
 
-        _temperature = data.getTemperature();
+        _temperature = physicalData.getTemperature();
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
@@ -153,8 +153,8 @@ namespace thermostat
             energyFriction += _zeta[i];
         }
 
-        data.setNoseHooverMomentumEnergy(energyMomentum);
-        data.setNoseHooverFrictionEnergy(energyFriction);
+        physicalData.setNoseHooverMomentumEnergy(energyMomentum);
+        physicalData.setNoseHooverFrictionEnergy(energyFriction);
     }
 
     /***************************

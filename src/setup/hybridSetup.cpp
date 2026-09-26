@@ -108,7 +108,7 @@ namespace setup
         case MACE:
         case FENNOL:
         case NONE:
-            throw(exc::InputFileException(errorMsg));
+            throw exc::InputFileException(errorMsg);
     }
         // clang-format on
     }
@@ -194,19 +194,19 @@ namespace setup
 
         if (coreRadius > layerRadius)
         {
-            throw(exc::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "Core radius ({} Å) cannot be larger than layer radius ({} "
                     "Å)",
                     coreRadius,
                     layerRadius
                 )
-            ));
+            );
         }
 
         if (coreRadius > (layerRadius - smoothingRegionThickness))
         {
-            throw(exc::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "Smoothing region is too thick ({} Å) for the chosen "
                     "combination of core ({} Å) and layer radius ({} Å)",
@@ -214,12 +214,12 @@ namespace setup
                     coreRadius,
                     layerRadius
                 )
-            ));
+            );
         }
 
         if (layerRadius > (minimalBoxDimension / 4))
         {
-            throw(exc::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "Layer radius ({} Å) exceeds one quarter of the smallest "
                     "box "
@@ -229,13 +229,13 @@ namespace setup
                     layerRadius,
                     minimalBoxDimension
                 )
-            ));
+            );
         }
 
         if ((layerRadius + pointChargeThickness) >
             (minimalBoxDimension * 3 / 2))
         {
-            throw(exc::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "Layer radius ({} Å) plus point charge thickness ({} Å) "
                     "exceeds three halves of the smallest box dimension ({} "
@@ -247,7 +247,7 @@ namespace setup
                     pointChargeThickness,
                     minimalBoxDimension
                 )
-            ));
+            );
         }
     }
 
@@ -271,14 +271,14 @@ namespace setup
 
         if (mmChargesRequested && qmAtomsPresent)
         {
-            throw(exc::InputFileException(
+            throw exc::InputFileException(
                 "Invalid configuration: MM charges requested (qm_charges = mm) "
                 "in "
                 "input file but atoms with moltype \"0\" are present in the "
                 "system. Either set \"qm_charges = qm\" or ensure all atoms "
                 "have a"
                 "non-zero moltype."
-            ));
+            );
         }
     }
 
