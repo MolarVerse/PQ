@@ -73,9 +73,9 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simulationBox)
 
 #ifdef WITH_MPI
     if (mpi::MPI::isRoot())
-        std::ranges::for_each(simBox.getAtoms(), generateVelocities);
+        std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 
-    auto velocities = simBox.flattenVelocities();
+    auto velocities = simulationBox.flattenVelocities();
 
     ::MPI_Bcast(
         velocities.data(),
@@ -85,7 +85,7 @@ void MaxwellBoltzmann::initializeVelocities(SimulationBox &simulationBox)
         MPI_COMM_WORLD
     );
 
-    simBox.deFlattenVelocities(velocities);
+    simulationBox.deFlattenVelocities(velocities);
 #else
     std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 #endif
