@@ -28,6 +28,20 @@
 namespace input
 {
     /**
+     * @brief Registers a deprecated input key.
+     *
+     * @param name the name of the deprecated key
+     * @return a reference to the registered DeprecatedInputKey
+     */
+    void InputRegistry::registerDeprecatedKey(
+        const DeprecatedInputKey &deprecatedKey
+    )
+    {
+        auto key = std::make_unique<DeprecatedInputKey>(deprecatedKey);
+        _deprecatedKeys[deprecatedKey.getKey()] = std::move(key);
+    }
+
+    /**
      * @brief Parses a line from the input file and updates the corresponding
      * key's value.
      *

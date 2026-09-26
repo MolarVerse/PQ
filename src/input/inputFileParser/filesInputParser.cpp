@@ -22,18 +22,91 @@
 
 #include "filesInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
+#include <mstd/file.hpp>
 #include <utility>
 
-#include "exceptions.hpp"   // for InputFileException
-#include "file.hpp"
 #include "fileSettings.hpp"   // for FileSettings
-#include "parserUtils.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyRegistry.hpp"
 
 using namespace input;
 using namespace exc;
 using namespace settings;
+
+namespace
+{
+    /**
+     * @brief Add a file keyword to the parser
+     *
+     * @tparam T The type of the file
+     * @param metaData The metadata for the key
+     * @param setValue The function to set the value
+     * @param parser The input file parser
+     * @param registry The key registry
+     * @param isRequired Flag indicating whether the key is required
+     */
+    template <typename T>
+    void addFileKeywordImpl(
+        const KeyMetadata &metaData,
+        const auto        &setValue,
+        auto              &parser,
+        auto              &registry,
+        bool               isRequired
+    )
+    {
+        auto keyRegistry = [&, metaData, setValue]<typename U>()
+        { return KeyRegistry<U>{.metadata = metaData, .onSet = setValue}; };
+
+        parser.addKeyword(
+            metaData.name,
+            adapt(registry.registerKey(keyRegistry.template operator()<T>())),
+            isRequired
+        );
+    }
+
+    /**
+     * @brief Add a file keyword to the parser, choosing between std::string and
+     * File based on validation flag
+     *
+     * @param metaData The metadata for the key
+     * @param setValue The function to set the value
+     * @param parser The input file parser
+     * @param registry The key registry
+     * @param isRequired Flag indicating whether the key is required
+     * @param validateFilePaths Flag indicating whether to validate file paths
+     *
+     */
+    void addFileKeyword(
+        const KeyMetadata &metaData,
+        const auto        &setValue,
+        auto              &parser,
+        auto              &registry,
+        bool               isRequired,
+        bool               validateFilePaths
+    )
+    {
+        if (!validateFilePaths)
+        {
+            addFileKeywordImpl<std::string>(
+                metaData,
+                setValue,
+                parser,
+                registry,
+                isRequired
+            );
+        }
+        else
+        {
+            addFileKeywordImpl<mstd::File>(
+                metaData,
+                setValue,
+                parser,
+                registry,
+                isRequired
+            );
+        }
+    }
+}   // namespace
 
 /**
  * @brief Construct a new Input File Parser Non Coulomb Type:: Input File Parser
@@ -77,364 +150,365 @@ FilesInputParser::FilesInputParser(
       _intraNonBonded(std::move(intraNonBonded)),
       _validateFilePaths(validateFilePaths)
 {
-    addKeyword(
-        std::string("intra-nonBonded_file"),
-        bindMember(&FilesInputParser::parseIntraNonBondedFile, this),
-        false
-    );
-
-    addKeyword(
-        std::string("topology_file"),
-        bindMember(&FilesInputParser::parseTopologyFilename, this),
-        false
-    );
-
-    addKeyword(
-        std::string("parameter_file"),
-        bindMember(&FilesInputParser::parseParameterFilename, this),
-        false
-    );
-
-    addKeyword(
-        std::string("start_file"),
-        bindMember(&FilesInputParser::parseStartFilename, this),
-        true
-    );
-
-    addKeyword(
-        std::string("rpmd_start_file"),
-        bindMember(&FilesInputParser::parseRingPolymerStartFilename, this),
-        false
-    );
-
-    addKeyword(
-        std::string("moldescriptor_file"),
-        bindMember(&FilesInputParser::parseMoldescriptorFilename, this),
-        false
-    );
-
-    addKeyword(
-        std::string("guff_path"),
-        bindMember(&FilesInputParser::parseGuffPath, this),
-        false
-    );
-
-    addKeyword(
-        std::string("guff_file"),
-        bindMember(&FilesInputParser::parseGuffDatFilename, this),
-        false
-    );
-
-    addKeyword(
-        std::string("mshake_file"),
-        bindMember(&FilesInputParser::parseMShakeFilename, this),
-        false
-    );
-
-    addKeyword(
-        std::string("dftb_file"),
-        bindMember(&FilesInputParser::parseDFTBFilename, this),
-        false
-    );
-
-    addKeyword(
-        std::string("turbomole_file"),
-        bindMember(&FilesInputParser::parseTMFilename, this),
-        false
-    );
+    addIntraNonBondedFileKey();
+    addTopologyFileKey();
+    addParameterFileKey();
+    addStartFileKey();
+    addRingPolymerStartFileKey();
+    addMoldescriptorFileKey();
+    addGuffDatFileKey();
+    addGuffPathKey();
+    addMShakeFileKey();
+    addDFTBFileKey();
+    addTMFileKey();
 }
 
 /**
- * @brief Parse the name of the file containing the intraNonBonded combinations
+ * @brief Adds the intra-nonBonded_file keyword to the parser
  *
- * @details Settings this keyword activates the intraNonBonded interactions
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if the file does not exist
+ * This keyword specifies the file containing intra non bonded combinations.
  */
-void FilesInputParser::parseIntraNonBondedFile(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void FilesInputParser::addIntraNonBondedFileKey()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name        = "intra-nonBonded_file",
+        .title       = "Intra Non Bonded File",
+        .description = "File containing intra non bonded combinations"
+    };
 
-    const auto &fileName = lineElements[2];
-
-    if (_validateFilePaths && !File(fileName).exists())
-        throw InputFileException(
-            std::format("Intra non bonded file \"{}\" File not found", fileName)
-        );
-
-    _intraNonBonded->activate();
-
-    FileSettings::setIntraNonBondedFileName(fileName);
-    FileSettings::setIsIntraNonBondedFileNameSet();
-}
-
-/**
- * @brief parse topology file name of simulation and set it in settings
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if topology filename is empty or
- * file does not exist
- */
-void FilesInputParser::parseTopologyFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-) const
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto &filename = lineElements[2];
-
-    if (_validateFilePaths && !File(filename).exists())
-        throw InputFileException(
-            std::format("Cannot open topology file - filename = {}", filename)
-        );
-
-    FileSettings::setTopologyFileName(filename);
-    FileSettings::setIsTopologyFileNameSet();
-}
-
-/**
- * @brief parse parameter file name of simulation and set it in settings
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if parameter filename is empty or
- * file does not exist
- */
-void FilesInputParser::parseParameterFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-) const
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto &filename = lineElements[2];
-
-    if (_validateFilePaths && !File(filename).exists())
-        throw InputFileException(
-            std::format("Cannot open parameter file - filename = {}", filename)
-        );
-
-    FileSettings::setParameterFileName(filename);
-    FileSettings::setIsParameterFileNameSet();
-}
-
-/**
- * @brief parse start file of simulation and set it in settings
- *
- * @param lineElements
- * @param lineNumber
- */
-void FilesInputParser::parseStartFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-) const
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto &filename = lineElements[2];
-
-    if (_validateFilePaths && !File(filename).exists())
-        throw InputFileException(
-            std::format("Cannot open start file - filename = {}", filename)
-        );
-
-    FileSettings::setStartFileName(filename);
-}
-
-/**
- * @brief parse ring polymer start file of simulation and set it in settings
- *
- * @param lineElements
- * @param lineNumber
- */
-void FilesInputParser::parseRingPolymerStartFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-) const
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto &filename = lineElements[2];
-
-    if (_validateFilePaths && !File(filename).exists())
+    const auto setValue =
+        [intraNonBonded = _intraNonBonded]<typename T>(const T &value) -> void
     {
-        throw InputFileException(
-            std::format(
-                "Cannot open ring polymer start file - filename = {}",
-                filename
-            )
-        );
-    }
+        intraNonBonded->activate();
 
-    FileSettings::setRingPolymerStartFileName(filename);
-    FileSettings::setIsRingPolymerStartFileNameSet();
-}
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setIntraNonBondedFileName(value);
+        else
+            FileSettings::setIntraNonBondedFileName(value.fileName());
 
-/**
- * @brief parse moldescriptor file of simulation and set it in settings
- *
- * @details default is moldescriptor.dat
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if file does not exist
- */
-void FilesInputParser::parseMoldescriptorFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-) const
-{
-    checkCommand(lineElements, lineNumber);
+        FileSettings::setIsIntraNonBondedFileNameSet();
+    };
 
-    const auto &filename = lineElements[2];
-
-    if (_validateFilePaths && !File(filename).exists())
-    {
-        throw InputFileException(
-            std::format(
-                "Cannot open moldescriptor file - filename = \"{}\" - file not "
-                "found",
-                filename
-            )
-        );
-    }
-
-    FileSettings::setMolDescriptorFileName(filename);
-}
-
-/**
- * @brief parse guff path of simulation and set it in settings
- *
- * @throws InputFileException deprecated keyword
- */
-void FilesInputParser::parseGuffPath(
-    const std::vector<std::string> & /*lineElements*/,
-    size_t /*lineNumber*/
-)
-{
-    throw InputFileException(
-        std::format(
-            "The \"guff_path\" keyword id deprecated. Please use "
-            "\"guffdat_file\" "
-            "instead."
-        )
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
     );
 }
 
 /**
- * @brief parse guff dat file of simulation and set it in settings
+ * @brief Adds the topology_file keyword to the parser
  *
- * @details default is guff.dat
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if file does not exist
+ * This keyword specifies the file containing the topology of the system.
  */
-void FilesInputParser::parseGuffDatFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-) const
+void FilesInputParser::addTopologyFileKey()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name        = "topology_file",
+        .title       = "Topology File",
+        .description = "File containing the topology of the system"
+    };
 
-    const auto &filename = lineElements[2];
-
-    if (_validateFilePaths && !File(filename).exists())
-        throw InputFileException(
-            std::format("Cannot open guff file - filename = {}", filename)
-        );
-
-    FileSettings::setGuffDatFileName(filename);
-}
-
-/**
- * @brief parse mshake file of simulation and set it in settings
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if file does not exist
- */
-void FilesInputParser::parseMShakeFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-) const
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto &filename = lineElements[2];
-
-    if (_validateFilePaths && !File(filename).exists())
-        throw InputFileException(
-            std::format("Cannot open mshake file - filename = {}", filename)
-        );
-
-    FileSettings::setMShakeFileName(filename);
-}
-
-/**
- * @brief parse dftb file of simulation and set it in settings
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if file does not exist
- */
-void FilesInputParser::parseDFTBFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-) const
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto &filename = lineElements[2];
-
-    if (_validateFilePaths && !File(filename).exists())
-        throw InputFileException(
-            std::format("Cannot open DFTB setup file - filename = {}", filename)
-        );
-
-    FileSettings::setDFTBFileName(filename);
-}
-
-/**
- * @brief parse Turbomole file of simulation and set it in settings
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if file does not exist
- */
-void FilesInputParser::parseTMFilename(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto &filename = lineElements[2];
-
-    if (!File(filename).exists())
+    const auto setValue = []<typename T>(const T &value) -> void
     {
-        throw InputFileException(
-            std::format(
-                "Cannot open TURBOMOLE setup file - filename = {}",
-                filename
-            )
-        );
-    }
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setTopologyFileName(value);
+        else
+            FileSettings::setTopologyFileName(value.fileName());
 
-    FileSettings::setTMFileName(filename);
+        FileSettings::setIsTopologyFileNameSet();
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the parameter_file keyword to the parser
+ *
+ * This keyword specifies the file containing the parameters of the system.
+ */
+void FilesInputParser::addParameterFileKey()
+{
+    const auto metaData = KeyMetadata{
+        .name        = "parameter_file",
+        .title       = "Parameter File",
+        .description = "File containing the parameters of the system"
+    };
+
+    const auto setValue = []<typename T>(const T &value) -> void
+    {
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setParameterFileName(value);
+        else
+            FileSettings::setParameterFileName(value.fileName());
+
+        FileSettings::setIsParameterFileNameSet();
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the start_file keyword to the parser
+ *
+ * This keyword specifies the file containing the start configuration of the
+ * system.
+ */
+void FilesInputParser::addStartFileKey()
+{
+    const auto metaData = KeyMetadata{
+        .name        = "start_file",
+        .title       = "Start File",
+        .description = "File containing the start configuration of the system"
+    };
+
+    const auto setValue = []<typename T>(const T &value) -> void
+    {
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setStartFileName(value);
+        else
+            FileSettings::setStartFileName(value.fileName());
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        true,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the ring_polymer_start_file keyword to the parser
+ *
+ * This keyword specifies the file containing the ring polymer start
+ * configuration of the system.
+ */
+void FilesInputParser::addRingPolymerStartFileKey()
+{
+    const auto metaData = KeyMetadata{
+        .name  = "rpmd_start_file",
+        .title = "Ring Polymer Start File",
+        .description =
+            "File containing the ring polymer start configuration of the system"
+    };
+
+    const auto setValue = []<typename T>(const T &value) -> void
+    {
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setRingPolymerStartFileName(value);
+        else
+            FileSettings::setRingPolymerStartFileName(value.fileName());
+
+        FileSettings::setIsRingPolymerStartFileNameSet();
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the moldescriptor_file keyword to the parser
+ *
+ * This keyword specifies the file containing the molecular descriptor of the
+ * system.
+ */
+void FilesInputParser::addMoldescriptorFileKey()
+{
+    const auto metaData = KeyMetadata{
+        .name        = "moldescriptorFile_name",
+        .title       = "Mol Descriptor File",
+        .description = "File containing the molecular descriptor of the system"
+    };
+
+    const auto setValue = []<typename T>(const T &value) -> void
+    {
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setMolDescriptorFileName(value);
+        else
+            FileSettings::setMolDescriptorFileName(value.fileName());
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the guffdat_file keyword to the parser
+ *
+ * This keyword specifies the file containing the guff dat configuration of the
+ * system.
+ */
+void FilesInputParser::addGuffDatFileKey()
+{
+    const auto metaData = KeyMetadata{
+        .name  = "guffdat_file",
+        .title = "Guff Dat File",
+        .description =
+            "File containing the guff dat configuration of the system"
+    };
+
+    const auto setValue = []<typename T>(const T &value) -> void
+    {
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setGuffDatFileName(value);
+        else
+            FileSettings::setGuffDatFileName(value.fileName());
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the mshake_file keyword to the parser
+ *
+ * This keyword specifies the file containing the MShake configuration of the
+ * system.
+ */
+void FilesInputParser::addMShakeFileKey()
+{
+    const auto metaData = KeyMetadata{
+        .name        = "mshake_file",
+        .title       = "MShake File",
+        .description = "File containing the MShake configuration of the system"
+    };
+
+    const auto setValue = []<typename T>(const T &value) -> void
+    {
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setMShakeFileName(value);
+        else
+            FileSettings::setMShakeFileName(value.fileName());
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the dftb_file keyword to the parser
+ *
+ * This keyword specifies the file containing the DFTB configuration of the
+ * system.
+ */
+void FilesInputParser::addDFTBFileKey()
+{
+    const auto metaData = KeyMetadata{
+        .name        = "dftb_file",
+        .title       = "DFTB File",
+        .description = "File containing the DFTB configuration of the system"
+    };
+
+    const auto setValue = []<typename T>(const T &value) -> void
+    {
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setDFTBFileName(value);
+        else
+            FileSettings::setDFTBFileName(value.fileName());
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the tm_file keyword to the parser
+ *
+ * @details registers the "tm_file" key and associates it with the appropriate
+ * callback that sets the Turbomole file name in the settings.
+ */
+void FilesInputParser::addTMFileKey()
+{
+    const auto metaData = KeyMetadata{
+        .name  = "turbomole_file",
+        .title = "Turbomole File",
+        .description =
+            "File containing the Turbomole configuration of the system"
+    };
+
+    const auto setValue = []<typename T>(const T &value) -> void
+    {
+        if constexpr (std::is_same_v<T, std::string>)
+            FileSettings::setTMFileName(value);
+        else
+            FileSettings::setTMFileName(value.fileName());
+    };
+
+    addFileKeyword(
+        metaData,
+        setValue,
+        *this,
+        _getRegistry(),
+        false,
+        _validateFilePaths
+    );
+}
+
+/**
+ * @brief Adds the deprecated guff_path keyword to the parser
+ *
+ * @details registers the "guff_path" key as deprecated and associates it
+ * with the appropriate callback that throws an exception when used.
+ */
+void FilesInputParser::addGuffPathKey()
+{
+    const auto deprecatedKey = DeprecatedInputKey(
+        "guff_path",
+        "The \"guff_path\" keyword is deprecated. Please use \"guffdat_file\" "
+        "instead."
+    );
+
+    _getRegistry().registerDeprecatedKey(deprecatedKey);
+
+    addKeyword(deprecatedKey.getKey(), adapt(deprecatedKey), false);
 }
