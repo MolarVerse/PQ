@@ -56,7 +56,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"topology.txt\" for key \"topology_file\" at line 0 in "
-        "input file. Possible options are: existing file path"
+        "input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -92,7 +92,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"param.txt\" for key \"parameter_file\" at line 0 in "
-        "input file. Possible options are: existing file path"
+        "input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -129,7 +129,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"intra.dat\" for key \"intra-nonBonded_file\" at line "
-        "0 in input file. Possible options are: existing file path"
+        "0 in input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -162,7 +162,7 @@ TEST_F(TestInputFileReader, testStartFileName)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"start.xyz\" for key \"start_file\" at line 0 in "
-        "input file. Possible options are: existing file path"
+        "input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -196,7 +196,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
         exc::InputFileException,
         "Invalid value \"moldescriptor.txt\" for key "
         "\"moldescriptorFile_name\" at line 0 in "
-        "input file. Possible options are: existing file path"
+        "input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -248,7 +248,7 @@ TEST_F(TestInputFileReader, guffDatFilename)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"guff.dat\" for key \"guffdat_file\" at line 0 in "
-        "input file. Possible options are: existing file path"
+        "input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -280,7 +280,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"rpmd_start.xyz\" for key \"rpmd_start_file\" "
-        "at line 0 in input file. Possible options are: existing file path"
+        "at line 0 in input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -313,7 +313,7 @@ TEST_F(TestInputFileReader, testMShakeFileName)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"mshake.dat\" for key \"mshake_file\" at line 0 in "
-        "input file. Possible options are: existing file path"
+        "input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -346,7 +346,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"dftb_in.template\" for key \"dftb_file\" at line 0 in "
-        "input file. Possible options are: existing file path"
+        "input file. Value must be an existing file path."
     );
 
     clearParser(parser);
@@ -379,8 +379,7 @@ TEST_F(TestInputFileReader, testTMFileName)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"tm_define.template\" for key \"turbomole_file\" at "
-        "line 0 in "
-        "input file. Possible options are: existing file path"
+        "line 0 in input file. Value must be an existing file path."
     );
 
     clearParser(parser);

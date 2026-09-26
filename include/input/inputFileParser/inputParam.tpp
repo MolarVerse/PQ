@@ -28,7 +28,6 @@
 #include "exceptions.hpp"
 #include "inputConverter.hpp"
 #include "inputParam.hpp"
-#include "stringUtilities.hpp"
 
 namespace input
 {
@@ -80,11 +79,11 @@ namespace input
                       )
                     : std::format(
                           "Invalid value \"{}\" for key \"{}\" at line "
-                          "{} in input file. Possible options are: {}",
+                          "{} in input file. {}",
                           raw,
                           _metadata.name,
                           lineNumber,
-                          describeDomain<T>()
+                          Converter<T>::describeDomain()
                       )
             );
         }

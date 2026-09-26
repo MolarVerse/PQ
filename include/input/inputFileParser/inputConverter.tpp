@@ -102,7 +102,7 @@ namespace input
     {
         using Meta = mstd::enum_meta_t<T>;
 
-        std::string allowed;
+        std::string allowed = "Allowed values: ";
         for (size_t i = 0; i < Meta::size; ++i)
         {
             if (i != 0)
@@ -123,7 +123,7 @@ namespace input
     requires(!std::same_as<T, bool>)
     std::string Converter<T>::describeDomain()
     {
-        return "positive integer";
+        return "Value must be a positive integer";
     }
 
     /**
@@ -135,36 +135,9 @@ namespace input
      * @tparam T
      */
     template <typename T>
-    std::string describeDomain()
+    std::string ConverterBase<T>::describeDomain()
     {
-        if constexpr (mstd::has_enum_meta<T>)
-            return Converter<T>::describeDomain();
-        else if constexpr (std::same_as<T, bool>)
-        {
-            std::string options;
-            for (const auto& [positive, negative] : boolKeywords)
-            {
-                if (!options.empty())
-                    options += "|";
-
-                options += positive;
-                options += "|";
-                options += negative;
-            }
-            return options;
-        }
-        else if constexpr (std::unsigned_integral<T>)
-        {
-            return Converter<T>::describeDomain();
-        }
-        else if constexpr (std::same_as<T, mstd::File>)
-        {
-            return Converter<T>::describeDomain();
-        }
-        else
-        {
-            return "<value>";
-        }
+        return "<value>";
     }
 }   // namespace input
 
