@@ -30,8 +30,7 @@ namespace input
     /**
      * @brief Registers a deprecated input key.
      *
-     * @param name the name of the deprecated key
-     * @return a reference to the registered DeprecatedInputKey
+     * @param deprecatedKey the deprecated input key to register
      */
     void InputRegistry::registerDeprecatedKey(
         const DeprecatedInputKey &deprecatedKey
