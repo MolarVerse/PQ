@@ -11,6 +11,7 @@ on:
     branches:
       - main
       - dev
+      - NEXT
 
 permissions:
   pull-requests: write

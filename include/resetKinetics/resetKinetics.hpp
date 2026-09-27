@@ -58,10 +58,6 @@ namespace resetKinetics
         size_t _frequencyAngularReset;
         size_t _nStepsForcesReset;
 
-        double        _temperature = 0.0;
-        linalg::Vec3D _momentum;
-        linalg::Vec3D _angularMomentum;
-
        public:
         ResetKinetics() = default;
         ResetKinetics(
@@ -78,19 +74,21 @@ namespace resetKinetics
             size_t step,
             physicalData::PhysicalData &,
             molsys::SimulationBox &
-        );
-        void resetTemperature(molsys::SimulationBox &);
-        void resetMomentum(molsys::SimulationBox &);
-        void resetAngularMomentum(molsys::SimulationBox &);
+        ) const;
         void resetForces(size_t step, molsys::SimulationBox &) const;
 
-        /********************
-         * standard setters *
-         *******************/
-
-        void setTemperature(double temperature);
-        void setMomentum(const linalg::Vec3D &momentum);
-        void setAngularMomentum(const linalg::Vec3D &angularMomentum);
+        static void resetTemperature(
+            molsys::SimulationBox &,
+            double temperature
+        );
+        static void resetMomentum(
+            molsys::SimulationBox &,
+            const linalg::Vec3D &momentum
+        );
+        static void resetAngularMomentum(
+            molsys::SimulationBox &,
+            const linalg::Vec3D &angularMomentum
+        );
 
         /********************
          * standard getters *

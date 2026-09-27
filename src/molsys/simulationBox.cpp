@@ -603,6 +603,8 @@ namespace molsys
     {
         auto angularMom = Vec3D{0.0};
 
+        calculateCenterOfMass();
+
         auto accumulateAngularMomentum = [&angularMom](const auto& atom)
         {
             const auto mass = atom->getMass();
