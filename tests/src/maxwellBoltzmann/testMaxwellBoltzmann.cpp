@@ -53,7 +53,8 @@ namespace
         {
             const auto x      = static_cast<double>(i % 3);
             const auto y      = static_cast<double>((i / 3) % 3);
-            const auto z      = static_cast<double>(static_cast<double>(i) / 9);
+            const auto iDiv9  = i / 9;
+            const auto z      = static_cast<double>(iDiv9);
             const auto scalar = 0.1 * std::sin(static_cast<double>(i));
 
             auto atom = std::make_shared<molsys::Atom>();
