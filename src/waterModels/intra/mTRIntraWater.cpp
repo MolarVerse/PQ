@@ -115,7 +115,7 @@ namespace waterModel
             // clang-format on
 
             using enum molsys::HybridZone;
-            using enum settings::SmoothingMethod;
+            using enum SmoothingMethod;
 
             auto       smF = 0.0;
             const auto smoothing =

@@ -379,7 +379,7 @@ namespace input
         const auto method =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        using enum settings::SmoothingMethod;
+        using enum SmoothingMethod;
 
         if (method == "hotspot")
             settings::HybridSettings::setSmoothingMethod(HOTSPOT);
@@ -418,7 +418,7 @@ namespace input
         const auto method =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        using enum settings::QMForceDist;
+        using enum QMForceDist;
 
         if (method == "none")
             settings::HybridSettings::setQMForceDist(NONE);

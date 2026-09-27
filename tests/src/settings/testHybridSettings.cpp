@@ -27,14 +27,6 @@
 
 #include "hybridSettings.hpp"
 
-TEST(HybridSettingsTest, StringRoundTripForSmoothingMethod)
-{
-    using enum settings::SmoothingMethod;
-
-    EXPECT_EQ(string(HOTSPOT), "Hotspot");
-    EXPECT_EQ(string(EXACT), "Exact");
-}
-
 TEST(HybridSettingsTest, InnerRegionCenterRoundTrip)
 {
     settings::HybridSettings::setInnerRegionCenter({4, 2, 9});
@@ -93,8 +85,8 @@ TEST(HybridSettingsTest, BoolAndRadiusSettingsRoundTrip)
 
 TEST(HybridSettingsTest, EnumSettingsRoundTrip)
 {
-    using enum settings::SmoothingMethod;
-    using enum settings::QMForceDist;
+    using enum SmoothingMethod;
+    using enum QMForceDist;
 
     settings::HybridSettings::setSmoothingMethod(HOTSPOT);
     EXPECT_EQ(settings::HybridSettings::getSmoothingMethod(), HOTSPOT);

@@ -146,7 +146,7 @@ namespace engine
      */
     void QMMMMDEngine::applySmoothing()
     {
-        using enum settings::SmoothingMethod;
+        using enum SmoothingMethod;
 
         const auto &smoothingMethod =
             settings::HybridSettings::getSmoothingMethod();
@@ -315,8 +315,7 @@ namespace engine
 
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
-        if (settings::HybridSettings::getQMForceDist() ==
-            settings::QMForceDist::NONE)
+        if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
             scaleSmoothingMoleculeForcesInner();
         else
             distributeSmoothingMolQMForces();
@@ -567,7 +566,7 @@ namespace engine
             // clang-format off
             switch (type)
             {
-                using enum settings::QMForceDist;
+                using enum QMForceDist;
 
                 case NONE: continue;
                 case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1); break;

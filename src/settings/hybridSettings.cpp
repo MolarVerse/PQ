@@ -29,24 +29,6 @@
 namespace settings
 {
 
-    /**
-     * @brief convert smoothing method to string representation
-     *
-     * @param method
-     */
-    std::string string(SmoothingMethod method)
-    {
-        switch (method)
-        {
-            using enum SmoothingMethod;
-
-            case HOTSPOT: return "Hotspot";
-            case EXACT: return "Exact";
-        }
-
-        std::unreachable();
-    }
-
     /********************
      *                  *
      * standard setters *
@@ -274,19 +256,13 @@ namespace settings
      *
      * @return SmoothingMethod
      */
-    settings::SmoothingMethod HybridSettings::getSmoothingMethod()
-    {
-        return _smoothing;
-    }
+    SmoothingMethod HybridSettings::getSmoothingMethod() { return _smoothing; }
 
     /**
      * @brief get the type of QM force distribution in hotspot smoothing
      *
      * @return QMForceDist
      */
-    settings::QMForceDist HybridSettings::getQMForceDist()
-    {
-        return _qmForceDist;
-    }
+    QMForceDist HybridSettings::getQMForceDist() { return _qmForceDist; }
 
 }   // namespace settings
