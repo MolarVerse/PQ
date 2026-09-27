@@ -40,18 +40,6 @@ TEST(TestPotentialSettings, stringNonCoulombType)
 }
 
 /**
- * @brief tests string conversion of Coulomb long-range types
- */
-TEST(TestPotentialSettings, stringCoulombLongRangeType)
-{
-    using enum settings::CoulombLongRangeType;
-
-    EXPECT_EQ(settings::string(SHIFTED), "shifted");
-    EXPECT_EQ(settings::string(REACTION_FIELD), "reaction-field");
-    EXPECT_EQ(settings::string(WOLF), "wolf");
-}
-
-/**
  * @brief tests setNonCoulombType function
  *
  */

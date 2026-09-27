@@ -15,3 +15,4 @@
 - migrate `OutputInputParser`
 - migrate `VirialInputParser`
 - migrate `IntegratorInputParser`
+- migrate `CoulombLongRangeInputParser`
