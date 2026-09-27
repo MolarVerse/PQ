@@ -22,69 +22,45 @@
 
 #include "virialInputParser.hpp"
 
-#include <format>   // for format
-
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyRegistry.hpp"
 #include "settings.hpp"
-#include "stringUtilities.hpp"   // for utilities::toLowerCopy
 
-namespace input
+using namespace input;
+using namespace exc;
+
+/**
+ * @brief Construct a new Input File Parser Virial:: Input File Parser Virial
+ * object
+ *
+ * @details following keywords are added to the _keywordFuncMap,
+ * _keywordRequiredMap and _keywordCountMap: 1) virial "<molecular/atomic>"
+ */
+VirialInputParser::VirialInputParser() { addVirialKey(); }
+
+/**
+ * @brief adds virial key metadata
+ *
+ * @details this function adds the metadata for the virial key to the parser
+ */
+void VirialInputParser::addVirialKey()
 {
+    const auto metaData = KeyMetadata{
+        .name        = "virial",
+        .title       = "Virial Type",
+        .description = "Specifies the type of virial: molecular or atomic",
+    };
 
-    /**
-     * @brief Construct a new Input File Parser Virial:: Input File Parser
-     * Virial object
-     *
-     * @details following keywords are added to the _keywordFuncMap,
-     * _keywordRequiredMap and _keywordCountMap: 1) virial "<molecular/atomic>"
-     */
-    VirialInputParser::VirialInputParser()
-    {
-        addKeyword(
-            std::string("virial"),
-            bindMember(&VirialInputParser::parseVirial, this),
-            false
-        );
-    }
+    const auto onSet = [](settings::VirialType virial)
+    { settings::Settings::setVirialType(virial); };
 
-    /**
-     * @brief parses virial command
-     *
-     * @details possible options are:
-     * 1) molecular - molecular virial (default)
-     * 2) atomic    - atomic virial - sets file pointer to atomic virial file in
-     * physical data
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws InputFileException if invalid virial keyword
-     */
-    void VirialInputParser::parseVirial(
-        const std::vector<std::string>& lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-
-        const auto virial = utilities::toLowerCopy(lineElements[2]);
-
-        if (virial == "molecular")
-            settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
-
-        else if (virial == "atomic")
-            settings::Settings::setVirialType(settings::VirialType::ATOMIC);
-
-        else
-        {
-            throw exc::InputFileException(format(
-                "Invalid virial setting \"{}\" at line {} in input file.\n"
-                "Possible options are: molecular or atomic",
-                lineElements[2],
-                lineNumber
-            ));
+    auto& key = _getRegistry().registerKey(
+        KeyRegistry<settings::VirialType>{
+            .metadata     = metaData,
+            .defaultValue = settings::VirialType::MOLECULAR,
+            .onSet        = onSet,
         }
-    }
+    );
 
-}   // namespace input
+    addKeyword(metaData.name, adapt(key), false);
+}

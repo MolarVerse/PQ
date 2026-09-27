@@ -203,7 +203,7 @@ namespace resetKinetics
         simulationBox.calculateCenterOfMass();
         const auto centerOfMass = simulationBox.getCenterOfMass();
 
-        linalg::tensor3D helperMatrix{0.0};
+        linalg::StaticMatrix3x3 helperMatrix{0.0};
 
         auto addInertiaOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
         {
@@ -216,7 +216,7 @@ namespace resetKinetics
         std::ranges::for_each(simulationBox.getAtoms(), addInertiaOfAtom);
 
         const auto inertia =
-            -helperMatrix + linalg::diagonalMatrix(trace(helperMatrix));
+            -helperMatrix + linalg::diagonalMatrix(linalg::trace(helperMatrix));
         const auto inverseInertia  = inverse(inertia);
         const auto angularVelocity = inverseInertia * angularMomentum;
 

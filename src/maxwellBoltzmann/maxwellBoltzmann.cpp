@@ -28,9 +28,9 @@
 #include "constants/conversionFactors.hpp"           // for _AMU_TO_KG_
 #include "constants/internalConversionFactors.hpp"   // for _VELOCITY_UNIT_TO_SI_
 #include "constants/natureConstants.hpp"             // for _BOLTZMANN_CONSTANT_
-#include "resetKinetics.hpp"                         // for ResetKinetics
-#include "simulationBox.hpp"                         // for SimulationBox
-#include "thermostatSettings.hpp"                    // for ThermostatSettings
+#include "resetKinetics.hpp"        // for resetKinetics::ResetKinetics
+#include "simulationBox.hpp"        // for SimulationBox
+#include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD

@@ -604,6 +604,8 @@ namespace molsys
 
         calculateCenterOfMass();
 
+        calculateCenterOfMass();
+
         auto accumulateAngularMomentum = [&angularMom](const auto& atom)
         {
             const auto mass = atom->getMass();
