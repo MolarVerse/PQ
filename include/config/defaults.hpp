@@ -32,6 +32,8 @@
  */
 struct DefaultFiles
 {
+    static constexpr auto prefix = "default";
+
     static constexpr auto restartFile      = "default.rst";
     static constexpr auto energyFile       = "default.en";
     static constexpr auto instEnFile       = "default.instant_en";
