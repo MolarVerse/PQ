@@ -26,10 +26,9 @@
 #include <cmath>       // for cbrt
 
 #include "globalTimer.hpp"
-#include "manostatSettings.hpp"   // for ManostatType, Isotropy
-#include "physicalData.hpp"       // for PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
-#include "timingsSettings.hpp"    // for TimingsSettings
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 namespace manostat
 {

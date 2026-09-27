@@ -28,7 +28,6 @@
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
 #include "globalTimer.hpp"
-#include "manostatSettings.hpp"     // for ManostatType, Isotropy
 #include "physicalData.hpp"         // for PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
 #include "thermostatSettings.hpp"   // for ThermostatSettings
