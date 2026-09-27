@@ -382,25 +382,22 @@ TEST_F(
  */
 TEST_F(TestSimulationBox, removeNetForce)
 {
-    using namespace molsys;
-    using namespace linalg;
-
-    SimulationBox simBox;
-    auto          atom1 = Atom();
-    auto          atom2 = Atom();
-    auto          atom3 = Atom();
+    molsys::SimulationBox simBox;
+    auto                  atom1 = molsys::Atom();
+    auto                  atom2 = molsys::Atom();
+    auto                  atom3 = molsys::Atom();
 
     atom1.setForce({3.0, 1.0, 0.0});
     atom2.setForce({2.0, 4.0, -2.0});
     atom3.setForce({1.0, 4.0, 2.0});
 
-    simBox.addAtom(std::make_shared<Atom>(atom1));
-    simBox.addAtom(std::make_shared<Atom>(atom2));
-    simBox.addAtom(std::make_shared<Atom>(atom3));
+    simBox.addAtom(std::make_shared<molsys::Atom>(atom1));
+    simBox.addAtom(std::make_shared<molsys::Atom>(atom2));
+    simBox.addAtom(std::make_shared<molsys::Atom>(atom3));
 
     EXPECT_VECTOR_NEAR(
         simBox.calculateTotalForceVector(),
-        Vec3D({6.0, 9.0, 0.0}),
+        linalg::Vec3D({6.0, 9.0, 0.0}),
         1e-10
     );
 
@@ -408,23 +405,23 @@ TEST_F(TestSimulationBox, removeNetForce)
 
     EXPECT_VECTOR_NEAR(
         simBox.calculateTotalForceVector(),
-        Vec3D({0.0, 0.0, 0.0}),
+        linalg::Vec3D({0.0, 0.0, 0.0}),
         1e-10
     );
 
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(0).getForce(),
-        Vec3D({1.0, -2.0, 0.0}),
+        linalg::Vec3D({1.0, -2.0, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(1).getForce(),
-        Vec3D({0.0, 1.0, -2.0}),
+        linalg::Vec3D({0.0, 1.0, -2.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(2).getForce(),
-        Vec3D({-1.0, 1.0, 2.0}),
+        linalg::Vec3D({-1.0, 1.0, 2.0}),
         1e-10
     );
 }
@@ -435,9 +432,6 @@ TEST_F(TestSimulationBox, removeNetForce)
  */
 TEST_F(TestSimulationBox, updateOldPositions)
 {
-    using namespace molsys;
-    using namespace linalg;
-
     _simulationBox->getAtoms()[0]->setPositionOld({9.0, 9.0, 9.0});
     _simulationBox->getAtoms()[1]->setPositionOld({9.0, 9.0, 9.0});
 
