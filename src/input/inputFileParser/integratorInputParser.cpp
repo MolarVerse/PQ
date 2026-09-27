@@ -22,15 +22,15 @@
 
 #include "integratorInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
+#include <format>   // for format
 
 #include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "settings.hpp"           // for Settings
-#include "stringUtilities.hpp"    // for toLowerCopy
 
 using namespace input;
 using namespace exc;
@@ -45,55 +45,41 @@ using namespace references;
  * @details following keywords are added to the _keywordFuncMap,
  * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
  */
-IntegratorInputParser::IntegratorInputParser()
-{
-    addKeyword(
-        std::string("integrator"),
-        bindMember(&IntegratorInputParser::parseIntegrator, this),
-        false
-    );
-}
+IntegratorInputParser::IntegratorInputParser() { addIntegratorKey(); }
 
 /**
- * @brief Parse the integrator used in the simulation
+ * @brief Add the integrator key to the input file parser
  *
- * @details Possible options are:
- * 1) "v-verlet"  - velocity verlet integrator is used (default)
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if integrator is not valid -
- * currently only velocity verlet is supported
+ * @details This function adds the "integrator" key to the input file parser
+ * along with its metadata.
  */
-void IntegratorInputParser::parseIntegrator(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
+void IntegratorInputParser::addIntegratorKey()
 {
-    checkCommand(lineElements, lineNumber);
+    const auto metaData = KeyMetadata{
+        .name  = "integrator",
+        .title = "Integrator Type",
+        .description =
+            "Specifies the integrator type to be used in the simulation",
+    };
 
-    const auto integrator = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    if (!Settings::isMDJobType())
-        throw InputFileException(
-            std::format("Integrator is only supported for MD simulations!")
-        );
-
-    if (integrator == "v_verlet")
+    const auto setValue = [](IntegratorType integratorType)
     {
-        Settings::setIntegratorType(IntegratorType::VELOCITY_VERLET);
+        if (!settings::Settings::isMDJobType())
+            throw InputFileException(
+                std::format("Integrator is only supported for MD simulations!")
+            );
+
+        Settings::setIntegratorType(integratorType);
         ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
-    }
+    };
 
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid integrator \"{}\" at line {} in input file",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
+    auto& key = _getRegistry().registerKey(
+        KeyRegistry<IntegratorType>{
+            .metadata     = metaData,
+            .defaultValue = IntegratorType::VELOCITY_VERLET,
+            .onSet        = setValue,
+        }
+    );
+
+    addKeyword(metaData.name, adapt(key), false);
 }

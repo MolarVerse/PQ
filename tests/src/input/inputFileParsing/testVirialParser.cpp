@@ -71,6 +71,6 @@ TEST_F(TestInputFileReader, testParseVirial)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"virial\" at line 0 in input "
-        "file. Allowed values: ATOMIC, MOLECULAR"
+        "file. Allowed values: atomic, molecular"
     );
 }

@@ -28,7 +28,8 @@
 #include <mstd/enum.hpp>
 #include <string_view>   // for string_view
 
-#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
+#include "defaults.hpp"     // for _DIMENSIONALITY_DEFAULT_
+#include "enums/base.hpp"   // for InputAlias
 
 namespace settings
 {
@@ -70,11 +71,14 @@ namespace settings
 
 #undef VIRIAL_TYPE_LIST
 
-    enum class IntegratorType : std::uint8_t
-    {
-        NONE,
-        VELOCITY_VERLET,
-    };
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define INTEGRATOR_TYPE_LIST(X) \
+    X(NONE)                     \
+    X(VELOCITY_VERLET)
+
+    MSTD_ENUM(IntegratorType, std::uint8_t, INTEGRATOR_TYPE_LIST)
+
+#undef INTEGRATOR_TYPE_LIST
 
     [[nodiscard]] std::string string(JobType jobtype);
 
@@ -173,5 +177,20 @@ namespace settings
     };
 
 }   // namespace settings
+
+// TODO: move this to deidcated enum file as soon as it is done
+
+/**
+ * @brief Input alias for IntegratorType
+ *
+ * @details Maps string representations to IntegratorType enum values
+ */
+template <>
+struct InputAlias<settings::IntegratorType>
+{
+    static constexpr std::
+        array<std::pair<std::string_view, settings::IntegratorType>, 1>
+            value{{{"v-verlet", settings::IntegratorType::VELOCITY_VERLET}}};
+};
 
 #endif   // _SETTINGS_HPP_

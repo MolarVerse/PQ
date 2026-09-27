@@ -23,7 +23,9 @@
 #ifndef _INPUT_CONVERTER_TPP_
 #define _INPUT_CONVERTER_TPP_
 
+#include "enums/base.hpp"
 #include "inputConverter.hpp"
+#include "stringUtilities.hpp"
 
 namespace input
 {
@@ -88,6 +90,14 @@ namespace input
     template <mstd::has_enum_meta T>
     std::optional<T> Converter<T>::tryParse(std::string_view raw)
     {
+        const auto rawTransformed = utilities::toLowerAndReplaceDashesCopy(raw);
+        for (const auto& pair : InputAlias<T>::value)
+        {
+            if (rawTransformed ==
+                utilities::toLowerAndReplaceDashesCopy(pair.first))
+                return pair.second;
+        }
+
         using Meta = mstd::enum_meta_t<T>;
         return Meta::from_stringCaseInsensitive(raw);
     }
@@ -102,15 +112,21 @@ namespace input
     {
         using Meta = mstd::enum_meta_t<T>;
 
-        std::string allowed = "Allowed values: ";
-        for (size_t i = 0; i < Meta::size; ++i)
+        std::string allowed;
+        for (const auto& name : Meta::names)
         {
-            if (i != 0)
+            if (!allowed.empty())
                 allowed += ", ";
-            allowed += std::string(Meta::names.at(i));
+            allowed += utilities::toLowerCopy(std::string(name));
+        }
+        for (const auto& pair : InputAlias<T>::value)
+        {
+            if (!allowed.empty())
+                allowed += ", ";
+            allowed += utilities::toLowerCopy(std::string(pair.first));
         }
 
-        return allowed;
+        return "Allowed values: " + allowed;
     }
 
     /**

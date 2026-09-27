@@ -95,7 +95,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"1\" for key \"shake\" at line 0 in input file. "
-        "Allowed values: OFF, ON, SHAKE, MSHAKE"
+        "Allowed values: off, on, shake, mshake"
     );
 }
 

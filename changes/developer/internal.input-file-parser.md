@@ -14,3 +14,4 @@
 - rework error messages when `tryParse` fails
 - migrate `OutputInputParser`
 - migrate `VirialInputParser`
+- migrate `IntegratorInputParser`
