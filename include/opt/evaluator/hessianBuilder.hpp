@@ -27,7 +27,7 @@
 #include <memory>
 #include <vector>
 
-#include "hessianSettings.hpp"
+#include "enums/hessian.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -121,8 +121,8 @@ namespace opt
 
     [[nodiscard]]
     std::shared_ptr<HessianBuilder> makeHessianBuilder(
-        settings::HessianBuilderType builder,
-        double                       displacement
+        HessianBuilderType builder,
+        double             displacement
     );
 
 }   // namespace opt

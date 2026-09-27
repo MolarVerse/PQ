@@ -27,10 +27,12 @@
 #include <vector>
 
 #include "atom.hpp"
+#include "enums/hessian.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "hessianBuilder.hpp"
 #include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 
 namespace
 {
@@ -178,9 +180,10 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         (void) builder.build(evaluator, *box),
-        exc::UserInputException
+        exc::UserInputException,
+        "The selected evaluator does not support analytic Hessians."
     );
 }
 
@@ -203,36 +206,28 @@ TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 
 TEST(TestHessianBuilder, makeHessianBuilderSelectsConcreteStrategies)
 {
-    using enum settings::HessianBuilderType;
-
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::CentralForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(FINITE_DIFFERENCE_FORCES_CENTRAL, 1.0e-3)
+            opt::makeHessianBuilder(HessianBuilderType::CENTRAL, 1.0e-3)
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::ForwardForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(FINITE_DIFFERENCE_FORCES_FORWARD, 1.0e-3)
+            opt::makeHessianBuilder(HessianBuilderType::FORWARD, 1.0e-3)
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::FivePointForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(FINITE_DIFFERENCE_FORCES_FIVE_POINT, 1.0e-3)
+            opt::makeHessianBuilder(HessianBuilderType::FIVE_POINT, 1.0e-3)
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::AnalyticHessianBuilder>(
-            opt::makeHessianBuilder(ANALYTIC, 1.0e-3)
+            opt::makeHessianBuilder(HessianBuilderType::ANALYTIC, 1.0e-3)
         ),
         nullptr
-    );
-
-    EXPECT_THROW(
-        (void
-        ) opt::makeHessianBuilder(settings::HessianBuilderType::NONE, 1.0e-3),
-        exc::UserInputException
     );
 }

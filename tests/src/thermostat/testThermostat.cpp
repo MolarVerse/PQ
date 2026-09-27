@@ -34,7 +34,8 @@
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
 #include "thermostatSettings.hpp"                    // for ThermostatType
-#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"               // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 TEST_F(TestThermostat, calculateTemperature)
@@ -225,9 +226,11 @@ TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _thermostat->applyThermostat(*_simulationBox, *_data),
-        exc::UserInputException
+        exc::UserInputException,
+        "Cannot apply Berendsen coupling to a zero-temperature system with a "
+        "positive target temperature. Initialize velocities first."
     );
 }
 
@@ -257,9 +260,11 @@ TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _thermostat->applyThermostat(*_simulationBox, *_data),
-        exc::UserInputException
+        exc::UserInputException,
+        "Cannot apply velocity rescaling to a zero-temperature system with a "
+        "positive target temperature. Initialize velocities first."
     );
 }
 

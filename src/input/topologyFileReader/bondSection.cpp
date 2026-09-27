@@ -98,9 +98,8 @@ namespace input::topology
         {
             throw exc::TopologyException(
                 std::format(
-                    "Topology file shake section at line {} - atoms cannot be "
-                    "the "
-                    "same!",
+                    "Topology file bond section at line {} - atoms cannot be "
+                    "the same!",
                     _lineNumber
                 )
             );

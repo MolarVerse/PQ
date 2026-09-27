@@ -107,7 +107,11 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     std::ifstream file(filename);
     _section->_fp = &file;
 
-    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine),
+        exc::RstFileException,
+        "Error in line 10: Molecule must have 1 atoms"
+    );
 
     line[2] = "1";
 
@@ -116,7 +120,11 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     std::ifstream fp2(filename2);
     _section->_fp = &fp2;
 
-    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine),
+        exc::RstFileException,
+        "Error in line 14: Molecule must have 2 atoms"
+    );
 }
 
 TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
@@ -135,7 +143,12 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     std::ifstream file(filename);
     _section->_fp = &file;
 
-    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine),
+        exc::RstFileException,
+        "Error in line 2: Atom section must have 6, 9, 12, 15, 18 or 21 "
+        "elements"
+    );
 }
 
 TEST_F(TestAtomSection, testProcess)

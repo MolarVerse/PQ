@@ -56,15 +56,19 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
     );
 
     lineElements = {"1", "2", "1.0", "0", "2"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         improperDihedralSection.processSection(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file improper section at line "
+        "0 - number of elements has to be 4!"
     );
 
     lineElements = {"1", "2", "-1.0", "3"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         improperDihedralSection.processSection(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Parameter file improper section at line 0 - periodicity has to be "
+        "positive!"
     );
 }
 

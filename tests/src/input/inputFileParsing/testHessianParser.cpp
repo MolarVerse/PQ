@@ -79,7 +79,7 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
 
     EXPECT_EQ(
         settings::HessianSettings::getBuilder(),
-        settings::HessianBuilderType::FINITE_DIFFERENCE_FORCES_FIVE_POINT
+        HessianBuilderType::FIVE_POINT
     );
 
     lineElements = {"hessian_builder", "=", "unknown"};

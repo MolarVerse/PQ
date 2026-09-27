@@ -36,6 +36,7 @@
 #include "qmSettings.hpp"
 #include "settings.hpp"
 #include "testSetup.hpp"
+#include "throwWithMessage.hpp"
 
 namespace
 {
@@ -126,9 +127,13 @@ TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
 TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
 {
     input::HybridInputParser parser;
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         parser.parseSelectionNoPython("", "qm_center"),
-        exc::InputFileException
+        exc::InputFileException,
+        "The value of key qm_center -  is an empty list. The qm_center string "
+        "must be a comma-separated list of integers or ranges, representing "
+        "the atom indices in the restart file that should be treated as the "
+        "qm_center."
     );
 }
 
@@ -158,9 +163,16 @@ TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
 TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 {
     input::HybridInputParser parser;
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         parser.parseSelection("not_a_number", "qm_center"),
-        exc::InputFileException
+        exc::InputFileException,
+        "The value of key qm_center - not_a_number contains characters that "
+        "are not digits, \"-\" or commas. The current build of PQ was compiled "
+        "without Python bindings, so the qm_center string must be a "
+        "comma-separated list of integers, representing the atom indices in "
+        "the restart file that should be treated as the qm_center. In order to "
+        "use the full selection parser power of the PQAnalysis Python package, "
+        "the PQ build must be compiled with Python bindings."
     );
 }
 #endif
@@ -170,7 +182,12 @@ TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
 TEST_F(TestSetup, setupThrowsNotImplemented)
 {
     setup::HybridSetup hybridSetup{*_engine};
-    EXPECT_THROW(hybridSetup.setup(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        hybridSetup.setup(),
+        exc::InputFileException,
+        "QM method \"none\" is not supported for hybrid type calculations. "
+        "Supported QM methods are \"dftbplus\" and \"turbomole\"."
+    );
 }
 
 TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
@@ -219,7 +236,14 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
     for (const auto method : unsupported)
     {
         settings::QMSettings::setQMMethod(method);
-        EXPECT_THROW(setup.validateQMMethod(), exc::InputFileException);
+        EXPECT_THROW_MSG(
+            setup.validateQMMethod(),
+            exc::InputFileException,
+            "QM method \"" + string(method) +
+                "\" is not supported for hybrid type "
+                "calculations. Supported QM methods are \"dftbplus\" and "
+                "\"turbomole\"."
+        );
     }
 
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
@@ -237,23 +261,45 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
     settings::HybridSettings::setLayerRadius(4.0);
     settings::HybridSettings::setSmoothingRegionThickness(1.0);
     settings::HybridSettings::setPointChargeThickness(0.0);
-    EXPECT_THROW(setup.checkZoneRadii(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        setup.checkZoneRadii(),
+        exc::InputFileException,
+        "Core radius (5 Å) cannot be larger than layer radius (4 Å)"
+    );
 
     settings::HybridSettings::setCoreRadius(3.5);
     settings::HybridSettings::setLayerRadius(4.0);
     settings::HybridSettings::setSmoothingRegionThickness(1.0);
-    EXPECT_THROW(setup.checkZoneRadii(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        setup.checkZoneRadii(),
+        exc::InputFileException,
+        "Smoothing region is too thick (1 Å) for the chosen combination of "
+        "core (3.5 Å) and layer radius (4 Å)"
+    );
 
     settings::HybridSettings::setCoreRadius(2.0);
     settings::HybridSettings::setLayerRadius(11.0);
     settings::HybridSettings::setSmoothingRegionThickness(1.0);
-    EXPECT_THROW(setup.checkZoneRadii(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        setup.checkZoneRadii(),
+        exc::InputFileException,
+        "Layer radius (11 Å) exceeds one quarter of the smallest box dimension "
+        "(40 Å). This configuration is not allowed to ensure compliance with "
+        "the minimum image convention."
+    );
 
     settings::HybridSettings::setCoreRadius(1.0);
     settings::HybridSettings::setLayerRadius(2.0);
     settings::HybridSettings::setSmoothingRegionThickness(0.5);
     settings::HybridSettings::setPointChargeThickness(59.0);
-    EXPECT_THROW(setup.checkZoneRadii(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        setup.checkZoneRadii(),
+        exc::InputFileException,
+        "Layer radius (2 Å) plus point charge thickness (59 Å) exceeds three "
+        "halves of the smallest box dimension (40 Å). This configuration is "
+        "not allowed, as it would include point charges from beyond the "
+        "immediate neighboring cells."
+    );
 
     settings::HybridSettings::setPointChargeThickness(2.0);
     EXPECT_NO_THROW(setup.checkZoneRadii());
@@ -267,7 +313,14 @@ TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
     settings::HybridSettings::setUseQMCharges(false);
     setup::HybridSetup setup{*_engine};
 
-    EXPECT_THROW(setup.validateQMChargeSettings(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        setup.validateQMChargeSettings(),
+        exc::InputFileException,
+        "Invalid configuration: MM charges requested (qm_charges = mm) in "
+        "input file but atoms with moltype \"0\" are present in the system. "
+        "Either set \"qm_charges = qm\" or ensure all atoms have anon-zero "
+        "moltype."
+    );
 
     settings::HybridSettings::setUseQMCharges(true);
     EXPECT_NO_THROW(setup.validateQMChargeSettings());

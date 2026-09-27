@@ -24,26 +24,14 @@
 
 #define _HESSIAN_SETTINGS_HPP_
 
-#include <cstdint>
 #include <string>
 #include <string_view>
 
 #include "defaults.hpp"
+#include "enums/hessian.hpp"
 
 namespace settings
 {
-    enum class HessianBuilderType : std::uint8_t
-    {
-        FINITE_DIFFERENCE_FORCES_CENTRAL,
-        FINITE_DIFFERENCE_FORCES_FORWARD,
-        FINITE_DIFFERENCE_FORCES_FIVE_POINT,
-        ANALYTIC,
-        NONE
-    };
-
-    [[nodiscard]]
-    std::string string(HessianBuilderType builder);
-
     class HessianSettings
     {
        private:
@@ -54,15 +42,13 @@ namespace settings
             defaults::HESSIAN_DISPLACEMENT_DEFAULT;
         static inline bool _optimizeBeforeHessian =
             defaults::HESSIAN_OPTIMIZE_DEFAULT;
-        static inline HessianBuilderType _builder =
-            HessianBuilderType::FINITE_DIFFERENCE_FORCES_CENTRAL;
+        static inline HessianBuilderType _builder = HessianBuilderType::CENTRAL;
 
        public:
         static void setHessianFile(const std::string_view &filename);
         static void setHessianInfoFile(const std::string_view &filename);
         static void setDisplacement(double displacement);
         static void setOptimizeBeforeHessian(bool optimize);
-        static void setBuilder(const std::string_view &builder);
         static void setBuilder(HessianBuilderType builder);
 
         [[nodiscard]] static std::string        getHessianFile();

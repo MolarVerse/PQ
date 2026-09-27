@@ -84,7 +84,7 @@ namespace input::topology
         {
             throw exc::TopologyException(
                 std::format(
-                    "Topology file dihedral section at line {} "
+                    "Topology file j-coupling section at line {} "
                     "- atoms cannot be the same!",
                     _lineNumber
                 )

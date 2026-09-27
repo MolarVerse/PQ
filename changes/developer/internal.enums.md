@@ -1,2 +1,3 @@
 - move `ShakeType` from settings to enum
 - move `ConvStrategy` from settings to enum
+- move `HessianBuilderType` from settings to enum

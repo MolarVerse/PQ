@@ -29,6 +29,7 @@
 #include "exceptions.hpp"
 #include "jCouplingSection.hpp"
 #include "testTopologySection.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestTopologySection, jCouplingSectionKeyword)
 {
@@ -40,7 +41,11 @@ TEST_F(TestTopologySection, jCouplingSectionEndedNormally)
 {
     input::topology::JCouplingSection section;
     EXPECT_NO_THROW(section.endedNormally(true));
-    EXPECT_THROW(section.endedNormally(false), exc::TopologyException);
+    EXPECT_THROW_MSG(
+        section.endedNormally(false),
+        exc::TopologyException,
+        "Topology file j-coupling section at line 0 - no end of section found!"
+    );
 }
 
 TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
@@ -67,15 +72,19 @@ TEST_F(TestTopologySection, jCouplingSectionThrowsOnWrongElementCount)
 {
     input::topology::JCouplingSection section;
     std::vector<std::string>          lineElements = {"1", "2", "3"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         section.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Wrong number of arguments in topology file j-coupling section at line "
+        "0 - number of elements has to be 5!"
     );
 
     lineElements = {"1", "2", "3", "4", "9", "extra"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         section.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Wrong number of arguments in topology file j-coupling section at line "
+        "0 - number of elements has to be 5!"
     );
 }
 
@@ -84,8 +93,9 @@ TEST_F(TestTopologySection, jCouplingSectionThrowsOnDuplicateAtomIndices)
     input::topology::JCouplingSection section;
     // atom1 == atom2 — unique check should fire.
     std::vector<std::string> lineElements = {"1", "1", "2", "3", "9"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         section.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file j-coupling section at line 0 - atoms cannot be the same!"
     );
 }
