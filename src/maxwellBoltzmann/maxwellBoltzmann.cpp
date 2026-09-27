@@ -104,3 +104,5 @@ namespace maxwellBoltzmann
             simulationBox.calculateTemperature()
         );
     }
+
+}   // namespace maxwellBoltzmann
