@@ -47,7 +47,7 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulPot,
-        molsys::CellList                             &cellList
+        const molsys::CellList                       &cellList
     )
     {
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
@@ -220,7 +220,7 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        molsys::CellList                             &cellList
+        const molsys::CellList                       &cellList
     )
     {
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
@@ -347,7 +347,7 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        molsys::CellList                             &cellList
+        const molsys::CellList                       &cellList
     )
     {
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
@@ -583,7 +583,7 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulPot,
-        molsys::CellList                             &cellList
+        const molsys::CellList                       &cellList
     )
     {
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
@@ -764,7 +764,7 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulPot,
-        molsys::CellList                             &cellList
+        const molsys::CellList                       &cellList
     )
     {
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();

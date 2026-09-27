@@ -41,12 +41,10 @@ namespace input
      */
     class CellListInputParser : public InputFileParser
     {
-        std::shared_ptr<molsys::CellList> _cellListPtr;
+        molsys::CellList* _cellListPtr;
 
        public:
-        explicit CellListInputParser(
-            std::shared_ptr<molsys::CellList> cellListPtr
-        );
+        explicit CellListInputParser(molsys::CellList& cellList);
 
         void addCellListActivated();
         void addNumberOfCells();
