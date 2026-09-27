@@ -59,26 +59,32 @@ namespace input
                 "Specifies the integrator type to be used in the simulation",
         };
 
-        const auto setValue = [](IntegratorType integratorType)
+        const auto setValue = [](settings::IntegratorType integratorType)
         {
+            // TODO: remove this via general setup
             if (!settings::Settings::isMDJobType())
-                throw InputFileException(
+            {
+                throw exc::InputFileException(
                     std::format(
                         "Integrator is only supported for MD simulations!"
                     )
                 );
+            }
 
-            Settings::setIntegratorType(integratorType);
-            ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
+            settings::Settings::setIntegratorType(integratorType);
+            references::ReferencesOutput::addReferenceFile(
+                references::VELOCITY_VERLET_FILE
+            );
         };
 
         auto& key = _getRegistry().registerKey(
-            KeyRegistry<IntegratorType>{
+            KeyRegistry<settings::IntegratorType>{
                 .metadata     = metaData,
-                .defaultValue = IntegratorType::VELOCITY_VERLET,
+                .defaultValue = settings::IntegratorType::VELOCITY_VERLET,
                 .onSet        = setValue,
             }
         );
 
         addKeyword(metaData.name, adapt(key), false);
     }
+}   // namespace input

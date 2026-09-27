@@ -39,8 +39,8 @@
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    IntegratorInputParser parser;
-    const auto            funcMap = parser.getKeywordFuncMap();
+    input::IntegratorInputParser parser;
+    const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("integrator"));
     const auto &parseFunc = funcMap.at("integrator");
 
