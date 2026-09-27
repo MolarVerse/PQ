@@ -28,7 +28,6 @@
 #include <cstdint>
 #include <mstd/enum.hpp>
 #include <optional>      // for optional
-#include <string>        // for allocator, string
 #include <string_view>   // for string_view
 
 #include "defaults.hpp"   // for _COULOMB_LONG_RANGE_TYPE_DEFAULT_, ...
@@ -36,21 +35,29 @@
 
 namespace settings
 {
-    /**
-     * @enum CoulombLongRangeType
-     *
-     * @brief enum class to store the coulomb long range type
-     *
-     */
-    enum class NonCoulombType : std::uint8_t
-    {
-        LJ,
-        LJ_9_12,   // at the momentum just dummy for testing not implemented yet
-        BUCKINGHAM,
-        MORSE,
-        GUFF,
-        NONE
-    };
+
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define FF_TYPE_LIST(X) \
+    X(OFF)              \
+    X(ON)               \
+    X(BONDED)
+
+    MSTD_ENUM(ForceFieldType, std::uint8_t, FF_TYPE_LIST)
+
+#undef FF_TYPE_LIST
+
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define NON_COULOMB_TYPE_LIST(X) \
+    X(NONE)                      \
+    X(LJ)                        \
+    X(LJ_9_12)                   \
+    X(BUCKINGHAM)                \
+    X(MORSE)                     \
+    X(GUFF)
+
+    MSTD_ENUM(NonCoulombType, std::uint8_t, NON_COULOMB_TYPE_LIST)
+
+#undef NON_COULOMB_TYPE_LIST
 
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define COULOMB_LONG_RANGE_TYPE_LIST(X) \
@@ -61,8 +68,6 @@ namespace settings
     MSTD_ENUM(CoulombLongRangeType, std::uint8_t, COULOMB_LONG_RANGE_TYPE_LIST)
 
 #undef COULOMB_LONG_RANGE_TYPE_LIST
-
-    [[nodiscard]] std::string string(NonCoulombType nonCoulombType);
 
     /**
      * @class PotentialSettings
@@ -95,9 +100,7 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setNonCoulombType(const std::string_view &type);
         static void setNonCoulombType(NonCoulombType type);
-        static void setCoulombLongRangeType(const std::string_view &type);
         static void setCoulombLongRangeType(CoulombLongRangeType type);
 
         // clang-format off
@@ -137,6 +140,17 @@ struct InputAlias<settings::CoulombLongRangeType>
     static constexpr std::
         array<std::pair<std::string_view, settings::CoulombLongRangeType>, 1>
             value = {{{"none", settings::CoulombLongRangeType::SHIFTED}}};
+};
+
+/**
+ * @brief Input alias for settings::NonCoulombType
+ */
+template <>
+struct InputAlias<settings::NonCoulombType>
+{
+    static constexpr std::
+        array<std::pair<std::string_view, settings::NonCoulombType>, 1>
+            value = {{{"buck", settings::NonCoulombType::BUCKINGHAM}}};
 };
 
 #endif   // _POTENTIAL_SETTINGS_HPP_

@@ -236,8 +236,7 @@ TEST(TestInputKey, allowedSubsetRejectsOutOfRangeValue)
                     .description = "",
                     .unit        = ""
                 },
-            .allowed =
-                std::vector<TestJobType>{TestJobType::mm, TestJobType::qm}
+            .notAllowed = std::vector<TestJobType>{TestJobType::qm}
         }
     );
 
@@ -360,12 +359,11 @@ TEST(TestInputKey, describeIncludesAllowedList)
                     .description = "",
                     .unit        = ""
                 },
-            .allowed =
-                std::vector<TestJobType>{TestJobType::mm, TestJobType::qm},
+            .notAllowed = std::vector<TestJobType>{TestJobType::qm},
         }
     );
 
-    EXPECT_EQ(key.describe(), "jobtype (Job Type) = <unset> [allowed: mm, qm]");
+    EXPECT_EQ(key.describe(), "jobtype (Job Type) = <unset> [not allowed: qm]");
 }
 
 /**

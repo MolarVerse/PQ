@@ -20,81 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, Test, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-// for Message, TestPartResult
-#include "potentialSettings.hpp"   // for string, PotentialSettings, NonCoulo
-
-/**
- * @brief tests string function of enum nonCoulombType
- *
- */
-TEST(TestPotentialSettings, stringNonCoulombType)
-{
-    EXPECT_EQ(settings::string(settings::NonCoulombType::LJ), "lj");
-    EXPECT_EQ(settings::string(settings::NonCoulombType::LJ_9_12), "lj_9_12");
-    EXPECT_EQ(settings::string(settings::NonCoulombType::BUCKINGHAM), "buck");
-    EXPECT_EQ(settings::string(settings::NonCoulombType::MORSE), "morse");
-    EXPECT_EQ(settings::string(settings::NonCoulombType::GUFF), "guff");
-    EXPECT_EQ(settings::string(settings::NonCoulombType::NONE), "none");
-}
-
-/**
- * @brief tests setNonCoulombType function
- *
- */
-TEST(TestPotentialSettings, setNonCoulombType)
-{
-    settings::PotentialSettings::setNonCoulombType("lj");
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::LJ
-    );
-
-    settings::PotentialSettings::setNonCoulombType("lj_9_12");
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::LJ_9_12
-    );
-
-    settings::PotentialSettings::setNonCoulombType("buck");
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::BUCKINGHAM
-    );
-
-    settings::PotentialSettings::setNonCoulombType("morse");
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::MORSE
-    );
-
-    settings::PotentialSettings::setNonCoulombType("guff");
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::GUFF
-    );
-
-    settings::PotentialSettings::setNonCoulombType("none");
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::NONE
-    );
-}
+#include "potentialSettings.hpp"
 
 /**
  * @brief tests reaction-field settings
  */
 TEST(TestPotentialSettings, reactionFieldSettings)
 {
-    using enum settings::CoulombLongRangeType;
-
-    settings::PotentialSettings::setCoulombLongRangeType("reaction-field");
-    EXPECT_EQ(
-        settings::PotentialSettings::getCoulombLongRangeType(),
-        REACTION_FIELD
-    );
-
     settings::PotentialSettings::setReactionFieldEpsilon(80.0);
     EXPECT_DOUBLE_EQ(
         settings::PotentialSettings::getReactionFieldEpsilon(),

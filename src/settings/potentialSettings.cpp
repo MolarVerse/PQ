@@ -22,73 +22,14 @@
 
 #include "potentialSettings.hpp"
 
-#include <utility>
-
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
-
 namespace settings
 {
-
-    /**
-     * @brief return string of nonCoulombType
-     *
-     * @param nonCoulombType
-     * @return std::string
-     */
-    std::string string(NonCoulombType nonCoulombType)
-    {
-        switch (nonCoulombType)
-        {
-            using enum NonCoulombType;
-
-            case LJ: return "lj";
-            case LJ_9_12: return "lj_9_12";
-            case BUCKINGHAM: return "buck";
-            case MORSE: return "morse";
-            case GUFF: return "guff";
-
-            case NONE: return "none";
-        }
-
-        std::unreachable();
-    }
 
     /********************
      *                  *
      * standard setters *
      *                  *
      ********************/
-
-    /**
-     * @brief Set the nonCoulomb type as string and enum in the
-     * PotentialSettings class
-     *
-     * @param type
-     */
-    void PotentialSettings::setNonCoulombType(const std::string_view &type)
-    {
-        using enum NonCoulombType;
-        const auto typeToLower = utilities::toLowerAndReplaceDashesCopy(type);
-
-        if (typeToLower == "lj")
-            _nonCoulombType = LJ;
-
-        else if (typeToLower == "lj_9_12")
-            _nonCoulombType = LJ_9_12;
-
-        else if (typeToLower == "buck")
-            _nonCoulombType = BUCKINGHAM;
-
-        else if (typeToLower == "morse")
-            _nonCoulombType = MORSE;
-
-        else if (typeToLower == "guff")
-            _nonCoulombType = GUFF;
-
-        else
-            _nonCoulombType = NONE;
-    }
 
     /**
      * @brief Set the nonCoulomb type as enum in the PotentialSettings class
@@ -98,28 +39,6 @@ namespace settings
     void PotentialSettings::setNonCoulombType(NonCoulombType type)
     {
         _nonCoulombType = type;
-    }
-
-    void PotentialSettings::setCoulombLongRangeType(
-        const std::string_view &type
-    )
-    {
-        using enum CoulombLongRangeType;
-        const auto typeToLower = utilities::toLowerAndReplaceDashesCopy(type);
-
-        if (typeToLower == "reaction_field")
-            _coulombLRType = REACTION_FIELD;
-
-        else if (typeToLower == "wolf")
-            _coulombLRType = WOLF;
-
-        else if (typeToLower == "shifted")
-            _coulombLRType = SHIFTED;
-
-        else
-            throw exc::UserInputException(
-                "Unknown Coulomb long range type " + std::string(type)
-            );
     }
 
     /**

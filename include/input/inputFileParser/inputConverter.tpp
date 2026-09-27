@@ -108,21 +108,32 @@ namespace input
      * @return a string listing all allowed enum values
      */
     template <mstd::has_enum_meta T>
-    std::string Converter<T>::describeDomain()
+    std::string Converter<T>::describeDomain(const std::vector<T>& notAllowed)
     {
         using Meta = mstd::enum_meta_t<T>;
 
         std::string allowed;
-        for (const auto& name : Meta::names)
+        for (size_t i = 0; i < Meta::names.size(); ++i)
         {
+            const auto& name  = Meta::names[i];
+            const auto& value = Meta::values[i];
+
+            if (std::ranges::find(notAllowed, value) != notAllowed.end())
+                continue;
+
             if (!allowed.empty())
                 allowed += ", ";
-            allowed += utilities::toLowerCopy(std::string(name));
+
+            allowed += utilities::toLowerCopy(name);
         }
         for (const auto& pair : InputAlias<T>::value)
         {
+            if (std::ranges::find(notAllowed, pair.second) != notAllowed.end())
+                continue;
+
             if (!allowed.empty())
                 allowed += ", ";
+
             allowed += utilities::toLowerCopy(std::string(pair.first));
         }
 
@@ -137,9 +148,14 @@ namespace input
      */
     template <std::unsigned_integral T>
     requires(!std::same_as<T, bool>)
-    std::string Converter<T>::describeDomain()
+    std::string Converter<T>::describeDomain(const std::vector<T>& notAllowed)
     {
-        return "Value must be a positive integer";
+        std::string message = "Value must be a positive integer";
+
+        for (const auto& value : notAllowed)
+            message += ", not allowed: " + std::to_string(value);
+
+        return message;
     }
 
     /**
@@ -151,9 +167,15 @@ namespace input
      * @tparam T
      */
     template <typename T>
-    std::string ConverterBase<T>::describeDomain()
+    std::string ConverterBase<T>::describeDomain(
+        const std::vector<T>& notAllowed
+    )
     {
-        return "<value>";
+        std::string message = "<value>";
+        for (const auto& value : notAllowed)
+            message += std::format(", not allowed: {}", value);
+
+        return message;
     }
 }   // namespace input
 
