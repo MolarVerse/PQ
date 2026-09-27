@@ -675,9 +675,6 @@ void OutputInputParser::addOptFilenameKeyword()
  * @brief parse RPMD restart filename of simulation and add it to output
  *
  * @details default value is default.rpmd.rst
- *
- * @param lineElements
- * @param lineNumber
  */
 void OutputInputParser::addRPMDRestartFilenameKeyword()
 {
