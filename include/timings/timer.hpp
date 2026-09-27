@@ -92,8 +92,8 @@ namespace timings
        private:
         friend class TimingsSectionGuard;
 
-        void startTimingsSection(std::string_view name);
-        void stopTimingsSection(std::string_view name);
+        void _startTimingsSection(std::string_view name);
+        void _stopTimingsSection(std::string_view name);
     };
 
 }   // namespace timings
