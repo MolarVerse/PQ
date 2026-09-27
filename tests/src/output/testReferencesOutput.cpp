@@ -32,6 +32,7 @@
 #include "outputFileSettings.hpp"
 #include "referencesOutput.hpp"
 #include "testOutputBase.hpp"
+#include "throwWithMessage.hpp"
 
 class ReferencesOutputTest : public ::testing::Test
 {
@@ -74,9 +75,13 @@ TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 {
     settings::OutputFileSettings::setRefFileName(".");
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
+
         references::ReferencesOutput::writeReferencesFile(),
-        std::runtime_error
+
+        std::runtime_error,
+        "Could not open reference output file \".\""
+
     );
 }
 
@@ -85,9 +90,13 @@ TEST_F(ReferencesOutputTest, rejectsFailedOutputWrites)
 {
     settings::OutputFileSettings::setRefFileName("/dev/full");
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
+
         references::ReferencesOutput::writeReferencesFile(),
-        std::runtime_error
+
+        std::runtime_error,
+        "Could not write reference output file \"/dev/full\""
+
     );
 }
 #endif
@@ -137,9 +146,15 @@ TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
 
     references::ReferencesOutput::addReferenceFile(unreadablePath.string());
     settings::OutputFileSettings::setRefFileName(outputPath);
-    EXPECT_THROW(
+
+    EXPECT_THROW_MSG(
         references::ReferencesOutput::writeReferencesFile(),
-        std::runtime_error
+        std::runtime_error,
+        std::format(
+            "Could not open PQ reference file "
+            "\"{}\"",
+            unreadablePath.string()
+        )
     );
     removeReferenceFile(unreadablePath.string());
 
@@ -155,20 +170,24 @@ TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
 {
     const std::string outputPath = "default.refs.test";
 
-    EXPECT_NO_THROW(
-        references::ReferencesOutput::addReferenceFile("nonexistent.ref")
-    );
-    EXPECT_NO_THROW(
-        references::ReferencesOutput::addReferenceFile("nonexistent.ref")
-    );
+    std::string file = "nonexistent.ref";
+
+    EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
+    EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
 
     settings::OutputFileSettings::setRefFileName(outputPath);
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         references::ReferencesOutput::writeReferencesFile(),
-        std::runtime_error
+        std::runtime_error,
+        std::format(
+            "PQ reference file "
+            "\"{}/{}\" could not be found",
+            _REFERENCES_PATH_,
+            file
+        )
     );
     EXPECT_FALSE(std::ifstream(outputPath).good());
 
-    removeReferenceFile("nonexistent.ref");
+    removeReferenceFile(file);
 }

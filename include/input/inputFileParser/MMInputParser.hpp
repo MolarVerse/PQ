@@ -24,8 +24,6 @@
 
 #define _MM_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "forceFieldClass.hpp"
 #include "inputFileParser.hpp"   // for InputFileParser
 #include "potential.hpp"
@@ -50,19 +48,10 @@ namespace input
             std::shared_ptr<pot::Potential> potential
         );
 
-        void parseForceFieldType(const std::vector<std::string> &, size_t);
-        static void parseNonCoulombType(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseWaterIntraModel(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseWaterInterModel(
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addForceFieldTypeKey();
+        void addNonCoulombTypeKey();
+        void addWaterIntraModelKey();
+        void addWaterInterModelKey();
     };
 
 }   // namespace input

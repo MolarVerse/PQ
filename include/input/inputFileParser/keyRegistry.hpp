@@ -35,7 +35,7 @@ namespace input
 
         KeyMetadata                      metadata;
         std::optional<T>                 defaultValue = std::nullopt;
-        std::optional<std::vector<T>>    allowed      = std::nullopt;
+        std::vector<T>                   notAllowed   = {};
         CustomParser                     customParser = nullptr;
         std::function<void(const T &)>   onSet        = nullptr;
         std::shared_ptr<KeyValidator<T>> validator    = nullptr;

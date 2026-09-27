@@ -32,6 +32,7 @@
 #include "exceptions.hpp"
 #include "hessianBuilder.hpp"
 #include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 
 namespace
 {
@@ -179,9 +180,10 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         (void) builder.build(evaluator, *box),
-        exc::UserInputException
+        exc::UserInputException,
+        "The selected evaluator does not support analytic Hessians."
     );
 }
 

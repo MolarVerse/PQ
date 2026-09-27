@@ -51,9 +51,11 @@ TEST_F(TestParameterFileSection, processSectionAngle)
     EXPECT_EQ(angleTypes[0].getParams().forceConstant, 234.3);
 
     lineElements = {"1", "2", "1.0", "0"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         angleSection.processSection(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file angle section at line 0 - "
+        "number of elements has to be 3!"
     );
 }
 

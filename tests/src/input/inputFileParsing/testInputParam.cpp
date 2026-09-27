@@ -162,7 +162,11 @@ TEST(TestInputKey, valueThrowsWithoutDefaultOrExplicit)
     );
 
     EXPECT_FALSE(key.isSet());
-    EXPECT_THROW(const auto _ = key.value(), std::logic_error);
+    EXPECT_THROW_MSG(
+        const auto _ = key.value(),
+        std::logic_error,
+        "Key \"jobtype\" has neither a set value nor a default"
+    );
     EXPECT_FALSE(key.tryValue().has_value());
 }
 
@@ -236,15 +240,21 @@ TEST(TestInputKey, allowedSubsetRejectsOutOfRangeValue)
                     .description = "",
                     .unit        = ""
                 },
-            .allowed =
-                std::vector<TestJobType>{TestJobType::mm, TestJobType::qm}
+            .notAllowed = std::vector<TestJobType>{TestJobType::md}
         }
     );
 
     key.parse({"jobtype", "=", "mm"}, 1);
     EXPECT_EQ(key.value(), TestJobType::mm);
 
-    EXPECT_THROW(key.parse({"jobtype", "=", "md"}, 2), exc::InputFileException);
+    key.clearValue();
+
+    EXPECT_THROW_MSG(
+        key.parse({"jobtype", "=", "md"}, 2),
+        exc::InputFileException,
+        "Invalid value \"md\" for key \"jobtype\" at line 2 in input file: not "
+        "allowed"
+    );
 }
 
 /**
@@ -360,12 +370,11 @@ TEST(TestInputKey, describeIncludesAllowedList)
                     .description = "",
                     .unit        = ""
                 },
-            .allowed =
-                std::vector<TestJobType>{TestJobType::mm, TestJobType::qm},
+            .notAllowed = std::vector<TestJobType>{TestJobType::qm},
         }
     );
 
-    EXPECT_EQ(key.describe(), "jobtype (Job Type) = <unset> [allowed: mm, qm]");
+    EXPECT_EQ(key.describe(), "jobtype (Job Type) = <unset> [not allowed: qm]");
 }
 
 /**

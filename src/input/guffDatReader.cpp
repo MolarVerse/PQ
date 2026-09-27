@@ -394,7 +394,9 @@ namespace input::guffdat
                 throw exc::UserInputException(
                     std::format(
                         "Invalid nonCoulombic type {} given",
-                        string(settings::PotentialSettings::getNonCoulombType())
+                        settings::NonCoulombTypeMeta::toString(
+                            settings::PotentialSettings::getNonCoulombType()
+                        )
                     )
                 );
             }
