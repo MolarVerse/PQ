@@ -239,7 +239,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     box.setBoxDimensions({4.0, 5.0, 6.0});
     box.setBoxAngles({80.0, 75.0, 70.0});
 
-    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
     box.scaleBox(diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0}));
     EXPECT_VECTOR_NEAR(
         box.getBoxDimensions(),
@@ -248,9 +248,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     );
     EXPECT_NEAR(box.getVolume(), box.calculateVolume(), 1.0e-12);
 
-    settings::ManostatSettings::setIsotropy(
-        settings::Isotropy::FULL_ANISOTROPIC
-    );
+    settings::ManostatSettings::setIsotropy(Isotropy::FULL_ANISOTROPIC);
     const auto originalAngles = box.getBoxAngles();
     box.scaleBox(diagonalMatrix(linalg::Vec3D{0.5, 0.5, 0.5}));
     EXPECT_VECTOR_NEAR(

@@ -2,3 +2,4 @@
 - move `ConvStrategy` from settings to enum
 - move `HessianBuilderType` from settings to enum
 - move `SmoothingMethod` and `QMForceDist` from settings to enum
+- move `ManostatType`, `Isotropy` and `FixedAxis` from settings to enum
