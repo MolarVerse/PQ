@@ -32,6 +32,38 @@ if(BUILD_WITH_ASE)
     )
 endif()
 
+# Create cleanup script at configure time
+file(WRITE "${CMAKE_BINARY_DIR}/cleanup_gcda.cmake"
+    "file(GLOB_RECURSE GCDA_FILES \"${CMAKE_BINARY_DIR}/**/*.gcda\")\n"
+    "if(GCDA_FILES)\n"
+    "    file(REMOVE \${GCDA_FILES})\n"
+    "endif()\n"
+)
+
+# Add cleanup as a test that runs first
+add_test(NAME cleanup-gcda 
+    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_BINARY_DIR}/cleanup_gcda.cmake"
+)
+set_tests_properties(cleanup-gcda PROPERTIES
+    FIXTURES_SETUP "gcda-cleanup"
+)
+
+# Helper function
+function(add_test_with_gcda_cleanup test_name test_executable)
+    target_include_directories(${test_name}
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/tests/include/macros
+    )
+    add_test(
+        NAME ${test_name}
+        COMMAND ${test_executable}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
+    )
+    set_tests_properties(${test_name} PROPERTIES
+        FIXTURES_REQUIRED "gcda-cleanup"
+    )
+endfunction()
+
 add_subdirectory(src)
 add_subdirectory(apps)
 add_subdirectory(regression)

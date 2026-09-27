@@ -37,6 +37,7 @@
 #include "settings.hpp"
 #include "strongTypes.hpp"
 #include "testSetup.hpp"
+#include "throwWithMessage.hpp"
 #include "waterModelSettings.hpp"
 #include "waterModelSetup.hpp"
 
@@ -195,7 +196,12 @@ TEST_F(TestSetup, waterModelSetupRejectsMissingWaterType)
 {
     configureNoInterModel();
     WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
-    EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
+    EXPECT_THROW_MSG(
+        WaterModelSetup(*_mdEngine).setup(),
+        UserInputException,
+        "Use of water model has been requested in the input file, but no water "
+        "type is specified in the moldescriptor file."
+    );
 }
 
 TEST_F(TestSetup, waterModelSetupRejectsInvalidAtomOrder)
@@ -203,7 +209,12 @@ TEST_F(TestSetup, waterModelSetupRejectsInvalidAtomOrder)
     configureNoInterModel();
     WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
     addWaterSystem(*_mdEngine, {"H", "O", "H"});
-    EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), MolDescriptorException);
+    EXPECT_THROW_MSG(
+        WaterModelSetup(*_mdEngine).setup(),
+        MolDescriptorException,
+        "Water molecule type must have exactly 3 atoms in the following order: "
+        "O (oxygen), H (hydrogen), H (hydrogen)."
+    );
 }
 
 TEST_F(TestSetup, waterModelSetupRejectsQmOnlyJobs)
@@ -212,7 +223,11 @@ TEST_F(TestSetup, waterModelSetupRejectsQmOnlyJobs)
     WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
     addWaterSystem(*_mdEngine);
     Settings::setJobtype(JobType::QM_MD);
-    EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
+    EXPECT_THROW_MSG(
+        WaterModelSetup(*_mdEngine).setup(),
+        UserInputException,
+        "Water models are not supported for QM-only job types."
+    );
 }
 
 TEST_F(TestSetup, waterModelSetupRejectsMismatchedCharges)
@@ -221,7 +236,12 @@ TEST_F(TestSetup, waterModelSetupRejectsMismatchedCharges)
     WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
     WaterModelSettings::setWaterInterModel(WaterInterModel::SPC);
     addWaterSystem(*_mdEngine);
-    EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
+    EXPECT_THROW_MSG(
+        WaterModelSetup(*_mdEngine).setup(),
+        UserInputException,
+        "Water molecule partial charge mismatch for atom O: expected -0.82 "
+        "(according to SPC water model), got 0."
+    );
 }
 
 TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
@@ -234,7 +254,14 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
         ff::BondForceField(water, water, AtomIndex{0}, AtomIndex{1}, BondId{0})
     );
 
-    EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
+    EXPECT_THROW_MSG(
+        WaterModelSetup(*_mdEngine).setup(),
+        UserInputException,
+        "A water type molecule is included in the bond list of the topology "
+        "file \"\" at entry number 1. Requesting the use of the \"SPC/Fw\" "
+        "intramolecular water type model expects the molecules of this moltype "
+        "not to appear in the topology file."
+    );
 }
 
 TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
@@ -251,5 +278,12 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
         )
     );
 
-    EXPECT_THROW(WaterModelSetup(*_mdEngine).setup(), UserInputException);
+    EXPECT_THROW_MSG(
+        WaterModelSetup(*_mdEngine).setup(),
+        UserInputException,
+        "A water type molecule is included in the angle list of the topology "
+        "file \"\" at entry number 1. Requesting the use of the \"SPC/Fw\" "
+        "intramolecular water type model expects the molecules of this moltype "
+        "not to appear in the topology file."
+    );
 }

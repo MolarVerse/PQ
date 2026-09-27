@@ -34,6 +34,7 @@
 #include "settings.hpp"
 #include "steepestDescent.hpp"
 #include "testSetup.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace setup;
 using namespace settings;
@@ -120,9 +121,10 @@ TEST_F(TestSetup, setupLearningRateStrategyConstantDecayMissingDecayThrows)
     // across orderings, we skip the assertion if a value has been set.
     if (!OptimizerSettings::getLearningRateDecay().has_value())
     {
-        EXPECT_THROW(
+        EXPECT_THROW_MSG(
             const auto _ = setup.setupLearningRateStrategy(),
-            UserInputException
+            UserInputException,
+            "Learning rate decay must be set for CONSTANT_DECAY strategy."
         );
     }
 }
@@ -132,9 +134,10 @@ TEST_F(TestSetup, setupLearningRateStrategyLineSearchThrows)
     resetOptimizerSettings();
     OptimizerSettings::setLearningRateStrategy(LREnum::LINESEARCH_WOLFE);
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         const auto _ = setup.setupLearningRateStrategy(),
-        UserInputException
+        UserInputException,
+        "The Wolfe line search learning rate strategy is not yet implemented"
     );
 }
 
@@ -145,9 +148,11 @@ TEST_F(TestSetup, setupLearningRateStrategyNoneThrows)
     EXPECT_EQ(string(LREnum::NONE), "none");
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         const auto _ = setup.setupLearningRateStrategy(),
-        UserInputException
+        UserInputException,
+        "In order to run the optimizer, you need to specify a learning rate "
+        "strategy."
     );
 }
 
@@ -174,7 +179,12 @@ TEST_F(TestSetup, setupMinMaxLRThrowsWhenMinGreaterThanMax)
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
     auto learningRate = setup::OptimizerSetup::setupLearningRateStrategy();
-    EXPECT_THROW(setup.setupMinMaxLR(learningRate), UserInputException);
+    EXPECT_THROW_MSG(
+        setup.setupMinMaxLR(learningRate),
+        UserInputException,
+        "The minimum learning rate 1 is greater or equal to the maximum "
+        "learning rate 0.5, which is not allowed."
+    );
 }
 
 /* ---------- setupEmptyOptimizer ---------- */
@@ -207,9 +217,10 @@ TEST_F(TestSetup, setupEmptyOptimizerNoneThrows)
     OptimizerSettings::setOptimizer(OptimizerType::NONE);
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         const auto _ = setup.setupEmptyOptimizer(),
-        UserInputException
+        UserInputException,
+        "Unknown optimizer type none"
     );
 }
 
@@ -250,7 +261,11 @@ TEST_F(TestSetup, setupEvaluatorUnknownJobThrows)
     Settings::setJobtype(JobType::QM_MD);
 
     OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW(const auto _ = setup.setupEvaluator(), UserInputException);
+    EXPECT_THROW_MSG(
+        const auto _ = setup.setupEvaluator(),
+        UserInputException,
+        "Unknown job type for the optimizer in order to setup up the evaluator"
+    );
 }
 
 /* ---------- full setup ---------- */
@@ -277,7 +292,12 @@ TEST_F(TestSetup, hessianOptimizationValidatesLearningRateStrategy)
     OptimizerSettings::setLearningRateStrategy(LREnum::NONE);
 
     engine::HessianEngine hessianEngine;
-    EXPECT_THROW(hessianEngine.run(), UserInputException);
+    EXPECT_THROW_MSG(
+        hessianEngine.run(),
+        UserInputException,
+        "In order to run the optimizer, you need to specify a learning rate "
+        "strategy."
+    );
 
     HessianSettings::setOptimizeBeforeHessian(false);
 }
@@ -291,7 +311,12 @@ TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
     OptimizerSettings::setMaxLearningRate(0.5);
 
     engine::HessianEngine hessianEngine;
-    EXPECT_THROW(hessianEngine.run(), UserInputException);
+    EXPECT_THROW_MSG(
+        hessianEngine.run(),
+        UserInputException,
+        "The minimum learning rate 0.5 is greater or equal to the maximum "
+        "learning rate 0.5, which is not allowed."
+    );
 
     HessianSettings::setOptimizeBeforeHessian(false);
 }

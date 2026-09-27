@@ -34,7 +34,8 @@
 #include "testSetup.hpp"                     // for TestSetup
 #include "thermostatSettings.hpp"            // for ThermostatSettings
 #include "thermostatSetup.hpp"   // for ThermostatSetup, setupThermostat
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"               // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
 
 using namespace setup;
@@ -142,7 +143,11 @@ TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
     settings::ThermostatSettings::setStartTemperature(200);
     settings::ThermostatSettings::setTemperatureRampSteps(0);
 
-    EXPECT_THROW(thermostatSetup.setup(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        thermostatSetup.setup(),
+        exc::InputFileException,
+        "Temperature ramp requires at least one simulation step"
+    );
 }
 
 TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
@@ -156,7 +161,11 @@ TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
     settings::ThermostatSettings::setTemperatureRampSteps(10);
     settings::ThermostatSettings::setTemperatureRampFrequency(0);
 
-    EXPECT_THROW(thermostatSetup.setup(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        thermostatSetup.setup(),
+        exc::InputFileException,
+        "Temperature ramp frequency must be greater than zero"
+    );
 
     settings::ThermostatSettings::setTemperatureRampSteps(0);
     settings::ThermostatSettings::setTemperatureRampFrequency(1);

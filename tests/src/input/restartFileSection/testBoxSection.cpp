@@ -20,20 +20,20 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), ASSERT_THROW
+#include <gtest/gtest.h>
 
-#include <cstddef>   // for size_t, std
-#include <string>    // for string, allocator, basic_string
-#include <vector>    // for vector
+#include <cstddef>
+#include <string>
+#include <vector>
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for RstFileException, customException
-#include "gmock/gmock.h"    // for ElementsAre, MakePredicateForma...
-// for Message, TestPartResult, Assert...
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "gmock/gmock.h"
 #include "restartFileReader/restartFileSection.hpp"
-#include "settings.hpp"                 // for Settings
-#include "simulationBoxSettings.hpp"    // for SimulationBoxSettings
-#include "testRestartFileSection.hpp"   // for TestBoxSection
+#include "settings.hpp"
+#include "simulationBoxSettings.hpp"
+#include "testRestartFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace input;
 
@@ -48,9 +48,10 @@ TEST_F(TestBoxSection, testNumberOfArguments)
         if (i != 4 && i != 7)
         {
             auto line = std::vector<std::string>(i);
-            ASSERT_THROW(
+            ASSERT_THROW_MSG(
                 _section->process(line, *_engine),
-                exc::RstFileException
+                exc::RstFileException,
+                "Error in line 0: Box section must have 4 or 7 elements"
             );
         }
     }
@@ -85,13 +86,25 @@ TEST_F(TestBoxSection, testProcess)
     );
 
     line = {"box", "1.0", "2.0", "-3.0", "90.0", "90.0", "90.0"};
-    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine),
+        exc::RstFileException,
+        "All box dimensions must be positive"
+    );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "190.0"};
-    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine),
+        exc::RstFileException,
+        "Box angles must be positive and smaller than 180°"
+    );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "-90.0"};
-    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine),
+        exc::RstFileException,
+        "Box angles must be positive and smaller than 180°"
+    );
 
     EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), true);
 }

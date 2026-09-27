@@ -32,6 +32,7 @@
 #include "outputFileSettings.hpp"
 #include "referencesOutput.hpp"
 #include "testOutputBase.hpp"
+#include "throwWithMessage.hpp"
 
 using references::ReferencesOutput;
 using namespace settings;
@@ -77,7 +78,11 @@ TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 {
     OutputFileSettings::setRefFileName(".");
 
-    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    EXPECT_THROW_MSG(
+        ReferencesOutput::writeReferencesFile(),
+        std::runtime_error,
+        "Could not open reference output file \".\""
+    );
 }
 
 #if defined(__linux__)
@@ -85,7 +90,11 @@ TEST_F(ReferencesOutputTest, rejectsFailedOutputWrites)
 {
     OutputFileSettings::setRefFileName("/dev/full");
 
-    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    EXPECT_THROW_MSG(
+        ReferencesOutput::writeReferencesFile(),
+        std::runtime_error,
+        "Could not write reference output file \"/dev/full\""
+    );
 }
 #endif
 
@@ -134,7 +143,13 @@ TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
 
     ReferencesOutput::addReferenceFile(unreadablePath.string());
     OutputFileSettings::setRefFileName(outputPath);
-    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    EXPECT_THROW_MSG(
+        ReferencesOutput::writeReferencesFile(),
+        std::runtime_error,
+        "Could not open PQ reference file "
+        "\"/home/jag/projects/molarverse/PQ2/tests/"
+        "unreadable-reference.ref.test\""
+    );
     removeReferenceFile(unreadablePath.string());
 
     std::filesystem::permissions(
@@ -154,7 +169,13 @@ TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
 
     OutputFileSettings::setRefFileName(outputPath);
 
-    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    EXPECT_THROW_MSG(
+        ReferencesOutput::writeReferencesFile(),
+        std::runtime_error,
+        "PQ reference file "
+        "\"/home/jag/projects/molarverse/PQ2/.build/src/output/references/"
+        "referenceFiles/nonexistent.ref\" could not be found"
+    );
     EXPECT_FALSE(std::ifstream(outputPath).good());
 
     removeReferenceFile("nonexistent.ref");

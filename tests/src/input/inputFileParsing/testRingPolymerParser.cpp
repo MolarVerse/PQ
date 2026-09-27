@@ -92,5 +92,10 @@ TEST_F(TestInputFileReader, testParseNumberOfReplicasInvalidSyntax)
         "not_a_number"
     };
 
-    EXPECT_THROW(parseFunc(lineElements, 0), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"not_a_number\" for key \"rpmd_n_replica\" at line 0 "
+        "in input file. Value must be a positive integer"
+    );
 }

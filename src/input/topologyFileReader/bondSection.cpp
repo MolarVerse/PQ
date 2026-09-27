@@ -99,7 +99,7 @@ void BondSection::processSection(
     {
         throw TopologyException(
             std::format(
-                "Topology file shake section at line {} - atoms cannot be the "
+                "Topology file bond section at line {} - atoms cannot be the "
                 "same!",
                 _lineNumber
             )

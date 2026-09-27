@@ -26,6 +26,7 @@
 #include "fileSettings.hpp"         // for FileSettings
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 // for AssertionResult, Message, TestPartResult
+#include "throwWithMessage.hpp"
 #include "topologyReader.hpp"   // for TopologyReader
 
 using namespace input::topology;
@@ -61,10 +62,10 @@ TEST_F(TestTopologyReader, determineSection)
         [[maybe_unused]] const auto dummy =
             _topologyReader->determineSection({"shake"})
     );
-    EXPECT_THROW(
-        [[maybe_unused]] const auto dummy =
-            _topologyReader->determineSection({"unknown"}),
-        exc::TopologyException
+    EXPECT_THROW_MSG(
+        const auto _ = _topologyReader->determineSection({"unknown"}),
+        exc::TopologyException,
+        "Unknown or already parsed keyword \"unknown\" in topology file"
     );
 }
 
@@ -79,7 +80,11 @@ TEST_F(TestTopologyReader, read)
     EXPECT_NO_THROW(_topologyReader->read());
 
     settings::FileSettings::unsetIsTopologyFileNameSet();
-    EXPECT_THROW(_topologyReader->read(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        _topologyReader->read(),
+        exc::InputFileException,
+        "Topology file needed for requested simulation setup"
+    );
 }
 
 /**

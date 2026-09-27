@@ -86,7 +86,7 @@ void JCouplingSection::processSection(
     {
         throw TopologyException(
             std::format(
-                "Topology file dihedral section at line {} "
+                "Topology file j-coupling section at line {} "
                 "- atoms cannot be the same!",
                 _lineNumber
             )

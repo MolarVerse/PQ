@@ -26,6 +26,7 @@
 #include <string_view>
 
 #include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 #include "waterModelSettings.hpp"
 
 using exc::UserInputException;
@@ -117,9 +118,10 @@ TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
 
     EXPECT_EQ(settings::string(WaterIntraModel::SPC), "SPC");
     EXPECT_EQ(settings::string(WaterIntraModel::NONE), "none");
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         WaterModelSettings::setWaterIntraModel("unknown"),
-        UserInputException
+        UserInputException,
+        "Water intra model \"unknown\" not recognized"
     );
 }
 
@@ -193,8 +195,9 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
     }
 
     EXPECT_EQ(settings::string(WaterInterModel::NONE), "none");
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         WaterModelSettings::setWaterInterModel("unknown"),
-        UserInputException
+        UserInputException,
+        "Water inter model \"unknown\" not recognized"
     );
 }

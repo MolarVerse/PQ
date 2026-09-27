@@ -31,6 +31,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "steepestDescent.hpp"
+#include "throwWithMessage.hpp"
 #include "vector3d.hpp"   // IWYU pragma: keep
 
 using namespace opt;
@@ -94,8 +95,16 @@ TEST(TestOptimizer, maxHistoryLengthIsTwoForSteepestDescent)
 TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)
 {
     const SteepestDescent opt(1U);
-    EXPECT_THROW((void) opt.getHistoryIndex(0), exc::OptException);
-    EXPECT_THROW((void) opt.getHistoryIndex(1), exc::OptException);
+    EXPECT_THROW_MSG(
+        (void) opt.getHistoryIndex(0),
+        exc::OptException,
+        "Offset must be negative to access history in the past"
+    );
+    EXPECT_THROW_MSG(
+        (void) opt.getHistoryIndex(1),
+        exc::OptException,
+        "Offset must be negative to access history in the past"
+    );
 }
 
 /* ---------- updateHistory + getters ---------- */

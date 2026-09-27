@@ -34,6 +34,7 @@
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 
 using namespace constraints;
@@ -200,5 +201,10 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     settings::ConstraintSettings::setMShakeMaxIter(1);
     settings::ConstraintSettings::setMShakeTolerance(-1.0);
 
-    EXPECT_THROW(mShake.applyMShake(simBox), exc::MShakeException);
+    EXPECT_THROW_MSG(
+        mShake.applyMShake(simBox),
+        exc::MShakeException,
+        "M-Shake did not converge within 1 iterations for molecule type "
+        "MolType(1)"
+    );
 }

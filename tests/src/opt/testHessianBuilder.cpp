@@ -31,6 +31,7 @@
 #include "exceptions.hpp"
 #include "hessianBuilder.hpp"
 #include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace opt;
 using molsys::Atom;
@@ -171,9 +172,10 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
     evaluator.setSimulationBox(box);
     AnalyticHessianBuilder builder;
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         (void) builder.build(evaluator, *box),
-        exc::UserInputException
+        exc::UserInputException,
+        "The selected evaluator does not support analytic Hessians."
     );
 }
 
@@ -223,8 +225,9 @@ TEST(TestHessianBuilder, makeHessianBuilderSelectsConcreteStrategies)
         nullptr
     );
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         (void) makeHessianBuilder(settings::HessianBuilderType::NONE, 1.0e-3),
-        exc::UserInputException
+        exc::UserInputException,
+        "Unknown Hessian builder."
     );
 }

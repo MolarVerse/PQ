@@ -41,6 +41,7 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "throwWithMessage.hpp"
 #include "turbomoleRunner.hpp"
 
 using exc::QMRunnerException;
@@ -313,9 +314,10 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteForces)
 {
     writeFile(FileSettings::getQMForcesTempFileName(), "0\n0 0\n");
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         readForceFile(_simulationBox, _physicalData),
-        QMRunnerException
+        QMRunnerException,
+        "Incomplete DFTBPLUS force file \"qm_forces\""
     );
 }
 
@@ -323,9 +325,10 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteForces)
 {
     writeFile(FileSettings::getQMForcesTempFileName(), "0\nnan 0 0\n");
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         readForceFile(_simulationBox, _physicalData),
-        QMRunnerException
+        QMRunnerException,
+        "Incomplete DFTBPLUS force file \"qm_forces\""
     );
 }
 
@@ -337,23 +340,32 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
 
     writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
 
-    EXPECT_THROW(readChargeFile(_simulationBox), QMRunnerException);
+    EXPECT_THROW_MSG(
+        readChargeFile(_simulationBox),
+        QMRunnerException,
+        "Incomplete DFTBPLUS charge file \"qm_charges\""
+    );
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsNonFiniteCharges)
 {
     writeFile(FileSettings::getQMChargesTempFileName(), "nan\n");
 
-    EXPECT_THROW(readChargeFile(_simulationBox), QMRunnerException);
+    EXPECT_THROW_MSG(
+        readChargeFile(_simulationBox),
+        QMRunnerException,
+        "Incomplete DFTBPLUS charge file \"qm_charges\""
+    );
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsIncompleteStressTensor)
 {
     writeFile(FileSettings::getStressTensorTempFileName(), "0 0 0\n0 0 0\n");
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _dftbRunner.readStressTensor(_simulationBox.getBox(), _physicalData),
-        QMRunnerException
+        QMRunnerException,
+        "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
 }
 
@@ -364,8 +376,9 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
         "nan 0 0\n0 0 0\n0 0 0\n"
     );
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _dftbRunner.readStressTensor(_simulationBox.getBox(), _physicalData),
-        QMRunnerException
+        QMRunnerException,
+        "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
 }

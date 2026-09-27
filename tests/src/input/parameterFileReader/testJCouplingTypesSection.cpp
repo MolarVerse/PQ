@@ -29,6 +29,7 @@
 #include "exceptions.hpp"
 #include "jCouplingSection.hpp"
 #include "testParameterFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 using namespace input::parameterFile;
 using namespace exc;
@@ -86,9 +87,11 @@ TEST_F(TestParameterFileSection, jCouplingSectionThrowsOnTooFewElements)
 {
     JCouplingSection         section;
     std::vector<std::string> lineElements = {"1", "2", "3"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         section.processSection(lineElements, *_engine),
-        ParameterFileException
+        ParameterFileException,
+        "Wrong number of arguments in parameter file j-coupling section at "
+        "line 0 - number of elements has to be 7 or 8!"
     );
 }
 
@@ -97,8 +100,10 @@ TEST_F(TestParameterFileSection, jCouplingSectionThrowsOnTooManyElements)
     JCouplingSection         section;
     std::vector<std::string> lineElements =
         {"1", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "+", "extra"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         section.processSection(lineElements, *_engine),
-        ParameterFileException
+        ParameterFileException,
+        "Wrong number of arguments in parameter file j-coupling section at "
+        "line 0 - number of elements has to be 7 or 8!"
     );
 }
