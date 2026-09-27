@@ -57,7 +57,7 @@ namespace settings
             return buildPath.string() +
                    std::filesystem::path::preferred_separator;
 #else
-            throw InputFileException(
+            throw exc::InputFileException(
                 "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
                 "-DBUILD_WITH_ASE=On"
             );
