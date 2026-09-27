@@ -59,9 +59,17 @@ TEST(TestStringUtilities, removeComments)
 TEST(TestStringUtilities, getLineCommands)
 {
     std::string line2 = "test";
-    EXPECT_THROW(utilities::getLineCommands(line2, 0), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        utilities::getLineCommands(line2, 0),
+        exc::InputFileException,
+        "Missing semicolon in input file at line 0"
+    );
     const auto *line = "nstep = 1";
-    ASSERT_THROW(utilities::getLineCommands(line, 1), exc::InputFileException);
+    ASSERT_THROW_MSG(
+        utilities::getLineCommands(line, 1),
+        exc::InputFileException,
+        "Missing semicolon in input file at line 1"
+    );
 
     line = "nstep = 1;";
     ASSERT_THAT(
@@ -70,11 +78,15 @@ TEST(TestStringUtilities, getLineCommands)
     );
 
     line = "nstep = 1; nstep = 2";
-    ASSERT_THROW(utilities::getLineCommands(line, 1), exc::InputFileException);
+    ASSERT_THROW_MSG(
+        utilities::getLineCommands(line, 2),
+        exc::InputFileException,
+        "Missing semicolon in input file at line 2"
+    );
 
     line = "nstep = 1; nstep = 2;";
     ASSERT_THAT(
-        utilities::getLineCommands(line, 1),
+        utilities::getLineCommands(line, 2),
         testing::ElementsAre("nstep = 1", " nstep = 2")
     );
 }

@@ -30,6 +30,7 @@
                                      // for Message, TestPartResult
 #include "shakeSection.hpp"          // for ShakeSection
 #include "testTopologySection.hpp"   // for TestTopologySection
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test shake section processing one line
@@ -63,15 +64,18 @@ TEST_F(TestTopologySection, processSectionShake)
     EXPECT_EQ(constraints->getBondConstraints()[0].getTargetBondLength(), 1.0);
 
     lineElements = {"1", "1", "1.0", "0"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         shakeSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file shake section at line 0 - atoms cannot be the same!"
     );
 
     lineElements = {"1", "1", "1.0", "0", "1"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         shakeSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Wrong number of arguments in topology file shake section at line 0 - "
+        "number of elements has to be 3 or 4!"
     );
 }
 
@@ -82,6 +86,10 @@ TEST_F(TestTopologySection, processSectionShake)
 TEST_F(TestTopologySection, endedNormallyShake)
 {
     input::topology::ShakeSection shakeSection;
-    EXPECT_THROW(shakeSection.endedNormally(false), exc::TopologyException);
+    EXPECT_THROW_MSG(
+        shakeSection.endedNormally(false),
+        exc::TopologyException,
+        "Topology file shake section at line 0 - no end of section found!"
+    );
     EXPECT_NO_THROW(shakeSection.endedNormally(true));
 }

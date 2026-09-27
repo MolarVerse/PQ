@@ -101,9 +101,10 @@ TEST_F(TestInputFileReader, testAddKeyword)
 TEST_F(TestInputFileReader, testNotAValidKeyword)
 {
     auto lineElements = std::vector<std::string>{"notAValidKeyword", "=", "1"};
-    ASSERT_THROW(
+    ASSERT_THROW_MSG(
         _inputFileReader->process(lineElements),
-        exc::InputFileException
+        exc::InputFileException,
+        "Invalid keyword \"notAValidKeyword\" at line 1"
     );
 }
 
@@ -137,7 +138,11 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 {
     std::string filename = "data/inputFileReader/inputFileNotFound.txt";
     _inputFileReader->setFilename(filename);
-    ASSERT_THROW(_inputFileReader->read(), exc::InputFileException);
+    ASSERT_THROW_MSG(
+        _inputFileReader->read(),
+        exc::InputFileException,
+        "\"data/inputFileReader/inputFileNotFound.txt\" File not found"
+    );
 }
 
 TEST_F(TestInputFileReader, testReadInputFileFunction)
@@ -221,7 +226,11 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
     {
         const auto &keyword = keywordsRef[index];
         _inputFileReader->setKeywordCount(keyword, 0);
-        ASSERT_THROW(_inputFileReader->postProcess(), exc::InputFileException);
+        ASSERT_THROW_MSG(
+            _inputFileReader->postProcess(),
+            exc::InputFileException,
+            "Missing keyword \"" + keyword + "\" in input file"
+        );
         _inputFileReader->setKeywordCount(keyword, 1);
     }
 }
@@ -257,9 +266,16 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
         {
             const auto &keyword = keywordsRef[index];
             _inputFileReader->setKeywordCount(keyword, index);
-            ASSERT_THROW(
+            std::string excMsg;
+            if (index > 1)
+                excMsg = "Multiple keywords \"" + keyword + "\" in input file";
+            else
+                excMsg = "Missing keyword \"" + keyword + "\" in input file";
+
+            ASSERT_THROW_MSG(
                 _inputFileReader->postProcess(),
-                exc::InputFileException
+                exc::InputFileException,
+                excMsg
             );
             _inputFileReader->setKeywordCount(keyword, 1);
         }

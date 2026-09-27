@@ -42,6 +42,7 @@
 #include "simulationBoxSetup.hpp"   // for setup::SimulationBoxSetup, setupSimulationBox
 #include "strongTypes.hpp"
 #include "testSetup.hpp"   // for TestSetup
+#include "throwWithMessage.hpp"
 
 TEST_F(TestSetup, setAtomNames)
 {
@@ -230,9 +231,10 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
-    ASSERT_THROW(
+    ASSERT_THROW_MSG(
         simulationBoxSetup.setAtomMasses(),
-        exc::MolDescriptorException
+        exc::MolDescriptorException,
+        "Invalid atom name \"l\""
     );
 }
 
@@ -275,9 +277,10 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
-    ASSERT_THROW(
+    ASSERT_THROW_MSG(
         simulationBoxSetup.setAtomicNumbers(),
-        exc::MolDescriptorException
+        exc::MolDescriptorException,
+        "Invalid atom name \"l\""
     );
 }
 
@@ -340,9 +343,10 @@ TEST_F(TestSetup, noDensityNoBox)
     settings::SimulationBoxSettings::setDensitySet(false);
     settings::SimulationBoxSettings::setBoxSet(false);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
-    ASSERT_THROW(
+    ASSERT_THROW_MSG(
         simulationBoxSetup.checkBoxSettings(),
-        exc::UserInputException
+        exc::UserInputException,
+        "Box dimensions and density not set"
     );
 }
 
@@ -402,7 +406,12 @@ TEST_F(TestSetup, testCheckRcCutoff)
     _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
     settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
-    EXPECT_THROW(simulationBoxSetup.checkRcCutoff(), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        simulationBoxSetup.checkRcCutoff(),
+        exc::InputFileException,
+        "Rc cutoff is larger than half of the minimal box dimension of 10 "
+        "Angstrom."
+    );
 
     setup::SimulationBoxSetup simulationBox2Setup(*_engine);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);

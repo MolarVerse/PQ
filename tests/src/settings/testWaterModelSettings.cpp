@@ -26,6 +26,7 @@
 #include <string_view>
 
 #include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 #include "waterModelSettings.hpp"
 
 TEST(TestWaterModelSettings, FlagsAndEnumSettersRoundTrip)
@@ -136,9 +137,10 @@ TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
         ),
         "NONE"
     );
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         settings::WaterModelSettings::setWaterIntraModel("unknown"),
-        exc::UserInputException
+        exc::UserInputException,
+        "Water intra model \"unknown\" not recognized"
     );
 }
 
@@ -223,8 +225,9 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
         ),
         "NONE"
     );
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         settings::WaterModelSettings::setWaterInterModel("unknown"),
-        exc::UserInputException
+        exc::UserInputException,
+        "Water inter model \"unknown\" not recognized"
     );
 }

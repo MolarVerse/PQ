@@ -28,6 +28,7 @@
 #include "exceptions.hpp"     // for TopologyException
                               // for Message, TestPartResult
 #include "shakeSection.hpp"   // for ShakeSection
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests full process function
@@ -119,9 +120,11 @@ TEST_F(TestTopologySection, processShakeSectionIncorrectNumberOfElements)
     getline(file, lineElements[0]);
     shakeSection.setFp(&file);
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         shakeSection.process(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Wrong number of arguments in topology file shake section at line 0 - "
+        "number of elements has to be 3 or 4!"
     );
 }
 
@@ -146,9 +149,10 @@ TEST_F(TestTopologySection, processShakeSectionSameAtomTwice)
     getline(file, lineElements[0]);
     shakeSection.setFp(&file);
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         shakeSection.process(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file shake section at line 0 - atoms cannot be the same!"
     );
 }
 
@@ -175,8 +179,9 @@ TEST_F(TestTopologySection, processShakeSectionMissingEnd)
     getline(file, lineElements[0]);
     shakeSection.setFp(&file);
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         shakeSection.process(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file shake section at line 4 - no end of section found!"
     );
 }

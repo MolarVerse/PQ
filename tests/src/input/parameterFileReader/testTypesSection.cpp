@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_THROW, TestInfo (ptr ...
+#include <gtest/gtest.h>
 
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
@@ -46,33 +46,45 @@ TEST_F(TestParameterFileSection, processSectionTypes)
     EXPECT_EQ(settings::PotentialSettings::getScale14VDW(), 0.99);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         typesSection.process(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file types section at line 0 - "
+        "number of elements has to be 8!"
     );
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "1.01"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         typesSection.process(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong scaleVanDerWaals in parameter file types section at line 0 - "
+        "has to be between 0 and 1!"
     );
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "1.23", "0.01"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         typesSection.process(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong scaleCoulomb in parameter file types section at line 0 - has to "
+        "be "
+        "between 0 and 1!"
     );
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "-0.23", "0.01"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         typesSection.process(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong scaleCoulomb in parameter file types section at line 0 - has to "
+        "be "
+        "between 0 and 1!"
     );
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "-0.01"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         typesSection.process(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong scaleVanDerWaals in parameter file types section at line 0 - "
+        "has to be between 0 and 1!"
     );
 }
 

@@ -29,6 +29,7 @@
 #include "exceptions.hpp"                // for TopologyException
 #include "improperDihedralSection.hpp"   // for ImproperDihedralSection
 #include "testTopologySection.hpp"       // for TestTopologySection
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test impropers section processing one line
@@ -56,15 +57,19 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
     EXPECT_EQ(improperDihedrals[0].getType(), DihedralId{7});
 
     lineElements = {"1", "1", "2", "3", "4"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         improperDihedralSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file improper dihedral section at line 0 - atoms cannot be "
+        "the same!"
     );
 
     lineElements = {"1", "2", "7"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         improperDihedralSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Wrong number of arguments in topology file improper dihedral section "
+        "at line 0 - number of elements has to be 5!"
     );
 }
 
@@ -75,9 +80,11 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
 TEST_F(TestTopologySection, endedNormallyImproperDihedral)
 {
     input::topology::ImproperDihedralSection improperDihedralSection;
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         improperDihedralSection.endedNormally(false),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file improper dihedral section at line 0 - no end of section "
+        "found!"
     );
     EXPECT_NO_THROW(improperDihedralSection.endedNormally(true));
 }

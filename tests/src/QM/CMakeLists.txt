@@ -15,10 +15,6 @@ target_link_libraries(testExternalQMRunner
     pq_test_main
 )
 
-add_test(
-    NAME testExternalQMRunner
-    COMMAND testExternalQMRunner
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
-)
+add_test_with_gcda_cleanup(testExternalQMRunner testExternalQMRunner)
 
 set_property(TEST testExternalQMRunner PROPERTY LABELS QM)

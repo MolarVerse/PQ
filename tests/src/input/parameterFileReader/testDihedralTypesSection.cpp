@@ -52,15 +52,19 @@ TEST_F(TestParameterFileSection, processSectionDihedral)
     EXPECT_EQ(dihedralTypes[0].getParams().phaseShift, 324.3 * DEG_TO_RAD);
 
     lineElements = {"1", "2", "1.0", "0", "2"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         dihedralSection.processSection(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file dihedral section at line "
+        "0 - number of elements has to be 4!"
     );
 
     lineElements = {"1", "2", "-1.0", "3"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         dihedralSection.processSection(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Parameter file dihedral section at line 0 - periodicity has to be "
+        "positive!"
     );
 }
 
