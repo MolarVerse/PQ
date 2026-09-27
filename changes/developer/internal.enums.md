@@ -1,0 +1,1 @@
+- move `ShakeType` from settings to enum
