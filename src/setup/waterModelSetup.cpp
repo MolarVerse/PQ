@@ -139,14 +139,18 @@ namespace setup
         _engine.getLogOutput().writeSetupInfo(
             std::format(
                 "Intramolecular water model: {}",
-                string(settings::WaterModelSettings::getWaterIntraModel())
+                settings::WaterIntraModelMeta::toString(
+                    settings::WaterModelSettings::getWaterIntraModel()
+                )
             )
         );
 
         _engine.getLogOutput().writeSetupInfo(
             std::format(
                 "Intermolecular water model: {}",
-                string(settings::WaterModelSettings::getWaterInterModel())
+                settings::WaterInterModelMeta::toString(
+                    settings::WaterModelSettings::getWaterInterModel()
+                )
             )
         );
 
@@ -199,7 +203,7 @@ namespace setup
                         "topology file.",
                         settings::FileSettings::getTopologyFileName(),
                         bondIndex,
-                        string(
+                        settings::WaterIntraModelMeta::toString(
                             settings::WaterModelSettings::getWaterIntraModel()
                         )
                     )
@@ -237,7 +241,7 @@ namespace setup
                         "the topology file.",
                         settings::FileSettings::getTopologyFileName(),
                         angleIndex,
-                        string(
+                        settings::WaterIntraModelMeta::toString(
                             settings::WaterModelSettings::getWaterIntraModel()
                         )
                     )
@@ -262,8 +266,9 @@ namespace setup
         const waterModel::InterWaterState &state
     )
     {
-        const auto modelName =
-            string(settings::WaterModelSettings::getWaterInterModel());
+        const auto modelName = settings::WaterInterModelMeta::toString(
+            settings::WaterModelSettings::getWaterInterModel()
+        );
         const auto checkCharge = [&modelName](
                                      const molsys::Molecule &water,
                                      AtomIndex               atomIndex,

@@ -24,51 +24,48 @@
 
 #define _WATER_MODEL_SETTINGS_HPP_
 
-#include <cstdint>       // for std::uint8_t
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <cstdint>
+#include <mstd/enum.hpp>
+#include <string_view>
 
 namespace settings
 {
-    /**
-     * @brief Enum for intramolecular water model types
-     */
-    enum class WaterIntraModel : std::uint8_t
-    {
-        NONE,
-        SPC,
-        SPC_E,
-        SPC_FW,
-        QSPC_FW,
-        SPC_DC,
-        H2O_DC,
-        TIP3P,
-        OPC3,
-        SPC_MTR,
-        TIP3P_MTR
-    };
 
-    [[nodiscard]] std::string string(const WaterIntraModel &waterIntraModel);
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define WATER_INTRA_MODEL_LIST(X) \
+    X(NONE)                       \
+    X(SPC)                        \
+    X(SPC_E)                      \
+    X(SPC_FW)                     \
+    X(QSPC_FW)                    \
+    X(SPC_DC)                     \
+    X(H2O_DC)                     \
+    X(TIP3P)                      \
+    X(OPC3)                       \
+    X(SPC_MTR)                    \
+    X(TIP3P_MTR)
 
-    /**
-     * @brief Enum for intermolecular water model types
-     */
-    enum class WaterInterModel : std::uint8_t
-    {
-        NONE,
-        SPC,
-        SPC_E,
-        SPC_FW,
-        QSPC_FW,
-        SPC_DC,
-        H2O_DC,
-        TIP3P,
-        OPC3,
-        SPC_MTR,
-        TIP3P_MTR
-    };
+    MSTD_ENUM(WaterIntraModel, std::uint8_t, WATER_INTRA_MODEL_LIST)
 
-    [[nodiscard]] std::string string(const WaterInterModel &waterInterModel);
+#undef WATER_INTRA_MODEL_LIST
+
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define WATER_INTER_MODEL_LIST(X) \
+    X(NONE)                       \
+    X(SPC)                        \
+    X(SPC_E)                      \
+    X(SPC_FW)                     \
+    X(QSPC_FW)                    \
+    X(SPC_DC)                     \
+    X(H2O_DC)                     \
+    X(TIP3P)                      \
+    X(OPC3)                       \
+    X(SPC_MTR)                    \
+    X(TIP3P_MTR)
+
+    MSTD_ENUM(WaterInterModel, std::uint8_t, WATER_INTER_MODEL_LIST)
+
+#undef WATER_INTER_MODEL_LIST
 
     /**
      * @class WaterModelSettings

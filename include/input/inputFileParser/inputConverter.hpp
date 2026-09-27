@@ -55,7 +55,7 @@ namespace input
     struct ConverterBase
     {
         [[nodiscard]]
-        static std::string describeDomain();
+        static std::string describeDomain(const std::vector<T> &notAllowed);
     };
 
     /**
@@ -95,7 +95,7 @@ namespace input
         static std::optional<bool> tryParse(std::string_view raw);
 
         [[nodiscard]]
-        static std::string describeDomain();
+        static std::string describeDomain(const std::vector<bool> &notAllowed);
     };
 
     /**
@@ -134,7 +134,7 @@ namespace input
         static std::optional<T> tryParse(std::string_view raw);
 
         [[nodiscard]]
-        static std::string describeDomain();
+        static std::string describeDomain(const std::vector<T> &notAllowed);
     };
 
     /**
@@ -155,7 +155,7 @@ namespace input
         static std::optional<T> tryParse(std::string_view raw);
 
         [[nodiscard]]
-        static std::string describeDomain();
+        static std::string describeDomain(const std::vector<T> &notAllowed);
     };
 
     /**
@@ -169,7 +169,9 @@ namespace input
         static std::optional<mstd::File> tryParse(std::string_view raw);
 
         [[nodiscard]]
-        static std::string describeDomain();
+        static std::string describeDomain(
+            const std::vector<mstd::File> &notAllowed
+        );
     };
 
     /**
