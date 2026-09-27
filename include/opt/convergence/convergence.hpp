@@ -24,7 +24,7 @@
 
 #define _CONVERGENCE_HPP_
 
-#include "convergenceSettings.hpp"
+#include "enums/convergence.hpp"
 
 namespace opt
 {
@@ -54,7 +54,7 @@ namespace opt
         double _absMaxForceConvThreshold = 0.0;
         double _absRMSForceConvThreshold = 0.0;
 
-        settings::ConvStrategy _energyConvStrategy;
+        ConvStrategy _energyConvStrategy;
 
        public:
         Convergence() = default;
@@ -66,7 +66,7 @@ namespace opt
             double,
             double,
             double,
-            settings::ConvStrategy
+            ConvStrategy
         );
 
         [[nodiscard]] bool checkConvergence() const;
@@ -83,7 +83,7 @@ namespace opt
         [[nodiscard]] double getAbsMaxForce() const;
         [[nodiscard]] double getAbsRMSForce() const;
 
-        [[nodiscard]] settings::ConvStrategy getEnConvStrategy() const;
+        [[nodiscard]] ConvStrategy getEnConvStrategy() const;
 
         [[nodiscard]] bool isEnergyConvEnabled() const;
         [[nodiscard]] bool isMaxForceConvEnabled() const;

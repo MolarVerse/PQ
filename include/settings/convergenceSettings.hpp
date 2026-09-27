@@ -24,29 +24,15 @@
 
 #define _CONVERGENCE_SETTINGS_HPP_
 
-#include <cstdint>
 #include <optional>      // for optional
 #include <string>        // for string
 #include <string_view>   // for string_view
 
-#include "defaults.hpp"   // for _OPTIMIZER_DEFAULT_
+#include "defaults.hpp"            // for _OPTIMIZER_DEFAULT_
+#include "enums/convergence.hpp"   // for ConvergenceType
 
 namespace settings
 {
-    /**
-     * @brief enum ConvStrategy
-     *
-     */
-    enum class ConvStrategy : std::uint8_t
-    {
-        RIGOROUS,
-        LOOSE,
-        ABSOLUTE,
-        RELATIVE
-    };
-
-    std::string string(ConvStrategy strategy);
-
     /**
      * @class ConvSettings
      *

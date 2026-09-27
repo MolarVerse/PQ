@@ -31,6 +31,7 @@
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
 #include "engine.hpp"
+#include "enums/convergence.hpp"
 #include "expDecay.hpp"
 #include "mmEvaluator.hpp"
 #include "optEngine.hpp"
@@ -336,9 +337,7 @@ namespace setup
         auto maxForceConvStr  = std::format("{:.2e}", maxForceConv);
         auto rmsForceConvStr  = std::format("{:.2e}", rmsForceConv);
 
-        const auto convStrategyStr = string(convStrategy);
-
-        using enum settings::ConvStrategy;
+        using enum ConvStrategy;
 
         if (convStrategy == RELATIVE)
             absEnergyConvStr = "disabled";
@@ -373,20 +372,30 @@ namespace setup
             decayLRStr = std::format("{:.2e}", decay.value());
         }
 
-        // clang-format off
-    const auto optMsg        = std::format("Optimizer:                   {}", string(optimizer));
+        const auto optMsg =
+            std::format("Optimizer:                   {}", string(optimizer));
 
-    const auto lrMsg         = std::format("Learning rate strategy:      {}", string(lrStrategy));
-    const auto initialLRMsg  = std::format("Initial learning rate:       {:.2e}", initialLR);
-    const auto lrFreqMsg     = std::format("Learning rate update freq:   {}", lrFreq);
-    const auto decayLRMsg    = std::format("Learning rate decay factor:  {}", decayLRStr);
+        const auto lrMsg =
+            std::format("Learning rate strategy:      {}", string(lrStrategy));
+        const auto initialLRMsg =
+            std::format("Initial learning rate:       {:.2e}", initialLR);
+        const auto lrFreqMsg =
+            std::format("Learning rate update freq:   {}", lrFreq);
+        const auto decayLRMsg =
+            std::format("Learning rate decay factor:  {}", decayLRStr);
 
-    const auto convStratMsg  = std::format("Convergence strategy:        {}", convStrategyStr);
-    const auto energyConvMsg = std::format("Relative Energy convergence: {}", relEnergyConvStr);
-    const auto absEnergyMsg  = std::format("Absolute Energy convergence: {}", absEnergyConvStr);
-    const auto maxForceMsg   = std::format("Max Force convergence:       {}", maxForceConvStr);
-    const auto rmsForceMsg   = std::format("RMS Force convergence:       {}", rmsForceConvStr);
-        // clang-format on
+        const auto convStratMsg = std::format(
+            "Convergence strategy:        {}",
+            ConvStrategyMeta::toString(convStrategy)
+        );
+        const auto energyConvMsg =
+            std::format("Relative Energy convergence: {}", relEnergyConvStr);
+        const auto absEnergyMsg =
+            std::format("Absolute Energy convergence: {}", absEnergyConvStr);
+        const auto maxForceMsg =
+            std::format("Max Force convergence:       {}", maxForceConvStr);
+        const auto rmsForceMsg =
+            std::format("RMS Force convergence:       {}", rmsForceConvStr);
 
         auto &logOutput = _optEngine.getLogOutput();
 

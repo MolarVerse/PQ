@@ -26,7 +26,6 @@
 
 #include "atom.hpp"
 #include "convergence.hpp"
-#include "convergenceSettings.hpp"
 #include "exceptions.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -171,14 +170,11 @@ TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
 
     opt.setConvergence(conv);
-    EXPECT_EQ(
-        opt.getConvergence().getEnConvStrategy(),
-        settings::ConvStrategy::RIGOROUS
-    );
+    EXPECT_EQ(opt.getConvergence().getEnConvStrategy(), ConvStrategy::RIGOROUS);
 
     // Non-const getConvergence() returns a reference — mutating via it should
     // be observable on subsequent reads.
@@ -198,7 +194,7 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
     opt.setConvergence(conv);
 
@@ -234,7 +230,7 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
     opt.setConvergence(conv);
 

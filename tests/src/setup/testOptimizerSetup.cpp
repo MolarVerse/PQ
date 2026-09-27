@@ -239,9 +239,7 @@ TEST_F(TestSetup, setupConvergenceWritesIntoOptimizer)
     settings::OptimizerSettings::setOptimizer(
         settings::OptimizerType::STEEPEST_DESCENT
     );
-    settings::ConvSettings::setEnergyConvStrategy(
-        settings::ConvStrategy::RIGOROUS
-    );
+    settings::ConvSettings::setEnergyConvStrategy(ConvStrategy::RIGOROUS);
     settings::ConvSettings::setUseEnergyConv(true);
     settings::ConvSettings::setUseMaxForceConv(true);
     settings::ConvSettings::setUseRMSForceConv(true);
@@ -251,7 +249,7 @@ TEST_F(TestSetup, setupConvergenceWritesIntoOptimizer)
     EXPECT_NO_THROW(setup.setupConvergence(opt));
     EXPECT_EQ(
         opt->getConvergence().getEnConvStrategy(),
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
 }
 

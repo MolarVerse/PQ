@@ -26,7 +26,6 @@
 #include <string>
 
 #include "convergence.hpp"
-#include "convergenceSettings.hpp"
 #include "optOutput.hpp"
 #include "steepestDescent.hpp"
 #include "testOutputBase.hpp"
@@ -47,7 +46,7 @@ TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
     conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
     conv.calcForceConvergence(1.0e-5, 2.0e-5);
@@ -80,7 +79,7 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::ABSOLUTE
+        ConvStrategy::ABSOLUTE
     );
     conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
@@ -113,7 +112,7 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RELATIVE
+        ConvStrategy::RELATIVE
     );
     conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
@@ -144,7 +143,7 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
     opt.setConvergence(conv);

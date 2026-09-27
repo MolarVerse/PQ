@@ -137,7 +137,7 @@ namespace input
 
         const auto strategy = utilities::toLowerCopy(lineElements[2]);
 
-        using enum settings::ConvStrategy;
+        using enum ConvStrategy;
 
         if ("rigorous" == strategy)
             settings::ConvSettings::setEnergyConvStrategy(RIGOROUS);
