@@ -159,7 +159,7 @@ namespace
     // (momenta are stored in SI units in PhysicalData, internal units in
     // the box)
     void expectDataMatchesBox(
-        physicalData::PhysicalData &data,
+        physicalData::PhysicalData &physicalData,
         molsys::SimulationBox      &simulationBox
     )
     {
@@ -170,13 +170,17 @@ namespace
         const auto angularMomentum = angularMomentumOf(simulationBox);
 
         EXPECT_NEAR(
-            data.getTemperature(),
+            physicalData.getTemperature(),
             simulationBox.calculateTemperature(),
             1e-9
         );
-        expectVec3DNear(data.getMomentum() * S_TO_FS, momentum, tolerance);
         expectVec3DNear(
-            data.getAngularMomentum() * S_TO_FS,
+            physicalData.getMomentum() * S_TO_FS,
+            momentum,
+            tolerance
+        );
+        expectVec3DNear(
+            physicalData.getAngularMomentum() * S_TO_FS,
             angularMomentum,
             tolerance
         );
