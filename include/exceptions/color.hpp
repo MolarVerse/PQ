@@ -56,16 +56,17 @@ namespace Color
      */
     class Modifier
     {
-        Code code;
+       private:
+        Code _code;
 
        public:
-        explicit Modifier(const Code pCode) : code(pCode) {}
+        explicit Modifier(const Code pCode) : _code(pCode) {}
         friend std::ostream &operator<<(
             std::ostream   &ostream,
             const Modifier &mod
         )
         {
-            return ostream << "\033" << "[" << static_cast<int>(mod.code)
+            return ostream << "\033" << "[" << static_cast<int>(mod._code)
                            << "m";
         }
     };
