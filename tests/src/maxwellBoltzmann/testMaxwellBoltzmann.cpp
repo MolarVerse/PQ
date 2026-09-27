@@ -96,31 +96,33 @@ namespace
         SeedGuard &operator=(const SeedGuard &) = delete;
     };
 
-    std::vector<linalg::Vec3D> velocitiesOf(molsys::SimulationBox &box)
+    std::vector<linalg::Vec3D> velocitiesOf(
+        molsys::SimulationBox &simulationBox
+    )
     {
         std::vector<linalg::Vec3D> velocities;
-        for (const auto &atom : box.getAtoms())
+        for (const auto &atom : simulationBox.getAtoms())
             velocities.push_back(atom->getVelocity());
         return velocities;
     }
 
     // sum of |m v| - natural scale of the total linear momentum
-    double momentumScale(molsys::SimulationBox &box)
+    double momentumScale(molsys::SimulationBox &simulationBox)
     {
         auto scale = 0.0;
-        for (const auto &atom : box.getAtoms())
+        for (const auto &atom : simulationBox.getAtoms())
             scale += atom->getMass() * norm(atom->getVelocity());
         return scale;
     }
 
     // sum of |m (r - R)| |v| - natural scale of the total angular momentum
-    double angularMomentumScale(molsys::SimulationBox &box)
+    double angularMomentumScale(molsys::SimulationBox &simulationBox)
     {
-        box.calculateCenterOfMass();
-        const auto centerOfMass = box.getCenterOfMass();
+        simulationBox.calculateCenterOfMass();
+        const auto centerOfMass = simulationBox.getCenterOfMass();
 
         auto scale = 0.0;
-        for (const auto &atom : box.getAtoms())
+        for (const auto &atom : simulationBox.getAtoms())
         {
             const auto relativePosition = atom->getPosition() - centerOfMass;
             scale += atom->getMass() * norm(relativePosition) *
@@ -129,10 +131,12 @@ namespace
         return scale;
     }
 
-    linalg::Vec3D angularMomentumOf(molsys::SimulationBox &box)
+    linalg::Vec3D angularMomentumOf(molsys::SimulationBox &simulationBox)
     {
-        box.calculateCenterOfMass();
-        return box.calculateAngularMomentum(box.calculateMomentum());
+        simulationBox.calculateCenterOfMass();
+        return simulationBox.calculateAngularMomentum(
+            simulationBox.calculateMomentum()
+        );
     }
 }   // namespace
 
