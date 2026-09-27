@@ -28,6 +28,7 @@
 
 #include "constraintSettings.hpp"   // for settings::ConstraintSettings
 #include "constraints.hpp"
+#include "enums/shake.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
@@ -77,14 +78,14 @@ namespace input
             .description = "Keyword to activate or deactivate shake constraints"
         };
 
-        const auto defaultValue = settings::ShakeType::OFF;
+        const auto defaultValue = ShakeType::OFF;
 
         const auto setValue = [constraints = _constraints](auto value)
         {
             switch (value)
             {
-                case settings::ShakeType::ON:
-                case settings::ShakeType::SHAKE:
+                case ShakeType::ON:
+                case ShakeType::SHAKE:
                 {
                     constraints->activateShake();
                     settings::ConstraintSettings::activateShake();
@@ -93,7 +94,7 @@ namespace input
                     );
                     break;
                 }
-                case settings::ShakeType::OFF:
+                case ShakeType::OFF:
                 {
                     constraints->deactivateShake();
                     constraints->deactivateMShake();
@@ -101,7 +102,7 @@ namespace input
                     settings::ConstraintSettings::deactivateMShake();
                     break;
                 }
-                case settings::ShakeType::MSHAKE:
+                case ShakeType::MSHAKE:
                 {
                     constraints->activateMShake();
                     constraints->activateShake();
@@ -113,7 +114,7 @@ namespace input
         };
 
         auto &key = _getRegistry().registerKey(
-            KeyRegistry<settings::ShakeType>{
+            KeyRegistry<ShakeType>{
                 .metadata     = metaData,
                 .defaultValue = defaultValue,
                 .onSet        = setValue
