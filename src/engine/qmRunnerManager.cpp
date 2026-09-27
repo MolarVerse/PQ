@@ -25,8 +25,8 @@
 #include <memory>
 #include <utility>
 
-#include "dftbplusRunner.hpp"    // for DFTBPlusRunner
-#include "exceptions.hpp"        // for InputFileException, CompileTimeException
+#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
+#include "exceptions.hpp"   // for InputFileException, exc::CompileTimeException
 #include "pyscfRunner.hpp"       // for PySCFRunner
 #include "qmSettings.hpp"        // for settings::QMSettings
 #include "settings.hpp"          // for Settings
@@ -86,7 +86,7 @@ namespace engine
      * @brief Create a MACE QM runner
      *
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the MACE runner
-     * @throws CompileTimeException if ASE was not enabled at compile time
+     * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner()
     {
@@ -111,7 +111,7 @@ namespace engine
             useCueq
         );
 #else
-        throw CompileTimeException(
+        throw exc::CompileTimeException(
             "A MACE type QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use MACE type "
             "QM methods using: -DBUILD_WITH_ASE=ON"
@@ -124,7 +124,7 @@ namespace engine
      *
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the ASE DFTB+
      * runner
-     * @throws CompileTimeException if ASE was not enabled at compile time
+     * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseDftbRunner()
     {
@@ -141,7 +141,7 @@ namespace engine
             dispersion
         );
 #else
-        throw CompileTimeException(
+        throw exc::CompileTimeException(
             "The ASE DFTB+ QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
             "type "
@@ -155,7 +155,7 @@ namespace engine
      *
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the ASE xTB
      * runner
-     * @throws CompileTimeException if ASE was not enabled at compile time
+     * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseXtbRunner()
     {
@@ -164,7 +164,7 @@ namespace engine
 
         return std::make_shared<QM::AseXtbRunner>(xtbMethod);
 #else
-        throw CompileTimeException(
+        throw exc::CompileTimeException(
             "The ASE xTB QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "
             "xTB "
@@ -178,7 +178,7 @@ namespace engine
      *
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the ASE FeNNol
      * runner
-     * @throws CompileTimeException if ASE was not enabled at compile time
+     * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseFennolRunner()
     {
@@ -197,7 +197,7 @@ namespace engine
             useFloat64
         );
 #else
-        throw CompileTimeException(
+        throw exc::CompileTimeException(
             "The ASE FeNNol QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "
             "FeNNol "
