@@ -108,14 +108,12 @@ namespace out
             );
         }
 
-        if (settings::ManostatSettings::getManostatType() !=
-            settings::ManostatType::NONE)
+        if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
         {
             _fp << std::format("{:20.12f}\t", physicalData.getVolume());
             _fp << std::format("{:20.12f}\t", physicalData.getDensity());
 
-            if (settings::ManostatSettings::getFixedAxis() !=
-                settings::FixedAxis::NONE)
+            if (settings::ManostatSettings::getFixedAxis() != FixedAxis::NONE)
             {
                 _fp << std::format(
                     "{:20.12f}\t",

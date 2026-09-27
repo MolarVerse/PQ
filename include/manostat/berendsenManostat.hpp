@@ -40,17 +40,17 @@ namespace manostat
     class BerendsenManostat : public Manostat
     {
        protected:
-        double              _tau;
-        double              _compressibility;
-        double              _dt;
-        settings::FixedAxis _fixedAxis;
+        double    _tau;
+        double    _compressibility;
+        double    _dt;
+        FixedAxis _fixedAxis;
 
        public:
         explicit BerendsenManostat(
-            double              targetPressure,
-            double              tau,
-            double              compressibility,
-            settings::FixedAxis fixedAxis
+            double    targetPressure,
+            double    tau,
+            double    compressibility,
+            FixedAxis fixedAxis
         );
 
         void applyManostat(
@@ -67,8 +67,8 @@ namespace manostat
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
 
-        [[nodiscard]] settings::ManostatType getManostatType() const final;
-        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
+        [[nodiscard]] ManostatType getManostatType() const final;
+        [[nodiscard]] Isotropy     getIsotropy() const override;
     };
 
     /**
@@ -90,12 +90,12 @@ namespace manostat
             double                     compressibility,
             size_t                     anisotropicAxis,
             const std::vector<size_t> &isotropicAxes,
-            settings::FixedAxis        fixedAxis
+            FixedAxis                  fixedAxis
         );
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
     /**
@@ -111,7 +111,7 @@ namespace manostat
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
     /**
@@ -130,7 +130,7 @@ namespace manostat
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat

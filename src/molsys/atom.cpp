@@ -98,13 +98,13 @@ namespace molsys
     )
     {
         if (settings::ManostatSettings::getIsotropy() !=
-            settings::Isotropy::FULL_ANISOTROPIC)
+            Isotropy::FULL_ANISOTROPIC)
             _velocity = box.toOrthoSpace(_velocity);
 
         _velocity = scalingTensor * _velocity;
 
         if (settings::ManostatSettings::getIsotropy() !=
-            settings::Isotropy::FULL_ANISOTROPIC)
+            Isotropy::FULL_ANISOTROPIC)
             _velocity = box.toSimSpace(_velocity);
     }
 

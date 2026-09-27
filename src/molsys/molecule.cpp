@@ -132,7 +132,7 @@ namespace molsys
         auto centerOfMass = _centerOfMass;
 
         if (settings::ManostatSettings::getIsotropy() !=
-            settings::Isotropy::FULL_ANISOTROPIC)
+            Isotropy::FULL_ANISOTROPIC)
             centerOfMass = box.toOrthoSpace(_centerOfMass);
 
         const auto shift = shiftTensor * centerOfMass - centerOfMass;
@@ -142,13 +142,13 @@ namespace molsys
             auto position = atom->getPosition();
 
             if (settings::ManostatSettings::getIsotropy() !=
-                settings::Isotropy::FULL_ANISOTROPIC)
+                Isotropy::FULL_ANISOTROPIC)
                 position = box.toOrthoSpace(position);
 
             position += shift;
 
             if (settings::ManostatSettings::getIsotropy() !=
-                settings::Isotropy::FULL_ANISOTROPIC)
+                Isotropy::FULL_ANISOTROPIC)
                 position = box.toSimSpace(position);
 
             box.applyPBC(position);
@@ -184,14 +184,14 @@ namespace molsys
         auto scaledCenterOfMassVelocity = centerOfMassVelocity;
 
         if (settings::ManostatSettings::getIsotropy() !=
-            settings::Isotropy::FULL_ANISOTROPIC)
+            Isotropy::FULL_ANISOTROPIC)
             scaledCenterOfMassVelocity =
                 box.toOrthoSpace(scaledCenterOfMassVelocity);
 
         scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
 
         if (settings::ManostatSettings::getIsotropy() !=
-            settings::Isotropy::FULL_ANISOTROPIC)
+            Isotropy::FULL_ANISOTROPIC)
             scaledCenterOfMassVelocity =
                 box.toSimSpace(scaledCenterOfMassVelocity);
 

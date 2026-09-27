@@ -69,7 +69,7 @@ namespace setup
      */
     void ManostatSetup::setup()
     {
-        using enum settings::ManostatType;
+        using enum ManostatType;
 
         const auto manostatType = settings::ManostatSettings::getManostatType();
 
@@ -105,7 +105,7 @@ namespace setup
 
         switch (isotropy)
         {
-            using enum settings::Isotropy;
+            using enum Isotropy;
 
                 // clang-format off
         case SEMI_ISOTROPIC:
@@ -148,7 +148,7 @@ namespace setup
 
         switch (isotropy)
         {
-            using enum settings::Isotropy;
+            using enum Isotropy;
 
                 // clang-format off
 
@@ -179,14 +179,13 @@ namespace setup
      */
     void ManostatSetup::validateIsotropyFixedAxisCombination()
     {
-        using enum settings::Isotropy;
+        using enum Isotropy;
 
         const auto isotropy     = settings::ManostatSettings::getIsotropy();
         const auto fixedAxis    = settings::ManostatSettings::getFixedAxis();
         const auto manostatType = settings::ManostatSettings::getManostatType();
 
-        if (manostatType != settings::ManostatType::NONE &&
-            fixedAxis == settings::FixedAxis::ALL)
+        if (manostatType != ManostatType::NONE && fixedAxis == FixedAxis::ALL)
         {
             throw exc::UserInputException(
                 "Invalid combination: all axes cannot be fixed while a "
@@ -194,13 +193,12 @@ namespace setup
             );
         }
 
-        if (isotropy == SEMI_ISOTROPIC &&
-            fixedAxis != settings::FixedAxis::NONE)
+        if (isotropy == SEMI_ISOTROPIC && fixedAxis != FixedAxis::NONE)
         {
             const auto anisoAxis =
                 settings::ManostatSettings::get2DAnisotropicAxis();
             const auto allowedFixedAxis =
-                static_cast<settings::FixedAxis>(1U << anisoAxis);
+                static_cast<FixedAxis>(1U << anisoAxis);
 
             if (fixedAxis != allowedFixedAxis)
             {
@@ -224,8 +222,7 @@ namespace setup
         if (settings::ManostatSettings::isBerendsenBased())
             writeBerendsenSetup();
 
-        if (settings::ManostatSettings::getManostatType() !=
-            settings::ManostatType::NONE)
+        if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
             writeIsotropy();
     }
 
@@ -239,7 +236,7 @@ namespace setup
 
         switch (settings::ManostatSettings::getManostatType())
         {
-            using enum settings::ManostatType;
+            using enum ManostatType;
 
             case BERENDSEN:
                 logOutput.writeSetupInfo("Berendsen manostat selected");
@@ -287,7 +284,7 @@ namespace setup
 
         switch (settings::ManostatSettings::getIsotropy())
         {
-            using enum settings::Isotropy;
+            using enum Isotropy;
 
             case ISOTROPIC:
                 logOutput.writeSetupInfo("Isotropy: isotropic");
