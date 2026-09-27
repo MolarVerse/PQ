@@ -48,8 +48,8 @@ namespace molsys
     {
         _boxAngles = boxAngles * DEG_TO_RAD;
 
-        calculateTransformationMatrix();
-        calculateBoxMatrix();
+        _calculateTransformationMatrix();
+        _calculateBoxMatrix();
     }
 
     /**
@@ -61,14 +61,14 @@ namespace molsys
     {
         _boxDimensions = boxDimensions;
 
-        calculateBoxMatrix();
+        _calculateBoxMatrix();
     }
 
     /**
      * @brief Calculate the box matrix from the box dimensions and angles
      *
      */
-    void TriclinicBox::calculateBoxMatrix()
+    void TriclinicBox::_calculateBoxMatrix()
     {
         _boxMatrix[0][0] = _boxDimensions[0];
         _boxMatrix[0][1] = _boxDimensions[1] * _transformationMatrix[0][1];
@@ -84,7 +84,7 @@ namespace molsys
      * @brief Calculate the rotation matrix
      *
      */
-    void TriclinicBox::calculateTransformationMatrix()
+    void TriclinicBox::_calculateTransformationMatrix()
     {
         _transformationMatrix[0][0] = 1;
         _transformationMatrix[0][1] = cosGamma();
