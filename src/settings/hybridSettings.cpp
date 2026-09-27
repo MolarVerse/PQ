@@ -23,7 +23,6 @@
 #include "hybridSettings.hpp"
 
 #include <cstddef>
-#include <utility>
 #include <vector>
 
 namespace settings
