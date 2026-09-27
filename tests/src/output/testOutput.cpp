@@ -50,7 +50,7 @@ TEST(TestOutput, testSpecialSetFilename)
     );
 
     EXPECT_THROW_MSG(
-        output.openFile(),
+        output._openFile(),
         exc::InputFileException,
         std::format("Could not open file - filename = src")
     );
