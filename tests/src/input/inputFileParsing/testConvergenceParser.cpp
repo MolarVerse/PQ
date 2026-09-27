@@ -32,12 +32,12 @@ TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {
     EXPECT_EQ(
         settings::ConvSettings::getEnConvStrategy(),
-        std::optional<settings::ConvStrategy>()
+        std::optional<ConvStrategy>()
     );
 
     auto parser = input::ConvInputParser{};
 
-    using enum settings::ConvStrategy;
+    using enum ConvStrategy;
 
     auto lineElements =
         std::vector<std::string>{"energy-conv-strategy", "=", "loose"};

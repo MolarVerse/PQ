@@ -62,7 +62,7 @@ namespace out
 
         if (isEnergyConvEnabled)
         {
-            using enum settings::ConvStrategy;
+            using enum ConvStrategy;
 
             if (convStrategy == RIGOROUS || convStrategy == LOOSE)
             {

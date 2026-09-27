@@ -22,9 +22,9 @@
 
 #include "convergence.hpp"
 
-#include <cmath>   // for abs
+#include <cmath>
 
-#include "convergenceSettings.hpp"
+#include "enums/convergence.hpp"
 
 namespace opt
 {
@@ -42,14 +42,14 @@ namespace opt
      * @param energyConvStrategy
      */
     Convergence::Convergence(
-        bool                   enableEnergyConv,
-        bool                   enableMaxForceConv,
-        bool                   enableRMSForceConv,
-        double                 relEnergyConvThreshold,
-        double                 absEnergyConvThreshold,
-        double                 absMaxForceConvThreshold,
-        double                 absRMSForceConvThreshold,
-        settings::ConvStrategy energyConvStrategy
+        bool         enableEnergyConv,
+        bool         enableMaxForceConv,
+        bool         enableRMSForceConv,
+        double       relEnergyConvThreshold,
+        double       absEnergyConvThreshold,
+        double       absMaxForceConvThreshold,
+        double       absRMSForceConvThreshold,
+        ConvStrategy energyConvStrategy
     )
         : _enableEnergyConv(enableEnergyConv),
           _enableMaxForceConv(enableMaxForceConv),
@@ -73,19 +73,18 @@ namespace opt
 
         switch (_energyConvStrategy)
         {
-            using enum settings::ConvStrategy;
-
-            case RIGOROUS:
+            case ConvStrategy::RIGOROUS:
                 isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
                 break;
-
-            case LOOSE:
+            case ConvStrategy::LOOSE:
                 isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
                 break;
-
-            case ABSOLUTE: isEnergyConverged = _isAbsEnergyConv; break;
-
-            case RELATIVE: isEnergyConverged = _isRelEnergyConv; break;
+            case ConvStrategy::ABSOLUTE:
+                isEnergyConverged = _isAbsEnergyConv;
+                break;
+            case ConvStrategy::RELATIVE:
+                isEnergyConverged = _isRelEnergyConv;
+                break;
         }
 
         return isEnergyConverged && _isAbsMaxForceConv && _isAbsRMSForceConv;
@@ -164,9 +163,9 @@ namespace opt
     /**
      * @brief get energy convergence strategy
      *
-     * @return settings::ConvStrategy
+     * @return ConvStrategy
      */
-    settings::ConvStrategy Convergence::getEnConvStrategy() const
+    ConvStrategy Convergence::getEnConvStrategy() const
     {
         return _energyConvStrategy;
     }
