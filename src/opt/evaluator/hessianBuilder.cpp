@@ -23,8 +23,10 @@
 #include "hessianBuilder.hpp"
 
 #include <memory>
+#include <utility>
 
 #include "atom.hpp"
+#include "enums/hessian.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 
@@ -314,32 +316,30 @@ namespace opt
      * @return std::shared_ptr<HessianBuilder>
      */
     std::shared_ptr<HessianBuilder> makeHessianBuilder(
-        settings::HessianBuilderType builder,
-        double                       displacement
+        HessianBuilderType builder,
+        double             displacement
     )
     {
-        using enum settings::HessianBuilderType;
+        switch (builder)
+        {
+            using enum HessianBuilderType;
 
-        // TODO: use switch statement
-        if (builder == FINITE_DIFFERENCE_FORCES_CENTRAL)
-            return std::make_shared<CentralForceDifferenceHessianBuilder>(
-                displacement
-            );
+            case CENTRAL:
+                return std::make_shared<CentralForceDifferenceHessianBuilder>(
+                    displacement
+                );
+            case FORWARD:
+                return std::make_shared<ForwardForceDifferenceHessianBuilder>(
+                    displacement
+                );
+            case FIVE_POINT:
+                return std::make_shared<FivePointForceDifferenceHessianBuilder>(
+                    displacement
+                );
+            case ANALYTIC: return std::make_shared<AnalyticHessianBuilder>();
+        }
 
-        if (builder == FINITE_DIFFERENCE_FORCES_FORWARD)
-            return std::make_shared<ForwardForceDifferenceHessianBuilder>(
-                displacement
-            );
-
-        if (builder == FINITE_DIFFERENCE_FORCES_FIVE_POINT)
-            return std::make_shared<FivePointForceDifferenceHessianBuilder>(
-                displacement
-            );
-
-        if (builder == ANALYTIC)
-            return std::make_shared<AnalyticHessianBuilder>();
-
-        throw exc::UserInputException("Unknown Hessian builder.");
+        std::unreachable();
     }
 
 }   // namespace opt

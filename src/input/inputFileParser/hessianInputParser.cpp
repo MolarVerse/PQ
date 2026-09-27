@@ -119,12 +119,16 @@ namespace input
         size_t                          lineNumber
     )
     {
-        using enum settings::HessianBuilderType;
-
         checkCommand(lineElements, lineNumber);
-        settings::HessianSettings::setBuilder(lineElements[2]);
+        const auto transformed =
+            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        if (settings::HessianSettings::getBuilder() == NONE)
+        const auto builderType =
+            HessianBuilderTypeMeta::from_stringCaseInsensitive(transformed);
+
+        if (builderType.has_value())
+            settings::HessianSettings::setBuilder(builderType.value());
+        else
         {
             throw exc::InputFileException(
                 std::format(

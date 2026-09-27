@@ -24,40 +24,6 @@
 
 #include "hessianSettings.hpp"
 
-TEST(TestHessianSettings, setBuilder)
-{
-    settings::HessianSettings::setBuilder("central");
-    EXPECT_EQ(
-        settings::HessianSettings::getBuilder(),
-        settings::HessianBuilderType::FINITE_DIFFERENCE_FORCES_CENTRAL
-    );
-
-    settings::HessianSettings::setBuilder("forward");
-    EXPECT_EQ(
-        settings::HessianSettings::getBuilder(),
-        settings::HessianBuilderType::FINITE_DIFFERENCE_FORCES_FORWARD
-    );
-
-    settings::HessianSettings::setBuilder("five-point");
-    EXPECT_EQ(
-        settings::HessianSettings::getBuilder(),
-        settings::HessianBuilderType::FINITE_DIFFERENCE_FORCES_FIVE_POINT
-    );
-
-    settings::HessianSettings::setBuilder("analytic");
-    EXPECT_EQ(
-        settings::HessianSettings::getBuilder(),
-        settings::HessianBuilderType::ANALYTIC
-    );
-
-    settings::HessianSettings::setBuilder("unknown");
-    EXPECT_EQ(
-        settings::HessianSettings::getBuilder(),
-        settings::HessianBuilderType::NONE
-    );
-    EXPECT_EQ(string(settings::HessianBuilderType::NONE), "NONE");
-}
-
 TEST(TestHessianSettings, setFilesAndDisplacement)
 {
     settings::HessianSettings::setHessianFile("water.hessian");
