@@ -106,9 +106,16 @@ namespace input
      *
      * @return a string describing the domain
      */
-    std::string Converter<mstd::File>::describeDomain()
+    std::string Converter<mstd::File>::describeDomain(
+        const std::vector<mstd::File>& notAllowed
+    )
     {
-        return "Value must be an existing file path.";
+        std::string message = "Value must be an existing file path.";
+
+        for (const auto& value : notAllowed)
+            message += ", not allowed: " + value.fileName();
+
+        return message;
     }
 
     /**
@@ -116,7 +123,9 @@ namespace input
      *
      * @return a string describing the domain
      */
-    std::string Converter<bool>::describeDomain()
+    std::string Converter<bool>::describeDomain(
+        const std::vector<bool>& /*notAllowed*/
+    )
     {
         std::string options;
         for (const auto& [positive, negative] : boolKeywords)
