@@ -17,3 +17,4 @@
 - migrate `IntegratorInputParser`
 - migrate `CoulombLongRangeInputParser`
 - migrate `MMInputParser`
+- migrate `SimulationBoxInputParser`
