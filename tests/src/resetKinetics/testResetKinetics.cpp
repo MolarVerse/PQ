@@ -80,28 +80,30 @@ namespace
     // step % never != 0 for 0 < step < never.
     constexpr size_t never = 1'000'000U;
 
-    std::vector<linalg::Vec3D> velocitiesOf(molsys::SimulationBox &box)
+    std::vector<linalg::Vec3D> velocitiesOf(
+        molsys::SimulationBox &simulationBox
+    )
     {
         std::vector<linalg::Vec3D> velocities;
-        for (const auto &atom : box.getAtoms())
+        for (const auto &atom : simulationBox.getAtoms())
             velocities.push_back(atom->getVelocity());
         return velocities;
     }
 
-    std::vector<linalg::Vec3D> positionsOf(molsys::SimulationBox &box)
+    std::vector<linalg::Vec3D> positionsOf(molsys::SimulationBox &simulationBox)
     {
         std::vector<linalg::Vec3D> positions;
-        for (const auto &atom : box.getAtoms())
+        for (const auto &atom : simulationBox.getAtoms())
             positions.push_back(atom->getPosition());
         return positions;
     }
 
     // velocities can become huge when scaling to a target temperature (the
     // fixture starts at a tiny temperature) -> compare relative to that scale
-    double velocityTolerance(molsys::SimulationBox &box)
+    double velocityTolerance(molsys::SimulationBox &simulationBox)
     {
         auto scale = 1.0;
-        for (const auto &velocity : velocitiesOf(box))
+        for (const auto &velocity : velocitiesOf(simulationBox))
             for (size_t i = 0; i < 3; ++i)
                 scale = std::max(scale, std::abs(velocity[i]));
 
@@ -109,19 +111,21 @@ namespace
     }
 
     // total angular momentum about the centre of mass, as reset() sees it
-    linalg::Vec3D angularMomentumOf(molsys::SimulationBox &box)
+    linalg::Vec3D angularMomentumOf(molsys::SimulationBox &simulationBox)
     {
-        box.calculateCenterOfMass();
-        return box.calculateAngularMomentum(box.calculateMomentum());
+        simulationBox.calculateCenterOfMass();
+        return simulationBox.calculateAngularMomentum(
+            simulationBox.calculateMomentum()
+        );
     }
 
     // fill PhysicalData the same way the MD loop does before reset() is called
-    physicalData::PhysicalData makeData(molsys::SimulationBox &box)
+    physicalData::PhysicalData makeData(molsys::SimulationBox &simulationBox)
     {
         auto data = physicalData::PhysicalData();
-        box.calculateCenterOfMass();
-        data.calculateKinetics(box);
-        data.calculateTemperature(box);
+        simulationBox.calculateCenterOfMass();
+        data.calculateKinetics(simulationBox);
+        data.calculateTemperature(simulationBox);
         return data;
     }
 
@@ -136,12 +140,12 @@ namespace
     }
 
     void expectVelocitiesNear(
-        molsys::SimulationBox            &box,
+        molsys::SimulationBox            &simulationBox,
         const std::vector<linalg::Vec3D> &expected,
         double                            tolerance
     )
     {
-        const auto actual = velocitiesOf(box);
+        const auto actual = velocitiesOf(simulationBox);
         ASSERT_EQ(actual.size(), expected.size());
 
         for (size_t i = 0; i < actual.size(); ++i)
@@ -156,16 +160,20 @@ namespace
     // the box)
     void expectDataMatchesBox(
         physicalData::PhysicalData &data,
-        molsys::SimulationBox      &box
+        molsys::SimulationBox      &simulationBox
     )
     {
-        const auto tolerance =
-            velocityTolerance(box) * std::max(1.0, box.getTotalMass());
+        const auto tolerance = velocityTolerance(simulationBox) *
+                               std::max(1.0, simulationBox.getTotalMass());
 
-        const auto momentum        = box.calculateMomentum();
-        const auto angularMomentum = angularMomentumOf(box);
+        const auto momentum        = simulationBox.calculateMomentum();
+        const auto angularMomentum = angularMomentumOf(simulationBox);
 
-        EXPECT_NEAR(data.getTemperature(), box.calculateTemperature(), 1e-9);
+        EXPECT_NEAR(
+            data.getTemperature(),
+            simulationBox.calculateTemperature(),
+            1e-9
+        );
         expectVec3DNear(data.getMomentum() * S_TO_FS, momentum, tolerance);
         expectVec3DNear(
             data.getAngularMomentum() * S_TO_FS,
@@ -192,14 +200,14 @@ namespace
     }
 
     // masses 1, 2, 4 - total mass 7
-    void makeMassesNonUniform(molsys::SimulationBox &box)
+    void makeMassesNonUniform(molsys::SimulationBox &simulationBox)
     {
         const std::vector<double> masses = {1.0, 2.0, 4.0};
 
         for (size_t i = 0; i < masses.size(); ++i)
-            box.getAtoms()[i]->setMass(masses[i]);
+            simulationBox.getAtoms()[i]->setMass(masses[i]);
 
-        box.setTotalMass(7.0);
+        simulationBox.setTotalMass(7.0);
     }
 }   // namespace
 
