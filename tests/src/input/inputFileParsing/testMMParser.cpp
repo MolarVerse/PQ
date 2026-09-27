@@ -33,8 +33,6 @@
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "force-field" command
  *
@@ -44,7 +42,10 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    MMInputParser parser(_engine->getForceField(), _engine->getPotential());
+    input::MMInputParser parser(
+        _engine->getForceField(),
+        _engine->getPotential()
+    );
     std::vector<std::string> lineElements = {"force-field", "=", "on"};
     parser.parseForceFieldType(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
@@ -78,7 +79,10 @@ TEST_F(TestInputFileReader, testParseForceField)
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    MMInputParser parser(_engine->getForceField(), _engine->getPotential());
+    input::MMInputParser parser(
+        _engine->getForceField(),
+        _engine->getPotential()
+    );
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
     input::MMInputParser::parseNonCoulombType(lineElements, 0);
     EXPECT_EQ(

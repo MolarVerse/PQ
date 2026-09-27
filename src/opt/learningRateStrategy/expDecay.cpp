@@ -22,42 +22,46 @@
 
 #include "expDecay.hpp"
 
-using namespace opt;
-
-/**
- * @brief Construct a new Exp Decay L R Strategy:: Exp Decay L R Strategy object
- *
- * @param initialLearningRate
- * @param decay
- * @param frequency
- */
-ExpDecayLR::ExpDecayLR(
-    double initialLearningRate,
-    double decay,
-    size_t frequency
-)
-    : LearningRateStrategy(initialLearningRate, frequency), _decay(decay)
+namespace opt
 {
-}
 
-/**
- * @brief make a clone of the learning rate strategy
- *
- * @return std::shared_ptr<LearningRateStrategy>
- */
-std::shared_ptr<LearningRateStrategy> ExpDecayLR::clone() const
-{
-    return std::make_shared<ExpDecayLR>(*this);
-}
+    /**
+     * @brief Construct a new Exp Decay L R Strategy:: Exp Decay L R Strategy
+     * object
+     *
+     * @param initialLearningRate
+     * @param decay
+     * @param frequency
+     */
+    ExpDecayLR::ExpDecayLR(
+        double initialLearningRate,
+        double decay,
+        size_t frequency
+    )
+        : LearningRateStrategy(initialLearningRate, frequency), _decay(decay)
+    {
+    }
 
-/**
- * @brief Update the learning rate
- */
-void ExpDecayLR::updateLearningRate(size_t step, size_t nEpochs)
-{
-    const auto factor = std::exp(
-        -_decay * static_cast<double>(step) / static_cast<double>(nEpochs)
-    );
+    /**
+     * @brief make a clone of the learning rate strategy
+     *
+     * @return std::shared_ptr<LearningRateStrategy>
+     */
+    std::shared_ptr<LearningRateStrategy> ExpDecayLR::clone() const
+    {
+        return std::make_shared<ExpDecayLR>(*this);
+    }
 
-    _learningRate = _initialLearningRate * factor;
-}
+    /**
+     * @brief Update the learning rate
+     */
+    void ExpDecayLR::updateLearningRate(size_t step, size_t nEpochs)
+    {
+        const auto factor = std::exp(
+            -_decay * static_cast<double>(step) / static_cast<double>(nEpochs)
+        );
+
+        _learningRate = _initialLearningRate * factor;
+    }
+
+}   // namespace opt

@@ -28,8 +28,6 @@
 // for AssertionResult, Message, TestPartResult
 #include "lennardJonesPair.hpp"   // for LennardJonesPair
 
-using namespace pot;
-
 /**
  * @brief tests the equals operator of LennardJonesPair
  *
@@ -43,30 +41,30 @@ TEST(TestLennardJonesPair, equalsOperator)
     const auto       ljParams2 = LJParams{.c6 = 3.0, .c12 = 3.0};
     const auto       ljParams3 = LJParams{.c6 = 2.0, .c12 = 4.0};
     const auto       nonCoulombPair1 =
-        LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams1);
+        pot::LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams1);
 
     const auto nonCoulombPair2 =
-        LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams1);
+        pot::LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams1);
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair2);
 
     const auto nonCoulombPair3 =
-        LennardJonesPair(vdwType2, vdwType1, 1.0, ljParams1);
+        pot::LennardJonesPair(vdwType2, vdwType1, 1.0, ljParams1);
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair3);
 
     const auto nonCoulombPair4 =
-        LennardJonesPair(vdwType1, vdwType3, 1.0, ljParams1);
+        pot::LennardJonesPair(vdwType1, vdwType3, 1.0, ljParams1);
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair4);
 
     const auto nonCoulombPair5 =
-        LennardJonesPair(vdwType1, vdwType2, 2.0, ljParams1);
+        pot::LennardJonesPair(vdwType1, vdwType2, 2.0, ljParams1);
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair5);
 
     const auto nonCoulombPair6 =
-        LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams2);
+        pot::LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams2);
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair6);
 
     const auto nonCoulombPair7 =
-        LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams3);
+        pot::LennardJonesPair(vdwType1, vdwType2, 1.0, ljParams3);
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair7);
 }
 

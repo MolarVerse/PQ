@@ -31,19 +31,15 @@
 #include "steepestDescent.hpp"
 #include "testOutputBase.hpp"
 
-using namespace out;
-using namespace opt;
-using settings::ConvStrategy;
-
 TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
+    out::OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -51,7 +47,7 @@ TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        ConvStrategy::RIGOROUS
+        settings::ConvStrategy::RIGOROUS
     );
     conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
     conv.calcForceConvergence(1.0e-5, 2.0e-5);
@@ -72,11 +68,11 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
+    out::OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -84,7 +80,7 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        ConvStrategy::ABSOLUTE
+        settings::ConvStrategy::ABSOLUTE
     );
     conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
@@ -105,11 +101,11 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
+    out::OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -117,7 +113,7 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        ConvStrategy::RELATIVE
+        settings::ConvStrategy::RELATIVE
     );
     conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
@@ -136,11 +132,11 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
+    out::OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         false,   // energy disabled
         true,
         true,
@@ -148,7 +144,7 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        ConvStrategy::RIGOROUS
+        settings::ConvStrategy::RIGOROUS
     );
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
     opt.setConvergence(conv);

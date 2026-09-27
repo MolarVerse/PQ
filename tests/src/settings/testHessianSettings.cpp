@@ -24,52 +24,59 @@
 
 #include "hessianSettings.hpp"
 
-using namespace settings;
-
 TEST(TestHessianSettings, setBuilder)
 {
-    HessianSettings::setBuilder("central");
+    settings::HessianSettings::setBuilder("central");
     EXPECT_EQ(
-        HessianSettings::getBuilder(),
-        HessianBuilderType::FINITE_DIFFERENCE_FORCES_CENTRAL
+        settings::HessianSettings::getBuilder(),
+        settings::HessianBuilderType::FINITE_DIFFERENCE_FORCES_CENTRAL
     );
 
-    HessianSettings::setBuilder("forward");
+    settings::HessianSettings::setBuilder("forward");
     EXPECT_EQ(
-        HessianSettings::getBuilder(),
-        HessianBuilderType::FINITE_DIFFERENCE_FORCES_FORWARD
+        settings::HessianSettings::getBuilder(),
+        settings::HessianBuilderType::FINITE_DIFFERENCE_FORCES_FORWARD
     );
 
-    HessianSettings::setBuilder("five-point");
+    settings::HessianSettings::setBuilder("five-point");
     EXPECT_EQ(
-        HessianSettings::getBuilder(),
-        HessianBuilderType::FINITE_DIFFERENCE_FORCES_FIVE_POINT
+        settings::HessianSettings::getBuilder(),
+        settings::HessianBuilderType::FINITE_DIFFERENCE_FORCES_FIVE_POINT
     );
 
-    HessianSettings::setBuilder("analytic");
-    EXPECT_EQ(HessianSettings::getBuilder(), HessianBuilderType::ANALYTIC);
+    settings::HessianSettings::setBuilder("analytic");
+    EXPECT_EQ(
+        settings::HessianSettings::getBuilder(),
+        settings::HessianBuilderType::ANALYTIC
+    );
 
-    HessianSettings::setBuilder("unknown");
-    EXPECT_EQ(HessianSettings::getBuilder(), HessianBuilderType::NONE);
-    EXPECT_EQ(string(HessianBuilderType::NONE), "NONE");
+    settings::HessianSettings::setBuilder("unknown");
+    EXPECT_EQ(
+        settings::HessianSettings::getBuilder(),
+        settings::HessianBuilderType::NONE
+    );
+    EXPECT_EQ(string(settings::HessianBuilderType::NONE), "NONE");
 }
 
 TEST(TestHessianSettings, setFilesAndDisplacement)
 {
-    HessianSettings::setHessianFile("water.hessian");
-    HessianSettings::setHessianInfoFile("water.hessian.info");
-    HessianSettings::setDisplacement(0.002);
+    settings::HessianSettings::setHessianFile("water.hessian");
+    settings::HessianSettings::setHessianInfoFile("water.hessian.info");
+    settings::HessianSettings::setDisplacement(0.002);
 
-    EXPECT_EQ(HessianSettings::getHessianFile(), "water.hessian");
-    EXPECT_EQ(HessianSettings::getHessianInfoFile(), "water.hessian.info");
-    EXPECT_EQ(HessianSettings::getDisplacement(), 0.002);
+    EXPECT_EQ(settings::HessianSettings::getHessianFile(), "water.hessian");
+    EXPECT_EQ(
+        settings::HessianSettings::getHessianInfoFile(),
+        "water.hessian.info"
+    );
+    EXPECT_EQ(settings::HessianSettings::getDisplacement(), 0.002);
 }
 
 TEST(TestHessianSettings, setOptimizeBeforeHessian)
 {
-    HessianSettings::setOptimizeBeforeHessian(false);
-    EXPECT_FALSE(HessianSettings::optimizeBeforeHessian());
+    settings::HessianSettings::setOptimizeBeforeHessian(false);
+    EXPECT_FALSE(settings::HessianSettings::optimizeBeforeHessian());
 
-    HessianSettings::setOptimizeBeforeHessian(true);
-    EXPECT_TRUE(HessianSettings::optimizeBeforeHessian());
+    settings::HessianSettings::setOptimizeBeforeHessian(true);
+    EXPECT_TRUE(settings::HessianSettings::optimizeBeforeHessian());
 }

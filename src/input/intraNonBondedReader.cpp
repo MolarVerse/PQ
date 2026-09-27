@@ -31,140 +31,150 @@
 #include <vector>        // for vector
 
 #include "engine.hpp"                    // for Engine
-#include "exceptions.hpp"                // for IntraNonBondedException
+#include "exceptions.hpp"                // for exc::IntraNonBondedException
 #include "fileSettings.hpp"              // for FileSettings
 #include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
 #include "mathUtilities.hpp"             // for sign, utilities
 #include "simulationBox.hpp"             // for SimulationBox
 #include "stringUtilities.hpp"           // for removeComments, splitString
 
-using namespace input::intraNonBondedReader;
-using namespace engine;
-using namespace settings;
-using namespace exc;
-using namespace utilities;
-using namespace intraNonBonded;
-
-using std::views::drop;
-
-/**
- * @brief checks if the intra non bonded interactions are needed
- *
- * @param engine
- * @return bool
- */
-bool input::intraNonBondedReader::isNeeded(const Engine &engine)
+namespace input::intraNonBondedReader
 {
-    return engine.isIntraNonBondedActivated();
-}
 
-/**
- * @brief construct IntraNonBondedReader object and read the file
- *
- * @param engine
- */
-void input::intraNonBondedReader::readIntraNonBondedFile(Engine &engine)
-{
-    if (!isNeeded(engine))
-        return;
-
-    auto &log = engine.getLogOutput();
-
-    const auto filename = FileSettings::getIntraNonBondedFileName();
-
-    out::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
-    log.writeRead("Intra Non-Bonded File", filename);
-
-    IntraNonBondedReader reader(filename, engine);
-    reader.read();
-}
-
-/**
- * @brief Construct a new Intra Non Bonded Reader:: Intra Non Bonded Reader
- * object
- *
- * @param fileName
- * @param engine
- */
-IntraNonBondedReader::IntraNonBondedReader(
-    const std::string &fileName,
-    Engine            &engine
-)
-    : _fileName(fileName), _fp(fileName), _engine(engine)
-{
-}
-
-/**
- * @brief reads the intra non bonded interactions from the intraNonBonded file
- *
- * @details The function reads the intra non bonded interactions from the
- * intraNonBonded file. It calls the processMolecule function if a molecule type
- * is found. The molecule type can be given either via the string name or the
- * size_t molecule type.
- *
- * @throws IntraNonBondedException if the intraNonBonded file
- * is not provided by the user
- * @throws IntraNonBondedException if the intraNonBonded file
- * does not exist
- * @throws IntraNonBondedException if the molecule type is not
- * found
- */
-void IntraNonBondedReader::read()
-{
-    if (!FileSettings::isIntraNonBondedFileNameSet())
-        throw IntraNonBondedException(
-            "Intra non bonded file needed for requested simulation setup"
-        );
-
-    std::string line;
-
-    while (getline(_fp, line))
+    /**
+     * @brief checks if the intra non bonded interactions are needed
+     *
+     * @param engine
+     * @return bool
+     */
+    bool isNeeded(const engine::Engine &engine)
     {
-        line              = removeComments(line, "#");
-        auto lineElements = splitString(line);
+        return engine.isIntraNonBondedActivated();
+    }
 
-        if (lineElements.empty())
+    /**
+     * @brief construct IntraNonBondedReader object and read the file
+     *
+     * @param engine
+     */
+    void readIntraNonBondedFile(engine::Engine &engine)
+    {
+        if (!isNeeded(engine))
+            return;
+
+        auto &log = engine.getLogOutput();
+
+        const auto filename =
+            settings::FileSettings::getIntraNonBondedFileName();
+
+        out::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
+        log.writeRead("Intra Non-Bonded File", filename);
+
+        IntraNonBondedReader reader(filename, engine);
+        reader.read();
+    }
+
+    /**
+     * @brief Construct a new Intra Non Bonded Reader:: Intra Non Bonded Reader
+     * object
+     *
+     * @param fileName
+     * @param engine
+     */
+    IntraNonBondedReader::IntraNonBondedReader(
+        const std::string &fileName,
+        engine::Engine    &engine
+    )
+        : _fileName(fileName), _fp(fileName), _engine(engine)
+    {
+    }
+
+    /**
+     * @brief reads the intra non bonded interactions from the intraNonBonded
+     * file
+     *
+     * @details The function reads the intra non bonded interactions from the
+     * intraNonBonded file. It calls the processMolecule function if a molecule
+     * type is found. The molecule type can be given either via the string name
+     * or the size_t molecule type.
+     *
+     * @throws exc::IntraNonBondedException if the intraNonBonded file
+     * is not provided by the user
+     * @throws exc::IntraNonBondedException if the intraNonBonded file
+     * does not exist
+     * @throws exc::IntraNonBondedException if the molecule type is not
+     * found
+     */
+    void IntraNonBondedReader::read()
+    {
+        if (!settings::FileSettings::isIntraNonBondedFileNameSet())
+            throw exc::IntraNonBondedException(
+                "Intra non bonded file needed for requested simulation setup"
+            );
+
+        std::string line;
+
+        while (getline(_fp, line))
         {
+            line              = utilities::removeComments(line, "#");
+            auto lineElements = utilities::splitString(line);
+
+            if (lineElements.empty())
+            {
+                ++_lineNumber;
+                continue;
+            }
+
+            const auto moleculeType = findMoleculeType(lineElements[0]);
+
+            processMolecule(moleculeType);
+
             ++_lineNumber;
-            continue;
         }
 
-        const auto moleculeType = findMoleculeType(lineElements[0]);
-
-        processMolecule(moleculeType);
-
-        ++_lineNumber;
+        checkDuplicates();
     }
 
-    checkDuplicates();
-}
-
-/**
- * @brief finds the molecule type either by string
- *
- * @param id
- * @return MolType
- *
- * @throws IntraNonBondedException if the molecule type is not
- * found
- */
-MolType IntraNonBondedReader::findMoleculeType(const std::string &id) const
-{
-    auto &simBox            = _engine.getSimulationBox();
-    auto  molTypeFromString = simBox.findMoleculeTypeByString(id);
-
-    if (molTypeFromString.has_value())
-        return molTypeFromString.value();
-
-    MolType molTypeFromSizeT{};
-
-    try
+    /**
+     * @brief finds the molecule type either by string
+     *
+     * @param id
+     * @return MolType
+     *
+     * @throws exc::IntraNonBondedException if the molecule type is not
+     * found
+     */
+    MolType IntraNonBondedReader::findMoleculeType(const std::string &id) const
     {
-        molTypeFromSizeT = MolType{stoul(id)};
-    }
-    catch (...)
-    {
-        throw IntraNonBondedException(format(
+        auto &simBox            = _engine.getSimulationBox();
+        auto  molTypeFromString = simBox.findMoleculeTypeByString(id);
+
+        if (molTypeFromString.has_value())
+            return molTypeFromString.value();
+
+        MolType molTypeFromSizeT{};
+
+        try
+        {
+            molTypeFromSizeT = MolType{stoul(id)};
+        }
+        catch (...)
+        {
+            throw exc::IntraNonBondedException(format(
+                "ERROR: could not find molecule type '{}' in line {} in file "
+                "'{}'",
+                id,
+                _lineNumber,
+                _fileName
+            ));
+        }
+
+        const bool molTypeExists = simBox.moleculeTypeExists(molTypeFromSizeT);
+
+        if (molTypeExists)
+            return molTypeFromSizeT;
+
+        throw exc::IntraNonBondedException(format(
             "ERROR: could not find molecule type '{}' in line {} in file "
             "'{}'",
             id,
@@ -173,170 +183,173 @@ MolType IntraNonBondedReader::findMoleculeType(const std::string &id) const
         ));
     }
 
-    const bool molTypeExists = simBox.moleculeTypeExists(molTypeFromSizeT);
-
-    if (molTypeExists)
-        return molTypeFromSizeT;
-
-    throw IntraNonBondedException(format(
-        "ERROR: could not find molecule type '{}' in line {} in file "
-        "'{}'",
-        id,
-        _lineNumber,
-        _fileName
-    ));
-}
-
-/**
- * @brief processes the intra nonBonded interactions for a given molecule type
- *
- * @details the atomIndices vector is a vector of vectors. The first index is
- * the reference atom index. The second index is the atom index that interacts
- * with the reference atom. The sign of the atom index indicates the type of
- * interaction. If the sign is negative then the interaction is a 1-4
- * interaction and has to be scaled accordingly.
- *
- * Each line should have the following format:
- * `<reference atom index> <atom index 1> <atom index 2> ...`
- * (negative atom index means 1-4 interaction)
- *
- * The molecule section should end with "END" (case insensitive)
- *
- * @param moleculeType
- *
- * @throws IntraNonBondedException if the reference atom index
- * is out of range
- * @throws IntraNonBondedException if the abs(atom index) is
- * out of range
- * @throws IntraNonBondedException if "END" is not found
- */
-void IntraNonBondedReader::processMolecule(MolType moleculeType)
-{
-    std::string line;
-    auto        endedNormal = false;
-
-    auto &molType = _engine.getSimulationBox().findMoleculeType(moleculeType);
-
-    const auto nAtoms = molType.getNumberOfAtoms();
-
-    std::vector<std::vector<int>> atomIndices(nAtoms, std::vector<int>(0));
-
-    ++_lineNumber;
-
-    while (getline(_fp, line))
+    /**
+     * @brief processes the intra nonBonded interactions for a given molecule
+     * type
+     *
+     * @details the atomIndices vector is a vector of vectors. The first index
+     * is the reference atom index. The second index is the atom index that
+     * interacts with the reference atom. The sign of the atom index indicates
+     * the type of interaction. If the sign is negative then the interaction is
+     * a 1-4 interaction and has to be scaled accordingly.
+     *
+     * Each line should have the following format:
+     * `<reference atom index> <atom index 1> <atom index 2> ...`
+     * (negative atom index means 1-4 interaction)
+     *
+     * The molecule section should end with "END" (case insensitive)
+     *
+     * @param moleculeType
+     *
+     * @throws exc::IntraNonBondedException if the reference atom index
+     * is out of range
+     * @throws exc::IntraNonBondedException if the abs(atom index) is
+     * out of range
+     * @throws exc::IntraNonBondedException if "END" is not found
+     */
+    void IntraNonBondedReader::processMolecule(MolType moleculeType)
     {
-        line                    = removeComments(line, "#");
-        const auto lineElements = splitString(line);
+        std::string line;
+        auto        endedNormal = false;
 
-        if (lineElements.empty())
+        auto &molType =
+            _engine.getSimulationBox().findMoleculeType(moleculeType);
+
+        const auto nAtoms = molType.getNumberOfAtoms();
+
+        std::vector<std::vector<int>> atomIndices(nAtoms, std::vector<int>(0));
+
+        ++_lineNumber;
+
+        while (getline(_fp, line))
         {
-            ++_lineNumber;
-            continue;
-        }
+            line                    = utilities::removeComments(line, "#");
+            const auto lineElements = utilities::splitString(line);
 
-        if (toLowerCopy(lineElements[0]) == "end")
-        {
-            endedNormal = true;
-            break;
-        }
-
-        const auto refAtomIdx = static_cast<size_t>(stoi(lineElements[0]) - 1);
-
-        if (refAtomIdx >= nAtoms)
-        {
-            throw IntraNonBondedException(format(
-                "ERROR: reference atom index '{}' in line {} in file '{}' is "
-                "out of range",
-                lineElements[0],
-                _lineNumber,
-                _fileName
-            ));
-        }
-
-        auto addAtomIdxToRefAtom =
-            [&atomIndices, refAtomIdx, nAtoms, this](const auto &lineElement)
-        {
-            auto atomIndex  = ::abs(stoi(lineElement)) - 1;
-            atomIndex      *= sign(stoi(lineElement));
-
-            if (::abs(atomIndex) >= static_cast<int>(nAtoms))
+            if (lineElements.empty())
             {
-                throw IntraNonBondedException(format(
-                    "ERROR: atom index '{}' in line {} in file '{}' is out of "
-                    "range",
-                    lineElement,
+                ++_lineNumber;
+                continue;
+            }
+
+            if (utilities::toLowerCopy(lineElements[0]) == "end")
+            {
+                endedNormal = true;
+                break;
+            }
+
+            const auto refAtomIdx =
+                static_cast<size_t>(stoi(lineElements[0]) - 1);
+
+            if (refAtomIdx >= nAtoms)
+            {
+                throw exc::IntraNonBondedException(format(
+                    "ERROR: reference atom index '{}' in line {} in file '{}' "
+                    "is "
+                    "out of range",
+                    lineElements[0],
                     _lineNumber,
                     _fileName
                 ));
             }
 
-            atomIndices[refAtomIdx].push_back(atomIndex);
-        };
+            auto addAtomIdxToRefAtom = [&atomIndices, refAtomIdx, nAtoms, this](
+                                           const auto &lineElement
+                                       )
+            {
+                auto atomIndex  = ::abs(stoi(lineElement)) - 1;
+                atomIndex      *= utilities::sign(stoi(lineElement));
 
-        std::ranges::for_each(lineElements | drop(1), addAtomIdxToRefAtom);
+                if (::abs(atomIndex) >= static_cast<int>(nAtoms))
+                {
+                    throw exc::IntraNonBondedException(format(
+                        "ERROR: atom index '{}' in line {} in file '{}' is out "
+                        "of "
+                        "range",
+                        lineElement,
+                        _lineNumber,
+                        _fileName
+                    ));
+                }
 
-        ++_lineNumber;
+                atomIndices[refAtomIdx].push_back(atomIndex);
+            };
+
+            std::ranges::for_each(
+                lineElements | std::views::drop(1),
+                addAtomIdxToRefAtom
+            );
+
+            ++_lineNumber;
+        }
+
+        if (!endedNormal)
+        {
+            throw exc::IntraNonBondedException(format(
+                "ERROR: could not find 'END' for moltype '{}' in file '{}'",
+                moleculeType.toString(),
+                _fileName
+            ));
+        }
+
+        const auto container =
+            intraNonBonded::IntraNonBondedContainer(moleculeType, atomIndices);
+
+        _engine.getIntraNonBonded()->addIntraNonBondedContainer(container);
     }
 
-    if (!endedNormal)
+    /**
+     * @brief checks if a molecule type is defined multiple times
+     *
+     * @throws exc::IntraNonBondedException if a molecule type is
+     * defined multiple times
+     *
+     */
+    void IntraNonBondedReader::checkDuplicates() const
     {
-        throw IntraNonBondedException(format(
-            "ERROR: could not find 'END' for moltype '{}' in file '{}'",
-            moleculeType.toString(),
-            _fileName
-        ));
+        const auto &intraNonBonded = _engine.getIntraNonBonded();
+        const auto  nonBondedCont =
+            intraNonBonded->getIntraNonBondedContainers();
+
+        auto transform = [](const auto &container)
+        { return container.getMolType(); };
+
+        auto moleculeTypesView =
+            nonBondedCont | std::views::transform(transform);
+
+        const auto start = moleculeTypesView.begin();
+        const auto end   = moleculeTypesView.end();
+
+        std::vector<MolType> moleculeTypes(start, end);
+        std::ranges::sort(moleculeTypes);
+        const auto it = std::ranges::adjacent_find(moleculeTypes);
+
+        if (it != moleculeTypes.end())
+        {
+            throw exc::IntraNonBondedException(format(
+                "ERROR: moltype '{}' is defined multiple times in file '{}'",
+                it->toString(),
+                _fileName
+            ));
+        }
     }
 
-    const auto container = IntraNonBondedContainer(moleculeType, atomIndices);
-
-    _engine.getIntraNonBonded()->addIntraNonBondedContainer(container);
-}
-
-/**
- * @brief checks if a molecule type is defined multiple times
- *
- * @throws IntraNonBondedException if a molecule type is
- * defined multiple times
- *
- */
-void IntraNonBondedReader::checkDuplicates() const
-{
-    const auto &intraNonBonded = _engine.getIntraNonBonded();
-    const auto  nonBondedCont  = intraNonBonded->getIntraNonBondedContainers();
-
-    auto transform = [](const auto &container)
-    { return container.getMolType(); };
-
-    auto moleculeTypesView = nonBondedCont | std::views::transform(transform);
-
-    const auto start = moleculeTypesView.begin();
-    const auto end   = moleculeTypesView.end();
-
-    std::vector<MolType> moleculeTypes(start, end);
-    std::ranges::sort(moleculeTypes);
-    const auto it = std::ranges::adjacent_find(moleculeTypes);
-
-    if (it != moleculeTypes.end())
+    /**
+     * @brief sets the file name
+     *
+     * @param fileName
+     */
+    void IntraNonBondedReader::setFileName(const std::string_view &fileName)
     {
-        throw IntraNonBondedException(format(
-            "ERROR: moltype '{}' is defined multiple times in file '{}'",
-            it->toString(),
-            _fileName
-        ));
+        _fileName = fileName;
     }
-}
 
-/**
- * @brief sets the file name
- *
- * @param fileName
- */
-void IntraNonBondedReader::setFileName(const std::string_view &fileName)
-{
-    _fileName = fileName;
-}
+    /**
+     * @brief reinitializes the file pointer
+     */
+    void IntraNonBondedReader::reInitializeFp()
+    {
+        _fp = std::ifstream(_fileName);
+    }
 
-/**
- * @brief reinitializes the file pointer
- */
-void IntraNonBondedReader::reInitializeFp() { _fp = std::ifstream(_fileName); }
+}   // namespace input::intraNonBondedReader

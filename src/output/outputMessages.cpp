@@ -28,8 +28,6 @@
 
 #include "systemInfo.hpp"   // for _AUTHOR_
 
-using namespace sysinfo;
-
 namespace out
 {
 
@@ -60,18 +58,20 @@ namespace out
 )";
 
         header_title << '\n';
-        header_title << OUTPUT << "Author:        " << AUTHOR << '\n';
-        header_title << OUTPUT << "Email:         " << EMAIL << '\n';
+        header_title << OUTPUT << "Author:        " << sysinfo::AUTHOR << '\n';
+        header_title << OUTPUT << "Email:         " << sysinfo::EMAIL << '\n';
 
         header_title << '\n';
-        header_title << OUTPUT << "Testing:       " << JOSEF << '\n';
-        header_title << OUTPUT << "               " << ARMIN << '\n';
-        header_title << OUTPUT << "               " << STEFAN << '\n';
-        header_title << OUTPUT << "               " << BENJAMIN << '\n';
+        header_title << OUTPUT << "Testing:       " << sysinfo::JOSEF << '\n';
+        header_title << OUTPUT << "               " << sysinfo::ARMIN << '\n';
+        header_title << OUTPUT << "               " << sysinfo::STEFAN << '\n';
+        header_title << OUTPUT << "               " << sysinfo::BENJAMIN
+                     << '\n';
 
         header_title << '\n';
-        header_title << OUTPUT << "Version:       " << VERSION << '\n';
-        header_title << OUTPUT << "Compile date:  " << COMPILE_DATE << '\n';
+        header_title << OUTPUT << "Version:       " << sysinfo::VERSION << '\n';
+        header_title << OUTPUT << "Compile date:  " << sysinfo::COMPILE_DATE
+                     << '\n';
 
         return header_title.str();
     }

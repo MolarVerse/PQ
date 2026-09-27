@@ -22,60 +22,63 @@
 
 #include "constantDecay.hpp"
 
-using namespace opt;
-
-/**
- * @brief Construct a new Constant Decay L R Strategy:: Constant Decay L R
- * Strategy object
- *
- * @param initialLearningRate
- * @param decay
- * @param frequency
- */
-ConstantDecayLRStrategy::ConstantDecayLRStrategy(
-    double initialLearningRate,
-    double decay,
-    size_t frequency
-)
-    : LearningRateStrategy(initialLearningRate, frequency), _decay(decay)
+namespace opt
 {
-}
 
-/**
- * @brief Construct a new Constant Decay L R Strategy:: Constant Decay L R
- * Strategy object
- *
- * @param initialLearningRate
- * @param decay
- */
-ConstantDecayLRStrategy::ConstantDecayLRStrategy(
-    double initialLearningRate,
-    double decay
-)
-    : LearningRateStrategy(initialLearningRate), _decay(decay)
-{
-}
+    /**
+     * @brief Construct a new Constant Decay L R Strategy:: Constant Decay L R
+     * Strategy object
+     *
+     * @param initialLearningRate
+     * @param decay
+     * @param frequency
+     */
+    ConstantDecayLRStrategy::ConstantDecayLRStrategy(
+        double initialLearningRate,
+        double decay,
+        size_t frequency
+    )
+        : LearningRateStrategy(initialLearningRate, frequency), _decay(decay)
+    {
+    }
 
-/**
- * @brief Clone the learning rate strategy
- *
- * @return std::shared_ptr<LearningRateStrategy>
- */
-std::shared_ptr<LearningRateStrategy> ConstantDecayLRStrategy::clone() const
-{
-    return std::make_shared<ConstantDecayLRStrategy>(*this);
-}
+    /**
+     * @brief Construct a new Constant Decay L R Strategy:: Constant Decay L R
+     * Strategy object
+     *
+     * @param initialLearningRate
+     * @param decay
+     */
+    ConstantDecayLRStrategy::ConstantDecayLRStrategy(
+        double initialLearningRate,
+        double decay
+    )
+        : LearningRateStrategy(initialLearningRate), _decay(decay)
+    {
+    }
 
-/**
- * @brief Update the learning rate
- */
-void ConstantDecayLRStrategy::updateLearningRate(
-    size_t step,
-    size_t /* totalSteps */
-)
-{
-    if (step % _frequency == 0)
-        _learningRate -= _decay;
+    /**
+     * @brief Clone the learning rate strategy
+     *
+     * @return std::shared_ptr<LearningRateStrategy>
+     */
+    std::shared_ptr<LearningRateStrategy> ConstantDecayLRStrategy::clone() const
+    {
+        return std::make_shared<ConstantDecayLRStrategy>(*this);
+    }
 
-    checkLearningRate();
-}
+    /**
+     * @brief Update the learning rate
+     */
+    void ConstantDecayLRStrategy::updateLearningRate(
+        size_t step,
+        size_t /* totalSteps */
+    )
+    {
+        if (step % _frequency == 0)
+            _learningRate -= _decay;
+
+        checkLearningRate();
+    }
+
+}   // namespace opt

@@ -22,8 +22,6 @@
 
 #include "hybridMDEngine.hpp"
 
-using enum molsys::HybridZone;
-
 namespace engine
 {
     /**
@@ -159,7 +157,9 @@ namespace engine
      */
     void HybridMDEngine::scaleSmoothingMoleculeForcesInner()
     {
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(
+                 molsys::HybridZone::SMOOTHING
+             ))
         {
             const auto smF = mol.getSmoothingFactor();
             for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
@@ -179,7 +179,9 @@ namespace engine
      */
     void HybridMDEngine::scaleSmoothingMoleculeForcesOuter()
     {
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        for (auto& mol : _simulationBox->getMoleculesInsideZone(
+                 molsys::HybridZone::SMOOTHING
+             ))
         {
             const auto smF = mol.getSmoothingFactor();
             for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
@@ -234,8 +236,9 @@ namespace engine
         double globalSmoothingFactor = 1;
 
         size_t index = 0;
-        for (const auto& mol :
-             _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        for (const auto& mol : _simulationBox->getMoleculesInsideZone(
+                 molsys::HybridZone::SMOOTHING
+             ))
         {
             if (inactiveForInnerCalcMolecules.contains(index))
                 globalSmoothingFactor *= 1 - mol.getSmoothingFactor();

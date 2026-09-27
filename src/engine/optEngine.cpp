@@ -31,317 +31,332 @@
 #include "progressbar.hpp"
 #include "timingsSettings.hpp"
 
-using namespace engine;
-using namespace opt;
-using namespace physicalData;
-
-/**
- * @brief run the optimizer
- */
-void OptEngine::run()
+namespace engine
 {
-    _evaluator->evaluate();
-    _optimizer->updateHistory();
 
-    _nSteps = _optimizer->getNEpochs();
-
-    writeOutput();
-
-    progressbar bar(static_cast<int>(_nSteps), true, std::cout);
-
-    for (size_t i = 0; i < _nSteps; ++i)
+    /**
+     * @brief run the optimizer
+     */
+    void OptEngine::run()
     {
-        bar.update();
+        _evaluator->evaluate();
+        _optimizer->updateHistory();
 
-        takeStep();
-
-        if (_converged || _optStopped)
-            break;
+        _nSteps = _optimizer->getNEpochs();
 
         writeOutput();
-        deleteTmpFiles();
-    }
 
-    if (!_converged)
-    {
-        throw exc::OptException(
-            std::format(
-                "Optimizer did not converge after {} epochs.",
-                _optimizer->getNEpochs()
-            )
-        );
-    }
+        progressbar bar(static_cast<int>(_nSteps), true, std::cout);
 
-    if (_optStopped)
-    {
-        auto msg = std::format(
-            "Optimizer stopped after {} epochs out of {}. The following error "
-            "messages were raised:\n",
-            _step,
-            _optimizer->getNEpochs()
-        );
-
-        const auto &errorMessages = _learningRateStrategy->getErrorMessages();
-
-        for (size_t i = 0; i < errorMessages.size(); ++i)
-            msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
-
-        throw exc::OptException(msg);
-    }
-
-    timings::GlobalTimer::get().stopSimulationTimer();
-
-    const auto elapsedTime =
-        timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
-
-    _engineOutput.writeTimingsFile();
-
-    if (_converged)
-    {
-        const auto msg =
-            std::format("Optimizer converged after {} epochs.", _step);
-
-        getLogOutput().writeInfo(msg);
-        out::StdoutOutput::writeInfo(msg);
-
-        getLogOutput().writeEndedNormally(elapsedTime);
-        out::StdoutOutput::writeEndedNormally(elapsedTime);
-    }
-}
-
-/**
- * @brief take a step
- */
-void OptEngine::takeStep()
-{
-    _optimizer->update(_learningRateStrategy->getLearningRate(), _step);
-
-    _evaluator->evaluate();
-
-    _optimizer->updateHistory();
-
-    _converged = _optimizer->hasConverged();
-
-    if (!_converged)
-    {
-        _learningRateStrategy->updateLearningRate(_step, _nSteps);
-
-        if (!_learningRateStrategy->getErrorMessages().empty())
-            _optStopped = true;
-
-        const auto &msg = _learningRateStrategy->getWarningMessages();
-
-        if (!msg.empty())
+        for (size_t i = 0; i < _nSteps; ++i)
         {
-            const auto headerMessage = std::format(
-                "Updating learning rate did raise "
-                "the following warnings in epoch {} out of {}:",
+            bar.update();
+
+            takeStep();
+
+            if (_converged || _optStopped)
+                break;
+
+            writeOutput();
+            deleteTmpFiles();
+        }
+
+        if (!_converged)
+        {
+            throw exc::OptException(
+                std::format(
+                    "Optimizer did not converge after {} epochs.",
+                    _optimizer->getNEpochs()
+                )
+            );
+        }
+
+        if (_optStopped)
+        {
+            auto msg = std::format(
+                "Optimizer stopped after {} epochs out of {}. The following "
+                "error "
+                "messages were raised:\n",
                 _step,
                 _optimizer->getNEpochs()
             );
-            getLogOutput().writeOptWarning(headerMessage);
-            out::StdoutOutput::writeOptWarning(headerMessage);
 
-            for (const auto &message : msg)
-            {
-                getLogOutput().writeOptWarning(message);
-                out::StdoutOutput::writeOptWarning(message);
-            }
+            const auto &errorMessages =
+                _learningRateStrategy->getErrorMessages();
+
+            for (size_t i = 0; i < errorMessages.size(); ++i)
+                msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
+
+            throw exc::OptException(msg);
+        }
+
+        timings::GlobalTimer::get().stopSimulationTimer();
+
+        const auto elapsedTime =
+            timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
+
+        _engineOutput.writeTimingsFile();
+
+        if (_converged)
+        {
+            const auto msg =
+                std::format("Optimizer converged after {} epochs.", _step);
+
+            getLogOutput().writeInfo(msg);
+            out::StdoutOutput::writeInfo(msg);
+
+            getLogOutput().writeEndedNormally(elapsedTime);
+            out::StdoutOutput::writeEndedNormally(elapsedTime);
         }
     }
 
-    ++_step;
-}
-
-/**
- * @brief Writes output files.
- *
- * @details output files are written if the step is a multiple of the output
- * frequency.
- *
- */
-void OptEngine::writeOutput()
-{
-    const auto outputFreq = settings::OutputFileSettings::getOutputFrequency();
-    const auto step0      = settings::TimingsSettings::getStepCount();
-    const auto effStep    = _step + step0;
-
-    if (0 == _step % outputFreq)
+    /**
+     * @brief take a step
+     */
+    void OptEngine::takeStep()
     {
-        _engineOutput.writeXyzFile(*_simulationBox, effStep);
-        _engineOutput.writeForceFile(*_simulationBox, effStep);
-        _engineOutput.writeOptRstFile(*_simulationBox, effStep);
-        _engineOutput.writeOptFile(_step, *_optimizer);
+        _optimizer->update(_learningRateStrategy->getLearningRate(), _step);
 
-        // _engineOutput.writeVirialFile(
-        //     effStep,
-        //     *_physicalData
-        // );   // use physicalData instead of averagePhysicalData
+        _evaluator->evaluate();
 
-        // _engineOutput.writeStressFile(
-        //     effStep,
-        //     *_physicalData
-        // );   // use physicalData instead of averagePhysicalData
+        _optimizer->updateHistory();
 
-        // _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+        _converged = _optimizer->hasConverged();
+
+        if (!_converged)
+        {
+            _learningRateStrategy->updateLearningRate(_step, _nSteps);
+
+            if (!_learningRateStrategy->getErrorMessages().empty())
+                _optStopped = true;
+
+            const auto &msg = _learningRateStrategy->getWarningMessages();
+
+            if (!msg.empty())
+            {
+                const auto headerMessage = std::format(
+                    "Updating learning rate did raise "
+                    "the following warnings in epoch {} out of {}:",
+                    _step,
+                    _optimizer->getNEpochs()
+                );
+                getLogOutput().writeOptWarning(headerMessage);
+                out::StdoutOutput::writeOptWarning(headerMessage);
+
+                for (const auto &message : msg)
+                {
+                    getLogOutput().writeOptWarning(message);
+                    out::StdoutOutput::writeOptWarning(message);
+                }
+            }
+        }
+
+        ++_step;
     }
 
-    // NOTE:
-    // stop and restart immediately time manager - maximum lost time is en file
-    // writing in last step of simulation but on the other hand setup is now
-    // included in total simulation time
-    // Unfortunately, setup is therefore included in the first looptime output
-    // but this is not a big problem - could also be a feature and not a bug
-    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
-
-    _physicalData->setLoopTime(timings::GlobalTimer::get().calculateLoopTime());
-    _averagePhysicalData.updateAverages(*_physicalData);
-
-    if (0 == _step % outputFreq)
+    /**
+     * @brief Writes output files.
+     *
+     * @details output files are written if the step is a multiple of the output
+     * frequency.
+     *
+     */
+    void OptEngine::writeOutput()
     {
-        _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
+        const auto outputFreq =
+            settings::OutputFileSettings::getOutputFrequency();
+        const auto step0   = settings::TimingsSettings::getStepCount();
+        const auto effStep = _step + step0;
 
-        const auto effStepDouble = static_cast<double>(effStep);
+        if (0 == _step % outputFreq)
+        {
+            _engineOutput.writeXyzFile(*_simulationBox, effStep);
+            _engineOutput.writeForceFile(*_simulationBox, effStep);
+            _engineOutput.writeOptRstFile(*_simulationBox, effStep);
+            _engineOutput.writeOptFile(_step, *_optimizer);
 
-        _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInfoFile(effStepDouble, _averagePhysicalData);
+            // _engineOutput.writeVirialFile(
+            //     effStep,
+            //     *_physicalData
+            // );   // use physicalData instead of averagePhysicalData
 
-        _averagePhysicalData = PhysicalData();
+            // _engineOutput.writeStressFile(
+            //     effStep,
+            //     *_physicalData
+            // );   // use physicalData instead of averagePhysicalData
+
+            // _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+        }
+
+        // NOTE:
+        // stop and restart immediately time manager - maximum lost time is en
+        // file writing in last step of simulation but on the other hand setup
+        // is now included in total simulation time Unfortunately, setup is
+        // therefore included in the first looptime output but this is not a big
+        // problem - could also be a feature and not a bug
+        timings::GlobalTimer::get().stopAndRestartSimulationTimer();
+
+        _physicalData->setLoopTime(
+            timings::GlobalTimer::get().calculateLoopTime()
+        );
+        _averagePhysicalData.updateAverages(*_physicalData);
+
+        if (0 == _step % outputFreq)
+        {
+            _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
+
+            const auto effStepDouble = static_cast<double>(effStep);
+
+            _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
+            _engineOutput.writeInfoFile(effStepDouble, _averagePhysicalData);
+
+            _averagePhysicalData = physicalData::PhysicalData();
+        }
+
+        _physicalData->reset();
     }
 
-    _physicalData->reset();
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief set the optimizer from a shared pointer
+     *
+     * @param optimizer
+     */
+    void OptEngine::setOptimizer(
+        const std::shared_ptr<opt::Optimizer> &optimizer
+    )
+    {
+        _optimizer = optimizer;
+    }
 
-/**
- * @brief set the optimizer from a shared pointer
- *
- * @param optimizer
- */
-void OptEngine::setOptimizer(const std::shared_ptr<Optimizer> &optimizer)
-{
-    _optimizer = optimizer;
-}
+    /**
+     * @brief set the learning rate strategy from a shared pointer
+     *
+     * @param learningRateStrategy
+     */
+    void OptEngine::setLearningRateStrategy(
+        const std::shared_ptr<opt::LearningRateStrategy> &learningRateStrategy
+    )
+    {
+        _learningRateStrategy = learningRateStrategy;
+    }
 
-/**
- * @brief set the learning rate strategy from a shared pointer
- *
- * @param learningRateStrategy
- */
-void OptEngine::setLearningRateStrategy(
-    const std::shared_ptr<LearningRateStrategy> &learningRateStrategy
-)
-{
-    _learningRateStrategy = learningRateStrategy;
-}
+    /**
+     * @brief set the evaluator from a shared pointer
+     *
+     * @param evaluator
+     */
+    void OptEngine::setEvaluator(
+        const std::shared_ptr<opt::Evaluator> &evaluator
+    )
+    {
+        _evaluator = evaluator;
+    }
 
-/**
- * @brief set the evaluator from a shared pointer
- *
- * @param evaluator
- */
-void OptEngine::setEvaluator(const std::shared_ptr<Evaluator> &evaluator)
-{
-    _evaluator = evaluator;
-}
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief get the optimizer
+     *
+     */
+    opt::Optimizer &OptEngine::getOptimizer() { return *_optimizer; }
 
-/**
- * @brief get the optimizer
- *
- */
-Optimizer &OptEngine::getOptimizer() { return *_optimizer; }
+    /**
+     * @brief get the learning rate strategy
+     *
+     * @return LearningRate&
+     */
+    opt::LearningRateStrategy &OptEngine::getLearningRate()
+    {
+        return *_learningRateStrategy;
+    }
 
-/**
- * @brief get the learning rate strategy
- *
- * @return LearningRate&
- */
-LearningRateStrategy &OptEngine::getLearningRate()
-{
-    return *_learningRateStrategy;
-}
+    /**
+     * @brief get the evaluator
+     *
+     * @return Evaluator&
+     */
+    opt::Evaluator &OptEngine::getEvaluator() { return *_evaluator; }
 
-/**
- * @brief get the evaluator
- *
- * @return Evaluator&
- */
-Evaluator &OptEngine::getEvaluator() { return *_evaluator; }
+    /**
+     * @brief get the convergence
+     *
+     * @return Convergence&
+     */
+    opt::Convergence &OptEngine::getConvergence()
+    {
+        return _optimizer->getConvergence();
+    }
 
-/**
- * @brief get the convergence
- *
- * @return Convergence&
- */
-Convergence &OptEngine::getConvergence()
-{
-    return _optimizer->getConvergence();
-}
+    /**
+     * @brief get the optimizer as a shared pointer
+     *
+     * @return std::shared_ptr<Optimizer>
+     */
+    std::shared_ptr<opt::Optimizer> OptEngine::getSharedOptimizer()
+    {
+        return _optimizer;
+    }
 
-/**
- * @brief get the optimizer as a shared pointer
- *
- * @return std::shared_ptr<Optimizer>
- */
-std::shared_ptr<Optimizer> OptEngine::getSharedOptimizer()
-{
-    return _optimizer;
-}
+    /**
+     * @brief get the learning rate strategy as a shared pointer
+     *
+     * @return std::shared_ptr<LearningRateStrategy>
+     */
+    std::shared_ptr<opt::LearningRateStrategy> OptEngine::getSharedLearningRate(
+    )
+    {
+        return _learningRateStrategy;
+    }
 
-/**
- * @brief get the learning rate strategy as a shared pointer
- *
- * @return std::shared_ptr<LearningRateStrategy>
- */
-std::shared_ptr<LearningRateStrategy> OptEngine::getSharedLearningRate()
-{
-    return _learningRateStrategy;
-}
+    /**
+     * @brief get the evaluator as a shared pointer
+     *
+     * @return std::shared_ptr<Evaluator>
+     */
+    std::shared_ptr<opt::Evaluator> OptEngine::getSharedEvaluator()
+    {
+        return _evaluator;
+    }
 
-/**
- * @brief get the evaluator as a shared pointer
- *
- * @return std::shared_ptr<Evaluator>
- */
-std::shared_ptr<Evaluator> OptEngine::getSharedEvaluator()
-{
-    return _evaluator;
-}
+    /**
+     * @brief get the old physical data reference
+     *
+     * @return PhysicalData&
+     */
+    physicalData::PhysicalData &OptEngine::getPhysicalDataOld()
+    {
+        return *_physicalDataOld;
+    }
 
-/**
- * @brief get the old physical data reference
- *
- * @return PhysicalData&
- */
-PhysicalData &OptEngine::getPhysicalDataOld() { return *_physicalDataOld; }
+    /**
+     * @brief get the shared old physical data reference
+     *
+     * @return SharedPhysicalData&
+     */
+    std::shared_ptr<physicalData::PhysicalData> OptEngine::
+        getSharedPhysicalDataOld()
+    {
+        return _physicalDataOld;
+    }
 
-/**
- * @brief get the shared old physical data reference
- *
- * @return SharedPhysicalData&
- */
-std::shared_ptr<PhysicalData> OptEngine::getSharedPhysicalDataOld()
-{
-    return _physicalDataOld;
-}
+    /**
+     * @brief get the optimizer output
+     *
+     * @return out::OptOutput&
+     */
+    out::OptOutput &OptEngine::getOptOutput()
+    {
+        return _engineOutput.getOptOutput();
+    }
 
-/**
- * @brief get the optimizer output
- *
- * @return out::OptOutput&
- */
-out::OptOutput &OptEngine::getOptOutput()
-{
-    return _engineOutput.getOptOutput();
-}
+}   // namespace engine

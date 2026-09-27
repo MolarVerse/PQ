@@ -24,94 +24,93 @@
 
 #include <cmath>   // for sqrt
 
-#include "exceptions.hpp"   // for UserInputException
+#include "exceptions.hpp"   // for exc::UserInputException
 #include "globalTimer.hpp"
 #include "mathUtilities.hpp"        // for isZero
-#include "physicalData.hpp"         // for PhysicalData
+#include "physicalData.hpp"         // for physicalData::PhysicalData
 #include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for ThermostatType
-#include "timingsSettings.hpp"      // for TimingsSettings
+#include "thermostatSettings.hpp"   // for settings::ThermostatType
+#include "timingsSettings.hpp"      // for settings::TimingsSettings
 
-using thermostat::BerendsenThermostat;
-using namespace exc;
-using namespace settings;
-using namespace molsys;
-using namespace physicalData;
-using namespace utilities;
-
-/**
- * @brief Construct a new Berendsen Thermostat object
- *
- * @param targetTemp
- * @param tau
- */
-BerendsenThermostat::BerendsenThermostat(double targetTemp, double tau)
-    : Thermostat(targetTemp), _tau(tau)
+namespace thermostat
 {
-}
 
-/**
- * @brief apply thermostat - [Berendsen](https://doi.org/10.1063/1.448118)
- *
- * @param simulationBox
- * @param physicalData
- */
-void BerendsenThermostat::applyThermostat(
-    SimulationBox &simulationBox,
-    PhysicalData  &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
-
-    physicalData.calculateTemperature(simulationBox);
-
-    _temperature = physicalData.getTemperature();
-
-    if (isZero(_temperature))
+    /**
+     * @brief Construct a new Berendsen Thermostat object
+     *
+     * @param targetTemp
+     * @param tau
+     */
+    BerendsenThermostat::BerendsenThermostat(double targetTemp, double tau)
+        : Thermostat(targetTemp), _tau(tau)
     {
-        if (isZero(_targetTemperature))
-            return;
+    }
 
-        throw UserInputException(
-            "Cannot apply Berendsen coupling to a zero-temperature system "
-            "with a positive target temperature. Initialize velocities first."
+    /**
+     * @brief apply thermostat - [Berendsen](https://doi.org/10.1063/1.448118)
+     *
+     * @param simulationBox
+     * @param physicalData
+     */
+    void BerendsenThermostat::applyThermostat(
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
+    )
+    {
+        auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
+
+        physicalData.calculateTemperature(simulationBox);
+
+        _temperature = physicalData.getTemperature();
+
+        if (utilities::isZero(_temperature))
+        {
+            if (utilities::isZero(_targetTemperature))
+                return;
+
+            throw exc::UserInputException(
+                "Cannot apply Berendsen coupling to a zero-temperature system "
+                "with a positive target temperature. Initialize velocities "
+                "first."
+            );
+        }
+
+        const auto timeStep  = settings::TimingsSettings::getTimeStep();
+        const auto tempRatio = _targetTemperature / _temperature;
+
+        const auto berendsenFactor =
+            ::sqrt(1.0 + (timeStep / _tau * (tempRatio - 1.0)));
+
+        for (const auto &atom : simulationBox.getAtoms())
+            atom->scaleVelocity(berendsenFactor);
+
+        physicalData.setTemperature(
+            _temperature * berendsenFactor * berendsenFactor
         );
     }
 
-    const auto timeStep  = TimingsSettings::getTimeStep();
-    const auto tempRatio = _targetTemperature / _temperature;
+    /**
+     * @brief Get the tau (relaxation time) of the Berendsen thermostat
+     *
+     * @return double
+     */
+    double BerendsenThermostat::getTau() const { return _tau; }
 
-    const auto berendsenFactor =
-        ::sqrt(1.0 + (timeStep / _tau * (tempRatio - 1.0)));
+    /**
+     * @brief Set the tau (relaxation time) of the Berendsen thermostat
+     *
+     * @param tau
+     */
+    void BerendsenThermostat::setTau(double tau) { _tau = tau; }
 
-    for (const auto &atom : simulationBox.getAtoms())
-        atom->scaleVelocity(berendsenFactor);
+    /**
+     * @brief Get thermostat type
+     *
+     * @return settings::ThermostatType
+     */
+    settings::ThermostatType BerendsenThermostat::getThermostatType() const
+    {
+        return settings::ThermostatType::BERENDSEN;
+    }
 
-    physicalData.setTemperature(
-        _temperature * berendsenFactor * berendsenFactor
-    );
-}
-
-/**
- * @brief Get the tau (relaxation time) of the Berendsen thermostat
- *
- * @return double
- */
-double BerendsenThermostat::getTau() const { return _tau; }
-
-/**
- * @brief Set the tau (relaxation time) of the Berendsen thermostat
- *
- * @param tau
- */
-void BerendsenThermostat::setTau(double tau) { _tau = tau; }
-
-/**
- * @brief Get thermostat type
- *
- * @return ThermostatType
- */
-ThermostatType BerendsenThermostat::getThermostatType() const
-{
-    return ThermostatType::BERENDSEN;
-}
+}   // namespace thermostat

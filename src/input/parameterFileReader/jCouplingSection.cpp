@@ -25,114 +25,116 @@
 #include <format>   // for format
 
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "engine.hpp"                        // for Engine
+#include "engine.hpp"                        // for engine::Engine
 #include "exceptions.hpp"                    // for ParameterFileException
 #include "jCouplingType.hpp"                 // for JCouplingType
 
-using namespace input::parameterFile;
-using namespace engine;
-using namespace exc;
-using namespace ff;
-
-/**
- * @brief returns the keyword of the j-coupling section
- *
- * @return "j-couplings"
- */
-std::string JCouplingSection::keyword() { return "j_couplings"; }
-
-/**
- * @brief processes one line of the j-coupling section of the parameter file and
- * adds the j-coupling type to the force field
- *
- * @details The line is expected to have the following format:
- * 1. jCouplingTypeId
- * 2. J0
- * 3. forceConstant
- * 4. a
- * 5. b
- * 6. c
- * 7. phaseShift
- * 8. symmetry +/-/0 or anything
- *
- * According to the following equation:
- *
- * J = a * cos(phi + phaseShift)^2 + b * cos(phi + phaseShift) + c
- *
- * where phi is the dihedral angle
- *
- * V_J = forceConstant * (J - J_0)^2
- *
- * The symmetry parameter is used to determine the symmetry of the j-coupling
- *     - if symmetry is 0, no j-coupling is calculated
- *     - if symmetry is +, the j-coupling is calculated if J > J_0
- *     - if symmetry is -, the j-coupling is calculated if J < J_0
- *     - if symmetry is anything else, the j-coupling is calculated if J != J_0
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if number of elements in line
- * is not 7 or 8
- */
-void JCouplingSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::parameterFile
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if (lineElements.size() != 7 && lineElements.size() != 8)
+
+    /**
+     * @brief returns the keyword of the j-coupling section
+     *
+     * @return "j-couplings"
+     */
+    std::string JCouplingSection::keyword() { return "j_couplings"; }
+
+    /**
+     * @brief processes one line of the j-coupling section of the parameter file
+     * and adds the j-coupling type to the force field
+     *
+     * @details The line is expected to have the following format:
+     * 1. jCouplingTypeId
+     * 2. J0
+     * 3. forceConstant
+     * 4. a
+     * 5. b
+     * 6. c
+     * 7. phaseShift
+     * 8. symmetry +/-/0 or anything
+     *
+     * According to the following equation:
+     *
+     * J = a * cos(phi + phaseShift)^2 + b * cos(phi + phaseShift) + c
+     *
+     * where phi is the dihedral angle
+     *
+     * V_J = forceConstant * (J - J_0)^2
+     *
+     * The symmetry parameter is used to determine the symmetry of the
+     * j-coupling
+     *     - if symmetry is 0, no j-coupling is calculated
+     *     - if symmetry is +, the j-coupling is calculated if J > J_0
+     *     - if symmetry is -, the j-coupling is calculated if J < J_0
+     *     - if symmetry is anything else, the j-coupling is calculated if J !=
+     * J_0
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throw ParameterFileException if number of elements in line
+     * is not 7 or 8
+     */
+    void JCouplingSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    )
     {
-        throw ParameterFileException(
-            std::format(
-                "Wrong number of arguments in parameter file j-coupling "
-                "section at "
-                "line {} - number of elements has to be 7 or 8!",
-                _lineNumber
-            )
-        );
-    }
-
-    auto id            = stoul(lineElements[0]);
-    auto J0            = stod(lineElements[1]);
-    auto forceConstant = stod(lineElements[2]);
-    auto constA        = stod(lineElements[3]);
-    auto constB        = stod(lineElements[4]);
-    auto constC        = stod(lineElements[5]);
-    auto phase         = stod(lineElements[6]) * DEG_TO_RAD;
-
-    auto upperSymmetry = true;
-    auto lowerSymmetry = true;
-
-    if (lineElements.size() == 8)
-    {
-        const auto &symmetry = lineElements[7];
-
-        if (symmetry == "0")
-            upperSymmetry = lowerSymmetry = false;
-
-        if (symmetry == "+")
-            lowerSymmetry = false;
-
-        if (symmetry == "-")
-            upperSymmetry = false;
-    }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-    auto jCouplingType = JCouplingType(
-        id,
-        JCouplingParams{
-            .J0            = J0,
-            .forceConstant = forceConstant,
-            .a             = constA,
-            .b             = constB,
-            .c             = constC,
-            .phaseShift    = phase
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 7 && lineElements.size() != 8)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Wrong number of arguments in parameter file j-coupling "
+                    "section at "
+                    "line {} - number of elements has to be 7 or 8!",
+                    _lineNumber
+                )
+            );
         }
-    );
 
-    jCouplingType.setUpperSymmetry(upperSymmetry);
-    jCouplingType.setLowerSymmetry(lowerSymmetry);
+        auto id            = stoul(lineElements[0]);
+        auto J0            = stod(lineElements[1]);
+        auto forceConstant = stod(lineElements[2]);
+        auto constA        = stod(lineElements[3]);
+        auto constB        = stod(lineElements[4]);
+        auto constC        = stod(lineElements[5]);
+        auto phase         = stod(lineElements[6]) * DEG_TO_RAD;
 
-    engine.getForceField()->addJCouplingType(jCouplingType);
-}
+        auto upperSymmetry = true;
+        auto lowerSymmetry = true;
+
+        if (lineElements.size() == 8)
+        {
+            const auto &symmetry = lineElements[7];
+
+            if (symmetry == "0")
+                upperSymmetry = lowerSymmetry = false;
+
+            if (symmetry == "+")
+                lowerSymmetry = false;
+
+            if (symmetry == "-")
+                upperSymmetry = false;
+        }
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        auto jCouplingType = ff::JCouplingType(
+            id,
+            JCouplingParams{
+                .J0            = J0,
+                .forceConstant = forceConstant,
+                .a             = constA,
+                .b             = constB,
+                .c             = constC,
+                .phaseShift    = phase
+            }
+        );
+
+        jCouplingType.setUpperSymmetry(upperSymmetry);
+        jCouplingType.setLowerSymmetry(lowerSymmetry);
+
+        engine.getForceField()->addJCouplingType(jCouplingType);
+    }
+
+}   // namespace input::parameterFile

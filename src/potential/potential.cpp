@@ -25,90 +25,90 @@
 #include "coulombPotential.hpp"      // for CoulombPotential
 #include "nonCoulombPotential.hpp"   // for NonCoulombPotential
 
-using namespace pot;
-using namespace molsys;
-using namespace physicalData;
-
-/**
- * @brief calculates QMMM forces by invoking core-to-outer, layer-to-outer, and
- * outer-to-outer force calculations
- *
- * @param simulationBox
- * @param physicalData
- * @param cellList
- */
-void Potential::calculateQMMMForces(
-    SimulationBox &simulationBox,
-    PhysicalData  &physicalData,
-    CellList      &cellList
-)
+namespace pot
 {
-    calculateCoreToOuterForces(simulationBox, physicalData, cellList);
-    calculateLayerToOuterForces(simulationBox, physicalData, cellList);
-    calculateOuterToOuterForces(simulationBox, physicalData, cellList);
-}
+    /**
+     * @brief calculates QMMM forces by invoking core-to-outer, layer-to-outer,
+     * and outer-to-outer force calculations
+     *
+     * @param simulationBox
+     * @param physicalData
+     * @param cellList
+     */
+    void Potential::calculateQMMMForces(
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData,
+        molsys::CellList           &cellList
+    )
+    {
+        calculateCoreToOuterForces(simulationBox, physicalData, cellList);
+        calculateLayerToOuterForces(simulationBox, physicalData, cellList);
+        calculateOuterToOuterForces(simulationBox, physicalData, cellList);
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set the coulomb potential as a shared pointer
- *
- * @param pot
- */
-void Potential::setNonCoulombPotential(
-    const std::shared_ptr<NonCoulombPotential> &pot
-)
-{
-    _nonCoulombPot = pot;
-}
+    /**
+     * @brief set the coulomb potential as a shared pointer
+     *
+     * @param pot
+     */
+    void Potential::setNonCoulombPotential(
+        const std::shared_ptr<NonCoulombPotential> &pot
+    )
+    {
+        _nonCoulombPot = pot;
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the coulomb potential
- *
- * @return CoulombPotential&
- */
-CoulombPotential &Potential::getCoulombPotential() const
-{
-    return *_coulombPotential;
-}
+    /**
+     * @brief get the coulomb potential
+     *
+     * @return CoulombPotential&
+     */
+    CoulombPotential &Potential::getCoulombPotential() const
+    {
+        return *_coulombPotential;
+    }
 
-/**
- * @brief get the non-coulomb potential
- *
- * @return NonCoulombPotential&
- */
-NonCoulombPotential &Potential::getNonCoulombPotential() const
-{
-    return *_nonCoulombPot;
-}
+    /**
+     * @brief get the non-coulomb potential
+     *
+     * @return NonCoulombPotential&
+     */
+    NonCoulombPotential &Potential::getNonCoulombPotential() const
+    {
+        return *_nonCoulombPot;
+    }
 
-/**
- * @brief get the coulomb potential as a shared pointer
- *
- * @return std::shared_ptr<pot::CoulombPotential>
- */
-std::shared_ptr<CoulombPotential> Potential::getCoulombPotSharedPtr() const
-{
-    return _coulombPotential;
-}
+    /**
+     * @brief get the coulomb potential as a shared pointer
+     *
+     * @return std::shared_ptr<pot::CoulombPotential>
+     */
+    std::shared_ptr<CoulombPotential> Potential::getCoulombPotSharedPtr() const
+    {
+        return _coulombPotential;
+    }
 
-/**
- * @brief get the non-coulomb potential as a shared pointer
- *
- * @return SharedNonCoulombPot
- */
-std::shared_ptr<NonCoulombPotential> Potential::getNonCoulombPotSharedPtr(
-) const
-{
-    return _nonCoulombPot;
-}
+    /**
+     * @brief get the non-coulomb potential as a shared pointer
+     *
+     * @return SharedNonCoulombPot
+     */
+    std::shared_ptr<NonCoulombPotential> Potential::getNonCoulombPotSharedPtr(
+    ) const
+    {
+        return _nonCoulombPot;
+    }
+
+}   // namespace pot

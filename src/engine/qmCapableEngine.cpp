@@ -24,32 +24,34 @@
 
 #include "qmRunnerManager.hpp"
 
-using namespace engine;
-using namespace settings;
-using namespace QM;
-
-using std::shared_ptr;
-
-/**
- * @brief Set the QM runner based on the specified method
- *
- * @param method The QM method to use
- */
-void QMCapableEngine::setQMRunner(QMMethod method)
+namespace engine
 {
-    _qmRunner = QMRunnerManager::createQMRunner(method);
-}
 
-/**
- * @brief Get the QM runner
- *
- * @return shared_ptr<QMRunner> Shared pointer to the QM runner
- */
-shared_ptr<QMRunner> QMCapableEngine::getQMRunner() const { return _qmRunner; }
+    /**
+     * @brief Set the QM runner based on the specified method
+     *
+     * @param method The QM method to use
+     */
+    void QMCapableEngine::setQMRunner(settings::QMMethod method)
+    {
+        _qmRunner = QMRunnerManager::createQMRunner(method);
+    }
 
-/**
- * @brief Check if QM runner is set
- *
- * @return bool True if QM runner is set, false otherwise
- */
-bool QMCapableEngine::hasQMRunner() const { return _qmRunner != nullptr; }
+    /**
+     * @brief Get the QM runner
+     *
+     * @return shared_ptr<QMRunner> Shared pointer to the QM runner
+     */
+    std::shared_ptr<QM::QMRunner> QMCapableEngine::getQMRunner() const
+    {
+        return _qmRunner;
+    }
+
+    /**
+     * @brief Check if QM runner is set
+     *
+     * @return bool True if QM runner is set, false otherwise
+     */
+    bool QMCapableEngine::hasQMRunner() const { return _qmRunner != nullptr; }
+
+}   // namespace engine

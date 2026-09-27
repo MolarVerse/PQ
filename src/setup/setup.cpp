@@ -52,146 +52,142 @@
 #include "waterModelSettings.hpp"   // for WaterModelSettings
 #include "waterModelSetup.hpp"      // for setupWaterModel
 
-using namespace engine;
-using namespace input;
-using namespace timings;
-using namespace settings;
-using namespace guffdat;
-using namespace molDescriptor;
-using namespace restartFile;
-using namespace topology;
-using namespace parameterFile;
-using namespace input::intraNonBondedReader;
-using namespace setup::molsys;
-using namespace setup::resetKinetics;
-
-/**
- * @brief setup the engine
- *
- * @param inputFileName
- * @param engine
- */
-void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
+namespace setup
 {
-    auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
 
-    startSetup();
-
-    readInputFile(inputFileName, engine);
-
-    setupOutputFiles(engine);
-
-    readFiles(engine);
-
-    setupEngine(engine);
-
-    // needs setup of engine before reading guff.dat
-    readGuffDat(engine);
-
-    endSetup(engine);
-}
-
-/**
- * @brief start the setup
- *
- */
-void setup::startSetup() { out::StdoutOutput::writeHeader(); }
-
-/**
- * @brief end the setup
- *
- * @param engine
- */
-void setup::endSetup(Engine& engine)
-{
-    out::StdoutOutput::writeSetupCompleted();
-    engine.getLogOutput().writeSetupCompleted();
-}
-
-/**
- * @brief reads all the files needed for the simulation
- *
- * @param engine
- */
-void setup::readFiles(Engine& engine)
-{
-    readMolDescriptor(engine);
-
-    readRestartFile(engine);
-
-    readTopologyFile(engine);
-
-    readParameterFile(engine);
-
-    readIntraNonBondedFile(engine);
-}
-
-/**
- * @brief setup the engine
- *
- * @param engine
- */
-void setup::setupEngine(Engine& engine)
-{
-    if (Settings::isQMActivated())
-        setupQM(engine);
-
-    if (Settings::isMDJobType())
+    /**
+     * @brief setup the engine
+     *
+     * @param inputFileName
+     * @param engine
+     */
+    void setupRequestedJob(
+        const std::string& inputFileName,
+        engine::Engine&    engine
+    )
     {
-        switch (Settings::getIntegratorType())
+        auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
+
+        startSetup();
+
+        input::readInputFile(inputFileName, engine);
+
+        setupOutputFiles(engine);
+
+        readFiles(engine);
+
+        setupEngine(engine);
+
+        // needs setup of engine before reading guff.dat
+        input::guffdat::readGuffDat(engine);
+
+        endSetup(engine);
+    }
+
+    /**
+     * @brief start the setup
+     *
+     */
+    void startSetup() { out::StdoutOutput::writeHeader(); }
+
+    /**
+     * @brief end the setup
+     *
+     * @param engine
+     */
+    void endSetup(engine::Engine& engine)
+    {
+        out::StdoutOutput::writeSetupCompleted();
+        engine.getLogOutput().writeSetupCompleted();
+    }
+
+    /**
+     * @brief reads all the files needed for the simulation
+     *
+     * @param engine
+     */
+    void readFiles(engine::Engine& engine)
+    {
+        input::molDescriptor::readMolDescriptor(engine);
+
+        input::restartFile::readRestartFile(engine);
+
+        input::topology::readTopologyFile(engine);
+
+        input::parameterFile::readParameterFile(engine);
+
+        input::intraNonBondedReader::readIntraNonBondedFile(engine);
+    }
+
+    /**
+     * @brief setup the engine
+     *
+     * @param engine
+     */
+    void setupEngine(engine::Engine& engine)
+    {
+        if (settings::Settings::isQMActivated())
+            setupQM(engine);
+
+        if (settings::Settings::isMDJobType())
         {
-            case IntegratorType::VELOCITY_VERLET:
+            switch (settings::Settings::getIntegratorType())
             {
-                auto& mdEngine = dynamic_cast<MDEngine&>(engine);
-                mdEngine.makeIntegrator(integrator::VelocityVerlet());
-                break;
+                case settings::IntegratorType::VELOCITY_VERLET:
+                {
+                    auto& mdEngine = dynamic_cast<engine::MDEngine&>(engine);
+                    mdEngine.makeIntegrator(integrator::VelocityVerlet());
+                    break;
+                }
+                case settings::IntegratorType::NONE:
+                {
+                    throw exc::InputFileException(
+                        "Integrator is not set for MD simulation - please set "
+                        "it "
+                        "in the input file"
+                    );
+                }
             }
-            case IntegratorType::NONE:
-            {
-                throw exc::InputFileException(
-                    "Integrator is not set for MD simulation - please set it "
-                    "in the input file"
-                );
-            }
+            setupRandomNumberGenerator(engine);
+            setupResetKinetics(engine);
         }
-        setupRandomNumberGenerator(engine);
-        setupResetKinetics(engine);
+
+        setupSimulationBox(engine);
+
+        setupCellList(engine);
+
+        if (settings::Settings::isMDJobType())
+        {
+            setupThermostat(engine);
+
+            setupManostat(engine);
+        }
+
+        if (settings::Settings::isMMActivated())
+        {
+            setupPotential(engine);
+
+            setupIntraNonBonded(engine);
+        }
+
+        if (settings::ForceFieldSettings::isActive())
+            setupForceField(engine);
+
+        if (settings::WaterModelSettings::isWaterModelSet())
+            setupWaterModel(engine);
+
+        setupConstraints(engine);
+
+        if (settings::Settings::isMDJobType())
+            setupRingPolymer(engine);
+
+        if (settings::Settings::isHybridJobtype())
+            setupHybrid(engine);
+
+        if (settings::Settings::isOptJobType())
+            setupOptimizer(engine);
+
+        engine.getLogOutput().flushQueuedWarnings();
     }
 
-    setupSimulationBox(engine);
-
-    setupCellList(engine);
-
-    if (Settings::isMDJobType())
-    {
-        setupThermostat(engine);
-
-        setupManostat(engine);
-    }
-
-    if (Settings::isMMActivated())
-    {
-        setupPotential(engine);
-
-        setupIntraNonBonded(engine);
-    }
-
-    if (ForceFieldSettings::isActive())
-        setupForceField(engine);
-
-    if (WaterModelSettings::isWaterModelSet())
-        setupWaterModel(engine);
-
-    setupConstraints(engine);
-
-    if (Settings::isMDJobType())
-        setupRingPolymer(engine);
-
-    if (Settings::isHybridJobtype())
-        setupHybrid(engine);
-
-    if (Settings::isOptJobType())
-        setupOptimizer(engine);
-
-    engine.getLogOutput().flushQueuedWarnings();
-}
+}   // namespace setup

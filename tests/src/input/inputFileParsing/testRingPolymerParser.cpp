@@ -31,8 +31,6 @@
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
-using namespace input;
-
 /**
  * @brief tests parsing the "rpmd_n_replica" command
  *
@@ -45,8 +43,8 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseNumberOfReplicas)
 {
-    RingPolymerInputParser parser;
-    const auto             funcMap = parser.getKeywordFuncMap();
+    input::RingPolymerInputParser parser;
+    const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_n_replica"));
     const auto &parseFunc = funcMap.at("rpmd_n_replica");
 
@@ -82,9 +80,9 @@ TEST_F(TestInputFileReader, testParseNumberOfReplicas)
  */
 TEST_F(TestInputFileReader, testParseNumberOfReplicasInvalidSyntax)
 {
-    RingPolymerInputParser parser;
-    const auto             funcMap   = parser.getKeywordFuncMap();
-    const auto            &parseFunc = funcMap.at("rpmd_n_replica");
+    input::RingPolymerInputParser parser;
+    const auto                    funcMap   = parser.getKeywordFuncMap();
+    const auto                   &parseFunc = funcMap.at("rpmd_n_replica");
 
     const std::vector<std::string> lineElements = {
         "rpmd_n_replica",

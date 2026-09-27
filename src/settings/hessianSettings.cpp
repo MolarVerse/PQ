@@ -24,78 +24,87 @@
 
 #include "stringUtilities.hpp"
 
-using namespace settings;
-using namespace utilities;
-
-std::string settings::string(HessianBuilderType builder)
+namespace settings
 {
-    switch (builder)
+
+    std::string string(HessianBuilderType builder)
+    {
+        switch (builder)
+        {
+            using enum HessianBuilderType;
+
+            case FINITE_DIFFERENCE_FORCES_CENTRAL: return "CENTRAL";
+            case FINITE_DIFFERENCE_FORCES_FORWARD: return "FORWARD";
+            case FINITE_DIFFERENCE_FORCES_FIVE_POINT: return "FIVE-POINT";
+            case ANALYTIC: return "ANALYTIC";
+            case NONE: break;
+        }
+
+        return "NONE";
+    }
+
+    void HessianSettings::setHessianFile(const std::string_view &filename)
+    {
+        _hessianFile = filename;
+    }
+
+    void HessianSettings::setHessianInfoFile(const std::string_view &filename)
+    {
+        _hessianInfoFile = filename;
+    }
+
+    void HessianSettings::setDisplacement(double displacement)
+    {
+        _displacement = displacement;
+    }
+
+    void HessianSettings::setOptimizeBeforeHessian(bool optimize)
+    {
+        _optimizeBeforeHessian = optimize;
+    }
+
+    void HessianSettings::setBuilder(const std::string_view &builder)
     {
         using enum HessianBuilderType;
 
-        case FINITE_DIFFERENCE_FORCES_CENTRAL: return "CENTRAL";
-        case FINITE_DIFFERENCE_FORCES_FORWARD: return "FORWARD";
-        case FINITE_DIFFERENCE_FORCES_FIVE_POINT: return "FIVE-POINT";
-        case ANALYTIC: return "ANALYTIC";
-        case NONE: break;
+        const auto builderLower =
+            utilities::toLowerAndReplaceDashesCopy(builder);
+
+        if ("central" == builderLower)
+            setBuilder(FINITE_DIFFERENCE_FORCES_CENTRAL);
+
+        else if ("forward" == builderLower)
+            setBuilder(FINITE_DIFFERENCE_FORCES_FORWARD);
+
+        else if ("five_point" == builderLower)
+            setBuilder(FINITE_DIFFERENCE_FORCES_FIVE_POINT);
+
+        else if ("analytic" == builderLower)
+            setBuilder(ANALYTIC);
+
+        else
+            setBuilder(NONE);
     }
 
-    return "NONE";
-}
+    void HessianSettings::setBuilder(HessianBuilderType builder)
+    {
+        _builder = builder;
+    }
 
-void HessianSettings::setHessianFile(const std::string_view &filename)
-{
-    _hessianFile = filename;
-}
+    std::string HessianSettings::getHessianFile() { return _hessianFile; }
 
-void HessianSettings::setHessianInfoFile(const std::string_view &filename)
-{
-    _hessianInfoFile = filename;
-}
+    std::string HessianSettings::getHessianInfoFile()
+    {
+        return _hessianInfoFile;
+    }
 
-void HessianSettings::setDisplacement(double displacement)
-{
-    _displacement = displacement;
-}
+    double HessianSettings::getDisplacement() { return _displacement; }
 
-void HessianSettings::setOptimizeBeforeHessian(bool optimize)
-{
-    _optimizeBeforeHessian = optimize;
-}
+    bool HessianSettings::optimizeBeforeHessian()
+    {
+        return _optimizeBeforeHessian;
+    }
 
-void HessianSettings::setBuilder(const std::string_view &builder)
-{
-    using enum HessianBuilderType;
+    HessianBuilderType HessianSettings::getBuilder() { return _builder; }
 
-    const auto builderLower = toLowerAndReplaceDashesCopy(builder);
-
-    if ("central" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_CENTRAL);
-
-    else if ("forward" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_FORWARD);
-
-    else if ("five_point" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_FIVE_POINT);
-
-    else if ("analytic" == builderLower)
-        setBuilder(ANALYTIC);
-
-    else
-        setBuilder(NONE);
-}
-
-void HessianSettings::setBuilder(HessianBuilderType builder)
-{
-    _builder = builder;
-}
-
-std::string HessianSettings::getHessianFile() { return _hessianFile; }
-
-std::string HessianSettings::getHessianInfoFile() { return _hessianInfoFile; }
-
-double HessianSettings::getDisplacement() { return _displacement; }
-
-bool HessianSettings::optimizeBeforeHessian() { return _optimizeBeforeHessian; }
-
-HessianBuilderType HessianSettings::getBuilder() { return _builder; }
+}   // namespace settings

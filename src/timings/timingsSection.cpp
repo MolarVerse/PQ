@@ -26,127 +26,132 @@
 
 #include "constants/conversionFactors.hpp"
 
-using namespace timings;
-
-using Time     = std::chrono::time_point<std::chrono::high_resolution_clock>;
-using Duration = std::chrono::duration<double>;
-using std::chrono::duration_cast;
-
-using ms = std::chrono::milliseconds;
-using ns = std::chrono::nanoseconds;
-
-/**
- * @brief Timings struct to store timing information
- *
- */
-struct TimingsSection::Timings
+namespace timings
 {
-    Time     start;
-    Time     end;
-    Duration totalTime    = Duration::zero();
-    Duration lastStepTime = Duration::zero();
-};
 
-/**
- * @brief Construct a new Timings Section:: Timings Section object
- *
- * @param name
- */
-TimingsSection::TimingsSection(std::string_view name)
-    : _name(name), _time(std::make_unique<Timings>())
-{
-}
+    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
+    using Duration = std::chrono::duration<double>;
 
-/**
- * @brief Copy constructor for TimingsSection
- *
- * @param other
- */
-TimingsSection::TimingsSection(const TimingsSection& other)
-    : _name(other._name),
-      _steps(other._steps),
-      _time(other._time ? std::make_unique<Timings>(*other._time) : nullptr)
-{
-}
+    using ms = std::chrono::milliseconds;
+    using ns = std::chrono::nanoseconds;
 
-/**
- * @brief Copy assignment operator for TimingsSection
- *
- * @param other
- * @return TimingsSection&
- */
-TimingsSection& TimingsSection::operator=(const TimingsSection& other)
-{
-    if (this != &other)
+    /**
+     * @brief Timings struct to store timing information
+     *
+     */
+    struct TimingsSection::Timings
     {
-        _time = other._time ? std::make_unique<Timings>(*other._time) : nullptr;
-        _name = other._name;
-        _steps = other._steps;
+        Time     start;
+        Time     end;
+        Duration totalTime    = Duration::zero();
+        Duration lastStepTime = Duration::zero();
+    };
+
+    /**
+     * @brief Construct a new Timings Section:: Timings Section object
+     *
+     * @param name
+     */
+    TimingsSection::TimingsSection(std::string_view name)
+        : _name(name), _time(std::make_unique<Timings>())
+    {
     }
-    return *this;
-}
 
-TimingsSection::~TimingsSection()                                    = default;
-TimingsSection::TimingsSection(TimingsSection&&) noexcept            = default;
-TimingsSection& TimingsSection::operator=(TimingsSection&&) noexcept = default;
+    /**
+     * @brief Copy constructor for TimingsSection
+     *
+     * @param other
+     */
+    TimingsSection::TimingsSection(const TimingsSection& other)
+        : _name(other._name),
+          _steps(other._steps),
+          _time(other._time ? std::make_unique<Timings>(*other._time) : nullptr)
+    {
+    }
 
-/**
- * @brief
- *
- */
-void TimingsSection::beginTimer()
-{
-    _time->start = std::chrono::high_resolution_clock::now();
-}
+    /**
+     * @brief Copy assignment operator for TimingsSection
+     *
+     * @param other
+     * @return TimingsSection&
+     */
+    TimingsSection& TimingsSection::operator=(const TimingsSection& other)
+    {
+        if (this != &other)
+        {
+            _time =
+                other._time ? std::make_unique<Timings>(*other._time) : nullptr;
+            _name  = other._name;
+            _steps = other._steps;
+        }
+        return *this;
+    }
 
-/**
- * @brief end the timer
- *
- */
-void TimingsSection::endTimer()
-{
-    _time->end           = std::chrono::high_resolution_clock::now();
-    _steps               = _steps + 1;
-    _time->totalTime    += _time->end - _time->start;
-    _time->lastStepTime  = _time->end - _time->start;
-}
+    TimingsSection::~TimingsSection()                         = default;
+    TimingsSection::TimingsSection(TimingsSection&&) noexcept = default;
+    TimingsSection& TimingsSection::operator=(TimingsSection&&
+    ) noexcept                                                = default;
 
-/**
- * @brief calculates the elapsed time in ms
- *
- */
-double TimingsSection::calculateElapsedTime() const
-{
-    return static_cast<double>(duration_cast<ns>(_time->totalTime).count()) *
-           NS_TO_MS;
-}
+    /**
+     * @brief
+     *
+     */
+    void TimingsSection::beginTimer()
+    {
+        _time->start = std::chrono::high_resolution_clock::now();
+    }
 
-double TimingsSection::calculateAverageLoopTime() const
-{
-    auto time =
-        static_cast<double>(duration_cast<ns>(_time->totalTime).count());
+    /**
+     * @brief end the timer
+     *
+     */
+    void TimingsSection::endTimer()
+    {
+        _time->end           = std::chrono::high_resolution_clock::now();
+        _steps               = _steps + 1;
+        _time->totalTime    += _time->end - _time->start;
+        _time->lastStepTime  = _time->end - _time->start;
+    }
 
-    time = time * NS_TO_S / static_cast<double>(_steps);
+    /**
+     * @brief calculates the elapsed time in ms
+     *
+     */
+    double TimingsSection::calculateElapsedTime() const
+    {
+        return static_cast<double>(duration_cast<ns>(_time->totalTime).count()
+               ) *
+               NS_TO_MS;
+    }
 
-    return time;
-}
+    double TimingsSection::calculateAverageLoopTime() const
+    {
+        auto time =
+            static_cast<double>(duration_cast<ns>(_time->totalTime).count());
 
-/**
- * @brief calculates the loop time in s
- *
- */
-double TimingsSection::calculateLoopTime() const
-{
-    auto time =
-        static_cast<double>(duration_cast<ns>(_time->lastStepTime).count());
-    time = time * NS_TO_S;
+        time = time * NS_TO_S / static_cast<double>(_steps);
 
-    return time;
-}
+        return time;
+    }
 
-/**
- * @brief get the name of the timings section
- *
- * @return std::string
- */
-std::string TimingsSection::getName() const { return _name; }
+    /**
+     * @brief calculates the loop time in s
+     *
+     */
+    double TimingsSection::calculateLoopTime() const
+    {
+        auto time =
+            static_cast<double>(duration_cast<ns>(_time->lastStepTime).count());
+        time = time * NS_TO_S;
+
+        return time;
+    }
+
+    /**
+     * @brief get the name of the timings section
+     *
+     * @return std::string
+     */
+    std::string TimingsSection::getName() const { return _name; }
+
+}   // namespace timings

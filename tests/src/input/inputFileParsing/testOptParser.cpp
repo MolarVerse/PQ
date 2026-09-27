@@ -22,16 +22,11 @@
 
 #include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
 
-#include "exceptions.hpp"            // for InputFileException, customException
-#include "optInputParser.hpp"        // for InputFileParserOptimizer
-#include "optimizerSettings.hpp"     // for OptimizerSettings
+#include "exceptions.hpp"       // for exc::InputFileException, customException
+#include "optInputParser.hpp"   // for InputFileParserOptimizer
+#include "optimizerSettings.hpp"     // for settings::OptimizerSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
-
-using namespace input;
-using namespace settings;
-using namespace exc;
-using namespace defaults;
 
 /**
  * @brief test parsing the optimizer input key
@@ -42,25 +37,25 @@ using namespace defaults;
  */
 TEST_F(TestInputFileReader, parserOptimizer)
 {
-    using enum OptimizerType;
+    using enum settings::OptimizerType;
 
-    EXPECT_EQ(OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
+    EXPECT_EQ(settings::OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
 
-    OptimizerSettings::setOptimizer("none");
+    settings::OptimizerSettings::setOptimizer("none");
 
-    auto parser = OptInputParser();
+    auto parser = input::OptInputParser();
     input::OptInputParser::parseOptimizer(
         {"optimizer", "=", "steepest-descent"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
+    EXPECT_EQ(settings::OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
 
     input::OptInputParser::parseOptimizer({"optimizer", "=", "adam"}, 0);
-    EXPECT_EQ(OptimizerSettings::getOptimizer(), ADAM);
+    EXPECT_EQ(settings::OptimizerSettings::getOptimizer(), ADAM);
 
     ASSERT_THROW_MSG(
         parser.parseOptimizer({"optimizer", "=", "notValid"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Unknown optimizer method \"notValid\" in input file at line 0.\n"
         "Possible options are: steepest-descent, adam"
     )
@@ -77,49 +72,64 @@ TEST_F(TestInputFileReader, parserOptimizer)
  */
 TEST_F(TestInputFileReader, parserLearningRateStrategy)
 {
-    using enum LREnum;
+    using enum settings::LREnum;
 
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), EXPONENTIAL_DECAY);
+    EXPECT_EQ(
+        settings::OptimizerSettings::getLearningRateStrategy(),
+        EXPONENTIAL_DECAY
+    );
 
-    OptimizerSettings::setLearningRateStrategy("none");
+    settings::OptimizerSettings::setLearningRateStrategy("none");
 
-    auto parser = OptInputParser();
+    auto parser = input::OptInputParser();
     input::OptInputParser::parseLearningRateStrategy(
         {"learning-rate-strategy", "=", "constant-decay"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), CONSTANT_DECAY);
+    EXPECT_EQ(
+        settings::OptimizerSettings::getLearningRateStrategy(),
+        CONSTANT_DECAY
+    );
 
     input::OptInputParser::parseLearningRateStrategy(
         {"learning-rate-strategy", "=", "constant"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), CONSTANT);
+    EXPECT_EQ(settings::OptimizerSettings::getLearningRateStrategy(), CONSTANT);
 
     input::OptInputParser::parseLearningRateStrategy(
         {"learning-rate-strategy", "=", "exponential-decay"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), EXPONENTIAL_DECAY);
+    EXPECT_EQ(
+        settings::OptimizerSettings::getLearningRateStrategy(),
+        EXPONENTIAL_DECAY
+    );
 
     input::OptInputParser::parseLearningRateStrategy(
         {"learning-rate-strategy", "=", "lineSearch-wolfe"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), LINESEARCH_WOLFE);
+    EXPECT_EQ(
+        settings::OptimizerSettings::getLearningRateStrategy(),
+        LINESEARCH_WOLFE
+    );
 
     input::OptInputParser::parseLearningRateStrategy(
         {"learning-rate-strategy", "=", "linesearch"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), LINESEARCH_WOLFE);
+    EXPECT_EQ(
+        settings::OptimizerSettings::getLearningRateStrategy(),
+        LINESEARCH_WOLFE
+    );
 
     ASSERT_THROW_MSG(
         parser.parseLearningRateStrategy(
             {"learning-rate-strategy", "=", "notValid"},
             0
         ),
-        InputFileException,
+        exc::InputFileException,
         "Unknown learning rate strategy \"notValid\" in input file at line 0.\n"
         "Possible options are: constant, constant-decay, exponential-decay, "
         "linesearch (linesearch-wolfe)"
@@ -135,25 +145,25 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 TEST_F(TestInputFileReader, parserInitialLearningRate)
 {
     EXPECT_EQ(
-        OptimizerSettings::getInitialLearningRate(),
-        INITIAL_LEARNING_RATE_DEFAULT
+        settings::OptimizerSettings::getInitialLearningRate(),
+        defaults::INITIAL_LEARNING_RATE_DEFAULT
     );
 
-    OptimizerSettings::setInitialLearningRate(0.0);
+    settings::OptimizerSettings::setInitialLearningRate(0.0);
 
-    auto parser = OptInputParser();
+    auto parser = input::OptInputParser();
     input::OptInputParser::parseInitialLearningRate(
         {"initial-learning-rate", "=", "0.99"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getInitialLearningRate(), 0.99);
+    EXPECT_EQ(settings::OptimizerSettings::getInitialLearningRate(), 0.99);
 
     ASSERT_THROW_MSG(
         parser.parseInitialLearningRate(
             {"initial-learning-rate", "=", "-0.99"},
             0
         ),
-        InputFileException,
+        exc::InputFileException,
         "Initial learning rate must be greater than 0.0 in input file at line "
         "0."
     )
@@ -167,20 +177,23 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
  */
 TEST_F(TestInputFileReader, parserLearningRateDecay)
 {
-    EXPECT_EQ(OptimizerSettings::getLearningRateDecay(), std::nullopt);
+    EXPECT_EQ(
+        settings::OptimizerSettings::getLearningRateDecay(),
+        std::nullopt
+    );
 
-    OptimizerSettings::setLearningRateDecay(0.0);
+    settings::OptimizerSettings::setLearningRateDecay(0.0);
 
-    auto parser = OptInputParser();
+    auto parser = input::OptInputParser();
     input::OptInputParser::parseLearningRateDecay(
         {"learning-rate-decay", "=", "0.99"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getLearningRateDecay(), 0.99);
+    EXPECT_EQ(settings::OptimizerSettings::getLearningRateDecay(), 0.99);
 
     ASSERT_THROW_MSG(
         parser.parseLearningRateDecay({"learning-rate-decay", "=", "-0.99"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Learning rate decay must be greater than 0.0 in input file at line 0."
     )
 }
@@ -193,20 +206,20 @@ TEST_F(TestInputFileReader, parserLearningRateDecay)
  */
 TEST_F(TestInputFileReader, parserMaxLearningRate)
 {
-    EXPECT_EQ(OptimizerSettings::getMaxLearningRate(), std::nullopt);
+    EXPECT_EQ(settings::OptimizerSettings::getMaxLearningRate(), std::nullopt);
 
-    OptimizerSettings::setMaxLearningRate(0.0);
+    settings::OptimizerSettings::setMaxLearningRate(0.0);
 
-    auto parser = OptInputParser();
+    auto parser = input::OptInputParser();
     input::OptInputParser::parseMaxLearningRate(
         {"max-learning-rate", "=", "0.99"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getMaxLearningRate(), 0.99);
+    EXPECT_EQ(settings::OptimizerSettings::getMaxLearningRate(), 0.99);
 
     ASSERT_THROW_MSG(
         parser.parseMaxLearningRate({"max-learning-rate", "=", "-0.99"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Maximum learning rate must be greater than 0.0 in input file at line "
         "0."
     )
@@ -221,25 +234,25 @@ TEST_F(TestInputFileReader, parserMaxLearningRate)
 TEST_F(TestInputFileReader, parserLRUpdateFrequency)
 {
     EXPECT_EQ(
-        OptimizerSettings::getLRUpdateFrequency(),
-        LR_UPDATE_FREQUENCY_DEFAULT
+        settings::OptimizerSettings::getLRUpdateFrequency(),
+        defaults::LR_UPDATE_FREQUENCY_DEFAULT
     );
 
-    OptimizerSettings::setLRUpdateFrequency(0);
+    settings::OptimizerSettings::setLRUpdateFrequency(0);
 
-    auto parser = OptInputParser();
+    auto parser = input::OptInputParser();
     input::OptInputParser::parseLearningRateUpdateFreq(
         {"lr-update-frequency", "=", "100"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getLRUpdateFrequency(), 100);
+    EXPECT_EQ(settings::OptimizerSettings::getLRUpdateFrequency(), 100);
 
     ASSERT_THROW_MSG(
         parser.parseLearningRateUpdateFreq(
             {"lr-update-frequency", "=", "-100"},
             0
         ),
-        InputFileException,
+        exc::InputFileException,
         "Learning rate update frequency must be greater than 0 in input file "
         "at line 0."
     )
@@ -254,22 +267,22 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
 TEST_F(TestInputFileReader, parserMinLearningRate)
 {
     EXPECT_EQ(
-        OptimizerSettings::getMinLearningRate(),
-        MIN_LEARNING_RATE_DEFAULT
+        settings::OptimizerSettings::getMinLearningRate(),
+        defaults::MIN_LEARNING_RATE_DEFAULT
     );
 
-    OptimizerSettings::setMinLearningRate(0.0);
+    settings::OptimizerSettings::setMinLearningRate(0.0);
 
-    auto parser = OptInputParser();
+    auto parser = input::OptInputParser();
     input::OptInputParser::parseMinLearningRate(
         {"min-learning-rate", "=", "0.99"},
         0
     );
-    EXPECT_EQ(OptimizerSettings::getMinLearningRate(), 0.99);
+    EXPECT_EQ(settings::OptimizerSettings::getMinLearningRate(), 0.99);
 
     ASSERT_THROW_MSG(
         parser.parseMinLearningRate({"min-learning-rate", "=", "-0.99"}, 0),
-        InputFileException,
+        exc::InputFileException,
         "Minimum learning rate must be greater than 0.0 in input file at line "
         "0."
     )

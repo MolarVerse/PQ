@@ -25,12 +25,9 @@
 #include <iosfwd>   // for ifstream
 #include <string>   // for getline, allocator, string
 
-#include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
-#include "thermostat.hpp"             // for Thermostat
+#include "noseHooverThermostat.hpp"   // for thermostat::NoseHooverThermostat
+#include "thermostat.hpp"             // for thermostat::Thermostat
 #include "thermostatSettings.hpp"     // for ThermostatType
-
-using namespace thermostat;
-using namespace settings;
 
 /**
  * @brief tests writing the restart file
@@ -39,7 +36,7 @@ using namespace settings;
 TEST_F(TestRstFileOutput, write)
 {
     _rstFileOutput->setFilename("default.rst");
-    _rstFileOutput->write(*_simulationBox, Thermostat(), 10);
+    _rstFileOutput->write(*_simulationBox, thermostat::Thermostat(), 10);
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
@@ -80,12 +77,14 @@ TEST_F(TestRstFileOutput, write)
  */
 TEST_F(TestRstFileOutput, writeWithNoseHoover)
 {
-    auto thermostat = NoseHooverThermostat();
+    auto thermostat = thermostat::NoseHooverThermostat();
     // NOTE: HERE one more value than printed is needed
     thermostat.setChi({1.0, 2.0, 3.0, 0.0});
     thermostat.setZeta({3.0, 2.0, 1.0, 0.0});
 
-    ThermostatSettings::setThermostatType(ThermostatType::NOSE_HOOVER);
+    settings::ThermostatSettings::setThermostatType(
+        settings::ThermostatType::NOSE_HOOVER
+    );
 
     _rstFileOutput->setFilename("default.rst");
     _rstFileOutput->write(*_simulationBox, thermostat, 10);

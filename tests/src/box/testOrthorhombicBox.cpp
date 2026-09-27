@@ -27,14 +27,12 @@
 #include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 #include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
 #include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
-#include "orthorhombicBox.hpp"               // for OrthorhombicBox
+#include "orthorhombicBox.hpp"               // for molsys::OrthorhombicBox
 #include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
-
-using namespace molsys;
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
 {
-    auto                box           = OrthorhombicBox();
+    auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
@@ -42,7 +40,7 @@ TEST(TestOrthoRhombicBox, setBoxDimensions)
 
 TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 {
-    auto                box           = OrthorhombicBox();
+    auto                box           = molsys::OrthorhombicBox();
     const double        density       = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
     const double        totalMass     = 1.0;
     const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
@@ -51,7 +49,7 @@ TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 
 TEST(TestOrthoRhombicBox, calculateVolume)
 {
-    auto                box           = OrthorhombicBox();
+    auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
     EXPECT_EQ(box.calculateVolume(), 6.0);
@@ -59,7 +57,7 @@ TEST(TestOrthoRhombicBox, calculateVolume)
 
 TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
 {
-    auto                box           = OrthorhombicBox();
+    auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
 
@@ -72,7 +70,7 @@ TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
 
 TEST(TestOrthoRhombicBox, scaleBox)
 {
-    auto box = OrthorhombicBox();
+    auto box = molsys::OrthorhombicBox();
 
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
@@ -87,7 +85,7 @@ TEST(TestOrthoRhombicBox, scaleBox)
 
 TEST(TestOrthoRhombicBox, getMinimalBoxDimension)
 {
-    auto                box           = OrthorhombicBox();
+    auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {2.0, 1.0, 3.0};
     box.setBoxDimensions(boxDimensions);
 
@@ -96,7 +94,7 @@ TEST(TestOrthoRhombicBox, getMinimalBoxDimension)
 
 TEST(TestOrthoRhombicBox, calculateShiftVector)
 {
-    auto box = OrthorhombicBox();
+    auto box = molsys::OrthorhombicBox();
 
     box.setBoxDimensions({1.0, 1.0, 1.0});
     const linalg::Vec3D vector{0.2, 1.2, -0.8};
@@ -108,7 +106,7 @@ TEST(TestOrthoRhombicBox, calculateShiftVector)
 
 TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
 {
-    auto             box       = OrthorhombicBox();
+    auto             box       = molsys::OrthorhombicBox();
     constexpr double tolerance = 1e-10;
 
     box.setBoxDimensions({1.0, 1.0, 1.0});
@@ -123,10 +121,10 @@ TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
 
 TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
 {
-    OrthorhombicBox box;
+    molsys::OrthorhombicBox box;
     box.setBoxDimensions({1.0, 2.0, 3.0});
 
-    using enum Periodicity;
+    using enum molsys::Periodicity;
     constexpr std::array periodicities{NON_PERIODIC, X, Y, Z, XY, XZ, YZ, XYZ};
     constexpr std::array expectedPeriodicAxes{
         std::array{false, false, false},
@@ -154,7 +152,7 @@ TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
 
 TEST(TestOrthoRhombicBox, baseTransformsAndStateAccessors)
 {
-    OrthorhombicBox box;
+    molsys::OrthorhombicBox box;
     box.setBoxDimensions({2.0, 3.0, 4.0});
 
     const linalg::Vec3D vector{1.0, 2.0, 3.0};

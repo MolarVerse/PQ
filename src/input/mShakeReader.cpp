@@ -28,243 +28,252 @@
 #include "exceptions.hpp"        // for MShakeFileException
 #include "fileSettings.hpp"      // for FileSettings
 #include "mShakeReference.hpp"   // for MShakeReference
-#include "stringUtilities.hpp"   // for removeComments
+#include "stringUtilities.hpp"   // for utilities::removeComments
 
-using namespace input::mShake;
-using namespace engine;
-using namespace exc;
-using namespace settings;
-using namespace utilities;
-using namespace constraints;
-using namespace molsys;
-
-/**
- * @brief Wrapper to construct MShakeReader and read mShake file
- *
- * @param engine
- */
-void input::mShake::readMShake(Engine &engine)
+namespace input::mShake
 {
-    MShakeReader mShakeReader(engine);
-    mShakeReader.read();
-}
 
-/**
- * @brief constructor
- *
- * @details opens mShake file pointer
- *
- * @param engine
- */
-MShakeReader::MShakeReader(Engine &engine) : _engine(engine)
-{
-    _fileName = FileSettings::getMShakeFileName();
-    _fp.open(_fileName);
-}
-
-/**
- * @brief reads mShake file
- *
- * @details reads mShake file
- */
-void MShakeReader::read()
-{
-    std::string line;
-
-    _lineNumber = 0;
-
-    while (getline(_fp, line))
+    /**
+     * @brief Wrapper to construct MShakeReader and read mShake file
+     *
+     * @param engine
+     */
+    void readMShake(engine::Engine &engine)
     {
-        line              = removeComments(line, "#");
-        auto lineElements = splitString(line);
+        MShakeReader mShakeReader(engine);
+        mShakeReader.read();
+    }
 
-        ++_lineNumber;
+    /**
+     * @brief constructor
+     *
+     * @details opens mShake file pointer
+     *
+     * @param engine
+     */
+    MShakeReader::MShakeReader(engine::Engine &engine) : _engine(engine)
+    {
+        _fileName = settings::FileSettings::getMShakeFileName();
+        _fp.open(_fileName);
+    }
 
-        const auto nAtoms          = std::stoi(lineElements[0]);
-        auto       mShakeReference = MShakeReference();
+    /**
+     * @brief reads mShake file
+     *
+     * @details reads mShake file
+     */
+    void MShakeReader::read()
+    {
+        std::string line;
 
-        getline(_fp, line);
-        processCommentLine(line, mShakeReference);
+        _lineNumber = 0;
 
-        std::vector<std::string> atomLines;
-
-        for (int i = 0; i < nAtoms; ++i)
+        while (getline(_fp, line))
         {
+            line              = utilities::removeComments(line, "#");
+            auto lineElements = utilities::splitString(line);
+
+            ++_lineNumber;
+
+            const auto nAtoms          = std::stoi(lineElements[0]);
+            auto       mShakeReference = constraints::MShakeReference();
+
             getline(_fp, line);
-            atomLines.push_back(line);
-        }
+            processCommentLine(line, mShakeReference);
 
-        processAtomLines(atomLines, mShakeReference);
+            std::vector<std::string> atomLines;
 
-        _engine.getConstraints()->addMShakeReference(mShakeReference);
-    }
-}
-
-/**
- * @brief processes comment line
- *
- * @details processes comment line
- *
- * @param line
- * @param mShakeReference
- *
- * @throws MShakeFileException - if no moltype definition is
- * found in the comment line
- */
-void MShakeReader::processCommentLine(
-    std::string     &line,
-    MShakeReference &mShakeReference
-)
-{
-    auto lineCommands = removeComments(line, "#");
-
-    auto configs = std::vector<std::string>();
-
-    if (lineCommands.empty())
-        configs = {};
-    else
-        configs = getLineCommands(lineCommands, _lineNumber);
-
-    auto foundMolType = false;
-
-    for (auto &config : configs)
-    {
-        addSpaces(config, "=", _lineNumber);
-        auto configElements = splitString(config);
-
-        if (toLowerCopy(configElements[0]) == "moltype")
-        {
-            const auto molType = std::stoi(configElements[2]);
-            try
+            for (int i = 0; i < nAtoms; ++i)
             {
-                auto  simBox       = _engine.getSimulationBox();
-                auto &moleculeType = simBox.findMoleculeType(
-                    MolType{static_cast<size_t>(molType)}
-                );
-
-                mShakeReference.setMoleculeType(moleculeType);
-
-                foundMolType = true;
-                break;
+                getline(_fp, line);
+                atomLines.push_back(line);
             }
-            catch (const RstFileException &e)
-            {
-                throw MShakeFileException(e.what());
-            }
+
+            processAtomLines(atomLines, mShakeReference);
+
+            _engine.getConstraints()->addMShakeReference(mShakeReference);
         }
     }
 
-    if (!foundMolType)
+    /**
+     * @brief processes comment line
+     *
+     * @details processes comment line
+     *
+     * @param line
+     * @param mShakeReference
+     *
+     * @throws MShakeFileException - if no moltype definition is
+     * found in the comment line
+     */
+    void MShakeReader::processCommentLine(
+        std::string                  &line,
+        constraints::MShakeReference &mShakeReference
+    )
     {
-        throw MShakeFileException(
-            std::format(
-                "Unknown command in mShake file at line {}! The M-Shake file "
-                "should be in the form a an extended xyz file. Here, the "
-                "comment line should contain the molecule type from the "
-                "moldescriptor file in the following form: 'MolType = 1;'. "
-                "Please note that the syntax parsing works exactly like in the "
-                "input file. Thus, it is case insensitive and the commands are "
-                "separated by semicolons. Furthermore, the spaces around the "
-                "'=' sign can be of arbitrary length (including also no spaces "
-                "at all).",
-                _lineNumber
-            )
-        );
-    }
-}
+        auto lineCommands = utilities::removeComments(line, "#");
 
-/**
- * @brief processes atom line
- *
- * @details processes atom line
- *
- * @param lines
- * @param mShakeReference
- *
- * @throws MShakeFileException - if a line does not contain
- * exactly 4 (1 str and 3 double) arguments
- * @throws MShakeFileException - if the atomnames in the mshake
- * file do not correspond to the atom names in the rst file
- */
-void MShakeReader::processAtomLines(
-    std::vector<std::string> &lines,
-    MShakeReference          &mShakeReference
-)
-{
-    std::vector<std::string> atomNames;
-    std::vector<Atom>        atoms;
+        auto configs = std::vector<std::string>();
 
-    for (auto &line : lines)
-    {
-        line              = removeComments(line, "#");
-        auto lineElements = splitString(line);
+        if (lineCommands.empty())
+            configs = {};
+        else
+            configs = utilities::getLineCommands(lineCommands, _lineNumber);
 
-        if (lineElements.size() != 4)
+        auto foundMolType = false;
+
+        for (auto &config : configs)
         {
-            throw MShakeFileException(
+            utilities::addSpaces(config, "=", _lineNumber);
+            auto configElements = utilities::splitString(config);
+
+            if (utilities::toLowerCopy(configElements[0]) == "moltype")
+            {
+                const auto molType = std::stoi(configElements[2]);
+                try
+                {
+                    auto  simBox       = _engine.getSimulationBox();
+                    auto &moleculeType = simBox.findMoleculeType(
+                        MolType{static_cast<size_t>(molType)}
+                    );
+
+                    mShakeReference.setMoleculeType(moleculeType);
+
+                    foundMolType = true;
+                    break;
+                }
+                catch (const exc::RstFileException &e)
+                {
+                    throw exc::MShakeFileException(e.what());
+                }
+            }
+        }
+
+        if (!foundMolType)
+        {
+            throw exc::MShakeFileException(
                 std::format(
-                    "Wrong number of elements in atom lines in mShake file "
-                    "starting at line {}! The M-Shake file should be in the "
-                    "form a "
-                    "an extended xyz file. Therefore, this line should contain "
+                    "Unknown command in mShake file at line {}! The M-Shake "
+                    "file "
+                    "should be in the form a an extended xyz file. Here, the "
+                    "comment line should contain the molecule type from the "
+                    "moldescriptor file in the following form: 'MolType = 1;'. "
+                    "Please note that the syntax parsing works exactly like in "
                     "the "
-                    "atom type and the coordinates of the atom.",
+                    "input file. Thus, it is case insensitive and the commands "
+                    "are "
+                    "separated by semicolons. Furthermore, the spaces around "
+                    "the "
+                    "'=' sign can be of arbitrary length (including also no "
+                    "spaces "
+                    "at all).",
+                    _lineNumber
+                )
+            );
+        }
+    }
+
+    /**
+     * @brief processes atom line
+     *
+     * @details processes atom line
+     *
+     * @param lines
+     * @param mShakeReference
+     *
+     * @throws MShakeFileException - if a line does not contain
+     * exactly 4 (1 str and 3 double) arguments
+     * @throws MShakeFileException - if the atomnames in the mshake
+     * file do not correspond to the atom names in the rst file
+     */
+    void MShakeReader::processAtomLines(
+        std::vector<std::string>     &lines,
+        constraints::MShakeReference &mShakeReference
+    )
+    {
+        std::vector<std::string>  atomNames;
+        std::vector<molsys::Atom> atoms;
+
+        for (auto &line : lines)
+        {
+            line              = utilities::removeComments(line, "#");
+            auto lineElements = utilities::splitString(line);
+
+            if (lineElements.size() != 4)
+            {
+                throw exc::MShakeFileException(
+                    std::format(
+                        "Wrong number of elements in atom lines in mShake file "
+                        "starting at line {}! The M-Shake file should be in "
+                        "the "
+                        "form a "
+                        "an extended xyz file. Therefore, this line should "
+                        "contain "
+                        "the "
+                        "atom type and the coordinates of the atom.",
+                        _lineNumber
+                    )
+                );
+            }
+
+            const auto &atomName = lineElements[0];
+            const auto  x        = std::stod(lineElements[1]);
+            const auto  y        = std::stod(lineElements[2]);
+            const auto  z        = std::stod(lineElements[3]);
+
+            molsys::Atom atom{};
+
+            atom.setName(atomName);
+            atom.addPosition({x, y, z});
+
+            atomNames.push_back(atomName);
+            atoms.push_back(atom);
+        }
+
+        const auto &molType      = mShakeReference.getMoleculeType();
+        const auto  refAtomNames = molType.getAtomNames();
+
+        if (atoms.size() == 1)
+        {
+            throw exc::MShakeFileException(
+                std::format(
+                    "Molecule type {} has only one atom. M-Shake requires at "
+                    "least "
+                    "two atoms.",
+                    molType.getMoltype().toString()
+                )
+            );
+        }
+
+        if (atomNames != refAtomNames)
+        {
+            throw exc::MShakeFileException(
+                std::format(
+                    "Atom names in mShake file at line {} do not match the "
+                    "atom "
+                    "names of the molecule type! The M-Shake file should be in "
+                    "the "
+                    "form a an extended xyz file. Therefore, the atom names in "
+                    "the "
+                    "atom lines should match the atom names of the molecule "
+                    "type "
+                    "from the restart file.",
                     _lineNumber
                 )
             );
         }
 
-        const auto &atomName = lineElements[0];
-        const auto  x        = std::stod(lineElements[1]);
-        const auto  y        = std::stod(lineElements[2]);
-        const auto  z        = std::stod(lineElements[3]);
-
-        auto atom = Atom();
-
-        atom.setName(atomName);
-        atom.addPosition({x, y, z});
-
-        atomNames.push_back(atomName);
-        atoms.push_back(atom);
+        mShakeReference.setAtoms(atoms);
     }
 
-    const auto &molType      = mShakeReference.getMoleculeType();
-    const auto  refAtomNames = molType.getAtomNames();
-
-    if (atoms.size() == 1)
+    /**
+     * @brief getter for file name
+     *
+     * @return file name
+     */
+    [[nodiscard]] std::string MShakeReader::getFileName() const
     {
-        throw MShakeFileException(
-            std::format(
-                "Molecule type {} has only one atom. M-Shake requires at least "
-                "two atoms.",
-                molType.getMoltype().toString()
-            )
-        );
+        return _fileName;
     }
 
-    if (atomNames != refAtomNames)
-    {
-        throw MShakeFileException(
-            std::format(
-                "Atom names in mShake file at line {} do not match the atom "
-                "names of the molecule type! The M-Shake file should be in the "
-                "form a an extended xyz file. Therefore, the atom names in the "
-                "atom lines should match the atom names of the molecule type "
-                "from the restart file.",
-                _lineNumber
-            )
-        );
-    }
-
-    mShakeReference.setAtoms(atoms);
-}
-
-/**
- * @brief getter for file name
- *
- * @return file name
- */
-[[nodiscard]] std::string MShakeReader::getFileName() const
-{
-    return _fileName;
-}
+}   // namespace input::mShake

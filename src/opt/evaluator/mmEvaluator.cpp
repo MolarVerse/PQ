@@ -22,52 +22,59 @@
 
 #include "mmEvaluator.hpp"
 
-using namespace opt;
-
-/**
- * @brief clones the evaluator
- *
- */
-std::shared_ptr<Evaluator> MMEvaluator::clone() const
+namespace opt
 {
-    return std::make_shared<MMEvaluator>(*this);
-}
 
-/**
- * @brief update forces
- *
- */
-void MMEvaluator::evaluate()
-{
-    _physicalDataOld->copy(*_physicalData);
+    /**
+     * @brief clones the evaluator
+     *
+     */
+    std::shared_ptr<Evaluator> MMEvaluator::clone() const
+    {
+        return std::make_shared<MMEvaluator>(*this);
+    }
 
-    _simulationBox->updateOldForces();
-    _simulationBox->resetForces();
+    /**
+     * @brief update forces
+     *
+     */
+    void MMEvaluator::evaluate()
+    {
+        _physicalDataOld->copy(*_physicalData);
 
-    // _constraints->applyShake(_simulationBox);
+        _simulationBox->updateOldForces();
+        _simulationBox->resetForces();
 
-    _cellList->updateCellList(*_simulationBox);
+        // _constraints->applyShake(_simulationBox);
 
-    _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
+        _cellList->updateCellList(*_simulationBox);
 
-    _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+        _potential
+            ->calculateForces(*_simulationBox, *_physicalData, *_cellList);
 
-    // const auto virial = virial::Virial::calculateVirial(*_simulationBox);
-    // _physicalData->setVirial(virial);
+        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
-    _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
+        // const auto virial = virial::Virial::calculateVirial(*_simulationBox);
+        // _physicalData->setVirial(virial);
 
-    // _constraints->applyDistanceConstraints(
-    //     _simulationBox,
-    //     _physicalData,
-    //     calculateTotalSimulationTime()
-    // );
+        _forceField->calculateBondedInteractions(
+            *_simulationBox,
+            *_physicalData
+        );
 
-    // _constraints.calculateConstraintBondRefs(_simulationBox);
+        // _constraints->applyDistanceConstraints(
+        //     _simulationBox,
+        //     _physicalData,
+        //     calculateTotalSimulationTime()
+        // );
 
-    // const auto virialCorrection =
-    // virial::Virial::intraMolecularVirialCorrection(*_simulationBox);
-    // _physicalData->addVirial(virialCorrection);
+        // _constraints.calculateConstraintBondRefs(_simulationBox);
 
-    // _constraints.applyRattle(_simulationBox);
-}
+        // const auto virialCorrection =
+        // virial::Virial::intraMolecularVirialCorrection(*_simulationBox);
+        // _physicalData->addVirial(virialCorrection);
+
+        // _constraints.applyRattle(_simulationBox);
+    }
+
+}   // namespace opt

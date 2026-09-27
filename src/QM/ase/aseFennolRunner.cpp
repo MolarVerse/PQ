@@ -22,40 +22,46 @@
 
 #include "aseFennolRunner.hpp"
 
-using QM::AseFennolRunner;
-
-/**
- * @brief Construct a new AseFennolRunner::AseFennolRunner object
- *
- * @param modelPath
- * @param gpuPreprocessing
- * @param useFloat64
- *
- * @throw pybind11::error_already_set if the import of the fennol module fails
- */
-AseFennolRunner::AseFennolRunner(
-    const std::string &modelPath,
-    bool               gpuPreprocessing,
-    bool               useFloat64
-)
+namespace QM
 {
-    try
+
+    /**
+     * @brief Construct a new AseFennolRunner::AseFennolRunner object
+     *
+     * @param modelPath
+     * @param gpuPreprocessing
+     * @param useFloat64
+     *
+     * @throw pybind11::error_already_set if the import of the fennol module
+     * fails
+     */
+    AseFennolRunner::AseFennolRunner(
+        const std::string &modelPath,
+        bool               gpuPreprocessing,
+        bool               useFloat64
+    )
     {
-        const pybind11::module_ calculators =
-            pybind11::module_::import("fennol.ase");
+        try
+        {
+            const pybind11::module_ calculators =
+                pybind11::module_::import("fennol.ase");
 
-        const pybind11::dict calculatorArgs;
+            const pybind11::dict calculatorArgs;
 
-        calculatorArgs["model"]             = modelPath.c_str();
-        calculatorArgs["gpu_preprocessing"] = pybind11::bool_(gpuPreprocessing);
-        calculatorArgs["use_float64"]       = pybind11::bool_(useFloat64);
+            calculatorArgs["model"] = modelPath.c_str();
+            calculatorArgs["gpu_preprocessing"] =
+                pybind11::bool_(gpuPreprocessing);
+            calculatorArgs["use_float64"] = pybind11::bool_(useFloat64);
 
-        setAseCalculator(calculators.attr("FENNIXCalculator")(**calculatorArgs)
-        );
+            setAseCalculator(
+                calculators.attr("FENNIXCalculator")(**calculatorArgs)
+            );
+        }
+        catch (const pybind11::error_already_set &)
+        {
+            ::PyErr_Print();
+            throw;
+        }
     }
-    catch (const pybind11::error_already_set &)
-    {
-        ::PyErr_Print();
-        throw;
-    }
-}
+
+}   // namespace QM

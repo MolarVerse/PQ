@@ -32,113 +32,117 @@
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
-using namespace opt;
-using namespace pot;
-using namespace molsys;
-using namespace physicalData;
-using namespace ff;
-using namespace intraNonBonded;
-using namespace virial;
-using namespace constraints;
-using namespace exc;
-
-bool Evaluator::supportsAnalyticHessian() const { return false; }
-
-HessianMatrix Evaluator::calculateAnalyticHessian()
+namespace opt
 {
-    throw UserInputException(
-        "The selected evaluator does not support analytic Hessian generation."
-    );
-}
 
-/***************************
- * standard setter methods *
- ***************************/
+    bool Evaluator::supportsAnalyticHessian() const { return false; }
 
-/**
- * @brief set the potential as shared pointer
- *
- * @param potential - std::shared_ptr<Potential>
- */
-void Evaluator::setPotential(const std::shared_ptr<Potential>& potential)
-{
-    _potential = potential;
-}
+    HessianMatrix Evaluator::calculateAnalyticHessian()
+    {
+        throw exc::UserInputException(
+            "The selected evaluator does not support analytic Hessian "
+            "generation."
+        );
+    }
 
-/**
- * @brief set the cell list as shared pointer
- *
- * @param cellList - std::shared_ptr<CellList>
- */
-void Evaluator::setCellList(const std::shared_ptr<CellList>& cellList)
-{
-    _cellList = cellList;
-}
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-/**
- * @brief set the simulation box as shared pointer
- *
- * @param simulationBox - std::shared_ptr<SimulationBox>
- */
-void Evaluator::setSimulationBox(
-    const std::shared_ptr<SimulationBox>& simulationBox
-)
-{
-    _simulationBox = simulationBox;
-}
+    /**
+     * @brief set the potential as shared pointer
+     *
+     * @param potential - std::shared_ptr<Potential>
+     */
+    void Evaluator::setPotential(
+        const std::shared_ptr<pot::Potential>& potential
+    )
+    {
+        _potential = potential;
+    }
 
-/**
- * @brief set the constraints as shared pointer
- *
- * @param constraints - std::shared_ptr<Constraints>
- */
-void Evaluator::setConstraints(const std::shared_ptr<Constraints>& constraints)
-{
-    _constraints = constraints;
-}
+    /**
+     * @brief set the cell list as shared pointer
+     *
+     * @param cellList - std::shared_ptr<CellList>
+     */
+    void Evaluator::setCellList(
+        const std::shared_ptr<molsys::CellList>& cellList
+    )
+    {
+        _cellList = cellList;
+    }
 
-/**
- * @brief set the physical data as shared pointer
- *
- * @param physicalData - std::shared_ptr<PhysicalData>
- */
-void Evaluator::setPhysicalData(
-    const std::shared_ptr<PhysicalData>& physicalData
-)
-{
-    _physicalData = physicalData;
-}
+    /**
+     * @brief set the simulation box as shared pointer
+     *
+     * @param simulationBox - std::shared_ptr<SimulationBox>
+     */
+    void Evaluator::setSimulationBox(
+        const std::shared_ptr<molsys::SimulationBox>& simulationBox
+    )
+    {
+        _simulationBox = simulationBox;
+    }
 
-/**
- * @brief set the old physical data as shared pointer
- *
- * @param physicalData - std::shared_ptr<PhysicalData>
- */
-void Evaluator::setPhysicalDataOld(
-    const std::shared_ptr<PhysicalData>& physicalData
-)
-{
-    _physicalDataOld = physicalData;
-}
+    /**
+     * @brief set the constraints as shared pointer
+     *
+     * @param constraints - std::shared_ptr<Constraints>
+     */
+    void Evaluator::setConstraints(
+        const std::shared_ptr<constraints::Constraints>& constraints
+    )
+    {
+        _constraints = constraints;
+    }
 
-/**
- * @brief set the force field as shared pointer
- *
- * @param forceField - std::shared_ptr<ForceField>
- */
-void Evaluator::setForceField(const std::shared_ptr<ForceField>& forceField)
-{
-    _forceField = forceField;
-}
+    /**
+     * @brief set the physical data as shared pointer
+     *
+     * @param physicalData - std::shared_ptr<PhysicalData>
+     */
+    void Evaluator::setPhysicalData(
+        const std::shared_ptr<physicalData::PhysicalData>& physicalData
+    )
+    {
+        _physicalData = physicalData;
+    }
 
-/**
- * @brief set the intra non bonded as shared pointer
- *
- * @param intraNonBonded - std::shared_ptr<IntraNonBonded>
- */
-void Evaluator::setIntraNonBonded(
-    const std::shared_ptr<IntraNonBonded>& intraNonBonded
-)
-{
-    _intraNonBonded = intraNonBonded;
-}
+    /**
+     * @brief set the old physical data as shared pointer
+     *
+     * @param physicalData - std::shared_ptr<PhysicalData>
+     */
+    void Evaluator::setPhysicalDataOld(
+        const std::shared_ptr<physicalData::PhysicalData>& physicalData
+    )
+    {
+        _physicalDataOld = physicalData;
+    }
+
+    /**
+     * @brief set the force field as shared pointer
+     *
+     * @param forceField - std::shared_ptr<ForceField>
+     */
+    void Evaluator::setForceField(
+        const std::shared_ptr<ff::ForceField>& forceField
+    )
+    {
+        _forceField = forceField;
+    }
+
+    /**
+     * @brief set the intra non bonded as shared pointer
+     *
+     * @param intraNonBonded - std::shared_ptr<IntraNonBonded>
+     */
+    void Evaluator::setIntraNonBonded(
+        const std::shared_ptr<intraNonBonded::IntraNonBonded>& intraNonBonded
+    )
+    {
+        _intraNonBonded = intraNonBonded;
+    }
+
+}   // namespace opt

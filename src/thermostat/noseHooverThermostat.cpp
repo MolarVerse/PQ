@@ -30,225 +30,229 @@
 #include "globalTimer.hpp"                           // for GlobalTimer
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
-#include "thermostatSettings.hpp"                    // for ThermostatType
-#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "thermostatSettings.hpp"   // for settings::ThermostatType
+#include "timingsSettings.hpp"      // for TimingsSettings
 
-using thermostat::NoseHooverThermostat;
-
-using namespace settings;
-using namespace molsys;
-using namespace physicalData;
-
-/**
- * @brief Construct a new Nose Hoover Thermostat:: Nose Hoover Thermostat object
- *
- * @param targetTemp
- * @param chi
- * @param zeta
- * @param couplingFrequency
- */
-NoseHooverThermostat::NoseHooverThermostat(
-    double                     targetTemp,
-    const std::vector<double> &chi,
-    const std::vector<double> &zeta,
-    double                     couplingFrequency
-)
-    : Thermostat(targetTemp),
-      _chi(chi),
-      _zeta(zeta),
-      _couplingFrequency(couplingFrequency)
+namespace thermostat
 {
-}
 
-/**
- * @brief applies the Nose-Hoover thermostat on the forces
- *
- * @details the Nose-Hoover thermostat is applied on the forces of the atoms
- * after force calculation
- *
- * @param simulationBox simulation box
- */
-void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simulationBox)
-{
-    auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
-
-    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-    const auto kT_target         = boltzmannConstant * _targetTemperature;
-
-    const auto degreesOfFreedom =
-        static_cast<double>(simulationBox.getDegreesOfFreedom());
-    const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
-
-    auto factor  = _chi[0] * couplingFreqSquared;
-    factor      /= (kT_target * degreesOfFreedom);
-    factor      *= MOMENTUM_TO_FORCE;
-
-    auto applyNoseHoover = [factor](auto &atom)
-    { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
-
-    std::ranges::for_each(simulationBox.getAtoms(), applyNoseHoover);
-}
-
-/**
- * @brief applies the Nose-Hoover thermostat on the velocities
- *
- * @details the Nose-Hoover thermostat is applied on the velocities of the atoms
- * after velocity integration
- *
- * @param simulationBox simulation box
- * @param physicalData physical data
- */
-void NoseHooverThermostat::applyThermostat(
-    SimulationBox &simulationBox,
-    PhysicalData  &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
-
-    physicalData.calculateTemperature(simulationBox);
-
-    _temperature = physicalData.getTemperature();
-
-    const auto degreesOfFreedom =
-        static_cast<double>(simulationBox.getDegreesOfFreedom());
-    const auto couplingFreqSquared = _couplingFrequency * _couplingFrequency;
-
-    const auto timeStep          = TimingsSettings::getTimeStep();
-    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-
-    const auto timestep            = timeStep * FS_TO_S;
-    const auto thermalEnergy       = boltzmannConstant * _temperature;
-    const auto thermalEnergyTarget = boltzmannConstant * _targetTemperature;
-
-    auto chi  = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
-    chi      -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
-
-    _chi[0] += timestep * chi;
-
-    auto ratio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
-                 couplingFreqSquared;
-
-    _zeta[0] += ratio * timestep;
-    ratio    *= _chi[0];
-
-    auto energyMomentum = ratio;
-    auto energyFriction = degreesOfFreedom * _zeta[0];
-
-    for (size_t i = 1; i < _chi.size() - 1; ++i)
+    /**
+     * @brief Construct a new Nose Hoover Thermostat:: Nose Hoover Thermostat
+     * object
+     *
+     * @param targetTemp
+     * @param chi
+     * @param zeta
+     * @param couplingFrequency
+     */
+    NoseHooverThermostat::NoseHooverThermostat(
+        double                     targetTemp,
+        const std::vector<double> &chi,
+        const std::vector<double> &zeta,
+        double                     couplingFrequency
+    )
+        : Thermostat(targetTemp),
+          _chi(chi),
+          _zeta(zeta),
+          _couplingFrequency(couplingFrequency)
     {
-        chi  = ratio;
-        chi -= thermalEnergyTarget;
-        chi -=
-            _chi[i] * _chi[i + 1] / thermalEnergyTarget * couplingFreqSquared;
-
-        _chi[i] += timestep * chi;
-
-        ratio     = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
-        _zeta[i] += ratio * timestep;
-        ratio    *= _chi[i];
-
-        energyMomentum += ratio;
-        energyFriction += _zeta[i];
     }
 
-    physicalData.setNoseHooverMomentumEnergy(energyMomentum);
-    physicalData.setNoseHooverFrictionEnergy(energyFriction);
-}
+    /**
+     * @brief applies the Nose-Hoover thermostat on the forces
+     *
+     * @details the Nose-Hoover thermostat is applied on the forces of the atoms
+     * after force calculation
+     *
+     * @param simulationBox simulation box
+     */
+    void NoseHooverThermostat::applyThermostatOnForces(
+        molsys::SimulationBox &simulationBox
+    )
+    {
+        auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+        const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+        const auto kT_target         = boltzmannConstant * _targetTemperature;
 
-/**
- * @brief get the chi values of the Nose-Hoover thermostat
- *
- * @return std::vector<double>
- */
-std::vector<double> NoseHooverThermostat::getChi() const { return _chi; }
+        const auto degreesOfFreedom =
+            static_cast<double>(simulationBox.getDegreesOfFreedom());
+        const auto couplingFreqSquared =
+            _couplingFrequency * _couplingFrequency;
 
-/**
- * @brief get the zeta values of the Nose-Hoover thermostat
- *
- * @return std::vector<double>
- */
-std::vector<double> NoseHooverThermostat::getZeta() const { return _zeta; }
+        auto factor  = _chi[0] * couplingFreqSquared;
+        factor      /= (kT_target * degreesOfFreedom);
+        factor      *= MOMENTUM_TO_FORCE;
 
-/**
- * @brief get the coupling frequency of the Nose-Hoover thermostat
- *
- * @return double
- */
-double NoseHooverThermostat::getCouplingFrequency() const
-{
-    return _couplingFrequency;
-}
+        auto applyNoseHoover = [factor](auto &atom)
+        { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+        std::ranges::for_each(simulationBox.getAtoms(), applyNoseHoover);
+    }
 
-/**
- * @brief set the chi value at the given index
- *
- * @param index
- * @param chi
- */
-void NoseHooverThermostat::setChi(size_t index, double chi)
-{
-    _chi[index] = chi;
-}
+    /**
+     * @brief applies the Nose-Hoover thermostat on the velocities
+     *
+     * @details the Nose-Hoover thermostat is applied on the velocities of the
+     * atoms after velocity integration
+     *
+     * @param simulationBox simulation box
+     * @param physicalData physical data
+     */
+    void NoseHooverThermostat::applyThermostat(
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
+    )
+    {
+        auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
-/**
- * @brief set the chi values of the Nose-Hoover thermostat
- *
- * @param chi
- */
-void NoseHooverThermostat::setChi(const std::vector<double> &chi)
-{
-    _chi = chi;
-}
+        physicalData.calculateTemperature(simulationBox);
 
-/**
- * @brief set the zeta value at the given index
- *
- * @param index
- * @param zeta
- */
-void NoseHooverThermostat::setZeta(size_t index, double zeta)
-{
-    _zeta[index] = zeta;
-}
+        _temperature = physicalData.getTemperature();
 
-/**
- * @brief set the zeta values of the Nose-Hoover thermostat
- *
- * @param zeta
- */
-void NoseHooverThermostat::setZeta(const std::vector<double> &zeta)
-{
-    _zeta = zeta;
-}
+        const auto degreesOfFreedom =
+            static_cast<double>(simulationBox.getDegreesOfFreedom());
+        const auto couplingFreqSquared =
+            _couplingFrequency * _couplingFrequency;
 
-/**
- * @brief set the coupling frequency of the Nose-Hoover thermostat
- *
- * @param couplingFrequency
- */
-void NoseHooverThermostat::setCouplingFrequency(double couplingFrequency)
-{
-    _couplingFrequency = couplingFrequency;
-}
+        const auto timeStep          = settings::TimingsSettings::getTimeStep();
+        const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-/**
- * @brief get the ThermostatType
- *
- * @return ThermostatType
- */
-ThermostatType NoseHooverThermostat::getThermostatType() const
-{
-    return ThermostatType::NOSE_HOOVER;
-}
+        const auto timestep            = timeStep * FS_TO_S;
+        const auto thermalEnergy       = boltzmannConstant * _temperature;
+        const auto thermalEnergyTarget = boltzmannConstant * _targetTemperature;
+
+        auto chi = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
+        chi -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
+
+        _chi[0] += timestep * chi;
+
+        auto ratio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
+                     couplingFreqSquared;
+
+        _zeta[0] += ratio * timestep;
+        ratio    *= _chi[0];
+
+        auto energyMomentum = ratio;
+        auto energyFriction = degreesOfFreedom * _zeta[0];
+
+        for (size_t i = 1; i < _chi.size() - 1; ++i)
+        {
+            chi  = ratio;
+            chi -= thermalEnergyTarget;
+            chi -= _chi[i] * _chi[i + 1] / thermalEnergyTarget *
+                   couplingFreqSquared;
+
+            _chi[i] += timestep * chi;
+
+            ratio     = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
+            _zeta[i] += ratio * timestep;
+            ratio    *= _chi[i];
+
+            energyMomentum += ratio;
+            energyFriction += _zeta[i];
+        }
+
+        physicalData.setNoseHooverMomentumEnergy(energyMomentum);
+        physicalData.setNoseHooverFrictionEnergy(energyFriction);
+    }
+
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief get the chi values of the Nose-Hoover thermostat
+     *
+     * @return std::vector<double>
+     */
+    std::vector<double> NoseHooverThermostat::getChi() const { return _chi; }
+
+    /**
+     * @brief get the zeta values of the Nose-Hoover thermostat
+     *
+     * @return std::vector<double>
+     */
+    std::vector<double> NoseHooverThermostat::getZeta() const { return _zeta; }
+
+    /**
+     * @brief get the coupling frequency of the Nose-Hoover thermostat
+     *
+     * @return double
+     */
+    double NoseHooverThermostat::getCouplingFrequency() const
+    {
+        return _couplingFrequency;
+    }
+
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief set the chi value at the given index
+     *
+     * @param index
+     * @param chi
+     */
+    void NoseHooverThermostat::setChi(size_t index, double chi)
+    {
+        _chi[index] = chi;
+    }
+
+    /**
+     * @brief set the chi values of the Nose-Hoover thermostat
+     *
+     * @param chi
+     */
+    void NoseHooverThermostat::setChi(const std::vector<double> &chi)
+    {
+        _chi = chi;
+    }
+
+    /**
+     * @brief set the zeta value at the given index
+     *
+     * @param index
+     * @param zeta
+     */
+    void NoseHooverThermostat::setZeta(size_t index, double zeta)
+    {
+        _zeta[index] = zeta;
+    }
+
+    /**
+     * @brief set the zeta values of the Nose-Hoover thermostat
+     *
+     * @param zeta
+     */
+    void NoseHooverThermostat::setZeta(const std::vector<double> &zeta)
+    {
+        _zeta = zeta;
+    }
+
+    /**
+     * @brief set the coupling frequency of the Nose-Hoover thermostat
+     *
+     * @param couplingFrequency
+     */
+    void NoseHooverThermostat::setCouplingFrequency(double couplingFrequency)
+    {
+        _couplingFrequency = couplingFrequency;
+    }
+
+    /**
+     * @brief get the settings::ThermostatType
+     *
+     * @return settings::ThermostatType
+     */
+    settings::ThermostatType NoseHooverThermostat::getThermostatType() const
+    {
+        return settings::ThermostatType::NOSE_HOOVER;
+    }
+
+}   // namespace thermostat

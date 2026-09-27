@@ -24,52 +24,60 @@
 
 #include "settings.hpp"   // for Settings
 
-using namespace randomNumberGenerator;
-using namespace settings;
-
-/**
- * @brief constructor
- *
- * @details if random seed is set in settings, use it to seed the generator,
- * otherwise use random device to seed the generator
- *
- * @details NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c) because the random
- * device is not a security issue, as we specifically check if we have a random
- * seed set in the settings, and if not, we use the random device to seed the
- * generator. This is not a security issue, as we are not using the random
- * device for cryptographic purposes, but rather for generating random numbers
- * for simulations.
- *
- */
-// NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c)
-RandomNumberGenerator::RandomNumberGenerator()
+namespace rng
 {
-    if (Settings::isRandomSeedSet())
-        _generator.seed(Settings::getRandomSeed());
-    else
-        _generator.seed(_randomDevice());
-}
 
-/**
- * @brief get a random double from a normal distribution
- *
- * @param mean
- * @param stddev
- */
-double RandomNumberGenerator::getNormalDistribution(double mean, double stddev)
-{
-    std::normal_distribution<double> distribution{mean, stddev};
-    return distribution(_generator);
-}
+    /**
+     * @brief constructor
+     *
+     * @details if random seed is set in settings, use it to seed the generator,
+     * otherwise use random device to seed the generator
+     *
+     * @details NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c) because the random
+     * device is not a security issue, as we specifically check if we have a
+     * random seed set in the settings, and if not, we use the random device to
+     * seed the generator. This is not a security issue, as we are not using the
+     * random device for cryptographic purposes, but rather for generating
+     * random numbers for simulations.
+     *
+     */
+    // NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c)
+    RandomNumberGenerator::RandomNumberGenerator()
+    {
+        if (settings::Settings::isRandomSeedSet())
+            _generator.seed(settings::Settings::getRandomSeed());
+        else
+            _generator.seed(_randomDevice());
+    }
 
-/**
- * @brief get a random double from a uniform real distribution
- *
- * @param min
- * @param max
- */
-double RandomNumberGenerator::getUniformRealDistribution(double min, double max)
-{
-    std::uniform_real_distribution<double> distribution{min, max};
-    return distribution(_generator);
-}
+    /**
+     * @brief get a random double from a normal distribution
+     *
+     * @param mean
+     * @param stddev
+     */
+    double RandomNumberGenerator::getNormalDistribution(
+        double mean,
+        double stddev
+    )
+    {
+        std::normal_distribution<double> distribution{mean, stddev};
+        return distribution(_generator);
+    }
+
+    /**
+     * @brief get a random double from a uniform real distribution
+     *
+     * @param min
+     * @param max
+     */
+    double RandomNumberGenerator::getUniformRealDistribution(
+        double min,
+        double max
+    )
+    {
+        std::uniform_real_distribution<double> distribution{min, max};
+        return distribution(_generator);
+    }
+
+}   // namespace rng

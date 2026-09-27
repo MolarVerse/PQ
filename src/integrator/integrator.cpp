@@ -28,68 +28,71 @@
 #include "simulationBox.hpp"                         // for SimulationBox
 #include "timingsSettings.hpp"                       // for TimingsSettings
 
-using namespace integrator;
-using namespace molsys;
-using namespace settings;
-
-/**
- * @brief Construct a new Integrator:: Integrator object
- *
- * @param integratorType
- */
-Integrator::Integrator(std::string_view integratorType)
-    : _integratorType(integratorType)
+namespace integrator
 {
-}
+    /**
+     * @brief Construct a new Integrator:: Integrator object
+     *
+     * @param integratorType
+     */
+    Integrator::Integrator(std::string_view integratorType)
+        : _integratorType(integratorType)
+    {
+    }
 
-/**
- * @brief integrates the velocities of a single atom
- *
- * @param atom
- */
-void Integrator::integrateVelocities(Atom *atom)
-{
-    auto       velocity  = atom->getVelocity();
-    const auto force     = atom->getForce();
-    const auto mass      = atom->getMass();
-    const auto timeStamp = TimingsSettings::getTimeStep();
+    /**
+     * @brief integrates the velocities of a single atom
+     *
+     * @param atom
+     */
+    void Integrator::integrateVelocities(molsys::Atom *atom)
+    {
+        auto       velocity  = atom->getVelocity();
+        const auto force     = atom->getForce();
+        const auto mass      = atom->getMass();
+        const auto timeStamp = settings::TimingsSettings::getTimeStep();
 
-    velocity += timeStamp * force / mass * V_VERLET_VELOCITY_FACTOR;
+        velocity += timeStamp * force / mass * V_VERLET_VELOCITY_FACTOR;
 
-    atom->setVelocity(velocity);
-}
+        atom->setVelocity(velocity);
+    }
 
-/**
- * @brief integrates the positions of a single atom
- *
- * @param atom
- * @param simulationBox
- */
-void Integrator::integratePositions(
-    Atom                *atom,
-    const SimulationBox &simulationBox
-)
-{
-    auto       position = atom->getPosition();
-    const auto velocity = atom->getVelocity();
+    /**
+     * @brief integrates the positions of a single atom
+     *
+     * @param atom
+     * @param simulationBox
+     */
+    void Integrator::integratePositions(
+        molsys::Atom *atom,
 
-    position += TimingsSettings::getTimeStep() * velocity * FS_TO_S;
+        const molsys::SimulationBox &simulationBox
 
-    simulationBox.applyPBC(position);
+    )
+    {
+        auto       position = atom->getPosition();
+        const auto velocity = atom->getVelocity();
 
-    atom->setPosition(position);
-}
+        position +=
+            settings::TimingsSettings::getTimeStep() * velocity * FS_TO_S;
 
-/********************************
- * standard getters and setters *
- ********************************/
+        simulationBox.applyPBC(position);
 
-/**
- * @brief get the integrator type
- *
- * @return std::string_view
- */
-std::string_view Integrator::getIntegratorType() const
-{
-    return _integratorType;
-}
+        atom->setPosition(position);
+    }
+
+    /********************************
+     * standard getters and setters *
+     ********************************/
+
+    /**
+     * @brief get the integrator type
+     *
+     * @return std::string_view
+     */
+    std::string_view Integrator::getIntegratorType() const
+    {
+        return _integratorType;
+    }
+
+}   // namespace integrator
