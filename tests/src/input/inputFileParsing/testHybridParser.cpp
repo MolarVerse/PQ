@@ -166,7 +166,7 @@ TEST_F(TestInputFileReader, parseThicknesses)
 
 TEST_F(TestInputFileReader, parseSmoothingMethod)
 {
-    using enum settings::SmoothingMethod;
+    using enum SmoothingMethod;
 
     auto parser = input::HybridInputParser{};
 
@@ -192,7 +192,7 @@ TEST_F(TestInputFileReader, parseSmoothingMethod)
 
 TEST_F(TestInputFileReader, parseQMForceDistribution)
 {
-    using enum settings::QMForceDist;
+    using enum QMForceDist;
 
     auto parser = input::HybridInputParser{};
 

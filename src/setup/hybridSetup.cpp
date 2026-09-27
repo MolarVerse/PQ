@@ -26,7 +26,8 @@
 #include <string>   // for string
 #include <vector>   // for vector
 
-#include "engine.hpp"           // for Engine
+#include "engine.hpp"   // for Engine
+#include "enums/hybrid.hpp"
 #include "exceptions.hpp"       // for InputFileException
 #include "hybridSettings.hpp"   // for settings::HybridSettings
 #include "qmSettings.hpp"       // for QMSettings
@@ -332,17 +333,38 @@ namespace setup
             logOutput.writeSetupInfo(jobtypeMsg);
         }
 
-        // clang-format off
-    const auto smoothingMethodMsg          = std::format("Smoothing method:            {}", string(smoothingMethod));
-    const auto innerRegionCenterMsg        = std::format("Inner region center atoms:   {}", formatIndexList(innerRegionCenter));
-    const auto forcedCoreListMsg           = std::format("Forced inner molecules:      {}", formatIndexList(forcedCoreList));
-    const auto forcedOuterListMsg          = std::format("Forced outer molecules:      {}", formatIndexList(forcedOuterList));
-    const auto qmChargesSourceMsg          = std::format("QM charge source:            {}", useQMCharges ? "qm" : "mm");
-    const auto coreRadiusMsg               = std::format("Core radius:                 {} Å", coreRadius);
-    const auto layerRadiusMsg              = std::format("Layer radius:                {} Å", layerRadius);
-    const auto smoothingRegionThicknessMsg = std::format("Smoothing region thickness:  {} Å", smoothingRegionThickness);
-    const auto pointChargeThicknessMsg     = std::format("Point charge thickness:      {} Å", pointChargeThickness);
-        // clang-format on
+        const auto smoothingMethodMsg = std::format(
+            "Smoothing method:            {}",
+            SmoothingMethodMeta::toString(smoothingMethod)
+        );
+        const auto innerRegionCenterMsg = std::format(
+            "Inner region center atoms:   {}",
+            formatIndexList(innerRegionCenter)
+        );
+        const auto forcedCoreListMsg = std::format(
+            "Forced inner molecules:      {}",
+            formatIndexList(forcedCoreList)
+        );
+        const auto forcedOuterListMsg = std::format(
+            "Forced outer molecules:      {}",
+            formatIndexList(forcedOuterList)
+        );
+        const auto qmChargesSourceMsg = std::format(
+            "QM charge source:            {}",
+            useQMCharges ? "qm" : "mm"
+        );
+        const auto coreRadiusMsg =
+            std::format("Core radius:                 {} Å", coreRadius);
+        const auto layerRadiusMsg =
+            std::format("Layer radius:                {} Å", layerRadius);
+        const auto smoothingRegionThicknessMsg = std::format(
+            "Smoothing region thickness:  {} Å",
+            smoothingRegionThickness
+        );
+        const auto pointChargeThicknessMsg = std::format(
+            "Point charge thickness:      {} Å",
+            pointChargeThickness
+        );
 
         logOutput.writeSetupInfo(smoothingMethodMsg);
         logOutput.writeSetupInfo(innerRegionCenterMsg);

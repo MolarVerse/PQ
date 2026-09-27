@@ -149,7 +149,7 @@ namespace ff
 
                 forcexyz = forceMagnitude * dPosition23;
 
-                using enum settings::SmoothingMethod;
+                using enum SmoothingMethod;
 
                 auto       smF = 0.0;
                 const auto smoothing =
