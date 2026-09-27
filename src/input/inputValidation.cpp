@@ -72,14 +72,14 @@ namespace input
      */
     void InputFileReader::validateInputConfiguration() const
     {
-        validateTimings();
+        _validateTimings();
         validateOptimizer();
-        validateQM();
-        validateThermostat();
-        validateManostat();
-        validateCellList();
-        validateReactionFieldCoulomb();
-        validateRingPolymer();
+        _validateQM();
+        _validateThermostat();
+        _validateManostat();
+        _validateCellList();
+        _validateReactionFieldCoulomb();
+        _validateRingPolymer();
     }
 
     /**
@@ -88,7 +88,7 @@ namespace input
      * @throws exc::UserInputException if `nstep` or `timestep` is missing for a
      * job type that requires it
      */
-    void InputFileReader::validateTimings() const
+    void InputFileReader::_validateTimings() const
     {
         using enum settings::JobType;
 
@@ -127,7 +127,7 @@ namespace input
      * @throws exc::InputFileException if selected QM settings require missing
      * or incompatible keywords
      */
-    void InputFileReader::validateQM() const
+    void InputFileReader::_validateQM() const
     {
         if (!settings::Settings::isQMActivated())
             return;
@@ -232,7 +232,7 @@ namespace input
      * @throws exc::InputFileException if temperature keywords are missing,
      * contradictory, or define an invalid ramp
      */
-    void InputFileReader::validateThermostat() const
+    void InputFileReader::_validateThermostat() const
     {
         const auto thermostatType =
             settings::ThermostatSettings::getThermostatType();
@@ -396,7 +396,7 @@ namespace input
      * @throws exc::InputFileException if a manostat is selected without
      * `pressure`
      */
-    void InputFileReader::validateManostat() const
+    void InputFileReader::_validateManostat() const
     {
         const auto manostatType = settings::ManostatSettings::getManostatType();
 
@@ -428,7 +428,7 @@ namespace input
      * @throws exc::InputFileException if an active cell list is incompatible
      * with the selected potential
      */
-    void InputFileReader::validateCellList()
+    void InputFileReader::_validateCellList()
     {
         if (!settings::Settings::isCellListActivated())
             return;
@@ -452,7 +452,7 @@ namespace input
      * correction is selected but `rf_epsilon` is missing in the current input
      * file
      */
-    void InputFileReader::validateReactionFieldCoulomb() const
+    void InputFileReader::_validateReactionFieldCoulomb() const
     {
         using enum settings::CoulombLongRangeType;
 
@@ -477,7 +477,7 @@ namespace input
      * @throws exc::InputFileException if a ring-polymer job omits
      * `rpmd_n_replica`
      */
-    void InputFileReader::validateRingPolymer() const
+    void InputFileReader::_validateRingPolymer() const
     {
         if (settings::Settings::isRingPolymerMDActivated() &&
             !getKeywordSet("rpmd_n_replica"))
