@@ -22,16 +22,17 @@
 
 #include "outputInputParser.hpp"
 
-#include <format>   // for format
+#include <cstddef>
 
-#include "exceptions.hpp"           // for exc::InputFileException
-#include "outputFileSettings.hpp"   // for settings::OutputFileSettings
-#include "parserUtils.hpp"
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "defaults.hpp"
+#include "inputKeyAdapter.hpp"
+#include "inputRegistry.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "outputFileSettings.hpp"
 
 namespace input
 {
-
     /**
      * @brief Construct a new Input File Parser Output:: Input File Parser
      * Output object
@@ -66,632 +67,775 @@ namespace input
      */
     OutputInputParser::OutputInputParser()
     {
-        addKeyword(
-            std::string("output_freq"),
-            bindMember(&OutputInputParser::parseOutputFreq, this),
-            false
-        );
-        addKeyword(
-            std::string("file_prefix"),
-            bindMember(&OutputInputParser::parseFilePrefix, this),
-            false
-        );
-        addKeyword(
-            std::string("output_file"),
-            bindMember(&OutputInputParser::parseLogFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("reference_file"),
-            bindMember(&OutputInputParser::parseRefFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("info_file"),
-            bindMember(&OutputInputParser::parseInfoFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("energy_file"),
-            bindMember(&OutputInputParser::parseEnergyFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("instant_energy_file"),
-            bindMember(&OutputInputParser::parseInstantEnergyFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("traj_file"),
-            bindMember(&OutputInputParser::parseTrajectoryFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("hybrid_center_file"),
-            bindMember(&OutputInputParser::parseHybridCenterFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("vel_file"),
-            bindMember(&OutputInputParser::parseVelocityFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("force_file"),
-            bindMember(&OutputInputParser::parseForceFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("restart_file"),
-            bindMember(&OutputInputParser::parseRestartFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("charge_file"),
-            bindMember(&OutputInputParser::parseChargeFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("momentum_file"),
-            bindMember(&OutputInputParser::parseMomentumFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("virial_file"),
-            bindMember(&OutputInputParser::parseVirialFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("stress_file"),
-            bindMember(&OutputInputParser::parseStressFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("box_file"),
-            bindMember(&OutputInputParser::parseBoxFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("timings_file"),
-            bindMember(&OutputInputParser::parseTimingsFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("opt_file"),
-            bindMember(&OutputInputParser::parseOptFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("rpmd_restart_file"),
-            bindMember(&OutputInputParser::parseRPMDRestartFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("rpmd_traj_file"),
-            bindMember(&OutputInputParser::parseRPMDTrajectoryFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("rpmd_vel_file"),
-            bindMember(&OutputInputParser::parseRPMDVelocityFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("rpmd_force_file"),
-            bindMember(&OutputInputParser::parseRPMDForceFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("rpmd_charge_file"),
-            bindMember(&OutputInputParser::parseRPMDChargeFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("rpmd_energy_file"),
-            bindMember(&OutputInputParser::parseRPMDEnergyFilename, this),
-            false
-        );
-        addKeyword(
-            std::string("overwrite_output"),
-            bindMember(&OutputInputParser::parseOverwriteOutput, this),
-            false
-        );
-        addKeyword(
-            std::string("include_output_metadata"),
-            bindMember(&OutputInputParser::parseIncludeOutputMetadata, this),
-            false
-        );
+        addOutputFrequencyKeyword();
+        addFilePrefixKeyword();
+
+        addLogFilenameKeyword();
+        addReferenceFilenameKeyword();
+        addInfoFilenameKeyword();
+        addEnergyFilenameKeyword();
+        addInstantEnergyFilenameKeyword();
+        addTrajectoryFilenameKeyword();
+        addHybridCenterFilenameKeyword();
+        addVelocityFilenameKeyword();
+        addForceFilenameKeyword();
+        addRestartFilenameKeyword();
+        addChargeFilenameKeyword();
+        addMomentumFilenameKeyword();
+        addVirialFilenameKeyword();
+        addStressFilenameKeyword();
+        addBoxFilenameKeyword();
+        addTimingsFilenameKeyword();
+        addOptFilenameKeyword();
+
+        addRPMDRestartFilenameKeyword();
+        addRPMDTrajectoryFilenameKeyword();
+        addRPMDVelocityFilenameKeyword();
+        addRPMDForceFilenameKeyword();
+        addRPMDChargeFilenameKeyword();
+        addRPMDEnergyFilenameKeyword();
+
+        addOverwriteOutputKeyword();
+        addIncludeOutputMetadataKeyword();
     }
 
     /**
-     * @brief parse output frequency of simulation and set it in output
-     * statically
+     * @brief add overwrite output keyword to the input parser
      *
-     * @details default value is 1
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if output frequency is negative
+     * @details this keyword controls whether existing output files should be
+     * overwritten
      */
-    void OutputInputParser::parseOutputFreq(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addOverwriteOutputKeyword()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name        = "overwrite_output",
+            .title       = "Overwrite output files",
+            .description = "Whether to overwrite existing output files"
+        };
 
-        const auto outputFrequency = utilities::stringToInt(lineElements[2]);
-        if (outputFrequency < 0)
-        {
-            throw exc::InputFileException(format(
-                "Output frequency cannot be negative - \"{}\" at line {} in "
-                "input "
-                "file",
-                lineElements[2],
-                lineNumber
-            ));
-        }
+        const auto setValue = [](bool value)
+        { settings::OutputFileSettings::setOverwriteOutputFiles(value); };
 
-        settings::OutputFileSettings::setOutputFrequency(
-            static_cast<size_t>(outputFrequency)
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata     = metaData,
+                .defaultValue = false,
+                .onSet        = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse file prefix of simulation and set it in output statically
+     * @brief add include output metadata keyword to the input parser
      *
-     * @details default value is default
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls whether metadata should be included in
+     * output files
      */
-    void OutputInputParser::parseFilePrefix(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addIncludeOutputMetadataKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setFilePrefix(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "include_output_metadata",
+            .title       = "Include output metadata",
+            .description = "Whether to include metadata in output files"
+        };
+
+        const auto setValue = [](bool value)
+        { settings::OutputFileSettings::setIncludeOutputMetadata(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata     = metaData,
+                .defaultValue = false,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse log filename of simulation and add it to output
+     * @brief add output frequency keyword to the input parser
      *
-     * @details default value is default.log
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the frequency at which output files are
+     * generated
      */
-    void OutputInputParser::parseLogFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addOutputFrequencyKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setLogFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "output_freq",
+            .title       = "Output frequency",
+            .description = "Frequency at which output files are generated"
+        };
+
+        const auto setValue = [](size_t value)
+        { settings::OutputFileSettings::setOutputFrequency(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = 1,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse ref filename of simulation and add it to output
+     * @brief add file prefix keyword to the input parser
      *
-     * @details default value is default.ref
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the prefix for output files
      */
-    void OutputInputParser::parseRefFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addFilePrefixKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setRefFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "file_prefix",
+            .title       = "File prefix",
+            .description = "Prefix for output files"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setFilePrefix(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::prefix,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse info filename of simulation and add it to output
+     * @brief add reference filename keyword to the input parser
      *
-     * @details default value is default.info
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the reference output
      */
-    void OutputInputParser::parseInfoFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addLogFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setInfoFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "output_file",
+            .title       = "Log filename",
+            .description = "Filename for the log output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setLogFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::logFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse energy filename of simulation and add it to output
+     * @brief add reference filename keyword to the input parser
      *
-     * @details default value is default.en
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the reference output
      */
-    void OutputInputParser::parseEnergyFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addReferenceFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setEnergyFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "reference_file",
+            .title       = "Reference filename",
+            .description = "Filename for the reference output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setRefFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::refFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse instant energy filename of simulation and add it to output
+     * @brief add info filename keyword to the input parser
      *
-     * @details default value is default.inen
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the info output
      */
-    void OutputInputParser::parseInstantEnergyFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addInfoFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setInstantEnergyFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "info_file",
+            .title       = "Info filename",
+            .description = "Filename for the info output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setInfoFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::infoFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse trajectory filename of simulation and add it to output
+     * @brief add energy filename keyword to the input parser
      *
-     * @details default value is default.xyz
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the energy output
      */
-    void OutputInputParser::parseTrajectoryFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addEnergyFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setTrajectoryFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "energy_file",
+            .title       = "Energy filename",
+            .description = "Filename for the energy output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setEnergyFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::energyFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse hybrid center filename of simulation and add it to output
+     * @brief add instant energy filename keyword to the input parser
      *
-     * @details default value is default.center.xyz
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the instant energy output
      */
-    void OutputInputParser::parseHybridCenterFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addInstantEnergyFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setHybridCenterFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "instant_energy_file",
+            .title       = "Instant Energy filename",
+            .description = "Filename for the instant energy output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setInstantEnergyFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::instEnFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse velocity filename of simulation and add it to output
+     * @brief add trajectory filename keyword to the input parser
      *
-     * @details default value is default.vel
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the trajectory output
      */
-    void OutputInputParser::parseVelocityFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addTrajectoryFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setVelocityFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "traj_file",
+            .title       = "Trajectory filename",
+            .description = "Filename for the trajectory output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setTrajectoryFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::trajFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse force filename of simulation and add it to output
+     * @brief add hybrid center filename keyword to the input parser
      *
-     * @details default value is default.force
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the hybrid center output
      */
-    void OutputInputParser::parseForceFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addHybridCenterFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setForceFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "hybrid_center_file",
+            .title       = "Hybrid Center filename",
+            .description = "Filename for the hybrid center output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setHybridCenterFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::hybridCenterFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse restart filename of simulation and add it to output
+     * @brief add velocity filename keyword to the input parser
      *
-     * @details default value is default.rst
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the velocity output
      */
-    void OutputInputParser::parseRestartFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addVelocityFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setRestartFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "vel_file",
+            .title       = "Velocity filename",
+            .description = "Filename for the velocity output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setVelocityFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::velFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse charge filename of simulation and add it to output
+     * @brief add force filename keyword to the input parser
      *
-     * @details default value is default.chrg
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the force output
      */
-    void OutputInputParser::parseChargeFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addForceFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setChargeFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "force_file",
+            .title       = "Force filename",
+            .description = "Filename for the force output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setForceFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::forceFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse momentum filename of simulation and add it to output
+     * @brief add restart filename keyword to the input parser
      *
-     * @details default value is default.mom
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the restart output
      */
-    void OutputInputParser::parseMomentumFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addRestartFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setMomentumFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "restart_file",
+            .title       = "Restart filename",
+            .description = "Filename for the restart output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setRestartFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::restartFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse virial filename of simulation and add it to output
+     * @brief add charge filename keyword to the input parser
      *
-     * @details default value is default.vir
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the charge output
      */
-    void OutputInputParser::parseVirialFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addChargeFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setVirialFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "charge_file",
+            .title       = "Charge filename",
+            .description = "Filename for the charge output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setChargeFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::chargeFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse stress filename of simulation and add it to output
+     * @brief add momentum filename keyword to the input parser
      *
-     * @details default value is default.stress
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the momentum output
      */
-    void OutputInputParser::parseStressFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addMomentumFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setStressFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "momentum_file",
+            .title       = "Momentum filename",
+            .description = "Filename for the momentum output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setMomentumFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::momentumFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse box filename of simulation and add it to output
+     * @brief add stress filename keyword to the input parser
      *
-     * @details default value is default.box
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the stress output
      */
-    void OutputInputParser::parseBoxFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addStressFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setBoxFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "stress_file",
+            .title       = "Stress filename",
+            .description = "Filename for the stress output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setStressFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::stressFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse timings filename of simulation and add it to output
+     * @brief add virial filename keyword to the input parser
      *
-     * @details default value is default.timings
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the virial output
      */
-    void OutputInputParser::parseTimingsFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addVirialFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setTimingsFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "virial_file",
+            .title       = "Virial filename",
+            .description = "Filename for the virial output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setVirialFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::virialFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse optimization filename of simulation and add it to output
+     * @brief add box filename keyword to the input parser
      *
-     * @details default value is default.opt
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the box output
      */
-    void OutputInputParser::parseOptFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addBoxFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setOptFileName(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "box_file",
+            .title       = "Box filename",
+            .description = "Filename for the box output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setBoxFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::boxFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add timings filename keyword to the input parser
+     *
+     * @details this keyword controls the filename for the timings output
+     */
+    void OutputInputParser::addTimingsFilenameKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "timings_file",
+            .title       = "Timings filename",
+            .description = "Filename for the timings output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setTimingsFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::timingsFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add optimization filename keyword to the input parser
+     *
+     * @details this keyword controls the filename for the optimization output
+     */
+    void OutputInputParser::addOptFilenameKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "opt_file",
+            .title       = "Optimization filename",
+            .description = "Filename for the optimization output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setOptFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::optFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
      * @brief parse RPMD restart filename of simulation and add it to output
      *
      * @details default value is default.rpmd.rst
-     *
-     * @param lineElements
-     * @param lineNumber
      */
-    void OutputInputParser::parseRPMDRestartFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addRPMDRestartFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setRingPolymerRestartFileName(
-            lineElements[2]
+        const auto metaData = KeyMetadata{
+            .name        = "rpmd_restart_file",
+            .title       = "RPMD Restart filename",
+            .description = "Filename for the RPMD restart output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setRingPolymerRestartFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::rpmdRstFile,
+                .onSet        = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse RPMD trajectory filename of simulation and add it to output
+     * @brief add RPMD trajectory filename keyword to the input parser
      *
-     * @details default value is default.rpmd.xyz
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the RPMD trajectory
+     * output
      */
-    void OutputInputParser::parseRPMDTrajectoryFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addRPMDTrajectoryFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setRingPolymerTrajectoryFileName(
-            lineElements[2]
+        const auto metaData = KeyMetadata{
+            .name        = "rpmd_traj_file",
+            .title       = "RPMD Trajectory filename",
+            .description = "Filename for the RPMD trajectory output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        {
+            settings::OutputFileSettings::setRingPolymerTrajectoryFileName(
+                value
+            );
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::rpmdTrajFile,
+                .onSet        = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse RPMD velocity filename of simulation and add it to output
+     * @brief add RPMD velocity filename keyword to the input parser
      *
-     * @details default value is default.rpmd.vel
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the RPMD velocity output
      */
-    void OutputInputParser::parseRPMDVelocityFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addRPMDVelocityFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setRingPolymerVelocityFileName(
-            lineElements[2]
+        const auto metaData = KeyMetadata{
+            .name        = "rpmd_vel_file",
+            .title       = "RPMD Velocity filename",
+            .description = "Filename for the RPMD velocity output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        {
+            settings::OutputFileSettings::setRingPolymerVelocityFileName(value);
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::rpmdVelFile,
+                .onSet        = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse RPMD force filename of simulation and add it to output
+     * @brief add RPMD force filename keyword to the input parser
      *
-     * @details default value is default.rpmd.force
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the RPMD force output
      */
-    void OutputInputParser::parseRPMDForceFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addRPMDForceFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setRingPolymerForceFileName(
-            lineElements[2]
+        const auto metaData = KeyMetadata{
+            .name        = "rpmd_force_file",
+            .title       = "RPMD Force filename",
+            .description = "Filename for the RPMD force output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setRingPolymerForceFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::rpmdForceFile,
+                .onSet        = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse RPMD charge filename of simulation and add it to output
+     * @brief add RPMD charge filename keyword to the input parser
      *
-     * @details default value is default.rpmd.chrg
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the RPMD charge output
      */
-    void OutputInputParser::parseRPMDChargeFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addRPMDChargeFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setRingPolymerChargeFileName(
-            lineElements[2]
+        const auto metaData = KeyMetadata{
+            .name        = "rpmd_charge_file",
+            .title       = "RPMD Charge filename",
+            .description = "Filename for the RPMD charge output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setRingPolymerChargeFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::rpmdChargeFile,
+                .onSet        = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse RPMD energy filename of simulation and add it to output
+     * @brief add RPMD energy filename keyword to the input parser
      *
-     * @details default value is default.rpmd.en
-     *
-     * @param lineElements
-     * @param lineNumber
+     * @details this keyword controls the filename for the RPMD energy output
      */
-    void OutputInputParser::parseRPMDEnergyFilename(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void OutputInputParser::addRPMDEnergyFilenameKeyword()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::OutputFileSettings::setRingPolymerEnergyFileName(
-            lineElements[2]
+        const auto metaData = KeyMetadata{
+            .name        = "rpmd_energy_file",
+            .title       = "RPMD Energy filename",
+            .description = "Filename for the RPMD energy output"
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::OutputFileSettings::setRingPolymerEnergyFileName(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::rpmdEnergyFile,
+                .onSet        = setValue,
+            }
         );
-    }
 
-    /**
-     * @brief parse if existing output files should be overwritten
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void OutputInputParser::parseOverwriteOutput(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-
-        settings::OutputFileSettings::setOverwriteOutputFiles(
-            utilities::keywordToBool(lineElements)
-        );
-    }
-
-    /**
-     * @brief parse if output files should include metadata
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void OutputInputParser::parseIncludeOutputMetadata(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-
-        settings::OutputFileSettings::setIncludeOutputMetadata(
-            utilities::keywordToBool(lineElements)
-        );
+        addKeyword(metaData.name, adapt(key), false);
     }
 
 }   // namespace input

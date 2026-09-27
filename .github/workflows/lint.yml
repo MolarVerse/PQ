@@ -8,6 +8,7 @@ on:
     branches:
       - dev
       - main
+      - NEXT
   workflow_dispatch:
 
 jobs:
