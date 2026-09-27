@@ -100,14 +100,14 @@ void NoseHooverThermostat::applyThermostatOnForces(SimulationBox &simulationBox)
  */
 void NoseHooverThermostat::applyThermostat(
     SimulationBox &simulationBox,
-    PhysicalData  &data
+    PhysicalData  &physicalData
 )
 {
     auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
-    data.calculateTemperature(simulationBox);
+    physicalData.calculateTemperature(simulationBox);
 
-    _temperature = data.getTemperature();
+    _temperature = physicalData.getTemperature();
 
     const auto degreesOfFreedom =
         static_cast<double>(simulationBox.getDegreesOfFreedom());
@@ -151,8 +151,8 @@ void NoseHooverThermostat::applyThermostat(
         energyFriction += _zeta[i];
     }
 
-    data.setNoseHooverMomentumEnergy(energyMomentum);
-    data.setNoseHooverFrictionEnergy(energyFriction);
+    physicalData.setNoseHooverMomentumEnergy(energyMomentum);
+    physicalData.setNoseHooverFrictionEnergy(energyFriction);
 }
 
 /***************************

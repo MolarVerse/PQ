@@ -89,7 +89,6 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     auto molecule = Molecule();
     molecule.setMoltype(MolType{1});
-    molecule.setNumberOfAtoms(3);
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
@@ -171,7 +170,6 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 
     auto molecule = Molecule();
     molecule.setMoltype(MolType{1});
-    molecule.setNumberOfAtoms(3);
 
     const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
