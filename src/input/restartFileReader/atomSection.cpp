@@ -283,9 +283,10 @@ namespace input::restartFile
              * should break before                         *
              ***********************************************/
 
-            checkAtomLine(lineElements, *molecule);
+            _checkAtomLine(lineElements, *molecule);
 
-            while (lineElements.empty()) checkAtomLine(lineElements, *molecule);
+            while (lineElements.empty())
+                _checkAtomLine(lineElements, *molecule);
 
             checkNumberOfLineArguments(lineElements);
 
@@ -307,7 +308,7 @@ namespace input::restartFile
      * @throws RstFileException if the next line of the rst
      * file does not exist
      */
-    void AtomSection::checkAtomLine(
+    void AtomSection::_checkAtomLine(
         std::vector<std::string> &lineElements,
         const molsys::Molecule   &molecule
     )
