@@ -51,7 +51,7 @@ namespace setup
         {
 #ifdef WITH_MPI
             if (mpi::MPI::getSize() > 1)
-                throw MPIException(
+                throw exc::MPIException(
                     "MPI parallelization with more than one process is not "
                     "supported for non-ring polymer MD"
                 );
