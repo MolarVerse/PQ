@@ -88,7 +88,7 @@ namespace
             const std::string_view program
         ) const
         {
-            executeCommand(command, program);
+            _executeCommand(command, program);
         }
 
         [[nodiscard]] bool sawStaleResults() const { return _sawStaleResults; }
@@ -101,7 +101,7 @@ namespace
         mutable std::string _command;
 
        protected:
-        void executeCommand(
+        void _executeCommand(
             const std::string_view command,
             const std::string_view /*program*/
         ) const override

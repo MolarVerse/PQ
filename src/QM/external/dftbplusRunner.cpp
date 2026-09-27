@@ -185,7 +185,7 @@ namespace QM
     void DFTBPlusRunner::execute(molsys::SimulationBox &simulationBox)
     {
         const auto scriptFile =
-            resolveScriptPath(settings::QMSettings::getQMScript());
+            _resolveScriptPath(settings::QMSettings::getQMScript());
 
         if (!mstd::File(scriptFile).exists())
         {
@@ -222,7 +222,7 @@ namespace QM
                 settings::FileSettings::getPointChargeFileName()
             )
         );
-        executeCommand(command, "DFTB+");
+        _executeCommand(command, "DFTB+");
 
         // set for next execution
         _isFirstExecution = false;
