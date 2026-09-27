@@ -146,14 +146,15 @@ TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
 
     references::ReferencesOutput::addReferenceFile(unreadablePath.string());
     settings::OutputFileSettings::setRefFileName(outputPath);
+
     EXPECT_THROW_MSG(
-
         references::ReferencesOutput::writeReferencesFile(),
-
         std::runtime_error,
-        "Could not open PQ reference file "
-        "\"/home/jag/projects/molarverse/PQ2/tests/"
-        "unreadable-reference.ref.test\""
+        std::format(
+            "Could not open PQ reference file "
+            "\"{}\"",
+            unreadablePath.string()
+        )
     );
     removeReferenceFile(unreadablePath.string());
 
@@ -169,25 +170,24 @@ TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
 {
     const std::string outputPath = "default.refs.test";
 
-    EXPECT_NO_THROW(
-        references::ReferencesOutput::addReferenceFile("nonexistent.ref")
-    );
-    EXPECT_NO_THROW(
-        references::ReferencesOutput::addReferenceFile("nonexistent.ref")
-    );
+    std::string file = "nonexistent.ref";
+
+    EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
+    EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
 
     settings::OutputFileSettings::setRefFileName(outputPath);
 
     EXPECT_THROW_MSG(
-
         references::ReferencesOutput::writeReferencesFile(),
-
         std::runtime_error,
-        "PQ reference file "
-        "\"/home/jag/projects/molarverse/PQ2/.build/src/output/references/"
-        "referenceFiles/nonexistent.ref\" could not be found"
+        std::format(
+            "PQ reference file "
+            "\"{}/{}\" could not be found",
+            _REFERENCES_PATH_,
+            file
+        )
     );
     EXPECT_FALSE(std::ifstream(outputPath).good());
 
-    removeReferenceFile("nonexistent.ref");
+    removeReferenceFile(file);
 }

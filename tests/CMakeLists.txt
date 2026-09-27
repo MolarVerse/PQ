@@ -59,6 +59,7 @@ function(add_test_with_gcda_cleanup test_name test_executable)
         COMMAND ${test_executable}
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
     )
+    target_compile_definitions(${test_name} PRIVATE _WORKING_DIRECTORY_=\"${PROJECT_SOURCE_DIR}/tests\")
     set_tests_properties(${test_name} PROPERTIES
         FIXTURES_REQUIRED "gcda-cleanup"
     )
