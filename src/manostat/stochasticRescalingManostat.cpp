@@ -92,7 +92,7 @@ namespace manostat
             double                     compressibility,
             size_t                     anisotropicAxis,
             const std::vector<size_t> &isotropicAxes,
-            settings::FixedAxis        fixedAxis
+            FixedAxis                  fixedAxis
         )
         : StochasticRescalingManostat(
               targetPressure,
@@ -115,10 +115,10 @@ namespace manostat
      * @param fixedAxis
      */
     StochasticRescalingManostat::StochasticRescalingManostat(
-        double              targetPressure,
-        double              tau,
-        double              compressibility,
-        settings::FixedAxis fixedAxis
+        double    targetPressure,
+        double    tau,
+        double    compressibility,
+        FixedAxis fixedAxis
     )
         : Manostat(targetPressure),
           _tau(tau),
@@ -186,7 +186,7 @@ namespace manostat
      */
     linalg::tensor3D StochasticRescalingManostat::calculateMu(double volume)
     {
-        if (_fixedAxis == settings::FixedAxis::ALL)
+        if (_fixedAxis == FixedAxis::ALL)
             return diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
         const auto compress          = _compressibility * _dt / _tau;
@@ -203,7 +203,7 @@ namespace manostat
         stochasticFactor      *= PRESSURE_FACTOR;
         stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
-        if (_fixedAxis == settings::FixedAxis::NONE)
+        if (_fixedAxis == FixedAxis::NONE)
         {
             const auto     deltaP    = _targetPressure - _pressure;
             constexpr auto dimension = 3.0;
@@ -420,54 +420,51 @@ namespace manostat
     /**
      * @brief get the manostat type
      *
-     * @return settings::ManostatType
+     * @return ManostatType
      */
-    settings::ManostatType StochasticRescalingManostat::getManostatType() const
+    ManostatType StochasticRescalingManostat::getManostatType() const
     {
-        return settings::ManostatType::STOCHASTIC_RESCALING;
+        return ManostatType::STOCHASTIC_RESCALING;
     }
 
     /**
      * @brief get the isotropy of the manostat
      *
-     * @return settings::Isotropy
+     * @return Isotropy
      */
-    settings::Isotropy StochasticRescalingManostat::getIsotropy() const
+    Isotropy StochasticRescalingManostat::getIsotropy() const
     {
-        return settings::Isotropy::ISOTROPIC;
+        return Isotropy::ISOTROPIC;
     }
 
     /**
      * @brief get the isotropy of the manostat
      *
-     * @return settings::Isotropy
+     * @return Isotropy
      */
-    settings::Isotropy SemiIsotropicStochasticRescalingManostat::getIsotropy(
-    ) const
+    Isotropy SemiIsotropicStochasticRescalingManostat::getIsotropy() const
     {
-        return settings::Isotropy::SEMI_ISOTROPIC;
+        return Isotropy::SEMI_ISOTROPIC;
     }
 
     /**
      * @brief get the isotropy of the manostat
      *
-     * @return settings::Isotropy
+     * @return Isotropy
      */
-    settings::Isotropy AnisotropicStochasticRescalingManostat::getIsotropy(
-    ) const
+    Isotropy AnisotropicStochasticRescalingManostat::getIsotropy() const
     {
-        return settings::Isotropy::ANISOTROPIC;
+        return Isotropy::ANISOTROPIC;
     }
 
     /**
      * @brief get the isotropy of the manostat
      *
-     * @return settings::Isotropy
+     * @return Isotropy
      */
-    settings::Isotropy FullAnisotropicStochasticRescalingManostat::getIsotropy(
-    ) const
+    Isotropy FullAnisotropicStochasticRescalingManostat::getIsotropy() const
     {
-        return settings::Isotropy::FULL_ANISOTROPIC;
+        return Isotropy::FULL_ANISOTROPIC;
     }
 
 }   // namespace manostat

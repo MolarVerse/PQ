@@ -400,7 +400,7 @@ namespace input
     {
         const auto manostatType = settings::ManostatSettings::getManostatType();
 
-        if (manostatType == settings::ManostatType::NONE)
+        if (manostatType == ManostatType::NONE)
             return;
 
         if (!getKeywordSet("pressure"))
@@ -408,7 +408,7 @@ namespace input
             throw exc::InputFileException(
                 std::format(
                     "Pressure not set for {} manostat",
-                    string(manostatType)
+                    ManostatTypeMeta::toString(manostatType)
                 )
             );
         }

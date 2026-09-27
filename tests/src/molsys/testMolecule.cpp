@@ -95,7 +95,7 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
 
 TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
 {
-    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
 
     const linalg::tensor3D scale =
         diagonalMatrix(linalg::Vec3D{0.5, 0.25, 2.0});

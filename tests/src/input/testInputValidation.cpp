@@ -55,9 +55,7 @@ class TestInputValidation : public ::testing::Test
         settings::OptimizerSettings::setMinLearningRate(1.0e-15);
         settings::OptimizerSettings::setMaxLearningRate(1.0);
 
-        settings::ManostatSettings::setManostatType(
-            settings::ManostatType::NONE
-        );
+        settings::ManostatSettings::setManostatType(ManostatType::NONE);
         settings::ManostatSettings::setTauManostat(
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
@@ -187,23 +185,19 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
 
 TEST_F(TestInputValidation, requiresPressureForManostat)
 {
-    settings::ManostatSettings::setManostatType(
-        settings::ManostatType::BERENDSEN
-    );
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
         exc::InputFileException,
-        "Pressure not set for berendsen manostat"
+        "Pressure not set for BERENDSEN manostat"
     );
 }
 
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
     configureMDJob(settings::JobType::MM_MD);
-    settings::ManostatSettings::setManostatType(
-        settings::ManostatType::BERENDSEN
-    );
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ManostatSettings::setTauManostat(0.0001);
     setKeyword("pressure");
 
@@ -634,9 +628,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
     settings::QMSettings::setMaceModel(settings::MaceModel::CUSTOM);
-    settings::ManostatSettings::setManostatType(
-        settings::ManostatType::BERENDSEN
-    );
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::BERENDSEN
     );

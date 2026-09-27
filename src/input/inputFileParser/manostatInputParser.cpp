@@ -111,7 +111,7 @@ namespace input
         const auto manostat =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        using enum settings::ManostatType;
+        using enum ManostatType;
 
         if (manostat == "none")
             settings::ManostatSettings::setManostatType(NONE);
@@ -257,7 +257,7 @@ namespace input
         const auto isotropy =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        using enum settings::Isotropy;
+        using enum Isotropy;
 
         if (isotropy == "isotropic")
             settings::ManostatSettings::setIsotropy(ISOTROPIC);
@@ -315,7 +315,7 @@ namespace input
         const auto fixed_axis =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        using enum settings::FixedAxis;
+        using enum FixedAxis;
 
         if (fixed_axis == "none")
             settings::ManostatSettings::setFixedAxis(NONE);
