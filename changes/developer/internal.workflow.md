@@ -4,3 +4,4 @@
 - add 0.5% threshold for test coverage
 - fix CI issue if special characters like backticks are present in PR title
 - make all compiler warnings as errors
+- add a new `NEXT` branch for future feature development that should not be in released in the next version (feature branch). Additionally, add a CI to automatically merge dev into NEXT daily to keep it in sync
