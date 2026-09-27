@@ -26,84 +26,89 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "timingsSettings.hpp"   // for settings::TimingsSettings
 
-using namespace input;
-using namespace exc;
-using namespace settings;
-
-/**
- * @brief Construct a new Input File Parser Timings object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) timestep "<double>" (required)
- * 2) nstep "<size_t>" (required)
- */
-TimingsInputParser::TimingsInputParser()
+namespace input
 {
-    addTimeStep();
-    addNumberOfSteps();
-}
 
-/**
- * @brief Add the timestep key to the input parser
- *
- * @details This function registers the "timestep" keyword with the input
- * parser, including its metadata, validation, and callback to set the value in
- * TimingsSettings.
- */
-void TimingsInputParser::addTimeStep()
-{
-    const auto metaData = KeyMetadata{
-        .name        = "timestep",
-        .title       = "Timestep of the simulation",
-        .description = "The time step used in the simulation",
-        .unit        = "fs"
-    };
+    /**
+     * @brief Construct a new Input File Parser Timings object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) timestep "<double>"
+     * (required) 2) nstep "<size_t>" (required)
+     */
+    TimingsInputParser::TimingsInputParser()
+    {
+        addTimeStep();
+        addNumberOfSteps();
+    }
 
-    const RangeValidator<double, Greater::GT> validator{0.0, std::nullopt};
+    /**
+     * @brief Add the timestep key to the input parser
+     *
+     * @details This function registers the "timestep" keyword with the input
+     * parser, including its metadata, validation, and callback to set the value
+     * in settings::TimingsSettings.
+     */
+    void TimingsInputParser::addTimeStep()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "timestep",
+            .title       = "Timestep of the simulation",
+            .description = "The time step used in the simulation",
+            .unit        = "fs"
+        };
 
-    const auto setTimeStep = [&](double value)
-    { TimingsSettings::setTimeStep(value); };
+        const RangeValidator<double, Greater::GT> validator{0.0, std::nullopt};
 
-    auto &timeStep = _getRegistry().registerKey(
-        KeyRegistry<double>{
-            .metadata  = metaData,
-            .onSet     = setTimeStep,
-            .validator = makeShared(validator)
-        }
-    );
+        const auto setTimeStep = [&](double value)
+        { settings::TimingsSettings::setTimeStep(value); };
 
-    addKeyword(std::string("timestep"), adapt(timeStep), false);
-}
+        auto &timeStep = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata  = metaData,
+                .onSet     = setTimeStep,
+                .validator = makeShared(validator)
+            }
+        );
 
-/**
- * @brief Add the number of steps key to the input parser
- *
- * @details This function registers the "nstep" keyword with the input parser,
- * including its metadata, validation, and callback to set the value in
- * TimingsSettings.
- */
-void TimingsInputParser::addNumberOfSteps()
-{
-    const auto metaData = KeyMetadata{
-        .name        = "nstep",
-        .title       = "Number of steps of the simulation",
-        .description = "The total number of steps in the simulation"
-    };
+        addKeyword(std::string("timestep"), adapt(timeStep), false);
+    }
 
-    const RangeValidator<int> validator{1, std::nullopt};
+    /**
+     * @brief Add the number of steps key to the input parser
+     *
+     * @details This function registers the "nstep" keyword with the input
+     * parser, including its metadata, validation, and callback to set the value
+     * in settings::TimingsSettings.
+     */
+    void TimingsInputParser::addNumberOfSteps()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "nstep",
+            .title       = "Number of steps of the simulation",
+            .description = "The total number of steps in the simulation"
+        };
 
-    const auto setNumberOfSteps = [&](int value)
-    { TimingsSettings::setNumberOfSteps(static_cast<size_t>(value)); };
+        const RangeValidator<int> validator{1, std::nullopt};
 
-    auto &numberOfSteps = _getRegistry().registerKey(
-        KeyRegistry<int>{
-            .metadata  = metaData,
-            .onSet     = setNumberOfSteps,
-            .validator = std::make_shared<RangeValidator<int>>(validator)
-        }
-    );
+        const auto setNumberOfSteps = [&](int value)
+        {
+            settings::TimingsSettings::setNumberOfSteps(
+                static_cast<size_t>(value)
+            );
+        };
 
-    addKeyword(std::string("nstep"), adapt(numberOfSteps), false);
-}
+        auto &numberOfSteps = _getRegistry().registerKey(
+            KeyRegistry<int>{
+                .metadata  = metaData,
+                .onSet     = setNumberOfSteps,
+                .validator = std::make_shared<RangeValidator<int>>(validator)
+            }
+        );
+
+        addKeyword(std::string("nstep"), adapt(numberOfSteps), false);
+    }
+
+}   // namespace input

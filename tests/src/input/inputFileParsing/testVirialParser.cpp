@@ -30,10 +30,6 @@
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 #include "virialInputParser.hpp"
 
-using namespace std;
-using namespace input;
-using namespace ::testing;
-
 /**
  * @brief tests parsing the "virial" command
  *
@@ -43,8 +39,8 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseVirial)
 {
-    VirialInputParser parser;
-    const auto        funcMap = parser.getKeywordFuncMap();
+    input::VirialInputParser parser;
+    const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("virial"));
     const auto& parseFunc = funcMap.at("virial");
 

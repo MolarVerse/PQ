@@ -22,7 +22,7 @@
 
 #include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
-#include "celllistSetup.hpp"   // for CellListSetup, setupCellList, setup
+#include "celllistSetup.hpp"   // for setup::CellListSetup, setupCellList, setup
 #include "engine.hpp"          // for Engine
                                // for Message, TestPartResult
 #include "potentialBruteForce.hpp"
@@ -31,15 +31,13 @@
 #include "testSetup.hpp"   // for TestSetup
 #include "testUtils.hpp"
 
-using namespace setup;
-
 /**
  * @brief test the setup cell list function after parsing input
  *
  */
 TEST_F(TestSetup, setupCellList)
 {
-    CellListSetup cellListSetup(*_engine);
+    setup::CellListSetup cellListSetup(*_engine);
     cellListSetup.setup();
 
     test::checkType(_engine->getPotential(), typeid(pot::PotentialBruteForce));
@@ -52,5 +50,5 @@ TEST_F(TestSetup, setupCellList)
 
     test::checkType(_engine->getPotential(), typeid(pot::PotentialCellList));
 
-    EXPECT_NO_THROW(setupCellList(*_engine));
+    EXPECT_NO_THROW(setup::setupCellList(*_engine));
 }

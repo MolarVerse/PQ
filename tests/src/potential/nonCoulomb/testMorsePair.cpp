@@ -26,13 +26,11 @@
 #include <vector>   // for vector
 
 // for AssertionResult, Message, TestPartResult
-#include "morsePair.hpp"   // for MorsePair
+#include "morsePair.hpp"   // for pot::MorsePair
 #include "strongTypes.hpp"
 
-using namespace pot;
-
 /**
- * @brief tests the equals operator of MorsePair
+ * @brief tests the equals operator of pot::MorsePair
  *
  */
 TEST(TestMorsePair, equalsOperator)
@@ -41,7 +39,7 @@ TEST(TestMorsePair, equalsOperator)
     const ExtVdwType vdwType2{1};
     const ExtVdwType vdwType3{2};
 
-    const auto nonCoulombPair1 = MorsePair(
+    const auto nonCoulombPair1 = pot::MorsePair(
         vdwType1,
         vdwType2,
         1.0,
@@ -52,7 +50,7 @@ TEST(TestMorsePair, equalsOperator)
         }
     );
 
-    const auto nonCoulombPair2 = MorsePair(
+    const auto nonCoulombPair2 = pot::MorsePair(
         vdwType1,
         vdwType2,
         1.0,
@@ -64,7 +62,7 @@ TEST(TestMorsePair, equalsOperator)
     );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair2);
 
-    const auto nonCoulombPair3 = MorsePair(
+    const auto nonCoulombPair3 = pot::MorsePair(
         vdwType2,
         vdwType1,
         1.0,
@@ -76,7 +74,7 @@ TEST(TestMorsePair, equalsOperator)
     );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair3);
 
-    const auto nonCoulombPair4 = MorsePair(
+    const auto nonCoulombPair4 = pot::MorsePair(
         vdwType1,
         vdwType3,
         1.0,
@@ -88,7 +86,7 @@ TEST(TestMorsePair, equalsOperator)
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair4);
 
-    const auto nonCoulombPair5 = MorsePair(
+    const auto nonCoulombPair5 = pot::MorsePair(
         vdwType1,
         vdwType2,
         2.0,
@@ -100,7 +98,7 @@ TEST(TestMorsePair, equalsOperator)
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair5);
 
-    const auto nonCoulombPair6 = MorsePair(
+    const auto nonCoulombPair6 = pot::MorsePair(
         vdwType1,
         vdwType2,
         1.0,
@@ -112,7 +110,7 @@ TEST(TestMorsePair, equalsOperator)
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair6);
 
-    const auto nonCoulombPair7 = MorsePair(
+    const auto nonCoulombPair7 = pot::MorsePair(
         vdwType1,
         vdwType2,
         1.0,
@@ -124,7 +122,7 @@ TEST(TestMorsePair, equalsOperator)
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair7);
 
-    const auto nonCoulombPair8 = MorsePair(
+    const auto nonCoulombPair8 = pot::MorsePair(
         vdwType1,
         vdwType2,
         1.0,
@@ -138,7 +136,7 @@ TEST(TestMorsePair, equalsOperator)
 }
 
 /**
- * @brief tests the calculation of the energy and force of a MorsePair
+ * @brief tests the calculation of the energy and force of a pot::MorsePair
  *
  */
 TEST(TestMorsePair, calculateEnergyAndForces)

@@ -23,11 +23,8 @@
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
 
 // for Message, TestPartResult
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
-#include "settings.hpp"                // for Settings
-
-using namespace randomNumberGenerator;
-using namespace settings;
+#include "randomNumberGenerator.hpp"   // for rng::RandomNumberGenerator
+#include "settings.hpp"                // for settings::Settings
 
 /**
  * @brief test randomNumberGenerator uniform real distribution range
@@ -35,10 +32,10 @@ using namespace settings;
  */
 TEST(TestRandomNumberGenerator, uniformRealDistributionRange)
 {
-    RandomNumberGenerator rng{};
-    constexpr double      min{5.0};
-    constexpr double      max{10.0};
-    constexpr int         numSamples{1000};
+    rng::RandomNumberGenerator rng{};
+    constexpr double           min{5.0};
+    constexpr double           max{10.0};
+    constexpr int              numSamples{1000};
 
     for (int i{0}; i < numSamples; ++i)
     {
@@ -54,10 +51,10 @@ TEST(TestRandomNumberGenerator, uniformRealDistributionRange)
  */
 TEST(TestRandomNumberGenerator, uniformRealDistributionMean)
 {
-    RandomNumberGenerator rng{};
-    constexpr double      min{0.0};
-    constexpr double      max{10.0};
-    constexpr int         numSamples{10000};
+    rng::RandomNumberGenerator rng{};
+    constexpr double           min{0.0};
+    constexpr double           max{10.0};
+    constexpr int              numSamples{10000};
 
     double sum{0.0};
     for (int i{0}; i < numSamples; ++i)
@@ -76,10 +73,10 @@ TEST(TestRandomNumberGenerator, uniformRealDistributionMean)
  */
 TEST(TestRandomNumberGenerator, normalDistributionMean)
 {
-    RandomNumberGenerator rng{};
-    constexpr double      mean{5.0};
-    constexpr double      stddev{2.0};
-    constexpr int         numSamples{10000};
+    rng::RandomNumberGenerator rng{};
+    constexpr double           mean{5.0};
+    constexpr double           stddev{2.0};
+    constexpr int              numSamples{10000};
 
     double sum{0.0};
     for (int i{0}; i < numSamples; ++i)
@@ -97,11 +94,11 @@ TEST(TestRandomNumberGenerator, normalDistributionMean)
  */
 TEST(TestRandomNumberGenerator, determinismWithSeed)
 {
-    Settings::setIsRandomSeedSet(true);
-    Settings::setRandomSeed(73);
+    settings::Settings::setIsRandomSeedSet(true);
+    settings::Settings::setRandomSeed(73);
 
-    RandomNumberGenerator rng1{};
-    RandomNumberGenerator rng2{};
+    rng::RandomNumberGenerator rng1{};
+    rng::RandomNumberGenerator rng2{};
 
     for (int i{0}; i < 100; ++i)
     {
@@ -117,7 +114,7 @@ TEST(TestRandomNumberGenerator, determinismWithSeed)
  */
 TEST(TestRandomNumberGenerator, edgeCases)
 {
-    RandomNumberGenerator rng{};
+    rng::RandomNumberGenerator rng{};
 
     EXPECT_NO_THROW(rng.getUniformRealDistribution(5.0, 5.0));
     EXPECT_NO_THROW(rng.getNormalDistribution(0.0, 0.0));
@@ -131,7 +128,7 @@ TEST(TestRandomNumberGenerator, edgeCases)
  */
 TEST(TestRandomNumberGenerator, normalDistributionShape)
 {
-    RandomNumberGenerator rng{};
+    rng::RandomNumberGenerator rng{};
 
     constexpr double mean{0.0};
     constexpr double stddev{1.0};

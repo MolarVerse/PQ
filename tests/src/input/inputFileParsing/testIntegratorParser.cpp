@@ -31,8 +31,6 @@
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "integrator" command
  *

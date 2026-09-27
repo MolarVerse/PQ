@@ -22,21 +22,27 @@
 
 #include "nonCoulombPotential.hpp"
 
-using namespace pot;
-
-/**
- * @brief get the mixing rule
- *
- * @return MixingRule
- */
-MixingRule NonCoulombPotential::getMixingRule() const { return _mixingRule; }
-
-/**
- * @brief set the mixing rule
- *
- * @param mixingRule
- */
-void NonCoulombPotential::setMixingRule(MixingRule mixingRule)
+namespace pot
 {
-    _mixingRule = mixingRule;
-}
+
+    /**
+     * @brief get the mixing rule
+     *
+     * @return MixingRule
+     */
+    MixingRule NonCoulombPotential::getMixingRule() const
+    {
+        return _mixingRule;
+    }
+
+    /**
+     * @brief set the mixing rule
+     *
+     * @param mixingRule
+     */
+    void NonCoulombPotential::setMixingRule(MixingRule mixingRule)
+    {
+        _mixingRule = mixingRule;
+    }
+
+}   // namespace pot

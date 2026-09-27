@@ -30,25 +30,22 @@
 #include "jCouplingSection.hpp"
 #include "testTopologySection.hpp"
 
-using input::topology::JCouplingSection;
-using namespace exc;
-
 TEST_F(TestTopologySection, jCouplingSectionKeyword)
 {
-    JCouplingSection section;
+    input::topology::JCouplingSection section;
     EXPECT_EQ(section.keyword(), "j_couplings");
 }
 
 TEST_F(TestTopologySection, jCouplingSectionEndedNormally)
 {
-    JCouplingSection section;
+    input::topology::JCouplingSection section;
     EXPECT_NO_THROW(section.endedNormally(true));
-    EXPECT_THROW(section.endedNormally(false), TopologyException);
+    EXPECT_THROW(section.endedNormally(false), exc::TopologyException);
 }
 
 TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
 {
-    JCouplingSection section;
+    input::topology::JCouplingSection section;
     // atom1, atom2, atom3, atom4, type
     std::vector<std::string> lineElements = {"1", "2", "3", "4", "9"};
     section.processSection(lineElements, *_engine);
@@ -68,27 +65,27 @@ TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
 
 TEST_F(TestTopologySection, jCouplingSectionThrowsOnWrongElementCount)
 {
-    JCouplingSection         section;
-    std::vector<std::string> lineElements = {"1", "2", "3"};
+    input::topology::JCouplingSection section;
+    std::vector<std::string>          lineElements = {"1", "2", "3"};
     EXPECT_THROW(
         section.processSection(lineElements, *_engine),
-        TopologyException
+        exc::TopologyException
     );
 
     lineElements = {"1", "2", "3", "4", "9", "extra"};
     EXPECT_THROW(
         section.processSection(lineElements, *_engine),
-        TopologyException
+        exc::TopologyException
     );
 }
 
 TEST_F(TestTopologySection, jCouplingSectionThrowsOnDuplicateAtomIndices)
 {
-    JCouplingSection section;
+    input::topology::JCouplingSection section;
     // atom1 == atom2 — unique check should fire.
     std::vector<std::string> lineElements = {"1", "1", "2", "3", "9"};
     EXPECT_THROW(
         section.processSection(lineElements, *_engine),
-        TopologyException
+        exc::TopologyException
     );
 }

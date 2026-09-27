@@ -32,61 +32,61 @@
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
 
-using QM::PySCFRunner;
-using namespace molsys;
-using namespace settings;
-using namespace exc;
-using namespace utilities;
-
-/**
- * @brief writes the coords file in order to run the external qm program
- *
- * @param simulationBox Simulation box containing molecules and atoms.
- */
-void PySCFRunner::writeCoordsFile(SimulationBox &simulationBox)
+namespace QM
 {
-    const std::string fileName = "coords.xyz";
-    std::ofstream     coordsFile(fileName);
 
-    coordsFile << simulationBox.getNumberOfQMAtoms() << "\n\n";
-
-    for (const auto &atom : simulationBox.getQMAtoms())
+    /**
+     * @brief writes the coords file in order to run the external qm program
+     *
+     * @param simulationBox Simulation box containing molecules and atoms.
+     */
+    void PySCFRunner::writeCoordsFile(molsys::SimulationBox &simulationBox)
     {
-        coordsFile << std::format(
-            "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            atom->getName(),
-            atom->getPosition()[0],
-            atom->getPosition()[1],
-            atom->getPosition()[2]
-        );
+        const std::string fileName = "coords.xyz";
+        std::ofstream     coordsFile(fileName);
+
+        coordsFile << simulationBox.getNumberOfQMAtoms() << "\n\n";
+
+        for (const auto &atom : simulationBox.getQMAtoms())
+        {
+            coordsFile << std::format(
+                "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                atom->getName(),
+                atom->getPosition()[0],
+                atom->getPosition()[1],
+                atom->getPosition()[2]
+            );
+        }
+
+        coordsFile.close();
     }
 
-    coordsFile.close();
-}
-
-/**
- * @brief executes the qm script of the external program
- *
- */
-void PySCFRunner::execute(SimulationBox & /*simBox*/)
-{
-    const auto scriptFileName = resolveScriptPath(QMSettings::getQMScript());
-
-    if (!mstd::File(scriptFileName).exists())
+    /**
+     * @brief executes the qm script of the external program
+     *
+     */
+    void PySCFRunner::execute(molsys::SimulationBox & /*simBox*/)
     {
-        throw InputFileException(
-            std::format(
-                "PySCF script file \"{}\" does not exist.",
-                scriptFileName
-            )
+        const auto scriptFileName =
+            resolveScriptPath(settings::QMSettings::getQMScript());
+
+        if (!mstd::File(scriptFileName).exists())
+        {
+            throw exc::InputFileException(
+                std::format(
+                    "PySCF script file \"{}\" does not exist.",
+                    scriptFileName
+                )
+            );
+        }
+
+        const auto command = std::format(
+            "python {} > {}",
+            utilities::shellQuote(scriptFileName),
+            utilities::shellQuote("pyscf.out")
         );
+
+        executeCommand(command, "PySCF");
     }
 
-    const auto command = std::format(
-        "python {} > {}",
-        shellQuote(scriptFileName),
-        shellQuote("pyscf.out")
-    );
-
-    executeCommand(command, "PySCF");
-}
+}   // namespace QM

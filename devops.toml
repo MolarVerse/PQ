@@ -19,7 +19,7 @@ fail_fast = true
 #ast_checks = true
 ast_check_compile_args = ["-std=c++23", "-Iinclude/concepts"]
 # ast_check_enabled_ids = ["noThrowParen"]
-ast_check_disabled_ids = ["noGlobalUsing", "noGlobalUsingEnum"]
+# ast_check_disabled_ids = ["noGlobalUsing", "noGlobalUsingEnum"]
 
 # Per-check configuration — one sub-table per check id.
 # The paramNameForType check has NO built-in defaults, so you must

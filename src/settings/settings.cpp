@@ -27,420 +27,434 @@
 
 #include "stringUtilities.hpp"   // for toLowerCopy
 
-using namespace settings;
-using namespace utilities;
-
-/**
- * @brief convert jobtype to string representation
- *
- * @param jobtype
- */
-std::string settings::string(JobType jobtype)
+namespace settings
 {
-    switch (jobtype)
+
+    /**
+     * @brief convert jobtype to string representation
+     *
+     * @param jobtype
+     */
+    std::string string(JobType jobtype)
+    {
+        switch (jobtype)
+        {
+            using enum JobType;
+
+            case MM_MD: return "MM_MD";
+            case QM_MD: return "QM_MD";
+            case QMMM_MD: return "QMMM_MD";
+            case RING_POLYMER_QM_MD: return "RING_POLYMER_QM_MD";
+            case MM_OPT: return "MM_OPT";
+            case MM_HESSIAN: return "MM_HESSIAN";
+            case NONE: return "NONE";
+        }
+
+        std::unreachable();
+    }
+
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief sets the jobtype to enum in settings
+     *
+     * @param jobtype
+     */
+    void Settings::setJobtype(std::string_view jobtype)
+    {
+        using enum JobType;
+        const auto jobtypeToLower =
+            utilities::toLowerAndReplaceDashesCopy(jobtype);
+
+        if (jobtypeToLower == "mmmd")
+            setJobtype(MM_MD);
+
+        else if (jobtypeToLower == "qmmd")
+            setJobtype(QM_MD);
+
+        else if (jobtypeToLower == "ring_polymer_qmmd")
+            setJobtype(RING_POLYMER_QM_MD);
+
+        else if (jobtypeToLower == "qmmmmd")
+            setJobtype(QMMM_MD);
+
+        else if (jobtypeToLower == "mmopt")
+            setJobtype(MM_OPT);
+
+        else if (jobtypeToLower == "mmhessian")
+            setJobtype(MM_HESSIAN);
+
+        else
+            setJobtype(NONE);
+    }
+
+    /**
+     * @brief sets the jobtype to enum in settings
+     *
+     * @param jobtype
+     */
+    void Settings::setJobtype(JobType jobtype)
+    {
+        _jobtype = jobtype;
+
+        switch (jobtype)
+        {
+            using enum JobType;
+
+            case MM_OPT:       // fallthrough
+            case MM_HESSIAN:   // fallthrough
+            case MM_MD:        // fallthrough
+            case QM_MD:        // fallthrough
+            case QMMM_MD:      // fallthrough
+            case NONE: deactivateRingPolymerMD(); break;
+            case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
+        }
+    }
+
+    /**
+     * @brief sets the floating point type
+     *
+     * @param floatingPointType
+     */
+    void Settings::setFloatingPointType(std::string_view floatingPointType)
+    {
+        using enum FPType;
+        const auto floatingPointTypeToLower =
+            utilities::toLowerCopy(floatingPointType);
+
+        if (floatingPointTypeToLower == "float")
+            setFloatingPointType(FLOAT);
+
+        else
+            setFloatingPointType(DOUBLE);
+    }
+
+    /**
+     * @brief sets the floating point type
+     *
+     * @param floatingPointType
+     */
+    void Settings::setFloatingPointType(FPType floatingPointType)
+    {
+        _floatingPointType = floatingPointType;
+    }
+
+    /**
+     * @brief sets the random seed value
+     *
+     * @param randomSeed
+     */
+    void Settings::setRandomSeed(uint_fast32_t randomSeed)
+    {
+        _randomSeed = randomSeed;
+    }
+
+    /**
+     * @brief sets if the random seed value has been set
+     *
+     * @param isRandomSeedSet
+     */
+    void Settings::setIsRandomSeedSet(bool isRandomSeedSet)
+    {
+        _isRandomSeedset = isRandomSeedSet;
+    }
+
+    /**
+     * @brief sets Ring Polymer MD to active
+     *
+     * @param isRingPolymerMD
+     */
+    void Settings::setIsRingPolymerMDActivated(bool isRingPolymerMD)
+    {
+        _isRingPolymerMDActivated = isRingPolymerMD;
+    }
+
+    /**
+     * @brief sets the dimensionality
+     *
+     * @param dimensionality
+     */
+    void Settings::setDimensionality(size_t dimensionality)
+    {
+        _dimensionality = dimensionality;
+    }
+
+    /**
+     * @brief sets the virial type
+     *
+     * @param virialType
+     */
+    void Settings::setVirialType(VirialType virialType)
+    {
+        _virial = virialType;
+    }
+
+    /**
+     * @brief sets the integrator type
+     *
+     * @param integratorType
+     */
+    void Settings::setIntegratorType(IntegratorType integratorType)
+    {
+        _integrator = integratorType;
+    }
+
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief get the jobtype
+     *
+     * @return JobType
+     */
+    JobType Settings::getJobtype() { return _jobtype; }
+
+    /**
+     * @brief get the floating point type
+     *
+     * @return FPType
+     */
+    FPType Settings::getFloatingPointType() { return _floatingPointType; }
+
+    /**
+     * @brief get the floating point string representation used in pybind11
+     * bindings
+     *
+     */
+    std::string Settings::getFloatingPointPybindString()
+    {
+        if (_floatingPointType == FPType::FLOAT)
+            return "float32";
+
+        return "float64";
+    }
+
+    /**
+     * @brief get the random seed value
+     *
+     * @return uint_fast32_t
+     */
+    uint_fast32_t Settings::getRandomSeed() { return _randomSeed; }
+
+    /**
+     * @brief get if the random seed value has been set
+     *
+     * @return bool
+     */
+    bool Settings::isRandomSeedSet() { return _isRandomSeedset; }
+
+    /**
+     * @brief get the dimensionality
+     *
+     * @return size_t
+     */
+    size_t Settings::getDimensionality() { return _dimensionality; }
+
+    /**
+     * @brief get the virial type
+     *
+     * @return VirialType
+     */
+    VirialType Settings::getVirialType() { return _virial; }
+
+    /**
+     * @brief get the integrator type
+     *
+     * @return IntegratorType
+     */
+    IntegratorType Settings::getIntegratorType() { return _integrator; }
+
+    /******************************
+     *                            *
+     * standard is-active methods *
+     *                            *
+     ******************************/
+
+    /**
+     * @brief Returns true if the jobtype does not use any MM type simulations
+     *
+     * @return true/false if the jobtype does not use any MM type simulations
+     *
+     */
+    bool Settings::isQMOnlyJobtype()
     {
         using enum JobType;
 
-        case MM_MD: return "MM_MD";
-        case QM_MD: return "QM_MD";
-        case QMMM_MD: return "QMMM_MD";
-        case RING_POLYMER_QM_MD: return "RING_POLYMER_QM_MD";
-        case MM_OPT: return "MM_OPT";
-        case MM_HESSIAN: return "MM_HESSIAN";
-        case NONE: return "NONE";
+        switch (_jobtype)
+        {
+            case MM_MD:
+            case QMMM_MD:
+            case MM_OPT:
+            case MM_HESSIAN:
+            case NONE: return false;
+            case QM_MD:
+            case RING_POLYMER_QM_MD: return true;
+        }
+
+        std::unreachable();
     }
 
-    std::unreachable();
-}
+    /**
+     * @brief Returns true if the jobtype does not use any QM type simulations
+     *
+     * @return true/false if the jobtype does not use any QM type simulations
+     *
+     */
+    bool Settings::isMMOnlyJobtype() { return _jobtype == JobType::MM_MD; }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief Returns true if the jobtype is a hybrid type simulation
+     *
+     * @return true/false if the jobtype is a hybrid type simulation
+     *
+     */
+    bool Settings::isHybridJobtype() { return _jobtype == JobType::QMMM_MD; }
 
-/**
- * @brief sets the jobtype to enum in settings
- *
- * @param jobtype
- */
-void Settings::setJobtype(std::string_view jobtype)
-{
-    using enum JobType;
-    const auto jobtypeToLower = toLowerAndReplaceDashesCopy(jobtype);
-
-    if (jobtypeToLower == "mmmd")
-        setJobtype(MM_MD);
-
-    else if (jobtypeToLower == "qmmd")
-        setJobtype(QM_MD);
-
-    else if (jobtypeToLower == "ring_polymer_qmmd")
-        setJobtype(RING_POLYMER_QM_MD);
-
-    else if (jobtypeToLower == "qmmmmd")
-        setJobtype(QMMM_MD);
-
-    else if (jobtypeToLower == "mmopt")
-        setJobtype(MM_OPT);
-
-    else if (jobtypeToLower == "mmhessian")
-        setJobtype(MM_HESSIAN);
-
-    else
-        setJobtype(NONE);
-}
-
-/**
- * @brief sets the jobtype to enum in settings
- *
- * @param jobtype
- */
-void Settings::setJobtype(JobType jobtype)
-{
-    _jobtype = jobtype;
-
-    switch (jobtype)
+    /**
+     * @brief Returns true if the jobtype performs an MD simulation
+     *
+     * @return true/false
+     *
+     */
+    bool Settings::isMDJobType()
     {
         using enum JobType;
 
-        case MM_OPT:       // fallthrough
-        case MM_HESSIAN:   // fallthrough
-        case MM_MD:        // fallthrough
-        case QM_MD:        // fallthrough
-        case QMMM_MD:      // fallthrough
-        case NONE: deactivateRingPolymerMD(); break;
-        case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
+        auto isMD = false;
+        isMD      = isMD || _jobtype == MM_MD;
+        isMD      = isMD || _jobtype == QM_MD;
+        isMD      = isMD || _jobtype == QMMM_MD;
+        isMD      = isMD || _jobtype == RING_POLYMER_QM_MD;
+
+        return isMD;
     }
-}
 
-/**
- * @brief sets the floating point type
- *
- * @param floatingPointType
- */
-void Settings::setFloatingPointType(std::string_view floatingPointType)
-{
-    using enum FPType;
-    const auto floatingPointTypeToLower = toLowerCopy(floatingPointType);
+    /**
+     * @brief Returns true if the jobtype does is based on optimization
+     *
+     * @return true/false
+     *
+     */
+    bool Settings::isOptJobType() { return _jobtype == JobType::MM_OPT; }
 
-    if (floatingPointTypeToLower == "float")
-        setFloatingPointType(FLOAT);
-
-    else
-        setFloatingPointType(DOUBLE);
-}
-
-/**
- * @brief sets the floating point type
- *
- * @param floatingPointType
- */
-void Settings::setFloatingPointType(FPType floatingPointType)
-{
-    _floatingPointType = floatingPointType;
-}
-
-/**
- * @brief sets the random seed value
- *
- * @param randomSeed
- */
-void Settings::setRandomSeed(uint_fast32_t randomSeed)
-{
-    _randomSeed = randomSeed;
-}
-
-/**
- * @brief sets if the random seed value has been set
- *
- * @param isRandomSeedSet
- */
-void Settings::setIsRandomSeedSet(bool isRandomSeedSet)
-{
-    _isRandomSeedset = isRandomSeedSet;
-}
-
-/**
- * @brief sets Ring Polymer MD to active
- *
- * @param isRingPolymerMD
- */
-void Settings::setIsRingPolymerMDActivated(bool isRingPolymerMD)
-{
-    _isRingPolymerMDActivated = isRingPolymerMD;
-}
-
-/**
- * @brief sets the dimensionality
- *
- * @param dimensionality
- */
-void Settings::setDimensionality(size_t dimensionality)
-{
-    _dimensionality = dimensionality;
-}
-
-/**
- * @brief sets the virial type
- *
- * @param virialType
- */
-void Settings::setVirialType(VirialType virialType) { _virial = virialType; }
-
-/**
- * @brief sets the integrator type
- *
- * @param integratorType
- */
-void Settings::setIntegratorType(IntegratorType integratorType)
-{
-    _integrator = integratorType;
-}
-
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
-
-/**
- * @brief get the jobtype
- *
- * @return JobType
- */
-JobType Settings::getJobtype() { return _jobtype; }
-
-/**
- * @brief get the floating point type
- *
- * @return FPType
- */
-FPType Settings::getFloatingPointType() { return _floatingPointType; }
-
-/**
- * @brief get the floating point string representation used in pybind11 bindings
- *
- */
-std::string Settings::getFloatingPointPybindString()
-{
-    if (_floatingPointType == FPType::FLOAT)
-        return "float32";
-
-    return "float64";
-}
-
-/**
- * @brief get the random seed value
- *
- * @return uint_fast32_t
- */
-uint_fast32_t Settings::getRandomSeed() { return _randomSeed; }
-
-/**
- * @brief get if the random seed value has been set
- *
- * @return bool
- */
-bool Settings::isRandomSeedSet() { return _isRandomSeedset; }
-
-/**
- * @brief get the dimensionality
- *
- * @return size_t
- */
-size_t Settings::getDimensionality() { return _dimensionality; }
-
-/**
- * @brief get the virial type
- *
- * @return VirialType
- */
-VirialType Settings::getVirialType() { return _virial; }
-
-/**
- * @brief get the integrator type
- *
- * @return IntegratorType
- */
-IntegratorType Settings::getIntegratorType() { return _integrator; }
-
-/******************************
- *                            *
- * standard is-active methods *
- *                            *
- ******************************/
-
-/**
- * @brief Returns true if the jobtype does not use any MM type simulations
- *
- * @return true/false if the jobtype does not use any MM type simulations
- *
- */
-bool Settings::isQMOnlyJobtype()
-{
-    using enum JobType;
-
-    switch (_jobtype)
+    /**
+     * @brief Returns true if the MM simulations are activated
+     *
+     * @return true/false
+     *
+     */
+    bool Settings::isMMActivated()
     {
-        case MM_MD:
-        case QMMM_MD:
-        case MM_OPT:
-        case MM_HESSIAN:
-        case NONE: return false;
-        case QM_MD:
-        case RING_POLYMER_QM_MD: return true;
+        using enum JobType;
+
+        auto isMM = false;
+
+        isMM = isMM || _jobtype == MM_MD;
+        isMM = isMM || _jobtype == QMMM_MD;
+        isMM = isMM || _jobtype == MM_OPT;
+        isMM = isMM || _jobtype == MM_HESSIAN;
+
+        return isMM;
     }
 
-    std::unreachable();
-}
+    /**
+     * @brief Returns true if the QM simulations are activated
+     *
+     * @return true/false
+     *
+     */
+    bool Settings::isQMActivated()
+    {
+        using enum JobType;
 
-/**
- * @brief Returns true if the jobtype does not use any QM type simulations
- *
- * @return true/false if the jobtype does not use any QM type simulations
- *
- */
-bool Settings::isMMOnlyJobtype() { return _jobtype == JobType::MM_MD; }
+        auto isQM = false;
 
-/**
- * @brief Returns true if the jobtype is a hybrid type simulation
- *
- * @return true/false if the jobtype is a hybrid type simulation
- *
- */
-bool Settings::isHybridJobtype() { return _jobtype == JobType::QMMM_MD; }
+        isQM = isQM || _jobtype == QM_MD;
+        isQM = isQM || _jobtype == QMMM_MD;
+        isQM = isQM || _jobtype == RING_POLYMER_QM_MD;
 
-/**
- * @brief Returns true if the jobtype performs an MD simulation
- *
- * @return true/false
- *
- */
-bool Settings::isMDJobType()
-{
-    using enum JobType;
+        return isQM;
+    }
 
-    auto isMD = false;
-    isMD      = isMD || _jobtype == MM_MD;
-    isMD      = isMD || _jobtype == QM_MD;
-    isMD      = isMD || _jobtype == QMMM_MD;
-    isMD      = isMD || _jobtype == RING_POLYMER_QM_MD;
+    /**
+     * @brief Returns true if only QM simulations are activated
+     *
+     * @return true/false
+     *
+     */
+    bool Settings::isQMOnlyActivated()
+    {
+        return isQMActivated() && !isMMActivated();
+    }
 
-    return isMD;
-}
+    /**
+     * @brief Returns true if only MM simulations are activated
+     *
+     * @return true/false
+     *
+     */
+    bool Settings::isMMOnlyActivated()
+    {
+        return isMMActivated() && !isQMActivated();
+    }
 
-/**
- * @brief Returns true if the jobtype does is based on optimization
- *
- * @return true/false
- *
- */
-bool Settings::isOptJobType() { return _jobtype == JobType::MM_OPT; }
+    /**
+     * @brief Returns true if the ring polymer MD simulations are activated
+     *
+     * @return true/false
+     *
+     */
+    bool Settings::isRingPolymerMDActivated()
+    {
+        return _isRingPolymerMDActivated;
+    }
 
-/**
- * @brief Returns true if the MM simulations are activated
- *
- * @return true/false
- *
- */
-bool Settings::isMMActivated()
-{
-    using enum JobType;
+    /**
+     * @brief Returns true if the cell list is activated
+     *
+     * @return true/false
+     *
+     */
+    bool Settings::isCellListActivated() { return _isCellListActivated; }
 
-    auto isMM = false;
+    /*****************************
+     *                           *
+     * standard activate methods *
+     *                           *
+     *****************************/
 
-    isMM = isMM || _jobtype == MM_MD;
-    isMM = isMM || _jobtype == QMMM_MD;
-    isMM = isMM || _jobtype == MM_OPT;
-    isMM = isMM || _jobtype == MM_HESSIAN;
+    /**
+     * @brief activate ring polymer MD simulations
+     *
+     */
+    void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
 
-    return isMM;
-}
+    /**
+     * @brief deactivate ring polymer MD simulations
+     *
+     */
+    void Settings::deactivateRingPolymerMD()
+    {
+        _isRingPolymerMDActivated = false;
+    }
 
-/**
- * @brief Returns true if the QM simulations are activated
- *
- * @return true/false
- *
- */
-bool Settings::isQMActivated()
-{
-    using enum JobType;
+    /**
+     * @brief activate cell list
+     *
+     */
+    void Settings::activateCellList() { _isCellListActivated = true; }
 
-    auto isQM = false;
+    /**
+     * @brief deactivate cell list
+     *
+     */
+    void Settings::deactivateCellList() { _isCellListActivated = false; }
 
-    isQM = isQM || _jobtype == QM_MD;
-    isQM = isQM || _jobtype == QMMM_MD;
-    isQM = isQM || _jobtype == RING_POLYMER_QM_MD;
-
-    return isQM;
-}
-
-/**
- * @brief Returns true if only QM simulations are activated
- *
- * @return true/false
- *
- */
-bool Settings::isQMOnlyActivated()
-{
-    return isQMActivated() && !isMMActivated();
-}
-
-/**
- * @brief Returns true if only MM simulations are activated
- *
- * @return true/false
- *
- */
-bool Settings::isMMOnlyActivated()
-{
-    return isMMActivated() && !isQMActivated();
-}
-
-/**
- * @brief Returns true if the ring polymer MD simulations are activated
- *
- * @return true/false
- *
- */
-bool Settings::isRingPolymerMDActivated() { return _isRingPolymerMDActivated; }
-
-/**
- * @brief Returns true if the cell list is activated
- *
- * @return true/false
- *
- */
-bool Settings::isCellListActivated() { return _isCellListActivated; }
-
-/*****************************
- *                           *
- * standard activate methods *
- *                           *
- *****************************/
-
-/**
- * @brief activate ring polymer MD simulations
- *
- */
-void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
-
-/**
- * @brief deactivate ring polymer MD simulations
- *
- */
-void Settings::deactivateRingPolymerMD() { _isRingPolymerMDActivated = false; }
-
-/**
- * @brief activate cell list
- *
- */
-void Settings::activateCellList() { _isCellListActivated = true; }
-
-/**
- * @brief deactivate cell list
- *
- */
-void Settings::deactivateCellList() { _isCellListActivated = false; }
+}   // namespace settings

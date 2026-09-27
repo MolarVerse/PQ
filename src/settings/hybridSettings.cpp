@@ -26,254 +26,267 @@
 #include <utility>
 #include <vector>
 
-using settings::HybridSettings;
-
-/**
- * @brief convert smoothing method to string representation
- *
- * @param method
- */
-std::string settings::string(SmoothingMethod method)
+namespace settings
 {
-    switch (method)
-    {
-        using enum SmoothingMethod;
 
-        case HOTSPOT: return "Hotspot";
-        case EXACT: return "Exact";
+    /**
+     * @brief convert smoothing method to string representation
+     *
+     * @param method
+     */
+    std::string string(SmoothingMethod method)
+    {
+        switch (method)
+        {
+            using enum SmoothingMethod;
+
+            case HOTSPOT: return "Hotspot";
+            case EXACT: return "Exact";
+        }
+
+        std::unreachable();
     }
 
-    std::unreachable();
-}
+    /********************
+     *                  *
+     * standard setters *
+     *                  *
+     ********************/
 
-/********************
- *                  *
- * standard setters *
- *                  *
- ********************/
+    /**
+     * @brief set the innerRegionCenter in the settings
+     *
+     * @details the innerRegionCenter is a list of atom indices with which the
+     * center of the inner region of a hybrid calculation can be selected
+     *
+     * @param innerRegionCenter
+     */
+    void HybridSettings::setInnerRegionCenter(
+        const std::vector<size_t> &innerRegionCenter
+    )
+    {
+        _innerRegionCenter = innerRegionCenter;
+    }
 
-/**
- * @brief set the innerRegionCenter in the settings
- *
- * @details the innerRegionCenter is a list of atom indices with which the
- * center of the inner region of a hybrid calculation can be selected
- *
- * @param innerRegionCenter
- */
-void HybridSettings::setInnerRegionCenter(
-    const std::vector<size_t> &innerRegionCenter
-)
-{
-    _innerRegionCenter = innerRegionCenter;
-}
+    /**
+     * @brief set the _forcedCoreList in the settings
+     *
+     * @details the forcedCoreList is a list of molecules which will always be
+     * part of the CORE zone in hybrid calculation
+     *
+     * @param list
+     */
+    void HybridSettings::setForcedCoreList(const std::vector<int> &list)
+    {
+        _forcedCoreList = list;
+    }
 
-/**
- * @brief set the _forcedCoreList in the settings
- *
- * @details the forcedCoreList is a list of molecules which will always be
- * part of the CORE zone in hybrid calculation
- *
- * @param list
- */
-void HybridSettings::setForcedCoreList(const std::vector<int> &list)
-{
-    _forcedCoreList = list;
-}
+    /**
+     * @brief set the _forcedLayerList in the settings
+     *
+     * @details the forcedLayerList is a list of molecules which will always be
+     * part of the LAYER zone in hybrid calculation
+     *
+     * @param list
+     */
+    void HybridSettings::setForcedLayerList(const std::vector<int> &list)
+    {
+        _forcedLayerList = list;
+    }
 
-/**
- * @brief set the _forcedLayerList in the settings
- *
- * @details the forcedLayerList is a list of molecules which will always be
- * part of the LAYER zone in hybrid calculation
- *
- * @param list
- */
-void HybridSettings::setForcedLayerList(const std::vector<int> &list)
-{
-    _forcedLayerList = list;
-}
+    /**
+     * @brief set the _forcedOuterList in the settings
+     *
+     * @details the forcedOuterList is a list of molecules which will always be
+     * treated with the method chosen for the outer region of the hybrid
+     * calculation
+     *
+     * @param list
+     */
+    void HybridSettings::setForcedOuterList(const std::vector<int> &list)
+    {
+        _forcedOuterList = list;
+    }
 
-/**
- * @brief set the _forcedOuterList in the settings
- *
- * @details the forcedOuterList is a list of molecules which will always be
- * treated with the method chosen for the outer region of the hybrid calculation
- *
- * @param list
- */
-void HybridSettings::setForcedOuterList(const std::vector<int> &list)
-{
-    _forcedOuterList = list;
-}
+    /**
+     * @brief set the useQMCharges in the settings
+     *
+     * @param useQMCharges
+     */
+    void HybridSettings::setUseQMCharges(bool useQMCharges)
+    {
+        _useQMCharges = useQMCharges;
+    }
 
-/**
- * @brief set the useQMCharges in the settings
- *
- * @param useQMCharges
- */
-void HybridSettings::setUseQMCharges(bool useQMCharges)
-{
-    _useQMCharges = useQMCharges;
-}
+    /**
+     * @brief set the coreRadius in the settings
+     *
+     * @details the coreRadius is the radius of the core region
+     *
+     * @param radius
+     */
+    void HybridSettings::setCoreRadius(double radius) { _coreRadius = radius; }
 
-/**
- * @brief set the coreRadius in the settings
- *
- * @details the coreRadius is the radius of the core region
- *
- * @param radius
- */
-void HybridSettings::setCoreRadius(double radius) { _coreRadius = radius; }
+    /**
+     * @brief set the layerRadius in the settings
+     *
+     * @details the layerRadius is the radius of the layer region
+     *
+     * @param radius
+     */
+    void HybridSettings::setLayerRadius(double radius)
+    {
+        _layerRadius = radius;
+    }
 
-/**
- * @brief set the layerRadius in the settings
- *
- * @details the layerRadius is the radius of the layer region
- *
- * @param radius
- */
-void HybridSettings::setLayerRadius(double radius) { _layerRadius = radius; }
+    /**
+     * @brief set the smoothingRegionThickness in the settings
+     *
+     * @param thickness
+     */
+    void HybridSettings::setSmoothingRegionThickness(double thickness)
+    {
+        _smoothingRegionThickness = thickness;
+    }
 
-/**
- * @brief set the smoothingRegionThickness in the settings
- *
- * @param thickness
- */
-void HybridSettings::setSmoothingRegionThickness(double thickness)
-{
-    _smoothingRegionThickness = thickness;
-}
+    /**
+     * @brief set the pointChargeThickness in the settings
+     *
+     * @details the pointChargeThickness is the distance measured from the layer
+     * radius up to which point charges are included
+     *
+     * @param radius
+     */
+    void HybridSettings::setPointChargeThickness(double radius)
+    {
+        _pointChargeThickness = radius;
+    }
 
-/**
- * @brief set the pointChargeThickness in the settings
- *
- * @details the pointChargeThickness is the distance measured from the layer
- * radius up to which point charges are included
- *
- * @param radius
- */
-void HybridSettings::setPointChargeThickness(double radius)
-{
-    _pointChargeThickness = radius;
-}
+    /**
+     * @brief set the smoothing method in the settings
+     *
+     * @param method
+     */
+    void HybridSettings::setSmoothingMethod(SmoothingMethod method)
+    {
+        _smoothing = method;
+    }
 
-/**
- * @brief set the smoothing method in the settings
- *
- * @param method
- */
-void HybridSettings::setSmoothingMethod(SmoothingMethod method)
-{
-    _smoothing = method;
-}
+    /**
+     * @brief set the type of QM force distribtion in hotspot smoothing
+     *
+     * @param method
+     */
+    void HybridSettings::setQMForceDist(QMForceDist method)
+    {
+        _qmForceDist = method;
+    }
 
-/**
- * @brief set the type of QM force distribtion in hotspot smoothing
- *
- * @param method
- */
-void HybridSettings::setQMForceDist(QMForceDist method)
-{
-    _qmForceDist = method;
-}
+    /********************
+     *                  *
+     * standard getters *
+     *                  *
+     ********************/
 
-/********************
- *                  *
- * standard getters *
- *                  *
- ********************/
+    /**
+     * @brief get the innerRegionCenter as list of int
+     *
+     * @return std::optional<std::vector<size_t>>
+     */
+    std::optional<std::vector<size_t>> HybridSettings::getInnerRegionCenter()
+    {
+        return _innerRegionCenter;
+    }
 
-/**
- * @brief get the innerRegionCenter as list of int
- *
- * @return std::optional<std::vector<size_t>>
- */
-std::optional<std::vector<size_t>> HybridSettings::getInnerRegionCenter()
-{
-    return _innerRegionCenter;
-}
+    /**
+     * @brief get the forcedCoreList
+     *
+     * @return vector<int>
+     */
+    std::vector<int> HybridSettings::getForcedCoreList()
+    {
+        return _forcedCoreList;
+    }
 
-/**
- * @brief get the forcedCoreList
- *
- * @return vector<int>
- */
-std::vector<int> HybridSettings::getForcedCoreList() { return _forcedCoreList; }
+    /**
+     * @brief get the forcedLayerList
+     *
+     * @return vector<int>
+     */
+    std::vector<int> HybridSettings::getForcedLayerList()
+    {
+        return _forcedLayerList;
+    }
 
-/**
- * @brief get the forcedLayerList
- *
- * @return vector<int>
- */
-std::vector<int> HybridSettings::getForcedLayerList()
-{
-    return _forcedLayerList;
-}
+    /**
+     * @brief get the forcedOuterList
+     *
+     * @return vector<int>
+     */
+    std::vector<int> HybridSettings::getForcedOuterList()
+    {
+        return _forcedOuterList;
+    }
 
-/**
- * @brief get the forcedOuterList
- *
- * @return vector<int>
- */
-std::vector<int> HybridSettings::getForcedOuterList()
-{
-    return _forcedOuterList;
-}
+    /**
+     * @brief get the useQMCharges
+     *
+     * @return bool
+     */
+    bool HybridSettings::getUseQMCharges() { return _useQMCharges; }
 
-/**
- * @brief get the useQMCharges
- *
- * @return bool
- */
-bool HybridSettings::getUseQMCharges() { return _useQMCharges; }
+    /**
+     * @brief get the coreRadius
+     *
+     * @return double
+     */
+    double HybridSettings::getCoreRadius() { return _coreRadius; }
 
-/**
- * @brief get the coreRadius
- *
- * @return double
- */
-double HybridSettings::getCoreRadius() { return _coreRadius; }
+    /**
+     * @brief get the layerRadius
+     *
+     * @return double
+     */
+    double HybridSettings::getLayerRadius() { return _layerRadius; }
 
-/**
- * @brief get the layerRadius
- *
- * @return double
- */
-double HybridSettings::getLayerRadius() { return _layerRadius; }
+    /**
+     * @brief get the smoothingRegionThickness
+     *
+     * @return double
+     */
+    double HybridSettings::getSmoothingRegionThickness()
+    {
+        return _smoothingRegionThickness;
+    }
 
-/**
- * @brief get the smoothingRegionThickness
- *
- * @return double
- */
-double HybridSettings::getSmoothingRegionThickness()
-{
-    return _smoothingRegionThickness;
-}
+    /**
+     * @brief get the pointChargeThickness
+     *
+     * @return double
+     */
+    double HybridSettings::getPointChargeThickness()
+    {
+        return _pointChargeThickness;
+    }
 
-/**
- * @brief get the pointChargeThickness
- *
- * @return double
- */
-double HybridSettings::getPointChargeThickness()
-{
-    return _pointChargeThickness;
-}
+    /**
+     * @brief get the smoothing method
+     *
+     * @return SmoothingMethod
+     */
+    settings::SmoothingMethod HybridSettings::getSmoothingMethod()
+    {
+        return _smoothing;
+    }
 
-/**
- * @brief get the smoothing method
- *
- * @return SmoothingMethod
- */
-settings::SmoothingMethod HybridSettings::getSmoothingMethod()
-{
-    return _smoothing;
-}
+    /**
+     * @brief get the type of QM force distribution in hotspot smoothing
+     *
+     * @return QMForceDist
+     */
+    settings::QMForceDist HybridSettings::getQMForceDist()
+    {
+        return _qmForceDist;
+    }
 
-/**
- * @brief get the type of QM force distribution in hotspot smoothing
- *
- * @return QMForceDist
- */
-settings::QMForceDist HybridSettings::getQMForceDist() { return _qmForceDist; }
+}   // namespace settings

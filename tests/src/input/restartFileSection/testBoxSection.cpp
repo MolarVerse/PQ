@@ -35,8 +35,6 @@
 #include "simulationBoxSettings.hpp"    // for SimulationBoxSettings
 #include "testRestartFileSection.hpp"   // for TestBoxSection
 
-using namespace input;
-
 TEST_F(TestBoxSection, testKeyword) { EXPECT_EQ(_section->keyword(), "box"); }
 
 TEST_F(TestBoxSection, testIsHeader) { EXPECT_TRUE(_section->isHeader()); }

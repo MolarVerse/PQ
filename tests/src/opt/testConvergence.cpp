@@ -27,9 +27,6 @@
 #include "convergence.hpp"
 #include "convergenceSettings.hpp"
 
-using namespace opt;
-using settings::ConvStrategy;
-
 namespace
 {
     constexpr bool   _enableAll = true;
@@ -38,7 +35,7 @@ namespace
     constexpr double _maxThresh = 1.0e-3;
     constexpr double _rmsThresh = 1.0e-3;
 
-    Convergence makeConv(ConvStrategy strat)
+    opt::Convergence makeConv(settings::ConvStrategy strat)
     {
         return {
             _enableAll,
@@ -52,7 +49,10 @@ namespace
         };
     }
 
-    Convergence makeConv() { return makeConv(ConvStrategy::RIGOROUS); }
+    opt::Convergence makeConv()
+    {
+        return makeConv(settings::ConvStrategy::RIGOROUS);
+    }
 }   // namespace
 
 /* ---------- constructor and getters ---------- */
@@ -72,12 +72,12 @@ TEST(TestConvergence, defaultConstructedFlagsAreTrue)
 
 TEST(TestConvergence, constructorStoresThresholdsAndStrategy)
 {
-    const auto conv = makeConv(ConvStrategy::LOOSE);
+    const auto conv = makeConv(settings::ConvStrategy::LOOSE);
     EXPECT_DOUBLE_EQ(conv.getRelEnergyConvThreshold(), _relThresh);
     EXPECT_DOUBLE_EQ(conv.getAbsEnergyConvThreshold(), _absThresh);
     EXPECT_DOUBLE_EQ(conv.getAbsMaxForceConvThreshold(), _maxThresh);
     EXPECT_DOUBLE_EQ(conv.getAbsRMSForceConvThreshold(), _rmsThresh);
-    EXPECT_EQ(conv.getEnConvStrategy(), ConvStrategy::LOOSE);
+    EXPECT_EQ(conv.getEnConvStrategy(), settings::ConvStrategy::LOOSE);
     EXPECT_TRUE(conv.isEnergyConvEnabled());
     EXPECT_TRUE(conv.isMaxForceConvEnabled());
     EXPECT_TRUE(conv.isRMSForceConvEnabled());
@@ -107,7 +107,7 @@ TEST(TestConvergence, calcEnergyConvergenceFlagsAboveThreshold)
 
 TEST(TestConvergence, calcEnergyConvergenceSkippedWhenDisabled)
 {
-    Convergence conv(
+    opt::Convergence conv(
         false,   // energy disabled
         _enableAll,
         _enableAll,
@@ -115,7 +115,7 @@ TEST(TestConvergence, calcEnergyConvergenceSkippedWhenDisabled)
         _absThresh,
         _maxThresh,
         _rmsThresh,
-        ConvStrategy::RIGOROUS
+        settings::ConvStrategy::RIGOROUS
     );
     conv.calcEnergyConvergence(1.0, 2.0);   // would fail thresholds
     // Disabled → flags retain default (true) regardless of energy diff.
@@ -153,7 +153,7 @@ TEST(TestConvergence, calcForceConvergenceUsesAbsoluteValue)
 
 TEST(TestConvergence, calcForceConvergenceSkippedWhenDisabled)
 {
-    Convergence conv(
+    opt::Convergence conv(
         _enableAll,
         false,   // max force disabled
         false,   // rms force disabled
@@ -161,7 +161,7 @@ TEST(TestConvergence, calcForceConvergenceSkippedWhenDisabled)
         _absThresh,
         _maxThresh,
         _rmsThresh,
-        ConvStrategy::RIGOROUS
+        settings::ConvStrategy::RIGOROUS
     );
     conv.calcForceConvergence(1.0, 1.0);
     EXPECT_TRUE(conv.isAbsMaxForceConv());
@@ -174,7 +174,7 @@ TEST(TestConvergence, calcForceConvergenceSkippedWhenDisabled)
 
 TEST(TestConvergence, checkConvergenceRigorousRequiresBothEnergyFlags)
 {
-    auto conv = makeConv(ConvStrategy::RIGOROUS);
+    auto conv = makeConv(settings::ConvStrategy::RIGOROUS);
 
     // Below thresholds → both energy flags true.
     conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
@@ -188,7 +188,7 @@ TEST(TestConvergence, checkConvergenceRigorousRequiresBothEnergyFlags)
 
 TEST(TestConvergence, checkConvergenceLooseAcceptsEitherEnergyFlag)
 {
-    auto conv = makeConv(ConvStrategy::LOOSE);
+    auto conv = makeConv(settings::ConvStrategy::LOOSE);
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
 
     // abs=1.0e-5 (true), rel=1.0e-5/1.0e10=1.0e-15 (true) — both true.
@@ -205,7 +205,7 @@ TEST(TestConvergence, checkConvergenceLooseAcceptsEitherEnergyFlag)
 
 TEST(TestConvergence, checkConvergenceAbsoluteIgnoresRelativeFlag)
 {
-    auto conv = makeConv(ConvStrategy::ABSOLUTE);
+    auto conv = makeConv(settings::ConvStrategy::ABSOLUTE);
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
     // abs=1.0e-5 (true), rel=1.0e-5/1.0e-3=1.0e-2 (false)
     conv.calcEnergyConvergence(1.0e-3, 1.0e-3 + 1.0e-5);
@@ -216,7 +216,7 @@ TEST(TestConvergence, checkConvergenceAbsoluteIgnoresRelativeFlag)
 
 TEST(TestConvergence, checkConvergenceRelativeIgnoresAbsoluteFlag)
 {
-    auto conv = makeConv(ConvStrategy::RELATIVE);
+    auto conv = makeConv(settings::ConvStrategy::RELATIVE);
     conv.calcForceConvergence(1.0e-5, 1.0e-5);
     // abs=1.0 (false), rel=1.0/1.0e10=1.0e-10 (true)
     conv.calcEnergyConvergence(1.0e10, 1.0e10 + 1.0);

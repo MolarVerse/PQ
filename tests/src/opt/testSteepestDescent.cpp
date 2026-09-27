@@ -29,13 +29,9 @@
 #include "steepestDescent.hpp"
 #include "vector3d.hpp"   // IWYU pragma: keep
 
-using namespace opt;
-using molsys::Atom;
-using molsys::SimulationBox;
-
 namespace
 {
-    std::shared_ptr<SimulationBox> makeBoxWithTwoAtoms(
+    std::shared_ptr<molsys::SimulationBox> makeBoxWithTwoAtoms(
         const linalg::Vec3D &pos0,
         const linalg::Vec3D &pos1,
         const linalg::Vec3D &force0,
@@ -43,11 +39,11 @@ namespace
         const linalg::Vec3D &boxDims
     )
     {
-        auto box = std::make_shared<SimulationBox>();
+        auto box = std::make_shared<molsys::SimulationBox>();
         box->setBoxDimensions(boxDims);
 
-        auto atom1 = std::make_shared<Atom>();
-        auto atom2 = std::make_shared<Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
         atom1->setPosition(pos0);
         atom2->setPosition(pos1);
         atom1->setForce(force0);
@@ -59,7 +55,7 @@ namespace
         return box;
     }
 
-    std::shared_ptr<SimulationBox> makeBoxWithTwoAtoms(
+    std::shared_ptr<molsys::SimulationBox> makeBoxWithTwoAtoms(
         const linalg::Vec3D &pos0,
         const linalg::Vec3D &pos1,
         const linalg::Vec3D &force0,
@@ -87,7 +83,7 @@ TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
         {-0.2, 0.3, 0.7}
     );
 
-    SteepestDescent opt(1U);
+    opt::SteepestDescent opt(1U);
     opt.setSimulationBox(box);
 
     const auto learningRate = 0.1;
@@ -129,7 +125,7 @@ TEST(TestSteepestDescent, updateStoresOldPosition)
         {0.2, 0.2, 0.2}
     );
 
-    SteepestDescent opt(1U);
+    opt::SteepestDescent opt(1U);
     opt.setSimulationBox(box);
     opt.update(0.05, 1U);
 
@@ -155,7 +151,7 @@ TEST(TestSteepestDescent, updateAppliesPBCToNewPosition)
         {10.0, 10.0, 10.0}
     );
 
-    SteepestDescent opt(1U);
+    opt::SteepestDescent opt(1U);
     opt.setSimulationBox(box);
     opt.update(1.0, 1U);
 
@@ -171,7 +167,7 @@ TEST(TestSteepestDescent, updateIsNoOpWithZeroLearningRate)
         {1.0, 1.0, 1.0}
     );
 
-    SteepestDescent opt(1U);
+    opt::SteepestDescent opt(1U);
     opt.setSimulationBox(box);
     opt.update(0.0, 1U);
 

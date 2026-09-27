@@ -30,14 +30,11 @@
 #include "testOutputBase.hpp"
 #include "timingsOutput.hpp"
 
-using namespace out;
-using namespace timings;
-
 TEST(TestTimingsOutput, writeProducesHeaderAndTotalRow)
 {
     const std::string path = "default.timings.test";
 
-    TimingsOutput out(path);
+    out::TimingsOutput out(path);
     out.setFilename(path);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -60,7 +57,7 @@ TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
 {
     const std::string path = "default.timings.test";
 
-    TimingsOutput out(path);
+    out::TimingsOutput out(path);
     out.setFilename(path);
 
     {

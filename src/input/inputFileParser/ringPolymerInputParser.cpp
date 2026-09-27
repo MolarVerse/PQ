@@ -27,40 +27,45 @@
 #include "rangeValidator.hpp"
 #include "ringPolymerSettings.hpp"
 
-using namespace input;
-using namespace settings;
-
-/**
- * @brief Construct a new RingPolymerInputParser::
- * RingPolymerInputParser object
- *
- * @details following keywords are registered: 1) rpmd_n_replica `<size_t>`,
- * must be at least 2
- *
- */
-RingPolymerInputParser::RingPolymerInputParser() { addNumberOfBeadsKeyword(); }
-
-void RingPolymerInputParser::addNumberOfBeadsKeyword()
+namespace input
 {
-    const auto metaData = KeyMetadata{
-        .name  = "rpmd_n_replica",
-        .title = "Number of Ring-Polymer Replicas",
-        .description =
-            "Number of beads (replicas) used in ring-polymer "
-            "molecular dynamics"
-    };
 
-    const RangeValidator<size_t> rangeValidator{2, std::nullopt};
+    /**
+     * @brief Construct a new RingPolymerInputParser::
+     * RingPolymerInputParser object
+     *
+     * @details following keywords are registered: 1) rpmd_n_replica `<size_t>`,
+     * must be at least 2
+     *
+     */
+    RingPolymerInputParser::RingPolymerInputParser()
+    {
+        addNumberOfBeadsKeyword();
+    }
 
-    const auto setValue = [](const size_t &nBeads)
-    { RingPolymerSettings::setNumberOfBeads(nBeads); };
+    void RingPolymerInputParser::addNumberOfBeadsKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "rpmd_n_replica",
+            .title = "Number of Ring-Polymer Replicas",
+            .description =
+                "Number of beads (replicas) used in ring-polymer "
+                "molecular dynamics"
+        };
 
-    auto &numberOfBeadsKey =
-        _getRegistry().registerKey<size_t>(KeyRegistry<size_t>{
-            .metadata  = metaData,
-            .onSet     = setValue,
-            .validator = makeShared(rangeValidator),
-        });
+        const RangeValidator<size_t> rangeValidator{2, std::nullopt};
 
-    addKeyword("rpmd_n_replica", adapt(numberOfBeadsKey), false);
-}
+        const auto setValue = [](const size_t &nBeads)
+        { settings::RingPolymerSettings::setNumberOfBeads(nBeads); };
+
+        auto &numberOfBeadsKey =
+            _getRegistry().registerKey<size_t>(KeyRegistry<size_t>{
+                .metadata  = metaData,
+                .onSet     = setValue,
+                .validator = makeShared(rangeValidator),
+            });
+
+        addKeyword("rpmd_n_replica", adapt(numberOfBeadsKey), false);
+    }
+
+}   // namespace input

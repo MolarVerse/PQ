@@ -27,144 +27,147 @@
 #include "constants/conversionFactors.hpp"
 #include "globalTimer.hpp"   // for GlobalTimer
 
-using namespace out;
-using namespace timings;
-
-/**
- * @brief Write the timings to the output file
- *
- */
-void TimingsOutput::write()
+namespace out
 {
-    const auto timers = timings::GlobalTimer::get().sortTimers();
 
-    _fp << std::format(
-        "{:<30}\t{:>10}\t{:>10}\n",
-        "Section",
-        "Time [s]",
-        "Time [%]"
-    );
-
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
-    // readability-magic-numbers) write a line consisting only of '-'
-    _fp << std::format(
-        "{:<30}\t{:>10}\t{:>10}\n",
-        std::string(30, '-'),
-        std::string(10, '-'),
-        std::string(10, '-')
-    );
-
-    _fp << "\n";
-
-    const auto elapsedTime = timings::GlobalTimer::get().calculateElapsedTime();
-
-    // write the simulation timer
-    _fp << std::format(
-        "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
-        "Total",
-        elapsedTime * MS_TO_S,
-        100.0
-    );
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
-    // readability-magic-numbers)
-
-    _fp << "\n";
-
-    // write the execution timers
-    for (const auto &section : timers)
+    /**
+     * @brief Write the timings to the output file
+     *
+     */
+    void TimingsOutput::write()
     {
-        const auto name       = section.getTimerName();
-        const auto time       = section.calculateElapsedTime();
-        const auto percentage = (time / elapsedTime) * 100.0;
+        const auto timers = timings::GlobalTimer::get().sortTimers();
 
         _fp << std::format(
-            "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
-            name,
-            time * MS_TO_S,
-            percentage
+            "{:<30}\t{:>10}\t{:>10}\n",
+            "Section",
+            "Time [s]",
+            "Time [%]"
         );
-    }
-
-    _fp << "\n";
-    _fp << "\n";
-    _fp << "\n";
-    _fp << "\n";
-
-    _fp << std::format(
-        "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
-        "Section",
-        "Time [s]",
-        "Time [%]",
-        "RelT [%]"
-    );
-
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
-    // readability-magic-numbers) write a line consisting only of '-'
-    _fp << std::format(
-        "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
-        std::string(30, '-'),
-        std::string(10, '-'),
-        std::string(10, '-'),
-        std::string(10, '-')
-    );
-
-    _fp << "\n";
-
-    // write the simulation timer
-    _fp << std::format(
-        "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
-        "Total",
-        elapsedTime * MS_TO_S,
-        100.0,
-        100.0
-    );
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
-    // readability-magic-numbers)
-
-    _fp << "\n";
-
-    // write the execution timers
-    for (const auto &section : timers)
-    {
-        auto subsections = section.getTimingDetails();
-
-        if (subsections.empty())
-            continue;
-
-        const auto name       = section.getTimerName();
-        const auto time       = section.calculateElapsedTime();
-        const auto percentage = (time / elapsedTime) * 100.0;
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
-        // readability-magic-numbers)
+        // readability-magic-numbers) write a line consisting only of '-'
         _fp << std::format(
-            "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
-            name,
-            time * MS_TO_S,
-            percentage,
+            "{:<30}\t{:>10}\t{:>10}\n",
+            std::string(30, '-'),
+            std::string(10, '-'),
+            std::string(10, '-')
+        );
+
+        _fp << "\n";
+
+        const auto elapsedTime =
+            timings::GlobalTimer::get().calculateElapsedTime();
+
+        // write the simulation timer
+        _fp << std::format(
+            "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
+            "Total",
+            elapsedTime * MS_TO_S,
             100.0
         );
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
 
-        for (const auto &subSection : subsections)
+        _fp << "\n";
+
+        // write the execution timers
+        for (const auto &section : timers)
         {
-            const auto subName          = subSection.getName();
-            const auto subTime          = subSection.calculateElapsedTime();
-            const auto subPercentage    = (subTime / time) * 100.0;
-            const auto subTotPercentage = (subTime / elapsedTime) * 100.0;
+            const auto name       = section.getTimerName();
+            const auto time       = section.calculateElapsedTime();
+            const auto percentage = (time / elapsedTime) * 100.0;
 
             _fp << std::format(
-                "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
-                subName,
-                subTime * MS_TO_S,
-                subTotPercentage,
-                subPercentage
+                "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
+                name,
+                time * MS_TO_S,
+                percentage
             );
         }
 
         _fp << "\n";
+        _fp << "\n";
+        _fp << "\n";
+        _fp << "\n";
+
+        _fp << std::format(
+            "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
+            "Section",
+            "Time [s]",
+            "Time [%]",
+            "RelT [%]"
+        );
+
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+        // readability-magic-numbers) write a line consisting only of '-'
+        _fp << std::format(
+            "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
+            std::string(30, '-'),
+            std::string(10, '-'),
+            std::string(10, '-'),
+            std::string(10, '-')
+        );
+
+        _fp << "\n";
+
+        // write the simulation timer
+        _fp << std::format(
+            "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
+            "Total",
+            elapsedTime * MS_TO_S,
+            100.0,
+            100.0
+        );
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+        // readability-magic-numbers)
+
+        _fp << "\n";
+
+        // write the execution timers
+        for (const auto &section : timers)
+        {
+            auto subsections = section.getTimingDetails();
+
+            if (subsections.empty())
+                continue;
+
+            const auto name       = section.getTimerName();
+            const auto time       = section.calculateElapsedTime();
+            const auto percentage = (time / elapsedTime) * 100.0;
+
+            // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+            // readability-magic-numbers)
+            _fp << std::format(
+                "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
+                name,
+                time * MS_TO_S,
+                percentage,
+                100.0
+            );
+            // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+            // readability-magic-numbers)
+
+            for (const auto &subSection : subsections)
+            {
+                const auto subName          = subSection.getName();
+                const auto subTime          = subSection.calculateElapsedTime();
+                const auto subPercentage    = (subTime / time) * 100.0;
+                const auto subTotPercentage = (subTime / elapsedTime) * 100.0;
+
+                _fp << std::format(
+                    "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
+                    subName,
+                    subTime * MS_TO_S,
+                    subTotPercentage,
+                    subPercentage
+                );
+            }
+
+            _fp << "\n";
+        }
+
+        _fp << std::flush;
     }
 
-    _fp << std::flush;
-}
+}   // namespace out

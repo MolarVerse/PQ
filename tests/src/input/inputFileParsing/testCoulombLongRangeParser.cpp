@@ -23,14 +23,10 @@
 #include <gtest/gtest.h>   // for TestInfo (ptr only)
 
 #include "coulombLongRangeInputParser.hpp"
-#include "exceptions.hpp"            // for InputFileException
+#include "exceptions.hpp"            // for exc::InputFileException
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
-
-using namespace input;
-using namespace settings;
-using namespace exc;
 
 /**
  * @brief tests parsing the "long-range" command
@@ -41,26 +37,29 @@ using namespace exc;
  */
 TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
-    using enum CoulombLongRangeType;
+    using enum settings::CoulombLongRangeType;
 
-    CoulombLongRangeInputParser parser;
+    input::CoulombLongRangeInputParser parser;
 
     std::vector<std::string> lineElements = {"long-range", "=", "none"};
     input::CoulombLongRangeInputParser::parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), SHIFTED);
+    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), SHIFTED);
 
     lineElements = {"long-range", "=", "reaction-field"};
     input::CoulombLongRangeInputParser::parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), REACTION_FIELD);
+    EXPECT_EQ(
+        settings::PotentialSettings::getCoulombLongRangeType(),
+        REACTION_FIELD
+    );
 
     lineElements = {"long-range", "=", "wolf"};
     input::CoulombLongRangeInputParser::parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), WOLF);
+    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), WOLF);
 
     lineElements = {"long-range", "=", "notValid"};
     EXPECT_THROW_MSG(
         parser.parseCoulombLongRange(lineElements, 0),
-        InputFileException,
+        exc::InputFileException,
         "Invalid long-range type for coulomb correction \"notValid\" at line 0 "
         "in input file\nPossible options are: none, shifted, reaction-field, "
         "wolf"
@@ -75,16 +74,16 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
  */
 TEST_F(TestInputFileReader, testParseWolfParameter)
 {
-    CoulombLongRangeInputParser parser;
+    input::CoulombLongRangeInputParser parser;
 
     std::vector<std::string> lineElements = {"wolf_param", "=", "1.0"};
     input::CoulombLongRangeInputParser::parseWolfParameter(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getWolfParameter(), 1.0);
+    EXPECT_EQ(settings::PotentialSettings::getWolfParameter(), 1.0);
 
     lineElements = {"wolf_param", "=", "-1.0"};
     EXPECT_THROW_MSG(
         parser.parseWolfParameter(lineElements, 0),
-        InputFileException,
+        exc::InputFileException,
         "Wolf parameter cannot be negative"
     );
 }
@@ -95,19 +94,19 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
  */
 TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
 {
-    CoulombLongRangeInputParser parser;
+    input::CoulombLongRangeInputParser parser;
 
     std::vector<std::string> lineElements = {"rf-epsilon", "=", "1.0"};
     input::CoulombLongRangeInputParser::parseReactionFieldEpsilon(
         lineElements,
         0
     );
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 1.0);
+    EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 1.0);
 
     lineElements = {"rf-epsilon", "=", "0.999999"};
     EXPECT_THROW_MSG(
         parser.parseReactionFieldEpsilon(lineElements, 0),
-        InputFileException,
+        exc::InputFileException,
         "Static relative permittivity \"rf_epsilon\" cannot be lower than "
         "1.0"
     );
@@ -115,7 +114,7 @@ TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
     lineElements = {"rf-epsilon", "=", "-1.0"};
     EXPECT_THROW_MSG(
         parser.parseReactionFieldEpsilon(lineElements, 0),
-        InputFileException,
+        exc::InputFileException,
         "Static relative permittivity \"rf_epsilon\" cannot be lower than "
         "1.0"
     );

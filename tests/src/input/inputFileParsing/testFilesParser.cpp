@@ -31,8 +31,6 @@
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "topology_file" command
  *
@@ -42,8 +40,8 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseTopologyFilename)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("topology_file"));
     const auto &parseFunc = funcMap.at("topology_file");
 
@@ -78,8 +76,8 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
  */
 TEST_F(TestInputFileReader, testParseParameterFilename)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("parameter_file"));
     const auto &parseFunc = funcMap.at("parameter_file");
 
@@ -115,8 +113,8 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
  */
 TEST_F(TestInputFileReader, parseIntraNonBondedFile)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("intra_nonbonded_file"));
     const auto &parseFunc = funcMap.at("intra_nonbonded_file");
 
@@ -152,8 +150,8 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
  */
 TEST_F(TestInputFileReader, testStartFileName)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("start_file"));
     const auto &parseFunc = funcMap.at("start_file");
 
@@ -181,8 +179,8 @@ TEST_F(TestInputFileReader, testStartFileName)
  */
 TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("moldescriptorfile_name"));
     const auto &parseFunc = funcMap.at("moldescriptorfile_name");
 
@@ -219,8 +217,8 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("guff_path"));
     const auto                    &parseFunc    = funcMap.at("guff_path");
     const std::vector<std::string> lineElements = {"guff_path", "=", "guff"};
@@ -238,8 +236,8 @@ TEST_F(TestInputFileReader, testGuffPath)
  */
 TEST_F(TestInputFileReader, guffDatFilename)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("guffdat_file"));
     const auto &parseFunc = funcMap.at("guffdat_file");
 
@@ -266,8 +264,8 @@ TEST_F(TestInputFileReader, guffDatFilename)
  */
 TEST_F(TestInputFileReader, testRpmdStartFileName)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_start_file"));
     const auto &parseFunc = funcMap.at("rpmd_start_file");
 
@@ -302,8 +300,8 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
  */
 TEST_F(TestInputFileReader, testMShakeFileName)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mshake_file"));
     const auto &parseFunc = funcMap.at("mshake_file");
 
@@ -331,8 +329,8 @@ TEST_F(TestInputFileReader, testMShakeFileName)
  */
 TEST_F(TestInputFileReader, testDFTBFileName)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("dftb_file"));
     const auto &parseFunc = funcMap.at("dftb_file");
 
@@ -364,8 +362,8 @@ TEST_F(TestInputFileReader, testDFTBFileName)
  */
 TEST_F(TestInputFileReader, testTMFileName)
 {
-    FilesInputParser parser(_engine->getIntraNonBonded());
-    const auto       funcMap = parser.getKeywordFuncMap();
+    input::FilesInputParser parser(_engine->getIntraNonBonded());
+    const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("turbomole_file"));
     const auto &parseFunc = funcMap.at("turbomole_file");
 

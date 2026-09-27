@@ -32,54 +32,53 @@
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "settings.hpp"           // for Settings
 
-using namespace input;
-using namespace exc;
-using namespace settings;
-using namespace utilities;
-using namespace references;
-
-/**
- * @brief Construct a new Input File Parser Integrator:: Input File Parser
- * Integrator object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
- */
-IntegratorInputParser::IntegratorInputParser() { addIntegratorKey(); }
-
-/**
- * @brief Add the integrator key to the input file parser
- *
- * @details This function adds the "integrator" key to the input file parser
- * along with its metadata.
- */
-void IntegratorInputParser::addIntegratorKey()
+namespace input
 {
-    const auto metaData = KeyMetadata{
-        .name  = "integrator",
-        .title = "Integrator Type",
-        .description =
-            "Specifies the integrator type to be used in the simulation",
-    };
 
-    const auto setValue = [](IntegratorType integratorType)
+    /**
+     * @brief Construct a new Input File Parser Integrator:: Input File Parser
+     * Integrator object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
+     */
+    IntegratorInputParser::IntegratorInputParser() { addIntegratorKey(); }
+
+    /**
+     * @brief Add the integrator key to the input file parser
+     *
+     * @details This function adds the "integrator" key to the input file parser
+     * along with its metadata.
+     */
+    void IntegratorInputParser::addIntegratorKey()
     {
-        if (!settings::Settings::isMDJobType())
-            throw InputFileException(
-                std::format("Integrator is only supported for MD simulations!")
-            );
+        const auto metaData = KeyMetadata{
+            .name  = "integrator",
+            .title = "Integrator Type",
+            .description =
+                "Specifies the integrator type to be used in the simulation",
+        };
 
-        Settings::setIntegratorType(integratorType);
-        ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
-    };
+        const auto setValue = [](IntegratorType integratorType)
+        {
+            if (!settings::Settings::isMDJobType())
+                throw InputFileException(
+                    std::format(
+                        "Integrator is only supported for MD simulations!"
+                    )
+                );
 
-    auto& key = _getRegistry().registerKey(
-        KeyRegistry<IntegratorType>{
-            .metadata     = metaData,
-            .defaultValue = IntegratorType::VELOCITY_VERLET,
-            .onSet        = setValue,
-        }
-    );
+            Settings::setIntegratorType(integratorType);
+            ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
+        };
 
-    addKeyword(metaData.name, adapt(key), false);
-}
+        auto& key = _getRegistry().registerKey(
+            KeyRegistry<IntegratorType>{
+                .metadata     = metaData,
+                .defaultValue = IntegratorType::VELOCITY_VERLET,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }

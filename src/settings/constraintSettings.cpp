@@ -22,190 +22,193 @@
 
 #include "constraintSettings.hpp"
 
-using namespace settings;
-
-/*****************************
- *                           *
- * standard activate methods *
- *                           *
- *****************************/
-
-/**
- * @brief activate the shake algorithm
- *
- */
-void ConstraintSettings::activateShake() { _shakeActive = true; }
-
-/**
- * @brief deactivate the shake algorithm
- *
- */
-void ConstraintSettings::deactivateShake() { _shakeActive = false; }
-
-/**
- * @brief activate the M-shake algorithm
- *
- */
-void ConstraintSettings::activateMShake() { _mShakeActive = true; }
-
-/**
- * @brief deactivate the M-shake algorithm
- *
- */
-void ConstraintSettings::deactivateMShake() { _mShakeActive = false; }
-
-/**
- * @brief activate the distance constraints
- *
- */
-void ConstraintSettings::activateDistanceConstraints()
+namespace settings
 {
-    _distanceConstsActive = true;
-}
 
-/**
- * @brief deactivate the distance constraints
- *
- */
-void ConstraintSettings::deactivateDistanceConstraints()
-{
-    _distanceConstsActive = false;
-}
+    /*****************************
+     *                           *
+     * standard activate methods *
+     *                           *
+     *****************************/
 
-/*****************************
- *                           *
- * standard getter methods   *
- *                           *
- *****************************/
+    /**
+     * @brief activate the shake algorithm
+     *
+     */
+    void ConstraintSettings::activateShake() { _shakeActive = true; }
 
-/**
- * @brief check if the shake algorithm is activated
- *
- * @return true if shake is activated
- */
-bool ConstraintSettings::isShakeActivated() { return _shakeActive; }
+    /**
+     * @brief deactivate the shake algorithm
+     *
+     */
+    void ConstraintSettings::deactivateShake() { _shakeActive = false; }
 
-/**
- * @brief check if the M-shake algorithm is activated
- *
- * @return true if M-shake is activated
- */
-bool ConstraintSettings::isMShakeActivated() { return _mShakeActive; }
+    /**
+     * @brief activate the M-shake algorithm
+     *
+     */
+    void ConstraintSettings::activateMShake() { _mShakeActive = true; }
 
-/**
- * @brief check if the distance constraints are activated
- *
- * @return true if distance constraints are activated
- */
-bool ConstraintSettings::isDistanceConstraintsActivated()
-{
-    return _distanceConstsActive;
-}
+    /**
+     * @brief deactivate the M-shake algorithm
+     *
+     */
+    void ConstraintSettings::deactivateMShake() { _mShakeActive = false; }
 
-/**
- * @brief get the maximum number of iterations for the shake algorithm
- *
- * @return the maximum number of iterations
- */
-size_t ConstraintSettings::getShakeMaxIter() { return _shakeMaxIter; }
+    /**
+     * @brief activate the distance constraints
+     *
+     */
+    void ConstraintSettings::activateDistanceConstraints()
+    {
+        _distanceConstsActive = true;
+    }
 
-/**
- * @brief get the maximum number of iterations for the rattle algorithm
- *
- * @return the maximum number of iterations
- */
-size_t ConstraintSettings::getRattleMaxIter() { return _rattleMaxIter; }
+    /**
+     * @brief deactivate the distance constraints
+     *
+     */
+    void ConstraintSettings::deactivateDistanceConstraints()
+    {
+        _distanceConstsActive = false;
+    }
 
-/**
- * @brief get the maximum number of iterations for the MShake algorithm
- *
- * @return the maximum number of iterations
- */
-size_t ConstraintSettings::getMShakeMaxIter() { return _mshakeMaxIter; }
+    /*****************************
+     *                           *
+     * standard getter methods   *
+     *                           *
+     *****************************/
 
-/**
- * @brief get the tolerance for the shake algorithm
- *
- * @return the tolerance
- */
-double ConstraintSettings::getShakeTolerance() { return _shakeTolerance; }
+    /**
+     * @brief check if the shake algorithm is activated
+     *
+     * @return true if shake is activated
+     */
+    bool ConstraintSettings::isShakeActivated() { return _shakeActive; }
 
-/**
- * @brief get the tolerance for the rattle algorithm
- *
- * @return the tolerance
- */
-double ConstraintSettings::getRattleTolerance() { return _rattleTolerance; }
+    /**
+     * @brief check if the M-shake algorithm is activated
+     *
+     * @return true if M-shake is activated
+     */
+    bool ConstraintSettings::isMShakeActivated() { return _mShakeActive; }
 
-/**
- * @brief get the tolerance for the MShake algorithm
- *
- * @return the tolerance
- */
-double ConstraintSettings::getMShakeTolerance() { return _mshakeTolerance; }
+    /**
+     * @brief check if the distance constraints are activated
+     *
+     * @return true if distance constraints are activated
+     */
+    bool ConstraintSettings::isDistanceConstraintsActivated()
+    {
+        return _distanceConstsActive;
+    }
 
-/*****************************
- *                           *
- * standard setter methods   *
- *                           *
- *****************************/
+    /**
+     * @brief get the maximum number of iterations for the shake algorithm
+     *
+     * @return the maximum number of iterations
+     */
+    size_t ConstraintSettings::getShakeMaxIter() { return _shakeMaxIter; }
 
-/**
- * @brief set the maximum number of iterations for the shake algorithm
- *
- * @param shakeMaxIter
- */
-void ConstraintSettings::setShakeMaxIter(size_t shakeMaxIter)
-{
-    _shakeMaxIter = shakeMaxIter;
-}
+    /**
+     * @brief get the maximum number of iterations for the rattle algorithm
+     *
+     * @return the maximum number of iterations
+     */
+    size_t ConstraintSettings::getRattleMaxIter() { return _rattleMaxIter; }
 
-/**
- * @brief set the maximum number of iterations for the rattle algorithm
- *
- * @param rattleMaxIter
- */
-void ConstraintSettings::setRattleMaxIter(size_t rattleMaxIter)
-{
-    _rattleMaxIter = rattleMaxIter;
-}
+    /**
+     * @brief get the maximum number of iterations for the MShake algorithm
+     *
+     * @return the maximum number of iterations
+     */
+    size_t ConstraintSettings::getMShakeMaxIter() { return _mshakeMaxIter; }
 
-/**
- * @brief set the maximum number of iterations for the MShake algorithm
- *
- * @param mshakeMaxIter
- */
-void ConstraintSettings::setMShakeMaxIter(size_t mshakeMaxIter)
-{
-    _mshakeMaxIter = mshakeMaxIter;
-}
+    /**
+     * @brief get the tolerance for the shake algorithm
+     *
+     * @return the tolerance
+     */
+    double ConstraintSettings::getShakeTolerance() { return _shakeTolerance; }
 
-/**
- * @brief set the tolerance for the shake algorithm
- *
- * @param shakeTolerance
- */
-void ConstraintSettings::setShakeTolerance(double shakeTolerance)
-{
-    _shakeTolerance = shakeTolerance;
-}
+    /**
+     * @brief get the tolerance for the rattle algorithm
+     *
+     * @return the tolerance
+     */
+    double ConstraintSettings::getRattleTolerance() { return _rattleTolerance; }
 
-/**
- * @brief set the tolerance for the rattle algorithm
- *
- * @param rattleTolerance
- */
-void ConstraintSettings::setRattleTolerance(double rattleTolerance)
-{
-    _rattleTolerance = rattleTolerance;
-}
+    /**
+     * @brief get the tolerance for the MShake algorithm
+     *
+     * @return the tolerance
+     */
+    double ConstraintSettings::getMShakeTolerance() { return _mshakeTolerance; }
 
-/**
- * @brief set the tolerance for the MShake algorithm
- *
- * @param mshakeTolerance
- */
-void ConstraintSettings::setMShakeTolerance(double mshakeTolerance)
-{
-    _mshakeTolerance = mshakeTolerance;
-}
+    /*****************************
+     *                           *
+     * standard setter methods   *
+     *                           *
+     *****************************/
+
+    /**
+     * @brief set the maximum number of iterations for the shake algorithm
+     *
+     * @param shakeMaxIter
+     */
+    void ConstraintSettings::setShakeMaxIter(size_t shakeMaxIter)
+    {
+        _shakeMaxIter = shakeMaxIter;
+    }
+
+    /**
+     * @brief set the maximum number of iterations for the rattle algorithm
+     *
+     * @param rattleMaxIter
+     */
+    void ConstraintSettings::setRattleMaxIter(size_t rattleMaxIter)
+    {
+        _rattleMaxIter = rattleMaxIter;
+    }
+
+    /**
+     * @brief set the maximum number of iterations for the MShake algorithm
+     *
+     * @param mshakeMaxIter
+     */
+    void ConstraintSettings::setMShakeMaxIter(size_t mshakeMaxIter)
+    {
+        _mshakeMaxIter = mshakeMaxIter;
+    }
+
+    /**
+     * @brief set the tolerance for the shake algorithm
+     *
+     * @param shakeTolerance
+     */
+    void ConstraintSettings::setShakeTolerance(double shakeTolerance)
+    {
+        _shakeTolerance = shakeTolerance;
+    }
+
+    /**
+     * @brief set the tolerance for the rattle algorithm
+     *
+     * @param rattleTolerance
+     */
+    void ConstraintSettings::setRattleTolerance(double rattleTolerance)
+    {
+        _rattleTolerance = rattleTolerance;
+    }
+
+    /**
+     * @brief set the tolerance for the MShake algorithm
+     *
+     * @param mshakeTolerance
+     */
+    void ConstraintSettings::setMShakeTolerance(double mshakeTolerance)
+    {
+        _mshakeTolerance = mshakeTolerance;
+    }
+
+}   // namespace settings

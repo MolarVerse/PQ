@@ -29,60 +29,57 @@
 #include "testSetup.hpp"
 #include "timingsSettings.hpp"
 
-using namespace setup::resetKinetics;
-using namespace settings;
-
 namespace
 {
     void resetSettings()
     {
-        ResetKineticsSettings::setNScale(0);
-        ResetKineticsSettings::setFScale(0);
-        ResetKineticsSettings::setNReset(0);
-        ResetKineticsSettings::setFReset(0);
-        ResetKineticsSettings::setNResetAngular(0);
-        ResetKineticsSettings::setFResetAngular(0);
-        ResetKineticsSettings::setFResetForces(0);
+        settings::ResetKineticsSettings::setNScale(0);
+        settings::ResetKineticsSettings::setFScale(0);
+        settings::ResetKineticsSettings::setNReset(0);
+        settings::ResetKineticsSettings::setFReset(0);
+        settings::ResetKineticsSettings::setNResetAngular(0);
+        settings::ResetKineticsSettings::setFResetAngular(0);
+        settings::ResetKineticsSettings::setFResetForces(0);
     }
 }   // namespace
 
 TEST_F(TestSetup, setupResetKineticsIsNoOpWhenNotMDJob)
 {
     resetSettings();
-    Settings::setJobtype(JobType::MM_OPT);
-    EXPECT_NO_THROW(setupResetKinetics(*_engine));
+    settings::Settings::setJobtype(settings::JobType::MM_OPT);
+    EXPECT_NO_THROW(setup::setupResetKinetics(*_engine));
 }
 
 TEST_F(TestSetup, setupResetKineticsPopulatesResetKineticsOnMDEngine)
 {
     resetSettings();
-    Settings::setJobtype(JobType::MM_MD);
-    TimingsSettings::setNumberOfSteps(100);
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::TimingsSettings::setNumberOfSteps(100);
 
-    EXPECT_NO_THROW(setupResetKinetics(*_mdEngine));
+    EXPECT_NO_THROW(setup::setupResetKinetics(*_mdEngine));
     EXPECT_NO_THROW((void) _mdEngine->getResetKinetics());
 }
 
 TEST_F(TestSetup, setupConvertsZeroFrequenciesToNumberOfStepsPlusOne)
 {
     resetSettings();
-    Settings::setJobtype(JobType::MM_MD);
-    TimingsSettings::setNumberOfSteps(42);
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::TimingsSettings::setNumberOfSteps(42);
 
-    ResetKineticsSetup setup(*_mdEngine);
+    setup::ResetKineticsSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 }
 
 TEST_F(TestSetup, setupAcceptsNonZeroFrequencies)
 {
     resetSettings();
-    Settings::setJobtype(JobType::MM_MD);
-    TimingsSettings::setNumberOfSteps(50);
-    ResetKineticsSettings::setFScale(10);
-    ResetKineticsSettings::setFReset(5);
-    ResetKineticsSettings::setFResetAngular(3);
-    ResetKineticsSettings::setFResetForces(2);
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::TimingsSettings::setNumberOfSteps(50);
+    settings::ResetKineticsSettings::setFScale(10);
+    settings::ResetKineticsSettings::setFReset(5);
+    settings::ResetKineticsSettings::setFResetAngular(3);
+    settings::ResetKineticsSettings::setFResetForces(2);
 
-    ResetKineticsSetup setup(*_mdEngine);
+    setup::ResetKineticsSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 }

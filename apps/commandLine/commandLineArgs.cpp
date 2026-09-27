@@ -22,9 +22,7 @@
 
 #include "commandLineArgs.hpp"
 
-#include "exceptions.hpp"   // for UserInputException
-
-using namespace exc;
+#include "exceptions.hpp"   // for exc::UserInputException
 
 /**
  * @brief Construct a new CommandLineArgs::CommandLineArgs object
@@ -40,12 +38,12 @@ CommandLineArgs::CommandLineArgs(int argc, const std::vector<std::string> &argv)
 /**
  * @brief Parses the command line arguments.
  *
- * @throw UserInputException if the command line is invalid
+ * @throw exc::UserInputException if the command line is invalid
  */
 void CommandLineArgs::parse()
 {
     if (_argc < 2)
-        throw UserInputException(
+        throw exc::UserInputException(
             "No input file specified. Usage: PQ <input_file>"
         );
 
@@ -56,7 +54,7 @@ void CommandLineArgs::parse()
         _action = CommandLineAction::VALIDATE;
 
         if (_argc < 3 || _argv[2].starts_with('-'))
-            throw UserInputException(
+            throw exc::UserInputException(
                 "No input file specified. Usage: PQ --validate <input_file>"
             );
 
@@ -90,7 +88,7 @@ void CommandLineArgs::parse()
             }
             else
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     "Unexpected argument: " + option +
                     ". Use PQ --help for usage."
                 );
@@ -108,7 +106,7 @@ void CommandLineArgs::parse()
         _action = CommandLineAction::CAPABILITIES;
     else if (argument.starts_with('-'))
     {
-        throw UserInputException(
+        throw exc::UserInputException(
             "Unknown option: " + argument + ". Use PQ --help for usage."
         );
     }
@@ -118,7 +116,7 @@ void CommandLineArgs::parse()
     }
 
     if (_argc > 2)
-        throw UserInputException(
+        throw exc::UserInputException(
             "Unexpected argument: " + _argv[2] + ". Use PQ --help for usage."
         );
 }

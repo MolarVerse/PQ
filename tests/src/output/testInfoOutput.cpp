@@ -27,15 +27,12 @@
 
 #include "forceFieldSettings.hpp"
 #include "infoOutput.hpp"           // for InfoOutput
-#include "manostatSettings.hpp"     // for ManostatSettings
+#include "manostatSettings.hpp"     // for settings::ManostatSettings
 #include "physicalData.hpp"         // for PhysicalData
-#include "settings.hpp"             // for Settings
+#include "settings.hpp"             // for settings::Settings
 #include "testEnergyOutput.hpp"     // for TestEnergyOutput
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
 #include "vector3d.hpp"
-
-using namespace settings;
-using namespace linalg;
 
 /**
  * @brief tests writing info file
@@ -50,13 +47,13 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
     _physicalData->setLoopTime(0.1);
 
-    ForceFieldSettings::deactivate();
-    Settings::setJobtype(JobType::MM_MD);
+    settings::ForceFieldSettings::deactivate();
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -133,7 +130,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -143,8 +140,8 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     _physicalData->setImproperEnergy(22.0);
     _physicalData->setLoopTime(0.1);
 
-    ForceFieldSettings::activate();
-    Settings::setJobtype(JobType::MM_MD);
+    settings::ForceFieldSettings::activate();
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -233,7 +230,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -241,9 +238,9 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     _physicalData->setDensity(12.0);
     _physicalData->setLoopTime(0.1);
 
-    ForceFieldSettings::deactivate();
-    ManostatSettings::setManostatType("Berendsen");
-    Settings::setJobtype(JobType::MM_MD);
+    settings::ForceFieldSettings::deactivate();
+    settings::ManostatSettings::setManostatType("Berendsen");
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -327,7 +324,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -335,10 +332,10 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _physicalData->setDensity(12.0);
     _physicalData->setLoopTime(0.1);
 
-    ForceFieldSettings::deactivate();
-    ManostatSettings::setManostatType("Berendsen");
-    ManostatSettings::setFixedAxis(FixedAxis::Z);
-    Settings::setJobtype(JobType::MM_MD);
+    settings::ForceFieldSettings::deactivate();
+    settings::ManostatSettings::setManostatType("Berendsen");
+    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::Z);
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -413,7 +410,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
         "-------------------"
     );
 
-    ManostatSettings::setFixedAxis(FixedAxis::Z);
+    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::Z);
 }
 
 /**
@@ -429,7 +426,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _physicalData->setTemperature(1.0);
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
-    _physicalData->setMomentum(Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(0.0);
     _physicalData->setIntraNonCoulombEnergy(0.0);
 
@@ -439,9 +436,9 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    ForceFieldSettings::deactivate();
-    Settings::setJobtype(JobType::QM_MD);
-    ManostatSettings::setManostatType("none");
+    settings::ForceFieldSettings::deactivate();
+    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    settings::ManostatSettings::setManostatType("none");
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -518,17 +515,19 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
     _physicalData->setNoseHooverMomentumEnergy(11.0);
     _physicalData->setNoseHooverFrictionEnergy(12.0);
     _physicalData->setLoopTime(0.1);
 
-    ForceFieldSettings::deactivate();
-    Settings::setJobtype(JobType::MM_MD);
-    ManostatSettings::setManostatType("none");
-    ThermostatSettings::setThermostatType(ThermostatType::NOSE_HOOVER);
+    settings::ForceFieldSettings::deactivate();
+    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::ManostatSettings::setManostatType("none");
+    settings::ThermostatSettings::setThermostatType(
+        settings::ThermostatType::NOSE_HOOVER
+    );
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);

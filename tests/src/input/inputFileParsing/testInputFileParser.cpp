@@ -28,15 +28,13 @@
 
 #include "exceptions.hpp"           // for InputFileException
 #include "generalInputParser.hpp"   // for InputFileParserGeneral
-#include "inputFileParser.hpp"      // for ParseFunc, checkCommand
+#include "inputFileParser.hpp"      // for ParseFunc, input::checkCommand
 #include "parserUtils.hpp"
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
-using namespace input;
-
 /**
- * @brief tests checkCommand function
+ * @brief tests input::checkCommand function
  *
  * @details if the number of arguments is not 3 it throws inputFileException
  *
@@ -45,20 +43,20 @@ TEST_F(TestInputFileReader, checkCommand)
 {
     auto lineElements = std::vector<std::string>{"test", "="};
     ASSERT_THROW_MSG(
-        checkCommand(lineElements, 1),
+        input::checkCommand(lineElements, 1),
         exc::InputFileException,
         "Invalid number of arguments at line 1 in input file"
     );
 
     lineElements = std::vector<std::string>{"test", "=", "test2", "tooMany"};
     ASSERT_THROW_MSG(
-        checkCommand(lineElements, 1),
+        input::checkCommand(lineElements, 1),
         exc::InputFileException,
         "Invalid number of arguments at line 1 in input file"
     );
 
     lineElements = std::vector<std::string>{"test", "=", "test2"};
-    ASSERT_NO_THROW(checkCommand(lineElements, 1));
+    ASSERT_NO_THROW(input::checkCommand(lineElements, 1));
 }
 
 /**
@@ -72,31 +70,31 @@ TEST_F(TestInputFileReader, checkCommandArray)
 {
     auto lineElements = std::vector<std::string>{"test", "="};
     ASSERT_THROW_MSG(
-        checkCommandArray(lineElements, 1),
+        input::checkCommandArray(lineElements, 1),
         exc::InputFileException,
         "Invalid number of arguments at line 1 in input file"
     );
 
     lineElements = std::vector<std::string>{"test", "=", "test2", "OK"};
-    ASSERT_NO_THROW(checkCommandArray(lineElements, 1));
+    ASSERT_NO_THROW(input::checkCommandArray(lineElements, 1));
 
     lineElements = std::vector<std::string>{"test", "=", "test2"};
-    ASSERT_NO_THROW(checkCommandArray(lineElements, 1));
+    ASSERT_NO_THROW(input::checkCommandArray(lineElements, 1));
 }
 
 /**
- * @brief tests checkEqualSign function
+ * @brief tests input::checkEqualSign function
  *
  */
 TEST_F(TestInputFileReader, equalSign)
 {
     ASSERT_THROW_MSG(
-        checkEqualSign("a", 1),
+        input::checkEqualSign("a", 1),
         exc::InputFileException,
         "Invalid command at line 1 in input file"
     );
 
-    ASSERT_NO_THROW(checkEqualSign("=", 1));
+    ASSERT_NO_THROW(input::checkEqualSign("=", 1));
 }
 
 /**
@@ -108,12 +106,12 @@ TEST_F(TestInputFileReader, equalSign)
  */
 TEST_F(TestInputFileReader, addKeyword)
 {
-    GeneralInputParser parser{};
-    const auto         initialSizeOfMaps = parser.getKeywordCountMap().size();
+    input::GeneralInputParser parser{};
+    const auto initialSizeOfMaps = parser.getKeywordCountMap().size();
 
     parser.addKeyword(
         "test",
-        input::bindMember(&GeneralInputParser::parseJobType, &parser),
+        input::bindMember(&input::GeneralInputParser::parseJobType, &parser),
         true
     );
 

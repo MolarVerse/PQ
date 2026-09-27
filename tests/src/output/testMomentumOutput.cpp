@@ -30,16 +30,14 @@
 #include "testEnergyOutput.hpp"   // for TestEnergyOutput
 #include "vector3d.hpp"
 
-using namespace linalg;
-
 /**
  * @brief tests writing momentum output file
  *
  */
 TEST_F(TestEnergyOutput, writeMomentumFile)
 {
-    _physicalData->setMomentum(Vec3D(3.0, 4.0, 0.0));
-    _physicalData->setAngularMomentum(Vec3D(4.0, 0.0, 3.0));
+    _physicalData->setMomentum(linalg::Vec3D(3.0, 4.0, 0.0));
+    _physicalData->setAngularMomentum(linalg::Vec3D(4.0, 0.0, 3.0));
 
     _momentumOutput->setFilename("default.mom");
     _momentumOutput->write(100, *_physicalData);

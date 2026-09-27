@@ -25,8 +25,6 @@
 #include "constants/internalConversionFactors.hpp"
 #include "coulombReactionField.hpp"
 
-using namespace pot;
-
 /**
  * @brief tests reaction-field energy, force, and cutoff continuity
  */
@@ -37,7 +35,7 @@ TEST(TestCoulombReactionField, calculate)
     constexpr auto epsilon       = 80.0;
     constexpr auto distance      = 2.0;
 
-    const auto potential = CoulombReactionField(cutoff, epsilon);
+    const auto potential = pot::CoulombReactionField(cutoff, epsilon);
 
     const auto reactionFieldPrefactor = (epsilon - 1.0) / (2.0 * epsilon + 1.0);
     const auto cutoffEnergy           = 1.0 / cutoff;
