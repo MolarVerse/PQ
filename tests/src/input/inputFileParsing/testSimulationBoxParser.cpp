@@ -40,23 +40,33 @@ TEST_F(TestInputFileReader, parseDensity)
 {
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), false);
     input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
-    const std::vector<std::string>  lineElements = {"density", "=", "1.0"};
-    parser.parseDensity(lineElements, 0);
+    const auto                      funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("density"));
+    const auto& parseFunc = funcMap.at("density");
+
+    const std::vector<std::string> lineElements = {"density", "=", "1.0"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(_engine->getSimulationBox().getDensity(), 1.0);
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), true);
 
+    clearParser(parser);
+
     const std::vector<std::string> lineElements2 = {"density", "=", "-1.0"};
     EXPECT_THROW_MSG(
-        parser.parseDensity(lineElements2, 0),
+        parseFunc(lineElements2, 0),
         exc::InputFileException,
-        "Density must be positive - density = -1"
+        "Invalid value \"-1.0\" for key \"density\" at line 0 in input file: "
+        "failed validation with message Value must be greater than 0"
     );
+
+    clearParser(parser);
 
     const std::vector<std::string> zeroDensity = {"density", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseDensity(zeroDensity, 0),
+        parseFunc(zeroDensity, 0),
         exc::InputFileException,
-        "Density must be positive - density = 0"
+        "Invalid value \"0\" for key \"density\" at line 0 in input file: "
+        "failed validation with message Value must be greater than 0"
     );
 }
 
@@ -69,61 +79,70 @@ TEST_F(TestInputFileReader, parseDensity)
 TEST_F(TestInputFileReader, parseCoulombRadius)
 {
     input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
-    const std::vector<std::string>  lineElements = {"rcoulomb", "=", "1.0"};
-    input::SimulationBoxInputParser::parseCoulombRadius(lineElements, 0);
+    const auto                      funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("rcoulomb"));
+    const auto& parseFunc = funcMap.at("rcoulomb");
+
+    const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
+
+    clearParser(parser);
 
     const std::vector<std::string> lineElements2 = {"rcoulomb", "=", "-1.0"};
     EXPECT_THROW_MSG(
-        parser.parseCoulombRadius(lineElements2, 0),
+        parseFunc(lineElements2, 0),
         exc::InputFileException,
-        "Coulomb radius cutoff must be positive - \"-1.0\" at line 0 in input "
-        "file"
+        "Invalid value \"-1.0\" for key \"rcoulomb\" at line 0 in input file: "
+        "failed validation with message Value must be greater than 0"
     );
 }
 
 TEST_F(TestInputFileReader, parseInitVelocities)
 {
     input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
-    const std::vector<std::string>  lineElements = {
+    const auto                      funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("init_velocities"));
+    const auto& parseFunc = funcMap.at("init_velocities");
+
+    const std::vector<std::string> lineElements = {
         "init_velocities",
         "=",
         "true"
     };
-    input::SimulationBoxInputParser::parseInitializeVelocities(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
         settings::InitVelocities::TRUE
     );
+
+    clearParser(parser);
 
     const std::vector<std::string> lineElements2 = {
         "init_velocities",
         "=",
         "false"
     };
-
-    input::SimulationBoxInputParser::parseInitializeVelocities(
-        lineElements2,
-        0
-    );
+    parseFunc(lineElements2, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
         settings::InitVelocities::FALSE
     );
+
+    clearParser(parser);
 
     const std::vector<std::string> lineElements3 = {
         "init_velocities",
         "=",
         "force"
     };
-    input::SimulationBoxInputParser::parseInitializeVelocities(
-        lineElements3,
-        0
-    );
+    parseFunc(lineElements3, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
         settings::InitVelocities::FORCE
     );
+
+    clearParser(parser);
 
     const std::vector<std::string> lineElements4 = {
         "init_velocities",
@@ -131,10 +150,9 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         "wrongKeyword"
     };
     EXPECT_THROW_MSG(
-        parser.parseInitializeVelocities(lineElements4, 0),
+        parseFunc(lineElements4, 0),
         exc::InputFileException,
-        "Invalid value for initialize velocities - \"wrongKeyword\" at line 0 "
-        "in input file.\n"
-        "Possible options are: true, false, force"
+        "Invalid value \"wrongKeyword\" for key \"init_velocities\" at line 0 "
+        "in input file. Allowed values: false, true, force"
     );
 }
