@@ -183,13 +183,13 @@ std::string OutputFileSettings::determineMostCommonPrefix()
     const auto [first, last] = std::ranges::unique(uniqueFileNames);
     uniqueFileNames.erase(first, last);
 
-    std::string mostCommonPrefix = "default";
+    std::string mostCommonPrefix = DefaultFiles::prefix;
     auto        count            = 0;
 
     auto getHighestOccurrence =
         [&fileNames, &mostCommonPrefix, &count](const std::string &fileName)
     {
-        if (fileName == "default")
+        if (fileName == DefaultFiles::prefix)
             return;
 
         const auto occurrence = std::ranges::count(fileNames, fileName);
