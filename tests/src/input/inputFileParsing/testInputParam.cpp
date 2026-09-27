@@ -240,18 +240,20 @@ TEST(TestInputKey, allowedSubsetRejectsOutOfRangeValue)
                     .description = "",
                     .unit        = ""
                 },
-            .notAllowed = std::vector<TestJobType>{TestJobType::qm}
+            .notAllowed = std::vector<TestJobType>{TestJobType::md}
         }
     );
 
     key.parse({"jobtype", "=", "mm"}, 1);
     EXPECT_EQ(key.value(), TestJobType::mm);
 
+    key.clearValue();
+
     EXPECT_THROW_MSG(
         key.parse({"jobtype", "=", "md"}, 2),
         exc::InputFileException,
-        "Invalid value \"md\" for key \"jobtype\" at line 2 in input file: out "
-        "of allowed range"
+        "Invalid value \"md\" for key \"jobtype\" at line 2 in input file: not "
+        "allowed"
     );
 }
 

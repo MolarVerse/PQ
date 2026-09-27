@@ -20,29 +20,24 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef _HESSIAN_ENUM_HPP_
+#define _HESSIAN_ENUM_HPP_
 
-#include "hessianSettings.hpp"
+#include <cstdint>
+#include <mstd/enum.hpp>
 
-TEST(TestHessianSettings, setFilesAndDisplacement)
-{
-    settings::HessianSettings::setHessianFile("water.hessian");
-    settings::HessianSettings::setHessianInfoFile("water.hessian.info");
-    settings::HessianSettings::setDisplacement(0.002);
+/**
+ * @brief Enum class for different Hessian builder types.
+ *
+ */
+enum class HessianBuilderType : std::uint8_t;
 
-    EXPECT_EQ(settings::HessianSettings::getHessianFile(), "water.hessian");
-    EXPECT_EQ(
-        settings::HessianSettings::getHessianInfoFile(),
-        "water.hessian.info"
-    );
-    EXPECT_EQ(settings::HessianSettings::getDisplacement(), 0.002);
-}
+#define HESSIAN_BUILDER_TYPE_LIST(X) \
+    X(CENTRAL)                       \
+    X(FORWARD)                       \
+    X(FIVE_POINT)                    \
+    X(ANALYTIC)
 
-TEST(TestHessianSettings, setOptimizeBeforeHessian)
-{
-    settings::HessianSettings::setOptimizeBeforeHessian(false);
-    EXPECT_FALSE(settings::HessianSettings::optimizeBeforeHessian());
+MSTD_ENUM(HessianBuilderType, std::uint8_t, HESSIAN_BUILDER_TYPE_LIST)
 
-    settings::HessianSettings::setOptimizeBeforeHessian(true);
-    EXPECT_TRUE(settings::HessianSettings::optimizeBeforeHessian());
-}
+#endif   // _HESSIAN_ENUM_HPP_

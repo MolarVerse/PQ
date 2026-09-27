@@ -22,26 +22,8 @@
 
 #include "hessianSettings.hpp"
 
-#include "stringUtilities.hpp"
-
 namespace settings
 {
-
-    std::string string(HessianBuilderType builder)
-    {
-        switch (builder)
-        {
-            using enum HessianBuilderType;
-
-            case FINITE_DIFFERENCE_FORCES_CENTRAL: return "CENTRAL";
-            case FINITE_DIFFERENCE_FORCES_FORWARD: return "FORWARD";
-            case FINITE_DIFFERENCE_FORCES_FIVE_POINT: return "FIVE-POINT";
-            case ANALYTIC: return "ANALYTIC";
-            case NONE: break;
-        }
-
-        return "NONE";
-    }
 
     void HessianSettings::setHessianFile(const std::string_view &filename)
     {
@@ -61,29 +43,6 @@ namespace settings
     void HessianSettings::setOptimizeBeforeHessian(bool optimize)
     {
         _optimizeBeforeHessian = optimize;
-    }
-
-    void HessianSettings::setBuilder(const std::string_view &builder)
-    {
-        using enum HessianBuilderType;
-
-        const auto builderLower =
-            utilities::toLowerAndReplaceDashesCopy(builder);
-
-        if ("central" == builderLower)
-            setBuilder(FINITE_DIFFERENCE_FORCES_CENTRAL);
-
-        else if ("forward" == builderLower)
-            setBuilder(FINITE_DIFFERENCE_FORCES_FORWARD);
-
-        else if ("five_point" == builderLower)
-            setBuilder(FINITE_DIFFERENCE_FORCES_FIVE_POINT);
-
-        else if ("analytic" == builderLower)
-            setBuilder(ANALYTIC);
-
-        else
-            setBuilder(NONE);
     }
 
     void HessianSettings::setBuilder(HessianBuilderType builder)

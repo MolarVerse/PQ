@@ -34,6 +34,7 @@
 #include "constants.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
+#include "enums/hessian.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
@@ -260,7 +261,10 @@ namespace engine
             file << "hessian_file = "
                  << settings::HessianSettings::getHessianFile() << '\n';
             file << "hessian_builder = "
-                 << string(settings::HessianSettings::getBuilder()) << '\n';
+                 << HessianBuilderTypeMeta::toString(
+                        settings::HessianSettings::getBuilder()
+                    )
+                 << '\n';
             file << "optimize_before_hessian = "
                  << (settings::HessianSettings::optimizeBeforeHessian()
                          ? "true"

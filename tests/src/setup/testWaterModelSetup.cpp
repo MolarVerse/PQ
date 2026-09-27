@@ -276,7 +276,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
 
         exc::UserInputException,
         "A water type molecule is included in the bond list of the topology "
-        "file \"\" at entry number 1. Requesting the use of the \"SPC/Fw\" "
+        "file \"\" at entry number 1. Requesting the use of the \"SPC_FW\" "
         "intramolecular water type model expects the molecules of this moltype "
         "not to appear in the topology file."
     );
@@ -304,7 +304,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
 
         exc::UserInputException,
         "A water type molecule is included in the angle list of the topology "
-        "file \"\" at entry number 1. Requesting the use of the \"SPC/Fw\" "
+        "file \"\" at entry number 1. Requesting the use of the \"SPC_FW\" "
         "intramolecular water type model expects the molecules of this moltype "
         "not to appear in the topology file."
     );
