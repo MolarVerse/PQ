@@ -89,11 +89,18 @@ namespace maxwellBoltzmann
         std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 #endif
 
-        auto resetKinetics = resetKinetics::ResetKinetics();
-        resetKinetics.setMomentum(simulationBox.calculateMomentum());
-        resetKinetics.resetMomentum(simulationBox);
-        resetKinetics.resetAngularMomentum(simulationBox);
-        resetKinetics.resetTemperature(simulationBox);
+        resetKinetics::ResetKinetics::resetMomentum(
+            simulationBox,
+            simulationBox.calculateMomentum()
+        );
+        resetKinetics::ResetKinetics::resetAngularMomentum(
+            simulationBox,
+            simulationBox.calculateAngularMomentum(
+                simulationBox.calculateMomentum()
+            )
+        );
+        resetKinetics::ResetKinetics::resetTemperature(
+            simulationBox,
+            simulationBox.calculateTemperature()
+        );
     }
-
-}   // namespace maxwellBoltzmann
