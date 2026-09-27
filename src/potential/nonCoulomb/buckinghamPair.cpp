@@ -24,94 +24,96 @@
 
 #include <cmath>   // for exp
 
-using namespace pot;
-
-/**
- * @brief Construct a new Buckingham Pair:: Buckingham Pair object
- *
- * @param vanDerWaalsType1
- * @param vanDerWaalsType2
- * @param cutOff
- * @param params
- */
-BuckinghamPair::BuckinghamPair(
-    ExtVdwType              vanDerWaalsType1,
-    ExtVdwType              vanDerWaalsType2,
-    double                  cutOff,
-    const BuckinghamParams& params
-)
-    : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
-      _params(params)
+namespace pot
 {
-}
+    /**
+     * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+     *
+     * @param vanDerWaalsType1
+     * @param vanDerWaalsType2
+     * @param cutOff
+     * @param params
+     */
+    BuckinghamPair::BuckinghamPair(
+        ExtVdwType              vanDerWaalsType1,
+        ExtVdwType              vanDerWaalsType2,
+        double                  cutOff,
+        const BuckinghamParams& params
+    )
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+          _params(params)
+    {
+    }
 
-/**
- * @brief Construct a new Buckingham Pair:: Buckingham Pair object
- *
- * @param cutOff
- * @param params
- */
-BuckinghamPair::BuckinghamPair(
-    const double            cutOff,
-    const BuckinghamParams& params
-)
-    : NonCoulombPair(cutOff), _params(params)
-{
-}
+    /**
+     * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+     *
+     * @param cutOff
+     * @param params
+     */
+    BuckinghamPair::BuckinghamPair(
+        const double            cutOff,
+        const BuckinghamParams& params
+    )
+        : NonCoulombPair(cutOff), _params(params)
+    {
+    }
 
-/**
- * @brief Construct a new Buckingham Pair:: Buckingham Pair object
- *
- * @param cutOff
- * @param energyCutoff
- * @param forceCutoff
- * @param params
- */
-BuckinghamPair::BuckinghamPair(
-    double                  cutOff,
-    double                  energyCutoff,
-    double                  forceCutoff,
-    const BuckinghamParams& params
-)
-    : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
-{
-}
+    /**
+     * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+     *
+     * @param cutOff
+     * @param energyCutoff
+     * @param forceCutoff
+     * @param params
+     */
+    BuckinghamPair::BuckinghamPair(
+        double                  cutOff,
+        double                  energyCutoff,
+        double                  forceCutoff,
+        const BuckinghamParams& params
+    )
+        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
+    {
+    }
 
-/**
- * @brief operator overload for the comparison of two BuckinghamPair objects
- *
- * @param other
- * @return true
- * @return false
- */
-bool BuckinghamPair::operator==(const BuckinghamPair& other) const
-{
-    return NonCoulombPair::operator==(other) && _params == other._params;
-}
+    /**
+     * @brief operator overload for the comparison of two BuckinghamPair objects
+     *
+     * @param other
+     * @return true
+     * @return false
+     */
+    bool BuckinghamPair::operator==(const BuckinghamPair& other) const
+    {
+        return NonCoulombPair::operator==(other) && _params == other._params;
+    }
 
-/**
- * @brief calculates the energy and force of a
- * [BuckinghamPair](https://doi.org/10.1098/rspa.1938.0173)
- *
- * @param distance
- * @return std::pair<double, double>
- */
-std::pair<double, double> BuckinghamPair::calculate(double distance) const
-{
-    const auto distanceThird = distance * distance * distance;
-    const auto distanceSixth = distanceThird * distanceThird;
-    const auto expTerm       = _params.scaling * ::exp(_params.dRho * distance);
+    /**
+     * @brief calculates the energy and force of a
+     * [BuckinghamPair](https://doi.org/10.1098/rspa.1938.0173)
+     *
+     * @param distance
+     * @return std::pair<double, double>
+     */
+    std::pair<double, double> BuckinghamPair::calculate(double distance) const
+    {
+        const auto distanceThird = distance * distance * distance;
+        const auto distanceSixth = distanceThird * distanceThird;
+        const auto expTerm = _params.scaling * ::exp(_params.dRho * distance);
 
-    auto energy  = expTerm + (_params.c6 / distanceSixth) - _energyCutOff;
-    energy      -= _forceCutOff * (_radialCutOff - distance);
+        auto energy  = expTerm + (_params.c6 / distanceSixth) - _energyCutOff;
+        energy      -= _forceCutOff * (_radialCutOff - distance);
 
-    auto force = -_params.dRho * expTerm;
+        auto force = -_params.dRho * expTerm;
 
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
-    // readability-magic-numbers)
-    force += 6.0 * _params.c6 / (distanceSixth * distance) - _forceCutOff;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
-    // readability-magic-numbers)
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+        // readability-magic-numbers)
+        force += 6.0 * _params.c6 / (distanceSixth * distance) - _forceCutOff;
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+        // readability-magic-numbers)
 
-    return {energy, force};
-}
+        return {energy, force};
+    }
+
+}   // namespace pot

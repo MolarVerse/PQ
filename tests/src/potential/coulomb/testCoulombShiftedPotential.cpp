@@ -26,8 +26,6 @@
 #include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
                                          // for Message, TestPartResult
 
-using namespace pot;
-
 /**
  * @brief tests calculation of shifted Coulomb potential
  *
@@ -39,7 +37,7 @@ TEST(TestCoulombShiftedPotential, calculate)
     const auto energyCutOff  = 1 / rcCutoff;
     const auto forceCutoff   = 1 / (rcCutoff * rcCutoff);
 
-    const auto potential = CoulombShiftedPotential(rcCutoff);
+    const auto potential = pot::CoulombShiftedPotential(rcCutoff);
 
     auto distance = 2.0;
 

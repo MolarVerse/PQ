@@ -44,245 +44,260 @@
 #include "simulationBox.hpp"        // for SimulationBox
 #include "stringUtilities.hpp"      // for fileExists
 
-using QM::DFTBPlusRunner;
-using enum molsys::Periodicity;
-
-using namespace configurator;
-
-using namespace exc;
-using namespace linalg;
-using namespace physicalData;
-using namespace settings;
-using namespace molsys;
-using namespace utilities;
-
-/**
- * @brief writes the coords file in order to run the external qm program
- *
- * @param simulationBox
- */
-void DFTBPlusRunner::writeCoordsFile(SimulationBox &simulationBox)
+namespace QM
 {
-    using std::ranges::distance;
-    using std::ranges::find;
 
-    const std::string fileName = "coords";
-    std::ofstream     coordsFile(fileName);
-
-    coordsFile << simulationBox.getNumberOfQMAtoms();
-    coordsFile << "  " << (_periodicity == NON_PERIODIC ? 'C' : 'S') << '\n';
-
-    const auto uniqueAtomNames = simulationBox.getUniqueQMAtomNames();
-
-    for (const auto &atomName : uniqueAtomNames) coordsFile << atomName << "  ";
-    coordsFile << "\n";
-
-    size_t atomIndex = 1;
-    for (const auto &atom : simulationBox.getQMAtoms())
+    /**
+     * @brief writes the coords file in order to run the external qm program
+     *
+     * @param simulationBox
+     */
+    void DFTBPlusRunner::writeCoordsFile(molsys::SimulationBox &simulationBox)
     {
-        const auto iter   = find(uniqueAtomNames, atom->getName());
-        const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;
+        using std::ranges::distance;
+        using std::ranges::find;
 
-        coordsFile << std::format(
-            "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            atomIndex,
-            atomId,
-            atom->getPosition()[0],
-            atom->getPosition()[1],
-            atom->getPosition()[2]
-        );
-        ++atomIndex;
-    }
+        const std::string fileName = "coords";
+        std::ofstream     coordsFile(fileName);
 
-    if (_periodicity != NON_PERIODIC)
-    {
-        const auto boxMatrix =
-            simulationBox.getBox().getBoxMatrix(_periodicity);
+        coordsFile << simulationBox.getNumberOfQMAtoms();
+        coordsFile << "  "
+                   << (_periodicity == molsys::Periodicity::NON_PERIODIC ? 'C'
+                                                                         : 'S')
+                   << '\n';
 
-        // coordinate origin
-        coordsFile << std::format(
-            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            "",
-            0.0,
-            0.0,
-            0.0
-        );
+        const auto uniqueAtomNames = simulationBox.getUniqueQMAtomNames();
 
-        coordsFile << std::format(
-            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            "",
-            boxMatrix[0][0],
-            boxMatrix[1][0],
-            boxMatrix[2][0]
-        );
+        for (const auto &atomName : uniqueAtomNames)
+            coordsFile << atomName << "  ";
+        coordsFile << "\n";
 
-        coordsFile << std::format(
-            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            "",
-            boxMatrix[0][1],
-            boxMatrix[1][1],
-            boxMatrix[2][1]
-        );
-
-        coordsFile << std::format(
-            "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-            "",
-            boxMatrix[0][2],
-            boxMatrix[1][2],
-            boxMatrix[2][2]
-        );
-    }
-
-    coordsFile.close();
-}
-
-/**
- * @brief Writes a file containing point charges for hybrid simulations.
- *
- * This function creates the pointcharges file listing the positions and
- * partial charges of all atoms in inactive molecules assigned to the
- * SMOOTHING or POINT_CHARGE hybrid zones. The file is used for QM/QM and QM/MM
- * coupling in DFTB+ calculations.
- *
- * @param simulationBox Simulation box containing molecules and atoms.
- */
-void DFTBPlusRunner::writePointChargeFile(molsys::SimulationBox &simulationBox)
-{
-    const std::string fileName = FileSettings::getPointChargeFileName();
-    std::ofstream     pcFile(fileName);
-
-    using enum HybridZone;
-    for (const auto &mol : simulationBox.getInactiveMolecules())
-    {
-        const auto zone = mol.getHybridZone();
-
-        if (zone == SMOOTHING || zone == POINT_CHARGE)
+        size_t atomIndex = 1;
+        for (const auto &atom : simulationBox.getQMAtoms())
         {
-            for (const auto &atom : mol.getAtoms())
+            const auto iter   = find(uniqueAtomNames, atom->getName());
+            const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;
+
+            coordsFile << std::format(
+                "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                atomIndex,
+                atomId,
+                atom->getPosition()[0],
+                atom->getPosition()[1],
+                atom->getPosition()[2]
+            );
+            ++atomIndex;
+        }
+
+        if (_periodicity != molsys::Periodicity::NON_PERIODIC)
+        {
+            const auto boxMatrix =
+                simulationBox.getBox().getBoxMatrix(_periodicity);
+
+            // coordinate origin
+            coordsFile << std::format(
+                "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                "",
+                0.0,
+                0.0,
+                0.0
+            );
+
+            coordsFile << std::format(
+                "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                "",
+                boxMatrix[0][0],
+                boxMatrix[1][0],
+                boxMatrix[2][0]
+            );
+
+            coordsFile << std::format(
+                "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                "",
+                boxMatrix[0][1],
+                boxMatrix[1][1],
+                boxMatrix[2][1]
+            );
+
+            coordsFile << std::format(
+                "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                "",
+                boxMatrix[0][2],
+                boxMatrix[1][2],
+                boxMatrix[2][2]
+            );
+        }
+
+        coordsFile.close();
+    }
+
+    /**
+     * @brief Writes a file containing point charges for hybrid simulations.
+     *
+     * This function creates the pointcharges file listing the positions and
+     * partial charges of all atoms in inactive molecules assigned to the
+     * SMOOTHING or POINT_CHARGE hybrid zones. The file is used for QM/QM and
+     * QM/MM coupling in DFTB+ calculations.
+     *
+     * @param simulationBox Simulation box containing molecules and atoms.
+     */
+    void DFTBPlusRunner::writePointChargeFile(
+        molsys::SimulationBox &simulationBox
+    )
+    {
+        const std::string fileName =
+            settings::FileSettings::getPointChargeFileName();
+        std::ofstream pcFile(fileName);
+
+        using enum molsys::HybridZone;
+
+        for (const auto &mol : simulationBox.getInactiveMolecules())
+        {
+            const auto zone = mol.getHybridZone();
+
+            if (zone == SMOOTHING || zone == POINT_CHARGE)
             {
-                pcFile << std::format(
-                    "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-                    atom->getPosition()[0],
-                    atom->getPosition()[1],
-                    atom->getPosition()[2],
-                    atom->getPartialCharge()
-                );
-                _usePointCharges = true;
+                for (const auto &atom : mol.getAtoms())
+                {
+                    pcFile << std::format(
+                        "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                        atom->getPosition()[0],
+                        atom->getPosition()[1],
+                        atom->getPosition()[2],
+                        atom->getPartialCharge()
+                    );
+                    _usePointCharges = true;
+                }
             }
         }
-    }
-    pcFile.close();
+        pcFile.close();
 
-    if (!_usePointCharges)
-        std::filesystem::remove(fileName);
-}
-
-/**
- * @brief executes the qm script of the external program
- *
- * @param simulationBox Simulation box containing molecules and atoms.
- *
- */
-void DFTBPlusRunner::execute(SimulationBox &simulationBox)
-{
-    const auto scriptFile = resolveScriptPath(QMSettings::getQMScript());
-
-    if (!mstd::File(scriptFile).exists())
-        throw InputFileException(
-            std::format("DFTB+ script file \"{}\" does not exist.", scriptFile)
-        );
-
-    auto charge = simulationBox.calcActiveMolCharge();
-
-    auto molChangedZone = HybridConfigurator::getMoleculeChangedZone();
-
-    using enum settings::SmoothingMethod;
-
-    // TODO: https://github.com/MolarVerse/PQ/issues/200
-    if (HybridSettings::getSmoothingMethod() == EXACT)
-        molChangedZone = true;
-
-    const auto readChargesBin  = !_isFirstExecution && !molChangedZone ? 1 : 0;
-    const auto usePointCharges = _usePointCharges ? 1 : 0;
-
-    const auto command = std::format(
-        "{} {} {} {} {} {}",
-        shellQuote(scriptFile),
-        charge,
-        readChargesBin,
-        usePointCharges,
-        shellQuote(FileSettings::getDFTBFileName()),
-        shellQuote(FileSettings::getPointChargeFileName())
-    );
-    executeCommand(command, "DFTB+");
-
-    // set for next execution
-    _isFirstExecution = false;
-    _usePointCharges  = false;
-}
-
-/**
- * @brief reads the stress tensor and adds it to the physical data
- *
- * @param box
- * @param physicalData Physical data object to which the stress tensor and
- * virial will be added.
- */
-void DFTBPlusRunner::readStressTensor(Box &box, PhysicalData &physicalData)
-{
-    const auto stressFileName = FileSettings::getStressTensorTempFileName();
-
-    std::ifstream stressFile(stressFileName);
-
-    if (!stressFile.is_open())
-    {
-        throw QMRunnerException(
-            std::format(
-                "Cannot open {} stress tensor \"{}\"",
-                string(QMSettings::getQMMethod()),
-                stressFileName
-            )
-        );
+        if (!_usePointCharges)
+            std::filesystem::remove(fileName);
     }
 
-    StaticMatrix3x3<double> stress{0.0};
-
-    if (!(stressFile >> stress[0][0] >> stress[0][1] >> stress[0][2] >>
-          stress[1][0] >> stress[1][1] >> stress[1][2] >> stress[2][0] >>
-          stress[2][1] >> stress[2][2]))
+    /**
+     * @brief executes the qm script of the external program
+     *
+     * @param simulationBox Simulation box containing molecules and atoms.
+     *
+     */
+    void DFTBPlusRunner::execute(molsys::SimulationBox &simulationBox)
     {
-        throw QMRunnerException(
-            std::format(
-                "Incomplete {} stress tensor \"{}\"",
-                string(QMSettings::getQMMethod()),
-                stressFileName
-            )
-        );
-    }
+        const auto scriptFile =
+            resolveScriptPath(settings::QMSettings::getQMScript());
 
-    for (size_t row = 0; row < 3; ++row)
-    {
-        for (size_t column = 0; column < 3; ++column)
+        if (!mstd::File(scriptFile).exists())
         {
-            if (!std::isfinite(stress[row][column]))
+            throw exc::InputFileException(
+                std::format(
+                    "DFTB+ script file \"{}\" does not exist.",
+                    scriptFile
+                )
+            );
+        }
+
+        auto charge = simulationBox.calcActiveMolCharge();
+
+        auto molChangedZone =
+            configurator::HybridConfigurator::getMoleculeChangedZone();
+
+        using enum settings::SmoothingMethod;
+
+        // TODO: https://github.com/MolarVerse/PQ/issues/200
+        if (settings::HybridSettings::getSmoothingMethod() == EXACT)
+            molChangedZone = true;
+
+        const auto readChargesBin =
+            !_isFirstExecution && !molChangedZone ? 1 : 0;
+        const auto usePointCharges = _usePointCharges ? 1 : 0;
+
+        const auto command = std::format(
+            "{} {} {} {} {} {}",
+            utilities::shellQuote(scriptFile),
+            charge,
+            readChargesBin,
+            usePointCharges,
+            utilities::shellQuote(settings::FileSettings::getDFTBFileName()),
+            utilities::shellQuote(
+                settings::FileSettings::getPointChargeFileName()
+            )
+        );
+        executeCommand(command, "DFTB+");
+
+        // set for next execution
+        _isFirstExecution = false;
+        _usePointCharges  = false;
+    }
+
+    /**
+     * @brief reads the stress tensor and adds it to the physical data
+     *
+     * @param box
+     * @param physicalData Physical data object to which the stress tensor and
+     * virial will be added.
+     */
+    void DFTBPlusRunner::readStressTensor(
+        molsys::Box                &box,
+        physicalData::PhysicalData &physicalData
+    )
+    {
+        const auto stressFileName =
+            settings::FileSettings::getStressTensorTempFileName();
+
+        std::ifstream stressFile(stressFileName);
+
+        if (!stressFile.is_open())
+        {
+            throw exc::QMRunnerException(
+                std::format(
+                    "Cannot open {} stress tensor \"{}\"",
+                    string(settings::QMSettings::getQMMethod()),
+                    stressFileName
+                )
+            );
+        }
+
+        linalg::StaticMatrix3x3<double> stress{0.0};
+
+        if (!(stressFile >> stress[0][0] >> stress[0][1] >> stress[0][2] >>
+              stress[1][0] >> stress[1][1] >> stress[1][2] >> stress[2][0] >>
+              stress[2][1] >> stress[2][2]))
+        {
+            throw exc::QMRunnerException(
+                std::format(
+                    "Incomplete {} stress tensor \"{}\"",
+                    string(settings::QMSettings::getQMMethod()),
+                    stressFileName
+                )
+            );
+        }
+
+        for (size_t row = 0; row < 3; ++row)
+        {
+            for (size_t column = 0; column < 3; ++column)
             {
-                throw QMRunnerException(
-                    std::format(
-                        "Invalid value in {} stress tensor \"{}\"",
-                        string(QMSettings::getQMMethod()),
-                        stressFileName
-                    )
-                );
+                if (!std::isfinite(stress[row][column]))
+                {
+                    throw exc::QMRunnerException(
+                        std::format(
+                            "Invalid value in {} stress tensor \"{}\"",
+                            string(settings::QMSettings::getQMMethod()),
+                            stressFileName
+                        )
+                    );
+                }
             }
         }
+
+        const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
+        stress                = stress * conversion;
+        const auto virial     = stress * box.getVolume();
+
+        physicalData.setStressTensor(stress);
+        physicalData.addVirial(virial);
+
+        stressFile.close();
     }
 
-    const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
-    stress                = stress * conversion;
-    const auto virial     = stress * box.getVolume();
-
-    physicalData.setStressTensor(stress);
-    physicalData.addVirial(virial);
-
-    stressFile.close();
-}
+}   // namespace QM

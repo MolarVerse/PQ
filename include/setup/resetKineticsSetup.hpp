@@ -30,7 +30,7 @@ namespace engine
     class MDEngine;   // forward declaration
 }   // namespace engine
 
-namespace setup::resetKinetics
+namespace setup
 {
     void setupResetKinetics(engine::Engine &);
 
@@ -52,6 +52,6 @@ namespace setup::resetKinetics
         void writeSetupInfo() const;
     };
 
-}   // namespace setup::resetKinetics
+}   // namespace setup
 
 #endif   // _RESET_KINETICS_SETUP_HPP_

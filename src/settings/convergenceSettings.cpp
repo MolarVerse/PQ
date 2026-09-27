@@ -26,298 +26,309 @@
 
 #include "exceptions.hpp"
 
-using namespace settings;
-using namespace exc;
-
-/**
- * @brief returns the convergence strategy as string
- *
- * @param strategy
- * @return std::string
- */
-std::string settings::string(ConvStrategy strategy)
+namespace settings
 {
-    switch (strategy)
+
+    /**
+     * @brief returns the convergence strategy as string
+     *
+     * @param strategy
+     * @return std::string
+     */
+    std::string string(ConvStrategy strategy)
+    {
+        switch (strategy)
+        {
+            using enum ConvStrategy;
+
+            case RIGOROUS: return "RIGOROUS";
+            case LOOSE: return "LOOSE";
+            case ABSOLUTE: return "ABSOLUTE";
+            case RELATIVE: return "RELATIVE";
+        }
+
+        std::unreachable();
+    }
+
+    /**
+     * @brief get ConvStrategy from string
+     *
+     * @param strategy
+     * @return ConvStrategy
+     *
+     * @throw UserInputException if the strategy is unknown
+     */
+    ConvStrategy ConvSettings::getConvStrategy(const std::string_view &strategy)
     {
         using enum ConvStrategy;
 
-        case RIGOROUS: return "RIGOROUS";
-        case LOOSE: return "LOOSE";
-        case ABSOLUTE: return "ABSOLUTE";
-        case RELATIVE: return "RELATIVE";
+        auto convStrategy = RIGOROUS;
+
+        if ("rigorous" == strategy)
+            convStrategy = RIGOROUS;
+
+        else if ("loose" == strategy)
+            convStrategy = LOOSE;
+
+        else if ("absolute" == strategy)
+            convStrategy = ABSOLUTE;
+
+        else if ("relative" == strategy)
+            convStrategy = RELATIVE;
+
+        else
+            throw exc::UserInputException(
+                "Unknown convergence strategy: " + std::string(strategy)
+            );
+
+        return convStrategy;
     }
 
-    std::unreachable();
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get ConvStrategy from string
- *
- * @param strategy
- * @return ConvStrategy
- *
- * @throw UserInputException if the strategy is unknown
- */
-ConvStrategy ConvSettings::getConvStrategy(const std::string_view &strategy)
-{
-    using enum ConvStrategy;
+    /**
+     * @brief set energy convergence
+     *
+     * @details this method is used to set both the energy convergence for the
+     * absolute and relative convergence
+     *
+     * @param energyConv
+     */
+    void ConvSettings::setEnergyConv(double energyConv)
+    {
+        _energyConv = energyConv;
+    }
 
-    auto convStrategy = RIGOROUS;
+    /**
+     * @brief set relative energy convergence
+     *
+     * @param relEnergyConv
+     */
+    void ConvSettings::setRelEnergyConv(double relEnergyConv)
+    {
+        _relEnergyConv = relEnergyConv;
+    }
 
-    if ("rigorous" == strategy)
-        convStrategy = RIGOROUS;
+    /**
+     * @brief set absolute energy convergence
+     *
+     * @param absEnergyConv
+     */
+    void ConvSettings::setAbsEnergyConv(double absEnergyConv)
+    {
+        _absEnergyConv = absEnergyConv;
+    }
 
-    else if ("loose" == strategy)
-        convStrategy = LOOSE;
+    /**
+     * @brief set force convergence
+     *
+     * @details this method is used to set both the force convergence for the
+     * absolute and relative convergence as well as to set them both for the
+     * max force and the rms force convergence
+     *
+     * @param forceConv
+     */
+    void ConvSettings::setForceConv(double forceConv)
+    {
+        _forceConv = forceConv;
+    }
 
-    else if ("absolute" == strategy)
-        convStrategy = ABSOLUTE;
+    /**
+     * @brief set max force convergence
+     *
+     * @details this method is used to set the max force convergence
+     * for the absolute and relative convergence
+     *
+     * @param maxForceConv
+     */
+    void ConvSettings::setMaxForceConv(double maxForceConv)
+    {
+        _maxForceConv = maxForceConv;
+    }
 
-    else if ("relative" == strategy)
-        convStrategy = RELATIVE;
+    /**
+     * @brief set relative max force convergence
+     *
+     * @details this method is used to set the rms force convergence
+     * for the absolute and relative convergence
+     *
+     * @param rmsForceConv
+     */
+    void ConvSettings::setRMSForceConv(double rmsForceConv)
+    {
+        _rmsForceConv = rmsForceConv;
+    }
 
-    else
-        throw UserInputException(
-            "Unknown convergence strategy: " + std::string(strategy)
-        );
+    /**
+     * @brief set use energy convergence
+     *
+     * @param useEnergyConvergence
+     */
+    void ConvSettings::setUseEnergyConv(bool useEnergyConvergence)
+    {
+        _useEnergyConv = useEnergyConvergence;
+    }
 
-    return convStrategy;
-}
+    /**
+     * @brief set use force convergence
+     *
+     * @param useForceConvergence
+     */
+    void ConvSettings::setUseForceConv(bool useForceConvergence)
+    {
+        _useForceConv = useForceConvergence;
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief set use max force convergence
+     *
+     * @param useMaxForceConvergence
+     */
+    void ConvSettings::setUseMaxForceConv(bool useMaxForceConvergence)
+    {
+        _useMaxForceConv = useMaxForceConvergence;
+    }
 
-/**
- * @brief set energy convergence
- *
- * @details this method is used to set both the energy convergence for the
- * absolute and relative convergence
- *
- * @param energyConv
- */
-void ConvSettings::setEnergyConv(double energyConv)
-{
-    _energyConv = energyConv;
-}
+    /**
+     * @brief set use rms force convergence
+     *
+     * @param useRMSForceConvergence
+     */
+    void ConvSettings::setUseRMSForceConv(bool useRMSForceConvergence)
+    {
+        _useRMSForceConv = useRMSForceConvergence;
+    }
 
-/**
- * @brief set relative energy convergence
- *
- * @param relEnergyConv
- */
-void ConvSettings::setRelEnergyConv(double relEnergyConv)
-{
-    _relEnergyConv = relEnergyConv;
-}
+    /**
+     * @brief set energy convergence strategy
+     *
+     * @param strategy
+     */
+    void ConvSettings::setEnergyConvStrategy(ConvStrategy strategy)
+    {
+        _energyConvStrategy = strategy;
+    }
 
-/**
- * @brief set absolute energy convergence
- *
- * @param absEnergyConv
- */
-void ConvSettings::setAbsEnergyConv(double absEnergyConv)
-{
-    _absEnergyConv = absEnergyConv;
-}
+    /**
+     * @brief set energy convergence strategy
+     *
+     * @param strategy
+     */
+    void ConvSettings::setEnergyConvStrategy(const std::string_view &strategy)
+    {
+        _energyConvStrategy = getConvStrategy(strategy);
+    }
 
-/**
- * @brief set force convergence
- *
- * @details this method is used to set both the force convergence for the
- * absolute and relative convergence as well as to set them both for the
- * max force and the rms force convergence
- *
- * @param forceConv
- */
-void ConvSettings::setForceConv(double forceConv) { _forceConv = forceConv; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set max force convergence
- *
- * @details this method is used to set the max force convergence
- * for the absolute and relative convergence
- *
- * @param maxForceConv
- */
-void ConvSettings::setMaxForceConv(double maxForceConv)
-{
-    _maxForceConv = maxForceConv;
-}
+    /**
+     * @brief get energy convergence
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> ConvSettings::getEnergyConv() { return _energyConv; }
 
-/**
- * @brief set relative max force convergence
- *
- * @details this method is used to set the rms force convergence
- * for the absolute and relative convergence
- *
- * @param rmsForceConv
- */
-void ConvSettings::setRMSForceConv(double rmsForceConv)
-{
-    _rmsForceConv = rmsForceConv;
-}
+    /**
+     * @brief get relative energy convergence
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> ConvSettings::getRelEnergyConv()
+    {
+        return _relEnergyConv;
+    }
 
-/**
- * @brief set use energy convergence
- *
- * @param useEnergyConvergence
- */
-void ConvSettings::setUseEnergyConv(bool useEnergyConvergence)
-{
-    _useEnergyConv = useEnergyConvergence;
-}
+    /**
+     * @brief get absolute energy convergence
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> ConvSettings::getAbsEnergyConv()
+    {
+        return _absEnergyConv;
+    }
 
-/**
- * @brief set use force convergence
- *
- * @param useForceConvergence
- */
-void ConvSettings::setUseForceConv(bool useForceConvergence)
-{
-    _useForceConv = useForceConvergence;
-}
+    /**
+     * @brief get force convergence
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> ConvSettings::getForceConv() { return _forceConv; }
 
-/**
- * @brief set use max force convergence
- *
- * @param useMaxForceConvergence
- */
-void ConvSettings::setUseMaxForceConv(bool useMaxForceConvergence)
-{
-    _useMaxForceConv = useMaxForceConvergence;
-}
+    /**
+     * @brief get max force convergence
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> ConvSettings::getMaxForceConv()
+    {
+        return _maxForceConv;
+    }
 
-/**
- * @brief set use rms force convergence
- *
- * @param useRMSForceConvergence
- */
-void ConvSettings::setUseRMSForceConv(bool useRMSForceConvergence)
-{
-    _useRMSForceConv = useRMSForceConvergence;
-}
+    /**
+     * @brief get rms force convergence
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> ConvSettings::getRMSForceConv()
+    {
+        return _rmsForceConv;
+    }
 
-/**
- * @brief set energy convergence strategy
- *
- * @param strategy
- */
-void ConvSettings::setEnergyConvStrategy(ConvStrategy strategy)
-{
-    _energyConvStrategy = strategy;
-}
+    /**
+     * @brief get use energy convergence
+     *
+     * @return bool
+     */
+    bool ConvSettings::getUseEnergyConv() { return _useEnergyConv; }
 
-/**
- * @brief set energy convergence strategy
- *
- * @param strategy
- */
-void ConvSettings::setEnergyConvStrategy(const std::string_view &strategy)
-{
-    _energyConvStrategy = getConvStrategy(strategy);
-}
+    /**
+     * @brief get use force convergence
+     *
+     * @return bool
+     */
+    bool ConvSettings::getUseForceConv() { return _useForceConv; }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief get use max force convergence
+     *
+     * @return bool
+     */
+    bool ConvSettings::getUseMaxForceConv() { return _useMaxForceConv; }
 
-/**
- * @brief get energy convergence
- *
- * @return std::optional<double>
- */
-std::optional<double> ConvSettings::getEnergyConv() { return _energyConv; }
+    /**
+     * @brief get use rms force convergence
+     *
+     * @return bool
+     */
+    bool ConvSettings::getUseRMSForceConv() { return _useRMSForceConv; }
 
-/**
- * @brief get relative energy convergence
- *
- * @return std::optional<double>
- */
-std::optional<double> ConvSettings::getRelEnergyConv()
-{
-    return _relEnergyConv;
-}
+    /**
+     * @brief get energy convergence strategy
+     *
+     * @return ConvStrategy
+     */
+    std::optional<ConvStrategy> ConvSettings::getEnConvStrategy()
+    {
+        return _energyConvStrategy;
+    }
 
-/**
- * @brief get absolute energy convergence
- *
- * @return std::optional<double>
- */
-std::optional<double> ConvSettings::getAbsEnergyConv()
-{
-    return _absEnergyConv;
-}
+    /**
+     * @brief get default energy convergence strategy
+     *
+     * @return ConvStrategy
+     */
+    ConvStrategy ConvSettings::getDefaultEnergyConvStrategy()
+    {
+        return getConvStrategy(_defaultEnergyConvStrategy);
+    }
 
-/**
- * @brief get force convergence
- *
- * @return std::optional<double>
- */
-std::optional<double> ConvSettings::getForceConv() { return _forceConv; }
-
-/**
- * @brief get max force convergence
- *
- * @return std::optional<double>
- */
-std::optional<double> ConvSettings::getMaxForceConv() { return _maxForceConv; }
-
-/**
- * @brief get rms force convergence
- *
- * @return std::optional<double>
- */
-std::optional<double> ConvSettings::getRMSForceConv() { return _rmsForceConv; }
-
-/**
- * @brief get use energy convergence
- *
- * @return bool
- */
-bool ConvSettings::getUseEnergyConv() { return _useEnergyConv; }
-
-/**
- * @brief get use force convergence
- *
- * @return bool
- */
-bool ConvSettings::getUseForceConv() { return _useForceConv; }
-
-/**
- * @brief get use max force convergence
- *
- * @return bool
- */
-bool ConvSettings::getUseMaxForceConv() { return _useMaxForceConv; }
-
-/**
- * @brief get use rms force convergence
- *
- * @return bool
- */
-bool ConvSettings::getUseRMSForceConv() { return _useRMSForceConv; }
-
-/**
- * @brief get energy convergence strategy
- *
- * @return ConvStrategy
- */
-std::optional<ConvStrategy> ConvSettings::getEnConvStrategy()
-{
-    return _energyConvStrategy;
-}
-
-/**
- * @brief get default energy convergence strategy
- *
- * @return ConvStrategy
- */
-ConvStrategy ConvSettings::getDefaultEnergyConvStrategy()
-{
-    return getConvStrategy(_defaultEnergyConvStrategy);
-}
+}   // namespace settings

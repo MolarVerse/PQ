@@ -24,32 +24,38 @@
 
 #include "virial.hpp"
 
-using namespace engine;
-using virial::calculateVirial;
-
-/**
- * @brief calculate MM forces
- *
- */
-void MMMDEngine::calculateForces()
+namespace engine
 {
-    _cellList->updateCellList(*_simulationBox);
 
-    _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
+    /**
+     * @brief calculate MM forces
+     *
+     */
+    void MMMDEngine::calculateForces()
+    {
+        _cellList->updateCellList(*_simulationBox);
 
-    _interWater->calculate(
-        *_simulationBox,
-        *_physicalData,
-        _potential->getCoulombPotSharedPtr(),
-        *_cellList
-    );
+        _potential
+            ->calculateForces(*_simulationBox, *_physicalData, *_cellList);
 
-    _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+        _interWater->calculate(
+            *_simulationBox,
+            *_physicalData,
+            _potential->getCoulombPotSharedPtr(),
+            *_cellList
+        );
 
-    const auto virial = calculateVirial(*_simulationBox);
-    _physicalData->setVirial(virial);
+        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
-    _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
+        const auto virial = virial::calculateVirial(*_simulationBox);
+        _physicalData->setVirial(virial);
 
-    _intraWater->calculate(*_simulationBox, *_physicalData);
-}
+        _forceField->calculateBondedInteractions(
+            *_simulationBox,
+            *_physicalData
+        );
+
+        _intraWater->calculate(*_simulationBox, *_physicalData);
+    }
+
+}   // namespace engine

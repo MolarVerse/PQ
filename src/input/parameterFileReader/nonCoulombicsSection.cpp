@@ -28,293 +28,312 @@
 
 #include "buckinghamPair.hpp"         // for BuckinghamPair
 #include "engine.hpp"                 // for Engine
-#include "exceptions.hpp"             // for ParameterFileException
+#include "exceptions.hpp"             // for exc::ParameterFileException
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
 #include "lennardJonesPair.hpp"       // for LennardJonesPair
 #include "morsePair.hpp"              // for MorsePair
-#include "potentialSettings.hpp"      // for PotentialSettings
+#include "potentialSettings.hpp"      // for settings::PotentialSettings
 #include "stringUtilities.hpp"        // for toLowerCopy
 #include "strongTypes.hpp"
 
-using namespace input::parameterFile;
-using namespace exc;
-using namespace engine;
-using namespace pot;
-using namespace settings;
-using namespace utilities;
-
-/**
- * @brief keyword for nonCoulombics section
- *
- * @return "noncoulombics"
- */
-std::string NonCoulombicsSection::keyword() { return "noncoulombics"; }
-
-/**
- * @brief processes the nonCoulombics header of the parameter file
- *
- * @note type of forceField can be given as second argument
- *       default is lj (Lennard Jones) which overrides default of guff
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if type of nonCoulombic is not
- * lj, buckingham or morse
- */
-void NonCoulombicsSection::processHeader(
-    std::vector<std::string> &lineElements,
-    Engine & /*engine*/
-)
+namespace input::parameterFile
 {
-    using enum NonCoulombType;
 
-    if (lineElements.size() > 1)
+    /**
+     * @brief keyword for nonCoulombics section
+     *
+     * @return "noncoulombics"
+     */
+    std::string NonCoulombicsSection::keyword() { return "noncoulombics"; }
+
+    /**
+     * @brief processes the nonCoulombics header of the parameter file
+     *
+     * @note type of forceField can be given as second argument
+     *       default is lj (Lennard Jones) which overrides default of guff
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throw exc::ParameterFileException if type of nonCoulombic is not
+     * lj, buckingham or morse
+     */
+    void NonCoulombicsSection::processHeader(
+        std::vector<std::string> &lineElements,
+        engine::Engine & /*engine*/
+    )
     {
-        const auto type = toLowerCopy(lineElements[1]);
+        using enum settings::NonCoulombType;
 
-        if (type == "lj")
-            PotentialSettings::setNonCoulombType(LJ);
+        if (lineElements.size() > 1)
+        {
+            const auto type = utilities::toLowerCopy(lineElements[1]);
 
-        else if (type == "buckingham")
-            PotentialSettings::setNonCoulombType(BUCKINGHAM);
+            if (type == "lj")
+                settings::PotentialSettings::setNonCoulombType(LJ);
 
-        else if (type == "morse")
-            PotentialSettings::setNonCoulombType(MORSE);
+            else if (type == "buckingham")
+                settings::PotentialSettings::setNonCoulombType(BUCKINGHAM);
 
+            else if (type == "morse")
+                settings::PotentialSettings::setNonCoulombType(MORSE);
+
+            else
+            {
+                throw exc::ParameterFileException(
+                    std::format(
+                        "Invalid type of nonCoulombic in parameter file "
+                        "nonCoulombic "
+                        "section at line {} - has to be lj, buckingham or "
+                        "morse!",
+                        _lineNumber
+                    )
+                );
+            }
+        }
         else
         {
-            throw ParameterFileException(
+            // default of guff gets overriden
+            settings::PotentialSettings::setNonCoulombType(LJ);
+        }
+    }
+
+    /**
+     * @brief determines which nonCoulombic type is processed
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throw exc::ParameterFileException if nonCoulombic type is not
+     * lj, buckingham or morse
+     */
+    void NonCoulombicsSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    )
+    {
+        using enum settings::NonCoulombType;
+
+        switch (settings::PotentialSettings::getNonCoulombType())
+        {
+            case LJ: processLJ(lineElements, engine); break;
+            case BUCKINGHAM: processBuckingham(lineElements, engine); break;
+            case MORSE: processMorse(lineElements, engine); break;
+
+            case LJ_9_12:
+            case GUFF:
+            case NONE:
+                throw exc::ParameterFileException(
+                    std::format(
+                        "Wrong type of nonCoulombic in parameter file "
+                        "nonCoulombic "
+                        "section at line {}  - has to be lj, buckingham or "
+                        "morse!",
+                        _lineNumber
+                    )
+                );
+        }
+    }
+
+    /**
+     * @brief processes the LJ nonCoulombics section of the parameter file and
+     * adds the LJ pair to the nonCoulombic potential
+     *
+     * @details The line is expected to have the following format:
+     * 1. global van der Waals type 1
+     * 2. global van der Waals type 2
+     * 3. c6
+     * 4. c12
+     * 5. cutOff (optional); if not given or -1, the global Coulomb radius
+     * cutOff is used
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throw exc::ParameterFileException if number of elements in line
+     * is not 4 or 5
+     */
+    void NonCoulombicsSection::processLJ(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    ) const
+    {
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 4 && lineElements.size() != 5)
+        {
+            throw exc::ParameterFileException(
                 std::format(
-                    "Invalid type of nonCoulombic in parameter file "
-                    "nonCoulombic "
-                    "section at line {} - has to be lj, buckingham or morse!",
+                    "Wrong number of arguments in parameter file in Lennard "
+                    "Jones "
+                    "nonCoulombics section at line {} - number of "
+                    "elements has to be 4 or 5!",
                     _lineNumber
                 )
             );
         }
+
+        const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
+        const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
+        const auto c6        = stod(lineElements[2]);
+        const auto c12       = stod(lineElements[3]);
+
+        auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        const auto coulombCutOff =
+            settings::PotentialSettings::getCoulombRadiusCutOff();
+
+        cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+
+        auto &pot       = engine.getPotential()->getNonCoulombPotential();
+        auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
+
+        const auto params = LJParams{.c6 = c6, .c12 = c12};
+
+        potential.addNonCoulombicPair(
+            std::make_shared<pot::LennardJonesPair>(
+                atomType1,
+                atomType2,
+                cutOff,
+                params
+            )
+        );
     }
-    else
+
+    /**
+     * @brief processes the buckingham nonCoulombics section of the parameter
+     * file and adds the buckingham pair to the nonCoulombic potential
+     *
+     * @details The line is expected to have the following format:
+     * 1. global van der Waals type 1
+     * 2. global van der Waals type 2
+     * 3. a
+     * 4. dRho
+     * 5. c6
+     * 6. cutOff (optional); if not given or -1, the global Coulomb radius
+     * cutOff is used
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throw exc::ParameterFileException if number of elements in line
+     * is not 5 or 6
+     */
+    void NonCoulombicsSection::processBuckingham(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    ) const
     {
-        // default of guff gets overriden
-        PotentialSettings::setNonCoulombType(LJ);
-    }
-}
-
-/**
- * @brief determines which nonCoulombic type is processed
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if nonCoulombic type is not
- * lj, buckingham or morse
- */
-void NonCoulombicsSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
-{
-    switch (PotentialSettings::getNonCoulombType())
-    {
-        using enum NonCoulombType;
-        case LJ: processLJ(lineElements, engine); break;
-
-        case BUCKINGHAM: processBuckingham(lineElements, engine); break;
-
-        case MORSE: processMorse(lineElements, engine); break;
-
-        case LJ_9_12:
-        case GUFF:
-        case NONE:
-            throw ParameterFileException(
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 5 && lineElements.size() != 6)
+        {
+            throw exc::ParameterFileException(
                 std::format(
-                    "Wrong type of nonCoulombic in parameter file nonCoulombic "
-                    "section at line {}  - has to be lj, buckingham or morse!",
+                    "Wrong number of arguments in parameter file in Buckingham "
+                    "nonCoulombics section at line {} - number of "
+                    "elements has to be 5 or 6!",
                     _lineNumber
                 )
             );
-    }
-}
+        }
 
-/**
- * @brief processes the LJ nonCoulombics section of the parameter file and adds
- * the LJ pair to the nonCoulombic potential
- *
- * @details The line is expected to have the following format:
- * 1. global van der Waals type 1
- * 2. global van der Waals type 2
- * 3. c6
- * 4. c12
- * 5. cutOff (optional); if not given or -1, the global Coulomb radius cutOff is
- * used
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if number of elements in line
- * is not 4 or 5
- */
-void NonCoulombicsSection::processLJ(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-) const
-{
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if (lineElements.size() != 4 && lineElements.size() != 5)
-    {
-        throw ParameterFileException(
-            std::format(
-                "Wrong number of arguments in parameter file in Lennard Jones "
-                "nonCoulombics section at line {} - number of "
-                "elements has to be 4 or 5!",
-                _lineNumber
+        const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
+        const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
+        const auto scale     = stod(lineElements[2]);
+        const auto dRho      = stod(lineElements[3]);
+        const auto c6        = stod(lineElements[4]);
+
+        auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        const auto coulombCutOff =
+            settings::PotentialSettings::getCoulombRadiusCutOff();
+
+        cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+
+        auto      &pot       = engine.getPotential()->getNonCoulombPotential();
+        auto      &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
+        const auto params =
+            BuckinghamParams{.scaling = scale, .dRho = dRho, .c6 = c6};
+
+        potential.addNonCoulombicPair(
+            std::make_shared<pot::BuckinghamPair>(
+                atomType1,
+                atomType2,
+                cutOff,
+                params
             )
         );
     }
 
-    const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
-    const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
-    const auto c6        = stod(lineElements[2]);
-    const auto c12       = stod(lineElements[3]);
-
-    auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-    const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
-
-    cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
-
-    auto &pot       = engine.getPotential()->getNonCoulombPotential();
-    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
-
-    const auto params = LJParams{.c6 = c6, .c12 = c12};
-
-    potential.addNonCoulombicPair(
-        std::make_shared<LennardJonesPair>(atomType1, atomType2, cutOff, params)
-    );
-}
-
-/**
- * @brief processes the buckingham nonCoulombics section of the parameter file
- * and adds the buckingham pair to the nonCoulombic potential
- *
- * @details The line is expected to have the following format:
- * 1. global van der Waals type 1
- * 2. global van der Waals type 2
- * 3. a
- * 4. dRho
- * 5. c6
- * 6. cutOff (optional); if not given or -1, the global Coulomb radius cutOff is
- * used
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if number of elements in line
- * is not 5 or 6
- */
-void NonCoulombicsSection::processBuckingham(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-) const
-{
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if (lineElements.size() != 5 && lineElements.size() != 6)
+    /**
+     * @brief processes the morse nonCoulombics section of the parameter file
+     * and adds the morse pair to the nonCoulombic potential
+     *
+     * @details The line is expected to have the following format:
+     * 1. global van der Waals type 1
+     * 2. global van der Waals type 2
+     * 3. dissociationEnergy
+     * 4. wellWidth
+     * 5. equilibriumDistance
+     * 6. cutOff (optional); if not given or -1, the global Coulomb radius
+     * cutOff is used
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throw exc::ParameterFileException if number of elements in line
+     * is not 5 or 6
+     */
+    void NonCoulombicsSection::processMorse(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    ) const
     {
-        throw ParameterFileException(
-            std::format(
-                "Wrong number of arguments in parameter file in Buckingham "
-                "nonCoulombics section at line {} - number of "
-                "elements has to be 5 or 6!",
-                _lineNumber
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 5 && lineElements.size() != 6)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Wrong number of arguments in parameter file in Morse "
+                    "nonCoulombics section at line {} - number of "
+                    "elements has to be 5 or 6!",
+                    _lineNumber
+                )
+            );
+        }
+
+        const auto atomType1           = ExtVdwType{stoul(lineElements[0])};
+        const auto atomType2           = ExtVdwType{stoul(lineElements[1])};
+        const auto dissociationEnergy  = stod(lineElements[2]);
+        const auto wellWidth           = stod(lineElements[3]);
+        const auto equilibriumDistance = stod(lineElements[4]);
+
+        auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        const auto coulombCutOff =
+            settings::PotentialSettings::getCoulombRadiusCutOff();
+
+        cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+
+        auto &pot       = engine.getPotential()->getNonCoulombPotential();
+        auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
+
+        const auto params = MorseParams{
+            .dissociationEnergy  = dissociationEnergy,
+            .wellWidth           = wellWidth,
+            .equilibriumDistance = equilibriumDistance
+        };
+
+        potential.addNonCoulombicPair(
+            std::make_shared<pot::MorsePair>(
+                atomType1,
+                atomType2,
+                cutOff,
+                params
             )
         );
     }
 
-    const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
-    const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
-    const auto scale     = stod(lineElements[2]);
-    const auto dRho      = stod(lineElements[3]);
-    const auto c6        = stod(lineElements[4]);
-
-    auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-    const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
-
-    cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
-
-    auto      &pot       = engine.getPotential()->getNonCoulombPotential();
-    auto      &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
-    const auto params =
-        BuckinghamParams{.scaling = scale, .dRho = dRho, .c6 = c6};
-
-    potential.addNonCoulombicPair(
-        std::make_shared<BuckinghamPair>(atomType1, atomType2, cutOff, params)
-    );
-}
-
-/**
- * @brief processes the morse nonCoulombics section of the parameter file and
- * adds the morse pair to the nonCoulombic potential
- *
- * @details The line is expected to have the following format:
- * 1. global van der Waals type 1
- * 2. global van der Waals type 2
- * 3. dissociationEnergy
- * 4. wellWidth
- * 5. equilibriumDistance
- * 6. cutOff (optional); if not given or -1, the global Coulomb radius cutOff is
- * used
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if number of elements in line
- * is not 5 or 6
- */
-void NonCoulombicsSection::processMorse(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-) const
-{
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if (lineElements.size() != 5 && lineElements.size() != 6)
-    {
-        throw ParameterFileException(
-            std::format(
-                "Wrong number of arguments in parameter file in Morse "
-                "nonCoulombics section at line {} - number of "
-                "elements has to be 5 or 6!",
-                _lineNumber
-            )
-        );
-    }
-
-    const auto atomType1           = ExtVdwType{stoul(lineElements[0])};
-    const auto atomType2           = ExtVdwType{stoul(lineElements[1])};
-    const auto dissociationEnergy  = stod(lineElements[2]);
-    const auto wellWidth           = stod(lineElements[3]);
-    const auto equilibriumDistance = stod(lineElements[4]);
-
-    auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-    const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
-
-    cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
-
-    auto &pot       = engine.getPotential()->getNonCoulombPotential();
-    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(pot);
-
-    const auto params = MorseParams{
-        .dissociationEnergy  = dissociationEnergy,
-        .wellWidth           = wellWidth,
-        .equilibriumDistance = equilibriumDistance
-    };
-
-    potential.addNonCoulombicPair(
-        std::make_shared<MorsePair>(atomType1, atomType2, cutOff, params)
-    );
-}
+}   // namespace input::parameterFile

@@ -26,59 +26,53 @@
 #include <unordered_set>   // for unordered_set
 
 #include "atom.hpp"                 // for Atom
-#include "exceptions.hpp"           // for HybridConfiguratorException
-#include "hybridConfigurator.hpp"   // for HybridConfigurator
-#include "hybridSettings.hpp"       // for HybridSettings
+#include "exceptions.hpp"           // for exc::HybridConfiguratorException
+#include "hybridConfigurator.hpp"   // for configurator::HybridConfigurator
+#include "hybridSettings.hpp"       // for settings::HybridSettings
 #include "molecule.hpp"             // for Molecule
 #include "simulationBox.hpp"        // for SimulationBox
 #include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG
-#include "vector3d.hpp"             // for Vec3D
+#include "vector3d.hpp"             // for linalg::Vec3D
 #include "vectorNear.hpp"           // for EXPECT_VECTOR_NEAR
-
-using namespace configurator;
-using namespace exc;
-using namespace linalg;
-using namespace pq;
-using namespace settings;
-using namespace molsys;
 
 TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 {
-    HybridConfigurator    hybridConfigurator;
-    molsys::SimulationBox simBox;
+    configurator::HybridConfigurator hybridConfigurator;
+    molsys::SimulationBox            simBox;
 
     EXPECT_THROW_MSG(
         hybridConfigurator.calculateInnerRegionCenter(simBox),
-        HybridConfiguratorException,
+        exc::HybridConfiguratorException,
         "Cannot calculate inner region center: no center atoms specified"
     );
 
-    const auto center = Vec3D({0.43662598672853264, 0.60446640043437561, 0.0});
+    const auto center =
+        linalg::Vec3D({0.43662598672853264, 0.60446640043437561, 0.0});
 
-    auto atom1 = Atom();
+    molsys::Atom atom1;
     atom1.setPosition({0.40084395, 0.55383599, 0.0});
     atom1.setName("O");
     atom1.initMass();
 
-    auto atom2 = Atom();
+    molsys::Atom atom2;
     atom2.setPosition({1.36084395, 0.55383599, 0.0});
     atom2.setName("H");
     atom2.initMass();
 
-    auto atom3 = Atom();
+    molsys::Atom atom3;
     atom3.setPosition({0.08038937, 1.45877182, 0.0});
     atom3.setName("H");
     atom3.initMass();
 
-    auto atom4 = Atom();
+    molsys::Atom atom4;
     atom4.setPosition({4.0, -4.5, -2.0});
     atom4.setName("Zr");
     atom4.initMass();
 
-    simBox.addAtom(std::make_shared<Atom>(atom1));
-    simBox.addAtom(std::make_shared<Atom>(atom2));
-    simBox.addAtom(std::make_shared<Atom>(atom3));
-    simBox.addAtom(std::make_shared<Atom>(atom4));
+    simBox.addAtom(std::make_shared<molsys::Atom>(atom1));
+    simBox.addAtom(std::make_shared<molsys::Atom>(atom2));
+    simBox.addAtom(std::make_shared<molsys::Atom>(atom3));
+    simBox.addAtom(std::make_shared<molsys::Atom>(atom4));
 
     simBox.setBoxDimensions({10.0, 10.0, 10.0});
     simBox.addInnerRegionCenterAtoms({0, 1, 2});
@@ -95,22 +89,22 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(0).getPosition(),
-        Vec3D({-0.03578203672853264, -0.05063041043437561, 0.0}),
+        linalg::Vec3D({-0.03578203672853264, -0.05063041043437561, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(1).getPosition(),
-        Vec3D({0.92421796327146732, -0.05063041043437561, 0.0}),
+        linalg::Vec3D({0.92421796327146732, -0.05063041043437561, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(2).getPosition(),
-        Vec3D({-0.35623661672853263, 0.85430541956562439, 0.0}),
+        linalg::Vec3D({-0.35623661672853263, 0.85430541956562439, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(3).getPosition(),
-        Vec3D({3.5633740132714674, 4.8955335995656242, -2.0}),
+        linalg::Vec3D({3.5633740132714674, 4.8955335995656242, -2.0}),
         1e-10
     );
 
@@ -140,67 +134,67 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 
 TEST(testHybridConfigurator, assignHybridZones)
 {
-    HybridConfigurator    hybridConfigurator;
-    molsys::SimulationBox simBox;
+    configurator::HybridConfigurator hybridConfigurator;
+    molsys::SimulationBox            simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
-    HybridSettings::setCoreRadius(6.0);
-    HybridSettings::setLayerRadius(12.0);
-    HybridSettings::setSmoothingRegionThickness(2.0);
-    HybridSettings::setPointChargeThickness(7.0);
+    settings::HybridSettings::setCoreRadius(6.0);
+    settings::HybridSettings::setLayerRadius(12.0);
+    settings::HybridSettings::setSmoothingRegionThickness(2.0);
+    settings::HybridSettings::setPointChargeThickness(7.0);
 
-    auto atom1 = std::make_shared<Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
     atom1->setPosition({3.95, 3.15, 1.95}
     );   // C atom: r ≈ 5.41 < 6.0 (inside core)
     atom1->setName("C");
     atom1->initMass();
 
-    auto atom2 = std::make_shared<Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
     atom2->setPosition({4.45, 3.95, 2.45}
     );   // O atom: r ≈ 6.44 > 6.0 (outside core)
     atom2->setName("O");
     atom2->initMass();
 
     // mol1 com: (4.22, 3.58, 2.22), r ≈ 5.96 < 6.0 (inside core)
-    auto mol1 = Molecule();
+    auto mol1 = molsys::Molecule();
     mol1.addAtom(atom1);
     mol1.addAtom(atom2);
     simBox.addMolecule(mol1);
 
-    auto atom3 = std::make_shared<Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
     atom3->setPosition({6.5, 5.0, 3.5});
     atom3->setName("Ar");
     atom3->initMass();
 
-    auto mol2 = Molecule();
+    auto mol2 = molsys::Molecule();
     mol2.addAtom(atom3);
     simBox.addMolecule(mol2);
 
-    auto atom4 = std::make_shared<Atom>();
+    auto atom4 = std::make_shared<molsys::Atom>();
     atom4->setPosition({0.0, 0.0, 12.0});
     atom4->setName("Re");
     atom4->initMass();
 
-    auto mol3 = Molecule();
+    auto mol3 = molsys::Molecule();
     mol3.addAtom(atom4);
     simBox.addMolecule(mol3);
 
-    auto atom5 = std::make_shared<Atom>();
+    auto atom5 = std::make_shared<molsys::Atom>();
     atom5->setPosition({0.0, 19.0, 0.0});
     atom5->setName("Zr");
     atom5->initMass();
 
-    auto mol4 = Molecule();
+    auto mol4 = molsys::Molecule();
     mol4.addAtom(atom5);
     simBox.addMolecule(mol4);
 
-    auto atom6 = std::make_shared<Atom>();
+    auto atom6 = std::make_shared<molsys::Atom>();
     atom6->setPosition({19.0, 0.001, 0.0});
     atom6->setName("Tc");
     atom6->initMass();
 
-    auto mol5 = Molecule();
+    auto mol5 = molsys::Molecule();
     mol5.addAtom(atom6);
     simBox.addMolecule(mol5);
 
@@ -216,22 +210,22 @@ TEST(testHybridConfigurator, assignHybridZones)
 
 TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 {
-    HybridConfigurator    hybridConfigurator;
-    molsys::SimulationBox simBox;
+    configurator::HybridConfigurator hybridConfigurator;
+    molsys::SimulationBox            simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
-    HybridSettings::setCoreRadius(0.0);
-    HybridSettings::setLayerRadius(7.0);
-    HybridSettings::setSmoothingRegionThickness(0.2);
-    HybridSettings::setPointChargeThickness(7.0);
+    settings::HybridSettings::setCoreRadius(0.0);
+    settings::HybridSettings::setLayerRadius(7.0);
+    settings::HybridSettings::setSmoothingRegionThickness(0.2);
+    settings::HybridSettings::setPointChargeThickness(7.0);
 
-    auto atom = std::make_shared<Atom>();
+    auto atom = std::make_shared<molsys::Atom>();
     atom->setPosition({0.0, 0.0, 0.0});
     atom->setName("Dy");
     atom->initMass();
 
-    auto mol = Molecule();
+    auto mol = molsys::Molecule();
     mol.addAtom(atom);
     simBox.addMolecule(mol);
 
@@ -240,7 +234,7 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), LAYER);
 
-    HybridSettings::setCoreRadius(0.00001);
+    settings::HybridSettings::setCoreRadius(0.00001);
     configurator::HybridConfigurator::assignHybridZones(simBox);
 
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
@@ -248,23 +242,23 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 
 TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
 {
-    HybridConfigurator    hybridConfigurator;
-    molsys::SimulationBox simBox;
+    configurator::HybridConfigurator hybridConfigurator;
+    molsys::SimulationBox            simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
-    HybridSettings::setCoreRadius(2.0);
-    HybridSettings::setLayerRadius(4.0);
-    HybridSettings::setSmoothingRegionThickness(1.0);
-    HybridSettings::setPointChargeThickness(2.0);
+    settings::HybridSettings::setCoreRadius(2.0);
+    settings::HybridSettings::setLayerRadius(4.0);
+    settings::HybridSettings::setSmoothingRegionThickness(1.0);
+    settings::HybridSettings::setPointChargeThickness(2.0);
 
-    auto makeMolecule = [](const Vec3D &position)
+    auto makeMolecule = [](const linalg::Vec3D &position)
     {
-        auto atom = std::make_shared<Atom>();
+        auto atom = std::make_shared<molsys::Atom>();
         atom->setPosition(position);
         atom->setMass(1.0);
 
-        auto molecule = Molecule();
+        auto molecule = molsys::Molecule();
         molecule.addAtom(atom);
         return molecule;
     };
@@ -286,38 +280,38 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
 
 TEST(testHybridConfigurator, activateDeactivateMolecules)
 {
-    HybridConfigurator    hybridConfigurator;
-    molsys::SimulationBox simBox;
+    configurator::HybridConfigurator hybridConfigurator;
+    molsys::SimulationBox            simBox;
 
     using enum molsys::HybridZone;
 
-    auto atom1 = std::make_shared<Atom>();
-    auto mol1  = Molecule();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto mol1  = molsys::Molecule();
     mol1.addAtom(atom1);
     mol1.setHybridZone(CORE);
 
-    auto atom2 = std::make_shared<Atom>();
-    auto mol2  = Molecule();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto mol2  = molsys::Molecule();
     mol2.addAtom(atom2);
     mol2.setHybridZone(LAYER);
 
-    auto atom3 = std::make_shared<Atom>();
-    auto mol3  = Molecule();
+    auto atom3 = std::make_shared<molsys::Atom>();
+    auto mol3  = molsys::Molecule();
     mol3.addAtom(atom3);
     mol3.setHybridZone(SMOOTHING);
 
-    auto atom4 = std::make_shared<Atom>();
-    auto mol4  = Molecule();
+    auto atom4 = std::make_shared<molsys::Atom>();
+    auto mol4  = molsys::Molecule();
     mol4.addAtom(atom4);
     mol4.setHybridZone(SMOOTHING);
 
-    auto atom5 = std::make_shared<Atom>();
-    auto mol5  = Molecule();
+    auto atom5 = std::make_shared<molsys::Atom>();
+    auto mol5  = molsys::Molecule();
     mol5.addAtom(atom5);
     mol5.setHybridZone(POINT_CHARGE);
 
-    auto atom6 = std::make_shared<Atom>();
-    auto mol6  = Molecule();
+    auto atom6 = std::make_shared<molsys::Atom>();
+    auto mol6  = molsys::Molecule();
     mol6.addAtom(atom6);
     mol6.setHybridZone(OUTER);
 
@@ -374,52 +368,52 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
 
 TEST(testHybridConfigurator, calculateSmoothingFactors)
 {
-    HybridConfigurator    hybridConfigurator;
-    molsys::SimulationBox simBox;
+    configurator::HybridConfigurator hybridConfigurator;
+    molsys::SimulationBox            simBox;
 
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
-    HybridSettings::setLayerRadius(12.0);
-    HybridSettings::setSmoothingRegionThickness(2.0);
+    settings::HybridSettings::setLayerRadius(12.0);
+    settings::HybridSettings::setSmoothingRegionThickness(2.0);
 
     using enum molsys::HybridZone;
 
-    auto atom1 = std::make_shared<Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
     atom1->setPosition({10.0, 0.0, 0.0});
     atom1->setName("Au");
     atom1->initMass();
 
-    auto mol1 = Molecule();
+    auto mol1 = molsys::Molecule();
     mol1.addAtom(atom1);
     mol1.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol1);
 
-    auto atom2 = std::make_shared<Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
     atom2->setPosition({11.0, 0.0, 0.0});
     atom2->setName("Ag");
     atom2->initMass();
 
-    auto mol2 = Molecule();
+    auto mol2 = molsys::Molecule();
     mol2.addAtom(atom2);
     mol2.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol2);
 
-    auto atom3 = std::make_shared<Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
     atom3->setPosition({12.0, 0.0, 0.0});
     atom3->setName("As");
     atom3->initMass();
 
-    auto mol3 = Molecule();
+    auto mol3 = molsys::Molecule();
     mol3.addAtom(atom3);
     mol3.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol3);
 
-    auto atom4 = std::make_shared<Atom>();
+    auto atom4 = std::make_shared<molsys::Atom>();
     atom4->setPosition({11.73, 0.0, 0.0});
     atom4->setName("At");
     atom4->initMass();
 
-    auto mol4 = Molecule();
+    auto mol4 = molsys::Molecule();
     mol4.addAtom(atom4);
     mol4.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol4);
@@ -435,19 +429,19 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
         1e-10
     );
 
-    auto atom5 = std::make_shared<Atom>();
+    auto atom5 = std::make_shared<molsys::Atom>();
     atom5->setPosition({0.0, 0.0, 0.0});
     atom5->setName("Al");
     atom5->initMass();
 
-    auto mol5 = Molecule();
+    auto mol5 = molsys::Molecule();
     mol5.addAtom(atom5);
     mol5.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol5);
 
     EXPECT_THROW_MSG(
         hybridConfigurator.calculateSmoothingFactors(simBox),
-        HybridConfiguratorException,
+        exc::HybridConfiguratorException,
         "Cannot calculate smoothing factor for molecule outside the "
         "smoothing region"
     );

@@ -23,7 +23,7 @@
 #include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
 #include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <vector>   // for std::vector
 
 #include "exceptions.hpp"            // for InputFileException
 #include "testInputFileReader.hpp"   // for TestInputFileReader
@@ -31,22 +31,18 @@
 #include "timingsInputParser.hpp"
 #include "timingsSettings.hpp"   // for TimingsSettings
 
-using namespace std;
-using namespace input;
-using namespace ::testing;
-
 /**
  * @brief tests parsing the "timestep" command
  *
  */
 TEST_F(TestInputFileReader, testParseTimestep)
 {
-    TimingsInputParser parser;
-    const auto         funcMap = parser.getKeywordFuncMap();
+    input::TimingsInputParser parser;
+    const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("timestep"));
     const auto &timeStepFunc = funcMap.at("timestep");
 
-    vector<string> lineElements = {"timestep", "=", "1"};
+    std::vector<std::string> lineElements = {"timestep", "=", "1"};
     timeStepFunc(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
 
@@ -85,12 +81,12 @@ TEST_F(TestInputFileReader, testParseTimestep)
  */
 TEST_F(TestInputFileReader, testParseNumberOfSteps)
 {
-    TimingsInputParser parser;
-    const auto         funcMap = parser.getKeywordFuncMap();
+    input::TimingsInputParser parser;
+    const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nstep"));
     const auto &nstepsFunc = funcMap.at("nstep");
 
-    vector<string> lineElements = {"nstep", "=", "1000"};
+    std::vector<std::string> lineElements = {"nstep", "=", "1000"};
     nstepsFunc(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getNumberOfSteps(), 1000);
 

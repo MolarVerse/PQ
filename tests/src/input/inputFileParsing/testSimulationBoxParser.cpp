@@ -33,17 +33,14 @@
 #include "testInputFileReader.hpp"        // for TestInputFileReader
 #include "throwWithMessage.hpp"           // for EXPECT_THROW_MSG
 
-using namespace input;
-using settings::InitVelocities;
-
 /**
  * @brief tests parsing the "density" command
  */
 TEST_F(TestInputFileReader, parseDensity)
 {
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), false);
-    SimulationBoxInputParser       parser(_engine->getSharedSimulationBox());
-    const std::vector<std::string> lineElements = {"density", "=", "1.0"};
+    input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
+    const std::vector<std::string>  lineElements = {"density", "=", "1.0"};
     parser.parseDensity(lineElements, 0);
     EXPECT_EQ(_engine->getSimulationBox().getDensity(), 1.0);
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), true);
@@ -71,8 +68,8 @@ TEST_F(TestInputFileReader, parseDensity)
  */
 TEST_F(TestInputFileReader, parseCoulombRadius)
 {
-    SimulationBoxInputParser       parser(_engine->getSharedSimulationBox());
-    const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
+    input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
+    const std::vector<std::string>  lineElements = {"rcoulomb", "=", "1.0"};
     input::SimulationBoxInputParser::parseCoulombRadius(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
 
@@ -87,8 +84,8 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
 
 TEST_F(TestInputFileReader, parseInitVelocities)
 {
-    SimulationBoxInputParser       parser(_engine->getSharedSimulationBox());
-    const std::vector<std::string> lineElements = {
+    input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
+    const std::vector<std::string>  lineElements = {
         "init_velocities",
         "=",
         "true"
@@ -96,7 +93,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
     input::SimulationBoxInputParser::parseInitializeVelocities(lineElements, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
-        InitVelocities::TRUE
+        settings::InitVelocities::TRUE
     );
 
     const std::vector<std::string> lineElements2 = {
@@ -111,7 +108,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
     );
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
-        InitVelocities::FALSE
+        settings::InitVelocities::FALSE
     );
 
     const std::vector<std::string> lineElements3 = {
@@ -125,7 +122,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
     );
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
-        InitVelocities::FORCE
+        settings::InitVelocities::FORCE
     );
 
     const std::vector<std::string> lineElements4 = {

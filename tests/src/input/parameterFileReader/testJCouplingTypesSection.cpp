@@ -31,18 +31,15 @@
 #include "testParameterFileSection.hpp"
 #include "throwWithMessage.hpp"
 
-using namespace input::parameterFile;
-using namespace exc;
-
 TEST_F(TestParameterFileSection, jCouplingSectionKeyword)
 {
-    JCouplingSection section;
+    input::parameterFile::JCouplingSection section;
     EXPECT_EQ(section.keyword(), "j_couplings");
 }
 
 TEST_F(TestParameterFileSection, jCouplingSectionProcessSevenElements)
 {
-    JCouplingSection section;
+    input::parameterFile::JCouplingSection section;
     // id, J0, fc, a, b, c, phase
     std::vector<std::string> lineElements =
         {"7", "1.0", "2.0", "3.0", "4.0", "5.0", "30.0"};
@@ -60,8 +57,8 @@ TEST_F(TestParameterFileSection, jCouplingSectionProcessSevenElements)
 
 TEST_F(TestParameterFileSection, jCouplingSectionAcceptsZeroSymmetry)
 {
-    JCouplingSection         section;
-    std::vector<std::string> lineElements =
+    input::parameterFile::JCouplingSection section;
+    std::vector<std::string>               lineElements =
         {"1", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0"};
     EXPECT_NO_THROW(section.processSection(lineElements, *_engine));
     EXPECT_EQ(_engine->getForceField()->getJCouplTypes().size(), 1U);
@@ -69,27 +66,27 @@ TEST_F(TestParameterFileSection, jCouplingSectionAcceptsZeroSymmetry)
 
 TEST_F(TestParameterFileSection, jCouplingSectionAcceptsPlusSymmetry)
 {
-    JCouplingSection         section;
-    std::vector<std::string> lineElements =
+    input::parameterFile::JCouplingSection section;
+    std::vector<std::string>               lineElements =
         {"2", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "+"};
     EXPECT_NO_THROW(section.processSection(lineElements, *_engine));
 }
 
 TEST_F(TestParameterFileSection, jCouplingSectionAcceptsMinusSymmetry)
 {
-    JCouplingSection         section;
-    std::vector<std::string> lineElements =
+    input::parameterFile::JCouplingSection section;
+    std::vector<std::string>               lineElements =
         {"3", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "-"};
     EXPECT_NO_THROW(section.processSection(lineElements, *_engine));
 }
 
 TEST_F(TestParameterFileSection, jCouplingSectionThrowsOnTooFewElements)
 {
-    JCouplingSection         section;
-    std::vector<std::string> lineElements = {"1", "2", "3"};
+    input::parameterFile::JCouplingSection section;
+    std::vector<std::string>               lineElements = {"1", "2", "3"};
     EXPECT_THROW_MSG(
         section.processSection(lineElements, *_engine),
-        ParameterFileException,
+        exc::ParameterFileException,
         "Wrong number of arguments in parameter file j-coupling section at "
         "line 0 - number of elements has to be 7 or 8!"
     );
@@ -97,12 +94,12 @@ TEST_F(TestParameterFileSection, jCouplingSectionThrowsOnTooFewElements)
 
 TEST_F(TestParameterFileSection, jCouplingSectionThrowsOnTooManyElements)
 {
-    JCouplingSection         section;
-    std::vector<std::string> lineElements =
+    input::parameterFile::JCouplingSection section;
+    std::vector<std::string>               lineElements =
         {"1", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "+", "extra"};
     EXPECT_THROW_MSG(
         section.processSection(lineElements, *_engine),
-        ParameterFileException,
+        exc::ParameterFileException,
         "Wrong number of arguments in parameter file j-coupling section at "
         "line 0 - number of elements has to be 7 or 8!"
     );

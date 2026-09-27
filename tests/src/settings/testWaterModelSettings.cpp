@@ -29,98 +29,106 @@
 #include "throwWithMessage.hpp"
 #include "waterModelSettings.hpp"
 
-using exc::UserInputException;
-using settings::WaterInterModel;
-using settings::WaterIntraModel;
-using settings::WaterModelSettings;
-
 TEST(TestWaterModelSettings, FlagsAndEnumSettersRoundTrip)
 {
-    WaterModelSettings::setIsWaterModelSet(true);
-    WaterModelSettings::setIsInterWaterModelSet(true);
-    EXPECT_TRUE(WaterModelSettings::isWaterModelSet());
-    EXPECT_TRUE(WaterModelSettings::isInterWaterModelSet());
+    settings::WaterModelSettings::setIsWaterModelSet(true);
+    settings::WaterModelSettings::setIsInterWaterModelSet(true);
+    EXPECT_TRUE(settings::WaterModelSettings::isWaterModelSet());
+    EXPECT_TRUE(settings::WaterModelSettings::isInterWaterModelSet());
 
-    WaterModelSettings::setWaterIntraModel(WaterIntraModel::SPC);
-    WaterModelSettings::setWaterInterModel(WaterInterModel::NONE);
-    EXPECT_EQ(WaterModelSettings::getWaterIntraModel(), WaterIntraModel::SPC);
-    EXPECT_EQ(WaterModelSettings::getWaterInterModel(), WaterInterModel::NONE);
+    settings::WaterModelSettings::setWaterIntraModel(
+        settings::WaterIntraModel::SPC
+    );
+    settings::WaterModelSettings::setWaterInterModel(
+        settings::WaterInterModel::NONE
+    );
+    EXPECT_EQ(
+        settings::WaterModelSettings::getWaterIntraModel(),
+        settings::WaterIntraModel::SPC
+    );
+    EXPECT_EQ(
+        settings::WaterModelSettings::getWaterInterModel(),
+        settings::WaterInterModel::NONE
+    );
 
-    WaterModelSettings::setIsWaterModelSet(false);
-    WaterModelSettings::setIsInterWaterModelSet(false);
-    EXPECT_FALSE(WaterModelSettings::isWaterModelSet());
-    EXPECT_FALSE(WaterModelSettings::isInterWaterModelSet());
+    settings::WaterModelSettings::setIsWaterModelSet(false);
+    settings::WaterModelSettings::setIsInterWaterModelSet(false);
+    EXPECT_FALSE(settings::WaterModelSettings::isWaterModelSet());
+    EXPECT_FALSE(settings::WaterModelSettings::isInterWaterModelSet());
 }
 
 TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
 {
     struct ModelCase
     {
-        std::string_view input;
-        WaterIntraModel  model;
-        std::string_view display;
+        std::string_view          input;
+        settings::WaterIntraModel model;
+        std::string_view          display;
     };
 
     constexpr std::array cases{
         ModelCase{
             .input   = "spc-e",
-            .model   = WaterIntraModel::SPC_E,
+            .model   = settings::WaterIntraModel::SPC_E,
             .display = "SPC/E"
         },
         ModelCase{
             .input   = "SPC_FW",
-            .model   = WaterIntraModel::SPC_FW,
+            .model   = settings::WaterIntraModel::SPC_FW,
             .display = "SPC/Fw"
         },
         ModelCase{
             .input   = "qspc-fw",
-            .model   = WaterIntraModel::QSPC_FW,
+            .model   = settings::WaterIntraModel::QSPC_FW,
             .display = "qSPC/Fw"
         },
         ModelCase{
             .input   = "spc-dc",
-            .model   = WaterIntraModel::SPC_DC,
+            .model   = settings::WaterIntraModel::SPC_DC,
             .display = "SPC/DC"
         },
         ModelCase{
             .input   = "h2o-dc",
-            .model   = WaterIntraModel::H2O_DC,
+            .model   = settings::WaterIntraModel::H2O_DC,
             .display = "H2O-DC"
         },
         ModelCase{
             .input   = "tip3p",
-            .model   = WaterIntraModel::TIP3P,
+            .model   = settings::WaterIntraModel::TIP3P,
             .display = "TIP3P"
         },
         ModelCase{
             .input   = "opc3",
-            .model   = WaterIntraModel::OPC3,
+            .model   = settings::WaterIntraModel::OPC3,
             .display = "OPC3"
         },
         ModelCase{
             .input   = "spc-mtr",
-            .model   = WaterIntraModel::SPC_MTR,
+            .model   = settings::WaterIntraModel::SPC_MTR,
             .display = "SPC-mTR"
         },
         ModelCase{
             .input   = "tip3p-mtr",
-            .model   = WaterIntraModel::TIP3P_MTR,
+            .model   = settings::WaterIntraModel::TIP3P_MTR,
             .display = "TIP3P-mTR"
         },
     };
 
     for (const auto &testCase : cases)
     {
-        WaterModelSettings::setWaterIntraModel(testCase.input);
-        EXPECT_EQ(WaterModelSettings::getWaterIntraModel(), testCase.model);
+        settings::WaterModelSettings::setWaterIntraModel(testCase.input);
+        EXPECT_EQ(
+            settings::WaterModelSettings::getWaterIntraModel(),
+            testCase.model
+        );
         EXPECT_EQ(settings::string(testCase.model), testCase.display);
     }
 
-    EXPECT_EQ(settings::string(WaterIntraModel::SPC), "SPC");
-    EXPECT_EQ(settings::string(WaterIntraModel::NONE), "none");
+    EXPECT_EQ(settings::string(settings::WaterIntraModel::SPC), "SPC");
+    EXPECT_EQ(settings::string(settings::WaterIntraModel::NONE), "none");
     EXPECT_THROW_MSG(
-        WaterModelSettings::setWaterIntraModel("unknown"),
-        UserInputException,
+        settings::WaterModelSettings::setWaterIntraModel("unknown"),
+        exc::UserInputException,
         "Water intra model \"unknown\" not recognized"
     );
 }
@@ -129,75 +137,78 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
 {
     struct ModelCase
     {
-        std::string_view input;
-        WaterInterModel  model;
-        std::string_view display;
+        std::string_view          input;
+        settings::WaterInterModel model;
+        std::string_view          display;
     };
 
     constexpr std::array cases{
         ModelCase{
             .input   = "spc",
-            .model   = WaterInterModel::SPC,
+            .model   = settings::WaterInterModel::SPC,
             .display = "SPC"
         },
         ModelCase{
             .input   = "spc-e",
-            .model   = WaterInterModel::SPC_E,
+            .model   = settings::WaterInterModel::SPC_E,
             .display = "SPC/E"
         },
         ModelCase{
             .input   = "SPC_FW",
-            .model   = WaterInterModel::SPC_FW,
+            .model   = settings::WaterInterModel::SPC_FW,
             .display = "SPC/Fw"
         },
         ModelCase{
             .input   = "qspc-fw",
-            .model   = WaterInterModel::QSPC_FW,
+            .model   = settings::WaterInterModel::QSPC_FW,
             .display = "qSPC/Fw"
         },
         ModelCase{
             .input   = "spc-dc",
-            .model   = WaterInterModel::SPC_DC,
+            .model   = settings::WaterInterModel::SPC_DC,
             .display = "SPC/DC"
         },
         ModelCase{
             .input   = "h2o-dc",
-            .model   = WaterInterModel::H2O_DC,
+            .model   = settings::WaterInterModel::H2O_DC,
             .display = "H2O-DC"
         },
         ModelCase{
             .input   = "tip3p",
-            .model   = WaterInterModel::TIP3P,
+            .model   = settings::WaterInterModel::TIP3P,
             .display = "TIP3P"
         },
         ModelCase{
             .input   = "opc3",
-            .model   = WaterInterModel::OPC3,
+            .model   = settings::WaterInterModel::OPC3,
             .display = "OPC3"
         },
         ModelCase{
             .input   = "spc-mtr",
-            .model   = WaterInterModel::SPC_MTR,
+            .model   = settings::WaterInterModel::SPC_MTR,
             .display = "SPC-mTR"
         },
         ModelCase{
             .input   = "tip3p-mtr",
-            .model   = WaterInterModel::TIP3P_MTR,
+            .model   = settings::WaterInterModel::TIP3P_MTR,
             .display = "TIP3P-mTR"
         },
     };
 
     for (const auto &testCase : cases)
     {
-        WaterModelSettings::setWaterInterModel(testCase.input);
-        EXPECT_EQ(WaterModelSettings::getWaterInterModel(), testCase.model);
+        settings::WaterModelSettings::setWaterInterModel(testCase.input);
+        EXPECT_EQ(
+            settings::WaterModelSettings::getWaterInterModel(),
+            testCase.model
+        );
         EXPECT_EQ(settings::string(testCase.model), testCase.display);
     }
 
-    EXPECT_EQ(settings::string(WaterInterModel::NONE), "none");
+    EXPECT_EQ(settings::string(settings::WaterInterModel::NONE), "none");
     EXPECT_THROW_MSG(
-        WaterModelSettings::setWaterInterModel("unknown"),
-        UserInputException,
+        settings::WaterModelSettings::setWaterInterModel("unknown"),
+        exc::UserInputException,
         "Water inter model \"unknown\" not recognized"
     );
 }

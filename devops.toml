@@ -20,8 +20,8 @@ fail_fast = true
 ast_check_compile_args = ["-std=c++23", "-Iinclude/concepts"]
 ast_check_enabled_ids = [
     "paramNameForType",
-    # "noGlobalUsing",
-    # "noGlobalUsingEnum",
+    "noGlobalUsing",
+    "noGlobalUsingEnum",
     "noThrowParen",
     "macroReplacement",
 ]

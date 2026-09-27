@@ -22,43 +22,45 @@
 
 #include "bond.hpp"
 
-using namespace connectivity;
-using namespace molsys;
-
-/**
- * @brief Construct a new Bond:: Bond object
- *
- * @param molecule1
- * @param molecule2
- * @param atomIndex1
- * @param atomIndex2
- */
-Bond::Bond(
-    Molecule       *molecule1,
-    Molecule       *molecule2,
-    const AtomIndex atomIndex1,
-    const AtomIndex atomIndex2
-)
-    : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
+namespace connectivity
 {
-}
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief Construct a new Bond:: Bond object
+     *
+     * @param molecule1
+     * @param molecule2
+     * @param atomIndex1
+     * @param atomIndex2
+     */
+    Bond::Bond(
+        molsys::Molecule *molecule1,
+        molsys::Molecule *molecule2,
+        const AtomIndex   atomIndex1,
+        const AtomIndex   atomIndex2
+    )
+        : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
+    {
+    }
 
-/**
- * @brief Get the molecule1 object
- *
- * @return Molecule*
- */
-Molecule *Bond::getMolecule1() const { return _molecules[0]; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief Get the molecule2 object
- *
- * @return Molecule*
- */
-Molecule *Bond::getMolecule2() const { return _molecules[1]; }
+    /**
+     * @brief Get the molecule1 object
+     *
+     * @return Molecule*
+     */
+    molsys::Molecule *Bond::getMolecule1() const { return _molecules[0]; }
+
+    /**
+     * @brief Get the molecule2 object
+     *
+     * @return Molecule*
+     */
+    molsys::Molecule *Bond::getMolecule2() const { return _molecules[1]; }
+
+}   // namespace connectivity

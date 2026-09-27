@@ -92,6 +92,7 @@ namespace defaults
     static constexpr double SCALE_14_COULOMB_DEFAULT = 1.0;
     static constexpr double SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;
     static constexpr double WOLF_PARAM_DEFAULT = 0.25;   // TODO: add unit
+    static constexpr double RF_EPSILON_DEFAULT = 1.0;
 
     static constexpr bool   CONSTRAINTS_ACTIVE_DEFAULT = false;
     static constexpr size_t SHAKE_MAX_ITER_DEFAULT     = 20;

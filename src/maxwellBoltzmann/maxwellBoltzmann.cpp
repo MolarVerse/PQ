@@ -28,9 +28,9 @@
 #include "constants/conversionFactors.hpp"           // for _AMU_TO_KG_
 #include "constants/internalConversionFactors.hpp"   // for _VELOCITY_UNIT_TO_SI_
 #include "constants/natureConstants.hpp"             // for _BOLTZMANN_CONSTANT_
-#include "resetKinetics.hpp"                         // for ResetKinetics
-#include "simulationBox.hpp"                         // for SimulationBox
-#include "thermostatSettings.hpp"                    // for ThermostatSettings
+#include "resetKinetics.hpp"        // for resetKinetics::ResetKinetics
+#include "simulationBox.hpp"        // for SimulationBox
+#include "thermostatSettings.hpp"   // for ThermostatSettings
 
 #ifdef WITH_MPI
 #include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
@@ -38,61 +38,71 @@
 #include "mpi.hpp"   // for MPI
 #endif
 
-using maxwellBoltzmann::MaxwellBoltzmann;
-using namespace molsys;
-
-using namespace settings;
-using namespace resetKinetics;
-
-/**
- * @brief generate boltzmann distributed velocities for all atoms in the
- * simulation box
- *
- * @details using a standard deviation of sqrt(kb*T/m) for each component of the
- * velocity vector
- *
- * @param simulationBox
- */
-void MaxwellBoltzmann::initializeVelocities(SimulationBox &simulationBox)
+namespace maxwellBoltzmann
 {
-    auto generateVelocities = [this](auto &atom)
+    /**
+     * @brief generate boltzmann distributed velocities for all atoms in the
+     * simulation box
+     *
+     * @details using a standard deviation of sqrt(kb*T/m) for each component of
+     * the velocity vector
+     *
+     * @param simulationBox
+     */
+    void MaxwellBoltzmann::initializeVelocities(
+        molsys::SimulationBox &simulationBox
+    )
     {
-        const auto mass              = atom->getMass() * AMU_TO_KG;
-        const auto boltzmannConstant = BOLTZMANN_CONSTANT;
-        const auto temp = ThermostatSettings::getActualTargetTemperature();
+        auto generateVelocities = [this](auto &atom)
+        {
+            const auto mass              = atom->getMass() * AMU_TO_KG;
+            const auto boltzmannConstant = BOLTZMANN_CONSTANT;
+            const auto temp =
+                settings::ThermostatSettings::getActualTargetTemperature();
 
-        const auto stddev =
-            ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
+            const auto stddev =
+                ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
 
-        atom->setVelocity(
-            {_randomNumberGenerator.getNormalDistribution(0.0, stddev),
-             _randomNumberGenerator.getNormalDistribution(0.0, stddev),
-             _randomNumberGenerator.getNormalDistribution(0.0, stddev)}
-        );
-    };
+            atom->setVelocity(
+                {_randomNumberGenerator.getNormalDistribution(0.0, stddev),
+                 _randomNumberGenerator.getNormalDistribution(0.0, stddev),
+                 _randomNumberGenerator.getNormalDistribution(0.0, stddev)}
+            );
+        };
 
 #ifdef WITH_MPI
-    if (mpi::MPI::isRoot())
-        std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
+        if (mpi::MPI::isRoot())
+            std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 
-    auto velocities = simulationBox.flattenVelocities();
+        auto velocities = simulationBox.flattenVelocities();
 
-    ::MPI_Bcast(
-        velocities.data(),
-        velocities.size(),
-        MPI_DOUBLE,
-        0,
-        MPI_COMM_WORLD
-    );
+        ::MPI_Bcast(
+            velocities.data(),
+            velocities.size(),
+            MPI_DOUBLE,
+            0,
+            MPI_COMM_WORLD
+        );
 
-    simulationBox.deFlattenVelocities(velocities);
+        simulationBox.deFlattenVelocities(velocities);
 #else
-    std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
+        std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 #endif
 
-    auto resetKinetics = ResetKinetics();
-    resetKinetics.setMomentum(simulationBox.calculateMomentum());
-    resetKinetics.resetMomentum(simulationBox);
-    resetKinetics.resetAngularMomentum(simulationBox);
-    resetKinetics.resetTemperature(simulationBox);
-}
+        resetKinetics::ResetKinetics::resetMomentum(
+            simulationBox,
+            simulationBox.calculateMomentum()
+        );
+        resetKinetics::ResetKinetics::resetAngularMomentum(
+            simulationBox,
+            simulationBox.calculateAngularMomentum(
+                simulationBox.calculateMomentum()
+            )
+        );
+        resetKinetics::ResetKinetics::resetTemperature(
+            simulationBox,
+            simulationBox.calculateTemperature()
+        );
+    }
+
+}   // namespace maxwellBoltzmann

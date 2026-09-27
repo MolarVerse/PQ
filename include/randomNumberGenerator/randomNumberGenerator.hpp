@@ -26,7 +26,7 @@
 
 #include <random>   // for std::random_device and std::mt19937
 
-namespace randomNumberGenerator
+namespace rng
 {
     /**
      * @class RandomNumberGenerator
@@ -47,6 +47,6 @@ namespace randomNumberGenerator
         double getUniformRealDistribution(double min, double max);
     };
 
-}   // namespace randomNumberGenerator
+}   // namespace rng
 
 #endif   // _RANDOM_NUMBER_GENERATOR_HPP_

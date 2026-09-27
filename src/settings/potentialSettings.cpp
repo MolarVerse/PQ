@@ -27,264 +27,249 @@
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"
 
-using namespace settings;
-using namespace utilities;
-using namespace exc;
-
-/**
- * @brief return string of nonCoulombType
- *
- * @param nonCoulombType
- * @return std::string
- */
-std::string settings::string(NonCoulombType nonCoulombType)
+namespace settings
 {
-    switch (nonCoulombType)
+
+    /**
+     * @brief return string of nonCoulombType
+     *
+     * @param nonCoulombType
+     * @return std::string
+     */
+    std::string string(NonCoulombType nonCoulombType)
+    {
+        switch (nonCoulombType)
+        {
+            using enum NonCoulombType;
+
+            case LJ: return "lj";
+            case LJ_9_12: return "lj_9_12";
+            case BUCKINGHAM: return "buck";
+            case MORSE: return "morse";
+            case GUFF: return "guff";
+
+            case NONE: return "none";
+        }
+
+        std::unreachable();
+    }
+
+    /********************
+     *                  *
+     * standard setters *
+     *                  *
+     ********************/
+
+    /**
+     * @brief Set the nonCoulomb type as string and enum in the
+     * PotentialSettings class
+     *
+     * @param type
+     */
+    void PotentialSettings::setNonCoulombType(const std::string_view &type)
     {
         using enum NonCoulombType;
+        const auto typeToLower = utilities::toLowerAndReplaceDashesCopy(type);
 
-        case LJ: return "lj";
-        case LJ_9_12: return "lj_9_12";
-        case BUCKINGHAM: return "buck";
-        case MORSE: return "morse";
-        case GUFF: return "guff";
+        if (typeToLower == "lj")
+            _nonCoulombType = LJ;
 
-        case NONE: return "none";
+        else if (typeToLower == "lj_9_12")
+            _nonCoulombType = LJ_9_12;
+
+        else if (typeToLower == "buck")
+            _nonCoulombType = BUCKINGHAM;
+
+        else if (typeToLower == "morse")
+            _nonCoulombType = MORSE;
+
+        else if (typeToLower == "guff")
+            _nonCoulombType = GUFF;
+
+        else
+            _nonCoulombType = NONE;
     }
 
-    std::unreachable();
-}
+    /**
+     * @brief Set the nonCoulomb type as enum in the PotentialSettings class
+     *
+     * @param type
+     */
+    void PotentialSettings::setNonCoulombType(NonCoulombType type)
+    {
+        _nonCoulombType = type;
+    }
 
-/**
- * @brief return string of CoulombLongRangeType
- *
- * @param coulombLongRangeType
- * @return std::string
- */
-std::string settings::string(CoulombLongRangeType coulombLongRangeType)
-{
-    switch (coulombLongRangeType)
+    void PotentialSettings::setCoulombLongRangeType(
+        const std::string_view &type
+    )
     {
         using enum CoulombLongRangeType;
+        const auto typeToLower = utilities::toLowerAndReplaceDashesCopy(type);
 
-        case REACTION_FIELD: return "reaction-field";
-        case WOLF: return "wolf";
-        case SHIFTED: return "shifted";
+        if (typeToLower == "reaction_field")
+            _coulombLRType = REACTION_FIELD;
+
+        else if (typeToLower == "wolf")
+            _coulombLRType = WOLF;
+
+        else if (typeToLower == "shifted")
+            _coulombLRType = SHIFTED;
+
+        else
+            throw exc::UserInputException(
+                "Unknown Coulomb long range type " + std::string(type)
+            );
     }
 
-    std::unreachable();
-}
+    /**
+     * @brief Set the Coulomb long range type in the PotentialSettings class
+     *
+     * @param type
+     */
+    void PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType type)
+    {
+        _coulombLRType = type;
+    }
 
-/********************
- *                  *
- * standard setters *
- *                  *
- ********************/
+    /**
+     * @brief Set the Coulomb radius cut off in the PotentialSettings class
+     *
+     * @param coulombRadiusCutOff
+     */
+    void PotentialSettings::setCoulombRadiusCutOff(double coulombRadiusCutOff)
+    {
+        _coulombRadiusCutOff = coulombRadiusCutOff;
+    }
 
-/**
- * @brief Set the nonCoulomb type as string and enum in the PotentialSettings
- * class
- *
- * @param type
- */
-void PotentialSettings::setNonCoulombType(const std::string_view &type)
-{
-    using enum NonCoulombType;
-    const auto typeToLower = toLowerAndReplaceDashesCopy(type);
+    /**
+     * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
+     *
+     * @param nonCoulombRadiusCutOff
+     */
+    void PotentialSettings::setNonCoulombRadiusCutOff(
+        double nonCoulombRadiusCutOff
+    )
+    {
+        _nonCoulombRadiusCutOff = nonCoulombRadiusCutOff;
+    }
 
-    if (typeToLower == "lj")
-        _nonCoulombType = LJ;
+    /**
+     * @brief Set the 1-4 Coulomb scaling factor in the PotentialSettings class
+     *
+     * @param scale14Coulomb
+     */
+    void PotentialSettings::setScale14Coulomb(double scale14Coulomb)
+    {
+        _scale14Coulomb = scale14Coulomb;
+    }
 
-    else if (typeToLower == "lj_9_12")
-        _nonCoulombType = LJ_9_12;
+    /**
+     * @brief Set the 1-4 Van der Waals scaling factor in the PotentialSettings
+     * class
+     *
+     * @param scale14VanDerWaals
+     */
+    void PotentialSettings::setScale14VanDerWaals(double scale14VanDerWaals)
+    {
+        _scale14VanDerWaals = scale14VanDerWaals;
+    }
 
-    else if (typeToLower == "buck")
-        _nonCoulombType = BUCKINGHAM;
+    /**
+     * @brief Set the reaction field epsilon in the PotentialSettings class
+     *
+     * @param epsilon
+     */
+    void PotentialSettings::setReactionFieldEpsilon(double epsilon)
+    {
+        _reactionFieldEpsilon = epsilon;
+    }
 
-    else if (typeToLower == "morse")
-        _nonCoulombType = MORSE;
+    /**
+     * @brief Set the Wolf parameter in the PotentialSettings class
+     *
+     * @param wolfParameter
+     */
+    void PotentialSettings::setWolfParameter(double wolfParameter)
+    {
+        _wolfParameter = wolfParameter;
+    }
 
-    else if (typeToLower == "guff")
-        _nonCoulombType = GUFF;
+    /********************
+     *                  *
+     * standard getters *
+     *                  *
+     ********************/
 
-    else
-        _nonCoulombType = NONE;
-}
+    /**
+     * @brief get the Coulomb long range type
+     *
+     * @return CoulombLongRangeType
+     */
+    CoulombLongRangeType PotentialSettings::getCoulombLongRangeType()
+    {
+        return _coulombLRType;
+    }
 
-/**
- * @brief Set the nonCoulomb type as enum in the PotentialSettings class
- *
- * @param type
- */
-void PotentialSettings::setNonCoulombType(NonCoulombType type)
-{
-    _nonCoulombType = type;
-}
+    /**
+     * @brief get the nonCoulomb type
+     *
+     * @return NonCoulombType
+     */
+    NonCoulombType PotentialSettings::getNonCoulombType()
+    {
+        return _nonCoulombType;
+    }
 
-void PotentialSettings::setCoulombLongRangeType(const std::string_view &type)
-{
-    using enum CoulombLongRangeType;
-    const auto typeToLower = toLowerAndReplaceDashesCopy(type);
+    /**
+     * @brief get the Coulomb radius cut off
+     *
+     * @return double
+     */
+    double PotentialSettings::getCoulombRadiusCutOff()
+    {
+        return _coulombRadiusCutOff;
+    }
 
-    if (typeToLower == "reaction_field")
-        _coulombLRType = REACTION_FIELD;
+    /**
+     * @brief get the non-Coulomb radius cut off
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> PotentialSettings::getNonCoulombRadiusCutOff()
+    {
+        return _nonCoulombRadiusCutOff;
+    }
 
-    else if (typeToLower == "wolf")
-        _coulombLRType = WOLF;
+    /**
+     * @brief get the 1-4 Coulomb scaling factor
+     *
+     * @return double
+     */
+    double PotentialSettings::getScale14Coulomb() { return _scale14Coulomb; }
 
-    else if (typeToLower == "shifted")
-        _coulombLRType = SHIFTED;
+    /**
+     * @brief get the 1-4 Van der Waals scaling factor
+     *
+     * @return double
+     */
+    double PotentialSettings::getScale14VDW() { return _scale14VanDerWaals; }
 
-    else
-        throw UserInputException(
-            "Unknown Coulomb long range type " + std::string(type)
-        );
-}
+    /**
+     * @brief get the reaction field epsilon
+     *
+     * @return double
+     */
+    double PotentialSettings::getReactionFieldEpsilon()
+    {
+        return _reactionFieldEpsilon;
+    }
 
-/**
- * @brief Set the Coulomb long range type in the PotentialSettings class
- *
- * @param type
- */
-void PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType type)
-{
-    _coulombLRType = type;
-}
+    /**
+     * @brief get the Wolf parameter
+     *
+     * @return double
+     */
+    double PotentialSettings::getWolfParameter() { return _wolfParameter; }
 
-/**
- * @brief Set the Coulomb radius cut off in the PotentialSettings class
- *
- * @param coulombRadiusCutOff
- */
-void PotentialSettings::setCoulombRadiusCutOff(double coulombRadiusCutOff)
-{
-    _coulombRadiusCutOff = coulombRadiusCutOff;
-}
-
-/**
- * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
- *
- * @param nonCoulombRadiusCutOff
- */
-void PotentialSettings::setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff)
-{
-    _nonCoulombRadiusCutOff = nonCoulombRadiusCutOff;
-}
-
-/**
- * @brief Set the 1-4 Coulomb scaling factor in the PotentialSettings class
- *
- * @param scale14Coulomb
- */
-void PotentialSettings::setScale14Coulomb(double scale14Coulomb)
-{
-    _scale14Coulomb = scale14Coulomb;
-}
-
-/**
- * @brief Set the 1-4 Van der Waals scaling factor in the PotentialSettings
- * class
- *
- * @param scale14VanDerWaals
- */
-void PotentialSettings::setScale14VanDerWaals(double scale14VanDerWaals)
-{
-    _scale14VanDerWaals = scale14VanDerWaals;
-}
-
-/**
- * @brief Set the reaction field epsilon in the PotentialSettings class
- *
- * @param epsilon
- */
-void PotentialSettings::setReactionFieldEpsilon(double epsilon)
-{
-    _reactionFieldEpsilon = epsilon;
-}
-
-/**
- * @brief Set the Wolf parameter in the PotentialSettings class
- *
- * @param wolfParameter
- */
-void PotentialSettings::setWolfParameter(double wolfParameter)
-{
-    _wolfParameter = wolfParameter;
-}
-
-/********************
- *                  *
- * standard getters *
- *                  *
- ********************/
-
-/**
- * @brief get the Coulomb long range type
- *
- * @return CoulombLongRangeType
- */
-CoulombLongRangeType PotentialSettings::getCoulombLongRangeType()
-{
-    return _coulombLRType;
-}
-
-/**
- * @brief get the nonCoulomb type
- *
- * @return NonCoulombType
- */
-NonCoulombType PotentialSettings::getNonCoulombType()
-{
-    return _nonCoulombType;
-}
-
-/**
- * @brief get the Coulomb radius cut off
- *
- * @return double
- */
-double PotentialSettings::getCoulombRadiusCutOff()
-{
-    return _coulombRadiusCutOff;
-}
-
-/**
- * @brief get the non-Coulomb radius cut off
- *
- * @return std::optional<double>
- */
-std::optional<double> PotentialSettings::getNonCoulombRadiusCutOff()
-{
-    return _nonCoulombRadiusCutOff;
-}
-
-/**
- * @brief get the 1-4 Coulomb scaling factor
- *
- * @return double
- */
-double PotentialSettings::getScale14Coulomb() { return _scale14Coulomb; }
-
-/**
- * @brief get the 1-4 Van der Waals scaling factor
- *
- * @return double
- */
-double PotentialSettings::getScale14VDW() { return _scale14VanDerWaals; }
-
-/**
- * @brief get the reaction field epsilon
- *
- * @return double
- */
-double PotentialSettings::getReactionFieldEpsilon()
-{
-    return _reactionFieldEpsilon;
-}
-
-/**
- * @brief get the Wolf parameter
- *
- * @return double
- */
-double PotentialSettings::getWolfParameter() { return _wolfParameter; }
+}   // namespace settings

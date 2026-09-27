@@ -22,41 +22,45 @@
 
 #include "intraNonBondedContainer.hpp"
 
-using namespace intraNonBonded;
-
-/**
- * @brief constructor for IntraNonBondedContainer
- *
- * @param molType
- * @param atomIndices
- */
-IntraNonBondedContainer::IntraNonBondedContainer(
-    MolType                              molType,
-    const std::vector<std::vector<int>> &atomIndices
-)
-    : _molType(molType), _atomIndices(atomIndices)
+namespace intraNonBonded
 {
-}
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief constructor for IntraNonBondedContainer
+     *
+     * @param molType
+     * @param atomIndices
+     */
+    IntraNonBondedContainer::IntraNonBondedContainer(
+        MolType                              molType,
+        const std::vector<std::vector<int>> &atomIndices
+    )
+        : _molType(molType), _atomIndices(atomIndices)
+    {
+    }
 
-/**
- * @brief get the molType
- *
- * @return MolType
- */
-MolType IntraNonBondedContainer::getMolType() const { return _molType; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the atomIndices
- *
- * @return std::vector<std::vector<int>>
- */
-std::vector<std::vector<int>> IntraNonBondedContainer::getAtomIndices() const
-{
-    return _atomIndices;
-}
+    /**
+     * @brief get the molType
+     *
+     * @return MolType
+     */
+    MolType IntraNonBondedContainer::getMolType() const { return _molType; }
+
+    /**
+     * @brief get the atomIndices
+     *
+     * @return std::vector<std::vector<int>>
+     */
+    std::vector<std::vector<int>> IntraNonBondedContainer::getAtomIndices(
+    ) const
+    {
+        return _atomIndices;
+    }
+
+}   // namespace intraNonBonded

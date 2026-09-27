@@ -20,16 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POSITION_SETTINGS_HPP_
+#ifndef _POTENTIAL_SETTINGS_HPP_
 
-#define _POSITION_SETTINGS_HPP_
+#define _POTENTIAL_SETTINGS_HPP_
 
+#include <array>
 #include <cstdint>
+#include <mstd/enum.hpp>
 #include <optional>      // for optional
 #include <string>        // for allocator, string
 #include <string_view>   // for string_view
 
 #include "defaults.hpp"   // for _COULOMB_LONG_RANGE_TYPE_DEFAULT_, ...
+#include "enums/base.hpp"
 
 namespace settings
 {
@@ -49,21 +52,17 @@ namespace settings
         NONE
     };
 
-    /**
-     * @enum CoulombLongRangeType
-     *
-     * @brief enum class to store the coulomb long range type
-     *
-     */
-    enum class CoulombLongRangeType : std::uint8_t
-    {
-        SHIFTED,
-        REACTION_FIELD,
-        WOLF
-    };
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define COULOMB_LONG_RANGE_TYPE_LIST(X) \
+    X(SHIFTED)                          \
+    X(REACTION_FIELD)                   \
+    X(WOLF)
+
+    MSTD_ENUM(CoulombLongRangeType, std::uint8_t, COULOMB_LONG_RANGE_TYPE_LIST)
+
+#undef COULOMB_LONG_RANGE_TYPE_LIST
 
     [[nodiscard]] std::string string(NonCoulombType nonCoulombType);
-    [[nodiscard]] std::string string(CoulombLongRangeType coulombLongRangeType);
 
     /**
      * @class PotentialSettings
@@ -85,7 +84,8 @@ namespace settings
         // clang-format on
 
         static inline double _wolfParameter = defaults::WOLF_PARAM_DEFAULT;
-        static inline double _reactionFieldEpsilon;
+        static inline double _reactionFieldEpsilon =
+            defaults::RF_EPSILON_DEFAULT;
 
        public:
         PotentialSettings()  = default;
@@ -126,4 +126,17 @@ namespace settings
 
 }   // namespace settings
 
-#endif   // _POSITION_SETTINGS_HPP_
+// TODO: move this to deidcated enum file as soon as it is done
+
+/**
+ * @brief Input alias for settings::CoulombLongRangeType
+ */
+template <>
+struct InputAlias<settings::CoulombLongRangeType>
+{
+    static constexpr std::
+        array<std::pair<std::string_view, settings::CoulombLongRangeType>, 1>
+            value = {{{"none", settings::CoulombLongRangeType::SHIFTED}}};
+};
+
+#endif   // _POTENTIAL_SETTINGS_HPP_

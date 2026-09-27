@@ -24,101 +24,105 @@
 
 #include <pybind11/embed.h>
 
-using QM::AseDftbRunner;
-
-/**
- * @brief Construct a new AseDftbRunner::AseDftbRunner object
- *
- * @param slakosPath
- * @param thirdOrder
- * @param hubbardDerivs
- * @param dispersion
- *
- * @throw pybind11::error_already_set if the import of the mace module fails
- */
-AseDftbRunner::AseDftbRunner(
-    const std::string                             &slakosPath,
-    bool                                           thirdOrder,
-    const std::unordered_map<std::string, double> &hubbardDerivs,
-    bool                                           dispersion
-)
+namespace QM
 {
-    try
+
+    /**
+     * @brief Construct a new AseDftbRunner::AseDftbRunner object
+     *
+     * @param slakosPath
+     * @param thirdOrder
+     * @param hubbardDerivs
+     * @param dispersion
+     *
+     * @throw pybind11::error_already_set if the import of the mace module fails
+     */
+    AseDftbRunner::AseDftbRunner(
+        const std::string                             &slakosPath,
+        bool                                           thirdOrder,
+        const std::unordered_map<std::string, double> &hubbardDerivs,
+        bool                                           dispersion
+    )
     {
-        const pybind11::module_ calculator =
-            pybind11::module_::import("ase.calculators.dftb");
-
-        const pybind11::dict calculatorArgs;
-
-        calculatorArgs["slako_dir"] = slakosPath.c_str();
-
-        if (dispersion)
+        try
         {
-            calculatorArgs["Hamiltonian_Dispersion"]            = "DftD3{";
-            calculatorArgs["Hamiltonian_Dispersion_Damping_a1"] = "0.746";
-            calculatorArgs["Hamiltonian_Dispersion_Damping_a2"] = "4.191";
-            calculatorArgs["Hamiltonian_Dispersion_Damping"] = "BeckeJohnson{";
-            calculatorArgs["Hamiltonian_Dispersion_s6"]      = "1.0";
-            calculatorArgs["Hamiltonian_Dispersion_s8"]      = "3.209";
-        }
+            const pybind11::module_ calculator =
+                pybind11::module_::import("ase.calculators.dftb");
 
-        if (thirdOrder)
-        {
-            setHubbDerivDict(hubbardDerivs);
-            calculatorArgs["Hamiltonian_ThirdOrderFull"] = "Yes";
-            calculatorArgs["Hamiltonian_hubbardderivs_"] = "";
-            const auto hubbDerivDict                     = getHubbDerivDict();
-            for (const auto &[key, value] : hubbDerivDict)
+            const pybind11::dict calculatorArgs;
+
+            calculatorArgs["slako_dir"] = slakosPath.c_str();
+
+            if (dispersion)
             {
-                auto _key = "Hamiltonian_hubbardderivs_" + key;
-                calculatorArgs[_key.c_str()] = value;
+                calculatorArgs["Hamiltonian_Dispersion"]            = "DftD3{";
+                calculatorArgs["Hamiltonian_Dispersion_Damping_a1"] = "0.746";
+                calculatorArgs["Hamiltonian_Dispersion_Damping_a2"] = "4.191";
+                calculatorArgs["Hamiltonian_Dispersion_Damping"] =
+                    "BeckeJohnson{";
+                calculatorArgs["Hamiltonian_Dispersion_s6"] = "1.0";
+                calculatorArgs["Hamiltonian_Dispersion_s8"] = "3.209";
             }
+
+            if (thirdOrder)
+            {
+                setHubbDerivDict(hubbardDerivs);
+                calculatorArgs["Hamiltonian_ThirdOrderFull"] = "Yes";
+                calculatorArgs["Hamiltonian_hubbardderivs_"] = "";
+                const auto hubbDerivDict = getHubbDerivDict();
+                for (const auto &[key, value] : hubbDerivDict)
+                {
+                    auto _key = "Hamiltonian_hubbardderivs_" + key;
+                    calculatorArgs[_key.c_str()] = value;
+                }
+            }
+            // default would be 1, which is incompatible with DFTB3
+            calculatorArgs["ParserOptions_ParserVersion"] = "12";
+            // SCC = "Yes" is mandatory for SCC cycles to be performed
+            calculatorArgs["Hamiltonian_SCC"]              = "Yes";
+            calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
+            calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
+            calculatorArgs["kpts"] = pybind11::make_tuple(1, 1, 1);
+            setAseCalculator(calculator.attr("Dftb")(**calculatorArgs));
         }
-        // default would be 1, which is incompatible with DFTB3
-        calculatorArgs["ParserOptions_ParserVersion"] = "12";
-        // SCC = "Yes" is mandatory for SCC cycles to be performed
-        calculatorArgs["Hamiltonian_SCC"]              = "Yes";
-        calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
-        calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
-        calculatorArgs["kpts"] = pybind11::make_tuple(1, 1, 1);
-        setAseCalculator(calculator.attr("Dftb")(**calculatorArgs));
+        catch (const pybind11::error_already_set &)
+        {
+            ::PyErr_Print();
+            throw;
+        }
     }
-    catch (const pybind11::error_already_set &)
+
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief get the 3ob Hubbard derivatives as dict
+     *
+     * @return std::unordered_map<std::string, float>
+     */
+    const std::unordered_map<std::string, double> &AseDftbRunner::
+        getHubbDerivDict() const
     {
-        ::PyErr_Print();
-        throw;
+        return _hubbardDerivDict;
     }
-}
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the 3ob Hubbard derivatives as dict
- *
- * @return std::unordered_map<std::string, float>
- */
-const std::unordered_map<std::string, double> &AseDftbRunner::getHubbDerivDict(
-) const
-{
-    return _hubbardDerivDict;
-}
+    /**
+     * @brief set the 3ob Hubbard derivatives as dict
+     */
+    void AseDftbRunner::setHubbDerivDict(
+        const std::unordered_map<std::string, double> &slakosDict
+    )
+    {
+        _hubbardDerivDict = slakosDict;
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
-
-/**
- * @brief set the 3ob Hubbard derivatives as dict
- */
-void AseDftbRunner::setHubbDerivDict(
-    const std::unordered_map<std::string, double> &slakosDict
-)
-{
-    _hubbardDerivDict = slakosDict;
-}
+}   // namespace QM

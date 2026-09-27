@@ -31,8 +31,6 @@
 #include "testInputFileReader.hpp"     // for TestInputFileReader
 #include "throwWithMessage.hpp"        // for EXPECT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "nscale" command
  *
@@ -40,8 +38,8 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseNScale)
 {
-    ResetKineticsInputParser parser;
-    const auto               funcMap = parser.getKeywordFuncMap();
+    input::ResetKineticsInputParser parser;
+    const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nscale"));
     const auto &parseFunc = funcMap.at("nscale");
 
@@ -67,8 +65,8 @@ TEST_F(TestInputFileReader, testParseNScale)
  */
 TEST_F(TestInputFileReader, testParseFScale)
 {
-    ResetKineticsInputParser parser;
-    const auto               funcMap = parser.getKeywordFuncMap();
+    input::ResetKineticsInputParser parser;
+    const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("fscale"));
     const auto &parseFunc = funcMap.at("fscale");
 
@@ -94,8 +92,8 @@ TEST_F(TestInputFileReader, testParseFScale)
  */
 TEST_F(TestInputFileReader, testParseNReset)
 {
-    ResetKineticsInputParser parser;
-    const auto               funcMap = parser.getKeywordFuncMap();
+    input::ResetKineticsInputParser parser;
+    const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nreset"));
     const auto &parseFunc = funcMap.at("nreset");
 
@@ -121,8 +119,8 @@ TEST_F(TestInputFileReader, testParseNReset)
  */
 TEST_F(TestInputFileReader, testParseFReset)
 {
-    ResetKineticsInputParser parser;
-    const auto               funcMap = parser.getKeywordFuncMap();
+    input::ResetKineticsInputParser parser;
+    const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("freset"));
     const auto &parseFunc = funcMap.at("freset");
 
@@ -148,8 +146,8 @@ TEST_F(TestInputFileReader, testParseFReset)
  */
 TEST_F(TestInputFileReader, testParseNResetAngular)
 {
-    ResetKineticsInputParser parser;
-    const auto               funcMap = parser.getKeywordFuncMap();
+    input::ResetKineticsInputParser parser;
+    const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nreset_angular"));
     const auto &parseFunc = funcMap.at("nreset_angular");
 
@@ -175,8 +173,8 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
  */
 TEST_F(TestInputFileReader, testParseFResetAngular)
 {
-    ResetKineticsInputParser parser;
-    const auto               funcMap = parser.getKeywordFuncMap();
+    input::ResetKineticsInputParser parser;
+    const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("freset_angular"));
     const auto &parseFunc = funcMap.at("freset_angular");
 

@@ -30,354 +30,363 @@
 #include "globalTimer.hpp"                           // for GlobalTimer
 #include "simulationBox.hpp"                         // for SimulationBox
 
-using namespace physicalData;
-using namespace molsys;
-using namespace linalg;
-
-/**
- * @brief get the virial tensor, either atomic or molecular depending on the
- * configured virial type
- *
- * @param virialType - the virial type to get the virial tensor for
- *
- * @return const linalg::tensor3D&
- */
-const linalg::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
-    settings::VirialType virialType
-) const
+namespace physicalData
 {
-    switch (virialType)
+    /**
+     * @brief get the virial tensor, either atomic or molecular depending on the
+     * configured virial type
+     *
+     * @param virialType - the virial type to get the virial tensor for
+     *
+     * @return const linalg::tensor3D&
+     */
+    const linalg::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
+        settings::VirialType virialType
+    ) const
     {
-        case settings::VirialType::ATOMIC: return atomic;
-        case settings::VirialType::MOLECULAR: return molecular;
-    }
-
-    std::unreachable();
-}
-
-/**
- * @brief Calculates kinetic energy and momentum of the system
- *
- * @param simulationBox
- */
-void PhysicalData::calculateKinetics(SimulationBox& simulationBox)
-{
-    auto _ = scopedTimer(TimerId::PhysicalData, "Calc Kinetics");
-
-    _momentum = Vec3D();
-    tensor3D kineticEnergyAtomicTensor{};
-    tensor3D kineticEnergyMolecularTensor{};
-
-    auto kinEnergyAndMomOfMol = [&kineticEnergyAtomicTensor,
-                                 &kineticEnergyMolecularTensor,
-                                 this](auto& molecule)
-    {
-        const auto numberOfAtoms   = molecule.getNumberOfAtoms();
-        auto       momentumSquared = tensor3D();
-
-        for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
+        switch (virialType)
         {
-            const auto velocities = molecule.getAtomVelocity(i);
-
-            const auto momentum = velocities * molecule.getAtomMass(i);
-
-            _momentum                 += momentum;
-            kineticEnergyAtomicTensor += tensorProduct(momentum, velocities);
-            momentumSquared           += tensorProduct(momentum, momentum);
+            case settings::VirialType::ATOMIC: return atomic;
+            case settings::VirialType::MOLECULAR: return molecular;
         }
 
-        kineticEnergyMolecularTensor += momentumSquared / molecule.getMolMass();
-    };
+        std::unreachable();
+    }
 
-    std::ranges::for_each(simulationBox.getMolecules(), kinEnergyAndMomOfMol);
+    /**
+     * @brief Calculates kinetic energy and momentum of the system
+     *
+     * @param simulationBox
+     */
+    void PhysicalData::calculateKinetics(molsys::SimulationBox& simulationBox)
+    {
+        auto _ = scopedTimer(TimerId::PhysicalData, "Calc Kinetics");
 
-    kineticEnergyAtomicTensor    *= KINETIC_ENERGY_FACTOR;
-    kineticEnergyMolecularTensor *= KINETIC_ENERGY_FACTOR;
+        _momentum = linalg::Vec3D();
+        linalg::tensor3D kineticEnergyAtomicTensor{};
+        linalg::tensor3D kineticEnergyMolecularTensor{};
 
-    _kinEnergyVirialTensor.atomic    = kineticEnergyAtomicTensor;
-    _kinEnergyVirialTensor.molecular = kineticEnergyMolecularTensor;
+        auto kinEnergyAndMomOfMol = [&kineticEnergyAtomicTensor,
+                                     &kineticEnergyMolecularTensor,
+                                     this](auto& molecule)
+        {
+            const auto numberOfAtoms   = molecule.getNumberOfAtoms();
+            auto       momentumSquared = linalg::tensor3D();
 
-    _kineticEnergy = trace(kineticEnergyAtomicTensor);
+            for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
+            {
+                const auto velocities = molecule.getAtomVelocity(i);
 
-    _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
-    _angularMomentum *= FS_TO_S;
+                const auto momentum = velocities * molecule.getAtomMass(i);
 
-    _momentum *= FS_TO_S;
-}
+                _momentum += momentum;
+                kineticEnergyAtomicTensor +=
+                    tensorProduct(momentum, velocities);
+                momentumSquared += tensorProduct(momentum, momentum);
+            }
 
-/**
- * @brief clones the physicalData
- *
- * @return std::shared_ptr<PhysicalData>
- */
-std::shared_ptr<PhysicalData> PhysicalData::clone() const
-{
-    return std::make_shared<PhysicalData>(*this);
-}
+            kineticEnergyMolecularTensor +=
+                momentumSquared / molecule.getMolMass();
+        };
 
-/**
- * @brief copies one physicalData to another
- *
- * @param other - physicalData to copy from
- */
-void PhysicalData::copy(const PhysicalData& other)
-{
-    reset();
+        std::ranges::for_each(
+            simulationBox.getMolecules(),
+            kinEnergyAndMomOfMol
+        );
 
-    updateAverages(other);
-}
+        kineticEnergyAtomicTensor    *= KINETIC_ENERGY_FACTOR;
+        kineticEnergyMolecularTensor *= KINETIC_ENERGY_FACTOR;
 
-/**
- * @brief calculates the sum of all physicalData of last steps
- *
- * @param other - physicalData to update averages from
- */
-void PhysicalData::updateAverages(const PhysicalData& other)
-{
-    _numberOfQMAtoms += other.getNumberOfQMAtoms();
-    _loopTime        += other.getLoopTime();
+        _kinEnergyVirialTensor.atomic    = kineticEnergyAtomicTensor;
+        _kinEnergyVirialTensor.molecular = kineticEnergyMolecularTensor;
 
-    _coulombEnergy         += other.getCoulombEnergy();
-    _nonCoulombEnergy      += other.getNonCoulombEnergy();
-    _intraCoulombEnergy    += other.getIntraCoulombEnergy();
-    _intraNonCoulombEnergy += other.getIntraNonCoulombEnergy();
+        _kineticEnergy = trace(kineticEnergyAtomicTensor);
 
-    _bondEnergy     += other.getBondEnergy();
-    _angleEnergy    += other.getAngleEnergy();
-    _dihedralEnergy += other.getDihedralEnergy();
-    _improperEnergy += other.getImproperEnergy();
+        _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
+        _angularMomentum *= FS_TO_S;
 
-    _temperature     += other.getTemperature();
-    _kineticEnergy   += other.getKineticEnergy();
-    _volume          += other.getVolume();
-    _density         += other.getDensity();
-    _virial          += other.getVirial();
-    _pressure        += other.getPressure();
-    _coupledPressure += other.getCoupledPressure();
+        _momentum *= FS_TO_S;
+    }
 
-    _qmEnergy += other.getQMEnergy();
+    /**
+     * @brief clones the physicalData
+     *
+     * @return std::shared_ptr<PhysicalData>
+     */
+    std::shared_ptr<PhysicalData> PhysicalData::clone() const
+    {
+        return std::make_shared<PhysicalData>(*this);
+    }
 
-    _numberOfSmoothingMol += other.getNumberOfSmoothingMolecules();
+    /**
+     * @brief copies one physicalData to another
+     *
+     * @param other - physicalData to copy from
+     */
+    void PhysicalData::copy(const PhysicalData& other)
+    {
+        reset();
 
-    _momentum        += other.getMomentum();
-    _angularMomentum += other.getAngularMomentum();
+        updateAverages(other);
+    }
 
-    _noseHooverMomentumEnergy += other.getNoseHooverMomentumEnergy();
-    _noseHooverFrictionEnergy += other.getNoseHooverFrictionEnergy();
+    /**
+     * @brief calculates the sum of all physicalData of last steps
+     *
+     * @param other - physicalData to update averages from
+     */
+    void PhysicalData::updateAverages(const PhysicalData& other)
+    {
+        _numberOfQMAtoms += other.getNumberOfQMAtoms();
+        _loopTime        += other.getLoopTime();
 
-    _lowerDistanceConstraints += other.getLowerDistanceConstraints();
-    _upperDistanceConstraints += other.getUpperDistanceConstraints();
+        _coulombEnergy         += other.getCoulombEnergy();
+        _nonCoulombEnergy      += other.getNonCoulombEnergy();
+        _intraCoulombEnergy    += other.getIntraCoulombEnergy();
+        _intraNonCoulombEnergy += other.getIntraNonCoulombEnergy();
 
-    _ringPolymerEnergy += other.getRingPolymerEnergy();
+        _bondEnergy     += other.getBondEnergy();
+        _angleEnergy    += other.getAngleEnergy();
+        _dihedralEnergy += other.getDihedralEnergy();
+        _improperEnergy += other.getImproperEnergy();
 
-    const auto& kinEnergyVirialTensor = other._kinEnergyVirialTensor;
+        _temperature     += other.getTemperature();
+        _kineticEnergy   += other.getKineticEnergy();
+        _volume          += other.getVolume();
+        _density         += other.getDensity();
+        _virial          += other.getVirial();
+        _pressure        += other.getPressure();
+        _coupledPressure += other.getCoupledPressure();
 
-    _kinEnergyVirialTensor.atomic    += kinEnergyVirialTensor.atomic;
-    _kinEnergyVirialTensor.molecular += kinEnergyVirialTensor.molecular;
-}
+        _qmEnergy += other.getQMEnergy();
 
-/**
- * @brief calculates the average of all physicalData of last steps
- *
- * @param outputFrequency
- */
-void PhysicalData::makeAverages(const double outputFrequency)
-{
-    _numberOfQMAtoms /= outputFrequency;
-    _loopTime        /= outputFrequency;
+        _numberOfSmoothingMol += other.getNumberOfSmoothingMolecules();
 
-    _kineticEnergy         /= outputFrequency;
-    _coulombEnergy         /= outputFrequency;
-    _nonCoulombEnergy      /= outputFrequency;
-    _intraCoulombEnergy    /= outputFrequency;
-    _intraNonCoulombEnergy /= outputFrequency;
+        _momentum        += other.getMomentum();
+        _angularMomentum += other.getAngularMomentum();
 
-    _bondEnergy     /= outputFrequency;
-    _angleEnergy    /= outputFrequency;
-    _dihedralEnergy /= outputFrequency;
-    _improperEnergy /= outputFrequency;
+        _noseHooverMomentumEnergy += other.getNoseHooverMomentumEnergy();
+        _noseHooverFrictionEnergy += other.getNoseHooverFrictionEnergy();
 
-    _temperature     /= outputFrequency;
-    _volume          /= outputFrequency;
-    _density         /= outputFrequency;
-    _virial          /= outputFrequency;
-    _pressure        /= outputFrequency;
-    _coupledPressure /= outputFrequency;
+        _lowerDistanceConstraints += other.getLowerDistanceConstraints();
+        _upperDistanceConstraints += other.getUpperDistanceConstraints();
 
-    _qmEnergy /= outputFrequency;
+        _ringPolymerEnergy += other.getRingPolymerEnergy();
 
-    _numberOfSmoothingMol /= outputFrequency;
+        const auto& kinEnergyVirialTensor = other._kinEnergyVirialTensor;
 
-    _momentum        /= outputFrequency;
-    _angularMomentum /= outputFrequency;
+        _kinEnergyVirialTensor.atomic    += kinEnergyVirialTensor.atomic;
+        _kinEnergyVirialTensor.molecular += kinEnergyVirialTensor.molecular;
+    }
 
-    _noseHooverMomentumEnergy /= outputFrequency;
-    _noseHooverFrictionEnergy /= outputFrequency;
+    /**
+     * @brief calculates the average of all physicalData of last steps
+     *
+     * @param outputFrequency
+     */
+    void PhysicalData::makeAverages(const double outputFrequency)
+    {
+        _numberOfQMAtoms /= outputFrequency;
+        _loopTime        /= outputFrequency;
 
-    _lowerDistanceConstraints /= outputFrequency;
-    _upperDistanceConstraints /= outputFrequency;
+        _kineticEnergy         /= outputFrequency;
+        _coulombEnergy         /= outputFrequency;
+        _nonCoulombEnergy      /= outputFrequency;
+        _intraCoulombEnergy    /= outputFrequency;
+        _intraNonCoulombEnergy /= outputFrequency;
 
-    _ringPolymerEnergy /= outputFrequency;
+        _bondEnergy     /= outputFrequency;
+        _angleEnergy    /= outputFrequency;
+        _dihedralEnergy /= outputFrequency;
+        _improperEnergy /= outputFrequency;
 
-    _kinEnergyVirialTensor.atomic    /= outputFrequency;
-    _kinEnergyVirialTensor.molecular /= outputFrequency;
-}
+        _temperature     /= outputFrequency;
+        _volume          /= outputFrequency;
+        _density         /= outputFrequency;
+        _virial          /= outputFrequency;
+        _pressure        /= outputFrequency;
+        _coupledPressure /= outputFrequency;
 
-/**
- * @brief clear all physicalData in order to call add functions
- *
- */
-void PhysicalData::reset()
-{
-    _numberOfQMAtoms = 0.0;
-    _loopTime        = 0.0;
+        _qmEnergy /= outputFrequency;
 
-    _volume          = 0.0;
-    _density         = 0.0;
-    _temperature     = 0.0;
-    _pressure        = 0.0;
-    _coupledPressure = 0.0;
+        _numberOfSmoothingMol /= outputFrequency;
 
-    _kineticEnergy         = 0.0;
-    _coulombEnergy         = 0.0;
-    _nonCoulombEnergy      = 0.0;
-    _intraCoulombEnergy    = 0.0;
-    _intraNonCoulombEnergy = 0.0;
+        _momentum        /= outputFrequency;
+        _angularMomentum /= outputFrequency;
 
-    _bondEnergy     = 0.0;
-    _angleEnergy    = 0.0;
-    _dihedralEnergy = 0.0;
-    _improperEnergy = 0.0;
+        _noseHooverMomentumEnergy /= outputFrequency;
+        _noseHooverFrictionEnergy /= outputFrequency;
 
-    _qmEnergy = 0.0;
+        _lowerDistanceConstraints /= outputFrequency;
+        _upperDistanceConstraints /= outputFrequency;
 
-    _numberOfSmoothingMol = 0.0;
+        _ringPolymerEnergy /= outputFrequency;
 
-    _momentum        = {0.0, 0.0, 0.0};
-    _angularMomentum = {0.0, 0.0, 0.0};
+        _kinEnergyVirialTensor.atomic    /= outputFrequency;
+        _kinEnergyVirialTensor.molecular /= outputFrequency;
+    }
 
-    _noseHooverMomentumEnergy = 0.0;
-    _noseHooverFrictionEnergy = 0.0;
+    /**
+     * @brief clear all physicalData in order to call add functions
+     *
+     */
+    void PhysicalData::reset()
+    {
+        _numberOfQMAtoms = 0.0;
+        _loopTime        = 0.0;
 
-    _lowerDistanceConstraints = 0.0;
-    _upperDistanceConstraints = 0.0;
+        _volume          = 0.0;
+        _density         = 0.0;
+        _temperature     = 0.0;
+        _pressure        = 0.0;
+        _coupledPressure = 0.0;
 
-    _momentum        = {0.0, 0.0, 0.0};
-    _angularMomentum = {0.0, 0.0, 0.0};
+        _kineticEnergy         = 0.0;
+        _coulombEnergy         = 0.0;
+        _nonCoulombEnergy      = 0.0;
+        _intraCoulombEnergy    = 0.0;
+        _intraNonCoulombEnergy = 0.0;
 
-    _virial       = {0.0};
-    _stressTensor = {0.0};
+        _bondEnergy     = 0.0;
+        _angleEnergy    = 0.0;
+        _dihedralEnergy = 0.0;
+        _improperEnergy = 0.0;
 
-    _ringPolymerEnergy = 0.0;
+        _qmEnergy = 0.0;
 
-    // reset kinetic energy virial tensor, but make sure to keep the
-    // isVirialAtomic flag as it is
-    _kinEnergyVirialTensor.atomic    = {0.0};
-    _kinEnergyVirialTensor.molecular = {0.0};
-}
+        _numberOfSmoothingMol = 0.0;
 
-/**
- * @brief Clear all energies in PhysicalData. Used in QM/MM exact smoothing.
- *
- */
-void PhysicalData::resetEnergies()
-{
-    _kineticEnergy         = 0.0;
-    _coulombEnergy         = 0.0;
-    _nonCoulombEnergy      = 0.0;
-    _intraCoulombEnergy    = 0.0;
-    _intraNonCoulombEnergy = 0.0;
+        _momentum        = {0.0, 0.0, 0.0};
+        _angularMomentum = {0.0, 0.0, 0.0};
 
-    _bondEnergy     = 0.0;
-    _angleEnergy    = 0.0;
-    _dihedralEnergy = 0.0;
-    _improperEnergy = 0.0;
+        _noseHooverMomentumEnergy = 0.0;
+        _noseHooverFrictionEnergy = 0.0;
 
-    _qmEnergy = 0.0;
+        _lowerDistanceConstraints = 0.0;
+        _upperDistanceConstraints = 0.0;
 
-    _kinEnergyVirialTensor.atomic    = {0.0};
-    _kinEnergyVirialTensor.molecular = {0.0};
-}
+        _momentum        = {0.0, 0.0, 0.0};
+        _angularMomentum = {0.0, 0.0, 0.0};
 
-/**
- * @brief calculate temperature
- *
- * @param simulationBox
- */
-void PhysicalData::calculateTemperature(SimulationBox& simulationBox)
-{
-    _temperature = simulationBox.calculateTemperature();
-}
+        _virial       = {0.0};
+        _stressTensor = {0.0};
 
-/**
- * @brief calculate total energy
- *
- * @return double
- */
-double PhysicalData::getTotalEnergy() const
-{
-    auto totalEnergy = 0.0;
+        _ringPolymerEnergy = 0.0;
 
-    totalEnergy += _bondEnergy;
-    totalEnergy += _angleEnergy;
-    totalEnergy += _dihedralEnergy;
-    totalEnergy += _improperEnergy;
+        // reset kinetic energy virial tensor, but make sure to keep the
+        // isVirialAtomic flag as it is
+        _kinEnergyVirialTensor.atomic    = {0.0};
+        _kinEnergyVirialTensor.molecular = {0.0};
+    }
 
-    totalEnergy += _coulombEnergy;      // intra + inter
-    totalEnergy += _nonCoulombEnergy;   // intra + inter
+    /**
+     * @brief Clear all energies in PhysicalData. Used in QM/MM exact smoothing.
+     *
+     */
+    void PhysicalData::resetEnergies()
+    {
+        _kineticEnergy         = 0.0;
+        _coulombEnergy         = 0.0;
+        _nonCoulombEnergy      = 0.0;
+        _intraCoulombEnergy    = 0.0;
+        _intraNonCoulombEnergy = 0.0;
 
-    totalEnergy += _kineticEnergy;
+        _bondEnergy     = 0.0;
+        _angleEnergy    = 0.0;
+        _dihedralEnergy = 0.0;
+        _improperEnergy = 0.0;
 
-    totalEnergy += _qmEnergy;
+        _qmEnergy = 0.0;
 
-    return totalEnergy;
-}
+        _kinEnergyVirialTensor.atomic    = {0.0};
+        _kinEnergyVirialTensor.molecular = {0.0};
+    }
 
-/**
- * @brief add intra coulomb energy
- *
- * @details This function is used to add intra coulomb energy to the total
- * coulomb energy
- *
- * @param intraCoulombEnergy
- */
-void PhysicalData::addIntraCoulombEnergy(const double intraCoulombEnergy)
-{
-    _intraCoulombEnergy += intraCoulombEnergy;
-    _coulombEnergy      += intraCoulombEnergy;
-}
+    /**
+     * @brief calculate temperature
+     *
+     * @param simulationBox
+     */
+    void PhysicalData::calculateTemperature(
+        molsys::SimulationBox& simulationBox
+    )
+    {
+        _temperature = simulationBox.calculateTemperature();
+    }
 
-/**
- * @brief add intra non coulomb energy
- *
- * @details This function is used to add intra non coulomb energy to the total
- * non coulomb energy
- *
- * @param intraNonCoulombEnergy
- */
-void PhysicalData::addIntraNonCoulombEnergy(const double intraNonCoulombEnergy)
-{
-    _intraNonCoulombEnergy += intraNonCoulombEnergy;
-    _nonCoulombEnergy      += intraNonCoulombEnergy;
-}
+    /**
+     * @brief calculate total energy
+     *
+     * @return double
+     */
+    double PhysicalData::getTotalEnergy() const
+    {
+        auto totalEnergy = 0.0;
 
-/**
- * @brief calculate the mean of a vector of physicalData
- *
- * @param physicalDataVector - vector of physicalData
- * @return PhysicalData
- */
-PhysicalData physicalData::mean(std::vector<PhysicalData>& physicalDataVector)
-{
-    PhysicalData meanData;
+        totalEnergy += _bondEnergy;
+        totalEnergy += _angleEnergy;
+        totalEnergy += _dihedralEnergy;
+        totalEnergy += _improperEnergy;
 
-    std::ranges::for_each(
-        physicalDataVector,
-        [&meanData](auto& physicalData)
-        { meanData.updateAverages(physicalData); }
-    );
+        totalEnergy += _coulombEnergy;      // intra + inter
+        totalEnergy += _nonCoulombEnergy;   // intra + inter
 
-    meanData.makeAverages(static_cast<double>(physicalDataVector.size()));
+        totalEnergy += _kineticEnergy;
 
-    return meanData;
-}
+        totalEnergy += _qmEnergy;
+
+        return totalEnergy;
+    }
+
+    /**
+     * @brief add intra coulomb energy
+     *
+     * @details This function is used to add intra coulomb energy to the total
+     * coulomb energy
+     *
+     * @param intraCoulombEnergy
+     */
+    void PhysicalData::addIntraCoulombEnergy(const double intraCoulombEnergy)
+    {
+        _intraCoulombEnergy += intraCoulombEnergy;
+        _coulombEnergy      += intraCoulombEnergy;
+    }
+
+    /**
+     * @brief add intra non coulomb energy
+     *
+     * @details This function is used to add intra non coulomb energy to the
+     * total non coulomb energy
+     *
+     * @param intraNonCoulombEnergy
+     */
+    void PhysicalData::addIntraNonCoulombEnergy(
+        const double intraNonCoulombEnergy
+    )
+    {
+        _intraNonCoulombEnergy += intraNonCoulombEnergy;
+        _nonCoulombEnergy      += intraNonCoulombEnergy;
+    }
+
+    /**
+     * @brief calculate the mean of a vector of physicalData
+     *
+     * @param physicalDataVector - vector of physicalData
+     * @return PhysicalData
+     */
+    PhysicalData mean(std::vector<PhysicalData>& physicalDataVector)
+    {
+        PhysicalData meanData;
+
+        std::ranges::for_each(
+            physicalDataVector,
+            [&meanData](auto& physicalData)
+            { meanData.updateAverages(physicalData); }
+        );
+
+        meanData.makeAverages(static_cast<double>(physicalDataVector.size()));
+
+        return meanData;
+    }
+
+}   // namespace physicalData

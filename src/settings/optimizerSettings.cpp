@@ -28,318 +28,329 @@
 #include "exceptions.hpp"
 #include "stringUtilities.hpp"   // for toLowerCopy
 
-using namespace settings;
-using namespace utilities;
-using namespace exc;
-
-/**
- * @brief returns the optimizer as string
- *
- * @param method
- * @return std::string
- */
-std::string settings::string(OptimizerType method)
+namespace settings
 {
-    switch (method)
-    {
-        using enum OptimizerType;
 
-        case STEEPEST_DESCENT: return "STEEPEST-DESCENT";
-        case ADAM: return "ADAM";
-        case NONE: return "none";
+    /**
+     * @brief returns the optimizer as string
+     *
+     * @param method
+     * @return std::string
+     */
+    std::string string(OptimizerType method)
+    {
+        switch (method)
+        {
+            using enum OptimizerType;
+
+            case STEEPEST_DESCENT: return "STEEPEST-DESCENT";
+            case ADAM: return "ADAM";
+            case NONE: return "none";
+        }
+
+        std::unreachable();
     }
 
-    std::unreachable();
-}
+    /**
+     * @brief returns the learning rate strategy as string
+     *
+     * @param method
+     * @return std::string
+     */
+    std::string string(LREnum method)
+    {
+        switch (method)
+        {
+            using enum LREnum;
 
-/**
- * @brief returns the learning rate strategy as string
- *
- * @param method
- * @return std::string
- */
-std::string settings::string(LREnum method)
-{
-    switch (method)
+            case CONSTANT: return "CONSTANT";
+            case CONSTANT_DECAY: return "CONSTANT-DECAY";
+            case EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
+            case LINESEARCH_WOLFE: return "LINESEARCH-WOLFE";
+
+            case NONE: return "none";
+        }
+
+        std::unreachable();
+    }
+
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief sets the optimizer to enum in settings
+     *
+     * @param optimizer
+     */
+    void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
+    {
+        using enum OptimizerType;
+        const auto optimizerLower =
+            utilities::toLowerAndReplaceDashesCopy(optimizer);
+
+        if ("steepest_descent" == optimizerLower)
+            setOptimizer(OptimizerType::STEEPEST_DESCENT);
+
+        else if ("adam" == optimizerLower)
+            setOptimizer(OptimizerType::ADAM);
+
+        else
+            setOptimizer(OptimizerType::NONE);
+    }
+
+    /**
+     * @brief sets the optimizer to enum in settings
+     *
+     * @param optimizer
+     */
+    void OptimizerSettings::setOptimizer(OptimizerType optimizer)
+    {
+        _optimizer = optimizer;
+    }
+
+    /**
+     * @brief sets the optimizer to enum in settings
+     *
+     * @param method
+     */
+    void OptimizerSettings::setLearningRateStrategy(
+        const std::string_view &method
+    )
     {
         using enum LREnum;
 
-        case CONSTANT: return "CONSTANT";
-        case CONSTANT_DECAY: return "CONSTANT-DECAY";
-        case EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
-        case LINESEARCH_WOLFE: return "LINESEARCH-WOLFE";
+        const auto methodLower = utilities::toLowerAndReplaceDashesCopy(method);
 
-        case NONE: return "none";
+        if ("constant" == methodLower)
+            setLearningRateStrategy(CONSTANT);
+
+        else if ("constant_decay" == methodLower)
+            setLearningRateStrategy(CONSTANT_DECAY);
+
+        else if ("exponential_decay" == methodLower)
+            setLearningRateStrategy(EXPONENTIAL_DECAY);
+
+        else if ("linesearch_wolfe" == methodLower)
+            setLearningRateStrategy(LINESEARCH_WOLFE);
+
+        else
+            setLearningRateStrategy(NONE);
     }
 
-    std::unreachable();
-}
-
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
-
-/**
- * @brief sets the optimizer to enum in settings
- *
- * @param optimizer
- */
-void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
-{
-    using enum OptimizerType;
-    const auto optimizerLower = toLowerAndReplaceDashesCopy(optimizer);
-
-    if ("steepest_descent" == optimizerLower)
-        setOptimizer(OptimizerType::STEEPEST_DESCENT);
-
-    else if ("adam" == optimizerLower)
-        setOptimizer(OptimizerType::ADAM);
-
-    else
-        setOptimizer(OptimizerType::NONE);
-}
-
-/**
- * @brief sets the optimizer to enum in settings
- *
- * @param optimizer
- */
-void OptimizerSettings::setOptimizer(OptimizerType optimizer)
-{
-    _optimizer = optimizer;
-}
-
-/**
- * @brief sets the optimizer to enum in settings
- *
- * @param method
- */
-void OptimizerSettings::setLearningRateStrategy(const std::string_view &method)
-{
-    using enum LREnum;
-
-    const auto methodLower = toLowerAndReplaceDashesCopy(method);
-
-    if ("constant" == methodLower)
-        setLearningRateStrategy(CONSTANT);
-
-    else if ("constant_decay" == methodLower)
-        setLearningRateStrategy(CONSTANT_DECAY);
-
-    else if ("exponential_decay" == methodLower)
-        setLearningRateStrategy(EXPONENTIAL_DECAY);
-
-    else if ("linesearch_wolfe" == methodLower)
-        setLearningRateStrategy(LINESEARCH_WOLFE);
-
-    else
-        setLearningRateStrategy(NONE);
-}
-
-/**
- * @brief sets the optimizer to enum in settings
- *
- * @param method
- */
-void OptimizerSettings::setLearningRateStrategy(LREnum method)
-{
-    _lRStrategy = method;
-}
-
-/**
- * @brief sets the number of epochs
- *
- * @param nEpochs
- */
-void OptimizerSettings::setNumberOfEpochs(size_t nEpochs)
-{
-    _nEpochs = nEpochs;
-}
-
-/**
- * @brief sets the learning rate update frequency
- *
- * @param frequency
- */
-void OptimizerSettings::setLRUpdateFrequency(size_t frequency)
-{
-    _lRupdateFrequency = frequency;
-}
-
-/**
- * @brief sets the initial learning rate
- *
- * @param learningRate
- */
-void OptimizerSettings::setInitialLearningRate(double learningRate)
-{
-    _initialLearningRate = learningRate;
-}
-
-/**
- * @brief sets the learning rate decay
- *
- * @param decay
- */
-void OptimizerSettings::setLearningRateDecay(double decay)
-{
-    _learningRateDecay = decay;
-}
-
-/**
- * @brief sets the min learning rate
- *
- * @param minLearningRate
- */
-void OptimizerSettings::setMinLearningRate(double minLearningRate)
-{
-    _minLearningRate = minLearningRate;
-}
-
-/**
- * @brief sets the max learning rate
- *
- * @param maxLearningRate
- */
-void OptimizerSettings::setMaxLearningRate(double maxLearningRate)
-{
-    _maxLearningRate = maxLearningRate;
-}
-
-/*****************************
- *                           *
- * validation helper methods *
- *                           *
- *****************************/
-
-/**
- * @brief validates the selected learning-rate strategy
- */
-void OptimizerSettings::validateLearningRateStrategy()
-{
-    const auto strategy = getLearningRateStrategy();
-
-    if (strategy == LREnum::LINESEARCH_WOLFE)
+    /**
+     * @brief sets the optimizer to enum in settings
+     *
+     * @param method
+     */
+    void OptimizerSettings::setLearningRateStrategy(LREnum method)
     {
-        throw UserInputException(
-            "The Wolfe line search learning rate strategy is not yet "
-            "implemented"
-        );
+        _lRStrategy = method;
     }
 
-    if (strategy == LREnum::NONE)
+    /**
+     * @brief sets the number of epochs
+     *
+     * @param nEpochs
+     */
+    void OptimizerSettings::setNumberOfEpochs(size_t nEpochs)
     {
-        throw UserInputException(
-            "In order to run the optimizer, you need to specify a learning "
-            "rate strategy."
-        );
+        _nEpochs = nEpochs;
     }
 
-    const auto needsDecay = strategy == LREnum::CONSTANT_DECAY ||
-                            strategy == LREnum::EXPONENTIAL_DECAY;
-
-    if (needsDecay && !getLearningRateDecay().has_value())
+    /**
+     * @brief sets the learning rate update frequency
+     *
+     * @param frequency
+     */
+    void OptimizerSettings::setLRUpdateFrequency(size_t frequency)
     {
-        throw UserInputException(
-            std::format(
-                "The {} learning rate strategy requires learning-rate-decay.",
-                strategy == LREnum::CONSTANT_DECAY ? "constant-decay"
-                                                   : "exponential-decay"
-            )
-        );
+        _lRupdateFrequency = frequency;
     }
-}
 
-/**
- * @brief validates the configured learning-rate bounds
- */
-void OptimizerSettings::validateLearningRateBounds()
-{
-    const auto minLR = getMinLearningRate();
-    const auto maxLR = getMaxLearningRate();
-
-    if (maxLR.has_value() && minLR >= maxLR.value())
+    /**
+     * @brief sets the initial learning rate
+     *
+     * @param learningRate
+     */
+    void OptimizerSettings::setInitialLearningRate(double learningRate)
     {
-        throw UserInputException(
-            std::format(
-                "The minimum learning rate {} is greater or equal to the "
-                "maximum learning rate {}, which is not allowed.",
-                minLR,
-                maxLR.value()
-            )
-        );
+        _initialLearningRate = learningRate;
     }
-}
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief sets the learning rate decay
+     *
+     * @param decay
+     */
+    void OptimizerSettings::setLearningRateDecay(double decay)
+    {
+        _learningRateDecay = decay;
+    }
 
-/**
- * @brief returns the optimizer as string
- *
- * @return OptimizerType
- */
-settings::OptimizerType OptimizerSettings::getOptimizer() { return _optimizer; }
+    /**
+     * @brief sets the min learning rate
+     *
+     * @param minLearningRate
+     */
+    void OptimizerSettings::setMinLearningRate(double minLearningRate)
+    {
+        _minLearningRate = minLearningRate;
+    }
 
-/**
- * @brief returns the learning rate strategy as string
- *
- * @return LearningRateStrategy
- */
-LREnum OptimizerSettings::getLearningRateStrategy() { return _lRStrategy; }
+    /**
+     * @brief sets the max learning rate
+     *
+     * @param maxLearningRate
+     */
+    void OptimizerSettings::setMaxLearningRate(double maxLearningRate)
+    {
+        _maxLearningRate = maxLearningRate;
+    }
 
-/**
- * @brief returns the number of epochs
- *
- * @return size_t
- */
-size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }
+    /*****************************
+     *                           *
+     * validation helper methods *
+     *                           *
+     *****************************/
 
-/**
- * @brief returns the learning rate update frequency
- *
- * @return size_t
- */
-size_t OptimizerSettings::getLRUpdateFrequency() { return _lRupdateFrequency; }
+    /**
+     * @brief validates the selected learning-rate strategy
+     */
+    void OptimizerSettings::validateLearningRateStrategy()
+    {
+        const auto strategy = getLearningRateStrategy();
 
-/**
- * @brief returns the initial learning rate
- *
- * @return double
- */
-double OptimizerSettings::getInitialLearningRate()
-{
-    return _initialLearningRate;
-}
+        if (strategy == LREnum::LINESEARCH_WOLFE)
+        {
+            throw exc::UserInputException(
+                "The Wolfe line search learning rate strategy is not yet "
+                "implemented"
+            );
+        }
 
-/**
- * @brief returns the min learning rate
- *
- * @return double
- */
-double OptimizerSettings::getMinLearningRate() { return _minLearningRate; }
+        if (strategy == LREnum::NONE)
+        {
+            throw exc::UserInputException(
+                "In order to run the optimizer, you need to specify a learning "
+                "rate strategy."
+            );
+        }
 
-/**
- * @brief returns the learning rate decay
- *
- * @return std::optional<double>
- */
-std::optional<double> OptimizerSettings::getLearningRateDecay()
-{
-    return _learningRateDecay;
-}
+        const auto needsDecay = strategy == LREnum::CONSTANT_DECAY ||
+                                strategy == LREnum::EXPONENTIAL_DECAY;
 
-/**
- * @brief returns the max learning rate
- *
- * @return std::optional<double>
- */
-std::optional<double> OptimizerSettings::getMaxLearningRate()
-{
-    return _maxLearningRate;
-}
+        if (needsDecay && !getLearningRateDecay().has_value())
+        {
+            throw exc::UserInputException(
+                std::format(
+                    "The {} learning rate strategy requires "
+                    "learning-rate-decay.",
+                    strategy == LREnum::CONSTANT_DECAY ? "constant-decay"
+                                                       : "exponential-decay"
+                )
+            );
+        }
+    }
+
+    /**
+     * @brief validates the configured learning-rate bounds
+     */
+    void OptimizerSettings::validateLearningRateBounds()
+    {
+        const auto minLR = getMinLearningRate();
+        const auto maxLR = getMaxLearningRate();
+
+        if (maxLR.has_value() && minLR >= maxLR.value())
+        {
+            throw exc::UserInputException(
+                std::format(
+                    "The minimum learning rate {} is greater or equal to the "
+                    "maximum learning rate {}, which is not allowed.",
+                    minLR,
+                    maxLR.value()
+                )
+            );
+        }
+    }
+
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief returns the optimizer as string
+     *
+     * @return OptimizerType
+     */
+    settings::OptimizerType OptimizerSettings::getOptimizer()
+    {
+        return _optimizer;
+    }
+
+    /**
+     * @brief returns the learning rate strategy as string
+     *
+     * @return LearningRateStrategy
+     */
+    LREnum OptimizerSettings::getLearningRateStrategy() { return _lRStrategy; }
+
+    /**
+     * @brief returns the number of epochs
+     *
+     * @return size_t
+     */
+    size_t OptimizerSettings::getNumberOfEpochs() { return _nEpochs; }
+
+    /**
+     * @brief returns the learning rate update frequency
+     *
+     * @return size_t
+     */
+    size_t OptimizerSettings::getLRUpdateFrequency()
+    {
+        return _lRupdateFrequency;
+    }
+
+    /**
+     * @brief returns the initial learning rate
+     *
+     * @return double
+     */
+    double OptimizerSettings::getInitialLearningRate()
+    {
+        return _initialLearningRate;
+    }
+
+    /**
+     * @brief returns the min learning rate
+     *
+     * @return double
+     */
+    double OptimizerSettings::getMinLearningRate() { return _minLearningRate; }
+
+    /**
+     * @brief returns the learning rate decay
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> OptimizerSettings::getLearningRateDecay()
+    {
+        return _learningRateDecay;
+    }
+
+    /**
+     * @brief returns the max learning rate
+     *
+     * @return std::optional<double>
+     */
+    std::optional<double> OptimizerSettings::getMaxLearningRate()
+    {
+        return _maxLearningRate;
+    }
+
+}   // namespace settings

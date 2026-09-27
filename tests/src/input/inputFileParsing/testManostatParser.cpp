@@ -32,16 +32,14 @@
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "pressure" command
  *
  */
 TEST_F(TestInputFileReader, ParsePressure)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"pressure", "=", "300.0"};
     input::ManostatInputParser::parsePressure(lineElements, 0);
 
     EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
@@ -63,8 +61,8 @@ TEST_F(TestInputFileReader, ParsePressure)
  */
 TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"p_relaxation", "=", "0.1"};
     input::ManostatInputParser::parseManostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
 
@@ -99,8 +97,8 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
  */
 TEST_F(TestInputFileReader, ParseManostat)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"manostat", "=", "none"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"manostat", "=", "none"};
     input::ManostatInputParser::parseManostat(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
@@ -138,8 +136,8 @@ TEST_F(TestInputFileReader, ParseManostat)
  */
 TEST_F(TestInputFileReader, ParseCompressibility)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"compressibility", "=", "0.1"};
     input::ManostatInputParser::parseCompressibility(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);
 
@@ -164,8 +162,8 @@ TEST_F(TestInputFileReader, ParseCompressibility)
  */
 TEST_F(TestInputFileReader, ParseIsotropy)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"isotropy", "=", "isotropic"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"isotropy", "=", "isotropic"};
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
@@ -262,8 +260,8 @@ TEST_F(TestInputFileReader, ParseIsotropy)
  */
 TEST_F(TestInputFileReader, ParseFixedAxis)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"fixed_axis", "=", "none"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"fixed_axis", "=", "none"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getFixedAxis(),

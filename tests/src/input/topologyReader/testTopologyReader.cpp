@@ -29,8 +29,6 @@
 #include "throwWithMessage.hpp"
 #include "topologyReader.hpp"   // for TopologyReader
 
-using namespace input::topology;
-
 /**
  * @brief tests isNeeded function
  *
@@ -40,16 +38,16 @@ using namespace input::topology;
  */
 TEST_F(TestTopologyReader, isNeeded)
 {
-    EXPECT_FALSE(isNeeded(*_engine));
+    EXPECT_FALSE(input::topology::isNeeded(*_engine));
 
     const auto& constraints = _engine->getConstraints();
 
     constraints->activateShake();
-    EXPECT_TRUE(isNeeded(*_engine));
+    EXPECT_TRUE(input::topology::isNeeded(*_engine));
 
     constraints->deactivateShake();
     settings::ForceFieldSettings::activate();
-    EXPECT_TRUE(isNeeded(*_engine));
+    EXPECT_TRUE(input::topology::isNeeded(*_engine));
 }
 
 /**

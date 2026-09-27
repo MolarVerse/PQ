@@ -31,115 +31,131 @@
 #include "settings.hpp"                // for Settings
 #include "timingsSettings.hpp"         // for TimingsSettings
 
-using setup::resetKinetics::ResetKineticsSetup;
-using namespace engine;
-using namespace settings;
-
-/**
- * @brief constructs a new Reset Kinetics Setup:: Reset Kinetics Setup object
- * and calls setup
- *
- * @param engine
- */
-void setup::resetKinetics::setupResetKinetics(Engine &engine)
+namespace setup
 {
-    if (!Settings::isMDJobType())
-        return;
 
-    out::StdoutOutput::writeSetup("Reset Kinetics");
-    engine.getLogOutput().writeSetup("Reset Kinetics");
+    /**
+     * @brief constructs a new Reset Kinetics Setup:: Reset Kinetics Setup
+     * object and calls setup
+     *
+     * @param engine
+     */
+    void setupResetKinetics(engine::Engine &engine)
+    {
+        if (!settings::Settings::isMDJobType())
+            return;
 
-    ResetKineticsSetup resetKineticsSetup(dynamic_cast<MDEngine &>(engine));
-    resetKineticsSetup.setup();
-}
+        out::StdoutOutput::writeSetup("Reset Kinetics");
+        engine.getLogOutput().writeSetup("Reset Kinetics");
 
-/**
- * @brief Construct a new Reset Kinetics Setup object
- *
- * @param engine
- */
-ResetKineticsSetup::ResetKineticsSetup(MDEngine &engine) : _engine(engine) {}
+        ResetKineticsSetup resetKineticsSetup(
+            dynamic_cast<engine::MDEngine &>(engine)
+        );
+        resetKineticsSetup.setup();
+    }
 
-/**
- * @brief setup nscale, fscale, nreset, freset
- *
- * @details decides if temperature and momentum or only temperature is reset
- * It checks if either fscale or freset is set to 0 and sets it to the number of
- * steps + 1, so that the reset is not performed. nreset and freset are set to 0
- * if they are not set.
- *
- */
-void ResetKineticsSetup::setup()
-{
-    const auto nScale        = ResetKineticsSettings::getNScale();
-    auto       fScale        = ResetKineticsSettings::getFScale();
-    const auto nReset        = ResetKineticsSettings::getNReset();
-    auto       fReset        = ResetKineticsSettings::getFReset();
-    const auto nResetAngular = ResetKineticsSettings::getNResetAngular();
-    auto       fResetAngular = ResetKineticsSettings::getFResetAngular();
-    auto       fResetForces  = ResetKineticsSettings::getFResetForces();
+    /**
+     * @brief Construct a new Reset Kinetics Setup object
+     *
+     * @param engine
+     */
+    ResetKineticsSetup::ResetKineticsSetup(engine::MDEngine &engine)
+        : _engine(engine)
+    {
+    }
 
-    const auto numberOfSteps = TimingsSettings::getNumberOfSteps();
+    /**
+     * @brief setup nscale, fscale, nreset, freset
+     *
+     * @details decides if temperature and momentum or only temperature is reset
+     * It checks if either fscale or freset is set to 0 and sets it to the
+     * number of steps + 1, so that the reset is not performed. nreset and
+     * freset are set to 0 if they are not set.
+     *
+     */
+    void ResetKineticsSetup::setup()
+    {
+        const auto nScale = settings::ResetKineticsSettings::getNScale();
+        auto       fScale = settings::ResetKineticsSettings::getFScale();
+        const auto nReset = settings::ResetKineticsSettings::getNReset();
+        auto       fReset = settings::ResetKineticsSettings::getFReset();
+        const auto nResetAngular =
+            settings::ResetKineticsSettings::getNResetAngular();
+        auto fResetAngular =
+            settings::ResetKineticsSettings::getFResetAngular();
+        auto fResetForces = settings::ResetKineticsSettings::getFResetForces();
 
-    fScale        = (0 == fScale) ? numberOfSteps + 1 : fScale;
-    fReset        = (0 == fReset) ? numberOfSteps + 1 : fReset;
-    fResetAngular = (0 == fResetAngular) ? numberOfSteps + 1 : fResetAngular;
-    fResetForces  = (0 == fResetForces) ? numberOfSteps + 1 : fResetForces;
+        const auto numberOfSteps =
+            settings::TimingsSettings::getNumberOfSteps();
 
-    _engine.getResetKinetics() = ::resetKinetics::ResetKinetics(
-        nScale,
-        fScale,
-        nReset,
-        fReset,
-        nResetAngular,
-        fResetAngular,
-        fResetForces
-    );
+        fScale = (0 == fScale) ? numberOfSteps + 1 : fScale;
+        fReset = (0 == fReset) ? numberOfSteps + 1 : fReset;
+        fResetAngular =
+            (0 == fResetAngular) ? numberOfSteps + 1 : fResetAngular;
+        fResetForces = (0 == fResetForces) ? numberOfSteps + 1 : fResetForces;
 
-    writeSetupInfo();
-}
+        _engine.getResetKinetics() = ::resetKinetics::ResetKinetics(
+            nScale,
+            fScale,
+            nReset,
+            fReset,
+            nResetAngular,
+            fResetAngular,
+            fResetForces
+        );
 
-/**
- * @brief writes setup info to log file
- */
-void ResetKineticsSetup::writeSetupInfo() const
-{
-    const auto _fScale        = ResetKineticsSettings::getFScale();
-    const auto _fReset        = ResetKineticsSettings::getFReset();
-    const auto _fResetAngular = ResetKineticsSettings::getFResetAngular();
-    const auto _fResetForces  = ResetKineticsSettings::getFResetForces();
+        writeSetupInfo();
+    }
 
-    const int fScale = _fScale == 0 ? -1 : static_cast<int>(_fScale);
-    const int fReset = _fReset == 0 ? -1 : static_cast<int>(_fReset);
-    const int fResetAngular =
-        _fResetAngular == 0 ? -1 : static_cast<int>(_fResetAngular);
-    const int fResetForces =
-        _fResetForces == 0 ? -1 : static_cast<int>(_fResetForces);
+    /**
+     * @brief writes setup info to log file
+     */
+    void ResetKineticsSetup::writeSetupInfo() const
+    {
+        const auto _fScale = settings::ResetKineticsSettings::getFScale();
+        const auto _fReset = settings::ResetKineticsSettings::getFReset();
+        const auto _fResetAngular =
+            settings::ResetKineticsSettings::getFResetAngular();
+        const auto _fResetForces =
+            settings::ResetKineticsSettings::getFResetForces();
 
-    const auto nScale        = ResetKineticsSettings::getNScale();
-    const auto nReset        = ResetKineticsSettings::getNReset();
-    const auto nResetAngular = ResetKineticsSettings::getNResetAngular();
+        const int fScale = _fScale == 0 ? -1 : static_cast<int>(_fScale);
+        const int fReset = _fReset == 0 ? -1 : static_cast<int>(_fReset);
+        const int fResetAngular =
+            _fResetAngular == 0 ? -1 : static_cast<int>(_fResetAngular);
+        const int fResetForces =
+            _fResetForces == 0 ? -1 : static_cast<int>(_fResetForces);
 
-    const auto nScaleMsg    = std::format("first {:5d} steps,", nScale);
-    const auto fScaleMsg    = std::format("every {:5d} steps", fScale);
-    const auto nResetMsg    = std::format("first {:5d} steps,", nReset);
-    const auto fResetMsg    = std::format("every {:5d} steps", fReset);
-    const auto nResetAngMsg = std::format("first {:5d} steps,", nResetAngular);
-    const auto fResetAngMsg = std::format("every {:5d} steps", fResetAngular);
-    const auto fResetForcesMsg = std::format("every {:5d} steps", fResetForces);
+        const auto nScale = settings::ResetKineticsSettings::getNScale();
+        const auto nReset = settings::ResetKineticsSettings::getNReset();
+        const auto nResetAngular =
+            settings::ResetKineticsSettings::getNResetAngular();
 
-    // clang-format off
+        const auto nScaleMsg = std::format("first {:5d} steps,", nScale);
+        const auto fScaleMsg = std::format("every {:5d} steps", fScale);
+        const auto nResetMsg = std::format("first {:5d} steps,", nReset);
+        const auto fResetMsg = std::format("every {:5d} steps", fReset);
+        const auto nResetAngMsg =
+            std::format("first {:5d} steps,", nResetAngular);
+        const auto fResetAngMsg =
+            std::format("every {:5d} steps", fResetAngular);
+        const auto fResetForcesMsg =
+            std::format("every {:5d} steps", fResetForces);
+
+        // clang-format off
     const auto scaleMsg      = std::format("reset temperature:      {} {}", nScaleMsg, fScaleMsg);
     const auto resetMsg      = std::format("reset momentum:         {} {}", nResetMsg, fResetMsg);
     const auto resetAngMsg   = std::format("reset angular momentum: {} {}", nResetAngMsg, fResetAngMsg);
     const auto resetForceMsg = std::format("reset forces:           {}   ", fResetForcesMsg);
-    // clang-format on
+        // clang-format on
 
-    auto &log = _engine.getLogOutput();
+        auto &log = _engine.getLogOutput();
 
-    log.writeSetupInfo(scaleMsg);
-    log.writeSetupInfo(resetMsg);
-    log.writeSetupInfo(resetAngMsg);
-    log.writeSetupInfo(resetForceMsg);
-    log.writeEmptyLine();
-}
+        log.writeSetupInfo(scaleMsg);
+        log.writeSetupInfo(resetMsg);
+        log.writeSetupInfo(resetAngMsg);
+        log.writeSetupInfo(resetForceMsg);
+        log.writeEmptyLine();
+    }
+
+}   // namespace setup

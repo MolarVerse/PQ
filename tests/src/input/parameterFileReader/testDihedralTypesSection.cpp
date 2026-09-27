@@ -26,14 +26,12 @@
 #include <vector>   // for vector
 
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "dihedralSection.hpp"               // for DihedralSection
-#include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"                    // for ParameterFileException
-                                             // for Message, TestPartResult
-#include "testParameterFileSection.hpp"      // for TestParameterFileSection
-#include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
-
-using namespace input::parameterFile;
+#include "dihedralSection.hpp"   // for input::parameterFile::DihedralSection
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for ParameterFileException
+                                 // for Message, TestPartResult
+#include "testParameterFileSection.hpp"   // for TestParameterFileSection
+#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
 /**
  * @brief test bonds section processing one line
@@ -42,7 +40,7 @@ using namespace input::parameterFile;
 TEST_F(TestParameterFileSection, processSectionDihedral)
 {
     std::vector<std::string> lineElements = {"0", "1.22", "234.3", "324.3"};
-    DihedralSection          dihedralSection;
+    input::parameterFile::DihedralSection dihedralSection;
     dihedralSection.processSection(lineElements, *_engine);
 
     const auto &dihedralTypes = _engine->getForceField()->getDihedralTypes();
@@ -72,7 +70,7 @@ TEST_F(TestParameterFileSection, processSectionDihedral)
 
 TEST_F(TestParameterFileSection, endedNormallyDihedral)
 {
-    auto dihedralSection = DihedralSection();
+    auto dihedralSection = input::parameterFile::DihedralSection();
     ASSERT_NO_THROW(dihedralSection.endedNormally(true));
 
     ASSERT_THROW_MSG(

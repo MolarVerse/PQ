@@ -25,16 +25,14 @@
 #include "distanceKernels.hpp"
 #include "simulationBox.hpp"
 
-using namespace kernel;
-
 TEST(TestDistanceKernels, distVecNoPBCIsSimpleSubtraction)
 {
     const auto vec1 = linalg::Vec3D(2.0, 3.0, 4.0);
     const auto vec2 = linalg::Vec3D(1.0, 1.0, 1.0);
 
-    EXPECT_EQ(distVec(vec1, vec2), linalg::Vec3D(1.0, 2.0, 3.0));
-    EXPECT_EQ(distVec(vec1, vec1), linalg::Vec3D(0.0, 0.0, 0.0));
-    EXPECT_EQ(distVec(vec2, vec1), linalg::Vec3D(-1.0, -2.0, -3.0));
+    EXPECT_EQ(kernel::distVec(vec1, vec2), linalg::Vec3D(1.0, 2.0, 3.0));
+    EXPECT_EQ(kernel::distVec(vec1, vec1), linalg::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(kernel::distVec(vec2, vec1), linalg::Vec3D(-1.0, -2.0, -3.0));
 }
 
 TEST(TestDistanceKernels, distVecAndDist2NoPBCMatchesAnalyticalDistanceSquared)
@@ -42,7 +40,7 @@ TEST(TestDistanceKernels, distVecAndDist2NoPBCMatchesAnalyticalDistanceSquared)
     const auto vec1 = linalg::Vec3D(1.0, 2.0, 2.0);
     const auto vec2 = linalg::Vec3D(0.0, 0.0, 0.0);
 
-    const auto [dxyz, rSquared] = distVecAndDist2(vec1, vec2);
+    const auto [dxyz, rSquared] = kernel::distVecAndDist2(vec1, vec2);
     EXPECT_EQ(dxyz, linalg::Vec3D(1.0, 2.0, 2.0));
     EXPECT_DOUBLE_EQ(rSquared, 1.0 + 4.0 + 4.0);
 }
@@ -56,7 +54,7 @@ TEST(TestDistanceKernels, distVecWithPBCChoosesMinimumImage)
 
     const auto vec1 = linalg::Vec3D(0.5, 0.0, 0.0);
     const auto vec2 = linalg::Vec3D(9.5, 0.0, 0.0);
-    const auto dxy  = distVec(vec1, vec2, box);
+    const auto dxy  = kernel::distVec(vec1, vec2, box);
 
     EXPECT_NEAR(linalg::norm(dxy), 1.0, 1e-12);
 }
@@ -69,8 +67,8 @@ TEST(TestDistanceKernels, distVecAndDist2WithPBCConsistentWithDistVec)
     const auto vec1 = linalg::Vec3D(0.0, 0.0, 0.0);
     const auto vec2 = linalg::Vec3D(3.0, 4.0, 0.0);
 
-    const auto dxyzOnly         = distVec(vec1, vec2, box);
-    const auto [dxyz, rSquared] = distVecAndDist2(vec1, vec2, box);
+    const auto dxyzOnly         = kernel::distVec(vec1, vec2, box);
+    const auto [dxyz, rSquared] = kernel::distVecAndDist2(vec1, vec2, box);
     EXPECT_EQ(dxyzOnly, dxyz);
     EXPECT_DOUBLE_EQ(rSquared, linalg::normSquared(dxyz));
 }
@@ -83,9 +81,9 @@ TEST(TestDistanceKernels, distVecWithPBCIsSymmetricAcrossAllAxes)
     const auto vec1 = linalg::Vec3D(4.8, -5.5, 6.2);
     const auto vec2 = linalg::Vec3D(-4.7, 5.6, -6.1);
 
-    const auto vec12           = distVec(vec1, vec2, box);
-    const auto vec21           = distVec(vec2, vec1, box);
-    const auto [ab2, rSquared] = distVecAndDist2(vec1, vec2, box);
+    const auto vec12           = kernel::distVec(vec1, vec2, box);
+    const auto vec21           = kernel::distVec(vec2, vec1, box);
+    const auto [ab2, rSquared] = kernel::distVecAndDist2(vec1, vec2, box);
 
     EXPECT_NEAR(vec12[0], -0.5, 1e-12);
     EXPECT_NEAR(vec12[1], 0.9, 1e-12);
@@ -94,8 +92,8 @@ TEST(TestDistanceKernels, distVecWithPBCIsSymmetricAcrossAllAxes)
     EXPECT_EQ(vec12, ab2);
     EXPECT_NEAR(rSquared, linalg::normSquared(vec12), 1e-12);
     EXPECT_NEAR(
-        distSquared(vec1, vec2, box),
-        distSquared(vec2, vec1, box),
+        kernel::distSquared(vec1, vec2, box),
+        kernel::distSquared(vec2, vec1, box),
         1e-12
     );
 
@@ -112,16 +110,16 @@ TEST(TestDistanceKernels, distSquaredWithPBCMinimumImageDistance)
     const auto vec1 = linalg::Vec3D(0.5, 0.0, 0.0);
     const auto vec2 = linalg::Vec3D(9.5, 0.0, 0.0);
 
-    EXPECT_NEAR(distSquared(vec1, vec2, box), 1.0, 1e-12);
+    EXPECT_NEAR(kernel::distSquared(vec1, vec2, box), 1.0, 1e-12);
 }
 
 TEST(TestDistanceKernels, distVecZeroInputs)
 {
     const auto vec1 = linalg::Vec3D(0.0, 0.0, 0.0);
 
-    EXPECT_EQ(distVec(vec1, vec1), linalg::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(kernel::distVec(vec1, vec1), linalg::Vec3D(0.0, 0.0, 0.0));
 
-    const auto [dxyz, rSquared] = distVecAndDist2(vec1, vec1);
+    const auto [dxyz, rSquared] = kernel::distVecAndDist2(vec1, vec1);
     EXPECT_EQ(dxyz, linalg::Vec3D(0.0, 0.0, 0.0));
     EXPECT_DOUBLE_EQ(rSquared, 0.0);
 }

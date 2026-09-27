@@ -23,14 +23,10 @@
 #include <gtest/gtest.h>   // for TestInfo (ptr only)
 
 #include "coulombLongRangeInputParser.hpp"
-#include "exceptions.hpp"            // for InputFileException
+#include "exceptions.hpp"            // for exc::InputFileException
 #include "potentialSettings.hpp"     // for PotentialSettings
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
-
-using namespace input;
-using namespace settings;
-using namespace exc;
 
 /**
  * @brief tests parsing the "long-range" command
@@ -41,29 +37,40 @@ using namespace exc;
  */
 TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
-    using enum CoulombLongRangeType;
+    using enum settings::CoulombLongRangeType;
 
-    CoulombLongRangeInputParser parser;
+    input::CoulombLongRangeInputParser parser;
+    const auto                         funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("long_range"));
+    const auto& parseFunc = funcMap.at("long_range");
 
     std::vector<std::string> lineElements = {"long-range", "=", "none"};
-    input::CoulombLongRangeInputParser::parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), SHIFTED);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), SHIFTED);
+
+    clearParser(parser);
 
     lineElements = {"long-range", "=", "reaction-field"};
-    input::CoulombLongRangeInputParser::parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), REACTION_FIELD);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(
+        settings::PotentialSettings::getCoulombLongRangeType(),
+        REACTION_FIELD
+    );
+
+    clearParser(parser);
 
     lineElements = {"long-range", "=", "wolf"};
-    input::CoulombLongRangeInputParser::parseCoulombLongRange(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), WOLF);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), WOLF);
+
+    clearParser(parser);
 
     lineElements = {"long-range", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseCoulombLongRange(lineElements, 0),
-        InputFileException,
-        "Invalid long-range type for coulomb correction \"notValid\" at line 0 "
-        "in input file\nPossible options are: none, shifted, reaction-field, "
-        "wolf"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"long_range\" at line 0 in input "
+        "file. Allowed values: shifted, reaction_field, wolf, none"
     );
 }
 
@@ -75,17 +82,23 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
  */
 TEST_F(TestInputFileReader, testParseWolfParameter)
 {
-    CoulombLongRangeInputParser parser;
+    input::CoulombLongRangeInputParser parser;
+    const auto                         funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("wolf_param"));
+    const auto& parseFunc = funcMap.at("wolf_param");
 
     std::vector<std::string> lineElements = {"wolf_param", "=", "1.0"};
-    input::CoulombLongRangeInputParser::parseWolfParameter(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getWolfParameter(), 1.0);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings::PotentialSettings::getWolfParameter(), 1.0);
+
+    clearParser(parser);
 
     lineElements = {"wolf_param", "=", "-1.0"};
     EXPECT_THROW_MSG(
-        parser.parseWolfParameter(lineElements, 0),
-        InputFileException,
-        "Wolf parameter cannot be negative"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-1.0\" for key \"wolf_param\" at line 0 in input "
+        "file: failed validation with message Value must be greater than 0"
     );
 }
 
@@ -95,28 +108,34 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
  */
 TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
 {
-    CoulombLongRangeInputParser parser;
+    input::CoulombLongRangeInputParser parser;
+    const auto                         funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("rf_epsilon"));
+    const auto& parseFunc = funcMap.at("rf_epsilon");
 
     std::vector<std::string> lineElements = {"rf-epsilon", "=", "1.0"};
-    input::CoulombLongRangeInputParser::parseReactionFieldEpsilon(
-        lineElements,
-        0
-    );
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 1.0);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 1.0);
+
+    clearParser(parser);
 
     lineElements = {"rf-epsilon", "=", "0.999999"};
     EXPECT_THROW_MSG(
-        parser.parseReactionFieldEpsilon(lineElements, 0),
-        InputFileException,
-        "Static relative permittivity \"rf_epsilon\" cannot be lower than "
-        "1.0"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0.999999\" for key \"rf_epsilon\" at line 0 in input "
+        "file: failed validation with message Value must be greater than or "
+        "equal to 1"
     );
+
+    clearParser(parser);
 
     lineElements = {"rf-epsilon", "=", "-1.0"};
     EXPECT_THROW_MSG(
-        parser.parseReactionFieldEpsilon(lineElements, 0),
-        InputFileException,
-        "Static relative permittivity \"rf_epsilon\" cannot be lower than "
-        "1.0"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-1.0\" for key \"rf_epsilon\" at line 0 in input "
+        "file: failed validation with message Value must be greater than or "
+        "equal to 1"
     );
 }

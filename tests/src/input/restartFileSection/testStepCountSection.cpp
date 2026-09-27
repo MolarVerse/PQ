@@ -33,8 +33,6 @@
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"   // for TimingsSettings
 
-using namespace input;
-
 TEST_F(TestStepCountSection, testKeyword)
 {
     EXPECT_EQ(_section->keyword(), "step");

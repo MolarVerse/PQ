@@ -24,79 +24,81 @@
 
 #include <format>   // for format
 
-#include "bondType.hpp"     // for BondType
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for ParameterFileException
+#include "bondType.hpp"     // for ff::BondType
+#include "engine.hpp"       // for engine::Engine
+#include "exceptions.hpp"   // for exc::ParameterFileException
 
-using namespace input::parameterFile;
-using namespace exc;
-using namespace engine;
-using namespace ff;
-
-/**
- * @brief returns the keyword of the bond section
- *
- * @return "bonds"
- */
-std::string BondSection::keyword() { return "bonds"; }
-
-/**
- * @brief processes one line of the bond section of the parameter file and adds
- * the bond type to the force field
- *
- * @details The line is expected to have the following format:
- * 1. bondTypeId
- * 2. equilibriumDistance
- * 3. forceConstant
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if number of elements in line
- * is not 3
- * @throw ParameterFileException if equilibrium distance is
- * negative
- */
-void BondSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::parameterFile
 {
-    if (lineElements.size() != 3)
+
+    /**
+     * @brief returns the keyword of the bond section
+     *
+     * @return "bonds"
+     */
+    std::string BondSection::keyword() { return "bonds"; }
+
+    /**
+     * @brief processes one line of the bond section of the parameter file and
+     * adds the bond type to the force field
+     *
+     * @details The line is expected to have the following format:
+     * 1. bondTypeId
+     * 2. equilibriumDistance
+     * 3. forceConstant
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throw exc::ParameterFileException if number of elements in line
+     * is not 3
+     * @throw exc::ParameterFileException if equilibrium distance is
+     * negative
+     */
+    void BondSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    )
     {
-        throw ParameterFileException(
+        if (lineElements.size() != 3)
+        {
+            throw exc::ParameterFileException(
 
-            std::format(
-                "Wrong number of arguments in parameter file bond section at "
-                "line {} - number of elements has to be 3!",
-                _lineNumber
-            )
+                std::format(
+                    "Wrong number of arguments in parameter file bond section "
+                    "at "
+                    "line {} - number of elements has to be 3!",
+                    _lineNumber
+                )
 
-        );
-    }
-
-    auto id                  = BondId{stoul(lineElements[0])};
-    auto equilibriumDistance = stod(lineElements[1]);
-    auto forceConstant       = stod(lineElements[2]);
-
-    if (equilibriumDistance < 0.0)
-    {
-        throw ParameterFileException(
-            std::format(
-                "Parameter file bond section at line {} - equilibrium distance "
-                "has to be positive!",
-                _lineNumber
-            )
-        );
-    }
-
-    auto bondType = BondType(
-        id,
-        BondParams{
-            .equilibrium   = equilibriumDistance,
-            .forceConstant = forceConstant
+            );
         }
-    );
 
-    engine.getForceField()->addBondType(bondType);
-}
+        auto id                  = BondId{stoul(lineElements[0])};
+        auto equilibriumDistance = stod(lineElements[1]);
+        auto forceConstant       = stod(lineElements[2]);
+
+        if (equilibriumDistance < 0.0)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Parameter file bond section at line {} - equilibrium "
+                    "distance "
+                    "has to be positive!",
+                    _lineNumber
+                )
+            );
+        }
+
+        auto bondType = ff::BondType(
+            id,
+            BondParams{
+                .equilibrium   = equilibriumDistance,
+                .forceConstant = forceConstant
+            }
+        );
+
+        engine.getForceField()->addBondType(bondType);
+    }
+
+}   // namespace input::parameterFile

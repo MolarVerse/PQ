@@ -26,201 +26,203 @@
 
 #include "exceptions.hpp"
 
-using namespace timings;
-using namespace exc;
-
-/**
- * @brief Construct a new Timer:: Timer object
- *
- * @param id
- */
-Timer::Timer(const TimerId id) : _id(id) {}
-
-/**
- * @brief get the sorted timings details
- *
- */
-std::vector<TimingsSection> Timer::getTimingDetails() const
+namespace timings
 {
-    std::vector<TimingsSection> sortedTimingDetails = _timingDetails;
-    std::ranges::sort(
-        sortedTimingDetails,
-        [](const TimingsSection& lhs, const TimingsSection& rhs)
-        { return lhs.calculateElapsedTime() > rhs.calculateElapsedTime(); }
-    );
-    return sortedTimingDetails;
-}
 
-/**
- * @brief calculates the elapsed time in ms
- *
- */
-double Timer::calculateElapsedTime() const
-{
-    double elapsedTime = 0;
+    /**
+     * @brief Construct a new Timer:: Timer object
+     *
+     * @param id
+     */
+    Timer::Timer(const TimerId id) : _id(id) {}
 
-    for (const auto& timing : _timingDetails)
-        elapsedTime += timing.calculateElapsedTime();
-
-    return elapsedTime;
-}
-
-/**
- * @brief calculates the loop time in s
- *
- */
-double Timer::calculateLoopTime() const
-{
-    auto loopTime = 0.0;
-
-    for (const auto& timing : _timingDetails)
-        loopTime += timing.calculateLoopTime();
-
-    return loopTime;
-}
-
-/**
- * @brief starts a new timer with default name
- *
- */
-void Timer::startTimingsSection()
-{
-    const auto index = findTimingsSectionIndex(getTimerName());
-
-    if (index == _timingDetails.size())
+    /**
+     * @brief get the sorted timings details
+     *
+     */
+    std::vector<TimingsSection> Timer::getTimingDetails() const
     {
-        _timingDetails.emplace_back(getTimerName());
-        _timingDetails.back().beginTimer();
+        std::vector<TimingsSection> sortedTimingDetails = _timingDetails;
+        std::ranges::sort(
+            sortedTimingDetails,
+            [](const TimingsSection& lhs, const TimingsSection& rhs)
+            { return lhs.calculateElapsedTime() > rhs.calculateElapsedTime(); }
+        );
+        return sortedTimingDetails;
     }
-    else
+
+    /**
+     * @brief calculates the elapsed time in ms
+     *
+     */
+    double Timer::calculateElapsedTime() const
     {
-        _timingDetails[index].beginTimer();
+        double elapsedTime = 0;
+
+        for (const auto& timing : _timingDetails)
+            elapsedTime += timing.calculateElapsedTime();
+
+        return elapsedTime;
     }
-}
 
-/**
- * @brief starts a new timer
- *
- */
-void Timer::startTimingsSection(std::string_view name)
-{
-    const auto index = findTimingsSectionIndex(name);
-
-    if (index == _timingDetails.size())
+    /**
+     * @brief calculates the loop time in s
+     *
+     */
+    double Timer::calculateLoopTime() const
     {
-        _timingDetails.emplace_back(name);
-        _timingDetails.back().beginTimer();
+        auto loopTime = 0.0;
+
+        for (const auto& timing : _timingDetails)
+            loopTime += timing.calculateLoopTime();
+
+        return loopTime;
     }
-    else
+
+    /**
+     * @brief starts a new timer with default name
+     *
+     */
+    void Timer::startTimingsSection()
     {
-        _timingDetails[index].beginTimer();
+        const auto index = findTimingsSectionIndex(getTimerName());
+
+        if (index == _timingDetails.size())
+        {
+            _timingDetails.emplace_back(getTimerName());
+            _timingDetails.back().beginTimer();
+        }
+        else
+        {
+            _timingDetails[index].beginTimer();
+        }
     }
-}
 
-/**
- * @brief stops a timer with default name
- *
- */
-void Timer::stopTimingsSection()
-{
-    const auto index = findTimingsSectionIndex(getTimerName());
+    /**
+     * @brief starts a new timer
+     *
+     */
+    void Timer::startTimingsSection(std::string_view name)
+    {
+        const auto index = findTimingsSectionIndex(name);
 
-    if (index == _timingDetails.size())
-        throw TimerException("Timer not found");
+        if (index == _timingDetails.size())
+        {
+            _timingDetails.emplace_back(name);
+            _timingDetails.back().beginTimer();
+        }
+        else
+        {
+            _timingDetails[index].beginTimer();
+        }
+    }
 
-    _timingDetails[index].endTimer();
-}
+    /**
+     * @brief stops a timer with default name
+     *
+     */
+    void Timer::stopTimingsSection()
+    {
+        const auto index = findTimingsSectionIndex(getTimerName());
 
-/**
- * @brief stops a timer
- *
- */
-void Timer::stopTimingsSection(std::string_view name)
-{
-    const auto index = findTimingsSectionIndex(name);
+        if (index == _timingDetails.size())
+            throw exc::TimerException("Timer not found");
 
-    if (index == _timingDetails.size())
-        throw TimerException("Timer not found");
+        _timingDetails[index].endTimer();
+    }
 
-    _timingDetails[index].endTimer();
-}
+    /**
+     * @brief stops a timer
+     *
+     */
+    void Timer::stopTimingsSection(std::string_view name)
+    {
+        const auto index = findTimingsSectionIndex(name);
 
-/**
- * @brief find timeManager by name
- *
- */
-size_t Timer::findTimingsSectionIndex(std::string_view name) const
-{
-    for (size_t i = 0; i < _timingDetails.size(); ++i)
-        if (_timingDetails[i].getName() == name)
-            return i;
+        if (index == _timingDetails.size())
+            throw exc::TimerException("Timer not found");
 
-    return _timingDetails.size();
-}
+        _timingDetails[index].endTimer();
+    }
 
-/**
- * @brief sort the timings sections
- *
- */
-void Timer::sortTimingsSections()
-{
-    std::ranges::sort(
-        _timingDetails,
-        [](const TimingsSection& lhs, const TimingsSection& rhs)
-        { return lhs.calculateElapsedTime() > rhs.calculateElapsedTime(); }
-    );
-}
+    /**
+     * @brief find timeManager by name
+     *
+     */
+    size_t Timer::findTimingsSectionIndex(std::string_view name) const
+    {
+        for (size_t i = 0; i < _timingDetails.size(); ++i)
+            if (_timingDetails[i].getName() == name)
+                return i;
 
-/********************
- * standard setters *
- ********************/
+        return _timingDetails.size();
+    }
 
-/**
- * @brief set timer id
- *
- * @param id
- */
-void Timer::setTimerId(const TimerId id) { _id = id; }
+    /**
+     * @brief sort the timings sections
+     *
+     */
+    void Timer::sortTimingsSections()
+    {
+        std::ranges::sort(
+            _timingDetails,
+            [](const TimingsSection& lhs, const TimingsSection& rhs)
+            { return lhs.calculateElapsedTime() > rhs.calculateElapsedTime(); }
+        );
+    }
 
-/********************
- * standard getters *
- ********************/
+    /********************
+     * standard setters *
+     ********************/
 
-/**
- * @brief get TimingsSection by name
- *
- */
-TimingsSection Timer::getTimingsSection(std::string_view name) const
-{
-    const auto index = findTimingsSectionIndex(name);
+    /**
+     * @brief set timer id
+     *
+     * @param id
+     */
+    void Timer::setTimerId(const TimerId id) { _id = id; }
 
-    if (index == _timingDetails.size())
-        throw TimerException("Timer not found");
+    /********************
+     * standard getters *
+     ********************/
 
-    return _timingDetails[index];
-}
+    /**
+     * @brief get TimingsSection by name
+     *
+     */
+    TimingsSection Timer::getTimingsSection(std::string_view name) const
+    {
+        const auto index = findTimingsSectionIndex(name);
 
-/**
- * @brief get timer name
- *
- * @return std::string
- */
-std::string Timer::getTimerName() const { return toString(_id); }
+        if (index == _timingDetails.size())
+            throw exc::TimerException("Timer not found");
 
-/**
- * @brief get timer
- *
- * @return Timer
- */
-Timer Timer::getTimer() const { return *this; }
+        return _timingDetails[index];
+    }
 
-/**
- * @brief get a timings section guard
- *
- * @param name
- * @return TimingsSectionGuard
- */
-TimingsSectionGuard Timer::scoped(std::string_view name)
-{
-    return TimingsSectionGuard(*this, name);
-}
+    /**
+     * @brief get timer name
+     *
+     * @return std::string
+     */
+    std::string Timer::getTimerName() const { return toString(_id); }
+
+    /**
+     * @brief get timer
+     *
+     * @return Timer
+     */
+    Timer Timer::getTimer() const { return *this; }
+
+    /**
+     * @brief get a timings section guard
+     *
+     * @param name
+     * @return TimingsSectionGuard
+     */
+    TimingsSectionGuard Timer::scoped(std::string_view name)
+    {
+        return TimingsSectionGuard(*this, name);
+    }
+
+}   // namespace timings

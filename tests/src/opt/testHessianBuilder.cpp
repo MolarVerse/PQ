@@ -33,13 +33,9 @@
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 
-using namespace opt;
-using molsys::Atom;
-using molsys::SimulationBox;
-
 namespace
 {
-    class HarmonicEvaluator : public Evaluator
+    class HarmonicEvaluator : public opt::Evaluator
     {
        private:
         std::vector<double> _forceConstants;
@@ -87,20 +83,20 @@ namespace
             return _analyticSupported;
         }
 
-        [[nodiscard]] HessianMatrix calculateAnalyticHessian() override
+        [[nodiscard]] opt::HessianMatrix calculateAnalyticHessian() override
         {
             return {{2.0, 4.0}, {6.0, 8.0}};
         }
     };
 
-    std::shared_ptr<SimulationBox> makeSimulationBox()
+    std::shared_ptr<molsys::SimulationBox> makeSimulationBox()
     {
-        auto box = std::make_shared<SimulationBox>();
+        auto box = std::make_shared<molsys::SimulationBox>();
 
-        auto atom0 = std::make_shared<Atom>();
+        auto atom0 = std::make_shared<molsys::Atom>();
         atom0->setPosition({1.0, -2.0, 3.0});
 
-        auto atom1 = std::make_shared<Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
         atom1->setPosition({-4.0, 5.0, -6.0});
 
         box->addAtom(atom0);
@@ -110,7 +106,7 @@ namespace
     }
 
     void expectDiagonalHessian(
-        const HessianMatrix       &hessian,
+        const opt::HessianMatrix  &hessian,
         const std::vector<double> &diagonal
     )
     {
@@ -128,10 +124,16 @@ namespace
         }
     }
 
-    void expectPositionsRestored(SimulationBox &box)
+    void expectPositionsRestored(molsys::SimulationBox &simulationBox)
     {
-        EXPECT_EQ(box.getAtom(0).getPosition(), linalg::Vec3D(1.0, -2.0, 3.0));
-        EXPECT_EQ(box.getAtom(1).getPosition(), linalg::Vec3D(-4.0, 5.0, -6.0));
+        EXPECT_EQ(
+            simulationBox.getAtom(0).getPosition(),
+            linalg::Vec3D(1.0, -2.0, 3.0)
+        );
+        EXPECT_EQ(
+            simulationBox.getAtom(1).getPosition(),
+            linalg::Vec3D(-4.0, 5.0, -6.0)
+        );
     }
 }   // namespace
 
@@ -140,14 +142,19 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
     const auto diagonal = std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
 
     for (const auto &builder : {
-             std::shared_ptr<HessianBuilder>(
-                 std::make_shared<CentralForceDifferenceHessianBuilder>(1.0e-4)
+             std::shared_ptr<opt::HessianBuilder>(
+                 std::make_shared<opt::CentralForceDifferenceHessianBuilder>(
+                     1.0e-4
+                 )
              ),
-             std::shared_ptr<HessianBuilder>(
-                 std::make_shared<ForwardForceDifferenceHessianBuilder>(1.0e-4)
+             std::shared_ptr<opt::HessianBuilder>(
+                 std::make_shared<opt::ForwardForceDifferenceHessianBuilder>(
+                     1.0e-4
+                 )
              ),
-             std::shared_ptr<HessianBuilder>(
-                 std::make_shared<FivePointForceDifferenceHessianBuilder>(1.0e-4
+             std::shared_ptr<opt::HessianBuilder>(
+                 std::make_shared<opt::FivePointForceDifferenceHessianBuilder>(
+                     1.0e-4
                  )
              ),
          })
@@ -170,7 +177,7 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
     auto              box = makeSimulationBox();
     HarmonicEvaluator evaluator({1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
     evaluator.setSimulationBox(box);
-    AnalyticHessianBuilder builder;
+    opt::AnalyticHessianBuilder builder;
 
     EXPECT_THROW_MSG(
         (void) builder.build(evaluator, *box),
@@ -184,7 +191,7 @@ TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
     auto              box = makeSimulationBox();
     HarmonicEvaluator evaluator({1.0, 2.0, 3.0, 4.0, 5.0, 6.0}, true);
     evaluator.setSimulationBox(box);
-    AnalyticHessianBuilder builder;
+    opt::AnalyticHessianBuilder builder;
 
     const auto hessian = builder.build(evaluator, *box);
 
@@ -201,32 +208,33 @@ TEST(TestHessianBuilder, makeHessianBuilderSelectsConcreteStrategies)
     using enum settings::HessianBuilderType;
 
     EXPECT_NE(
-        std::dynamic_pointer_cast<CentralForceDifferenceHessianBuilder>(
-            makeHessianBuilder(FINITE_DIFFERENCE_FORCES_CENTRAL, 1.0e-3)
+        std::dynamic_pointer_cast<opt::CentralForceDifferenceHessianBuilder>(
+            opt::makeHessianBuilder(FINITE_DIFFERENCE_FORCES_CENTRAL, 1.0e-3)
         ),
         nullptr
     );
     EXPECT_NE(
-        std::dynamic_pointer_cast<ForwardForceDifferenceHessianBuilder>(
-            makeHessianBuilder(FINITE_DIFFERENCE_FORCES_FORWARD, 1.0e-3)
+        std::dynamic_pointer_cast<opt::ForwardForceDifferenceHessianBuilder>(
+            opt::makeHessianBuilder(FINITE_DIFFERENCE_FORCES_FORWARD, 1.0e-3)
         ),
         nullptr
     );
     EXPECT_NE(
-        std::dynamic_pointer_cast<FivePointForceDifferenceHessianBuilder>(
-            makeHessianBuilder(FINITE_DIFFERENCE_FORCES_FIVE_POINT, 1.0e-3)
+        std::dynamic_pointer_cast<opt::FivePointForceDifferenceHessianBuilder>(
+            opt::makeHessianBuilder(FINITE_DIFFERENCE_FORCES_FIVE_POINT, 1.0e-3)
         ),
         nullptr
     );
     EXPECT_NE(
-        std::dynamic_pointer_cast<AnalyticHessianBuilder>(
-            makeHessianBuilder(ANALYTIC, 1.0e-3)
+        std::dynamic_pointer_cast<opt::AnalyticHessianBuilder>(
+            opt::makeHessianBuilder(ANALYTIC, 1.0e-3)
         ),
         nullptr
     );
 
     EXPECT_THROW_MSG(
-        (void) makeHessianBuilder(settings::HessianBuilderType::NONE, 1.0e-3),
+        (void
+        ) opt::makeHessianBuilder(settings::HessianBuilderType::NONE, 1.0e-3),
         exc::UserInputException,
         "Unknown Hessian builder."
     );

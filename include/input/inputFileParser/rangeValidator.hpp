@@ -112,6 +112,12 @@ namespace input
         std::string _isLessMsg() const
         requires(L == Less::LT);
     };
+
+    using GEDoubleValidator = RangeValidator<double, Greater::GE>;
+
+    const auto PositiveGTDoubleValidator =
+        RangeValidator<double, Greater::GT>{0.0, std::nullopt};
+
 }   // namespace input
 
 #ifndef _RANGE_VALIDATOR_TPP_

@@ -30,17 +30,14 @@
 #include "vector3d.hpp"
 #include "virialOutput.hpp"
 
-using namespace out;
-using physicalData::PhysicalData;
-
 TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
 {
     const std::string path = "default.vir.test";
 
-    VirialOutput out(path);
+    out::VirialOutput out(path);
     out.setFilename(path);
 
-    PhysicalData data;
+    physicalData::PhysicalData data;
     data.setVirial(
         linalg::tensor3D{
             linalg::Vec3D{0.1, 0.2, 0.3},
@@ -66,10 +63,10 @@ TEST(TestVirialOutput, writeEmitsOneLinePerCall)
 {
     const std::string path = "default.vir.test";
 
-    VirialOutput out(path);
+    out::VirialOutput out(path);
     out.setFilename(path);
 
-    PhysicalData data;
+    physicalData::PhysicalData data;
 
     out.write(1, data);
     out.write(2, data);

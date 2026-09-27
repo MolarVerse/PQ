@@ -42,8 +42,6 @@
 #include "testRestartFileSection.hpp"   // for TestAtomSection
 #include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
 
-using namespace input::restartFile;
-
 /**
  * @brief tests the keyword function
  *

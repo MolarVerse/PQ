@@ -26,510 +26,514 @@
 #include <format>      // for format
 #include <vector>      // for vector
 
-#include "exceptions.hpp"   // for ShakeException
+#include "exceptions.hpp"   // for exc::ShakeException
 #include "globalTimer.hpp"
 #include "mShake.hpp"
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
-using namespace constraints;
-using namespace molsys;
-using namespace exc;
-
-/**
- * @brief constructor
- *
- **/
-Constraints::Constraints() : _mShake(std::make_unique<MShake>()) {}
-
-Constraints::~Constraints() = default;
-
-/**
- * @brief init M-Shake from M-Shake references
- *
- */
-void Constraints::initMShake() { _mShake->initMShake(); }
-
-/**
- * @brief calculates the reference bond data of all bond constraints
- *
- * @param simulationBox
- *
- */
-void Constraints::calculateConstraintBondRefs(
-    const SimulationBox &simulationBox
-)
+namespace constraints
 {
-    auto _ = scopedTimer(TimerId::Constraints, "Reference Bond Data");
 
-    std::ranges::for_each(
-        _bondConstraints,
-        [&simulationBox](auto &bondConstraint)
-        { bondConstraint.calculateConstraintBondRef(simulationBox); }
-    );
-}
+    /**
+     * @brief constructor
+     *
+     **/
+    Constraints::Constraints() : _mShake(std::make_unique<MShake>()) {}
 
-/**
- * @brief applies both shake and mShake algorithm to all bond constraints
- *
- * @param simulationBox
- */
-void Constraints::applyShake(SimulationBox &simulationBox)
-{
-    if (!_shakeActivated && !_mShakeActivated)
-        return;
+    Constraints::~Constraints() = default;
 
-    if (_shakeActivated)
-        _applyShake(simulationBox);
+    /**
+     * @brief init M-Shake from M-Shake references
+     *
+     */
+    void Constraints::initMShake() { _mShake->initMShake(); }
 
-    if (_mShakeActivated)
-        _applyMShake(simulationBox);
-}
-
-/**
- * @brief applies the shake algorithm to all bond constraints
- *
- * @param simulationBox
- *
- * @throws ShakeException if shake algorithm does not
- * converge
- */
-void Constraints::_applyShake(SimulationBox &simulationBox)
-{
-    auto _ = scopedTimer(TimerId::Constraints, "Shake");
-
-    std::vector<bool> convergedVector;
-    bool              converged = false;
-
-    size_t iter = 0;
-
-    while (!converged && iter <= _shakeMaxIter)
+    /**
+     * @brief calculates the reference bond data of all bond constraints
+     *
+     * @param simulationBox
+     *
+     */
+    void Constraints::calculateConstraintBondRefs(
+        const molsys::SimulationBox &simulationBox
+    )
     {
-        convergedVector.clear();
+        auto _ = scopedTimer(TimerId::Constraints, "Reference Bond Data");
 
-        auto applyShakeSingleBond =
-            [&simulationBox, &convergedVector, this](auto &bondConst)
+        std::ranges::for_each(
+            _bondConstraints,
+            [&simulationBox](auto &bondConstraint)
+            { bondConstraint.calculateConstraintBondRef(simulationBox); }
+        );
+    }
+
+    /**
+     * @brief applies both shake and mShake algorithm to all bond constraints
+     *
+     * @param simulationBox
+     */
+    void Constraints::applyShake(molsys::SimulationBox &simulationBox)
+    {
+        if (!_shakeActivated && !_mShakeActivated)
+            return;
+
+        if (_shakeActivated)
+            _applyShake(simulationBox);
+
+        if (_mShakeActivated)
+            _applyMShake(simulationBox);
+    }
+
+    /**
+     * @brief applies the shake algorithm to all bond constraints
+     *
+     * @param simulationBox
+     *
+     * @throws exc::ShakeException if shake algorithm does not
+     * converge
+     */
+    void Constraints::_applyShake(molsys::SimulationBox &simulationBox)
+    {
+        auto _ = scopedTimer(TimerId::Constraints, "Shake");
+
+        std::vector<bool> convergedVector;
+        bool              converged = false;
+
+        size_t iter = 0;
+
+        while (!converged && iter <= _shakeMaxIter)
         {
-            convergedVector.push_back(
-                bondConst.applyShake(simulationBox, _shakeTolerance)
+            convergedVector.clear();
+
+            auto applyShakeSingleBond =
+                [&simulationBox, &convergedVector, this](auto &bondConst)
+            {
+                convergedVector.push_back(
+                    bondConst.applyShake(simulationBox, _shakeTolerance)
+                );
+            };
+
+            std::ranges::for_each(_bondConstraints, applyShakeSingleBond);
+
+            converged = std::ranges::all_of(
+                convergedVector,
+                [](const bool isConverged) { return isConverged; }
             );
-        };
 
-        std::ranges::for_each(_bondConstraints, applyShakeSingleBond);
+            ++iter;
+        }
 
-        converged = std::ranges::all_of(
-            convergedVector,
-            [](const bool isConverged) { return isConverged; }
-        );
-
-        ++iter;
-    }
-
-    if (!converged)
-    {
-        throw ShakeException(
-            std::format(
-                "Shake algorithm did not converge for {} bonds.",
-                std::ranges::count(convergedVector, false)
-            )
-        );
-    }
-}
-
-/**
- * @brief applies the mShake algorithm to all bond constraints
- *
- * @param simulationBox
- *
- */
-void Constraints::_applyMShake(SimulationBox &simulationBox)
-{
-    auto _ = scopedTimer(TimerId::Constraints, "MShake - Shake");
-    _mShake->applyMShake(simulationBox);
-}
-
-/**
- * @brief applies the rattle algorithm to all bond constraints
- *
- * @throws ShakeException if rattle algorithm does not
- * converge
- *
- * @param simulationBox the simulation box to apply periodic boundary conditions
- */
-void Constraints::applyRattle(SimulationBox &simulationBox)
-{
-    if (!_shakeActivated && !_mShakeActivated)
-        return;
-
-    if (_shakeActivated)
-        _applyRattle();
-
-    if (_mShakeActivated)
-        _applyMRattle(simulationBox);
-}
-
-/**
- * @brief applies the rattle algorithm to all bond constraints
- *
- * @throws ShakeException if rattle algorithm does not
- * converge
- */
-void Constraints::_applyRattle()
-{
-    auto _ = scopedTimer(TimerId::Constraints, "Rattle");
-
-    std::vector<bool> convergedVector;
-    bool              converged = false;
-
-    size_t iter = 0;
-
-    while (!converged && iter <= _rattleMaxIter)
-    {
-        convergedVector.clear();
-
-        auto applyRattleForSingleBond =
-            [&convergedVector, this](auto &bondConstraint)
+        if (!converged)
         {
-            convergedVector.push_back(
-                bondConstraint.applyRattle(_rattleTolerance)
-            );
-        };
-
-        std::ranges::for_each(_bondConstraints, applyRattleForSingleBond);
-
-        converged = std::ranges::all_of(
-            convergedVector,
-            [](const bool isConverged) { return isConverged; }
-        );
-
-        ++iter;
-    }
-
-    if (!converged)
-    {
-        throw ShakeException(
-            std::format(
-                "Rattle algorithm did not converge for {} bonds.",
-                std::ranges::count(convergedVector, false)
-            )
-        );
-    }
-}
-
-/**
- * @brief applies M-Shake Rattle algorithm
- *
- * @param simulationBox
- */
-void Constraints::_applyMRattle(SimulationBox &simulationBox)
-{
-    auto _ = scopedTimer(TimerId::Constraints, "MShake - Rattle");
-    _mShake->applyMRattle(simulationBox);
-}
-
-/**
- * @brief applies the distance constraints to all distance constraints
- *
- * @param simulationBox
- * @param physicalData the physical data object to update with constraint
- * energies
- * @param time
- *
- */
-void Constraints::applyDistanceConstraints(
-    const SimulationBox        &simulationBox,
-    physicalData::PhysicalData &physicalData,
-    double                      time
-)
-{
-    if (!_distanceConstActivated)
-        return;
-
-    auto effective_time = time - _startTime;
-
-    effective_time = effective_time > 0.0 ? effective_time : -1;
-
-    std::ranges::for_each(
-        _distanceConstraints,
-        [&simulationBox, effective_time](auto &distanceConstraint)
-        {
-            distanceConstraint.applyDistanceConstraint(
-                simulationBox,
-                effective_time
+            throw exc::ShakeException(
+                std::format(
+                    "Shake algorithm did not converge for {} bonds.",
+                    std::ranges::count(convergedVector, false)
+                )
             );
         }
-    );
+    }
 
-    auto lowerEnergy = 0.0;
-    auto upperEnergy = 0.0;
+    /**
+     * @brief applies the mShake algorithm to all bond constraints
+     *
+     * @param simulationBox
+     *
+     */
+    void Constraints::_applyMShake(molsys::SimulationBox &simulationBox)
+    {
+        auto _ = scopedTimer(TimerId::Constraints, "MShake - Shake");
+        _mShake->applyMShake(simulationBox);
+    }
 
-    std::ranges::for_each(
-        _distanceConstraints,
-        [&lowerEnergy](const auto &distanceConstraint)
-        { lowerEnergy += distanceConstraint.getLowerEnergy(); }
-    );
+    /**
+     * @brief applies the rattle algorithm to all bond constraints
+     *
+     * @throws exc::ShakeException if rattle algorithm does not
+     * converge
+     *
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
+     */
+    void Constraints::applyRattle(molsys::SimulationBox &simulationBox)
+    {
+        if (!_shakeActivated && !_mShakeActivated)
+            return;
 
-    std::ranges::for_each(
-        _distanceConstraints,
-        [&upperEnergy](const auto &distanceConstraint)
-        { upperEnergy += distanceConstraint.getUpperEnergy(); }
-    );
+        if (_shakeActivated)
+            _applyRattle();
 
-    physicalData.setLowerDistanceConstraints(lowerEnergy);
-    physicalData.setUpperDistanceConstraints(upperEnergy);
-}
+        if (_mShakeActivated)
+            _applyMRattle(simulationBox);
+    }
 
-/*****************************
- *                           *
- * standard activate methods *
- *                           *
- *****************************/
+    /**
+     * @brief applies the rattle algorithm to all bond constraints
+     *
+     * @throws exc::ShakeException if rattle algorithm does not
+     * converge
+     */
+    void Constraints::_applyRattle()
+    {
+        auto _ = scopedTimer(TimerId::Constraints, "Rattle");
 
-/**
- * @brief activates the shake algorithm
- *
- */
-void Constraints::activateDistanceConstraints()
-{
-    _distanceConstActivated = true;
-}
+        std::vector<bool> convergedVector;
+        bool              converged = false;
 
-/**
- * @brief deactivates the shake algorithm
- *
- */
-void Constraints::deactivateDistanceConstraints()
-{
-    _distanceConstActivated = false;
-}
+        size_t iter = 0;
 
-/**
- * @brief checks if shake algorithm is active
- *
- * @return true if shake algorithm is active
- */
-bool Constraints::isShakeActive() const { return _shakeActivated; }
+        while (!converged && iter <= _rattleMaxIter)
+        {
+            convergedVector.clear();
 
-/**
- * @brief checks if mShake algorithm is active
- *
- * @return true if mShake algorithm is active
- */
-bool Constraints::isMShakeActive() const { return _mShakeActivated; }
+            auto applyRattleForSingleBond =
+                [&convergedVector, this](auto &bondConstraint)
+            {
+                convergedVector.push_back(
+                    bondConstraint.applyRattle(_rattleTolerance)
+                );
+            };
 
-/**
- * @brief checks if shake like algorithm is active
- *
- * @details shake like algorithm is active if shake or mShake is active
- *
- * @return true
- * @return false
- */
-bool Constraints::isShakeLikeActive() const
-{
-    return isShakeActive() || isMShakeActive();
-}
+            std::ranges::for_each(_bondConstraints, applyRattleForSingleBond);
 
-/**
- * @brief checks if distance constraints are active
- *
- * @return true if distance constraints are active
- */
-bool Constraints::isDistanceConstraintsActive() const
-{
-    return _distanceConstActivated;
-}
+            converged = std::ranges::all_of(
+                convergedVector,
+                [](const bool isConverged) { return isConverged; }
+            );
 
-/**
- * @brief checks if any constraint is active
- *
- */
-bool Constraints::isActive() const
-{
-    return _shakeActivated || _mShakeActivated || _distanceConstActivated;
-}
+            ++iter;
+        }
 
-/************************
- *                      *
- * standard add methods *
- *                      *
- ************************/
+        if (!converged)
+        {
+            throw exc::ShakeException(
+                std::format(
+                    "Rattle algorithm did not converge for {} bonds.",
+                    std::ranges::count(convergedVector, false)
+                )
+            );
+        }
+    }
 
-/**
- * @brief adds a bond constraint to the constraints
- *
- * @param bondConstraint
- *
- */
-void Constraints::addBondConstraint(const BondConstraint &bondConstraint)
-{
-    _bondConstraints.push_back(bondConstraint);
-}
+    /**
+     * @brief applies M-Shake Rattle algorithm
+     *
+     * @param simulationBox
+     */
+    void Constraints::_applyMRattle(molsys::SimulationBox &simulationBox)
+    {
+        auto _ = scopedTimer(TimerId::Constraints, "MShake - Rattle");
+        _mShake->applyMRattle(simulationBox);
+    }
 
-/**
- * @brief adds a distance constraint to the constraints
- *
- * @param distanceConstraint
- *
- */
-void Constraints::addDistanceConstraint(
-    const DistanceConstraint &distanceConstraint
-)
-{
-    _distanceConstraints.push_back(distanceConstraint);
-}
+    /**
+     * @brief applies the distance constraints to all distance constraints
+     *
+     * @param simulationBox
+     * @param physicalData the physical data object to update with constraint
+     * energies
+     * @param time
+     *
+     */
+    void Constraints::applyDistanceConstraints(
+        const molsys::SimulationBox &simulationBox,
+        physicalData::PhysicalData  &physicalData,
+        double                       time
+    )
+    {
+        if (!_distanceConstActivated)
+            return;
 
-/**
- * @brief adds a mShake reference to the constraints
- *
- * @param mShakeReference
- *
- */
-void Constraints::addMShakeReference(const MShakeReference &mShakeReference)
-{
-    _mShake->addMShakeReference(mShakeReference);
-}
+        auto effective_time = time - _startTime;
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+        effective_time = effective_time > 0.0 ? effective_time : -1;
 
-/**
- * @brief returns all bond constraints
- *
- * @return all bond constraints
- */
-const std::vector<BondConstraint> &Constraints::getBondConstraints() const
-{
-    return _bondConstraints;
-}
+        std::ranges::for_each(
+            _distanceConstraints,
+            [&simulationBox, effective_time](auto &distanceConstraint)
+            {
+                distanceConstraint.applyDistanceConstraint(
+                    simulationBox,
+                    effective_time
+                );
+            }
+        );
 
-/**
- * @brief returns all distance constraints
- *
- * @return all distance constraints
- */
-const std::vector<DistanceConstraint> &Constraints::getDistConstraints() const
-{
-    return _distanceConstraints;
-}
+        auto lowerEnergy = 0.0;
+        auto upperEnergy = 0.0;
 
-/**
- * @brief returns all mShake references
- *
- * @return all mShake references
- */
-const std::vector<MShakeReference> &Constraints::getMShakeReferences() const
-{
-    return _mShake->getMShakeReferences();
-}
+        std::ranges::for_each(
+            _distanceConstraints,
+            [&lowerEnergy](const auto &distanceConstraint)
+            { lowerEnergy += distanceConstraint.getLowerEnergy(); }
+        );
 
-/**
- * @brief returns the number of bond constraints
- *
- * @return the number of bond constraints
- */
-size_t Constraints::getNumberOfBondConstraints() const
-{
-    return _bondConstraints.size();
-}
+        std::ranges::for_each(
+            _distanceConstraints,
+            [&upperEnergy](const auto &distanceConstraint)
+            { upperEnergy += distanceConstraint.getUpperEnergy(); }
+        );
 
-/**
- * @brief returns the number of mShake constraints
- *
- * @param simulationBox the simulation box to apply periodic boundary conditions
- *
- * @return the number of mShake constraints
- */
-size_t Constraints::getNumberOfMShakeConstraints(
-    SimulationBox &simulationBox
-) const
-{
-    return _mShake->calcNumberOfBondConstraints(simulationBox);
-}
+        physicalData.setLowerDistanceConstraints(lowerEnergy);
+        physicalData.setUpperDistanceConstraints(upperEnergy);
+    }
 
-/**
- * @brief returns the number of distance constraints
- *
- * @return the number of distance constraints
- */
-size_t Constraints::getNumberOfDistanceConstraints() const
-{
-    return _distanceConstraints.size();
-}
+    /*****************************
+     *                           *
+     * standard activate methods *
+     *                           *
+     *****************************/
 
-/**
- * @brief returns the maximum number of iterations for the shake algorithm
- *
- * @return the maximum number of iterations for the shake algorithm
- */
-size_t Constraints::getShakeMaxIter() const { return _shakeMaxIter; }
+    /**
+     * @brief activates the shake algorithm
+     *
+     */
+    void Constraints::activateDistanceConstraints()
+    {
+        _distanceConstActivated = true;
+    }
 
-/**
- * @brief returns the maximum number of iterations for the rattle algorithm
- *
- * @return the maximum number of iterations for the rattle algorithm
- */
-size_t Constraints::getRattleMaxIter() const { return _rattleMaxIter; }
+    /**
+     * @brief deactivates the shake algorithm
+     *
+     */
+    void Constraints::deactivateDistanceConstraints()
+    {
+        _distanceConstActivated = false;
+    }
 
-/**
- * @brief returns the shake tolerance
- *
- * @return the shake tolerance
- */
-double Constraints::getShakeTolerance() const { return _shakeTolerance; }
+    /**
+     * @brief checks if shake algorithm is active
+     *
+     * @return true if shake algorithm is active
+     */
+    bool Constraints::isShakeActive() const { return _shakeActivated; }
 
-/**
- * @brief returns the rattle tolerance
- *
- * @return the rattle tolerance
- */
-double Constraints::getRattleTolerance() const { return _rattleTolerance; }
+    /**
+     * @brief checks if mShake algorithm is active
+     *
+     * @return true if mShake algorithm is active
+     */
+    bool Constraints::isMShakeActive() const { return _mShakeActivated; }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief checks if shake like algorithm is active
+     *
+     * @details shake like algorithm is active if shake or mShake is active
+     *
+     * @return true
+     * @return false
+     */
+    bool Constraints::isShakeLikeActive() const
+    {
+        return isShakeActive() || isMShakeActive();
+    }
 
-/**
- * @brief sets the maximum number of iterations for the shake algorithm
- *
- * @param shakeMaxIter
- */
-void Constraints::setShakeMaxIter(size_t shakeMaxIter)
-{
-    _shakeMaxIter = shakeMaxIter;
-}
+    /**
+     * @brief checks if distance constraints are active
+     *
+     * @return true if distance constraints are active
+     */
+    bool Constraints::isDistanceConstraintsActive() const
+    {
+        return _distanceConstActivated;
+    }
 
-/**
- * @brief sets the maximum number of iterations for the rattle algorithm
- *
- * @param rattleMaxIter
- */
-void Constraints::setRattleMaxIter(size_t rattleMaxIter)
-{
-    _rattleMaxIter = rattleMaxIter;
-}
+    /**
+     * @brief checks if any constraint is active
+     *
+     */
+    bool Constraints::isActive() const
+    {
+        return _shakeActivated || _mShakeActivated || _distanceConstActivated;
+    }
 
-/**
- * @brief sets the shake tolerance
- *
- * @param shakeTolerance
- */
-void Constraints::setShakeTolerance(double shakeTolerance)
-{
-    _shakeTolerance = shakeTolerance;
-}
+    /************************
+     *                      *
+     * standard add methods *
+     *                      *
+     ************************/
 
-/**
- * @brief sets the rattle tolerance
- *
- * @param rattleTolerance
- */
-void Constraints::setRattleTolerance(double rattleTolerance)
-{
-    _rattleTolerance = rattleTolerance;
-}
+    /**
+     * @brief adds a bond constraint to the constraints
+     *
+     * @param bondConstraint
+     *
+     */
+    void Constraints::addBondConstraint(const BondConstraint &bondConstraint)
+    {
+        _bondConstraints.push_back(bondConstraint);
+    }
+
+    /**
+     * @brief adds a distance constraint to the constraints
+     *
+     * @param distanceConstraint
+     *
+     */
+    void Constraints::addDistanceConstraint(
+        const DistanceConstraint &distanceConstraint
+    )
+    {
+        _distanceConstraints.push_back(distanceConstraint);
+    }
+
+    /**
+     * @brief adds a mShake reference to the constraints
+     *
+     * @param mShakeReference
+     *
+     */
+    void Constraints::addMShakeReference(const MShakeReference &mShakeReference)
+    {
+        _mShake->addMShakeReference(mShakeReference);
+    }
+
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief returns all bond constraints
+     *
+     * @return all bond constraints
+     */
+    const std::vector<BondConstraint> &Constraints::getBondConstraints() const
+    {
+        return _bondConstraints;
+    }
+
+    /**
+     * @brief returns all distance constraints
+     *
+     * @return all distance constraints
+     */
+    const std::vector<DistanceConstraint> &Constraints::getDistConstraints(
+    ) const
+    {
+        return _distanceConstraints;
+    }
+
+    /**
+     * @brief returns all mShake references
+     *
+     * @return all mShake references
+     */
+    const std::vector<MShakeReference> &Constraints::getMShakeReferences() const
+    {
+        return _mShake->getMShakeReferences();
+    }
+
+    /**
+     * @brief returns the number of bond constraints
+     *
+     * @return the number of bond constraints
+     */
+    size_t Constraints::getNumberOfBondConstraints() const
+    {
+        return _bondConstraints.size();
+    }
+
+    /**
+     * @brief returns the number of mShake constraints
+     *
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
+     *
+     * @return the number of mShake constraints
+     */
+    size_t Constraints::getNumberOfMShakeConstraints(
+        molsys::SimulationBox &simulationBox
+    ) const
+    {
+        return _mShake->calcNumberOfBondConstraints(simulationBox);
+    }
+
+    /**
+     * @brief returns the number of distance constraints
+     *
+     * @return the number of distance constraints
+     */
+    size_t Constraints::getNumberOfDistanceConstraints() const
+    {
+        return _distanceConstraints.size();
+    }
+
+    /**
+     * @brief returns the maximum number of iterations for the shake algorithm
+     *
+     * @return the maximum number of iterations for the shake algorithm
+     */
+    size_t Constraints::getShakeMaxIter() const { return _shakeMaxIter; }
+
+    /**
+     * @brief returns the maximum number of iterations for the rattle algorithm
+     *
+     * @return the maximum number of iterations for the rattle algorithm
+     */
+    size_t Constraints::getRattleMaxIter() const { return _rattleMaxIter; }
+
+    /**
+     * @brief returns the shake tolerance
+     *
+     * @return the shake tolerance
+     */
+    double Constraints::getShakeTolerance() const { return _shakeTolerance; }
+
+    /**
+     * @brief returns the rattle tolerance
+     *
+     * @return the rattle tolerance
+     */
+    double Constraints::getRattleTolerance() const { return _rattleTolerance; }
+
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief sets the maximum number of iterations for the shake algorithm
+     *
+     * @param shakeMaxIter
+     */
+    void Constraints::setShakeMaxIter(size_t shakeMaxIter)
+    {
+        _shakeMaxIter = shakeMaxIter;
+    }
+
+    /**
+     * @brief sets the maximum number of iterations for the rattle algorithm
+     *
+     * @param rattleMaxIter
+     */
+    void Constraints::setRattleMaxIter(size_t rattleMaxIter)
+    {
+        _rattleMaxIter = rattleMaxIter;
+    }
+
+    /**
+     * @brief sets the shake tolerance
+     *
+     * @param shakeTolerance
+     */
+    void Constraints::setShakeTolerance(double shakeTolerance)
+    {
+        _shakeTolerance = shakeTolerance;
+    }
+
+    /**
+     * @brief sets the rattle tolerance
+     *
+     * @param rattleTolerance
+     */
+    void Constraints::setRattleTolerance(double rattleTolerance)
+    {
+        _rattleTolerance = rattleTolerance;
+    }
+
+}   // namespace constraints

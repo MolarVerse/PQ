@@ -32,8 +32,6 @@
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 #include "typesSection.hpp"               // for TypesSection
 
-using namespace input::parameterFile;
-
 /**
  * @brief test types section processing one line
  *
@@ -92,7 +90,7 @@ TEST_F(TestParameterFileSection, processSectionTypes)
 
 TEST_F(TestParameterFileSection, endedNormallyTypes)
 {
-    auto typesSection = TypesSection();
+    auto typesSection = input::parameterFile::TypesSection();
     ASSERT_NO_THROW(typesSection.endedNormally(true));
 
     ASSERT_THROW_MSG(
@@ -108,7 +106,7 @@ TEST_F(TestParameterFileSection, endedNormallyTypes)
  */
 TEST_F(TestParameterFileSection, dummyHeaderTest)
 {
-    auto typesSection = TypesSection();
+    auto typesSection = input::parameterFile::TypesSection();
     auto lineElements = std::vector<std::string>({"dummy"});
     EXPECT_NO_THROW(typesSection.processHeader(lineElements, *_engine));
 }

@@ -113,6 +113,4 @@ jobs:
             --base NEXT \
             --head "$BRANCH" \
             --title "merge: sync dev into NEXT (conflicts)" \
-            --body "Automated daily sync of \`dev\` into \`NEXT\` failed due to merge conflicts.
-
-Please resolve the conflict markers in the affected files and merge this PR to keep \`NEXT\` in sync with \`dev\`."
+            --body "Automated daily sync of \`dev\` into \`NEXT\` failed due to merge conflicts. Please resolve the conflict markers in the affected files and merge this PR to keep \`NEXT\` in sync with \`dev\`."

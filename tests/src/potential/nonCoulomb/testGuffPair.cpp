@@ -27,8 +27,6 @@
 // for Message, TestPartResult
 #include "guffPair.hpp"   // for GuffPair
 
-using namespace pot;
-
 /**
  * @brief tests the calculation of the energy and force of a GuffPair
  *

@@ -33,97 +33,99 @@
 #include "stepCountSection.hpp"    // for StepCountSection
 #include "stringUtilities.hpp"     // for removeComments, splitString
 
-using namespace input::restartFile;
-using namespace engine;
-using namespace utilities;
-using namespace settings;
-
-/**
- * @brief Construct a new Rst File Reader:: Rst File Reader object
- *
- * @details The constructor initializes the sections of the .rst file and pushes
- * them into a vector. It also sets the filename and the engine object and with
- * the filename it opens the file in the ifstream object _fp.
- *
- *
- * @param filename
- * @param engine
- */
-RestartFileReader::RestartFileReader(
-    const std::string &filename,
-    Engine            &engine
-)
-    : _fileName(filename),
-      _fp(filename),
-      _engine(engine),
-      _atomSection(std::make_unique<AtomSection>())
+namespace input::restartFile
 {
-    _sections.push_back(std::make_unique<BoxSection>());
-    _sections.push_back(std::make_unique<NoseHooverSection>());
-    _sections.push_back(std::make_unique<StepCountSection>());
-}
 
-/**
- * @brief Determines which section of the .rst file the line belongs to
- *
- * @param lineElements
- * @return RestartFileSection*
- */
-RestartFileSection *RestartFileReader::determineSection(
-    std::vector<std::string> &lineElements
-)
-{
-    for (const auto &section : _sections)
-        if (section->keyword() == toLowerAndReplaceDashesCopy(lineElements[0]))
-            return section.get();
-
-    return _atomSection.get();
-}
-
-/**
- * @brief Reads a restart file and calls the process function of the
- * corresponding section
- *
- * @throw exc::InputFileException if file not found
- */
-void RestartFileReader::read()
-{
-    std::string line;
-    int         lineNumber = 1;
-
-    while (getline(_fp, line))
+    /**
+     * @brief Construct a new Rst File Reader:: Rst File Reader object
+     *
+     * @details The constructor initializes the sections of the .rst file and
+     * pushes them into a vector. It also sets the filename and the engine
+     * object and with the filename it opens the file in the ifstream object
+     * _fp.
+     *
+     *
+     * @param filename
+     * @param engine
+     */
+    RestartFileReader::RestartFileReader(
+        const std::string &filename,
+        engine::Engine    &engine
+    )
+        : _fileName(filename),
+          _fp(filename),
+          _engine(engine),
+          _atomSection(std::make_unique<AtomSection>())
     {
-        line              = removeComments(line, "#");
-        auto lineElements = splitString(line);
-
-        if (lineElements.empty())
-        {
-            ++lineNumber;
-            continue;
-        }
-
-        auto *section        = determineSection(lineElements);
-        section->_lineNumber = lineNumber;
-        section->_fp         = &_fp;
-        section->process(lineElements, _engine);
-        lineNumber = section->_lineNumber;
-        ++lineNumber;
+        _sections.push_back(std::make_unique<BoxSection>());
+        _sections.push_back(std::make_unique<NoseHooverSection>());
+        _sections.push_back(std::make_unique<StepCountSection>());
     }
-}
 
-/**
- * @brief wrapper function to construct a RestartFileReader object and call the
- * read function
- *
- * @param engine
- */
-void input::restartFile::readRestartFile(Engine &engine)
-{
-    const auto filename = FileSettings::getStartFileName();
+    /**
+     * @brief Determines which section of the .rst file the line belongs to
+     *
+     * @param lineElements
+     * @return RestartFileSection*
+     */
+    RestartFileSection *RestartFileReader::determineSection(
+        std::vector<std::string> &lineElements
+    )
+    {
+        for (const auto &section : _sections)
+            if (section->keyword() ==
+                utilities::toLowerAndReplaceDashesCopy(lineElements[0]))
+                return section.get();
 
-    out::StdoutOutput::writeRead("Start File", filename);
-    engine.getLogOutput().writeRead("Start File", filename);
+        return _atomSection.get();
+    }
 
-    RestartFileReader rstFileReader(filename, engine);
-    rstFileReader.read();
-}
+    /**
+     * @brief Reads a restart file and calls the process function of the
+     * corresponding section
+     *
+     * @throw exc::InputFileException if file not found
+     */
+    void RestartFileReader::read()
+    {
+        std::string line;
+        int         lineNumber = 1;
+
+        while (getline(_fp, line))
+        {
+            line              = utilities::removeComments(line, "#");
+            auto lineElements = utilities::splitString(line);
+
+            if (lineElements.empty())
+            {
+                ++lineNumber;
+                continue;
+            }
+
+            auto *section        = determineSection(lineElements);
+            section->_lineNumber = lineNumber;
+            section->_fp         = &_fp;
+            section->process(lineElements, _engine);
+            lineNumber = section->_lineNumber;
+            ++lineNumber;
+        }
+    }
+
+    /**
+     * @brief wrapper function to construct a RestartFileReader object and call
+     * the read function
+     *
+     * @param engine
+     */
+    void readRestartFile(engine::Engine &engine)
+    {
+        const auto filename = settings::FileSettings::getStartFileName();
+
+        out::StdoutOutput::writeRead("Start File", filename);
+        engine.getLogOutput().writeRead("Start File", filename);
+
+        RestartFileReader rstFileReader(filename, engine);
+        rstFileReader.read();
+    }
+
+}   // namespace input::restartFile
