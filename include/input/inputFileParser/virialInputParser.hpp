@@ -24,8 +24,6 @@
 
 #define _VIRIAL_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "inputFileParser.hpp"   // for InputFileParser
 
 namespace input
@@ -41,7 +39,7 @@ namespace input
        public:
         VirialInputParser();
 
-        static void parseVirial(const std::vector<std::string> &, size_t);
+        void addVirialKey();
     };
 
 }   // namespace input
