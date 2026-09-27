@@ -174,12 +174,12 @@ namespace waterModel
         InterWaterState                     _state;
         std::unique_ptr<InterWaterStrategy> _strategy;
 
-        void setNonCoulombCutOffRadii() const;
-        void initNonCoulombPairs() const;
-        void initState()
+        void _setNonCoulombCutOffRadii() const;
+        void _initNonCoulombPairs() const;
+        void _initState()
         {
-            setNonCoulombCutOffRadii();
-            initNonCoulombPairs();
+            _setNonCoulombCutOffRadii();
+            _initNonCoulombPairs();
         }
     };
 

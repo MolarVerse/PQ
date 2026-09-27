@@ -467,7 +467,7 @@ namespace QM
      *
      * @param calculator
      */
-    void AseQMRunner::setAseCalculator(const pybind11::object &calculator)
+    void AseQMRunner::_setAseCalculator(const pybind11::object &calculator)
     {
         _ase->calculator = calculator;
     }
