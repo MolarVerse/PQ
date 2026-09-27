@@ -26,7 +26,6 @@
 #include <format>    // for format
 #include <optional>
 #include <string>   // for allocator, operator==, string
-#include <utility>
 
 #include "celllist.hpp"
 #include "inputKeyAdapter.hpp"
@@ -45,12 +44,10 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) cell-list "<on/off>"
      * 2) cell-number "<size_t>"
      *
-     * @param cellListPtr pointer to the cell list object
+     * @param cellList reference to the cell list object
      */
-    CellListInputParser::CellListInputParser(
-        std::shared_ptr<molsys::CellList> cellListPtr
-    )
-        : _cellListPtr(std::move(cellListPtr))
+    CellListInputParser::CellListInputParser(molsys::CellList &cellList)
+        : _cellListPtr(&cellList)
     {
         addCellListActivated();
         addNumberOfCells();

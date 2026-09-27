@@ -45,7 +45,7 @@ TEST_F(TestSetup, setupCellList)
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
     settings::Settings::activateCellList();
     _engine->getSimulationBox().setBoxDimensions({15.0, 15.0, 15.0});
-    _engine->getCellList()->setNumberOfCells(3);
+    _engine->getCellList().setNumberOfCells(3);
     cellListSetup.setup();
 
     test::checkType(_engine->getPotential(), typeid(pot::PotentialCellList));

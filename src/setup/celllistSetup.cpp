@@ -22,6 +22,7 @@
 
 #include "celllistSetup.hpp"
 
+#include "celllist.hpp"
 #include "engine.hpp"   // for Engine
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"   // for PotentialCellList
@@ -69,9 +70,9 @@ namespace setup
 
         if (settings::Settings::isCellListActivated())
         {
-            const auto &cellList = _engine.getCellList();
-            cellList->resizeCells();
-            cellList->setup(_engine.getSimulationBox());
+            auto &cellList = _engine.getCellList();
+            cellList.resizeCells();
+            cellList.setup(_engine.getSimulationBox());
             _engine.makePotential(pot::PotentialCellList());
         }
         else
