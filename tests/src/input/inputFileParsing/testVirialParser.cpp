@@ -43,26 +43,34 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseVirial)
 {
-    VirialInputParser        parser;
+    VirialInputParser parser;
+    const auto        funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("virial"));
+    const auto& parseFunc = funcMap.at("virial");
+
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
-    input::VirialInputParser::parseVirial(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::Settings::getVirialType(),
         settings::VirialType::ATOMIC
     );
 
+    clearParser(parser);
+
     lineElements = {"virial", "=", "molecular"};
-    input::VirialInputParser::parseVirial(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::Settings::getVirialType(),
         settings::VirialType::MOLECULAR
     );
 
+    clearParser(parser);
+
     lineElements = {"virial", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseVirial(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid virial setting \"notValid\" at line 0 in input file.\n"
-        "Possible options are: molecular or atomic"
+        "Invalid value \"notValid\" for key \"virial\" at line 0 in input "
+        "file. Allowed values: ATOMIC, MOLECULAR"
     );
 }

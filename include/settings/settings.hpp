@@ -24,7 +24,8 @@
 
 #define _SETTINGS_HPP_
 
-#include <cstdint>       // for uint_fast32_t
+#include <cstdint>   // for uint_fast32_t
+#include <mstd/enum.hpp>
 #include <string_view>   // for string_view
 
 #include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
@@ -60,11 +61,14 @@ namespace settings
         DOUBLE
     };
 
-    enum class VirialType : std::uint8_t
-    {
-        ATOMIC,
-        MOLECULAR
-    };
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define VIRIAL_TYPE_LIST(X) \
+    X(ATOMIC)               \
+    X(MOLECULAR)
+
+    MSTD_ENUM(VirialType, std::uint8_t, VIRIAL_TYPE_LIST)
+
+#undef VIRIAL_TYPE_LIST
 
     enum class IntegratorType : std::uint8_t
     {
