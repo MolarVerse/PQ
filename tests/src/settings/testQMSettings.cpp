@@ -279,14 +279,14 @@ TEST(QMSettingsTest, SetBuiltInSlakosTypeRequiresAse)
 {
     ASSERT_THROW_MSG(
         settings::QMSettings::setSlakosType("3ob"),
-        InputFileException,
+        exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
 
     ASSERT_THROW_MSG(
         settings::QMSettings::setSlakosType("matsci"),
-        InputFileException,
+        exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
