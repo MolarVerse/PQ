@@ -88,7 +88,6 @@ namespace setup
 
         setAtomMasses();
         setAtomicNumbers();
-        calculateMolMasses();
         calculateTotalCharge();
 
         auto &simBox = _engine.getSimulationBox();
@@ -300,25 +299,6 @@ namespace setup
 
         auto &molecules = _engine.getSimulationBox().getMolecules();
         std::ranges::for_each(molecules, setAtomicNumbers);
-    }
-
-    /**
-     * @brief calculates the molecular mass of each molecule in the simulation
-     * box
-     *
-     */
-    void SimulationBoxSetup::calculateMolMasses()
-    {
-        auto calculateMolMasses = [](auto &molecule)
-        {
-            const auto &masses = molecule.getAtomMasses();
-            molecule.setMolMass(
-                std::accumulate(masses.begin(), masses.end(), 0.0)
-            );
-        };
-
-        auto &molecules = _engine.getSimulationBox().getMolecules();
-        std::ranges::for_each(molecules, calculateMolMasses);
     }
 
     /**

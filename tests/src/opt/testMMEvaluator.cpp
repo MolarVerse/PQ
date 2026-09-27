@@ -47,7 +47,6 @@ namespace
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
         auto mol = molsys::Molecule();
-        mol.setNumberOfAtoms(2);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
@@ -116,7 +115,6 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
     auto mol = molsys::Molecule();
-    mol.setNumberOfAtoms(1);
 
     auto atom = std::make_shared<molsys::Atom>();
     atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));

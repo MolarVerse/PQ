@@ -85,7 +85,6 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
-    molecule.setNumberOfAtoms(3);
 
     const auto refPos0 = linalg::Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = linalg::Vec3D(1.0, 0.0, 0.0);
@@ -167,7 +166,6 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
-    molecule.setNumberOfAtoms(3);
 
     const auto refPos0 = linalg::Vec3D(0.0, 0.0, 0.0);
     const auto refPos1 = linalg::Vec3D(1.0, 0.0, 0.0);

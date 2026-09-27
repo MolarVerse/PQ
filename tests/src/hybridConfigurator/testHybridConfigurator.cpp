@@ -160,7 +160,6 @@ TEST(testHybridConfigurator, assignHybridZones)
     auto mol1 = molsys::Molecule();
     mol1.addAtom(atom1);
     mol1.addAtom(atom2);
-    mol1.setMolMass(atom1->getMass() + atom2->getMass());
     simBox.addMolecule(mol1);
 
     auto atom3 = std::make_shared<molsys::Atom>();
@@ -170,7 +169,6 @@ TEST(testHybridConfigurator, assignHybridZones)
 
     auto mol2 = molsys::Molecule();
     mol2.addAtom(atom3);
-    mol2.setMolMass(atom3->getMass());
     simBox.addMolecule(mol2);
 
     auto atom4 = std::make_shared<molsys::Atom>();
@@ -180,7 +178,6 @@ TEST(testHybridConfigurator, assignHybridZones)
 
     auto mol3 = molsys::Molecule();
     mol3.addAtom(atom4);
-    mol3.setMolMass(atom4->getMass());
     simBox.addMolecule(mol3);
 
     auto atom5 = std::make_shared<molsys::Atom>();
@@ -190,7 +187,6 @@ TEST(testHybridConfigurator, assignHybridZones)
 
     auto mol4 = molsys::Molecule();
     mol4.addAtom(atom5);
-    mol4.setMolMass(atom5->getMass());
     simBox.addMolecule(mol4);
 
     auto atom6 = std::make_shared<molsys::Atom>();
@@ -200,7 +196,6 @@ TEST(testHybridConfigurator, assignHybridZones)
 
     auto mol5 = molsys::Molecule();
     mol5.addAtom(atom6);
-    mol5.setMolMass(atom6->getMass());
     simBox.addMolecule(mol5);
 
     configurator::HybridConfigurator::assignHybridZones(simBox);
@@ -232,7 +227,6 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 
     auto mol = molsys::Molecule();
     mol.addAtom(atom);
-    mol.setMolMass(atom->getMass());
     simBox.addMolecule(mol);
 
     configurator::HybridConfigurator::assignHybridZones(simBox);
@@ -266,7 +260,6 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
 
         auto molecule = molsys::Molecule();
         molecule.addAtom(atom);
-        molecule.setMolMass(1.0);
         return molecule;
     };
 
@@ -392,7 +385,6 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 
     auto mol1 = molsys::Molecule();
     mol1.addAtom(atom1);
-    mol1.setMolMass(atom1->getMass());
     mol1.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol1);
 
@@ -403,7 +395,6 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 
     auto mol2 = molsys::Molecule();
     mol2.addAtom(atom2);
-    mol2.setMolMass(atom2->getMass());
     mol2.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol2);
 
@@ -414,7 +405,6 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 
     auto mol3 = molsys::Molecule();
     mol3.addAtom(atom3);
-    mol3.setMolMass(atom3->getMass());
     mol3.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol3);
 
@@ -425,7 +415,6 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 
     auto mol4 = molsys::Molecule();
     mol4.addAtom(atom4);
-    mol4.setMolMass(atom4->getMass());
     mol4.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol4);
 
@@ -447,7 +436,6 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 
     auto mol5 = molsys::Molecule();
     mol5.addAtom(atom5);
-    mol5.setMolMass(atom5->getMass());
     mol5.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol5);
 

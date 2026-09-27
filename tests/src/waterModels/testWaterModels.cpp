@@ -106,7 +106,6 @@ namespace
 
         molsys::Molecule water;
         water.setMoltype(molType);
-        water.setNumberOfAtoms(3);
         water.setHybridZone(zone);
         water.setSmoothingFactor(0.25);
         water.addAtom(oxygen);

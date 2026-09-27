@@ -178,7 +178,6 @@ namespace input::restartFile
         const auto molecule = std::make_unique<molsys::Molecule>(MolType{0});
 
         molecule->setName("QM");
-        molecule->setNumberOfAtoms(1);
 
         atom->setAtomTypeName(lineElements[0]);
         atom->setName(lineElements[0]);
@@ -247,7 +246,6 @@ namespace input::restartFile
         auto molecule =
             std::make_unique<molsys::Molecule>(moleculeType->getMoltype());
 
-        molecule->setNumberOfAtoms(moleculeType->getNumberOfAtoms());
         molecule->setName(moleculeType->getName());
         molecule->setCharge(moleculeType->getCharge());
 

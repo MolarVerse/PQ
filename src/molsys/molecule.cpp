@@ -24,6 +24,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <numeric>
 
 #include "box.hpp"   // for Box
 #include "collectionUtilities.hpp"
@@ -582,7 +583,7 @@ namespace molsys
      *
      * @return size_t
      */
-    size_t Molecule::getNumberOfAtoms() const { return _numberOfAtoms; }
+    size_t Molecule::getNumberOfAtoms() const { return _atoms.size(); }
 
     /**
      * @brief returns the number of degrees of freedom of the molecule
@@ -607,7 +608,15 @@ namespace molsys
      *
      * @return double
      */
-    double Molecule::getMolMass() const { return _molMass; }
+    double Molecule::getMolMass() const
+    {
+        return std::accumulate(
+            _atoms.begin(),
+            _atoms.end(),
+            0.0,
+            [](double sum, const auto &atom) { return sum + atom->getMass(); }
+        );
+    }
 
     /**
      * @brief returns the name of the molecule
@@ -636,7 +645,15 @@ namespace molsys
      *
      * @return double
      */
-    double Molecule::getSmoothingFactor() const { return _smoothingFactor; }
+    double Molecule::getSmoothingFactor() const
+    {
+        if (_smoothingFactor.has_value())
+            return _smoothingFactor.value();
+
+        throw std::runtime_error(
+            "Smoothing factor is not set for this molecule."
+        );
+    }
 
     /**
      * @brief returns the atom by index
@@ -704,16 +721,6 @@ namespace molsys
     void Molecule::setName(std::string_view name) { _name = name; }
 
     /**
-     * @brief set the number of atoms in the molecule
-     *
-     * @param numberOfAtoms
-     */
-    void Molecule::setNumberOfAtoms(size_t numberOfAtoms)
-    {
-        _numberOfAtoms = numberOfAtoms;
-    }
-
-    /**
      * @brief set the moltype of the molecule
      *
      * @param moltype
@@ -726,13 +733,6 @@ namespace molsys
      * @param charge
      */
     void Molecule::setCharge(int charge) { _charge = charge; }
-
-    /**
-     * @brief set the molecular mass of the molecule
-     *
-     * @param molMass
-     */
-    void Molecule::setMolMass(double molMass) { _molMass = molMass; }
 
     /**
      * @brief set the center of mass of the molecule

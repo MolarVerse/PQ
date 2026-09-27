@@ -110,7 +110,6 @@ namespace
 
             molsys::Molecule molecule;
             molecule.setMoltype(placement.molType);
-            molecule.setNumberOfAtoms(1);
             molecule.addAtom(atom);
 
             simBox.addMolecule(molecule);
