@@ -40,14 +40,21 @@
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
     input::IntegratorInputParser parser;
-    std::vector<std::string>     lineElements = {"integrator", "=", "v-verlet"};
-    input::IntegratorInputParser::parseIntegrator(lineElements, 0);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("integrator"));
+    const auto &parseFunc = funcMap.at("integrator");
+
+    std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
+
+    clearParser(parser);
 
     lineElements = {"integrator", "=", "notValid"};
     ASSERT_THROW_MSG(
-        parser.parseIntegrator(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid integrator \"notValid\" at line 0 in input file"
+        "Invalid value \"notValid\" for key \"integrator\" at line 0 in input "
+        "file. Allowed values: none, velocity_verlet, v-verlet"
     );
 }

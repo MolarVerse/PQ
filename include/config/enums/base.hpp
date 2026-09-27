@@ -20,28 +20,22 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTEGRATOR_INPUT_PARSER_HPP_
+#ifndef _ENUM_BASE_HPP_
+#define _ENUM_BASE_HPP_
 
-#define _INTEGRATOR_INPUT_PARSER_HPP_
+#include <array>
+#include <string_view>
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
-namespace input
+/**
+ * @brief InputAlias template to store input aliases for enum types
+ *
+ * @tparam T The enum type for which input aliases are defined.
+ *
+ */
+template <typename T>
+struct InputAlias
 {
-    /**
-     * @brief IntegratorInputParser inherits from InputFileParser
-     *
-     * @details Parses the integrator commands in the input file
-     *
-     */
-    class IntegratorInputParser : public InputFileParser
-    {
-       public:
-        IntegratorInputParser();
+    static constexpr std::array<std::pair<std::string_view, T>, 0> value{};
+};
 
-        void addIntegratorKey();
-    };
-
-}   // namespace input
-
-#endif   // _INTEGRATOR_INPUT_PARSER_HPP_
+#endif   // _ENUM_BASE_HPP_
