@@ -27,9 +27,9 @@
 #include <string_view>
 
 /**
- * @enum VirialType
+ * @brief InputAlias template to store input aliases for enum types
  *
- * @brief enum class to store the type of the virial
+ * @tparam T The enum type for which input aliases are defined.
  *
  */
 template <typename T>
