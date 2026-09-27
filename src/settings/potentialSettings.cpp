@@ -54,26 +54,6 @@ namespace settings
         std::unreachable();
     }
 
-    /**
-     * @brief return string of CoulombLongRangeType
-     *
-     * @param coulombLongRangeType
-     * @return std::string
-     */
-    std::string string(CoulombLongRangeType coulombLongRangeType)
-    {
-        switch (coulombLongRangeType)
-        {
-            using enum CoulombLongRangeType;
-
-            case REACTION_FIELD: return "reaction-field";
-            case WOLF: return "wolf";
-            case SHIFTED: return "shifted";
-        }
-
-        std::unreachable();
-    }
-
     /********************
      *                  *
      * standard setters *

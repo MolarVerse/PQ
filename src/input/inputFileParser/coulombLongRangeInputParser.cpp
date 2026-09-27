@@ -22,13 +22,11 @@
 
 #include "coulombLongRangeInputParser.hpp"
 
-#include <cstddef>   // for size_t, std
-#include <format>    // for format
-
-#include "exceptions.hpp"   // for exc::InputFileException, customException
-#include "parserUtils.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
 #include "potentialSettings.hpp"   // for settings::PotentialSettings
-#include "stringUtilities.hpp"     // for toLowerCopy
+#include "rangeValidator.hpp"
 
 namespace input
 {
@@ -43,137 +41,94 @@ namespace input
      */
     CoulombLongRangeInputParser::CoulombLongRangeInputParser()
     {
-        addKeyword(
-            std::string("long_range"),
-            bindMember(
-                &CoulombLongRangeInputParser::parseCoulombLongRange,
-                this
-            ),
-            false
-        );
-
-        addKeyword(
-            std::string("wolf_param"),
-            bindMember(&CoulombLongRangeInputParser::parseWolfParameter, this),
-            false
-        );
-
-        addKeyword(
-            std::string("rf_epsilon"),
-            bindMember(
-                &CoulombLongRangeInputParser::parseReactionFieldEpsilon,
-                this
-            ),
-            false
-        );
+        addCoulombLongRangeKey();
+        addWolfParameterKey();
+        addReactionFieldEpsilonKey();
     }
 
     /**
-     * @brief Parse the coulombic long-range correction used in the simulation
+     * @brief Add the "long_range" key to the input file parser
      *
-     * @details Possible options are:
-     * 1) "none" - no long-range correction is used (default) = shifted
-     * potential 2) "reaction_field" - reaction field long-range correction is
-     * used 3) "wolf" - wolf long-range correction is used
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if coulombic long-range
-     * correction is not valid - currently only none and wolf are supported
      */
-    void CoulombLongRangeInputParser::parseCoulombLongRange(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void CoulombLongRangeInputParser::addCoulombLongRangeKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name  = "long_range",
+            .title = "Coulomb long-range correction type",
+            .description =
+                "Specifies the type of Coulomb long-range correction to use in "
+                "the simulation",
+        };
 
-        const auto type =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+        const auto setValue = [](settings::CoulombLongRangeType type)
+        { settings::PotentialSettings::setCoulombLongRangeType(type); };
 
-        using enum settings::CoulombLongRangeType;
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<settings::CoulombLongRangeType>{
+                .metadata     = metaData,
+                .defaultValue = settings::CoulombLongRangeType::SHIFTED,
+                .onSet        = setValue
+            }
+        );
 
-        if (type == "none" || type == "shifted")
-            settings::PotentialSettings::setCoulombLongRangeType(SHIFTED);
-
-        else if (type == "reaction_field")
-        {
-            settings::PotentialSettings::setCoulombLongRangeType(
-                REACTION_FIELD
-            );
-        }
-
-        else if (type == "wolf")
-        {
-            settings::PotentialSettings::setCoulombLongRangeType(WOLF);
-        }
-        else
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid long-range type for coulomb correction "
-                    "\"{}\" at line {} in input file\n"
-                    "Possible options are: none, shifted, reaction-field, wolf",
-                    lineElements[2],
-                    lineNumber
-                )
-            );
-        }
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse the wolf parameter used in the simulation
+     * @brief Add the "wolf_param" key to the input file parser
      *
-     * @details default value is 0.25
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if wolf parameter is negative
      */
-    void CoulombLongRangeInputParser::parseWolfParameter(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void CoulombLongRangeInputParser::addWolfParameterKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name  = "wolf_param",
+            .title = "Wolf long-range correction parameter",
+            .description =
+                "Specifies the parameter for the Wolf long-range correction",
+        };
 
-        const auto wolfParameter =
-            utilities::stringToFiniteDouble(lineElements[2]);
+        const auto setValue = [](double wolfParameter)
+        { settings::PotentialSettings::setWolfParameter(wolfParameter); };
 
-        if (wolfParameter < 0.0)
-            throw exc::InputFileException("Wolf parameter cannot be negative");
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaults::WOLF_PARAM_DEFAULT,
+                .onSet        = setValue,
+                .validator    = makeShared(PositiveGTDoubleValidator),
+            }
+        );
 
-        settings::PotentialSettings::setWolfParameter(wolfParameter);
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
-     * @brief parse the reaction field epsilon used in the simulation
+     * @brief Add the "rf_epsilon" key to the input file parser
      *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if epsilon is negative
      */
-    void CoulombLongRangeInputParser::parseReactionFieldEpsilon(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void CoulombLongRangeInputParser::addReactionFieldEpsilonKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name  = "rf_epsilon",
+            .title = "Reaction field epsilon",
+            .description =
+                "Specifies the static relative permittivity for the reaction "
+                "field correction",
+        };
 
-        const auto epsilon = utilities::stringToFiniteDouble(lineElements[2]);
+        const auto setValue = [](double epsilon)
+        { settings::PotentialSettings::setReactionFieldEpsilon(epsilon); };
 
-        if (epsilon < 1)
-        {
-            throw exc::InputFileException(
-                "Static relative permittivity \"rf_epsilon\" cannot be "
-                "lower than 1.0"
-            );
-        }
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaults::RF_EPSILON_DEFAULT,
+                .onSet        = setValue,
+                .validator = makeShared(GEDoubleValidator{1.0, std::nullopt}),
+            }
+        );
 
-        settings::PotentialSettings::setReactionFieldEpsilon(epsilon);
+        addKeyword(metaData.name, adapt(key), false);
     }
 
 }   // namespace input

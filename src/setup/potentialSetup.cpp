@@ -220,7 +220,7 @@ namespace setup
             settings::PotentialSettings::getCoulombLongRangeType();
 
         // clang-format off
-    log.writeSetupInfo(std::format("Coulomb long range type: {}", string(coulLRType)));
+    log.writeSetupInfo(std::format("Coulomb long range type: {}", settings::CoulombLongRangeTypeMeta::toString(coulLRType)));
     log.writeEmptyLine();
         // clang-format on
 

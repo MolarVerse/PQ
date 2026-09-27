@@ -99,7 +99,7 @@ namespace input
         }
 
         using Meta = mstd::enum_meta_t<T>;
-        return Meta::from_stringCaseInsensitive(raw);
+        return Meta::from_stringCaseInsensitive(rawTransformed);
     }
 
     /**
