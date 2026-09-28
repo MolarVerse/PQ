@@ -21,10 +21,7 @@
 ******************************************************************************/
 
 #ifndef _HESSIAN_INPUT_PARSER_HPP_
-
 #define _HESSIAN_INPUT_PARSER_HPP_
-
-#include <cstddef>
 
 #include "inputFileParser.hpp"
 
@@ -35,17 +32,11 @@ namespace input
        public:
         HessianInputParser();
 
-        static void parseHessianFile(const std::vector<std::string> &, size_t);
-        static void parseHessianInfoFile(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseDisplacement(const std::vector<std::string> &, size_t);
-        static void parseOptimizeBeforeHessian(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseBuilder(const std::vector<std::string> &, size_t);
+        void addHessianFileKey();
+        void addHessianInfoFileKey();
+        void addDisplacementKey();
+        void addOptimizeBeforeHessianKey();
+        void addBuilderKey();
     };
 
 }   // namespace input

@@ -22,124 +22,126 @@
 
 #include "hessianInputParser.hpp"
 
-#include <format>
-
-#include "exceptions.hpp"
 #include "hessianSettings.hpp"
-#include "parserUtils.hpp"
-#include "stringUtilities.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
 
 namespace input
 {
 
+    /**
+     * @brief Construct a new HessianInputParser object
+     *
+     */
     HessianInputParser::HessianInputParser()
     {
-        addKeyword(
-            std::string("hessian_file"),
-            bindMember(&HessianInputParser::parseHessianFile, this),
-            false
-        );
-        addKeyword(
-            std::string("hessian_info_file"),
-            bindMember(&HessianInputParser::parseHessianInfoFile, this),
-            false
-        );
-        addKeyword(
-            std::string("hessian_displacement"),
-            bindMember(&HessianInputParser::parseDisplacement, this),
-            false
-        );
-        addKeyword(
-            std::string("optimize_before_hessian"),
-            bindMember(&HessianInputParser::parseOptimizeBeforeHessian, this),
-            false
-        );
-        addKeyword(
-            std::string("hessian_builder"),
-            bindMember(&HessianInputParser::parseBuilder, this),
-            false
-        );
+        addHessianFileKey();
+        addHessianInfoFileKey();
+        addDisplacementKey();
+        addOptimizeBeforeHessianKey();
+        addBuilderKey();
     }
 
-    void HessianInputParser::parseHessianFile(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HessianInputParser::addHessianFileKey()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::HessianSettings::setHessianFile(lineElements[2]);
-    }
+        const auto metaData = KeyMetadata{
+            .name        = "hessian_file",
+            .title       = "Hessian file",
+            .description = "The output Hessian file"
+        };
 
-    void HessianInputParser::parseHessianInfoFile(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::HessianSettings::setHessianInfoFile(lineElements[2]);
-    }
+        const auto setValue = [](const std::string &value)
+        { settings::HessianSettings::setHessianFile(value); };
 
-    void HessianInputParser::parseDisplacement(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-
-        const auto displacement =
-            utilities::stringToFiniteDouble(lineElements[2]);
-
-        if (displacement <= 0.0)
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Hessian displacement must be greater than 0 in input file "
-                    "at line {}",
-                    lineNumber
-                )
-            );
-        }
-
-        settings::HessianSettings::setDisplacement(displacement);
-    }
-
-    void HessianInputParser::parseOptimizeBeforeHessian(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::HessianSettings::setOptimizeBeforeHessian(
-            utilities::keywordToBool(lineElements)
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{.metadata = metaData, .onSet = setValue}
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    void HessianInputParser::parseBuilder(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HessianInputParser::addHessianInfoFileKey()
     {
-        checkCommand(lineElements, lineNumber);
-        const auto transformed =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "hessian_info_file",
+            .title       = "Hessian info file",
+            .description = "The output Hessian info file"
+        };
 
-        const auto builderType =
-            HessianBuilderTypeMeta::from_stringCaseInsensitive(transformed);
+        const auto setValue = [](const std::string &value)
+        { settings::HessianSettings::setHessianInfoFile(value); };
 
-        if (builderType.has_value())
-            settings::HessianSettings::setBuilder(builderType.value());
-        else
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid hessian_builder \"{}\" in input file at line {} - "
-                    "possible values are: central, forward, five-point, "
-                    "analytic",
-                    lineElements[2],
-                    lineNumber
-                )
-            );
-        }
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{.metadata = metaData, .onSet = setValue}
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void HessianInputParser::addDisplacementKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "hessian_displacement",
+            .title = "Hessian displacement",
+            .description =
+                "The displacement used for numerical Hessian calculations"
+        };
+
+        const auto setValue = [](double value)
+        { settings::HessianSettings::setDisplacement(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void HessianInputParser::addOptimizeBeforeHessianKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "optimize_before_hessian",
+            .title = "Optimize before Hessian",
+            .description =
+                "Whether to optimize the structure before calculating the "
+                "Hessian"
+        };
+
+        const auto setValue = [](bool value)
+        { settings::HessianSettings::setOptimizeBeforeHessian(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void HessianInputParser::addBuilderKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "hessian_builder",
+            .title       = "Hessian builder",
+            .description = "The type of Hessian builder to use"
+        };
+
+        const auto setValue = [](HessianBuilderType value)
+        { settings::HessianSettings::setBuilder(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<HessianBuilderType>{
+                .metadata = metaData,
+                .onSet    = setValue
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
 }   // namespace input
