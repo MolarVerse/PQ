@@ -24,8 +24,6 @@
 
 #include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
 
-using namespace linalg;
-
 namespace molsys
 {
 
@@ -46,7 +44,7 @@ namespace molsys
      *
      * @param position
      */
-    void OrthorhombicBox::applyPBC(Vec3D &position) const
+    void OrthorhombicBox::applyPBC(linalg::Vec3D &position) const
     {
         position -= _boxDimensions * round(position / _boxDimensions);
     }
@@ -55,9 +53,11 @@ namespace molsys
      * @brief Calculate the shift vector
      *
      * @param shiftVector
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
-    Vec3D OrthorhombicBox::calcShiftVector(const Vec3D &shiftVector) const
+    linalg::Vec3D OrthorhombicBox::calcShiftVector(
+        const linalg::Vec3D &shiftVector
+    ) const
     {
         return _boxDimensions * round(shiftVector / _boxDimensions);
     }
@@ -67,7 +67,7 @@ namespace molsys
      *
      * @return vector<double>
      */
-    Vec3D OrthorhombicBox::calcBoxDimFromDensity(
+    linalg::Vec3D OrthorhombicBox::calcBoxDimFromDensity(
         double totalMass,
         double density
     )
@@ -77,9 +77,11 @@ namespace molsys
         return {::cbrt(_volume)};
     }
 
-    Vec3D OrthorhombicBox::wrapPositionIntoBox(const Vec3D &pos) const
+    linalg::Vec3D OrthorhombicBox::wrapPositionIntoBox(
+        const linalg::Vec3D &pos
+    ) const
     {
-        Vec3D position = pos;
+        linalg::Vec3D position = pos;
         applyPBC(position);
         return position;
     }
@@ -89,7 +91,7 @@ namespace molsys
      *
      * @param scalingTensor
      */
-    void OrthorhombicBox::scaleBox(const tensor3D &scalingTensor)
+    void OrthorhombicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
         setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
         _volume = calculateVolume();

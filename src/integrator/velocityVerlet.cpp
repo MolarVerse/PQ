@@ -25,54 +25,57 @@
 #include "globalTimer.hpp"
 #include "simulationBox.hpp"
 
-using namespace integrator;
-using namespace molsys;
-
-/**
- * @brief Construct a new Velocity Verlet::Velocity Verlet object
- *
- */
-VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
-
-/**
- * @brief applies first half step of velocity verlet algorithm
- *
- * @param simulationBox
- */
-void VelocityVerlet::firstStep(SimulationBox &simulationBox)
+namespace integrator
 {
-    auto _ = scopedTimer(TimerId::Integrator, "Velocity Verlet - First Step");
+    /**
+     * @brief Construct a new Velocity Verlet::Velocity Verlet object
+     *
+     */
+    VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
 
-    auto integrate = [&simulationBox](auto &atom)
+    /**
+     * @brief applies first half step of velocity verlet algorithm
+     *
+     * @param simulationBox
+     */
+    void VelocityVerlet::firstStep(molsys::SimulationBox &simulationBox)
     {
-        integrateVelocities(atom.get());
-        integratePositions(atom.get(), simulationBox);
-    };
+        auto _ =
+            scopedTimer(TimerId::Integrator, "Velocity Verlet - First Step");
 
-    std::ranges::for_each(simulationBox.getAtoms(), integrate);
+        auto integrate = [&simulationBox](auto &atom)
+        {
+            integrateVelocities(atom.get());
+            integratePositions(atom.get(), simulationBox);
+        };
 
-    const auto box = simulationBox.getBoxPtr();
+        std::ranges::for_each(simulationBox.getAtoms(), integrate);
 
-    auto calculateCOM = [&box](auto &molecule)
+        const auto box = simulationBox.getBoxPtr();
+
+        auto calculateCOM = [&box](auto &molecule)
+        {
+            molecule.calculateCenterOfMass(*box);
+            molecule.setAtomForcesToZero();
+        };
+
+        std::ranges::for_each(simulationBox.getMolecules(), calculateCOM);
+    }
+
+    /**
+     * @brief applies second half step of velocity verlet algorithm
+     *
+     * @param simulationBox
+     */
+    void VelocityVerlet::secondStep(molsys::SimulationBox &simulationBox)
     {
-        molecule.calculateCenterOfMass(*box);
-        molecule.setAtomForcesToZero();
-    };
+        auto _ =
+            scopedTimer(TimerId::Integrator, "Velocity Verlet - Second Step");
 
-    std::ranges::for_each(simulationBox.getMolecules(), calculateCOM);
-}
+        std::ranges::for_each(
+            simulationBox.getAtoms(),
+            [](const auto &atom) { integrateVelocities(atom.get()); }
+        );
+    }
 
-/**
- * @brief applies second half step of velocity verlet algorithm
- *
- * @param simulationBox
- */
-void VelocityVerlet::secondStep(SimulationBox &simulationBox)
-{
-    auto _ = scopedTimer(TimerId::Integrator, "Velocity Verlet - Second Step");
-
-    std::ranges::for_each(
-        simulationBox.getAtoms(),
-        [](const auto &atom) { integrateVelocities(atom.get()); }
-    );
-}
+}   // namespace integrator

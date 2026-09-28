@@ -29,125 +29,128 @@
 #include <vector>        // for vector
 
 #include "constants.hpp"
-#include "engine.hpp"                  // for Engine
-#include "exceptions.hpp"              // for RstFileException
+#include "engine.hpp"                  // for engine::Engine
+#include "exceptions.hpp"              // for exc::RstFileException
 #include "mathUtilities.hpp"           // for compare
 #include "settings.hpp"                // for Settings
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "triclinicBox.hpp"            // for TriclinicBox
 
-using namespace input::restartFile;
-using namespace exc;
-using namespace linalg;
-using namespace utilities;
-using namespace settings;
-using namespace molsys;
-using namespace engine;
-
-/**
- * @brief processes the box section of the rst file
- *
- * @details the box section can have 4 or 7 elements. If it has 4 elements, the
- * box is assumed to be orthogonal. If it has 7 elements, the box is assumed to
- * be triclinic. The second to fourth elements are the box dimensions, the next
- * 3 elements are the box angles.
- *
- * @param lineElements all elements of the line
- * @param engine object containing the engine
- *
- * @throws RstFileException if the number of elements in the
- * line is not 4 or 7
- * @throws RstFileException if the box dimensions are not
- * positive
- * @throws RstFileException if the box angles are not positive
- * or larger than 90°
- */
-void BoxSection::process(std::vector<std::string> &lineElements, Engine &engine)
+namespace input::restartFile
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if ((lineElements.size() != 4) && (lineElements.size() != 7))
+
+    /**
+     * @brief processes the box section of the rst file
+     *
+     * @details the box section can have 4 or 7 elements. If it has 4 elements,
+     * the box is assumed to be orthogonal. If it has 7 elements, the box is
+     * assumed to be triclinic. The second to fourth elements are the box
+     * dimensions, the next 3 elements are the box angles.
+     *
+     * @param lineElements all elements of the line
+     * @param engine object containing the engine
+     *
+     * @throws exc::RstFileException if the number of elements in the
+     * line is not 4 or 7
+     * @throws exc::RstFileException if the box dimensions are not
+     * positive
+     * @throws exc::RstFileException if the box angles are not positive
+     * or larger than 90°
+     */
+    void BoxSection::process(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    )
     {
-        throw RstFileException(
-            std::format(
-                "Error in line {}: Box section must have 4 or 7 elements",
-                _lineNumber
-            )
-        );
-    }
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if ((lineElements.size() != 4) && (lineElements.size() != 7))
+        {
+            throw exc::RstFileException(
+                std::format(
+                    "Error in line {}: Box section must have 4 or 7 elements",
+                    _lineNumber
+                )
+            );
+        }
 
-    const auto boxDimensions = Vec3D{
-        stod(lineElements[1]),
-        stod(lineElements[2]),
-        stod(lineElements[3])
-    };
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-    auto checkPositive = [](const double dimension) { return dimension < 0.0; };
-
-    if (std::ranges::any_of(boxDimensions, checkPositive))
-        throw RstFileException("All box dimensions must be positive");
-
-    constexpr auto defaultAngle = 90.0;
-    auto           boxAngles = Vec3D{defaultAngle, defaultAngle, defaultAngle};
-
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if (7 == lineElements.size())
-    {
-        boxAngles = Vec3D{
-            stod(lineElements[4]),
-            stod(lineElements[5]),
-            stod(lineElements[6])
+        const auto boxDimensions = linalg::Vec3D{
+            stod(lineElements[1]),
+            stod(lineElements[2]),
+            stod(lineElements[3])
         };
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        auto checkAngles = [](const double angle)
-        { return angle < 0.0 || angle > 2.0 * defaultAngle; };
+        auto checkPositive = [](const double dimension)
+        { return dimension < 0.0; };
 
-        if (std::ranges::any_of(boxAngles, checkAngles))
-            throw RstFileException(
-                "Box angles must be positive and smaller than 180°"
-            );
+        if (std::ranges::any_of(boxDimensions, checkPositive))
+            throw exc::RstFileException("All box dimensions must be positive");
+
+        constexpr auto defaultAngle = 90.0;
+        auto           boxAngles =
+            linalg::Vec3D{defaultAngle, defaultAngle, defaultAngle};
+
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (7 == lineElements.size())
+        {
+            boxAngles = linalg::Vec3D{
+                stod(lineElements[4]),
+                stod(lineElements[5]),
+                stod(lineElements[6])
+            };
+
+            auto checkAngles = [](const double angle)
+            { return angle < 0.0 || angle > 2.0 * defaultAngle; };
+
+            if (std::ranges::any_of(boxAngles, checkAngles))
+                throw exc::RstFileException(
+                    "Box angles must be positive and smaller than 180°"
+                );
+        }
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        if (!utilities::compare(
+                boxAngles,
+                linalg::Vec3D{defaultAngle, defaultAngle, defaultAngle},
+                TRICLINIC_BOX_ANGLE_THRESHOLD
+            ))
+        {
+            molsys::TriclinicBox box;
+            box.setBoxAngles(boxAngles);
+            box.setBoxDimensions(boxDimensions);
+            engine.getSimulationBox().setBox(box);
+
+            const auto jobType = settings::Settings::getJobtype();
+
+            // TODO: implement triclinic box for MM-MD
+            if (jobType != settings::JobType::QM_MD &&
+                jobType != settings::JobType::RING_POLYMER_QM_MD)
+                throw exc::InputFileException(
+                    "Triclinic box is only supported for QM-MD and RP-QM-MD"
+                );
+        }
+        else
+        {
+            molsys::OrthorhombicBox box;
+            box.setBoxDimensions(boxDimensions);
+            engine.getSimulationBox().setBox(box);
+        }
+
+        settings::SimulationBoxSettings::setBoxSet(true);
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    if (!compare(
-            boxAngles,
-            Vec3D{defaultAngle, defaultAngle, defaultAngle},
-            TRICLINIC_BOX_ANGLE_THRESHOLD
-        ))
-    {
-        auto box = TriclinicBox();
-        box.setBoxAngles(boxAngles);
-        box.setBoxDimensions(boxDimensions);
-        engine.getSimulationBox().setBox(box);
+    /**
+     * @brief returns the keyword of the box section
+     *
+     * @return std::string
+     */
+    std::string BoxSection::keyword() { return "box"; }
 
-        const auto jobType = Settings::getJobtype();
+    /**
+     * @brief returns if the box section is a header
+     *
+     * @return true
+     */
+    bool BoxSection::isHeader() { return true; }
 
-        // TODO: implement triclinic box for MM-MD
-        if (jobType != JobType::QM_MD && jobType != JobType::RING_POLYMER_QM_MD)
-            throw InputFileException(
-                "Triclinic box is only supported for QM-MD and RP-QM-MD"
-            );
-    }
-    else
-    {
-        auto box = OrthorhombicBox();
-        box.setBoxDimensions(boxDimensions);
-        engine.getSimulationBox().setBox(box);
-    }
-
-    SimulationBoxSettings::setBoxSet(true);
-}
-
-/**
- * @brief returns the keyword of the box section
- *
- * @return std::string
- */
-std::string BoxSection::keyword() { return "box"; }
-
-/**
- * @brief returns if the box section is a header
- *
- * @return true
- */
-bool BoxSection::isHeader() { return true; }
+}   // namespace input::restartFile

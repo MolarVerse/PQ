@@ -1,0 +1,1 @@
+- Cell-list assignment wraps escaped atom positions correctly and rejects non-finite coordinates with a clear error instead of segfaulting.

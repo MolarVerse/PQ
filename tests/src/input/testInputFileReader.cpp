@@ -37,9 +37,6 @@
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"
 
-using namespace input;
-using namespace settings;
-
 namespace
 {
     void readKeywordList(
@@ -104,9 +101,10 @@ TEST_F(TestInputFileReader, testAddKeyword)
 TEST_F(TestInputFileReader, testNotAValidKeyword)
 {
     auto lineElements = std::vector<std::string>{"notAValidKeyword", "=", "1"};
-    ASSERT_THROW(
+    ASSERT_THROW_MSG(
         _inputFileReader->process(lineElements),
-        exc::InputFileException
+        exc::InputFileException,
+        "Invalid keyword \"notAValidKeyword\" at line 1"
     );
 }
 
@@ -140,13 +138,17 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 {
     std::string filename = "data/inputFileReader/inputFileNotFound.txt";
     _inputFileReader->setFilename(filename);
-    ASSERT_THROW(_inputFileReader->read(), exc::InputFileException);
+    ASSERT_THROW_MSG(
+        _inputFileReader->read(),
+        exc::InputFileException,
+        "\"data/inputFileReader/inputFileNotFound.txt\" File not found"
+    );
 }
 
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(readInputFile(filename, *_mdEngine));
+    ASSERT_NO_THROW(input::readInputFile(filename, *_mdEngine));
 }
 
 TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
@@ -164,7 +166,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
     }
 
     ASSERT_THROW_MSG(
-        readInputFile(_fileName, *_mdEngine),
+        input::readInputFile(_fileName, *_mdEngine),
         exc::InputFileException,
         "Missing required keyword \"rf_epsilon\" in input file: it must be "
         "set when the Coulomb long-range correction is set to "
@@ -187,12 +189,12 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
-    ASSERT_NO_THROW(readInputFile(_fileName, *_mdEngine));
+    ASSERT_NO_THROW(input::readInputFile(_fileName, *_mdEngine));
     EXPECT_EQ(
-        PotentialSettings::getCoulombLongRangeType(),
-        CoulombLongRangeType::REACTION_FIELD
+        settings::PotentialSettings::getCoulombLongRangeType(),
+        settings::CoulombLongRangeType::REACTION_FIELD
     );
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 80.0);
+    EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
@@ -224,7 +226,11 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
     {
         const auto &keyword = keywordsRef[index];
         _inputFileReader->setKeywordCount(keyword, 0);
-        ASSERT_THROW(_inputFileReader->postProcess(), exc::InputFileException);
+        ASSERT_THROW_MSG(
+            _inputFileReader->postProcess(),
+            exc::InputFileException,
+            "Missing keyword \"" + keyword + "\" in input file"
+        );
         _inputFileReader->setKeywordCount(keyword, 1);
     }
 }
@@ -260,9 +266,16 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
         {
             const auto &keyword = keywordsRef[index];
             _inputFileReader->setKeywordCount(keyword, index);
-            ASSERT_THROW(
+            std::string excMsg;
+            if (index > 1)
+                excMsg = "Multiple keywords \"" + keyword + "\" in input file";
+            else
+                excMsg = "Missing keyword \"" + keyword + "\" in input file";
+
+            ASSERT_THROW_MSG(
                 _inputFileReader->postProcess(),
-                exc::InputFileException
+                exc::InputFileException,
+                excMsg
             );
             _inputFileReader->setKeywordCount(keyword, 1);
         }

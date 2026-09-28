@@ -69,4 +69,75 @@ namespace input
         return std::nullopt;
     }
 
+    /**
+     * @brief attempts to parse a File from a raw input-file token
+     *
+     * @param raw the raw input-file token
+     * @return an optional containing the parsed File if successful,
+     *         std::nullopt otherwise
+     */
+    std::optional<mstd::File> Converter<mstd::File>::tryParse(
+        std::string_view raw
+    )
+    {
+        mstd::File file((std::string(raw)));
+        if (file.exists())
+            return file;
+
+        return std::nullopt;
+    }
+
+    /**
+     * @brief attempts to parse a std::string from a raw input-file token
+     *
+     * @param raw the raw input-file token
+     * @return an optional containing the parsed std::string if successful,
+     *         std::nullopt otherwise
+     */
+    std::optional<std::string> Converter<std::string>::tryParse(
+        std::string_view raw
+    )
+    {
+        return std::string(raw);
+    }
+
+    /**
+     * @brief describes the domain of valid File inputs
+     *
+     * @return a string describing the domain
+     */
+    std::string Converter<mstd::File>::describeDomain(
+        const std::vector<mstd::File>& notAllowed
+    )
+    {
+        std::string message = "Value must be an existing file path.";
+
+        for (const auto& value : notAllowed)
+            message += ", not allowed: " + value.fileName();
+
+        return message;
+    }
+
+    /**
+     * @brief describes the domain of valid std::string inputs
+     *
+     * @return a string describing the domain
+     */
+    std::string Converter<bool>::describeDomain(
+        const std::vector<bool>& /*notAllowed*/
+    )
+    {
+        std::string options;
+        for (const auto& [positive, negative] : boolKeywords)
+        {
+            if (!options.empty())
+                options += "|";
+
+            options += positive;
+            options += "|";
+            options += negative;
+        }
+        return "Allowed values: " + options;
+    }
+
 }   // namespace input

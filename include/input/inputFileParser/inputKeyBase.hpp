@@ -83,6 +83,26 @@ namespace input
         virtual void clearValue() = 0;
     };
 
+    /**
+     * @class DeprecatedInputKey
+     *
+     * @brief placeholder for deprecated input keys
+     *
+     */
+    class DeprecatedInputKey
+    {
+       private:
+        std::string _key;
+        std::string _message;
+
+       public:
+        explicit DeprecatedInputKey(std::string key, std::string message);
+
+        void deprecated(size_t lineNumber) const;
+
+        [[nodiscard]] const std::string &getKey() const;
+    };
+
 }   // namespace input
 
 #endif   // _INPUT_KEY_BASE_HPP_

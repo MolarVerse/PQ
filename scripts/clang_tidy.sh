@@ -5,6 +5,9 @@ LOGFILE="clangd-tidy-report.log"
 
 all_files=false
 recheck=false
+base_ref=""
+head_ref=""
+compile_db="."
 while [[ $# -gt 0 ]]; do
     case "$1" in
     --all)
@@ -15,6 +18,18 @@ while [[ $# -gt 0 ]]; do
         recheck=true
         shift
         ;;
+    --base)
+        base_ref="$2"
+        shift 2
+        ;;
+    --head)
+        head_ref="$2"
+        shift 2
+        ;;
+    -p | --build-dir)
+        compile_db="$2"
+        shift 2
+        ;;
     *)
         echo "Unknown option: $1"
         exit 1
@@ -24,6 +39,11 @@ done
 
 if $all_files && $recheck; then
     echo "--all and --recheck are mutually exclusive"
+    exit 1
+fi
+
+if { $all_files || $recheck; } && { [[ -n "$base_ref" ]] || [[ -n "$head_ref" ]]; }; then
+    echo "--base/--head only apply to the default changed-files mode"
     exit 1
 fi
 
@@ -67,14 +87,23 @@ elif $all_files; then
         [[ -f "$f" ]] && files+=("$f")
     done < <(git ls-files '*.cpp' '*.cxx' '*.cc' '*.c' '*.h' '*.hpp' '*.hxx' -- ':!external')
 else
-    echo "  Mode: changed files since origin/dev"
+    diff_base="$base_ref"
+    [[ -z "$diff_base" ]] && diff_base="$(git merge-base HEAD origin/dev)"
+    diff_refs=("$diff_base")
+    [[ -n "$head_ref" ]] && diff_refs+=("$head_ref")
+
+    if [[ -n "$base_ref" ]]; then
+        echo "  Mode: changed files from $diff_base to ${head_ref:-working tree}"
+    else
+        echo "  Mode: changed files since origin/dev"
+    fi
     while IFS=$'\t' read -r status old new; do
         case "$status" in
         D) ;;
         R*) [[ -f "$new" ]] && files+=("$new") ;;
         *) [[ -f "$old" ]] && files+=("$old") ;;
         esac
-    done < <(git diff --name-status "$(git merge-base HEAD origin/dev)")
+    done < <(git diff --name-status "${diff_refs[@]}")
 
     # Filter to C++ files only (changed mode may include non-source files)
     # and exclude anything under external/
@@ -92,4 +121,4 @@ if [[ ${#files[@]} -eq 0 ]]; then
 fi
 
 echo "  Files: ${#files[@]}"
-clangd-tidy "${files[@]}" -p=. --fail-on-severity=hint --tqdm -j1
+clangd-tidy "${files[@]}" -p="$compile_db" --fail-on-severity=hint --tqdm -j1

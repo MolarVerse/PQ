@@ -32,16 +32,14 @@
 #include "restartFileReader.hpp"     // for RstFileReader, readRstFile
 #include "restartFileSection.hpp"    // for RstFileSection, readInput
 
-using namespace input;
-
 /**
  * @brief tests determineSection base on the first element of the line
  *
  */
 TEST_F(TestRstFileReader, determineSection)
 {
-    std::string                    filename = "examples/setup/h2o_qmcfc.rst";
-    restartFile::RestartFileReader rstFileReader(filename, *_engine);
+    std::string filename = "examples/setup/h2o_qmcfc.rst";
+    input::restartFile::RestartFileReader rstFileReader(filename, *_engine);
 
     auto  lineElements = std::vector<std::string>{"sTeP", "1"};
     auto *section      = rstFileReader.determineSection(lineElements);
@@ -65,11 +63,11 @@ TEST_F(TestRstFileReader, rstFileReading)
     settings::FileSettings::setMolDescriptorFileName(
         "examples/setup/moldescriptor.dat"
     );
-    molDescriptor::MoldescriptorReader moldescriptor(*_engine);
+    input::molDescriptor::MoldescriptorReader moldescriptor(*_engine);
 
     std::string filename = "examples/setup/h2o-qmcf.rst";
     settings::FileSettings::setStartFileName(filename);
 
     moldescriptor.read();
-    ASSERT_NO_THROW(restartFile::readRestartFile(*_engine));
+    ASSERT_NO_THROW(input::restartFile::readRestartFile(*_engine));
 }

@@ -69,7 +69,6 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     auto molecule = molsys::Molecule();
 
     molecule.setMoltype(MolType{0});
-    molecule.setNumberOfAtoms(2);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();

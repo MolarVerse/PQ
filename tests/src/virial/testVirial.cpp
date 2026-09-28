@@ -26,10 +26,6 @@
 
 #include "virial.hpp"
 
-using namespace linalg;
-using namespace physicalData;
-using namespace virial;
-
 TEST_F(TestVirial, calculateVirial)
 {
     const auto &molecule0 = _simBox->getMolecule(0);
@@ -53,16 +49,19 @@ TEST_F(TestVirial, calculateVirial)
                         shiftForce_mol1_atom1 + shiftForce_mol1_atom2 +
                         shiftForce_mol2_atom1;
 
-    const auto virialCalc = calculateVirial(*_simBox);
+    const auto virialCalc = virial::calculateVirial(*_simBox);
     EXPECT_EQ(diagonal(virialCalc), virial);
-    EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(0), Vec3D{0});
-    EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(1), Vec3D{0});
-    EXPECT_EQ(_simBox->getMolecule(1).getAtomShiftForce(0), Vec3D{0});
+    EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(0), linalg::Vec3D{0});
+    EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(1), linalg::Vec3D{0});
+    EXPECT_EQ(_simBox->getMolecule(1).getAtomShiftForce(0), linalg::Vec3D{0});
 }
 
 TEST_F(TestVirial, atomicVirialHasNoIntramolecularCorrection)
 {
-    EXPECT_EQ(intraMolecularVirialCorrection(*_simBox), tensor3D{0.0});
+    EXPECT_EQ(
+        virial::intraMolecularVirialCorrection(*_simBox),
+        linalg::tensor3D{0.0}
+    );
 }
 
 TEST_F(TestVirial, intramolecularCorrection)
@@ -88,7 +87,7 @@ TEST_F(TestVirial, intramolecularCorrection)
                   shiftForce_mol1_atom1 + shiftForce_mol1_atom2 +
                   shiftForce_mol2_atom1;
 
-    const auto virialCalc = calculateVirial(*_simBox);
+    const auto virialCalc = virial::calculateVirial(*_simBox);
 
     EXPECT_EQ(diagonal(virialCalc), virial);
 }
@@ -116,7 +115,8 @@ TEST_F(TestVirial, calculateMolecularVirial)
         force_mol1_atom2 * (position_mol1_atom2 - centerOfMass_mol1) -
         force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2);
 
-    const auto virialCalculated = intraMolecularVirialCorrection(*_simBox);
+    const auto virialCalculated =
+        virial::intraMolecularVirialCorrection(*_simBox);
 
     EXPECT_EQ(diagonal(virialCalculated), virial);
 }

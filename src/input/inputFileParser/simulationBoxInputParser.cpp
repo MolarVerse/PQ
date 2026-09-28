@@ -22,192 +22,148 @@
 
 #include "simulationBoxInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
 #include <utility>
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
-#include "potentialSettings.hpp"   // for PotentialSettings
+#include "defaults.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "potentialSettings.hpp"
+#include "rangeValidator.hpp"
 #include "simulationBox.hpp"
-#include "simulationBoxSettings.hpp"   // for setDensitySet
-#include "stringUtilities.hpp"         // for toLowerCopy
+#include "simulationBoxSettings.hpp"
 
-using namespace input;
-using namespace exc;
-using namespace settings;
-using namespace utilities;
-
-/**
- * @brief Construct a new Input File Parser Simulation Box:: Input File Parser
- * Simulation Box object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) rcoulomb "<double>" 2) density
- * "<double>"
- *
- * @param simulationBox
- */
-SimulationBoxInputParser::SimulationBoxInputParser(
-    std::shared_ptr<molsys::SimulationBox> simulationBox
-)
-    : _simulationBox(std::move(simulationBox))
+namespace input
 {
-    addKeyword(
-        std::string("rcoulomb"),
-        bindMember(&SimulationBoxInputParser::parseCoulombRadius, this),
-        false
-    );
-    addKeyword(
-        std::string("rnoncoulomb"),
-        bindMember(&SimulationBoxInputParser::parseNonCoulombRadius, this),
-        false
-    );
-    addKeyword(
-        std::string("density"),
-        bindMember(&SimulationBoxInputParser::parseDensity, this),
-        false
-    );
-    addKeyword(
-        std::string("init_velocities"),
-        bindMember(&SimulationBoxInputParser::parseInitializeVelocities, this),
-        false
-    );
-}
 
-/**
- * @brief parses the coulomb cutoff radius
- *
- * @details default value is 12.5
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if the cutoff radius is negative
- */
-void SimulationBoxInputParser::parseCoulombRadius(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto cutOff = stringToFiniteDouble(lineElements[2]);
-
-    if (cutOff < 0.0)
+    /**
+     * @brief Construct a new Input File Parser Simulation Box:: Input File
+     * Parser Simulation Box object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) rcoulomb "<double>" 2)
+     * density
+     * "<double>"
+     *
+     * @param simulationBox
+     */
+    SimulationBoxInputParser::SimulationBoxInputParser(
+        std::shared_ptr<molsys::SimulationBox> simulationBox
+    )
+        : _simulationBox(std::move(simulationBox))
     {
-        throw InputFileException(format(
-            "Coulomb radius cutoff must be positive - \"{}\" at line {} in "
-            "input file",
-            lineElements[2],
-            lineNumber
-        ));
+        addCoulombRadiusKey();
+        addNonCoulombRadiusKey();
+        addDensityKey();
+        addInitializeVelocitiesKey();
     }
 
-    PotentialSettings::setCoulombRadiusCutOff(cutOff);
-}
-
-/**
- * @brief parses the non-coulomb cutoff radius
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if the cutoff radius is negative
- */
-void SimulationBoxInputParser::parseNonCoulombRadius(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto cutOff = stod(lineElements[2]);
-
-    if (cutOff < 0.0)
+    /**
+     * @brief adds the coulomb radius key to the key registry
+     */
+    void SimulationBoxInputParser::addCoulombRadiusKey()
     {
-        throw InputFileException(format(
-            "Non-Coulomb radius cutoff must be positive - \"{}\" at line {} in "
-            "input file",
-            lineElements[2],
-            lineNumber
-        ));
-    }
+        const auto metaData = KeyMetadata{
+            .name  = "rcoulomb",
+            .title = "Coulomb cutoff radius",
+            .description =
+                "Specifies the cutoff radius for Coulomb interactions"
+        };
 
-    PotentialSettings::setNonCoulombRadiusCutOff(cutOff);
-}
+        const auto setValue = [](double value)
+        { settings::PotentialSettings::setCoulombRadiusCutOff(value); };
 
-/**
- * @brief parse density of simulation and set it in simulation box
- *
- * @details set in simulationBoxSettings if density is set to put warning if
- * both density and box size are set
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if the density is negative
- */
-void SimulationBoxInputParser::parseDensity(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto density = stringToFiniteDouble(lineElements[2]);
-
-    if (density <= 0.0)
-        throw InputFileException(
-            std::format("Density must be positive - density = {}", density)
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaults::COULOMB_CUT_OFF_DEFAULT,
+                .onSet        = setValue,
+                .validator    = makeShared(PositiveGTDoubleValidator)
+            }
         );
 
-    SimulationBoxSettings::setDensitySet(true);
-    _simulationBox->setDensity(density);
-}
-
-/**
- * @brief parse if velocities should be initialized with maxwell boltzmann
- * distribution
- *
- * @details possible options are:
- * 1) true
- * 2) false (default)
- * 3) force
- *
- * @param lineElements
- * @param lineNumber
- */
-void SimulationBoxInputParser::parseInitializeVelocities(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    using enum InitVelocities;
-    checkCommand(lineElements, lineNumber);
-
-    const auto initializeVelocities = toLowerCopy(lineElements[2]);
-
-    if (initializeVelocities == "true")
-        SimulationBoxSettings::setInitializeVelocities(TRUE);
-
-    else if (initializeVelocities == "false")
-        SimulationBoxSettings::setInitializeVelocities(FALSE);
-
-    else if (initializeVelocities == "force")
-        SimulationBoxSettings::setInitializeVelocities(FORCE);
-
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid value for initialize velocities - \"{}\" at line {} "
-                "in "
-                "input file.\n"
-                "Possible options are: true, false, force",
-                lineElements[2],
-                lineNumber
-            )
-        );
+        addKeyword(metaData.name, adapt(key), false);
     }
-}
+
+    /**
+     * @brief adds the non-coulomb radius key to the key registry
+     */
+    void SimulationBoxInputParser::addNonCoulombRadiusKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "rnoncoulomb",
+            .title = "Non-Coulomb cutoff radius",
+            .description =
+                "Specifies the cutoff radius for Non-Coulomb interactions"
+        };
+
+        const auto setValue = [](double value)
+        { settings::PotentialSettings::setNonCoulombRadiusCutOff(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata  = metaData,
+                .onSet     = setValue,
+                .validator = makeShared(PositiveGTDoubleValidator)
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief adds the density key to the key registry
+     */
+    void SimulationBoxInputParser::addDensityKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "density",
+            .title       = "Density of the simulation box",
+            .description = "Specifies the density of the simulation box"
+        };
+
+        const auto setValue = [simulationBox = _simulationBox](double value)
+        {
+            settings::SimulationBoxSettings::setDensitySet(true);
+            simulationBox->setDensity(value);
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata  = metaData,
+                .onSet     = setValue,
+                .validator = makeShared(PositiveGTDoubleValidator)
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief adds the initialize velocities key to the key registry
+     */
+    void SimulationBoxInputParser::addInitializeVelocitiesKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "init_velocities",
+            .title = "Initialize velocities",
+            .description =
+                "Specifies if velocities should be initialized with "
+                "Maxwell-Boltzmann distribution"
+        };
+
+        const auto setValue = [](settings::InitVelocities value)
+        { settings::SimulationBoxSettings::setInitializeVelocities(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<settings::InitVelocities>{
+                .metadata     = metaData,
+                .defaultValue = settings::InitVelocities::FALSE,
+                .onSet        = setValue
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+}   // namespace input

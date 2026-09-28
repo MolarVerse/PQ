@@ -41,7 +41,7 @@ namespace input
     InputKey<T>::InputKey(const KeyRegistry<T> &registry)
         : _metadata(registry.metadata),
           _default(registry.defaultValue),
-          _allowed(registry.allowed),
+          _notAllowed(registry.notAllowed),
           _customParser(registry.customParser),
           _onSet(registry.onSet),
           _validator(registry.validator)
@@ -79,22 +79,22 @@ namespace input
                       )
                     : std::format(
                           "Invalid value \"{}\" for key \"{}\" at line "
-                          "{} in input file. Possible options are: {}",
+                          "{} in input file. {}",
                           raw,
                           _metadata.name,
                           lineNumber,
-                          describeDomain<T>()
+                          Converter<T>::describeDomain(_notAllowed)
                       )
             );
         }
 
-        if (_allowed &&
-            std::ranges::find(*_allowed, *parsed) == _allowed->end())
+        if (!_notAllowed.empty() &&
+            std::ranges::find(_notAllowed, *parsed) != _notAllowed.end())
         {
             throw exc::InputFileException(
                 std::format(
                     "Invalid value \"{}\" for key \"{}\" at line {} in "
-                    "input file: out of allowed range",
+                    "input file: not allowed",
                     raw,
                     _metadata.name,
                     lineNumber
@@ -245,16 +245,16 @@ namespace input
         if (_metadata.unit && !_metadata.unit->empty())
             result += std::format(" [{}]", *_metadata.unit);
 
-        if (_allowed)
+        if (!_notAllowed.empty())
         {
-            std::string allowedStr;
-            for (size_t i = 0; i < _allowed->size(); ++i)
+            std::string notAllowedStr;
+            for (size_t i = 0; i < _notAllowed.size(); ++i)
             {
                 if (i != 0)
-                    allowedStr += ", ";
-                allowedStr += _valueToString((*_allowed)[i]);
+                    notAllowedStr += ", ";
+                notAllowedStr += _valueToString(_notAllowed[i]);
             }
-            result += std::format(" [allowed: {}]", allowedStr);
+            result += std::format(" [not allowed: {}]", notAllowedStr);
         }
 
         return result;
@@ -285,6 +285,8 @@ namespace input
             return mstd::enum_meta_t<T>::toString(value);
         else if constexpr (std::same_as<T, bool>)
             return value ? "true" : "false";
+        else if constexpr (std::same_as<T, mstd::File>)
+            return value.fileName();
         else
             return std::format("{}", value);
     }

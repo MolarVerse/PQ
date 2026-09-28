@@ -39,7 +39,7 @@ namespace thermostat
     class LangevinThermostat : public Thermostat
     {
        private:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator;
+        rng::RandomNumberGenerator _randomNumberGenerator;
 
         double _friction = 0.0;
         double _sigma    = 0.0;

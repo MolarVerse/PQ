@@ -37,8 +37,6 @@
 #include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
 #include "typesSection.hpp"              // for TypesSection
 
-using namespace input::parameterFile;
-
 /**
  * @brief tests isNeeded function
  *
@@ -47,10 +45,10 @@ using namespace input::parameterFile;
  */
 TEST_F(TestParameterFileReader, isNeeded)
 {
-    EXPECT_FALSE(isNeeded());
+    EXPECT_FALSE(input::parameterFile::isNeeded());
 
     settings::ForceFieldSettings::activate();
-    EXPECT_TRUE(isNeeded());
+    EXPECT_TRUE(input::parameterFile::isNeeded());
 }
 
 /**

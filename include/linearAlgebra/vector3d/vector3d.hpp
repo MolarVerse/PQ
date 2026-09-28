@@ -295,6 +295,13 @@ namespace linalg
     template <pq::ArithmeticVector3D U>
     auto mean(const U &vec) -> decltype(sum(vec) / 3);
 
+    /**********************
+     * isFinite function *
+     **********************/
+
+    template <pq::ArithmeticVector3D U>
+    auto isFinite(const U &vec) -> bool;
+
     /***************
      * dot product *
      ***************/

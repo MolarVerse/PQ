@@ -31,62 +31,65 @@
 #include "exceptions.hpp"        // for RstFileException
 #include "timingsSettings.hpp"   // for TimingsSettings
 
-using namespace input::restartFile;
-using namespace engine;
-using namespace settings;
-using namespace exc;
-
-/**
- * @brief processes the step count section of the rst file
- *
- * @details The step count section is a header section and must have 2 elements:
- * 1. keyword "step"
- * 2. step count
- *
- * @param lineElements all elements of the line
- * @param engine object containing the engine
- *
- * @throws RstFileException if the number of elements in the line is not 2
- * @throws RstFileException if the step count is negative
- */
-void StepCountSection::
-    process(std::vector<std::string> &lineElements, Engine & /*engine*/)
+namespace input::restartFile
 {
-    if (lineElements.size() != 2)
+
+    /**
+     * @brief processes the step count section of the rst file
+     *
+     * @details The step count section is a header section and must have 2
+     * elements:
+     * 1. keyword "step"
+     * 2. step count
+     *
+     * @param lineElements all elements of the line
+     * @param engine object containing the engine
+     *
+     * @throws RstFileException if the number of elements in the line is not 2
+     * @throws RstFileException if the step count is negative
+     */
+    void StepCountSection::process(
+        std::vector<std::string> &lineElements,
+        engine::Engine & /*engine*/
+    )
     {
-        throw RstFileException(
-            std::format(
-                "Error in line {}: Step count section must have 2 elements",
-                _lineNumber
-            )
-        );
+        if (lineElements.size() != 2)
+        {
+            throw exc::RstFileException(
+                std::format(
+                    "Error in line {}: Step count section must have 2 elements",
+                    _lineNumber
+                )
+            );
+        }
+
+        auto stepCount = stoi(lineElements[1]);
+
+        if (stepCount < 0)
+        {
+            throw exc::RstFileException(
+                std::format(
+                    "Error in line {}: Step count must be positive",
+                    _lineNumber
+                )
+            );
+        }
+
+        settings::TimingsSettings::setStepCount(static_cast<size_t>(stepCount));
     }
 
-    auto stepCount = stoi(lineElements[1]);
+    /**
+     * @brief returns the keyword of the section
+     *
+     * @return "step"
+     */
+    std::string StepCountSection::keyword() { return "step"; }
 
-    if (stepCount < 0)
-    {
-        throw RstFileException(
-            std::format(
-                "Error in line {}: Step count must be positive",
-                _lineNumber
-            )
-        );
-    }
+    /**
+     * @brief returns if the section is a header
+     *
+     * @return true
+     */
+    bool StepCountSection::isHeader() { return true; }
 
-    TimingsSettings::setStepCount(static_cast<size_t>(stepCount));
-}
-
-/**
- * @brief returns the keyword of the section
- *
- * @return "step"
- */
-std::string StepCountSection::keyword() { return "step"; }
-
-/**
- * @brief returns if the section is a header
- *
- * @return true
- */
-bool StepCountSection::isHeader() { return true; }
+}   // namespace input::restartFile

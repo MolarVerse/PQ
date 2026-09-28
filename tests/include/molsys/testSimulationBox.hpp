@@ -43,9 +43,6 @@ class TestSimulationBox : public ::testing::Test
         auto molecule1 = molsys::Molecule();
         auto molecule2 = molsys::Molecule();
 
-        molecule1.setNumberOfAtoms(3);
-        molecule2.setNumberOfAtoms(2);
-
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
         auto atom3 = std::make_shared<molsys::Atom>();
@@ -60,7 +57,6 @@ class TestSimulationBox : public ::testing::Test
         atom2->setMass(2.0);
         atom3->setMass(3.0);
 
-        molecule1.setMolMass(6.0);
         molecule1.setMoltype(MolType{1});
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
@@ -76,7 +72,6 @@ class TestSimulationBox : public ::testing::Test
         atom4->setMass(1.0);
         atom5->setMass(2.0);
 
-        molecule2.setMolMass(3.0);
         molecule2.setMoltype(MolType{2});
         molecule2.addAtom(atom4);
         molecule2.addAtom(atom5);

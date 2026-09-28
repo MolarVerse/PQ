@@ -33,8 +33,6 @@
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "force-field" command
  *
@@ -44,28 +42,41 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    MMInputParser parser(_engine->getForceField(), _engine->getPotential());
+    input::MMInputParser parser(
+        _engine->getForceField(),
+        _engine->getPotential()
+    );
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("force_field"));
+    const auto& parseFunc = funcMap.at("force_field");
+
     std::vector<std::string> lineElements = {"force-field", "=", "on"};
-    parser.parseForceFieldType(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
     EXPECT_TRUE(_engine->getForceField()->isNonCoulombicActivated());
 
+    clearParser(parser);
+
     lineElements = {"force-field", "=", "off"};
-    parser.parseForceFieldType(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_FALSE(settings::ForceFieldSettings::isActive());
     EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
 
+    clearParser(parser);
+
     lineElements = {"force-field", "=", "bonded"};
-    parser.parseForceFieldType(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
     EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
 
+    clearParser(parser);
+
     lineElements = {"forceField", "=", "notValid"};
     ASSERT_THROW_MSG(
-        parser.parseForceFieldType(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid force-field keyword \"notValid\" at line 0 in input file\n"
-        "Possible options are \"on\", \"off\" or \"bonded\""
+        "Invalid value \"notValid\" for key \"force-field\" at line 0 in input "
+        "file. Allowed values: off, on, bonded"
     );
 }
 
@@ -78,40 +89,55 @@ TEST_F(TestInputFileReader, testParseForceField)
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    MMInputParser parser(_engine->getForceField(), _engine->getPotential());
+    input::MMInputParser parser(
+        _engine->getForceField(),
+        _engine->getPotential()
+    );
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("noncoulomb"));
+    const auto& parseNonCoulombFunc = funcMap.at("noncoulomb");
+
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
-    input::MMInputParser::parseNonCoulombType(lineElements, 0);
+    parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::GUFF
     );
 
+    clearParser(parser);
+
     lineElements = {"noncoulomb", "=", "lj"};
-    input::MMInputParser::parseNonCoulombType(lineElements, 0);
+    parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::LJ
     );
 
+    clearParser(parser);
+
     lineElements = {"noncoulomb", "=", "buck"};
-    input::MMInputParser::parseNonCoulombType(lineElements, 0);
+    parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::BUCKINGHAM
     );
 
+    clearParser(parser);
+
     lineElements = {"noncoulomb", "=", "morse"};
-    input::MMInputParser::parseNonCoulombType(lineElements, 0);
+    parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
         settings::NonCoulombType::MORSE
     );
 
-    lineElements = {"coulomb", "=", "notValid"};
+    clearParser(parser);
+
+    lineElements = {"noncoulomb", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseNonCoulombType(lineElements, 0),
+        parseNonCoulombFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid nonCoulomb type \"notValid\" at line 0 in input file.\n"
-        "Possible options are: lj, buck, morse and guff"
+        "Invalid value \"notValid\" for key \"noncoulomb\" at line 0 in input "
+        "file. Allowed values: none, lj, buckingham, morse, guff, buck"
     );
 }

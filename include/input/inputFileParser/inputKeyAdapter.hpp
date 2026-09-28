@@ -30,6 +30,9 @@ namespace input
     [[nodiscard]]
     InputFileParser::ParseFunc adapt(InputKeyBase &key);
 
+    [[nodiscard]]
+    InputFileParser::ParseFunc adapt(const DeprecatedInputKey &deprecatedKey);
+
 }   // namespace input
 
 #endif   // _INPUT_KEY_ADAPTER_HPP_

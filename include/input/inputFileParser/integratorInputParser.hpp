@@ -24,8 +24,6 @@
 
 #define _INTEGRATOR_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "inputFileParser.hpp"   // for InputFileParser
 
 namespace input
@@ -41,7 +39,7 @@ namespace input
        public:
         IntegratorInputParser();
 
-        static void parseIntegrator(const std::vector<std::string> &, size_t);
+        void addIntegratorKey();
     };
 
 }   // namespace input

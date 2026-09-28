@@ -24,153 +24,160 @@
 
 #include <format>   // for format
 
-using namespace opt;
-
-/**
- * @brief Construct a new LearningRateStrategy object
- *
- * @param initialLearningRate
- */
-LearningRateStrategy::LearningRateStrategy(double initialLearningRate)
-    : _initialLearningRate(initialLearningRate),
-      _learningRate(initialLearningRate)
+namespace opt
 {
-}
 
-/**
- * @brief Construct a new LearningRateStrategy object
- *
- * @param initialLearningRate
- * @param frequency
- */
-LearningRateStrategy::LearningRateStrategy(
-    double initialLearningRate,
-    size_t frequency
-)
-    : _frequency(frequency),
-      _initialLearningRate(initialLearningRate),
-      _learningRate(initialLearningRate)
-{
-}
-
-/**
- * @brief check the learning rate if it is within the bounds
- *       and update the learning rate
- */
-void LearningRateStrategy::checkLearningRate()
-{
-    if (_maxLearningRate.has_value())
+    /**
+     * @brief Construct a new LearningRateStrategy object
+     *
+     * @param initialLearningRate
+     */
+    LearningRateStrategy::LearningRateStrategy(double initialLearningRate)
+        : _initialLearningRate(initialLearningRate),
+          _learningRate(initialLearningRate)
     {
-        if (_learningRate > _maxLearningRate.value())
+    }
+
+    /**
+     * @brief Construct a new LearningRateStrategy object
+     *
+     * @param initialLearningRate
+     * @param frequency
+     */
+    LearningRateStrategy::LearningRateStrategy(
+        double initialLearningRate,
+        size_t frequency
+    )
+        : _frequency(frequency),
+          _initialLearningRate(initialLearningRate),
+          _learningRate(initialLearningRate)
+    {
+    }
+
+    /**
+     * @brief check the learning rate if it is within the bounds
+     *       and update the learning rate
+     */
+    void LearningRateStrategy::checkLearningRate()
+    {
+        if (_maxLearningRate.has_value())
         {
-            _learningRate      = _maxLearningRate.value();
+            if (_learningRate > _maxLearningRate.value())
+            {
+                _learningRate      = _maxLearningRate.value();
+                const auto message = std::format(
+                    "Learning rate {} is greater than the maximum learning "
+                    "rate "
+                    "{}. Therefore, the learning rate is set to the maximum "
+                    "learning rate.",
+                    _learningRate,
+                    _maxLearningRate.value()
+                );
+
+                _warningMessages.push_back(message);
+            }
+        }
+
+        if (_learningRate < _minLearningRate)
+        {
+            _learningRate      = _minLearningRate;
             const auto message = std::format(
-                "Learning rate {} is greater than the maximum learning rate "
-                "{}. Therefore, the learning rate is set to the maximum "
-                "learning rate.",
+                "Learning rate {} is less than the minimum learning rate {}. "
+                "Therefore, the learning rate is set to the minimum learning "
+                "rate.",
                 _learningRate,
-                _maxLearningRate.value()
+                _minLearningRate
             );
 
             _warningMessages.push_back(message);
         }
     }
 
-    if (_learningRate < _minLearningRate)
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief Get the learning rate
+     *
+     * @return double
+     */
+    double LearningRateStrategy::getLearningRate() const
     {
-        _learningRate      = _minLearningRate;
-        const auto message = std::format(
-            "Learning rate {} is less than the minimum learning rate {}. "
-            "Therefore, the learning rate is set to the minimum learning "
-            "rate.",
-            _learningRate,
-            _minLearningRate
-        );
-
-        _warningMessages.push_back(message);
+        return _learningRate;
     }
-}
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief Get the warning messages
+     *
+     * @return std::vector<std::string>
+     */
+    std::vector<std::string> LearningRateStrategy::getWarningMessages() const
+    {
+        return _warningMessages;
+    }
 
-/**
- * @brief Get the learning rate
- *
- * @return double
- */
-double LearningRateStrategy::getLearningRate() const { return _learningRate; }
+    /**
+     * @brief Get the error messages
+     *
+     * @return std::vector<std::string>
+     */
+    std::vector<std::string> LearningRateStrategy::getErrorMessages() const
+    {
+        return _errorMessages;
+    }
 
-/**
- * @brief Get the warning messages
- *
- * @return std::vector<std::string>
- */
-std::vector<std::string> LearningRateStrategy::getWarningMessages() const
-{
-    return _warningMessages;
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief Get the error messages
- *
- * @return std::vector<std::string>
- */
-std::vector<std::string> LearningRateStrategy::getErrorMessages() const
-{
-    return _errorMessages;
-}
+    /**
+     * @brief set the evaluator from a shared pointer
+     *
+     */
+    void LearningRateStrategy::setEvaluator(
+        const std::shared_ptr<Evaluator>& evaluator
+    )
+    {
+        _evaluator = evaluator;
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief set the optimizer from a shared pointer
+     *
+     * @param optimizer - std::shared_ptr<Optimizer>
+     */
+    void LearningRateStrategy::setOptimizer(
+        const std::shared_ptr<Optimizer>& optimizer
+    )
+    {
+        _optimizer = optimizer;
+    }
 
-/**
- * @brief set the evaluator from a shared pointer
- *
- */
-void LearningRateStrategy::setEvaluator(
-    const std::shared_ptr<Evaluator>& evaluator
-)
-{
-    _evaluator = evaluator;
-}
+    /**
+     * @brief set the minimum learning rate
+     *
+     * @param minLearningRate - double
+     */
+    void LearningRateStrategy::setMinLearningRate(double minLearningRate)
+    {
+        _minLearningRate = minLearningRate;
+    }
 
-/**
- * @brief set the optimizer from a shared pointer
- *
- * @param optimizer - std::shared_ptr<Optimizer>
- */
-void LearningRateStrategy::setOptimizer(
-    const std::shared_ptr<Optimizer>& optimizer
-)
-{
-    _optimizer = optimizer;
-}
+    /**
+     * @brief set the maximum learning rate
+     *
+     * @param maxLearningRate - std::optional<double>
+     */
+    void LearningRateStrategy::setMaxLearningRate(
+        std::optional<double> maxLearningRate
+    )
+    {
+        _maxLearningRate = maxLearningRate;
+    }
 
-/**
- * @brief set the minimum learning rate
- *
- * @param minLearningRate - double
- */
-void LearningRateStrategy::setMinLearningRate(double minLearningRate)
-{
-    _minLearningRate = minLearningRate;
-}
-
-/**
- * @brief set the maximum learning rate
- *
- * @param maxLearningRate - std::optional<double>
- */
-void LearningRateStrategy::setMaxLearningRate(
-    std::optional<double> maxLearningRate
-)
-{
-    _maxLearningRate = maxLearningRate;
-}
+}   // namespace opt

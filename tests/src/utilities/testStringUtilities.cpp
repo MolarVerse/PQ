@@ -27,7 +27,8 @@
 #include <cstdio>       // for remove
 #include <filesystem>   // for create_directory
 #include <format>
-#include <fstream>     // for ofstream
+#include <fstream>   // for ofstream
+#include <mstd/file.hpp>
 #include <stdexcept>   // for out_of_range and invalid_argument
 #include <string>      // for string, allocator
 
@@ -58,9 +59,17 @@ TEST(TestStringUtilities, removeComments)
 TEST(TestStringUtilities, getLineCommands)
 {
     std::string line2 = "test";
-    EXPECT_THROW(utilities::getLineCommands(line2, 0), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        utilities::getLineCommands(line2, 0),
+        exc::InputFileException,
+        "Missing semicolon in input file at line 0"
+    );
     const auto *line = "nstep = 1";
-    ASSERT_THROW(utilities::getLineCommands(line, 1), exc::InputFileException);
+    ASSERT_THROW_MSG(
+        utilities::getLineCommands(line, 1),
+        exc::InputFileException,
+        "Missing semicolon in input file at line 1"
+    );
 
     line = "nstep = 1;";
     ASSERT_THAT(
@@ -69,11 +78,15 @@ TEST(TestStringUtilities, getLineCommands)
     );
 
     line = "nstep = 1; nstep = 2";
-    ASSERT_THROW(utilities::getLineCommands(line, 1), exc::InputFileException);
+    ASSERT_THROW_MSG(
+        utilities::getLineCommands(line, 2),
+        exc::InputFileException,
+        "Missing semicolon in input file at line 2"
+    );
 
     line = "nstep = 1; nstep = 2;";
     ASSERT_THAT(
-        utilities::getLineCommands(line, 1),
+        utilities::getLineCommands(line, 2),
         testing::ElementsAre("nstep = 1", " nstep = 2")
     );
 }
@@ -178,9 +191,9 @@ TEST(TestStringUtilities, fileExists)
     std::ofstream out(file);
     out.close();
     std::filesystem::create_directory(directory);
-    EXPECT_TRUE(utilities::fileExists(file));
-    EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
-    EXPECT_FALSE(utilities::fileExists(directory));
+    EXPECT_TRUE(mstd::File(file).exists());
+    EXPECT_FALSE(mstd::File("testFile2.txt").exists());
+    EXPECT_FALSE(mstd::File(directory).exists());
     std::filesystem::remove(file);
     std::filesystem::remove(directory);
 }

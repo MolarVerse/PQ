@@ -25,17 +25,48 @@
 
 namespace input
 {
+    /**
+     * @brief Create a shared pointer for the given validator
+     *
+     * @tparam T The type of the validator
+     * @param validator The validator instance
+     * @return std::shared_ptr<T> A shared pointer to the validator
+     */
+    template <typename T>
+    std::shared_ptr<T> makeShared(const T &validator)
+    {
+        return std::make_shared<T>(validator);
+    }
+
+    /**
+     * @brief Base class for key validators
+     *
+     * @tparam T The type of the value to be validated
+     */
     template <typename T>
     class KeyValidator
     {
        public:
         virtual ~KeyValidator() = default;
 
+        /**
+         * @brief Validate the given value
+         *
+         * @param value The value to be validated
+         * @return true if the value is valid, false otherwise
+         * @note This function must be implemented by derived classes
+         */
         [[nodiscard]]
-        virtual bool validate(const T &value) const = 0;
+        virtual bool validate(const T &value) = 0;
 
+        /**
+         * @brief Get the error message for the last validation
+         *
+         * @return std::string The error message
+         * @note This function must be implemented by derived classes
+         */
         [[nodiscard]]
-        virtual std::string errorMessage() const = 0;
+        virtual std::string errorMessage() = 0;
     };
 }   // namespace input
 

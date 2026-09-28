@@ -26,86 +26,85 @@
 
 #include "optimizer.hpp"   // for Optimizer
 
-using namespace out;
-using namespace settings;
-using namespace opt;
-
-using std::format;
-
-/**
- * @brief write the output file
- *
- * @param step
- * @param optimizer
- */
-void OptOutput::write(size_t step, const Optimizer& optimizer)
+namespace out
 {
-    const auto& conv = optimizer.getConvergence();
 
-    const auto stepStr     = format("{:8d}\t", step);
-    const auto absEnStr    = format("{:.8e}\t", conv.getAbsEnergy());
-    const auto relEnStr    = format("{:.8e}\t", conv.getRelEnergy());
-    const auto maxForceStr = format("{:.8e}\t", conv.getAbsMaxForce());
-    const auto rmsForceStr = format("{:.8e}\t", conv.getAbsRMSForce());
-
-    _fp << stepStr;
-    _fp << absEnStr;
-    _fp << relEnStr;
-    _fp << maxForceStr;
-    _fp << rmsForceStr;
-
-    const auto convStrategy = conv.getEnConvStrategy();
-
-    const auto isEnergyConvEnabled   = conv.isEnergyConvEnabled();
-    const auto isMaxForceConvEnabled = conv.isMaxForceConvEnabled();
-    const auto isRMSForceConvEnabled = conv.isRMSForceConvEnabled();
-
-    auto isRelEnergyEnabled = false;
-    auto isAbsEnergyEnabled = false;
-
-    if (isEnergyConvEnabled)
+    /**
+     * @brief write the output file
+     *
+     * @param step
+     * @param optimizer
+     */
+    void OptOutput::write(size_t step, const opt::Optimizer& optimizer)
     {
-        using enum ConvStrategy;
+        const auto& conv = optimizer.getConvergence();
 
-        if (convStrategy == RIGOROUS || convStrategy == LOOSE)
+        const auto stepStr     = std::format("{:8d}\t", step);
+        const auto absEnStr    = std::format("{:.8e}\t", conv.getAbsEnergy());
+        const auto relEnStr    = std::format("{:.8e}\t", conv.getRelEnergy());
+        const auto maxForceStr = std::format("{:.8e}\t", conv.getAbsMaxForce());
+        const auto rmsForceStr = std::format("{:.8e}\t", conv.getAbsRMSForce());
+
+        _fp << stepStr;
+        _fp << absEnStr;
+        _fp << relEnStr;
+        _fp << maxForceStr;
+        _fp << rmsForceStr;
+
+        const auto convStrategy = conv.getEnConvStrategy();
+
+        const auto isEnergyConvEnabled   = conv.isEnergyConvEnabled();
+        const auto isMaxForceConvEnabled = conv.isMaxForceConvEnabled();
+        const auto isRMSForceConvEnabled = conv.isRMSForceConvEnabled();
+
+        auto isRelEnergyEnabled = false;
+        auto isAbsEnergyEnabled = false;
+
+        if (isEnergyConvEnabled)
         {
-            isRelEnergyEnabled = true;
-            isAbsEnergyEnabled = true;
+            using enum ConvStrategy;
+
+            if (convStrategy == RIGOROUS || convStrategy == LOOSE)
+            {
+                isRelEnergyEnabled = true;
+                isAbsEnergyEnabled = true;
+            }
+            else if (convStrategy == ABSOLUTE)
+            {
+                isAbsEnergyEnabled = true;
+            }
+            else if (convStrategy == RELATIVE)
+            {
+                isRelEnergyEnabled = true;
+            }
         }
-        else if (convStrategy == ABSOLUTE)
-        {
-            isAbsEnergyEnabled = true;
-        }
-        else if (convStrategy == RELATIVE)
-        {
-            isRelEnergyEnabled = true;
-        }
+
+        const auto isRelEnConv    = conv.isRelEnergyConv();
+        const auto isAbsEnConv    = conv.isAbsEnergyConv();
+        const auto isMaxForceConv = conv.isAbsMaxForceConv();
+        const auto isRMSForceConv = conv.isAbsRMSForceConv();
+
+        auto isRelEnConvInt    = isRelEnConv ? 1 : -1;
+        auto isAbsEnConvInt    = isAbsEnConv ? 1 : -1;
+        auto isMaxForceConvInt = isMaxForceConv ? 1 : -1;
+        auto isRMSForceConvInt = isRMSForceConv ? 1 : -1;
+
+        isRelEnConvInt    = isRelEnergyEnabled ? isRelEnConvInt : 0;
+        isAbsEnConvInt    = isAbsEnergyEnabled ? isAbsEnConvInt : 0;
+        isMaxForceConvInt = isMaxForceConvEnabled ? isMaxForceConvInt : 0;
+        isRMSForceConvInt = isRMSForceConvEnabled ? isRMSForceConvInt : 0;
+
+        _fp << std::format("{:3d}\t", isRelEnConvInt);
+        _fp << std::format("{:3d}\t", isAbsEnConvInt);
+        _fp << std::format("{:3d}\t", isMaxForceConvInt);
+        _fp << std::format("{:3d}\t", isRMSForceConvInt);
+
+        _fp << std::format("{:.8e}\t", conv.getRelEnergyConvThreshold());
+        _fp << std::format("{:.8e}\t", conv.getAbsEnergyConvThreshold());
+        _fp << std::format("{:.8e}\t", conv.getAbsMaxForceConvThreshold());
+        _fp << std::format("{:.8e}\n", conv.getAbsRMSForceConvThreshold());
+
+        _fp.flush();
     }
 
-    const auto isRelEnConv    = conv.isRelEnergyConv();
-    const auto isAbsEnConv    = conv.isAbsEnergyConv();
-    const auto isMaxForceConv = conv.isAbsMaxForceConv();
-    const auto isRMSForceConv = conv.isAbsRMSForceConv();
-
-    auto isRelEnConvInt    = isRelEnConv ? 1 : -1;
-    auto isAbsEnConvInt    = isAbsEnConv ? 1 : -1;
-    auto isMaxForceConvInt = isMaxForceConv ? 1 : -1;
-    auto isRMSForceConvInt = isRMSForceConv ? 1 : -1;
-
-    isRelEnConvInt    = isRelEnergyEnabled ? isRelEnConvInt : 0;
-    isAbsEnConvInt    = isAbsEnergyEnabled ? isAbsEnConvInt : 0;
-    isMaxForceConvInt = isMaxForceConvEnabled ? isMaxForceConvInt : 0;
-    isRMSForceConvInt = isRMSForceConvEnabled ? isRMSForceConvInt : 0;
-
-    _fp << format("{:3d}\t", isRelEnConvInt);
-    _fp << format("{:3d}\t", isAbsEnConvInt);
-    _fp << format("{:3d}\t", isMaxForceConvInt);
-    _fp << format("{:3d}\t", isRMSForceConvInt);
-
-    _fp << format("{:.8e}\t", conv.getRelEnergyConvThreshold());
-    _fp << format("{:.8e}\t", conv.getAbsEnergyConvThreshold());
-    _fp << format("{:.8e}\t", conv.getAbsMaxForceConvThreshold());
-    _fp << format("{:.8e}\n", conv.getAbsRMSForceConvThreshold());
-
-    _fp.flush();
-}
+}   // namespace out

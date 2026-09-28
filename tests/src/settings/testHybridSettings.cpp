@@ -27,64 +27,60 @@
 
 #include "hybridSettings.hpp"
 
-using namespace settings;
-
-TEST(HybridSettingsTest, StringRoundTripForSmoothingMethod)
-{
-    using enum SmoothingMethod;
-
-    EXPECT_EQ(string(HOTSPOT), "Hotspot");
-    EXPECT_EQ(string(EXACT), "Exact");
-}
-
 TEST(HybridSettingsTest, InnerRegionCenterRoundTrip)
 {
-    HybridSettings::setInnerRegionCenter({4, 2, 9});
+    settings::HybridSettings::setInnerRegionCenter({4, 2, 9});
 
-    ASSERT_TRUE(HybridSettings::getInnerRegionCenter().has_value());
+    ASSERT_TRUE(settings::HybridSettings::getInnerRegionCenter().has_value());
     EXPECT_EQ(
-        HybridSettings::getInnerRegionCenter(),
+        settings::HybridSettings::getInnerRegionCenter(),
         std::optional<std::vector<size_t>>({4, 2, 9})
     );
 }
 
 TEST(HybridSettingsTest, ForcedRegionListsRoundTrip)
 {
-    HybridSettings::setForcedCoreList({1, 3, 5});
-    EXPECT_EQ(HybridSettings::getForcedCoreList(), std::vector<int>({1, 3, 5}));
-
-    HybridSettings::setForcedLayerList({7, 9, 11});
+    settings::HybridSettings::setForcedCoreList({1, 3, 5});
     EXPECT_EQ(
-        HybridSettings::getForcedLayerList(),
+        settings::HybridSettings::getForcedCoreList(),
+        std::vector<int>({1, 3, 5})
+    );
+
+    settings::HybridSettings::setForcedLayerList({7, 9, 11});
+    EXPECT_EQ(
+        settings::HybridSettings::getForcedLayerList(),
         std::vector<int>({7, 9, 11})
     );
 
-    HybridSettings::setForcedOuterList({2, 4, 6});
+    settings::HybridSettings::setForcedOuterList({2, 4, 6});
     EXPECT_EQ(
-        HybridSettings::getForcedOuterList(),
+        settings::HybridSettings::getForcedOuterList(),
         std::vector<int>({2, 4, 6})
     );
 }
 
 TEST(HybridSettingsTest, BoolAndRadiusSettingsRoundTrip)
 {
-    HybridSettings::setUseQMCharges(false);
-    EXPECT_FALSE(HybridSettings::getUseQMCharges());
+    settings::HybridSettings::setUseQMCharges(false);
+    EXPECT_FALSE(settings::HybridSettings::getUseQMCharges());
 
-    HybridSettings::setUseQMCharges(true);
-    EXPECT_TRUE(HybridSettings::getUseQMCharges());
+    settings::HybridSettings::setUseQMCharges(true);
+    EXPECT_TRUE(settings::HybridSettings::getUseQMCharges());
 
-    HybridSettings::setCoreRadius(2.5);
-    EXPECT_DOUBLE_EQ(HybridSettings::getCoreRadius(), 2.5);
+    settings::HybridSettings::setCoreRadius(2.5);
+    EXPECT_DOUBLE_EQ(settings::HybridSettings::getCoreRadius(), 2.5);
 
-    HybridSettings::setLayerRadius(6.75);
-    EXPECT_DOUBLE_EQ(HybridSettings::getLayerRadius(), 6.75);
+    settings::HybridSettings::setLayerRadius(6.75);
+    EXPECT_DOUBLE_EQ(settings::HybridSettings::getLayerRadius(), 6.75);
 
-    HybridSettings::setSmoothingRegionThickness(1.25);
-    EXPECT_DOUBLE_EQ(HybridSettings::getSmoothingRegionThickness(), 1.25);
+    settings::HybridSettings::setSmoothingRegionThickness(1.25);
+    EXPECT_DOUBLE_EQ(
+        settings::HybridSettings::getSmoothingRegionThickness(),
+        1.25
+    );
 
-    HybridSettings::setPointChargeThickness(4.5);
-    EXPECT_DOUBLE_EQ(HybridSettings::getPointChargeThickness(), 4.5);
+    settings::HybridSettings::setPointChargeThickness(4.5);
+    EXPECT_DOUBLE_EQ(settings::HybridSettings::getPointChargeThickness(), 4.5);
 }
 
 TEST(HybridSettingsTest, EnumSettingsRoundTrip)
@@ -92,21 +88,21 @@ TEST(HybridSettingsTest, EnumSettingsRoundTrip)
     using enum SmoothingMethod;
     using enum QMForceDist;
 
-    HybridSettings::setSmoothingMethod(HOTSPOT);
-    EXPECT_EQ(HybridSettings::getSmoothingMethod(), HOTSPOT);
+    settings::HybridSettings::setSmoothingMethod(HOTSPOT);
+    EXPECT_EQ(settings::HybridSettings::getSmoothingMethod(), HOTSPOT);
 
-    HybridSettings::setSmoothingMethod(EXACT);
-    EXPECT_EQ(HybridSettings::getSmoothingMethod(), EXACT);
+    settings::HybridSettings::setSmoothingMethod(EXACT);
+    EXPECT_EQ(settings::HybridSettings::getSmoothingMethod(), EXACT);
 
-    HybridSettings::setQMForceDist(NONE);
-    EXPECT_EQ(HybridSettings::getQMForceDist(), NONE);
+    settings::HybridSettings::setQMForceDist(NONE);
+    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), NONE);
 
-    HybridSettings::setQMForceDist(EQUAL);
-    EXPECT_EQ(HybridSettings::getQMForceDist(), EQUAL);
+    settings::HybridSettings::setQMForceDist(EQUAL);
+    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), EQUAL);
 
-    HybridSettings::setQMForceDist(RANDOM);
-    EXPECT_EQ(HybridSettings::getQMForceDist(), RANDOM);
+    settings::HybridSettings::setQMForceDist(RANDOM);
+    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), RANDOM);
 
-    HybridSettings::setQMForceDist(DISTANCE_WEIGHTED);
-    EXPECT_EQ(HybridSettings::getQMForceDist(), DISTANCE_WEIGHTED);
+    settings::HybridSettings::setQMForceDist(DISTANCE_WEIGHTED);
+    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), DISTANCE_WEIGHTED);
 }

@@ -24,8 +24,6 @@
 
 #include "defaults.hpp"
 
-using namespace linalg;
-
 namespace molsys
 {
 
@@ -38,20 +36,20 @@ namespace molsys
     /**
      * @brief get the box angles
      *
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
-    Vec3D Box::getBoxAngles() const
+    linalg::Vec3D Box::getBoxAngles() const
     {
         constexpr auto ninetyDegrees = 90.0;
-        return Vec3D{ninetyDegrees};
+        return linalg::Vec3D{ninetyDegrees};
     }
 
     /**
      * @brief get the box matrix
      *
-     * @return StaticMatrix3x3<double>
+     * @return linalg::StaticMatrix3x3<double>
      */
-    StaticMatrix3x3<double> Box::getBoxMatrix() const
+    linalg::StaticMatrix3x3<double> Box::getBoxMatrix() const
     {
         return diagonalMatrix(_boxDimensions);
     }
@@ -59,9 +57,11 @@ namespace molsys
     /**
      * @brief get the box matrix
      *
-     * @return StaticMatrix3x3<double>
+     * @return linalg::StaticMatrix3x3<double>
      */
-    StaticMatrix3x3<double> Box::getBoxMatrix(Periodicity periodicity) const
+    linalg::StaticMatrix3x3<double> Box::getBoxMatrix(
+        Periodicity periodicity
+    ) const
     {
         auto boxMatrix = getBoxMatrix();
 
@@ -99,17 +99,20 @@ namespace molsys
      * @brief transform a vector into orthogonal space
      *
      * @param position
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
-    Vec3D Box::toOrthoSpace(const Vec3D &position) const { return position; }
+    linalg::Vec3D Box::toOrthoSpace(const linalg::Vec3D &position) const
+    {
+        return position;
+    }
 
     /**
      * @brief transform a tensor into orthogonal space
      *
      * @param position
-     * @return tensor3D
+     * @return linalg::tensor3D
      */
-    tensor3D Box::toOrthoSpace(const tensor3D &position) const
+    linalg::tensor3D Box::toOrthoSpace(const linalg::tensor3D &position) const
     {
         return position;
     }
@@ -118,17 +121,20 @@ namespace molsys
      * @brief transform a vector into simulation space
      *
      * @param position
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
-    Vec3D Box::toSimSpace(const Vec3D &position) const { return position; }
+    linalg::Vec3D Box::toSimSpace(const linalg::Vec3D &position) const
+    {
+        return position;
+    }
 
     /**
      * @brief transform a tensor into simulation space
      *
      * @param position
-     * @return tensor3D
+     * @return linalg::tensor3D
      */
-    tensor3D Box::toSimSpace(const tensor3D &position) const
+    linalg::tensor3D Box::toSimSpace(const linalg::tensor3D &position) const
     {
         return position;
     }
@@ -138,7 +144,7 @@ namespace molsys
      *
      * @param boxDimensions
      */
-    void Box::setBoxDimensions(const Vec3D &boxDimensions)
+    void Box::setBoxDimensions(const linalg::Vec3D &boxDimensions)
     {
         _boxDimensions = boxDimensions;
     }
@@ -177,7 +183,7 @@ namespace molsys
     /**
      * @brief get the box dimensions
      *
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
     linalg::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
 

@@ -70,7 +70,6 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     auto molecule = molsys::Molecule();
 
     molecule.setMoltype(MolType{0});
-    molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -260,7 +259,6 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{0});
-    molecule.setNumberOfAtoms(3);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();

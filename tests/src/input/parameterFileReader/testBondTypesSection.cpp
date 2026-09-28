@@ -31,8 +31,6 @@
 #include "testParameterFileSection.hpp"   // for TestParameterFileSection
 #include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
 
-using namespace input::parameterFile;
-
 /**
  * @brief test bonds section processing one line
  *
@@ -49,21 +47,25 @@ TEST_F(TestParameterFileSection, processSectionBonds)
     EXPECT_EQ(bondTypes[0].getParams().forceConstant, 234.3);
 
     lineElements = {"1", "2", "1.0", "0"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         bondSection.processSection(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file bond section at line 0 - "
+        "number of elements has to be 3!"
     );
 
     lineElements = {"1", "-2", "1.0"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         bondSection.processSection(lineElements, *_engine),
-        exc::ParameterFileException
+        exc::ParameterFileException,
+        "Parameter file bond section at line 0 - equilibrium distance has to "
+        "be positive!"
     );
 }
 
 TEST_F(TestParameterFileSection, endedNormallyBonds)
 {
-    auto bondSection = BondSection();
+    auto bondSection = input::parameterFile::BondSection();
     ASSERT_NO_THROW(bondSection.endedNormally(true));
 
     ASSERT_THROW_MSG(

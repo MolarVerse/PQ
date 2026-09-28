@@ -29,7 +29,7 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-namespace setup::molsys
+namespace setup
 {
     void setupSimulationBox(engine::Engine &);
 
@@ -58,7 +58,6 @@ namespace setup::molsys
         void setAtomMasses();
         void setAtomicNumbers();
 
-        void calculateMolMasses();
         void calculateTotalCharge();
 
         void checkBoxSettings();
@@ -82,6 +81,6 @@ namespace setup::molsys
         [[nodiscard]] static bool getZeroVelocities();
     };
 
-}   // namespace setup::molsys
+}   // namespace setup
 
 #endif   // _SIMULATION_BOX_SETUP_HPP_

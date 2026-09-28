@@ -25,83 +25,85 @@
 #include <format>   // for format
 
 #include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "dihedralType.hpp"                  // for DihedralType
-#include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"                    // for ParameterFileException
+#include "dihedralType.hpp"                  // for ff::DihedralType
+#include "engine.hpp"                        // for engine::Engine
+#include "exceptions.hpp"                    // for exc::ParameterFileException
 
-using namespace input::parameterFile;
-using namespace engine;
-using namespace exc;
-using namespace ff;
-
-/**
- * @brief returns the keyword of the improper dihedral section
- *
- * @return "impropers"
- */
-std::string ImproperDihedralSection::keyword() { return "impropers"; }
-
-/**
- * @brief processes one line of the improper dihedral section of the parameter
- * file and adds the improper dihedral type to the force field
- *
- * @details The line is expected to have the following format:
- * 1. dihedralTypeId
- * 2. forceConstant
- * 3. periodicity
- * 4. phaseShift
- *
- * @note for the improper dihedral a general DihedralType is used
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if number of elements in line
- * is not 4
- * @throw ParameterFileException if periodicity is negative
- */
-void ImproperDihedralSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::parameterFile
 {
-    if (lineElements.size() != 4)
+
+    /**
+     * @brief returns the keyword of the improper dihedral section
+     *
+     * @return "impropers"
+     */
+    std::string ImproperDihedralSection::keyword() { return "impropers"; }
+
+    /**
+     * @brief processes one line of the improper dihedral section of the
+     * parameter file and adds the improper dihedral type to the force field
+     *
+     * @details The line is expected to have the following format:
+     * 1. dihedralTypeId
+     * 2. forceConstant
+     * 3. periodicity
+     * 4. phaseShift
+     *
+     * @note for the improper dihedral a general ff::DihedralType is used
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throw exc::ParameterFileException if number of elements in line
+     * is not 4
+     * @throw exc::ParameterFileException if periodicity is negative
+     */
+    void ImproperDihedralSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    )
     {
-        throw ParameterFileException(
-            std::format(
-                "Wrong number of arguments in parameter file improper section "
-                "at "
-                "line {} - number of elements has to be 4!",
-                _lineNumber
-            )
-        );
-    }
-
-    auto id            = DihedralId{stoul(lineElements[0])};
-    auto forceConstant = stod(lineElements[1]);
-    auto periodicity   = stod(lineElements[2]);
-    auto phase         = stod(lineElements[3]) * DEG_TO_RAD;
-
-    if (periodicity < 0.0)
-    {
-        throw ParameterFileException(
-            std::format(
-                "Parameter file improper section at line {} - periodicity has "
-                "to "
-                "be positive!",
-                _lineNumber
-            )
-        );
-    }
-
-    auto improperType = DihedralType(
-        id,
-        DihedralParams{
-            .forceConstant = forceConstant,
-            .frequency     = periodicity,
-            .phaseShift    = phase
+        if (lineElements.size() != 4)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Wrong number of arguments in parameter file improper "
+                    "section "
+                    "at "
+                    "line {} - number of elements has to be 4!",
+                    _lineNumber
+                )
+            );
         }
-    );
 
-    engine.getForceField()->addImproperDihedralType(improperType);
-}
+        auto id            = DihedralId{stoul(lineElements[0])};
+        auto forceConstant = stod(lineElements[1]);
+        auto periodicity   = stod(lineElements[2]);
+        auto phase         = stod(lineElements[3]) * DEG_TO_RAD;
+
+        if (periodicity < 0.0)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Parameter file improper section at line {} - periodicity "
+                    "has "
+                    "to "
+                    "be positive!",
+                    _lineNumber
+                )
+            );
+        }
+
+        auto improperType = ff::DihedralType(
+            id,
+            DihedralParams{
+                .forceConstant = forceConstant,
+                .frequency     = periodicity,
+                .phaseShift    = phase
+            }
+        );
+
+        engine.getForceField()->addImproperDihedralType(improperType);
+    }
+
+}   // namespace input::parameterFile

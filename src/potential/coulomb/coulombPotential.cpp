@@ -22,66 +22,69 @@
 
 #include "coulombPotential.hpp"
 
-using namespace pot;
-
-/**
- * @brief Construct a new Coulomb Potential:: Coulomb Potential object
- *
- * @details the coulomb energy cutoff is set to 1 / coulombRadiusCutOff and the
- * coulomb force cutoff is set to 1 / (coulombRadiusCutOff *
- * coulombRadiusCutOff) the coulomb pre factor is not included here but later in
- * the calculate function of the derived classes
- *
- * @param coulombRadiusCutOff
- */
-CoulombPotential::CoulombPotential(double coulombRadiusCutOff)
+namespace pot
 {
-    setCoulombRadiusCutOff(coulombRadiusCutOff);
-}
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief Construct a new Coulomb Potential:: Coulomb Potential object
+     *
+     * @details the coulomb energy cutoff is set to 1 / coulombRadiusCutOff and
+     * the coulomb force cutoff is set to 1 / (coulombRadiusCutOff *
+     * coulombRadiusCutOff) the coulomb pre factor is not included here but
+     * later in the calculate function of the derived classes
+     *
+     * @param coulombRadiusCutOff
+     */
+    CoulombPotential::CoulombPotential(double coulombRadiusCutOff)
+    {
+        setCoulombRadiusCutOff(coulombRadiusCutOff);
+    }
 
-/**
- * @brief sets the coulombRadiusCutOff and calculates the energy and force
- * cutoff - equivalent to the constructor
- *
- * @details coulombPreFactor is not included in the energy and force cutoff
- *
- * @param coulombRadiusCutOff
- */
-void CoulombPotential::setCoulombRadiusCutOff(double coulombRadiusCutOff)
-{
-    _coulombRadiusCutOff = coulombRadiusCutOff;
-    _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
-    _coulombForceCutOff  = 1 / (_coulombRadiusCutOff * _coulombRadiusCutOff);
-    _coulombCutOffCubedInverse =
-        1 /
-        (_coulombRadiusCutOff * _coulombRadiusCutOff * _coulombRadiusCutOff);
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set the coulombEnergyCutOff
- *
- * @param coulombEnergyCutOff
- */
-void CoulombPotential::setCoulombEnergyCutOff(double coulombEnergyCutOff)
-{
-    _coulombEnergyCutOff = coulombEnergyCutOff;
-}
+    /**
+     * @brief sets the coulombRadiusCutOff and calculates the energy and force
+     * cutoff - equivalent to the constructor
+     *
+     * @details coulombPreFactor is not included in the energy and force cutoff
+     *
+     * @param coulombRadiusCutOff
+     */
+    void CoulombPotential::setCoulombRadiusCutOff(double coulombRadiusCutOff)
+    {
+        _coulombRadiusCutOff = coulombRadiusCutOff;
+        _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
+        _coulombForceCutOff = 1 / (_coulombRadiusCutOff * _coulombRadiusCutOff);
+        _coulombCutOffCubedInverse =
+            1 / (_coulombRadiusCutOff * _coulombRadiusCutOff *
+                 _coulombRadiusCutOff);
+    }
 
-/**
- * @brief set the coulombForceCutOff
- *
- * @param coulombForceCutOff
- */
-void CoulombPotential::setCoulombForceCutOff(double coulombForceCutOff)
-{
-    _coulombForceCutOff = coulombForceCutOff;
-}
+    /**
+     * @brief set the coulombEnergyCutOff
+     *
+     * @param coulombEnergyCutOff
+     */
+    void CoulombPotential::setCoulombEnergyCutOff(double coulombEnergyCutOff)
+    {
+        _coulombEnergyCutOff = coulombEnergyCutOff;
+    }
 
-// Coulomb cutoff getters are inline in the header so the per-pair call
-// in Potential::calculateSingleInteraction can be elided without LTO.
+    /**
+     * @brief set the coulombForceCutOff
+     *
+     * @param coulombForceCutOff
+     */
+    void CoulombPotential::setCoulombForceCutOff(double coulombForceCutOff)
+    {
+        _coulombForceCutOff = coulombForceCutOff;
+    }
+
+    // Coulomb cutoff getters are inline in the header so the per-pair call
+    // in Potential::calculateSingleInteraction can be elided without LTO.
+
+}   // namespace pot

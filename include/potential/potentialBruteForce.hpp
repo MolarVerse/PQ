@@ -42,31 +42,31 @@ namespace pot
         void calculateForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) override;
 
         void calculateCoreToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) override;
 
         void calculateLayerToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) override;
 
         void calculateOuterToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            molsys::CellList           &cellList
+            const molsys::CellList     &cellList
         ) override;
 
         void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) override;
 
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;

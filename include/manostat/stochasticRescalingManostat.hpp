@@ -38,20 +38,20 @@ namespace manostat
     class StochasticRescalingManostat : public Manostat
     {
        protected:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator;
+        rng::RandomNumberGenerator _randomNumberGenerator;
 
-        double              _tau;
-        double              _compressibility;
-        double              _dt;
-        settings::FixedAxis _fixedAxis;
+        double    _tau;
+        double    _compressibility;
+        double    _dt;
+        FixedAxis _fixedAxis;
 
        public:
         StochasticRescalingManostat() = default;
         explicit StochasticRescalingManostat(
-            double              targetPressure,
-            double              tau,
-            double              compressibility,
-            settings::FixedAxis fixedAxis
+            double    targetPressure,
+            double    tau,
+            double    compressibility,
+            FixedAxis fixedAxis
         );
         ~StochasticRescalingManostat() override = default;
 
@@ -73,8 +73,8 @@ namespace manostat
 
         [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
 
-        [[nodiscard]] settings::ManostatType getManostatType() const override;
-        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
+        [[nodiscard]] ManostatType getManostatType() const override;
+        [[nodiscard]] Isotropy     getIsotropy() const override;
 
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
@@ -100,13 +100,13 @@ namespace manostat
             double                     compressibility,
             size_t                     anisotropicAxis,
             const std::vector<size_t> &isotropicAxes,
-            settings::FixedAxis        fixedAxis
+            FixedAxis                  fixedAxis
         );
 
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
     /**
@@ -124,7 +124,7 @@ namespace manostat
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
     /**
@@ -142,7 +142,7 @@ namespace manostat
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
 
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat

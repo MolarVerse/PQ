@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ctest -R testPQValidationEnvironment --output-on-failure)",
+      "Bash(ctest --output-on-failure)",
+      "Bash(ctest -R testFilesParser --output-on-failure)"
+    ]
+  }
+}

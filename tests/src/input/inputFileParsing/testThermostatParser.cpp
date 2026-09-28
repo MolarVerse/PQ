@@ -31,8 +31,6 @@
 #include "thermostatSettings.hpp"   // for ThermostatSettings
 #include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "temp" command
  *
@@ -43,8 +41,8 @@ TEST_F(TestInputFileReader, testParseTemperature)
 {
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), false);
 
-    ThermostatInputParser    parser;
-    std::vector<std::string> lineElements = {"temp", "=", "300.0"};
+    input::ThermostatInputParser parser;
+    std::vector<std::string>     lineElements = {"temp", "=", "300.0"};
     input::ThermostatInputParser::parseTemperature(lineElements, 0);
 
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), true);
@@ -70,8 +68,8 @@ TEST_F(TestInputFileReader, testParseTemperature)
  */
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
-    ThermostatInputParser    parser;
-    std::vector<std::string> lineElements = {"t_relaxation", "=", "10.0"};
+    input::ThermostatInputParser parser;
+    std::vector<std::string>     lineElements = {"t_relaxation", "=", "10.0"};
     input::ThermostatInputParser::parseThermostatRelaxationTime(
         lineElements,
         0
@@ -110,8 +108,8 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
  */
 TEST_F(TestInputFileReader, testParseThermostat)
 {
-    ThermostatInputParser    parser;
-    std::vector<std::string> lineElements = {"thermostat", "=", "none"};
+    input::ThermostatInputParser parser;
+    std::vector<std::string>     lineElements = {"thermostat", "=", "none"};
     input::ThermostatInputParser::parseThermostat(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
@@ -169,8 +167,8 @@ TEST_F(TestInputFileReader, testParseThermostat)
  */
 TEST_F(TestInputFileReader, testParseFriction)
 {
-    ThermostatInputParser    parser;
-    std::vector<std::string> lineElements = {"friction", "=", "0.1"};
+    input::ThermostatInputParser parser;
+    std::vector<std::string>     lineElements = {"friction", "=", "0.1"};
     input::ThermostatInputParser::parseThermostatFriction(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getFriction(), 0.1 * 1.0e12);
 
@@ -197,8 +195,8 @@ TEST_F(TestInputFileReader, testParseFriction)
  */
 TEST_F(TestInputFileReader, testParseChainLength)
 {
-    ThermostatInputParser    parser;
-    std::vector<std::string> lineElements = {"nh-chain-length", "=", "10"};
+    input::ThermostatInputParser parser;
+    std::vector<std::string>     lineElements = {"nh-chain-length", "=", "10"};
     input::ThermostatInputParser::parseThermostatChainLength(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getNoseHooverChainLength(), 10);
 
@@ -223,7 +221,7 @@ TEST_F(TestInputFileReader, testParseChainLength)
  */
 TEST_F(TestInputFileReader, testParseCouplingFrequency)
 {
-    ThermostatInputParser    parser;
+    input::ThermostatInputParser parser;
     std::vector<std::string> lineElements = {"coupling_frequency", "=", "10"};
     input::ThermostatInputParser::parseThermostatCouplingFrequency(
         lineElements,
@@ -257,8 +255,8 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
  */
 TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 {
-    ThermostatInputParser    parser;
-    std::vector<std::string> lineElements = {"temp_ramp_steps", "=", "10"};
+    input::ThermostatInputParser parser;
+    std::vector<std::string>     lineElements = {"temp_ramp_steps", "=", "10"};
     input::ThermostatInputParser::parseTemperatureRampSteps(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampSteps(), 10);
 
@@ -278,7 +276,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
  */
 TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 {
-    ThermostatInputParser    parser;
+    input::ThermostatInputParser parser;
     std::vector<std::string> lineElements = {"temp_ramp_frequency", "=", "10"};
     input::ThermostatInputParser::parseTemperatureRampFrequency(
         lineElements,
@@ -309,7 +307,7 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
  */
 TEST_F(TestInputFileReader, testParseStartTemperature)
 {
-    ThermostatInputParser    parser;
+    input::ThermostatInputParser parser;
     std::vector<std::string> lineElements = {"start_temperature", "=", "10"};
     input::ThermostatInputParser::parseStartTemperature(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getStartTemperature(), 10);
@@ -333,8 +331,8 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
  */
 TEST_F(TestInputFileReader, testParseEndTemperature)
 {
-    ThermostatInputParser    parser;
-    std::vector<std::string> lineElements = {"end_temperature", "=", "10"};
+    input::ThermostatInputParser parser;
+    std::vector<std::string>     lineElements = {"end_temperature", "=", "10"};
     input::ThermostatInputParser::parseEndTemperature(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getEndTemperature(), 10);
 

@@ -23,13 +23,14 @@
 #ifndef _INPUT_CONVERTER_TPP_
 #define _INPUT_CONVERTER_TPP_
 
+#include "enums/base.hpp"
 #include "inputConverter.hpp"
+#include "stringUtilities.hpp"
 
 namespace input
 {
     /**
-     * @brief attempts to parse an integral value from a raw input-file
-     * token
+     * @brief attempts to parse an integral value from a raw input-file token
      *
      * @param raw the raw input-file token
      * @return an optional containing the parsed value if successful,
@@ -37,7 +38,7 @@ namespace input
      */
     template <std::integral T>
     requires(!std::same_as<T, bool>)
-    std::optional<T> Converter<T>::tryParse(std::string_view raw)
+    static std::optional<T> _tryParse(std::string_view raw)
     {
         T          value{};
         const auto result =
@@ -50,6 +51,36 @@ namespace input
     }
 
     /**
+     * @brief attempts to parse a signed integral value from a raw input-file
+     * token
+     *
+     * @param raw the raw input-file token
+     * @return an optional containing the parsed value if successful,
+     *         std::nullopt otherwise
+     */
+    template <std::signed_integral T>
+    requires(!std::same_as<T, bool>)
+    std::optional<T> Converter<T>::tryParse(std::string_view raw)
+    {
+        return _tryParse<T>(raw);
+    }
+
+    /**
+     * @brief attempts to parse an unsigned integral value from a raw input-file
+     * token
+     *
+     * @param raw the raw input-file token
+     * @return an optional containing the parsed value if successful,
+     *         std::nullopt otherwise
+     */
+    template <std::unsigned_integral T>
+    requires(!std::same_as<T, bool>)
+    std::optional<T> Converter<T>::tryParse(std::string_view raw)
+    {
+        return _tryParse<T>(raw);
+    }
+
+    /**
      * @brief attempts to parse an enum value from a raw input-file token
      *
      * @param raw the raw input-file token
@@ -59,8 +90,16 @@ namespace input
     template <mstd::has_enum_meta T>
     std::optional<T> Converter<T>::tryParse(std::string_view raw)
     {
+        const auto rawTransformed = utilities::toLowerAndReplaceDashesCopy(raw);
+        for (const auto& pair : InputAlias<T>::value)
+        {
+            if (rawTransformed ==
+                utilities::toLowerAndReplaceDashesCopy(pair.first))
+                return pair.second;
+        }
+
         using Meta = mstd::enum_meta_t<T>;
-        return Meta::from_string(raw);
+        return Meta::from_stringCaseInsensitive(rawTransformed);
     }
 
     /**
@@ -69,19 +108,54 @@ namespace input
      * @return a string listing all allowed enum values
      */
     template <mstd::has_enum_meta T>
-    std::string Converter<T>::describeDomain()
+    std::string Converter<T>::describeDomain(const std::vector<T>& notAllowed)
     {
         using Meta = mstd::enum_meta_t<T>;
 
         std::string allowed;
-        for (size_t i = 0; i < Meta::size; ++i)
+        for (size_t i = 0; i < Meta::names.size(); ++i)
         {
-            if (i != 0)
+            const auto& name  = Meta::names[i];
+            const auto& value = Meta::values[i];
+
+            if (std::ranges::find(notAllowed, value) != notAllowed.end())
+                continue;
+
+            if (!allowed.empty())
                 allowed += ", ";
-            allowed += std::string(Meta::names.at(i));
+
+            allowed += utilities::toLowerCopy(name);
+        }
+        for (const auto& pair : InputAlias<T>::value)
+        {
+            if (std::ranges::find(notAllowed, pair.second) != notAllowed.end())
+                continue;
+
+            if (!allowed.empty())
+                allowed += ", ";
+
+            allowed += utilities::toLowerCopy(std::string(pair.first));
         }
 
-        return allowed;
+        return "Allowed values: " + allowed;
+    }
+
+    /**
+     * @brief describes the valid domain of the unsigned integral type for error
+     * messages
+     *
+     * @return a string describing the valid domain
+     */
+    template <std::unsigned_integral T>
+    requires(!std::same_as<T, bool>)
+    std::string Converter<T>::describeDomain(const std::vector<T>& notAllowed)
+    {
+        std::string message = "Value must be a positive integer";
+
+        for (const auto& value : notAllowed)
+            message += ", not allowed: " + std::to_string(value);
+
+        return message;
     }
 
     /**
@@ -93,28 +167,15 @@ namespace input
      * @tparam T
      */
     template <typename T>
-    std::string describeDomain()
+    std::string ConverterBase<T>::describeDomain(
+        const std::vector<T>& notAllowed
+    )
     {
-        if constexpr (mstd::has_enum_meta<T>)
-            return Converter<T>::describeDomain();
-        else if constexpr (std::same_as<T, bool>)
-        {
-            std::string options;
-            for (const auto& [positive, negative] : boolKeywords)
-            {
-                if (!options.empty())
-                    options += "|";
+        std::string message = "<value>";
+        for (const auto& value : notAllowed)
+            message += std::format(", not allowed: {}", value);
 
-                options += positive;
-                options += "|";
-                options += negative;
-            }
-            return options;
-        }
-        else
-        {
-            return "<value>";
-        }
+        return message;
     }
 }   // namespace input
 

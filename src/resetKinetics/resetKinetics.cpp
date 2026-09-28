@@ -29,308 +29,287 @@
 #include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
 #include "exceptions.hpp"                    // for UserInputException
 #include "globalTimer.hpp"
-#include "mathUtilities.hpp"        // for isZero
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "staticMatrix.hpp"         // for operator*, operator+=
-#include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "vector3d.hpp"             // for Vec3D, Vector3D, cross
+#include "mathUtilities.hpp"   // for isZero
+#include "physicalData.hpp"    // for physicalData::PhysicalData
+#include "simulationBox.hpp"   // for molsys::SimulationBox
+#include "staticMatrix.hpp"    // for operator*, operator+=
+#include "staticMatrix/staticMatrix3x3Class.hpp"
+#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
+#include "vector3d.hpp"             // for linalg::Vec3D, Vector3D, cross
 
-using namespace resetKinetics;
-using namespace linalg;
-using namespace physicalData;
-using namespace molsys;
-
-using namespace exc;
-using namespace settings;
-using namespace utilities;
-
-/**
- * @brief Construct a new Reset Kinetics:: Reset Kinetics object
- *
- * @param nStepsTemperatureReset
- * @param frequencyTemperatureReset
- * @param nStepsMomentumReset
- * @param frequencyMomentumReset
- * @param nStepsAngularReset
- * @param frequencyAngularReset
- * @param nStepsForcesReset
- */
-ResetKinetics::ResetKinetics(
-    size_t nStepsTemperatureReset,
-    size_t frequencyTemperatureReset,
-    size_t nStepsMomentumReset,
-    size_t frequencyMomentumReset,
-    size_t nStepsAngularReset,
-    size_t frequencyAngularReset,
-    size_t nStepsForcesReset
-)
-    : _nStepsTemperatureReset(nStepsTemperatureReset),
-      _frequencyTemperatureReset(frequencyTemperatureReset),
-      _nStepsMomentumReset(nStepsMomentumReset),
-      _frequencyMomentumReset(frequencyMomentumReset),
-      _nStepsAngularReset(nStepsAngularReset),
-      _frequencyAngularReset(frequencyAngularReset),
-      _nStepsForcesReset(nStepsForcesReset)
+namespace resetKinetics
 {
-}
 
-/**
- * @brief checks to reset angular momentum
- *
- * @param step
- * @param data
- * @param simBox
- */
-void ResetKinetics::reset(
-    size_t         step,
-    PhysicalData  &data,
-    SimulationBox &simBox
-)
-{
-    auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
-
-    _momentum        = data.getMomentum() * S_TO_FS;
-    _angularMomentum = data.getAngularMomentum() * S_TO_FS;
-    _temperature     = data.getTemperature();
-
-    auto resetTemp = (step <= _nStepsTemperatureReset);
-    resetTemp      = resetTemp || (0 == step % _frequencyTemperatureReset);
-
-    auto resetMom = (step <= _nStepsMomentumReset);
-    resetMom      = resetMom || (0 == step % _frequencyMomentumReset);
-    resetMom      = !resetTemp && resetMom;
-
-    auto resetAngular = (step <= _nStepsAngularReset);
-    resetAngular      = resetAngular || (0 == step % _frequencyAngularReset);
-
-    if (resetTemp)
+    /**
+     * @brief Construct a new Reset Kinetics:: Reset Kinetics object
+     *
+     * @param nStepsTemperatureReset
+     * @param frequencyTemperatureReset
+     * @param nStepsMomentumReset
+     * @param frequencyMomentumReset
+     * @param nStepsAngularReset
+     * @param frequencyAngularReset
+     * @param nStepsForcesReset
+     */
+    ResetKinetics::ResetKinetics(
+        size_t nStepsTemperatureReset,
+        size_t frequencyTemperatureReset,
+        size_t nStepsMomentumReset,
+        size_t frequencyMomentumReset,
+        size_t nStepsAngularReset,
+        size_t frequencyAngularReset,
+        size_t nStepsForcesReset
+    )
+        : _nStepsTemperatureReset(nStepsTemperatureReset),
+          _frequencyTemperatureReset(frequencyTemperatureReset),
+          _nStepsMomentumReset(nStepsMomentumReset),
+          _frequencyMomentumReset(frequencyMomentumReset),
+          _nStepsAngularReset(nStepsAngularReset),
+          _frequencyAngularReset(frequencyAngularReset),
+          _nStepsForcesReset(nStepsForcesReset)
     {
-        ResetKinetics::resetTemperature(simBox);
-        ResetKinetics::resetMomentum(simBox);
     }
 
-    if (resetMom)
-        ResetKinetics::resetMomentum(simBox);
-
-    if (resetAngular)
-        ResetKinetics::resetAngularMomentum(simBox);
-
-    data.setTemperature(_temperature);
-    data.setMomentum(_momentum * FS_TO_S);
-    data.setAngularMomentum(_angularMomentum * FS_TO_S);
-}
-
-/**
- * @brief reset the temperature of the system - hard scaling
- *
- * @details calculate hard scaling factor for target temperature and current
- * temperature and scale all velocities
- *
- * @param simBox
- */
-void ResetKinetics::resetTemperature(SimulationBox &simBox)
-{
-    const auto targetTemp = ThermostatSettings::getActualTargetTemperature();
-
-    if (isZero(_temperature))
+    /**
+     * @brief checks to reset angular momentum
+     *
+     * @param step The current simulation step
+     * @param physicalData The physical data of the system
+     * @param simulationBox The simulation box containing the system
+     */
+    void ResetKinetics::reset(
+        size_t                      step,
+        physicalData::PhysicalData &physicalData,
+        molsys::SimulationBox      &simulationBox
+    ) const
     {
-        throw UserInputException(
-            "Cannot rescale a zero-temperature system. Initialize velocities "
-            "first."
+        auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
+
+        auto momentum        = physicalData.getMomentum() * S_TO_FS;
+        auto angularMomentum = physicalData.getAngularMomentum() * S_TO_FS;
+        auto temperature     = physicalData.getTemperature();
+
+        auto resetTemp = (step <= _nStepsTemperatureReset);
+        resetTemp      = resetTemp || (0 == step % _frequencyTemperatureReset);
+
+        auto resetMom = (step <= _nStepsMomentumReset);
+        resetMom      = resetMom || (0 == step % _frequencyMomentumReset);
+
+        auto resetAngular = (step <= _nStepsAngularReset);
+        resetAngular = resetAngular || (0 == step % _frequencyAngularReset);
+
+        if (resetTemp)
+        {
+            resetTemperature(simulationBox, temperature);
+            momentum = simulationBox.calculateMomentum();
+            resetMomentum(simulationBox, momentum);
+            temperature     = simulationBox.calculateTemperature();
+            momentum        = simulationBox.calculateMomentum();
+            angularMomentum = simulationBox.calculateAngularMomentum(momentum);
+        }
+        else if (resetMom)
+        {
+            // temperature also needs reset of momentum, thus the else if
+            ResetKinetics::resetMomentum(simulationBox, momentum);
+            momentum        = simulationBox.calculateMomentum();
+            temperature     = simulationBox.calculateTemperature();
+            angularMomentum = simulationBox.calculateAngularMomentum(momentum);
+        }
+
+        if (resetAngular)
+        {
+            ResetKinetics::resetAngularMomentum(simulationBox, angularMomentum);
+            temperature     = simulationBox.calculateTemperature();
+            momentum        = simulationBox.calculateMomentum();
+            angularMomentum = simulationBox.calculateAngularMomentum(momentum);
+        }
+
+        physicalData.setTemperature(temperature);
+        physicalData.setMomentum(momentum * FS_TO_S);
+        physicalData.setAngularMomentum(angularMomentum * FS_TO_S);
+    }
+
+    /**
+     * @brief reset the temperature of the system - hard scaling
+     *
+     * @details calculate hard scaling factor for target temperature and current
+     * temperature and scale all velocities
+     *
+     * @param simulationBox The simulation box containing the system
+     * @param temperature
+     */
+    void ResetKinetics::resetTemperature(
+        molsys::SimulationBox &simulationBox,
+        double                 temperature
+    )
+    {
+        const auto targetTemp =
+            settings::ThermostatSettings::getActualTargetTemperature();
+
+        if (utilities::isZero(temperature))
+        {
+            throw exc::UserInputException(
+                "Cannot rescale a zero-temperature system. Initialize "
+                "velocities "
+                "first."
+            );
+        }
+
+        const auto lambda = ::sqrt(targetTemp / temperature);
+
+        std::ranges::for_each(
+            simulationBox.getAtoms(),
+            [lambda](auto &atom) { atom->scaleVelocity(lambda); }
         );
     }
 
-    const auto lambda = ::sqrt(targetTemp / _temperature);
-
-    std::ranges::for_each(
-        simBox.getAtoms(),
-        [lambda](auto &atom) { atom->scaleVelocity(lambda); }
-    );
-
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
-}
-
-/**
- * @brief reset the momentum of the system
- *
- * @details subtract momentum correction from all velocities - correction is the
- * total momentum divided by the total mass
- *
- * @param simBox
- */
-void ResetKinetics::resetMomentum(SimulationBox &simBox)
-{
-    const auto momentumVector     = _momentum;
-    const auto momentumCorrection = momentumVector / simBox.getTotalMass();
-
-    std::ranges::for_each(
-        simBox.getAtoms(),
-        [momentumCorrection](auto &atom)
-        { atom->addVelocity(-momentumCorrection); }
-    );
-
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
-}
-
-/**
- * @brief reset the angular momentum of the system
- *
- * @details subtract angular momentum correction from all velocities -
- * correction is the total angular momentum divided by the total mass
- *
- * @param simBox
- */
-void ResetKinetics::resetAngularMomentum(SimulationBox &simBox)
-{
-    simBox.calculateCenterOfMass();
-    const auto centerOfMass = simBox.getCenterOfMass();
-
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
-
-    StaticMatrix3x3 helperMatrix{0.0};
-
-    auto addInertiaOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
+    /**
+     * @brief reset the momentum of the system
+     *
+     * @details subtract momentum correction from all velocities - correction is
+     * the total momentum divided by the total mass
+     *
+     * @param simulationBox The simulation box containing the system
+     * @param momentum the current momentum of the system
+     */
+    void ResetKinetics::resetMomentum(
+        molsys::SimulationBox &simulationBox,
+        const linalg::Vec3D   &momentum
+    )
     {
-        auto       relativePosition = atom->getPosition() - centerOfMass;
-        const auto tensor  = tensorProduct(relativePosition, relativePosition);
-        helperMatrix      += tensor * atom->getMass();
-    };
+        const auto momentumCorrection = momentum / simulationBox.getTotalMass();
 
-    std::ranges::for_each(simBox.getAtoms(), addInertiaOfAtom);
+        std::ranges::for_each(
+            simulationBox.getAtoms(),
+            [momentumCorrection](auto &atom)
+            { atom->addVelocity(-momentumCorrection); }
+        );
+    }
 
-    const auto inertia = -helperMatrix + diagonalMatrix(trace(helperMatrix));
-    const auto inverseInertia  = inverse(inertia);
-    const auto angularVelocity = inverseInertia * _angularMomentum;
-
-    auto correctVelocities = [&angularVelocity, &centerOfMass](auto &atom)
+    /**
+     * @brief reset the angular momentum of the system
+     *
+     * @details subtract angular momentum correction from all velocities -
+     * correction is the total angular momentum divided by the total mass
+     *
+     * @param simulationBox The simulation box containing the system
+     * @param angularMomentum the current angular momentum of the system
+     */
+    void ResetKinetics::resetAngularMomentum(
+        molsys::SimulationBox &simulationBox,
+        const linalg::Vec3D   &angularMomentum
+    )
     {
-        auto relativePosition = atom->getPosition() - centerOfMass;
-        atom->addVelocity(-cross(angularVelocity, relativePosition));
-    };
+        simulationBox.calculateCenterOfMass();
+        const auto centerOfMass = simulationBox.getCenterOfMass();
 
-    std::ranges::for_each(simBox.getAtoms(), correctVelocities);
+        linalg::StaticMatrix3x3 helperMatrix{0.0};
 
-    _temperature     = simBox.calculateTemperature();
-    _momentum        = simBox.calculateMomentum();
-    _angularMomentum = simBox.calculateAngularMomentum(_momentum);
-}
+        auto addInertiaOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
+        {
+            auto       relativePosition = atom->getPosition() - centerOfMass;
+            const auto tensor =
+                tensorProduct(relativePosition, relativePosition);
+            helperMatrix += tensor * atom->getMass();
+        };
 
-/**
- * @brief reset the force of the system
- *
- * @details subtract force correction from all forces - correction is the
- * total force divided by the number of atoms
- *
- * @param step
- * @param simBox
- */
-void ResetKinetics::resetForces(size_t step, SimulationBox &simBox) const
-{
-    if (0 != step % _nStepsForcesReset)
-        return;
+        std::ranges::for_each(simulationBox.getAtoms(), addInertiaOfAtom);
 
-    const auto forceVector     = simBox.calculateTotalForceVector();
-    const auto forceCorrection = forceVector / simBox.getNumberOfAtoms();
+        const auto inertia =
+            -helperMatrix + linalg::diagonalMatrix(linalg::trace(helperMatrix));
+        const auto inverseInertia  = inverse(inertia);
+        const auto angularVelocity = inverseInertia * angularMomentum;
 
-    std::ranges::for_each(
-        simBox.getAtoms(),
-        [forceCorrection](auto &atom) { atom->addForce(-forceCorrection); }
-    );
-}
+        auto correctVelocities = [&angularVelocity, &centerOfMass](auto &atom)
+        {
+            auto relativePosition = atom->getPosition() - centerOfMass;
+            atom->addVelocity(-cross(angularVelocity, relativePosition));
+        };
 
-/********************
- *                  *
- * standard setters *
- *                  *
- *******************/
+        std::ranges::for_each(simulationBox.getAtoms(), correctVelocities);
+    }
 
-/**
- * @brief set the temperature
- *
- * @param temperature
- */
-void ResetKinetics::setTemperature(double temperature)
-{
-    _temperature = temperature;
-}
+    /**
+     * @brief reset the force of the system
+     *
+     * @details subtract force correction from all forces - correction is the
+     * total force divided by the number of atoms
+     *
+     * @param step
+     * @param simulationBox The simulation box containing the system
+     */
+    void ResetKinetics::resetForces(
+        size_t                 step,
+        molsys::SimulationBox &simulationBox
+    ) const
+    {
+        if (0 != step % _nStepsForcesReset)
+            return;
 
-/**
- * @brief set the momentum
- *
- * @param momentum
- */
-void ResetKinetics::setMomentum(const linalg::Vec3D &momentum)
-{
-    _momentum = momentum;
-}
+        const auto forceVector = simulationBox.calculateTotalForceVector();
+        const auto forceCorrection =
+            forceVector / simulationBox.getNumberOfAtoms();
 
-/**
- * @brief set the angular momentum
- *
- * @param angularMomentum
- */
-void ResetKinetics::setAngularMomentum(const linalg::Vec3D &angularMomentum)
-{
-    _angularMomentum = angularMomentum;
-}
+        std::ranges::for_each(
+            simulationBox.getAtoms(),
+            [forceCorrection](auto &atom) { atom->addForce(-forceCorrection); }
+        );
+    }
 
-/********************
- *                  *
- * standard getters *
- *                  *
- *******************/
+    /********************
+     *                  *
+     * standard getters *
+     *                  *
+     *******************/
 
-/**
- * @brief get the number of steps for temperature reset
- *
- * @return size_t
- */
-size_t ResetKinetics::getNStepsTemperatureReset() const
-{
-    return _nStepsTemperatureReset;
-}
+    /**
+     * @brief get the number of steps for temperature reset
+     *
+     * @return size_t
+     */
+    size_t ResetKinetics::getNStepsTemperatureReset() const
+    {
+        return _nStepsTemperatureReset;
+    }
 
-/**
- * @brief get the frequency for temperature reset
- *
- * @return size_t
- */
-size_t ResetKinetics::getFrequencyTemperatureReset() const
-{
-    return _frequencyTemperatureReset;
-}
+    /**
+     * @brief get the frequency for temperature reset
+     *
+     * @return size_t
+     */
+    size_t ResetKinetics::getFrequencyTemperatureReset() const
+    {
+        return _frequencyTemperatureReset;
+    }
 
-/**
- * @brief get the number of steps for momentum reset
- *
- * @return size_t
- */
-size_t ResetKinetics::getNStepsMomentumReset() const
-{
-    return _nStepsMomentumReset;
-}
+    /**
+     * @brief get the number of steps for momentum reset
+     *
+     * @return size_t
+     */
+    size_t ResetKinetics::getNStepsMomentumReset() const
+    {
+        return _nStepsMomentumReset;
+    }
 
-/**
- * @brief get the frequency for momentum reset
- *
- * @return size_t
- */
-size_t ResetKinetics::getFrequencyMomentumReset() const
-{
-    return _frequencyMomentumReset;
-}
+    /**
+     * @brief get the frequency for momentum reset
+     *
+     * @return size_t
+     */
+    size_t ResetKinetics::getFrequencyMomentumReset() const
+    {
+        return _frequencyMomentumReset;
+    }
 
-/**
- * @brief get the number of steps for force reset
- *
- * @return size_t
- */
-size_t ResetKinetics::getNStepsForcesReset() const
-{
-    return _nStepsForcesReset;
-}
+    /**
+     * @brief get the number of steps for force reset
+     *
+     * @return size_t
+     */
+    size_t ResetKinetics::getNStepsForcesReset() const
+    {
+        return _nStepsForcesReset;
+    }
+
+}   // namespace resetKinetics

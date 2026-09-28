@@ -34,11 +34,8 @@
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
-
-using namespace constraints;
-using namespace linalg;
-using namespace molsys;
 
 /**
  * @brief regression test for the M-SHAKE inner-loop bound (3-atom molecule).
@@ -59,14 +56,14 @@ using namespace molsys;
 TEST(TestMShake, applyMShakeThreeAtomMolecule)
 {
     // --- reference shape: equilateral triangle in the xy plane ---
-    auto moltype = MoleculeType();
+    auto moltype = molsys::MoleculeType();
     moltype.setMoltype(MolType{1});
     moltype.setName("triangle");
     moltype.setNumberOfAtoms(3);
 
-    auto refAtoms = std::vector<Atom>(3);
-    // Atom::initMass (called from MShake::initMShakeReferences) looks the
-    // mass up from a name table, so each reference atom needs a valid
+    auto refAtoms = std::vector<molsys::Atom>(3);
+    // Atom::initMass (called from constraints::MShake::initMShakeReferences)
+    // looks the mass up from a name table, so each reference atom needs a valid
     // element name.
     refAtoms[0].setName("H");
     refAtoms[1].setName("H");
@@ -75,29 +72,28 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     refAtoms[1].setPosition({1.0, 0.0, 0.0});
     refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
 
-    auto mShakeRef = MShakeReference();
+    auto mShakeRef = constraints::MShakeReference();
     mShakeRef.setMoleculeType(moltype);
     mShakeRef.setAtoms(refAtoms);
 
-    auto mShake = MShake();
+    auto mShake = constraints::MShake();
     mShake.addMShakeReference(mShakeRef);
     mShake.initMShake();   // builds the (3, 3) mShake inverse matrix
 
     // --- molsys::SimulationBox with one slightly-stretched triangle ---
-    auto simBox = SimulationBox();
+    auto simBox = molsys::SimulationBox();
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
-    auto molecule = Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
-    molecule.setNumberOfAtoms(3);
 
-    const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
-    const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 = Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
+    const auto refPos0 = linalg::Vec3D(0.0, 0.0, 0.0);
+    const auto refPos1 = linalg::Vec3D(1.0, 0.0, 0.0);
+    const auto refPos2 = linalg::Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
 
-    auto atom1 = std::make_shared<Atom>();
-    auto atom2 = std::make_shared<Atom>();
-    auto atom3 = std::make_shared<Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
 
     atom1->setMass(1.0);
     atom2->setMass(1.0);
@@ -145,12 +141,12 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
  */
 TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 {
-    auto moltype = MoleculeType();
+    auto moltype = molsys::MoleculeType();
     moltype.setMoltype(MolType{1});
     moltype.setName("triangle");
     moltype.setNumberOfAtoms(3);
 
-    auto refAtoms = std::vector<Atom>(3);
+    auto refAtoms = std::vector<molsys::Atom>(3);
     refAtoms[0].setName("H");
     refAtoms[1].setName("H");
     refAtoms[2].setName("H");
@@ -158,28 +154,27 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     refAtoms[1].setPosition({1.0, 0.0, 0.0});
     refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
 
-    auto mShakeRef = MShakeReference();
+    auto mShakeRef = constraints::MShakeReference();
     mShakeRef.setMoleculeType(moltype);
     mShakeRef.setAtoms(refAtoms);
 
-    auto mShake = MShake();
+    auto mShake = constraints::MShake();
     mShake.addMShakeReference(mShakeRef);
     mShake.initMShake();
 
-    auto simBox = SimulationBox();
+    auto simBox = molsys::SimulationBox();
     simBox.setBoxDimensions({100.0, 100.0, 100.0});
 
-    auto molecule = Molecule();
+    auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
-    molecule.setNumberOfAtoms(3);
 
-    const auto refPos0 = Vec3D(0.0, 0.0, 0.0);
-    const auto refPos1 = Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 = Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
+    const auto refPos0 = linalg::Vec3D(0.0, 0.0, 0.0);
+    const auto refPos1 = linalg::Vec3D(1.0, 0.0, 0.0);
+    const auto refPos2 = linalg::Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
 
-    auto atom1 = std::make_shared<Atom>();
-    auto atom2 = std::make_shared<Atom>();
-    auto atom3 = std::make_shared<Atom>();
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
     atom1->setMass(1.0);
     atom2->setMass(1.0);
     atom3->setMass(1.0);
@@ -202,5 +197,10 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     settings::ConstraintSettings::setMShakeMaxIter(1);
     settings::ConstraintSettings::setMShakeTolerance(-1.0);
 
-    EXPECT_THROW(mShake.applyMShake(simBox), exc::MShakeException);
+    EXPECT_THROW_MSG(
+        mShake.applyMShake(simBox),
+        exc::MShakeException,
+        "M-Shake did not converge within 1 iterations for molecule type "
+        "MolType(1)"
+    );
 }

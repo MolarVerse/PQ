@@ -22,78 +22,69 @@
 
 #include "integratorInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
+#include <format>   // for format
 
 #include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
 #include "settings.hpp"           // for Settings
-#include "stringUtilities.hpp"    // for toLowerCopy
 
-using namespace input;
-using namespace exc;
-using namespace settings;
-using namespace utilities;
-using namespace references;
-
-/**
- * @brief Construct a new Input File Parser Integrator:: Input File Parser
- * Integrator object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
- */
-IntegratorInputParser::IntegratorInputParser()
+namespace input
 {
-    addKeyword(
-        std::string("integrator"),
-        bindMember(&IntegratorInputParser::parseIntegrator, this),
-        false
-    );
-}
 
-/**
- * @brief Parse the integrator used in the simulation
- *
- * @details Possible options are:
- * 1) "v-verlet"  - velocity verlet integrator is used (default)
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if integrator is not valid -
- * currently only velocity verlet is supported
- */
-void IntegratorInputParser::parseIntegrator(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
+    /**
+     * @brief Construct a new Input File Parser Integrator:: Input File Parser
+     * Integrator object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
+     */
+    IntegratorInputParser::IntegratorInputParser() { addIntegratorKey(); }
 
-    const auto integrator = toLowerAndReplaceDashesCopy(lineElements[2]);
+    /**
+     * @brief Add the integrator key to the input file parser
+     *
+     * @details This function adds the "integrator" key to the input file parser
+     * along with its metadata.
+     */
+    void IntegratorInputParser::addIntegratorKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "integrator",
+            .title = "Integrator Type",
+            .description =
+                "Specifies the integrator type to be used in the simulation",
+        };
 
-    if (!Settings::isMDJobType())
-        throw InputFileException(
-            std::format("Integrator is only supported for MD simulations!")
+        const auto setValue = [](settings::IntegratorType integratorType)
+        {
+            // TODO: remove this via general setup
+            if (!settings::Settings::isMDJobType())
+            {
+                throw exc::InputFileException(
+                    std::format(
+                        "Integrator is only supported for MD simulations!"
+                    )
+                );
+            }
+
+            settings::Settings::setIntegratorType(integratorType);
+            references::ReferencesOutput::addReferenceFile(
+                references::VELOCITY_VERLET_FILE
+            );
+        };
+
+        auto& key = _getRegistry().registerKey(
+            KeyRegistry<settings::IntegratorType>{
+                .metadata     = metaData,
+                .defaultValue = settings::IntegratorType::VELOCITY_VERLET,
+                .onSet        = setValue,
+            }
         );
 
-    if (integrator == "v_verlet")
-    {
-        Settings::setIntegratorType(IntegratorType::VELOCITY_VERLET);
-        ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
+        addKeyword(metaData.name, adapt(key), false);
     }
-
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid integrator \"{}\" at line {} in input file",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
+}   // namespace input

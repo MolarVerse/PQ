@@ -24,40 +24,46 @@
 
 #include "simulationBox.hpp"
 
-using namespace opt;
-
-/**
- * @brief Constructor
- *
- * @param nEpochs
- */
-SteepestDescent::SteepestDescent(size_t nEpochs) : Optimizer(nEpochs) {}
-
-/**
- * @brief get the maximum history length
- *
- * @return size_t
- */
-size_t SteepestDescent::maxHistoryLength() const { return _maxHistoryLength; }
-
-/**
- * @brief update the optimizer
- *
- * @param learningRate
- */
-void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
+namespace opt
 {
-    const auto& atoms = _getSimulationBox().getAtoms();
 
-    for (const auto& atom : atoms)
+    /**
+     * @brief Constructor
+     *
+     * @param nEpochs
+     */
+    SteepestDescent::SteepestDescent(size_t nEpochs) : Optimizer(nEpochs) {}
+
+    /**
+     * @brief get the maximum history length
+     *
+     * @return size_t
+     */
+    size_t SteepestDescent::maxHistoryLength() const
     {
-        const auto force = atom->getForce();
-        const auto pos   = atom->getPosition();
-
-        auto pos_new = pos + learningRate * force;
-        _getSimulationBox().applyPBC(pos_new);
-
-        atom->setPositionOld(pos);
-        atom->setPosition(pos_new);
+        return _maxHistoryLength;
     }
-}
+
+    /**
+     * @brief update the optimizer
+     *
+     * @param learningRate
+     */
+    void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
+    {
+        const auto& atoms = _getSimulationBox().getAtoms();
+
+        for (const auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            const auto pos   = atom->getPosition();
+
+            auto pos_new = pos + learningRate * force;
+            _getSimulationBox().applyPBC(pos_new);
+
+            atom->setPositionOld(pos);
+            atom->setPosition(pos_new);
+        }
+    }
+
+}   // namespace opt

@@ -41,16 +41,14 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    using namespace linalg;
-
-    const Vec3D vec1{1.1, 2.2, 3.3};
-    const Vec3D vec2{0.7, -1.3, 2.1};
+    const linalg::Vec3D vec1{1.1, 2.2, 3.3};
+    const linalg::Vec3D vec2{0.7, -1.3, 2.1};
 
     // non-singular so inverse() is well defined
-    const StaticMatrix3x3<double> matrix{
-        Vec3D{2.0, 0.1, 0.2},
-        Vec3D{0.3, 3.0, 0.1},
-        Vec3D{0.2, 0.1, 4.0}
+    const linalg::StaticMatrix3x3<double> matrix{
+        linalg::Vec3D{2.0, 0.1, 0.2},
+        linalg::Vec3D{0.3, 3.0, 0.1},
+        linalg::Vec3D{0.2, 0.1, 4.0}
     };
 
     CALLGRIND_ZERO_STATS;
@@ -58,15 +56,15 @@ int main()
     double sink = 0.0;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double scale      = 1.0 + (static_cast<double>(i & 255U) * 0.01);
-        const Vec3D  vec1Scaled = vec1 * scale;
-        const Vec3D  vec2Rel    = vec2 - vec1Scaled;
+        const double scale = 1.0 + (static_cast<double>(i & 255U) * 0.01);
+        const linalg::Vec3D vec1Scaled = vec1 * scale;
+        const linalg::Vec3D vec2Rel    = vec2 - vec1Scaled;
 
         sink += norm(vec1Scaled + vec2Rel) + normSquared(vec1Scaled) +
                 dot(vec1Scaled, vec2Rel) + norm(cross(vec1Scaled, vec2Rel));
 
-        const Vec3D matrixVec = matrix * vec2Rel;
-        const auto  matrixSq  = matrix * transpose(matrix);
+        const linalg::Vec3D matrixVec = matrix * vec2Rel;
+        const auto          matrixSq  = matrix * transpose(matrix);
 
         sink += norm(matrixVec) + det(matrixSq) + det(inverse(matrix));
     }

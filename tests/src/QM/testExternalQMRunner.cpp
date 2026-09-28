@@ -41,19 +41,8 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "throwWithMessage.hpp"
 #include "turbomoleRunner.hpp"
-
-using exc::QMRunnerException;
-using molsys::Atom;
-using molsys::Periodicity;
-using molsys::SimulationBox;
-using physicalData::PhysicalData;
-using settings::FileSettings;
-using settings::JobType;
-using settings::QMMethod;
-using settings::QMSettings;
-using settings::Settings;
-using testing::HasSubstr;
 
 namespace
 {
@@ -69,22 +58,29 @@ namespace
         bool _sawStaleResults = false;
 
        public:
-        void writeCoordsFile(SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
 
-        void execute(SimulationBox & /*simBox*/) override
+        void execute(molsys::SimulationBox & /*simBox*/) override
         {
-            _sawStaleResults = std::filesystem::exists(
-                                   FileSettings::getQMForcesTempFileName()
-                               ) ||
-                               std::filesystem::exists(
-                                   FileSettings::getQMChargesTempFileName()
-                               ) ||
-                               std::filesystem::exists(
-                                   FileSettings::getStressTensorTempFileName()
-                               );
+            _sawStaleResults =
+                std::filesystem::exists(
+                    settings::FileSettings::getQMForcesTempFileName()
+                ) ||
+                std::filesystem::exists(
+                    settings::FileSettings::getQMChargesTempFileName()
+                ) ||
+                std::filesystem::exists(
+                    settings::FileSettings::getStressTensorTempFileName()
+                );
 
-            writeFile(FileSettings::getQMForcesTempFileName(), "0\n0 0 0\n");
-            writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
+            writeFile(
+                settings::FileSettings::getQMForcesTempFileName(),
+                "0\n0 0 0\n"
+            );
+            writeFile(
+                settings::FileSettings::getQMChargesTempFileName(),
+                "0\n"
+            );
         }
 
         void runCommand(
@@ -122,38 +118,41 @@ namespace
 class ExternalQMRunnerTest : public testing::Test
 {
    protected:
-    std::filesystem::path   _originalPath;
-    std::filesystem::path   _workPath;
-    SimulationBox           _simulationBox;
-    PhysicalData            _physicalData;
-    ExternalQMRunnerHarness _runner;
-    QM::DFTBPlusRunner      _dftbRunner;
+    std::filesystem::path      _originalPath;
+    std::filesystem::path      _workPath;
+    molsys::SimulationBox      _simulationBox;
+    physicalData::PhysicalData _physicalData;
+    ExternalQMRunnerHarness    _runner;
+    QM::DFTBPlusRunner         _dftbRunner;
 
-    QMMethod    _qmMethod;
-    JobType     _jobType;
-    bool        _removeNetForce;
-    double      _timeLimit;
-    std::string _qmScript;
-    std::string _dftbFile;
+    settings::QMMethod _qmMethod;
+    settings::JobType  _jobType;
+    bool               _removeNetForce;
+    double             _timeLimit;
+    std::string        _qmScript;
+    std::string        _dftbFile;
 
-    static void readForceFile(SimulationBox &box, PhysicalData &physicalData)
+    static void readForceFile(
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
+    )
     {
-        QM::ExternalQMRunner::_readForceFile(box, physicalData);
+        QM::ExternalQMRunner::_readForceFile(simulationBox, physicalData);
     }
 
-    static void readChargeFile(SimulationBox &box)
+    static void readChargeFile(molsys::SimulationBox &simulationBox)
     {
-        QM::ExternalQMRunner::_readChargeFile(box);
+        QM::ExternalQMRunner::_readChargeFile(simulationBox);
     }
 
     void SetUp() override
     {
-        _qmMethod       = QMSettings::getQMMethod();
-        _jobType        = Settings::getJobtype();
-        _removeNetForce = QMSettings::getRemoveNetForce();
-        _timeLimit      = QMSettings::getQMLoopTimeLimit();
-        _qmScript       = QMSettings::getQMScript();
-        _dftbFile       = FileSettings::getDFTBFileName();
+        _qmMethod       = settings::QMSettings::getQMMethod();
+        _jobType        = settings::Settings::getJobtype();
+        _removeNetForce = settings::QMSettings::getRemoveNetForce();
+        _timeLimit      = settings::QMSettings::getQMLoopTimeLimit();
+        _qmScript       = settings::QMSettings::getQMScript();
+        _dftbFile       = settings::FileSettings::getDFTBFileName();
         _originalPath   = std::filesystem::current_path();
 
         const auto stamp =
@@ -163,12 +162,12 @@ class ExternalQMRunnerTest : public testing::Test
         ASSERT_TRUE(std::filesystem::create_directory(_workPath));
         std::filesystem::current_path(_workPath);
 
-        QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-        QMSettings::setRemoveNetForce(false);
-        QMSettings::setQMLoopTimeLimit(0.0);
-        Settings::setJobtype(JobType::QM_MD);
+        settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+        settings::QMSettings::setRemoveNetForce(false);
+        settings::QMSettings::setQMLoopTimeLimit(0.0);
+        settings::Settings::setJobtype(settings::JobType::QM_MD);
 
-        auto atom = std::make_shared<Atom>();
+        auto atom = std::make_shared<molsys::Atom>();
         atom->setName("H");
         _simulationBox.addAtom(atom);
         _simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
@@ -176,12 +175,12 @@ class ExternalQMRunnerTest : public testing::Test
 
     void TearDown() override
     {
-        QMSettings::setQMMethod(_qmMethod);
-        QMSettings::setRemoveNetForce(_removeNetForce);
-        QMSettings::setQMLoopTimeLimit(_timeLimit);
-        QMSettings::setQMScript(_qmScript);
-        FileSettings::setDFTBFileName(_dftbFile);
-        Settings::setJobtype(_jobType);
+        settings::QMSettings::setQMMethod(_qmMethod);
+        settings::QMSettings::setRemoveNetForce(_removeNetForce);
+        settings::QMSettings::setQMLoopTimeLimit(_timeLimit);
+        settings::QMSettings::setQMScript(_qmScript);
+        settings::FileSettings::setDFTBFileName(_dftbFile);
+        settings::Settings::setJobtype(_jobType);
 
         std::filesystem::current_path(_originalPath);
         std::error_code error;
@@ -203,7 +202,7 @@ class ExternalQMRunnerTest : public testing::Test
         writeFile(scriptFile.string(), "");
 
         runner.setScriptPath(scriptDirectory.string() + '/');
-        QMSettings::setQMScript(scriptName);
+        settings::QMSettings::setQMScript(scriptName);
 
         return scriptFile;
     }
@@ -217,7 +216,7 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
         _runner.runCommand("true", "External QM");
         FAIL() << "Expected command execution to be rejected on Windows";
     }
-    catch (const QMRunnerException &error)
+    catch (const exc::QMRunnerException &error)
     {
         EXPECT_THAT(error.what(), HasSubstr("not supported on Windows"));
     }
@@ -229,9 +228,12 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
         _runner.runCommand("false", "External QM");
         FAIL() << "Expected the failed command to throw";
     }
-    catch (const QMRunnerException &error)
+    catch (const exc::QMRunnerException &error)
     {
-        EXPECT_THAT(error.what(), HasSubstr("External QM command failed"));
+        EXPECT_THAT(
+            error.what(),
+            testing::HasSubstr("External QM command failed")
+        );
     }
 #endif
 }
@@ -241,7 +243,7 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
     auto       runner    = CommandCaptureRunner<QM::DFTBPlusRunner>();
     const auto path      = configureQuotedScript(runner);
     const auto inputFile = std::string("input file; touch qm-injected");
-    FileSettings::setDFTBFileName(inputFile);
+    settings::FileSettings::setDFTBFileName(inputFile);
 
     runner.execute(_simulationBox);
 
@@ -250,7 +252,9 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
             "{} 0 0 0 {} {}",
             utilities::shellQuote(path.string()),
             utilities::shellQuote(inputFile),
-            utilities::shellQuote(FileSettings::getPointChargeFileName())
+            utilities::shellQuote(
+                settings::FileSettings::getPointChargeFileName()
+            )
         ),
         runner.getCommand()
     );
@@ -286,8 +290,10 @@ TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
         std::format(
             "{} 0 1 0 {} {}",
             utilities::shellQuote(path.string()),
-            utilities::shellQuote(FileSettings::getTMFileName()),
-            utilities::shellQuote(FileSettings::getPointChargeFileName())
+            utilities::shellQuote(settings::FileSettings::getTMFileName()),
+            utilities::shellQuote(
+                settings::FileSettings::getPointChargeFileName()
+            )
         ),
         runner.getCommand()
     );
@@ -296,76 +302,98 @@ TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
 
 TEST_F(ExternalQMRunnerTest, removesStaleResultsBeforeExecution)
 {
-    writeFile(FileSettings::getQMForcesTempFileName(), "stale");
-    writeFile(FileSettings::getQMChargesTempFileName(), "stale");
-    writeFile(FileSettings::getStressTensorTempFileName(), "stale");
+    writeFile(settings::FileSettings::getQMForcesTempFileName(), "stale");
+    writeFile(settings::FileSettings::getQMChargesTempFileName(), "stale");
+    writeFile(settings::FileSettings::getStressTensorTempFileName(), "stale");
 
-    EXPECT_NO_THROW(
-        _runner.run(_simulationBox, _physicalData, Periodicity::NON_PERIODIC)
-    );
+    EXPECT_NO_THROW(_runner.run(
+        _simulationBox,
+        _physicalData,
+        molsys::Periodicity::NON_PERIODIC
+    ));
     EXPECT_FALSE(_runner.sawStaleResults());
     EXPECT_FALSE(
-        std::filesystem::exists(FileSettings::getStressTensorTempFileName())
+        std::filesystem::exists(
+            settings::FileSettings::getStressTensorTempFileName()
+        )
     );
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsIncompleteForces)
 {
-    writeFile(FileSettings::getQMForcesTempFileName(), "0\n0 0\n");
+    writeFile(settings::FileSettings::getQMForcesTempFileName(), "0\n0 0\n");
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         readForceFile(_simulationBox, _physicalData),
-        QMRunnerException
+        exc::QMRunnerException,
+        "Incomplete DFTBPLUS force file \"qm_forces\""
     );
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsNonFiniteForces)
 {
-    writeFile(FileSettings::getQMForcesTempFileName(), "0\nnan 0 0\n");
+    writeFile(
+        settings::FileSettings::getQMForcesTempFileName(),
+        "0\nnan 0 0\n"
+    );
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         readForceFile(_simulationBox, _physicalData),
-        QMRunnerException
+        exc::QMRunnerException,
+        "Incomplete DFTBPLUS force file \"qm_forces\""
     );
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
 {
-    auto atom = std::make_shared<Atom>();
+    auto atom = std::make_shared<molsys::Atom>();
     atom->setName("H");
     _simulationBox.addAtom(atom);
 
-    writeFile(FileSettings::getQMChargesTempFileName(), "0\n");
+    writeFile(settings::FileSettings::getQMChargesTempFileName(), "0\n");
 
-    EXPECT_THROW(readChargeFile(_simulationBox), QMRunnerException);
+    EXPECT_THROW_MSG(
+        readChargeFile(_simulationBox),
+        exc::QMRunnerException,
+        "Incomplete DFTBPLUS charge file \"qm_charges\""
+    );
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsNonFiniteCharges)
 {
-    writeFile(FileSettings::getQMChargesTempFileName(), "nan\n");
+    writeFile(settings::FileSettings::getQMChargesTempFileName(), "nan\n");
 
-    EXPECT_THROW(readChargeFile(_simulationBox), QMRunnerException);
+    EXPECT_THROW_MSG(
+        readChargeFile(_simulationBox),
+        exc::QMRunnerException,
+        "Incomplete DFTBPLUS charge file \"qm_charges\""
+    );
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsIncompleteStressTensor)
 {
-    writeFile(FileSettings::getStressTensorTempFileName(), "0 0 0\n0 0 0\n");
+    writeFile(
+        settings::FileSettings::getStressTensorTempFileName(),
+        "0 0 0\n0 0 0\n"
+    );
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _dftbRunner.readStressTensor(_simulationBox.getBox(), _physicalData),
-        QMRunnerException
+        exc::QMRunnerException,
+        "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
 }
 
 TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
 {
     writeFile(
-        FileSettings::getStressTensorTempFileName(),
+        settings::FileSettings::getStressTensorTempFileName(),
         "nan 0 0\n0 0 0\n0 0 0\n"
     );
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _dftbRunner.readStressTensor(_simulationBox.getBox(), _physicalData),
-        QMRunnerException
+        exc::QMRunnerException,
+        "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
 }

@@ -22,244 +22,251 @@
 
 #include "convergence.hpp"
 
-#include <cmath>   // for abs
+#include <cmath>
 
-#include "convergenceSettings.hpp"
+#include "enums/convergence.hpp"
 
-using namespace opt;
-using namespace settings;
-
-/**
- * @brief Construct a new Convergence object
- *
- * @param enableEnergyConv
- * @param enableMaxForceConv
- * @param enableRMSForceConv
- * @param relEnergyConvThreshold
- * @param absEnergyConvThreshold
- * @param absMaxForceConvThreshold
- * @param absRMSForceConvThreshold
- * @param energyConvStrategy
- */
-Convergence::Convergence(
-    bool         enableEnergyConv,
-    bool         enableMaxForceConv,
-    bool         enableRMSForceConv,
-    double       relEnergyConvThreshold,
-    double       absEnergyConvThreshold,
-    double       absMaxForceConvThreshold,
-    double       absRMSForceConvThreshold,
-    ConvStrategy energyConvStrategy
-)
-    : _enableEnergyConv(enableEnergyConv),
-      _enableMaxForceConv(enableMaxForceConv),
-      _enableRMSForceConv(enableRMSForceConv),
-      _relEnergyConvThreshold(relEnergyConvThreshold),
-      _absEnergyConvThreshold(absEnergyConvThreshold),
-      _absMaxForceConvThreshold(absMaxForceConvThreshold),
-      _absRMSForceConvThreshold(absRMSForceConvThreshold),
-      _energyConvStrategy(energyConvStrategy)
+namespace opt
 {
-}
 
-/**
- * @brief check if the optimizer has converged
- *
- * @return true/false if the optimizer has converged
- */
-bool Convergence::checkConvergence() const
-{
-    auto isEnergyConverged = true;
-
-    switch (_energyConvStrategy)
+    /**
+     * @brief Construct a new Convergence object
+     *
+     * @param enableEnergyConv
+     * @param enableMaxForceConv
+     * @param enableRMSForceConv
+     * @param relEnergyConvThreshold
+     * @param absEnergyConvThreshold
+     * @param absMaxForceConvThreshold
+     * @param absRMSForceConvThreshold
+     * @param energyConvStrategy
+     */
+    Convergence::Convergence(
+        bool         enableEnergyConv,
+        bool         enableMaxForceConv,
+        bool         enableRMSForceConv,
+        double       relEnergyConvThreshold,
+        double       absEnergyConvThreshold,
+        double       absMaxForceConvThreshold,
+        double       absRMSForceConvThreshold,
+        ConvStrategy energyConvStrategy
+    )
+        : _enableEnergyConv(enableEnergyConv),
+          _enableMaxForceConv(enableMaxForceConv),
+          _enableRMSForceConv(enableRMSForceConv),
+          _relEnergyConvThreshold(relEnergyConvThreshold),
+          _absEnergyConvThreshold(absEnergyConvThreshold),
+          _absMaxForceConvThreshold(absMaxForceConvThreshold),
+          _absRMSForceConvThreshold(absRMSForceConvThreshold),
+          _energyConvStrategy(energyConvStrategy)
     {
-        using enum ConvStrategy;
-
-        case RIGOROUS:
-            isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
-            break;
-
-        case LOOSE:
-            isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
-            break;
-
-        case ABSOLUTE: isEnergyConverged = _isAbsEnergyConv; break;
-
-        case RELATIVE: isEnergyConverged = _isRelEnergyConv; break;
     }
 
-    return isEnergyConverged && _isAbsMaxForceConv && _isAbsRMSForceConv;
-}
-
-/**
- * @brief calculate the energy convergence
- *
- * @param energyOld
- * @param energyNew
- */
-void Convergence::calcEnergyConvergence(double energyOld, double energyNew)
-{
-    _absEnergy = std::abs(energyNew - energyOld);
-    _relEnergy = _absEnergy / std::abs(energyOld);
-
-    if (_enableEnergyConv)
+    /**
+     * @brief check if the optimizer has converged
+     *
+     * @return true/false if the optimizer has converged
+     */
+    bool Convergence::checkConvergence() const
     {
-        _isAbsEnergyConv = _absEnergy < _absEnergyConvThreshold;
-        _isRelEnergyConv = _relEnergy < _relEnergyConvThreshold;
+        auto isEnergyConverged = true;
+
+        switch (_energyConvStrategy)
+        {
+            case ConvStrategy::RIGOROUS:
+                isEnergyConverged = _isAbsEnergyConv && _isRelEnergyConv;
+                break;
+            case ConvStrategy::LOOSE:
+                isEnergyConverged = _isAbsEnergyConv || _isRelEnergyConv;
+                break;
+            case ConvStrategy::ABSOLUTE:
+                isEnergyConverged = _isAbsEnergyConv;
+                break;
+            case ConvStrategy::RELATIVE:
+                isEnergyConverged = _isRelEnergyConv;
+                break;
+        }
+
+        return isEnergyConverged && _isAbsMaxForceConv && _isAbsRMSForceConv;
     }
-}
 
-/**
- * @brief calculate the force convergence
- *
- * @param maxForce
- * @param rmsForce
- */
-void Convergence::calcForceConvergence(double maxForce, double rmsForce)
-{
-    _absMaxForce = std::abs(maxForce);
-    _absRMSForce = std::abs(rmsForce);
+    /**
+     * @brief calculate the energy convergence
+     *
+     * @param energyOld
+     * @param energyNew
+     */
+    void Convergence::calcEnergyConvergence(double energyOld, double energyNew)
+    {
+        _absEnergy = std::abs(energyNew - energyOld);
+        _relEnergy = _absEnergy / std::abs(energyOld);
 
-    if (_enableMaxForceConv)
-        _isAbsMaxForceConv = _absMaxForce < _absMaxForceConvThreshold;
+        if (_enableEnergyConv)
+        {
+            _isAbsEnergyConv = _absEnergy < _absEnergyConvThreshold;
+            _isRelEnergyConv = _relEnergy < _relEnergyConvThreshold;
+        }
+    }
 
-    if (_enableRMSForceConv)
-        _isAbsRMSForceConv = _absRMSForce < _absRMSForceConvThreshold;
-}
+    /**
+     * @brief calculate the force convergence
+     *
+     * @param maxForce
+     * @param rmsForce
+     */
+    void Convergence::calcForceConvergence(double maxForce, double rmsForce)
+    {
+        _absMaxForce = std::abs(maxForce);
+        _absRMSForce = std::abs(rmsForce);
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+        if (_enableMaxForceConv)
+            _isAbsMaxForceConv = _absMaxForce < _absMaxForceConvThreshold;
 
-/**
- * @brief get relative energy difference
- *
- * @return double
- */
-double Convergence::getRelEnergy() const { return _relEnergy; }
+        if (_enableRMSForceConv)
+            _isAbsRMSForceConv = _absRMSForce < _absRMSForceConvThreshold;
+    }
 
-/**
- * @brief get absolute energy difference
- *
- * @return double
- */
-double Convergence::getAbsEnergy() const { return _absEnergy; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get absolute maximum force
- *
- * @return double
- */
-double Convergence::getAbsMaxForce() const { return _absMaxForce; }
+    /**
+     * @brief get relative energy difference
+     *
+     * @return double
+     */
+    double Convergence::getRelEnergy() const { return _relEnergy; }
 
-/**
- * @brief get absolute RMS force
- *
- * @return double
- */
-double Convergence::getAbsRMSForce() const { return _absRMSForce; }
+    /**
+     * @brief get absolute energy difference
+     *
+     * @return double
+     */
+    double Convergence::getAbsEnergy() const { return _absEnergy; }
 
-/**
- * @brief get energy convergence strategy
- *
- * @return ConvStrategy
- */
-ConvStrategy Convergence::getEnConvStrategy() const
-{
-    return _energyConvStrategy;
-}
+    /**
+     * @brief get absolute maximum force
+     *
+     * @return double
+     */
+    double Convergence::getAbsMaxForce() const { return _absMaxForce; }
 
-/**
- * @brief get if energy convergence is enabled
- *
- * @return double
- */
-bool Convergence::isEnergyConvEnabled() const { return _enableEnergyConv; }
+    /**
+     * @brief get absolute RMS force
+     *
+     * @return double
+     */
+    double Convergence::getAbsRMSForce() const { return _absRMSForce; }
 
-/**
- * @brief get if maximum force convergence is enabled
- *
- * @return double
- */
-bool Convergence::isMaxForceConvEnabled() const { return _enableMaxForceConv; }
+    /**
+     * @brief get energy convergence strategy
+     *
+     * @return ConvStrategy
+     */
+    ConvStrategy Convergence::getEnConvStrategy() const
+    {
+        return _energyConvStrategy;
+    }
 
-/**
- * @brief get if RMS force convergence is enabled
- *
- * @return double
- */
-bool Convergence::isRMSForceConvEnabled() const { return _enableRMSForceConv; }
+    /**
+     * @brief get if energy convergence is enabled
+     *
+     * @return double
+     */
+    bool Convergence::isEnergyConvEnabled() const { return _enableEnergyConv; }
 
-/**
- * @brief get if relative energy convergence is achieved
- *
- * @return true
- * @return false
- */
-bool Convergence::isRelEnergyConv() const { return _isRelEnergyConv; }
+    /**
+     * @brief get if maximum force convergence is enabled
+     *
+     * @return double
+     */
+    bool Convergence::isMaxForceConvEnabled() const
+    {
+        return _enableMaxForceConv;
+    }
 
-/**
- * @brief get if absolute energy convergence is achieved
- *
- * @return true
- * @return false
- */
-bool Convergence::isAbsEnergyConv() const { return _isAbsEnergyConv; }
+    /**
+     * @brief get if RMS force convergence is enabled
+     *
+     * @return double
+     */
+    bool Convergence::isRMSForceConvEnabled() const
+    {
+        return _enableRMSForceConv;
+    }
 
-/**
- * @brief get if absolute maximum force convergence is achieved
- *
- * @return true
- * @return false
- */
-bool Convergence::isAbsMaxForceConv() const { return _isAbsMaxForceConv; }
+    /**
+     * @brief get if relative energy convergence is achieved
+     *
+     * @return true
+     * @return false
+     */
+    bool Convergence::isRelEnergyConv() const { return _isRelEnergyConv; }
 
-/**
- * @brief get if absolute RMS force convergence is achieved
- *
- * @return true
- * @return false
- */
-bool Convergence::isAbsRMSForceConv() const { return _isAbsRMSForceConv; }
+    /**
+     * @brief get if absolute energy convergence is achieved
+     *
+     * @return true
+     * @return false
+     */
+    bool Convergence::isAbsEnergyConv() const { return _isAbsEnergyConv; }
 
-/**
- * @brief get the relative energy convergence threshold
- *
- * @return double
- */
-double Convergence::getRelEnergyConvThreshold() const
-{
-    return _relEnergyConvThreshold;
-}
+    /**
+     * @brief get if absolute maximum force convergence is achieved
+     *
+     * @return true
+     * @return false
+     */
+    bool Convergence::isAbsMaxForceConv() const { return _isAbsMaxForceConv; }
 
-/**
- * @brief get the absolute energy convergence threshold
- *
- * @return double
- */
-double Convergence::getAbsEnergyConvThreshold() const
-{
-    return _absEnergyConvThreshold;
-}
+    /**
+     * @brief get if absolute RMS force convergence is achieved
+     *
+     * @return true
+     * @return false
+     */
+    bool Convergence::isAbsRMSForceConv() const { return _isAbsRMSForceConv; }
 
-/**
- * @brief get the absolute maximum force convergence threshold
- *
- * @return double
- */
-double Convergence::getAbsMaxForceConvThreshold() const
-{
-    return _absMaxForceConvThreshold;
-}
+    /**
+     * @brief get the relative energy convergence threshold
+     *
+     * @return double
+     */
+    double Convergence::getRelEnergyConvThreshold() const
+    {
+        return _relEnergyConvThreshold;
+    }
 
-/**
- * @brief get the absolute RMS force convergence threshold
- *
- * @return double
- */
-double Convergence::getAbsRMSForceConvThreshold() const
-{
-    return _absRMSForceConvThreshold;
-}
+    /**
+     * @brief get the absolute energy convergence threshold
+     *
+     * @return double
+     */
+    double Convergence::getAbsEnergyConvThreshold() const
+    {
+        return _absEnergyConvThreshold;
+    }
+
+    /**
+     * @brief get the absolute maximum force convergence threshold
+     *
+     * @return double
+     */
+    double Convergence::getAbsMaxForceConvThreshold() const
+    {
+        return _absMaxForceConvThreshold;
+    }
+
+    /**
+     * @brief get the absolute RMS force convergence threshold
+     *
+     * @return double
+     */
+    double Convergence::getAbsRMSForceConvThreshold() const
+    {
+        return _absRMSForceConvThreshold;
+    }
+
+}   // namespace opt
