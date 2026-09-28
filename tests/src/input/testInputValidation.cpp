@@ -106,20 +106,20 @@ class TestInputValidation : public ::testing::Test
             std::make_unique<input::InputFileReader>("input.in", *_engine);
     }
 
-    void setKeyword(const std::string &keyword)
+    void _setKeyword(const std::string &keyword)
     {
         _reader->setKeywordCount(keyword, 1);
     }
 
-    void configureMDJob(const settings::JobType jobType)
+    void _configureMDJob(const settings::JobType jobType)
     {
         settings::Settings::setJobtype(jobType);
         settings::TimingsSettings::setNumberOfSteps(100);
-        setKeyword("nstep");
-        setKeyword("timestep");
+        _setKeyword("nstep");
+        _setKeyword("timestep");
         if (jobType == settings::JobType::QM_MD ||
             jobType == settings::JobType::RING_POLYMER_QM_MD)
-            setKeyword("qm_prog");
+            _setKeyword("qm_prog");
     }
 
     void TearDown() override { settings::Settings::deactivateCellList(); }
@@ -131,7 +131,7 @@ class TestInputValidation : public ::testing::Test
 TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 {
     settings::Settings::setJobtype(settings::JobType::MM_MD);
-    setKeyword("timestep");
+    _setKeyword("timestep");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -173,7 +173,7 @@ TEST_F(TestInputValidation, hessianWithoutOptimizationNeedsNoTimings)
 TEST_F(TestInputValidation, requiresTimeStepForMD)
 {
     settings::Settings::setJobtype(settings::JobType::MM_MD);
-    setKeyword("nstep");
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -196,10 +196,10 @@ TEST_F(TestInputValidation, requiresPressureForManostat)
 
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ManostatSettings::setTauManostat(0.0001);
-    setKeyword("pressure");
+    _setKeyword("pressure");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -211,8 +211,8 @@ TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 TEST_F(TestInputValidation, requiresQMProgramForQMJob)
 {
     settings::Settings::setJobtype(settings::JobType::QM_MD);
-    setKeyword("nstep");
-    setKeyword("timestep");
+    _setKeyword("nstep");
+    _setKeyword("timestep");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -239,8 +239,8 @@ TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::BERENDSEN
     );
-    setKeyword("temp");
-    setKeyword("end_temp");
+    _setKeyword("temp");
+    _setKeyword("end_temp");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -252,12 +252,12 @@ TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
 
 TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::BERENDSEN
     );
     settings::ThermostatSettings::setEndTemperature(300.0);
-    setKeyword("end_temp");
+    _setKeyword("end_temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
     EXPECT_DOUBLE_EQ(settings::ThermostatSettings::getTargetTemperature(), 0.0);
@@ -269,7 +269,7 @@ TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
 
 TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::SimulationBoxSettings::setInitializeVelocities(
         settings::InitVelocities::FORCE
     );
@@ -283,13 +283,13 @@ TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
 
 TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::VELOCITY_RESCALING
     );
     settings::ThermostatSettings::setTargetTemperature(300.0);
     settings::ThermostatSettings::setRelaxationTime(0.0001);
-    setKeyword("temp");
+    _setKeyword("temp");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -300,7 +300,7 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
 
 TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::LANGEVIN
     );
@@ -308,7 +308,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
     settings::ThermostatSettings::setFriction(
         std::numeric_limits<double>::max()
     );
-    setKeyword("temp");
+    _setKeyword("temp");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -320,7 +320,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 
 TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::LANGEVIN
     );
@@ -328,8 +328,8 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
     settings::ThermostatSettings::setStartTemperature(
         std::numeric_limits<double>::max()
     );
-    setKeyword("temp");
-    setKeyword("start_temp");
+    _setKeyword("temp");
+    _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -341,7 +341,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 
 TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::Settings::activateCellList();
     settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
 
@@ -354,7 +354,7 @@ TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 
 TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
     settings::Settings::activateCellList();
 
@@ -371,7 +371,7 @@ TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
         settings::ThermostatType::NOSE_HOOVER
     );
     settings::ThermostatSettings::setTargetTemperature(0.0);
-    setKeyword("temp");
+    _setKeyword("temp");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -386,20 +386,20 @@ TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
         settings::ThermostatType::BERENDSEN
     );
     settings::ThermostatSettings::setTargetTemperature(0.0);
-    setKeyword("temp");
+    _setKeyword("temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
 
 TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::BERENDSEN
     );
     settings::ThermostatSettings::setTemperatureRampSteps(200);
-    setKeyword("temp");
-    setKeyword("start_temp");
+    _setKeyword("temp");
+    _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -411,14 +411,14 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 
 TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::BERENDSEN
     );
     settings::ThermostatSettings::setTemperatureRampSteps(2);
     settings::ThermostatSettings::setTemperatureRampFrequency(4);
-    setKeyword("temp");
-    setKeyword("start_temp");
+    _setKeyword("temp");
+    _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -430,20 +430,20 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
 
 TEST_F(TestInputValidation, acceptsDefaultTemperatureRampLength)
 {
-    configureMDJob(settings::JobType::MM_MD);
+    _configureMDJob(settings::JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::BERENDSEN
     );
     settings::ThermostatSettings::setTemperatureRampFrequency(100);
-    setKeyword("temp");
-    setKeyword("start_temp");
+    _setKeyword("temp");
+    _setKeyword("start_temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
 
 TEST_F(TestInputValidation, requiresReplicaCountForRingPolymer)
 {
-    configureMDJob(settings::JobType::RING_POLYMER_QM_MD);
+    _configureMDJob(settings::JobType::RING_POLYMER_QM_MD);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -454,15 +454,15 @@ TEST_F(TestInputValidation, requiresReplicaCountForRingPolymer)
 
 TEST_F(TestInputValidation, acceptsReplicaCountForRingPolymer)
 {
-    configureMDJob(settings::JobType::RING_POLYMER_QM_MD);
-    setKeyword("rpmd_n_replica");
+    _configureMDJob(settings::JobType::RING_POLYMER_QM_MD);
+    _setKeyword("rpmd_n_replica");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
 
 TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
     settings::QMSettings::setSlakosType(settings::SlakosType::NONE);
 
@@ -475,7 +475,7 @@ TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
 
 TEST_F(TestInputValidation, requiresPathForCustomSlaterKosterParameters)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
     settings::QMSettings::setSlakosType(settings::SlakosType::CUSTOM);
 
@@ -488,13 +488,13 @@ TEST_F(TestInputValidation, requiresPathForCustomSlaterKosterParameters)
 
 TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
     settings::QMSettings::setSlakosType(settings::SlakosType::CUSTOM);
     settings::QMSettings::setUseThirdOrderDftb(false);
-    setKeyword("slakos_path");
-    setKeyword("third_order");
-    setKeyword("hubbard_derivs");
+    _setKeyword("slakos_path");
+    _setKeyword("third_order");
+    _setKeyword("hubbard_derivs");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -506,13 +506,13 @@ TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
 
 TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
     settings::QMSettings::setSlakosType(settings::SlakosType::CUSTOM);
     settings::QMSettings::setUseThirdOrderDftb(true);
-    setKeyword("slakos_path");
-    setKeyword("third_order");
-    setKeyword("hubbard_derivs");
+    _setKeyword("slakos_path");
+    _setKeyword("third_order");
+    _setKeyword("hubbard_derivs");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
@@ -520,12 +520,12 @@ TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
 #ifdef WITH_ASE
 TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
     settings::QMSettings::setSlakosType(settings::SlakosType::THREEOB);
     settings::QMSettings::setUseThirdOrderDftb(false);
-    setKeyword("third_order");
-    setKeyword("hubbard_derivs");
+    _setKeyword("third_order");
+    _setKeyword("hubbard_derivs");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -537,11 +537,11 @@ TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
 
 TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
     settings::QMSettings::setSlakosType(settings::SlakosType::THREEOB);
     settings::QMSettings::setUseThirdOrderDftb(false);
-    setKeyword("hubbard_derivs");
+    _setKeyword("hubbard_derivs");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
@@ -549,7 +549,7 @@ TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
 
 TEST_F(TestInputValidation, requiresFennolModelPath)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::FENNOL);
 
     ASSERT_THROW_MSG(
@@ -562,16 +562,16 @@ TEST_F(TestInputValidation, requiresFennolModelPath)
 
 TEST_F(TestInputValidation, acceptsFennolModelPath)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::FENNOL);
-    setKeyword("fennol_model_path");
+    _setKeyword("fennol_model_path");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
 
 TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
     settings::QMSettings::setMaceModelType(settings::MaceModelType::MACE_OFF);
     settings::QMSettings::setMaceModel(settings::MaceModel::MEDIUMOMAT0);
@@ -586,7 +586,7 @@ TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
 
 TEST_F(TestInputValidation, acceptsStandardMaceModelForNonMpType)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
     settings::QMSettings::setMaceModelType(settings::MaceModelType::MACE_OFF);
     settings::QMSettings::setMaceModel(settings::MaceModel::SMALL);
@@ -596,7 +596,7 @@ TEST_F(TestInputValidation, acceptsStandardMaceModelForNonMpType)
 
 TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
     settings::QMSettings::setMaceModel(settings::MaceModel::CUSTOM);
 
@@ -610,10 +610,10 @@ TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
 
 TEST_F(TestInputValidation, rejectsPathForBundledMaceModel)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
     settings::QMSettings::setMaceModel(settings::MaceModel::MEDIUMOMAT0);
-    setKeyword("mace_model_path");
+    _setKeyword("mace_model_path");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -625,16 +625,16 @@ TEST_F(TestInputValidation, rejectsPathForBundledMaceModel)
 
 TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
 {
-    configureMDJob(settings::JobType::QM_MD);
+    _configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
     settings::QMSettings::setMaceModel(settings::MaceModel::CUSTOM);
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::BERENDSEN
     );
-    setKeyword("mace_model_path");
-    setKeyword("pressure");
-    setKeyword("temp");
+    _setKeyword("mace_model_path");
+    _setKeyword("pressure");
+    _setKeyword("temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
@@ -646,7 +646,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::CONSTANT_DECAY
     );
-    setKeyword("nstep");
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -663,7 +663,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::EXPONENTIAL_DECAY
     );
-    setKeyword("nstep");
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -680,7 +680,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::CONSTANT
     );
-    setKeyword("nstep");
+    _setKeyword("nstep");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
@@ -692,7 +692,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::LINESEARCH_WOLFE
     );
-    setKeyword("nstep");
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -706,7 +706,7 @@ TEST_F(TestInputValidation, rejectsMissingLearningRateStrategy)
     settings::Settings::setJobtype(settings::JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(LearningRate::NONE);
-    setKeyword("nstep");
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -725,7 +725,7 @@ TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
     );
     settings::OptimizerSettings::setMinLearningRate(0.5);
     settings::OptimizerSettings::setMaxLearningRate(0.5);
-    setKeyword("nstep");
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),

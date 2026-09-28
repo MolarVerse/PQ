@@ -3,4 +3,5 @@
 - disallow `throw(...)` -- instead use `throw ...`
 - disallow the use of `EXPECT_THROW` and `ASSERT_THROW` -- they should always be used via their alternatives `EXPECT_THROW_MSG` and `ASSERT_THROW_MSG`
 - disallow private members to NOT start with a leading underscore
+- disallow private member functions to NOT start with a leading underscore
 - remove `cell.hpp` 50x transitive includes by removing `molsys::CellList` public include in `engine.hpp`

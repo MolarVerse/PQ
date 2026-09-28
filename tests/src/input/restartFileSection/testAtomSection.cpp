@@ -232,7 +232,7 @@ TEST_F(TestAtomSection, testProcessAtomLine)
         line[i]           = std::to_string(iValue + (iValue / 10.0));
     }
 
-    processAtomLine(line, _engine->getSimulationBox(), molecule);
+    _processAtomLine(line, _engine->getSimulationBox(), molecule);
 
     ASSERT_THAT(
         molecule.getAtomPosition(AtomIndex{0}),
@@ -260,7 +260,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
         line[i]           = std::to_string(iValue + (iValue / 10.0));
     }
 
-    processQMAtomLine(line, _engine->getSimulationBox());
+    _processQMAtomLine(line, _engine->getSimulationBox());
 
     settings::Settings::setJobtype(settings::JobType::QM_MD);
     auto atoms      = _engine->getSimulationBox().getQMAtoms();

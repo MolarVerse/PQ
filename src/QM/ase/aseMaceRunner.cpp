@@ -61,7 +61,7 @@ namespace QM
             calculatorArgs["default_dtype"] = fpType.c_str();
             calculatorArgs["device"]        = pybind11::str("cuda");
 
-            setAseCalculator(
+            _setAseCalculator(
                 calculators.attr(modelType.c_str())(**calculatorArgs)
             );
         }

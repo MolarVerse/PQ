@@ -314,7 +314,7 @@ namespace QM
         }
     }
 
-    std::string ExternalQMRunner::resolveScriptPath(
+    std::string ExternalQMRunner::_resolveScriptPath(
         const std::string_view script
     ) const
     {
@@ -327,7 +327,7 @@ namespace QM
         return _scriptPath + std::string(script);
     }
 
-    void ExternalQMRunner::executeCommand(
+    void ExternalQMRunner::_executeCommand(
         const std::string_view command,
         const std::string_view program
     ) const

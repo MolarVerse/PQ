@@ -45,8 +45,8 @@ namespace molsys
         linalg::tensor3D _boxMatrix{0.0};
         linalg::tensor3D _transformationMatrix{0.0};
 
-        void calculateBoxMatrix();
-        void calculateTransformationMatrix();
+        void _calculateBoxMatrix();
+        void _calculateTransformationMatrix();
 
        public:
         [[nodiscard]] double calculateVolume() override;

@@ -51,7 +51,7 @@ namespace QM
             calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
             calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
             calculatorArgs["kpts"] = pybind11::make_tuple(1, 1, 1);
-            setAseCalculator(calculator.attr("Dftb")(**calculatorArgs));
+            _setAseCalculator(calculator.attr("Dftb")(**calculatorArgs));
         }
         catch (const pybind11::error_already_set &)
         {

@@ -57,11 +57,10 @@ namespace QM
         constexpr static auto *_singularity = SINGULARITY_;
         constexpr static auto *_staticBuild = STATIC_BUILD_;
 
-        [[nodiscard]] std::string resolveScriptPath(
-            std::string_view script
-        ) const;
+        [[nodiscard]]
+        std::string _resolveScriptPath(std::string_view script) const;
 
-        virtual void executeCommand(
+        virtual void _executeCommand(
             std::string_view command,
             std::string_view program
         ) const;

@@ -102,7 +102,7 @@ namespace timings
      * @brief starts a new timer
      *
      */
-    void Timer::startTimingsSection(std::string_view name)
+    void Timer::_startTimingsSection(std::string_view name)
     {
         const auto index = findTimingsSectionIndex(name);
 
@@ -135,7 +135,7 @@ namespace timings
      * @brief stops a timer
      *
      */
-    void Timer::stopTimingsSection(std::string_view name)
+    void Timer::_stopTimingsSection(std::string_view name)
     {
         const auto index = findTimingsSectionIndex(name);
 

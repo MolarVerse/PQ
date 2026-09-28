@@ -40,26 +40,28 @@ class TestNonCoulombPotentialFF : public ::testing::Test
 
     [[nodiscard]]
     linalg::Matrix<
-        std::shared_ptr<pot::NonCoulombPair>> getNonCoulombPairsMatrix() const
+        std::shared_ptr<pot::NonCoulombPair>> _getNonCoulombPairsMatrix() const
     {
-        return getNonCoulombPairsMatrix(*_nonCoulombPotential);
+        return _getNonCoulombPairsMatrix(*_nonCoulombPotential);
     }
 
-    [[nodiscard]] static linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>> getNonCoulombPairsMatrix(
-        const pot::ForceFieldNonCoulomb &potential
-    )
+    [[nodiscard]]
+    static linalg::
+        Matrix<std::shared_ptr<pot::NonCoulombPair>> _getNonCoulombPairsMatrix(
+            const pot::ForceFieldNonCoulomb &potential
+        )
     {
         return potential._nonCoulPairsMatPtr->matrix;
     }
 
-    void setNonCoulombPairsMatrix(
+    void _setNonCoulombPairsMatrix(
         const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>> &matrix
     )
     {
-        setNonCoulombPairsMatrix(*_nonCoulombPotential, matrix);
+        _setNonCoulombPairsMatrix(*_nonCoulombPotential, matrix);
     }
 
-    static void setNonCoulombPairsMatrix(
+    static void _setNonCoulombPairsMatrix(
         pot::ForceFieldNonCoulomb                                  &potential,
         const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>> &matrix
     )
@@ -67,16 +69,16 @@ class TestNonCoulombPotentialFF : public ::testing::Test
         potential._nonCoulPairsMatPtr->matrix = matrix;
     }
 
-    void setNonCoulombPairsMatrix(
+    void _setNonCoulombPairsMatrix(
         size_t                       row,
         size_t                       col,
         const pot::LennardJonesPair &pair
     )
     {
-        setNonCoulombPairsMatrix(*_nonCoulombPotential, row, col, pair);
+        _setNonCoulombPairsMatrix(*_nonCoulombPotential, row, col, pair);
     }
 
-    static void setNonCoulombPairsMatrix(
+    static void _setNonCoulombPairsMatrix(
         pot::ForceFieldNonCoulomb   &potential,
         const size_t                 row,
         const size_t                 col,

@@ -283,12 +283,12 @@ namespace engine
 
     void HessianEngine::run()
     {
-        auto evaluator = setupEvaluator();
+        auto evaluator = _setupEvaluator();
 
         if (settings::HessianSettings::optimizeBeforeHessian())
         {
-            setupOptimization(evaluator);
-            runOptimization();
+            _setupOptimization(evaluator);
+            _runOptimization();
         }
 
         auto builder = setupHessianBuilder();
@@ -312,7 +312,7 @@ namespace engine
 
     void HessianEngine::writeOutput() {}
 
-    std::shared_ptr<opt::Evaluator> HessianEngine::setupEvaluator()
+    std::shared_ptr<opt::Evaluator> HessianEngine::_setupEvaluator()
     {
         std::shared_ptr<opt::Evaluator> evaluator;
 
@@ -336,13 +336,13 @@ namespace engine
         return evaluator;
     }
 
-    void HessianEngine::setupOptimization(
+    void HessianEngine::_setupOptimization(
         const std::shared_ptr<opt::Evaluator> &evaluator
     )
     {
         _evaluator            = evaluator;
         _learningRateStrategy = setupLearningRateStrategy();
-        _optimizer            = setupEmptyOptimizer();
+        _optimizer            = _setupEmptyOptimizer();
 
         setupConvergence(_optimizer);
         setupMinMaxLearningRate(_learningRateStrategy);
@@ -350,10 +350,10 @@ namespace engine
         _learningRateStrategy->setEvaluator(evaluator);
         _learningRateStrategy->setOptimizer(_optimizer);
 
-        writeOptimizationSetupInfo();
+        _writeOptimizationSetupInfo();
     }
 
-    void HessianEngine::runOptimization()
+    void HessianEngine::_runOptimization()
     {
         _converged  = false;
         _optStopped = false;
@@ -363,7 +363,7 @@ namespace engine
 
         _nSteps = _optimizer->getNEpochs();
 
-        writeOptimizationOutput();
+        _writeOptimizationOutput();
 
         progressbar bar(static_cast<int>(_nSteps), true, std::cout);
 
@@ -371,12 +371,12 @@ namespace engine
         {
             bar.update();
 
-            takeOptimizationStep();
+            _takeOptimizationStep();
 
             if (_converged || _optStopped)
                 break;
 
-            writeOptimizationOutput();
+            _writeOptimizationOutput();
             deleteTmpFiles();
         }
 
@@ -416,7 +416,7 @@ namespace engine
         out::StdoutOutput::writeInfo(msg);
     }
 
-    void HessianEngine::takeOptimizationStep()
+    void HessianEngine::_takeOptimizationStep()
     {
         _optimizer->update(_learningRateStrategy->getLearningRate(), _step);
 
@@ -457,7 +457,7 @@ namespace engine
         ++_step;
     }
 
-    void HessianEngine::writeOptimizationOutput()
+    void HessianEngine::_writeOptimizationOutput()
     {
         const auto outputFreq =
             settings::OutputFileSettings::getOutputFrequency();
@@ -494,7 +494,7 @@ namespace engine
         _physicalData->reset();
     }
 
-    std::shared_ptr<opt::Optimizer> HessianEngine::setupEmptyOptimizer()
+    std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()
     {
         const auto nEpochs = settings::TimingsSettings::getNumberOfSteps();
         const auto optimizerType = settings::OptimizerSettings::getOptimizer();
@@ -538,7 +538,7 @@ namespace engine
         return optimizer;
     }
 
-    void HessianEngine::writeOptimizationSetupInfo()
+    void HessianEngine::_writeOptimizationSetupInfo()
     {
         _engineOutput.getLogOutput().writeSetupInfo(
             std::format(

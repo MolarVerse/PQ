@@ -25,6 +25,7 @@ ast_check_enabled_ids = [
     "noThrowParen",
     "macroReplacement",
     "memberLeadingUnderscore",
+    "memberFunctionLeadingUnderscore",
 ]
 
 # Per-check configuration — one sub-table per check id.

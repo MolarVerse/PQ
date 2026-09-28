@@ -57,7 +57,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
         "input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"topology_file", "=", "data/topologyReader/topology.top"};
     parseFunc(lineElements, 0);
@@ -93,7 +93,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
         "input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {
         "parameter_file",
@@ -130,7 +130,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
         "0 in input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {
         "intra-nonBonded_file",
@@ -163,7 +163,7 @@ TEST_F(TestInputFileReader, testStartFileName)
         "input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"start_file", "=", "data/atomSection/testProcess.rst"};
     parseFunc(lineElements, 0);
@@ -197,7 +197,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
         "input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {
         "moldescriptorFile_name",
@@ -249,7 +249,7 @@ TEST_F(TestInputFileReader, guffDatFilename)
         "input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"guffdat_file", "=", "data/guffDatReader/guff.dat"};
     parseFunc(lineElements, 0);
@@ -281,7 +281,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
         "at line 0 in input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {
         "rpmd_start_file",
@@ -314,7 +314,7 @@ TEST_F(TestInputFileReader, testMShakeFileName)
         "input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
     parseFunc(lineElements, 0);
@@ -347,7 +347,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
         "input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"dftb_file", "=", "data/dftbReader/dftb_in.template"};
     parseFunc(lineElements, 0);
@@ -380,7 +380,7 @@ TEST_F(TestInputFileReader, testTMFileName)
         "line 0 in input file. Value must be an existing file path."
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {
         "turbomole_file",

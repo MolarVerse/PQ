@@ -55,7 +55,7 @@ namespace out
                 "File already exists - filename = " + std::string(_fileName)
             );
 
-        openFile();
+        _openFile();
     }
 
     /**
@@ -64,7 +64,7 @@ namespace out
      * @throw InputFileException if file cannot be opened
      *
      */
-    void Output::openFile()
+    void Output::_openFile()
     {
         _fp.open(_fileName);
 
@@ -79,7 +79,7 @@ namespace out
      *
      * @param step simulation step
      */
-    void Output::writeComment(size_t step)
+    void Output::_writeComment(size_t step)
     {
         if (settings::OutputFileSettings::getIncludeOutputMetadata())
             _fp << std::format("# step = {}\n", step);
@@ -93,9 +93,9 @@ namespace out
      * @param step simulation step
      * @param totalForce total force acting on the system
      */
-    void Output::writeForceComment(size_t step, double totalForce)
+    void Output::_writeForceComment(size_t step, double totalForce)
     {
-        _fp << formatForceComment(step, totalForce);
+        _fp << _formatForceComment(step, totalForce);
     }
 
     /**
@@ -105,7 +105,7 @@ namespace out
      * @param totalForce total force acting on the system
      * @return formatted force comment
      */
-    std::string Output::formatForceComment(
+    std::string Output::_formatForceComment(
         const size_t step,
         const double totalForce
     )

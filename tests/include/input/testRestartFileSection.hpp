@@ -116,7 +116,7 @@ class TestStepCountSection : public ::testing::Test
 class TestAtomSection : public ::testing::Test
 {
    protected:
-    static void processAtomLine(
+    static void _processAtomLine(
         std::vector<std::string> &line,
         molsys::SimulationBox    &simulationBox,
         molsys::Molecule         &molecule
@@ -129,7 +129,7 @@ class TestAtomSection : public ::testing::Test
         );
     }
 
-    static void processQMAtomLine(
+    static void _processQMAtomLine(
         std::vector<std::string> &line,
         molsys::SimulationBox    &simulationBox
     )

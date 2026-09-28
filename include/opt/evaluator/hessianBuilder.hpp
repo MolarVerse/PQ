@@ -59,7 +59,7 @@ namespace opt
        protected:
         double _displacement;
 
-        static void restorePositions(
+        static void _restorePositions(
             molsys::SimulationBox            &simulationBox,
             const std::vector<linalg::Vec3D> &positions
         );
