@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
 
-#include <stdexcept>
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
@@ -39,16 +38,22 @@
 TEST_F(TestInputFileReader, ParsePressure)
 {
     input::ManostatInputParser parser;
-    std::vector<std::string>   lineElements = {"pressure", "=", "300.0"};
-    input::ManostatInputParser::parsePressure(lineElements, 0);
+    const auto                 funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("pressure"));
+    const auto& parseFunc = funcMap.at("pressure");
 
+    std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
+
+    clearParser(parser);
 
     lineElements = {"pressure", "=", "nan"};
     EXPECT_THROW_MSG(
-        parser.parsePressure(lineElements, 0),
-        std::invalid_argument,
-        "Invalid floating-point value 'nan' encountered"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"nan\" for key \"pressure\" at line 0 in input file: "
+        "failed validation with message Value must not be NaN"
     );
 }
 
@@ -62,29 +67,43 @@ TEST_F(TestInputFileReader, ParsePressure)
 TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 {
     input::ManostatInputParser parser;
-    std::vector<std::string>   lineElements = {"p_relaxation", "=", "0.1"};
-    input::ManostatInputParser::parseManostatRelaxationTime(lineElements, 0);
+    const auto                 funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("p_relaxation"));
+    const auto& parseFunc = funcMap.at("p_relaxation");
+
+    std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
+
+    clearParser(parser);
 
     lineElements = {"p_relaxation", "=", "-100.0"};
     EXPECT_THROW_MSG(
-        parser.parseManostatRelaxationTime(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Relaxation time of manostat must be finite and greater than zero"
+        "Invalid value \"-100.0\" for key \"p_relaxation\" at line 0 in input "
+        "file: failed validation with message Value must be greater than 0"
     );
+
+    clearParser(parser);
 
     lineElements = {"p_relaxation", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseManostatRelaxationTime(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Relaxation time of manostat must be finite and greater than zero"
+        "Invalid value \"0\" for key \"p_relaxation\" at line 0 in input file: "
+        "failed validation with message Value must be greater than 0"
     );
+
+    clearParser(parser);
 
     lineElements = {"p_relaxation", "=", "1e308"};
     EXPECT_THROW_MSG(
-        parser.parseManostatRelaxationTime(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Relaxation time of manostat is too large to represent in femtoseconds"
+        "Invalid value \"1e308\" for key \"p_relaxation\" at line 0 in input "
+        "file: failed validation with message Relaxation time of manostat is "
+        "too large to represent in femtoseconds"
     );
 }
 
@@ -98,33 +117,43 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 TEST_F(TestInputFileReader, ParseManostat)
 {
     input::ManostatInputParser parser;
-    std::vector<std::string>   lineElements = {"manostat", "=", "none"};
-    input::ManostatInputParser::parseManostat(lineElements, 0);
+    const auto                 funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("manostat"));
+    const auto& parseFunc = funcMap.at("manostat");
+
+    std::vector<std::string> lineElements = {"manostat", "=", "none"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
         ManostatType::NONE
     );
 
+    clearParser(parser);
+
     lineElements = {"manostat", "=", "berendsen"};
-    input::ManostatInputParser::parseManostat(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
         ManostatType::BERENDSEN
     );
 
+    clearParser(parser);
+
     lineElements = {"manostat", "=", "stochastic_rescaling"};
-    input::ManostatInputParser::parseManostat(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
         ManostatType::STOCHASTIC_RESCALING
     );
 
+    clearParser(parser);
+
     lineElements = {"manostat", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseManostat(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid manostat \"notValid\" at line 0 in input file.\n"
-        "Possible options are: berendsen, stochastic_rescaling and none"
+        "Invalid value \"notValid\" for key \"manostat\" at line 0 in input "
+        "file. Allowed values: none, berendsen, stochastic_rescaling"
     );
 }
 
@@ -137,22 +166,32 @@ TEST_F(TestInputFileReader, ParseManostat)
 TEST_F(TestInputFileReader, ParseCompressibility)
 {
     input::ManostatInputParser parser;
-    std::vector<std::string>   lineElements = {"compressibility", "=", "0.1"};
-    input::ManostatInputParser::parseCompressibility(lineElements, 0);
+    const auto                 funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("compressibility"));
+    const auto& parseFunc = funcMap.at("compressibility");
+
+    std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);
+
+    clearParser(parser);
 
     lineElements = {"compressibility", "=", "-0.1"};
     EXPECT_THROW_MSG(
-        parser.parseCompressibility(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Compressibility must be finite and non-negative"
+        "Invalid value \"-0.1\" for key \"compressibility\" at line 0 in input "
+        "file: failed validation with message Value must be greater than 0"
     );
+
+    clearParser(parser);
 
     lineElements = {"compressibility", "=", "inf"};
     EXPECT_THROW_MSG(
-        parser.parseCompressibility(lineElements, 0),
-        std::invalid_argument,
-        "Invalid floating-point value 'inf' encountered"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"inf\" for key \"compressibility\" at line 0 in input "
+        "file: failed validation with message Value must not be infinite"
     );
 }
 
@@ -163,88 +202,93 @@ TEST_F(TestInputFileReader, ParseCompressibility)
 TEST_F(TestInputFileReader, ParseIsotropy)
 {
     input::ManostatInputParser parser;
-    std::vector<std::string>   lineElements = {"isotropy", "=", "isotropic"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    const auto                 funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("isotropy"));
+    const auto& parseFunc = funcMap.at("isotropy");
+
+    std::vector<std::string> lineElements = {"isotropy", "=", "isotropic"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ISOTROPIC);
 
+    clearParser(parser);
+
     lineElements = {"isotropy", "=", "anisotropic"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ANISOTROPIC);
 
+    clearParser(parser);
+
     lineElements = {"isotropy", "=", "full_anisotropic"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
         Isotropy::FULL_ANISOTROPIC
     );
 
+    clearParser(parser);
+
     lineElements = {"isotropy", "=", "xz"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC_XZ
     );
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
-    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 1);
+
+    clearParser(parser);
 
     lineElements = {"isotropy", "=", "zx"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC_XZ
     );
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
-    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 1);
+
+    clearParser(parser);
 
     lineElements = {"isotropy", "=", "yz"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC_YZ
     );
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 1);
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
-    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 0);
+
+    clearParser(parser);
 
     lineElements = {"isotropy", "=", "zy"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC_YZ
     );
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 1);
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
-    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 0);
+
+    clearParser(parser);
 
     lineElements = {"isotropy", "=", "xy"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC_XY
     );
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 1);
-    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2);
+
+    clearParser(parser);
 
     lineElements = {"isotropy", "=", "yx"};
-    input::ManostatInputParser::parseIsotropy(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC_XY
     );
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
-    EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 1);
-    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2);
+
+    clearParser(parser);
 
     lineElements = {"isotropy", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseIsotropy(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid isotropy \"notValid\" at line 0 in input file.\n"
-        "Possible options are: isotropic, xy, xz, yz, anisotropic and "
-        "full_anisotropic"
+        "Invalid value \"notValid\" for key \"isotropy\" at line 0 in input "
+        "file. Allowed values: isotropic, semi_isotropic_xy, "
+        "semi_isotropic_xz, semi_isotropic_yz, anisotropic, full_anisotropic, "
+        "xy, yx, xz, zx, yz, zy"
     );
 }
 
@@ -255,59 +299,88 @@ TEST_F(TestInputFileReader, ParseIsotropy)
 TEST_F(TestInputFileReader, ParseFixedAxis)
 {
     input::ManostatInputParser parser;
-    std::vector<std::string>   lineElements = {"fixed_axis", "=", "none"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    const auto                 funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("fixed_axis"));
+    const auto& parseFunc = funcMap.at("fixed_axis");
+
+    std::vector<std::string> lineElements = {"fixed_axis", "=", "none"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::NONE);
 
+    clearParser(parser);
+
     lineElements = {"fixed_axis", "=", "x"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::X);
 
+    clearParser(parser);
+
     lineElements = {"fixed_axis", "=", "y"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Y);
 
+    clearParser(parser);
+
     lineElements = {"fixed_axis", "=", "z"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Z);
 
+    clearParser(parser);
+
     lineElements = {"fixed_axis", "=", "xy"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
+
+    clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "yx"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
 
+    clearParser(parser);
+
     lineElements = {"fixed_axis", "=", "xz"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XZ);
+
+    clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "zx"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XZ);
 
+    clearParser(parser);
+
     lineElements = {"fixed_axis", "=", "yz"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::YZ);
+
+    clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "zy"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::YZ);
 
+    clearParser(parser);
+
     lineElements = {"fixed_axis", "=", "all"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
 
+    clearParser(parser);
+
     lineElements = {"fixed_axis", "=", "xyz"};
-    input::ManostatInputParser::parseFixedAxis(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
+
+    clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseFixedAxis(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid fixed_axis \"notValid\" at line 0 in input file.\n"
-        "Possible options are: none, x, y, z, xy, xz, yz, all"
+        "Invalid value \"notValid\" for key \"fixed_axis\" at line 0 in input "
+        "file. Allowed values: none, x, y, z, xy, xz, yz, all, yx, zx, zy, xyz"
     );
 }

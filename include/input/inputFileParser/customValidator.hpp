@@ -20,30 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _KEY_REGISTRY_HPP_
-#define _KEY_REGISTRY_HPP_
+#ifndef _CUSTOM_VALIDATOR_HPP_
+#define _CUSTOM_VALIDATOR_HPP_
 
-#include <functional>
-#include <memory>
-#include <vector>
-
-#include "keyMetaData.hpp"
 #include "keyValidatorBase.hpp"
 
 namespace input
 {
+    /**
+     * Custom validator that uses a user-provided validation function.
+     *
+     * @tparam T The type of the value to validate.
+     */
     template <typename T>
-    struct KeyRegistry
+    class CustomValidator : public KeyValidator<T>
     {
-        using CustomParser = std::function<std::optional<T>(std::string_view)>;
+       private:
+        std::function<bool(const T &)> _validationFunction;
+        std::string                    _errorMessage;
 
-        KeyMetadata                    metadata;
-        std::optional<T>               defaultValue              = std::nullopt;
-        std::vector<T>                 notAllowed                = {};
-        CustomParser                   customParser              = nullptr;
-        std::function<void(const T &)> onSet                     = nullptr;
-        std::vector<std::shared_ptr<KeyValidator<T>>> validators = {};
+       public:
+        CustomValidator(
+            std::function<bool(const T &)> validationFunction,
+            std::string                    errorMessage
+        );
+
+        [[nodiscard]]
+        bool validate(const T &value) override;
+
+        [[nodiscard]]
+        std::string errorMessage() override;
     };
 }   // namespace input
 
-#endif   // _KEY_REGISTRY_HPP_
+#ifndef _CUSTOM_VALIDATOR_TPP_
+#include "customValidator.tpp"
+#endif
+
+#endif   // _CUSTOM_VALIDATOR_HPP_

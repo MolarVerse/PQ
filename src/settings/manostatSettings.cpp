@@ -22,78 +22,8 @@
 
 #include "manostatSettings.hpp"
 
-#include <utility>
-
-#include "stringUtilities.hpp"
-
 namespace settings
 {
-
-    /**
-     * @brief return string of manostatType
-     *
-     * @param manostatType
-     */
-    std::string string(const ManostatType &manostatType)
-    {
-        switch (manostatType)
-        {
-            case ManostatType::BERENDSEN: return "berendsen";
-
-            case ManostatType::STOCHASTIC_RESCALING:
-                return "stochastic_rescaling";
-
-            case ManostatType::NONE: return "none";
-        }
-
-        std::unreachable();
-    }
-
-    /**
-     * @brief return string of isotropy
-     *
-     * @param isotropy
-     */
-    std::string string(const Isotropy &isotropy)
-    {
-        switch (isotropy)
-        {
-            using enum Isotropy;
-
-            case ISOTROPIC: return "isotropic";
-            case SEMI_ISOTROPIC: return "semi_isotropic";
-            case ANISOTROPIC: return "anisotropic";
-            case FULL_ANISOTROPIC: return "full_anisotropic";
-
-            case NONE: break;
-        }
-
-        return "isotropic";
-    }
-
-    /**
-     * @brief return string of fixedAxis
-     *
-     * @param fixedAxis
-     */
-    std::string string(const FixedAxis &fixedAxis)
-    {
-        switch (fixedAxis)
-        {
-            using enum FixedAxis;
-
-            case NONE: return "none";
-            case X: return "x";
-            case Y: return "y";
-            case Z: return "z";
-            case XY: return "xy";
-            case XZ: return "xz";
-            case YZ: return "yz";
-            case ALL: return "all";
-        }
-
-        std::unreachable();
-    }
 
     /***************************
      *                         *
@@ -106,28 +36,7 @@ namespace settings
      *
      * @param manostatType
      */
-    void ManostatSettings::setManostatType(const std::string_view &manostatType)
-    {
-        using enum ManostatType;
-        const auto manostatTypeToLower =
-            utilities::toLowerAndReplaceDashesCopy(manostatType);
-
-        if (manostatTypeToLower == "berendsen")
-            setManostatType(BERENDSEN);
-
-        else if (manostatTypeToLower == "stochastic_rescaling")
-            setManostatType(STOCHASTIC_RESCALING);
-
-        else
-            setManostatType(NONE);
-    }
-
-    /**
-     * @brief sets the manostatType to enum in settings
-     *
-     * @param manostatType
-     */
-    void ManostatSettings::setManostatType(const ManostatType &manostatType)
+    void ManostatSettings::setManostatType(ManostatType manostatType)
     {
         _manostatType = manostatType;
         if (!_isFixedAxisSet)
@@ -143,44 +52,18 @@ namespace settings
      *
      * @param isotropy
      */
-    void ManostatSettings::setIsotropy(const std::string_view &isotropy)
-    {
-        using enum Isotropy;
-        const auto isotropyToLower =
-            utilities::toLowerAndReplaceDashesCopy(isotropy);
-
-        _isotropy = ISOTROPIC;
-
-        if (isotropyToLower == "isotropic")
-            _isotropy = ISOTROPIC;
-
-        else if (isotropyToLower == "semi_isotropic")
-            _isotropy = SEMI_ISOTROPIC;
-
-        else if (isotropyToLower == "anisotropic")
-            _isotropy = ANISOTROPIC;
-
-        else if (isotropyToLower == "full_anisotropic")
-            _isotropy = FULL_ANISOTROPIC;
-    }
-
-    /**
-     * @brief sets the isotropy to enum in settings
-     *
-     * @param isotropy
-     */
-    void ManostatSettings::setIsotropy(const Isotropy &isotropy)
+    void ManostatSettings::setIsotropy(Isotropy isotropy)
     {
         _isotropy = isotropy;
     }
 
-    void ManostatSettings::setFixedAxis(const FixedAxis &fixedAxis)
+    void ManostatSettings::setFixedAxis(FixedAxis fixedAxis)
     {
         _fixedAxis      = fixedAxis;
         _isFixedAxisSet = true;
     }
 
-    void ManostatSettings::setIsFixedAxisSet(const bool isSet)
+    void ManostatSettings::setIsFixedAxisSet(bool isSet)
     {
         _isFixedAxisSet = isSet;
     }
@@ -213,28 +96,6 @@ namespace settings
     void ManostatSettings::setCompressibility(double compressibility)
     {
         _compressibility = compressibility;
-    }
-
-    /**
-     * @brief sets the 2D isotropic axes to vector<size_t> in settings
-     *
-     * @param indices
-     */
-    void ManostatSettings::set2DIsotropicAxes(
-        const std::vector<size_t> &indices
-    )
-    {
-        _2DIsotropicAxes = indices;
-    }
-
-    /**
-     * @brief sets the 2D anisotropic axis to size_t in settings
-     *
-     * @param index
-     */
-    void ManostatSettings::set2DAnisotropicAxis(const size_t index)
-    {
-        _2DAnisotropicAxis = index;
     }
 
     /***************************
@@ -304,25 +165,5 @@ namespace settings
      * @return double
      */
     double ManostatSettings::getCompressibility() { return _compressibility; }
-
-    /**
-     * @brief get the 2D isotropic axes
-     *
-     * @return std::vector<size_t>
-     */
-    std::vector<size_t> ManostatSettings::get2DIsotropicAxes()
-    {
-        return _2DIsotropicAxes;
-    }
-
-    /**
-     * @brief get the 2D anisotropic axis
-     *
-     * @return size_t
-     */
-    size_t ManostatSettings::get2DAnisotropicAxis()
-    {
-        return _2DAnisotropicAxis;
-    }
 
 }   // namespace settings

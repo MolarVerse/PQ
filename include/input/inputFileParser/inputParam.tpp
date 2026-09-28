@@ -44,7 +44,7 @@ namespace input
           _notAllowed(registry.notAllowed),
           _customParser(registry.customParser),
           _onSet(registry.onSet),
-          _validator(registry.validator)
+          _validators(registry.validators)
     {
     }
 
@@ -102,18 +102,24 @@ namespace input
             );
         }
 
-        if (_validator && !_validator->validate(*parsed))
+        if (!_validators.empty())
         {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid value \"{}\" for key \"{}\" at line {} in "
-                    "input file: failed validation with message {}",
-                    raw,
-                    _metadata.name,
-                    lineNumber,
-                    _validator->errorMessage()
-                )
-            );
+            for (const auto &validator : _validators)
+            {
+                if (!validator->validate(*parsed))
+                {
+                    throw exc::InputFileException(
+                        std::format(
+                            "Invalid value \"{}\" for key \"{}\" at line {} in "
+                            "input file: failed validation with message {}",
+                            raw,
+                            _metadata.name,
+                            lineNumber,
+                            validator->errorMessage()
+                        )
+                    );
+                }
+            }
         }
 
         if (_value)

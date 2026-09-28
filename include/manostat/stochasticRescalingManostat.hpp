@@ -74,7 +74,6 @@ namespace manostat
         [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
 
         [[nodiscard]] ManostatType getManostatType() const override;
-        [[nodiscard]] Isotropy     getIsotropy() const override;
 
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
@@ -90,23 +89,19 @@ namespace manostat
         : public StochasticRescalingManostat
     {
        private:
-        size_t              _2DAnisotropicAxis;
-        std::vector<size_t> _2DIsotropicAxes;
+        Isotropy _isotropy;
 
        public:
         explicit SemiIsotropicStochasticRescalingManostat(
-            double                     targetPressure,
-            double                     tau,
-            double                     compressibility,
-            size_t                     anisotropicAxis,
-            const std::vector<size_t> &isotropicAxes,
-            FixedAxis                  fixedAxis
+            double    targetPressure,
+            double    tau,
+            double    compressibility,
+            Isotropy  isotropy,
+            FixedAxis fixedAxis
         );
 
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
-
-        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
     /**
@@ -123,8 +118,6 @@ namespace manostat
 
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
-
-        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
     /**
@@ -141,8 +134,6 @@ namespace manostat
 
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
-
-        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat
