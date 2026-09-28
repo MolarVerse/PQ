@@ -22,8 +22,24 @@
 
 #include <gtest/gtest.h>
 
+#ifdef WITH_MPI
+#include "mpi.hpp"   // for MPI
+#endif
+
 int main(int argc, char **argv)
 {
+#ifdef WITH_MPI
+    // code under test may call MPI collectives (e.g. MPI_Bcast), which
+    // require MPI to be initialized (single rank when run via ctest)
+    mpi::MPI::init(&argc, &argv);
+#endif
+
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    const auto result = RUN_ALL_TESTS();
+
+#ifdef WITH_MPI
+    mpi::MPI::finalize();
+#endif
+
+    return result;
 }

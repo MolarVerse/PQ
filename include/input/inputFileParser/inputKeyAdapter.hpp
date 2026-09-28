@@ -24,12 +24,14 @@
 #define _INPUT_KEY_ADAPTER_HPP_
 
 #include "inputFileParser.hpp"
-#include "inputParam.hpp"
 
 namespace input
 {
     [[nodiscard]]
     InputFileParser::ParseFunc adapt(InputKeyBase &key);
+
+    [[nodiscard]]
+    InputFileParser::ParseFunc adapt(const DeprecatedInputKey &deprecatedKey);
 
 }   // namespace input
 

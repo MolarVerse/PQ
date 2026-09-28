@@ -30,31 +30,30 @@
 #include "ringPolymerEnergyOutput.hpp"
 #include "testOutputBase.hpp"
 
-using namespace out;
-using physicalData::PhysicalData;
-
 class TestRingPolymerEnergyOutput : public testing::Test
 {
    protected:
     static double sumOfRingPolymerEnergies(
-        const std::vector<PhysicalData> &dataVector
+        const std::vector<physicalData::PhysicalData> &dataVector
     )
     {
-        return RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(dataVector);
+        return out::RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(
+            dataVector
+        );
     }
 
     static double maxRingPolymerEnergy(
-        const std::vector<PhysicalData> &dataVector
+        const std::vector<physicalData::PhysicalData> &dataVector
     )
     {
-        return RingPolymerEnergyOutput::_maxRingPolymerEnergy(dataVector);
+        return out::RingPolymerEnergyOutput::_maxRingPolymerEnergy(dataVector);
     }
 };
 
 TEST_F(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
 {
-    RingPolymerEnergyOutput   out("dummy.rpe");
-    std::vector<PhysicalData> vec(3);
+    out::RingPolymerEnergyOutput            out("dummy.rpe");
+    std::vector<physicalData::PhysicalData> vec(3);
     vec[0].setRingPolymerEnergy(1.0);
     vec[1].setRingPolymerEnergy(2.5);
     vec[2].setRingPolymerEnergy(3.5);
@@ -63,8 +62,8 @@ TEST_F(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
 
 TEST_F(TestRingPolymerEnergyOutput, maxRingPolymerEnergyReturnsLargestEntry)
 {
-    RingPolymerEnergyOutput   out("dummy.rpe");
-    std::vector<PhysicalData> vec(3);
+    out::RingPolymerEnergyOutput            out("dummy.rpe");
+    std::vector<physicalData::PhysicalData> vec(3);
     vec[0].setRingPolymerEnergy(1.0);
     vec[1].setRingPolymerEnergy(9.0);
     vec[2].setRingPolymerEnergy(5.0);
@@ -75,10 +74,10 @@ TEST_F(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)
 {
     const std::string path = "default.rpe.test";
 
-    RingPolymerEnergyOutput out(path);
+    out::RingPolymerEnergyOutput out(path);
     out.setFilename(path);
 
-    std::vector<PhysicalData> vec(2);
+    std::vector<physicalData::PhysicalData> vec(2);
     vec[0].setRingPolymerEnergy(1.0);
     vec[1].setRingPolymerEnergy(3.0);
 

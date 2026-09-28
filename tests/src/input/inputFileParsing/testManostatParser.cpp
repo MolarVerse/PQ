@@ -32,16 +32,14 @@
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 
-using namespace input;
-
 /**
  * @brief tests parsing the "pressure" command
  *
  */
 TEST_F(TestInputFileReader, ParsePressure)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"pressure", "=", "300.0"};
     input::ManostatInputParser::parsePressure(lineElements, 0);
 
     EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
@@ -63,8 +61,8 @@ TEST_F(TestInputFileReader, ParsePressure)
  */
 TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"p_relaxation", "=", "0.1"};
     input::ManostatInputParser::parseManostatRelaxationTime(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
 
@@ -99,26 +97,26 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
  */
 TEST_F(TestInputFileReader, ParseManostat)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"manostat", "=", "none"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"manostat", "=", "none"};
     input::ManostatInputParser::parseManostat(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
-        settings::ManostatType::NONE
+        ManostatType::NONE
     );
 
     lineElements = {"manostat", "=", "berendsen"};
     input::ManostatInputParser::parseManostat(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
-        settings::ManostatType::BERENDSEN
+        ManostatType::BERENDSEN
     );
 
     lineElements = {"manostat", "=", "stochastic_rescaling"};
     input::ManostatInputParser::parseManostat(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getManostatType(),
-        settings::ManostatType::STOCHASTIC_RESCALING
+        ManostatType::STOCHASTIC_RESCALING
     );
 
     lineElements = {"manostat", "=", "notValid"};
@@ -138,8 +136,8 @@ TEST_F(TestInputFileReader, ParseManostat)
  */
 TEST_F(TestInputFileReader, ParseCompressibility)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"compressibility", "=", "0.1"};
     input::ManostatInputParser::parseCompressibility(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);
 
@@ -164,33 +162,27 @@ TEST_F(TestInputFileReader, ParseCompressibility)
  */
 TEST_F(TestInputFileReader, ParseIsotropy)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"isotropy", "=", "isotropic"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"isotropy", "=", "isotropic"};
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::ISOTROPIC
-    );
+    EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ISOTROPIC);
 
     lineElements = {"isotropy", "=", "anisotropic"};
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::ANISOTROPIC
-    );
+    EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ANISOTROPIC);
 
     lineElements = {"isotropy", "=", "full_anisotropic"};
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::FULL_ANISOTROPIC
+        Isotropy::FULL_ANISOTROPIC
     );
 
     lineElements = {"isotropy", "=", "xz"};
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC
     );
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
@@ -200,7 +192,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC
     );
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
@@ -210,7 +202,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC
     );
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 1);
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
@@ -220,7 +212,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC
     );
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 1);
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 2);
@@ -230,7 +222,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC
     );
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 1);
@@ -240,7 +232,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     input::ManostatInputParser::parseIsotropy(lineElements, 0);
     EXPECT_EQ(
         settings::ManostatSettings::getIsotropy(),
-        settings::Isotropy::SEMI_ISOTROPIC
+        Isotropy::SEMI_ISOTROPIC
     );
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[0], 0);
     EXPECT_EQ(settings::ManostatSettings::get2DIsotropicAxes()[1], 1);
@@ -262,90 +254,54 @@ TEST_F(TestInputFileReader, ParseIsotropy)
  */
 TEST_F(TestInputFileReader, ParseFixedAxis)
 {
-    ManostatInputParser      parser;
-    std::vector<std::string> lineElements = {"fixed_axis", "=", "none"};
+    input::ManostatInputParser parser;
+    std::vector<std::string>   lineElements = {"fixed_axis", "=", "none"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::NONE
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::NONE);
 
     lineElements = {"fixed_axis", "=", "x"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::X
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::X);
 
     lineElements = {"fixed_axis", "=", "y"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::Y
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Y);
 
     lineElements = {"fixed_axis", "=", "z"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::Z
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Z);
 
     lineElements = {"fixed_axis", "=", "xy"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::XY
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
 
     lineElements = {"fixed_axis", "=", "yx"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::XY
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
 
     lineElements = {"fixed_axis", "=", "xz"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::XZ
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XZ);
 
     lineElements = {"fixed_axis", "=", "zx"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::XZ
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XZ);
 
     lineElements = {"fixed_axis", "=", "yz"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::YZ
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::YZ);
 
     lineElements = {"fixed_axis", "=", "zy"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::YZ
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::YZ);
 
     lineElements = {"fixed_axis", "=", "all"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::ALL
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
 
     lineElements = {"fixed_axis", "=", "xyz"};
     input::ManostatInputParser::parseFixedAxis(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getFixedAxis(),
-        settings::FixedAxis::ALL
-    );
+    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
 
     lineElements = {"fixed_axis", "=", "notValid"};
     EXPECT_THROW_MSG(

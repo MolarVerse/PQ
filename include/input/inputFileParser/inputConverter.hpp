@@ -23,15 +23,13 @@
 #ifndef _INPUT_CONVERTER_HPP_
 #define _INPUT_CONVERTER_HPP_
 
-#include <charconv>
 #include <concepts>
+#include <map>
+#include <mstd/file.hpp>
+#include <mstd/type_traits.hpp>
 #include <optional>
 #include <string>
 #include <string_view>
-#include <unordered_set>
-
-#include "mstd/type_traits/enum_traits.hpp"
-#include "stringUtilities.hpp"
 
 /**
  * @namespace input
@@ -41,6 +39,25 @@
  */
 namespace input
 {
+
+    static const std::map<std::string, std::string> boolKeywords = {
+        {"on", "off"},
+        {"true", "false"},
+        {"yes", "no"}
+    };
+
+    /**
+     * @brief Base class for all Converter specializations
+     *
+     * @tparam T
+     */
+    template <typename T>
+    struct ConverterBase
+    {
+        [[nodiscard]]
+        static std::string describeDomain(const std::vector<T> &notAllowed);
+    };
+
     /**
      * @class Converter
      *
@@ -52,35 +69,19 @@ namespace input
      * @tparam T
      */
     template <typename T>
-    struct Converter;
+    struct Converter : public ConverterBase<T>
+    {
+    };
 
     /**
      * @brief Converter specialization for double
      *
      */
     template <>
-    struct Converter<double>
+    struct Converter<double> : public ConverterBase<double>
     {
-        /**
-         * @brief attempts to parse a double from a raw input-file token
-         *
-         * @param raw the raw input-file token
-         * @return an optional containing the parsed double if successful,
-         *         std::nullopt otherwise
-         */
         [[nodiscard]]
-        static std::optional<double> tryParse(const std::string_view raw)
-        {
-            double     value{};
-            const auto result =
-                std::from_chars(raw.data(), raw.data() + raw.size(), value);
-
-            if (result.ec != std::errc{} ||
-                result.ptr != raw.data() + raw.size())
-                return std::nullopt;
-
-            return value;
-        }
+        static std::optional<double> tryParse(std::string_view raw);
     };
 
     /**
@@ -88,29 +89,13 @@ namespace input
      *
      */
     template <>
-    struct Converter<bool>
+    struct Converter<bool> : public ConverterBase<bool>
     {
-        /**
-         * @brief attempts to parse a bool from a raw input-file token
-         *
-         * @param raw the raw input-file token
-         * @return an optional containing the parsed bool if successful,
-         *         std::nullopt otherwise
-         */
         [[nodiscard]]
-        static std::optional<bool> tryParse(const std::string_view raw)
-        {
-            const auto rawTransformed = utilities::toLowerCopy(raw);
+        static std::optional<bool> tryParse(std::string_view raw);
 
-            if (std::unordered_set<std::string_view>{"true", "on", "yes"}
-                    .contains(rawTransformed))
-                return true;
-            if (std::unordered_set<std::string_view>{"false", "off", "no"}
-                    .contains(rawTransformed))
-                return false;
-
-            return std::nullopt;
-        }
+        [[nodiscard]]
+        static std::string describeDomain(const std::vector<bool> &notAllowed);
     };
 
     /**
@@ -123,31 +108,33 @@ namespace input
      *
      * @tparam T
      */
-    template <std::integral T>
+    template <std::signed_integral T>
     requires(!std::same_as<T, bool>)
-    struct Converter<T>
+    struct Converter<T> : public ConverterBase<T>
     {
-        /**
-         * @brief attempts to parse an integral value from a raw input-file
-         * token
-         *
-         * @param raw the raw input-file token
-         * @return an optional containing the parsed value if successful,
-         *         std::nullopt otherwise
-         */
         [[nodiscard]]
-        static std::optional<T> tryParse(const std::string_view raw)
-        {
-            T          value{};
-            const auto result =
-                std::from_chars(raw.data(), raw.data() + raw.size(), value);
+        static std::optional<T> tryParse(std::string_view raw);
+    };
 
-            if (result.ec != std::errc{} ||
-                result.ptr != raw.data() + raw.size())
-                return std::nullopt;
+    /**
+     * @brief Converter specialization for plain integral types (size_t,
+     * int, unsigned, ...), excluding bool
+     *
+     * @details covers keys with no natural enum/double/bool representation
+     * (e.g. counts, indices) without requiring a per-key customParser for
+     * the common case
+     *
+     * @tparam T
+     */
+    template <std::unsigned_integral T>
+    requires(!std::same_as<T, bool>)
+    struct Converter<T> : public ConverterBase<T>
+    {
+        [[nodiscard]]
+        static std::optional<T> tryParse(std::string_view raw);
 
-            return value;
-        }
+        [[nodiscard]]
+        static std::string describeDomain(const std::vector<T> &notAllowed);
     };
 
     /**
@@ -162,62 +149,46 @@ namespace input
      * @tparam T
      */
     template <mstd::has_enum_meta T>
-    struct Converter<T>
+    struct Converter<T> : public ConverterBase<T>
     {
-        /**
-         * @brief attempts to parse an enum value from a raw input-file token
-         *
-         * @param raw the raw input-file token
-         * @return an optional containing the parsed enum value if successful,
-         *         std::nullopt otherwise
-         */
         [[nodiscard]]
-        static std::optional<T> tryParse(const std::string_view raw)
-        {
-            using Meta = mstd::enum_meta_t<T>;
-            return Meta::from_string(raw);
-        }
+        static std::optional<T> tryParse(std::string_view raw);
 
-        /**
-         * @brief describes the valid domain of the enum for error messages
-         *
-         * @return a string listing all allowed enum values
-         */
         [[nodiscard]]
-        static std::string describeDomain()
-        {
-            using Meta = mstd::enum_meta_t<T>;
-
-            std::string allowed;
-            for (size_t i = 0; i < Meta::size; ++i)
-            {
-                if (i != 0)
-                    allowed += ", ";
-                allowed += std::string(Meta::names.at(i));
-            }
-
-            return allowed;
-        }
+        static std::string describeDomain(const std::vector<T> &notAllowed);
     };
 
     /**
-     * @brief describes the valid domain of T for error messages
+     * @brief Converter specialization for File
      *
-     * @details falls back to a generic placeholder for types without a
-     * describeDomain() (i.e. everything except has_enum_meta<T>)
-     *
-     * @tparam T
      */
-    template <typename T>
-    [[nodiscard]] std::string describeDomain()
+    template <>
+    struct Converter<mstd::File> : public ConverterBase<mstd::File>
     {
-        if constexpr (mstd::has_enum_meta<T>)
-            return Converter<T>::describeDomain();
-        else if constexpr (std::same_as<T, bool>)
-            return "on|off|true|false";
-        else
-            return "<value>";
-    }
+        [[nodiscard]]
+        static std::optional<mstd::File> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        static std::string describeDomain(
+            const std::vector<mstd::File> &notAllowed
+        );
+    };
+
+    /**
+     * @brief Converter specialization for std::string
+     *
+     */
+    template <>
+    struct Converter<std::string> : public ConverterBase<std::string>
+    {
+        [[nodiscard]]
+        static std::optional<std::string> tryParse(std::string_view raw);
+    };
+
 }   // namespace input
+
+#ifndef _INPUT_CONVERTER_TPP_
+#include "inputConverter.tpp"
+#endif
 
 #endif   // _INPUT_CONVERTER_HPP_

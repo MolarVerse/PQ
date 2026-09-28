@@ -25,11 +25,13 @@
 #define _CONSTRAINT_SETTINGS_HPP_
 
 #include <cstddef>   // for size_t
+#include <mstd/enum.hpp>
 
 #include "defaults.hpp"
 
 namespace settings
 {
+
     /**
      * @class ConstraintSettings
      *

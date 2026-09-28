@@ -24,74 +24,14 @@
 
 #define _MANOSTAT_SETTINGS_HPP_
 
-#include <cstdint>
-#include <string>        // for string
 #include <string_view>   // for string_view
 #include <vector>        // for vector
 
 #include "defaults.hpp"
-#include "mstd/enum.hpp"
+#include "enums/manostat.hpp"
 
 namespace settings
 {
-    /**
-     * @enum ManostatType
-     *
-     * @brief enum class to store the type of the manostat
-     *
-     */
-    enum class ManostatType : std::uint8_t
-    {
-        NONE,
-        BERENDSEN,
-        STOCHASTIC_RESCALING
-    };
-
-    /**
-     * @enum Isotropy
-     *
-     * @brief enum class to store the isotropy of the manostat
-     *
-     */
-    enum class Isotropy : std::uint8_t
-    {
-        NONE,
-        ISOTROPIC,
-        SEMI_ISOTROPIC,
-        ANISOTROPIC,
-        FULL_ANISOTROPIC
-    };
-
-    // clang-format off
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define FIXED_AXIS_LIST(axis) \
-    axis(NONE, 0U)    \
-    axis(X, 1U << 0U) \
-    axis(Y, 1U << 1U) \
-    axis(Z, 1U << 2U) \
-    axis(XY, 0B011)   \
-    axis(XZ, 0B101)   \
-    axis(YZ, 0B110)   \
-    axis(ALL, 0B111)
-    // clang-format on
-
-    MSTD_ENUM_BITFLAG(FixedAxis, std::uint8_t, FIXED_AXIS_LIST);
-
-#undef FIXED_AXIS_LIST
-
-    [[nodiscard]] constexpr bool isAxisFixed(
-        FixedAxis fixedAxis,
-        size_t    axisIndex
-    )
-    {
-        const auto axisToCheck = static_cast<FixedAxis>(1U << axisIndex);
-        return (fixedAxis & axisToCheck) == axisToCheck;
-    }
-
-    [[nodiscard]] std::string string(const ManostatType &manostatType);
-    [[nodiscard]] std::string string(const Isotropy &isotropy);
-    [[nodiscard]] std::string string(const FixedAxis &fixedAxis);
-
     /**
      * @class ManostatSettings
      *

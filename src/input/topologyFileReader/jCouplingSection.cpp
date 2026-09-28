@@ -31,108 +31,113 @@
 #include "exceptions.hpp"            // for TopologyException
 #include "jCouplingForceField.hpp"   // for JCouplingForceField
 
-using namespace input::topology;
-using namespace exc;
-using namespace engine;
-using namespace ff;
-
-/**
- * @brief processes the j-coupling section of the topology file
- *
- * @details one line consists of 5 or 6 elements:
- * 1. atom index 1
- * 2. atom index 2
- * 3. atom index 3
- * 4. atom index 4
- * 5. j-coupling type
- *
- * @param lineElements
- * @param engine
- *
- * @throws TopologyException if number of elements in line
- is not 5
- * @throws TopologyException if atom indices are the same
- (=same atoms)
- */
-void JCouplingSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::topology
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    if (lineElements.size() != 5)
+
+    /**
+     * @brief processes the j-coupling section of the topology file
+     *
+     * @details one line consists of 5 or 6 elements:
+     * 1. atom index 1
+     * 2. atom index 2
+     * 3. atom index 3
+     * 4. atom index 4
+     * 5. j-coupling type
+     *
+     * @param lineElements
+     * @param engine
+     *
+     * @throws TopologyException if number of elements in line
+     is not 5
+     * @throws TopologyException if atom indices are the same
+     (=same atoms)
+     */
+    void JCouplingSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine
+    )
     {
-        throw TopologyException(
-            std::format(
-                "Wrong number of arguments in topology file j-coupling "
-                "section at line {} - number of elements has to be 5!",
-                _lineNumber
-            )
-        );
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 5)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Wrong number of arguments in topology file j-coupling "
+                    "section at line {} - number of elements has to be 5!",
+                    _lineNumber
+                )
+            );
+        }
+
+        auto atom1        = stoul(lineElements[0]);
+        auto atom2        = stoul(lineElements[1]);
+        auto atom3        = stoul(lineElements[2]);
+        auto atom4        = stoul(lineElements[3]);
+        auto dihedralType = stoul(lineElements[4]);
+
+        auto atoms = std::vector{atom1, atom2, atom3, atom4};
+        std::ranges::sort(atoms);
+        const auto [it, end] = std::ranges::unique(atoms);
+        atoms.erase(it, end);
+
+        if (4 != atoms.size())
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file j-coupling section at line {} "
+                    "- atoms cannot be the same!",
+                    _lineNumber
+                )
+            );
+        }
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        auto &simBox = engine.getSimulationBox();
+
+        const auto [molecule1, idx1] =
+            simBox.findMoleculeByGlobalAtomIndex(atom1);
+        const auto [molecule2, idx2] =
+            simBox.findMoleculeByGlobalAtomIndex(atom2);
+        const auto [molecule3, idx3] =
+            simBox.findMoleculeByGlobalAtomIndex(atom3);
+        const auto [molecule4, idx4] =
+            simBox.findMoleculeByGlobalAtomIndex(atom4);
+
+        const auto mols     = {molecule1, molecule2, molecule3, molecule4};
+        const auto atomIdxs = {idx1, idx2, idx3, idx4};
+
+        auto jCouplingFF =
+            ff::JCouplingForceField(mols, atomIdxs, dihedralType);
+
+        engine.getForceField()->addJCoupling(jCouplingFF);
     }
 
-    auto atom1        = stoul(lineElements[0]);
-    auto atom2        = stoul(lineElements[1]);
-    auto atom3        = stoul(lineElements[2]);
-    auto atom4        = stoul(lineElements[3]);
-    auto dihedralType = stoul(lineElements[4]);
+    /**
+     * @brief returns the keyword of the j-coupling section
+     *
+     * @return "j-couplings"
+     */
+    std::string JCouplingSection::keyword() { return "j_couplings"; }
 
-    auto atoms = std::vector{atom1, atom2, atom3, atom4};
-    std::ranges::sort(atoms);
-    const auto [it, end] = std::ranges::unique(atoms);
-    atoms.erase(it, end);
-
-    if (4 != atoms.size())
+    /**
+     * @brief checks if j-coupling section ends normally
+     *
+     * @param endedNormal
+     *
+     * @throws TopologyException if endedNormal is false
+     */
+    void JCouplingSection::endedNormally(bool endedNormal) const
     {
-        throw TopologyException(
-            std::format(
-                "Topology file dihedral section at line {} "
-                "- atoms cannot be the same!",
-                _lineNumber
-            )
-        );
+        if (!endedNormal)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file j-coupling section at line {} "
+                    "- no end of section found!",
+                    _lineNumber
+                )
+            );
+        }
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-    auto &simBox = engine.getSimulationBox();
-
-    const auto [molecule1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
-    const auto [molecule2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);
-    const auto [molecule3, idx3] = simBox.findMoleculeByGlobalAtomIndex(atom3);
-    const auto [molecule4, idx4] = simBox.findMoleculeByGlobalAtomIndex(atom4);
-
-    const auto mols     = {molecule1, molecule2, molecule3, molecule4};
-    const auto atomIdxs = {idx1, idx2, idx3, idx4};
-
-    auto jCouplingFF = JCouplingForceField(mols, atomIdxs, dihedralType);
-
-    engine.getForceField()->addJCoupling(jCouplingFF);
-}
-
-/**
- * @brief returns the keyword of the j-coupling section
- *
- * @return "j-couplings"
- */
-std::string JCouplingSection::keyword() { return "j_couplings"; }
-
-/**
- * @brief checks if j-coupling section ends normally
- *
- * @param endedNormal
- *
- * @throws TopologyException if endedNormal is false
- */
-void JCouplingSection::endedNormally(bool endedNormal) const
-{
-    if (!endedNormal)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file j-coupling section at line {} "
-                "- no end of section found!",
-                _lineNumber
-            )
-        );
-    }
-}
+}   // namespace input::topology

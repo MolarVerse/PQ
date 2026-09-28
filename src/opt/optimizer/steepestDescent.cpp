@@ -22,52 +22,48 @@
 
 #include "steepestDescent.hpp"
 
-#include "optimizer.hpp"
+#include "simulationBox.hpp"
 
-using namespace opt;
-
-/**
- * @brief Constructor
- *
- * @param nEpochs
- */
-SteepestDescent::SteepestDescent(size_t nEpochs) : Optimizer(nEpochs) {}
-
-/**
- * @brief clone the optimizer
- *
- * @return std::shared_ptr<Optimizer>
- */
-std::shared_ptr<Optimizer> SteepestDescent::clone() const
+namespace opt
 {
-    return std::make_shared<SteepestDescent>(*this);
-}
 
-/**
- * @brief get the maximum history length
- *
- * @return size_t
- */
-size_t SteepestDescent::maxHistoryLength() const { return _maxHistoryLength; }
+    /**
+     * @brief Constructor
+     *
+     * @param nEpochs
+     */
+    SteepestDescent::SteepestDescent(size_t nEpochs) : Optimizer(nEpochs) {}
 
-/**
- * @brief update the optimizer
- *
- * @param learningRate
- */
-void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
-{
-    const auto& atoms = _simulationBox->getAtoms();
-
-    for (const auto& atom : atoms)
+    /**
+     * @brief get the maximum history length
+     *
+     * @return size_t
+     */
+    size_t SteepestDescent::maxHistoryLength() const
     {
-        const auto force = atom->getForce();
-        const auto pos   = atom->getPosition();
-
-        auto pos_new = pos + learningRate * force;
-        _simulationBox->applyPBC(pos_new);
-
-        atom->setPositionOld(pos);
-        atom->setPosition(pos_new);
+        return _maxHistoryLength;
     }
-}
+
+    /**
+     * @brief update the optimizer
+     *
+     * @param learningRate
+     */
+    void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
+    {
+        const auto& atoms = _getSimulationBox().getAtoms();
+
+        for (const auto& atom : atoms)
+        {
+            const auto force = atom->getForce();
+            const auto pos   = atom->getPosition();
+
+            auto pos_new = pos + learningRate * force;
+            _getSimulationBox().applyPBC(pos_new);
+
+            atom->setPositionOld(pos);
+            atom->setPosition(pos_new);
+        }
+    }
+
+}   // namespace opt

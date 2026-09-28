@@ -32,26 +32,24 @@
 #include "outputFileSettings.hpp"
 #include "referencesOutput.hpp"
 #include "testOutputBase.hpp"
-
-using references::ReferencesOutput;
-using namespace settings;
+#include "throwWithMessage.hpp"
 
 class ReferencesOutputTest : public ::testing::Test
 {
    protected:
     static void removeReferenceFile(const std::string &path)
     {
-        ReferencesOutput::_referenceFileNames.erase(path);
-        ReferencesOutput::_bibtexFileNames.erase(path + ".bib");
+        references::ReferencesOutput::_referenceFileNames.erase(path);
+        references::ReferencesOutput::_bibtexFileNames.erase(path + ".bib");
     }
 };
 
 TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
 {
     const std::string path = "default.refs.test";
-    OutputFileSettings::setRefFileName(path);
+    settings::OutputFileSettings::setRefFileName(path);
 
-    ReferencesOutput::writeReferencesFile();
+    references::ReferencesOutput::writeReferencesFile();
 
     const auto content = slurp(path);
     // Top banner.
@@ -75,17 +73,31 @@ TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
 
 TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 {
-    OutputFileSettings::setRefFileName(".");
+    settings::OutputFileSettings::setRefFileName(".");
 
-    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    EXPECT_THROW_MSG(
+
+        references::ReferencesOutput::writeReferencesFile(),
+
+        std::runtime_error,
+        "Could not open reference output file \".\""
+
+    );
 }
 
 #if defined(__linux__)
 TEST_F(ReferencesOutputTest, rejectsFailedOutputWrites)
 {
-    OutputFileSettings::setRefFileName("/dev/full");
+    settings::OutputFileSettings::setRefFileName("/dev/full");
 
-    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    EXPECT_THROW_MSG(
+
+        references::ReferencesOutput::writeReferencesFile(),
+
+        std::runtime_error,
+        "Could not write reference output file \"/dev/full\""
+
+    );
 }
 #endif
 
@@ -99,10 +111,10 @@ TEST_F(ReferencesOutputTest, rendersAdditionalReferenceFiles)
 
     std::ofstream(referencePath) << "ADDITIONAL REFERENCE\n";
     std::ofstream(bibtexPath) << "ADDITIONAL BIBTEX\n";
-    ReferencesOutput::addReferenceFile(referencePath.string());
-    OutputFileSettings::setRefFileName(outputPath);
+    references::ReferencesOutput::addReferenceFile(referencePath.string());
+    settings::OutputFileSettings::setRefFileName(outputPath);
 
-    EXPECT_NO_THROW(ReferencesOutput::writeReferencesFile());
+    EXPECT_NO_THROW(references::ReferencesOutput::writeReferencesFile());
     const auto content = slurp(outputPath);
     EXPECT_NE(content.find("ADDITIONAL REFERENCE"), std::string::npos);
     EXPECT_NE(content.find("ADDITIONAL BIBTEX"), std::string::npos);
@@ -132,9 +144,18 @@ TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
         GTEST_SKIP() << "The current user can read files without permissions";
     }
 
-    ReferencesOutput::addReferenceFile(unreadablePath.string());
-    OutputFileSettings::setRefFileName(outputPath);
-    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    references::ReferencesOutput::addReferenceFile(unreadablePath.string());
+    settings::OutputFileSettings::setRefFileName(outputPath);
+
+    EXPECT_THROW_MSG(
+        references::ReferencesOutput::writeReferencesFile(),
+        std::runtime_error,
+        std::format(
+            "Could not open PQ reference file "
+            "\"{}\"",
+            unreadablePath.string()
+        )
+    );
     removeReferenceFile(unreadablePath.string());
 
     std::filesystem::permissions(
@@ -149,13 +170,24 @@ TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
 {
     const std::string outputPath = "default.refs.test";
 
-    EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
-    EXPECT_NO_THROW(ReferencesOutput::addReferenceFile("nonexistent.ref"));
+    std::string file = "nonexistent.ref";
 
-    OutputFileSettings::setRefFileName(outputPath);
+    EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
+    EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
 
-    EXPECT_THROW(ReferencesOutput::writeReferencesFile(), std::runtime_error);
+    settings::OutputFileSettings::setRefFileName(outputPath);
+
+    EXPECT_THROW_MSG(
+        references::ReferencesOutput::writeReferencesFile(),
+        std::runtime_error,
+        std::format(
+            "PQ reference file "
+            "\"{}/{}\" could not be found",
+            _REFERENCES_PATH_,
+            file
+        )
+    );
     EXPECT_FALSE(std::ifstream(outputPath).good());
 
-    removeReferenceFile("nonexistent.ref");
+    removeReferenceFile(file);
 }

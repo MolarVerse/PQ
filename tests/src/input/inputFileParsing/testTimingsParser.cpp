@@ -22,10 +22,8 @@
 
 #include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
 
-#include <format>   // for format
-#include <stdexcept>
 #include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <vector>   // for std::vector
 
 #include "exceptions.hpp"            // for InputFileException
 #include "testInputFileReader.hpp"   // for TestInputFileReader
@@ -33,38 +31,44 @@
 #include "timingsInputParser.hpp"
 #include "timingsSettings.hpp"   // for TimingsSettings
 
-using namespace std;
-using namespace input;
-using namespace ::testing;
-
 /**
  * @brief tests parsing the "timestep" command
  *
  */
 TEST_F(TestInputFileReader, testParseTimestep)
 {
-    TimingsInputParser parser;
-    vector<string>     lineElements = {"timestep", "=", "1"};
-    input::TimingsInputParser::parseTimeStep(lineElements, 0);
+    input::TimingsInputParser parser;
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("timestep"));
+    const auto &timeStepFunc = funcMap.at("timestep");
+
+    std::vector<std::string> lineElements = {"timestep", "=", "1"};
+    timeStepFunc(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
+
+    clearParser(parser);
 
     lineElements = {"timestep", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseTimeStep(lineElements, 0),
+        timeStepFunc(lineElements, 0),
         exc::InputFileException,
-        "Time step must be finite and greater than zero"
+        "Invalid value \"0\" for key \"timestep\" at line 0 in input file: "
+        "failed validation with message Value must be greater than 0"
     );
 
-    for (const auto &invalid : {"nan", "inf"})
+    for (const std::string &invalid : {std::string("nan"), std::string("inf")})
     {
+        clearParser(parser);
         lineElements = {"timestep", "=", invalid};
         EXPECT_THROW_MSG(
-            parser.parseTimeStep(lineElements, 0),
-            std::invalid_argument,
-            std::format(
-                "Invalid floating-point value '{}' encountered",
-                invalid
-            )
+            timeStepFunc(lineElements, 0),
+            exc::InputFileException,
+            invalid == "nan" ? "Invalid value \"nan\" for key \"timestep\" at "
+                               "line 0 in input file: failed validation with "
+                               "message Value must not be NaN"
+                             : "Invalid value \"inf\" for key \"timestep\" at "
+                               "line 0 in input file: failed validation with "
+                               "message Value must not be infinite"
         );
     }
 }
@@ -77,22 +81,34 @@ TEST_F(TestInputFileReader, testParseTimestep)
  */
 TEST_F(TestInputFileReader, testParseNumberOfSteps)
 {
-    TimingsInputParser parser;
-    vector<string>     lineElements = {"nsteps", "=", "1000"};
-    input::TimingsInputParser::parseNumberOfSteps(lineElements, 0);
+    input::TimingsInputParser parser;
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("nstep"));
+    const auto &nstepsFunc = funcMap.at("nstep");
+
+    std::vector<std::string> lineElements = {"nstep", "=", "1000"};
+    nstepsFunc(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getNumberOfSteps(), 1000);
 
-    lineElements = {"nsteps", "=", "-1"};
+    clearParser(parser);
+
+    lineElements = {"nstep", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseNumberOfSteps(lineElements, 0),
+        nstepsFunc(lineElements, 0),
         exc::InputFileException,
-        "Number of steps must be greater than zero"
+        "Invalid value \"-1\" for key \"nstep\" at line 0 in input file: "
+        "failed validation with message Value must be greater than or equal to "
+        "1"
     );
+
+    clearParser(parser);
 
     lineElements = {"nsteps", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseNumberOfSteps(lineElements, 0),
+        nstepsFunc(lineElements, 0),
         exc::InputFileException,
-        "Number of steps must be greater than zero"
+        "Invalid value \"0\" for key \"nstep\" at line 0 in input file: "
+        "failed validation with message Value must be greater than or equal to "
+        "1"
     );
 }

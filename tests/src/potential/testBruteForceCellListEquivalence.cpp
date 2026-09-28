@@ -41,21 +41,6 @@
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 
-using linalg::Vec3D;
-using molsys::Atom;
-using molsys::CellList;
-using molsys::Molecule;
-using molsys::MoleculeType;
-using molsys::SimulationBox;
-using physicalData::PhysicalData;
-using pot::CoulombPotential;
-using pot::CoulombShiftedPotential;
-using pot::GuffNonCoulomb;
-using pot::LennardJonesPair;
-using pot::PotentialBruteForce;
-using pot::PotentialCellList;
-using settings::PotentialSettings;
-
 namespace
 {
 
@@ -63,7 +48,8 @@ namespace
     // alias the same physical cell: with nNeighbour = ceil(cutoff / cellSize)
     // we must have kCellsPerSide >= 2 * nNeighbour + 1. Here cellSize = 5 and
     // cutoff = 4 yield nNeighbour = 1, so kCellsPerSide = 3 is sufficient and
-    // the half-neighbour list in CellList visits each cell pair exactly once.
+    // the half-neighbour list in molsys::CellList visits each cell pair exactly
+    // once.
     constexpr double kBoxEdge        = 15.0;
     constexpr double kCoulombCutOff  = 4.0;
     constexpr size_t kCellsPerSide   = 3;
@@ -71,13 +57,13 @@ namespace
 
     struct Placement
     {
-        MolType molType;
-        Vec3D   position;
+        MolType       molType;
+        linalg::Vec3D position;
     };
 
     /*
-     * Build a SimulationBox with two single-atom molecule types and a handful
-     * of molecules placed so the workload exercises both code paths in
+     * Build a molsys::SimulationBox with two single-atom molecule types and a
+     * handful of molecules placed so the workload exercises both code paths in
      * PotentialCellList: pairs inside the same cell and pairs across
      * neighbouring cells, with some pairs above and below the cutoff.
      *
@@ -85,14 +71,16 @@ namespace
      * from the same placements are completely decoupled and can be
      * force-evaluated with the two potentials in parallel.
      */
-    SimulationBox buildSimulationBox(const std::vector<Placement> &placements)
+    molsys::SimulationBox buildSimulationBox(
+        const std::vector<Placement> &placements
+    )
     {
-        SimulationBox simBox;
+        molsys::SimulationBox simBox;
         simBox.setBoxDimensions({kBoxEdge, kBoxEdge, kBoxEdge});
 
         auto buildMoleculeType = [](MolType molType, double charge)
         {
-            MoleculeType molType_;
+            molsys::MoleculeType molType_;
             molType_.setMoltype(molType);
             molType_.setNumberOfAtoms(1);
             molType_.addExternalAtomType(ExtAtomType{molType.get()});
@@ -110,7 +98,7 @@ namespace
 
         for (const auto &placement : placements)
         {
-            auto atom = std::make_shared<Atom>();
+            auto atom = std::make_shared<molsys::Atom>();
             atom->setPosition(placement.position);
             atom->setAtomType(AtomType{0});
             atom->setExternalAtomType(ExtAtomType{placement.molType.get()});
@@ -120,9 +108,8 @@ namespace
             atom->setInternalGlobalVDWType(VdwType{0});
             atom->setForceToZero();
 
-            Molecule molecule;
+            molsys::Molecule molecule;
             molecule.setMoltype(placement.molType);
-            molecule.setNumberOfAtoms(1);
             molecule.addAtom(atom);
 
             simBox.addMolecule(molecule);
@@ -131,9 +118,9 @@ namespace
         return simBox;
     }
 
-    std::shared_ptr<GuffNonCoulomb> buildGuffNonCoulomb()
+    std::shared_ptr<pot::GuffNonCoulomb> buildGuffNonCoulomb()
     {
-        auto guff = std::make_shared<GuffNonCoulomb>();
+        auto guff = std::make_shared<pot::GuffNonCoulomb>();
         guff->resizeGuff(2);
         for (size_t m1 = 0; m1 < 2; ++m1)
         {
@@ -145,7 +132,7 @@ namespace
             }
         }
 
-        const auto pair = std::make_shared<LennardJonesPair>(
+        const auto pair = std::make_shared<pot::LennardJonesPair>(
             kCoulombCutOff,
             LJParams{.c6 = -1.0, .c12 = 1.0}
         );
@@ -168,10 +155,10 @@ namespace
 
 TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
-    PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
-    CoulombPotential::setCoulombRadiusCutOff(kCoulombCutOff);
-    CoulombPotential::setCoulombEnergyCutOff(0.0);
-    CoulombPotential::setCoulombForceCutOff(0.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
+    pot::CoulombPotential::setCoulombRadiusCutOff(kCoulombCutOff);
+    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
+    pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
     // Cell layout: box 15 Å, 3 cells per side, cellSize 5 Å, cutoff 4 Å.
     // Cells per axis: [-7.5,-2.5], [-2.5,+2.5], [+2.5,+7.5]. Placements are
@@ -190,27 +177,29 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     auto simBoxBF = buildSimulationBox(placements);
     auto simBoxCL = buildSimulationBox(placements);
 
-    PhysicalData physicalDataBF;
-    PhysicalData physicalDataCL;
+    physicalData::PhysicalData physicalDataBF;
+    physicalData::PhysicalData physicalDataCL;
 
-    PotentialBruteForce bruteForce;
-    bruteForce.makeCoulombPotential(CoulombShiftedPotential(kCoulombCutOff));
+    pot::PotentialBruteForce bruteForce;
+    bruteForce.makeCoulombPotential(
+        pot::CoulombShiftedPotential(kCoulombCutOff)
+    );
     bruteForce.setNonCoulombPotential(buildGuffNonCoulomb());
 
-    PotentialCellList cellListPotential;
+    pot::PotentialCellList cellListPotential;
     cellListPotential.makeCoulombPotential(
-        CoulombShiftedPotential(kCoulombCutOff)
+        pot::CoulombShiftedPotential(kCoulombCutOff)
     );
     cellListPotential.setNonCoulombPotential(buildGuffNonCoulomb());
 
-    // Brute force ignores its CellList argument; pass a default-constructed
-    // one purely to satisfy the signature.
-    CellList dummyCellList;
+    // Brute force ignores its molsys::CellList argument; pass a
+    // default-constructed one purely to satisfy the signature.
+    molsys::CellList dummyCellList;
     bruteForce.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
 
     settings::Settings::activateCellList();
 
-    CellList cellList;
+    molsys::CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);
     cellList.resizeCells();
     cellList.setup(simBoxCL);

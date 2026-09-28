@@ -34,6 +34,10 @@ namespace input
     template <typename T, typename Ret, typename... Args>
     auto bindMember(Ret (T::*method)(Args...) const, const T *obj);
 
+    void checkEqualSign(const std::string_view &, size_t);
+    void checkCommandArray(const std::vector<std::string> &, size_t);
+    void checkCommand(const std::vector<std::string> &, size_t);
+
 }   // namespace input
 
 #ifndef _PARSER_UTILS_TPP_

@@ -22,288 +22,185 @@
 
 #include "MMInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
 #include <utility>
 
-#include "exceptions.hpp"             // for InputFileException, customException
 #include "forceFieldClass.hpp"        // for ForceField
 #include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "forceFieldSettings.hpp"     // for ForceFieldSettings
-#include "parserUtils.hpp"
+#include "forceFieldSettings.hpp"     // for settings::ForceFieldSettings
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
 #include "potential.hpp"            // for Potential
 #include "potentialSettings.hpp"    // for PotentialSettings
-#include "stringUtilities.hpp"      // for toLowerCopy
-#include "waterModelSettings.hpp"   // for WaterModelSettings
+#include "waterModelSettings.hpp"   // for settings::WaterModelSettings
 
-using namespace input;
-using namespace exc;
-using namespace settings;
-using namespace utilities;
-using namespace pot;
-
-/**
- * @brief Construct a new Input File Parser Force Field:: Input File Parser
- * Force Field object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) force-field "<on/off/bonded>"
- *
- * @param forceField
- * @param potential
- */
-MMInputParser::MMInputParser(
-    std::shared_ptr<ff::ForceField> forceField,
-    std::shared_ptr<pot::Potential> potential
-)
-    : _forceField(std::move(forceField)), _potential(std::move(potential))
+namespace input
 {
-    addKeyword(
-        std::string("force-field"),
-        bindMember(&MMInputParser::parseForceFieldType, this),
-        false
-    );
-    addKeyword(
-        std::string("noncoulomb"),
-        bindMember(&MMInputParser::parseNonCoulombType, this),
-        false
-    );
-    addKeyword(
-        std::string("water_intra"),
-        bindMember(&MMInputParser::parseWaterIntraModel, this),
-        false
-    );
-    addKeyword(
-        std::string("water_inter"),
-        bindMember(&MMInputParser::parseWaterInterModel, this),
-        false
-    );
-}
 
-/**
- * @brief Parse the force field type
- *
- * @details Possible options are:
- * 1) "on"  - force-field is activated
- * 2) "off" - force-field is deactivated (default)
- * 3) "bonded" - only bonded interactions are activated
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if force-field is not valid - currently only on,
- * off and bonded are supported
- */
-void MMInputParser::parseForceFieldType(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto forceFieldType = toLowerCopy(lineElements[2]);
-
-    if (forceFieldType == "on")
+    /**
+     * @brief Construct a new Input File Parser Force Field:: Input File Parser
+     * Force Field object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) force-field
+     * "<on/off/bonded>"
+     *
+     * @param forceField
+     * @param potential
+     */
+    MMInputParser::MMInputParser(
+        std::shared_ptr<ff::ForceField> forceField,
+        std::shared_ptr<pot::Potential> potential
+    )
+        : _forceField(std::move(forceField)), _potential(std::move(potential))
     {
-        ForceFieldSettings::activate();
-        _forceField->activateNonCoulombic();
-        _potential->makeNonCoulombPotential(ForceFieldNonCoulomb());
-    }
-    else if (forceFieldType == "off")
-    {
-        ForceFieldSettings::deactivate();
-        _forceField->deactivateNonCoulombic();
-    }
-    else if (forceFieldType == "bonded")
-    {
-        ForceFieldSettings::activate();
-        _forceField->deactivateNonCoulombic();
-    }
-    else
-    {
-        throw InputFileException(format(
-            "Invalid force-field keyword \"{}\" at line {} "
-            "in input file\n"
-            "Possible options are \"on\", \"off\" or \"bonded\"",
-            lineElements[2],
-            lineNumber
-        ));
-    }
-}
-
-/**
- * @brief Parse the nonCoulombic type of the guff.dat file
- *
- * @details Possible options are:
- * 1) "guff"  - guff.dat file is used (default)
- * 2) "lj"
- * 3) "buck"
- * 4) "morse"
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if invalid nonCoulomb type
- */
-void MMInputParser::parseNonCoulombType(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto type = toLowerCopy(lineElements[2]);
-
-    using enum NonCoulombType;
-
-    if (type == "guff")
-        PotentialSettings::setNonCoulombType(GUFF);
-
-    else if (type == "lj")
-        PotentialSettings::setNonCoulombType(LJ);
-
-    else if (type == "buck")
-        PotentialSettings::setNonCoulombType(BUCKINGHAM);
-
-    else if (type == "morse")
-        PotentialSettings::setNonCoulombType(MORSE);
-
-    else
-    {
-        throw InputFileException(format(
-            "Invalid nonCoulomb type \"{}\" at line {} in input file.\n"
-            "Possible options are: lj, buck, morse and guff",
-            lineElements[2],
-            lineNumber
-        ));
-    }
-}
-
-/**
- * @brief Parse the intramolecular water model type
- *
- * @details Possible options are:
- * 1) "SPC/Fw"
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if invalid water_intra model type
- */
-void MMInputParser::parseWaterIntraModel(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    using enum WaterIntraModel;
-
-    checkCommand(lineElements, lineNumber);
-
-    const auto waterIntraModel = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    if (waterIntraModel == "spc")
-        WaterModelSettings::setWaterIntraModel(SPC);
-    else if (waterIntraModel == "spc_e")
-        WaterModelSettings::setWaterIntraModel(SPC_E);
-    else if (waterIntraModel == "spc_fw")
-        WaterModelSettings::setWaterIntraModel(SPC_FW);
-    else if (waterIntraModel == "qspc_fw")
-        WaterModelSettings::setWaterIntraModel(QSPC_FW);
-    else if (waterIntraModel == "spc_dc")
-    {
-        WaterModelSettings::setWaterIntraModel(SPC_DC);
-    }
-    else if (waterIntraModel == "h2o_dc")
-    {
-        WaterModelSettings::setWaterIntraModel(H2O_DC);
-    }
-    else if (waterIntraModel == "tip3p")
-    {
-        WaterModelSettings::setWaterIntraModel(TIP3P);
-    }
-    else if (waterIntraModel == "opc3")
-    {
-        WaterModelSettings::setWaterIntraModel(OPC3);
-    }
-    else if (waterIntraModel == "spc_mtr")
-    {
-        WaterModelSettings::setWaterIntraModel(SPC_MTR);
-    }
-    else if (waterIntraModel == "tip3p_mtr")
-    {
-        WaterModelSettings::setWaterIntraModel(TIP3P_MTR);
-    }
-    else
-    {
-        throw InputFileException(format(
-            "Invalid water_intra keyword \"{}\" at line {} "
-            "in input file\n"
-            "Possible options are \"SPC\", \"SPC_E\", \"SPC_Fw\", \"qSPC_Fw\", "
-            "\"SPC_DC\", \"H2O-DC\", \"TIP3P\", \"OPC3\", \"SPC-mTR\" and "
-            "\"TIP3P-mTR\"",
-            lineElements[2],
-            lineNumber
-        ));
+        addForceFieldTypeKey();
+        addNonCoulombTypeKey();
+        addWaterIntraModelKey();
+        addWaterInterModelKey();
     }
 
-    WaterModelSettings::setIsWaterModelSet(true);
-}
-
-/**
- * @brief Parse the intermolecular water model type
- *
- * @details Possible options are:
- * 1) "SPC/Fw"
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if invalid water_inter model type
- */
-void MMInputParser::parseWaterInterModel(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    using enum WaterInterModel;
-
-    checkCommand(lineElements, lineNumber);
-
-    const auto waterInterModel = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    if (waterInterModel == "spc")
-        WaterModelSettings::setWaterInterModel(SPC);
-    else if (waterInterModel == "spc_e")
-        WaterModelSettings::setWaterInterModel(SPC_E);
-    else if (waterInterModel == "spc_fw")
-        WaterModelSettings::setWaterInterModel(SPC_FW);
-    else if (waterInterModel == "qspc_fw")
-        WaterModelSettings::setWaterInterModel(QSPC_FW);
-    else if (waterInterModel == "spc_dc")
-        WaterModelSettings::setWaterInterModel(SPC_DC);
-    else if (waterInterModel == "h2o_dc")
-        WaterModelSettings::setWaterInterModel(H2O_DC);
-    else if (waterInterModel == "tip3p")
-        WaterModelSettings::setWaterInterModel(TIP3P);
-    else if (waterInterModel == "opc3")
-        WaterModelSettings::setWaterInterModel(OPC3);
-    else if (waterInterModel == "spc_mtr")
-        WaterModelSettings::setWaterInterModel(SPC_MTR);
-    else if (waterInterModel == "tip3p_mtr")
-        WaterModelSettings::setWaterInterModel(TIP3P_MTR);
-    else
+    /**
+     * @brief Add the force field type key to the registry
+     *
+     * @details This function registers the "force-field" key with the input
+     * key registry and associates it with the appropriate metadata and
+     * callback function.
+     */
+    void MMInputParser::addForceFieldTypeKey()
     {
-        throw InputFileException(format(
-            "Invalid water_inter keyword \"{}\" at line {} "
-            "in input file\n"
-            "Possible options are \"SPC\", \"SPC_E\", \"SPC_Fw\", \"qSPC_Fw\", "
-            "\"SPC-DC\", \"H2O-DC\", \"TIP3P\", \"OPC3\", \"SPC-mTR\" and "
-            "\"TIP3P-mTR\"",
-            lineElements[2],
-            lineNumber
-        ));
+        const auto metaData = KeyMetadata{
+            .name  = "force-field",
+            .title = "Force Field Type",
+            .description =
+                "Specifies the type of force field to be used (on, off, "
+                "bonded)",
+        };
+
+        const auto setValue =
+            [forceField = _forceField,
+             potential  = _potential](settings::ForceFieldType value)
+        {
+            switch (value)
+            {
+                case settings::ForceFieldType::ON:
+                    settings::ForceFieldSettings::activate();
+                    forceField->activateNonCoulombic();
+                    potential->makeNonCoulombPotential(
+                        pot::ForceFieldNonCoulomb()
+                    );
+                    break;
+                case settings::ForceFieldType::OFF:
+                    settings::ForceFieldSettings::deactivate();
+                    forceField->deactivateNonCoulombic();
+                    break;
+                case settings::ForceFieldType::BONDED:
+                    settings::ForceFieldSettings::activate();
+                    forceField->deactivateNonCoulombic();
+                    break;
+            }
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<settings::ForceFieldType>{
+                .metadata     = metaData,
+                .defaultValue = settings::ForceFieldType::OFF,
+                .onSet        = setValue
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    WaterModelSettings::setIsWaterModelSet(true);
-    WaterModelSettings::setIsInterWaterModelSet(true);
-}
+    /**
+     * @brief Add the key for specifying the non-Coulombic interaction type
+     */
+    void MMInputParser::addNonCoulombTypeKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "noncoulomb",
+            .title = "Non-Coulomb Type",
+            .description =
+                "Specifies the type of non-Coulombic interaction to be used "
+                "(guff, lj, buck, morse)",
+        };
+
+        const auto setValue =
+            [potential = _potential](settings::NonCoulombType value)
+        { settings::PotentialSettings::setNonCoulombType(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<settings::NonCoulombType>{
+                .metadata   = metaData,
+                .notAllowed = {settings::NonCoulombType::LJ_9_12},
+                .onSet      = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief Add the key for specifying the intermolecular water model
+     */
+    void MMInputParser::addWaterIntraModelKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "water_intra",
+            .title = "Intramolecular Water Model",
+            .description =
+                "Specifies the intramolecular water model to be used "
+                "(spc, spc_e, spc_fw, qspc_fw, spc_dc, h2o_dc, tip3p, opc3, "
+                "spc_mtr, tip3p_mtr)",
+        };
+
+        const auto setValue =
+            [potential = _potential](settings::WaterIntraModel value)
+        {
+            settings::WaterModelSettings::setWaterIntraModel(value);
+            settings::WaterModelSettings::setIsWaterModelSet(true);
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<settings::WaterIntraModel>{
+                .metadata = metaData,
+                .onSet    = setValue
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief Add the key for specifying the intermolecular water model
+     */
+    void MMInputParser::addWaterInterModelKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "water_inter",
+            .title = "Intermolecular Water Model",
+            .description =
+                "Specifies the intermolecular water model to be used "
+                "(spc, spc_e, spc_fw, qspc_fw, spc_dc, h2o_dc, tip3p, opc3, "
+                "spc_mtr, tip3p_mtr)",
+        };
+
+        const auto setValue =
+            [potential = _potential](settings::WaterInterModel value)
+        {
+            settings::WaterModelSettings::setWaterInterModel(value);
+            settings::WaterModelSettings::setIsWaterModelSet(true);
+            settings::WaterModelSettings::setIsInterWaterModelSet(true);
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<settings::WaterInterModel>{
+                .metadata = metaData,
+                .onSet    = setValue
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+}   // namespace input

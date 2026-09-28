@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW, TestInfo...
+#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW_MSG, TestInfo...
 
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
@@ -30,6 +30,7 @@
 #include "exceptions.hpp"     // for TopologyException
 #include "strongTypes.hpp"
 #include "testTopologySection.hpp"   // for TestTopologySection
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test angle section processing one line
@@ -67,21 +68,26 @@ TEST_F(TestTopologySection, processSectionAngle)
     EXPECT_EQ(angles[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         angleSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file angle section at line 0 - atoms cannot be the same!"
     );
 
     lineElements = {"1", "2", "7"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         angleSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Wrong number of arguments in topology file angle section at line 0 - "
+        "number of elements has to be 4 or 5!"
     );
 
     lineElements = {"1", "2", "3", "7", "#"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         angleSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Fifth entry in topology file in angle section has to be a '*' or "
+        "empty at line 0!"
     );
 }
 
@@ -92,6 +98,10 @@ TEST_F(TestTopologySection, processSectionAngle)
 TEST_F(TestTopologySection, endedNormallyAngle)
 {
     input::topology::AngleSection angleSection;
-    EXPECT_THROW(angleSection.endedNormally(false), exc::TopologyException);
+    EXPECT_THROW_MSG(
+        angleSection.endedNormally(false),
+        exc::TopologyException,
+        "Topology file angle section at line 0 - no end of section found!"
+    );
     EXPECT_NO_THROW(angleSection.endedNormally(true));
 }

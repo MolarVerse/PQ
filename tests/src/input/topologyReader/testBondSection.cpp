@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW, TestInfo...
+#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW_MSG, TestInfo...
 
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
@@ -29,6 +29,7 @@
 #include "engine.hpp"                // for Engine
 #include "exceptions.hpp"            // for TopologyException
 #include "testTopologySection.hpp"   // for TestTopologySection
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test bond section processing one line
@@ -59,21 +60,26 @@ TEST_F(TestTopologySection, processSectionBond)
     EXPECT_EQ(bonds[1].isLinker(), true);
 
     lineElements = {"1", "1", "7"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         bondSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file bond section at line 0 - atoms cannot be the same!"
     );
 
     lineElements = {"1", "2", "7", "1", "2"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         bondSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Wrong number of arguments in topology file bond section at line 0 - "
+        "number of elements has to be 3 or 4!"
     );
 
     lineElements = {"1", "2", "7", "#"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         bondSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Forth entry in topology file in bond section has to be a '*' or empty "
+        "at line 0!"
     );
 }
 
@@ -84,6 +90,10 @@ TEST_F(TestTopologySection, processSectionBond)
 TEST_F(TestTopologySection, endedNormallyBond)
 {
     input::topology::BondSection bondSection;
-    EXPECT_THROW(bondSection.endedNormally(false), exc::TopologyException);
+    EXPECT_THROW_MSG(
+        bondSection.endedNormally(false),
+        exc::TopologyException,
+        "Topology file bond section at line 0 - no end of section found!"
+    );
     EXPECT_NO_THROW(bondSection.endedNormally(true));
 }

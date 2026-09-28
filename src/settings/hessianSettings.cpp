@@ -22,80 +22,48 @@
 
 #include "hessianSettings.hpp"
 
-#include "stringUtilities.hpp"
-
-using namespace settings;
-using namespace utilities;
-
-std::string settings::string(HessianBuilderType builder)
+namespace settings
 {
-    switch (builder)
-    {
-        using enum HessianBuilderType;
 
-        case FINITE_DIFFERENCE_FORCES_CENTRAL: return "CENTRAL";
-        case FINITE_DIFFERENCE_FORCES_FORWARD: return "FORWARD";
-        case FINITE_DIFFERENCE_FORCES_FIVE_POINT: return "FIVE-POINT";
-        case ANALYTIC: return "ANALYTIC";
-        case NONE: break;
+    void HessianSettings::setHessianFile(const std::string_view &filename)
+    {
+        _hessianFile = filename;
     }
 
-    return "NONE";
-}
+    void HessianSettings::setHessianInfoFile(const std::string_view &filename)
+    {
+        _hessianInfoFile = filename;
+    }
 
-void HessianSettings::setHessianFile(const std::string_view &filename)
-{
-    _hessianFile = filename;
-}
+    void HessianSettings::setDisplacement(double displacement)
+    {
+        _displacement = displacement;
+    }
 
-void HessianSettings::setHessianInfoFile(const std::string_view &filename)
-{
-    _hessianInfoFile = filename;
-}
+    void HessianSettings::setOptimizeBeforeHessian(bool optimize)
+    {
+        _optimizeBeforeHessian = optimize;
+    }
 
-void HessianSettings::setDisplacement(double displacement)
-{
-    _displacement = displacement;
-}
+    void HessianSettings::setBuilder(HessianBuilderType builder)
+    {
+        _builder = builder;
+    }
 
-void HessianSettings::setOptimizeBeforeHessian(bool optimize)
-{
-    _optimizeBeforeHessian = optimize;
-}
+    std::string HessianSettings::getHessianFile() { return _hessianFile; }
 
-void HessianSettings::setBuilder(const std::string_view &builder)
-{
-    using enum HessianBuilderType;
+    std::string HessianSettings::getHessianInfoFile()
+    {
+        return _hessianInfoFile;
+    }
 
-    const auto builderLower = toLowerAndReplaceDashesCopy(builder);
+    double HessianSettings::getDisplacement() { return _displacement; }
 
-    if ("central" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_CENTRAL);
+    bool HessianSettings::optimizeBeforeHessian()
+    {
+        return _optimizeBeforeHessian;
+    }
 
-    else if ("forward" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_FORWARD);
+    HessianBuilderType HessianSettings::getBuilder() { return _builder; }
 
-    else if ("five_point" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_FIVE_POINT);
-
-    else if ("analytic" == builderLower)
-        setBuilder(ANALYTIC);
-
-    else
-        setBuilder(NONE);
-}
-
-void HessianSettings::setBuilder(HessianBuilderType builder)
-{
-    _builder = builder;
-}
-
-std::string HessianSettings::getHessianFile() { return _hessianFile; }
-
-std::string HessianSettings::getHessianInfoFile() { return _hessianInfoFile; }
-
-double HessianSettings::getDisplacement() { return _displacement; }
-
-bool HessianSettings::optimizeBeforeHessian() { return _optimizeBeforeHessian; }
-
-HessianBuilderType HessianSettings::getBuilder() { return _builder; }
+}   // namespace settings

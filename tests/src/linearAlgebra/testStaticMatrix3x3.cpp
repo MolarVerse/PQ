@@ -27,15 +27,17 @@
 #include "matrixNear.hpp"
 #include "staticMatrix.hpp"
 
-using namespace linalg;
-
 TEST(TestStaticMatrix3x3, unaryMinusOperator)
 {
-    StaticMatrix3x3<double> mat{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7, 8, 9}};
+    linalg::StaticMatrix3x3<double> mat{
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7, 8, 9}
+    };
 
     EXPECT_EQ(
         -mat,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {-1.0, -2.0, -3.0},
             {-4.0, -5.0, -6.0},
             {-7.0, -8.0, -9.0}
@@ -45,12 +47,12 @@ TEST(TestStaticMatrix3x3, unaryMinusOperator)
 
 TEST(TestStaticMatrix3x3, subtractMatrices)
 {
-    const StaticMatrix3x3<double> lhs{
+    const linalg::StaticMatrix3x3<double> lhs{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7, 8, 9}
     };
-    const StaticMatrix3x3<double> rhs{
+    const linalg::StaticMatrix3x3<double> rhs{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7, 8, 9}
@@ -58,7 +60,7 @@ TEST(TestStaticMatrix3x3, subtractMatrices)
 
     EXPECT_EQ(
         lhs - rhs,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {0.0, 0.0, 0.0},
             {0.0, 0.0, 0.0},
             {0.0, 0.0, 0.0}
@@ -68,8 +70,12 @@ TEST(TestStaticMatrix3x3, subtractMatrices)
 
 TEST(TestStaticMatrix3x3, addAssignmentOperator)
 {
-    StaticMatrix3x3<double> lhs{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7, 8, 9}};
-    const StaticMatrix3x3<double> rhs{
+    linalg::StaticMatrix3x3<double> lhs{
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0},
+        {7, 8, 9}
+    };
+    const linalg::StaticMatrix3x3<double> rhs{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7, 8, 9}
@@ -79,7 +85,7 @@ TEST(TestStaticMatrix3x3, addAssignmentOperator)
 
     EXPECT_EQ(
         lhs,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {2.0, 4.0, 6.0},
             {8.0, 10.0, 12.0},
             {14.0, 16.0, 18.0}
@@ -89,12 +95,12 @@ TEST(TestStaticMatrix3x3, addAssignmentOperator)
 
 TEST(TestStaticMatrix3x3, addMatrices)
 {
-    const StaticMatrix3x3<double> lhs{
+    const linalg::StaticMatrix3x3<double> lhs{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7, 8, 9}
     };
-    const StaticMatrix3x3<double> rhs{
+    const linalg::StaticMatrix3x3<double> rhs{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7, 8, 9}
@@ -102,7 +108,7 @@ TEST(TestStaticMatrix3x3, addMatrices)
 
     EXPECT_EQ(
         lhs + rhs,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {2.0, 4.0, 6.0},
             {8.0, 10.0, 12.0},
             {14.0, 16.0, 18.0}
@@ -112,12 +118,12 @@ TEST(TestStaticMatrix3x3, addMatrices)
 
 TEST(TestStaticMatrix3x3, multiplyStaticMatrices)
 {
-    const StaticMatrix3x3<double> lhs{
+    const linalg::StaticMatrix3x3<double> lhs{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0}
     };
-    const StaticMatrix3x3<double> rhs{
+    const linalg::StaticMatrix3x3<double> rhs{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0}
@@ -125,7 +131,7 @@ TEST(TestStaticMatrix3x3, multiplyStaticMatrices)
 
     EXPECT_EQ(
         lhs * rhs,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {30.0, 36.0, 42.0},
             {66.0, 81.0, 96.0},
             {102.0, 126.0, 150.0}
@@ -135,7 +141,7 @@ TEST(TestStaticMatrix3x3, multiplyStaticMatrices)
 
 TEST(TestStaticMatrix3x3, multiplyStaticMatrixWithScalar)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0}
@@ -145,7 +151,7 @@ TEST(TestStaticMatrix3x3, multiplyStaticMatrixWithScalar)
 
     EXPECT_EQ(
         mat * scalar,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {3.0, 6.0, 9.0},
             {12.0, 15.0, 18.0},
             {21.0, 24.0, 27.0}
@@ -156,7 +162,7 @@ TEST(TestStaticMatrix3x3, multiplyStaticMatrixWithScalar)
 
 TEST(TestStaticMatrix3x3, addStaticMatrixWithScalar)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0}
@@ -166,7 +172,7 @@ TEST(TestStaticMatrix3x3, addStaticMatrixWithScalar)
 
     EXPECT_EQ(
         mat + scalar,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {4.0, 5.0, 6.0},
             {7.0, 8.0, 9.0},
             {10.0, 11.0, 12.0}
@@ -176,20 +182,20 @@ TEST(TestStaticMatrix3x3, addStaticMatrixWithScalar)
 
 TEST(TestStaticMatrix3x3, multiplyStaticMatrixWithVector3D)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0}
     };
 
-    const Vec3D vec{1.0, 2.0, 3.0};
+    const linalg::Vec3D vec{1.0, 2.0, 3.0};
 
-    EXPECT_EQ(mat * vec, Vec3D(14.0, 32.0, 50.0));
+    EXPECT_EQ(mat * vec, linalg::Vec3D(14.0, 32.0, 50.0));
 }
 
 TEST(TestStaticMatrix3x3, transpose)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0}
@@ -197,7 +203,7 @@ TEST(TestStaticMatrix3x3, transpose)
 
     EXPECT_EQ(
         transpose(mat),
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {1.0, 4.0, 7.0},
             {2.0, 5.0, 8.0},
             {3.0, 6.0, 9.0}
@@ -207,7 +213,7 @@ TEST(TestStaticMatrix3x3, transpose)
 
 TEST(TestStaticMatrix3x3, determinant)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {6.0, 4.0, 5.0},
         {8.0, 9.0, 7.0}
@@ -218,12 +224,12 @@ TEST(TestStaticMatrix3x3, determinant)
 
 TEST(TestStaticMatrix3x3, vectorProductToStaticMatrix3x3)
 {
-    const Vec3D lhs{1.0, 2.0, 3.0};
-    const Vec3D rhs{4.0, 5.0, 6.0};
+    const linalg::Vec3D lhs{1.0, 2.0, 3.0};
+    const linalg::Vec3D rhs{4.0, 5.0, 6.0};
 
     EXPECT_EQ(
         tensorProduct(lhs, rhs),
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {4.0, 5.0, 6.0},
             {8.0, 10.0, 12.0},
             {12.0, 15.0, 18.0}
@@ -233,7 +239,7 @@ TEST(TestStaticMatrix3x3, vectorProductToStaticMatrix3x3)
 
 TEST(TestStaticMatrix3x3, outputStreamOperator)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0}
@@ -247,7 +253,7 @@ TEST(TestStaticMatrix3x3, outputStreamOperator)
 
 TEST(TestStaticMatrix3x3, cofactorMatrix)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {6.0, 4.0, 5.0},
         {8.0, 9.0, 7.0}
@@ -255,7 +261,7 @@ TEST(TestStaticMatrix3x3, cofactorMatrix)
 
     EXPECT_EQ(
         cofactorMatrix(mat),
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {-17.0, -2.0, 22.0},
             {13.0, -17.0, 7.0},
             {-2.0, 13.0, -8.0}
@@ -265,7 +271,7 @@ TEST(TestStaticMatrix3x3, cofactorMatrix)
 
 TEST(TestStaticMatrix3x3, inverse)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {6.0, 4.0, 5.0},
         {8.0, 9.0, 7.0}
@@ -273,7 +279,7 @@ TEST(TestStaticMatrix3x3, inverse)
 
     EXPECT_MATRIX_NEAR(
         inverse(mat),
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {-0.377777777777778, 0.288888888888889, -0.0444444444444444},
             {-0.0444444444444444, -0.377777777777778, 0.288888888888889},
             {0.488888888888889, 0.155555555555556, -0.177777777777778}
@@ -284,22 +290,22 @@ TEST(TestStaticMatrix3x3, inverse)
 
 TEST(TestStaticMatrix3x3, diagonalOfMatrix)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {6.0, 4.0, 5.0},
         {8.0, 9.0, 7.0}
     };
 
-    EXPECT_EQ(diagonal(mat), Vec3D(1.0, 4.0, 7.0));
+    EXPECT_EQ(diagonal(mat), linalg::Vec3D(1.0, 4.0, 7.0));
 }
 
 TEST(TestStaticMatrix3x3, diagonalMatrixOfVec3D)
 {
-    const Vec3D vec{1.0, 2.0, 3.0};
+    const linalg::Vec3D vec{1.0, 2.0, 3.0};
 
     EXPECT_MATRIX_NEAR(
-        diagonalMatrix(vec),
-        StaticMatrix3x3<double>(
+        linalg::diagonalMatrix(vec),
+        linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 2.0, 0.0},
             {0.0, 0.0, 3.0}
@@ -311,8 +317,8 @@ TEST(TestStaticMatrix3x3, diagonalMatrixOfVec3D)
 TEST(TestStaticMatrix3x3, diagonalMatrixOfScalar)
 {
     EXPECT_MATRIX_NEAR(
-        diagonalMatrix(1.0),
-        StaticMatrix3x3<double>(
+        linalg::diagonalMatrix(1.0),
+        linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 1.0, 0.0},
             {0.0, 0.0, 1.0}
@@ -323,7 +329,7 @@ TEST(TestStaticMatrix3x3, diagonalMatrixOfScalar)
 
 TEST(TestStaticMatrix3x3, trace)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {6.0, 4.0, 5.0},
         {8.0, 9.0, 7.0}
@@ -334,7 +340,7 @@ TEST(TestStaticMatrix3x3, trace)
 
 TEST(TestStaticMatrix3x3, multiplyAssignmentOperatorScalar)
 {
-    StaticMatrix3x3<double> mat{
+    linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {6.0, 4.0, 5.0},
         {8.0, 9.0, 7.0}
@@ -344,7 +350,7 @@ TEST(TestStaticMatrix3x3, multiplyAssignmentOperatorScalar)
 
     EXPECT_EQ(
         mat,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {2.0, 4.0, 6.0},
             {12.0, 8.0, 10.0},
             {16.0, 18.0, 14.0}
@@ -354,7 +360,7 @@ TEST(TestStaticMatrix3x3, multiplyAssignmentOperatorScalar)
 
 TEST(TestStaticMatrix3x3, divideAssignmentOperatorScalar)
 {
-    StaticMatrix3x3<double> mat{
+    linalg::StaticMatrix3x3<double> mat{
         {2.0, 4.0, 6.0},
         {12.0, 8.0, 10.0},
         {16.0, 18.0, 14.0}
@@ -364,7 +370,7 @@ TEST(TestStaticMatrix3x3, divideAssignmentOperatorScalar)
 
     EXPECT_EQ(
         mat,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {1.0, 2.0, 3.0},
             {6.0, 4.0, 5.0},
             {8.0, 9.0, 7.0}
@@ -374,12 +380,12 @@ TEST(TestStaticMatrix3x3, divideAssignmentOperatorScalar)
 
 TEST(TestStaticMatrix3x3, subtractionAssignmentOperatorMatrices)
 {
-    StaticMatrix3x3<double> lhs{
+    linalg::StaticMatrix3x3<double> lhs{
         {2.0, 4.0, 6.0},
         {12.0, 8.0, 10.0},
         {16.0, 18.0, 14.0}
     };
-    const StaticMatrix3x3<double> rhs{
+    const linalg::StaticMatrix3x3<double> rhs{
         {1.0, 2.0, 3.0},
         {6.0, 4.0, 5.0},
         {8.0, 9.0, 7.0}
@@ -389,7 +395,7 @@ TEST(TestStaticMatrix3x3, subtractionAssignmentOperatorMatrices)
 
     EXPECT_EQ(
         lhs,
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {1.0, 2.0, 3.0},
             {6.0, 4.0, 5.0},
             {8.0, 9.0, 7.0}
@@ -399,18 +405,18 @@ TEST(TestStaticMatrix3x3, subtractionAssignmentOperatorMatrices)
 
 TEST(TestStaticMatrix3x3, getDiagonalVectorFromMatrix)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 2.0, 3.0},
         {6.0, 4.0, 5.0},
         {8.0, 9.0, 7.0}
     };
 
-    EXPECT_EQ(diagonal(mat), Vec3D(1.0, 4.0, 7.0));
+    EXPECT_EQ(diagonal(mat), linalg::Vec3D(1.0, 4.0, 7.0));
 }
 
 TEST(TestStaticMatrix3x3, getExponentialMatrix)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 0.0, 0.0},
         {0.0, 2.0, 0.0},
         {0.0, 0.0, 3.0}
@@ -418,7 +424,7 @@ TEST(TestStaticMatrix3x3, getExponentialMatrix)
 
     EXPECT_MATRIX_NEAR(
         exp(mat),
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {exp(1.0), exp(0.0), exp(0.0)},
             {exp(0.0), exp(2.0), exp(0.0)},
             {exp(0.0), exp(0.0), exp(3.0)}
@@ -429,20 +435,20 @@ TEST(TestStaticMatrix3x3, getExponentialMatrix)
 
 TEST(TestStaticMatrix3x3, getKroneckerDeltaMatrix)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 0.0, 0.0},
         {0.0, 1.0, 0.0},
         {0.0, 0.0, 1.0}
     };
 
-    auto delta = kroneckerDeltaMatrix<double>();
+    auto delta = linalg::kroneckerDeltaMatrix<double>();
 
     EXPECT_EQ(delta, mat);
 }
 
 TEST(TestStaticMatrix3x3, getExponentialPadeMatrix)
 {
-    const StaticMatrix3x3<double> mat{
+    const linalg::StaticMatrix3x3<double> mat{
         {1.0, 0.0, 0.0},
         {0.0, 1.0, 0.0},
         {0.0, 0.0, 1.0}
@@ -450,7 +456,7 @@ TEST(TestStaticMatrix3x3, getExponentialPadeMatrix)
 
     EXPECT_MATRIX_NEAR(
         expPade(mat),
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {exp(1.0), 0.0, 0.0},
             {0.0, exp(1.0), 0.0},
             {0.0, 0.0, exp(1.0)}
@@ -458,7 +464,7 @@ TEST(TestStaticMatrix3x3, getExponentialPadeMatrix)
         1e-3
     );
 
-    const StaticMatrix3x3<double> mat2{
+    const linalg::StaticMatrix3x3<double> mat2{
         {1.0, 1.0, 1.0},
         {0.0, 1.0, 0.0},
         {0.0, 0.0, 1.0}
@@ -466,7 +472,7 @@ TEST(TestStaticMatrix3x3, getExponentialPadeMatrix)
 
     EXPECT_MATRIX_NEAR(
         expPade(mat2),
-        StaticMatrix3x3<double>(
+        linalg::StaticMatrix3x3<double>(
             {exp(1.0), exp(1.0), exp(1.0)},
             {0.0, exp(1.0), 0.0},
             {0.0, 0.0, exp(1.0)}

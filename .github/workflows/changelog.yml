@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - dev
+      - NEXT
     types: [opened, reopened, synchronize]
 
 jobs:

@@ -26,24 +26,19 @@
 #include <string>
 
 #include "convergence.hpp"
-#include "convergenceSettings.hpp"
 #include "optOutput.hpp"
 #include "steepestDescent.hpp"
 #include "testOutputBase.hpp"
-
-using namespace out;
-using namespace opt;
-using settings::ConvStrategy;
 
 TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
+    out::OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -72,11 +67,11 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
+    out::OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -105,11 +100,11 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
+    out::OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -136,11 +131,11 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
+    out::OptOutput out(path);
     out.setFilename(path);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         false,   // energy disabled
         true,
         true,

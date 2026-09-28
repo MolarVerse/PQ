@@ -55,7 +55,6 @@ class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
 TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
 {
     auto molecule = molsys::Molecule{MolType{0}};
-    molecule.setNumberOfAtoms(2);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();

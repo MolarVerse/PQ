@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW, TestInfo...
+#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW_MSG, TestInfo...
 
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
@@ -30,6 +30,7 @@
 #include "exceptions.hpp"        // for TopologyException
 #include "strongTypes.hpp"
 #include "testTopologySection.hpp"   // for TestTopologySection
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test dihedral section processing one line
@@ -61,21 +62,27 @@ TEST_F(TestTopologySection, processSectionDihedral)
     EXPECT_EQ(dihedrals[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3", "4"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         dihedralSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Topology file dihedral section at line 0 - atoms cannot be the "
+        "same!"
     );
 
     lineElements = {"1", "2", "7"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         dihedralSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Wrong number of arguments in topology file dihedral section at "
+        "line 0 - number of elements has to be 5 or 6!"
     );
 
     lineElements = {"1", "2", "3", "4", "7", "#"};
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         dihedralSection.processSection(lineElements, *_engine),
-        exc::TopologyException
+        exc::TopologyException,
+        "Sixth entry in topology file in dihedral section has to be a '*' or "
+        "empty at line 0!"
     );
 }
 
@@ -86,6 +93,10 @@ TEST_F(TestTopologySection, processSectionDihedral)
 TEST_F(TestTopologySection, endedNormallyDihedral)
 {
     input::topology::DihedralSection dihedralSection;
-    EXPECT_THROW(dihedralSection.endedNormally(false), exc::TopologyException);
+    EXPECT_THROW_MSG(
+        dihedralSection.endedNormally(false),
+        exc::TopologyException,
+        "Topology file dihedral section at line 0 - no end of section found!"
+    );
     EXPECT_NO_THROW(dihedralSection.endedNormally(true));
 }

@@ -28,8 +28,6 @@
 #include "coulombWolf.hpp"                           // for CoulombWolf
 // for Message, TestPartResult
 
-using namespace pot;
-
 /**
  * @brief tests calculation of Coulomb potential with wolf long-range correction
  *

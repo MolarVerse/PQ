@@ -22,142 +22,90 @@
 
 #include "inputFileParser.hpp"
 
-#include <format>        // for format
-#include <string_view>   // for string_view
-
-#include "exceptions.hpp"        // for InputFileException
 #include "stringUtilities.hpp"   // for toLowerCopy
 
-using namespace input;
-using namespace exc;
-using namespace utilities;
-
-/**
- * @brief check if parameter is "="
- *
- * @param view
- * @param lineNumber
- *
- * @throw InputFileException if argument is not "="
- */
-void input::checkEqualSign(const std::string_view &view, size_t lineNumber)
+namespace input
 {
-    if (view != "=")
-        throw InputFileException(
-            std::format("Invalid command at line {} in input file", lineNumber)
-        );
-}
-
-/**
- * @brief check if command array has at least 3 elements
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if command array has less than 3
- * elements
- *
- * @note this function is used for commands that have an array as their third
- * argument
- */
-void input::checkCommandArray(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    if (lineElements.size() < 3)
+    /**
+     * @brief add keyword to different keyword maps
+     *
+     * @param keyword
+     * @param parserFunc
+     * @param required
+     *
+     * @details
+     *
+     *  parserFunc is a function pointer to a parsing function
+     *  count is the number of keywords found in the inputfile
+     *  required is a boolean that indicates if the keyword is required
+     *
+     */
+    void InputFileParser::addKeyword(
+        const std::string &keyword,
+        ParseFunc          parserFunc,
+        bool               required
+    )
     {
-        throw InputFileException(
-            std::format(
-                "Invalid number of arguments at line {} in input file",
-                lineNumber
-            )
-        );
+        const auto keywordLowerCase =
+            utilities::toLowerAndReplaceDashesCopy(keyword);
+        _keywordFuncMap.try_emplace(keywordLowerCase, parserFunc);
+        _keywordRequiredMap.try_emplace(keywordLowerCase, required);
+        _keywordCountMap.try_emplace(keywordLowerCase, 0);
     }
 
-    checkEqualSign(lineElements[1], lineNumber);
-}
-
-/**
- * @brief check if command array has exactly 3 elements
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if command array has less or more
- * than 3 elements
- */
-void input::checkCommand(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    if (lineElements.size() != 3)
+    /**
+     * @brief get the keyword function map
+     *
+     * @return the keyword function map
+     */
+    std::map<std::string, InputFileParser::ParseFunc> InputFileParser::
+        getKeywordFuncMap() const
     {
-        throw InputFileException(
-            std::format(
-                "Invalid number of arguments at line {} in input file",
-                lineNumber
-            )
-        );
+        return _keywordFuncMap;
     }
 
-    checkEqualSign(lineElements[1], lineNumber);
-}
+    /**
+     * @brief get the keyword required map
+     *
+     * @return the keyword required map
+     */
+    std::map<std::string, bool> InputFileParser::getKeywordRequiredMap() const
+    {
+        return _keywordRequiredMap;
+    }
 
-/**
- * @brief add keyword to different keyword maps
- *
- * @param keyword
- * @param parserFunc
- * @param required
- *
- * @details
- *
- *  parserFunc is a function pointer to a parsing function
- *  count is the number of keywords found in the inputfile
- *  required is a boolean that indicates if the keyword is required
- *
- */
-void InputFileParser::addKeyword(
-    const std::string &keyword,
-    ParseFunc          parserFunc,
-    bool               required
-)
-{
-    const auto keywordLowerCase = toLowerAndReplaceDashesCopy(keyword);
-    _keywordFuncMap.try_emplace(keywordLowerCase, parserFunc);
-    _keywordRequiredMap.try_emplace(keywordLowerCase, required);
-    _keywordCountMap.try_emplace(keywordLowerCase, 0);
-}
+    /**
+     * @brief get the keyword count map
+     *
+     * @return the keyword count map
+     */
+    std::map<std::string, int> InputFileParser::getKeywordCountMap() const
+    {
+        return _keywordCountMap;
+    }
 
-/**
- * @brief get the keyword function map
- *
- * @return the keyword function map
- */
-std::map<std::string, InputFileParser::ParseFunc> InputFileParser::
-    getKeywordFuncMap() const
-{
-    return _keywordFuncMap;
-}
+    /**
+     * @brief clear all keyword maps
+     *
+     * @details
+     *
+     * This function clears all the keyword maps, effectively resetting the
+     * parser state.
+     */
+    void InputFileParser::_clear()
+    {
+        _keywordFuncMap.clear();
+        _keywordRequiredMap.clear();
+        _keywordCountMap.clear();
 
-/**
- * @brief get the keyword required map
- *
- * @return the keyword required map
- */
-std::map<std::string, bool> InputFileParser::getKeywordRequiredMap() const
-{
-    return _keywordRequiredMap;
-}
+        _registry.clearValues();
+    }
 
-/**
- * @brief get the keyword count map
- *
- * @return the keyword count map
- */
-std::map<std::string, int> InputFileParser::getKeywordCountMap() const
-{
-    return _keywordCountMap;
-}
+    /**
+     * @brief get the input registry
+     *
+     * @return the input registry
+     */
+    InputRegistry &InputFileParser::_getRegistry() { return _registry; }
+
+}   // namespace input

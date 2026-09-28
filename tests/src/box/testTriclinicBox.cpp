@@ -28,14 +28,12 @@
 #include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
 #include "manostatSettings.hpp"   // for ManostatSettings
 #include "matrixNear.hpp"         // for EXPECT_MATRIX_NEAR
-#include "triclinicBox.hpp"       // for TriclinicBox
+#include "triclinicBox.hpp"       // for molsys::TriclinicBox
 #include "vectorNear.hpp"         // for EXPECT_VECTOR_NEAR
-
-using namespace molsys;
 
 TEST(TestTriclinicBox, setBoxDimensions)
 {
-    auto                box           = TriclinicBox();
+    auto                box           = molsys::TriclinicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
@@ -54,7 +52,7 @@ TEST(TestTriclinicBox, setBoxDimensions)
 
 TEST(TestTriclinicBox, setBoxAngles)
 {
-    auto                box           = TriclinicBox();
+    auto                box           = molsys::TriclinicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     const linalg::Vec3D boxAngles     = {90.0, 90.0, 90.0};
     box.setBoxDimensions(boxDimensions);
@@ -113,7 +111,7 @@ TEST(TestTriclinicBox, setBoxAngles)
 
 TEST(TestTriclinicBox, calculateVolume)
 {
-    auto box = TriclinicBox();
+    auto box = molsys::TriclinicBox();
     box.setBoxDimensions({1.0, 2.0, 3.0});
     box.setBoxAngles({30.0, 60.0, 45.0});
 
@@ -134,7 +132,7 @@ TEST(TestTriclinicBox, calculateVolume)
 
 TEST(TestTriclinicBox, applyPBC)
 {
-    auto box = TriclinicBox();
+    auto box = molsys::TriclinicBox();
     box.setBoxDimensions({1.0, 2.0, 3.0});
     box.setBoxAngles({30.0, 60.0, 45.0});
 
@@ -153,7 +151,7 @@ TEST(TestTriclinicBox, applyPBC)
 
 TEST(TestTriclinicBox, calculateShiftVectors)
 {
-    auto box = TriclinicBox();
+    auto box = molsys::TriclinicBox();
     box.setBoxDimensions({1.0, 2.0, 3.0});
     box.setBoxAngles({30.0, 60.0, 45.0});
 
@@ -169,7 +167,7 @@ TEST(TestTriclinicBox, calculateShiftVectors)
 
 TEST(TestTriclinicBox, wrapPositionIntoBox)
 {
-    auto box = TriclinicBox();
+    auto box = molsys::TriclinicBox();
     box.setBoxDimensions({60.0, 60.0, 4.542});
     box.setBoxAngles({90.0, 90.0, 120.0});
 
@@ -188,7 +186,7 @@ TEST(TestTriclinicBox, wrapPositionIntoBox)
 
 TEST(TestTriclinicBox, transformsRoundTrip)
 {
-    TriclinicBox box;
+    molsys::TriclinicBox box;
     box.setBoxDimensions({4.0, 5.0, 6.0});
     box.setBoxAngles({80.0, 75.0, 70.0});
 
@@ -217,11 +215,11 @@ TEST(TestTriclinicBox, transformsRoundTrip)
 
 TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
 {
-    TriclinicBox box;
+    molsys::TriclinicBox box;
     box.setBoxDimensions({4.0, 5.0, 6.0});
     box.setBoxAngles({80.0, 75.0, 70.0});
 
-    using enum Periodicity;
+    using enum molsys::Periodicity;
     constexpr std::array periodicities{NON_PERIODIC, X, Y, Z, XY, XZ, YZ, XYZ};
     for (const auto periodicity : periodicities)
         EXPECT_TRUE(std::isfinite(box.getBoxMatrix(periodicity)[0][0]));
@@ -237,11 +235,11 @@ TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
 
 TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
 {
-    TriclinicBox box;
+    molsys::TriclinicBox box;
     box.setBoxDimensions({4.0, 5.0, 6.0});
     box.setBoxAngles({80.0, 75.0, 70.0});
 
-    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
     box.scaleBox(diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0}));
     EXPECT_VECTOR_NEAR(
         box.getBoxDimensions(),
@@ -250,9 +248,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     );
     EXPECT_NEAR(box.getVolume(), box.calculateVolume(), 1.0e-12);
 
-    settings::ManostatSettings::setIsotropy(
-        settings::Isotropy::FULL_ANISOTROPIC
-    );
+    settings::ManostatSettings::setIsotropy(Isotropy::FULL_ANISOTROPIC);
     const auto originalAngles = box.getBoxAngles();
     box.scaleBox(diagonalMatrix(linalg::Vec3D{0.5, 0.5, 0.5}));
     EXPECT_VECTOR_NEAR(
@@ -263,7 +259,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     EXPECT_VECTOR_NEAR(box.getBoxAngles(), originalAngles, 1.0e-12);
 
     const auto [dimensions, angles] =
-        calcBoxDimAndAnglesFromBoxMatrix(box.getBoxMatrix());
+        molsys::calcBoxDimAndAnglesFromBoxMatrix(box.getBoxMatrix());
     EXPECT_VECTOR_NEAR(dimensions, box.getBoxDimensions(), 1.0e-12);
     EXPECT_VECTOR_NEAR(angles, box.getBoxAngles(), 1.0e-12);
 }

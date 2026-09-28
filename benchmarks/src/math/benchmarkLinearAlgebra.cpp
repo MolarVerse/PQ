@@ -27,13 +27,10 @@
 
 namespace
 {
-    using linalg::StaticMatrix3x3;
-    using linalg::Vec3D;
-
     void BM_VectorArithmetic(benchmark::State& state)
     {
-        Vec3D lhs{1.1, 2.2, 3.3};
-        Vec3D rhs{0.7, -1.3, 2.1};
+        linalg::Vec3D lhs{1.1, 2.2, 3.3};
+        linalg::Vec3D rhs{0.7, -1.3, 2.1};
 
         for (auto _ : state)
         {
@@ -46,8 +43,8 @@ namespace
 
     void BM_DotProduct(benchmark::State& state)
     {
-        Vec3D lhs{1.1, 2.2, 3.3};
-        Vec3D rhs{0.7, -1.3, 2.1};
+        linalg::Vec3D lhs{1.1, 2.2, 3.3};
+        linalg::Vec3D rhs{0.7, -1.3, 2.1};
 
         for (auto _ : state)
         {
@@ -60,8 +57,8 @@ namespace
 
     void BM_CrossProduct(benchmark::State& state)
     {
-        Vec3D lhs{1.1, 2.2, 3.3};
-        Vec3D rhs{0.7, -1.3, 2.1};
+        linalg::Vec3D lhs{1.1, 2.2, 3.3};
+        linalg::Vec3D rhs{0.7, -1.3, 2.1};
 
         for (auto _ : state)
         {
@@ -74,7 +71,7 @@ namespace
 
     void BM_VectorNorm(benchmark::State& state)
     {
-        Vec3D vector{1.1, 2.2, 3.3};
+        linalg::Vec3D vector{1.1, 2.2, 3.3};
 
         for (auto _ : state)
         {
@@ -86,7 +83,7 @@ namespace
 
     void BM_VectorNormSquared(benchmark::State& state)
     {
-        Vec3D vector{1.1, 2.2, 3.3};
+        linalg::Vec3D vector{1.1, 2.2, 3.3};
 
         for (auto _ : state)
         {
@@ -98,12 +95,12 @@ namespace
 
     void BM_MatrixVectorProduct(benchmark::State& state)
     {
-        StaticMatrix3x3<double> matrix{
-            Vec3D{2.0, 0.1, 0.2},
-            Vec3D{0.3, 3.0, 0.1},
-            Vec3D{0.2, 0.1, 4.0}
+        linalg::StaticMatrix3x3<double> matrix{
+            linalg::Vec3D{2.0, 0.1, 0.2},
+            linalg::Vec3D{0.3, 3.0, 0.1},
+            linalg::Vec3D{0.2, 0.1, 4.0}
         };
-        Vec3D vector{1.1, 2.2, 3.3};
+        linalg::Vec3D vector{1.1, 2.2, 3.3};
 
         for (auto _ : state)
         {
@@ -116,10 +113,10 @@ namespace
 
     void BM_MatrixInverse(benchmark::State& state)
     {
-        StaticMatrix3x3<double> matrix{
-            Vec3D{2.0, 0.1, 0.2},
-            Vec3D{0.3, 3.0, 0.1},
-            Vec3D{0.2, 0.1, 4.0}
+        linalg::StaticMatrix3x3<double> matrix{
+            linalg::Vec3D{2.0, 0.1, 0.2},
+            linalg::Vec3D{0.3, 3.0, 0.1},
+            linalg::Vec3D{0.2, 0.1, 4.0}
         };
 
         for (auto _ : state)
@@ -132,15 +129,15 @@ namespace
 
     void BM_MatrixProduct(benchmark::State& state)
     {
-        StaticMatrix3x3<double> lhs{
-            Vec3D{2.0, 0.1, 0.2},
-            Vec3D{0.3, 3.0, 0.1},
-            Vec3D{0.2, 0.1, 4.0}
+        linalg::StaticMatrix3x3<double> lhs{
+            linalg::Vec3D{2.0, 0.1, 0.2},
+            linalg::Vec3D{0.3, 3.0, 0.1},
+            linalg::Vec3D{0.2, 0.1, 4.0}
         };
-        StaticMatrix3x3<double> rhs{
-            Vec3D{1.5, 0.4, 0.1},
-            Vec3D{0.2, 2.5, 0.3},
-            Vec3D{0.1, 0.2, 3.5}
+        linalg::StaticMatrix3x3<double> rhs{
+            linalg::Vec3D{1.5, 0.4, 0.1},
+            linalg::Vec3D{0.2, 2.5, 0.3},
+            linalg::Vec3D{0.1, 0.2, 3.5}
         };
 
         for (auto _ : state)
@@ -154,10 +151,10 @@ namespace
 
     void BM_MatrixTranspose(benchmark::State& state)
     {
-        StaticMatrix3x3<double> matrix{
-            Vec3D{2.0, 0.1, 0.2},
-            Vec3D{0.3, 3.0, 0.1},
-            Vec3D{0.2, 0.1, 4.0}
+        linalg::StaticMatrix3x3<double> matrix{
+            linalg::Vec3D{2.0, 0.1, 0.2},
+            linalg::Vec3D{0.3, 3.0, 0.1},
+            linalg::Vec3D{0.2, 0.1, 4.0}
         };
 
         for (auto _ : state)
@@ -170,10 +167,10 @@ namespace
 
     void BM_MatrixDeterminant(benchmark::State& state)
     {
-        StaticMatrix3x3<double> matrix{
-            Vec3D{2.0, 0.1, 0.2},
-            Vec3D{0.3, 3.0, 0.1},
-            Vec3D{0.2, 0.1, 4.0}
+        linalg::StaticMatrix3x3<double> matrix{
+            linalg::Vec3D{2.0, 0.1, 0.2},
+            linalg::Vec3D{0.3, 3.0, 0.1},
+            linalg::Vec3D{0.2, 0.1, 4.0}
         };
 
         for (auto _ : state)

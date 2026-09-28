@@ -27,61 +27,63 @@
 #include "atom.hpp"           // for Atom
 #include "moleculeType.hpp"   // for MoleculeType
 
-using namespace constraints;
-using namespace molsys;
-
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
-
-/**
- * @brief Set the molecule type object as a unique pointer
- *
- * @param moltype
- */
-void MShakeReference::setMoleculeType(MoleculeType &moltype)
+namespace constraints
 {
-    _moleculeType = std::make_shared<MoleculeType>(moltype);
-}
 
-/**
- * @brief Set the atoms object
- *
- * @param atoms
- */
-void MShakeReference::setAtoms(const std::vector<Atom> &atoms)
-{
-    _atoms = atoms;
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief Set the molecule type object as a unique pointer
+     *
+     * @param moltype
+     */
+    void MShakeReference::setMoleculeType(molsys::MoleculeType &moltype)
+    {
+        _moleculeType = std::make_shared<molsys::MoleculeType>(moltype);
+    }
 
-/**
- * @brief get the number of atoms
- *
- * @return const size_t
- */
-size_t MShakeReference::getNumberOfAtoms() const { return _atoms.size(); }
+    /**
+     * @brief Set the atoms object
+     *
+     * @param atoms
+     */
+    void MShakeReference::setAtoms(const std::vector<molsys::Atom> &atoms)
+    {
+        _atoms = atoms;
+    }
 
-/**
- * @brief get the atoms
- *
- * @return const std::vector<Atom>&
- */
-std::vector<Atom> &MShakeReference::getAtoms() { return _atoms; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the molecule type
- *
- * @return const MoleculeType&
- */
-MoleculeType &MShakeReference::getMoleculeType() const
-{
-    return *_moleculeType;
-}
+    /**
+     * @brief get the number of atoms
+     *
+     * @return const size_t
+     */
+    size_t MShakeReference::getNumberOfAtoms() const { return _atoms.size(); }
+
+    /**
+     * @brief get the atoms
+     *
+     * @return const std::vector<Atom>&
+     */
+    std::vector<molsys::Atom> &MShakeReference::getAtoms() { return _atoms; }
+
+    /**
+     * @brief get the molecule type
+     *
+     * @return const MoleculeType&
+     */
+    molsys::MoleculeType &MShakeReference::getMoleculeType() const
+    {
+        return *_moleculeType;
+    }
+
+}   // namespace constraints

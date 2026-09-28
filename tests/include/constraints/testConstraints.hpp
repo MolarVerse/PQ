@@ -46,7 +46,6 @@ class TestConstraints : public ::testing::Test
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(3);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
@@ -67,7 +66,6 @@ class TestConstraints : public ::testing::Test
         molecule1.addAtom(atom3);
 
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(2);
 
         auto atom4 = std::make_shared<molsys::Atom>();
         auto atom5 = std::make_shared<molsys::Atom>();

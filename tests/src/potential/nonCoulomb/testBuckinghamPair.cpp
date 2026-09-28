@@ -28,8 +28,6 @@
 #include "buckinghamPair.hpp"   // for BuckinghamPair
                                 // for AssertionResult, Message, TestPartResult
 
-using namespace pot;
-
 /**
  * @brief tests the equals operator of BuckinghamPair
  *
@@ -40,14 +38,14 @@ TEST(TestBuckinghamPair, equalsOperator)
     const ExtVdwType vdwType2{1};
     const ExtVdwType vdwType3{2};
 
-    const auto nonCoulombPair1 = BuckinghamPair(
+    const auto nonCoulombPair1 = pot::BuckinghamPair(
         vdwType1,
         vdwType2,
         1.0,
         BuckinghamParams{.scaling = 2.0, .dRho = 3.0, .c6 = 4.0}
     );
 
-    const auto nonCoulombPair2 = BuckinghamPair(
+    const auto nonCoulombPair2 = pot::BuckinghamPair(
         vdwType1,
         vdwType2,
         1.0,
@@ -55,7 +53,7 @@ TEST(TestBuckinghamPair, equalsOperator)
     );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair2);
 
-    const auto nonCoulombPair3 = BuckinghamPair(
+    const auto nonCoulombPair3 = pot::BuckinghamPair(
         vdwType2,
         vdwType1,
         1.0,
@@ -63,7 +61,7 @@ TEST(TestBuckinghamPair, equalsOperator)
     );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair3);
 
-    const auto nonCoulombPair4 = BuckinghamPair(
+    const auto nonCoulombPair4 = pot::BuckinghamPair(
         vdwType1,
         vdwType3,
         1.0,
@@ -71,7 +69,7 @@ TEST(TestBuckinghamPair, equalsOperator)
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair4);
 
-    const auto nonCoulombPair5 = BuckinghamPair(
+    const auto nonCoulombPair5 = pot::BuckinghamPair(
         vdwType1,
         vdwType2,
         2.0,
@@ -79,7 +77,7 @@ TEST(TestBuckinghamPair, equalsOperator)
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair5);
 
-    const auto nonCoulombPair6 = BuckinghamPair(
+    const auto nonCoulombPair6 = pot::BuckinghamPair(
         vdwType1,
         vdwType2,
         1.0,
@@ -87,7 +85,7 @@ TEST(TestBuckinghamPair, equalsOperator)
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair6);
 
-    const auto nonCoulombPair7 = BuckinghamPair(
+    const auto nonCoulombPair7 = pot::BuckinghamPair(
         vdwType1,
         vdwType2,
         1.0,
@@ -95,7 +93,7 @@ TEST(TestBuckinghamPair, equalsOperator)
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair7);
 
-    const auto nonCoulombPair8 = BuckinghamPair(
+    const auto nonCoulombPair8 = pot::BuckinghamPair(
         vdwType1,
         vdwType2,
         1.0,

@@ -31,32 +31,30 @@
 #include "inputParam.hpp"
 #include "throwWithMessage.hpp"
 
-using namespace input;
-
 /**
  * @brief tests that calling the adapted ParseFunc behaves identically to
- * calling InputKey<T>::parse directly
+ * calling input::InputKey<T>::parse directly
  *
  */
 TEST(TestInputKeyAdapter, adaptedParseFuncMatchesDirectParse)
 {
     double captured = 0.0;
 
-    InputKey<double> key(
-        KeyMetadata{
-            .name         = "timestep",
-            .title        = "Timestep",
-            .description  = "The timestep for the simulation",
-            .unit         = "fs",
-            .errorMessage = "Invalid timestep value",
-        },
-        std::nullopt,
-        std::nullopt,
-        nullptr,
-        [&captured](const double &value) { captured = value; }
+    input::InputKey<double> key(
+        input::KeyRegistry<double>{
+            .metadata =
+                input::KeyMetadata{
+                    .name         = "timestep",
+                    .title        = "Timestep",
+                    .description  = "The timestep for the simulation",
+                    .unit         = "fs",
+                    .errorMessage = "Invalid timestep value",
+                },
+            .onSet = [&captured](const double &value) { captured = value; }
+        }
     );
 
-    const InputFileParser::ParseFunc parseFunc = adapt(key);
+    const input::InputFileParser::ParseFunc parseFunc = adapt(key);
     parseFunc({"timestep", "=", "0.5"}, 1);
 
     EXPECT_TRUE(key.isSet());
@@ -65,23 +63,26 @@ TEST(TestInputKeyAdapter, adaptedParseFuncMatchesDirectParse)
 }
 
 /**
- * @brief tests that an exception thrown by InputKey<T>::parse propagates
+ * @brief tests that an exception thrown by input::InputKey<T>::parse propagates
  * unchanged through the adapted ParseFunc
  *
  */
 TEST(TestInputKeyAdapter, exceptionsPropagateThroughAdapter)
 {
-    InputKey<double> key(
-        KeyMetadata{
-            .name         = "timestep",
-            .title        = "Timestep",
-            .description  = "The timestep for the simulation",
-            .unit         = "fs",
-            .errorMessage = "Invalid timestep value",
+    input::InputKey<double> key(
+        input::KeyRegistry<double>{
+            .metadata =
+                input::KeyMetadata{
+                    .name         = "timestep",
+                    .title        = "Timestep",
+                    .description  = "The timestep for the simulation",
+                    .unit         = "fs",
+                    .errorMessage = "Invalid timestep value",
+                }
         }
     );
 
-    const InputFileParser::ParseFunc parseFunc = adapt(key);
+    const input::InputFileParser::ParseFunc parseFunc = adapt(key);
 
     EXPECT_THROW_MSG(
         parseFunc({"timestep", "=", "not_a_number"}, 3),
@@ -91,26 +92,28 @@ TEST(TestInputKeyAdapter, exceptionsPropagateThroughAdapter)
 }
 
 /**
- * @brief tests the adapter wired into the real InputFileParser::addKeyword
- * / dispatch mechanism, exactly as a migrated parser class will use it --
- * this is the actual integration surface the whole design depends on
+ * @brief tests the adapter wired into the real
+ * input::InputFileParser::addKeyword / dispatch mechanism, exactly as a
+ * migrated parser class will use it -- this is the actual integration surface
+ * the whole design depends on
  *
  */
 TEST(TestInputKeyAdapter, wiresIntoRealInputFileParserAddKeyword)
 {
-    InputFileParser parser;
-    InputRegistry   registry;
+    input::InputFileParser parser;
+    input::InputRegistry   registry;
 
-    auto &timestepKey = registry.registerKey<double>(
-        KeyMetadata{
-            .name         = "timestep",
-            .title        = "Timestep",
-            .description  = "The timestep for the simulation",
-            .unit         = "fs",
-            .errorMessage = "Invalid timestep value",
-        },
-        /*defaultValue=*/1.0
-    );
+    auto &timestepKey = registry.registerKey<double>(input::KeyRegistry<double>{
+        .metadata =
+            input::KeyMetadata{
+                .name         = "timestep",
+                .title        = "Timestep",
+                .description  = "The timestep for the simulation",
+                .unit         = "fs",
+                .errorMessage = "Invalid timestep value",
+            },
+        .defaultValue = 1.0
+    });
 
     parser.addKeyword(
         "timestep",
@@ -131,21 +134,24 @@ TEST(TestInputKeyAdapter, wiresIntoRealInputFileParserAddKeyword)
 
 /**
  * @brief tests adapt() used directly per-key (the documented pattern for
- * a single InputKey<T>, as opposed to routing a whole registry through
+ * a single input::InputKey<T>, as opposed to routing a whole registry through
  * one ParseFunc as in the previous test)
  *
  */
 TEST(TestInputKeyAdapter, adaptWiresSingleKeyIntoAddKeyword)
 {
-    InputFileParser parser;
+    input::InputFileParser parser;
 
-    InputKey<bool> key(
-        KeyMetadata{
-            .name         = "verbose",
-            .title        = "Verbose",
-            .description  = "Enable verbose output",
-            .unit         = "",
-            .errorMessage = "Invalid verbose value",
+    input::InputKey<bool> key(
+        input::KeyRegistry<bool>{
+            .metadata =
+                input::KeyMetadata{
+                    .name         = "verbose",
+                    .title        = "Verbose",
+                    .description  = "Enable verbose output",
+                    .unit         = "",
+                    .errorMessage = "Invalid verbose value",
+                }
         }
     );
 

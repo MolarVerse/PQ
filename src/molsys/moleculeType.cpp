@@ -24,296 +24,311 @@
 
 #include "collectionUtilities.hpp"
 
-using namespace molsys;
-
-/**
- * @brief Construct a new Molecule Type:: Molecule Type object
- *
- * @param moltype
- */
-MoleculeType::MoleculeType(MolType moltype) : _moltype(moltype) {}
-
-/**
- * @brief Construct a new Molecule Type:: Molecule Type object
- *
- * @param name
- */
-MoleculeType::MoleculeType(const std::string_view &name) : _name(name) {}
-
-/**
- * @brief finds number of different atom types in molecule
- *
- * @return size_t
- */
-size_t MoleculeType::getNumberOfAtomTypes()
+namespace molsys
 {
-    return utilities::getUniqueElements(_atomTypes).size();
-}
+    /**
+     * @brief Construct a new Molecule Type:: Molecule Type object
+     *
+     * @param moltype
+     */
+    MoleculeType::MoleculeType(MolType moltype) : _moltype(moltype) {}
 
-/**************************
- *                        *
- * standard adder methods *
- *                        *
- **************************/
+    /**
+     * @brief Construct a new Molecule Type:: Molecule Type object
+     *
+     * @param name
+     */
+    MoleculeType::MoleculeType(const std::string_view &name) : _name(name) {}
 
-/**
- * @brief adds an atom name to the atomNames vector
- *
- * @param atomName
- */
-void MoleculeType::addAtomName(const std::string &atomName)
-{
-    _atomNames.push_back(atomName);
-}
+    /**
+     * @brief finds number of different atom types in molecule
+     *
+     * @return size_t
+     */
+    size_t MoleculeType::getNumberOfAtomTypes()
+    {
+        return utilities::getUniqueElements(_atomTypes).size();
+    }
 
-/**
- * @brief adds an external atom type to the externalAtomTypes vector
- *
- * @param externalAtomType
- */
-void MoleculeType::addExternalAtomType(ExtAtomType externalAtomType)
-{
-    _externalAtomTypes.push_back(externalAtomType);
-}
+    /**************************
+     *                        *
+     * standard adder methods *
+     *                        *
+     **************************/
 
-/**
- * @brief adds a partial charge to the partialCharges vector
- *
- * @param partialCharge
- */
-void MoleculeType::addPartialCharge(double partialCharge)
-{
-    _partialCharges.push_back(partialCharge);
-}
+    /**
+     * @brief adds an atom name to the atomNames vector
+     *
+     * @param atomName
+     */
+    void MoleculeType::addAtomName(const std::string &atomName)
+    {
+        _atomNames.push_back(atomName);
+    }
 
-/**
- * @brief adds an external global VDW type to the externalGlobalVDWTypes vector
- *
- * @param externalGlobalVDWType
- */
-void MoleculeType::addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType)
-{
-    _externalGlobalVDWTypes.push_back(externalGlobalVDWType);
-}
+    /**
+     * @brief adds an external atom type to the externalAtomTypes vector
+     *
+     * @param externalAtomType
+     */
+    void MoleculeType::addExternalAtomType(ExtAtomType externalAtomType)
+    {
+        _externalAtomTypes.push_back(externalAtomType);
+    }
 
-/**
- * @brief adds an element to the externalToInternalAtomTypes map
- *
- * @param key
- * @param value
- */
-void MoleculeType::addExternalToInternalAtomTypeElement(
-    ExtAtomType key,
-    AtomType    value
-)
-{
-    _externalToInternalAtomTypes.try_emplace(key, value);
-}
+    /**
+     * @brief adds a partial charge to the partialCharges vector
+     *
+     * @param partialCharge
+     */
+    void MoleculeType::addPartialCharge(double partialCharge)
+    {
+        _partialCharges.push_back(partialCharge);
+    }
 
-/**
- * @brief adds an atom type to the atomTypes vector
- *
- * @param atomType
- */
-void MoleculeType::addAtomType(AtomType atomType)
-{
-    _atomTypes.push_back(atomType);
-}
+    /**
+     * @brief adds an external global VDW type to the externalGlobalVDWTypes
+     * vector
+     *
+     * @param externalGlobalVDWType
+     */
+    void MoleculeType::addExternalGlobalVDWType(
+        ExtVdwType externalGlobalVDWType
+    )
+    {
+        _externalGlobalVDWTypes.push_back(externalGlobalVDWType);
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief adds an element to the externalToInternalAtomTypes map
+     *
+     * @param key
+     * @param value
+     */
+    void MoleculeType::addExternalToInternalAtomTypeElement(
+        ExtAtomType key,
+        AtomType    value
+    )
+    {
+        _externalToInternalAtomTypes.try_emplace(key, value);
+    }
 
-/**
- * @brief sets the name of the molecule
- *
- * @param name
- */
-void MoleculeType::setName(const std::string_view &name) { _name = name; }
+    /**
+     * @brief adds an atom type to the atomTypes vector
+     *
+     * @param atomType
+     */
+    void MoleculeType::addAtomType(AtomType atomType)
+    {
+        _atomTypes.push_back(atomType);
+    }
 
-/**
- * @brief sets the number of atoms in the molecule
- *
- * @param numberOfAtoms
- */
-void MoleculeType::setNumberOfAtoms(size_t numberOfAtoms)
-{
-    _numberOfAtoms = numberOfAtoms;
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief sets the moltype of the molecule
- *
- * @param moltype
- */
-void MoleculeType::setMoltype(MolType moltype) { _moltype = moltype; }
+    /**
+     * @brief sets the name of the molecule
+     *
+     * @param name
+     */
+    void MoleculeType::setName(const std::string_view &name) { _name = name; }
 
-/**
- * @brief sets the charge of the molecule
- *
- * @param charge
- */
-void MoleculeType::setCharge(int charge) { _charge = charge; }
+    /**
+     * @brief sets the number of atoms in the molecule
+     *
+     * @param numberOfAtoms
+     */
+    void MoleculeType::setNumberOfAtoms(size_t numberOfAtoms)
+    {
+        _numberOfAtoms = numberOfAtoms;
+    }
 
-/**
- * @brief sets the partial charge of an atom
- *
- * @param index
- * @param partialCharge
- */
-void MoleculeType::setPartialCharge(AtomIndex index, double partialCharge)
-{
-    _partialCharges[index.get()] = partialCharge;
-}
+    /**
+     * @brief sets the moltype of the molecule
+     *
+     * @param moltype
+     */
+    void MoleculeType::setMoltype(MolType moltype) { _moltype = moltype; }
 
-/**
- * @brief sets the partial charges of the molecule
- *
- * @param partialCharges
- */
-void MoleculeType::setPartialCharges(const std::vector<double> &partialCharges)
-{
-    _partialCharges = partialCharges;
-}
+    /**
+     * @brief sets the charge of the molecule
+     *
+     * @param charge
+     */
+    void MoleculeType::setCharge(int charge) { _charge = charge; }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief sets the partial charge of an atom
+     *
+     * @param index
+     * @param partialCharge
+     */
+    void MoleculeType::setPartialCharge(AtomIndex index, double partialCharge)
+    {
+        _partialCharges[index.get()] = partialCharge;
+    }
 
-/**
- * @brief get the number of atoms in the molecule
- *
- * @return size_t
- */
-size_t MoleculeType::getNumberOfAtoms() const { return _numberOfAtoms; }
+    /**
+     * @brief sets the partial charges of the molecule
+     *
+     * @param partialCharges
+     */
+    void MoleculeType::setPartialCharges(
+        const std::vector<double> &partialCharges
+    )
+    {
+        _partialCharges = partialCharges;
+    }
 
-/**
- * @brief get the moltype of the molecule
- *
- * @return MolType
- */
-MolType MoleculeType::getMoltype() const { return _moltype; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the external atom type of an atom
- *
- * @param index
- * @return ExtAtomType
- */
-ExtAtomType MoleculeType::getExternalAtomType(AtomIndex index) const
-{
-    return _externalAtomTypes[index.get()];
-}
+    /**
+     * @brief get the number of atoms in the molecule
+     *
+     * @return size_t
+     */
+    size_t MoleculeType::getNumberOfAtoms() const
+    {
+        if (_numberOfAtoms.has_value())
+            return _numberOfAtoms.value();
 
-/**
- * @brief get the atom type of an atom
- *
- * @param index
- * @return AtomType
- */
-AtomType MoleculeType::getAtomType(AtomIndex index) const
-{
-    return _atomTypes[index.get()];
-}
+        throw std::runtime_error(
+            "Number of atoms is not set for this molecule."
+        );
+    }
 
-/**
- * @brief get the internal atom type of an atom
- *
- * @param type
- * @return AtomType
- */
-AtomType MoleculeType::getInternalAtomType(ExtAtomType type) const
-{
-    return _externalToInternalAtomTypes.at(type);
-}
+    /**
+     * @brief get the moltype of the molecule
+     *
+     * @return MolType
+     */
+    MolType MoleculeType::getMoltype() const { return _moltype; }
 
-/**
- * @brief get the charge of the molecule
- *
- * @return int
- */
-int MoleculeType::getCharge() const { return _charge; }
+    /**
+     * @brief get the external atom type of an atom
+     *
+     * @param index
+     * @return ExtAtomType
+     */
+    ExtAtomType MoleculeType::getExternalAtomType(AtomIndex index) const
+    {
+        return _externalAtomTypes[index.get()];
+    }
 
-/**
- * @brief get the partial charge of an atom
- *
- * @param index
- * @return double
- */
-double MoleculeType::getPartialCharge(AtomIndex index) const
-{
-    return _partialCharges[index.get()];
-}
+    /**
+     * @brief get the atom type of an atom
+     *
+     * @param index
+     * @return AtomType
+     */
+    AtomType MoleculeType::getAtomType(AtomIndex index) const
+    {
+        return _atomTypes[index.get()];
+    }
 
-/**
- * @brief get the name of the molecule
- *
- * @return std::string
- */
-std::string MoleculeType::getName() const { return _name; }
+    /**
+     * @brief get the internal atom type of an atom
+     *
+     * @param type
+     * @return AtomType
+     */
+    AtomType MoleculeType::getInternalAtomType(ExtAtomType type) const
+    {
+        return _externalToInternalAtomTypes.at(type);
+    }
 
-/**
- * @brief get the name of an atom
- *
- * @param index
- * @return std::string
- */
-std::string MoleculeType::getAtomName(AtomIndex index) const
-{
-    return _atomNames[index.get()];
-}
+    /**
+     * @brief get the charge of the molecule
+     *
+     * @return int
+     */
+    int MoleculeType::getCharge() const { return _charge; }
 
-/**
- * @brief get the atom names of the molecule
- *
- * @return std::vector<std::string>
- */
-std::vector<std::string> MoleculeType::getAtomNames() const
-{
-    return _atomNames;
-}
+    /**
+     * @brief get the partial charge of an atom
+     *
+     * @param index
+     * @return double
+     */
+    double MoleculeType::getPartialCharge(AtomIndex index) const
+    {
+        return _partialCharges[index.get()];
+    }
 
-/**
- * @brief get the external atom types of the molecule
- *
- * @return std::vector<ExtAtomType>&
- */
-std::vector<ExtAtomType> &MoleculeType::getExternalAtomTypes()
-{
-    return _externalAtomTypes;
-}
+    /**
+     * @brief get the name of the molecule
+     *
+     * @return std::string
+     */
+    std::string MoleculeType::getName() const { return _name; }
 
-/**
- * @brief get the external global VDW types of the molecule
- *
- * @return std::vector<ExtVdwType>&
- */
-std::vector<ExtVdwType> &MoleculeType::getExternalGlobalVDWTypes()
-{
-    return _externalGlobalVDWTypes;
-}
+    /**
+     * @brief get the name of an atom
+     *
+     * @param index
+     * @return std::string
+     */
+    std::string MoleculeType::getAtomName(AtomIndex index) const
+    {
+        return _atomNames[index.get()];
+    }
 
-/**
- * @brief get the partial charges of the molecule
- *
- * @return std::vector<double>&
- */
-std::vector<double> &MoleculeType::getPartialCharges()
-{
-    return _partialCharges;
-}
+    /**
+     * @brief get the atom names of the molecule
+     *
+     * @return std::vector<std::string>
+     */
+    std::vector<std::string> MoleculeType::getAtomNames() const
+    {
+        return _atomNames;
+    }
 
-/**
- * @brief get the external to internal atom types of the molecule
- *
- * @return std::map<ExtAtomType, AtomType>
- */
-const std::map<ExtAtomType, AtomType> &MoleculeType::
-    getExternalToInternalAtomTypes() const
-{
-    return _externalToInternalAtomTypes;
-}
+    /**
+     * @brief get the external atom types of the molecule
+     *
+     * @return std::vector<ExtAtomType>&
+     */
+    std::vector<ExtAtomType> &MoleculeType::getExternalAtomTypes()
+    {
+        return _externalAtomTypes;
+    }
+
+    /**
+     * @brief get the external global VDW types of the molecule
+     *
+     * @return std::vector<ExtVdwType>&
+     */
+    std::vector<ExtVdwType> &MoleculeType::getExternalGlobalVDWTypes()
+    {
+        return _externalGlobalVDWTypes;
+    }
+
+    /**
+     * @brief get the partial charges of the molecule
+     *
+     * @return std::vector<double>&
+     */
+    std::vector<double> &MoleculeType::getPartialCharges()
+    {
+        return _partialCharges;
+    }
+
+    /**
+     * @brief get the external to internal atom types of the molecule
+     *
+     * @return std::map<ExtAtomType, AtomType>
+     */
+    const std::map<ExtAtomType, AtomType> &MoleculeType::
+        getExternalToInternalAtomTypes() const
+    {
+        return _externalToInternalAtomTypes;
+    }
+
+}   // namespace molsys

@@ -22,326 +22,350 @@
 
 #include "constraintsInputParser.hpp"
 
-#include <cstddef>       // for size_t
-#include <format>        // for format
-#include <string_view>   // for string_view
+#include <cstddef>   // for size_t
+#include <optional>
 #include <utility>
 
-#include "constraintSettings.hpp"   // for ConstraintSettings
+#include "constraintSettings.hpp"   // for settings::ConstraintSettings
 #include "constraints.hpp"
-#include "exceptions.hpp"   // for InputFileException
-#include "parserUtils.hpp"
-#include "references.hpp"         // for ReferencesOutput
-#include "referencesOutput.hpp"   // for ReferencesOutput
-#include "stringUtilities.hpp"    // for stringToFiniteDouble, stringToInt
+#include "enums/shake.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
+#include "references.hpp"         // for references::ReferencesOutput
+#include "referencesOutput.hpp"   // for references::ReferencesOutput
 
-using namespace input;
-using namespace settings;
-using namespace references;
-using namespace exc;
-
-/**
- * @brief Construct a new Input File Parser Constraints:: Input File Parser
- * Constraints object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) shake "<on/off>" 2)
- * shake-tolerance "<double>" 3) shake-iter "<size_t>" 4) rattle-iter "<size_t>"
- * 5) rattle-tolerance "<double>"
- *
- * @param constraints pointer to the constraints object
- */
-ConstraintsInputParser::ConstraintsInputParser(
-    std::shared_ptr<constraints::Constraints> constraints
-)
-    : _constraints(std::move(constraints))
+namespace input
 {
-    addKeyword(
-        std::string("shake"),
-        bindMember(&ConstraintsInputParser::parseShakeActivated, this),
-        false
-    );
-    addKeyword(
-        std::string("shake-tolerance"),
-        bindMember(&ConstraintsInputParser::parseShakeTolerance, this),
-        false
-    );
-    addKeyword(
-        std::string("shake-iter"),
-        bindMember(&ConstraintsInputParser::parseShakeIteration, this),
-        false
-    );
-    addKeyword(
-        std::string("rattle-iter"),
-        bindMember(&ConstraintsInputParser::parseRattleIteration, this),
-        false
-    );
-    addKeyword(
-        std::string("rattle-tolerance"),
-        bindMember(&ConstraintsInputParser::parseRattleTolerance, this),
-        false
-    );
-    addKeyword(
-        std::string("mshake-tolerance"),
-        bindMember(&ConstraintsInputParser::parseMShakeTolerance, this),
-        false
-    );
-    addKeyword(
-        std::string("mshake-iter"),
-        bindMember(&ConstraintsInputParser::parseMShakeIteration, this),
-        false
-    );
 
-    addKeyword(
-        std::string("distance-constraints"),
-        bindMember(
-            &ConstraintsInputParser::parseDistanceConstraintActivated,
-            this
-        ),
-        false
-    );
-}
+    /**
+     * @brief Construct a new Input File Parser Constraints:: Input File Parser
+     * Constraints object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) shake "<on/off>" 2)
+     * shake-tolerance "<double>" 3) shake-iter "<size_t>" 4) rattle-iter
+     * "<size_t>" 5) rattle-tolerance "<double>"
+     *
+     * @param constraints pointer to the constraints object
+     */
+    ConstraintsInputParser::ConstraintsInputParser(
+        std::shared_ptr<constraints::Constraints> constraints
+    )
+        : _constraints(std::move(constraints))
+    {
+        addShakeActivatedKeyword();
+        addShakeToleranceKeyword();
+        addShakeIterationKeyword();
+        addRattleIterationKeyword();
+        addRattleToleranceKeyword();
+        addMShakeToleranceKeyword();
+        addMShakeIterationKeyword();
+        addDistanceConstraintActivatedKeyword();
+    }
 
-/**
- * @brief parsing if shake is activated
- *
- * @details Possible options are:
- * 1) "on"  - shake is activated
- * 2) "off" - shake is deactivated (default)
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if keyword is not valid -
- * currently only on and off are supported
- */
-void ConstraintsInputParser::parseShakeActivated(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
+    /**
+     * @brief add the shake activated keyword to the parser
+     *
+     * @details default value is "off"
+     */
+    void ConstraintsInputParser::addShakeActivatedKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "shake",
+            .title       = "Shake activation",
+            .description = "Keyword to activate or deactivate shake constraints"
+        };
 
-    if (lineElements[2] == "on" || lineElements[2] == "shake")
-    {
-        _constraints->activateShake();
-        ConstraintSettings::activateShake();
-        ReferencesOutput::addReferenceFile(RATTLE_FILE);
-    }
-    else if (lineElements[2] == "off")
-    {
-        _constraints->deactivateShake();
-        ConstraintSettings::deactivateShake();
-    }
-    else if (lineElements[2] == "mshake")
-    {
-        _constraints->activateMShake();
-        _constraints->activateShake();
-        ConstraintSettings::activateMShake();
-        ConstraintSettings::activateShake();
-    }
-    else
-    {
-        auto message = format(
-            "Invalid shake keyword \"{}\" at line {} in input file\n"
-            "Possible keywords are: \"on\", \"off\", \"shake\", \"mshake\"",
-            lineElements[2],
-            lineNumber
+        const auto defaultValue = ShakeType::OFF;
+
+        const auto setValue = [constraints = _constraints](auto value)
+        {
+            switch (value)
+            {
+                case ShakeType::ON:
+                case ShakeType::SHAKE:
+                {
+                    constraints->activateShake();
+                    settings::ConstraintSettings::activateShake();
+                    references::ReferencesOutput::addReferenceFile(
+                        references::RATTLE_FILE
+                    );
+                    break;
+                }
+                case ShakeType::OFF:
+                {
+                    constraints->deactivateShake();
+                    constraints->deactivateMShake();
+                    settings::ConstraintSettings::deactivateShake();
+                    settings::ConstraintSettings::deactivateMShake();
+                    break;
+                }
+                case ShakeType::MSHAKE:
+                {
+                    constraints->activateMShake();
+                    constraints->activateShake();
+                    settings::ConstraintSettings::activateMShake();
+                    settings::ConstraintSettings::activateShake();
+                    break;
+                }
+            }
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<ShakeType>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue
+            }
         );
 
-        throw InputFileException(message);
+        addKeyword("shake", adapt(key), false);
     }
-}
 
-/**
- * @brief parsing shake tolerance
- *
- * @details default value is 1e-8
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if tolerance is negative
- */
-void ConstraintsInputParser::parseShakeTolerance(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto tolerance = utilities::stringToFiniteDouble(lineElements[2]);
-
-    if (tolerance <= 0.0)
-        throw InputFileException("Shake tolerance must be positive");
-
-    ConstraintSettings::setShakeTolerance(tolerance);
-}
-
-/**
- * @brief parsing shake iteration
- *
- * @details default value is 20
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if iteration is negative
- */
-void ConstraintsInputParser::parseShakeIteration(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto iteration = utilities::stringToInt(lineElements[2]);
-
-    if (iteration <= 0)
-        throw InputFileException("Maximum shake iterations must be positive");
-
-    ConstraintSettings::setShakeMaxIter(static_cast<size_t>(iteration));
-}
-
-/**
- * @brief parsing rattle tolerance
- *
- * @details default value is 1e-8
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if tolerance is negative
- */
-void ConstraintsInputParser::parseRattleTolerance(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto tolerance = utilities::stringToFiniteDouble(lineElements[2]);
-
-    if (tolerance <= 0.0)
-        throw InputFileException("Rattle tolerance must be positive");
-
-    ConstraintSettings::setRattleTolerance(tolerance);
-}
-
-/**
- * @brief parsing rattle iteration
- *
- * @details default value is 20
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if iteration is negative
- */
-void ConstraintsInputParser::parseRattleIteration(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto iteration = utilities::stringToInt(lineElements[2]);
-
-    if (iteration <= 0)
-        throw InputFileException("Maximum rattle iterations must be positive");
-
-    ConstraintSettings::setRattleMaxIter(static_cast<size_t>(iteration));
-}
-
-/**
- * @brief parsing MShake tolerance
- *
- * @details default value is 1e-8
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if tolerance is negative
- */
-void ConstraintsInputParser::parseMShakeTolerance(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto tolerance = utilities::stringToFiniteDouble(lineElements[2]);
-
-    if (tolerance <= 0.0)
-        throw InputFileException("MShake tolerance must be positive");
-
-    ConstraintSettings::setMShakeTolerance(tolerance);
-}
-
-/**
- * @brief parsing MShake iteration
- *
- * @details default value is 20
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throw InputFileException if iteration is negative
- */
-void ConstraintsInputParser::parseMShakeIteration(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto iteration = utilities::stringToInt(lineElements[2]);
-
-    if (iteration <= 0)
-        throw InputFileException("Maximum MShake iterations must be positive");
-
-    ConstraintSettings::setMShakeMaxIter(static_cast<size_t>(iteration));
-}
-
-/**
- * @brief parsing if distance constraint is activated
- *
- * @details Possible options are:
- * 1) "on"  - distance constraint is activated
- * 2) "off" - distance constraint is deactivated (default)
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if keyword is not valid -
- * currently only on and off are supported
- */
-void ConstraintsInputParser::parseDistanceConstraintActivated(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    if (lineElements[2] == "on")
+    /**
+     * @brief add the shake tolerance keyword to the parser
+     *
+     * @details default value is 1e-8
+     */
+    void ConstraintsInputParser::addShakeToleranceKeyword()
     {
-        _constraints->activateDistanceConstraints();
-        ConstraintSettings::activateDistanceConstraints();
-    }
-    else if (lineElements[2] == "off")
-    {
-        _constraints->deactivateDistanceConstraints();
-        ConstraintSettings::deactivateDistanceConstraints();
-    }
-    else
-    {
-        auto message = format(
-            "Invalid {} keyword \"{}\" at line {} in input file\n"
-            "Possible keywords are \"on\" and \"off\"",
-            lineElements[0],
-            lineElements[2],
-            lineNumber
+        const auto metaData = KeyMetadata{
+            .name        = "shake-tolerance",
+            .title       = "Shake tolerance",
+            .description = "Keyword to set the shake tolerance"
+        };
+
+        const auto defaultValue = 1e-8;
+
+        const RangeValidator<double, Greater::GT> rangeValidator{
+            0.0,
+            std::nullopt
+        };
+
+        const auto setValue = [](auto value)
+        { settings::ConstraintSettings::setShakeTolerance(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue,
+                .validator    = makeShared(rangeValidator)
+            }
         );
-        throw InputFileException(message);
+
+        addKeyword("shake-tolerance", adapt(key), false);
     }
-}
+
+    /**
+     * @brief add the shake iteration keyword to the parser
+     *
+     * @details default value is 20
+     */
+    void ConstraintsInputParser::addShakeIterationKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "shake-iter",
+            .title = "Shake iteration",
+            .description =
+                "Keyword to set the maximum number of shake iterations"
+        };
+
+        const auto defaultValue = 20;
+
+        const RangeValidator<size_t> rangeValidator{1, std::nullopt};
+
+        const auto setValue = [](auto value)
+        { settings::ConstraintSettings::setShakeMaxIter(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue,
+                .validator    = makeShared(rangeValidator)
+            }
+        );
+
+        addKeyword("shake-iter", adapt(key), false);
+    }
+
+    /**
+     * @brief add the rattle tolerance keyword to the parser
+     *
+     * @details default value is 1e-8
+     */
+    void ConstraintsInputParser::addRattleToleranceKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "rattle-tolerance",
+            .title       = "Rattle tolerance",
+            .description = "Keyword to set the rattle tolerance"
+        };
+
+        const auto defaultValue = 1e-8;
+
+        const RangeValidator<double, Greater::GT> rangeValidator{
+            0.0,
+            std::nullopt
+        };
+
+        const auto setValue = [](auto value)
+        { settings::ConstraintSettings::setRattleTolerance(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue,
+                .validator    = makeShared(rangeValidator)
+            }
+        );
+
+        addKeyword("rattle-tolerance", adapt(key), false);
+    }
+
+    /**
+     * @brief adding Rattle iteration keyword
+     *
+     * @details default value is 20
+     */
+    void ConstraintsInputParser::addRattleIterationKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "rattle-iter",
+            .title = "Rattle iteration",
+            .description =
+                "Keyword to set the maximum number of rattle iterations"
+        };
+
+        const auto defaultValue = 20;
+
+        const RangeValidator<size_t> rangeValidator{1, std::nullopt};
+
+        const auto setValue = [](auto value)
+        { settings::ConstraintSettings::setRattleMaxIter(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue,
+                .validator    = makeShared(rangeValidator)
+            }
+        );
+
+        addKeyword("rattle-iter", adapt(key), false);
+    }
+
+    /**
+     * @brief adding MShake tolerance keyword
+     *
+     * @details default value is 1e-8
+     */
+    void ConstraintsInputParser::addMShakeToleranceKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "mshake-tolerance",
+            .title       = "MShake tolerance",
+            .description = "Keyword to set the MShake tolerance"
+        };
+
+        const auto defaultValue = 1e-8;
+
+        const RangeValidator<double, Greater::GT> rangeValidator{
+            0.0,
+            std::nullopt
+        };
+
+        const auto setValue = [](auto value)
+        { settings::ConstraintSettings::setMShakeTolerance(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue,
+                .validator    = makeShared(rangeValidator)
+            }
+        );
+
+        addKeyword("mshake-tolerance", adapt(key), false);
+    }
+
+    /**
+     * @brief adding MShake iteration keyword
+     *
+     * @details default value is 20
+     */
+    void ConstraintsInputParser::addMShakeIterationKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "mshake-iter",
+            .title = "MShake iteration",
+            .description =
+                "Keyword to set the maximum number of MShake iterations"
+        };
+
+        const auto defaultValue = 20;
+
+        const RangeValidator<size_t> rangeValidator{1, std::nullopt};
+
+        const auto setValue = [](auto value)
+        { settings::ConstraintSettings::setMShakeMaxIter(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue,
+                .validator    = makeShared(rangeValidator)
+            }
+        );
+
+        addKeyword("mshake-iter", adapt(key), false);
+    }
+
+    /**
+     * @brief adding distance constraint activated keyword
+     *
+     * @details default value is false
+     */
+    void ConstraintsInputParser::addDistanceConstraintActivatedKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "distance-constraints",
+            .title       = "Distance constraint activated",
+            .description = "Keyword to activate the distance constraint"
+        };
+
+        const auto defaultValue = false;
+
+        const auto setValue = [constraints = _constraints](auto value)
+        {
+            if (value)
+            {
+                constraints->activateDistanceConstraints();
+                settings::ConstraintSettings::activateDistanceConstraints();
+            }
+            else
+            {
+                constraints->deactivateDistanceConstraints();
+                settings::ConstraintSettings::deactivateDistanceConstraints();
+            }
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue
+            }
+        );
+
+        addKeyword("distance-constraints", adapt(key), false);
+    }
+
+}   // namespace input

@@ -60,4 +60,35 @@ namespace input
                    size_t                          lineNumber
                ) { key.parse(lineElements, lineNumber); };
     }
+
+    /**
+     * @brief Adapts a DeprecatedInputKey into an InputFileParser::ParseFunc.
+     *
+     * Provides integration between the DeprecatedInputKey and the existing
+     * InputFileParser::ParseFunc callback mechanism, allowing
+     * DeprecatedInputKey::parse to be registered with
+     * InputFileParser::addKeyword without modifying InputFileParser or
+     * InputFileReader.
+     *
+     * Creates a callback that forwards InputFileParser::ParseFunc calls
+     * to the corresponding DeprecatedInputKey::parse method. Both signatures
+     * accept (const std::vector<std::string>&, size_t lineNumber) and
+     * are structurally identical, making this a simple forwarding wrapper.
+     *
+     * @param deprecatedKey The DeprecatedInputKey instance to adapt. Copied
+     * into the returned callable, since callers typically construct it as a
+     * local temporary that would otherwise not outlive the registration.
+     *
+     * @return InputFileParser::ParseFunc that delegates parse requests to
+     * a copy of @p deprecatedKey and forwards (lineElements, lineNumber)
+     * arguments to deprecatedKey.parse().
+     */
+    [[nodiscard]]
+    InputFileParser::ParseFunc adapt(const DeprecatedInputKey &deprecatedKey)
+    {
+        return [deprecatedKey](
+                   const std::vector<std::string> & /*lineElements*/,
+                   size_t lineNumber
+               ) { deprecatedKey.deprecated(lineNumber); };
+    }
 }   // namespace input

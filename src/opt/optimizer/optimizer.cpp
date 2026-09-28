@@ -24,270 +24,295 @@
 
 #include <memory>   // for std::shared_ptr
 
-#include "exceptions.hpp"      // for OptException
+#include "exceptions.hpp"      // for exc::OptException
 #include "physicalData.hpp"    // for PhysicalData
 #include "simulationBox.hpp"   // for SimulationBox
 
-using namespace opt;
-using namespace physicalData;
-using namespace molsys;
-using namespace settings;
-using namespace exc;
-
-/**
- * @brief Construct a new Optimizer object
- *
- * @param nEpochs
- */
-Optimizer::Optimizer(size_t nEpochs) : _nEpochs(nEpochs) {}
-
-/**
- * @brief update the optimizer history
- *
- */
-void Optimizer::updateHistory()
+namespace opt
 {
-    _energyHistory.push_back(_physicalData->getTotalEnergy());
-    _forceHistory.push_back(_simulationBox->getForces());
-    _positionHistory.push_back(_simulationBox->getPositions());
 
-    const auto rmsForce = rms(_simulationBox->getForces());
-    const auto maxForce = max(_simulationBox->getForces());
-
-    _rmsForceHistory.push_back(rmsForce);
-    _maxForceHistory.push_back(maxForce);
-
-    if (_energyHistory.size() > maxHistoryLength())
+    /**
+     * @brief Implementation struct for the Optimizer class (PIMPL idiom)
+     *
+     */
+    struct Optimizer::Impl
     {
-        _energyHistory.pop_front();
-        _forceHistory.pop_front();
-        _positionHistory.pop_front();
-        _rmsForceHistory.pop_front();
-        _maxForceHistory.pop_front();
+        std::shared_ptr<molsys::SimulationBox>      simulationBox;
+        std::shared_ptr<physicalData::PhysicalData> physicalData;
+        std::shared_ptr<physicalData::PhysicalData> physicalDataOld;
+    };
+
+    /**
+     * @brief Construct a new Optimizer object
+     *
+     * @param nEpochs
+     */
+    Optimizer::Optimizer(size_t nEpochs)
+        : _impl(std::make_unique<Impl>()), _nEpochs(nEpochs)
+    {
     }
-}
 
-/**
- * @brief check if the optimizer has converged
- *
- * @return true/false if the optimizer has converged
- */
-bool Optimizer::hasConverged()
-{
-    const auto energyOld = getEnergy(-2);
-    const auto energyNew = getEnergy(-1);
+    Optimizer::~Optimizer() = default;
 
-    const auto rmsForceNew = getRMSForce(-1);
-    const auto maxForceNew = getMaxForce(-1);
+    /**
+     * @brief update the optimizer history
+     *
+     */
+    void Optimizer::updateHistory()
+    {
+        _energyHistory.push_back(_impl->physicalData->getTotalEnergy());
+        _forceHistory.push_back(_impl->simulationBox->getForces());
+        _positionHistory.push_back(_impl->simulationBox->getPositions());
 
-    _convergence.calcEnergyConvergence(energyOld, energyNew);
-    _convergence.calcForceConvergence(maxForceNew, rmsForceNew);
+        const auto rmsForce = rms(_impl->simulationBox->getForces());
+        const auto maxForce = max(_impl->simulationBox->getForces());
 
-    return _convergence.checkConvergence();
-}
+        _rmsForceHistory.push_back(rmsForce);
+        _maxForceHistory.push_back(maxForce);
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+        if (_energyHistory.size() > maxHistoryLength())
+        {
+            _energyHistory.pop_front();
+            _forceHistory.pop_front();
+            _positionHistory.pop_front();
+            _rmsForceHistory.pop_front();
+            _maxForceHistory.pop_front();
+        }
+    }
 
-/**
- * @brief set convergence member
- *
- * @param convergence
- */
-void Optimizer::setConvergence(Convergence convergence)
-{
-    _convergence = convergence;
-}
+    /**
+     * @brief check if the optimizer has converged
+     *
+     * @return true/false if the optimizer has converged
+     */
+    bool Optimizer::hasConverged()
+    {
+        const auto energyOld = getEnergy(-2);
+        const auto energyNew = getEnergy(-1);
 
-/**
- * @brief set simulation box shared pointer
- *
- * @param simulationBox
- */
-void Optimizer::setSimulationBox(
-    const std::shared_ptr<SimulationBox> &simulationBox
-)
-{
-    _simulationBox = simulationBox;
-}
+        const auto rmsForceNew = getRMSForce(-1);
+        const auto maxForceNew = getMaxForce(-1);
 
-/**
- * @brief set physical data shared pointer
- *
- * @param physicalData
- */
-void Optimizer::setPhysicalData(
-    const std::shared_ptr<PhysicalData> &physicalData
-)
-{
-    _physicalData = physicalData;
-}
+        _convergence.calcEnergyConvergence(energyOld, energyNew);
+        _convergence.calcForceConvergence(maxForceNew, rmsForceNew);
 
-/**
- * @brief set old physical data shared pointer
- *
- * @param physicalData
- */
-void Optimizer::setPhysicalDataOld(
-    const std::shared_ptr<PhysicalData> &physicalData
-)
-{
-    _physicalDataOld = physicalData;
-}
+        return _convergence.checkConvergence();
+    }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the number of epochs
- *
- * @return size_t
- */
-size_t Optimizer::getNEpochs() const { return _nEpochs; }
+    /**
+     * @brief set convergence member
+     *
+     * @param convergence
+     */
+    void Optimizer::setConvergence(Convergence convergence)
+    {
+        _convergence = convergence;
+    }
 
-/**
- * @brief get history index
- *
- * @return size_t
- */
-size_t Optimizer::getHistoryIndex(int offset) const
-{
-    if (offset >= 0)
-        throw OptException(
-            "Offset must be negative to access history in the past"
-        );
+    /**
+     * @brief set simulation box shared pointer
+     *
+     * @param simulationBox
+     */
+    void Optimizer::setSimulationBox(
+        const std::shared_ptr<molsys::SimulationBox> &simulationBox
+    )
+    {
+        _impl->simulationBox = simulationBox;
+    }
 
-    const auto size  = _energyHistory.size();
-    const auto index = static_cast<int>(size) + offset;
+    /**
+     * @brief set physical data shared pointer
+     *
+     * @param physicalData
+     */
+    void Optimizer::setPhysicalData(
+        const std::shared_ptr<physicalData::PhysicalData> &physicalData
+    )
+    {
+        _impl->physicalData = physicalData;
+    }
 
-    if (index < 0 || index >= static_cast<int>(size))
-        throw OptException("History index out of bounds");
+    /**
+     * @brief set old physical data shared pointer
+     *
+     * @param physicalData
+     */
+    void Optimizer::setPhysicalDataOld(
+        const std::shared_ptr<physicalData::PhysicalData> &physicalData
+    )
+    {
+        _impl->physicalDataOld = physicalData;
+    }
 
-    return static_cast<size_t>(index);
-}
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get the last energy in the history
- *
- * @return double
- */
-double Optimizer::getEnergy() const { return _energyHistory.back(); }
+    /**
+     * @brief get the number of epochs
+     *
+     * @return size_t
+     */
+    size_t Optimizer::getNEpochs() const { return _nEpochs; }
 
-/**
- * @brief get the energy in history with negative index offset
- *
- * @param offset
- *
- */
-double Optimizer::getEnergy(int offset) const
-{
-    const auto index = getHistoryIndex(offset);
+    /**
+     * @brief get history index
+     *
+     * @return size_t
+     */
+    size_t Optimizer::getHistoryIndex(int offset) const
+    {
+        if (offset >= 0)
+            throw exc::OptException(
+                "Offset must be negative to access history in the past"
+            );
 
-    return _energyHistory[index];
-}
+        const auto size  = _energyHistory.size();
+        const auto index = static_cast<int>(size) + offset;
 
-/**
- * @brief get the last RMS force in the history
- *
- * @return double
- */
-double Optimizer::getRMSForce() const { return _rmsForceHistory.back(); }
+        if (index < 0 || index >= static_cast<int>(size))
+            throw exc::OptException("History index out of bounds");
 
-/**
- * @brief get the RMS force in history with negative index offset
- *
- * @param offset
- *
- */
-double Optimizer::getRMSForce(int offset) const
-{
-    const auto index = getHistoryIndex(offset);
+        return static_cast<size_t>(index);
+    }
 
-    return _rmsForceHistory[index];
-}
+    /**
+     * @brief get the last energy in the history
+     *
+     * @return double
+     */
+    double Optimizer::getEnergy() const { return _energyHistory.back(); }
 
-/**
- * @brief get the last max force in the history
- *
- * @return double
- */
-double Optimizer::getMaxForce() const { return _maxForceHistory.back(); }
+    /**
+     * @brief get the energy in history with negative index offset
+     *
+     * @param offset
+     *
+     */
+    double Optimizer::getEnergy(int offset) const
+    {
+        const auto index = getHistoryIndex(offset);
 
-/**
- * @brief get the max force in history with negative index offset
- *
- * @param offset
- *
- */
-double Optimizer::getMaxForce(int offset) const
-{
-    const auto index = getHistoryIndex(offset);
+        return _energyHistory[index];
+    }
 
-    return _maxForceHistory[index];
-}
+    /**
+     * @brief get the last RMS force in the history
+     *
+     * @return double
+     */
+    double Optimizer::getRMSForce() const { return _rmsForceHistory.back(); }
 
-/**
- * @brief get the last force in the history
- *
- * @return std::vector<pq::Vec3D>
- */
-std::vector<linalg::Vec3D> Optimizer::getForces() const
-{
-    return _forceHistory.back();
-}
+    /**
+     * @brief get the RMS force in history with negative index offset
+     *
+     * @param offset
+     *
+     */
+    double Optimizer::getRMSForce(int offset) const
+    {
+        const auto index = getHistoryIndex(offset);
 
-/**
- * @brief get the force in history with negative index offset
- *
- * @param offset
- *
- */
-std::vector<linalg::Vec3D> Optimizer::getForces(int offset) const
-{
-    const auto index = getHistoryIndex(offset);
+        return _rmsForceHistory[index];
+    }
 
-    return _forceHistory[index];
-}
+    /**
+     * @brief get the last max force in the history
+     *
+     * @return double
+     */
+    double Optimizer::getMaxForce() const { return _maxForceHistory.back(); }
 
-/**
- * @brief get the last position in the history
- *
- * @return std::vector<pq::Vec3D>
- */
-std::vector<linalg::Vec3D> Optimizer::getPositions() const
-{
-    return _positionHistory.back();
-}
+    /**
+     * @brief get the max force in history with negative index offset
+     *
+     * @param offset
+     *
+     */
+    double Optimizer::getMaxForce(int offset) const
+    {
+        const auto index = getHistoryIndex(offset);
 
-/**
- * @brief get the position in history with negative index offset
- *
- * @param offset
- *
- */
-std::vector<linalg::Vec3D> Optimizer::getPositions(int offset) const
-{
-    const auto index = getHistoryIndex(offset);
+        return _maxForceHistory[index];
+    }
 
-    return _positionHistory[index];
-}
+    /**
+     * @brief get the last force in the history
+     *
+     * @return std::vector<pq::Vec3D>
+     */
+    std::vector<linalg::Vec3D> Optimizer::getForces() const
+    {
+        return _forceHistory.back();
+    }
 
-/**
- * @brief get the convergence member
- *
- * @return opt::Convergence
- */
-Convergence Optimizer::getConvergence() const { return _convergence; }
+    /**
+     * @brief get the force in history with negative index offset
+     *
+     * @param offset
+     *
+     */
+    std::vector<linalg::Vec3D> Optimizer::getForces(int offset) const
+    {
+        const auto index = getHistoryIndex(offset);
 
-/**
- * @brief get the convergence member
- *
- * @return opt::Convergence
- */
-Convergence &Optimizer::getConvergence() { return _convergence; }
+        return _forceHistory[index];
+    }
+
+    /**
+     * @brief get the last position in the history
+     *
+     * @return std::vector<pq::Vec3D>
+     */
+    std::vector<linalg::Vec3D> Optimizer::getPositions() const
+    {
+        return _positionHistory.back();
+    }
+
+    /**
+     * @brief get the position in history with negative index offset
+     *
+     * @param offset
+     *
+     */
+    std::vector<linalg::Vec3D> Optimizer::getPositions(int offset) const
+    {
+        const auto index = getHistoryIndex(offset);
+
+        return _positionHistory[index];
+    }
+
+    /**
+     * @brief get the convergence member
+     *
+     * @return opt::Convergence
+     */
+    Convergence Optimizer::getConvergence() const { return _convergence; }
+
+    /**
+     * @brief get the convergence member
+     *
+     * @return opt::Convergence
+     */
+    Convergence &Optimizer::getConvergence() { return _convergence; }
+
+    /**
+     * @brief get the simulation box member
+     *
+     * @return SimulationBox&
+     */
+    molsys::SimulationBox &Optimizer::_getSimulationBox() const
+    {
+        return *_impl->simulationBox;
+    }
+
+}   // namespace opt

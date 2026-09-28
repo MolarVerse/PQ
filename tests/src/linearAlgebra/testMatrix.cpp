@@ -25,19 +25,17 @@
 // for Message, TestPartResult
 #include "matrix.hpp"   // for Matrix, linearAlgebra
 
-using namespace linalg;
-
 /**
  * @brief tests constructors for Matrix
  *
  */
 TEST(TestMatrix, constructors)
 {
-    Matrix<int> mat(2);
+    linalg::Matrix<int> mat(2);
     EXPECT_EQ(mat.rows(), 2);
     EXPECT_EQ(mat.cols(), 2);
 
-    Matrix<int> mat2(2, 3);
+    linalg::Matrix<int> mat2(2, 3);
     EXPECT_EQ(mat2.rows(), 2);
     EXPECT_EQ(mat2.cols(), 3);
 }
@@ -48,7 +46,7 @@ TEST(TestMatrix, constructors)
  */
 TEST(TestMatrix, shape)
 {
-    auto mat = Matrix<int>(2, 3);
+    auto mat = linalg::Matrix<int>(2, 3);
 
     const auto [rows, cols] = mat.shape();
     EXPECT_EQ(rows, 2);
@@ -61,7 +59,7 @@ TEST(TestMatrix, shape)
  */
 TEST(TestMatrix, size)
 {
-    auto mat = Matrix<int>(2, 3);
+    auto mat = linalg::Matrix<int>(2, 3);
 
     EXPECT_EQ(mat.size(), 6);
 }

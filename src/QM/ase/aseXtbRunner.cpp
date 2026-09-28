@@ -22,39 +22,42 @@
 
 #include "aseXtbRunner.hpp"
 
-using QM::AseXtbRunner;
-
-/**
- * @brief Construct a new AseXtbRunner::AseXtbRunner object
- *
- * @param method
- *
- * @throw pybind11::error_already_set if the import of the mace module fails
- */
-AseXtbRunner::AseXtbRunner(const std::string &method)
+namespace QM
 {
-    try
+
+    /**
+     * @brief Construct a new AseXtbRunner::AseXtbRunner object
+     *
+     * @param method
+     *
+     * @throw pybind11::error_already_set if the import of the mace module fails
+     */
+    AseXtbRunner::AseXtbRunner(const std::string &method)
     {
-        const pybind11::module_ calculator =
-            pybind11::module_::import("ase.calculators.dftb");
+        try
+        {
+            const pybind11::module_ calculator =
+                pybind11::module_::import("ase.calculators.dftb");
 
-        const pybind11::dict calculatorArgs;
+            const pybind11::dict calculatorArgs;
 
-        calculatorArgs["Hamiltonian_"]       = "xTB";
-        calculatorArgs["Hamiltonian_Method"] = method;
+            calculatorArgs["Hamiltonian_"]       = "xTB";
+            calculatorArgs["Hamiltonian_Method"] = method;
 
-        // default would be 1, which is incompatible with DFTB3
-        calculatorArgs["ParserOptions_ParserVersion"] = "12";
-        // SCC = "Yes" is mandatory for SCC cycles to be performed
-        calculatorArgs["Hamiltonian_SCC"]              = "Yes";
-        calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
-        calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
-        calculatorArgs["kpts"] = pybind11::make_tuple(1, 1, 1);
-        setAseCalculator(calculator.attr("Dftb")(**calculatorArgs));
+            // default would be 1, which is incompatible with DFTB3
+            calculatorArgs["ParserOptions_ParserVersion"] = "12";
+            // SCC = "Yes" is mandatory for SCC cycles to be performed
+            calculatorArgs["Hamiltonian_SCC"]              = "Yes";
+            calculatorArgs["Hamiltonian_SCCTolerance"]     = "1e-6";
+            calculatorArgs["Hamiltonian_MaxSCCIterations"] = "250";
+            calculatorArgs["kpts"] = pybind11::make_tuple(1, 1, 1);
+            setAseCalculator(calculator.attr("Dftb")(**calculatorArgs));
+        }
+        catch (const pybind11::error_already_set &)
+        {
+            ::PyErr_Print();
+            throw;
+        }
     }
-    catch (const pybind11::error_already_set &)
-    {
-        ::PyErr_Print();
-        throw;
-    }
-}
+
+}   // namespace QM

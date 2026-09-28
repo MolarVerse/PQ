@@ -35,29 +35,21 @@
 #include "potentialBruteForce.hpp"
 #include "simulationBox.hpp"
 
-using namespace opt;
-using molsys::Atom;
-using molsys::CellList;
-using molsys::Molecule;
-using molsys::SimulationBox;
-using physicalData::PhysicalData;
-
 namespace
 {
-    // Wire an MMEvaluator with the minimum set of dependencies needed for
+    // Wire an opt::MMEvaluator with the minimum set of dependencies needed for
     // evaluate() to walk through all of its calls without throwing.
-    void wireUp(MMEvaluator &eval)
+    void wireUp(opt::MMEvaluator& eval, molsys::CellList& cellList)
     {
-        auto box = std::make_shared<SimulationBox>();
+        auto box = std::make_shared<molsys::SimulationBox>();
         box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
-        auto mol = Molecule();
-        mol.setNumberOfAtoms(2);
+        auto mol = molsys::Molecule();
 
-        auto atom1 = std::make_shared<Atom>();
-        auto atom2 = std::make_shared<Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
         atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
         atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
         atom1->setForce(linalg::Vec3D(0.5, 0.0, 0.0));
@@ -73,10 +65,10 @@ namespace
         box->addAtom(atom2);
 
         eval.setSimulationBox(box);
-        eval.setCellList(std::make_shared<CellList>());
+        eval.setCellList(cellList);
         eval.setPotential(std::make_shared<pot::PotentialBruteForce>());
-        eval.setPhysicalData(std::make_shared<PhysicalData>());
-        eval.setPhysicalDataOld(std::make_shared<PhysicalData>());
+        eval.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
+        eval.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
         eval.setForceField(std::make_shared<ff::ForceField>());
         eval.setIntraNonBonded(
 
@@ -91,16 +83,17 @@ namespace
 
 TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 {
-    const MMEvaluator src;
-    const auto        cloned = src.clone();
+    const opt::MMEvaluator src{};
+    const auto             cloned = src.clone();
     ASSERT_NE(cloned, nullptr);
-    EXPECT_NE(std::dynamic_pointer_cast<MMEvaluator>(cloned), nullptr);
+    EXPECT_NE(std::dynamic_pointer_cast<opt::MMEvaluator>(cloned), nullptr);
 }
 
 TEST(TestMMEvaluator, evaluateRunsWithMinimalDependencies)
 {
-    MMEvaluator eval;
-    wireUp(eval);
+    opt::MMEvaluator eval;
+    molsys::CellList cellList;
+    wireUp(eval, cellList);
     EXPECT_NO_THROW(eval.evaluate());
 }
 
@@ -109,23 +102,23 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     // After evaluate(), the brute-force loop on a single molecule produces no
     // inter-molecular force contribution, and the cleared force buffer should
     // be (0, 0, 0) per atom.
-    MMEvaluator eval;
-    wireUp(eval);
+    opt::MMEvaluator eval;
+    molsys::CellList cellList;
+    wireUp(eval, cellList);
 
     // Borrow the wired-up simulation box back from a fresh setup by re-wiring
     // a second evaluator on the same shared structures isn't trivial, so test
     // the post-condition via the evaluator's own evaluate() exit state.
     eval.evaluate();
 
-    // We can't reach the box pointer through MMEvaluator's public API, so
+    // We can't reach the box pointer through opt::MMEvaluator's public API, so
     // re-wire a fresh evaluator with a known shared box and check the box.
-    auto box = std::make_shared<SimulationBox>();
+    auto box = std::make_shared<molsys::SimulationBox>();
     box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
-    auto mol = Molecule();
-    mol.setNumberOfAtoms(1);
+    auto mol = molsys::Molecule();
 
-    auto atom = std::make_shared<Atom>();
+    auto atom = std::make_shared<molsys::Atom>();
     atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
     atom->setForce(linalg::Vec3D(7.0, 7.0, 7.0));
     atom->setMass(1.0);
@@ -134,12 +127,13 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     box->addMolecule(mol);
     box->addAtom(atom);
 
-    MMEvaluator eval2;
+    opt::MMEvaluator eval2;
+    molsys::CellList cellList2;
     eval2.setSimulationBox(box);
-    eval2.setCellList(std::make_shared<CellList>());
+    eval2.setCellList(cellList2);
     eval2.setPotential(std::make_shared<pot::PotentialBruteForce>());
-    eval2.setPhysicalData(std::make_shared<PhysicalData>());
-    eval2.setPhysicalDataOld(std::make_shared<PhysicalData>());
+    eval2.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
+    eval2.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
     eval2.setForceField(std::make_shared<ff::ForceField>());
     eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
     eval2.setConstraints(std::make_shared<constraints::Constraints>());

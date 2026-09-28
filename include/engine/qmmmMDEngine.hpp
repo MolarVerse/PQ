@@ -45,8 +45,8 @@ namespace engine
         void calculateForces() override;
 
        private:
-        randomNumberGenerator::RandomNumberGenerator _rng;
-        physicalData::PhysicalData                   _qmmmPhysicalData{};
+        rng::RandomNumberGenerator _rng;
+        physicalData::PhysicalData _qmmmPhysicalData{};
 
         void applySmoothing();
         void applyExactSmoothing();

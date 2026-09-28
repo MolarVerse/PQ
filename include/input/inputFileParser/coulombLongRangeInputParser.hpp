@@ -24,8 +24,6 @@
 
 #define _COULOMB_LONG_RANGE_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "inputFileParser.hpp"   // for InputFileParser
 
 namespace input
@@ -41,20 +39,9 @@ namespace input
        public:
         CoulombLongRangeInputParser();
 
-        static void parseCoulombLongRange(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseReactionFieldEpsilon(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseWolfParameter(
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addCoulombLongRangeKey();
+        void addReactionFieldEpsilonKey();
+        void addWolfParameterKey();
     };
 
 }   // namespace input

@@ -32,420 +32,459 @@
 #include "exceptions.hpp"   // for InputFileException, customException
 #include "parserUtils.hpp"
 #include "references.hpp"           // for References
-#include "referencesOutput.hpp"     // for ReferencesOutput
+#include "referencesOutput.hpp"     // for references::ReferencesOutput
 #include "stringUtilities.hpp"      // for toLowerCopy
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
 
-using namespace input;
-using namespace exc;
-using namespace settings;
-using namespace utilities;
-using namespace references;
-
-/**
- * @brief Construct a new Input File Parser Thermostat:: Input File Parser
- * Thermostat object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) thermostat "<string>" 2) temp
- * "<double>" 3) t_relaxation "<double>" 4) friction "<double>" 5)
- * nh-chain_length "<size_t>" 6) coupling_frequency "<double>"
- */
-ThermostatInputParser::ThermostatInputParser()
+namespace input
 {
-    addKeyword(
-        std::string("thermostat"),
-        bindMember(&ThermostatInputParser::parseThermostat, this),
-        false
-    );
-    addKeyword(
-        std::string("temp"),
-        bindMember(&ThermostatInputParser::parseTemperature, this),
-        false
-    );
-    addKeyword(
-        std::string("start_temp"),
-        bindMember(&ThermostatInputParser::parseStartTemperature, this),
-        false
-    );
-    addKeyword(
-        std::string("end_temp"),
-        bindMember(&ThermostatInputParser::parseEndTemperature, this),
-        false
-    );
-    addKeyword(
-        std::string("temp_ramp_steps"),
-        bindMember(&ThermostatInputParser::parseTemperatureRampSteps, this),
-        false
-    );
-    addKeyword(
-        std::string("temp_ramp_frequency"),
-        bindMember(&ThermostatInputParser::parseTemperatureRampFrequency, this),
-        false
-    );
-    addKeyword(
-        std::string("t_relaxation"),
-        bindMember(&ThermostatInputParser::parseThermostatRelaxationTime, this),
-        false
-    );
-    addKeyword(
-        std::string("friction"),
-        bindMember(&ThermostatInputParser::parseThermostatFriction, this),
-        false
-    );
-    addKeyword(
-        std::string("nh-chain_length"),
-        bindMember(&ThermostatInputParser::parseThermostatChainLength, this),
-        false
-    );
-    addKeyword(
-        std::string("coupling_frequency"),
-        bindMember(
-            &ThermostatInputParser::parseThermostatCouplingFrequency,
-            this
-        ),
-        false
-    );
-}
 
-/**
- * @brief Parse the thermostat used in the simulation
- *
- * @details Possible options are:
- * 1) none               - no thermostat (default)
- * 2) berendsen          - berendsen thermostat
- * 3) velocity_rescaling - velocity rescaling thermostat
- * 4) langevin           - langevin thermostat
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if thermostat is not "none" or
- * "berendsen"
- */
-void ThermostatInputParser::parseThermostat(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto thermostat = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    using enum ThermostatType;
-
-    if (thermostat == "none")
-        ThermostatSettings::setThermostatType(NONE);
-
-    else if (thermostat == "berendsen")
+    /**
+     * @brief Construct a new Input File Parser Thermostat:: Input File Parser
+     * Thermostat object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) thermostat "<string>" 2)
+     * temp
+     * "<double>" 3) t_relaxation "<double>" 4) friction "<double>" 5)
+     * nh-chain_length "<size_t>" 6) coupling_frequency "<double>"
+     */
+    ThermostatInputParser::ThermostatInputParser()
     {
-        ThermostatSettings::setThermostatType(BERENDSEN);
-        ReferencesOutput::addReferenceFile(BERENDSEN_FILE);
-    }
-
-    else if (thermostat == "velocity_rescaling" || thermostat == "rescale")
-    {
-        ThermostatSettings::setThermostatType(VELOCITY_RESCALING);
-        ReferencesOutput::addReferenceFile(VELOCITY_RESCALING_FILE);
-    }
-
-    else if (thermostat == "langevin")
-    {
-        ThermostatSettings::setThermostatType(LANGEVIN);
-        ReferencesOutput::addReferenceFile(LANGEVIN_FILE);
-    }
-
-    else if (thermostat == "nh_chain")
-    {
-        ThermostatSettings::setThermostatType(NOSE_HOOVER);
-        ReferencesOutput::addReferenceFile(NOSE_HOOVER_CHAIN_FILE);
-    }
-
-    else
-    {
-        throw InputFileException(format(
-            "Invalid thermostat \"{}\" at line {} in input file.\n"
-            "Possible options are: none, berendsen, velocity_rescaling, "
-            "langevin, nh-chain",
-            lineElements[2],
-            lineNumber
-        ));
-    }
-}
-
-/**
- * @brief Parse the temperature used in the simulation
- *
- * @details Temperature is needs to be set if thermostat is not "none"
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if temperature is negative
- */
-void ThermostatInputParser::parseTemperature(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto temperature = stringToFiniteDouble(lineElements[2]);
-
-    if (temperature < 0.0)
-        throw InputFileException("Temperature must be finite and non-negative");
-
-    ThermostatSettings::setTargetTemperature(temperature);
-}
-
-/**
- * @brief Parse the start temperature used in the simulation
- *
- * @details Start temperature is needs to be set if thermostat is not "none"
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if start temperature is negative
- */
-void ThermostatInputParser::parseStartTemperature(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto startTemperature = stringToFiniteDouble(lineElements[2]);
-
-    if (startTemperature < 0.0)
-        throw InputFileException(
-            "Start temperature must be finite and non-negative"
+        addKeyword(
+            std::string("thermostat"),
+            bindMember(&ThermostatInputParser::parseThermostat, this),
+            false
         );
-
-    ThermostatSettings::setStartTemperature(startTemperature);
-}
-
-/**
- * @brief Parse the end temperature used in the simulation
- *
- * @details End temperature is needs to be set if thermostat is not "none"
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if end temperature is negative
- */
-void ThermostatInputParser::parseEndTemperature(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto endTemperature = stringToFiniteDouble(lineElements[2]);
-
-    if (endTemperature < 0.0)
-        throw InputFileException(
-            "End temperature must be finite and non-negative"
+        addKeyword(
+            std::string("temp"),
+            bindMember(&ThermostatInputParser::parseTemperature, this),
+            false
         );
-
-    ThermostatSettings::setEndTemperature(endTemperature);
-}
-
-/**
- * @brief Parse the temperature ramp steps used in the simulation
- *
- * @details if start_temp and end_temp are set, then if temperature_ramp_steps
- * is not set, the temperature will be ramped linearly from start_temp to
- * end_temp over the full simulation time.
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if temperature ramp steps is
- * negative
- */
-void ThermostatInputParser::parseTemperatureRampSteps(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto temperatureRampSteps = stringToInt(lineElements[2]);
-
-    if (temperatureRampSteps < 0)
-        throw InputFileException("Temperature ramp steps cannot be negative");
-
-    ThermostatSettings::setTemperatureRampSteps(
-        static_cast<size_t>(temperatureRampSteps)
-    );
-}
-
-/**
- * @brief Parse the temperature ramp frequency used in the simulation
- *
- * @details default value is 1
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if temperature ramp frequency is
- * negative
- */
-void ThermostatInputParser::parseTemperatureRampFrequency(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto tempRampFreq = stringToInt(lineElements[2]);
-
-    if (tempRampFreq < 1)
-        throw InputFileException(
-            "Temperature ramp frequency must be greater than zero"
+        addKeyword(
+            std::string("start_temp"),
+            bindMember(&ThermostatInputParser::parseStartTemperature, this),
+            false
         );
-
-    ThermostatSettings::setTemperatureRampFrequency(
-        static_cast<size_t>(tempRampFreq)
-    );
-}
-
-/**
- * @brief parses the relaxation time of the thermostat
- *
- * @details default value is 0.1
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if relaxation time is negative
- */
-void ThermostatInputParser::parseThermostatRelaxationTime(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto relaxationTime = stringToFiniteDouble(lineElements[2]);
-
-    if (relaxationTime <= 0.0)
-        throw InputFileException(
-            "Relaxation time of thermostat must be finite and greater than zero"
+        addKeyword(
+            std::string("end_temp"),
+            bindMember(&ThermostatInputParser::parseEndTemperature, this),
+            false
         );
-
-    if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
-    {
-        throw InputFileException(
-            "Relaxation time of thermostat is too large to represent in "
-            "femtoseconds"
+        addKeyword(
+            std::string("temp_ramp_steps"),
+            bindMember(&ThermostatInputParser::parseTemperatureRampSteps, this),
+            false
+        );
+        addKeyword(
+            std::string("temp_ramp_frequency"),
+            bindMember(
+                &ThermostatInputParser::parseTemperatureRampFrequency,
+                this
+            ),
+            false
+        );
+        addKeyword(
+            std::string("t_relaxation"),
+            bindMember(
+                &ThermostatInputParser::parseThermostatRelaxationTime,
+                this
+            ),
+            false
+        );
+        addKeyword(
+            std::string("friction"),
+            bindMember(&ThermostatInputParser::parseThermostatFriction, this),
+            false
+        );
+        addKeyword(
+            std::string("nh-chain_length"),
+            bindMember(
+                &ThermostatInputParser::parseThermostatChainLength,
+                this
+            ),
+            false
+        );
+        addKeyword(
+            std::string("coupling_frequency"),
+            bindMember(
+                &ThermostatInputParser::parseThermostatCouplingFrequency,
+                this
+            ),
+            false
         );
     }
 
-    ThermostatSettings::setRelaxationTime(relaxationTime);
-}
-
-/**
- * @brief parses the friction of the langevin thermostat
- *
- * @details default value is 1,0e11
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if friction is negative
- */
-void ThermostatInputParser::parseThermostatFriction(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto friction = stringToFiniteDouble(lineElements[2]);
-
-    if (friction < 0.0)
-        throw InputFileException(
-            "Friction of thermostat must be finite and non-negative"
-        );
-
-    if (friction >
-        std::numeric_limits<double>::max() / defaults::MAX_FRICTION_CONVERSION)
+    /**
+     * @brief Parse the thermostat used in the simulation
+     *
+     * @details Possible options are:
+     * 1) none               - no thermostat (default)
+     * 2) berendsen          - berendsen thermostat
+     * 3) velocity_rescaling - velocity rescaling thermostat
+     * 4) langevin           - langevin thermostat
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if thermostat is not "none" or
+     * "berendsen"
+     */
+    void ThermostatInputParser::parseThermostat(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
     {
-        throw InputFileException(
-            "Friction of thermostat is too large to represent in inverse "
-            "seconds"
+        checkCommand(lineElements, lineNumber);
+
+        const auto thermostat =
+            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+
+        using enum settings::ThermostatType;
+
+        if (thermostat == "none")
+            settings::ThermostatSettings::setThermostatType(NONE);
+
+        else if (thermostat == "berendsen")
+        {
+            settings::ThermostatSettings::setThermostatType(BERENDSEN);
+            references::ReferencesOutput::addReferenceFile(
+                references::BERENDSEN_FILE
+            );
+        }
+
+        else if (thermostat == "velocity_rescaling" || thermostat == "rescale")
+        {
+            settings::ThermostatSettings::setThermostatType(VELOCITY_RESCALING);
+            references::ReferencesOutput::addReferenceFile(
+                references::VELOCITY_RESCALING_FILE
+            );
+        }
+
+        else if (thermostat == "langevin")
+        {
+            settings::ThermostatSettings::setThermostatType(LANGEVIN);
+            references::ReferencesOutput::addReferenceFile(
+                references::LANGEVIN_FILE
+            );
+        }
+
+        else if (thermostat == "nh_chain")
+        {
+            settings::ThermostatSettings::setThermostatType(NOSE_HOOVER);
+            references::ReferencesOutput::addReferenceFile(
+                references::NOSE_HOOVER_CHAIN_FILE
+            );
+        }
+
+        else
+        {
+            throw exc::InputFileException(
+                std::format(
+                    "Invalid thermostat \"{}\" at line {} in input file.\n"
+                    "Possible options are: none, berendsen, "
+                    "velocity_rescaling, "
+                    "langevin, nh-chain",
+                    lineElements[2],
+                    lineNumber
+                )
+            );
+        }
+    }
+
+    /**
+     * @brief Parse the temperature used in the simulation
+     *
+     * @details Temperature is needs to be set if thermostat is not "none"
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if temperature is negative
+     */
+    void ThermostatInputParser::parseTemperature(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        const auto temperature =
+            utilities::stringToFiniteDouble(lineElements[2]);
+
+        if (temperature < 0.0)
+            throw exc::InputFileException(
+                "Temperature must be finite and non-negative"
+            );
+
+        settings::ThermostatSettings::setTargetTemperature(temperature);
+    }
+
+    /**
+     * @brief Parse the start temperature used in the simulation
+     *
+     * @details Start temperature is needs to be set if thermostat is not "none"
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if start temperature is negative
+     */
+    void ThermostatInputParser::parseStartTemperature(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        const auto startTemperature =
+            utilities::stringToFiniteDouble(lineElements[2]);
+
+        if (startTemperature < 0.0)
+            throw exc::InputFileException(
+                "Start temperature must be finite and non-negative"
+            );
+
+        settings::ThermostatSettings::setStartTemperature(startTemperature);
+    }
+
+    /**
+     * @brief Parse the end temperature used in the simulation
+     *
+     * @details End temperature is needs to be set if thermostat is not "none"
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if end temperature is negative
+     */
+    void ThermostatInputParser::parseEndTemperature(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        const auto endTemperature =
+            utilities::stringToFiniteDouble(lineElements[2]);
+
+        if (endTemperature < 0.0)
+            throw exc::InputFileException(
+                "End temperature must be finite and non-negative"
+            );
+
+        settings::ThermostatSettings::setEndTemperature(endTemperature);
+    }
+
+    /**
+     * @brief Parse the temperature ramp steps used in the simulation
+     *
+     * @details if start_temp and end_temp are set, then if
+     * temperature_ramp_steps is not set, the temperature will be ramped
+     * linearly from start_temp to end_temp over the full simulation time.
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if temperature ramp steps is
+     * negative
+     */
+    void ThermostatInputParser::parseTemperatureRampSteps(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        const auto temperatureRampSteps =
+            utilities::stringToInt(lineElements[2]);
+
+        if (temperatureRampSteps < 0)
+            throw exc::InputFileException(
+                "Temperature ramp steps cannot be negative"
+            );
+
+        settings::ThermostatSettings::setTemperatureRampSteps(
+            static_cast<size_t>(temperatureRampSteps)
         );
     }
 
-    ThermostatSettings::setFriction(
-        friction * NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
-    );
-}
-
-/**
- * @brief parses the chain length of the nh-chain thermostat
- *
- * @details default value is 3
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if chain length is negative
- */
-void ThermostatInputParser::parseThermostatChainLength(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto chainLength = stringToInt(lineElements[2]);
-
-    if (chainLength < 1)
-        throw InputFileException(
-            "Chain length of thermostat must be greater than zero"
-        );
-
-    ThermostatSettings::setNoseHooverChainLength(
-        static_cast<size_t>(chainLength)
-    );
-}
-
-/**
- * @brief parses the coupling frequency of the nh-chain thermostat
- *
- * @details default value is 1.0e3 cm⁻¹
- *
- * @param lineElements
- * @param lineNumber
- *
- * @throws InputFileException if coupling frequency is negative
- */
-void ThermostatInputParser::parseThermostatCouplingFrequency(
-    const std::vector<std::string> &lineElements,
-    size_t                          lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto couplingFrequency = stringToFiniteDouble(lineElements[2]);
-
-    if (couplingFrequency < 0.0)
-        throw InputFileException(
-            "Coupling frequency of thermostat must be finite and non-negative"
-        );
-
-    if (couplingFrequency >
-        std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ)
+    /**
+     * @brief Parse the temperature ramp frequency used in the simulation
+     *
+     * @details default value is 1
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if temperature ramp frequency is
+     * negative
+     */
+    void ThermostatInputParser::parseTemperatureRampFrequency(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
     {
-        throw InputFileException(
-            "Coupling frequency of thermostat is too large to represent in "
-            "hertz"
+        checkCommand(lineElements, lineNumber);
+
+        const auto tempRampFreq = utilities::stringToInt(lineElements[2]);
+
+        if (tempRampFreq < 1)
+            throw exc::InputFileException(
+                "Temperature ramp frequency must be greater than zero"
+            );
+
+        settings::ThermostatSettings::setTemperatureRampFrequency(
+            static_cast<size_t>(tempRampFreq)
         );
     }
 
-    ThermostatSettings::setNoseHooverCouplingFrequency(couplingFrequency);
-}
+    /**
+     * @brief parses the relaxation time of the thermostat
+     *
+     * @details default value is 0.1
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if relaxation time is negative
+     */
+    void ThermostatInputParser::parseThermostatRelaxationTime(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        const auto relaxationTime =
+            utilities::stringToFiniteDouble(lineElements[2]);
+
+        if (relaxationTime <= 0.0)
+        {
+            throw exc::InputFileException(
+                "Relaxation time of thermostat must be finite and greater than "
+                "zero"
+            );
+        }
+
+        if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
+        {
+            throw exc::InputFileException(
+                "Relaxation time of thermostat is too large to represent in "
+                "femtoseconds"
+            );
+        }
+
+        settings::ThermostatSettings::setRelaxationTime(relaxationTime);
+    }
+
+    /**
+     * @brief parses the friction of the langevin thermostat
+     *
+     * @details default value is 1,0e11
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if friction is negative
+     */
+    void ThermostatInputParser::parseThermostatFriction(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        const auto friction = utilities::stringToFiniteDouble(lineElements[2]);
+
+        if (friction < 0.0)
+            throw exc::InputFileException(
+                "Friction of thermostat must be finite and non-negative"
+            );
+
+        if (friction > std::numeric_limits<double>::max() /
+                           defaults::MAX_FRICTION_CONVERSION)
+        {
+            throw exc::InputFileException(
+                "Friction of thermostat is too large to represent in inverse "
+                "seconds"
+            );
+        }
+
+        settings::ThermostatSettings::setFriction(
+            friction * NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+        );
+    }
+
+    /**
+     * @brief parses the chain length of the nh-chain thermostat
+     *
+     * @details default value is 3
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if chain length is negative
+     */
+    void ThermostatInputParser::parseThermostatChainLength(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        const auto chainLength = utilities::stringToInt(lineElements[2]);
+
+        if (chainLength < 1)
+            throw exc::InputFileException(
+                "Chain length of thermostat must be greater than zero"
+            );
+
+        settings::ThermostatSettings::setNoseHooverChainLength(
+            static_cast<size_t>(chainLength)
+        );
+    }
+
+    /**
+     * @brief parses the coupling frequency of the nh-chain thermostat
+     *
+     * @details default value is 1.0e3 cm⁻¹
+     *
+     * @param lineElements
+     * @param lineNumber
+     *
+     * @throws InputFileException if coupling frequency is negative
+     */
+    void ThermostatInputParser::parseThermostatCouplingFrequency(
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
+    )
+    {
+        checkCommand(lineElements, lineNumber);
+
+        const auto couplingFrequency =
+            utilities::stringToFiniteDouble(lineElements[2]);
+
+        if (couplingFrequency < 0.0)
+        {
+            throw exc::InputFileException(
+                "Coupling frequency of thermostat must be finite and "
+                "non-negative"
+            );
+        }
+
+        if (couplingFrequency >
+            std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ)
+        {
+            throw exc::InputFileException(
+                "Coupling frequency of thermostat is too large to represent in "
+                "hertz"
+            );
+        }
+
+        settings::ThermostatSettings::setNoseHooverCouplingFrequency(
+            couplingFrequency
+        );
+    }
+
+}   // namespace input

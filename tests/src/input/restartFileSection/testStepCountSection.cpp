@@ -30,9 +30,8 @@
 // for AssertionResult, Message, TestPart...
 #include "restartFileReader/restartFileSection.hpp"   // for RstFileSection, readInput
 #include "testRestartFileSection.hpp"   // for TestStepCountSection
-#include "timingsSettings.hpp"          // for TimingsSettings
-
-using namespace input;
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 TEST_F(TestStepCountSection, testKeyword)
 {
@@ -51,9 +50,10 @@ TEST_F(TestStepCountSection, testNumberOfArguments)
         if (i != 2)
         {
             auto line = std::vector<std::string>(i);
-            ASSERT_THROW(
+            ASSERT_THROW_MSG(
                 _section->process(line, *_engine),
-                exc::RstFileException
+                exc::RstFileException,
+                "Error in line 0: Step count section must have 2 elements"
             );
         }
     }
@@ -63,7 +63,11 @@ TEST_F(TestStepCountSection, testNegativeStepCount)
 {
     auto line = std::vector<std::string>(2);
     line[1]   = "-1";
-    ASSERT_THROW(_section->process(line, *_engine), exc::RstFileException);
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine),
+        exc::RstFileException,
+        "Error in line 0: Step count must be positive"
+    );
 }
 
 TEST_F(TestStepCountSection, testProcess)
