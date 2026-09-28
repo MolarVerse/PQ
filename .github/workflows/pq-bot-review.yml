@@ -3,8 +3,6 @@ name: PQ Bot Review
 on:
   issue_comment:
     types: [created]
-  pull_request_target:
-    types: [review_requested]
 
 permissions:
   contents: read
@@ -12,21 +10,15 @@ permissions:
   issues: read
 
 concurrency:
-  group: pq-bot-review-${{ github.event.issue.number || github.event.pull_request.number }}
+  group: pq-bot-review-${{ github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:
   review:
     if: >-
-      (github.event_name == 'pull_request_target' &&
-         vars.PQ_BOT_MACHINE_USER != '' &&
-         github.event.requested_reviewer.login == vars.PQ_BOT_MACHINE_USER) ||
-      (github.event_name == 'issue_comment' &&
-         github.event.issue.pull_request &&
-         (contains(github.event.comment.body, '@pq-bot') ||
-          contains(github.event.comment.body, '/pq-bot') ||
-          (vars.PQ_BOT_MACHINE_USER != '' &&
-           contains(github.event.comment.body, vars.PQ_BOT_MACHINE_USER))))
+      github.event.issue.pull_request &&
+      (contains(github.event.comment.body, '@pq-bot') ||
+       contains(github.event.comment.body, '/pq-bot'))
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
@@ -39,7 +31,6 @@ jobs:
         id: prepare
         env:
           GH_TOKEN: ${{ github.token }}
-          PQ_BOT_MACHINE_USER: ${{ vars.PQ_BOT_MACHINE_USER }}
           PQ_BOT_MODEL_CHEAP: ${{ vars.PQ_BOT_MODEL_CHEAP }}
           PQ_BOT_MODEL_FAST: ${{ vars.PQ_BOT_MODEL_FAST }}
           PQ_BOT_MODEL_SMART: ${{ vars.PQ_BOT_MODEL_SMART }}
@@ -71,6 +62,7 @@ jobs:
         with:
           app-id: ${{ secrets.PQ_BOT_APP_ID }}
           private-key: ${{ secrets.PQ_BOT_PRIVATE_KEY }}
+          permission-pull-requests: write
 
       - name: Publish advisory comments
         if: steps.prepare.outputs.run == 'true'

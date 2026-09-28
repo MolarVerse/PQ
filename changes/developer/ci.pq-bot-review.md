@@ -1,1 +1,1 @@
-- Add bounded PQ Bot reviews and draft coworker PRs, with isolated model edits, safer CI token scopes, and optional machine-user review requests.
+- Add bounded PQ Bot reviews and test-driven draft coworker PRs with isolated model edits and scoped write credentials.

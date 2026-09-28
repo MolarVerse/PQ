@@ -34,27 +34,19 @@ def api(method, path, token, payload=None):
     return json.loads(content) if content else None
 
 
-def selected_review(event_name, event, machine_login):
+def selected_review(event_name, event):
     if (event.get("repository") or {}).get("private", False):
         return None
-    if event_name == "pull_request_target":
-        if not machine_login:
-            return None
-        reviewer = event.get("requested_reviewer") or {}
-        if event.get("action") != "review_requested":
-            return None
-        if reviewer.get("login", "").lower() != machine_login.lower():
-            return None
-        return event["pull_request"]["number"], True, ""
     if event_name != "issue_comment" or event.get("issue", {}).get("pull_request") is None:
         return None
     comment = event.get("comment") or {}
     if comment.get("author_association") not in ALLOWED_ASSOCIATIONS:
         return None
-    triggers = [r"[@/]pq-bot"]
-    if machine_login:
-        triggers.append("@" + re.escape(machine_login))
-    mention = re.compile(rf"^[ \t]{{0,3}}(?:{'|'.join(triggers)})[ \t]+review\b", re.I)
+    mention = re.compile(
+        r"^[ \t]{0,3}[@/]pq-bot[ \t]+review"
+        r"(?:[ \t]+with[ \t]+[A-Za-z0-9_]+)?[ \t]*$",
+        re.I,
+    )
     fence_marker = None
     command_line = None
     for line in comment.get("body", "").splitlines():
@@ -70,7 +62,7 @@ def selected_review(event_name, event, machine_login):
             break
     if command_line is None:
         return None
-    return event["issue"]["number"], False, command_line
+    return event["issue"]["number"], command_line
 
 
 def review_model(command_line):
@@ -82,7 +74,9 @@ def review_model(command_line):
     }
     choice = re.search(r"\bwith[ \t]+([A-Za-z0-9_]+)\b", command_line, re.I)
     alias = choice.group(1).lower() if choice else "review"
-    model = models.get(alias) or models["review"]
+    if alias not in models:
+        raise ValueError("Unsupported model alias")
+    model = models[alias]
     if not re.fullmatch(r"[A-Za-z0-9._:-]+/[A-Za-z0-9._:/-]+", model):
         raise ValueError("The selected review model is not configured")
     return model
@@ -154,7 +148,6 @@ def review_payload(repo, number, token):
         "head_sha": pull["head"]["sha"],
         "base_sha": pull["base"]["sha"],
         "allowed_lines": allowed,
-        "machine_login": os.environ.get("PQ_BOT_MACHINE_USER", ""),
     }
     prompt = (
         "Review this pull request diff for concrete correctness bugs and missing "
@@ -217,9 +210,7 @@ def validated_review(result, allowed):
 
 def prepare(outdir):
     event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
-    chosen = selected_review(
-        os.environ["GITHUB_EVENT_NAME"], event, os.environ.get("PQ_BOT_MACHINE_USER", "")
-    )
+    chosen = selected_review(os.environ["GITHUB_EVENT_NAME"], event)
     output = Path(os.environ["GITHUB_OUTPUT"])
     if not chosen or not repository_writer(
         os.environ["GITHUB_REPOSITORY"],
@@ -229,12 +220,11 @@ def prepare(outdir):
         with output.open("a", encoding="utf-8") as handle:
             handle.write("run=false\n")
         return
-    number, requested, command_line = chosen
+    number, command_line = chosen
     model = review_model(command_line)
     context, prompt = review_payload(
         os.environ["GITHUB_REPOSITORY"], number, os.environ["GH_TOKEN"]
     )
-    context["requested"] = requested
     Path(outdir, "pq-review-context.json").write_text(json.dumps(context), encoding="utf-8")
     Path(outdir, "pq-review-prompt.txt").write_text(prompt, encoding="utf-8")
     with output.open("a", encoding="utf-8") as handle:
@@ -265,18 +255,6 @@ def publish(outdir):
             "comments": comments,
         },
     )
-    if context["requested"]:
-        current = api("GET", f"{repo}/pulls/{number}", token)
-        requested = {user["login"].lower() for user in current["requested_reviewers"]}
-        if context["machine_login"].lower() in requested:
-            api(
-                "DELETE",
-                f"{repo}/pulls/{number}/requested_reviewers",
-                token,
-                {"reviewers": [context["machine_login"]]},
-            )
-
-
 def main():
     if len(sys.argv) != 3 or sys.argv[1] not in {"prepare", "publish"}:
         raise SystemExit("usage: pq_bot_review.py prepare|publish <outdir>")

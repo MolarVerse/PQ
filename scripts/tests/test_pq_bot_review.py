@@ -22,22 +22,25 @@ def comment(body, association="MEMBER", is_pr=True):
 
 
 class ReviewTriggerTests(unittest.TestCase):
-    def test_slash_and_literal_mentions_work_without_machine_user(self):
-        self.assertEqual((12, False, "/pq-bot review"), review.selected_review("issue_comment", comment("/pq-bot review"), ""))
-        self.assertEqual((12, False, "@pq-bot review"), review.selected_review("issue_comment", comment("@pq-bot review"), ""))
-
-    def test_machine_user_mention_and_review_request(self):
+    def test_slash_and_literal_mentions_work(self):
         self.assertEqual(
-            (12, False, "@molarverse-pq-bot review"),
-            review.selected_review("issue_comment", comment("@molarverse-pq-bot review"), "molarverse-pq-bot"),
+            (12, "/pq-bot review"),
+            review.selected_review("issue_comment", comment("/pq-bot review")),
         )
+        self.assertEqual(
+            (12, "@pq-bot review with smart"),
+            review.selected_review(
+                "issue_comment", comment("@pq-bot review with smart")
+            ),
+        )
+
+    def test_reviewer_requests_are_out_of_scope_until_tagging_is_added(self):
         event = {
             "action": "review_requested",
             "requested_reviewer": {"login": "molarverse-pq-bot"},
             "pull_request": {"number": 23},
         }
-        self.assertEqual((23, True, ""), review.selected_review("pull_request_target", event, "molarverse-pq-bot"))
-        self.assertIsNone(review.selected_review("pull_request_target", event, ""))
+        self.assertIsNone(review.selected_review("pull_request_target", event))
 
     def test_quotes_outsiders_and_other_commands_do_not_run(self):
         for body in (
@@ -46,13 +49,20 @@ class ReviewTriggerTests(unittest.TestCase):
             "    /pq-bot review",
             "```\n/pq-bot review\n```",
             "/pq-bot fix #3",
+            "/pq-bot review with smart and more",
         ):
-            self.assertIsNone(review.selected_review("issue_comment", comment(body), ""))
-        self.assertIsNone(review.selected_review("issue_comment", comment("/pq-bot review", "NONE"), ""))
-        self.assertIsNone(review.selected_review("issue_comment", comment("/pq-bot review", is_pr=False), ""))
+            self.assertIsNone(review.selected_review("issue_comment", comment(body)))
+        self.assertIsNone(
+            review.selected_review("issue_comment", comment("/pq-bot review", "NONE"))
+        )
+        self.assertIsNone(
+            review.selected_review(
+                "issue_comment", comment("/pq-bot review", is_pr=False)
+            )
+        )
         private = comment("/pq-bot review")
         private["repository"] = {"private": True}
-        self.assertIsNone(review.selected_review("issue_comment", private, ""))
+        self.assertIsNone(review.selected_review("issue_comment", private))
 
     def test_actual_repository_permission_controls_review(self):
         with mock.patch.object(review, "api", return_value={"permission": "read"}):
@@ -71,7 +81,8 @@ class ReviewTriggerTests(unittest.TestCase):
         with mock.patch.dict("os.environ", models):
             self.assertEqual("opencode-go/review", review.review_model(""))
             self.assertEqual("opencode-go/smart", review.review_model("@pq-bot review with smart"))
-            self.assertEqual("opencode-go/review", review.review_model("/pq-bot review with unknown"))
+            with self.assertRaisesRegex(ValueError, "Unsupported model"):
+                review.review_model("/pq-bot review with unknown")
         with mock.patch.dict("os.environ", {"PQ_BOT_MODEL_REVIEW": ""}):
             with self.assertRaisesRegex(ValueError, "not configured"):
                 review.review_model("/pq-bot review")
@@ -126,15 +137,13 @@ class ReviewOutputTests(unittest.TestCase):
             )
             self.assertEqual("Clear", review.read_model_result(path)["summary"])
 
-    def test_publisher_never_approves_and_removes_requested_alias(self):
+    def test_publisher_posts_comment_review_only(self):
         context = {
             "repo": "MolarVerse/PQ",
             "number": 12,
             "head_sha": "abc123",
             "base_sha": "base123",
             "allowed_lines": {"src/a.cpp": [8]},
-            "machine_login": "molarverse-pq-bot",
-            "requested": True,
         }
         events = {
             "type": "text",
@@ -150,14 +159,20 @@ class ReviewOutputTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             Path(directory, "pq-review-context.json").write_text(json.dumps(context), encoding="utf-8")
             Path(directory, "pq-review-events.jsonl").write_text(json.dumps(events) + "\n", encoding="utf-8")
-            pull = {"state": "open", "head": {"sha": "abc123"}, "base": {"sha": "base123"}, "requested_reviewers": [{"login": "molarverse-pq-bot"}]}
-            with mock.patch.dict("os.environ", {"GH_TOKEN": "test-token"}), mock.patch.object(review, "api", side_effect=[pull, {}, pull, {}]) as api:
+            pull = {
+                "state": "open",
+                "head": {"sha": "abc123"},
+                "base": {"sha": "base123"},
+            }
+            with mock.patch.dict(
+                "os.environ", {"GH_TOKEN": "test-token"}
+            ), mock.patch.object(review, "api", side_effect=[pull, {}]) as api:
                 review.publish(directory)
             self.assertEqual("COMMENT", api.call_args_list[1].args[3]["event"])
-            self.assertEqual("DELETE", api.call_args_list[3].args[0])
+            self.assertEqual(2, api.call_count)
 
     def test_publisher_aborts_if_head_changed(self):
-        context = {"repo": "MolarVerse/PQ", "number": 12, "head_sha": "abc123", "base_sha": "base123", "allowed_lines": {}, "requested": False}
+        context = {"repo": "MolarVerse/PQ", "number": 12, "head_sha": "abc123", "base_sha": "base123", "allowed_lines": {}}
         events = {"type": "text", "part": {"text": '{"summary":"No issue","findings":[]}'}}
         with tempfile.TemporaryDirectory() as directory:
             Path(directory, "pq-review-context.json").write_text(json.dumps(context), encoding="utf-8")
@@ -168,6 +183,16 @@ class ReviewOutputTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "changed during review"):
                     review.publish(directory)
             api.assert_called_once()
+
+
+class ReviewWorkflowTests(unittest.TestCase):
+    def test_review_workflow_uses_comment_trigger_and_scoped_app_token(self):
+        workflow = Path(".github/workflows/pq-bot-review.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("pull_request_target", workflow)
+        self.assertNotIn("PQ_BOT_MACHINE_USER", workflow)
+        self.assertIn("permission-pull-requests: write", workflow)
 
 
 if __name__ == "__main__":
