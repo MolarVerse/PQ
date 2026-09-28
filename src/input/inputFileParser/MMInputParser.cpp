@@ -77,24 +77,23 @@ namespace input
                 "bonded)",
         };
 
-        const auto setValue =
-            [forceField = _forceField,
-             potential  = _potential](settings::ForceFieldType value)
+        const auto setValue = [forceField = _forceField,
+                               potential  = _potential](ForceFieldType value)
         {
             switch (value)
             {
-                case settings::ForceFieldType::ON:
+                case ForceFieldType::ON:
                     settings::ForceFieldSettings::activate();
                     forceField->activateNonCoulombic();
                     potential->makeNonCoulombPotential(
                         pot::ForceFieldNonCoulomb()
                     );
                     break;
-                case settings::ForceFieldType::OFF:
+                case ForceFieldType::OFF:
                     settings::ForceFieldSettings::deactivate();
                     forceField->deactivateNonCoulombic();
                     break;
-                case settings::ForceFieldType::BONDED:
+                case ForceFieldType::BONDED:
                     settings::ForceFieldSettings::activate();
                     forceField->deactivateNonCoulombic();
                     break;
@@ -102,9 +101,9 @@ namespace input
         };
 
         auto &key = _getRegistry().registerKey(
-            KeyRegistry<settings::ForceFieldType>{
+            KeyRegistry<ForceFieldType>{
                 .metadata     = metaData,
-                .defaultValue = settings::ForceFieldType::OFF,
+                .defaultValue = ForceFieldType::OFF,
                 .onSet        = setValue
             }
         );
@@ -125,14 +124,13 @@ namespace input
                 "(guff, lj, buck, morse)",
         };
 
-        const auto setValue =
-            [potential = _potential](settings::NonCoulombType value)
+        const auto setValue = [potential = _potential](NonCoulombType value)
         { settings::PotentialSettings::setNonCoulombType(value); };
 
         auto &key = _getRegistry().registerKey(
-            KeyRegistry<settings::NonCoulombType>{
+            KeyRegistry<NonCoulombType>{
                 .metadata   = metaData,
-                .notAllowed = {settings::NonCoulombType::LJ_9_12},
+                .notAllowed = {NonCoulombType::LJ_9_12},
                 .onSet      = setValue,
             }
         );

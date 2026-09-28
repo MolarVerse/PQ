@@ -165,9 +165,7 @@ TEST_F(TestGuffDatReader, parseLine)
         "2.0", "2.0", "2.0", "2.0", "2.0",  "2.0",  "2.0", "2.0"
     };
     _guffDatReader->setupGuffMaps();
-    settings::PotentialSettings::setNonCoulombType(
-        settings::NonCoulombType::LJ
-    );
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
     EXPECT_NO_THROW(_guffDatReader->parseLine(line));
 
     EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][1][1][0], 10.0);
@@ -425,9 +423,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         };
     _guffDatReader->setupGuffMaps();
 
-    settings::PotentialSettings::setNonCoulombType(
-        settings::NonCoulombType::LJ
-    );
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -450,9 +446,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
             )
     );
 
-    settings::PotentialSettings::setNonCoulombType(
-        settings::NonCoulombType::BUCKINGHAM
-    );
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::BUCKINGHAM);
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -475,9 +469,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
             )
     );
 
-    settings::PotentialSettings::setNonCoulombType(
-        settings::NonCoulombType::MORSE
-    );
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::MORSE);
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -499,9 +491,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         )
     );
 
-    settings::PotentialSettings::setNonCoulombType(
-        settings::NonCoulombType::GUFF
-    );
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::GUFF);
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -523,9 +513,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         )
     );
 
-    settings::PotentialSettings::setNonCoulombType(
-        settings::NonCoulombType::LJ_9_12
-    );
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::LJ_9_12);
 
     EXPECT_THROW_MSG(
         _guffDatReader->addNonCoulombPair(
@@ -539,7 +527,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         exc::UserInputException,
         std::format(
             "Invalid nonCoulombic type {} given",
-            settings::NonCoulombTypeMeta::toString(
+            NonCoulombTypeMeta::toString(
                 settings::PotentialSettings::getNonCoulombType()
             )
         )

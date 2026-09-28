@@ -454,7 +454,7 @@ namespace input
      */
     void InputFileReader::validateReactionFieldCoulomb() const
     {
-        using enum settings::CoulombLongRangeType;
+        using enum CoulombLongRangeType;
 
         const auto longRangeCorrection =
             settings::PotentialSettings::getCoulombLongRangeType();

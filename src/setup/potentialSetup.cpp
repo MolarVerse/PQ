@@ -101,7 +101,7 @@ namespace setup
 
         switch (settings::PotentialSettings::getCoulombLongRangeType())
         {
-            using enum settings::CoulombLongRangeType;
+            using enum CoulombLongRangeType;
 
             case REACTION_FIELD:
                 potential->makeCoulombPotential(
@@ -220,7 +220,7 @@ namespace setup
             settings::PotentialSettings::getCoulombLongRangeType();
 
         // clang-format off
-    log.writeSetupInfo(std::format("Coulomb long range type: {}", settings::CoulombLongRangeTypeMeta::toString(coulLRType)));
+    log.writeSetupInfo(std::format("Coulomb long range type: {}", CoulombLongRangeTypeMeta::toString(coulLRType)));
     log.writeEmptyLine();
         // clang-format on
 
@@ -229,22 +229,22 @@ namespace setup
         auto wolfParam = 0.0;
         auto rfEpsilon = 0.0;
 
-        if (coulLRType == settings::CoulombLongRangeType::WOLF)
+        if (coulLRType == CoulombLongRangeType::WOLF)
             wolfParam = settings::PotentialSettings::getWolfParameter();
 
-        if (coulLRType == settings::CoulombLongRangeType::REACTION_FIELD)
+        if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
             rfEpsilon = settings::PotentialSettings::getReactionFieldEpsilon();
 
         // clang-format off
     const auto coulRCutStr  = std::format("Coulomb radius cut-off: {}", coulRCut);
     log.writeSetupInfo(coulRCutStr);
 
-    if (coulLRType == settings::CoulombLongRangeType::WOLF)
+    if (coulLRType == CoulombLongRangeType::WOLF)
     {
         const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
         log.writeSetupInfo(wolfParamStr);
     }
-    else if (coulLRType == settings::CoulombLongRangeType::REACTION_FIELD)
+    else if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
     {
         const auto rfEpsilonStr = std::format("Reaction-field static relative permittivity: {}", rfEpsilon);
         log.writeSetupInfo(rfEpsilonStr);

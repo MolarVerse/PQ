@@ -333,7 +333,7 @@ namespace input::guffdat
         double                     rncCutOff
     )
     {
-        using enum settings::NonCoulombType;
+        using enum NonCoulombType;
         switch (settings::PotentialSettings::getNonCoulombType())
         {
             case LJ:
@@ -394,7 +394,7 @@ namespace input::guffdat
                 throw exc::UserInputException(
                     std::format(
                         "Invalid nonCoulombic type {} given",
-                        settings::NonCoulombTypeMeta::toString(
+                        NonCoulombTypeMeta::toString(
                             settings::PotentialSettings::getNonCoulombType()
                         )
                     )
