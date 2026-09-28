@@ -25,6 +25,7 @@
 #include <cmath>
 #include <vector>
 
+#include "exceptions.hpp"
 #include "simulationBox.hpp"
 
 namespace constraints
@@ -67,6 +68,9 @@ namespace constraints
      * @param timeInterval the time interval over which the constraint is
      * applied
      *
+     * @throws exc::ShakeException if the constraint is violated and the
+     * atom separation is zero-length or non-finite, meaning the simulation
+     * has become unstable
      */
     void DistanceConstraint::applyDistanceConstraint(
         const molsys::SimulationBox &simulationBox,
@@ -89,6 +93,16 @@ namespace constraints
         const auto distance = norm(dPos);
         const auto force_constant =
             _springConstant + (_dSpringConstantDt * timeInterval);
+
+        if ((distance < _lowerDistance || distance > _upperDistance) &&
+            (!std::isfinite(distance) || 0.0 == distance))
+        {
+            throw exc::ShakeException(
+                "Degenerate distance-constraint separation - the atom "
+                "separation is zero-length or non-finite, the simulation "
+                "has become unstable"
+            );
+        }
 
         if (distance < _lowerDistance)
         {

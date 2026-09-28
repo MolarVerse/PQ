@@ -1,0 +1,1 @@
+- Fix SHAKE bond constraints, distance constraints, and cell-list setup silently producing NaN/Inf forces or an unstable cell layout on degenerate geometry (e.g. two constrained atoms colliding, or the box collapsing during a blow-up); these now throw a descriptive exception instead.
