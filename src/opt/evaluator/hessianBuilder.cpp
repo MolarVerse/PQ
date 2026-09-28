@@ -122,7 +122,7 @@ namespace opt
      * @param simulationBox
      * @param positions
      */
-    void ForceDifferenceHessianBuilder::restorePositions(
+    void ForceDifferenceHessianBuilder::_restorePositions(
         molsys::SimulationBox            &simulationBox,
         const std::vector<linalg::Vec3D> &positions
     )
@@ -181,7 +181,7 @@ namespace opt
                 hessian[row][col] =
                     -(fPlus[row] - fMinus[row]) / (2.0 * _displacement);
 
-            restorePositions(simulationBox, originalPositions);
+            _restorePositions(simulationBox, originalPositions);
         }
 
         evaluator.evaluate();
@@ -221,7 +221,7 @@ namespace opt
                 hessian[row][col] =
                     -(fPlus[row] - forces0[row]) / _displacement;
 
-            restorePositions(simulationBox, originalPositions);
+            _restorePositions(simulationBox, originalPositions);
         }
 
         evaluator.evaluate();
@@ -278,7 +278,7 @@ namespace opt
                 hessian[row][col] = -derivative;
             }
 
-            restorePositions(simulationBox, originalPositions);
+            _restorePositions(simulationBox, originalPositions);
         }
 
         evaluator.evaluate();

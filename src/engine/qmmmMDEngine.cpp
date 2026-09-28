@@ -126,7 +126,7 @@ namespace engine
 
         _applySmoothing();
 
-        combineInnerOuterForces();
+        _combineInnerOuterForces();
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }
 
@@ -187,9 +187,9 @@ namespace engine
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
             const auto inactiveSmMol =
-                generateInactiveSmoothingMoleculeSet(i, nSmMol);
+                _generateInactiveSmoothingMoleculeSet(i, nSmMol);
             const auto globalSmF =
-                calculateGlobalSmoothingFactor(inactiveSmMol);
+                _calculateGlobalSmoothingFactor(inactiveSmMol);
 
             // STEP 2: Setup and run QM calculation, accumulate QM forces
             // and QM virial contribution and the number of QM atoms for
@@ -218,7 +218,7 @@ namespace engine
             virial += virial::calculateQMVirial(*_simulationBox) * globalSmF;
             virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
+            _addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces
             // and MM virial contribution
@@ -250,7 +250,7 @@ namespace engine
             virial += virial::calculateVirial(*_simulationBox) * globalSmF;
             virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
+            _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
             _physicalData->setVirial({0.0});
@@ -265,7 +265,7 @@ namespace engine
             virial += _physicalData->getVirial() * globalSmF;
             virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
+            _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // STEP 4: Scale and accumulate hybrid energies and delete temp
             // files --> following configs cannot continue if the QM calc
@@ -316,13 +316,13 @@ namespace engine
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
-            scaleSmoothingMoleculeForcesInner();
+            _scaleSmoothingMoleculeForcesInner();
         else
             _distributeSmoothingMolQMForces();
 
         virial += virial::calculateQMVirial(*_simulationBox);
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToInnerAndReset(atoms);
+        _addCurrentForcesToInnerAndReset(atoms);
 
         // STEP 2: Setup and run inter-nonbonded calculation between
         // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of
@@ -347,10 +347,10 @@ namespace engine
             *_cellList
         );
 
-        scaleSmoothingMoleculeForcesInner();
+        _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateVirial(*_simulationBox);
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToOuterAndReset(atoms);
+        _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING
         // molecules and scale forces of smoothing molecules with (1 - smF)
@@ -368,10 +368,10 @@ namespace engine
             *_cellList
         );
 
-        scaleSmoothingMoleculeForcesOuter();
+        _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(*_simulationBox);
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToOuterAndReset(atoms);
+        _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale
         // forces of smoothing molecules with (1 - smF)
@@ -382,10 +382,10 @@ namespace engine
 
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
-        scaleSmoothingMoleculeForcesOuter();
+        _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(*_simulationBox);
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToOuterAndReset(atoms);
+        _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 5: Run intra-bonded calculation and scale forces of
         // smoothing molecules with (1 - smF)
@@ -400,10 +400,10 @@ namespace engine
 
         _intraWater->calculate(*_simulationBox, *_physicalData);
 
-        scaleSmoothingMoleculeForcesOuter();
+        _scaleSmoothingMoleculeForcesOuter();
         virial += _physicalData->getVirial();
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToOuterAndReset(atoms);
+        _addCurrentForcesToOuterAndReset(atoms);
 
         _physicalData->setVirial(virial);
     }
