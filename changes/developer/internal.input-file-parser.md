@@ -18,3 +18,4 @@
 - migrate `CoulombLongRangeInputParser`
 - migrate `MMInputParser`
 - migrate `SimulationBoxInputParser`
+- migrate `HessianInputParser`

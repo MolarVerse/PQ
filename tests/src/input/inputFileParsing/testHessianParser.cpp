@@ -33,79 +33,112 @@
 TEST_F(TestInputFileReader, parseHessianFile)
 {
     input::HessianInputParser parser;
-    std::vector<std::string>  lineElements = {
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("hessian_file"));
+    const auto& parseFunc = funcMap.at("hessian_file");
+
+    std::vector<std::string> lineElements = {
         "hessian_file",
         "=",
         "water.hessian"
     };
-
-    input::HessianInputParser::parseHessianFile(lineElements, 0);
-
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::HessianSettings::getHessianFile(), "water.hessian");
+}
+
+TEST_F(TestInputFileReader, parseHessianInfoFile)
+{
+    input::HessianInputParser parser;
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("hessian_info_file"));
+    const auto& parseFunc = funcMap.at("hessian_info_file");
+
+    std::vector<std::string> lineElements = {
+        "hessian_info_file",
+        "=",
+        "water.hessian.info"
+    };
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(
+        settings::HessianSettings::getHessianInfoFile(),
+        "water.hessian.info"
+    );
 }
 
 TEST_F(TestInputFileReader, parseHessianDisplacement)
 {
     input::HessianInputParser parser;
-    std::vector<std::string>  lineElements = {
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("hessian_displacement"));
+    const auto& parseFunc = funcMap.at("hessian_displacement");
+
+    std::vector<std::string> lineElements = {
         "hessian_displacement",
         "=",
         "0.001"
     };
-
-    input::HessianInputParser::parseDisplacement(lineElements, 0);
-
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::HessianSettings::getDisplacement(), 0.001);
 
-    lineElements = {"hessian_displacement", "=", "0.0"};
+    clearParser(parser);
 
+    lineElements = {"hessian_displacement", "=", "0.0"};
     EXPECT_THROW_MSG(
-        parser.parseDisplacement(lineElements, 7),
+        parseFunc(lineElements, 7),
         exc::InputFileException,
-        "Hessian displacement must be greater than 0 in input file at line 7"
+        "Invalid value \"0.0\" for key \"hessian_displacement\" at line 7 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
     );
 }
 
 TEST_F(TestInputFileReader, parseHessianBuilder)
 {
     input::HessianInputParser parser;
-    std::vector<std::string>  lineElements = {
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("hessian_builder"));
+    const auto& parseFunc = funcMap.at("hessian_builder");
+
+    std::vector<std::string> lineElements = {
         "hessian_builder",
         "=",
         "five-point"
     };
-
-    input::HessianInputParser::parseBuilder(lineElements, 0);
-
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::HessianSettings::getBuilder(),
         HessianBuilderType::FIVE_POINT
     );
 
-    lineElements = {"hessian_builder", "=", "unknown"};
+    clearParser(parser);
 
+    lineElements = {"hessian_builder", "=", "unknown"};
     EXPECT_THROW_MSG(
-        parser.parseBuilder(lineElements, 9),
+        parseFunc(lineElements, 9),
         exc::InputFileException,
-        "Invalid hessian_builder \"unknown\" in input file at line 9 - "
-        "possible values are: central, forward, five-point, analytic"
+        "Invalid value \"unknown\" for key \"hessian_builder\" at line 9 in "
+        "input file. Allowed values: central, forward, five_point, analytic"
     );
 }
 
 TEST_F(TestInputFileReader, parseOptimizeBeforeHessian)
 {
     input::HessianInputParser parser;
-    std::vector<std::string>  lineElements = {
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("optimize_before_hessian"));
+    const auto& parseFunc = funcMap.at("optimize_before_hessian");
+
+    std::vector<std::string> lineElements = {
         "optimize_before_hessian",
         "=",
         "off"
     };
-
-    input::HessianInputParser::parseOptimizeBeforeHessian(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_FALSE(settings::HessianSettings::optimizeBeforeHessian());
 
-    lineElements = {"optimize_before_hessian", "=", "on"};
+    clearParser(parser);
 
-    input::HessianInputParser::parseOptimizeBeforeHessian(lineElements, 0);
+    lineElements = {"optimize_before_hessian", "=", "on"};
+    parseFunc(lineElements, 0);
     EXPECT_TRUE(settings::HessianSettings::optimizeBeforeHessian());
 }
