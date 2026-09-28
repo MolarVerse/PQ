@@ -107,7 +107,7 @@ TEST_F(TestBondConstraint, applyShakeRejectsZeroLengthReference)
     _bondConstraint->setShakeDistanceRef(linalg::Vec3D(0.0, 0.0, 0.0));
 
     EXPECT_THROW_MSG(
-        (void)_bondConstraint->applyShake(*_box, 0.0),
+        (void) _bondConstraint->applyShake(*_box, 0.0),
         exc::ShakeException,
         "Degenerate shake reference bond vector - the reference distance is "
         "zero-length or non-finite, the simulation has become unstable"
@@ -124,7 +124,7 @@ TEST_F(TestBondConstraint, applyShakeRejectsNonFiniteReference)
     _bondConstraint->setShakeDistanceRef(linalg::Vec3D(nan, 0.0, 0.0));
 
     EXPECT_THROW_MSG(
-        (void)_bondConstraint->applyShake(*_box, 0.0),
+        (void) _bondConstraint->applyShake(*_box, 0.0),
         exc::ShakeException,
         "Degenerate shake reference bond vector - the reference distance is "
         "zero-length or non-finite, the simulation has become unstable"
