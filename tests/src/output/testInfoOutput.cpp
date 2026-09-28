@@ -239,7 +239,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::ManostatSettings::setManostatType("Berendsen");
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::Settings::setJobtype(settings::JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
@@ -333,8 +333,8 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::ManostatSettings::setManostatType("Berendsen");
-    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::Z);
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
     settings::Settings::setJobtype(settings::JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
@@ -410,7 +410,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
         "-------------------"
     );
 
-    settings::ManostatSettings::setFixedAxis(settings::FixedAxis::Z);
+    settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
 }
 
 /**
@@ -438,7 +438,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
 
     settings::ForceFieldSettings::deactivate();
     settings::Settings::setJobtype(settings::JobType::QM_MD);
-    settings::ManostatSettings::setManostatType("none");
+    settings::ManostatSettings::setManostatType(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -524,7 +524,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
 
     settings::ForceFieldSettings::deactivate();
     settings::Settings::setJobtype(settings::JobType::MM_MD);
-    settings::ManostatSettings::setManostatType("none");
+    settings::ManostatSettings::setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::NOSE_HOOVER
     );

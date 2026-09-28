@@ -324,6 +324,23 @@ else()
 endif()
 
 file(
+    WRITE "${VALIDATION_WORK_DIR}/zero-compressibility.in"
+    "jobtype = mm-md;\n"
+    "nstep = 1;\n"
+    "timestep = 0.5;\n"
+    "force-field = off;\n"
+    "manostat = berendsen;\n"
+    "pressure = 1;\n"
+    "compressibility = 0;\n"
+    "start_file = start.rst;\n"
+)
+assert_invalid(
+    "zero-compressibility.in"
+    installed
+    "compressibility.*Value must be greater than 0"
+)
+
+file(
     WRITE "${VALIDATION_WORK_DIR}/mace-remote.in"
     "jobtype = qm-md;\n"
     "nstep = 1;\n"

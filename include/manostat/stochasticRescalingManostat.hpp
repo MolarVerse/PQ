@@ -40,18 +40,18 @@ namespace manostat
        protected:
         rng::RandomNumberGenerator _randomNumberGenerator;
 
-        double              _tau;
-        double              _compressibility;
-        double              _dt;
-        settings::FixedAxis _fixedAxis;
+        double    _tau;
+        double    _compressibility;
+        double    _dt;
+        FixedAxis _fixedAxis;
 
        public:
         StochasticRescalingManostat() = default;
         explicit StochasticRescalingManostat(
-            double              targetPressure,
-            double              tau,
-            double              compressibility,
-            settings::FixedAxis fixedAxis
+            double    targetPressure,
+            double    tau,
+            double    compressibility,
+            FixedAxis fixedAxis
         );
         ~StochasticRescalingManostat() override = default;
 
@@ -73,8 +73,7 @@ namespace manostat
 
         [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
 
-        [[nodiscard]] settings::ManostatType getManostatType() const override;
-        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
+        [[nodiscard]] ManostatType getManostatType() const override;
 
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
@@ -90,23 +89,19 @@ namespace manostat
         : public StochasticRescalingManostat
     {
        private:
-        size_t              _2DAnisotropicAxis;
-        std::vector<size_t> _2DIsotropicAxes;
+        Isotropy _isotropy;
 
        public:
         explicit SemiIsotropicStochasticRescalingManostat(
-            double                     targetPressure,
-            double                     tau,
-            double                     compressibility,
-            size_t                     anisotropicAxis,
-            const std::vector<size_t> &isotropicAxes,
-            settings::FixedAxis        fixedAxis
+            double    targetPressure,
+            double    tau,
+            double    compressibility,
+            Isotropy  isotropy,
+            FixedAxis fixedAxis
         );
 
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -123,8 +118,6 @@ namespace manostat
 
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -141,8 +134,6 @@ namespace manostat
 
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat

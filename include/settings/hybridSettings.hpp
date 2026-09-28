@@ -24,42 +24,13 @@
 
 #define _HYBRID_SETTINGS_HPP_
 
-#include <cstdint>
 #include <optional>   // for optional
-#include <string>     // for string
 #include <vector>     // for vector
+
+#include "enums/hybrid.hpp"
 
 namespace settings
 {
-    /**
-     * @enum SmoothingMethod
-     *
-     * @brief enum class to store the type of smoothing method
-     *
-     */
-    enum class SmoothingMethod : std::uint8_t
-    {
-        HOTSPOT,
-        EXACT
-    };
-
-    /**
-     * @enum QMForceDist
-     *
-     * @brief enum class to store the type of force distribution of the QM
-     * method in hotspot smoothing
-     *
-     */
-    enum class QMForceDist : std::uint8_t
-    {
-        NONE,
-        EQUAL,
-        RANDOM,
-        DISTANCE_WEIGHTED
-    };
-
-    [[nodiscard]]
-    std::string string(SmoothingMethod method);
 
     /**
      * @class HybridSettings

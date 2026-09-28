@@ -20,36 +20,42 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_LIST_INPUT_PARSER_HPP_
+#ifndef _OPTIMIZER_ENUM_HPP_
+#define _OPTIMIZER_ENUM_HPP_
 
-#define _CELL_LIST_INPUT_PARSER_HPP_
+#include <cstdint>
+#include <mstd/enum.hpp>
 
-#include "inputFileParser.hpp"
+/**
+ * @brief enum OptimizerType
+ *
+ */
+enum class OptimizerType : std::uint8_t;
 
-namespace molsys
-{
-    class CellList;   // forward declaration
-}   // namespace molsys
+#define OPTIMIZER_TYPE_LIST(X) \
+    X(NONE)                    \
+    X(STEEPEST_DESCENT)        \
+    X(ADAM)
 
-namespace input
-{
-    /**
-     * @brief CellListInputParser inherits from InputFileParser
-     *
-     * @details Parses the cell list commands in the input file
-     *
-     */
-    class CellListInputParser : public InputFileParser
-    {
-        molsys::CellList* _cellListPtr;
+MSTD_ENUM(OptimizerType, std::uint8_t, OPTIMIZER_TYPE_LIST)
 
-       public:
-        explicit CellListInputParser(molsys::CellList& cellList);
+#undef OPTIMIZER_TYPE_LIST
 
-        void addCellListActivated();
-        void addNumberOfCells();
-    };
+/**
+ * @brief enum LearningRate
+ *
+ */
+enum class LearningRate : std::uint8_t;
 
-}   // namespace input
+#define LEARNING_RATE_LIST(X) \
+    X(NONE)                   \
+    X(CONSTANT)               \
+    X(CONSTANT_DECAY)         \
+    X(EXPONENTIAL_DECAY)      \
+    X(LINESEARCH_WOLFE)
 
-#endif   // _CELL_LIST_INPUT_PARSER_HPP_
+MSTD_ENUM(LearningRate, std::uint8_t, LEARNING_RATE_LIST)
+
+#undef LEARNING_RATE_LIST
+
+#endif   // _OPTIMIZER_ENUM_HPP_

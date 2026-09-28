@@ -183,8 +183,8 @@ namespace
         if (!Settings::isQMActivated() || !QMSettings::isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto script         = settings::QMSettings::getQMScript();
+        const auto fullPathScript = settings::QMSettings::getQMScriptFullPath();
 
         if (script.empty() && fullPathScript.empty())
         {
@@ -223,8 +223,8 @@ namespace
         if (!Settings::isQMActivated() || !QMSettings::isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto script         = settings::QMSettings::getQMScript();
+        const auto fullPathScript = settings::QMSettings::getQMScriptFullPath();
 
         // NOTE: these compile flags seem redundant with certain cmake
         // configurations, but are necessary for some build configurations (e.g.
@@ -271,7 +271,8 @@ namespace
         using settings::FileSettings;
         using settings::ForceFieldSettings;
 
-        if (engine.isConstraintsActivated() || ForceFieldSettings::isActive())
+        if (engine.isConstraintsActivated() ||
+            settings::ForceFieldSettings::isActive())
         {
             if (!FileSettings::isTopologyFileNameSet())
                 throw exc::InputFileException(
@@ -286,7 +287,7 @@ namespace
             );
 
         if (engine.getConstraints()->isMShakeActive() &&
-            FileSettings::getMShakeFileName().empty())
+            settings::FileSettings::getMShakeFileName().empty())
             throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
             );
@@ -296,71 +297,88 @@ namespace
 
     void validateEffectiveFiles(engine::Engine &engine)
     {
-        using settings::FileSettings;
-        using settings::ForceFieldSettings;
-        using settings::ManostatSettings;
-        using settings::ManostatType;
-        using settings::QMMethod;
-        using settings::QMSettings;
-        using settings::Settings;
-        using settings::SlakosType;
+        requireFile(settings::FileSettings::getStartFileName(), "Start file");
 
-        requireFile(FileSettings::getStartFileName(), "Start file");
-
-        if (FileSettings::isRingPolymerStartFileNameSet())
+        if (settings::FileSettings::isRingPolymerStartFileNameSet())
         {
             requireFile(
-                FileSettings::getRingPolymerStartFileName(),
+                settings::FileSettings::getRingPolymerStartFileName(),
                 "Ring-polymer start file"
             );
         }
 
-        if (FileSettings::isIntraNonBondedFileNameSet())
+        if (settings::FileSettings::isIntraNonBondedFileNameSet())
         {
             requireFile(
-                FileSettings::getIntraNonBondedFileName(),
+                settings::FileSettings::getIntraNonBondedFileName(),
                 "Intra non-bonded file"
             );
         }
 
-        if (Settings::isMMActivated() ||
-            ManostatSettings::getManostatType() != ManostatType::NONE)
+        if (settings::Settings::isMMActivated() ||
+            settings::ManostatSettings::getManostatType() != ManostatType::NONE)
         {
             requireFile(
-                FileSettings::getMolDescriptorFileName(),
+                settings::FileSettings::getMolDescriptorFileName(),
                 "Moldescriptor file"
             );
         }
 
-        if (Settings::isMMActivated() &&
+        if (settings::Settings::isMMActivated() &&
             !engine.isForceFieldNonCoulombicsActivated())
-            requireFile(FileSettings::getGuffDatFileName(), "Guff file");
+        {
+            requireFile(
+                settings::FileSettings::getGuffDatFileName(),
+                "Guff file"
+            );
+        }
 
-        if (engine.isConstraintsActivated() || ForceFieldSettings::isActive())
-            requireFile(FileSettings::getTopologyFileName(), "Topology file");
+        if (engine.isConstraintsActivated() ||
+            settings::ForceFieldSettings::isActive())
+        {
+            requireFile(
+                settings::FileSettings::getTopologyFileName(),
+                "Topology file"
+            );
+        }
 
-        if (ForceFieldSettings::isActive())
-            requireFile(FileSettings::getParameterFilename(), "Parameter file");
+        if (settings::ForceFieldSettings::isActive())
+        {
+            requireFile(
+                settings::FileSettings::getParameterFilename(),
+                "Parameter file"
+            );
+        }
 
-        if (FileSettings::isMShakeFileNameSet())
-            requireFile(FileSettings::getMShakeFileName(), "M-SHAKE file");
+        if (settings::FileSettings::isMShakeFileNameSet())
+        {
+            requireFile(
+                settings::FileSettings::getMShakeFileName(),
+                "M-SHAKE file"
+            );
+        }
 
-        if (!Settings::isQMActivated())
+        if (!settings::Settings::isQMActivated())
             return;
 
-        const auto method = QMSettings::getQMMethod();
+        const auto method = settings::QMSettings::getQMMethod();
 
-        if (method == QMMethod::DFTBPLUS)
-            requireFile(FileSettings::getDFTBFileName(), "DFTB setup file");
-
-        if (method == QMMethod::ASEDFTBPLUS &&
-            QMSettings::getSlakosType() != SlakosType::NONE)
+        if (method == settings::QMMethod::DFTBPLUS)
         {
-            const auto slakosType = QMSettings::getSlakosType();
-            if (slakosType == SlakosType::CUSTOM)
+            requireFile(
+                settings::FileSettings::getDFTBFileName(),
+                "DFTB setup file"
+            );
+        }
+
+        if (method == settings::QMMethod::ASEDFTBPLUS &&
+            settings::QMSettings::getSlakosType() != settings::SlakosType::NONE)
+        {
+            const auto slakosType = settings::QMSettings::getSlakosType();
+            if (slakosType == settings::SlakosType::CUSTOM)
             {
                 requireDirectory(
-                    QMSettings::getSlakosPath(),
+                    settings::QMSettings::getSlakosPath(),
                     "Slater-Koster directory"
                 );
             }
@@ -373,13 +391,18 @@ namespace
             }
         }
 
-        if (method == QMMethod::FENNOL)
-            requireFile(QMSettings::getFennolModelPath(), "FeNNol model file");
-
-        if (method == QMMethod::MACE &&
-            QMSettings::getMaceModel() == settings::MaceModel::CUSTOM)
+        if (method == settings::QMMethod::FENNOL)
         {
-            const auto modelPath = QMSettings::getMaceModelPath();
+            requireFile(
+                settings::QMSettings::getFennolModelPath(),
+                "FeNNol model file"
+            );
+        }
+
+        if (method == settings::QMMethod::MACE &&
+            settings::QMSettings::getMaceModel() == settings::MaceModel::CUSTOM)
+        {
+            const auto modelPath = settings::QMSettings::getMaceModelPath();
             if (!isRemoteResource(modelPath))
                 requireFile(modelPath, "MACE model file");
         }
@@ -413,8 +436,6 @@ namespace
         cli::ValidationResult        &result
     )
     {
-        using settings::ManostatSettings;
-        using settings::ManostatType;
         using settings::ThermostatSettings;
         using settings::ThermostatType;
 
@@ -447,16 +468,6 @@ namespace
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero Langevin friction disables thermostat coupling",
-                 std::nullopt}
-            );
-        }
-
-        if (ManostatSettings::getManostatType() != ManostatType::NONE &&
-            utilities::isZero(ManostatSettings::getCompressibility()))
-        {
-            result.diagnostics.push_back(
-                {cli::ValidationSeverity::WARNING,
-                 "A zero compressibility disables cell response",
                  std::nullopt}
             );
         }

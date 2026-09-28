@@ -109,7 +109,7 @@ namespace setup
 
         switch (optimizerType)
         {
-            using enum settings::OptimizerType;
+            using enum OptimizerType;
 
             case STEEPEST_DESCENT:
             {
@@ -128,9 +128,14 @@ namespace setup
         }
 
         if (!optimizer)
+        {
             throw exc::UserInputException(
-                std::format("Unknown optimizer type {}", string(optimizerType))
+                std::format(
+                    "Unknown optimizer type {}",
+                    OptimizerTypeMeta::toString(optimizerType)
+                )
             );
+        }
 
         optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
         optimizer->setPhysicalData(_optEngine.getSharedPhysicalData());
@@ -155,7 +160,7 @@ namespace setup
 
         switch (lrStrategy)
         {
-            using enum settings::LREnum;
+            using enum LearningRate;
 
             case CONSTANT:
                 return std::make_shared<opt::ConstantLRStrategy>(alpha_0);
@@ -361,7 +366,7 @@ namespace setup
             settings::OptimizerSettings::getInitialLearningRate();
         const auto lrFreq = settings::OptimizerSettings::getLRUpdateFrequency();
 
-        using enum settings::LREnum;
+        using enum LearningRate;
 
         std::string decayLRStr;
 
@@ -372,11 +377,15 @@ namespace setup
             decayLRStr = std::format("{:.2e}", decay.value());
         }
 
-        const auto optMsg =
-            std::format("Optimizer:                   {}", string(optimizer));
+        const auto optMsg = std::format(
+            "Optimizer:                   {}",
+            OptimizerTypeMeta::toString(optimizer)
+        );
 
-        const auto lrMsg =
-            std::format("Learning rate strategy:      {}", string(lrStrategy));
+        const auto lrMsg = std::format(
+            "Learning rate strategy:      {}",
+            LearningRateMeta::toString(lrStrategy)
+        );
         const auto initialLRMsg =
             std::format("Initial learning rate:       {:.2e}", initialLR);
         const auto lrFreqMsg =

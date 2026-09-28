@@ -23,6 +23,7 @@
 #include "manostat.hpp"
 
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "enums/manostat.hpp"
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"   // for ManostatType, Isotropy
 #include "physicalData.hpp"       // for PhysicalData
@@ -135,19 +136,9 @@ namespace manostat
      *
      * @return ManostatType
      */
-    settings::ManostatType Manostat::getManostatType() const
+    ManostatType Manostat::getManostatType() const
     {
-        return settings::ManostatType::NONE;
-    }
-
-    /**
-     * @brief get the isotropy of the manostat
-     *
-     * @return Isotropy
-     */
-    settings::Isotropy Manostat::getIsotropy() const
-    {
-        return settings::Isotropy::NONE;
+        return ManostatType::NONE;
     }
 
 }   // namespace manostat

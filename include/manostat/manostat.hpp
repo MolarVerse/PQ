@@ -24,7 +24,7 @@
 
 #define _MANOSTAT_HPP_
 
-#include "manostatSettings.hpp"
+#include "enums/manostat.hpp"
 #include "staticMatrix.hpp"
 
 namespace molsys
@@ -69,8 +69,7 @@ namespace manostat
 
         static void rotateMu(linalg::tensor3D &mu);
 
-        [[nodiscard]] virtual settings::ManostatType getManostatType() const;
-        [[nodiscard]] virtual settings::Isotropy     getIsotropy() const;
+        [[nodiscard]] virtual ManostatType getManostatType() const;
     };
 
 }   // namespace manostat

@@ -110,7 +110,7 @@ void waterModel::SPCIntraWater::calculate(
         hydrogen2.addForce(-forceOH2);
 
         using enum molsys::HybridZone;
-        using enum settings::SmoothingMethod;
+        using enum SmoothingMethod;
 
         auto       smF       = 0.0;
         const auto smoothing = settings::HybridSettings::getSmoothingMethod();

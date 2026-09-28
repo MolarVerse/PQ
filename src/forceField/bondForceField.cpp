@@ -113,7 +113,7 @@ namespace ff
         _molecules[0]->addAtomForce(_atomIndices[0], force);
         _molecules[1]->addAtomForce(_atomIndices[1], -force);
 
-        using enum settings::SmoothingMethod;
+        using enum SmoothingMethod;
 
         auto       smF       = 0.0;
         const auto smoothing = settings::HybridSettings::getSmoothingMethod();

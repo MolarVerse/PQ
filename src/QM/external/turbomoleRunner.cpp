@@ -120,7 +120,7 @@ namespace QM
      */
     void TurbomoleRunner::execute(molsys::SimulationBox &simulationBox)
     {
-        using enum settings::SmoothingMethod;
+        using enum SmoothingMethod;
 
         const auto scriptFile =
             resolveScriptPath(settings::QMSettings::getQMScript());

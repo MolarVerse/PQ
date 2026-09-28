@@ -50,14 +50,12 @@ class TestInputValidation : public ::testing::Test
         settings::HessianSettings::setOptimizeBeforeHessian(false);
 
         settings::OptimizerSettings::setLearningRateStrategy(
-            settings::LREnum::CONSTANT
+            LearningRate::CONSTANT
         );
         settings::OptimizerSettings::setMinLearningRate(1.0e-15);
         settings::OptimizerSettings::setMaxLearningRate(1.0);
 
-        settings::ManostatSettings::setManostatType(
-            settings::ManostatType::NONE
-        );
+        settings::ManostatSettings::setManostatType(ManostatType::NONE);
         settings::ManostatSettings::setTauManostat(
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
@@ -187,23 +185,19 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
 
 TEST_F(TestInputValidation, requiresPressureForManostat)
 {
-    settings::ManostatSettings::setManostatType(
-        settings::ManostatType::BERENDSEN
-    );
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
         exc::InputFileException,
-        "Pressure not set for berendsen manostat"
+        "Pressure not set for BERENDSEN manostat"
     );
 }
 
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
     configureMDJob(settings::JobType::MM_MD);
-    settings::ManostatSettings::setManostatType(
-        settings::ManostatType::BERENDSEN
-    );
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ManostatSettings::setTauManostat(0.0001);
     setKeyword("pressure");
 
@@ -634,9 +628,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     configureMDJob(settings::JobType::QM_MD);
     settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
     settings::QMSettings::setMaceModel(settings::MaceModel::CUSTOM);
-    settings::ManostatSettings::setManostatType(
-        settings::ManostatType::BERENDSEN
-    );
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::BERENDSEN
     );
@@ -652,7 +644,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
     settings::Settings::setJobtype(settings::JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
-        settings::LREnum::CONSTANT_DECAY
+        LearningRate::CONSTANT_DECAY
     );
     setKeyword("nstep");
 
@@ -669,7 +661,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
     settings::Settings::setJobtype(settings::JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
-        settings::LREnum::EXPONENTIAL_DECAY
+        LearningRate::EXPONENTIAL_DECAY
     );
     setKeyword("nstep");
 
@@ -686,7 +678,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
     settings::Settings::setJobtype(settings::JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
-        settings::LREnum::CONSTANT
+        LearningRate::CONSTANT
     );
     setKeyword("nstep");
 
@@ -698,7 +690,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
     settings::Settings::setJobtype(settings::JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
-        settings::LREnum::LINESEARCH_WOLFE
+        LearningRate::LINESEARCH_WOLFE
     );
     setKeyword("nstep");
 
@@ -713,9 +705,7 @@ TEST_F(TestInputValidation, rejectsMissingLearningRateStrategy)
 {
     settings::Settings::setJobtype(settings::JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(
-        settings::LREnum::NONE
-    );
+    settings::OptimizerSettings::setLearningRateStrategy(LearningRate::NONE);
     setKeyword("nstep");
 
     ASSERT_THROW_MSG(
@@ -731,7 +721,7 @@ TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
     settings::Settings::setJobtype(settings::JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
-        settings::LREnum::CONSTANT
+        LearningRate::CONSTANT
     );
     settings::OptimizerSettings::setMinLearningRate(0.5);
     settings::OptimizerSettings::setMaxLearningRate(0.5);

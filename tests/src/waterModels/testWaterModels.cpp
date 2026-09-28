@@ -229,7 +229,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -239,7 +239,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -249,7 +249,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -259,7 +259,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -269,7 +269,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -379,9 +379,7 @@ namespace
 
 TEST(IntraWater, FlexibleSpcModelsProduceFiniteConservativeForces)
 {
-    settings::HybridSettings::setSmoothingMethod(
-        settings::SmoothingMethod::HOTSPOT
-    );
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
 
     waterModel::SPCFwIntraWater spcFw;
     expectIntraModelConservesForce(
@@ -403,9 +401,7 @@ TEST(IntraWater, FlexibleSpcModelsProduceFiniteConservativeForces)
 TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
 {
     waterModel::SPCMTRIntraWater spcMtr;
-    settings::HybridSettings::setSmoothingMethod(
-        settings::SmoothingMethod::HOTSPOT
-    );
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
     expectIntraModelConservesForce(
         spcMtr,
         {.oh1 = 1.04, .oh2 = 0.97, .angle = 1.88}
@@ -414,9 +410,7 @@ TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
     EXPECT_DOUBLE_EQ(spcMtr.getEqHHDistance(), 1.632993162);
 
     waterModel::TIP3PMTRIntraWater tip3pMtr;
-    settings::HybridSettings::setSmoothingMethod(
-        settings::SmoothingMethod::EXACT
-    );
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
     expectIntraModelConservesForce(
         tip3pMtr,
         {.oh1 = 1.00, .oh2 = 0.93, .angle = 1.82}

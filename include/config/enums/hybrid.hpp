@@ -20,36 +20,45 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_LIST_INPUT_PARSER_HPP_
+#ifndef _HYBRID_ENUM_HPP_
+#define _HYBRID_ENUM_HPP_
 
-#define _CELL_LIST_INPUT_PARSER_HPP_
+#include <cstdint>
+#include <mstd/enum.hpp>
 
-#include "inputFileParser.hpp"
+/**
+ * @enum SmoothingMethod
+ *
+ * @brief enum class to store the type of smoothing method
+ *
+ */
+enum class SmoothingMethod : std::uint8_t;
 
-namespace molsys
-{
-    class CellList;   // forward declaration
-}   // namespace molsys
+#define SMOOTHING_METHOD_LIST(X) \
+    X(HOTSPOT)                   \
+    X(EXACT)
 
-namespace input
-{
-    /**
-     * @brief CellListInputParser inherits from InputFileParser
-     *
-     * @details Parses the cell list commands in the input file
-     *
-     */
-    class CellListInputParser : public InputFileParser
-    {
-        molsys::CellList* _cellListPtr;
+MSTD_ENUM(SmoothingMethod, std::uint8_t, SMOOTHING_METHOD_LIST)
 
-       public:
-        explicit CellListInputParser(molsys::CellList& cellList);
+#undef SMOOTHING_METHOD_LIST
 
-        void addCellListActivated();
-        void addNumberOfCells();
-    };
+/**
+ * @enum QMForceDist
+ *
+ * @brief enum class to store the type of force distribution of the QM
+ * method in hotspot smoothing
+ *
+ */
+enum class QMForceDist : std::uint8_t;
 
-}   // namespace input
+#define QM_FORCE_DIST_LIST(X) \
+    X(NONE)                   \
+    X(EQUAL)                  \
+    X(RANDOM)                 \
+    X(DISTANCE_WEIGHTED)
 
-#endif   // _CELL_LIST_INPUT_PARSER_HPP_
+MSTD_ENUM(QMForceDist, std::uint8_t, QM_FORCE_DIST_LIST)
+
+#undef QM_FORCE_DIST_LIST
+
+#endif   // _HYBRID_ENUM_HPP_

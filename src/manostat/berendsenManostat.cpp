@@ -26,9 +26,8 @@
 #include <cmath>       // for cbrt
 
 #include "globalTimer.hpp"
-#include "manostatSettings.hpp"   // for settings::ManostatType, settings::Isotropy
-#include "physicalData.hpp"       // for PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
 #include "timingsSettings.hpp"   // for TimingsSettings
 
 namespace manostat
@@ -43,10 +42,10 @@ namespace manostat
      * @param fixedAxis
      */
     BerendsenManostat::BerendsenManostat(
-        double              targetPressure,
-        double              tau,
-        double              compressibility,
-        settings::FixedAxis fixedAxis
+        double    targetPressure,
+        double    tau,
+        double    compressibility,
+        FixedAxis fixedAxis
     )
         : Manostat(targetPressure),
           _tau(tau),
@@ -62,21 +61,18 @@ namespace manostat
      * @param targetPressure
      * @param tau
      * @param compressibility
-     * @param anisotropicAxis
-     * @param isotropicAxes
+     * @param isotropy
      * @param fixedAxis
      */
     SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
-        double                     targetPressure,
-        double                     tau,
-        double                     compressibility,
-        size_t                     anisotropicAxis,
-        const std::vector<size_t> &isotropicAxes,
-        settings::FixedAxis        fixedAxis
+        double    targetPressure,
+        double    tau,
+        double    compressibility,
+        Isotropy  isotropy,
+        FixedAxis fixedAxis
     )
         : BerendsenManostat(targetPressure, tau, compressibility, fixedAxis),
-          _2DAnisotropicAxis(anisotropicAxis),
-          _2DIsotropicAxes(isotropicAxes)
+          _isotropy(isotropy)
     {
     }
 
@@ -132,7 +128,7 @@ namespace manostat
      */
     linalg::tensor3D BerendsenManostat::calculateMu() const
     {
-        if (_fixedAxis == settings::FixedAxis::ALL)
+        if (_fixedAxis == FixedAxis::ALL)
             return linalg::diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
         const auto preFactor = _compressibility * _dt / _tau;
@@ -184,25 +180,27 @@ namespace manostat
      */
     linalg::tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
     {
-        const auto p_xyz = diagonal(_pressureTensor);
-        const auto p_x   = p_xyz[_2DIsotropicAxes[0]];
-        const auto p_y   = p_xyz[_2DIsotropicAxes[1]];
-        const auto p_xy  = (p_x + p_y) / 2.0;
-        const auto p_z   = p_xyz[_2DAnisotropicAxis];
+        const auto p_xyz           = diagonal(_pressureTensor);
+        const auto anisotropicAxis = get2DAnisotropicAxis(_isotropy);
+        const auto isotropicAxes   = get2DIsotropicAxes(_isotropy);
+        const auto p_x             = p_xyz[isotropicAxes[0]];
+        const auto p_y             = p_xyz[isotropicAxes[1]];
+        const auto p_xy            = (p_x + p_y) / 2.0;
+        const auto p_z             = p_xyz[anisotropicAxis];
 
         const auto preFactor = _compressibility * _dt / _tau;
 
         const double mu_xy =
             ::sqrt(1.0 - (preFactor * (_targetPressure - p_xy)));
-        const double mu_z = isAxisFixed(_fixedAxis, _2DAnisotropicAxis)
+        const double mu_z = isAxisFixed(_fixedAxis, anisotropicAxis)
                                 ? 1.0
                                 : (1.0 - (preFactor * (_targetPressure - p_z)));
 
         linalg::Vec3D mu;
 
-        mu[_2DIsotropicAxes[0]] = mu_xy;
-        mu[_2DIsotropicAxes[1]] = mu_xy;
-        mu[_2DAnisotropicAxis]  = mu_z;
+        mu[isotropicAxes[0]] = mu_xy;
+        mu[isotropicAxes[1]] = mu_xy;
+        mu[anisotropicAxis]  = mu_z;
 
         return linalg::diagonalMatrix(mu);
     }
@@ -293,51 +291,11 @@ namespace manostat
     /**
      * @brief get the manostat type
      *
-     * @return settings::ManostatType
+     * @return ManostatType
      */
-    settings::ManostatType BerendsenManostat::getManostatType() const
+    ManostatType BerendsenManostat::getManostatType() const
     {
-        return settings::ManostatType::BERENDSEN;
-    }
-
-    /**
-     * @brief get the isotropy
-     *
-     * @return settings::Isotropy
-     */
-    settings::Isotropy BerendsenManostat::getIsotropy() const
-    {
-        return settings::Isotropy::ISOTROPIC;
-    }
-
-    /**
-     * @brief get the isotropy
-     *
-     * @return settings::Isotropy
-     */
-    settings::Isotropy SemiIsotropicBerendsenManostat::getIsotropy() const
-    {
-        return settings::Isotropy::SEMI_ISOTROPIC;
-    }
-
-    /**
-     * @brief get the isotropy
-     *
-     * @return settings::Isotropy
-     */
-    settings::Isotropy AnisotropicBerendsenManostat::getIsotropy() const
-    {
-        return settings::Isotropy::ANISOTROPIC;
-    }
-
-    /**
-     * @brief get the isotropy
-     *
-     * @return settings::Isotropy
-     */
-    settings::Isotropy FullAnisotropicBerendsenManostat::getIsotropy() const
-    {
-        return settings::Isotropy::FULL_ANISOTROPIC;
+        return ManostatType::BERENDSEN;
     }
 
 }   // namespace manostat

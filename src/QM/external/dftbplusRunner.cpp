@@ -202,10 +202,9 @@ namespace QM
         auto molChangedZone =
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
-        using enum settings::SmoothingMethod;
-
         // TODO: https://github.com/MolarVerse/PQ/issues/200
-        if (settings::HybridSettings::getSmoothingMethod() == EXACT)
+        if (settings::HybridSettings::getSmoothingMethod() ==
+            SmoothingMethod::EXACT)
             molChangedZone = true;
 
         const auto readChargesBin =

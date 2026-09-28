@@ -49,7 +49,7 @@ namespace pot
     void PotentialBruteForce::calculateForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
@@ -114,7 +114,7 @@ namespace pot
     void PotentialBruteForce::calculateCoreToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
@@ -161,7 +161,7 @@ namespace pot
     void PotentialBruteForce::calculateLayerToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
@@ -217,7 +217,7 @@ namespace pot
     void PotentialBruteForce::calculateOuterToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::CellList           &cellList
+        const molsys::CellList     &cellList
     )
     {
         calculateForces(simulationBox, physicalData, cellList);
@@ -232,7 +232,7 @@ namespace pot
     void PotentialBruteForce::calculateHotspotSmoothingMMForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");

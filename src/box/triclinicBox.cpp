@@ -250,7 +250,7 @@ namespace molsys
     void TriclinicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
         if (settings::ManostatSettings::getIsotropy() !=
-            settings::Isotropy::FULL_ANISOTROPIC)
+            Isotropy::FULL_ANISOTROPIC)
             setBoxDimensions(diagonal(scalingTensor) * _boxDimensions);
 
         else

@@ -20,56 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COLOR_HPP_
+#ifndef _CUSTOM_VALIDATOR_HPP_
+#define _CUSTOM_VALIDATOR_HPP_
 
-#define _COLOR_HPP_
+#include "keyValidatorBase.hpp"
 
-#include <cstdint>
-#include <ostream>
-
-namespace Color
+namespace input
 {
     /**
-     * @enum Code
+     * Custom validator that uses a user-provided validation function.
      *
-     * @brief ANSI escape codes for colors
-     *
+     * @tparam T The type of the value to validate.
      */
-    enum class Code : std::uint8_t
-    {
-        FG_RED = 31,
-        // FG_GREEN   = 32,
-        // FG_BLUE    = 34,
-        FG_ORANGE  = 33,
-        FG_DEFAULT = 39,
-        // BG_RED     = 41,
-        // BG_GREEN   = 42,
-        // BG_BLUE    = 44,
-        // BG_DEFAULT = 49
-    };
-
-    /**
-     * @class Modifier
-     *
-     * @brief Modifier class for ANSI escape codes
-     *
-     */
-    class Modifier
+    template <typename T>
+    class CustomValidator : public KeyValidator<T>
     {
        private:
-        Code _code;
+        std::function<bool(const T &)> _validationFunction;
+        std::string                    _errorMessage;
 
        public:
-        explicit Modifier(const Code pCode) : _code(pCode) {}
-        friend std::ostream &operator<<(
-            std::ostream   &ostream,
-            const Modifier &mod
-        )
-        {
-            return ostream << "\033" << "[" << static_cast<int>(mod._code)
-                           << "m";
-        }
-    };
-}   // namespace Color
+        CustomValidator(
+            std::function<bool(const T &)> validationFunction,
+            std::string                    errorMessage
+        );
 
-#endif   // _COLOR_HPP_
+        [[nodiscard]]
+        bool validate(const T &value) override;
+
+        [[nodiscard]]
+        std::string errorMessage() override;
+    };
+}   // namespace input
+
+#ifndef _CUSTOM_VALIDATOR_TPP_
+#include "customValidator.tpp"
+#endif
+
+#endif   // _CUSTOM_VALIDATOR_HPP_

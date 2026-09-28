@@ -60,9 +60,9 @@ namespace input
 
         auto &numberOfBeadsKey =
             _getRegistry().registerKey<size_t>(KeyRegistry<size_t>{
-                .metadata  = metaData,
-                .onSet     = setValue,
-                .validator = makeShared(rangeValidator),
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(rangeValidator)}
             });
 
         addKeyword("rpmd_n_replica", adapt(numberOfBeadsKey), false);

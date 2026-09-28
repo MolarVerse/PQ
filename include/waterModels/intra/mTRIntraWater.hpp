@@ -51,68 +51,70 @@ namespace waterModel
 
     class SPCMTRIntraWater : public MTRIntraWater
     {
-        // clang-format off
-        private:
-        static constexpr double eqOHDistance = 1.0;         // Angström
-        static constexpr double eqHHDistance = 1.632993162; // Angström
-        static constexpr double dOH = 101.9048757170172;    // kcal mol^-1
-        static constexpr double alpha = 2.511;              // Angström^-1
-        static constexpr double beta = 3.0;                 // Angström^-2
-        static constexpr double Ltt = 264.5841300191204;    // kcal mol^-1 Angström^-2
-        static constexpr double Lrt = -211.0444550669216;   // kcal mol^-1 Angström^-2
-        static constexpr double Lrr = 155.7839388145315;    // kcal mol^-1 Angström^-2
-        // clang-format on
+       private:
+        static constexpr double _eqOHDistance = 1.0;           // Angström
+        static constexpr double _eqHHDistance = 1.632993162;   // Angström
+        static constexpr double _dOH   = 101.9048757170172;    // kcal mol^-1
+        static constexpr double _alpha = 2.511;                // Angström^-1
+        static constexpr double _beta  = 3.0;                  // Angström^-2
+        static constexpr double _ltt =
+            264.5841300191204;   // kcal mol^-1 Angström^-2
+        static constexpr double _lrt =
+            -211.0444550669216;   // kcal mol^-1 Angström^-2
+        static constexpr double _lrr =
+            155.7839388145315;   // kcal mol^-1 Angström^-2
 
        public:
         [[nodiscard]]
         double getEqOHDistance() const final
         {
-            return eqOHDistance;
+            return _eqOHDistance;
         }
         [[nodiscard]]
         double getEqHHDistance() const final
         {
-            return eqHHDistance;
+            return _eqHHDistance;
         }
-        [[nodiscard]] double getDOH() const final { return dOH; }
-        [[nodiscard]] double getAlpha() const final { return alpha; }
-        [[nodiscard]] double getBeta() const final { return beta; }
-        [[nodiscard]] double getLtt() const final { return Ltt; }
-        [[nodiscard]] double getLrt() const final { return Lrt; }
-        [[nodiscard]] double getLrr() const final { return Lrr; }
+        [[nodiscard]] double getDOH() const final { return _dOH; }
+        [[nodiscard]] double getAlpha() const final { return _alpha; }
+        [[nodiscard]] double getBeta() const final { return _beta; }
+        [[nodiscard]] double getLtt() const final { return _ltt; }
+        [[nodiscard]] double getLrt() const final { return _lrt; }
+        [[nodiscard]] double getLrr() const final { return _lrr; }
     };
 
     class TIP3PMTRIntraWater : public MTRIntraWater
     {
-        // clang-format off
-        private:
-        static constexpr double eqOHDistance = 0.9572;    // Angström
-        static constexpr double eqHHDistance = 1.5139;    // Angström
-        static constexpr double dOH = 101.9048757170172;  // kcal mol^-1
-        static constexpr double alpha = 2.483;            // Angström^-1
-        static constexpr double beta = 3.0;               // Angström^-2
-        static constexpr double Ltt = 235.2449808795411;  // kcal mol^-1 Angström^-2
-        static constexpr double Lrt = -181.2906309751434; // kcal mol^-1 Angström^-2
-        static constexpr double Lrr = 127.1534416826004;  // kcal mol^-1 Angström^-2
-        // clang-format on
+       private:
+        static constexpr double _eqOHDistance = 0.9572;       // Angström
+        static constexpr double _eqHHDistance = 1.5139;       // Angström
+        static constexpr double _dOH   = 101.9048757170172;   // kcal mol^-1
+        static constexpr double _alpha = 2.483;               // Angström^-1
+        static constexpr double _beta  = 3.0;                 // Angström^-2
+        static constexpr double _ltt =
+            235.2449808795411;   // kcal mol^-1 Angström^-2
+        static constexpr double _lrt =
+            -181.2906309751434;   // kcal mol^-1 Angström^-2
+        static constexpr double _lrr =
+            127.1534416826004;   // kcal mol^-1 Angström^-2
 
        public:
         [[nodiscard]]
         double getEqOHDistance() const final
         {
-            return eqOHDistance;
+            return _eqOHDistance;
         }
         [[nodiscard]]
         double getEqHHDistance() const final
         {
-            return eqHHDistance;
+            return _eqHHDistance;
         }
-        [[nodiscard]] double getDOH() const final { return dOH; }
-        [[nodiscard]] double getAlpha() const final { return alpha; }
-        [[nodiscard]] double getBeta() const final { return beta; }
-        [[nodiscard]] double getLtt() const final { return Ltt; }
-        [[nodiscard]] double getLrt() const final { return Lrt; }
-        [[nodiscard]] double getLrr() const final { return Lrr; }
+        [[nodiscard]] double getDOH() const final { return _dOH; }
+        [[nodiscard]] double getAlpha() const final { return _alpha; }
+        [[nodiscard]] double getBeta() const final { return _beta; }
+        [[nodiscard]] double getLtt() const final { return _ltt; }
+        [[nodiscard]] double getLrt() const final { return _lrt; }
+        [[nodiscard]] double getLrr() const final { return _lrr; }
     };
 
 }   // namespace waterModel

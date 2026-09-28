@@ -24,10 +24,9 @@
 
 #define _ENGINE_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 #include <memory>
 
-#include "celllist.hpp"
 #include "constraints.hpp"
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
@@ -50,6 +49,10 @@ namespace engine
      */
     class Engine
     {
+       private:
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
+
        protected:
         size_t _step   = 1;
         size_t _nSteps = 0;
@@ -61,7 +64,6 @@ namespace engine
         std::shared_ptr<pot::Potential>                 _potential;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
-        std::shared_ptr<molsys::CellList>               _cellList;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
         std::shared_ptr<ff::ForceField>                 _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
@@ -73,7 +75,7 @@ namespace engine
 
        public:
         Engine();
-        virtual ~Engine() = default;
+        virtual ~Engine();
 
         virtual void run()         = 0;
         virtual void writeOutput() = 0;
@@ -95,7 +97,9 @@ namespace engine
          ***************************/
 
         [[nodiscard]]
-        const std::shared_ptr<molsys::CellList> &getCellList() const;
+        const molsys::CellList &getCellList() const;
+        [[nodiscard]]
+        molsys::CellList &getCellList();
         [[nodiscard]]
         const std::shared_ptr<constraints::Constraints> &getConstraints() const;
         [[nodiscard]]

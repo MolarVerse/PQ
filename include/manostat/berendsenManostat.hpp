@@ -24,9 +24,6 @@
 
 #define _BERENDSEN_MANOSTAT_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
-
 #include "manostat.hpp"   // for Manostat
 
 namespace manostat
@@ -40,17 +37,17 @@ namespace manostat
     class BerendsenManostat : public Manostat
     {
        protected:
-        double              _tau;
-        double              _compressibility;
-        double              _dt;
-        settings::FixedAxis _fixedAxis;
+        double    _tau;
+        double    _compressibility;
+        double    _dt;
+        FixedAxis _fixedAxis;
 
        public:
         explicit BerendsenManostat(
-            double              targetPressure,
-            double              tau,
-            double              compressibility,
-            settings::FixedAxis fixedAxis
+            double    targetPressure,
+            double    tau,
+            double    compressibility,
+            FixedAxis fixedAxis
         );
 
         void applyManostat(
@@ -67,8 +64,7 @@ namespace manostat
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
 
-        [[nodiscard]] settings::ManostatType getManostatType() const final;
-        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
+        [[nodiscard]] ManostatType getManostatType() const final;
     };
 
     /**
@@ -80,22 +76,18 @@ namespace manostat
     class SemiIsotropicBerendsenManostat : public BerendsenManostat
     {
        private:
-        size_t              _2DAnisotropicAxis;
-        std::vector<size_t> _2DIsotropicAxes;
+        Isotropy _isotropy;
 
        public:
         SemiIsotropicBerendsenManostat(
-            double                     targetPressure,
-            double                     tau,
-            double                     compressibility,
-            size_t                     anisotropicAxis,
-            const std::vector<size_t> &isotropicAxes,
-            settings::FixedAxis        fixedAxis
+            double    targetPressure,
+            double    tau,
+            double    compressibility,
+            Isotropy  isotropy,
+            FixedAxis fixedAxis
         );
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -110,8 +102,6 @@ namespace manostat
         using BerendsenManostat::BerendsenManostat;
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
     /**
@@ -129,8 +119,6 @@ namespace manostat
         using BerendsenManostat::BerendsenManostat;
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat
