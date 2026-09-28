@@ -43,6 +43,47 @@ TEST_F(TestCellList, determineCellSize)
     EXPECT_EQ(_cellList->getCellSize(), linalg::Vec3D(5.0, 5.0, 5.0));
 }
 
+/**
+ * @brief tests that determineCellSize rejects zero or negative box
+ * dimensions instead of silently producing a zero or negative cell size
+ */
+TEST_F(TestCellList, determineCellSizeRejectsNonPositiveBoxDimensions)
+{
+    constexpr auto message =
+        "Invalid simulation box dimensions during cell-list setup - box "
+        "dimensions must be finite and positive, the simulation has become "
+        "unstable";
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(0.0, 10.0, 10.0)),
+        exc::CellListException,
+        message
+    );
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(10.0, -1.0, 10.0)),
+        exc::CellListException,
+        message
+    );
+}
+
+/**
+ * @brief tests that determineCellSize rejects non-finite box dimensions
+ * instead of silently propagating NaN/Inf cell boundaries
+ */
+TEST_F(TestCellList, determineCellSizeRejectsNonFiniteBoxDimensions)
+{
+    const auto nan = std::numeric_limits<double>::quiet_NaN();
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(10.0, nan, 10.0)),
+        exc::CellListException,
+        "Invalid simulation box dimensions during cell-list setup - box "
+        "dimensions must be finite and positive, the simulation has become "
+        "unstable"
+    );
+}
+
 TEST_F(TestCellList, determineCellBoundaries)
 {
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
