@@ -92,9 +92,21 @@ namespace molsys
      * @brief determine cell size
      *
      * @param box
+     *
+     * @throws exc::CellListException if a box dimension is non-finite or
+     * not positive, meaning the simulation has become unstable
      */
     void CellList::determineCellSize(const linalg::Vec3D &box)
     {
+        if (!linalg::isFinite(box) || linalg::minimum(box) <= 0.0)
+        {
+            throw exc::CellListException(
+                "Invalid simulation box dimensions during cell-list setup - "
+                "box dimensions must be finite and positive, the simulation "
+                "has become unstable"
+            );
+        }
+
         _cellSize = box / linalg::Vec3D(_nCells);
     }
 
