@@ -82,7 +82,7 @@ class TestInputValidation : public ::testing::Test
         );
 
         settings::PotentialSettings::setCoulombLongRangeType(
-            settings::CoulombLongRangeType::SHIFTED
+            CoulombLongRangeType::SHIFTED
         );
         settings::PotentialSettings::setCoulombRadiusCutOff(
             defaults::COULOMB_CUT_OFF_DEFAULT

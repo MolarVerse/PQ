@@ -24,51 +24,14 @@
 
 #define _POTENTIAL_SETTINGS_HPP_
 
-#include <array>
-#include <cstdint>
 #include <mstd/enum.hpp>
-#include <optional>      // for optional
-#include <string_view>   // for string_view
+#include <optional>
 
-#include "defaults.hpp"   // for _COULOMB_LONG_RANGE_TYPE_DEFAULT_, ...
-#include "enums/base.hpp"
+#include "defaults.hpp"
+#include "enums/potential.hpp"
 
 namespace settings
 {
-
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define FF_TYPE_LIST(X) \
-    X(OFF)              \
-    X(ON)               \
-    X(BONDED)
-
-    MSTD_ENUM(ForceFieldType, std::uint8_t, FF_TYPE_LIST)
-
-#undef FF_TYPE_LIST
-
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define NON_COULOMB_TYPE_LIST(X) \
-    X(NONE)                      \
-    X(LJ)                        \
-    X(LJ_9_12)                   \
-    X(BUCKINGHAM)                \
-    X(MORSE)                     \
-    X(GUFF)
-
-    MSTD_ENUM(NonCoulombType, std::uint8_t, NON_COULOMB_TYPE_LIST)
-
-#undef NON_COULOMB_TYPE_LIST
-
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define COULOMB_LONG_RANGE_TYPE_LIST(X) \
-    X(SHIFTED)                          \
-    X(REACTION_FIELD)                   \
-    X(WOLF)
-
-    MSTD_ENUM(CoulombLongRangeType, std::uint8_t, COULOMB_LONG_RANGE_TYPE_LIST)
-
-#undef COULOMB_LONG_RANGE_TYPE_LIST
-
     /**
      * @class PotentialSettings
      *
@@ -128,29 +91,5 @@ namespace settings
     };
 
 }   // namespace settings
-
-// TODO: move this to deidcated enum file as soon as it is done
-
-/**
- * @brief Input alias for settings::CoulombLongRangeType
- */
-template <>
-struct InputAlias<settings::CoulombLongRangeType>
-{
-    static constexpr std::
-        array<std::pair<std::string_view, settings::CoulombLongRangeType>, 1>
-            value = {{{"none", settings::CoulombLongRangeType::SHIFTED}}};
-};
-
-/**
- * @brief Input alias for settings::NonCoulombType
- */
-template <>
-struct InputAlias<settings::NonCoulombType>
-{
-    static constexpr std::
-        array<std::pair<std::string_view, settings::NonCoulombType>, 1>
-            value = {{{"buck", settings::NonCoulombType::BUCKINGHAM}}};
-};
 
 #endif   // _POTENTIAL_SETTINGS_HPP_

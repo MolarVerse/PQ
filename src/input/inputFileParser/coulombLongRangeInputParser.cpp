@@ -60,13 +60,13 @@ namespace input
                 "the simulation",
         };
 
-        const auto setValue = [](settings::CoulombLongRangeType type)
+        const auto setValue = [](CoulombLongRangeType type)
         { settings::PotentialSettings::setCoulombLongRangeType(type); };
 
         auto &key = _getRegistry().registerKey(
-            KeyRegistry<settings::CoulombLongRangeType>{
+            KeyRegistry<CoulombLongRangeType>{
                 .metadata     = metaData,
-                .defaultValue = settings::CoulombLongRangeType::SHIFTED,
+                .defaultValue = CoulombLongRangeType::SHIFTED,
                 .onSet        = setValue
             }
         );
