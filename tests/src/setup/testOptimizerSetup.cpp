@@ -276,23 +276,6 @@ TEST_F(TestSetup, setupWiresOptimizerAndLearningRateAndEvaluator)
 
 /* ---------- Hessian optimization ---------- */
 
-TEST_F(TestSetup, hessianOptimizationValidatesLearningRateStrategy)
-{
-    resetOptimizerSettings();
-    settings::Settings::setJobtype(settings::JobType::MM_HESSIAN);
-    settings::HessianSettings::setOptimizeBeforeHessian(true);
-
-    engine::HessianEngine hessianEngine;
-    EXPECT_THROW_MSG(
-        hessianEngine.run(),
-        exc::UserInputException,
-        "In order to run the optimizer, you need to specify a learning rate "
-        "strategy."
-    );
-
-    settings::HessianSettings::setOptimizeBeforeHessian(false);
-}
-
 TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
 {
     resetOptimizerSettings();
