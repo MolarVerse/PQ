@@ -374,8 +374,7 @@ namespace molsys
         const auto inCellUnits = (position + box / 2.0) / _cellSize;
         const auto nCells      = linalg::Vec3D(_nCells);
 
-        const auto wrapped =
-            inCellUnits - nCells * floor(inCellUnits / nCells);
+        const auto wrapped = inCellUnits - nCells * floor(inCellUnits / nCells);
 
         return linalg::Vec3Dul(wrapped);
     }

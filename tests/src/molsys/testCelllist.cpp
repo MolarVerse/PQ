@@ -255,7 +255,6 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsNonFinitePositions)
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
 
     auto molecule = molsys::Molecule();
-    molecule.setNumberOfAtoms(1);
 
     const auto atom = std::make_shared<molsys::Atom>();
     const auto nan  = std::numeric_limits<double>::quiet_NaN();
@@ -291,7 +290,6 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
     cellList.determineCellSize(_simulationBox->getBoxDimensions());
 
     auto molecule = molsys::Molecule();
-    molecule.setNumberOfAtoms(1);
 
     const auto atom = std::make_shared<molsys::Atom>();
     atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
