@@ -23,6 +23,7 @@
 #include "enums/manostat.hpp"
 
 #include <stdexcept>
+#include <utility>
 
 /**
  * @brief checks if the given isotropy is semi-isotropic
@@ -55,6 +56,8 @@ size_t get2DAnisotropicAxis(Isotropy isotropy)
         case Isotropy::FULL_ANISOTROPIC:
             throw std::runtime_error("Not a semi-isotropic isotropy");
     }
+
+    std::unreachable();
 }
 
 /**
@@ -76,6 +79,8 @@ std::array<size_t, 2> get2DIsotropicAxes(Isotropy isotropy)
         case Isotropy::FULL_ANISOTROPIC:
             throw std::runtime_error("Not a semi-isotropic isotropy");
     }
+
+    std::unreachable();
 }
 
 /**

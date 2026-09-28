@@ -24,9 +24,6 @@
 
 #define _MANOSTAT_SETTINGS_HPP_
 
-#include <string_view>   // for string_view
-#include <vector>        // for vector
-
 #include "defaults.hpp"
 #include "enums/manostat.hpp"
 

@@ -80,8 +80,7 @@ namespace manostat
      * @param targetPressure
      * @param tau
      * @param compressibility
-     * @param anisotropicAxis
-     * @param isotropicAxes
+     * @param isotropy
      * @param fixedAxis
      */
     SemiIsotropicStochasticRescalingManostat::

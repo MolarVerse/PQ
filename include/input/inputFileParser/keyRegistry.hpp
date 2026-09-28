@@ -23,6 +23,10 @@
 #ifndef _KEY_REGISTRY_HPP_
 #define _KEY_REGISTRY_HPP_
 
+#include <functional>
+#include <memory>
+#include <vector>
+
 #include "keyMetaData.hpp"
 #include "keyValidatorBase.hpp"
 

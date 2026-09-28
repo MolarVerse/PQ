@@ -24,9 +24,6 @@
 
 #define _BERENDSEN_MANOSTAT_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
-
 #include "manostat.hpp"   // for Manostat
 
 namespace manostat
