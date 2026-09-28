@@ -62,10 +62,13 @@ class TestInputFileReader : public ::testing::Test
         delete _inputFileReader_mdEngine;
         delete _engine;
         delete _mdEngine;
-        removeFile();
+        _removeFile();
     }
 
-    static void clearParser(input::InputFileParser &parser) { parser._clear(); }
+    static void _clearParser(input::InputFileParser &parser)
+    {
+        parser._clear();
+    }
 
     std::string _fileName;
 
@@ -75,7 +78,7 @@ class TestInputFileReader : public ::testing::Test
     engine::MDEngine       *_mdEngine;
     input::InputFileReader *_inputFileReader_mdEngine;
 
-    void removeFile() const
+    void _removeFile() const
     {
         static_cast<void>(std::remove(_fileName.c_str()));
     }

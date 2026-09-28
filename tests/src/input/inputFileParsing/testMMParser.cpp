@@ -55,21 +55,21 @@ TEST_F(TestInputFileReader, testParseForceField)
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
     EXPECT_TRUE(_engine->getForceField()->isNonCoulombicActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"force-field", "=", "off"};
     parseFunc(lineElements, 0);
     EXPECT_FALSE(settings::ForceFieldSettings::isActive());
     EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"force-field", "=", "bonded"};
     parseFunc(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
     EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"forceField", "=", "notValid"};
     ASSERT_THROW_MSG(
@@ -104,7 +104,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
         settings::NonCoulombType::GUFF
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "lj"};
     parseNonCoulombFunc(lineElements, 0);
@@ -113,7 +113,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
         settings::NonCoulombType::LJ
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "buck"};
     parseNonCoulombFunc(lineElements, 0);
@@ -122,7 +122,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
         settings::NonCoulombType::BUCKINGHAM
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "morse"};
     parseNonCoulombFunc(lineElements, 0);
@@ -131,7 +131,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
         settings::NonCoulombType::MORSE
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "notValid"};
     EXPECT_THROW_MSG(

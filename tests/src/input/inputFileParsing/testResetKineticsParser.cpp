@@ -47,7 +47,7 @@ TEST_F(TestInputFileReader, testParseNScale)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNScale(), 3);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"nscale", "=", "-1"};
     EXPECT_THROW_MSG(
@@ -74,7 +74,7 @@ TEST_F(TestInputFileReader, testParseFScale)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFScale(), 3);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fscale", "=", "-1"};
     EXPECT_THROW_MSG(
@@ -101,7 +101,7 @@ TEST_F(TestInputFileReader, testParseNReset)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNReset(), 3);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"nreset", "=", "-1"};
     EXPECT_THROW_MSG(
@@ -128,7 +128,7 @@ TEST_F(TestInputFileReader, testParseFReset)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFReset(), 3);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"freset", "=", "-1"};
     EXPECT_THROW_MSG(
@@ -155,7 +155,7 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getNResetAngular(), 3);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"nreset_angular", "=", "-1"};
     EXPECT_THROW_MSG(
@@ -182,7 +182,7 @@ TEST_F(TestInputFileReader, testParseFResetAngular)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ResetKineticsSettings::getFResetAngular(), 3);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"freset_angular", "=", "-1"};
     EXPECT_THROW_MSG(

@@ -48,7 +48,7 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), SHIFTED);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"long-range", "=", "reaction-field"};
     parseFunc(lineElements, 0);
@@ -57,13 +57,13 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
         REACTION_FIELD
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"long-range", "=", "wolf"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), WOLF);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"long-range", "=", "notValid"};
     EXPECT_THROW_MSG(
@@ -91,7 +91,7 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getWolfParameter(), 1.0);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"wolf_param", "=", "-1.0"};
     EXPECT_THROW_MSG(
@@ -117,7 +117,7 @@ TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 1.0);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"rf-epsilon", "=", "0.999999"};
     EXPECT_THROW_MSG(
@@ -128,7 +128,7 @@ TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
         "equal to 1"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"rf-epsilon", "=", "-1.0"};
     EXPECT_THROW_MSG(

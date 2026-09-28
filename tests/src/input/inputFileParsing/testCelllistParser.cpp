@@ -48,13 +48,13 @@ TEST_F(TestInputFileReader, parseCellListActivated)
     parseFunc(lineElements, 0);
     EXPECT_FALSE(settings::Settings::isCellListActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"cell-list", "=", "on"};
     parseFunc(lineElements, 0);
     EXPECT_TRUE(settings::Settings::isCellListActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"cell-list", "=", "notValid"};
     EXPECT_THROW_MSG(
@@ -85,7 +85,7 @@ TEST_F(TestInputFileReader, numberOfCells)
         linalg::Vec3Dul(3, 3, 3)
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"cell-number", "=", "0"};
     EXPECT_THROW_MSG(
