@@ -152,20 +152,6 @@ TEST_F(TestSetup, setupLearningRateStrategyLineSearchThrows)
     );
 }
 
-TEST_F(TestSetup, setupLearningRateStrategyNoneThrows)
-{
-    resetOptimizerSettings();
-    settings::OptimizerSettings::setLearningRateStrategy(LearningRate::NONE);
-
-    setup::OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW_MSG(
-        const auto _ = setup.setupLearningRateStrategy(),
-        exc::UserInputException,
-        "In order to run the optimizer, you need to specify a learning rate "
-        "strategy."
-    );
-}
-
 /* ---------- setupMinMaxLR ---------- */
 
 TEST_F(TestSetup, setupMinMaxLRAcceptsValidRange)
@@ -223,19 +209,6 @@ TEST_F(TestSetup, setupEmptyOptimizerAdam)
     const auto            opt = setup.setupEmptyOptimizer();
     ASSERT_NE(opt, nullptr);
     EXPECT_NE(std::dynamic_pointer_cast<opt::Adam>(opt), nullptr);
-}
-
-TEST_F(TestSetup, setupEmptyOptimizerNoneThrows)
-{
-    resetOptimizerSettings();
-    settings::OptimizerSettings::setOptimizer(OptimizerType::NONE);
-
-    setup::OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
-    EXPECT_THROW_MSG(
-        const auto _ = setup.setupEmptyOptimizer(),
-        exc::UserInputException,
-        "Unknown optimizer type NONE"
-    );
 }
 
 /* ---------- setupConvergence ---------- */
@@ -308,7 +281,6 @@ TEST_F(TestSetup, hessianOptimizationValidatesLearningRateStrategy)
     resetOptimizerSettings();
     settings::Settings::setJobtype(settings::JobType::MM_HESSIAN);
     settings::HessianSettings::setOptimizeBeforeHessian(true);
-    settings::OptimizerSettings::setLearningRateStrategy(LearningRate::NONE);
 
     engine::HessianEngine hessianEngine;
     EXPECT_THROW_MSG(

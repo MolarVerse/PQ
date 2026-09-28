@@ -705,7 +705,6 @@ TEST_F(TestInputValidation, rejectsMissingLearningRateStrategy)
 {
     settings::Settings::setJobtype(settings::JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(LearningRate::NONE);
     setKeyword("nstep");
 
     ASSERT_THROW_MSG(
