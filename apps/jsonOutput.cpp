@@ -69,49 +69,49 @@ void cli::writeJsonString(std::ostream &output, const std::string_view value)
 
 cli::JsonWriter::JsonWriter(std::ostream &output) : _output(output) {}
 
-void cli::JsonWriter::indent() const
+void cli::JsonWriter::_indent() const
 {
     _output << std::string(_depth * 2, ' ');
 }
 
-void cli::JsonWriter::beforeValue()
+void cli::JsonWriter::_beforeValue()
 {
     if (_firstValues.empty())
         return;
     if (!_firstValues.back())
         _output << ',';
     _output << '\n';
-    indent();
+    _indent();
     _firstValues.back() = false;
 }
 
-void cli::JsonWriter::beforeMember(const std::string_view key)
+void cli::JsonWriter::_beforeMember(const std::string_view key)
 {
-    beforeValue();
+    _beforeValue();
     writeJsonString(_output, key);
     _output << ": ";
 }
 
-void cli::JsonWriter::beginContainer(const char opening)
+void cli::JsonWriter::_beginContainer(const char opening)
 {
-    beforeValue();
+    _beforeValue();
     _output << opening;
     ++_depth;
     _firstValues.push_back(true);
 }
 
-void cli::JsonWriter::beginContainer(
+void cli::JsonWriter::_beginContainer(
     const std::string_view key,
     const char             opening
 )
 {
-    beforeMember(key);
+    _beforeMember(key);
     _output << opening;
     ++_depth;
     _firstValues.push_back(true);
 }
 
-void cli::JsonWriter::endContainer(const char closing)
+void cli::JsonWriter::_endContainer(const char closing)
 {
     const auto empty = _firstValues.back();
     _firstValues.pop_back();
@@ -120,33 +120,33 @@ void cli::JsonWriter::endContainer(const char closing)
     if (!empty)
     {
         _output << '\n';
-        indent();
+        _indent();
     }
 
     _output << closing;
 }
 
-void cli::JsonWriter::beginObject() { beginContainer('{'); }
+void cli::JsonWriter::beginObject() { _beginContainer('{'); }
 
 void cli::JsonWriter::beginObject(const std::string_view key)
 {
-    beginContainer(key, '{');
+    _beginContainer(key, '{');
 }
 
-void cli::JsonWriter::endObject() { endContainer('}'); }
+void cli::JsonWriter::endObject() { _endContainer('}'); }
 
-void cli::JsonWriter::beginArray() { beginContainer('['); }
+void cli::JsonWriter::beginArray() { _beginContainer('['); }
 
 void cli::JsonWriter::beginArray(const std::string_view key)
 {
-    beginContainer(key, '[');
+    _beginContainer(key, '[');
 }
 
-void cli::JsonWriter::endArray() { endContainer(']'); }
+void cli::JsonWriter::endArray() { _endContainer(']'); }
 
 void cli::JsonWriter::value(const std::string_view value)
 {
-    beforeValue();
+    _beforeValue();
     writeJsonString(_output, value);
 }
 
@@ -157,19 +157,19 @@ void cli::JsonWriter::value(const char *value)
 
 void cli::JsonWriter::value(const bool value)
 {
-    beforeValue();
+    _beforeValue();
     _output << (value ? "true" : "false");
 }
 
 void cli::JsonWriter::value(const double value)
 {
-    beforeValue();
+    _beforeValue();
     _output << value;
 }
 
 void cli::JsonWriter::value(std::nullptr_t)
 {
-    beforeValue();
+    _beforeValue();
     _output << "null";
 }
 
@@ -180,7 +180,7 @@ void cli::JsonWriter::value(
     const std::string_view value
 )
 {
-    beforeMember(key);
+    _beforeMember(key);
     writeJsonString(_output, value);
 }
 // NOLINTEND(bugprone-easily-swappable-parameters)
@@ -192,18 +192,18 @@ void cli::JsonWriter::value(const std::string_view key, const char *value)
 
 void cli::JsonWriter::value(const std::string_view key, const bool value)
 {
-    beforeMember(key);
+    _beforeMember(key);
     _output << (value ? "true" : "false");
 }
 
 void cli::JsonWriter::value(const std::string_view key, const double value)
 {
-    beforeMember(key);
+    _beforeMember(key);
     _output << value;
 }
 
 void cli::JsonWriter::value(const std::string_view key, std::nullptr_t)
 {
-    beforeMember(key);
+    _beforeMember(key);
     _output << "null";
 }

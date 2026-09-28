@@ -37,7 +37,7 @@
 class ReferencesOutputTest : public ::testing::Test
 {
    protected:
-    static void removeReferenceFile(const std::string &path)
+    static void _removeReferenceFile(const std::string &path)
     {
         references::ReferencesOutput::_referenceFileNames.erase(path);
         references::ReferencesOutput::_bibtexFileNames.erase(path + ".bib");
@@ -119,7 +119,7 @@ TEST_F(ReferencesOutputTest, rendersAdditionalReferenceFiles)
     EXPECT_NE(content.find("ADDITIONAL REFERENCE"), std::string::npos);
     EXPECT_NE(content.find("ADDITIONAL BIBTEX"), std::string::npos);
 
-    removeReferenceFile(referencePath.string());
+    _removeReferenceFile(referencePath.string());
     std::filesystem::remove(referencePath);
     std::filesystem::remove(bibtexPath);
     std::filesystem::remove(outputPath);
@@ -156,7 +156,7 @@ TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
             unreadablePath.string()
         )
     );
-    removeReferenceFile(unreadablePath.string());
+    _removeReferenceFile(unreadablePath.string());
 
     std::filesystem::permissions(
         unreadablePath,
@@ -189,5 +189,5 @@ TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
     );
     EXPECT_FALSE(std::ifstream(outputPath).good());
 
-    removeReferenceFile(file);
+    _removeReferenceFile(file);
 }

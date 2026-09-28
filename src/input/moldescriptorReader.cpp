@@ -269,7 +269,7 @@ namespace input::molDescriptor
             }
         }
 
-        convertExternalToInternalAtomTypes(molecule);
+        _convertExternalToInternalAtomTypes(molecule);
 
         simBox.addMoleculeType(molecule);
     }
@@ -282,7 +282,7 @@ namespace input::molDescriptor
      *
      * @param molecule
      */
-    void MoldescriptorReader::convertExternalToInternalAtomTypes(
+    void MoldescriptorReader::_convertExternalToInternalAtomTypes(
         molsys::MoleculeType &molecule
     )
     {

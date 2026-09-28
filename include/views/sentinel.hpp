@@ -35,15 +35,15 @@ namespace pqviews
         {
            private:
             template <typename U>
-            static auto test(
+            static auto _test(
                 int
             ) -> decltype(typename std::iterator_traits<U>::difference_type{}, std::true_type{});
 
             template <typename>
-            static std::false_type test(...);
+            static std::false_type _test(...);
 
            public:
-            using type                  = decltype(test<T>(0));
+            using type                  = decltype(_test<T>(0));
             static constexpr bool value = type::value;
         };
 

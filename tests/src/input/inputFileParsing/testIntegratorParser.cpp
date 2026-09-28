@@ -48,7 +48,7 @@ TEST_F(TestInputFileReader, testParseIntegrator)
     parseFunc(lineElements, 0);
     EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"integrator", "=", "notValid"};
     ASSERT_THROW_MSG(

@@ -65,7 +65,7 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(simulationBox);
-        writeComment(step);
+        _writeComment(step);
 
         for (const auto &atom : simulationBox.getAtoms())
         {
@@ -102,7 +102,7 @@ namespace out
 
         // header line
         _fp << numberOfCenterAtoms << '\n';
-        writeComment(step);
+        _writeComment(step);
 
         std::ostringstream buffer;
         buffer << std::format("{:<5}\t", centerAtomName);
@@ -132,7 +132,7 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(simulationBox);
-        writeComment(step);
+        _writeComment(step);
 
         for (const auto &molecule : simulationBox.getMolecules())
         {
@@ -169,7 +169,7 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(simulationBox);
-        writeForceComment(step, simulationBox.calculateTotalForce());
+        _writeForceComment(step, simulationBox.calculateTotalForce());
 
         for (const auto &molecule : simulationBox.getMolecules())
         {
@@ -206,7 +206,7 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(simulationBox);
-        writeComment(step);
+        _writeComment(step);
 
         for (const auto &atom : simulationBox.getAtoms())
         {

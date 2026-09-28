@@ -59,31 +59,31 @@ namespace out
 
         _fp.open(_fileName);
 
-        writeHeader();
+        _writeHeader();
 
         if (settings::Settings::isMDJobType())
-            writeLeft(simulationTime, "SIMULATION-TIME", "ps");
+            _writeLeft(simulationTime, "SIMULATION-TIME", "ps");
         else
-            writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
+            _writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
 
-        writeRight(physicalData.getTemperature(), "TEMPERATURE", "K");
+        _writeRight(physicalData.getTemperature(), "TEMPERATURE", "K");
 
-        writeLeft(physicalData.getPressure(), "PRESSURE", "bar");
-        writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
+        _writeLeft(physicalData.getPressure(), "PRESSURE", "bar");
+        _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
 
         if (settings::Settings::isQMActivated())
         {
-            writeLeft(physicalData.getQMEnergy(), "E(QM)", "kcal/mol");
-            writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
+            _writeLeft(physicalData.getQMEnergy(), "E(QM)", "kcal/mol");
+            _writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
         }
 
-        writeLeft(physicalData.getKineticEnergy(), "E(KIN)", "kcal/mol");
-        writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
+        _writeLeft(physicalData.getKineticEnergy(), "E(KIN)", "kcal/mol");
+        _writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
         if (settings::Settings::isMMActivated())
         {
-            writeLeft(physicalData.getCoulombEnergy(), "E(COUL)", "kcal/mol");
-            writeRight(
+            _writeLeft(physicalData.getCoulombEnergy(), "E(COUL)", "kcal/mol");
+            _writeRight(
                 physicalData.getNonCoulombEnergy(),
                 "E(NON-COUL)",
                 "kcal/mol"
@@ -92,14 +92,14 @@ namespace out
 
         if (settings::ForceFieldSettings::isActive())
         {
-            writeLeft(physicalData.getBondEnergy(), "E(BOND)", "kcal/mol");
-            writeRight(physicalData.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
-            writeLeft(
+            _writeLeft(physicalData.getBondEnergy(), "E(BOND)", "kcal/mol");
+            _writeRight(physicalData.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
+            _writeLeft(
                 physicalData.getDihedralEnergy(),
                 "E(DIHEDRAL)",
                 "kcal/mol"
             );
-            writeRight(
+            _writeRight(
                 physicalData.getImproperEnergy(),
                 "E(IMPROPER)",
                 "kcal/mol"
@@ -108,39 +108,39 @@ namespace out
 
         if (settings::Settings::isHybridJobtype())
         {
-            writeLeft(
+            _writeLeft(
                 physicalData.getNumberOfSmoothingMolecules(),
                 "N(SM-MOL)",
                 "-"
             );
-            writeRight();
+            _writeRight();
         }
 
         if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
         {
-            writeLeft(physicalData.getVolume(), "VOLUME", "A^3");
-            writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
+            _writeLeft(physicalData.getVolume(), "VOLUME", "A^3");
+            _writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
 
             if (settings::ManostatSettings::getFixedAxis() != FixedAxis::NONE)
             {
-                writeLeft(
+                _writeLeft(
                     physicalData.getCoupledPressure(),
                     "P(COUPLED)",
                     "bar"
                 );
-                writeRight();
+                _writeRight();
             }
         }
 
         if (settings::ThermostatSettings::getThermostatType() ==
             settings::ThermostatType::NOSE_HOOVER)
         {
-            writeLeft(
+            _writeLeft(
                 physicalData.getNoseHooverMomentumEnergy(),
                 "E(NH-MOMENTUM)",
                 "kcal/mol"
             );
-            writeRight(
+            _writeRight(
                 physicalData.getNoseHooverFrictionEnergy(),
                 "E(NH-FRICTION)",
                 "kcal/mol"
@@ -149,24 +149,24 @@ namespace out
 
         if (settings::ConstraintSettings::isDistanceConstraintsActivated())
         {
-            writeLeft(
+            _writeLeft(
                 physicalData.getLowerDistanceConstraints(),
                 "LOWER-DIST-CONSTR",
                 "kcal/mol"
             );
-            writeRight(
+            _writeRight(
                 physicalData.getUpperDistanceConstraints(),
                 "UPPER-DIST-CONSTR",
                 "kcal/mol"
             );
         }
 
-        writeLeftScientific(
+        _writeLeftScientific(
             norm(physicalData.getMomentum()),
             "MOMENTUM",
             "amuA/fs"
         );
-        writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
+        _writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
 
         _fp << std::format("{:-^89}", "") << "\n\n";
 
@@ -177,7 +177,7 @@ namespace out
      * @brief write header of info file
      *
      */
-    void InfoOutput::writeHeader()
+    void InfoOutput::_writeHeader()
     {
         _fp << std::format("{:-^89}", "") << '\n';
 
@@ -193,7 +193,7 @@ namespace out
      * @param name
      * @param unit
      */
-    void InfoOutput::writeLeft(
+    void InfoOutput::_writeLeft(
         double                  value,
         const std::string_view &name,
         const std::string_view &unit
@@ -209,7 +209,7 @@ namespace out
      * @param name
      * @param unit
      */
-    void InfoOutput::writeLeftInteger(
+    void InfoOutput::_writeLeftInteger(
         double                  value,
         const std::string_view &name,
         const std::string_view &unit
@@ -230,7 +230,7 @@ namespace out
      * @param name
      * @param unit
      */
-    void InfoOutput::writeLeftScientific(
+    void InfoOutput::_writeLeftScientific(
         double                  value,
         const std::string_view &name,
         const std::string_view &unit
@@ -246,7 +246,7 @@ namespace out
      * @param name
      * @param unit
      */
-    void InfoOutput::writeRight(
+    void InfoOutput::_writeRight(
         double                  value,
         const std::string_view &name,
         const std::string_view &unit
@@ -259,7 +259,7 @@ namespace out
      * @brief write empty right column to info file
      *
      */
-    void InfoOutput::writeRight()
+    void InfoOutput::_writeRight()
     {
         _fp << "                                           |\n";
     }

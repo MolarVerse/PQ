@@ -53,7 +53,7 @@ namespace QM
                 pybind11::bool_(gpuPreprocessing);
             calculatorArgs["use_float64"] = pybind11::bool_(useFloat64);
 
-            setAseCalculator(
+            _setAseCalculator(
                 calculators.attr("FENNIXCalculator")(**calculatorArgs)
             );
         }

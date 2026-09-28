@@ -45,28 +45,28 @@ namespace out
     class InfoOutput : public Output
     {
        private:
-        void writeHeader();
-        void writeLeft(
+        void _writeHeader();
+        void _writeLeft(
             double,
             const std::string_view &,
             const std::string_view &
         );
-        void writeLeftScientific(
+        void _writeLeftScientific(
             double,
             const std::string_view &,
             const std::string_view &
         );
-        void writeLeftInteger(
+        void _writeLeftInteger(
             double,
             const std::string_view &,
             const std::string_view &
         );
-        void writeRight(
+        void _writeRight(
             double,
             const std::string_view &,
             const std::string_view &
         );
-        void writeRight();
+        void _writeRight();
 
        public:
         using Output::Output;

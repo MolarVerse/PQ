@@ -40,7 +40,7 @@
 
 TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
     const auto pair = pot::LennardJonesPair(
@@ -49,7 +49,7 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
         2.0,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
-    setNonCoulombPairsMatrix(0, 0, pair);
+    _setNonCoulombPairsMatrix(0, 0, pair);
     _nonCoulombPotential->setNonCoulombPairsVector(
         {std::make_shared<pot::LennardJonesPair>(pair)}
     );
@@ -58,8 +58,8 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 
     EXPECT_EQ(copy.getNonCoulombPairsVector().size(), 1);
     EXPECT_EQ(
-        getNonCoulombPairsMatrix(copy)(0, 0),
-        getNonCoulombPairsMatrix()(0, 0)
+        _getNonCoulombPairsMatrix(copy)(0, 0),
+        _getNonCoulombPairsMatrix()(0, 0)
     );
 
     const auto replacement = pot::LennardJonesPair(
@@ -68,16 +68,16 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
         3.0,
         LJParams{.c6 = 2.0, .c12 = 1.0}
     );
-    setNonCoulombPairsMatrix(*_nonCoulombPotential, 0, 0, replacement);
+    _setNonCoulombPairsMatrix(*_nonCoulombPotential, 0, 0, replacement);
     EXPECT_NE(
-        getNonCoulombPairsMatrix(copy)(0, 0),
-        getNonCoulombPairsMatrix()(0, 0)
+        _getNonCoulombPairsMatrix(copy)(0, 0),
+        _getNonCoulombPairsMatrix()(0, 0)
     );
 }
 
 TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
     const auto pair = pot::LennardJonesPair(
@@ -86,20 +86,20 @@ TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
         2.0,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
-    setNonCoulombPairsMatrix(0, 0, pair);
+    _setNonCoulombPairsMatrix(0, 0, pair);
 
     auto copy = pot::ForceFieldNonCoulomb();
     copy      = *_nonCoulombPotential;
 
-    const auto  matrixElement = getNonCoulombPairsMatrix(copy)(0, 0);
+    const auto  matrixElement = _getNonCoulombPairsMatrix(copy)(0, 0);
     const auto* self          = &copy;
     copy                      = *self;
-    EXPECT_EQ(getNonCoulombPairsMatrix(copy)(0, 0), matrixElement);
+    EXPECT_EQ(_getNonCoulombPairsMatrix(copy)(0, 0), matrixElement);
 }
 
 TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
 {
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(1)
     );
     const auto pair = pot::LennardJonesPair(
@@ -108,14 +108,14 @@ TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
         2.0,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
-    setNonCoulombPairsMatrix(0, 0, pair);
+    _setNonCoulombPairsMatrix(0, 0, pair);
 
     auto moved = pot::ForceFieldNonCoulomb(std::move(*_nonCoulombPotential));
-    EXPECT_NE(getNonCoulombPairsMatrix(moved)(0, 0), nullptr);
+    EXPECT_NE(_getNonCoulombPairsMatrix(moved)(0, 0), nullptr);
 
     auto assigned = pot::ForceFieldNonCoulomb();
     assigned      = std::move(moved);
-    EXPECT_NE(getNonCoulombPairsMatrix(assigned)(0, 0), nullptr);
+    EXPECT_NE(_getNonCoulombPairsMatrix(assigned)(0, 0), nullptr);
 }
 
 /**
@@ -190,12 +190,24 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
 
     _nonCoulombPotential->fillDiagOfNonCoulPairsMatrix(diagonalElements);
 
-    EXPECT_EQ(getNonCoulombPairsMatrix().rows(), 2);
-    EXPECT_EQ(getNonCoulombPairsMatrix().cols(), 2);
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 0)->getInternalType1(), VdwType{0});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 0)->getInternalType2(), VdwType{0});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 1)->getInternalType1(), VdwType{9});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 1)->getInternalType2(), VdwType{9});
+    EXPECT_EQ(_getNonCoulombPairsMatrix().rows(), 2);
+    EXPECT_EQ(_getNonCoulombPairsMatrix().cols(), 2);
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(0, 0)->getInternalType1(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(0, 0)->getInternalType2(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(1, 1)->getInternalType1(),
+        VdwType{9}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(1, 1)->getInternalType2(),
+        VdwType{9}
+    );
 }
 
 /**
@@ -380,7 +392,7 @@ TEST_F(
     _nonCoulombPotential->determineInternalGlobalVdwTypes(
         externalToInternalTypes
     );
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
 
@@ -437,15 +449,27 @@ TEST_F(
     _nonCoulombPotential->determineInternalGlobalVdwTypes(
         externalToInternalTypes
     );
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType1(), VdwType{0});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType2(), VdwType{1});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType1(), VdwType{0});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType2(), VdwType{1});
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
+        VdwType{1}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
+        VdwType{1}
+    );
 }
 
 /**
@@ -493,15 +517,27 @@ TEST_F(
     _nonCoulombPotential->determineInternalGlobalVdwTypes(
         externalToInternalTypes
     );
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType1(), VdwType{1});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType2(), VdwType{0});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType1(), VdwType{1});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType2(), VdwType{0});
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
+        VdwType{1}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
+        VdwType{1}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
+        VdwType{0}
+    );
 }
 
 /**
@@ -557,15 +593,27 @@ TEST_F(
     _nonCoulombPotential->determineInternalGlobalVdwTypes(
         externalToInternalTypes
     );
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
     _nonCoulombPotential->fillOffDiagOfNonCoulPairsMatrix();
 
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType1(), VdwType{0});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(0, 1)->getInternalType2(), VdwType{1});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType1(), VdwType{0});
-    EXPECT_EQ(getNonCoulombPairsMatrix()(1, 0)->getInternalType2(), VdwType{1});
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(0, 1)->getInternalType1(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(0, 1)->getInternalType2(),
+        VdwType{1}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(1, 0)->getInternalType1(),
+        VdwType{0}
+    );
+    EXPECT_EQ(
+        _getNonCoulombPairsMatrix()(1, 0)->getInternalType2(),
+        VdwType{1}
+    );
 }
 
 /**
@@ -605,7 +653,7 @@ TEST_F(
     _nonCoulombPotential->determineInternalGlobalVdwTypes(
         externalToInternalTypes
     );
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(3)
     );
 

@@ -69,7 +69,7 @@ namespace QM
         ) const;
 
        protected:
-        void setAseCalculator(const pybind11::object &calculator);
+        void _setAseCalculator(const pybind11::object &calculator);
     };
 
 }   // namespace QM

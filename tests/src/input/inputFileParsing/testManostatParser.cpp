@@ -46,7 +46,7 @@ TEST_F(TestInputFileReader, ParsePressure)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"pressure", "=", "nan"};
     EXPECT_THROW_MSG(
@@ -75,7 +75,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"p_relaxation", "=", "-100.0"};
     EXPECT_THROW_MSG(
@@ -85,7 +85,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
         "file: failed validation with message Value must be greater than 0"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"p_relaxation", "=", "0"};
     EXPECT_THROW_MSG(
@@ -95,7 +95,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
         "failed validation with message Value must be greater than 0"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"p_relaxation", "=", "1e308"};
     EXPECT_THROW_MSG(
@@ -128,7 +128,7 @@ TEST_F(TestInputFileReader, ParseManostat)
         ManostatType::NONE
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"manostat", "=", "berendsen"};
     parseFunc(lineElements, 0);
@@ -137,7 +137,7 @@ TEST_F(TestInputFileReader, ParseManostat)
         ManostatType::BERENDSEN
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"manostat", "=", "stochastic_rescaling"};
     parseFunc(lineElements, 0);
@@ -146,7 +146,7 @@ TEST_F(TestInputFileReader, ParseManostat)
         ManostatType::STOCHASTIC_RESCALING
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"manostat", "=", "notValid"};
     EXPECT_THROW_MSG(
@@ -174,7 +174,7 @@ TEST_F(TestInputFileReader, ParseCompressibility)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"compressibility", "=", "-0.1"};
     EXPECT_THROW_MSG(
@@ -184,7 +184,7 @@ TEST_F(TestInputFileReader, ParseCompressibility)
         "file: failed validation with message Value must be greater than 0"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"compressibility", "=", "inf"};
     EXPECT_THROW_MSG(
@@ -210,13 +210,13 @@ TEST_F(TestInputFileReader, ParseIsotropy)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ISOTROPIC);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "anisotropic"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ANISOTROPIC);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "full_anisotropic"};
     parseFunc(lineElements, 0);
@@ -225,7 +225,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         Isotropy::FULL_ANISOTROPIC
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "xz"};
     parseFunc(lineElements, 0);
@@ -234,7 +234,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         Isotropy::SEMI_ISOTROPIC_XZ
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "zx"};
     parseFunc(lineElements, 0);
@@ -243,7 +243,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         Isotropy::SEMI_ISOTROPIC_XZ
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "yz"};
     parseFunc(lineElements, 0);
@@ -252,7 +252,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         Isotropy::SEMI_ISOTROPIC_YZ
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "zy"};
     parseFunc(lineElements, 0);
@@ -261,7 +261,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         Isotropy::SEMI_ISOTROPIC_YZ
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "xy"};
     parseFunc(lineElements, 0);
@@ -270,7 +270,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         Isotropy::SEMI_ISOTROPIC_XY
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "yx"};
     parseFunc(lineElements, 0);
@@ -279,7 +279,7 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         Isotropy::SEMI_ISOTROPIC_XY
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"isotropy", "=", "notValid"};
     EXPECT_THROW_MSG(
@@ -307,74 +307,74 @@ TEST_F(TestInputFileReader, ParseFixedAxis)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::NONE);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "x"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::X);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "y"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Y);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "z"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Z);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xy"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "yx"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xz"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XZ);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "zx"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XZ);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "yz"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::YZ);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "zy"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::YZ);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "all"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xyz"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "notValid"};
     EXPECT_THROW_MSG(

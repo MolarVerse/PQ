@@ -80,7 +80,7 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::HessianSettings::getDisplacement(), 0.001);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"hessian_displacement", "=", "0.0"};
     EXPECT_THROW_MSG(
@@ -110,7 +110,7 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
         HessianBuilderType::FIVE_POINT
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"hessian_builder", "=", "unknown"};
     EXPECT_THROW_MSG(
@@ -136,7 +136,7 @@ TEST_F(TestInputFileReader, parseOptimizeBeforeHessian)
     parseFunc(lineElements, 0);
     EXPECT_FALSE(settings::HessianSettings::optimizeBeforeHessian());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"optimize_before_hessian", "=", "on"};
     parseFunc(lineElements, 0);

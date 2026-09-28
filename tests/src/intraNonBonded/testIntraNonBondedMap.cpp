@@ -82,7 +82,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
 
@@ -92,8 +92,8 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
         10.0,
         LJParams{.c6 = 2.0, .c12 = 3.0}
     );
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
-    setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
+    _setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    _setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
     auto simulationBox = molsys::SimulationBox();
     simulationBox.setBoxDimensions({10.0, 10.0, 10.0});

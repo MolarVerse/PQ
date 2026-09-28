@@ -53,7 +53,7 @@ TEST_F(TestInputFileReader, testParseNumberOfReplicas)
 
     EXPECT_EQ(settings::RingPolymerSettings::getNumberOfBeads(), 10);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"rpmd_n_replica", "=", "1"};
     EXPECT_THROW_MSG(

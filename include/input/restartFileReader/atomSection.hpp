@@ -53,7 +53,7 @@ namespace input::restartFile
     class AtomSection : public RestartFileSection
     {
        private:
-        void checkAtomLine(
+        void _checkAtomLine(
             std::vector<std::string> &lineElements,
             const molsys::Molecule &
         );

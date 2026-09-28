@@ -88,7 +88,7 @@ namespace
             const std::string_view program
         ) const
         {
-            executeCommand(command, program);
+            _executeCommand(command, program);
         }
 
         [[nodiscard]] bool sawStaleResults() const { return _sawStaleResults; }
@@ -101,7 +101,7 @@ namespace
         mutable std::string _command;
 
        protected:
-        void executeCommand(
+        void _executeCommand(
             const std::string_view command,
             const std::string_view /*program*/
         ) const override
@@ -132,7 +132,7 @@ class ExternalQMRunnerTest : public testing::Test
     std::string        _qmScript;
     std::string        _dftbFile;
 
-    static void readForceFile(
+    static void _readForceFile(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData
     )
@@ -140,7 +140,7 @@ class ExternalQMRunnerTest : public testing::Test
         QM::ExternalQMRunner::_readForceFile(simulationBox, physicalData);
     }
 
-    static void readChargeFile(molsys::SimulationBox &simulationBox)
+    static void _readChargeFile(molsys::SimulationBox &simulationBox)
     {
         QM::ExternalQMRunner::_readChargeFile(simulationBox);
     }
@@ -188,7 +188,7 @@ class ExternalQMRunnerTest : public testing::Test
         EXPECT_FALSE(error);
     }
 
-    std::filesystem::path configureQuotedScript(
+    std::filesystem::path _configureQuotedScript(
         QM::ExternalQMRunner &runner
     ) const
     {
@@ -241,7 +241,7 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
 TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
 {
     auto       runner    = CommandCaptureRunner<QM::DFTBPlusRunner>();
-    const auto path      = configureQuotedScript(runner);
+    const auto path      = _configureQuotedScript(runner);
     const auto inputFile = std::string("input file; touch qm-injected");
     settings::FileSettings::setDFTBFileName(inputFile);
 
@@ -264,7 +264,7 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
 TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
 {
     auto       runner = CommandCaptureRunner<QM::PySCFRunner>();
-    const auto path   = configureQuotedScript(runner);
+    const auto path   = _configureQuotedScript(runner);
 
     runner.execute(_simulationBox);
 
@@ -282,7 +282,7 @@ TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
 TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
 {
     auto       runner = CommandCaptureRunner<QM::TurbomoleRunner>();
-    const auto path   = configureQuotedScript(runner);
+    const auto path   = _configureQuotedScript(runner);
 
     runner.execute(_simulationBox);
 
@@ -324,7 +324,7 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteForces)
     writeFile(settings::FileSettings::getQMForcesTempFileName(), "0\n0 0\n");
 
     EXPECT_THROW_MSG(
-        readForceFile(_simulationBox, _physicalData),
+        _readForceFile(_simulationBox, _physicalData),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS force file \"qm_forces\""
     );
@@ -338,7 +338,7 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteForces)
     );
 
     EXPECT_THROW_MSG(
-        readForceFile(_simulationBox, _physicalData),
+        _readForceFile(_simulationBox, _physicalData),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS force file \"qm_forces\""
     );
@@ -353,7 +353,7 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
     writeFile(settings::FileSettings::getQMChargesTempFileName(), "0\n");
 
     EXPECT_THROW_MSG(
-        readChargeFile(_simulationBox),
+        _readChargeFile(_simulationBox),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS charge file \"qm_charges\""
     );
@@ -364,7 +364,7 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteCharges)
     writeFile(settings::FileSettings::getQMChargesTempFileName(), "nan\n");
 
     EXPECT_THROW_MSG(
-        readChargeFile(_simulationBox),
+        _readChargeFile(_simulationBox),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS charge file \"qm_charges\""
     );

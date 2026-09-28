@@ -46,19 +46,19 @@ namespace engine
         bool _optStopped = false;
 
         [[nodiscard]]
-        std::shared_ptr<opt::Evaluator> setupEvaluator();
+        std::shared_ptr<opt::Evaluator> _setupEvaluator();
 
-        void setupOptimization(
+        void _setupOptimization(
             const std::shared_ptr<opt::Evaluator> &evaluator
         );
-        void runOptimization();
-        void takeOptimizationStep();
-        void writeOptimizationOutput();
+        void _runOptimization();
+        void _takeOptimizationStep();
+        void _writeOptimizationOutput();
 
         [[nodiscard]]
-        std::shared_ptr<opt::Optimizer> setupEmptyOptimizer();
+        std::shared_ptr<opt::Optimizer> _setupEmptyOptimizer();
 
-        void writeOptimizationSetupInfo();
+        void _writeOptimizationSetupInfo();
 
        public:
         void run() final;

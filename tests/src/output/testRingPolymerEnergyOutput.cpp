@@ -33,7 +33,7 @@
 class TestRingPolymerEnergyOutput : public testing::Test
 {
    protected:
-    static double sumOfRingPolymerEnergies(
+    static double _sumOfRingPolymerEnergies(
         const std::vector<physicalData::PhysicalData> &dataVector
     )
     {
@@ -42,7 +42,7 @@ class TestRingPolymerEnergyOutput : public testing::Test
         );
     }
 
-    static double maxRingPolymerEnergy(
+    static double _maxRingPolymerEnergy(
         const std::vector<physicalData::PhysicalData> &dataVector
     )
     {
@@ -57,7 +57,7 @@ TEST_F(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
     vec[0].setRingPolymerEnergy(1.0);
     vec[1].setRingPolymerEnergy(2.5);
     vec[2].setRingPolymerEnergy(3.5);
-    EXPECT_DOUBLE_EQ(sumOfRingPolymerEnergies(vec), 7.0);
+    EXPECT_DOUBLE_EQ(_sumOfRingPolymerEnergies(vec), 7.0);
 }
 
 TEST_F(TestRingPolymerEnergyOutput, maxRingPolymerEnergyReturnsLargestEntry)
@@ -67,7 +67,7 @@ TEST_F(TestRingPolymerEnergyOutput, maxRingPolymerEnergyReturnsLargestEntry)
     vec[0].setRingPolymerEnergy(1.0);
     vec[1].setRingPolymerEnergy(9.0);
     vec[2].setRingPolymerEnergy(5.0);
-    EXPECT_DOUBLE_EQ(maxRingPolymerEnergy(vec), 9.0);
+    EXPECT_DOUBLE_EQ(_maxRingPolymerEnergy(vec), 9.0);
 }
 
 TEST_F(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)

@@ -46,7 +46,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
     timeStepFunc(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"timestep", "=", "0"};
     EXPECT_THROW_MSG(
@@ -58,7 +58,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
 
     for (const std::string &invalid : {std::string("nan"), std::string("inf")})
     {
-        clearParser(parser);
+        _clearParser(parser);
         lineElements = {"timestep", "=", invalid};
         EXPECT_THROW_MSG(
             timeStepFunc(lineElements, 0),
@@ -90,7 +90,7 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
     nstepsFunc(lineElements, 0);
     EXPECT_EQ(settings::TimingsSettings::getNumberOfSteps(), 1000);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"nstep", "=", "-1"};
     EXPECT_THROW_MSG(
@@ -101,7 +101,7 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
         "1"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"nsteps", "=", "0"};
     EXPECT_THROW_MSG(

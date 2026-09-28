@@ -51,7 +51,7 @@ TEST_F(TestInputFileReader, testParseVirial)
         settings::VirialType::ATOMIC
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"virial", "=", "molecular"};
     parseFunc(lineElements, 0);
@@ -60,7 +60,7 @@ TEST_F(TestInputFileReader, testParseVirial)
         settings::VirialType::MOLECULAR
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"virial", "=", "notValid"};
     EXPECT_THROW_MSG(
