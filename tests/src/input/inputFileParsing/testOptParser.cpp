@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
 
+#include "enums/optimizer.hpp"
 #include "exceptions.hpp"       // for exc::InputFileException, customException
 #include "optInputParser.hpp"   // for InputFileParserOptimizer
 #include "optimizerSettings.hpp"     // for settings::OptimizerSettings
@@ -37,11 +38,11 @@
  */
 TEST_F(TestInputFileReader, parserOptimizer)
 {
-    using enum settings::OptimizerType;
+    using enum OptimizerType;
 
     EXPECT_EQ(settings::OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
 
-    settings::OptimizerSettings::setOptimizer("none");
+    settings::OptimizerSettings::setOptimizer(OptimizerType::NONE);
 
     auto parser = input::OptInputParser();
     input::OptInputParser::parseOptimizer(
@@ -72,14 +73,14 @@ TEST_F(TestInputFileReader, parserOptimizer)
  */
 TEST_F(TestInputFileReader, parserLearningRateStrategy)
 {
-    using enum settings::LREnum;
+    using enum LearningRate;
 
     EXPECT_EQ(
         settings::OptimizerSettings::getLearningRateStrategy(),
         EXPONENTIAL_DECAY
     );
 
-    settings::OptimizerSettings::setLearningRateStrategy("none");
+    settings::OptimizerSettings::setLearningRateStrategy(LearningRate::NONE);
 
     auto parser = input::OptInputParser();
     input::OptInputParser::parseLearningRateStrategy(

@@ -106,7 +106,7 @@ namespace input
         const auto method =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        using enum settings::OptimizerType;
+        using enum OptimizerType;
 
         if ("steepest_descent" == method)
             settings::OptimizerSettings::setOptimizer(STEEPEST_DESCENT);
@@ -142,7 +142,7 @@ namespace input
         size_t                          lineNumber
     )
     {
-        using enum settings::LREnum;
+        using enum LearningRate;
         checkCommand(lineElements, lineNumber);
 
         const auto strategy =
