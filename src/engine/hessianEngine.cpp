@@ -35,6 +35,7 @@
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
 #include "enums/hessian.hpp"
+#include "enums/optimizer.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
@@ -90,7 +91,7 @@ namespace engine
 
             switch (lrStrategy)
             {
-                using enum settings::LREnum;
+                using enum LearningRate;
 
                 case CONSTANT:
                     return std::make_shared<opt::ConstantLRStrategy>(alpha0);
@@ -502,7 +503,7 @@ namespace engine
 
         switch (optimizerType)
         {
-            using enum settings::OptimizerType;
+            using enum OptimizerType;
 
             case STEEPEST_DESCENT:
             {
@@ -521,9 +522,14 @@ namespace engine
         }
 
         if (!optimizer)
+        {
             throw exc::UserInputException(
-                std::format("Unknown optimizer type {}", string(optimizerType))
+                std::format(
+                    "Unknown optimizer type {}",
+                    OptimizerTypeMeta::toString(optimizerType)
+                )
             );
+        }
 
         optimizer->setSimulationBox(getSharedSimulationBox());
         optimizer->setPhysicalData(getSharedPhysicalData());
@@ -544,13 +550,17 @@ namespace engine
         _engineOutput.getLogOutput().writeSetupInfo(
             std::format(
                 "Optimizer:                  {}",
-                string(settings::OptimizerSettings::getOptimizer())
+                OptimizerTypeMeta::toString(
+                    settings::OptimizerSettings::getOptimizer()
+                )
             )
         );
         _engineOutput.getLogOutput().writeSetupInfo(
             std::format(
                 "Learning rate strategy:     {}",
-                string(settings::OptimizerSettings::getLearningRateStrategy())
+                LearningRateMeta::toString(
+                    settings::OptimizerSettings::getLearningRateStrategy()
+                )
             )
         );
         _engineOutput.getLogOutput().writeEmptyLine();

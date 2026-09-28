@@ -63,7 +63,7 @@ namespace input::parameterFile
         engine::Engine & /*engine*/
     )
     {
-        using enum settings::NonCoulombType;
+        using enum NonCoulombType;
 
         if (lineElements.size() > 1)
         {
@@ -112,7 +112,7 @@ namespace input::parameterFile
         engine::Engine           &engine
     )
     {
-        using enum settings::NonCoulombType;
+        using enum NonCoulombType;
 
         switch (settings::PotentialSettings::getNonCoulombType())
         {

@@ -141,11 +141,4 @@ namespace manostat
         return ManostatType::NONE;
     }
 
-    /**
-     * @brief get the isotropy of the manostat
-     *
-     * @return Isotropy
-     */
-    Isotropy Manostat::getIsotropy() const { return Isotropy::NONE; }
-
 }   // namespace manostat

@@ -24,9 +24,6 @@
 
 #define _MANOSTAT_SETTINGS_HPP_
 
-#include <string_view>   // for string_view
-#include <vector>        // for vector
-
 #include "defaults.hpp"
 #include "enums/manostat.hpp"
 
@@ -48,13 +45,10 @@ namespace settings
 
         static inline double _targetPressure;
 
-        // clang-format off
-        static inline double _tauManostat     = defaults::BERENDSEN_MANOSTAT_RELAX_TIME;
-        static inline double _compressibility = defaults::COMPRESSIBILITY_WATER_DEFAULT;
-        // clang-format on
-
-        static inline std::vector<size_t> _2DIsotropicAxes;
-        static inline size_t              _2DAnisotropicAxis;
+        static inline double _tauManostat =
+            defaults::BERENDSEN_MANOSTAT_RELAX_TIME;
+        static inline double _compressibility =
+            defaults::COMPRESSIBILITY_WATER_DEFAULT;
 
        public:
         ManostatSettings()  = default;
@@ -64,21 +58,15 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setManostatType(const std::string_view &manostatType);
-        static void setManostatType(const ManostatType &manostatType);
+        static void setManostatType(ManostatType manostatType);
+        static void setIsotropy(Isotropy isotropy);
 
-        static void setIsotropy(const std::string_view &isotropy);
-        static void setIsotropy(const Isotropy &isotropy);
-
-        static void setFixedAxis(const FixedAxis &fixedAxis);
+        static void setFixedAxis(FixedAxis fixedAxis);
         static void setIsFixedAxisSet(bool isSet);
 
         static void setTargetPressure(double targetPressure);
         static void setTauManostat(double tauManostat);
         static void setCompressibility(double compressibility);
-
-        static void set2DIsotropicAxes(const std::vector<size_t> &indices);
-        static void set2DAnisotropicAxis(size_t index);
 
         /***************************
          * standard getter methods *
@@ -86,15 +74,13 @@ namespace settings
 
         [[nodiscard]] static bool isBerendsenBased();
 
-        [[nodiscard]] static ManostatType        getManostatType();
-        [[nodiscard]] static Isotropy            getIsotropy();
-        [[nodiscard]] static FixedAxis           getFixedAxis();
-        [[nodiscard]] static bool                isFixedAxisSet();
-        [[nodiscard]] static double              getTargetPressure();
-        [[nodiscard]] static double              getTauManostat();
-        [[nodiscard]] static double              getCompressibility();
-        [[nodiscard]] static std::vector<size_t> get2DIsotropicAxes();
-        [[nodiscard]] static size_t              get2DAnisotropicAxis();
+        [[nodiscard]] static ManostatType getManostatType();
+        [[nodiscard]] static Isotropy     getIsotropy();
+        [[nodiscard]] static FixedAxis    getFixedAxis();
+        [[nodiscard]] static bool         isFixedAxisSet();
+        [[nodiscard]] static double       getTargetPressure();
+        [[nodiscard]] static double       getTauManostat();
+        [[nodiscard]] static double       getCompressibility();
     };
 
 }   // namespace settings

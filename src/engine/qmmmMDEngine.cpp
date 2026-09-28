@@ -29,6 +29,7 @@
 #include <limits>       // for numeric_limits
 #include <vector>       // for vector
 
+#include "celllist.hpp"
 #include "exceptions.hpp"       // for HybridMDEngineException
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "intraNonBondedMap.hpp"
@@ -115,7 +116,7 @@ namespace engine
         configurator::HybridConfigurator::calculateSmoothingFactors(
             *_simulationBox
         );
-        _cellList->updateCellList(*_simulationBox);
+        getCellList().updateCellList(*_simulationBox);
         _physicalData->setNumberOfSmoothingMolecules(
             static_cast<double>(
                 std::ranges::distance(_simulationBox->getMoleculesInsideZone(
@@ -228,21 +229,21 @@ namespace engine
 
             if (settings::Settings::isCellListActivated())
             {
-                _cellList->assignMoleculeHybridZoneIndices();
-                _cellList->assignWaterMoleculeIndices(*_simulationBox);
+                getCellList().assignMoleculeHybridZoneIndices();
+                getCellList().assignWaterMoleculeIndices(*_simulationBox);
             }
 
             _potential->calculateQMMMForces(
                 *_simulationBox,
                 *_physicalData,
-                *_cellList
+                getCellList()
             );
 
             _interWater->calculateQMMMForces(
                 *_simulationBox,
                 *_physicalData,
                 _potential->getCoulombPotSharedPtr(),
-                *_cellList
+                getCellList()
             );
 
             _intraNonBonded->calculate(*_simulationBox, *_physicalData);
@@ -333,18 +334,21 @@ namespace engine
 
         if (settings::Settings::isCellListActivated())
         {
-            _cellList->assignMoleculeHybridZoneIndices();
-            _cellList->assignWaterMoleculeIndices(*_simulationBox);
+            getCellList().assignMoleculeHybridZoneIndices();
+            getCellList().assignWaterMoleculeIndices(*_simulationBox);
         }
 
-        _potential
-            ->calculateQMMMForces(*_simulationBox, *_physicalData, *_cellList);
+        _potential->calculateQMMMForces(
+            *_simulationBox,
+            *_physicalData,
+            getCellList()
+        );
 
         _interWater->calculateQMMMForces(
             *_simulationBox,
             *_physicalData,
             _potential->getCoulombPotSharedPtr(),
-            *_cellList
+            getCellList()
         );
 
         _scaleSmoothingMoleculeForcesInner();
@@ -358,14 +362,14 @@ namespace engine
         _potential->calculateHotspotSmoothingMMForces(
             *_simulationBox,
             *_physicalData,
-            *_cellList
+            getCellList()
         );
 
         _interWater->calculateHotspotSmoothingMMForces(
             *_simulationBox,
             *_physicalData,
             _potential->getCoulombPotSharedPtr(),
-            *_cellList
+            getCellList()
         );
 
         _scaleSmoothingMoleculeForcesOuter();

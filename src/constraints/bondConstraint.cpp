@@ -27,6 +27,7 @@
 
 #include "constants/conversionFactors.hpp"
 #include "distanceKernels.hpp"
+#include "exceptions.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
@@ -113,6 +114,9 @@ namespace constraints
      * @return true if the bond constraint is satisfied within the tolerance,
      * false otherwise
      *
+     * @throws exc::ShakeException if the reference bond vector is
+     * degenerate (zero-length or non-finite), meaning the simulation has
+     * become unstable
      */
     bool BondConstraint::applyShake(
         const molsys::SimulationBox &simulationBox,
@@ -131,6 +135,16 @@ namespace constraints
 
             const auto sumInvMass              = invMass1 + invMass2;
             const auto shakeDistanceRefSquared = normSquared(_shakeDistanceRef);
+
+            if (!linalg::isFinite(_shakeDistanceRef) ||
+                0.0 == shakeDistanceRefSquared)
+            {
+                throw exc::ShakeException(
+                    "Degenerate shake reference bond vector - the reference "
+                    "distance is zero-length or non-finite, the simulation "
+                    "has become unstable"
+                );
+            }
 
             const auto shakeForce =
                 delta / (sumInvMass) / shakeDistanceRefSquared;

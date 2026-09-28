@@ -27,6 +27,8 @@
 
 namespace pot
 {
+    Potential::~Potential() = default;
+
     /**
      * @brief calculates QMMM forces by invoking core-to-outer, layer-to-outer,
      * and outer-to-outer force calculations
@@ -38,7 +40,7 @@ namespace pot
     void Potential::calculateQMMMForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::CellList           &cellList
+        const molsys::CellList     &cellList
     )
     {
         calculateCoreToOuterForces(simulationBox, physicalData, cellList);

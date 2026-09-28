@@ -39,7 +39,7 @@ namespace
 {
     // Wire an opt::MMEvaluator with the minimum set of dependencies needed for
     // evaluate() to walk through all of its calls without throwing.
-    void wireUp(opt::MMEvaluator &eval)
+    void wireUp(opt::MMEvaluator& eval, molsys::CellList& cellList)
     {
         auto box = std::make_shared<molsys::SimulationBox>();
         box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
@@ -65,7 +65,7 @@ namespace
         box->addAtom(atom2);
 
         eval.setSimulationBox(box);
-        eval.setCellList(std::make_shared<molsys::CellList>());
+        eval.setCellList(cellList);
         eval.setPotential(std::make_shared<pot::PotentialBruteForce>());
         eval.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
         eval.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
@@ -83,7 +83,7 @@ namespace
 
 TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 {
-    const opt::MMEvaluator src;
+    const opt::MMEvaluator src{};
     const auto             cloned = src.clone();
     ASSERT_NE(cloned, nullptr);
     EXPECT_NE(std::dynamic_pointer_cast<opt::MMEvaluator>(cloned), nullptr);
@@ -92,7 +92,8 @@ TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 TEST(TestMMEvaluator, evaluateRunsWithMinimalDependencies)
 {
     opt::MMEvaluator eval;
-    wireUp(eval);
+    molsys::CellList cellList;
+    wireUp(eval, cellList);
     EXPECT_NO_THROW(eval.evaluate());
 }
 
@@ -102,7 +103,8 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     // inter-molecular force contribution, and the cleared force buffer should
     // be (0, 0, 0) per atom.
     opt::MMEvaluator eval;
-    wireUp(eval);
+    molsys::CellList cellList;
+    wireUp(eval, cellList);
 
     // Borrow the wired-up simulation box back from a fresh setup by re-wiring
     // a second evaluator on the same shared structures isn't trivial, so test
@@ -126,8 +128,9 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     box->addAtom(atom);
 
     opt::MMEvaluator eval2;
+    molsys::CellList cellList2;
     eval2.setSimulationBox(box);
-    eval2.setCellList(std::make_shared<molsys::CellList>());
+    eval2.setCellList(cellList2);
     eval2.setPotential(std::make_shared<pot::PotentialBruteForce>());
     eval2.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
     eval2.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());

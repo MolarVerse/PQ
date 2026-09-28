@@ -101,7 +101,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::GUFF
+        NonCoulombType::GUFF
     );
 
     _clearParser(parser);
@@ -110,7 +110,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::LJ
+        NonCoulombType::LJ
     );
 
     _clearParser(parser);
@@ -119,7 +119,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::BUCKINGHAM
+        NonCoulombType::BUCKINGHAM
     );
 
     _clearParser(parser);
@@ -128,7 +128,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::MORSE
+        NonCoulombType::MORSE
     );
 
     _clearParser(parser);

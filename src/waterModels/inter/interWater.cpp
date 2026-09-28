@@ -53,7 +53,7 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-        molsys::CellList                             &cellList
+        const molsys::CellList                       &cellList
     )
     {
         if (_strategy == nullptr)
@@ -82,7 +82,7 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-        molsys::CellList                             &cellList
+        const molsys::CellList                       &cellList
     )
     {
         if (_strategy == nullptr)
@@ -143,7 +143,7 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-        molsys::CellList                             &cellList
+        const molsys::CellList                       &cellList
     )
     {
         if (_strategy == nullptr)

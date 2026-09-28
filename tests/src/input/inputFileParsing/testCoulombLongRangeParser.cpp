@@ -37,7 +37,7 @@
  */
 TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
-    using enum settings::CoulombLongRangeType;
+    using enum CoulombLongRangeType;
 
     input::CoulombLongRangeInputParser parser;
     const auto                         funcMap = parser.getKeywordFuncMap();

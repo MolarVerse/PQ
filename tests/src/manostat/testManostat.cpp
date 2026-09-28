@@ -28,7 +28,8 @@
 #include "atom.hpp"                                  // for Atom
 #include "berendsenManostat.hpp"                     // for BerendsenManostat
 #include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
-#include "exceptions.hpp"                            // for ManostatException
+#include "enums/manostat.hpp"
+#include "exceptions.hpp"   // for ManostatException
 // for Message, TestPartResult
 #include "manostatSettings.hpp"    // for ManostatType, Isotropy
 #include "mathUtilities.hpp"       // for compare
@@ -576,23 +577,15 @@ TEST_F(TestManostat, berendsenManostatType)
     EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
 }
 
-TEST_F(TestManostat, berendsenIsotropy)
-{
-    auto manostat = manostat::BerendsenManostat(1.0, 0.1, 4.5, FixedAxis::NONE);
-    EXPECT_EQ(manostat.getIsotropy(), Isotropy::ISOTROPIC);
-}
-
 TEST_F(TestManostat, semiIsotropicBerendsenIsotropy)
 {
     auto manostat = manostat::SemiIsotropicBerendsenManostat(
         1.0,
         0.1,
         4.5,
-        2U,
-        std::vector<size_t>{0U, 1U},
+        Isotropy::SEMI_ISOTROPIC_XY,
         FixedAxis::NONE
     );
-    EXPECT_EQ(manostat.getIsotropy(), Isotropy::SEMI_ISOTROPIC);
     EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
 }
 
@@ -600,7 +593,6 @@ TEST_F(TestManostat, anisotropicBerendsenIsotropy)
 {
     auto manostat =
         manostat::AnisotropicBerendsenManostat(1.0, 0.1, 4.5, FixedAxis::NONE);
-    EXPECT_EQ(manostat.getIsotropy(), Isotropy::ANISOTROPIC);
     EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
 }
 
@@ -612,7 +604,6 @@ TEST_F(TestManostat, fullAnisotropicBerendsenIsotropy)
         4.5,
         FixedAxis::NONE
     );
-    EXPECT_EQ(manostat.getIsotropy(), Isotropy::FULL_ANISOTROPIC);
     EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
 }
 
@@ -798,8 +789,7 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
         1.0,
         0.5,
         0.2,
-        2U,
-        std::vector<size_t>{0U, 1U},
+        Isotropy::SEMI_ISOTROPIC_XY,
         FixedAxis::Z
     );
     manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 4.0, 5.0)));
@@ -821,8 +811,7 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
         7.0,
         0.25,
         0.12,
-        1U,
-        std::vector<size_t>{0U, 2U},
+        Isotropy::SEMI_ISOTROPIC_XZ,
         FixedAxis::Y
     );
     manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 5.0, 3.0)));

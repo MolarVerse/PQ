@@ -25,6 +25,9 @@
 
 #include <cstdint>
 #include <mstd/enum.hpp>
+#include <string_view>
+
+#include "enums/base.hpp"
 
 /**
  * @enum ManostatType
@@ -52,13 +55,43 @@ MSTD_ENUM(ManostatType, std::uint8_t, MANOSTAT_TYPE_LIST);
 enum class Isotropy : std::uint8_t;
 
 #define ISOTROPY_LIST(X) \
-    X(NONE)              \
     X(ISOTROPIC)         \
-    X(SEMI_ISOTROPIC)    \
+    X(SEMI_ISOTROPIC_XY) \
+    X(SEMI_ISOTROPIC_XZ) \
+    X(SEMI_ISOTROPIC_YZ) \
     X(ANISOTROPIC)       \
     X(FULL_ANISOTROPIC)
 
 MSTD_ENUM(Isotropy, std::uint8_t, ISOTROPY_LIST);
+
+[[nodiscard]]
+bool isSemiIsotropic(Isotropy isotropy);
+
+[[nodiscard]]
+size_t get2DAnisotropicAxis(Isotropy isotropy);
+
+[[nodiscard]]
+std::array<size_t, 2> get2DIsotropicAxes(Isotropy isotropy);
+
+/**
+ * @brief Input aliases for the Isotropy enum
+ *
+ * @details This specialization of the InputAlias template provides string
+ * aliases for the Isotropy enum values, allowing for more flexible input
+ * parsing.
+ */
+template <>
+struct InputAlias<Isotropy>
+{
+    static constexpr std::array<std::pair<std::string_view, Isotropy>, 6> value{
+        {{"xy", Isotropy::SEMI_ISOTROPIC_XY},
+         {"yx", Isotropy::SEMI_ISOTROPIC_XY},
+         {"xz", Isotropy::SEMI_ISOTROPIC_XZ},
+         {"zx", Isotropy::SEMI_ISOTROPIC_XZ},
+         {"yz", Isotropy::SEMI_ISOTROPIC_YZ},
+         {"zy", Isotropy::SEMI_ISOTROPIC_YZ}}
+    };
+};
 
 #undef ISOTROPY_LIST
 
@@ -86,6 +119,25 @@ MSTD_ENUM_BITFLAG(FixedAxis, std::uint8_t, FIXED_AXIS_LIST);
 
 [[nodiscard]]
 bool isAxisFixed(FixedAxis fixedAxis, size_t axisIndex);
+
+/**
+ * @brief Input aliases for the FixedAxis enum
+ *
+ * @details This specialization of the InputAlias template provides string
+ * aliases for the FixedAxis enum values, allowing for more flexible input
+ * parsing.
+ */
+template <>
+struct InputAlias<FixedAxis>
+{
+    static constexpr std::array<std::pair<std::string_view, FixedAxis>, 4>
+        value{
+            {{"yx", FixedAxis::XY},
+             {"zx", FixedAxis::XZ},
+             {"zy", FixedAxis::YZ},
+             {"xyz", FixedAxis::ALL}}
+        };
+};
 
 #undef FIXED_AXIS_LIST
 #undef U

@@ -20,36 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_LIST_INPUT_PARSER_HPP_
+#ifndef _CUSTOM_VALIDATOR_HPP_
+#define _CUSTOM_VALIDATOR_HPP_
 
-#define _CELL_LIST_INPUT_PARSER_HPP_
-
-#include "inputFileParser.hpp"
-
-namespace molsys
-{
-    class CellList;   // forward declaration
-}   // namespace molsys
+#include "keyValidatorBase.hpp"
 
 namespace input
 {
     /**
-     * @brief CellListInputParser inherits from InputFileParser
+     * Custom validator that uses a user-provided validation function.
      *
-     * @details Parses the cell list commands in the input file
-     *
+     * @tparam T The type of the value to validate.
      */
-    class CellListInputParser : public InputFileParser
+    template <typename T>
+    class CustomValidator : public KeyValidator<T>
     {
-        molsys::CellList* _cellListPtr;
+       private:
+        std::function<bool(const T &)> _validationFunction;
+        std::string                    _errorMessage;
 
        public:
-        explicit CellListInputParser(molsys::CellList& cellList);
+        CustomValidator(
+            std::function<bool(const T &)> validationFunction,
+            std::string                    errorMessage
+        );
 
-        void addCellListActivated();
-        void addNumberOfCells();
+        [[nodiscard]]
+        bool validate(const T &value) override;
+
+        [[nodiscard]]
+        std::string errorMessage() override;
     };
-
 }   // namespace input
 
-#endif   // _CELL_LIST_INPUT_PARSER_HPP_
+#ifndef _CUSTOM_VALIDATOR_TPP_
+#include "customValidator.tpp"
+#endif
+
+#endif   // _CUSTOM_VALIDATOR_HPP_

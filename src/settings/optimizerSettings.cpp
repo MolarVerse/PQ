@@ -23,83 +23,17 @@
 #include "optimizerSettings.hpp"
 
 #include <format>
-#include <utility>
 
 #include "exceptions.hpp"
-#include "stringUtilities.hpp"   // for toLowerCopy
 
 namespace settings
 {
-
-    /**
-     * @brief returns the optimizer as string
-     *
-     * @param method
-     * @return std::string
-     */
-    std::string string(OptimizerType method)
-    {
-        switch (method)
-        {
-            using enum OptimizerType;
-
-            case STEEPEST_DESCENT: return "STEEPEST-DESCENT";
-            case ADAM: return "ADAM";
-            case NONE: return "none";
-        }
-
-        std::unreachable();
-    }
-
-    /**
-     * @brief returns the learning rate strategy as string
-     *
-     * @param method
-     * @return std::string
-     */
-    std::string string(LREnum method)
-    {
-        switch (method)
-        {
-            using enum LREnum;
-
-            case CONSTANT: return "CONSTANT";
-            case CONSTANT_DECAY: return "CONSTANT-DECAY";
-            case EXPONENTIAL_DECAY: return "EXPONENTIAL-DECAY";
-            case LINESEARCH_WOLFE: return "LINESEARCH-WOLFE";
-
-            case NONE: return "none";
-        }
-
-        std::unreachable();
-    }
 
     /***************************
      *                         *
      * standard setter methods *
      *                         *
      ***************************/
-
-    /**
-     * @brief sets the optimizer to enum in settings
-     *
-     * @param optimizer
-     */
-    void OptimizerSettings::setOptimizer(const std::string_view &optimizer)
-    {
-        using enum OptimizerType;
-        const auto optimizerLower =
-            utilities::toLowerAndReplaceDashesCopy(optimizer);
-
-        if ("steepest_descent" == optimizerLower)
-            setOptimizer(OptimizerType::STEEPEST_DESCENT);
-
-        else if ("adam" == optimizerLower)
-            setOptimizer(OptimizerType::ADAM);
-
-        else
-            setOptimizer(OptimizerType::NONE);
-    }
 
     /**
      * @brief sets the optimizer to enum in settings
@@ -116,36 +50,7 @@ namespace settings
      *
      * @param method
      */
-    void OptimizerSettings::setLearningRateStrategy(
-        const std::string_view &method
-    )
-    {
-        using enum LREnum;
-
-        const auto methodLower = utilities::toLowerAndReplaceDashesCopy(method);
-
-        if ("constant" == methodLower)
-            setLearningRateStrategy(CONSTANT);
-
-        else if ("constant_decay" == methodLower)
-            setLearningRateStrategy(CONSTANT_DECAY);
-
-        else if ("exponential_decay" == methodLower)
-            setLearningRateStrategy(EXPONENTIAL_DECAY);
-
-        else if ("linesearch_wolfe" == methodLower)
-            setLearningRateStrategy(LINESEARCH_WOLFE);
-
-        else
-            setLearningRateStrategy(NONE);
-    }
-
-    /**
-     * @brief sets the optimizer to enum in settings
-     *
-     * @param method
-     */
-    void OptimizerSettings::setLearningRateStrategy(LREnum method)
+    void OptimizerSettings::setLearningRateStrategy(LearningRate method)
     {
         _lRStrategy = method;
     }
@@ -223,7 +128,7 @@ namespace settings
     {
         const auto strategy = getLearningRateStrategy();
 
-        if (strategy == LREnum::LINESEARCH_WOLFE)
+        if (strategy == LearningRate::LINESEARCH_WOLFE)
         {
             throw exc::UserInputException(
                 "The Wolfe line search learning rate strategy is not yet "
@@ -231,7 +136,7 @@ namespace settings
             );
         }
 
-        if (strategy == LREnum::NONE)
+        if (strategy == LearningRate::NONE)
         {
             throw exc::UserInputException(
                 "In order to run the optimizer, you need to specify a learning "
@@ -239,8 +144,8 @@ namespace settings
             );
         }
 
-        const auto needsDecay = strategy == LREnum::CONSTANT_DECAY ||
-                                strategy == LREnum::EXPONENTIAL_DECAY;
+        const auto needsDecay = strategy == LearningRate::CONSTANT_DECAY ||
+                                strategy == LearningRate::EXPONENTIAL_DECAY;
 
         if (needsDecay && !getLearningRateDecay().has_value())
         {
@@ -248,8 +153,9 @@ namespace settings
                 std::format(
                     "The {} learning rate strategy requires "
                     "learning-rate-decay.",
-                    strategy == LREnum::CONSTANT_DECAY ? "constant-decay"
-                                                       : "exponential-decay"
+                    strategy == LearningRate::CONSTANT_DECAY
+                        ? "constant-decay"
+                        : "exponential-decay"
                 )
             );
         }
@@ -287,17 +193,17 @@ namespace settings
      *
      * @return OptimizerType
      */
-    settings::OptimizerType OptimizerSettings::getOptimizer()
-    {
-        return _optimizer;
-    }
+    OptimizerType OptimizerSettings::getOptimizer() { return _optimizer; }
 
     /**
      * @brief returns the learning rate strategy as string
      *
      * @return LearningRateStrategy
      */
-    LREnum OptimizerSettings::getLearningRateStrategy() { return _lRStrategy; }
+    LearningRate OptimizerSettings::getLearningRateStrategy()
+    {
+        return _lRStrategy;
+    }
 
     /**
      * @brief returns the number of epochs

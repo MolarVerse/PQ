@@ -67,9 +67,9 @@ namespace input
 
         auto &timeStep = _getRegistry().registerKey(
             KeyRegistry<double>{
-                .metadata  = metaData,
-                .onSet     = setTimeStep,
-                .validator = makeShared(validator)
+                .metadata   = metaData,
+                .onSet      = setTimeStep,
+                .validators = {makeShared(validator)}
             }
         );
 
@@ -102,9 +102,9 @@ namespace input
 
         auto &numberOfSteps = _getRegistry().registerKey(
             KeyRegistry<int>{
-                .metadata  = metaData,
-                .onSet     = setNumberOfSteps,
-                .validator = std::make_shared<RangeValidator<int>>(validator)
+                .metadata   = metaData,
+                .onSet      = setNumberOfSteps,
+                .validators = {makeShared(validator)}
             }
         );
 

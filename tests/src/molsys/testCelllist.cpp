@@ -43,6 +43,47 @@ TEST_F(TestCellList, determineCellSize)
     EXPECT_EQ(_cellList->getCellSize(), linalg::Vec3D(5.0, 5.0, 5.0));
 }
 
+/**
+ * @brief tests that determineCellSize rejects zero or negative box
+ * dimensions instead of silently producing a zero or negative cell size
+ */
+TEST_F(TestCellList, determineCellSizeRejectsNonPositiveBoxDimensions)
+{
+    constexpr auto message =
+        "Invalid simulation box dimensions during cell-list setup - box "
+        "dimensions must be finite and positive, the simulation has become "
+        "unstable";
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(0.0, 10.0, 10.0)),
+        exc::CellListException,
+        message
+    );
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(10.0, -1.0, 10.0)),
+        exc::CellListException,
+        message
+    );
+}
+
+/**
+ * @brief tests that determineCellSize rejects non-finite box dimensions
+ * instead of silently propagating NaN/Inf cell boundaries
+ */
+TEST_F(TestCellList, determineCellSizeRejectsNonFiniteBoxDimensions)
+{
+    const auto nan = std::numeric_limits<double>::quiet_NaN();
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(10.0, nan, 10.0)),
+        exc::CellListException,
+        "Invalid simulation box dimensions during cell-list setup - box "
+        "dimensions must be finite and positive, the simulation has become "
+        "unstable"
+    );
+}
+
 TEST_F(TestCellList, determineCellBoundaries)
 {
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
@@ -247,6 +288,61 @@ TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
     EXPECT_EQ(
         cloned->getNumberOfNeighbourCells(),
         _cellList->getNumberOfNeighbourCells()
+    );
+}
+
+TEST_F(TestCellList, addMoleculesToCellsRejectsNonFinitePositions)
+{
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+
+    auto molecule = molsys::Molecule();
+
+    const auto atom = std::make_shared<molsys::Atom>();
+    const auto nan  = std::numeric_limits<double>::quiet_NaN();
+    atom->setPosition(linalg::Vec3D(nan, nan, nan));
+
+    molecule.addAtom(atom);
+    _simulationBox->addMolecule(molecule);
+
+    EXPECT_THROW_MSG(
+        _cellList->addMoleculesToCells(*_simulationBox),
+        exc::CellListException,
+        "Invalid atom position during cell-list update - coordinates "
+        "are non-finite, the simulation has become unstable"
+    );
+}
+
+TEST_F(TestCellList, getCellIndexOfAtomWrapsEscapedPositions)
+{
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linalg::Vec3D(-29.0, 0.0, 0.0)
+        ),
+        linalg::Vec3Dul(1, 1, 1)
+    );
+}
+
+TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
+{
+    auto cellList = molsys::CellList();
+    cellList.determineCellSize(_simulationBox->getBoxDimensions());
+
+    auto molecule = molsys::Molecule();
+
+    const auto atom = std::make_shared<molsys::Atom>();
+    atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+
+    molecule.addAtom(atom);
+    _simulationBox->addMolecule(molecule);
+
+    EXPECT_THROW_MSG(
+        cellList.addMoleculesToCells(*_simulationBox),
+        exc::CellListException,
+        "Invalid cell index during cell-list update - the cell "
+        "list is inconsistent, the simulation has become unstable"
     );
 }
 

@@ -3,3 +3,5 @@
 - move `HessianBuilderType` from settings to enum
 - move `SmoothingMethod` and `QMForceDist` from settings to enum
 - move `ManostatType`, `Isotropy` and `FixedAxis` from settings to enum
+- move `OptimizerType` and `LearningRate` from settings to enum
+- move `ForceFieldType`, `NonCoulombType` and `CoulombLongRangeType` from settings to enum

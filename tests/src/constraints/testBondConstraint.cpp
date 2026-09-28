@@ -24,7 +24,11 @@
 
 #include <gtest/gtest.h>
 
+#include <limits>   // for numeric_limits
+
 #include "constants/conversionFactors.hpp"
+#include "exceptions.hpp"         // for ShakeException
+#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
 #include "timingsSettings.hpp"
 
 /**
@@ -92,6 +96,39 @@ TEST_F(TestBondConstraint, applyShake)
     );
 
     EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0));
+}
+
+/**
+ * @brief tests that applyShake rejects a zero-length reference bond vector
+ * instead of silently dividing by zero
+ */
+TEST_F(TestBondConstraint, applyShakeRejectsZeroLengthReference)
+{
+    _bondConstraint->setShakeDistanceRef(linalg::Vec3D(0.0, 0.0, 0.0));
+
+    EXPECT_THROW_MSG(
+        (void) _bondConstraint->applyShake(*_box, 0.0),
+        exc::ShakeException,
+        "Degenerate shake reference bond vector - the reference distance is "
+        "zero-length or non-finite, the simulation has become unstable"
+    );
+}
+
+/**
+ * @brief tests that applyShake rejects a non-finite reference bond vector
+ * instead of silently propagating NaN forces
+ */
+TEST_F(TestBondConstraint, applyShakeRejectsNonFiniteReference)
+{
+    const auto nan = std::numeric_limits<double>::quiet_NaN();
+    _bondConstraint->setShakeDistanceRef(linalg::Vec3D(nan, 0.0, 0.0));
+
+    EXPECT_THROW_MSG(
+        (void) _bondConstraint->applyShake(*_box, 0.0),
+        exc::ShakeException,
+        "Degenerate shake reference bond vector - the reference distance is "
+        "zero-length or non-finite, the simulation has become unstable"
+    );
 }
 
 /**

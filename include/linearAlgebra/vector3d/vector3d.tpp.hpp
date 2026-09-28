@@ -1178,6 +1178,24 @@ namespace linalg
         return sum(vec) / 3;
     }
 
+    /**
+     * @brief checks if all elements of a Vector3d object are finite
+     *
+     * @code
+     * isFinite(Vector3D<int>)
+     * @endcode
+     *
+     * @tparam U
+     * @param vec
+     * @return true if all elements are finite, false otherwise
+     */
+    template <pq::ArithmeticVector3D U>
+    auto isFinite(const U &vec) -> bool
+    {
+        return std::isfinite(vec[0]) && std::isfinite(vec[1]) &&
+               std::isfinite(vec[2]);
+    }
+
     /***************
      *             *
      * dot product *
