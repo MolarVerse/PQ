@@ -22,6 +22,7 @@
 
 #include "mmmdEngine.hpp"
 
+#include "celllist.hpp"
 #include "virial.hpp"
 
 namespace engine
@@ -33,16 +34,16 @@ namespace engine
      */
     void MMMDEngine::calculateForces()
     {
-        _cellList->updateCellList(*_simulationBox);
+        getCellList().updateCellList(*_simulationBox);
 
         _potential
-            ->calculateForces(*_simulationBox, *_physicalData, *_cellList);
+            ->calculateForces(*_simulationBox, *_physicalData, getCellList());
 
         _interWater->calculate(
             *_simulationBox,
             *_physicalData,
             _potential->getCoulombPotSharedPtr(),
-            *_cellList
+            getCellList()
         );
 
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);

@@ -48,10 +48,10 @@ namespace opt
     class Evaluator
     {
        protected:
+        molsys::CellList*                               _cellList;
         std::shared_ptr<pot::Potential>                 _potential;
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
         std::shared_ptr<constraints::Constraints>       _constraints;
-        std::shared_ptr<molsys::CellList>               _cellList;
         std::shared_ptr<ff::ForceField>                 _forceField;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
@@ -72,7 +72,7 @@ namespace opt
          ***************************/
 
         void setPotential(const std::shared_ptr<pot::Potential>&);
-        void setCellList(const std::shared_ptr<molsys::CellList>&);
+        void setCellList(molsys::CellList&);
         void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
         void setConstraints(const std::shared_ptr<constraints::Constraints>&);
 

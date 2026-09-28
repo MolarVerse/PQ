@@ -81,7 +81,7 @@ TEST_F(TestInputFileReader, numberOfCells)
     std::vector<std::string> lineElements = {"cell-number", "=", "3"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        _engine->getCellList()->getNumberOfCells(),
+        _engine->getCellList().getNumberOfCells(),
         linalg::Vec3Dul(3, 3, 3)
     );
 

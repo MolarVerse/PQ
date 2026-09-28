@@ -36,6 +36,7 @@
 
 namespace pot
 {
+
     /**
      * @brief Calculate non-bonded inter-molecular interactions between two
      * atoms

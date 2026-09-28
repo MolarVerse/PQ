@@ -22,37 +22,37 @@
 
 #include "inputFileReader.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <format>      // for format
-#include <fstream>     // for ifstream, basic_istream
-#include <map>         // for map, operator==
-#include <stdexcept>   // for invalid_argument, out_of_range
-#include <string>      // for char_traits, string
-#include <vector>      // for vector
+#include <algorithm>
+#include <format>
+#include <fstream>
+#include <map>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-#include "MMInputParser.hpp"                 // for MMParserForceField
-#include "QMInputParser.hpp"                 // for InputFileParserQM
-#include "cellListInputParser.hpp"           // for CellListInputParser
-#include "constraintsInputParser.hpp"        // for InputFileParserConstraints
-#include "convergenceInputParser.hpp"        // for ConvergenceInputParser
-#include "coulombLongRangeInputParser.hpp"   // for InputFileParserCoulombLongRange
-#include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"                    // for exc::InputFileException
-#include "filesInputParser.hpp"              // for InputFileParserFiles
-#include "generalInputParser.hpp"            // for InputFileParserGeneral
-#include "hessianInputParser.hpp"            // for HessianInputParser
-#include "hybridInputParser.hpp"             // for InputFileParserQMMM
-#include "integratorInputParser.hpp"         // for InputFileParserIntegrator
-#include "manostatInputParser.hpp"           // for InputFileParserManostat
-#include "optInputParser.hpp"                // for OptInputParser
-#include "outputInputParser.hpp"             // for InputFileParserOutput
-#include "resetKineticsInputParser.hpp"      // for InputFileParserResetKinetics
-#include "ringPolymerInputParser.hpp"        // for InputFileParserRingPolymer
-#include "simulationBoxInputParser.hpp"      // for InputFileParserSimulationBox
-#include "stringUtilities.hpp"   // for getLineCommands, utilities::removeComments
-#include "thermostatInputParser.hpp"   // for InputFileParserThermostat
-#include "timingsInputParser.hpp"      // for InputFileParserTimings
-#include "virialInputParser.hpp"       // for InputFileParserVirial
+#include "MMInputParser.hpp"
+#include "QMInputParser.hpp"
+#include "cellListInputParser.hpp"
+#include "constraintsInputParser.hpp"
+#include "convergenceInputParser.hpp"
+#include "coulombLongRangeInputParser.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "filesInputParser.hpp"
+#include "generalInputParser.hpp"
+#include "hessianInputParser.hpp"
+#include "hybridInputParser.hpp"
+#include "integratorInputParser.hpp"
+#include "manostatInputParser.hpp"
+#include "optInputParser.hpp"
+#include "outputInputParser.hpp"
+#include "resetKineticsInputParser.hpp"
+#include "ringPolymerInputParser.hpp"
+#include "simulationBoxInputParser.hpp"
+#include "stringUtilities.hpp"
+#include "thermostatInputParser.hpp"
+#include "timingsInputParser.hpp"
+#include "virialInputParser.hpp"
 
 namespace input
 {
@@ -97,20 +97,20 @@ namespace input
     {
         // TODO: remove engine after rework
         _parsers.push_back(
-            make_unique<CellListInputParser>(engine.getCellList())
+            std::make_unique<CellListInputParser>(engine.getCellList())
         );
         _parsers.push_back(
-            make_unique<ConstraintsInputParser>(engine.getConstraints())
+            std::make_unique<ConstraintsInputParser>(engine.getConstraints())
         );
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
-            make_unique<FilesInputParser>(
+            std::make_unique<FilesInputParser>(
                 engine.getIntraNonBonded(),
                 validateFilePaths
             )
         );
         _parsers.push_back(
-            make_unique<MMInputParser>(
+            std::make_unique<MMInputParser>(
                 engine.getForceField(),
                 engine.getPotential()
             )
@@ -122,8 +122,9 @@ namespace input
         _parsers.push_back(std::make_unique<OutputInputParser>());
         _parsers.push_back(std::make_unique<ResetKineticsInputParser>());
         _parsers.push_back(
-            make_unique<SimulationBoxInputParser>(engine.getSharedSimulationBox(
-            ))
+            std::make_unique<SimulationBoxInputParser>(
+                engine.getSharedSimulationBox()
+            )
         );
         _parsers.push_back(std::make_unique<ThermostatInputParser>());
         _parsers.push_back(std::make_unique<TimingsInputParser>());

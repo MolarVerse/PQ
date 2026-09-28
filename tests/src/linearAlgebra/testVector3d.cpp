@@ -24,6 +24,7 @@
 
 #include <cmath>      // for sqrt
 #include <iostream>   // for cout, ostream
+#include <limits>     // for numeric_limits
 #include <string>     // for allocator, string
 
 // for Message, TestPartResult, AssertionResult
@@ -481,6 +482,21 @@ TEST(TestVector3d, mean)
     const auto vec1 = linalg::Vec3D(0.0, 1.0, 2.0);
 
     EXPECT_EQ(mean(vec1), 1.0);
+}
+
+/**
+ * @brief tests isFinite for linalg::Vector3D
+ *
+ */
+TEST(TestVector3d, isFinite)
+{
+    EXPECT_TRUE(isFinite(linalg::Vec3D(1.0, 2.0, 3.0)));
+
+    const auto nan = std::numeric_limits<double>::quiet_NaN();
+    EXPECT_FALSE(isFinite(linalg::Vec3D(nan, 0.0, 0.0)));
+
+    const auto inf = std::numeric_limits<double>::infinity();
+    EXPECT_FALSE(isFinite(linalg::Vec3D(0.0, inf, 0.0)));
 }
 
 /**

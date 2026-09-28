@@ -276,6 +276,8 @@ namespace molsys
      * atoms could be in a neighbouring cell
      *
      * @param simulationBox
+     * @throws exc::CellListException if an atom position is non-finite or
+     * maps outside the cell list, meaning the simulation has become unstable
      */
     void CellList::addMoleculesToCells(SimulationBox &simulationBox)
     {
@@ -297,6 +299,15 @@ namespace molsys
 
                 const auto atomCellIndices = getCellIndexOfAtom(box, position);
                 const auto cellIndexScalar = getCellIndex(atomCellIndices);
+
+                if (cellIndexScalar >= _cells.size())
+                {
+                    throw exc::CellListException(
+                        "Invalid cell index during cell-list update - the cell "
+                        "list is inconsistent, the simulation has become "
+                        "unstable"
+                    );
+                }
 
                 mapCellIndexToAtomPointers[cellIndexScalar].push_back(atom);
             }
@@ -337,24 +348,35 @@ namespace molsys
     /**
      * @brief get cell index of atom
      *
+     * @details the position is wrapped into the box in floating point before
+     * the conversion to an unsigned index, so out-of-box coordinates on either
+     * side map to the correct cell without relying on unsigned wrap-around
+     *
      * @param box
      * @param position
      * @return linalg::Vec3Dul
+     * @throws exc::CellListException if the position is non-finite, meaning
+     * the simulation has become unstable
      */
     linalg::Vec3Dul CellList::getCellIndexOfAtom(
         const linalg::Vec3D &box,
         const linalg::Vec3D &position
     ) const
     {
-        auto cellIndex =
-            linalg::Vec3Dul(floor((position + box / 2.0) / _cellSize));
+        if (!linalg::isFinite(position))
+        {
+            throw exc::CellListException(
+                "Invalid atom position during cell-list update - coordinates "
+                "are non-finite, the simulation has become unstable"
+            );
+        }
 
-        cellIndex -=
-            _nCells * linalg::Vec3Dul(floor(
-                          linalg::Vec3D(cellIndex) / linalg::Vec3D(_nCells)
-                      ));
+        const auto inCellUnits = (position + box / 2.0) / _cellSize;
+        const auto nCells      = linalg::Vec3D(_nCells);
 
-        return cellIndex;
+        const auto wrapped = inCellUnits - nCells * floor(inCellUnits / nCells);
+
+        return linalg::Vec3Dul(wrapped);
     }
 
     /**
