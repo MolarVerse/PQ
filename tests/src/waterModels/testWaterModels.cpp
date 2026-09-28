@@ -229,7 +229,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -239,7 +239,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -249,7 +249,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -259,7 +259,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }
@@ -269,7 +269,7 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/
         ) final
         {
         }

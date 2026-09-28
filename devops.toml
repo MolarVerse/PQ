@@ -24,6 +24,7 @@ ast_check_enabled_ids = [
     "noGlobalUsingEnum",
     "noThrowParen",
     "macroReplacement",
+    "memberLeadingUnderscore",
 ]
 
 # Per-check configuration — one sub-table per check id.

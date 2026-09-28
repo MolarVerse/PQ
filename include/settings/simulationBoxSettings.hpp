@@ -25,18 +25,20 @@
 #define _SIMULATION_BOX_SETTINGS_HPP_
 
 #include <cstdint>
+#include <mstd/enum.hpp>
 
 namespace settings
 {
-    /**
-     * @brief enum InitVelocities
-     */
-    enum class InitVelocities : std::uint8_t
-    {
-        FALSE,
-        TRUE,
-        FORCE
-    };
+
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define INIT_VELOCITIES_LIST(X) \
+    X(FALSE)                    \
+    X(TRUE)                     \
+    X(FORCE)
+
+    MSTD_ENUM(InitVelocities, std::uint8_t, INIT_VELOCITIES_LIST)
+
+#undef INIT_VELOCITIES_LIST
 
     /**
      * @brief SimulationBoxSettings

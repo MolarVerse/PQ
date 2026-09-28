@@ -24,8 +24,6 @@
 
 #define _SIMULATION_BOX_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "inputFileParser.hpp"   // for InputFileParser
 
 namespace molsys
@@ -51,19 +49,10 @@ namespace input
             std::shared_ptr<molsys::SimulationBox>
         );
 
-        static void parseCoulombRadius(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseNonCoulombRadius(
-            const std::vector<std::string> &,
-            size_t
-        );
-        void        parseDensity(const std::vector<std::string> &, size_t);
-        static void parseInitializeVelocities(
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addCoulombRadiusKey();
+        void addNonCoulombRadiusKey();
+        void addDensityKey();
+        void addInitializeVelocitiesKey();
     };
 
 }   // namespace input

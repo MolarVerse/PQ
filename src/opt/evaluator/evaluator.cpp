@@ -62,15 +62,13 @@ namespace opt
     }
 
     /**
-     * @brief set the cell list as shared pointer
+     * @brief set the cell list
      *
-     * @param cellList - std::shared_ptr<CellList>
+     * @param cellList - CellList&
      */
-    void Evaluator::setCellList(
-        const std::shared_ptr<molsys::CellList>& cellList
-    )
+    void Evaluator::setCellList(molsys::CellList& cellList)
     {
-        _cellList = cellList;
+        _cellList = &cellList;
     }
 
     /**

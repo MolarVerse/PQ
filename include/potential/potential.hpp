@@ -75,42 +75,42 @@ namespace pot
         std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
-        virtual ~Potential() = default;
+        virtual ~Potential();
 
         virtual void calculateForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &
         ) = 0;
 
         void calculateQMMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &
         );
 
         virtual void calculateCoreToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &
         ) = 0;
 
         virtual void calculateLayerToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &
         ) = 0;
 
         virtual void calculateOuterToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &
         ) = 0;
 
         virtual void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &
         ) = 0;
 
         [[nodiscard]]

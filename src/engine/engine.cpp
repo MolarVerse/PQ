@@ -25,6 +25,7 @@
 #include <filesystem>   // for remove
 #include <memory>
 
+#include "celllist.hpp"
 #include "fileSettings.hpp"   // for settings::FileSettings
 #include "logOutput.hpp"      // for LogOutput
 #include "potentialBruteForce.hpp"
@@ -33,6 +34,16 @@
 
 namespace engine
 {
+    /**
+     * @brief Implementation details for the Engine class.
+     *
+     * @details This struct holds the private members that are hidden
+     * from the public interface of the Engine class.
+     */
+    struct Engine::Impl
+    {
+        molsys::CellList cellList;
+    };
 
     /**
      * @brief Construct an Engine object with default simulation components.
@@ -41,15 +52,17 @@ namespace engine
      * cell list, intra-non-bonded handler, force field, and constraints.
      */
     Engine::Engine()
-        : _potential{std::make_shared<pot::PotentialBruteForce>()},
+        : _impl{std::make_unique<Impl>()},
+          _potential{std::make_shared<pot::PotentialBruteForce>()},
           _physicalData{std::make_shared<physicalData::PhysicalData>()},
           _simulationBox{std::make_shared<molsys::SimulationBox>()},
-          _cellList{std::make_shared<molsys::CellList>()},
           _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
           _forceField{std::make_shared<ff::ForceField>()},
           _constraints{std::make_shared<constraints::Constraints>()}
     {
     }
+
+    Engine::~Engine() = default;
 
     /**
      * @brief Calculate total simulation time.
@@ -346,12 +359,19 @@ namespace engine
     /**
      * @brief get the shared pointer to the cell list
      *
-     * @return const std::shared_ptr<CellList>&
+     * @return const molsys::CellList&
      */
-    const std::shared_ptr<molsys::CellList> &Engine::getCellList() const
+    const molsys::CellList &Engine::getCellList() const
     {
-        return _cellList;
+        return _impl->cellList;
     }
+
+    /**
+     * @brief get the reference to the cell list
+     *
+     * @return molsys::CellList&
+     */
+    molsys::CellList &Engine::getCellList() { return _impl->cellList; }
 
     /**
      * @brief get the shared pointer to the constraints
