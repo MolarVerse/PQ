@@ -138,11 +138,13 @@ namespace constraints
 
             if (!linalg::isFinite(_shakeDistanceRef) ||
                 0.0 == shakeDistanceRefSquared)
+            {
                 throw exc::ShakeException(
                     "Degenerate shake reference bond vector - the reference "
                     "distance is zero-length or non-finite, the simulation "
                     "has become unstable"
                 );
+            }
 
             const auto shakeForce =
                 delta / (sumInvMass) / shakeDistanceRefSquared;
