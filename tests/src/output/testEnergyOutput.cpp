@@ -150,7 +150,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::ManostatSettings::setManostatType("Berendsen");
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::Settings::setJobtype(settings::JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
@@ -193,7 +193,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::ManostatSettings::setManostatType("Berendsen");
+    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
     settings::Settings::setJobtype(settings::JobType::MM_MD);
 
@@ -241,7 +241,7 @@ TEST_F(TestEnergyOutput, qmActive)
 
     settings::ForceFieldSettings::deactivate();
     settings::Settings::setJobtype(settings::JobType::QM_MD);
-    settings::ManostatSettings::setManostatType("none");
+    settings::ManostatSettings::setManostatType(ManostatType::NONE);
 
     _energyOutput->setFilename("default.en");
     _energyOutput->write(100.0, *_physicalData);
@@ -282,7 +282,7 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     settings::ForceFieldSettings::deactivate();
     settings::Settings::setJobtype(settings::JobType::MM_MD);
     settings::Settings::deactivateRingPolymerMD();
-    settings::ManostatSettings::setManostatType("none");
+    settings::ManostatSettings::setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
         settings::ThermostatType::NOSE_HOOVER
     );

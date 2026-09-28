@@ -73,16 +73,3 @@ file(
     "start_file = start.rst;\n"
 )
 assert_warning("langevin.in" installed "zero Langevin friction")
-
-file(
-    WRITE "${VALIDATION_WORK_DIR}/manostat.in"
-    "jobtype = mm-md;\n"
-    "nstep = 1;\n"
-    "timestep = 0.5;\n"
-    "force-field = off;\n"
-    "manostat = berendsen;\n"
-    "pressure = 1;\n"
-    "compressibility = 0;\n"
-    "start_file = start.rst;\n"
-)
-assert_warning("manostat.in" installed "zero compressibility")

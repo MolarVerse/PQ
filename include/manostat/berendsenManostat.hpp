@@ -24,9 +24,6 @@
 
 #define _BERENDSEN_MANOSTAT_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
-
 #include "manostat.hpp"   // for Manostat
 
 namespace manostat
@@ -68,7 +65,6 @@ namespace manostat
         [[nodiscard]] double getCompressibility() const;
 
         [[nodiscard]] ManostatType getManostatType() const final;
-        [[nodiscard]] Isotropy     getIsotropy() const override;
     };
 
     /**
@@ -80,22 +76,18 @@ namespace manostat
     class SemiIsotropicBerendsenManostat : public BerendsenManostat
     {
        private:
-        size_t              _2DAnisotropicAxis;
-        std::vector<size_t> _2DIsotropicAxes;
+        Isotropy _isotropy;
 
        public:
         SemiIsotropicBerendsenManostat(
-            double                     targetPressure,
-            double                     tau,
-            double                     compressibility,
-            size_t                     anisotropicAxis,
-            const std::vector<size_t> &isotropicAxes,
-            FixedAxis                  fixedAxis
+            double    targetPressure,
+            double    tau,
+            double    compressibility,
+            Isotropy  isotropy,
+            FixedAxis fixedAxis
         );
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
-
-        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
     /**
@@ -110,8 +102,6 @@ namespace manostat
         using BerendsenManostat::BerendsenManostat;
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
-
-        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
     /**
@@ -129,8 +119,6 @@ namespace manostat
         using BerendsenManostat::BerendsenManostat;
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
-
-        [[nodiscard]] Isotropy getIsotropy() const final;
     };
 
 }   // namespace manostat
