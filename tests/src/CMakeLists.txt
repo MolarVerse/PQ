@@ -1,4 +1,5 @@
 add_subdirectory(setup)
+add_subdirectory(engine)
 add_subdirectory(QM)
 add_subdirectory(molsys)
 add_subdirectory(linearAlgebra)

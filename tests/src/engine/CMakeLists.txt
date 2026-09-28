@@ -1,0 +1,36 @@
+set(source_files
+    testEngine.cpp
+)
+
+foreach(source_file ${source_files})
+    get_filename_component(test_name ${source_file} NAME_WE)
+    add_executable(${test_name} ${source_file})
+    target_include_directories(${test_name}
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/tests/include/engine
+        ${PROJECT_SOURCE_DIR}/tests/include/macros
+    )
+    target_link_libraries(${test_name}
+        PRIVATE
+        engine
+        gtest
+        gmock
+        pq_test_main
+    )
+    add_test_with_gcda_cleanup(${test_name} ${test_name})
+    target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
+    target_link_libraries(${test_name} PRIVATE pq_test_pch)
+
+    set_property(TEST ${test_name} PROPERTY LABELS engine)
+endforeach()
+
+if(${BUILD_WITH_GCOVR})
+    include(CodeCoverage)
+    setup_target_for_coverage_gcovr_html(
+        NAME coverage_engine
+        EXCLUDE ${EXCLUDE_FOR_GCOVR}
+        EXECUTABLE "ctest"
+        EXECUTABLE_ARGS "-L;engine"
+        OUTPUT_PATH "coverage"
+    )
+endif()
