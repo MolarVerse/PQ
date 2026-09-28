@@ -121,7 +121,7 @@ namespace input
             .metadata     = metaData,
             .defaultValue = defaultValue,
             .onSet        = setValue,
-            .validator    = std::make_shared<RangeValidator<size_t>>(validator)
+            .validators   = {makeShared(validator)}
         });
 
         addKeyword(std::string("cell-number"), adapt(key), false);

@@ -95,7 +95,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaults::WOLF_PARAM_DEFAULT,
                 .onSet        = setValue,
-                .validator    = makeShared(PositiveGTDoubleValidator),
+                .validators   = {makeShared(PositiveGTDoubleValidator)},
             }
         );
 
@@ -124,7 +124,8 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaults::RF_EPSILON_DEFAULT,
                 .onSet        = setValue,
-                .validator = makeShared(GEDoubleValidator{1.0, std::nullopt}),
+                .validators =
+                    {makeShared(GEDoubleValidator{1.0, std::nullopt})},
             }
         );
 

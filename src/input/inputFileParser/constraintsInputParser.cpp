@@ -152,7 +152,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaultValue,
                 .onSet        = setValue,
-                .validator    = makeShared(rangeValidator)
+                .validators   = {makeShared(rangeValidator)}
             }
         );
 
@@ -185,7 +185,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaultValue,
                 .onSet        = setValue,
-                .validator    = makeShared(rangeValidator)
+                .validators   = {makeShared(rangeValidator)}
             }
         );
 
@@ -220,7 +220,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaultValue,
                 .onSet        = setValue,
-                .validator    = makeShared(rangeValidator)
+                .validators   = {makeShared(rangeValidator)}
             }
         );
 
@@ -253,7 +253,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaultValue,
                 .onSet        = setValue,
-                .validator    = makeShared(rangeValidator)
+                .validators   = {makeShared(rangeValidator)}
             }
         );
 
@@ -288,7 +288,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaultValue,
                 .onSet        = setValue,
-                .validator    = makeShared(rangeValidator)
+                .validators   = {makeShared(rangeValidator)}
             }
         );
 
@@ -321,7 +321,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaultValue,
                 .onSet        = setValue,
-                .validator    = makeShared(rangeValidator)
+                .validators   = {makeShared(rangeValidator)}
             }
         );
 

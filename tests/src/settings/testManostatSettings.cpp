@@ -25,48 +25,6 @@
 #include "enums/manostat.hpp"
 #include "manostatSettings.hpp"
 
-TEST(ManostatSettingsTest, SetManostatTypeViaString)
-{
-    settings::ManostatSettings::setManostatType("berendsen");
-    EXPECT_EQ(
-        settings::ManostatSettings::getManostatType(),
-        ManostatType::BERENDSEN
-    );
-
-    settings::ManostatSettings::setManostatType("stochastic_rescaling");
-    EXPECT_EQ(
-        settings::ManostatSettings::getManostatType(),
-        ManostatType::STOCHASTIC_RESCALING
-    );
-
-    settings::ManostatSettings::setManostatType("none");
-    EXPECT_EQ(
-        settings::ManostatSettings::getManostatType(),
-        ManostatType::NONE
-    );
-}
-
-TEST(ManostatSettingsTest, SetIsotropyViaString)
-{
-    settings::ManostatSettings::setIsotropy("isotropic");
-    EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ISOTROPIC);
-
-    settings::ManostatSettings::setIsotropy("semi_isotropic");
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC
-    );
-
-    settings::ManostatSettings::setIsotropy("anisotropic");
-    EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ANISOTROPIC);
-
-    settings::ManostatSettings::setIsotropy("full_anisotropic");
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::FULL_ANISOTROPIC
-    );
-}
-
 TEST(ManostatSettingsTest, DoubleSettersAndGetters)
 {
     settings::ManostatSettings::setTargetPressure(2.5);
@@ -77,18 +35,6 @@ TEST(ManostatSettingsTest, DoubleSettersAndGetters)
 
     settings::ManostatSettings::setCompressibility(4.5e-5);
     EXPECT_DOUBLE_EQ(settings::ManostatSettings::getCompressibility(), 4.5e-5);
-}
-
-TEST(ManostatSettingsTest, AnisotropicAxesSettersAndGetters)
-{
-    settings::ManostatSettings::set2DIsotropicAxes({0U, 1U});
-    EXPECT_EQ(
-        settings::ManostatSettings::get2DIsotropicAxes(),
-        (std::vector<size_t>{0U, 1U})
-    );
-
-    settings::ManostatSettings::set2DAnisotropicAxis(2U);
-    EXPECT_EQ(settings::ManostatSettings::get2DAnisotropicAxis(), 2U);
 }
 
 TEST(ManostatSettingsTest, SetFixedAxisViaEnum)

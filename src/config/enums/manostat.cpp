@@ -22,6 +22,62 @@
 
 #include "enums/manostat.hpp"
 
+#include <stdexcept>
+
+/**
+ * @brief checks if the given isotropy is semi-isotropic
+ *
+ * @param isotropy the isotropy to check
+ * @return true if the isotropy is semi-isotropic, false otherwise
+ */
+bool isSemiIsotropic(Isotropy isotropy)
+{
+    return isotropy == Isotropy::SEMI_ISOTROPIC_XY ||
+           isotropy == Isotropy::SEMI_ISOTROPIC_XZ ||
+           isotropy == Isotropy::SEMI_ISOTROPIC_YZ;
+}
+
+/**
+ * @brief gets the anisotropic axis for a given semi-isotropic isotropy
+ *
+ * @param isotropy the isotropy to check
+ * @return the index of the anisotropic axis (0 for X, 1 for Y, 2 for Z)
+ */
+size_t get2DAnisotropicAxis(Isotropy isotropy)
+{
+    switch (isotropy)
+    {
+        case Isotropy::SEMI_ISOTROPIC_XY: return 2;   // Z is anisotropic
+        case Isotropy::SEMI_ISOTROPIC_XZ: return 1;   // Y is anisotropic
+        case Isotropy::SEMI_ISOTROPIC_YZ: return 0;   // X is anisotropic
+        case Isotropy::ISOTROPIC:
+        case Isotropy::ANISOTROPIC:
+        case Isotropy::FULL_ANISOTROPIC:
+            throw std::runtime_error("Not a semi-isotropic isotropy");
+    }
+}
+
+/**
+ * @brief gets the isotropic axes for a given semi-isotropic isotropy
+ *
+ * @param isotropy the isotropy to check
+ * @return an array containing the indices of the isotropic axes (0 for X, 1 for
+ * Y, 2 for Z)
+ */
+std::array<size_t, 2> get2DIsotropicAxes(Isotropy isotropy)
+{
+    switch (isotropy)
+    {
+        case Isotropy::SEMI_ISOTROPIC_XY: return {0, 1};
+        case Isotropy::SEMI_ISOTROPIC_XZ: return {0, 2};
+        case Isotropy::SEMI_ISOTROPIC_YZ: return {1, 2};
+        case Isotropy::ISOTROPIC:
+        case Isotropy::ANISOTROPIC:
+        case Isotropy::FULL_ANISOTROPIC:
+            throw std::runtime_error("Not a semi-isotropic isotropy");
+    }
+}
+
 /**
  * @brief checks if a specific axis is fixed in the given FixedAxis bitmask
  *

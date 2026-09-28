@@ -436,7 +436,6 @@ namespace
         cli::ValidationResult        &result
     )
     {
-        using settings::ManostatSettings;
         using settings::ThermostatSettings;
         using settings::ThermostatType;
 
@@ -469,16 +468,6 @@ namespace
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero Langevin friction disables thermostat coupling",
-                 std::nullopt}
-            );
-        }
-
-        if (ManostatSettings::getManostatType() != ManostatType::NONE &&
-            utilities::isZero(ManostatSettings::getCompressibility()))
-        {
-            result.diagnostics.push_back(
-                {cli::ValidationSeverity::WARNING,
-                 "A zero compressibility disables cell response",
                  std::nullopt}
             );
         }

@@ -54,13 +54,13 @@ namespace input
     {
        public:
        private:
-        KeyMetadata                           _metadata;
-        std::optional<T>                      _default;
-        std::optional<T>                      _value;
-        std::vector<T>                        _notAllowed;
-        typename KeyRegistry<T>::CustomParser _customParser;
-        std::function<void(const T &)>        _onSet;
-        std::shared_ptr<KeyValidator<T>>      _validator;
+        KeyMetadata                                   _metadata;
+        std::optional<T>                              _default;
+        std::optional<T>                              _value;
+        std::vector<T>                                _notAllowed;
+        typename KeyRegistry<T>::CustomParser         _customParser;
+        std::function<void(const T &)>                _onSet;
+        std::vector<std::shared_ptr<KeyValidator<T>>> _validators;
 
        public:
         explicit InputKey(const KeyRegistry<T> &registry);

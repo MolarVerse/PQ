@@ -33,12 +33,12 @@ namespace input
     {
         using CustomParser = std::function<std::optional<T>(std::string_view)>;
 
-        KeyMetadata                      metadata;
-        std::optional<T>                 defaultValue = std::nullopt;
-        std::vector<T>                   notAllowed   = {};
-        CustomParser                     customParser = nullptr;
-        std::function<void(const T &)>   onSet        = nullptr;
-        std::shared_ptr<KeyValidator<T>> validator    = nullptr;
+        KeyMetadata                    metadata;
+        std::optional<T>               defaultValue              = std::nullopt;
+        std::vector<T>                 notAllowed                = {};
+        CustomParser                   customParser              = nullptr;
+        std::function<void(const T &)> onSet                     = nullptr;
+        std::vector<std::shared_ptr<KeyValidator<T>>> validators = {};
     };
 }   // namespace input
 

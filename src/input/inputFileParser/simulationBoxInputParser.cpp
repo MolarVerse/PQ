@@ -78,7 +78,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaults::COULOMB_CUT_OFF_DEFAULT,
                 .onSet        = setValue,
-                .validator    = makeShared(PositiveGTDoubleValidator)
+                .validators   = {makeShared(PositiveGTDoubleValidator)}
             }
         );
 
@@ -102,9 +102,9 @@ namespace input
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
-                .metadata  = metaData,
-                .onSet     = setValue,
-                .validator = makeShared(PositiveGTDoubleValidator)
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
             }
         );
 
@@ -130,9 +130,9 @@ namespace input
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
-                .metadata  = metaData,
-                .onSet     = setValue,
-                .validator = makeShared(PositiveGTDoubleValidator)
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
             }
         );
 

@@ -21,10 +21,7 @@
 ******************************************************************************/
 
 #ifndef _MANOSTAT_INPUT_PARSER_HPP_
-
 #define _MANOSTAT_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
 
 #include "inputFileParser.hpp"   // for InputFileParser
 
@@ -41,22 +38,12 @@ namespace input
        public:
         explicit ManostatInputParser();
 
-        static void parseManostat(const std::vector<std::string> &, size_t);
-
-        static void parsePressure(const std::vector<std::string> &, size_t);
-
-        static void parseManostatRelaxationTime(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseCompressibility(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseIsotropy(const std::vector<std::string> &, size_t);
-        static void parseFixedAxis(const std::vector<std::string> &, size_t);
+        void addManostatKey();
+        void addPressureKey();
+        void addManostatRelaxationTimeKey();
+        void addCompressibilityKey();
+        void addIsotropyKey();
+        void addFixedAxisKey();
     };
 
 }   // namespace input
