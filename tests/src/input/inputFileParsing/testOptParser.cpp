@@ -50,12 +50,12 @@ TEST_F(TestInputFileReader, parserOptimizer)
     parseFunc({"optimizer", "=", "steepest-descent"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"optimizer", "=", "adam"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getOptimizer(), ADAM);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"optimizer", "=", "notValid"}, 0),
@@ -94,12 +94,12 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
         CONSTANT_DECAY
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"learning-rate-strategy", "=", "constant"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getLearningRateStrategy(), CONSTANT);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"learning-rate-strategy", "=", "exponential-decay"}, 0);
     EXPECT_EQ(
@@ -107,7 +107,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
         EXPONENTIAL_DECAY
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"learning-rate-strategy", "=", "lineSearch-wolfe"}, 0);
     EXPECT_EQ(
@@ -115,7 +115,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
         LINESEARCH_WOLFE
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"learning-rate-strategy", "=", "linesearch"}, 0);
     EXPECT_EQ(
@@ -123,7 +123,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
         LINESEARCH_WOLFE
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"learning-rate-strategy", "=", "notValid"}, 0),
@@ -157,7 +157,7 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
     parseFunc({"initial-learning-rate", "=", "0.99"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getInitialLearningRate(), 0.99);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"initial-learning-rate", "=", "-0.99"}, 0),
@@ -191,7 +191,7 @@ TEST_F(TestInputFileReader, parserLearningRateDecay)
     parseFunc({"learning-rate-decay", "=", "0.99"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getLearningRateDecay(), 0.99);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"learning-rate-decay", "=", "-0.99"}, 0),
@@ -222,7 +222,7 @@ TEST_F(TestInputFileReader, parserMaxLearningRate)
     parseFunc({"max-learning-rate", "=", "0.99"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getMaxLearningRate(), 0.99);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"max-learning-rate", "=", "-0.99"}, 0),
@@ -256,7 +256,7 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
     parseFunc({"lr-update-frequency", "=", "100"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getLRUpdateFrequency(), 100);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"lr-update-frequency", "=", "-100"}, 0),
@@ -289,7 +289,7 @@ TEST_F(TestInputFileReader, parserMinLearningRate)
     parseFunc({"min-learning-rate", "=", "0.99"}, 0);
     EXPECT_EQ(settings::OptimizerSettings::getMinLearningRate(), 0.99);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"min-learning-rate", "=", "-0.99"}, 0),
