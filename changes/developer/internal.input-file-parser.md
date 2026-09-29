@@ -21,3 +21,4 @@
 - migrate `ManostatInputParser`
 - migrate `HessianInputParser`
 - migrate `OptInputParser`
+- migrate `ThermostatInputParser`
