@@ -26,7 +26,6 @@
 #include <optional>
 
 #include "constants/conversionFactors.hpp"
-#include "customValidator.hpp"
 #include "defaults.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"

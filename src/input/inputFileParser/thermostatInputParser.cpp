@@ -24,22 +24,16 @@
 
 #include <cmath>     // for sqrt
 #include <cstddef>   // for size_t, std
-#include <format>    // for format
 #include <limits>    // for numeric_limits
 #include <optional>
-#include <string_view>   // for string_view
 
 #include "constants.hpp"
-#include "customValidator.hpp"
-#include "exceptions.hpp"   // for InputFileException, customException
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
-#include "parserUtils.hpp"
 #include "rangeValidator.hpp"
 #include "references.hpp"           // for References
 #include "referencesOutput.hpp"     // for references::ReferencesOutput
-#include "stringUtilities.hpp"      // for toLowerCopy
 #include "thermostatSettings.hpp"   // for settings::ThermostatSettings
 
 namespace input

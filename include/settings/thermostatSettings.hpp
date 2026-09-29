@@ -28,7 +28,6 @@
 #include <cstdint>
 #include <map>   // for map
 #include <mstd/enum.hpp>
-#include <string>        // for string
 #include <string_view>   // for string_view
 
 #include "defaults.hpp"
