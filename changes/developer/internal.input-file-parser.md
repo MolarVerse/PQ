@@ -20,3 +20,4 @@
 - migrate `SimulationBoxInputParser`
 - migrate `ManostatInputParser`
 - migrate `HessianInputParser`
+- migrate `OptInputParser`

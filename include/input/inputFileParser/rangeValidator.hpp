@@ -115,6 +115,9 @@ namespace input
 
     using GEDoubleValidator = RangeValidator<double, Greater::GE>;
 
+    const auto SizeTValidatorExcludingZero =
+        RangeValidator<size_t, Greater::GT>{0, std::nullopt};
+
     const auto PositiveGTDoubleValidator =
         RangeValidator<double, Greater::GT>{0.0, std::nullopt};
 

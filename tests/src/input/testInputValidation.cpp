@@ -701,21 +701,6 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
     );
 }
 
-TEST_F(TestInputValidation, rejectsMissingLearningRateStrategy)
-{
-    settings::Settings::setJobtype(settings::JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(LearningRate::NONE);
-    _setKeyword("nstep");
-
-    ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        exc::UserInputException,
-        "In order to run the optimizer, you need to specify a learning rate "
-        "strategy."
-    );
-}
-
 TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
     settings::Settings::setJobtype(settings::JobType::MM_OPT);

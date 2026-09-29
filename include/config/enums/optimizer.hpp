@@ -23,8 +23,13 @@
 #ifndef _OPTIMIZER_ENUM_HPP_
 #define _OPTIMIZER_ENUM_HPP_
 
+#include <array>
 #include <cstdint>
 #include <mstd/enum.hpp>
+#include <string_view>
+#include <utility>
+
+#include "enums/base.hpp"
 
 /**
  * @brief enum OptimizerType
@@ -33,7 +38,6 @@
 enum class OptimizerType : std::uint8_t;
 
 #define OPTIMIZER_TYPE_LIST(X) \
-    X(NONE)                    \
     X(STEEPEST_DESCENT)        \
     X(ADAM)
 
@@ -48,13 +52,24 @@ MSTD_ENUM(OptimizerType, std::uint8_t, OPTIMIZER_TYPE_LIST)
 enum class LearningRate : std::uint8_t;
 
 #define LEARNING_RATE_LIST(X) \
-    X(NONE)                   \
     X(CONSTANT)               \
     X(CONSTANT_DECAY)         \
     X(EXPONENTIAL_DECAY)      \
     X(LINESEARCH_WOLFE)
 
 MSTD_ENUM(LearningRate, std::uint8_t, LEARNING_RATE_LIST)
+
+/**
+ * @brief Input alias for LearningRate enum
+ *
+ * @tparam LearningRate The enum type for which this input alias is defined.
+ */
+template <>
+struct InputAlias<LearningRate>
+{
+    static constexpr std::array<std::pair<std::string_view, LearningRate>, 1>
+        value{{{"linesearch", LearningRate::LINESEARCH_WOLFE}}};
+};
 
 #undef LEARNING_RATE_LIST
 
