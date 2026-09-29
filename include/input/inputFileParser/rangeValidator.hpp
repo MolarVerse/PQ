@@ -121,6 +121,9 @@ namespace input
     const auto PositiveGTDoubleValidator =
         RangeValidator<double, Greater::GT>{0.0, std::nullopt};
 
+    const auto PositiveGTEZeroDoubleValidator =
+        RangeValidator<double, Greater::GE>{0.0, std::nullopt};
+
 }   // namespace input
 
 #ifndef _RANGE_VALIDATOR_TPP_

@@ -151,11 +151,9 @@ namespace input
         const auto setValue = [](double relaxationTime)
         { settings::ManostatSettings::setTauManostat(relaxationTime); };
 
-        const auto maxValidator = CustomValidator<double>{
-            [](const double &value)
-            { return value <= std::numeric_limits<double>::max() / PS_TO_FS; },
-            "Relaxation time of manostat is too large to represent in "
-            "femtoseconds"
+        const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
+            0.0,
+            std::numeric_limits<double>::max() / PS_TO_FS
         };
 
         auto &key = _getRegistry().registerKey(
@@ -163,9 +161,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = 1.0,
                 .onSet        = setValue,
-                .validators =
-                    {makeShared(PositiveGTDoubleValidator),
-                     makeShared(maxValidator)}
+                .validators   = {makeShared(validator)}
             }
         );
 

@@ -82,7 +82,9 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"-100.0\" for key \"p_relaxation\" at line 0 in input "
-        "file: failed validation with message Value must be greater than 0"
+        "file: "
+        "failed validation with message Value must be between 0 and "
+        "1.7976931348623156e+305"
     );
 
     _clearParser(parser);
@@ -92,7 +94,8 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"0\" for key \"p_relaxation\" at line 0 in input file: "
-        "failed validation with message Value must be greater than 0"
+        "failed validation with message Value must be between 0 and "
+        "1.7976931348623156e+305"
     );
 
     _clearParser(parser);
@@ -102,8 +105,8 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"1e308\" for key \"p_relaxation\" at line 0 in input "
-        "file: failed validation with message Relaxation time of manostat is "
-        "too large to represent in femtoseconds"
+        "file: failed validation with message Value must be between 0 and "
+        "1.7976931348623156e+305"
     );
 }
 

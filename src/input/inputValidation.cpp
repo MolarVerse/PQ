@@ -247,7 +247,7 @@ namespace input
                 throw exc::InputFileException(
                     std::format(
                         "Target or end temperature not set for {} thermostat",
-                        string(thermostatType)
+                        settings::ThermostatTypeMeta::toString(thermostatType)
                     )
                 );
             }
@@ -260,7 +260,7 @@ namespace input
                         "thermostat. "
                         "They are mutually exclusive as they are treated as "
                         "synonyms",
-                        string(thermostatType)
+                        settings::ThermostatTypeMeta::toString(thermostatType)
                     )
                 );
             }
