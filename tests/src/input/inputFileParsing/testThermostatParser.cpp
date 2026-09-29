@@ -42,21 +42,31 @@ TEST_F(TestInputFileReader, testParseTemperature)
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), false);
 
     input::ThermostatInputParser parser;
-    std::vector<std::string>     lineElements = {"temp", "=", "300.0"};
-    input::ThermostatInputParser::parseTemperature(lineElements, 0);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("temp"));
+    const auto& parseFunc = funcMap.at("temp");
+
+    std::vector<std::string> lineElements = {"temp", "=", "300.0"};
+    parseFunc(lineElements, 0);
 
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), true);
     EXPECT_EQ(settings::ThermostatSettings::getTargetTemperature(), 300.0);
 
+    _clearParser(parser);
+
     lineElements = {"temp", "=", "-100.0"};
     EXPECT_THROW_MSG(
-        parser.parseTemperature(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Temperature must be finite and non-negative"
+        "Invalid value \"-100.0\" for key \"temp\" at line 0 in input file: "
+        "failed validation with message Value must be greater than or equal to "
+        "0"
     );
 
+    _clearParser(parser);
+
     lineElements = {"temp", "=", "0"};
-    EXPECT_NO_THROW(parser.parseTemperature(lineElements, 0));
+    EXPECT_NO_THROW(parseFunc(lineElements, 0));
 }
 
 /**
@@ -69,33 +79,45 @@ TEST_F(TestInputFileReader, testParseTemperature)
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
     input::ThermostatInputParser parser;
-    std::vector<std::string>     lineElements = {"t_relaxation", "=", "10.0"};
-    input::ThermostatInputParser::parseThermostatRelaxationTime(
-        lineElements,
-        0
-    );
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("t_relaxation"));
+    const auto& parseFunc = funcMap.at("t_relaxation");
+
+    std::vector<std::string> lineElements = {"t_relaxation", "=", "10.0"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0);
+
+    _clearParser(parser);
 
     lineElements = {"t_relaxation", "=", "-100.0"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatRelaxationTime(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Relaxation time of thermostat must be finite and greater than zero"
+        "Invalid value \"-100.0\" for key \"t_relaxation\" at line 0 in input "
+        "file: failed validation with message Value must be between 0 and "
+        "1.7976931348623156e+305"
     );
+
+    _clearParser(parser);
 
     lineElements = {"t_relaxation", "=", "1e308"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatRelaxationTime(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Relaxation time of thermostat is too large to represent in "
-        "femtoseconds"
+        "Invalid value \"1e308\" for key \"t_relaxation\" at line 0 in input "
+        "file: failed validation with message Value must be between 0 and "
+        "1.7976931348623156e+305"
     );
+
+    _clearParser(parser);
 
     lineElements = {"t_relaxation", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatRelaxationTime(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Relaxation time of thermostat must be finite and greater than zero"
+        "Invalid value \"0\" for key \"t_relaxation\" at line 0 in input file: "
+        "failed validation with message Value must be between 0 and "
+        "1.7976931348623156e+305"
     );
 }
 
@@ -109,55 +131,71 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
 TEST_F(TestInputFileReader, testParseThermostat)
 {
     input::ThermostatInputParser parser;
-    std::vector<std::string>     lineElements = {"thermostat", "=", "none"};
-    input::ThermostatInputParser::parseThermostat(lineElements, 0);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("thermostat"));
+    const auto& parseFunc = funcMap.at("thermostat");
+
+    std::vector<std::string> lineElements = {"thermostat", "=", "none"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
         settings::ThermostatType::NONE
     );
 
+    _clearParser(parser);
+
     lineElements = {"thermostat", "=", "berendsen"};
-    input::ThermostatInputParser::parseThermostat(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
         settings::ThermostatType::BERENDSEN
     );
 
+    _clearParser(parser);
+
     lineElements = {"thermostat", "=", "langevin"};
-    input::ThermostatInputParser::parseThermostat(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
         settings::ThermostatType::LANGEVIN
     );
 
+    _clearParser(parser);
+
     lineElements = {"thermostat", "=", "velocity_rescaling"};
-    input::ThermostatInputParser::parseThermostat(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
         settings::ThermostatType::VELOCITY_RESCALING
     );
+
+    _clearParser(parser);
 
     lineElements = {"thermostat", "=", "rescale"};
-    input::ThermostatInputParser::parseThermostat(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
         settings::ThermostatType::VELOCITY_RESCALING
     );
 
+    _clearParser(parser);
+
     lineElements = {"thermostat", "=", "nh-chain"};
-    input::ThermostatInputParser::parseThermostat(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
         settings::ThermostatType::NOSE_HOOVER
     );
 
+    _clearParser(parser);
+
     lineElements = {"thermostat", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseThermostat(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid thermostat \"notValid\" at line 0 in input file.\n"
-        "Possible options are: none, berendsen, "
-        "velocity_rescaling, langevin, nh-chain"
+        "Invalid value \"notValid\" for key \"thermostat\" at line 0 in input "
+        "file. Allowed values: none, berendsen, velocity_rescaling, langevin, "
+        "nose_hoover, nh_chain, rescale"
     );
 }
 
@@ -168,22 +206,34 @@ TEST_F(TestInputFileReader, testParseThermostat)
 TEST_F(TestInputFileReader, testParseFriction)
 {
     input::ThermostatInputParser parser;
-    std::vector<std::string>     lineElements = {"friction", "=", "0.1"};
-    input::ThermostatInputParser::parseThermostatFriction(lineElements, 0);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("friction"));
+    const auto& parseFunc = funcMap.at("friction");
+
+    std::vector<std::string> lineElements = {"friction", "=", "0.1"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getFriction(), 0.1 * 1.0e12);
+
+    _clearParser(parser);
 
     lineElements = {"friction", "=", "-0.1"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatFriction(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Friction of thermostat must be finite and non-negative"
+        "Invalid value \"-0.1\" for key \"friction\" at line 0 in input file: "
+        "failed validation with message Value must be between 0 and "
+        "1.797693134862316e+296"
     );
+
+    _clearParser(parser);
 
     lineElements = {"friction", "=", "1e308"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatFriction(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Friction of thermostat is too large to represent in inverse seconds"
+        "Invalid value \"1e308\" for key \"friction\" at line 0 in input file: "
+        "failed validation with message Value must be between 0 and "
+        "1.797693134862316e+296"
     );
 }
 
@@ -196,22 +246,33 @@ TEST_F(TestInputFileReader, testParseFriction)
 TEST_F(TestInputFileReader, testParseChainLength)
 {
     input::ThermostatInputParser parser;
-    std::vector<std::string>     lineElements = {"nh-chain-length", "=", "10"};
-    input::ThermostatInputParser::parseThermostatChainLength(lineElements, 0);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("nh_chain_length"));
+    const auto& parseFunc = funcMap.at("nh_chain_length");
+
+    std::vector<std::string> lineElements = {"nh-chain-length", "=", "10"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getNoseHooverChainLength(), 10);
+
+    _clearParser(parser);
 
     lineElements = {"nh-chain-length", "=", "-10"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatChainLength(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Chain length of thermostat must be greater than zero"
+        "Invalid value \"-10\" for key \"nh_chain_length\" at line 0 in input "
+        "file. Value must be a positive integer"
     );
+
+    _clearParser(parser);
 
     lineElements = {"nh-chain-length", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatChainLength(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Chain length of thermostat must be greater than zero"
+        "Invalid value \"0\" for key \"nh_chain_length\" at line 0 in input "
+        "file: failed validation with message Value must be greater than or "
+        "equal to 1"
     );
 }
 
@@ -222,28 +283,37 @@ TEST_F(TestInputFileReader, testParseChainLength)
 TEST_F(TestInputFileReader, testParseCouplingFrequency)
 {
     input::ThermostatInputParser parser;
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("coupling_frequency"));
+    const auto& parseFunc = funcMap.at("coupling_frequency");
+
     std::vector<std::string> lineElements = {"coupling_frequency", "=", "10"};
-    input::ThermostatInputParser::parseThermostatCouplingFrequency(
-        lineElements,
-        0
-    );
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getNoseHooverCouplingFrequency(),
         10
     );
 
+    _clearParser(parser);
+
     lineElements = {"coupling_frequency", "=", "-10"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatCouplingFrequency(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Coupling frequency of thermostat must be finite and non-negative"
+        "Invalid value \"-10\" for key \"coupling_frequency\" at line 0 in "
+        "input file: failed validation with message Value must be between 0 "
+        "and 4.47236332074191e+143"
     );
+
+    _clearParser(parser);
 
     lineElements = {"coupling_frequency", "=", "1e308"};
     EXPECT_THROW_MSG(
-        parser.parseThermostatCouplingFrequency(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Coupling frequency of thermostat is too large to represent in hertz"
+        "Invalid value \"1e308\" for key \"coupling_frequency\" at line 0 in "
+        "input file: failed validation with message Value must be between 0 "
+        "and 4.47236332074191e+143"
     );
 }
 
@@ -256,15 +326,22 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
 TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 {
     input::ThermostatInputParser parser;
-    std::vector<std::string>     lineElements = {"temp_ramp_steps", "=", "10"};
-    input::ThermostatInputParser::parseTemperatureRampSteps(lineElements, 0);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("temp_ramp_steps"));
+    const auto& parseFunc = funcMap.at("temp_ramp_steps");
+
+    std::vector<std::string> lineElements = {"temp_ramp_steps", "=", "10"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampSteps(), 10);
+
+    _clearParser(parser);
 
     lineElements = {"temp_ramp_steps", "=", "-10"};
     EXPECT_THROW_MSG(
-        parser.parseTemperatureRampSteps(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Temperature ramp steps cannot be negative"
+        "Invalid value \"-10\" for key \"temp_ramp_steps\" at line 0 in input "
+        "file. Value must be a positive integer"
     );
 }
 
@@ -277,25 +354,33 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 {
     input::ThermostatInputParser parser;
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("temp_ramp_frequency"));
+    const auto& parseFunc = funcMap.at("temp_ramp_frequency");
+
     std::vector<std::string> lineElements = {"temp_ramp_frequency", "=", "10"};
-    input::ThermostatInputParser::parseTemperatureRampFrequency(
-        lineElements,
-        0
-    );
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getTemperatureRampFrequency(), 10);
+
+    _clearParser(parser);
 
     lineElements = {"temp_ramp_frequency", "=", "-10"};
     EXPECT_THROW_MSG(
-        parser.parseTemperatureRampFrequency(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Temperature ramp frequency must be greater than zero"
+        "Invalid value \"-10\" for key \"temp_ramp_frequency\" at line 0 in "
+        "input file. Value must be a positive integer"
     );
+
+    _clearParser(parser);
 
     lineElements = {"temp_ramp_frequency", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseTemperatureRampFrequency(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Temperature ramp frequency must be greater than zero"
+        "Invalid value \"0\" for key \"temp_ramp_frequency\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
     );
 }
 
@@ -308,19 +393,29 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 TEST_F(TestInputFileReader, testParseStartTemperature)
 {
     input::ThermostatInputParser parser;
-    std::vector<std::string> lineElements = {"start_temperature", "=", "10"};
-    input::ThermostatInputParser::parseStartTemperature(lineElements, 0);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("start_temp"));
+    const auto& parseFunc = funcMap.at("start_temp");
+
+    std::vector<std::string> lineElements = {"start_temp", "=", "10"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getStartTemperature(), 10);
 
-    lineElements = {"start_temperature", "=", "-10"};
+    _clearParser(parser);
+
+    lineElements = {"start_temp", "=", "-10"};
     EXPECT_THROW_MSG(
-        parser.parseStartTemperature(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Start temperature must be finite and non-negative"
+        "Invalid value \"-10\" for key \"start_temp\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "or equal to 0"
     );
 
+    _clearParser(parser);
+
     lineElements = {"start_temp", "=", "0"};
-    EXPECT_NO_THROW(parser.parseStartTemperature(lineElements, 0));
+    EXPECT_NO_THROW(parseFunc(lineElements, 0));
 }
 
 /**
@@ -332,17 +427,27 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
 TEST_F(TestInputFileReader, testParseEndTemperature)
 {
     input::ThermostatInputParser parser;
-    std::vector<std::string>     lineElements = {"end_temperature", "=", "10"};
-    input::ThermostatInputParser::parseEndTemperature(lineElements, 0);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("end_temperature"));
+    const auto& parseFunc = funcMap.at("end_temperature");
+
+    std::vector<std::string> lineElements = {"end_temperature", "=", "10"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getEndTemperature(), 10);
+
+    _clearParser(parser);
 
     lineElements = {"end_temperature", "=", "-10"};
     EXPECT_THROW_MSG(
-        parser.parseEndTemperature(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "End temperature must be finite and non-negative"
+        "Invalid value \"-10\" for key \"end_temperature\" at line 0 in input "
+        "file: failed validation with message Value must be greater than or "
+        "equal to 0"
     );
 
+    _clearParser(parser);
+
     lineElements = {"end_temp", "=", "0"};
-    EXPECT_NO_THROW(parser.parseEndTemperature(lineElements, 0));
+    EXPECT_NO_THROW(parseFunc(lineElements, 0));
 }

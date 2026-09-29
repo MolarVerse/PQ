@@ -315,7 +315,10 @@ namespace setup
         else
         {
             log.writeSetupInfo(
-                std::format("Thermostat type: {}", string(thermostatType))
+                std::format(
+                    "Thermostat type: {}",
+                    settings::ThermostatTypeMeta::toString(thermostatType)
+                )
             );
             log.writeEmptyLine();
         }

@@ -24,8 +24,6 @@
 
 #define _THERMOSTAT_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
-
 #include "inputFileParser.hpp"   // for InputFileParser
 
 namespace input
@@ -41,40 +39,16 @@ namespace input
        public:
         ThermostatInputParser();
 
-        static void parseThermostat(const std::vector<std::string> &, size_t);
-        static void parseTemperature(const std::vector<std::string> &, size_t);
-        static void parseStartTemperature(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseEndTemperature(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseTemperatureRampSteps(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseTemperatureRampFrequency(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseThermostatRelaxationTime(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseThermostatFriction(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseThermostatChainLength(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseThermostatCouplingFrequency(
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addThermostatKey();
+        void addTemperatureKey();
+        void addStartTemperatureKey();
+        void addEndTemperatureKey();
+        void addTemperatureRampStepsKey();
+        void addTemperatureRampFrequencyKey();
+        void addThermostatRelaxationTimeKey();
+        void addThermostatFrictionKey();
+        void addThermostatChainLengthKey();
+        void addThermostatCouplingFrequencyKey();
     };
 
 }   // namespace input

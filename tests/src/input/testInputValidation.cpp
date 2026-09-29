@@ -230,7 +230,7 @@ TEST_F(TestInputValidation, requiresTemperatureForThermostat)
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
         exc::InputFileException,
-        "Target or end temperature not set for berendsen thermostat"
+        "Target or end temperature not set for BERENDSEN thermostat"
     );
 }
 
@@ -245,7 +245,7 @@ TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
         exc::InputFileException,
-        "Both target and end temperature set for berendsen thermostat. They "
+        "Both target and end temperature set for BERENDSEN thermostat. They "
         "are mutually exclusive as they are treated as synonyms"
     );
 }
