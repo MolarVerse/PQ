@@ -397,3 +397,78 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
         "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
 }
+
+TEST_F(ExternalQMRunnerTest, rejectsUniaxialPeriodicity)
+{
+    EXPECT_THROW_MSG(
+        _runner.run(_simulationBox, _physicalData, molsys::Periodicity::X),
+        exc::QMRunnerException,
+        "External QM runners only available for non- and 3D-periodic "
+        "calculations."
+    );
+}
+
+TEST_F(ExternalQMRunnerTest, rejectsBiaxialPeriodicity)
+{
+    EXPECT_THROW_MSG(
+        _runner.run(_simulationBox, _physicalData, molsys::Periodicity::XY),
+        exc::QMRunnerException,
+        "External QM runners only available for non- and 3D-periodic "
+        "calculations."
+    );
+}
+
+TEST_F(ExternalQMRunnerTest, dftbExecuteRejectsMissingScript)
+{
+    const auto scriptDirectory = (_workPath / "no-such-directory").string();
+    _dftbRunner.setScriptPath(scriptDirectory + '/');
+    settings::QMSettings::setQMScript("this-script-does-not-exist.sh");
+
+    EXPECT_THROW_MSG(
+        _dftbRunner.execute(_simulationBox),
+        exc::InputFileException,
+        std::format(
+            "DFTB+ script file \"{}/this-script-does-not-exist.sh\" does "
+            "not exist.",
+            scriptDirectory
+        )
+    );
+}
+
+TEST_F(ExternalQMRunnerTest, pyscfExecuteRejectsMissingScript)
+{
+    const auto scriptDirectory = (_workPath / "no-such-directory").string();
+
+    auto runner = QM::PySCFRunner();
+    runner.setScriptPath(scriptDirectory + '/');
+    settings::QMSettings::setQMScript("this-script-does-not-exist.py");
+
+    EXPECT_THROW_MSG(
+        runner.execute(_simulationBox),
+        exc::InputFileException,
+        std::format(
+            "PySCF script file \"{}/this-script-does-not-exist.py\" does "
+            "not exist.",
+            scriptDirectory
+        )
+    );
+}
+
+TEST_F(ExternalQMRunnerTest, turbomoleExecuteRejectsMissingScript)
+{
+    const auto scriptDirectory = (_workPath / "no-such-directory").string();
+
+    auto runner = QM::TurbomoleRunner();
+    runner.setScriptPath(scriptDirectory + '/');
+    settings::QMSettings::setQMScript("this-script-does-not-exist.sh");
+
+    EXPECT_THROW_MSG(
+        runner.execute(_simulationBox),
+        exc::InputFileException,
+        std::format(
+            "Turbomole script file \"{}/this-script-does-not-exist.sh\" "
+            "does not exist.",
+            scriptDirectory
+        )
+    );
+}
