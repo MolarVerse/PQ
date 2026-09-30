@@ -71,25 +71,28 @@ size_t get2DAnisotropicAxis(Isotropy isotropy);
 [[nodiscard]]
 std::array<size_t, 2> get2DIsotropicAxes(Isotropy isotropy);
 
-/**
- * @brief Input aliases for the Isotropy enum
- *
- * @details This specialization of the InputAlias template provides string
- * aliases for the Isotropy enum values, allowing for more flexible input
- * parsing.
- */
-template <>
-struct mstd::EnumAliases<Isotropy>
+namespace mstd
 {
-    static constexpr auto value = mstd::makeAliases<Isotropy>(
-        {{"xy", Isotropy::SEMI_ISOTROPIC_XY},
-         {"yx", Isotropy::SEMI_ISOTROPIC_XY},
-         {"xz", Isotropy::SEMI_ISOTROPIC_XZ},
-         {"zx", Isotropy::SEMI_ISOTROPIC_XZ},
-         {"yz", Isotropy::SEMI_ISOTROPIC_YZ},
-         {"zy", Isotropy::SEMI_ISOTROPIC_YZ}}
-    );
-};
+    /**
+     * @brief Input aliases for the Isotropy enum
+     *
+     * @details This specialization of the InputAlias template provides string
+     * aliases for the Isotropy enum values, allowing for more flexible input
+     * parsing.
+     */
+    template <>
+    struct EnumAliases<Isotropy>
+    {
+        static constexpr auto value = makeAliases<Isotropy>(
+            {{"xy", Isotropy::SEMI_ISOTROPIC_XY},
+             {"yx", Isotropy::SEMI_ISOTROPIC_XY},
+             {"xz", Isotropy::SEMI_ISOTROPIC_XZ},
+             {"zx", Isotropy::SEMI_ISOTROPIC_XZ},
+             {"yz", Isotropy::SEMI_ISOTROPIC_YZ},
+             {"zy", Isotropy::SEMI_ISOTROPIC_YZ}}
+        );
+    };
+}   // namespace mstd
 
 #undef ISOTROPY_LIST
 
