@@ -26,6 +26,7 @@
 #include <utility>
 
 #include "dftbplusRunner.hpp"   // for DFTBPlusRunner
+#include "enums/qm.hpp"
 #include "exceptions.hpp"   // for InputFileException, exc::CompileTimeException
 #include "pyscfRunner.hpp"       // for PySCFRunner
 #include "qmSettings.hpp"        // for settings::QMSettings
@@ -51,18 +52,18 @@ namespace engine
      * @throws InputFileException if the method is not supported
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(
-        settings::QMMethod method
+        QMMethod method
     )
     {
-        using enum settings::QMMethod;
+        using enum QMMethod;
 
         switch (method)
         {
             case DFTBPLUS: return std::make_shared<QM::DFTBPlusRunner>();
 
-            case ASEDFTBPLUS: return createAseDftbRunner();
+            case ASE_DFTBPLUS: return createAseDftbRunner();
 
-            case ASEXTB: return createAseXtbRunner();
+            case ASE_XTB: return createAseXtbRunner();
 
             case PYSCF: return std::make_shared<QM::PySCFRunner>();
 
@@ -91,14 +92,17 @@ namespace engine
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner()
     {
 #ifdef WITH_ASE
-        const auto modelType = string(settings::QMSettings::getMaceModelType());
+        const auto modelType = MaceModelTypeMeta::toString(
+            settings::QMSettings::getMaceModelType()
+        );
         const auto modelPath = settings::QMSettings::getMaceModelPath();
         const auto useDFTD   = settings::QMSettings::useDispersionCorr();
         const auto fpType = settings::Settings::getFloatingPointPybindString();
         const auto useCueq =
-            settings::QMSettings::getMaceMode() == settings::MaceMode::FAST;
+            settings::QMSettings::getMaceMode() == MaceMode::FAST;
 
-        auto maceModel = string(settings::QMSettings::getMaceModel());
+        auto maceModel =
+            MaceModelMeta::toString(settings::QMSettings::getMaceModel());
 
         if (!modelPath.empty())
             maceModel = modelPath;
@@ -160,7 +164,8 @@ namespace engine
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseXtbRunner()
     {
 #ifdef WITH_ASE
-        const auto xtbMethod = string(settings::QMSettings::getXtbMethod());
+        const auto xtbMethod =
+            XtbMethodMeta::toString(settings::QMSettings::getXtbMethod());
 
         return std::make_shared<QM::AseXtbRunner>(xtbMethod);
 #else

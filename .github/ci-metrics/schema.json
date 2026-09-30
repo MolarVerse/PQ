@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ci-metrics/job-record.v1",
+  "title": "CI job timing record (schema_version 1)",
+  "description": "One line of a data/<ISO-week>.jsonl file: the timing of one finished GitHub Actions job. See SCHEMA.md for how each field is derived.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "workflow",
+    "run_id",
+    "run_number",
+    "run_attempt",
+    "event",
+    "branch",
+    "head_sha",
+    "pr_number",
+    "job_id",
+    "job",
+    "runner_labels",
+    "arch",
+    "created_at",
+    "started_at",
+    "completed_at",
+    "queue_s",
+    "duration_s",
+    "conclusion",
+    "steps",
+    "flags"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "kind": { "const": "job" },
+    "workflow": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "integer", "minimum": 1 },
+    "run_number": { "type": "integer", "minimum": 1 },
+    "run_attempt": { "type": "integer", "minimum": 1 },
+    "event": {
+      "enum": ["pull_request", "push", "schedule", "workflow_dispatch"]
+    },
+    "branch": { "type": "string", "minLength": 1 },
+    "head_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "pr_number": { "type": ["integer", "null"], "minimum": 1 },
+    "job_id": { "type": "integer", "minimum": 1 },
+    "job": { "type": "string", "minLength": 1 },
+    "runner_labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "arch": { "enum": ["x86_64", "arm64"] },
+    "created_at": { "$ref": "#/definitions/timestamp" },
+    "started_at": { "$ref": "#/definitions/timestamp" },
+    "completed_at": { "$ref": "#/definitions/timestamp" },
+    "queue_s": { "type": "integer", "minimum": 0 },
+    "duration_s": { "type": "integer", "minimum": 0 },
+    "conclusion": {
+      "enum": [
+        "success",
+        "failure",
+        "cancelled",
+        "timed_out",
+        "neutral",
+        "action_required"
+      ]
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "seconds", "conclusion"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "seconds": { "type": "integer", "minimum": 0 },
+          "conclusion": { "enum": ["success", "failure", "cancelled"] }
+        }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eigen_cache_hit", "is_rerun", "infra_failure"],
+      "properties": {
+        "eigen_cache_hit": { "type": ["boolean", "null"] },
+        "is_rerun": { "type": "boolean" },
+        "infra_failure": { "type": ["boolean", "null"] }
+      }
+    }
+  },
+  "definitions": {
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    }
+  }
+}

@@ -251,7 +251,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} stress tensor \"{}\"",
-                    string(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     stressFileName
                 )
             );
@@ -266,7 +266,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Incomplete {} stress tensor \"{}\"",
-                    string(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     stressFileName
                 )
             );
@@ -281,7 +281,9 @@ namespace QM
                     throw exc::QMRunnerException(
                         std::format(
                             "Invalid value in {} stress tensor \"{}\"",
-                            string(settings::QMSettings::getQMMethod()),
+                            QMMethodMeta::toString(
+                                settings::QMSettings::getQMMethod()
+                            ),
                             stressFileName
                         )
                     );

@@ -28,6 +28,7 @@
 
 #include "engine.hpp"   // for Engine
 #include "enums/hybrid.hpp"
+#include "enums/qm.hpp"
 #include "exceptions.hpp"       // for InputFileException
 #include "hybridSettings.hpp"   // for settings::HybridSettings
 #include "qmSettings.hpp"       // for QMSettings
@@ -86,14 +87,14 @@ namespace setup
      */
     void HybridSetup::validateQMMethod()
     {
-        using enum settings::QMMethod;
+        using enum QMMethod;
 
         const auto qmMethod = settings::QMSettings::getQMMethod();
         const auto errorMsg = std::format(
             "QM method \"{}\" is not supported for hybrid type "
             "calculations. Supported QM methods are \"dftbplus\" and "
             "\"turbomole\".",
-            string(qmMethod)
+            QMMethodMeta::toString(qmMethod)
 
         );
 
@@ -104,8 +105,8 @@ namespace setup
         case TURBOMOLE: 
             break;
         case PYSCF:
-        case ASEDFTBPLUS:
-        case ASEXTB:
+        case ASE_DFTBPLUS:
+        case ASE_XTB:
         case MACE:
         case FENNOL:
         case NONE:

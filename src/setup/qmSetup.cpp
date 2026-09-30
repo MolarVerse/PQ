@@ -25,17 +25,18 @@
 #include <format>        // for format
 #include <string_view>   // for string_view
 
-#include "engine.hpp"              // for Engine
+#include "engine.hpp"   // for Engine
+#include "enums/qm.hpp"
 #include "exceptions.hpp"          // for exc::InputFileException
 #include "externalQMRunner.hpp"    // for ExternalQMRunner
 #include "potentialSettings.hpp"   // for settings::PotentialSettings
 #include "qmCapableEngine.hpp"     // for QMCapableEngine
-#include "qmSettings.hpp"   // for settings::QMMethod, settings::QMSettings
-#include "references.hpp"   // for references::ReferencesOutput
-#include "referencesOutput.hpp"   // for references::ReferencesOutput
-#include "settings.hpp"           // for settings::Settings
-#include "stdoutOutput.hpp"       // for StdoutOutput
-#include "stringUtilities.hpp"    // for toLowerCopy
+#include "qmSettings.hpp"          // for QMMethod, settings::QMSettings
+#include "references.hpp"          // for references::ReferencesOutput
+#include "referencesOutput.hpp"    // for references::ReferencesOutput
+#include "settings.hpp"            // for settings::Settings
+#include "stdoutOutput.hpp"        // for StdoutOutput
+#include "stringUtilities.hpp"     // for toLowerCopy
 
 namespace setup
 {
@@ -114,12 +115,10 @@ namespace setup
      */
     void QMSetup::setupQMMethodAseDftbPlus()
     {
-        if (!(settings::QMSettings::getQMMethod() ==
-              settings::QMMethod::ASEDFTBPLUS))
+        if (!(settings::QMSettings::getQMMethod() == QMMethod::ASE_DFTBPLUS))
             return;
 
-        if (settings::QMSettings::getSlakosType() ==
-                settings::SlakosType::THREEOB &&
+        if (settings::QMSettings::getSlakosType() == SlakosType::THREEOB &&
             !settings::QMSettings::isThirdOrderDftbSet())
             settings::QMSettings::setUseThirdOrderDftb(true);
     }
@@ -130,25 +129,22 @@ namespace setup
      */
     void QMSetup::setupQMMethodAseXtb()
     {
-        if (!(settings::QMSettings::getQMMethod() == settings::QMMethod::ASEXTB
-            ))
+        if (!(settings::QMSettings::getQMMethod() == QMMethod::ASE_XTB))
             return;
 
-        if (settings::QMSettings::getXtbMethod() == settings::XtbMethod::GFN1)
+        if (settings::QMSettings::getXtbMethod() == XtbMethod::GFN1)
         {
             references::ReferencesOutput::addReferenceFile(
                 references::GFN1_FILE
             );
         }
-        else if (settings::QMSettings::getXtbMethod() ==
-                 settings::XtbMethod::GFN2)
+        else if (settings::QMSettings::getXtbMethod() == XtbMethod::GFN2)
         {
             references::ReferencesOutput::addReferenceFile(
                 references::GFN2_FILE
             );
         }
-        else if (settings::QMSettings::getXtbMethod() ==
-                 settings::XtbMethod::IPEA1)
+        else if (settings::QMSettings::getXtbMethod() == XtbMethod::IPEA1)
         {
             references::ReferencesOutput::addReferenceFile(
                 references::IPEA1_FILE
@@ -288,7 +284,7 @@ namespace setup
      */
     void QMSetup::setupWriteInfo() const
     {
-        using enum settings::QMMethod;
+        using enum QMMethod;
 
         // Cast QMCapableEngine to Engine to access output methods
         auto &engine    = dynamic_cast<engine::Engine &>(_qmCapableEngine);
@@ -296,7 +292,7 @@ namespace setup
 
         const auto qmMethod = settings::QMSettings::getQMMethod();
         const auto qmRunnerMessage =
-            std::format("QM runner: {}", string(qmMethod));
+            std::format("QM runner: {}", QMMethodMeta::toString(qmMethod));
 
         logOutput.writeSetupInfo(qmRunnerMessage);
         logOutput.writeEmptyLine();
@@ -321,25 +317,25 @@ namespace setup
                 settings::QMSettings::useDispersionCorr() ? "on" : "off";
 
             // clang-format off
-        const auto modelTypeMsg = std::format("Model type:            {}", string(modelType));
-        const auto modelSizeMsg = std::format("Model size:            {}", string(modelSize));
+        const auto modelTypeMsg = std::format("Model type:            {}", MaceModelTypeMeta::toString(modelType));
+        const auto modelSizeMsg = std::format("Model size:            {}", MaceModelMeta::toString(modelSize));
         const auto modelPathMsg = std::format("Model path:            {}", modelPath);
         const auto fpMsg        = std::format("Floating point type:   {}", floatingPointStr);
         const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
-        const auto modeMsg      = std::format("Evaluation mode:       {}", string(maceMode));
+        const auto modeMsg      = std::format("Evaluation mode:       {}", MaceModeMeta::toString(maceMode));
             // clang-format on
 
             logOutput.writeSetupInfo(modelTypeMsg);
             logOutput.writeSetupInfo(modelSizeMsg);
 
-            if (modelSize == settings::MaceModel::CUSTOM)
+            if (modelSize == MaceModel::CUSTOM)
                 logOutput.writeSetupInfo(modelPathMsg);
 
             logOutput.writeSetupInfo(fpMsg);
             logOutput.writeSetupInfo(dispCorrMsg);
             logOutput.writeSetupInfo(modeMsg);
 
-            if (maceMode == settings::MaceMode::FAST)
+            if (maceMode == MaceMode::FAST)
             {
                 logOutput.writeSetupInfo(
                     std::format(
@@ -373,7 +369,7 @@ namespace setup
             logOutput.writeSetupInfo(fpMsg);
         }
 
-        if (qmMethod == ASEDFTBPLUS)
+        if (qmMethod == ASE_DFTBPLUS)
         {
             const auto slakosType = settings::QMSettings::getSlakosType();
             const auto slakosPath = settings::QMSettings::getSlakosPath();
@@ -384,7 +380,7 @@ namespace setup
             const auto dispersion = settings::QMSettings::useDispersionCorr();
 
             // clang-format off
-        const auto slakosTypeMsg           = std::format("DFTB approach:        {}", string(slakosType));
+        const auto slakosTypeMsg           = std::format("DFTB approach:        {}", SlakosTypeMeta::toString(slakosType));
         const auto slakosPathMsg           = std::format("sk file path:         {}", slakosPath);
         const auto dispersionMsg           = std::format("Dispersion is turned: {}", dispersion ? "on" : "off");
         const auto thirdOrderMsg           = std::format("3rd order is turned:  {}", thirdOrder ? "on" : "off");
@@ -401,15 +397,14 @@ namespace setup
                 logOutput.writeSetupInfo(hubbardDerivsMsg);
 
             // Warnings for non-recommended setups
-            if (slakosType == settings::SlakosType::THREEOB && !thirdOrder)
+            if (slakosType == SlakosType::THREEOB && !thirdOrder)
             {
                 logOutput.writeEmptyLine();
                 logOutput.writeSetupWarning(threeOBThirdOrderMsg);
                 out::StdoutOutput::writeSetupWarning(threeOBThirdOrderMsg);
             }
 
-            if (slakosType == settings::SlakosType::THREEOB &&
-                ishubbardDerivsSet)
+            if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
             {
                 logOutput.writeEmptyLine();
                 logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
@@ -417,12 +412,12 @@ namespace setup
             }
         }
 
-        if (qmMethod == ASEXTB)
+        if (qmMethod == ASE_XTB)
         {
             const auto xtbMethod = settings::QMSettings::getXtbMethod();
 
             // clang-format off
-        const auto xtbMethodMsg = std::format("xTB Parametrization:   {}", string(xtbMethod));
+        const auto xtbMethodMsg = std::format("xTB Parametrization:   {}", XtbMethodMeta::toString(xtbMethod));
             // clang-format on
 
             logOutput.writeSetupInfo(xtbMethodMsg);
