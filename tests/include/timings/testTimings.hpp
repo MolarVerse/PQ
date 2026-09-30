@@ -38,14 +38,14 @@
 class TestTimingsSection : public ::testing::Test
 {
    protected:
+    timings::TimingsSection *_section;
+
     void SetUp() override
     {
         _section = new timings::TimingsSection("test-section");
     }
 
     void TearDown() override { delete _section; }
-
-    timings::TimingsSection *_section;
 };
 
 /**
@@ -57,11 +57,10 @@ class TestTimingsSection : public ::testing::Test
 class TestTimer : public ::testing::Test
 {
    protected:
-    void SetUp() override { _timer = new timings::Timer(); }
+    timings::Timer *_timer;
+    void            SetUp() override { _timer = new timings::Timer(); }
 
     void TearDown() override { delete _timer; }
-
-    timings::Timer *_timer;
 };
 
 #endif   // _TEST_TIMINGS_HPP_
