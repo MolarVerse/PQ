@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "atom.hpp"
+#include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "hybridSetup.hpp"
 #include "inputFileParser/hybridInputParser.hpp"
@@ -56,7 +57,7 @@ namespace
     void configureValidHybridSettings(engine::Engine &engine)
     {
         settings::Settings::setJobtype(settings::JobType::QMMM_MD);
-        settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+        settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
         settings::HybridSettings::setForcedCoreList({});
         settings::HybridSettings::setForcedLayerList({});
         settings::HybridSettings::setForcedOuterList({});
@@ -185,7 +186,7 @@ TEST_F(TestSetup, setupThrowsNotImplemented)
     EXPECT_THROW_MSG(
         hybridSetup.setup(),
         exc::InputFileException,
-        "QM method \"none\" is not supported for hybrid type calculations. "
+        "QM method \"NONE\" is not supported for hybrid type calculations. "
         "Supported QM methods are \"dftbplus\" and \"turbomole\"."
     );
 }
@@ -205,7 +206,7 @@ TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
 {
     configureValidHybridSettings(*_engine);
-    settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
+    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
     settings::HybridSettings::setInnerRegionCenter({0, 1});
     settings::HybridSettings::setForcedCoreList({0});
     settings::HybridSettings::setForcedLayerList({1});
@@ -225,12 +226,12 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
 {
     setup::HybridSetup   setup{*_engine};
     constexpr std::array unsupported{
-        settings::QMMethod::PYSCF,
-        settings::QMMethod::ASEDFTBPLUS,
-        settings::QMMethod::ASEXTB,
-        settings::QMMethod::MACE,
-        settings::QMMethod::FENNOL,
-        settings::QMMethod::NONE,
+        QMMethod::PYSCF,
+        QMMethod::ASE_DFTBPLUS,
+        QMMethod::ASE_XTB,
+        QMMethod::MACE,
+        QMMethod::FENNOL,
+        QMMethod::NONE,
     };
 
     for (const auto method : unsupported)
@@ -239,16 +240,16 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
         EXPECT_THROW_MSG(
             setup.validateQMMethod(),
             exc::InputFileException,
-            "QM method \"" + string(method) +
+            "QM method \"" + QMMethodMeta::toString(method) +
                 "\" is not supported for hybrid type "
                 "calculations. Supported QM methods are \"dftbplus\" and "
                 "\"turbomole\"."
         );
     }
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     EXPECT_NO_THROW(setup.validateQMMethod());
-    settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
+    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
     EXPECT_NO_THROW(setup.validateQMMethod());
 }
 

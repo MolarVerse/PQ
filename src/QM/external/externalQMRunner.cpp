@@ -72,7 +72,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} force file \"{}\"",
-                    string(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
@@ -83,7 +83,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Empty {} force file \"{}\"",
-                    string(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
@@ -96,7 +96,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot read QM energy from {} force file \"{}\"",
-                    string(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
@@ -107,7 +107,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-                    string(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
@@ -124,7 +124,9 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Incomplete {} force file \"{}\"",
-                        string(settings::QMSettings::getQMMethod()),
+                        QMMethodMeta::toString(
+                            settings::QMSettings::getQMMethod()
+                        ),
                         forceFileName
                     )
                 );
@@ -139,7 +141,9 @@ namespace QM
                             "Invalid QM force component (NaN/Inf) in {} force "
                             "file "
                             "\"{}\"",
-                            string(settings::QMSettings::getQMMethod()),
+                            QMMethodMeta::toString(
+                                settings::QMSettings::getQMMethod()
+                            ),
                             forceFileName
                         )
                     );
@@ -181,7 +185,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} charge file \"{}\"",
-                    string(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     chargeFileName
                 )
             );
@@ -192,7 +196,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Empty {} charge file \"{}\"",
-                    string(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     chargeFileName
                 )
             );
@@ -209,7 +213,9 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Incomplete {} charge file \"{}\"",
-                        string(settings::QMSettings::getQMMethod()),
+                        QMMethodMeta::toString(
+                            settings::QMSettings::getQMMethod()
+                        ),
                         chargeFileName
                     )
                 );
@@ -219,7 +225,9 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Invalid value in {} charge file \"{}\"",
-                        string(settings::QMSettings::getQMMethod()),
+                        QMMethodMeta::toString(
+                            settings::QMSettings::getQMMethod()
+                        ),
                         chargeFileName
                     )
                 );

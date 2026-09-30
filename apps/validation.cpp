@@ -34,6 +34,7 @@
 #include <string_view>
 
 #include "engine.hpp"
+#include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "executablePath.hpp"
 #include "externalQMScripts.hpp"
@@ -161,9 +162,9 @@ namespace
         );
     }
 
-    std::filesystem::path bundledSlakosPath(const settings::SlakosType type)
+    std::filesystem::path bundledSlakosPath(const SlakosType type)
     {
-        const auto name = settings::string(type);
+        const auto name = SlakosTypeMeta::toString(type);
 
         return runtimeAssetPath(
             Files{
@@ -363,7 +364,7 @@ namespace
 
         const auto method = settings::QMSettings::getQMMethod();
 
-        if (method == settings::QMMethod::DFTBPLUS)
+        if (method == QMMethod::DFTBPLUS)
         {
             requireFile(
                 settings::FileSettings::getDFTBFileName(),
@@ -371,11 +372,11 @@ namespace
             );
         }
 
-        if (method == settings::QMMethod::ASEDFTBPLUS &&
-            settings::QMSettings::getSlakosType() != settings::SlakosType::NONE)
+        if (method == QMMethod::ASE_DFTBPLUS &&
+            settings::QMSettings::getSlakosType() != SlakosType::NONE)
         {
             const auto slakosType = settings::QMSettings::getSlakosType();
-            if (slakosType == settings::SlakosType::CUSTOM)
+            if (slakosType == SlakosType::CUSTOM)
             {
                 requireDirectory(
                     settings::QMSettings::getSlakosPath(),
@@ -391,7 +392,7 @@ namespace
             }
         }
 
-        if (method == settings::QMMethod::FENNOL)
+        if (method == QMMethod::FENNOL)
         {
             requireFile(
                 settings::QMSettings::getFennolModelPath(),
@@ -399,8 +400,8 @@ namespace
             );
         }
 
-        if (method == settings::QMMethod::MACE &&
-            settings::QMSettings::getMaceModel() == settings::MaceModel::CUSTOM)
+        if (method == QMMethod::MACE &&
+            settings::QMSettings::getMaceModel() == MaceModel::CUSTOM)
         {
             const auto modelPath = settings::QMSettings::getMaceModelPath();
             if (!isRemoteResource(modelPath))
@@ -416,16 +417,14 @@ namespace
             return;
 
         const auto method = settings::QMSettings::getQMMethod();
-        if (method == settings::QMMethod::ASEDFTBPLUS ||
-            method == settings::QMMethod::ASEXTB ||
-            method == settings::QMMethod::FENNOL ||
-            method == settings::QMMethod::MACE)
+        if (method == QMMethod::ASE_DFTBPLUS || method == QMMethod::ASE_XTB ||
+            method == QMMethod::FENNOL || method == QMMethod::MACE)
         {
             throw exc::InputFileException(
                 std::format(
                     "QM method {} requires ASE support, but this PQ build "
                     "does not include it",
-                    settings::string(method)
+                    QMMethodMeta::toString(method)
                 )
             );
         }

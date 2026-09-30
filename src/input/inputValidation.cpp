@@ -25,6 +25,7 @@
 #include <format>      // for format
 
 #include "constants/conversionFactors.hpp"
+#include "enums/qm.hpp"
 #include "exceptions.hpp"        // for exc::InputFileException
 #include "hessianSettings.hpp"   // for settings::HessianSettings
 #include "inputFileReader.hpp"
@@ -139,16 +140,14 @@ namespace input
 
         const auto qmMethod = settings::QMSettings::getQMMethod();
 
-        if (qmMethod == settings::QMMethod::ASEDFTBPLUS)
+        if (qmMethod == QMMethod::ASE_DFTBPLUS)
         {
-            if (settings::QMSettings::getSlakosType() ==
-                settings::SlakosType::NONE)
+            if (settings::QMSettings::getSlakosType() == SlakosType::NONE)
                 throw exc::InputFileException(
                     "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
                 );
 
-            if (settings::QMSettings::getSlakosType() ==
-                    settings::SlakosType::CUSTOM &&
+            if (settings::QMSettings::getSlakosType() == SlakosType::CUSTOM &&
                 !getKeywordSet("slakos_path"))
             {
                 throw exc::InputFileException(
@@ -159,8 +158,7 @@ namespace input
 
             auto useThirdOrder = settings::QMSettings::useThirdOrderDftb();
 
-            if (settings::QMSettings::getSlakosType() ==
-                    settings::SlakosType::THREEOB &&
+            if (settings::QMSettings::getSlakosType() == SlakosType::THREEOB &&
                 !getKeywordSet("third_order"))
                 useThirdOrder = true;
 
@@ -173,8 +171,7 @@ namespace input
             }
         }
 
-        if (qmMethod == settings::QMMethod::FENNOL &&
-            !getKeywordSet("fennol_model_path"))
+        if (qmMethod == QMMethod::FENNOL && !getKeywordSet("fennol_model_path"))
         {
             throw exc::InputFileException(
                 "The FeNNol QM runner has been selected but the "
@@ -183,30 +180,28 @@ namespace input
             );
         }
 
-        if (qmMethod != settings::QMMethod::MACE)
+        if (qmMethod != QMMethod::MACE)
             return;
 
         const auto modelType    = settings::QMSettings::getMaceModelType();
         const auto model        = settings::QMSettings::getMaceModel();
         const auto modelPathSet = getKeywordSet("mace_model_path");
 
-        if (modelType != settings::MaceModelType::MACE_MP &&
-            model != settings::MaceModel::SMALL &&
-            model != settings::MaceModel::MEDIUM &&
-            model != settings::MaceModel::LARGE)
+        if (modelType != MaceModelType::MACE_MP && model != MaceModel::SMALL &&
+            model != MaceModel::MEDIUM && model != MaceModel::LARGE)
         {
             throw exc::InputFileException(
                 std::format(
                     "The '{}' model size is only compatible with the '{}' "
                     "model "
                     "type.",
-                    string(model),
-                    string(settings::MaceModelType::MACE_MP)
+                    MaceModelMeta::toString(model),
+                    MaceModelTypeMeta::toString(MaceModelType::MACE_MP)
                 )
             );
         }
 
-        if (model == settings::MaceModel::CUSTOM && !modelPathSet)
+        if (model == MaceModel::CUSTOM && !modelPathSet)
         {
             throw exc::InputFileException(
                 "You have requested a custom MACE model but haven't provided a "
@@ -215,7 +210,7 @@ namespace input
             );
         }
 
-        if (model != settings::MaceModel::CUSTOM && modelPathSet)
+        if (model != MaceModel::CUSTOM && modelPathSet)
         {
             throw exc::InputFileException(
                 "You have set a custom MACE model path without requesting a "

@@ -32,7 +32,7 @@
 
 TEST_F(TestInputFileReader, parseQMMethod)
 {
-    using enum settings::QMMethod;
+    using enum QMMethod;
     EXPECT_EQ(settings::QMSettings::getQMMethod(), NONE);
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
@@ -49,15 +49,34 @@ TEST_F(TestInputFileReader, parseQMMethod)
     EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "ase_dftbplus"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), ASEDFTBPLUS);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), ASE_DFTBPLUS);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "ase_xtb"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), ASEXTB);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), ASE_XTB);
 
     input::QMInputParser::parseQMMethod({"qm_prog", "=", "fennol"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), FENNOL);
 
-    // the more detailed mace parser is tested in TestMaceParser
+    input::QMInputParser::parseQMMethod({"qm_prog", "=", "mace"}, 0);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+
+    input::QMInputParser::parseQMMethod({"qm_prog", "=", "mace_mp"}, 0);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+
+    input::QMInputParser::parseQMMethod({"qm_prog", "=", "mace_off"}, 0);
+    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+
+    EXPECT_THROW_MSG(
+        parser.parseQMMethod({"qm_prog", "=", "mace-ani"}, 0),
+        exc::InputFileException,
+        "The mace ani model is not supported in this version of PQ.\n"
+    );
+
+    EXPECT_THROW_MSG(
+        parser.parseQMMethod({"qm_prog", "=", "mace-anicc"}, 0),
+        exc::InputFileException,
+        "The mace ani model is not supported in this version of PQ.\n"
+    );
 
     ASSERT_THROW_MSG(
         parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
@@ -188,21 +207,18 @@ TEST_F(TestInputFileReader, parseRemoveNetForce)
 
 TEST_F(TestInputFileReader, parseMaceQMMethod)
 {
-    using enum settings::QMMethod;
-    using enum settings::MaceModelType;
+    using enum QMMethod;
+    using enum MaceModelType;
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
 
     input::QMInputParser::parseMaceQMMethod("mace");
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
 
     input::QMInputParser::parseMaceQMMethod("mace_mp");
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
 
     input::QMInputParser::parseMaceQMMethod("mace_off");
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_OFF);
 
     ASSERT_THROW_MSG(
@@ -221,13 +237,13 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
         parser.parseMaceQMMethod("notAMaceModel"),
         exc::InputFileException,
         "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
-        "Possible values are: mace (mace_mp), mace_off"
+        "Possible values are: mace (mace_mp), mace_off, mace_ani"
     )
 }
 
 TEST_F(TestInputFileReader, parseMaceModel)
 {
-    using enum settings::MaceModel;
+    using enum MaceModel;
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
     parser.parseMaceModel({"mace_model", "=", "small"}, 0);
@@ -240,28 +256,28 @@ TEST_F(TestInputFileReader, parseMaceModel)
     EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE);
 
     parser.parseMaceModel({"mace_model", "=", "small_0b"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL0B);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL_0B);
 
     parser.parseMaceModel({"mace_model", "=", "medium_0b"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM0B);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B);
 
     parser.parseMaceModel({"mace_model", "=", "small_0b2"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL0B2);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL_0B2);
 
     parser.parseMaceModel({"mace_model", "=", "medium_0b2"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM0B2);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B2);
 
     parser.parseMaceModel({"mace_model", "=", "large_0b2"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE0B2);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE_0B2);
 
     parser.parseMaceModel({"mace_model", "=", "medium_0b3"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM0B3);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B3);
 
     parser.parseMaceModel({"mace_model", "=", "medium_mpa_0"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUMMPA0);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_MPA_0);
 
     parser.parseMaceModel({"mace_model", "=", "medium_omat_0"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUMOMAT0);
+    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_OMAT_0);
 
     parser.parseMaceModel({"mace_model", "=", "custom"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), CUSTOM);
@@ -278,7 +294,7 @@ TEST_F(TestInputFileReader, parseMaceModel)
 
 TEST_F(TestInputFileReader, parseMaceMode)
 {
-    using enum settings::MaceMode;
+    using enum MaceMode;
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
 
@@ -290,9 +306,9 @@ TEST_F(TestInputFileReader, parseMaceMode)
 
     ASSERT_THROW_MSG(
         parser.parseMaceMode({"mace_mode", "=", "notAMode"}, 0),
-        exc::UserInputException,
-        "Unknown mace_mode \"notAMode\". Valid values are \"accurate\" (exact "
-        "e3nn reference) or \"fast\" (cuequivariance-accelerated)."
+        exc::InputFileException,
+        "Invalid mace_mode \"notAMode\" in input file.\n"
+        "Possible values are: accurate, fast"
     )
 }
 
@@ -311,22 +327,16 @@ TEST_F(TestInputFileReader, parseMaceModelPath)
 
 TEST_F(TestInputFileReader, parseSlakosType)
 {
-    using enum settings::QMMethod;
+    using enum QMMethod;
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
 
 #ifdef WITH_ASE
     parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(
-        settings::QMSettings::getSlakosType(),
-        settings::SlakosType::THREEOB
-    );
+    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
 
     parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
-    EXPECT_EQ(
-        settings::QMSettings::getSlakosType(),
-        settings::SlakosType::MATSCI
-    );
+    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::MATSCI);
 #else
     ASSERT_THROW_MSG(
         parser.parseSlakosType({"slakos", "=", "3ob"}, 0),
@@ -344,10 +354,7 @@ TEST_F(TestInputFileReader, parseSlakosType)
 #endif
 
     parser.parseSlakosType({"slakos", "=", "custom"}, 0);
-    EXPECT_EQ(
-        settings::QMSettings::getSlakosType(),
-        settings::SlakosType::CUSTOM
-    );
+    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::CUSTOM);
 
     ASSERT_THROW_MSG(
         parser.parseSlakosType({"slakos", "=", "notASlakosType"}, 0),
@@ -360,32 +367,26 @@ TEST_F(TestInputFileReader, parseSlakosType)
 #ifdef WITH_ASE
 TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 {
-    using enum settings::QMMethod;
+    using enum QMMethod;
 
     auto parser1 = input::QMInputParser(_engine->getLogOutput());
 
     input::QMInputParser::parseThirdOrder({"third_order", "=", "off"}, 0);
     parser1.parseSlakosType({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(
-        settings::QMSettings::getSlakosType(),
-        settings::SlakosType::THREEOB
-    );
+    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
     auto parser2 = input::QMInputParser(_engine->getLogOutput());
     parser2.parseSlakosType({"slakos", "=", "3ob"}, 0);
     input::QMInputParser::parseThirdOrder({"third_order", "=", "off"}, 0);
-    EXPECT_EQ(
-        settings::QMSettings::getSlakosType(),
-        settings::SlakosType::THREEOB
-    );
+    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 }
 #endif
 
 TEST_F(TestInputFileReader, parseSlakosPath)
 {
-    using enum settings::QMMethod;
+    using enum QMMethod;
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
     parser.parseSlakosType({"slakos", "=", "custom"}, 0);
@@ -464,18 +465,18 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
 
 TEST_F(TestInputFileReader, parseXtbMethod)
 {
-    using enum settings::QMMethod;
+    using enum QMMethod;
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
 
     input::QMInputParser::parseXtbMethod({"xtb_method", "=", "Gfn1-XTb"}, 0);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), settings::XtbMethod::GFN1);
+    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::GFN1);
 
     input::QMInputParser::parseXtbMethod({"xtb_method", "=", "gfN2-XTb"}, 0);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), settings::XtbMethod::GFN2);
+    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::GFN2);
 
     input::QMInputParser::parseXtbMethod({"xtb_method", "=", "iPEa1-XTb"}, 0);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), settings::XtbMethod::IPEA1);
+    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::IPEA1);
 
     ASSERT_THROW_MSG(
         parser.parseXtbMethod({"xtb_method", "=", "notAnXtbMethod"}, 0),
@@ -487,7 +488,7 @@ TEST_F(TestInputFileReader, parseXtbMethod)
 
 TEST_F(TestInputFileReader, parseFennolModelPath)
 {
-    using enum settings::QMMethod;
+    using enum QMMethod;
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
 
@@ -509,7 +510,7 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
 
 TEST_F(TestInputFileReader, parseGPUPreprocessing)
 {
-    using enum settings::QMMethod;
+    using enum QMMethod;
 
     auto parser = input::QMInputParser(_engine->getLogOutput());
 

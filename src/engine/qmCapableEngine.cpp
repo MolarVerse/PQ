@@ -32,7 +32,7 @@ namespace engine
      *
      * @param method The QM method to use
      */
-    void QMCapableEngine::setQMRunner(settings::QMMethod method)
+    void QMCapableEngine::setQMRunner(QMMethod method)
     {
         _qmRunner = QMRunnerManager::createQMRunner(method);
     }

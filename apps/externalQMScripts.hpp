@@ -29,7 +29,7 @@
 #include <span>
 #include <string_view>
 
-#include "qmSettings.hpp"
+#include "enums/qm.hpp"
 
 namespace cli
 {
@@ -70,17 +70,14 @@ namespace cli
         .requiredWorkingFile = "tm_define.template"
     }};
 
-    inline constexpr auto externalQMMethods = std::array{
-        settings::QMMethod::DFTBPLUS,
-        settings::QMMethod::PYSCF,
-        settings::QMMethod::TURBOMOLE
-    };
+    inline constexpr auto externalQMMethods =
+        std::array{QMMethod::DFTBPLUS, QMMethod::PYSCF, QMMethod::TURBOMOLE};
 
     inline std::span<const ExternalQMScriptInfo> externalQMScripts(
-        const settings::QMMethod method
+        const QMMethod method
     )
     {
-        using enum settings::QMMethod;
+        using enum QMMethod;
 
         switch (method)
         {
@@ -89,8 +86,8 @@ namespace cli
             case TURBOMOLE: return turbomoleScripts;
 
             case NONE:
-            case ASEDFTBPLUS:
-            case ASEXTB:
+            case ASE_DFTBPLUS:
+            case ASE_XTB:
             case MACE:
             case FENNOL: return {};
         }
@@ -98,11 +95,9 @@ namespace cli
         return {};
     }
 
-    inline std::string_view externalQMProgramName(
-        const settings::QMMethod method
-    )
+    inline std::string_view externalQMProgramName(const QMMethod method)
     {
-        using enum settings::QMMethod;
+        using enum QMMethod;
 
         switch (method)
         {
@@ -111,8 +106,8 @@ namespace cli
             case TURBOMOLE: return "turbomole";
 
             case NONE:
-            case ASEDFTBPLUS:
-            case ASEXTB:
+            case ASE_DFTBPLUS:
+            case ASE_XTB:
             case MACE:
             case FENNOL: return "";
         }
@@ -120,11 +115,9 @@ namespace cli
         return "";
     }
 
-    inline std::string_view recommendedExternalQMScript(
-        const settings::QMMethod method
-    )
+    inline std::string_view recommendedExternalQMScript(const QMMethod method)
     {
-        using enum settings::QMMethod;
+        using enum QMMethod;
 
         switch (method)
         {
@@ -132,8 +125,8 @@ namespace cli
             case TURBOMOLE: return turbomoleScripts.front().name;
 
             case NONE:
-            case ASEDFTBPLUS:
-            case ASEXTB:
+            case ASE_DFTBPLUS:
+            case ASE_XTB:
             case PYSCF:
             case MACE:
             case FENNOL: return "";
@@ -143,8 +136,8 @@ namespace cli
     }
 
     inline bool isExternalQMScript(
-        const settings::QMMethod method,
-        const std::string_view   script
+        const QMMethod         method,
+        const std::string_view script
     )
     {
         const auto scripts = externalQMScripts(method);

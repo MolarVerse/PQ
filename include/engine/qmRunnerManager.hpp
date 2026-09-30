@@ -26,8 +26,8 @@
 
 #include <memory>
 
+#include "enums/qm.hpp"
 #include "qmRunner.hpp"
-#include "qmSettings.hpp"
 
 namespace engine
 {
@@ -44,9 +44,7 @@ namespace engine
     class QMRunnerManager
     {
        public:
-        static std::shared_ptr<QM::QMRunner> createQMRunner(
-            settings::QMMethod method
-        );
+        static std::shared_ptr<QM::QMRunner> createQMRunner(QMMethod method);
         static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
         static std::shared_ptr<QM::QMRunner> createAseFennolRunner();
         static std::shared_ptr<QM::QMRunner> createAseMaceRunner();
