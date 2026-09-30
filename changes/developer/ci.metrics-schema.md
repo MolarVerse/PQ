@@ -1,0 +1,1 @@
+- Add .github/ci-metrics/ with the CI timing record schema, storage layout and decisions (data committed to dev via GITHUB_TOKEN, all CI workflows in scope); no collector yet.
