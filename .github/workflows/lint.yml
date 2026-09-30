@@ -11,6 +11,10 @@ on:
       - NEXT
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   changes:
     runs-on: ubuntu-24.04
@@ -65,6 +69,20 @@ jobs:
         with:
           key: lint
 
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
       - name: Setup python
         uses: actions/setup-python@v3
         with:
@@ -93,7 +111,8 @@ jobs:
             -DBUILD_WITH_TESTS=On \
             -DBUILD_WITH_BENCHMARKING=On \
             -DBUILD_WITH_PERF_BENCH=On \
-            -DBUILD_WITH_DOCS=Off
+            -DBUILD_WITH_DOCS=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
 
           # Best-effort build: this step only needs compile_commands.json to
           # resolve real headers for clangd-tidy to re-parse (fetched deps
