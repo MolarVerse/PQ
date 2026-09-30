@@ -55,6 +55,6 @@ TEST_F(TestInputFileReader, testParseIntegrator)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"integrator\" at line 0 in input "
-        "file. Allowed values: none, velocity_verlet, v-verlet"
+        "file. Allowed values: none, velocity_verlet, v_verlet"
     );
 }

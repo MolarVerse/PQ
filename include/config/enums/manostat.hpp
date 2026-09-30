@@ -25,9 +25,7 @@
 
 #include <cstdint>
 #include <mstd/enum.hpp>
-#include <string_view>
-
-#include "enums/base.hpp"
+#include <mstd/enum/enum_string.hpp>
 
 /**
  * @enum ManostatType
@@ -81,16 +79,16 @@ std::array<size_t, 2> get2DIsotropicAxes(Isotropy isotropy);
  * parsing.
  */
 template <>
-struct InputAlias<Isotropy>
+struct mstd::EnumAliases<Isotropy>
 {
-    static constexpr std::array<std::pair<std::string_view, Isotropy>, 6> value{
+    static constexpr auto value = mstd::makeAliases<Isotropy>(
         {{"xy", Isotropy::SEMI_ISOTROPIC_XY},
          {"yx", Isotropy::SEMI_ISOTROPIC_XY},
          {"xz", Isotropy::SEMI_ISOTROPIC_XZ},
          {"zx", Isotropy::SEMI_ISOTROPIC_XZ},
          {"yz", Isotropy::SEMI_ISOTROPIC_YZ},
          {"zy", Isotropy::SEMI_ISOTROPIC_YZ}}
-    };
+    );
 };
 
 #undef ISOTROPY_LIST
@@ -128,15 +126,14 @@ bool isAxisFixed(FixedAxis fixedAxis, size_t axisIndex);
  * parsing.
  */
 template <>
-struct InputAlias<FixedAxis>
+struct mstd::EnumAliases<FixedAxis>
 {
-    static constexpr std::array<std::pair<std::string_view, FixedAxis>, 4>
-        value{
-            {{"yx", FixedAxis::XY},
-             {"zx", FixedAxis::XZ},
-             {"zy", FixedAxis::YZ},
-             {"xyz", FixedAxis::ALL}}
-        };
+    static constexpr auto value = mstd::makeAliases<FixedAxis>(
+        {{"yx", FixedAxis::XY},
+         {"zx", FixedAxis::XZ},
+         {"zy", FixedAxis::YZ},
+         {"xyz", FixedAxis::ALL}}
+    );
 };
 
 #undef FIXED_AXIS_LIST
