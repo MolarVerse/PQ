@@ -24,14 +24,12 @@
 
 #define _TEST_INTRA_NON_BONDED_READER_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <string>   // for allocator
-
-#include "fileSettings.hpp"           // for FileSettings
-#include "intraNonBondedReader.hpp"   // for IntraNonBondedReader
-#include "mmmdEngine.hpp"             // for Engine
-#include "moleculeType.hpp"           // for MoleculeType
+#include "fileSettings.hpp"
+#include "intraNonBondedReader.hpp"
+#include "mmmdEngine.hpp"
+#include "moleculeType.hpp"
 
 /**
  * @class TestIntraNonBondedReader

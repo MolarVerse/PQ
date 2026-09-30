@@ -27,7 +27,6 @@
 #include <gtest/gtest.h>   // for Test
 
 #include <memory>
-#include <string>   // for allocator
 
 #include "fileSettings.hpp"     // for FileSettings
 #include "mmmdEngine.hpp"       // for Engine

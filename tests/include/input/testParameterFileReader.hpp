@@ -26,8 +26,6 @@
 
 #include <gtest/gtest.h>   // for Test
 
-#include <string>   // for allocator
-
 #include "fileSettings.hpp"          // for FileSettings
 #include "mmmdEngine.hpp"            // for Engine
 #include "molecule.hpp"              // for Molecule
