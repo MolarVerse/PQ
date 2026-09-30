@@ -46,19 +46,13 @@ TEST_F(TestInputFileReader, testParseVirial)
 
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::Settings::getVirialType(),
-        settings::VirialType::ATOMIC
-    );
+    EXPECT_EQ(settings::Settings::getVirialType(), VirialType::ATOMIC);
 
     _clearParser(parser);
 
     lineElements = {"virial", "=", "molecular"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::Settings::getVirialType(),
-        settings::VirialType::MOLECULAR
-    );
+    EXPECT_EQ(settings::Settings::getVirialType(), VirialType::MOLECULAR);
 
     _clearParser(parser);
 

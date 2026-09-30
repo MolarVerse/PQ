@@ -188,7 +188,7 @@ namespace engine
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseFennolRunner()
     {
 #ifdef WITH_ASE
-        using enum settings::FPType;
+        using enum FPType;
 
         const auto modelPath = settings::QMSettings::getFennolModelPath();
         const auto gpuPreprocessing =

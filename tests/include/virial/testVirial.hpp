@@ -38,14 +38,14 @@ class TestVirial : public ::testing::Test
 {
    protected:
     molsys::SimulationBox *_simBox;
-    settings::JobType      _jobType;
+    JobType                _jobType;
 
     void SetUp() override
     {
         _jobType = settings::Settings::getJobtype();
 
         _simBox = new molsys::SimulationBox();
-        settings::Settings::setVirialType(settings::VirialType::ATOMIC);
+        settings::Settings::setVirialType(VirialType::ATOMIC);
 
         auto molecule1 = molsys::Molecule();
 

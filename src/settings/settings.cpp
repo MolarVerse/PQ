@@ -25,72 +25,14 @@
 #include <string>   // for operator==, string
 #include <utility>
 
-#include "stringUtilities.hpp"   // for toLowerCopy
-
 namespace settings
 {
-
-    /**
-     * @brief convert jobtype to string representation
-     *
-     * @param jobtype
-     */
-    std::string string(JobType jobtype)
-    {
-        switch (jobtype)
-        {
-            using enum JobType;
-
-            case MM_MD: return "MM_MD";
-            case QM_MD: return "QM_MD";
-            case QMMM_MD: return "QMMM_MD";
-            case RING_POLYMER_QM_MD: return "RING_POLYMER_QM_MD";
-            case MM_OPT: return "MM_OPT";
-            case MM_HESSIAN: return "MM_HESSIAN";
-            case NONE: return "NONE";
-        }
-
-        std::unreachable();
-    }
 
     /***************************
      *                         *
      * standard setter methods *
      *                         *
      ***************************/
-
-    /**
-     * @brief sets the jobtype to enum in settings
-     *
-     * @param jobtype
-     */
-    void Settings::setJobtype(std::string_view jobtype)
-    {
-        using enum JobType;
-        const auto jobtypeToLower =
-            utilities::toLowerAndReplaceDashesCopy(jobtype);
-
-        if (jobtypeToLower == "mmmd")
-            setJobtype(MM_MD);
-
-        else if (jobtypeToLower == "qmmd")
-            setJobtype(QM_MD);
-
-        else if (jobtypeToLower == "ring_polymer_qmmd")
-            setJobtype(RING_POLYMER_QM_MD);
-
-        else if (jobtypeToLower == "qmmmmd")
-            setJobtype(QMMM_MD);
-
-        else if (jobtypeToLower == "mmopt")
-            setJobtype(MM_OPT);
-
-        else if (jobtypeToLower == "mmhessian")
-            setJobtype(MM_HESSIAN);
-
-        else
-            setJobtype(NONE);
-    }
 
     /**
      * @brief sets the jobtype to enum in settings
@@ -113,24 +55,6 @@ namespace settings
             case NONE: deactivateRingPolymerMD(); break;
             case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
         }
-    }
-
-    /**
-     * @brief sets the floating point type
-     *
-     * @param floatingPointType
-     */
-    void Settings::setFloatingPointType(std::string_view floatingPointType)
-    {
-        using enum FPType;
-        const auto floatingPointTypeToLower =
-            utilities::toLowerCopy(floatingPointType);
-
-        if (floatingPointTypeToLower == "float")
-            setFloatingPointType(FLOAT);
-
-        else
-            setFloatingPointType(DOUBLE);
     }
 
     /**

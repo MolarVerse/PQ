@@ -55,9 +55,7 @@ namespace physicalData
         linalg::tensor3D molecular;
 
         [[nodiscard]]
-        const linalg::tensor3D& getVirialTensor(
-            settings::VirialType virialType
-        ) const;
+        const linalg::tensor3D& getVirialTensor(VirialType virialType) const;
     };
 
     /**
@@ -229,7 +227,7 @@ namespace physicalData
 
         [[nodiscard]]
         const linalg::tensor3D& getKinEnergyVirialTensor(
-            settings::VirialType virialType
+            VirialType virialType
         ) const;
 
         [[nodiscard]] linalg::tensor3D getVirial() const;

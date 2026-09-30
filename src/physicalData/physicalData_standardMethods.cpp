@@ -646,7 +646,7 @@ namespace physicalData
      * @return const linalg::tensor3D&
      */
     const linalg::tensor3D& PhysicalData::getKinEnergyVirialTensor(
-        settings::VirialType virialType
+        VirialType virialType
     ) const
     {
         return _kinEnergyVirialTensor.getVirialTensor(virialType);

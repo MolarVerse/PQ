@@ -51,13 +51,13 @@ namespace input
             .description = "Specifies the type of virial: molecular or atomic",
         };
 
-        const auto onSet = [](settings::VirialType virial)
+        const auto onSet = [](VirialType virial)
         { settings::Settings::setVirialType(virial); };
 
         auto& key = _getRegistry().registerKey(
-            KeyRegistry<settings::VirialType>{
+            KeyRegistry<VirialType>{
                 .metadata     = metaData,
-                .defaultValue = settings::VirialType::MOLECULAR,
+                .defaultValue = VirialType::MOLECULAR,
                 .onSet        = onSet,
             }
         );

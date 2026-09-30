@@ -325,7 +325,7 @@ namespace setup
             return formatted;
         };
 
-        if (jobtype == settings::JobType::QMMM_MD)
+        if (jobtype == JobType::QMMM_MD)
         {
             // clang-format off
         const auto *const jobtypeMsg =                 "Hybrid type:                 QM/MM";
