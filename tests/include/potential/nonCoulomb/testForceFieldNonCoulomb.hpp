@@ -33,6 +33,8 @@
 class TestNonCoulombPotentialFF : public ::testing::Test
 {
    protected:
+    pot::ForceFieldNonCoulomb *_nonCoulombPotential;
+
     void SetUp() override
     {
         _nonCoulombPotential = new pot::ForceFieldNonCoulomb();
@@ -90,8 +92,6 @@ class TestNonCoulombPotentialFF : public ::testing::Test
     }
 
     void TearDown() override { delete _nonCoulombPotential; }
-
-    pot::ForceFieldNonCoulomb *_nonCoulombPotential;
 };
 
 #endif   // _TEST_FORCE_FIELD_NON_COULOMB_HPP_

@@ -52,9 +52,9 @@ namespace linalg
         if (this == &vec)
             return *this;
 
-        _x = vec._x;
-        _y = vec._y;
-        _z = vec._z;
+        x = vec.x;
+        y = vec.y;
+        z = vec.z;
         return *this;
     }
 
@@ -71,9 +71,9 @@ namespace linalg
         if (this == &vec)
             return *this;
 
-        _x = vec._x;
-        _y = vec._y;
-        _z = vec._z;
+        x = vec.x;
+        y = vec.y;
+        z = vec.z;
         return *this;
     }
 
@@ -90,9 +90,9 @@ namespace linalg
     void Vector3D<T>::operator+=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        _x += vec._x;
-        _y += vec._y;
-        _z += vec._z;
+        x += vec.x;
+        y += vec.y;
+        z += vec.z;
     }
 
     /**
@@ -105,9 +105,9 @@ namespace linalg
     Vector3D<T> &Vector3D<T>::operator+=(const T &vec)
     requires pq::Arithmetic<T>
     {
-        _x += vec;
-        _y += vec;
-        _z += vec;
+        x += vec;
+        y += vec;
+        z += vec;
         return *this;
     }
 
@@ -125,9 +125,9 @@ namespace linalg
     Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        _x -= vec._x;
-        _y -= vec._y;
-        _z -= vec._z;
+        x -= vec.x;
+        y -= vec.y;
+        z -= vec.z;
         return *this;
     }
 
@@ -141,9 +141,9 @@ namespace linalg
     Vector3D<T> &Vector3D<T>::operator-=(const T &vec)
     requires pq::Arithmetic<T>
     {
-        _x -= vec;
-        _y -= vec;
-        _z -= vec;
+        x -= vec;
+        y -= vec;
+        z -= vec;
         return *this;
     }
 
@@ -162,9 +162,9 @@ namespace linalg
     Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        _x *= vec._x;
-        _y *= vec._y;
-        _z *= vec._z;
+        x *= vec.x;
+        y *= vec.y;
+        z *= vec.z;
         return *this;
     }
 
@@ -179,9 +179,9 @@ namespace linalg
     Vector3D<T> &Vector3D<T>::operator*=(const T &vec)
     requires pq::Arithmetic<T>
     {
-        _x *= vec;
-        _y *= vec;
-        _z *= vec;
+        x *= vec;
+        y *= vec;
+        z *= vec;
         return *this;
     }
 
@@ -200,9 +200,9 @@ namespace linalg
     Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        _x /= vec._x;
-        _y /= vec._y;
-        _z /= vec._z;
+        x /= vec.x;
+        y /= vec.y;
+        z /= vec.z;
         return *this;
     }
 
@@ -217,9 +217,9 @@ namespace linalg
     Vector3D<T> &Vector3D<T>::operator/=(const T &vec)
     requires pq::Arithmetic<T>
     {
-        _x /= vec;
-        _y /= vec;
-        _z /= vec;
+        x /= vec;
+        y /= vec;
+        z /= vec;
         return *this;
     }
 
@@ -238,7 +238,7 @@ namespace linalg
     template <class T>
     T &Vector3D<T>::operator[](size_t index)
     {
-        return _xyz[index];
+        return xyz[index];
     }
 
     /**
@@ -250,7 +250,7 @@ namespace linalg
     template <class T>
     const T &Vector3D<T>::operator[](size_t index) const
     {
-        return _xyz[index];
+        return xyz[index];
     }
 
     /*******************
@@ -268,7 +268,7 @@ namespace linalg
     Vector3D<T> Vector3D<T>::operator-() const
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
-        return Vector3D<T>(-_x, -_y, -_z);
+        return Vector3D<T>(-x, -y, -z);
     }
 
     /********************
@@ -286,7 +286,7 @@ namespace linalg
     constexpr std::array<T, 3>::const_iterator Vector3D<T>::begin(
     ) const noexcept
     {
-        return _xyz.begin();
+        return xyz.begin();
     }
 
     /**
@@ -297,7 +297,7 @@ namespace linalg
     template <class T>
     constexpr std::array<T, 3>::const_iterator Vector3D<T>::end() const noexcept
     {
-        return _xyz.end();
+        return xyz.end();
     }
 
     /*******************
@@ -315,9 +315,9 @@ namespace linalg
     Vector3D<T>::operator Vector3D<U>() const
     {
         return Vector3D<U>(
-            static_cast<U>(_x),
-            static_cast<U>(_y),
-            static_cast<U>(_z)
+            static_cast<U>(x),
+            static_cast<U>(y),
+            static_cast<U>(z)
         );
     }
 
@@ -329,7 +329,7 @@ namespace linalg
     template <class T>
     std::vector<T> Vector3D<T>::toStdVector()
     {
-        return std::vector<T>(_xyz.begin(), _xyz.end());
+        return std::vector<T>(xyz.begin(), xyz.end());
     }
 
 }   // namespace linalg

@@ -45,9 +45,6 @@ namespace molsys
         linalg::tensor3D _boxMatrix{0.0};
         linalg::tensor3D _transformationMatrix{0.0};
 
-        void _calculateBoxMatrix();
-        void _calculateTransformationMatrix();
-
        public:
         [[nodiscard]] double calculateVolume() override;
         [[nodiscard]]
@@ -89,6 +86,10 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D    wrapPositionIntoBox(
                const linalg::Vec3D &pos
            ) const override;
+
+       private:
+        void _calculateBoxMatrix();
+        void _calculateTransformationMatrix();
     };
 
 }   // namespace molsys

@@ -52,12 +52,6 @@ namespace input::restartFile
      */
     class AtomSection : public RestartFileSection
     {
-       private:
-        void _checkAtomLine(
-            std::vector<std::string> &lineElements,
-            const molsys::Molecule &
-        );
-
        public:
         void checkNumberOfLineArguments(std::vector<std::string> &) const;
         void process(
@@ -78,6 +72,11 @@ namespace input::restartFile
         static void _processQMAtomLine(
             std::vector<std::string> &lineElements,
             molsys::SimulationBox    &simulationBox
+        );
+
+        void _checkAtomLine(
+            std::vector<std::string> &lineElements,
+            const molsys::Molecule &
         );
 
         friend class ::TestAtomSection;

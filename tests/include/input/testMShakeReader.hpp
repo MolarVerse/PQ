@@ -37,6 +37,8 @@
 class TestMShakeReader : public ::testing::Test
 {
    protected:
+    engine::Engine *_engine;
+
     void SetUp() override
     {
         // NOTE: use dummy engine for testing
@@ -44,8 +46,6 @@ class TestMShakeReader : public ::testing::Test
         //       and works therefore for all derived classes
         _engine = new engine::MMMDEngine();
     }
-
-    engine::Engine *_engine;
 };
 
 #endif   // _TEST_M_SHAKE_READER_HPP_

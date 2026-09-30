@@ -43,6 +43,14 @@
 class TestInputFileReader : public ::testing::Test
 {
    protected:
+    std::string _fileName;
+
+    engine::Engine         *_engine;
+    input::InputFileReader *_inputFileReader;
+
+    engine::MDEngine       *_mdEngine;
+    input::InputFileReader *_inputFileReader_mdEngine;
+
     void SetUp() override
     {
         // NOTE: here the MMOPTEngine is used as dummy engine
@@ -69,14 +77,6 @@ class TestInputFileReader : public ::testing::Test
     {
         parser._clear();
     }
-
-    std::string _fileName;
-
-    engine::Engine         *_engine;
-    input::InputFileReader *_inputFileReader;
-
-    engine::MDEngine       *_mdEngine;
-    input::InputFileReader *_inputFileReader_mdEngine;
 
     void _removeFile() const
     {

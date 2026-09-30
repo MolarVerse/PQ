@@ -44,6 +44,11 @@
 class TestRingPolymerRestartFileOutput : public ::testing::Test
 {
    protected:
+    out::RingPolymerRestartFileOutput *_rstFileOutput;
+    molsys::SimulationBox             *_simulationBox1;
+    molsys::SimulationBox             *_simulationBox2;
+    std::vector<molsys::SimulationBox> _beads;
+
     void SetUp() override
     {
         _rstFileOutput =
@@ -130,11 +135,6 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
         const auto errorCode = std::remove("default.rpmd.rst");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.rst";
     }
-
-    out::RingPolymerRestartFileOutput *_rstFileOutput;
-    molsys::SimulationBox             *_simulationBox1;
-    molsys::SimulationBox             *_simulationBox2;
-    std::vector<molsys::SimulationBox> _beads;
 };
 
 #endif   // _TEST_RING_POLYMER_RESTART_FILE_OUTPUT_HPP_

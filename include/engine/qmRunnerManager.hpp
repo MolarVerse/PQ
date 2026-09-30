@@ -43,9 +43,6 @@ namespace engine
      */
     class QMRunnerManager
     {
-       private:
-        QMRunnerManager() = default;
-
        public:
         static std::shared_ptr<QM::QMRunner> createQMRunner(
             settings::QMMethod method
@@ -54,6 +51,9 @@ namespace engine
         static std::shared_ptr<QM::QMRunner> createAseFennolRunner();
         static std::shared_ptr<QM::QMRunner> createAseMaceRunner();
         static std::shared_ptr<QM::QMRunner> createAseXtbRunner();
+
+       private:
+        QMRunnerManager() = default;
     };
 
 }   // namespace engine

@@ -37,11 +37,11 @@
 class TestStdoutOutput : public ::testing::Test
 {
    protected:
+    out::StdoutOutput *_stdoutOutput;
+
     void SetUp() override { _stdoutOutput = new out::StdoutOutput("stdout"); }
 
     void TearDown() override { delete _stdoutOutput; }
-
-    out::StdoutOutput *_stdoutOutput;
 };
 
 #endif   // _TEST_STDOUTOUTPUT_HPP_

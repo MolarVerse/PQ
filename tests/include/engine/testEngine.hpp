@@ -40,6 +40,8 @@
 class TestEngine : public ::testing::Test
 {
    protected:
+    engine::MMMDEngine *_engine;
+
     void SetUp() override { _engine = new engine::MMMDEngine(); }
 
     void TearDown() override
@@ -48,8 +50,6 @@ class TestEngine : public ::testing::Test
         settings::TimingsSettings::setStepCount(0);
         settings::TimingsSettings::setTimeStep(0.0);
     }
-
-    engine::MMMDEngine *_engine;
 };
 
 #endif   // _TEST_ENGINE_HPP_

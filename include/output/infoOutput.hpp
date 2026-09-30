@@ -44,6 +44,11 @@ namespace out
      */
     class InfoOutput : public Output
     {
+       public:
+        using Output::Output;
+
+        void write(double, const physicalData::PhysicalData &);
+
        private:
         void _writeHeader();
         void _writeLeft(
@@ -67,11 +72,6 @@ namespace out
             const std::string_view &
         );
         void _writeRight();
-
-       public:
-        using Output::Output;
-
-        void write(double, const physicalData::PhysicalData &);
     };
 
 }   // namespace out

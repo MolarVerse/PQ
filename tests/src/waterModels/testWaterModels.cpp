@@ -548,10 +548,10 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
     const auto *hydrogenHydrogenView = hydrogenHydrogen.get();
 
     waterModel::InterWaterState state;
-    state._oxygenOnlyNonCoulomb = false;
-    state._nonCoulombPairOO     = std::move(oxygenOxygen);
-    state._nonCoulombPairOH     = std::move(oxygenHydrogen);
-    state._nonCoulombPairHH     = std::move(hydrogenHydrogen);
+    state.oxygenOnlyNonCoulomb = false;
+    state.nonCoulombPairOO     = std::move(oxygenOxygen);
+    state.nonCoulombPairOH     = std::move(oxygenHydrogen);
+    state.nonCoulombPairHH     = std::move(hydrogenHydrogen);
 
     waterModel::InterWater interWater(
         std::move(state),

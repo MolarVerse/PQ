@@ -38,8 +38,6 @@ namespace pqviews
     class FilterIterator
     {
        private:
-        void _satisfy();
-
         Iter        _current;
         Iter        _end;
         const Pred* _pred;
@@ -64,6 +62,9 @@ namespace pqviews
         bool operator!=(const FilterIterator& other) const;
 
         Iter current() const;
+
+       private:
+        void _satisfy();
     };
 
     /**

@@ -45,6 +45,15 @@ namespace engine
         bool _converged  = false;
         bool _optStopped = false;
 
+       public:
+        void run() final;
+        void writeOutput() final;
+
+        [[nodiscard]]
+        std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
+        [[nodiscard]] out::OptOutput               &getOptOutput();
+
+       private:
         [[nodiscard]]
         std::shared_ptr<opt::Evaluator> _setupEvaluator();
 
@@ -59,14 +68,6 @@ namespace engine
         std::shared_ptr<opt::Optimizer> _setupEmptyOptimizer();
 
         void _writeOptimizationSetupInfo();
-
-       public:
-        void run() final;
-        void writeOutput() final;
-
-        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld(
-        );
-        [[nodiscard]] out::OptOutput &getOptOutput();
     };
 
 }   // namespace engine

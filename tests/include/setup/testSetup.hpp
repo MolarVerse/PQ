@@ -35,6 +35,9 @@
 class TestSetup : public ::testing::Test
 {
    protected:
+    engine::Engine   *_engine;
+    engine::MDEngine *_mdEngine;
+
     void SetUp() override
     {
         // NOTE: here the MMOPTEngine is used as dummy engine
@@ -44,9 +47,6 @@ class TestSetup : public ::testing::Test
         _engine   = new engine::OptEngine();
         _mdEngine = new engine::MMMDEngine();
     }
-
-    engine::Engine   *_engine;
-    engine::MDEngine *_mdEngine;
 
     void TearDown() override
     {

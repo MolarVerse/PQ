@@ -36,6 +36,8 @@
 class TestSimulationBox : public ::testing::Test
 {
    protected:
+    molsys::SimulationBox *_simulationBox;
+
     void SetUp() override
     {
         _simulationBox = new molsys::SimulationBox();
@@ -94,8 +96,6 @@ class TestSimulationBox : public ::testing::Test
     }
 
     void TearDown() override { delete _simulationBox; }
-
-    molsys::SimulationBox *_simulationBox;
 };
 
 #endif   // _TEST_SIMULATION_BOX_HPP_

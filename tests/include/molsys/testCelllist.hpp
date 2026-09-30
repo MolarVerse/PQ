@@ -33,6 +33,9 @@
 class TestCellList : public ::testing::Test
 {
    protected:
+    molsys::CellList      *_cellList;
+    molsys::SimulationBox *_simulationBox;
+
     void SetUp() override
     {
         _cellList = new molsys::CellList();
@@ -50,9 +53,6 @@ class TestCellList : public ::testing::Test
         delete _cellList;
         delete _simulationBox;
     }
-
-    molsys::CellList      *_cellList;
-    molsys::SimulationBox *_simulationBox;
 };
 
 #endif   // _TEST_CELL_LIST_HPP_

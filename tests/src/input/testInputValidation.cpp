@@ -44,6 +44,9 @@
 class TestInputValidation : public ::testing::Test
 {
    protected:
+    std::unique_ptr<engine::OptEngine>      _engine;
+    std::unique_ptr<input::InputFileReader> _reader;
+
     void SetUp() override
     {
         settings::Settings::setJobtype(settings::JobType::NONE);
@@ -123,9 +126,6 @@ class TestInputValidation : public ::testing::Test
     }
 
     void TearDown() override { settings::Settings::deactivateCellList(); }
-
-    std::unique_ptr<engine::OptEngine>      _engine;
-    std::unique_ptr<input::InputFileReader> _reader;
 };
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForMD)

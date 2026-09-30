@@ -34,16 +34,19 @@ namespace pqviews
         struct has_difference_type
         {
            private:
-            template <typename U>
-            static auto _test(
-                int
-            ) -> decltype(typename std::iterator_traits<U>::difference_type{}, std::true_type{});
+            struct _detail
+            {
+                template <typename U>
+                static auto test(
+                    int
+                ) -> decltype(typename std::iterator_traits<U>::difference_type{}, std::true_type{});
 
-            template <typename>
-            static std::false_type _test(...);
+                template <typename>
+                static std::false_type test(...);
+            };
 
            public:
-            using type                  = decltype(_test<T>(0));
+            using type = decltype(_detail::template test<T>(0));
             static constexpr bool value = type::value;
         };
 

@@ -39,6 +39,9 @@
 class TestQMSetupAse : public ::testing::Test
 {
    protected:
+    engine::QMMDEngine *_engine;
+    setup::QMSetup     *_qmSetup;
+
     void SetUp() override
     {
         _engine  = new engine::QMMDEngine();
@@ -61,9 +64,6 @@ class TestQMSetupAse : public ::testing::Test
         settings::QMSettings::setHubbardDerivs({});
         settings::QMSettings::setIsHubbardDerivsSet(false);
     }
-
-    engine::QMMDEngine *_engine;
-    setup::QMSetup     *_qmSetup;
 };
 
 #endif   // _TEST_QMSETUP_ASE_HPP_

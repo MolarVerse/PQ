@@ -52,13 +52,13 @@ namespace engine
      * cell list, intra-non-bonded handler, force field, and constraints.
      */
     Engine::Engine()
-        : _impl{std::make_unique<Impl>()},
-          _potential{std::make_shared<pot::PotentialBruteForce>()},
+        : _potential{std::make_shared<pot::PotentialBruteForce>()},
           _physicalData{std::make_shared<physicalData::PhysicalData>()},
           _simulationBox{std::make_shared<molsys::SimulationBox>()},
           _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
           _forceField{std::make_shared<ff::ForceField>()},
-          _constraints{std::make_shared<constraints::Constraints>()}
+          _constraints{std::make_shared<constraints::Constraints>()},
+          _impl{std::make_unique<Impl>()}
     {
     }
 

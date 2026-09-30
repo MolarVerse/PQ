@@ -26,6 +26,8 @@ ast_check_enabled_ids = [
     "macroReplacement",
     "memberLeadingUnderscore",
     "memberFunctionLeadingUnderscore",
+    "classMemberOrder",
+    "noPublicLeadingUnderscore",
 ]
 
 # Per-check configuration — one sub-table per check id.
@@ -39,6 +41,9 @@ type_to_name = { "molsys::SimulationBox" = [
     "physicalData",
     "other",
 ] }
+
+[cpp.ast_check_config.classMemberOrder]
+excluded_macros = ["MSTD_ENUM", "MSTD_ENUM_BITFLAG", "TEST", "TEST_F"]
 
 [logging]
 cpp_level = "INFO"

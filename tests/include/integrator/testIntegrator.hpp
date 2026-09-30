@@ -44,6 +44,10 @@
 class TestIntegrator : public ::testing::Test
 {
    protected:
+    integrator::Integrator *_integrator;
+    molsys::Molecule       *_molecule1;
+    molsys::SimulationBox  *_box;
+
     void SetUp() override
     {
         _integrator = new integrator::VelocityVerlet();
@@ -83,10 +87,6 @@ class TestIntegrator : public ::testing::Test
         delete _molecule1;
         delete _box;
     }
-
-    integrator::Integrator *_integrator;
-    molsys::Molecule       *_molecule1;
-    molsys::SimulationBox  *_box;
 };
 
 #endif   // _TEST_INTEGRATOR_HPP_

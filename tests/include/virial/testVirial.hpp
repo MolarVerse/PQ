@@ -37,6 +37,9 @@
 class TestVirial : public ::testing::Test
 {
    protected:
+    molsys::SimulationBox *_simBox;
+    settings::JobType      _jobType;
+
     void SetUp() override
     {
         _jobType = settings::Settings::getJobtype();
@@ -84,9 +87,6 @@ class TestVirial : public ::testing::Test
         delete _simBox;
         settings::Settings::setJobtype(_jobType);
     }
-
-    molsys::SimulationBox *_simBox;
-    settings::JobType      _jobType;
 };
 
 #endif

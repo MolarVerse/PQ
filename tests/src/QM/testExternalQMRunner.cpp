@@ -100,6 +100,13 @@ namespace
        private:
         mutable std::string _command;
 
+       public:
+        [[nodiscard]]
+        const std::string &getCommand() const
+        {
+            return _command;
+        }
+
        protected:
         void _executeCommand(
             const std::string_view command,
@@ -108,9 +115,6 @@ namespace
         {
             _command = command;
         }
-
-       public:
-        [[nodiscard]] const std::string &getCommand() const { return _command; }
     };
 
 }   // namespace

@@ -200,12 +200,12 @@ namespace waterModel
                 nonCoulombPair->setRadialCutOff(radialCutOff);
         };
 
-        setCutOff(_state._nonCoulombPairOO);
+        setCutOff(_state.nonCoulombPairOO);
 
-        if (!_state._oxygenOnlyNonCoulomb)
+        if (!_state.oxygenOnlyNonCoulomb)
         {
-            setCutOff(_state._nonCoulombPairOH);
-            setCutOff(_state._nonCoulombPairHH);
+            setCutOff(_state.nonCoulombPairOH);
+            setCutOff(_state.nonCoulombPairHH);
         }
     }
 
@@ -230,9 +230,9 @@ namespace waterModel
             nonCoulombPair->setForceCutOff(forceCutOff);
         };
 
-        setForceAndEnergyCutOff(_state._nonCoulombPairOO);
-        setForceAndEnergyCutOff(_state._nonCoulombPairOH);
-        setForceAndEnergyCutOff(_state._nonCoulombPairHH);
+        setForceAndEnergyCutOff(_state.nonCoulombPairOO);
+        setForceAndEnergyCutOff(_state.nonCoulombPairOH);
+        setForceAndEnergyCutOff(_state.nonCoulombPairHH);
     }
 
 }   // namespace waterModel

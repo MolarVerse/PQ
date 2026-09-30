@@ -298,9 +298,9 @@ namespace setup
 
         for (const auto &water : waterMolecules)
         {
-            checkCharge(water, AtomIndex{0}, state._oxygenCharge, "O");
-            checkCharge(water, AtomIndex{1}, state._hydrogenCharge, "H1");
-            checkCharge(water, AtomIndex{2}, state._hydrogenCharge, "H2");
+            checkCharge(water, AtomIndex{0}, state.oxygenCharge, "O");
+            checkCharge(water, AtomIndex{1}, state.hydrogenCharge, "H1");
+            checkCharge(water, AtomIndex{2}, state.hydrogenCharge, "H2");
         };
     }
 

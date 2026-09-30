@@ -38,6 +38,10 @@ namespace engine
      */
     class QMMMMDEngine : public HybridMDEngine
     {
+       private:
+        rng::RandomNumberGenerator _rng;
+        physicalData::PhysicalData _qmmmPhysicalData{};
+
        public:
         QMMMMDEngine()           = default;
         ~QMMMMDEngine() override = default;
@@ -45,9 +49,6 @@ namespace engine
         void calculateForces() override;
 
        private:
-        rng::RandomNumberGenerator _rng;
-        physicalData::PhysicalData _qmmmPhysicalData{};
-
         void _applySmoothing();
         void _applyExactSmoothing();
         void _applyHotspotSmoothing();

@@ -86,7 +86,7 @@ namespace
     {
         const auto state = waterModel::makeInterWaterState<Parameter>();
         engine.getSimulationBox().getMolecule(0).setPartialCharges(
-            {state._oxygenCharge, state._hydrogenCharge, state._hydrogenCharge}
+            {state.oxygenCharge, state.hydrogenCharge, state.hydrogenCharge}
         );
         settings::WaterModelSettings::setWaterInterModel(model);
         setup::WaterModelSetup(engine).setup();

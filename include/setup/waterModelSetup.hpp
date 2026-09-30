@@ -51,6 +51,12 @@ namespace setup
        private:
         engine::Engine &_engine;
 
+       public:
+        explicit WaterModelSetup(engine::MDEngine &engine);
+
+        void setup();
+
+       private:
         void _makeInterWater();
         void _makeIntraWater();
         void _checkTopologyFile();
@@ -64,11 +70,6 @@ namespace setup
             settings::WaterIntraModel intraModel
         );
         static void _addReferences();
-
-       public:
-        explicit WaterModelSetup(engine::MDEngine &engine);
-
-        void setup();
     };
 
 }   // namespace setup

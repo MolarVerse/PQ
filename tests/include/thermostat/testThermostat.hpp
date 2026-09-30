@@ -37,6 +37,10 @@
 class TestThermostat : public ::testing::Test
 {
    protected:
+    physicalData::PhysicalData *_data;
+    molsys::SimulationBox      *_simulationBox;
+    thermostat::Thermostat     *_thermostat;
+
     void SetUp() override
     {
         _thermostat = new thermostat::Thermostat();
@@ -80,10 +84,6 @@ class TestThermostat : public ::testing::Test
         delete _simulationBox;
         delete _thermostat;
     }
-
-    physicalData::PhysicalData *_data;
-    molsys::SimulationBox      *_simulationBox;
-    thermostat::Thermostat     *_thermostat;
 };
 
 #endif

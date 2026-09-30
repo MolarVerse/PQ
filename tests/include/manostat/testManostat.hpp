@@ -39,6 +39,10 @@
 class TestManostat : public ::testing::Test
 {
    protected:
+    physicalData::PhysicalData* _data;
+    molsys::SimulationBox*      _box;
+    manostat::Manostat*         _manostat;
+
     void SetUp() override
     {
         _manostat = new manostat::Manostat();
@@ -63,10 +67,6 @@ class TestManostat : public ::testing::Test
         delete _box;
         delete _manostat;
     }
-
-    physicalData::PhysicalData* _data;
-    molsys::SimulationBox*      _box;
-    manostat::Manostat*         _manostat;
 };
 
 #endif

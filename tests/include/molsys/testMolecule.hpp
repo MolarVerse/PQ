@@ -34,6 +34,8 @@
 class TestMolecule : public ::testing::Test
 {
    protected:
+    molsys::Molecule *_molecule;
+
     void SetUp() override
     {
         _molecule = new molsys::Molecule();
@@ -68,8 +70,6 @@ class TestMolecule : public ::testing::Test
     }
 
     void TearDown() override { delete _molecule; }
-
-    molsys::Molecule *_molecule;
 };
 
 #endif   // _TEST_MOLECULE_HPP_

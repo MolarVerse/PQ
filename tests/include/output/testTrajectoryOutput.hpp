@@ -42,6 +42,9 @@
 class TestTrajectoryOutput : public ::testing::Test
 {
    protected:
+    out::TrajectoryOutput *_trajectoryOutput;
+    molsys::SimulationBox *_simulationBox;
+
     void SetUp() override
     {
         _trajectoryOutput = new out::TrajectoryOutput("default.xyz");
@@ -94,9 +97,6 @@ class TestTrajectoryOutput : public ::testing::Test
         const auto errorCode = std::remove("default.xyz");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.xyz";
     }
-
-    out::TrajectoryOutput *_trajectoryOutput;
-    molsys::SimulationBox *_simulationBox;
 };
 
 #endif   // _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
