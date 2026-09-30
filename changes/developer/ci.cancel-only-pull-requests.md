@@ -1,0 +1,1 @@
+- Only cancel superseded runs for pull_request events; push (dev/main), schedule and manual runs of BUILD/LINT and the other gates now get their own concurrency group and are never cancelled.

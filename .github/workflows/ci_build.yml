@@ -13,9 +13,13 @@ on:
     - cron: '0 2 * * *'
   workflow_dispatch:
 
+# Only superseded pull_request runs are cancelled. Every other event (push to
+# dev/main, schedule, manual dispatch) gets its own group so it is neither
+# cancelled nor queued behind another run: post-merge runs give the real
+# verdict for a commit and populate the branch's cache scope.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
