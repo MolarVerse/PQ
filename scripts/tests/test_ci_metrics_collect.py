@@ -1,4 +1,6 @@
+import contextlib
 import importlib.util
+import io
 import json
 import re
 import subprocess
@@ -7,6 +9,7 @@ import tempfile
 import unittest
 from datetime import date, datetime, timedelta
 from pathlib import Path
+from unittest import mock
 from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -410,7 +413,7 @@ class MiniValidatorTests(unittest.TestCase):
 
 
 class GhApiTests(unittest.TestCase):
-    def make(self, outcomes, retries=3):
+    def make(self, outcomes, retries=3, **options):
         calls, sleeps = [], []
 
         def run(command, **_):
@@ -420,7 +423,7 @@ class GhApiTests(unittest.TestCase):
                 raise outcome
             return outcome
 
-        api = collect.GhApi("o/r", retries=retries, run=run, sleep=sleeps.append)
+        api = collect.GhApi("o/r", retries=retries, run=run, sleep=sleeps.append, **options)
         return api, calls, sleeps
 
     @staticmethod
@@ -471,6 +474,64 @@ class GhApiTests(unittest.TestCase):
         api, calls, _ = self.make([self.process(stdout="log text")])
         self.assertEqual("log text", api.get_text("actions/jobs/9/logs"))
         self.assertIn("--allow-escape-sequences", calls[0])
+
+    RATE_LIMITED = "gh: API rate limit exceeded for user ID 1. If you reach out to GitHub Support (HTTP 403)"
+
+    def test_waits_and_retries_a_rate_limit_with_growing_pauses_when_allowed(self):
+        limited = self.process(1, stderr=self.RATE_LIMITED)
+        api, calls, sleeps = self.make([limited, limited, limited, self.process(stdout="{}")], rate_limit_wait=3600)
+        self.assertEqual({}, api.get_json("x"))
+        self.assertEqual(4, len(calls))
+        self.assertEqual([60, 120, 240], sleeps)
+
+    def test_rate_limit_pauses_are_capped_at_ten_minutes(self):
+        limited = self.process(1, stderr=self.RATE_LIMITED)
+        api, _, sleeps = self.make([limited] * 7 + [self.process(stdout="{}")], rate_limit_wait=10**6)
+        api.get_json("x")
+        self.assertEqual([60, 120, 240, 480, 600, 600, 600], sleeps)
+
+    def test_rate_limit_wait_budget_is_not_exceeded(self):
+        limited = self.process(1, stderr=self.RATE_LIMITED)
+        api, calls, sleeps = self.make([limited, limited, limited], rate_limit_wait=90)
+        with self.assertRaises(collect.ApiError) as context:
+            api.get_json("x")
+        self.assertTrue(context.exception.rate_limited)
+        self.assertEqual([60, 30], sleeps)  # 90 s in total, then it gives up
+        self.assertEqual(3, len(calls))
+
+    def test_rate_limit_waits_do_not_use_up_the_transient_retry_budget(self):
+        limited = self.process(1, stderr=self.RATE_LIMITED)
+        server_error = self.process(1, stderr="gh: Server Error (HTTP 500)")
+        outcomes = [limited, server_error, limited, server_error, self.process(stdout="{}")]
+        api, calls, _ = self.make(outcomes, rate_limit_wait=3600)
+        self.assertEqual({}, api.get_json("x"))
+        self.assertEqual(5, len(calls))
+
+    def test_notice_reports_each_wait_with_the_shortened_message(self):
+        messages = []
+        limited = self.process(1, stderr=self.RATE_LIMITED)
+        api, _, _ = self.make([limited, self.process(stdout="{}")], rate_limit_wait=3600, notice=messages.append)
+        api.get_json("x")
+        self.assertEqual(["rate limited (API rate limit exceeded for user ID 1.); retrying in 60s"], messages)
+
+    def test_no_wait_by_default_even_with_a_notice_callback(self):
+        messages = []
+        api, calls, sleeps = self.make([self.process(1, stderr=self.RATE_LIMITED)], notice=messages.append)
+        with self.assertRaises(collect.ApiError):
+            api.get_json("x")
+        self.assertEqual(([], [], 1), (messages, sleeps, len(calls)))
+
+
+class ShortMessageTests(unittest.TestCase):
+    def test_strips_the_gh_prefix_and_the_support_boilerplate(self):
+        error = collect.ApiError(
+            "gh: API rate limit exceeded for user ID 77. If you reach out to GitHub Support for help, "
+            "please include the request ID X (HTTP 403)"
+        )
+        self.assertEqual("API rate limit exceeded for user ID 77.", collect.short_message(error))
+
+    def test_leaves_other_messages_alone(self):
+        self.assertEqual("timed out", collect.short_message(collect.ApiError("timed out")))
 
 
 class CollectTests(unittest.TestCase):
@@ -573,6 +634,32 @@ class CollectTests(unittest.TestCase):
         self.assertEqual(2, result.exit_code())
         self.assertEqual([10], [r["job_id"] for r in read_shard(self.data)])
 
+    def test_rate_limit_message_is_kept_once_and_shown_in_the_summary(self):
+        limited = collect.ApiError(
+            "gh: API rate limit exceeded for user ID 1. If you reach out to GitHub Support (HTTP 403)",
+            status=403,
+            rate_limited=True,
+        )
+        runs = [make_run(n, created=n * 10) for n in (1, 2, 3)]
+        api = FakeApi(runs=runs, jobs={}, job_errors={1: limited, 2: limited, 3: limited})
+        result = collect_into(api, runs, self.data)
+        self.assertEqual("API rate limit exceeded for user ID 1.", result.rate_limit_message)
+
+        lines = []
+        collect.summarize(result, False, out=lines.append)
+        stopped = [line for line in lines if "STOPPED EARLY" in line]
+        self.assertEqual(1, len(stopped))
+        self.assertIn("API rate limit exceeded for user ID 1.", stopped[0])
+        self.assertIn("--rate-limit-wait", stopped[0])
+        self.assertNotIn("If you reach out", "\n".join(lines))
+
+    def test_summary_without_a_message_still_says_it_stopped_early(self):
+        result = collect.Result()
+        result.rate_limited = True
+        lines = []
+        collect.summarize(result, False, out=lines.append)
+        self.assertTrue(any("STOPPED EARLY: API rate limit reached;" in line for line in lines))
+
     def test_pr_lookup_404_means_no_pr_and_other_errors_fail_the_run(self):
         run = make_run(event="pull_request", branch="feature/x")
         api = FakeApi(runs=[run], jobs={100: [make_job(1)]}, pulls={SHA: collect.ApiError("gone", status=404)})
@@ -645,6 +732,42 @@ class MainTests(unittest.TestCase):
 
         self.assertEqual(2, self.run_main(Failing(), "--since-days", "1"))
         self.assertTrue(any("could not list runs" in line for line in self.output))
+
+    def test_listing_failure_shows_the_shortened_rate_limit_message(self):
+        class Failing(FakeApi):
+            def get_json(self, path):
+                raise collect.ApiError(
+                    "gh: API rate limit exceeded for user ID 1. If you reach out to GitHub Support (HTTP 403)",
+                    status=403,
+                    rate_limited=True,
+                )
+
+        self.run_main(Failing(), "--since-days", "1")
+        self.assertEqual(["ERROR could not list runs: API rate limit exceeded for user ID 1."], self.output)
+
+    def test_rate_limit_wait_is_passed_to_the_api_in_seconds(self):
+        seen = {}
+
+        def fake_gh_api(repo, **options):
+            seen.update(options, repo=repo)
+            return FakeApi()
+
+        with mock.patch.object(collect, "GhApi", side_effect=fake_gh_api):
+            self.run_main(None, "--since-days", "1", "--rate-limit-wait", "5")
+        self.assertEqual(300, seen["rate_limit_wait"])
+        self.assertEqual("MolarVerse/PQ", seen["repo"])
+        self.assertTrue(callable(seen["notice"]))
+
+    def test_rate_limit_wait_defaults_to_not_waiting(self):
+        seen = {}
+        with mock.patch.object(collect, "GhApi", side_effect=lambda repo, **o: (seen.update(o), FakeApi())[1]):
+            self.run_main(None, "--since-days", "1")
+        self.assertEqual(0, seen["rate_limit_wait"])
+
+    def test_negative_rate_limit_wait_is_rejected(self):
+        with contextlib.redirect_stderr(io.StringIO()) as usage, self.assertRaises(SystemExit):
+            self.run_main(FakeApi(), "--rate-limit-wait", "-1")
+        self.assertIn("must not be negative", usage.getvalue())
 
     def test_summary_mentions_dropped_jobs_and_counts(self):
         run = make_run()

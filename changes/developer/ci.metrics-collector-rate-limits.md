@@ -1,0 +1,1 @@
+- CI metrics collector: show GitHub's rate-limit message once when it stops, and add --rate-limit-wait to retry with backoff instead of stopping; document what the first backfill showed.

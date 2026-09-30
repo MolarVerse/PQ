@@ -28,7 +28,7 @@ This page explains what each field means and how the collector derives it.
 | `event` | enum | `pull_request`, `push`, `schedule` or `workflow_dispatch`. Timings must be compared per event: `dev` pushes read `dev`'s cache scope, PR runs can read `dev`'s cache. |
 | `branch` | string | The run's `head_branch` (the PR branch for `pull_request`). |
 | `head_sha` | string | Commit the run built. For `pull_request` this is the PR head commit, not the merge ref. |
-| `pr_number` | int or null | Only set for `pull_request` events. The run's own `pull_requests` list is emptied by GitHub once the PR is merged and the branch deleted, so the collector resolves it from `GET /repos/{repo}/commits/{head_sha}/pulls`, choosing the PR whose `head.ref` equals `branch`. |
+| `pr_number` | int or null | Only set for `pull_request` events. The run's own `pull_requests` list is emptied by GitHub once the PR is merged and the branch deleted, so the collector resolves it from `GET /repos/{repo}/commits/{head_sha}/pulls`, choosing the PR whose `head.ref` equals `branch`. It is also `null` when GitHub reports no PR for that commit (a branch that never became a PR, or whose commits were force-pushed away): 450 of the 10,019 `pull_request` records of the first backfill. |
 | `job_id`, `job` | int, string | Job id and its full display name, including matrix values, for example `build (ubuntu-24.04-arm, Debug)`. |
 | `runner_labels` | string[] | The job's runner labels. |
 | `arch` | enum | `arm64` if any label contains `arm`, otherwise `x86_64`. |

@@ -13,6 +13,7 @@ the local login elsewhere.
 Examples:
   collect.py                       # last 3 days (incremental)
   collect.py --since-days 90       # backfill, resumable: re-run to continue
+  collect.py --since-days 90 --rate-limit-wait 90  # ... waiting out rate limits
   collect.py --run-id 36693119228  # one specific run
   collect.py --dry-run             # show what would be written
 
@@ -60,25 +61,44 @@ class ApiError(Exception):
         self.rate_limited = rate_limited
 
 
+RATE_LIMIT_FIRST_PAUSE = 60
+RATE_LIMIT_MAX_PAUSE = 600
+
+
 class GhApi:
-    """Read-only GitHub API access through `gh api`, with retries."""
+    """Read-only GitHub API access through `gh api`, with retries.
+
+    Transient failures are retried a few times with a short backoff. A rate
+    limit stops the call immediately unless `rate_limit_wait` (seconds, per
+    call) is set: then the call is retried after 1, 2, 4, 8, 10, 10 ... minutes
+    until that budget is used up. It deliberately does not compute when the
+    limit resets: neither `gh api rate_limit` nor the X-RateLimit-* headers
+    predicted the real reset reliably during the first backfill.
+    """
 
     def __init__(
         self,
         repo,
         timeout=60,
         retries=3,
+        rate_limit_wait=0,
+        notice=None,
         run=subprocess.run,
         sleep=time.sleep,
     ):
         self.repo = repo
         self.timeout = timeout
         self.retries = retries
+        self.rate_limit_wait = rate_limit_wait
+        self._notice = notice or (lambda _message: None)
         self._run = run
         self._sleep = sleep
 
     def _call(self, args):
-        for attempt in range(self.retries):
+        failures = 0
+        waited = 0
+        pause = RATE_LIMIT_FIRST_PAUSE
+        while True:
             try:
                 proc = self._run(
                     ["gh", "api", *args],
@@ -93,17 +113,32 @@ class GhApi:
                     return proc.stdout
                 error = _classify_error(proc.stderr)
 
-            final = attempt == self.retries - 1
-            if final or error.status == 404 or error.rate_limited:
+            if error.rate_limited:
+                delay = min(pause, self.rate_limit_wait - waited)
+                if delay <= 0:
+                    raise error
+                self._notice(f"rate limited ({short_message(error)}); retrying in {delay}s")
+                self._sleep(delay)
+                waited += delay
+                pause = min(pause * 2, RATE_LIMIT_MAX_PAUSE)
+                continue
+
+            failures += 1
+            if failures >= self.retries or error.status == 404:
                 raise error
-            self._sleep(2**attempt)
-        raise AssertionError("unreachable")
+            self._sleep(2 ** (failures - 1))
 
     def get_json(self, path):
         return json.loads(self._call([f"repos/{self.repo}/{path}"]))
 
     def get_text(self, path):
         return self._call(["--allow-escape-sequences", f"repos/{self.repo}/{path}"])
+
+
+def short_message(error):
+    """The error text without gh's prefix and GitHub's support boilerplate."""
+    text = str(error).strip().removeprefix("gh:").strip()
+    return text.split(" If you reach out")[0].strip()
 
 
 def _classify_error(stderr):
@@ -323,6 +358,7 @@ class Result:
         self.dropped = Counter()
         self.errors = []
         self.rate_limited = False
+        self.rate_limit_message = None  # the first one seen, for the summary
 
     def exit_code(self):
         if self.rate_limited:
@@ -391,6 +427,8 @@ def collect(api, config, data_dir, runs, *, workers=WORKERS, dry_run=False, max_
             if error is not None:
                 if getattr(error, "rate_limited", False):
                     result.rate_limited = True
+                    if result.rate_limit_message is None:
+                        result.rate_limit_message = short_message(error)
                 else:
                     result.errors.append(f"run {run['id']}: {error}")
                 continue
@@ -423,7 +461,11 @@ def summarize(result, dry_run, out=print):
     if result.dropped:
         out("dropped jobs: " + ", ".join(f"{k}={v}" for k, v in sorted(result.dropped.items())))
     if result.rate_limited:
-        out("STOPPED EARLY: API rate limit reached; re-run later to continue.")
+        detail = f" ({result.rate_limit_message})" if result.rate_limit_message else ""
+        out(
+            f"STOPPED EARLY: API rate limit reached{detail}; "
+            "re-run later to continue, or use --rate-limit-wait to wait and retry."
+        )
     for error in result.errors:
         out(f"ERROR {error}")
 
@@ -437,11 +479,25 @@ def main(argv=None, api=None, today=None, out=print):
     which.add_argument("--run-id", type=int, action="append", help="collect this run only (repeatable)")
     parser.add_argument("--max-runs", type=int, help="process at most this many runs per invocation")
     parser.add_argument("--workers", type=int, default=WORKERS)
+    parser.add_argument(
+        "--rate-limit-wait",
+        type=int,
+        default=0,
+        metavar="MINUTES",
+        help="on a rate limit, retry each call with backoff (1, 2, 4, 8, 10, 10 ... min) "
+        "for up to this many minutes instead of stopping (default 0: stop)",
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
+    if args.rate_limit_wait < 0:
+        parser.error("--rate-limit-wait must not be negative")
 
     config = json.loads(Path(args.config).read_text())
-    api = api or GhApi(config["repo"])
+    api = api or GhApi(
+        config["repo"],
+        rate_limit_wait=args.rate_limit_wait * 60,
+        notice=lambda message: out(f"  {message}"),
+    )
     today = today or datetime.now(timezone.utc).date()
 
     try:
@@ -454,7 +510,8 @@ def main(argv=None, api=None, today=None, out=print):
             windows = day_windows(today, args.since_days)
             runs = list_runs(api, windows, set(config["workflows"]))
     except ApiError as error:
-        out(f"ERROR could not list runs: {error}")
+        message = short_message(error) if error.rate_limited else error
+        out(f"ERROR could not list runs: {message}")
         return 2 if error.rate_limited else 1
 
     result = collect(
