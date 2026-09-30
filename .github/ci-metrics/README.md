@@ -9,7 +9,8 @@ instead of guessed. Tracked in #720.
 | Collector script (GitHub API to JSONL), see [Running the collector](#running-the-collector) | implemented, #715 |
 | Collector workflow, see [The workflow](#the-workflow) | implemented, #716 (inert until it reaches `main`) |
 | Overview report for `dev` | planned, #717 |
-| Build timings (`.ninja_log`, ccache, clang `-ftime-trace`) | planned, #718 and #719 |
+| Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented on the job side, #718; collector ingest and overview planned |
+| clang `-ftime-trace` analysis | planned, #719 |
 
 ## Layout
 
@@ -27,7 +28,7 @@ instead of guessed. Tracked in #720.
 The workflow is `.github/workflows/ci_metrics.yml`. Tests:
 `scripts/tests/test_ci_metrics_publish.py` (real local git repositories).
 
-Tests: `scripts/tests/test_ci_metrics_{collect,publish,report}.py` (offline; run
+Tests: `scripts/tests/test_ci_metrics_{collect,publish,report,build_summary}.py` (offline; run
 with the other script tests in CI).
 
 Nothing under `data/` is edited by hand.
@@ -191,6 +192,35 @@ What it shows, per recorded workflow:
 Windows are measured in days, not in runs, so the current and the previous window
 are comparable. The Eigen table starts in the week the `Cache Eigen source` step
 was introduced; before that the flag is `null`.
+
+## Build timings (#718)
+
+Job and step durations say how long a build took, not why. The jobs that build
+the project (`build` matrix, `build-static-lto`, `mpi-build`, `lint`) therefore
+run the composite action `.github/actions/upload-build-timings` as a last step
+(`if: always()`, never fails the job). It runs `summarise_build.py`, which writes:
+
+- `build-analysis.json`: total build time, CPU time and parallelism, the split
+  between compile, archive and link steps, the time between the last compile
+  finishing and the build ending (`tail_after_compile_s`, what a link-bound
+  build such as `build-static-lto` spends alone on one core), the 20 slowest
+  steps, and the ccache counters with the hit rate of cacheable calls. The
+  ccache counters include every "uncacheable" reason, see #732.
+- the raw `.ninja_log` and `ccache --print-stats` output.
+
+All of it is uploaded as the artifact `build-timings-<job>-a<run attempt>` with a
+retention of 14 days, so the collector has time to ingest it; raw logs are never
+committed. Only `build-static-lto` and `lint` use Ninja today, so the matrix and
+MPI jobs have ccache data only until #705 lands.
+
+A build that did not finish is flagged, not treated as a full build: after the
+build the script runs `ninja -n`, and `complete` is true only if nothing is left
+to do. This matters for `lint`, which builds with `-k 0` and tolerates errors
+(`pending_steps` says how many steps were left).
+
+Reading the file fields: see "Build analysis summary" in [`SCHEMA.md`](SCHEMA.md).
+Ingesting the artifacts into the JSONL data and showing them in the overview
+are the next steps of #718.
 
 ## Reading the data
 

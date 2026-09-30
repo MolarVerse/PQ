@@ -45,6 +45,8 @@ jobs:
               - 'benchmarks/.clang-tidy'
               - 'scripts/clang_tidy.sh'
               - '.github/workflows/lint.yml'
+              - '.github/actions/upload-build-timings/**'
+              - '.github/ci-metrics/summarise_build.py'
 
   lint:
     needs: changes
@@ -133,6 +135,13 @@ jobs:
         env:
           CC: gcc-13
           CXX: g++-13
+
+      - name: Collect build timings
+        if: always()
+        uses: ./.github/actions/upload-build-timings
+        with:
+          name: lint
+          job-id: ${{ job.check_run_id }}
 
       - name: Run clangd-tidy on changed files
         run: |
