@@ -230,7 +230,7 @@ TEST_F(TestInputValidation, requiresTemperatureForThermostat)
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
         exc::InputFileException,
-        "Target or end temperature not set for berendsen thermostat"
+        "Target or end temperature not set for BERENDSEN thermostat"
     );
 }
 
@@ -245,7 +245,7 @@ TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
         exc::InputFileException,
-        "Both target and end temperature set for berendsen thermostat. They "
+        "Both target and end temperature set for BERENDSEN thermostat. They "
         "are mutually exclusive as they are treated as synonyms"
     );
 }
@@ -698,21 +698,6 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
         _reader->validateInputConfiguration(),
         exc::UserInputException,
         "The Wolfe line search learning rate strategy is not yet implemented"
-    );
-}
-
-TEST_F(TestInputValidation, rejectsMissingLearningRateStrategy)
-{
-    settings::Settings::setJobtype(settings::JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(LearningRate::NONE);
-    _setKeyword("nstep");
-
-    ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        exc::UserInputException,
-        "In order to run the optimizer, you need to specify a learning rate "
-        "strategy."
     );
 }
 

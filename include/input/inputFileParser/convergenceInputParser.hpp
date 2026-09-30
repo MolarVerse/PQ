@@ -21,7 +21,6 @@
 ******************************************************************************/
 
 #ifndef _CONVERGENCE_INPUT_PARSER_HPP_
-
 #define _CONVERGENCE_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"   // for InputFileParser
@@ -39,60 +38,17 @@ namespace input
        public:
         ConvInputParser();
 
-        static void parseEnergyConvergenceStrategy(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseUseEnergyConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseUseForceConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseUseMaxForceConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseUseRMSForceConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseEnergyConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseRelativeEnergyConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseAbsoluteEnergyConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseForceConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseMaxForceConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseRMSForceConvergence(
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addEnergyConvergenceStrategyKey();
+        void addUseEnergyConvergenceKey();
+        void addUseForceConvergenceKey();
+        void addUseMaxForceConvergenceKey();
+        void addUseRMSForceConvergenceKey();
+        void addEnergyConvergenceKey();
+        void addRelativeEnergyConvergenceKey();
+        void addAbsoluteEnergyConvergenceKey();
+        void addForceConvergenceKey();
+        void addMaxForceConvergenceKey();
+        void addRMSForceConvergenceKey();
     };
 
 }   // namespace input

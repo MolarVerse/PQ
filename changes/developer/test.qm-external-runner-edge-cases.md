@@ -1,0 +1,1 @@
+- Add tests for ExternalQMRunner periodicity rejection and the DFTB+/PySCF/Turbomole runners' missing-script-file rejection; both guards already existed, only the tests were missing.

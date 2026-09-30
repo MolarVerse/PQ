@@ -122,8 +122,7 @@ namespace engine
                     );
                 }
 
-                case LINESEARCH_WOLFE:
-                case NONE: break;
+                case LINESEARCH_WOLFE: break;
             }
 
             throw exc::UserInputException(
@@ -517,8 +516,6 @@ namespace engine
                 optimizer = std::make_shared<opt::Adam>(nEpochs, nAtoms);
                 break;
             }
-
-            case NONE: break;
         }
 
         if (!optimizer)

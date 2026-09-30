@@ -136,14 +136,6 @@ namespace settings
             );
         }
 
-        if (strategy == LearningRate::NONE)
-        {
-            throw exc::UserInputException(
-                "In order to run the optimizer, you need to specify a learning "
-                "rate strategy."
-            );
-        }
-
         const auto needsDecay = strategy == LearningRate::CONSTANT_DECAY ||
                                 strategy == LearningRate::EXPONENTIAL_DECAY;
 

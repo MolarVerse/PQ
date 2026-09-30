@@ -20,34 +20,48 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_INPUT_PARSER_HPP_
+#ifndef _TEST_TIMINGS_HPP_
 
-#define _OPT_INPUT_PARSER_HPP_
+#define _TEST_TIMINGS_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
+#include <gtest/gtest.h>   // for Test
 
-namespace input
+#include "timer.hpp"            // for Timer
+#include "timingsSection.hpp"   // for TimingsSection
+
+/**
+ * @class TestTimingsSection
+ *
+ * @brief Fixture for TimingsSection tests.
+ *
+ */
+class TestTimingsSection : public ::testing::Test
 {
-    /**
-     * @class OptInputParser
-     *
-     * @brief Parses the input file for the optimizer
-     *
-     */
-    class OptInputParser : public InputFileParser
+   protected:
+    void SetUp() override
     {
-       public:
-        OptInputParser();
+        _section = new timings::TimingsSection("test-section");
+    }
 
-        void addOptimizerKey();
-        void addLearningRateStrategyKey();
-        void addInitialLearningRateKey();
-        void addLearningRateUpdateFreqKey();
-        void addMinLearningRateKey();
-        void addMaxLearningRateKey();
-        void addLearningRateDecayKey();
-    };
+    void TearDown() override { delete _section; }
 
-}   // namespace input
+    timings::TimingsSection *_section;
+};
 
-#endif   // _OPT_INPUT_PARSER_HPP_
+/**
+ * @class TestTimer
+ *
+ * @brief Fixture for Timer tests.
+ *
+ */
+class TestTimer : public ::testing::Test
+{
+   protected:
+    void SetUp() override { _timer = new timings::Timer(); }
+
+    void TearDown() override { delete _timer; }
+
+    timings::Timer *_timer;
+};
+
+#endif   // _TEST_TIMINGS_HPP_

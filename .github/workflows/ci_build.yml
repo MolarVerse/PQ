@@ -13,6 +13,10 @@ on:
     - cron: '0 2 * * *'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -64,6 +68,26 @@ jobs:
         with:
           key: ${{ matrix.os }}-${{ matrix.build }}
 
+      # Eigen is a header-only FetchContent dependency fetched from GitLab on
+      # every job that configures CMake; cache the cloned source once and
+      # point every subsequent job at it via FETCHCONTENT_SOURCE_DIR_EIGEN
+      # (CMake's official "use this local checkout instead of fetching"
+      # mechanism) so we don't re-clone it ~10 times per PR, and so a GitLab
+      # hiccup can't fail the whole matrix at once.
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
       - name: setup python ubuntu
         uses: actions/setup-python@v3
         with:
@@ -86,7 +110,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src" ..
           make -j$(nproc)
           make test
         env:
@@ -98,7 +123,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off ..
+          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src" ..
           make -j$(nproc)
           make coverage_xml
         env:
@@ -158,6 +184,20 @@ jobs:
           sudo apt install gcc-14 g++-14
         shell: bash
 
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
       - name: Build benchmark suite
         run: |
           cmake -S . -B build-benchmark \
@@ -166,7 +206,8 @@ jobs:
             -DBUILD_WITH_TESTS=Off \
             -DBUILD_WITH_ASE=Off \
             -DBUILD_WITH_DOCS=Off \
-            -DBUILD_WITH_NATIVE=Off
+            -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build-benchmark --target google_benchmarks -j$(nproc)
         env:
           CC: gcc-14
@@ -189,6 +230,29 @@ jobs:
           sudo apt update
           sudo apt install gcc-14 g++-14 mold ninja-build
 
+      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects);
+      # LTO's whole-program link pass itself isn't cached by ccache, but the
+      # per-file compile step is, which is most of the wall time on PRs that
+      # only touch a handful of files.
+      - name: setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: static-lto
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
       - name: Build and test static LTO
         run: |
           cmake -S . -B build -G Ninja \
@@ -196,7 +260,8 @@ jobs:
             -DBUILD_SHARED_LIBS=OFF \
             -DBUILD_WITH_ASE=OFF \
             -DBUILD_WITH_LTO=ON \
-            -DBUILD_WITH_NATIVE=OFF
+            -DBUILD_WITH_NATIVE=OFF \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel
           ctest --test-dir build --output-on-failure -j1
         env:
@@ -222,6 +287,20 @@ jobs:
         with:
           key: static-singularity
 
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
       - name: Build project
         run: |
           cmake -S . -B build \
@@ -230,7 +309,8 @@ jobs:
             -DBUILD_WITH_SINGULARITY=ON \
             -DBUILD_WITH_TESTS=ON \
             -DBUILD_WITH_ASE=OFF \
-            -DBUILD_WITH_NATIVE=OFF
+            -DBUILD_WITH_NATIVE=OFF \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
         env:
           CC: gcc-14
@@ -263,6 +343,20 @@ jobs:
         with:
           key: mpi-release
 
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
       - name: Build project
         run: |
           cmake -S . -B build \
@@ -270,7 +364,8 @@ jobs:
             -DBUILD_WITH_MPI=ON \
             -DBUILD_WITH_ASE=OFF \
             -DBUILD_WITH_NATIVE=OFF \
-            -DBUILD_WITH_TESTS=ON
+            -DBUILD_WITH_TESTS=ON \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
         env:
           CC: gcc-14

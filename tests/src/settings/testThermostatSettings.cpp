@@ -33,8 +33,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
         settings::ThermostatType::BERENDSEN
     );
     EXPECT_EQ(
-        settings::string(settings::ThermostatSettings::getThermostatType()),
-        "berendsen"
+        settings::ThermostatTypeMeta::toString(
+            settings::ThermostatSettings::getThermostatType()
+        ),
+        "BERENDSEN"
     );
 
     settings::ThermostatSettings::setThermostatType("none");
@@ -43,8 +45,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
         settings::ThermostatType::NONE
     );
     EXPECT_EQ(
-        settings::string(settings::ThermostatSettings::getThermostatType()),
-        "none"
+        settings::ThermostatTypeMeta::toString(
+            settings::ThermostatSettings::getThermostatType()
+        ),
+        "NONE"
     );
 
     settings::ThermostatSettings::setThermostatType("langevin");
@@ -53,8 +57,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
         settings::ThermostatType::LANGEVIN
     );
     EXPECT_EQ(
-        settings::string(settings::ThermostatSettings::getThermostatType()),
-        "langevin"
+        settings::ThermostatTypeMeta::toString(
+            settings::ThermostatSettings::getThermostatType()
+        ),
+        "LANGEVIN"
     );
 
     settings::ThermostatSettings::setThermostatType("NH-chain");
@@ -63,8 +69,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
         settings::ThermostatType::NOSE_HOOVER
     );
     EXPECT_EQ(
-        settings::string(settings::ThermostatSettings::getThermostatType()),
-        "nh-chain"
+        settings::ThermostatTypeMeta::toString(
+            settings::ThermostatSettings::getThermostatType()
+        ),
+        "NOSE_HOOVER"
     );
 
     settings::ThermostatSettings::setThermostatType("velocity_rescaling");
@@ -73,8 +81,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
         settings::ThermostatType::VELOCITY_RESCALING
     );
     EXPECT_EQ(
-        settings::string(settings::ThermostatSettings::getThermostatType()),
-        "velocity_rescaling"
+        settings::ThermostatTypeMeta::toString(
+            settings::ThermostatSettings::getThermostatType()
+        ),
+        "VELOCITY_RESCALING"
     );
 }
 
