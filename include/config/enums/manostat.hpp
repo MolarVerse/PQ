@@ -25,9 +25,7 @@
 
 #include <cstdint>
 #include <mstd/enum.hpp>
-#include <string_view>
-
-#include "enums/base.hpp"
+#include <mstd/enum/enum_string.hpp>
 
 /**
  * @enum ManostatType
@@ -73,25 +71,28 @@ size_t get2DAnisotropicAxis(Isotropy isotropy);
 [[nodiscard]]
 std::array<size_t, 2> get2DIsotropicAxes(Isotropy isotropy);
 
-/**
- * @brief Input aliases for the Isotropy enum
- *
- * @details This specialization of the InputAlias template provides string
- * aliases for the Isotropy enum values, allowing for more flexible input
- * parsing.
- */
-template <>
-struct InputAlias<Isotropy>
+namespace mstd
 {
-    static constexpr std::array<std::pair<std::string_view, Isotropy>, 6> value{
-        {{"xy", Isotropy::SEMI_ISOTROPIC_XY},
-         {"yx", Isotropy::SEMI_ISOTROPIC_XY},
-         {"xz", Isotropy::SEMI_ISOTROPIC_XZ},
-         {"zx", Isotropy::SEMI_ISOTROPIC_XZ},
-         {"yz", Isotropy::SEMI_ISOTROPIC_YZ},
-         {"zy", Isotropy::SEMI_ISOTROPIC_YZ}}
+    /**
+     * @brief Input aliases for the Isotropy enum
+     *
+     * @details This specialization of the InputAlias template provides string
+     * aliases for the Isotropy enum values, allowing for more flexible input
+     * parsing.
+     */
+    template <>
+    struct EnumAliases<Isotropy>
+    {
+        static constexpr auto value = makeAliases<Isotropy>(
+            {{"xy", Isotropy::SEMI_ISOTROPIC_XY},
+             {"yx", Isotropy::SEMI_ISOTROPIC_XY},
+             {"xz", Isotropy::SEMI_ISOTROPIC_XZ},
+             {"zx", Isotropy::SEMI_ISOTROPIC_XZ},
+             {"yz", Isotropy::SEMI_ISOTROPIC_YZ},
+             {"zy", Isotropy::SEMI_ISOTROPIC_YZ}}
+        );
     };
-};
+}   // namespace mstd
 
 #undef ISOTROPY_LIST
 
@@ -128,15 +129,14 @@ bool isAxisFixed(FixedAxis fixedAxis, size_t axisIndex);
  * parsing.
  */
 template <>
-struct InputAlias<FixedAxis>
+struct mstd::EnumAliases<FixedAxis>
 {
-    static constexpr std::array<std::pair<std::string_view, FixedAxis>, 4>
-        value{
-            {{"yx", FixedAxis::XY},
-             {"zx", FixedAxis::XZ},
-             {"zy", FixedAxis::YZ},
-             {"xyz", FixedAxis::ALL}}
-        };
+    static constexpr auto value = mstd::makeAliases<FixedAxis>(
+        {{"yx", FixedAxis::XY},
+         {"zx", FixedAxis::XZ},
+         {"zy", FixedAxis::YZ},
+         {"xyz", FixedAxis::ALL}}
+    );
 };
 
 #undef FIXED_AXIS_LIST

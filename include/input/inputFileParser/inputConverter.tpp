@@ -23,7 +23,6 @@
 #ifndef _INPUT_CONVERTER_TPP_
 #define _INPUT_CONVERTER_TPP_
 
-#include "enums/base.hpp"
 #include "inputConverter.hpp"
 #include "stringUtilities.hpp"
 
@@ -91,14 +90,7 @@ namespace input
     std::optional<T> Converter<T>::tryParse(std::string_view raw)
     {
         const auto rawTransformed = utilities::toLowerAndReplaceDashesCopy(raw);
-        for (const auto& pair : InputAlias<T>::value)
-        {
-            if (rawTransformed ==
-                utilities::toLowerAndReplaceDashesCopy(pair.first))
-                return pair.second;
-        }
-
-        using Meta = mstd::enum_meta_t<T>;
+        using Meta                = mstd::enum_meta_t<T>;
         return Meta::from_stringCaseInsensitive(rawTransformed);
     }
 
@@ -113,10 +105,10 @@ namespace input
         using Meta = mstd::enum_meta_t<T>;
 
         std::string allowed;
-        for (size_t i = 0; i < Meta::names.size(); ++i)
+        for (const auto& spelling : Meta::spellings())
         {
-            const auto& name  = Meta::names[i];
-            const auto& value = Meta::values[i];
+            const auto& name  = spelling.text;
+            const auto& value = spelling.value;
 
             if (std::ranges::find(notAllowed, value) != notAllowed.end())
                 continue;
@@ -125,16 +117,6 @@ namespace input
                 allowed += ", ";
 
             allowed += utilities::toLowerCopy(name);
-        }
-        for (const auto& pair : InputAlias<T>::value)
-        {
-            if (std::ranges::find(notAllowed, pair.second) != notAllowed.end())
-                continue;
-
-            if (!allowed.empty())
-                allowed += ", ";
-
-            allowed += utilities::toLowerCopy(std::string(pair.first));
         }
 
         return "Allowed values: " + allowed;

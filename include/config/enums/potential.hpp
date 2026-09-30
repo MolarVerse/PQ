@@ -26,8 +26,6 @@
 #include <cstdint>
 #include <mstd/enum.hpp>
 
-#include "base.hpp"
-
 /**
  * @brief Enumeration for different types of force fields.
  *
@@ -63,10 +61,11 @@ MSTD_ENUM(NonCoulombType, std::uint8_t, NON_COULOMB_TYPE_LIST)
  * @brief Input alias for settings::NonCoulombType
  */
 template <>
-struct InputAlias<NonCoulombType>
+struct mstd::EnumAliases<NonCoulombType>
 {
-    static constexpr std::array<std::pair<std::string_view, NonCoulombType>, 1>
-        value = {{{"buck", NonCoulombType::BUCKINGHAM}}};
+    static constexpr auto value =
+        mstd::makeAliases<NonCoulombType>({{"buck", NonCoulombType::BUCKINGHAM}}
+        );
 };
 
 #undef NON_COULOMB_TYPE_LIST
@@ -89,11 +88,11 @@ MSTD_ENUM(CoulombLongRangeType, std::uint8_t, COULOMB_LONG_RANGE_TYPE_LIST)
  * @brief Input alias for settings::CoulombLongRangeType
  */
 template <>
-struct InputAlias<CoulombLongRangeType>
+struct mstd::EnumAliases<CoulombLongRangeType>
 {
-    static constexpr std::
-        array<std::pair<std::string_view, CoulombLongRangeType>, 1>
-            value = {{{"none", CoulombLongRangeType::SHIFTED}}};
+    static constexpr auto value = mstd::makeAliases<CoulombLongRangeType>(
+        {{"none", CoulombLongRangeType::SHIFTED}}
+    );
 };
 
 #undef COULOMB_LONG_RANGE_TYPE_LIST

@@ -28,8 +28,7 @@
 #include <mstd/enum.hpp>
 #include <string_view>   // for string_view
 
-#include "defaults.hpp"     // for _DIMENSIONALITY_DEFAULT_
-#include "enums/base.hpp"   // for InputAlias
+#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
 
 namespace settings
 {
@@ -186,11 +185,11 @@ namespace settings
  * @details Maps string representations to IntegratorType enum values
  */
 template <>
-struct InputAlias<settings::IntegratorType>
+struct mstd::EnumAliases<settings::IntegratorType>
 {
-    static constexpr std::
-        array<std::pair<std::string_view, settings::IntegratorType>, 1>
-            value{{{"v-verlet", settings::IntegratorType::VELOCITY_VERLET}}};
+    static constexpr auto value = mstd::makeAliases<settings::IntegratorType>(
+        {{"v_verlet", settings::IntegratorType::VELOCITY_VERLET}}
+    );
 };
 
 #endif   // _SETTINGS_HPP_
