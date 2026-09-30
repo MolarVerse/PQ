@@ -1,0 +1,111 @@
+name: CI Metrics
+
+# Collects the timings of finished CI jobs and commits them to dev under
+# .github/ci-metrics/data/. See .github/ci-metrics/README.md.
+#
+# - `schedule` and `workflow_dispatch` only run from workflow files on the
+#   default branch (main), so this stays inert until it reaches main.
+# - A scheduled run always works on dev. A manual run works on the ref it was
+#   started on, and only pushes when that ref is dev; anywhere else it is a dry
+#   run that shows what it would commit.
+# - It is not a pull_request workflow, so it is never a required check and a
+#   failure here cannot block a merge.
+
+on:
+  schedule:
+    - cron: '30 4 * * *' # daily, after the nightly BUILD (02:00) and the dev -> NEXT sync (03:00)
+  workflow_dispatch:
+    inputs:
+      since_days:
+        description: How many days back to look for finished runs
+        type: string
+        default: '3'
+      dry_run:
+        description: Collect and show what would be committed, but do not push
+        type: boolean
+        default: false
+
+# One run at a time, and never cancel one that is writing to dev.
+concurrency:
+  group: ci-metrics
+  cancel-in-progress: false
+
+permissions:
+  contents: write # push the data commit to dev
+  actions: read # list runs and jobs, read job logs
+
+jobs:
+  collect:
+    if: github.repository == 'MolarVerse/PQ'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - name: Resolve the ref to work on
+        id: target
+        env:
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [[ "$EVENT" == "schedule" ]]; then
+            ref=dev
+          else
+            ref="$REF_NAME"
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "Working on $ref"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.ref }}
+          fetch-depth: 0 # the retry after a rejected push rebases onto a newer dev
+
+      - name: Collect
+        id: collect
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SINCE_DAYS: ${{ inputs.since_days || '3' }}
+        run: |
+          if ! [[ "$SINCE_DAYS" =~ ^[0-9]+$ ]] || (( SINCE_DAYS < 1 || SINCE_DAYS > 100 )); then
+            echo "since_days must be a whole number from 1 to 100, got '$SINCE_DAYS'" >&2
+            exit 2
+          fi
+
+          # Keep going after a partial failure or a rate limit: what was
+          # collected is still worth committing. The exit status is checked in
+          # the last step so the run still ends red.
+          set +e
+          python3 .github/ci-metrics/collect.py \
+            --since-days "$SINCE_DAYS" --rate-limit-wait 30 2>&1 | tee "$RUNNER_TEMP/collect.log"
+          code=${PIPESTATUS[0]}
+          set -e
+
+          {
+            echo '### CI metrics collection'
+            echo '```'
+            cat "$RUNNER_TEMP/collect.log"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
+      - name: Publish
+        if: always() && steps.collect.outcome != 'skipped'
+        env:
+          REF: ${{ steps.target.outputs.ref }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: |
+          if [[ "$REF" == "dev" && "$DRY_RUN" != "true" ]]; then
+            bash .github/ci-metrics/publish.sh dev
+          else
+            echo "Not pushing (ref=$REF, dry_run=$DRY_RUN): dry run only."
+            bash .github/ci-metrics/publish.sh dev --dry-run
+          fi
+
+      - name: Fail if collection was incomplete
+        if: always() && steps.collect.outputs.code != '' && steps.collect.outputs.code != '0'
+        env:
+          CODE: ${{ steps.collect.outputs.code }}
+        run: |
+          echo "collect.py exited with status $CODE (1: some runs could not be collected, 2: stopped on the rate limit)." >&2
+          exit 1
