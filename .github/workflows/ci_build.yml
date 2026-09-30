@@ -267,6 +267,7 @@ jobs:
         shell: bash
 
       - name: Build and test static LTO
+        id: build
         run: |
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
@@ -287,6 +288,7 @@ jobs:
         with:
           name: static-lto
           job-id: ${{ job.check_run_id }}
+          build-status: ${{ steps.build.outcome }}
 
   static-singularity-build:
     if: >-

@@ -7,7 +7,6 @@ Runs inside the CI job (Python standard library only) and writes, into --out:
                        `kind: "build-analysis"` record, see SCHEMA.md)
   ninja_log.txt        the raw `.ninja_log`, if there was one
   ccache-stats.txt     the raw `ccache --print-stats` output, if available
-  ninja-pending.txt    why `ninja -n` still sees work, only if it does
 
 Every part is optional and this script never fails a job because of missing
 inputs: it exits 0 and records what it could not read.
@@ -25,12 +24,20 @@ from pathlib import Path
 SCHEMA_VERSION = 1
 SLOWEST = 20
 SUPPORTED_LOG_VERSIONS = (5, 6, 7)
-EXPLAIN_LINES = 300
 SUMMARY_NAME = "build-analysis.json"
+BUILD_STATUSES = ("success", "failure", "cancelled", "skipped")
 
 COMPILE_SUFFIXES = (".o", ".obj", ".gch", ".pch")
 SHARED_LIBRARY = re.compile(r"\.(so(\.\d+)*|dylib|dll)$")
-STEP_COUNT = re.compile(r"^\[\d+/(\d+)\]")
+
+
+def build_succeeded(status):
+    """True/False from the outcome of the job's build step, None if unknown."""
+    if status == "success":
+        return True
+    if status in ("failure", "cancelled"):
+        return False
+    return None
 
 
 def classify(target):
@@ -93,13 +100,12 @@ def seconds(milliseconds):
     return round(milliseconds / 1000, 1)
 
 
-def summarise_ninja(text, pending_steps):
+def summarise_ninja(text, build_ok):
     steps, version, ignored = parse_ninja_log(text)
     if version not in SUPPORTED_LOG_VERSIONS or not steps:
         return {
             "log_version": version,
             "complete": None,
-            "pending_steps": pending_steps,
             "steps": len(steps),
             "error": "no usable .ninja_log (unsupported version or no steps)",
         }
@@ -120,8 +126,7 @@ def summarise_ninja(text, pending_steps):
     slowest = sorted(steps, key=lambda step: (-step["ms"], step["target"]))[:SLOWEST]
     summary = {
         "log_version": version,
-        "complete": None if pending_steps is None else pending_steps == 0,
-        "pending_steps": pending_steps,
+        "complete": build_ok,
         "steps": len(steps),
         "wall_s": seconds(wall),
         "cpu_s": seconds(cpu),
@@ -176,27 +181,6 @@ def run(command):
         return None
 
 
-def ninja_dry_run(build_dir):
-    """Returns (pending steps, explanation) from `ninja -n -d explain`.
-
-    Pending 0 means the build is complete. After `ninja -k 0` with failures, the
-    failed targets and everything that depends on them are still pending. The
-    explanation says why ninja considers each step dirty (capped), so a wrong
-    verdict can be diagnosed from the artifact.
-    """
-    result = run(["ninja", "-C", str(build_dir), "-n", "-d", "explain"])
-    if result is None or result.returncode != 0:
-        return None, None
-    explanation = "\n".join((result.stderr + result.stdout).splitlines()[:EXPLAIN_LINES]) + "\n"
-    if "no work to do" in result.stdout:
-        return 0, explanation
-    for line in result.stdout.splitlines():
-        match = STEP_COUNT.match(line)
-        if match:
-            return int(match.group(1)), explanation
-    return None, explanation
-
-
 def build_summary(args, env):
     summary = {
         "schema_version": SCHEMA_VERSION,
@@ -216,10 +200,7 @@ def build_summary(args, env):
     if ninja_log.is_file():
         text = ninja_log.read_text(encoding="utf-8", errors="replace")
         shutil.copyfile(ninja_log, out / "ninja_log.txt")
-        pending, explanation = ninja_dry_run(args.build_dir)
-        summary["ninja"] = summarise_ninja(text, pending)
-        if pending != 0 and explanation:
-            (out / "ninja-pending.txt").write_text(explanation, encoding="utf-8")
+        summary["ninja"] = summarise_ninja(text, build_succeeded(args.build_status))
 
     if args.ccache:
         result = run(["ccache", "--print-stats"])
@@ -234,6 +215,12 @@ def parse_args(argv):
     parser.add_argument("--out", required=True, help="directory for the summary and raw files")
     parser.add_argument("--name", required=True, help="artifact name this summary is uploaded under")
     parser.add_argument("--build-dir", default="build", help="directory holding .ninja_log (default: build)")
+    parser.add_argument(
+        "--build-status",
+        choices=BUILD_STATUSES,
+        default=None,
+        help="outcome of the job's build step; decides `ninja.complete` (default: unknown)",
+    )
     parser.add_argument("--ccache", action="store_true", help="also record `ccache --print-stats`")
     parser.add_argument("--job-id", type=int, default=None, help="REST API id of this job (job.check_run_id)")
     return parser.parse_args(argv)

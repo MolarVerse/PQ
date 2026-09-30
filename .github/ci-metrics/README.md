@@ -213,10 +213,16 @@ retention of 14 days, so the collector has time to ingest it; raw logs are never
 committed. Only `build-static-lto` and `lint` use Ninja today, so the matrix and
 MPI jobs have ccache data only until #705 lands.
 
-A build that did not finish is flagged, not treated as a full build: after the
-build the script runs `ninja -n`, and `complete` is true only if nothing is left
-to do. This matters for `lint`, which builds with `-k 0` and tolerates errors
-(`pending_steps` says how many steps were left).
+A build that did not finish is flagged, not treated as a full build. The job
+passes the outcome of its build step to the action (`build-status`), and
+`complete` is true only if that step succeeded. This matters for `lint`, which
+builds with `-k 0` and tolerates errors: its step records the real `ninja` exit
+code for this purpose, and in practice its builds are partial (a GCC/Eigen
+`-Werror` false positive in `mShake.cpp` and a few test objects fail). `ninja -n`
+is deliberately not used to decide this: with LTO, GCC lists its temporary
+`/tmp/cc*.ltrans*.o` files as dependencies of every link step, they are gone after
+the link, and so `ninja -n` reports a finished `build-static-lto` build as having
+165 steps left.
 
 Reading the file fields: see "Build analysis summary" in [`SCHEMA.md`](SCHEMA.md).
 Ingesting the artifacts into the JSONL data and showing them in the overview

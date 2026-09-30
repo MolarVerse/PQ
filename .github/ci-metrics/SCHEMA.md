@@ -61,8 +61,7 @@ record by `job_id` (not implemented yet). Every part may be `null`.
 | `artifact` | Name the summary was uploaded under. |
 | `ninja` | `null` if the build directory has no `.ninja_log`. |
 | `ninja.log_version` | `.ninja_log` format version; 5, 6 and 7 are read. |
-| `ninja.complete` | `true` if `ninja -n` has nothing left to do, `false` if steps are pending (for example after `-k 0` with errors), `null` if that could not be determined. A `false` build must not be compared with full builds. |
-| `ninja.pending_steps` | Steps `ninja -n` would still run. |
+| `ninja.complete` | `true` if the job's build step succeeded, `false` if it failed (for example `lint`'s `-k 0` build with errors), `null` if the job did not say. A `false` build must not be compared with full builds. It is not derived from `ninja -n`, which is wrong for LTO links. |
 | `ninja.steps`, `wall_s`, `cpu_s` | Distinct commands run, time from the first start to the last end, sum of step times. A rebuilt output keeps its last entry; outputs of one command count once. |
 | `ninja.parallelism` | `cpu_s / wall_s`. |
 | `ninja.tail_after_compile_s` | Time from the last compile step ending to the end of the build (mostly linking). |

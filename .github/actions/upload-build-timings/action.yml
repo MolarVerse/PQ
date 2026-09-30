@@ -17,6 +17,11 @@ inputs:
   job-id:
     description: REST API id of the calling job (pass `job.check_run_id`).
     default: ''
+  build-status:
+    description: >-
+      Outcome of the job's build step (success, failure, cancelled or skipped);
+      decides whether the .ninja_log counts as a complete build. Leave empty if unknown.
+    default: ''
 
 runs:
   using: composite
@@ -29,10 +34,12 @@ runs:
         BUILD_DIR: ${{ inputs.build-dir }}
         USE_CCACHE: ${{ inputs.ccache }}
         JOB_ID: ${{ inputs.job-id }}
+        BUILD_STATUS: ${{ inputs.build-status }}
       run: |
         args=(--out "$RUNNER_TEMP/build-timings" --name "$ARTIFACT_NAME" --build-dir "$BUILD_DIR")
         [[ "$USE_CCACHE" == "true" ]] && args+=(--ccache)
         [[ -n "$JOB_ID" ]] && args+=(--job-id "$JOB_ID")
+        [[ -n "$BUILD_STATUS" ]] && args+=(--build-status "$BUILD_STATUS")
         python3 "$GITHUB_WORKSPACE/.github/ci-metrics/summarise_build.py" "${args[@]}"
 
     - name: Upload build timings

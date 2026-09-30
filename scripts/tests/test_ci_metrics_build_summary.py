@@ -92,7 +92,7 @@ class ParseNinjaLogTests(unittest.TestCase):
 
 class SummariseNinjaTests(unittest.TestCase):
     def test_totals_and_split(self):
-        s = summary_module.summarise_ninja(SAMPLE, pending_steps=0)
+        s = summary_module.summarise_ninja(SAMPLE, build_ok=True)
         self.assertEqual(15.5, s["wall_s"])
         self.assertEqual(1 + 3 + 8 + 0.5 + 6, s["cpu_s"])
         self.assertEqual(round(18.5 / 15.5, 2), s["parallelism"])
@@ -104,38 +104,36 @@ class SummariseNinjaTests(unittest.TestCase):
         self.assertEqual({"steps": 0, "cpu_s": 0.0}, s["by_kind"]["other"])
 
     def test_time_after_the_last_compile_is_the_link_tail(self):
-        self.assertEqual(6.5, summary_module.summarise_ninja(SAMPLE, 0)["tail_after_compile_s"])
+        self.assertEqual(6.5, summary_module.summarise_ninja(SAMPLE, True)["tail_after_compile_s"])
 
     def test_slowest_are_sorted_and_capped(self):
         many = HEADER + "".join(entry(0, 1000 + i, f"t{i:03d}.o", f"h{i}") for i in range(30))
-        slowest = summary_module.summarise_ninja(many, 0)["slowest"]
+        slowest = summary_module.summarise_ninja(many, True)["slowest"]
         self.assertEqual(summary_module.SLOWEST, len(slowest))
         self.assertEqual("t029.o", slowest[0]["target"])
         self.assertEqual("compile", slowest[0]["kind"])
-        top = summary_module.summarise_ninja(SAMPLE, 0)["slowest"][:2]
+        top = summary_module.summarise_ninja(SAMPLE, True)["slowest"][:2]
         self.assertEqual(["src/CMakeFiles/b.dir/b.cpp.o", "apps/PQ"], [x["target"] for x in top])
         self.assertEqual([8.0, 6.0], [x["seconds"] for x in top])
 
-    def test_completeness_follows_the_pending_step_count(self):
-        self.assertTrue(summary_module.summarise_ninja(SAMPLE, 0)["complete"])
-        partial = summary_module.summarise_ninja(SAMPLE, 12)
-        self.assertFalse(partial["complete"])
-        self.assertEqual(12, partial["pending_steps"])
+    def test_completeness_is_what_the_job_reported(self):
+        self.assertTrue(summary_module.summarise_ninja(SAMPLE, True)["complete"])
+        self.assertFalse(summary_module.summarise_ninja(SAMPLE, False)["complete"])
         self.assertIsNone(summary_module.summarise_ninja(SAMPLE, None)["complete"])
 
     def test_log_versions_5_to_7_are_read(self):
         for version in (5, 6, 7):
             text = SAMPLE.replace("v5", f"v{version}", 1)
-            self.assertEqual(5, summary_module.summarise_ninja(text, 0)["steps"], version)
+            self.assertEqual(5, summary_module.summarise_ninja(text, True)["steps"], version)
 
     def test_unusable_logs_say_why_instead_of_raising(self):
         for text in ("", "# ninja log v4\n" + entry(0, 1, "a.o"), "# ninja log v8\n" + entry(0, 1, "a.o"), HEADER):
-            s = summary_module.summarise_ninja(text, 0)
+            s = summary_module.summarise_ninja(text, True)
             self.assertIsNone(s["complete"])
             self.assertIn("error", s)
 
     def test_a_no_op_build_has_no_parallelism(self):
-        s = summary_module.summarise_ninja(HEADER + entry(5, 5, "a.o"), 0)
+        s = summary_module.summarise_ninja(HEADER + entry(5, 5, "a.o"), True)
         self.assertIsNone(s["parallelism"])
         self.assertEqual(0.0, s["wall_s"])
 
@@ -163,38 +161,14 @@ class CcacheTests(unittest.TestCase):
         self.assertIsNone(summary_module.parse_ccache_stats("ccache: command not found\n"))
 
 
-class DryRunTests(unittest.TestCase):
-    def dry_run(self, stdout="", stderr="", raises=None, returncode=0):
-        with mock.patch.object(summary_module.subprocess, "run") as run:
-            if raises:
-                run.side_effect = raises
-            else:
-                run.return_value = subprocess.CompletedProcess([], returncode, stdout=stdout, stderr=stderr)
-            result = summary_module.ninja_dry_run("build")
-            self.command = run.call_args[0][0] if run.call_args else None
-            return result
-
-    def test_no_work_to_do_means_complete(self):
-        self.assertEqual(0, self.dry_run("ninja: no work to do.\n")[0])
-        self.assertEqual(["ninja", "-C", "build", "-n", "-d", "explain"], self.command)
-
-    def test_counts_the_steps_ninja_would_still_run_and_keeps_the_explanation(self):
-        pending, explanation = self.dry_run(
-            "[1/3] Building CXX a.o\n[2/3] Building CXX b.o\n[3/3] Linking x\n",
-            stderr="ninja explain: output x older than most recent input a.o\n",
-        )
-        self.assertEqual(3, pending)
-        self.assertIn("ninja explain: output x older than most recent input a.o", explanation)
-        self.assertIn("[3/3] Linking x", explanation)
-
-    def test_the_explanation_is_capped(self):
-        _, explanation = self.dry_run("[1/1] x\n", stderr="explain\n" * 1000)
-        self.assertEqual(summary_module.EXPLAIN_LINES, len(explanation.splitlines()))
-
-    def test_unknown_output_a_failing_ninja_or_a_missing_ninja_is_unknown(self):
-        self.assertIsNone(self.dry_run("something else\n")[0])
-        self.assertEqual((None, None), self.dry_run("", returncode=1))
-        self.assertEqual((None, None), self.dry_run(raises=FileNotFoundError()))
+class BuildSucceededTests(unittest.TestCase):
+    def test_maps_step_outcomes(self):
+        f = summary_module.build_succeeded
+        self.assertTrue(f("success"))
+        self.assertFalse(f("failure"))
+        self.assertFalse(f("cancelled"))
+        self.assertIsNone(f("skipped"))
+        self.assertIsNone(f(None))
 
 
 class EndToEndTests(unittest.TestCase):
@@ -227,7 +201,7 @@ class EndToEndTests(unittest.TestCase):
         self.build.mkdir()
         (self.build / ".ninja_log").write_text(SAMPLE)
         code, data, printed = self.run_main(
-            "--ccache", "--job-id", "555", tools={"ninja": "ninja: no work to do.\n", "ccache": CCACHE_STATS}
+            "--ccache", "--job-id", "555", "--build-status", "success", tools={"ccache": CCACHE_STATS}
         )
         self.assertEqual(0, code)
         self.assertEqual(
@@ -248,19 +222,25 @@ class EndToEndTests(unittest.TestCase):
         self.assertEqual(CCACHE_STATS, (self.out / "ccache-stats.txt").read_text())
         self.assertIn("ninja steps=5 complete=True", printed)
 
-    def test_a_partial_build_is_flagged(self):
+    def test_a_build_that_failed_is_flagged_as_partial(self):
         self.build.mkdir()
         (self.build / ".ninja_log").write_text(SAMPLE)
-        _, data, _ = self.run_main(tools={"ninja": "[1/2] Building CXX broken.o\n[2/2] Linking x\n"})
+        _, data, _ = self.run_main("--build-status", "failure")
         self.assertFalse(data["ninja"]["complete"])
-        self.assertEqual(2, data["ninja"]["pending_steps"])
-        self.assertIn("explained", (self.out / "ninja-pending.txt").read_text())
 
-    def test_a_complete_build_writes_no_explanation(self):
+    def test_without_a_build_status_completeness_is_unknown(self):
         self.build.mkdir()
         (self.build / ".ninja_log").write_text(SAMPLE)
-        self.run_main(tools={"ninja": "ninja: no work to do.\n"})
-        self.assertFalse((self.out / "ninja-pending.txt").exists())
+        _, data, _ = self.run_main()
+        self.assertIsNone(data["ninja"]["complete"])
+        self.assertEqual(5, data["ninja"]["steps"])
+
+    def test_ninja_is_never_run(self):
+        self.build.mkdir()
+        (self.build / ".ninja_log").write_text(SAMPLE)
+        with mock.patch.object(summary_module.subprocess, "run") as run:
+            summary_module.main(["--out", str(self.out), "--name", "n", "--build-dir", str(self.build)], env=self.env)
+        run.assert_not_called()
 
     def test_without_any_input_it_still_succeeds_and_records_nulls(self):
         code, data, _ = self.run_main()
@@ -277,7 +257,7 @@ class EndToEndTests(unittest.TestCase):
     def test_a_failing_ccache_leaves_the_rest_intact(self):
         self.build.mkdir()
         (self.build / ".ninja_log").write_text(SAMPLE)
-        _, data, _ = self.run_main("--ccache", tools={"ninja": "ninja: no work to do.\n", "ccache": None})
+        _, data, _ = self.run_main("--ccache", tools={"ccache": None})
         self.assertIsNone(data["ccache"])
         self.assertEqual(5, data["ninja"]["steps"])
 
