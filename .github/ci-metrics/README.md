@@ -6,7 +6,7 @@ instead of guessed. Tracked in #720.
 | Part | Status |
 | --- | --- |
 | Storage layout and record schema (this directory) | defined, see [`SCHEMA.md`](SCHEMA.md) |
-| Collector script (GitHub API to JSONL) | planned, #715 |
+| Collector script (GitHub API to JSONL), see [Running the collector](#running-the-collector) | implemented, #715 |
 | Collector workflow | planned, #716 |
 | Overview report for `dev` | planned, #717 |
 | Build timings (`.ninja_log`, ccache, clang `-ftime-trace`) | planned, #718 and #719 |
@@ -18,8 +18,13 @@ instead of guessed. Tracked in #720.
   README.md      this file
   SCHEMA.md      field definitions and derivation rules
   schema.json    JSON Schema for one record
+  config.json    repository, recorded workflows, infrastructure-failure signatures
+  collect.py     the collector (Python standard library only, uses the gh CLI)
   data/          weekly JSONL shards, written only by the collector
 ```
+
+Tests: `scripts/tests/test_ci_metrics_collect.py` (offline; runs with the other
+script tests in CI).
 
 Nothing under `data/` is edited by hand.
 
@@ -61,6 +66,38 @@ Nothing under `data/` is edited by hand.
   concern, move older shards to an archive location or a separate branch.
 - **The changelog is unaffected.** `DEV-CHANGELOG.md` is built from
   `changes/` fragments, not from commit messages.
+
+## Running the collector
+
+```bash
+python3 .github/ci-metrics/collect.py                     # last 3 days (incremental)
+python3 .github/ci-metrics/collect.py --since-days 90     # backfill
+python3 .github/ci-metrics/collect.py --run-id 36693119228
+python3 .github/ci-metrics/collect.py --dry-run           # write nothing
+python3 .github/ci-metrics/collect.py --data-dir /tmp/x   # try it without touching data/
+```
+
+It needs the `gh` CLI, logged in (or `GH_TOKEN`/`GITHUB_TOKEN` set). Exit status
+is 0 on success, 1 if some runs could not be collected, 2 if it stopped early
+on the API rate limit; whatever was collected before stopping is still written.
+
+- **Idempotent and resumable.** Jobs already present (by `job_id`) are never
+  written again, and runs whose latest attempt is already recorded are not
+  fetched again, so overlapping windows and re-runs are cheap and safe. Runs
+  are processed newest first.
+- **Cost.** One API call per run for its jobs, plus one per pull-request head
+  commit and one per *failed* job (for the log). Measured on one busy day
+  (95 runs): 165 calls (1 listing, 95 jobs, 48 pull-request lookups, 21 logs),
+  taking 18-43 seconds with the default 8 workers.
+- **Rate limits.** A workflow's `GITHUB_TOKEN` is limited to about 1,000
+  requests per hour per repository; a personal login gets 5,000. A 90-day
+  backfill needs on the order of ten thousand calls (extrapolated from that
+  one day, so an estimate). Run it locally with your own login, or in chunks
+  with `--max-runs`, re-running until it reports nothing left. The daily
+  incremental run needs a few hundred calls.
+- **Late changes.** A run is only recorded once it has completed. The default
+  3-day lookback picks up runs that finished late and reruns of recent runs
+  (a rerun of a run older than the lookback is not picked up).
 
 ## Reading the data
 

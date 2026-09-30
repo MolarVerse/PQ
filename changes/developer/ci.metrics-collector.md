@@ -1,0 +1,1 @@
+- Add the CI metrics collector (.github/ci-metrics/collect.py) that turns finished GitHub Actions jobs into weekly JSONL timing records, idempotently and with rate-limit handling, plus offline tests.

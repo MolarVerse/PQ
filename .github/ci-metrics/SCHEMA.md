@@ -43,7 +43,7 @@ This page explains what each field means and how the collector derives it.
 
 | Flag | Value |
 | --- | --- |
-| `eigen_cache_hit` | `true` if the step `Clone Eigen (cache miss)` was skipped (the Eigen cache was restored), `false` if it ran, `null` if the job has no such step. Derived from step conclusions, no log parsing. Depends on that step name. |
+| `eigen_cache_hit` | `true` if the step `Clone Eigen (cache miss)` was skipped (the Eigen cache was restored), `false` if it ran, `null` if the job has no such step **or the preceding `Cache Eigen source` step did not succeed** (a job that failed earlier also shows the clone step as skipped). Derived from step conclusions, no log parsing. Depends on those two step names. |
 | `is_rerun` | `true` if `run_attempt > 1`. |
 | `infra_failure` | For `failure` jobs only: `true` if the job log contains a known infrastructure-outage signature (currently `GitLab is currently unable to handle this request`), `false` if it failed without one, `null` if the job did not fail or its log was unavailable (logs expire after 90 days). |
 
