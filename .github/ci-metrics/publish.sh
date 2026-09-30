@@ -37,7 +37,7 @@ if git diff --cached --quiet -- "$data_dir"; then
   exit 0
 fi
 
-added=$(git diff --cached --numstat -- "$data_dir" | awk '{n += $1} END {print n + 0}')
+added=$(git diff --cached --numstat -- "$data_dir/*.jsonl" | awk '{n += $1} END {print n + 0}')
 files=$(git diff --cached --name-only -- "$data_dir" | wc -l | tr -d ' ')
 git diff --cached --stat -- "$data_dir"
 
