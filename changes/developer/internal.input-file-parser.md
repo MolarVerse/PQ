@@ -22,3 +22,4 @@
 - migrate `HessianInputParser`
 - migrate `OptInputParser`
 - migrate `ThermostatInputParser`
+- migrate `ConvergenceInputParser`
