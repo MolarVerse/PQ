@@ -26,9 +26,8 @@
 
 #include <memory>
 
+#include "enums/qm.hpp"
 #include "qmRunner.hpp"
-#include "qmSettings.hpp"
-
 namespace engine
 {
     /**
