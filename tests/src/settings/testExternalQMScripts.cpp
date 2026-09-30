@@ -40,25 +40,22 @@ TEST(ExternalQMScriptsTest, catalogsSupportedPrograms)
 
 TEST(ExternalQMScriptsTest, describesBundledScripts)
 {
-    const auto dftbPlus = cli::externalQMScripts(settings::QMMethod::DFTBPLUS);
+    const auto dftbPlus = cli::externalQMScripts(QMMethod::DFTBPLUS);
     ASSERT_EQ(dftbPlus.size(), 1);
     EXPECT_EQ(dftbPlus.front().name, "dftbplus_periodic_stress");
     EXPECT_EQ(dftbPlus.front().requiredFileKeyword, "dftb_file");
     EXPECT_EQ(
-        cli::recommendedExternalQMScript(settings::QMMethod::DFTBPLUS),
+        cli::recommendedExternalQMScript(QMMethod::DFTBPLUS),
         dftbPlus.front().name
     );
 
-    const auto pyScf = cli::externalQMScripts(settings::QMMethod::PYSCF);
+    const auto pyScf = cli::externalQMScripts(QMMethod::PYSCF);
     ASSERT_EQ(pyScf.size(), 2);
     EXPECT_EQ(pyScf.front().name, "pyscf_hf.py");
     EXPECT_EQ(pyScf.back().name, "pyscf_mp2.py");
-    EXPECT_TRUE(
-        cli::recommendedExternalQMScript(settings::QMMethod::PYSCF).empty()
-    );
+    EXPECT_TRUE(cli::recommendedExternalQMScript(QMMethod::PYSCF).empty());
 
-    const auto turbomole =
-        cli::externalQMScripts(settings::QMMethod::TURBOMOLE);
+    const auto turbomole = cli::externalQMScripts(QMMethod::TURBOMOLE);
     ASSERT_EQ(turbomole.size(), 1);
     EXPECT_EQ(turbomole.front().name, "turbomole_ricc2");
     EXPECT_EQ(turbomole.front().requiredWorkingFile, "tm_define.template");
@@ -67,14 +64,9 @@ TEST(ExternalQMScriptsTest, describesBundledScripts)
 TEST(ExternalQMScriptsTest, identifiesCatalogEntries)
 {
     EXPECT_TRUE(
-        cli::isExternalQMScript(
-            settings::QMMethod::DFTBPLUS,
-            "dftbplus_periodic_stress"
-        )
+        cli::isExternalQMScript(QMMethod::DFTBPLUS, "dftbplus_periodic_stress")
     );
-    EXPECT_FALSE(
-        cli::isExternalQMScript(settings::QMMethod::DFTBPLUS, "pyscf_hf.py")
-    );
-    EXPECT_TRUE(cli::externalQMScripts(settings::QMMethod::MACE).empty());
-    EXPECT_TRUE(cli::externalQMProgramName(settings::QMMethod::MACE).empty());
+    EXPECT_FALSE(cli::isExternalQMScript(QMMethod::DFTBPLUS, "pyscf_hf.py"));
+    EXPECT_TRUE(cli::externalQMScripts(QMMethod::MACE).empty());
+    EXPECT_TRUE(cli::externalQMProgramName(QMMethod::MACE).empty());
 }

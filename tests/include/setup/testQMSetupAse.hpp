@@ -44,7 +44,7 @@ class TestQMSetupAse : public ::testing::Test
         _engine  = new engine::QMMDEngine();
         _qmSetup = new setup::QMSetup(*_engine);
         _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-        settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
+        settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     }
 
     void TearDown() override
@@ -53,8 +53,8 @@ class TestQMSetupAse : public ::testing::Test
         delete _qmSetup;
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
-        settings::QMSettings::setSlakosType("none");
+        settings::QMSettings::setQMMethod(QMMethod::NONE);
+        settings::QMSettings::setSlakosType(SlakosType::NONE);
         settings::QMSettings::setUseDispersionCorrection(false);
         settings::QMSettings::setUseThirdOrderDftb(false);
         settings::QMSettings::setIsThirdOrderDftbSet(false);

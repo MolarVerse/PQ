@@ -47,9 +47,7 @@ namespace engine
         QMRunnerManager() = default;
 
        public:
-        static std::shared_ptr<QM::QMRunner> createQMRunner(
-            settings::QMMethod method
-        );
+        static std::shared_ptr<QM::QMRunner> createQMRunner(QMMethod method);
         static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
         static std::shared_ptr<QM::QMRunner> createAseFennolRunner();
         static std::shared_ptr<QM::QMRunner> createAseMaceRunner();

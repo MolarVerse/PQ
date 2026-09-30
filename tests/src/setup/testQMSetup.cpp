@@ -28,7 +28,8 @@
 #include <string_view>   // for string_view
 
 #include "dftbplusRunner.hpp"   // for DFTBPlusRunner
-#include "exceptions.hpp"       // for InputFileException
+#include "enums/qm.hpp"
+#include "exceptions.hpp"   // for InputFileException
 #include "externalQMRunner.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
@@ -97,13 +98,13 @@ TEST(TestQMSetup, setupDftbplus)
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     setBuildCompatibleQMScript();
     setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
+    settings::QMSettings::setQMMethod(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
@@ -118,13 +119,13 @@ TEST(TestQMSetup, setupPySCF)
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::PYSCF);
+    settings::QMSettings::setQMMethod(QMMethod::PYSCF);
     setBuildCompatibleQMScript();
     setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::PySCFRunner));
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
+    settings::QMSettings::setQMMethod(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
@@ -139,13 +140,13 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     engine::QMMDEngine engine;
     auto               setupQM = setup::QMSetup(engine);
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::TURBOMOLE);
+    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
     setBuildCompatibleQMScript();
     setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::TurbomoleRunner));
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
+    settings::QMSettings::setQMMethod(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
@@ -157,7 +158,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
 
 TEST(TestQMSetup, setupQMFull)
 {
-    settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("test");
 
     engine::QMMDEngine engine;
@@ -169,8 +170,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 {
     engine::QMMDEngine engine;
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
-    settings::QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
     settings::QMSettings::setIsThirdOrderDftbSet(false);
 
     setup::QMSetup::setupQMMethodAseDftbPlus();
@@ -181,8 +182,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
 {
     engine::QMMDEngine engine;
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
-    settings::QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
     settings::QMSettings::setIsThirdOrderDftbSet(true);
     settings::QMSettings::setUseThirdOrderDftb(true);
 
@@ -194,8 +195,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
 {
     engine::QMMDEngine engine;
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
-    settings::QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
     settings::QMSettings::setIsThirdOrderDftbSet(true);
     settings::QMSettings::setUseThirdOrderDftb(false);
 
@@ -207,8 +208,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
 {
     engine::QMMDEngine engine;
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
-    settings::QMSettings::setSlakosType("matsci");
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::MATSCI);
     settings::QMSettings::setIsThirdOrderDftbSet(false);
     settings::QMSettings::setUseThirdOrderDftb(false);
 
@@ -221,8 +222,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 {
     engine::QMMDEngine engine;
 
-    settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
-    settings::QMSettings::setSlakosType("custom");
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
     settings::QMSettings::setIsThirdOrderDftbSet(false);
     settings::QMSettings::setUseThirdOrderDftb(false);
 
@@ -236,7 +237,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
     auto *_qmSetup = new setup::QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("path/To/myQMScript");
 
     _qmSetup->setupWriteInfo();
@@ -266,7 +267,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
     auto *_qmSetup = new setup::QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("path/To/myQMScript");
     settings::QMSettings::setQMLoopTimeLimit(-1.2);
 
@@ -297,7 +298,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
     auto *_qmSetup = new setup::QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("path/To/myQMScript");
     settings::QMSettings::setQMLoopTimeLimit(0);
 
@@ -328,7 +329,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     auto *_qmSetup = new setup::QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("path/To/myQMScript");
     settings::QMSettings::setQMLoopTimeLimit(3.14);
 
@@ -359,7 +360,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     auto *_qmSetup = new setup::QMSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(settings::QMMethod::FENNOL);
+    settings::QMSettings::setQMMethod(QMMethod::FENNOL);
     settings::QMSettings::setFennolModelPath("path/To/fennol_model.fnx");
     settings::QMSettings::setUseGPUPreprocessing(false);
     settings::Settings::setFloatingPointType(settings::FPType::FLOAT);
@@ -370,7 +371,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "         QM runner: FeNNol");
+    EXPECT_EQ(line, "         QM runner: FENNOL");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);

@@ -24,99 +24,16 @@
 
 #define _QM_SETTINGS_HPP_
 
-#include <cstdint>
-#include <string>          // for string
-#include <string_view>     // for string_view
-#include <unordered_map>   // for unordered_map
+#include <string>
+#include <string_view>
+#include <unordered_map>
 
-#include "defaults.hpp"   // for _QM_LOOP_TIME_LIMIT_DEFAULT_
+#include "defaults.hpp"
+#include "enums/qm.hpp"
 
 namespace settings
 {
-    /**
-     * @brief enum QMMethod
-     *
-     */
-    enum class QMMethod : std::uint8_t
-    {
-        NONE,
-        DFTBPLUS,
-        ASEDFTBPLUS,
-        ASEXTB,
-        PYSCF,
-        TURBOMOLE,
-        MACE,
-        FENNOL
-    };
 
-    /**
-     * @brief enum MaceModel
-     *
-     */
-    enum class MaceModel : std::uint8_t
-    {
-        SMALL,
-        MEDIUM,
-        LARGE,
-        SMALL0B,
-        MEDIUM0B,
-        SMALL0B2,
-        MEDIUM0B2,
-        LARGE0B2,
-        MEDIUM0B3,
-        MEDIUMMPA0,
-        MEDIUMOMAT0,
-        CUSTOM,
-    };
-
-    /**
-     * @brief enum MaceModelType
-     */
-    enum class MaceModelType : std::uint8_t
-    {
-        MACE_MP,
-        MACE_OFF,
-        MACE_ANICC
-    };
-
-    /**
-     * @brief enum MaceMode
-     *
-     * @details enum class for the MACE evaluation mode / kernel backend
-     */
-    enum class MaceMode : std::uint8_t
-    {
-        ACCURATE,
-        FAST
-    };
-
-    /**
-     * @brief enum XtbMethod
-     */
-    enum class XtbMethod : std::uint8_t
-    {
-        GFN1,
-        GFN2,
-        IPEA1,
-    };
-
-    /**
-     * @brief enum SlakosType
-     */
-    enum class SlakosType : std::uint8_t
-    {
-        NONE,
-        THREEOB,
-        MATSCI,
-        CUSTOM
-    };
-
-    std::string string(QMMethod method);
-    std::string string(MaceModel model);
-    std::string string(MaceModelType model);
-    std::string string(MaceMode mode);
-    std::string string(XtbMethod method);
-    std::string string(SlakosType slakos);
     std::string string(
         const std::unordered_map<std::string, double> &unordered_map
     );
@@ -152,9 +69,8 @@ namespace settings
 
         static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
-        // clang-format off
-        static inline double _qmLoopTimeLimit = defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
-        // clang-format on
+        static inline double _qmLoopTimeLimit =
+            defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
 
        public:
         [[nodiscard]] static bool isExternalQMRunner();
@@ -163,21 +79,16 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setQMMethod(const std::string_view &method);
         static void setQMMethod(QMMethod method);
 
-        static void setMaceModel(const std::string_view &model);
         static void setMaceModel(MaceModel model);
-        static void setMaceModelType(const std::string_view &model);
         static void setMaceModelType(MaceModelType model);
-        static void setMaceMode(const std::string_view &mode);
         static void setMaceMode(MaceMode mode);
         static void setMaceModelPath(const std::string_view &path);
 
         static void setQMScript(const std::string_view &script);
         static void setQMScriptFullPath(const std::string_view &script);
 
-        static void setSlakosType(const std::string_view &slakos);
         static void setSlakosType(SlakosType slakos, bool resolveBuiltInPath);
         static void setSlakosType(SlakosType slakos);
         static void setSlakosPath(const std::string_view &path);
@@ -191,7 +102,6 @@ namespace settings
         );
         static void setIsHubbardDerivsSet(bool isHubbardDerivsSet);
 
-        static void setXtbMethod(const std::string_view &method);
         static void setXtbMethod(XtbMethod method);
 
         static void setFennolModelPath(const std::string_view &path);

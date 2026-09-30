@@ -125,12 +125,12 @@ class ExternalQMRunnerTest : public testing::Test
     ExternalQMRunnerHarness    _runner;
     QM::DFTBPlusRunner         _dftbRunner;
 
-    settings::QMMethod _qmMethod;
-    settings::JobType  _jobType;
-    bool               _removeNetForce;
-    double             _timeLimit;
-    std::string        _qmScript;
-    std::string        _dftbFile;
+    QMMethod          _qmMethod;
+    settings::JobType _jobType;
+    bool              _removeNetForce;
+    double            _timeLimit;
+    std::string       _qmScript;
+    std::string       _dftbFile;
 
     static void _readForceFile(
         molsys::SimulationBox      &simulationBox,
@@ -162,7 +162,7 @@ class ExternalQMRunnerTest : public testing::Test
         ASSERT_TRUE(std::filesystem::create_directory(_workPath));
         std::filesystem::current_path(_workPath);
 
-        settings::QMSettings::setQMMethod(settings::QMMethod::DFTBPLUS);
+        settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
         settings::QMSettings::setRemoveNetForce(false);
         settings::QMSettings::setQMLoopTimeLimit(0.0);
         settings::Settings::setJobtype(settings::JobType::QM_MD);

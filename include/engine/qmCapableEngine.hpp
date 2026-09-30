@@ -48,7 +48,7 @@ namespace engine
        public:
         virtual ~QMCapableEngine() = default;
 
-        void setQMRunner(settings::QMMethod method);
+        void setQMRunner(QMMethod method);
         [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
         [[nodiscard]] bool                          hasQMRunner() const;
     };

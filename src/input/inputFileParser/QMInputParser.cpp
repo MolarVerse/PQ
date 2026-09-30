@@ -27,6 +27,7 @@
 #include <stdexcept>
 #include <unordered_map>
 
+#include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "hubbardDerivMap.hpp"
 #include "parserUtils.hpp"
@@ -188,66 +189,63 @@ namespace input
         size_t                          lineNumber
     )
     {
-        using enum settings::QMMethod;
+        using enum QMMethod;
         checkCommand(lineElements, lineNumber);
 
         const auto method =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        if ("dftbplus" == method)
-        {
-            settings::QMSettings::setQMMethod(DFTBPLUS);
-            references::ReferencesOutput::addReferenceFile(
-                references::DFTBPLUS_FILE
-            );
-        }
-        else if ("ase_dftbplus" == method)
-        {
-            settings::QMSettings::setQMMethod(ASEDFTBPLUS);
-            references::ReferencesOutput::addReferenceFile(
-                references::DFTBPLUS_FILE
-            );
-        }
-        else if ("ase_xtb" == method)
-        {
-            settings::QMSettings::setQMMethod(ASEXTB);
-        }
-        else if ("pyscf" == method)
-        {
-            settings::QMSettings::setQMMethod(PYSCF);
-            references::ReferencesOutput::addReferenceFile(
-                references::PYSCF_FILE
-            );
-        }
-        else if ("turbomole" == method)
-        {
-            settings::QMSettings::setQMMethod(TURBOMOLE);
-            references::ReferencesOutput::addReferenceFile(
-                references::TURBOMOLE_FILE
-            );
-        }
-        else if ("fennol" == method)
-        {
-            settings::QMSettings::setQMMethod(method);
-            references::ReferencesOutput::addReferenceFile(
-                references::FENNOL_FILE
-            );
-        }
-        else if (method.starts_with("mace"))
-        {
-            parseMaceQMMethod(method);
-        }
-        else
+        const auto qmMethodOpt =
+            QMMethodMeta::from_stringCaseInsensitive(method);
+
+        if (!qmMethodOpt.has_value())
         {
             throw exc::InputFileException(
                 std::format(
                     "Invalid qm_prog \"{}\" in input file.\n"
                     "Possible values are: dftbplus, ase_dftbplus, ase_xtb, "
-                    "pyscf, "
-                    "turbomole, fennol, mace, mace_mp, mace_off",
+                    "pyscf, turbomole, fennol, mace, mace_mp, mace_off",
                     lineElements[2]
                 )
             );
+        }
+
+        settings::QMSettings::setQMMethod(qmMethodOpt.value());
+
+        switch (qmMethodOpt.value())
+        {
+            case ASE_DFTBPLUS:
+            case DFTBPLUS:
+                references::ReferencesOutput::addReferenceFile(
+                    references::DFTBPLUS_FILE
+                );
+                break;
+            case TURBOMOLE:
+                references::ReferencesOutput::addReferenceFile(
+                    references::TURBOMOLE_FILE
+                );
+                break;
+            case FENNOL:
+                references::ReferencesOutput::addReferenceFile(
+                    references::FENNOL_FILE
+                );
+                break;
+            case PYSCF:
+                references::ReferencesOutput::addReferenceFile(
+                    references::PYSCF_FILE
+                );
+                break;
+            case MACE: parseMaceQMMethod(method); break;
+            case ASE_XTB: break;
+            case NONE:
+                throw exc::InputFileException(
+                    std::format(
+                        "Invalid qm_prog \"{}\" in input file.\n"
+                        "Possible values are: dftbplus, ase_dftbplus, ase_xtb, "
+                        "pyscf, turbomole, fennol, mace, mace_mp, mace_off",
+                        lineElements[2]
+                    )
+                );
         }
     }
 
@@ -351,7 +349,7 @@ namespace input
         size_t                          lineNumber
     )
     {
-        using enum settings::MaceModel;
+        using enum MaceModel;
         checkCommand(lineElements, lineNumber);
 
         const auto *const modelSizeWarning =
@@ -368,42 +366,12 @@ namespace input
         const auto size =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        if ("small" == size)
-            settings::QMSettings::setMaceModel(SMALL);
+        const auto modelOpt = MaceModelMeta::from_stringCaseInsensitive(size);
 
-        else if ("medium" == size)
-            settings::QMSettings::setMaceModel(MEDIUM);
-
-        else if ("large" == size)
-            settings::QMSettings::setMaceModel(LARGE);
-
-        else if ("small_0b" == size)
-            settings::QMSettings::setMaceModel(SMALL0B);
-
-        else if ("medium_0b" == size)
-            settings::QMSettings::setMaceModel(MEDIUM0B);
-
-        else if ("small_0b2" == size)
-            settings::QMSettings::setMaceModel(SMALL0B2);
-
-        else if ("medium_0b2" == size)
-            settings::QMSettings::setMaceModel(MEDIUM0B2);
-
-        else if ("large_0b2" == size)
-            settings::QMSettings::setMaceModel(LARGE0B2);
-
-        else if ("medium_0b3" == size)
-            settings::QMSettings::setMaceModel(MEDIUM0B3);
-
-        else if ("medium_mpa_0" == size)
-            settings::QMSettings::setMaceModel(MEDIUMMPA0);
-
-        else if ("medium_omat_0" == size)
-            settings::QMSettings::setMaceModel(MEDIUMOMAT0);
-
-        else if ("custom" == size)
-            settings::QMSettings::setMaceModel(CUSTOM);
-
+        if (modelOpt.has_value())
+        {
+            settings::QMSettings::setMaceModel(modelOpt.value());
+        }
         else
         {
             throw exc::InputFileException(
@@ -431,7 +399,23 @@ namespace input
     {
         checkCommand(lineElements, lineNumber);
 
-        settings::QMSettings::setMaceMode(lineElements[2]);
+        const auto modeStr =
+            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+
+        const auto mode = MaceModeMeta::from_stringCaseInsensitive(modeStr);
+
+        if (!mode.has_value())
+        {
+            throw exc::InputFileException(
+                std::format(
+                    "Invalid mace_mode \"{}\" in input file.\n"
+                    "Possible values are: accurate, fast",
+                    lineElements[2]
+                )
+            );
+        }
+
+        settings::QMSettings::setMaceMode(mode.value());
     }
 
     /**
@@ -458,45 +442,43 @@ namespace input
      */
     void QMInputParser::parseMaceQMMethod(const std::string_view &model)
     {
-        using enum settings::MaceModelType;
+        const auto modelTypeOpt =
+            MaceModelTypeMeta::from_stringCaseInsensitive(model);
 
-        if ("mace" == model || "mace_mp" == model)
-        {
-            settings::QMSettings::setMaceModelType(MACE_MP);
-            references::ReferencesOutput::addReferenceFile(
-                references::MACEMP_FILE
-            );
-        }
-
-        else if ("mace_off" == model)
-        {
-            settings::QMSettings::setMaceModelType(MACE_OFF);
-            references::ReferencesOutput::addReferenceFile(
-                references::MACEOFF_FILE
-            );
-        }
-
-        else if ("mace_anicc" == model || "mace_ani" == model)
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "The mace ani model is not supported in this version of "
-                    "PQ.\n"
-                )
-            );
-        }
-        else
+        if (!modelTypeOpt.has_value())
         {
             throw exc::InputFileException(
                 std::format(
                     "Invalid mace type qm_method \"{}\" in input file.\n"
-                    "Possible values are: mace (mace_mp), mace_off",
+                    "Possible values are: mace (mace_mp), mace_off, mace_ani",
                     model
                 )
             );
         }
 
-        settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
+        switch (modelTypeOpt.value())
+        {
+            case MaceModelType::MACE_MP:
+                references::ReferencesOutput::addReferenceFile(
+                    references::MACEMP_FILE
+                );
+                break;
+            case MaceModelType::MACE_OFF:
+                references::ReferencesOutput::addReferenceFile(
+                    references::MACEOFF_FILE
+                );
+                break;
+            case MaceModelType::MACE_ANICC:
+                throw exc::InputFileException(
+                    std::format(
+                        "The mace ani model is not supported in this version "
+                        "of PQ.\n"
+                    )
+                );
+                break;
+        }
+
+        settings::QMSettings::setMaceModelType(modelTypeOpt.value());
     }
 
     /**
@@ -512,7 +494,7 @@ namespace input
         size_t                          lineNumber
     ) const
     {
-        using enum settings::SlakosType;
+        using enum SlakosType;
         checkCommand(lineElements, lineNumber);
 
         const auto slakos = utilities::toLowerCopy(lineElements[2]);
@@ -672,7 +654,7 @@ namespace input
         size_t                          lineNumber
     )
     {
-        using enum settings::XtbMethod;
+        using enum XtbMethod;
         checkCommand(lineElements, lineNumber);
 
         const auto slakos =
