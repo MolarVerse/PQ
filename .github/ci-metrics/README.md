@@ -6,7 +6,7 @@ instead of guessed. Tracked in #720.
 | Part | Status |
 | --- | --- |
 | Storage layout and record schema (this directory) | defined, see [`SCHEMA.md`](SCHEMA.md) |
-| Collector script (GitHub API to JSONL) | planned, #715 |
+| Collector script (GitHub API to JSONL), see [Running the collector](#running-the-collector) | implemented, #715 |
 | Collector workflow | planned, #716 |
 | Overview report for `dev` | planned, #717 |
 | Build timings (`.ninja_log`, ccache, clang `-ftime-trace`) | planned, #718 and #719 |
@@ -18,8 +18,13 @@ instead of guessed. Tracked in #720.
   README.md      this file
   SCHEMA.md      field definitions and derivation rules
   schema.json    JSON Schema for one record
+  config.json    repository, recorded workflows, infrastructure-failure signatures
+  collect.py     the collector (Python standard library only, uses the gh CLI)
   data/          weekly JSONL shards, written only by the collector
 ```
+
+Tests: `scripts/tests/test_ci_metrics_collect.py` (offline; runs with the other
+script tests in CI).
 
 Nothing under `data/` is edited by hand.
 
@@ -61,6 +66,51 @@ Nothing under `data/` is edited by hand.
   concern, move older shards to an archive location or a separate branch.
 - **The changelog is unaffected.** `DEV-CHANGELOG.md` is built from
   `changes/` fragments, not from commit messages.
+
+## Running the collector
+
+```bash
+python3 .github/ci-metrics/collect.py                     # last 3 days (incremental)
+python3 .github/ci-metrics/collect.py --since-days 90     # backfill
+python3 .github/ci-metrics/collect.py --run-id 36693119228
+python3 .github/ci-metrics/collect.py --dry-run           # write nothing
+python3 .github/ci-metrics/collect.py --data-dir /tmp/x   # try it without touching data/
+python3 .github/ci-metrics/collect.py --since-days 90 --rate-limit-wait 90   # backfill, waiting out rate limits
+```
+
+It needs the `gh` CLI, logged in (or `GH_TOKEN`/`GITHUB_TOKEN` set). Exit status
+is 0 on success, 1 if some runs could not be collected, 2 if it stopped early
+on the API rate limit; whatever was collected before stopping is still written.
+When it stops on a rate limit, the summary shows GitHub's own message once.
+
+- **Idempotent and resumable.** Jobs already present (by `job_id`) are never
+  written again, and runs whose latest attempt is already recorded are not
+  fetched again, so overlapping windows and re-runs are cheap and safe. Runs
+  are processed newest first.
+- **Cost.** One API call per run for its jobs, plus one per pull-request head
+  commit and one per *failed* job (for the log). Measured on one busy day
+  (95 runs): 165 calls (1 listing, 95 jobs, 48 pull-request lookups, 21 logs),
+  taking 18-43 seconds with the default 8 workers.
+- **Rate limits.** A workflow's `GITHUB_TOKEN` is limited to about 1,000
+  requests per hour per repository; a personal login gets 5,000. The daily
+  incremental run needs a few hundred calls. The one real 90-day backfill
+  (4,488 runs, 2026-07-03 to 2026-09-30, run locally with a personal login)
+  stopped on the rate limit after about 45 minutes and about 4,200 runs, and
+  calls worked again roughly 20 minutes later; the last ~270 runs then
+  finished in about 6 minutes.
+- **Waiting out a rate limit.** With `--rate-limit-wait MINUTES` a rate-limited
+  call is retried after 1, 2, 4, 8, 10, 10 ... minutes for up to that long,
+  instead of the run stopping (the default, `0`, stops). It deliberately does
+  not try to compute when the limit resets: during that backfill
+  `gh api rate_limit` kept reporting 5,000 remaining and a response header
+  reported 4,173 remaining while calls were refused with HTTP 403, and a retry
+  at the reset time given by that header was refused again. This was seen once,
+  so the cause is not established; treat those readings as unreliable for
+  scheduling. Runs are still written as they complete, so an interrupted
+  backfill loses nothing and can simply be re-run.
+- **Late changes.** A run is only recorded once it has completed. The default
+  3-day lookback picks up runs that finished late and reruns of recent runs
+  (a rerun of a run older than the lookback is not picked up).
 
 ## Reading the data
 

@@ -1,0 +1,18 @@
+{
+  "repo": "MolarVerse/PQ",
+  "workflows": [
+    "BUILD",
+    "LINT",
+    "Performance Gate",
+    "DevOps C++ Check",
+    "Clang Format Check",
+    "License Header Check",
+    "Changelog Fragment Check",
+    "Check PR Has Linked Issue",
+    "Dismiss Stale Approvals",
+    "Docs"
+  ],
+  "infra_failure_signatures": [
+    "GitLab is currently unable to handle this request"
+  ]
+}
