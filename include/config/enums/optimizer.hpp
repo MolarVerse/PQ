@@ -23,13 +23,8 @@
 #ifndef _OPTIMIZER_ENUM_HPP_
 #define _OPTIMIZER_ENUM_HPP_
 
-#include <array>
 #include <cstdint>
 #include <mstd/enum.hpp>
-#include <string_view>
-#include <utility>
-
-#include "enums/base.hpp"
 
 /**
  * @brief enum OptimizerType
@@ -59,17 +54,22 @@ enum class LearningRate : std::uint8_t;
 
 MSTD_ENUM(LearningRate, std::uint8_t, LEARNING_RATE_LIST)
 
-/**
- * @brief Input alias for LearningRate enum
- *
- * @tparam LearningRate The enum type for which this input alias is defined.
- */
-template <>
-struct InputAlias<LearningRate>
+namespace mstd
 {
-    static constexpr std::array<std::pair<std::string_view, LearningRate>, 1>
-        value{{{"linesearch", LearningRate::LINESEARCH_WOLFE}}};
-};
+
+    /**
+     * @brief Input alias for LearningRate enum
+     *
+     * @tparam LearningRate The enum type for which this input alias is defined.
+     */
+    template <>
+    struct EnumAliases<LearningRate>
+    {
+        static constexpr auto value = makeAliases<LearningRate>(
+            {{"linesearch", LearningRate::LINESEARCH_WOLFE}}
+        );
+    };
+}   // namespace mstd
 
 #undef LEARNING_RATE_LIST
 

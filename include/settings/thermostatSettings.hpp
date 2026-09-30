@@ -28,10 +28,10 @@
 #include <cstdint>
 #include <map>   // for map
 #include <mstd/enum.hpp>
+#include <mstd/enum/enum_string.hpp>
 #include <string_view>   // for string_view
 
 #include "defaults.hpp"
-#include "enums/base.hpp"
 
 namespace settings
 {
@@ -152,22 +152,24 @@ namespace settings
 
 // TODO: move this to enum as soon as it is done
 
-/**
- * @brief Provides a mapping between string aliases and the ThermostatType enum
- * values.
- *
- * @tparam  settings::ThermostatType The enum type for which the input aliases
- * are defined.
- */
-template <>
-struct InputAlias<settings::ThermostatType>
+namespace mstd
 {
-    static constexpr std::
-        array<std::pair<std::string_view, settings::ThermostatType>, 2>
-            value{
-                {{"nh_chain", settings::ThermostatType::NOSE_HOOVER},
-                 {"rescale", settings::ThermostatType::VELOCITY_RESCALING}}
-            };
-};
+    /**
+     * @brief Provides a mapping between string aliases and the ThermostatType
+     * enum values.
+     *
+     * @tparam  settings::ThermostatType The enum type for which the input
+     * aliases are defined.
+     */
+    template <>
+    struct EnumAliases<settings::ThermostatType>
+    {
+        static constexpr auto value = makeAliases<settings::ThermostatType>(
+            {{"nh_chain", settings::ThermostatType::NOSE_HOOVER},
+             {"rescale", settings::ThermostatType::VELOCITY_RESCALING}}
+        );
+    };
+
+}   // namespace mstd
 
 #endif   // _THERMOSTAT_SETTINGS_HPP_
