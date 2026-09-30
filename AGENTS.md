@@ -25,6 +25,8 @@ The project uses the **git-flow** branching model: `main` is the stable/release 
 7. Use `git push -u origin <branch-name>` when pushing a new branch.
 8. **Install the commit-msg hook once per clone**: `cp .githooks/commit-msg .git/hooks/`. It rejects commits whose subject doesn't start with a recognized conventional-commit-style prefix (see below) — this is enforced locally, not just in CI.
 
+> **One documented exception to rule 1:** the CI metrics collector commits timing data under `.github/ci-metrics/data/` directly to `dev` using `GITHUB_TOKEN` (see `.github/ci-metrics/README.md`). It applies only to that workflow and that path. Contributors and coding assistants must still never push to `dev`.
+
 ```bash
 # Correct workflow
 git checkout dev
@@ -69,6 +71,7 @@ Example: `docs: add shared contributor guide`
 ```
 PQ/
 ├── .github/workflows/     # CI/CD pipelines (GitHub Actions)
+├── .github/ci-metrics/    # CI timing data + schema (data written by the collector)
 ├── .githooks/             # commit-msg hook (conventional-commit enforcement)
 ├── .cmake/                # CMake helper modules (config, eigen, testing, mpi, ...)
 ├── apps/                  # Main application executable (PQ.cpp)
