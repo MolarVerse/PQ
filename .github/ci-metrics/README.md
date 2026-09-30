@@ -7,7 +7,7 @@ instead of guessed. Tracked in #720.
 | --- | --- |
 | Storage layout and record schema (this directory) | defined, see [`SCHEMA.md`](SCHEMA.md) |
 | Collector script (GitHub API to JSONL), see [Running the collector](#running-the-collector) | implemented, #715 |
-| Collector workflow | planned, #716 |
+| Collector workflow, see [The workflow](#the-workflow) | implemented, #716 (inert until it reaches `main`) |
 | Overview report for `dev` | planned, #717 |
 | Build timings (`.ninja_log`, ccache, clang `-ftime-trace`) | planned, #718 and #719 |
 
@@ -20,8 +20,12 @@ instead of guessed. Tracked in #720.
   schema.json    JSON Schema for one record
   config.json    repository, recorded workflows, infrastructure-failure signatures
   collect.py     the collector (Python standard library only, uses the gh CLI)
+  publish.sh     commits and pushes new data (used by the workflow)
   data/          weekly JSONL shards, written only by the collector
 ```
+
+The workflow is `.github/workflows/ci_metrics.yml`. Tests:
+`scripts/tests/test_ci_metrics_publish.py` (real local git repositories).
 
 Tests: `scripts/tests/test_ci_metrics_collect.py` (offline; runs with the other
 script tests in CI).
@@ -111,6 +115,43 @@ When it stops on a rate limit, the summary shows GitHub's own message once.
 - **Late changes.** A run is only recorded once it has completed. The default
   3-day lookback picks up runs that finished late and reruns of recent runs
   (a rerun of a run older than the lookback is not picked up).
+
+## The workflow
+
+`.github/workflows/ci_metrics.yml` ("CI Metrics") runs `collect.py` and commits
+the new records to `dev` with `publish.sh`.
+
+- **When.** Daily at 04:30 UTC (after the nightly BUILD at 02:00 and the
+  dev to NEXT sync at 03:00), looking back 3 days, plus `workflow_dispatch`
+  with `since_days` (1-100) and `dry_run` inputs. At most about one data commit
+  per day, and none when there is nothing new.
+- **It stays inert until it reaches `main`.** `schedule` only fires from the
+  workflow file on the default branch (`main`). `workflow_dispatch` does not
+  work for a workflow that exists only on another branch either: GitHub answers
+  "workflow ci_metrics.yml not found on the default branch" (checked). So the
+  first real run can only happen after a release brings the file to `main`.
+- **Which ref it works on.** A scheduled run always uses `dev`. A manual run
+  uses the ref it was started on and **only pushes when that ref is `dev`**;
+  anywhere else it is a dry run that reports what it would commit.
+- **Token and permissions.** The job's `GITHUB_TOKEN` with `contents: write`
+  (to push to `dev`) and `actions: read`; nothing else. A push made with it does
+  not start other workflows.
+- **One at a time.** A `ci-metrics` concurrency group without cancellation, so
+  two runs never write at once and a run that is writing is never killed.
+- **Failure handling.** `publish.sh` only commits files under `data/`. It
+  rebases onto the current `dev` first and refuses to push if that would change
+  anything else; a rejected push (because `dev` moved) is fetched, rebased and
+  retried up to 5 times; a conflicting rebase is aborted and nothing is pushed.
+  If the collector hits a partial failure or a rate limit (`--rate-limit-wait
+  30`), what it collected is still committed and the run then ends red. It is not
+  a pull-request workflow, so it can never block a merge.
+- **Output.** The collector's summary appears on the run's summary page.
+- **Verified before merging.** The workflow was run for real from a throwaway
+  branch (with a temporary `push` trigger that is not part of this repository)
+  as a dry run: the token had `Actions: read`, `Contents: write`, `Metadata:
+  read`; 455 runs were listed, 437 skipped as already collected, 18 collected
+  and nothing pushed. The push itself is covered by `publish.sh`'s tests
+  against local git repositories, not by a run against `dev`.
 
 ## Reading the data
 
