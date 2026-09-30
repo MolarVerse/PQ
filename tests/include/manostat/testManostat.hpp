@@ -26,6 +26,8 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
+
 #include "manostat.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -39,14 +41,14 @@
 class TestManostat : public ::testing::Test
 {
    protected:
-    physicalData::PhysicalData* _data;
-    molsys::SimulationBox*      _box;
-    manostat::Manostat*         _manostat;
+    std::unique_ptr<physicalData::PhysicalData> _data;
+    std::unique_ptr<molsys::SimulationBox>      _box;
+    std::unique_ptr<manostat::Manostat>         _manostat;
 
     void SetUp() override
     {
-        _manostat = new manostat::Manostat();
-        _data     = new physicalData::PhysicalData();
+        _manostat = std::make_unique<manostat::Manostat>();
+        _data     = std::make_unique<physicalData::PhysicalData>();
 
         _data->setVolume(2.0);
         _data->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)));
@@ -57,15 +59,8 @@ class TestManostat : public ::testing::Test
             diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0))
         );
 
-        _box = new molsys::SimulationBox();
+        _box = std::make_unique<molsys::SimulationBox>();
         _box->setVolume(2.0);
-    }
-
-    void TearDown() override
-    {
-        delete _data;
-        delete _box;
-        delete _manostat;
     }
 };
 

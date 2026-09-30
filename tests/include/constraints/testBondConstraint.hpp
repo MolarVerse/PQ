@@ -42,9 +42,9 @@
 class TestBondConstraint : public ::testing::Test
 {
    protected:
-    molsys::SimulationBox       *_box;
-    constraints::BondConstraint *_bondConstraint;
-    double                       _targetBondLength = 1.2;
+    std::unique_ptr<molsys::SimulationBox>       _box;
+    std::unique_ptr<constraints::BondConstraint> _bondConstraint;
+    double                                       _targetBondLength = 1.2;
 
     void SetUp() override
     {
@@ -65,23 +65,17 @@ class TestBondConstraint : public ::testing::Test
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        _box = new molsys::SimulationBox();
+        _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
         _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
-        _bondConstraint = new constraints::BondConstraint(
+        _bondConstraint = std::make_unique<constraints::BondConstraint>(
             _box->getMolecules().data(),
             _box->getMolecules().data(),
             AtomIndex{0},
             AtomIndex{1},
             _targetBondLength
         );
-    }
-
-    void TearDown() override
-    {
-        delete _box;
-        delete _bondConstraint;
     }
 };
 

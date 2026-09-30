@@ -37,14 +37,14 @@
 class TestVirial : public ::testing::Test
 {
    protected:
-    molsys::SimulationBox *_simBox;
-    settings::JobType      _jobType;
+    std::unique_ptr<molsys::SimulationBox> _simBox;
+    settings::JobType                      _jobType;
 
     void SetUp() override
     {
         _jobType = settings::Settings::getJobtype();
 
-        _simBox = new molsys::SimulationBox();
+        _simBox = std::make_unique<molsys::SimulationBox>();
         settings::Settings::setVirialType(settings::VirialType::ATOMIC);
 
         auto molecule1 = molsys::Molecule();
@@ -82,11 +82,7 @@ class TestVirial : public ::testing::Test
         _simBox->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
     }
 
-    void TearDown() override
-    {
-        delete _simBox;
-        settings::Settings::setJobtype(_jobType);
-    }
+    void TearDown() override { settings::Settings::setJobtype(_jobType); }
 };
 
 #endif

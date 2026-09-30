@@ -40,13 +40,12 @@
 class TestEngine : public ::testing::Test
 {
    protected:
-    engine::MMMDEngine *_engine;
+    std::unique_ptr<engine::MMMDEngine> _engine;
 
-    void SetUp() override { _engine = new engine::MMMDEngine(); }
+    void SetUp() override { _engine = std::make_unique<engine::MMMDEngine>(); }
 
     void TearDown() override
     {
-        delete _engine;
         settings::TimingsSettings::setStepCount(0);
         settings::TimingsSettings::setTimeStep(0.0);
     }

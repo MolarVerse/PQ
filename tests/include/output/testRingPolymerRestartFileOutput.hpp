@@ -44,17 +44,18 @@
 class TestRingPolymerRestartFileOutput : public ::testing::Test
 {
    protected:
-    out::RingPolymerRestartFileOutput *_rstFileOutput;
-    molsys::SimulationBox             *_simulationBox1;
-    molsys::SimulationBox             *_simulationBox2;
-    std::vector<molsys::SimulationBox> _beads;
+    std::unique_ptr<out::RingPolymerRestartFileOutput> _rstFileOutput;
+    std::unique_ptr<molsys::SimulationBox>             _simulationBox1;
+    std::unique_ptr<molsys::SimulationBox>             _simulationBox2;
+    std::vector<molsys::SimulationBox>                 _beads;
 
     void SetUp() override
     {
-        _rstFileOutput =
-            new out::RingPolymerRestartFileOutput("default.rpmd.rst");
-        _simulationBox1 = new molsys::SimulationBox();
-        _simulationBox2 = new molsys::SimulationBox();
+        _rstFileOutput = std::make_unique<out::RingPolymerRestartFileOutput>(
+            "default.rpmd.rst"
+        );
+        _simulationBox1 = std::make_unique<molsys::SimulationBox>();
+        _simulationBox2 = std::make_unique<molsys::SimulationBox>();
 
         _simulationBox1->setBoxDimensions({10.0, 10.0, 10.0});
         _simulationBox2->setBoxDimensions({10.0, 10.0, 10.0});
@@ -129,9 +130,6 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
 
     void TearDown() override
     {
-        delete _rstFileOutput;
-        delete _simulationBox1;
-        delete _simulationBox2;
         const auto errorCode = std::remove("default.rpmd.rst");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.rst";
     }

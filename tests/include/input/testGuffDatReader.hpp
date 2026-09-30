@@ -48,8 +48,8 @@
 class TestGuffDatReader : public ::testing::Test
 {
    protected:
-    input::guffdat::GuffDatReader *_guffDatReader;
-    engine::Engine                *_engine;
+    std::unique_ptr<input::guffdat::GuffDatReader> _guffDatReader;
+    std::unique_ptr<engine::Engine>                _engine;
 
     void SetUp() override
     {
@@ -101,7 +101,7 @@ class TestGuffDatReader : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>();
 
         _engine->getSimulationBox().addMoleculeType(moleculeType1);
         _engine->getSimulationBox().addMoleculeType(moleculeType2);
@@ -122,13 +122,8 @@ class TestGuffDatReader : public ::testing::Test
         );
         settings::PotentialSettings::setNonCoulombType(NonCoulombType::GUFF);
 
-        _guffDatReader = new input::guffdat::GuffDatReader(*_engine);
-    }
-
-    void TearDown() override
-    {
-        delete _guffDatReader;
-        delete _engine;
+        _guffDatReader =
+            std::make_unique<input::guffdat::GuffDatReader>(*_engine);
     }
 };
 

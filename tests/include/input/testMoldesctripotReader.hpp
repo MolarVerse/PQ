@@ -26,6 +26,8 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
+
 #include "mmmdEngine.hpp"
 
 /**
@@ -37,14 +39,14 @@
 class TestMoldescriptorReader : public ::testing::Test
 {
    protected:
-    engine::Engine *_engine;
+    std::unique_ptr<engine::Engine> _engine;
 
     void SetUp() override
     {
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>();
     }
 };
 

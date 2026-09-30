@@ -42,12 +42,12 @@
 class TestPhysicalData : public ::testing::Test
 {
    protected:
-    physicalData::PhysicalData *_physicalData;
-    molsys::SimulationBox      *_simulationBox;
+    std::unique_ptr<physicalData::PhysicalData> _physicalData;
+    std::unique_ptr<molsys::SimulationBox>      _simulationBox;
 
     void SetUp() override
     {
-        _physicalData = new physicalData::PhysicalData();
+        _physicalData = std::make_unique<physicalData::PhysicalData>();
         _physicalData->setCoulombEnergy(1.0);
         _physicalData->setNonCoulombEnergy(2.0);
         _physicalData->setTemperature(3.0);
@@ -59,7 +59,7 @@ class TestPhysicalData : public ::testing::Test
         _physicalData->setCoupledPressure(8.5);
         _physicalData->setQMEnergy(9.0);
 
-        _simulationBox = new molsys::SimulationBox();
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         auto molecule1 = molsys::Molecule();
 
@@ -85,7 +85,6 @@ class TestPhysicalData : public ::testing::Test
 
         _simulationBox->calculateDegreesOfFreedom();
     }
-    void TearDown() override { delete _physicalData; }
 };
 
 #endif

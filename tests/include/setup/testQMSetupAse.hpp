@@ -39,21 +39,19 @@
 class TestQMSetupAse : public ::testing::Test
 {
    protected:
-    engine::QMMDEngine *_engine;
-    setup::QMSetup     *_qmSetup;
+    std::unique_ptr<engine::QMMDEngine> _engine;
+    std::unique_ptr<setup::QMSetup>     _qmSetup;
 
     void SetUp() override
     {
-        _engine  = new engine::QMMDEngine();
-        _qmSetup = new setup::QMSetup(*_engine);
+        _engine  = std::make_unique<engine::QMMDEngine>();
+        _qmSetup = std::make_unique<setup::QMSetup>(*_engine);
         _engine->getEngineOutput().getLogOutput().setFilename("default.log");
         settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
     }
 
     void TearDown() override
     {
-        delete _engine;
-        delete _qmSetup;
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
         settings::QMSettings::setQMMethod(settings::QMMethod::NONE);

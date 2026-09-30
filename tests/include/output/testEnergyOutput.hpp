@@ -27,6 +27,7 @@
 #include <gtest/gtest.h>   // for Test
 
 #include <filesystem>
+#include <memory>
 
 #include "energyOutput.hpp"     // for EnergyOutput
 #include "infoOutput.hpp"       // for InfoOutput
@@ -42,25 +43,21 @@
 class TestEnergyOutput : public ::testing::Test
 {
    protected:
-    out::InfoOutput            *_infoOutput;
-    out::EnergyOutput          *_energyOutput;
-    out::MomentumOutput        *_momentumOutput;
-    physicalData::PhysicalData *_physicalData;
+    std::unique_ptr<out::InfoOutput>            _infoOutput;
+    std::unique_ptr<out::EnergyOutput>          _energyOutput;
+    std::unique_ptr<out::MomentumOutput>        _momentumOutput;
+    std::unique_ptr<physicalData::PhysicalData> _physicalData;
 
     void SetUp() override
     {
-        _infoOutput     = new out::InfoOutput("default.info");
-        _energyOutput   = new out::EnergyOutput("default.en");
-        _momentumOutput = new out::MomentumOutput("default.mom");
-        _physicalData   = new physicalData::PhysicalData();
+        _infoOutput     = std::make_unique<out::InfoOutput>("default.info");
+        _energyOutput   = std::make_unique<out::EnergyOutput>("default.en");
+        _momentumOutput = std::make_unique<out::MomentumOutput>("default.mom");
+        _physicalData   = std::make_unique<physicalData::PhysicalData>();
     }
 
     void TearDown() override
     {
-        delete _infoOutput;
-        delete _energyOutput;
-        delete _momentumOutput;
-        delete _physicalData;
         static_cast<void>(std::filesystem::remove("default.info"));
         static_cast<void>(std::filesystem::remove("default.en"));
         static_cast<void>(std::filesystem::remove("default.mom"));

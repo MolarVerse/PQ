@@ -25,6 +25,7 @@
 #include <gtest/gtest.h>
 
 #include <cmath>   // for sqrt
+#include <memory>
 
 #include "berendsenThermostat.hpp"                   // for BerendsenThermostat
 #include "constants/internalConversionFactors.hpp"   // for _TEMPERATURE_FACTOR_
@@ -126,7 +127,8 @@ TEST_F(TestThermostat, applyTemperatureRamping)
 
 TEST_F(TestThermostat, applyThermostatBerendsen)
 {
-    _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
+    _thermostat =
+        std::make_unique<thermostat::BerendsenThermostat>(300.0, 100.0);
     settings::TimingsSettings::setTimeStep(0.1);
 
     const auto mol1                = _simulationBox->getMolecule(0);
@@ -182,8 +184,8 @@ TEST_F(TestThermostat, velocityRescalingThermostatType)
 
 TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 {
-    delete _thermostat;
-    _thermostat = new thermostat::VelocityRescalingThermostat(300.0, 100.0);
+    _thermostat =
+        std::make_unique<thermostat::VelocityRescalingThermostat>(300.0, 100.0);
     settings::TimingsSettings::setTimeStep(0.1);
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
@@ -202,8 +204,7 @@ TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 
 TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 {
-    delete _thermostat;
-    _thermostat = new thermostat::BerendsenThermostat(0.0, 100.0);
+    _thermostat = std::make_unique<thermostat::BerendsenThermostat>(0.0, 100.0);
     settings::TimingsSettings::setTimeStep(0.1);
 
     for (auto &atom : _simulationBox->getAtoms())
@@ -219,8 +220,8 @@ TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 
 TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
 {
-    delete _thermostat;
-    _thermostat = new thermostat::BerendsenThermostat(300.0, 100.0);
+    _thermostat =
+        std::make_unique<thermostat::BerendsenThermostat>(300.0, 100.0);
     settings::TimingsSettings::setTimeStep(0.1);
 
     for (auto &atom : _simulationBox->getAtoms())
@@ -236,8 +237,8 @@ TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
 
 TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
 {
-    delete _thermostat;
-    _thermostat = new thermostat::VelocityRescalingThermostat(0.0, 100.0);
+    _thermostat =
+        std::make_unique<thermostat::VelocityRescalingThermostat>(0.0, 100.0);
     settings::TimingsSettings::setTimeStep(0.1);
 
     for (auto &atom : _simulationBox->getAtoms())
@@ -253,8 +254,8 @@ TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
 
 TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
 {
-    delete _thermostat;
-    _thermostat = new thermostat::VelocityRescalingThermostat(300.0, 100.0);
+    _thermostat =
+        std::make_unique<thermostat::VelocityRescalingThermostat>(300.0, 100.0);
     settings::TimingsSettings::setTimeStep(0.1);
 
     for (auto &atom : _simulationBox->getAtoms())
