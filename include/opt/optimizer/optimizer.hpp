@@ -51,10 +51,6 @@ namespace opt
      */
     class Optimizer
     {
-       private:
-        struct Impl;
-        std::unique_ptr<Impl> _impl;
-
        protected:
         size_t _nEpochs = 0;
 
@@ -65,6 +61,10 @@ namespace opt
         std::deque<double>                     _rmsForceHistory;
         std::deque<std::vector<linalg::Vec3D>> _forceHistory;
         std::deque<std::vector<linalg::Vec3D>> _positionHistory;
+
+       private:
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
 
        public:
         explicit Optimizer(size_t);

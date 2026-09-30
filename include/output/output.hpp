@@ -47,11 +47,6 @@ namespace out
         std::ofstream _fp;
         int           _rank;
 
-        void               _openFile();
-        void               _writeComment(size_t);
-        void               _writeForceComment(size_t, double);
-        static std::string _formatForceComment(size_t step, double totalForce);
-
        public:
         explicit Output(std::string filename) : _fileName(std::move(filename))
         {
@@ -65,6 +60,7 @@ namespace out
         void setFilename(const std::string_view &);
         void close();
 
+// TODO: remove the TESTS dependency
 #ifdef WITH_TESTS
         friend class ::TestOutput_testSpecialSetFilename_Test;
 #endif
@@ -74,6 +70,12 @@ namespace out
          ***************************/
 
         std::string getFilename() const;
+
+       protected:
+        void               _openFile();
+        void               _writeComment(size_t);
+        void               _writeForceComment(size_t, double);
+        static std::string _formatForceComment(size_t step, double totalForce);
     };
 
 }   // namespace out

@@ -42,6 +42,9 @@
 class TestPhysicalData : public ::testing::Test
 {
    protected:
+    physicalData::PhysicalData *_physicalData;
+    molsys::SimulationBox      *_simulationBox;
+
     void SetUp() override
     {
         _physicalData = new physicalData::PhysicalData();
@@ -83,9 +86,6 @@ class TestPhysicalData : public ::testing::Test
         _simulationBox->calculateDegreesOfFreedom();
     }
     void TearDown() override { delete _physicalData; }
-
-    physicalData::PhysicalData *_physicalData;
-    molsys::SimulationBox      *_simulationBox;
 };
 
 #endif

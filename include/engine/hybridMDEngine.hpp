@@ -39,6 +39,12 @@ namespace engine
      */
     class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
     {
+       public:
+        HybridMDEngine()           = default;
+        ~HybridMDEngine() override = default;
+
+        void calculateForces() override = 0;
+
        protected:
         void _combineInnerOuterForces();
 
@@ -71,12 +77,6 @@ namespace engine
         double _calculateGlobalSmoothingFactor(
             const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
         ) const;
-
-       public:
-        HybridMDEngine()           = default;
-        ~HybridMDEngine() override = default;
-
-        void calculateForces() override = 0;
     };
 
 }   // namespace engine

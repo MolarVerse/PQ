@@ -35,6 +35,8 @@
 class TestRstFileReader : public ::testing::Test
 {
    protected:
+    engine::Engine *_engine;
+
     void SetUp() override
     {
         // NOTE: use dummy engine for testing
@@ -42,8 +44,6 @@ class TestRstFileReader : public ::testing::Test
         //       and works therefore for all derived classes
         _engine = new engine::MMMDEngine();
     }
-
-    engine::Engine *_engine;
 };
 
 #endif

@@ -43,6 +43,9 @@
 class TestConstraints : public ::testing::Test
 {
    protected:
+    molsys::SimulationBox    *_box;
+    constraints::Constraints *_constraints;
+
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
@@ -113,9 +116,6 @@ class TestConstraints : public ::testing::Test
         delete _box;
         delete _constraints;
     }
-
-    molsys::SimulationBox    *_box;
-    constraints::Constraints *_constraints;
 };
 
 #endif   // _TEST_CONSTRAINTS_HPP_

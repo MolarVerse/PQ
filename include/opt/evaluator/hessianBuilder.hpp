@@ -59,15 +59,16 @@ namespace opt
        protected:
         double _displacement;
 
-        static void _restorePositions(
-            molsys::SimulationBox            &simulationBox,
-            const std::vector<linalg::Vec3D> &positions
-        );
-
        public:
         explicit ForceDifferenceHessianBuilder(double displacement);
 
         static void symmetrize(HessianMatrix &hessian);
+
+       protected:
+        static void _restorePositions(
+            molsys::SimulationBox            &simulationBox,
+            const std::vector<linalg::Vec3D> &positions
+        );
     };
 
     class CentralForceDifferenceHessianBuilder

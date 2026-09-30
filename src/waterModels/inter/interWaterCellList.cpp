@@ -109,7 +109,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOH
+                                    state.nonCoulombPairOH
                                 );
                                 // O-O interaction
                             }
@@ -118,7 +118,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOO
+                                    state.nonCoulombPairOO
                                 );
                                 // H-H interaction
                             }
@@ -127,7 +127,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairHH
+                                    state.nonCoulombPairHH
                                 );
                             }
                         }
@@ -176,7 +176,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOH
+                                        state.nonCoulombPairOH
                                     );
                                     // O-O interaction
                                 }
@@ -185,7 +185,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOO
+                                        state.nonCoulombPairOO
                                     );
                                     // H-H interaction
                                 }
@@ -194,7 +194,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairHH
+                                        state.nonCoulombPairHH
                                     );
                                 }
                             }
@@ -411,7 +411,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOH
+                                    state.nonCoulombPairOH
                                 );
                                 // O-O interaction
                             }
@@ -420,7 +420,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOO
+                                    state.nonCoulombPairOO
                                 );
                                 // H-H interaction
                             }
@@ -429,7 +429,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairHH
+                                    state.nonCoulombPairHH
                                 );
                             }
                         }
@@ -474,7 +474,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOH
+                                        state.nonCoulombPairOH
                                     );
                                     // O-O interaction
                                 }
@@ -483,7 +483,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOO
+                                        state.nonCoulombPairOO
                                     );
                                     // H-H interaction
                                 }
@@ -492,7 +492,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairHH
+                                        state.nonCoulombPairHH
                                     );
                                 }
                             }
@@ -538,7 +538,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOH
+                                        state.nonCoulombPairOH
                                     );
                                     // O-O interaction
                                 }
@@ -547,7 +547,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOO
+                                        state.nonCoulombPairOO
                                     );
                                     // H-H interaction
                                 }
@@ -556,7 +556,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairHH
+                                        state.nonCoulombPairHH
                                     );
                                 }
                             }
@@ -650,7 +650,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOH
+                                    state.nonCoulombPairOH
                                 );
                                 // O-O interaction
                             }
@@ -659,7 +659,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOO
+                                    state.nonCoulombPairOO
                                 );
                                 // H-H interaction
                             }
@@ -668,7 +668,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairHH
+                                    state.nonCoulombPairHH
                                 );
                             }
                         }
@@ -719,7 +719,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOH
+                                        state.nonCoulombPairOH
                                     );
                                     // O-O interaction
                                 }
@@ -728,7 +728,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOO
+                                        state.nonCoulombPairOO
                                     );
                                     // H-H interaction
                                 }
@@ -737,7 +737,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairHH
+                                        state.nonCoulombPairHH
                                     );
                                 }
                             }
@@ -848,7 +848,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOH
+                                    state.nonCoulombPairOH
                                 );
                                 // O-O interaction
                             }
@@ -857,7 +857,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOO
+                                    state.nonCoulombPairOO
                                 );
                                 // H-H interaction
                             }
@@ -866,7 +866,7 @@ namespace waterModel
                                 singleInteraction(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairHH
+                                    state.nonCoulombPairHH
                                 );
                             }
                         }
@@ -910,7 +910,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOH
+                                        state.nonCoulombPairOH
                                     );
                                     // O-O interaction
                                 }
@@ -919,7 +919,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOO
+                                        state.nonCoulombPairOO
                                     );
                                     // H-H interaction
                                 }
@@ -928,7 +928,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairHH
+                                        state.nonCoulombPairHH
                                     );
                                 }
                             }
@@ -973,7 +973,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOH
+                                        state.nonCoulombPairOH
                                     );
                                     // O-O interaction
                                 }
@@ -982,7 +982,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOO
+                                        state.nonCoulombPairOO
                                     );
                                     // H-H interaction
                                 }
@@ -991,7 +991,7 @@ namespace waterModel
                                     singleInteraction(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairHH
+                                        state.nonCoulombPairHH
                                     );
                                 }
                             }
@@ -1033,7 +1033,7 @@ namespace waterModel
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOH
+                                    state.nonCoulombPairOH
                                 );
                                 // O-O interaction
                             }
@@ -1042,7 +1042,7 @@ namespace waterModel
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairOO
+                                    state.nonCoulombPairOO
                                 );
                                 // H-H interaction
                             }
@@ -1051,7 +1051,7 @@ namespace waterModel
                                 singleInteractionOneWay(
                                     *atom_i,
                                     *atom_j,
-                                    state._nonCoulombPairHH
+                                    state.nonCoulombPairHH
                                 );
                             }
                         }
@@ -1102,7 +1102,7 @@ namespace waterModel
                                     singleInteractionOneWay(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOH
+                                        state.nonCoulombPairOH
                                     );
                                     // O-O interaction
                                 }
@@ -1111,7 +1111,7 @@ namespace waterModel
                                     singleInteractionOneWay(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOO
+                                        state.nonCoulombPairOO
                                     );
                                     // H-H interaction
                                 }
@@ -1120,7 +1120,7 @@ namespace waterModel
                                     singleInteractionOneWay(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairHH
+                                        state.nonCoulombPairHH
                                     );
                                 }
                             }
@@ -1172,7 +1172,7 @@ namespace waterModel
                                     singleInteractionOneWay(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOH
+                                        state.nonCoulombPairOH
                                     );
                                     // O-O interaction
                                 }
@@ -1181,7 +1181,7 @@ namespace waterModel
                                     singleInteractionOneWay(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairOO
+                                        state.nonCoulombPairOO
                                     );
                                     // H-H interaction
                                 }
@@ -1190,7 +1190,7 @@ namespace waterModel
                                     singleInteractionOneWay(
                                         *atom_i,
                                         *atom_j,
-                                        state._nonCoulombPairHH
+                                        state.nonCoulombPairHH
                                     );
                                 }
                             }

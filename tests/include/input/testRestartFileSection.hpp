@@ -41,6 +41,9 @@
 class TestBoxSection : public ::testing::Test
 {
    protected:
+    input::restartFile::RestartFileSection *_section;
+    engine::Engine                         *_engine;
+
     void SetUp() override
     {
         _section = new input::restartFile::BoxSection;
@@ -52,9 +55,6 @@ class TestBoxSection : public ::testing::Test
     }
 
     void TearDown() override { delete _section; }
-
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
 };
 
 /**
@@ -66,6 +66,9 @@ class TestBoxSection : public ::testing::Test
 class TestNoseHooverSection : public ::testing::Test
 {
    protected:
+    input::restartFile::RestartFileSection *_section;
+    engine::Engine                         *_engine;
+
     void SetUp() override
     {
         _section = new input::restartFile::NoseHooverSection;
@@ -77,9 +80,6 @@ class TestNoseHooverSection : public ::testing::Test
     }
 
     void TearDown() override { delete _section; }
-
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
 };
 
 /**
@@ -91,6 +91,9 @@ class TestNoseHooverSection : public ::testing::Test
 class TestStepCountSection : public ::testing::Test
 {
    protected:
+    input::restartFile::RestartFileSection *_section;
+    engine::Engine                         *_engine;
+
     void SetUp() override
     {
         _section = new input::restartFile::StepCountSection;
@@ -102,9 +105,6 @@ class TestStepCountSection : public ::testing::Test
     }
 
     void TearDown() override { delete _section; }
-
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
 };
 
 /**
@@ -116,6 +116,9 @@ class TestStepCountSection : public ::testing::Test
 class TestAtomSection : public ::testing::Test
 {
    protected:
+    input::restartFile::RestartFileSection *_section;
+    engine::Engine                         *_engine;
+
     static void _processAtomLine(
         std::vector<std::string> &line,
         molsys::SimulationBox    &simulationBox,
@@ -151,9 +154,6 @@ class TestAtomSection : public ::testing::Test
     }
 
     void TearDown() override { delete _section; }
-
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
 };
 
 #endif   // _TEST_RESTART_FILE_SECTION_HPP_

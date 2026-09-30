@@ -42,6 +42,17 @@
 class TestDistanceConstraint : public ::testing::Test
 {
    protected:
+    molsys::SimulationBox           *_box;
+    constraints::DistanceConstraint *_distanceConstraint;
+
+    std::shared_ptr<molsys::Atom> _atom1;
+    std::shared_ptr<molsys::Atom> _atom2;
+
+    double _lowerDistance     = 1.0;
+    double _upperDistance     = 3.0;
+    double _springConstant    = 10.0;
+    double _dSpringConstantDt = 0.0;
+
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
@@ -79,17 +90,6 @@ class TestDistanceConstraint : public ::testing::Test
         delete _box;
         delete _distanceConstraint;
     }
-
-    molsys::SimulationBox           *_box;
-    constraints::DistanceConstraint *_distanceConstraint;
-
-    std::shared_ptr<molsys::Atom> _atom1;
-    std::shared_ptr<molsys::Atom> _atom2;
-
-    double _lowerDistance     = 1.0;
-    double _upperDistance     = 3.0;
-    double _springConstant    = 10.0;
-    double _dSpringConstantDt = 0.0;
 };
 
 #endif   // _TEST_DISTANCE_CONSTRAINT_HPP_

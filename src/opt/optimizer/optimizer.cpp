@@ -48,7 +48,7 @@ namespace opt
      * @param nEpochs
      */
     Optimizer::Optimizer(size_t nEpochs)
-        : _impl(std::make_unique<Impl>()), _nEpochs(nEpochs)
+        : _nEpochs(nEpochs), _impl(std::make_unique<Impl>())
     {
     }
 

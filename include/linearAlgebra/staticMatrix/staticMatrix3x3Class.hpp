@@ -43,6 +43,9 @@ namespace linalg
     template <typename T>
     class StaticMatrix3x3
     {
+       public:
+        static constexpr auto size = 3;
+
        private:
         Vector3D<Vector3D<T>> _data;
 
@@ -50,8 +53,6 @@ namespace linalg
 
        public:
         StaticMatrix3x3() = default;
-
-        static constexpr auto size = 3;
 
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &data);
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &&data);

@@ -57,14 +57,6 @@ namespace QM
         constexpr static auto *_singularity = SINGULARITY_;
         constexpr static auto *_staticBuild = STATIC_BUILD_;
 
-        [[nodiscard]]
-        std::string _resolveScriptPath(std::string_view script) const;
-
-        virtual void _executeCommand(
-            std::string_view command,
-            std::string_view program
-        ) const;
-
        public:
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
@@ -101,6 +93,15 @@ namespace QM
         [[nodiscard]] static std::string getStaticBuild();
 
         void setScriptPath(const std::string_view &scriptPath);
+
+       protected:
+        [[nodiscard]]
+        std::string _resolveScriptPath(std::string_view script) const;
+
+        virtual void _executeCommand(
+            std::string_view command,
+            std::string_view program
+        ) const;
 
        private:
         static void _readForceFile(

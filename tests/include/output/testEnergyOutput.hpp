@@ -42,6 +42,11 @@
 class TestEnergyOutput : public ::testing::Test
 {
    protected:
+    out::InfoOutput            *_infoOutput;
+    out::EnergyOutput          *_energyOutput;
+    out::MomentumOutput        *_momentumOutput;
+    physicalData::PhysicalData *_physicalData;
+
     void SetUp() override
     {
         _infoOutput     = new out::InfoOutput("default.info");
@@ -60,11 +65,6 @@ class TestEnergyOutput : public ::testing::Test
         static_cast<void>(std::filesystem::remove("default.en"));
         static_cast<void>(std::filesystem::remove("default.mom"));
     }
-
-    out::InfoOutput            *_infoOutput;
-    out::EnergyOutput          *_energyOutput;
-    out::MomentumOutput        *_momentumOutput;
-    physicalData::PhysicalData *_physicalData;
 };
 
 #endif   // _TEST_ENERGY_OUTPUT_HPP_

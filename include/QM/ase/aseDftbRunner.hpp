@@ -37,6 +37,9 @@ namespace QM
     class __attribute__((visibility("default"))) AseDftbRunner
         : public AseQMRunner
     {
+       private:
+        std::unordered_map<std::string, double> _hubbardDerivDict;
+
        public:
         ~AseDftbRunner() override = default;
 
@@ -50,6 +53,7 @@ namespace QM
         /***************************
          * standard getter methods *
          ***************************/
+        [[nodiscard]]
         const std::unordered_map<std::string, double> &getHubbDerivDict() const;
 
         /***************************
@@ -58,9 +62,6 @@ namespace QM
         void setHubbDerivDict(
             const std::unordered_map<std::string, double> &slakosDict
         );
-
-       private:
-        std::unordered_map<std::string, double> _hubbardDerivDict;
     };
 }   // namespace QM
 

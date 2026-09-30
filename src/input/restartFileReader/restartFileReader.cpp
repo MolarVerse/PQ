@@ -89,7 +89,7 @@ namespace input::restartFile
     void RestartFileReader::read()
     {
         std::string line;
-        int         lineNumber = 1;
+        size_t      lineNumber = 1;
 
         while (getline(_fp, line))
         {
@@ -102,11 +102,11 @@ namespace input::restartFile
                 continue;
             }
 
-            auto *section        = determineSection(lineElements);
-            section->_lineNumber = lineNumber;
-            section->_fp         = &_fp;
+            auto *section = determineSection(lineElements);
+            section->setLineNumber(lineNumber);
+            section->setFilePointer(&_fp);
             section->process(lineElements, _engine);
-            lineNumber = section->_lineNumber;
+            lineNumber = section->getLineNumber();
             ++lineNumber;
         }
     }

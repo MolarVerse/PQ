@@ -46,13 +46,13 @@ namespace waterModel
     struct InterWaterState
     {
         // clang-format off
-        double _oxygenCharge{};
-        double _hydrogenCharge{};
-        bool   _oxygenOnlyNonCoulomb{false};
+        double oxygenCharge{0.0};
+        double hydrogenCharge{0.0};
+        bool   oxygenOnlyNonCoulomb{false};
 
-        std::unique_ptr<pot::NonCoulombPair> _nonCoulombPairOO;
-        std::unique_ptr<pot::NonCoulombPair> _nonCoulombPairOH;
-        std::unique_ptr<pot::NonCoulombPair> _nonCoulombPairHH;
+        std::unique_ptr<pot::NonCoulombPair> nonCoulombPairOO;
+        std::unique_ptr<pot::NonCoulombPair> nonCoulombPairOH;
+        std::unique_ptr<pot::NonCoulombPair> nonCoulombPairHH;
         // clang-format on
     };
 
@@ -141,6 +141,10 @@ namespace waterModel
 
     class InterWater
     {
+       private:
+        InterWaterState                     _state;
+        std::unique_ptr<InterWaterStrategy> _strategy;
+
        public:
         InterWater();
 
@@ -171,9 +175,6 @@ namespace waterModel
         );
 
        private:
-        InterWaterState                     _state;
-        std::unique_ptr<InterWaterStrategy> _strategy;
-
         void _setNonCoulombCutOffRadii() const;
         void _initNonCoulombPairs() const;
         void _initState()

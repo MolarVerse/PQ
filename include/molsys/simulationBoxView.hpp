@@ -40,13 +40,6 @@ namespace molsys
     template <typename Derived>
     class SimulationBoxView
     {
-       private:
-        auto& _getAtoms() const;
-        auto& _getAtoms();
-
-        auto& _getMolecules() const;
-        auto& _getMolecules();
-
        public:
         auto getQMAtoms();
         auto getQMAtoms() const;
@@ -70,6 +63,13 @@ namespace molsys
 
         auto getWaterTypeMolecules();
         auto getWaterTypeMolecules() const;
+
+       private:
+        auto& _getAtoms() const;
+        auto& _getAtoms();
+
+        auto& _getMolecules() const;
+        auto& _getMolecules();
     };
 
     /**

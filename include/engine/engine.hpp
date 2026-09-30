@@ -49,10 +49,6 @@ namespace engine
      */
     class Engine
     {
-       private:
-        struct Impl;
-        std::unique_ptr<Impl> _impl;
-
        protected:
         size_t _step   = 1;
         size_t _nSteps = 0;
@@ -72,6 +68,10 @@ namespace engine
             std::make_unique<waterModel::IntraWater>();
         std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
+
+       private:
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
 
        public:
         Engine();

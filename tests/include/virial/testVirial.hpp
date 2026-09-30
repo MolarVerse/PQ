@@ -37,6 +37,8 @@
 class TestVirial : public ::testing::Test
 {
    protected:
+    molsys::SimulationBox *_simBox;
+
     void SetUp() override
     {
         _simBox = new molsys::SimulationBox();
@@ -78,8 +80,6 @@ class TestVirial : public ::testing::Test
     }
 
     void TearDown() override { delete _simBox; }
-
-    molsys::SimulationBox *_simBox;
 };
 
 #endif

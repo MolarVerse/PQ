@@ -39,6 +39,9 @@ namespace out
      */
     class LogOutput : public Output
     {
+       private:
+        std::vector<std::string> _pendingWarnings;
+
        public:
         using Output::Output;
 
@@ -61,9 +64,6 @@ namespace out
 
         void queueWarning(const std::string &warning);
         void flushQueuedWarnings();
-
-       private:
-        std::vector<std::string> _pendingWarnings;
     };
 
 }   // namespace out

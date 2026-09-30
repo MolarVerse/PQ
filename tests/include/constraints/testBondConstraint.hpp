@@ -42,6 +42,10 @@
 class TestBondConstraint : public ::testing::Test
 {
    protected:
+    molsys::SimulationBox       *_box;
+    constraints::BondConstraint *_bondConstraint;
+    double                       _targetBondLength = 1.2;
+
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
@@ -79,10 +83,6 @@ class TestBondConstraint : public ::testing::Test
         delete _box;
         delete _bondConstraint;
     }
-
-    molsys::SimulationBox       *_box;
-    constraints::BondConstraint *_bondConstraint;
-    double                       _targetBondLength = 1.2;
 };
 
 #endif   // _TEST_BOND_CONSTRAINT_HPP_

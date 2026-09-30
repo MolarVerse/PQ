@@ -128,17 +128,17 @@ int main()
     }
 
     waterModel::InterWaterState state;
-    state._oxygenCharge     = -0.82;
-    state._hydrogenCharge   = 0.41;
-    state._nonCoulombPairOO = std::make_unique<pot::LennardJonesPair>(
+    state.oxygenCharge     = -0.82;
+    state.hydrogenCharge   = 0.41;
+    state.nonCoulombPairOO = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
-    state._nonCoulombPairOH = std::make_unique<pot::LennardJonesPair>(
+    state.nonCoulombPairOH = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
         LJParams{.c6 = 0.5, .c12 = 1.5}
     );
-    state._nonCoulombPairHH = std::make_unique<pot::LennardJonesPair>(
+    state.nonCoulombPairHH = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
         LJParams{.c6 = 0.2, .c12 = 0.8}
     );

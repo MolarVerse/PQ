@@ -63,12 +63,12 @@ namespace linalg
 #pragma GCC diagnostic ignored "-Wpedantic"
         union
         {
-            std::array<T, 3> _xyz;
+            std::array<T, 3> xyz;
             struct
             {
-                T _x;
-                T _y;
-                T _z;
+                T x;
+                T y;
+                T z;
             };
         };
 #pragma GCC diagnostic pop
@@ -77,11 +77,11 @@ namespace linalg
         ~Vector3D() = default;
 
         Vector3D() = default;
-        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z) {}
-        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz) {}
-        Vector3D(Vector3D<T> &&xyz) noexcept : _xyz(std::move(xyz._xyz)) {}
+        Vector3D(const T x, const T y, const T z) : x(x), y(y), z(z) {}
+        Vector3D(const Vector3D<T> &xyz) : xyz(xyz.xyz) {}
+        Vector3D(Vector3D<T> &&xyz) noexcept : xyz(std::move(xyz.xyz)) {}
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
-        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz) {}
+        Vector3D(const T xyz) : x(xyz), y(xyz), z(xyz) {}
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
 
         using value_type = T;

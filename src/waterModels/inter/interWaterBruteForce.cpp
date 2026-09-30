@@ -86,35 +86,19 @@ namespace waterModel
                 };
 
                 // O-O interaction
-                singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
+                singleInteraction(oxygen1, oxygen2, state.nonCoulombPairOO);
 
                 // O-H interactions
-                singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
-                singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
-                singleInteraction(hydrogen1, oxygen2, state._nonCoulombPairOH);
-                singleInteraction(hydrogen2, oxygen2, state._nonCoulombPairOH);
+                singleInteraction(oxygen1, hydrogen3, state.nonCoulombPairOH);
+                singleInteraction(oxygen1, hydrogen4, state.nonCoulombPairOH);
+                singleInteraction(hydrogen1, oxygen2, state.nonCoulombPairOH);
+                singleInteraction(hydrogen2, oxygen2, state.nonCoulombPairOH);
 
                 // H-H interactions
-                singleInteraction(
-                    hydrogen1,
-                    hydrogen3,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen1,
-                    hydrogen4,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen2,
-                    hydrogen3,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen2,
-                    hydrogen4,
-                    state._nonCoulombPairHH
-                );
+                singleInteraction(hydrogen1, hydrogen3, state.nonCoulombPairHH);
+                singleInteraction(hydrogen1, hydrogen4, state.nonCoulombPairHH);
+                singleInteraction(hydrogen2, hydrogen3, state.nonCoulombPairHH);
+                singleInteraction(hydrogen2, hydrogen4, state.nonCoulombPairHH);
 
                 ++idxJ;
             }
@@ -267,35 +251,19 @@ namespace waterModel
                 };
 
                 // O-O interaction
-                singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
+                singleInteraction(oxygen1, oxygen2, state.nonCoulombPairOO);
 
                 // O-H interactions
-                singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
-                singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
-                singleInteraction(hydrogen1, oxygen2, state._nonCoulombPairOH);
-                singleInteraction(hydrogen2, oxygen2, state._nonCoulombPairOH);
+                singleInteraction(oxygen1, hydrogen3, state.nonCoulombPairOH);
+                singleInteraction(oxygen1, hydrogen4, state.nonCoulombPairOH);
+                singleInteraction(hydrogen1, oxygen2, state.nonCoulombPairOH);
+                singleInteraction(hydrogen2, oxygen2, state.nonCoulombPairOH);
 
                 // H-H interactions
-                singleInteraction(
-                    hydrogen1,
-                    hydrogen3,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen1,
-                    hydrogen4,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen2,
-                    hydrogen3,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen2,
-                    hydrogen4,
-                    state._nonCoulombPairHH
-                );
+                singleInteraction(hydrogen1, hydrogen3, state.nonCoulombPairHH);
+                singleInteraction(hydrogen1, hydrogen4, state.nonCoulombPairHH);
+                singleInteraction(hydrogen2, hydrogen3, state.nonCoulombPairHH);
+                singleInteraction(hydrogen2, hydrogen4, state.nonCoulombPairHH);
             }
         }
 
@@ -396,35 +364,19 @@ namespace waterModel
                 };
 
                 // O-O interaction
-                singleInteraction(oxygen1, oxygen2, state._nonCoulombPairOO);
+                singleInteraction(oxygen1, oxygen2, state.nonCoulombPairOO);
 
                 // O-H interactions
-                singleInteraction(oxygen1, hydrogen3, state._nonCoulombPairOH);
-                singleInteraction(oxygen1, hydrogen4, state._nonCoulombPairOH);
-                singleInteraction(hydrogen1, oxygen2, state._nonCoulombPairOH);
-                singleInteraction(hydrogen2, oxygen2, state._nonCoulombPairOH);
+                singleInteraction(oxygen1, hydrogen3, state.nonCoulombPairOH);
+                singleInteraction(oxygen1, hydrogen4, state.nonCoulombPairOH);
+                singleInteraction(hydrogen1, oxygen2, state.nonCoulombPairOH);
+                singleInteraction(hydrogen2, oxygen2, state.nonCoulombPairOH);
 
                 // H-H interactions
-                singleInteraction(
-                    hydrogen1,
-                    hydrogen3,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen1,
-                    hydrogen4,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen2,
-                    hydrogen3,
-                    state._nonCoulombPairHH
-                );
-                singleInteraction(
-                    hydrogen2,
-                    hydrogen4,
-                    state._nonCoulombPairHH
-                );
+                singleInteraction(hydrogen1, hydrogen3, state.nonCoulombPairHH);
+                singleInteraction(hydrogen1, hydrogen4, state.nonCoulombPairHH);
+                singleInteraction(hydrogen2, hydrogen3, state.nonCoulombPairHH);
+                singleInteraction(hydrogen2, hydrogen4, state.nonCoulombPairHH);
             }
         }
 
@@ -485,19 +437,19 @@ namespace waterModel
 
                 // clang-format off
             // O-O interaction
-            singleInteractionOneWay(oxygen1, oxygen2, state._nonCoulombPairOO);
+            singleInteractionOneWay(oxygen1, oxygen2, state.nonCoulombPairOO);
 
             // O-H interactions
-            singleInteractionOneWay(oxygen1, hydrogen3, state._nonCoulombPairOH);
-            singleInteractionOneWay(oxygen1, hydrogen4, state._nonCoulombPairOH);
-            singleInteractionOneWay(hydrogen1, oxygen2, state._nonCoulombPairOH);
-            singleInteractionOneWay(hydrogen2, oxygen2, state._nonCoulombPairOH);
+            singleInteractionOneWay(oxygen1, hydrogen3, state.nonCoulombPairOH);
+            singleInteractionOneWay(oxygen1, hydrogen4, state.nonCoulombPairOH);
+            singleInteractionOneWay(hydrogen1, oxygen2, state.nonCoulombPairOH);
+            singleInteractionOneWay(hydrogen2, oxygen2, state.nonCoulombPairOH);
 
             // H-H interactions
-            singleInteractionOneWay(hydrogen1, hydrogen3, state._nonCoulombPairHH);
-            singleInteractionOneWay(hydrogen1, hydrogen4, state._nonCoulombPairHH);
-            singleInteractionOneWay(hydrogen2, hydrogen3, state._nonCoulombPairHH);
-            singleInteractionOneWay(hydrogen2, hydrogen4, state._nonCoulombPairHH);
+            singleInteractionOneWay(hydrogen1, hydrogen3, state.nonCoulombPairHH);
+            singleInteractionOneWay(hydrogen1, hydrogen4, state.nonCoulombPairHH);
+            singleInteractionOneWay(hydrogen2, hydrogen3, state.nonCoulombPairHH);
+            singleInteractionOneWay(hydrogen2, hydrogen4, state.nonCoulombPairHH);
             //clang-format on
 
             ++idxJ;

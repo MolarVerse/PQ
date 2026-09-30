@@ -5,3 +5,4 @@
 - disallow private members to NOT start with a leading underscore
 - disallow private member functions to NOT start with a leading underscore
 - remove `cell.hpp` 50x transitive includes by removing `molsys::CellList` public include in `engine.hpp`
+- fix ordering of members and methods in classes and structs + disallow public members starting with an underscore

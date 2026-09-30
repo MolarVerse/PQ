@@ -37,6 +37,8 @@
 class TestLogOutput : public ::testing::Test
 {
    protected:
+    out::LogOutput *_logOutput;
+
     void SetUp() override { _logOutput = new out::LogOutput("default.log"); }
 
     void TearDown() override
@@ -45,8 +47,6 @@ class TestLogOutput : public ::testing::Test
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     }
-
-    out::LogOutput *_logOutput;
 };
 
 #endif   // _TEST_LOGOUTPUT_HPP_

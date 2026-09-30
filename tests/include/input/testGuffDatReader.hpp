@@ -48,6 +48,9 @@
 class TestGuffDatReader : public ::testing::Test
 {
    protected:
+    input::guffdat::GuffDatReader *_guffDatReader;
+    engine::Engine                *_engine;
+
     void SetUp() override
     {
         auto moleculeType1 = molsys::MoleculeType();
@@ -127,9 +130,6 @@ class TestGuffDatReader : public ::testing::Test
         delete _guffDatReader;
         delete _engine;
     }
-
-    input::guffdat::GuffDatReader *_guffDatReader;
-    engine::Engine                *_engine;
 };
 
 #endif   // _TEST_GUFFDAT_READER_HPP_

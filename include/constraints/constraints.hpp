@@ -87,13 +87,7 @@ namespace constraints
         void initMShake();
 
         void applyShake(molsys::SimulationBox &simulationBox);
-        void _applyShake(molsys::SimulationBox &simulationBox);
-        void _applyMShake(molsys::SimulationBox &simulationBox);
-
         void applyRattle(molsys::SimulationBox &simulationBox);
-        void _applyRattle();
-        void _applyMRattle(molsys::SimulationBox &simulationBox);
-
         void applyDistanceConstraints(
             const molsys::SimulationBox &,
             physicalData::PhysicalData &,
@@ -157,6 +151,13 @@ namespace constraints
         void setRattleTolerance(double rattleTolerance);
 
         void setStartTime(const double startTime) { _startTime = startTime; }
+
+       private:
+        void _applyShake(molsys::SimulationBox &simulationBox);
+        void _applyMShake(molsys::SimulationBox &simulationBox);
+
+        void _applyRattle();
+        void _applyMRattle(molsys::SimulationBox &simulationBox);
     };
 
 }   // namespace constraints

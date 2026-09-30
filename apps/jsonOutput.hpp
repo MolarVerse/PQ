@@ -42,13 +42,6 @@ namespace cli
         std::size_t       _depth = 0;
         std::vector<bool> _firstValues;
 
-        void _indent() const;
-        void _beforeValue();
-        void _beforeMember(std::string_view key);
-        void _beginContainer(char opening);
-        void _beginContainer(std::string_view key, char opening);
-        void _endContainer(char closing);
-
        public:
         explicit JsonWriter(std::ostream &output);
 
@@ -87,6 +80,14 @@ namespace cli
             _beforeMember(key);
             _output << value;
         }
+
+       private:
+        void _indent() const;
+        void _beforeValue();
+        void _beforeMember(std::string_view key);
+        void _beginContainer(char opening);
+        void _beginContainer(std::string_view key, char opening);
+        void _endContainer(char closing);
     };
 }   // namespace cli
 

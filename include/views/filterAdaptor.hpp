@@ -37,7 +37,7 @@ namespace pqviews
     template <typename Pred>
     struct FilterAdaptor
     {
-        Pred _pred;
+        Pred pred;
 
         template <typename Range>
         auto operator()(Range&& range) const
@@ -47,7 +47,7 @@ namespace pqviews
                 // For lvalue references, store a reference to avoid copying
                 return FilterView<Range, Pred>{
                     std::forward<Range>(range),
-                    _pred
+                    pred
                 };
             }
             else
@@ -55,7 +55,7 @@ namespace pqviews
                 // For rvalue references, decay
                 return FilterView<std::decay_t<Range>, Pred>{
                     std::forward<Range>(range),
-                    _pred
+                    pred
                 };
             }
         }

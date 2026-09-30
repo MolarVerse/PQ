@@ -60,7 +60,7 @@ TEST_F(TestAtomSection, isHeader) { EXPECT_FALSE(_section->isHeader()); }
  */
 TEST_F(TestAtomSection, numberOfArguments)
 {
-    _section->_lineNumber = 7;
+    _section->setLineNumber(7);
     for (size_t i = 0; i < 25; ++i)
     {
         if (i % 3 != 0 || i < 6 || i > 21)
@@ -93,9 +93,9 @@ TEST_F(TestAtomSection, moltypeNotFound)
 
 TEST_F(TestAtomSection, notEnoughElementsInLine)
 {
-    _section->_lineNumber = 7;
-    auto line             = std::vector<std::string>(21);
-    line[2]               = "1";
+    _section->setLineNumber(7);
+    auto line = std::vector<std::string>(21);
+    line[2]   = "1";
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
     std::string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
@@ -105,7 +105,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
     std::ifstream file(filename);
-    _section->_fp = &file;
+    _section->setFilePointer(&file);
 
     ASSERT_THROW_MSG(
         _section->process(line, *_engine),
@@ -118,7 +118,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     std::string filename2 =
         "data/atomSection/testNotEnoughAtomsInMolecule2.rst";
     std::ifstream fp2(filename2);
-    _section->_fp = &fp2;
+    _section->setFilePointer(&fp2);
 
     ASSERT_THROW_MSG(
         _section->process(line, *_engine),
@@ -141,7 +141,7 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
 
     std::ifstream file(filename);
-    _section->_fp = &file;
+    _section->setFilePointer(&file);
 
     ASSERT_THROW_MSG(
         _section->process(line, *_engine),
@@ -168,7 +168,7 @@ TEST_F(TestAtomSection, testProcess)
     _engine->getSimulationBox().addMoleculeType(molecule2);
 
     std::ifstream file(filename);
-    _section->_fp = &file;
+    _section->setFilePointer(&file);
 
     _section->process(line, *_engine);
 

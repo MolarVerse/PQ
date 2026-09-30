@@ -42,6 +42,9 @@
 class TestRstFileOutput : public ::testing::Test
 {
    protected:
+    out::RstFileOutput    *_rstFileOutput;
+    molsys::SimulationBox *_simulationBox;
+
     void SetUp() override
     {
         _rstFileOutput = new out::RstFileOutput("default.rst");
@@ -91,9 +94,6 @@ class TestRstFileOutput : public ::testing::Test
         const auto errorCode = std::remove("default.rst");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rst";
     }
-
-    out::RstFileOutput    *_rstFileOutput;
-    molsys::SimulationBox *_simulationBox;
 };
 
 #endif   // _TEST_RSTFILEOUTPUT_HPP_
