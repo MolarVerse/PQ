@@ -57,7 +57,8 @@ This page explains what each field means and how the collector derives it.
   computed from the full step list *before* omission.
 - All attempts of a run are recorded. `GET .../runs/{id}/jobs` returns only the
   latest attempt by default, so the collector must request
-  `.../runs/{id}/attempts/{n}/jobs` for `n = 1..run_attempt`.
+  `.../runs/{id}/jobs?filter=all` (one call, all attempts; checked on a real
+  rerun). `.../runs/{id}/attempts/{n}/jobs` returns a single attempt if needed.
 
 ## Example
 
