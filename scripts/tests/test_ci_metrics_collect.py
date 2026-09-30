@@ -153,8 +153,8 @@ def make_job(
 def records_for(run, jobs, pr=None, logs=None, signatures=("GitLab is currently",)):
     pr_calls = []
 
-    def resolve_pr(sha, branch):
-        pr_calls.append((sha, branch))
+    def resolve_pr(sha, branch, created_at):
+        pr_calls.append((sha, branch, created_at))
         return pr
 
     def fetch_log(job_id):
@@ -167,10 +167,11 @@ def records_for(run, jobs, pr=None, logs=None, signatures=("GitLab is currently"
 class FakeApi:
     """Stands in for GhApi: serves runs, jobs, PRs and logs from dicts."""
 
-    def __init__(self, runs=(), jobs=None, pulls=None, logs=None, job_errors=None):
+    def __init__(self, runs=(), jobs=None, pulls=None, logs=None, job_errors=None, branch_prs=None):
         self.runs = list(runs)
         self.jobs = jobs or {}
-        self.pulls = pulls or {}
+        self.pulls = pulls or {}  # commit sha -> PRs that GitHub associates with the commit
+        self.branch_prs = branch_prs or {}  # head branch -> all PRs from that branch
         self.logs = logs or {}
         self.job_errors = job_errors or {}
         self.calls = []
@@ -194,6 +195,13 @@ class FakeApi:
             return next(r for r in self.runs if r["id"] == int(segments[2]))
         if segments[0] == "commits" and segments[-1] == "pulls":
             result = self.pulls.get(segments[1], [])
+            if isinstance(result, Exception):
+                raise result
+            return result
+        if parts.path == "pulls":
+            owner, branch = query["head"][0].split(":", 1)
+            assert owner == "MolarVerse", owner
+            result = self.branch_prs.get(branch, [])
             if isinstance(result, Exception):
                 raise result
             return result
@@ -334,7 +342,7 @@ class BuildRecordsTests(unittest.TestCase):
         run = make_run(event="pull_request", branch="feature/x")
         records, _, calls = records_for(run, [make_job(1), make_job(2)], pr=721)
         self.assertEqual([721, 721], [r["pr_number"] for r in records])
-        self.assertEqual([(SHA, "feature/x")], calls)  # once per run
+        self.assertEqual([(SHA, "feature/x", at(0))], calls)  # once per run, with the run's creation time
 
         records, _, calls = records_for(make_run(event="push"), [make_job()], pr=721)
         self.assertIsNone(records[0]["pr_number"])
@@ -520,6 +528,214 @@ class GhApiTests(unittest.TestCase):
         with self.assertRaises(collect.ApiError):
             api.get_json("x")
         self.assertEqual(([], [], 1), (messages, sleeps, len(calls)))
+
+
+def pr_info(number, opened, closed=None):
+    """A PR as returned by GET pulls?head=...: times are seconds after BASE."""
+    return {"number": number, "created_at": at(opened), "closed_at": at(closed) if closed is not None else None}
+
+
+def commit_pr(number, head_ref):
+    """A PR as returned by GET commits/{sha}/pulls."""
+    return {"number": number, "head": {"ref": head_ref}}
+
+
+class PrResolverTests(unittest.TestCase):
+    def resolver(self, **api_options):
+        api = FakeApi(**api_options)
+        return collect.PrResolver(api, "MolarVerse"), api
+
+    def test_the_commit_lookup_wins_and_no_branch_lookup_is_made(self):
+        resolver, api = self.resolver(pulls={SHA: [commit_pr(7, "feature/x")]}, branch_prs={"feature/x": [pr_info(9, 0)]})
+        self.assertEqual(7, resolver.resolve(SHA, "feature/x", at(100)))
+        self.assertEqual([f"commits/{SHA}/pulls?per_page=100"], api.calls)
+
+    def test_stacked_pr_whose_head_is_the_merge_of_another_pr_falls_back_to_the_branch(self):
+        # GitHub returns the PR that MERGED the commit (#727), not the PR whose
+        # head it is (#725): exactly what the first dry run hit.
+        resolver, _ = self.resolver(
+            pulls={SHA: [commit_pr(727, "ci/rate-limits")]},
+            branch_prs={"ci/collector": [pr_info(725, 0)]},
+        )
+        self.assertEqual(725, resolver.resolve(SHA, "ci/collector", at(500)))
+
+    def test_no_pr_from_the_branch_gives_none(self):
+        resolver, _ = self.resolver(pulls={}, branch_prs={})
+        self.assertIsNone(resolver.resolve(SHA, "never/a/pr", at(100)))
+
+    def test_picks_the_pr_that_was_open_when_the_run_was_created(self):
+        # one branch name reused by three PRs over time
+        prs = [pr_info(1, 0, 100), pr_info(2, 200, 300), pr_info(3, 400)]
+        resolver, _ = self.resolver(branch_prs={"reused": prs})
+        self.assertEqual(1, resolver.resolve("a" * 40, "reused", at(50)))
+        self.assertEqual(2, resolver.resolve("b" * 40, "reused", at(250)))
+        self.assertEqual(3, resolver.resolve("c" * 40, "reused", at(999)))
+
+    def test_a_run_between_two_prs_belongs_to_neither(self):
+        resolver, _ = self.resolver(branch_prs={"reused": [pr_info(1, 0, 100), pr_info(2, 200, 300)]})
+        self.assertIsNone(resolver.resolve(SHA, "reused", at(150)))
+
+    def test_ignores_prs_created_after_the_run_and_closed_before_it(self):
+        resolver, _ = self.resolver(branch_prs={"b": [pr_info(1, 500), pr_info(2, 0, 100)]})
+        self.assertIsNone(resolver.resolve(SHA, "b", at(300)))
+
+    def test_the_latest_created_pr_wins_if_several_were_open_at_once(self):
+        resolver, _ = self.resolver(branch_prs={"b": [pr_info(1, 0), pr_info(2, 50)]})
+        self.assertEqual(2, resolver.resolve(SHA, "b", at(100)))
+
+    def test_a_pr_closed_exactly_when_the_run_was_created_still_counts(self):
+        resolver, _ = self.resolver(branch_prs={"b": [pr_info(1, 0, 100)]})
+        self.assertEqual(1, resolver.resolve(SHA, "b", at(100)))
+
+    def test_the_branch_list_is_fetched_once_per_branch_and_results_are_cached(self):
+        resolver, api = self.resolver(branch_prs={"b": [pr_info(1, 0)]})
+        for sha in ("a" * 40, "b" * 40, "a" * 40):
+            self.assertEqual(1, resolver.resolve(sha, "b", at(10)))
+        self.assertEqual(1, sum(1 for c in api.calls if c.startswith("pulls?")))
+        self.assertEqual(2, sum(1 for c in api.calls if c.startswith("commits/")))  # 2 distinct shas
+
+    def test_branch_names_are_url_encoded(self):
+        # "+" would otherwise be read as a space
+        branch = "Input-parser-rework-+-keys/issue-574"
+        resolver, api = self.resolver(branch_prs={branch: [pr_info(5, 0)]})
+        self.assertEqual(5, resolver.resolve(SHA, branch, at(10)))
+        call = next(c for c in api.calls if c.startswith("pulls?"))
+        self.assertIn("head=MolarVerse:Input-parser-rework-%2B-keys/issue-574", call)
+
+    def test_a_404_from_either_lookup_means_no_pr(self):
+        gone = collect.ApiError("gone", status=404)
+        resolver, _ = self.resolver(pulls={SHA: gone}, branch_prs={"b": gone})
+        self.assertIsNone(resolver.resolve(SHA, "b", at(10)))
+
+    def test_other_errors_propagate_so_the_run_is_retried_later(self):
+        boom = collect.ApiError("boom", status=500)
+        with self.assertRaises(collect.ApiError):
+            self.resolver(pulls={SHA: boom})[0].resolve(SHA, "b", at(10))
+        with self.assertRaises(collect.ApiError):
+            self.resolver(branch_prs={"b": boom})[0].resolve(SHA, "b", at(10))
+
+
+class CollectUsesTheBranchFallbackTests(unittest.TestCase):
+    def test_collect_records_the_fallback_pr_number(self):
+        with tempfile.TemporaryDirectory() as directory:
+            run = make_run(event="pull_request", branch="ci/collector")
+            api = FakeApi(
+                runs=[run],
+                jobs={100: [make_job(1)]},
+                pulls={SHA: [commit_pr(727, "ci/rate-limits")]},
+                branch_prs={"ci/collector": [pr_info(725, -60)]},
+            )
+            collect_into(api, [run], directory)
+            self.assertEqual(725, read_shard(directory)[0]["pr_number"])
+
+
+class FixPrNumbersTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.data = Path(self.directory.name)
+
+    def record(self, job_id, event="pull_request", branch="b", pr_number=None, sha=SHA):
+        run = make_run(job_id, event=event, branch=branch)
+        run["head_sha"] = sha
+        found = collect.build_records(run, [make_job(job_id)], lambda *_: pr_number, lambda _: None, [])[0][0]
+        return found
+
+    def write(self, name, records):
+        (self.data / name).write_text("".join(json.dumps(r, separators=(",", ":")) + "\n" for r in records))
+
+    def fix(self, api, **kwargs):
+        lines = []
+        found = collect.fix_pr_numbers(api, CONFIG, self.data, out=lines.append, **kwargs)
+        return found, lines
+
+    def test_fills_in_only_the_null_pr_numbers_of_pull_request_records(self):
+        nulls = self.record(1, branch="stacked")
+        known = self.record(2, branch="known", pr_number=11)
+        pushed = self.record(3, event="push", branch="dev")
+        no_pr = self.record(4, branch="nothing")
+        self.write("2026-W40.jsonl", [nulls, known, pushed, no_pr])
+        api = FakeApi(branch_prs={"stacked": [pr_info(725, -60)]})
+
+        (found, fixed), lines = self.fix(api)
+
+        self.assertEqual((2, 1), (found, fixed))
+        rows = read_shard(self.data)
+        self.assertEqual([725, 11, None, None], [r["pr_number"] for r in rows])
+        self.assertIn("2 pull_request records without pr_number; fixed 1, 1 still unresolved", lines[-1])
+
+    def test_only_the_pr_number_value_changes_every_other_byte_is_kept(self):
+        before = self.record(1, branch="stacked")
+        untouched = self.record(2, branch="known", pr_number=11)
+        self.write("2026-W40.jsonl", [before, untouched])
+        original = (self.data / "2026-W40.jsonl").read_text().splitlines()
+
+        self.fix(FakeApi(branch_prs={"stacked": [pr_info(725, -60)]}))
+
+        changed = (self.data / "2026-W40.jsonl").read_text().splitlines()
+        self.assertEqual(original[1], changed[1])
+        self.assertEqual(original[0].replace('"pr_number":null', '"pr_number":725'), changed[0])
+
+    def test_dry_run_reports_but_writes_nothing(self):
+        self.write("2026-W40.jsonl", [self.record(1, branch="stacked")])
+        before = (self.data / "2026-W40.jsonl").read_bytes()
+        (found, fixed), lines = self.fix(FakeApi(branch_prs={"stacked": [pr_info(725, -60)]}), dry_run=True)
+        self.assertEqual((1, 1), (found, fixed))
+        self.assertEqual(before, (self.data / "2026-W40.jsonl").read_bytes())
+        self.assertIn("would fix 1", lines[-1])
+
+    def test_a_second_run_changes_nothing(self):
+        self.write("2026-W40.jsonl", [self.record(1, branch="stacked")])
+        api = FakeApi(branch_prs={"stacked": [pr_info(725, -60)]})
+        self.fix(api)
+        after_first = (self.data / "2026-W40.jsonl").read_bytes()
+        (found, fixed), _ = self.fix(api)
+        self.assertEqual((0, 0), (found, fixed))
+        self.assertEqual(after_first, (self.data / "2026-W40.jsonl").read_bytes())
+
+    def test_files_with_nothing_to_fix_are_not_rewritten_and_no_temp_file_is_left(self):
+        self.write("2026-W39.jsonl", [self.record(1, branch="known", pr_number=3)])
+        self.write("2026-W40.jsonl", [self.record(2, branch="stacked")])
+        untouched = self.data / "2026-W39.jsonl"
+        stamp = untouched.stat().st_mtime_ns
+        self.fix(FakeApi(branch_prs={"stacked": [pr_info(725, -60)]}))
+        self.assertEqual(stamp, untouched.stat().st_mtime_ns)
+        self.assertEqual([], list(self.data.glob("*.tmp")))
+
+    def test_an_api_error_leaves_the_data_unchanged(self):
+        self.write("2026-W40.jsonl", [self.record(1, branch="stacked")])
+        before = (self.data / "2026-W40.jsonl").read_bytes()
+        api = FakeApi(pulls={SHA: collect.ApiError("boom", status=500)})
+        with self.assertRaises(collect.ApiError):
+            self.fix(api)
+        self.assertEqual(before, (self.data / "2026-W40.jsonl").read_bytes())
+
+
+class FixPrNumbersCliTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.output = []
+
+    def run_main(self, api, *argv):
+        return collect.main(
+            ["--data-dir", self.directory.name, *argv], api=api, today=date(2026, 9, 30), out=self.output.append
+        )
+
+    def test_fix_pr_numbers_does_not_list_or_collect_runs(self):
+        api = FakeApi()
+        self.assertEqual(0, self.run_main(api, "--fix-pr-numbers"))
+        self.assertEqual([], [c for c in api.calls if c.startswith("actions/")])
+        self.assertIn("0 pull_request records without pr_number", self.output[-1])
+
+    def test_rate_limit_during_the_repair_exits_with_2(self):
+        record = collect.build_records(
+            make_run(event="pull_request", branch="b"), [make_job(1)], lambda *_: None, lambda _: None, []
+        )[0][0]
+        (Path(self.directory.name) / "2026-W40.jsonl").write_text(json.dumps(record) + "\n")
+        limited = collect.ApiError("gh: API rate limit exceeded (HTTP 403)", status=403, rate_limited=True)
+        self.assertEqual(2, self.run_main(FakeApi(pulls={SHA: limited}), "--fix-pr-numbers"))
+        self.assertTrue(any("could not look up pull requests" in line for line in self.output))
 
 
 class ShortMessageTests(unittest.TestCase):

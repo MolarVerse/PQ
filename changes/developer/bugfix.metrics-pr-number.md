@@ -1,0 +1,1 @@
+- CI metrics collector: find the pull request of runs whose head is a merge commit (stacked PRs) through the branch's PRs, and add --fix-pr-numbers to repair records that were written with a null pr_number.

@@ -32,6 +32,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 HERE = Path(__file__).resolve().parent
 SCHEMA_VERSION = 1
@@ -219,6 +220,75 @@ def eigen_cache_hit(raw_steps):
     return None
 
 
+class PrResolver:
+    """Finds the pull request a pull_request run belongs to.
+
+    1. `commits/{sha}/pulls`, keeping the PR whose head branch is the run's.
+       That endpoint returns the PR that *merged* a commit, not the PR whose
+       head it is, so it misses runs whose head commit is a merge commit of
+       another PR (a stacked PR), and also others; all 450 historical misses of
+       the first backfill were of this kind.
+    2. Fallback: the PRs from that branch (`pulls?head=owner:branch`), keeping
+       the most recently created one that was open when the run was created. A
+       branch name can be reused by several PRs over time, hence the time check.
+
+    PRs from forks are not found (their head is `fork-owner:branch`).
+    """
+
+    def __init__(self, api, owner):
+        self._api = api
+        self._owner = owner
+        self._lock = threading.Lock()
+        self._by_commit = {}
+        self._by_branch = {}
+
+    def resolve(self, sha, branch, created_at):
+        key = (sha, branch)
+        with self._lock:
+            if key in self._by_commit:
+                return self._by_commit[key]
+        number = self._from_commit(sha, branch)
+        if number is None:
+            number = self._from_branch(branch, created_at)
+        with self._lock:
+            self._by_commit[key] = number
+        return number
+
+    def _from_commit(self, sha, branch):
+        try:
+            pulls = self._api.get_json(f"commits/{sha}/pulls?per_page=100")
+        except ApiError as error:
+            if error.status != 404:  # 404: commit is gone (force-push)
+                raise
+            pulls = []
+        return next((p["number"] for p in pulls if p["head"]["ref"] == branch), None)
+
+    def _from_branch(self, branch, created_at):
+        with self._lock:
+            pulls = self._by_branch.get(branch)
+        if pulls is None:
+            head = quote(f"{self._owner}:{branch}", safe=":/")
+            try:
+                pulls = self._api.get_json(f"pulls?state=all&head={head}&per_page=100")
+            except ApiError as error:
+                if error.status != 404:
+                    raise
+                pulls = []
+            with self._lock:
+                self._by_branch[branch] = pulls
+
+        when = parse_time(created_at)
+        open_then = [
+            p
+            for p in pulls
+            if parse_time(p["created_at"]) <= when
+            and (p.get("closed_at") is None or parse_time(p["closed_at"]) >= when)
+        ]
+        if not open_then:
+            return None
+        return max(open_then, key=lambda p: p["created_at"])["number"]
+
+
 def build_records(run, jobs, resolve_pr, fetch_log, signatures):
     """Turn the jobs of one run into records; also count what was dropped."""
     dropped = Counter()
@@ -241,7 +311,7 @@ def build_records(run, jobs, resolve_pr, fetch_log, signatures):
             continue
 
         if run["event"] == "pull_request" and pr_number is None:
-            pr_number = resolve_pr(run["head_sha"], run["head_branch"])
+            pr_number = resolve_pr(run["head_sha"], run["head_branch"], run["created_at"])
 
         raw_steps = job.get("steps") or []
         steps = [
@@ -371,23 +441,7 @@ def collect(api, config, data_dir, runs, *, workers=WORKERS, dry_run=False, max_
     index = ShardIndex(data_dir)
     signatures = config["infra_failure_signatures"]
 
-    pr_cache, pr_lock = {}, threading.Lock()
-
-    def resolve_pr(sha, branch):
-        key = (sha, branch)
-        with pr_lock:
-            if key in pr_cache:
-                return pr_cache[key]
-        try:
-            pulls = api.get_json(f"commits/{sha}/pulls?per_page=100")
-        except ApiError as error:
-            if error.status != 404:  # 404: commit is gone (force-push)
-                raise
-            pulls = []
-        number = next((p["number"] for p in pulls if p["head"]["ref"] == branch), None)
-        with pr_lock:
-            pr_cache[key] = number
-        return number
+    resolve_pr = PrResolver(api, config["repo"].split("/")[0]).resolve
 
     def fetch_log(job_id):
         try:
@@ -450,6 +504,40 @@ def collect(api, config, data_dir, runs, *, workers=WORKERS, dry_run=False, max_
     return result
 
 
+def fix_pr_numbers(api, config, data_dir, *, dry_run=False, out=print):
+    """Fill in `pr_number` where it is null on pull_request records.
+
+    The only change ever made to existing data: a one-off repair for records
+    written before the branch-based fallback existed. Only that value changes;
+    every other byte of the affected lines and all other lines are kept.
+    Returns (null records found, records fixed).
+    """
+    resolver = PrResolver(api, config["repo"].split("/")[0])
+    found = fixed = 0
+    for path in sorted(Path(data_dir).glob("*.jsonl")):
+        lines, changed = [], 0
+        for line in path.read_text().splitlines():
+            record = json.loads(line) if line.strip() else None
+            if record and record["event"] == "pull_request" and record["pr_number"] is None:
+                found += 1
+                number = resolver.resolve(record["head_sha"], record["branch"], record["created_at"])
+                if number is not None:
+                    record["pr_number"] = number
+                    line = json.dumps(record, separators=(",", ":"))
+                    changed += 1
+            lines.append(line)
+        if changed:
+            fixed += changed
+            out(f"  {path.name}: {changed} fixed")
+            if not dry_run:
+                temporary = path.with_suffix(".jsonl.tmp")
+                temporary.write_text("\n".join(lines) + "\n")
+                temporary.replace(path)
+    verb = "would fix" if dry_run else "fixed"
+    out(f"{found} pull_request records without pr_number; {verb} {fixed}, {found - fixed} still unresolved")
+    return found, fixed
+
+
 def summarize(result, dry_run, out=print):
     verb = "would write" if dry_run else "wrote"
     out(
@@ -488,6 +576,12 @@ def main(argv=None, api=None, today=None, out=print):
         "for up to this many minutes instead of stopping (default 0: stop)",
     )
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--fix-pr-numbers",
+        action="store_true",
+        help="instead of collecting, fill in null pr_number values of pull_request records "
+        "already in the data directory (a one-off repair; combine with --dry-run to preview)",
+    )
     args = parser.parse_args(argv)
     if args.rate_limit_wait < 0:
         parser.error("--rate-limit-wait must not be negative")
@@ -499,6 +593,15 @@ def main(argv=None, api=None, today=None, out=print):
         notice=lambda message: out(f"  {message}"),
     )
     today = today or datetime.now(timezone.utc).date()
+
+    if args.fix_pr_numbers:
+        try:
+            fix_pr_numbers(api, config, args.data_dir, dry_run=args.dry_run, out=out)
+        except ApiError as error:
+            message = short_message(error) if error.rate_limited else error
+            out(f"ERROR could not look up pull requests: {message}")
+            return 2 if error.rate_limited else 1
+        return 0
 
     try:
         if args.run_id:
