@@ -5,3 +5,4 @@
 - move `ManostatType`, `Isotropy` and `FixedAxis` from settings to enum
 - move `OptimizerType` and `LearningRate` from settings to enum
 - move `ForceFieldType`, `NonCoulombType` and `CoulombLongRangeType` from settings to enum
+- use new enum aliases strategy from mstd to make life easier for QM enums later
