@@ -77,11 +77,14 @@ namespace linalg
         ~Vector3D() = default;
 
         Vector3D() = default;
-        Vector3D(const T x, const T y, const T z) : x(x), y(y), z(z) {}
-        Vector3D(const Vector3D<T> &xyz) : xyz(xyz.xyz) {}
-        Vector3D(Vector3D<T> &&xyz) noexcept : xyz(std::move(xyz.xyz)) {}
+        Vector3D(const T xValue, const T yValue, const T zValue)
+            : x(xValue), y(yValue), z(zValue)
+        {
+        }
+        Vector3D(const Vector3D<T> &xyz_) : xyz(xyz_.xyz) {}
+        Vector3D(Vector3D<T> &&xyz_) noexcept : xyz(std::move(xyz_.xyz)) {}
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
-        Vector3D(const T xyz) : x(xyz), y(xyz), z(xyz) {}
+        Vector3D(const T xyz_) : x(xyz_), y(xyz_), z(xyz_) {}
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
 
         using value_type = T;
