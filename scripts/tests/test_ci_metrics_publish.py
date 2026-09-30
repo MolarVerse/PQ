@@ -124,6 +124,14 @@ class PublishScriptTests(unittest.TestCase):
         self.assertEqual(0, self.publish("dev").returncode)
         self.assertEqual("ci: update CI timing data (+3 records)", self.remote_log()[0])
 
+    def test_the_generated_report_is_published_but_not_counted_as_records(self):
+        self.write_shard(self.work)
+        (self.work / DATA / "CI_TIMINGS.md").write_text("# report\n\nline\n\nline\n")
+        result = self.publish("dev")
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertIn(f"{DATA}/CI_TIMINGS.md", self.remote_files())
+        self.assertEqual("ci: update CI timing data (+2 records)", self.remote_log()[0])
+
     def test_dry_run_reports_but_commits_and_pushes_nothing(self):
         self.write_shard(self.work)
         before = self.remote_log()

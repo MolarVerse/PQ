@@ -27,8 +27,8 @@ instead of guessed. Tracked in #720.
 The workflow is `.github/workflows/ci_metrics.yml`. Tests:
 `scripts/tests/test_ci_metrics_publish.py` (real local git repositories).
 
-Tests: `scripts/tests/test_ci_metrics_collect.py` (offline; runs with the other
-script tests in CI).
+Tests: `scripts/tests/test_ci_metrics_{collect,publish,report}.py` (offline; run
+with the other script tests in CI).
 
 Nothing under `data/` is edited by hand.
 
@@ -160,6 +160,37 @@ the new records to `dev` with `publish.sh`.
   read`; 455 runs were listed, 437 skipped as already collected, 18 collected
   and nothing pushed. The push itself is covered by `publish.sh`'s tests
   against local git repositories, not by a run against `dev`.
+
+## Overview report
+
+[`data/CI_TIMINGS.md`](data/CI_TIMINGS.md) is rendered by GitHub and regenerated
+by the workflow after every collector run (`python3 .github/ci-metrics/report.py`;
+options `--window-days`, `--regression-percent`, `--min-samples`, `--out`). It
+lives in `data/` so the publish step commits it together with the new records.
+It is generated only from the records and uses the newest record as "now", so
+unchanged data gives identical bytes and never a commit.
+
+What it shows, per recorded workflow:
+
+- **Jobs:** median and p90 of the job duration over the current window (14 days
+  by default), split into `push (dev)` and `pull_request`, next to the median of
+  the 14 days before, the change, and the queue time apart from the duration.
+- **Regressions:** a median up by more than 20% *and* at least 30 seconds, with
+  at least 5 samples in both windows, is flagged and listed at the top.
+- **Wall-clock per workflow:** first job created to last job finished, per run,
+  and the job that usually finishes last (what a pull request waits for). Runs
+  with any non-successful job, second attempts, and runs where the paths filter
+  skipped every real job (only `changes` and `*-gate` ran) are left out, because
+  they would pull the medians down.
+- **Trend:** weekly median wall-clock of BUILD (Mermaid `xychart-beta`, no binary
+  files), and the weekly Eigen cache hit rate (the effect of #703).
+- **Exclusions:** what was left out and how many, so the numbers can be
+  reproduced: cancelled, other events, pushes to branches other than `dev`,
+  reruns, infrastructure failures and failed jobs.
+
+Windows are measured in days, not in runs, so the current and the previous window
+are comparable. The Eigen table starts in the week the `Cache Eigen source` step
+was introduced; before that the flag is `null`.
 
 ## Reading the data
 
