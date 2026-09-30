@@ -27,7 +27,7 @@
 #include <memory>
 #include <vector>   // for vector
 
-#include "settings.hpp"
+#include "enums/virial.hpp"
 #include "staticMatrix.hpp"
 
 namespace molsys

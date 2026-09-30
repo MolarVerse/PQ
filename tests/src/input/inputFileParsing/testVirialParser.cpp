@@ -25,7 +25,8 @@
 #include <string>   // for string, allocator, basic_string
 #include <vector>   // for vector
 
-#include "exceptions.hpp"            // for InputFileException
+#include "exceptions.hpp"   // for InputFileException
+#include "settings.hpp"
 #include "testInputFileReader.hpp"   // for TestInputFileReader
 #include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
 #include "virialInputParser.hpp"

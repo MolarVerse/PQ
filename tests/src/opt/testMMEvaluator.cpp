@@ -27,12 +27,14 @@
 #include "atom.hpp"
 #include "celllist.hpp"
 #include "constraints.hpp"
+#include "enums/virial.hpp"
 #include "forceFieldClass.hpp"
 #include "intraNonBonded.hpp"
 #include "mmEvaluator.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 
 namespace

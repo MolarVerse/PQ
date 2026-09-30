@@ -37,6 +37,7 @@
 
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 

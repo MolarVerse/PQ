@@ -46,6 +46,7 @@
 #include "moleculeType.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "vector3d.hpp"
 #include "waterModelSettings.hpp"
