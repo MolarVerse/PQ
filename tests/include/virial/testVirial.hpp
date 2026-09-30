@@ -39,6 +39,8 @@ class TestVirial : public ::testing::Test
    protected:
     void SetUp() override
     {
+        _jobType = settings::Settings::getJobtype();
+
         _simBox = new molsys::SimulationBox();
         settings::Settings::setVirialType(settings::VirialType::ATOMIC);
 
@@ -77,9 +79,14 @@ class TestVirial : public ::testing::Test
         _simBox->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
     }
 
-    void TearDown() override { delete _simBox; }
+    void TearDown() override
+    {
+        delete _simBox;
+        settings::Settings::setJobtype(_jobType);
+    }
 
     molsys::SimulationBox *_simBox;
+    settings::JobType      _jobType;
 };
 
 #endif
