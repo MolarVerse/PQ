@@ -80,6 +80,7 @@ python3 .github/ci-metrics/collect.py --run-id 36693119228
 python3 .github/ci-metrics/collect.py --dry-run           # write nothing
 python3 .github/ci-metrics/collect.py --data-dir /tmp/x   # try it without touching data/
 python3 .github/ci-metrics/collect.py --since-days 90 --rate-limit-wait 90   # backfill, waiting out rate limits
+python3 .github/ci-metrics/collect.py --fix-pr-numbers --dry-run   # preview the one-off pr_number repair
 ```
 
 It needs the `gh` CLI, logged in (or `GH_TOKEN`/`GITHUB_TOKEN` set). Exit status
@@ -94,7 +95,14 @@ When it stops on a rate limit, the summary shows GitHub's own message once.
 - **Cost.** One API call per run for its jobs, plus one per pull-request head
   commit and one per *failed* job (for the log). Measured on one busy day
   (95 runs): 165 calls (1 listing, 95 jobs, 48 pull-request lookups, 21 logs),
-  taking 18-43 seconds with the default 8 workers.
+  taking 18-43 seconds with the default 8 workers. When the commit lookup does
+  not find the PR, one more call lists the PRs of that branch (once per
+  branch).
+- **`--fix-pr-numbers`** is a one-off repair, and the only thing that ever
+  changes existing data: it fills in `pr_number` where it is `null` on
+  pull-request records (the first backfill wrote 450 of those, see
+  [`SCHEMA.md`](SCHEMA.md)), touching nothing else on those lines. It makes
+  about one API call per distinct commit or branch involved.
 - **Rate limits.** A workflow's `GITHUB_TOKEN` is limited to about 1,000
   requests per hour per repository; a personal login gets 5,000. The daily
   incremental run needs a few hundred calls. The one real 90-day backfill
