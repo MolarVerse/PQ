@@ -68,7 +68,7 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(beads[0]);
-        writeComment(step);
+        _writeComment(step);
 
         const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
 
@@ -112,7 +112,7 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(beads[0]);
-        writeComment(step);
+        _writeComment(step);
 
         const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
 
@@ -165,7 +165,7 @@ namespace out
             { totalForce += bead.calculateTotalForce(); }
         );
 
-        writeForceComment(step, totalForce);
+        _writeForceComment(step, totalForce);
 
         for (size_t i = 0;
              i < settings::RingPolymerSettings::getNumberOfBeads();
@@ -210,7 +210,7 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(beads[0]);
-        writeComment(step);
+        _writeComment(step);
 
         for (size_t i = 0;
              i < settings::RingPolymerSettings::getNumberOfBeads();

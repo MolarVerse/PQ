@@ -8,6 +8,10 @@ on:
       - NEXT
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   changes:
     runs-on: ubuntu-24.04
@@ -51,13 +55,29 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
+          cache: 'pip'
+          cache-dependency-path: 'external/devops/pyproject.toml'
 
       - name: Install devops package with AST support
         run: |
-          pip install --upgrade pip 
+          pip install --upgrade pip
           pip install -e "external/devops[ast]"
           pip install ase
+        shell: bash
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
         shell: bash
 
       - name: Configure CMake (generate compile_commands.json)
@@ -69,7 +89,8 @@ jobs:
             -DBUILD_WITH_TESTS=ON \
             -DBUILD_WITH_DOCS=OFF \
             -DBUILD_WITH_PERF_BENCH=ON \
-            -DBUILD_WITH_BENCHMARKING=ON
+            -DBUILD_WITH_BENCHMARKING=ON \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
         env:
           CC: gcc-13
           CXX: g++-13

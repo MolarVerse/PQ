@@ -66,7 +66,7 @@ namespace input::molDescriptor
         void processMolecule(std::vector<std::string> &lineElements);
 
        private:
-        static void convertExternalToInternalAtomTypes(
+        static void _convertExternalToInternalAtomTypes(
             molsys::MoleculeType &molecule
         );
     };

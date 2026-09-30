@@ -49,7 +49,7 @@ TEST_F(TestInputFileReader, parseDensity)
     EXPECT_EQ(_engine->getSimulationBox().getDensity(), 1.0);
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), true);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     const std::vector<std::string> lineElements2 = {"density", "=", "-1.0"};
     EXPECT_THROW_MSG(
@@ -59,7 +59,7 @@ TEST_F(TestInputFileReader, parseDensity)
         "failed validation with message Value must be greater than 0"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     const std::vector<std::string> zeroDensity = {"density", "=", "0"};
     EXPECT_THROW_MSG(
@@ -87,7 +87,7 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     const std::vector<std::string> lineElements2 = {"rcoulomb", "=", "-1.0"};
     EXPECT_THROW_MSG(
@@ -116,7 +116,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         settings::InitVelocities::TRUE
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     const std::vector<std::string> lineElements2 = {
         "init_velocities",
@@ -129,7 +129,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         settings::InitVelocities::FALSE
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     const std::vector<std::string> lineElements3 = {
         "init_velocities",
@@ -142,7 +142,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         settings::InitVelocities::FORCE
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     const std::vector<std::string> lineElements4 = {
         "init_velocities",

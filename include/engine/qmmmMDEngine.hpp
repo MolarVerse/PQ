@@ -48,19 +48,20 @@ namespace engine
         rng::RandomNumberGenerator _rng;
         physicalData::PhysicalData _qmmmPhysicalData{};
 
-        void applySmoothing();
-        void applyExactSmoothing();
-        void applyHotspotSmoothing();
+        void _applySmoothing();
+        void _applyExactSmoothing();
+        void _applyHotspotSmoothing();
 
-        void moltypeCheck();
-        void setNumberOfQMAtoms();
+        void _moltypeCheck();
+        void _setNumberOfQMAtoms();
 
-        void scaleAndAccumulateEnergies(double globalSmF);
-        void moveEnergiesToPhysicalData();
+        void _scaleAndAccumulateEnergies(double globalSmF);
+        void _moveEnergiesToPhysicalData();
 
-        void distributeSmoothingMolQMForces();
+        void _distributeSmoothingMolQMForces();
 
-        std::vector<double> getRandomWeights(
+        [[nodiscard]]
+        std::vector<double> _getRandomWeights(
             const std::vector<std::reference_wrapper<molsys::Molecule>>
                 &recipientMolecules
         );

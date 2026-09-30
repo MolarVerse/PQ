@@ -42,16 +42,19 @@ namespace settings
     class OptimizerSettings
     {
        private:
-        // clang-format off
-        static inline OptimizerType _optimizer = OptimizerType::STEEPEST_DESCENT;
-        static inline LearningRate _lRStrategy   = LearningRate::EXPONENTIAL_DECAY;
+        static inline OptimizerType _optimizer =
+            OptimizerType::STEEPEST_DESCENT;
+        static inline LearningRate _lRStrategy =
+            LearningRate::EXPONENTIAL_DECAY;
 
-        static inline size_t _nEpochs           = defaults::N_EPOCHS_DEFAULT;
-        static inline size_t _lRupdateFrequency = defaults::LR_UPDATE_FREQUENCY_DEFAULT;
+        static inline size_t _nEpochs = defaults::N_EPOCHS_DEFAULT;
+        static inline size_t _lRupdateFrequency =
+            defaults::LR_UPDATE_FREQUENCY_DEFAULT;
 
-        static inline double _initialLearningRate = defaults::INITIAL_LEARNING_RATE_DEFAULT;
-        static inline double _minLearningRate     = defaults::MIN_LEARNING_RATE_DEFAULT;
-        // clang-format on
+        static inline double _initialLearningRate =
+            defaults::INITIAL_LEARNING_RATE_DEFAULT;
+        static inline double _minLearningRate =
+            defaults::MIN_LEARNING_RATE_DEFAULT;
 
         static inline std::optional<double> _learningRateDecay;
         static inline std::optional<double> _maxLearningRate;

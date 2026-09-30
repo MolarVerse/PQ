@@ -123,7 +123,7 @@ namespace QM
         using enum SmoothingMethod;
 
         const auto scriptFile =
-            resolveScriptPath(settings::QMSettings::getQMScript());
+            _resolveScriptPath(settings::QMSettings::getQMScript());
 
         if (!mstd::File(scriptFile).exists())
         {
@@ -157,7 +157,7 @@ namespace QM
                 settings::FileSettings::getPointChargeFileName()
             )
         );
-        executeCommand(command, "Turbomole");
+        _executeCommand(command, "Turbomole");
 
         _isFirstExecution = false;
         _usePointCharges  = false;

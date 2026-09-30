@@ -40,35 +40,35 @@ namespace engine
     class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
     {
        protected:
-        void combineInnerOuterForces();
+        void _combineInnerOuterForces();
 
-        void addCurrentForcesToInnerAndReset(
+        void _addCurrentForcesToInnerAndReset(
             std::vector<std::shared_ptr<molsys::Atom>>& atoms
         );
-        void addScaledCurrentForcesToInnerAndReset(
+        void _addScaledCurrentForcesToInnerAndReset(
             std::vector<std::shared_ptr<molsys::Atom>>& atoms,
             double                                      globalSmF
         );
 
-        void addCurrentForcesToOuterAndReset(
+        void _addCurrentForcesToOuterAndReset(
             std::vector<std::shared_ptr<molsys::Atom>>& atoms
         );
-        void addScaledCurrentForcesToOuterAndReset(
+        void _addScaledCurrentForcesToOuterAndReset(
             std::vector<std::shared_ptr<molsys::Atom>>& atoms,
             double                                      globalSmF
         );
 
-        void scaleSmoothingMoleculeForcesInner();
-        void scaleSmoothingMoleculeForcesOuter();
+        void _scaleSmoothingMoleculeForcesInner();
+        void _scaleSmoothingMoleculeForcesOuter();
 
         [[nodiscard]]
-        static std::unordered_set<size_t> generateInactiveSmoothingMoleculeSet(
+        static std::unordered_set<size_t> _generateInactiveSmoothingMoleculeSet(
             size_t bitPattern,
             size_t totalMolecules
         );
 
         [[nodiscard]]
-        double calculateGlobalSmoothingFactor(
+        double _calculateGlobalSmoothingFactor(
             const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
         ) const;
 

@@ -47,10 +47,10 @@ namespace out
         std::ofstream _fp;
         int           _rank;
 
-        void               openFile();
-        void               writeComment(size_t);
-        void               writeForceComment(size_t, double);
-        static std::string formatForceComment(size_t step, double totalForce);
+        void               _openFile();
+        void               _writeComment(size_t);
+        void               _writeForceComment(size_t, double);
+        static std::string _formatForceComment(size_t step, double totalForce);
 
        public:
         explicit Output(std::string filename) : _fileName(std::move(filename))

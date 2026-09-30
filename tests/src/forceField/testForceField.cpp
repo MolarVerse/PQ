@@ -216,10 +216,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
         15.0,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    _setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = molsys::Molecule();
 
@@ -347,10 +347,10 @@ TEST_F(TestForceField, correctLinker)
         5.0,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    _setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = molsys::Molecule();
 

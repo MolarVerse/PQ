@@ -53,7 +53,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
     EXPECT_FALSE(constraints->isShakeActive());
     EXPECT_FALSE(settings::ConstraintSettings::isShakeActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"shake", "=", "on"};
     parseFunc(lineElements, 0);
@@ -61,7 +61,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
     EXPECT_TRUE(constraints->isShakeActive());
     EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     settings::ConstraintSettings::deactivateShake();
     constraints->deactivateShake();
@@ -72,7 +72,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
     EXPECT_TRUE(constraints->isShakeActive());
     EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     settings::ConstraintSettings::deactivateShake();
     constraints->deactivateShake();
@@ -85,7 +85,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
     EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
     EXPECT_TRUE(settings::ConstraintSettings::isMShakeActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"shake", "=", "1"};
     EXPECT_THROW_MSG(
@@ -113,7 +113,7 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ConstraintSettings::getShakeTolerance(), 0.0001);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"shake-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
@@ -124,7 +124,7 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
         "0"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"shake-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
@@ -152,7 +152,7 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ConstraintSettings::getShakeMaxIter(), 100);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"shake-iter", "=", "-100"};
     EXPECT_THROW_MSG(
@@ -162,7 +162,7 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
         "file. Value must be a positive integer"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"shake-iter", "=", "0"};
     EXPECT_THROW_MSG(
@@ -191,7 +191,7 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ConstraintSettings::getRattleTolerance(), 0.0001);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"rattle-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
@@ -202,7 +202,7 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
         "0"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"rattle-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
@@ -230,7 +230,7 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ConstraintSettings::getRattleMaxIter(), 100);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"rattle-iter", "=", "-100"};
     EXPECT_THROW_MSG(
@@ -240,7 +240,7 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
         "file. Value must be a positive integer"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"rattle-iter", "=", "0"};
     EXPECT_THROW_MSG(
@@ -269,7 +269,7 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ConstraintSettings::getMShakeTolerance(), 0.01);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"mshake-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
@@ -280,7 +280,7 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
         "0"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"mshake-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
@@ -308,7 +308,7 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ConstraintSettings::getMShakeMaxIter(), 73);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"mshake-iter", "=", "-100"};
     EXPECT_THROW_MSG(
@@ -318,7 +318,7 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
         "file. Value must be a positive integer"
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"mshake-iter", "=", "0"};
     EXPECT_THROW_MSG(
@@ -348,7 +348,7 @@ TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
     EXPECT_TRUE(constraints->isDistanceConstraintsActive());
     EXPECT_TRUE(settings::ConstraintSettings::isDistanceConstraintsActivated());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"distance-constraints", "=", "off"};
     parseFunc(lineElements, 0);
@@ -358,7 +358,7 @@ TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
         settings::ConstraintSettings::isDistanceConstraintsActivated()
     );
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"distance-constraints", "=", "1"};
     EXPECT_THROW_MSG(

@@ -120,21 +120,21 @@ namespace setup
                 "Water models are not supported for QM-only job types."
             );
 
-        makeIntraWater();
+        _makeIntraWater();
 
         if (settings::WaterModelSettings::getWaterIntraModel() !=
             settings::WaterIntraModel::NONE)
-            checkTopologyFile();
+            _checkTopologyFile();
 
-        if (const auto geometry = getRigidWaterGeometry(
+        if (const auto geometry = _getRigidWaterGeometry(
                 settings::WaterModelSettings::getWaterIntraModel()
             );
             geometry.has_value())
-            shakeSetupForRigidWater(geometry.value());
+            _shakeSetupForRigidWater(geometry.value());
 
         if (settings::WaterModelSettings::getWaterInterModel() !=
             settings::WaterInterModel::NONE)
-            makeInterWater();
+            _makeInterWater();
 
         _engine.getLogOutput().writeSetupInfo(
             std::format(
@@ -156,7 +156,7 @@ namespace setup
 
         _engine.getLogOutput().writeEmptyLine();
 
-        addReferences();
+        _addReferences();
     }
 
     /**
@@ -171,7 +171,7 @@ namespace setup
      * @throws UserInputException If a water type molecule is found in the bond
      * or angle list of the topology file.
      */
-    void WaterModelSetup::checkTopologyFile()
+    void WaterModelSetup::_checkTopologyFile()
     {
         std::unordered_set<const molsys::Molecule *> waterMolecules;
         for (const auto &waterMol :
@@ -262,7 +262,7 @@ namespace setup
      *
      * @param state Inter-water parameters providing expected charge values.
      */
-    void WaterModelSetup::checkMoldescriptorWaterCharge(
+    void WaterModelSetup::_checkMoldescriptorWaterCharge(
         const waterModel::InterWaterState &state
     )
     {
@@ -314,7 +314,7 @@ namespace setup
      * @return The O-H and H-H distances for rigid models, or @c std::nullopt if
      * the model is not rigid.
      */
-    std::optional<RigidWaterGeometry> WaterModelSetup::getRigidWaterGeometry(
+    std::optional<RigidWaterGeometry> WaterModelSetup::_getRigidWaterGeometry(
         settings::WaterIntraModel intraModel
     )
     {
@@ -371,7 +371,7 @@ namespace setup
      *
      * @param geometry The target rigid water geometry.
      */
-    void WaterModelSetup::shakeSetupForRigidWater(
+    void WaterModelSetup::_shakeSetupForRigidWater(
         const RigidWaterGeometry &geometry
     )
     {
@@ -424,7 +424,7 @@ namespace setup
      * water models are handled by constraints and do not require an IntraWater
      * object.
      */
-    void WaterModelSetup::makeIntraWater()
+    void WaterModelSetup::_makeIntraWater()
     {
         using enum settings::WaterIntraModel;
 
@@ -466,7 +466,7 @@ namespace setup
      * @throws UserInputException If water molecule partial charges do not match
      * the expected values for the selected intermolecular model.
      */
-    void WaterModelSetup::makeInterWater()
+    void WaterModelSetup::_makeInterWater()
     {
         using enum settings::WaterInterModel;
         auto state = waterModel::InterWaterState();
@@ -521,7 +521,7 @@ namespace setup
             case NONE: break;
         }
 
-        checkMoldescriptorWaterCharge(state);
+        _checkMoldescriptorWaterCharge(state);
 
         std::unique_ptr<waterModel::InterWaterStrategy> strategy;
 
@@ -546,7 +546,7 @@ namespace setup
      * @details Adds bibliography references for both intramolecular and
      * intermolecular water models to the references output.
      */
-    void WaterModelSetup::addReferences()
+    void WaterModelSetup::_addReferences()
     {
         const auto intraModel =
             settings::WaterModelSettings::getWaterIntraModel();

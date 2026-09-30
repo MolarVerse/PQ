@@ -25,12 +25,19 @@ on:
       - 'scripts/perf_gate.sh'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   pull-requests: write
 
 jobs:
   perf-regression:
+    # This job builds PR code and later mints a write token. Bot-authored
+    # branches require a human-run performance check on a trusted branch.
+    if: github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'pq-bot/')
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout PR
@@ -68,12 +75,31 @@ jobs:
         with:
           key: perf-${{ github.base_ref || 'dev' }}
 
+      # Only used for the PR build below, not the base-branch build: if a PR
+      # bumps EIGEN_TAG itself, the base branch's own (older) pin must still
+      # be fetched fresh so the comparison stays correct. The base build is
+      # usually skipped anyway via the base_ir.tsv cache above.
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
       - name: Build PR benchmarks
         run: |
           cmake -S . -B build-pr \
             -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
             -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_ASE=Off \
-            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off
+            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build-pr --target perf_benchmarks -j$(nproc)
         env:
           CC: gcc-13

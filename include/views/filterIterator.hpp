@@ -38,7 +38,7 @@ namespace pqviews
     class FilterIterator
     {
        private:
-        void satisfy();
+        void _satisfy();
 
         Iter        _current;
         Iter        _end;
@@ -73,7 +73,7 @@ namespace pqviews
      * satisfies the predicate or reaches the end of the range.
      */
     template <typename Iter, typename Pred>
-    void FilterIterator<Iter, Pred>::satisfy()
+    void FilterIterator<Iter, Pred>::_satisfy()
     {
         while (_current != _end && !_pred->operator()(*_current))
         {
@@ -99,7 +99,7 @@ namespace pqviews
     )
         : _current(current), _end(end), _pred(pred)
     {
-        satisfy();
+        _satisfy();
     }
 
     /**
@@ -136,7 +136,7 @@ namespace pqviews
     FilterIterator<Iter, Pred>& FilterIterator<Iter, Pred>::operator++()
     {
         ++_current;
-        satisfy();
+        _satisfy();
         return *this;
     }
 

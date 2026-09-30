@@ -19,3 +19,7 @@
 - migrate `MMInputParser`
 - migrate `SimulationBoxInputParser`
 - migrate `ManostatInputParser`
+- migrate `HessianInputParser`
+- migrate `OptInputParser`
+- migrate `ThermostatInputParser`
+- migrate `ConvergenceInputParser`

@@ -112,7 +112,7 @@ namespace engine
         _configurator.calculateInnerRegionCenter(*_simulationBox);
         _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
         configurator::HybridConfigurator::assignHybridZones(*_simulationBox);
-        moltypeCheck();
+        _moltypeCheck();
         configurator::HybridConfigurator::calculateSmoothingFactors(
             *_simulationBox
         );
@@ -125,9 +125,9 @@ namespace engine
             )
         );
 
-        applySmoothing();
+        _applySmoothing();
 
-        combineInnerOuterForces();
+        _combineInnerOuterForces();
         _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
     }
 
@@ -145,7 +145,7 @@ namespace engine
      * zones. This is a wrapper function that delegates to either
      * applyHotspotSmoothing() or applyExactSmoothing().
      */
-    void QMMMMDEngine::applySmoothing()
+    void QMMMMDEngine::_applySmoothing()
     {
         using enum SmoothingMethod;
 
@@ -154,8 +154,8 @@ namespace engine
 
         switch (smoothingMethod)
         {
-            case HOTSPOT: applyHotspotSmoothing(); break;
-            case EXACT: applyExactSmoothing(); break;
+            case HOTSPOT: _applyHotspotSmoothing(); break;
+            case EXACT: _applyExactSmoothing(); break;
         }
     }
 
@@ -169,7 +169,7 @@ namespace engine
      * @note Computational cost: O(2^n) where n = number of smoothing
      * molecules
      */
-    void QMMMMDEngine::applyExactSmoothing()
+    void QMMMMDEngine::_applyExactSmoothing()
     {
         using enum molsys::Periodicity;
         using std::ranges::distance;
@@ -188,9 +188,9 @@ namespace engine
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
             const auto inactiveSmMol =
-                generateInactiveSmoothingMoleculeSet(i, nSmMol);
+                _generateInactiveSmoothingMoleculeSet(i, nSmMol);
             const auto globalSmF =
-                calculateGlobalSmoothingFactor(inactiveSmMol);
+                _calculateGlobalSmoothingFactor(inactiveSmMol);
 
             // STEP 2: Setup and run QM calculation, accumulate QM forces
             // and QM virial contribution and the number of QM atoms for
@@ -219,7 +219,7 @@ namespace engine
             virial += virial::calculateQMVirial(*_simulationBox) * globalSmF;
             virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
+            _addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces
             // and MM virial contribution
@@ -251,7 +251,7 @@ namespace engine
             virial += virial::calculateVirial(*_simulationBox) * globalSmF;
             virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
+            _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
             _physicalData->setVirial({0.0});
@@ -266,18 +266,18 @@ namespace engine
             virial += _physicalData->getVirial() * globalSmF;
             virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
                       globalSmF;
-            addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
+            _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // STEP 4: Scale and accumulate hybrid energies and delete temp
             // files --> following configs cannot continue if the QM calc
             // fails
-            scaleAndAccumulateEnergies(globalSmF);
+            _scaleAndAccumulateEnergies(globalSmF);
             _physicalData->resetEnergies();
             deleteTmpFiles();
         }
 
         // STEP 5: Set energies, virial and numQMAtoms to accumulated values
-        moveEnergiesToPhysicalData();
+        _moveEnergiesToPhysicalData();
         _physicalData->setVirial(virial);
         _physicalData->setNumberOfQMAtoms(numQMAtoms);
     }
@@ -297,7 +297,7 @@ namespace engine
      * @note Computational cost: O(1) - constant time regardless of number
      * of smoothing molecules
      */
-    void QMMMMDEngine::applyHotspotSmoothing()
+    void QMMMMDEngine::_applyHotspotSmoothing()
     {
         using enum molsys::Periodicity;
 
@@ -305,7 +305,7 @@ namespace engine
         linalg::tensor3D virial = {0.0};
 
         // Set number of QM atoms in physical data for output purposes
-        setNumberOfQMAtoms();
+        _setNumberOfQMAtoms();
 
         // STEP 1: Setup and run QM calculation, scale forces of smoothing
         // molecules with smF
@@ -317,13 +317,13 @@ namespace engine
         _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
-            scaleSmoothingMoleculeForcesInner();
+            _scaleSmoothingMoleculeForcesInner();
         else
-            distributeSmoothingMolQMForces();
+            _distributeSmoothingMolQMForces();
 
         virial += virial::calculateQMVirial(*_simulationBox);
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToInnerAndReset(atoms);
+        _addCurrentForcesToInnerAndReset(atoms);
 
         // STEP 2: Setup and run inter-nonbonded calculation between
         // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of
@@ -351,10 +351,10 @@ namespace engine
             getCellList()
         );
 
-        scaleSmoothingMoleculeForcesInner();
+        _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateVirial(*_simulationBox);
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToOuterAndReset(atoms);
+        _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING
         // molecules and scale forces of smoothing molecules with (1 - smF)
@@ -372,10 +372,10 @@ namespace engine
             getCellList()
         );
 
-        scaleSmoothingMoleculeForcesOuter();
+        _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(*_simulationBox);
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToOuterAndReset(atoms);
+        _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale
         // forces of smoothing molecules with (1 - smF)
@@ -386,10 +386,10 @@ namespace engine
 
         _intraNonBonded->calculate(*_simulationBox, *_physicalData);
 
-        scaleSmoothingMoleculeForcesOuter();
+        _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(*_simulationBox);
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToOuterAndReset(atoms);
+        _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 5: Run intra-bonded calculation and scale forces of
         // smoothing molecules with (1 - smF)
@@ -404,10 +404,10 @@ namespace engine
 
         _intraWater->calculate(*_simulationBox, *_physicalData);
 
-        scaleSmoothingMoleculeForcesOuter();
+        _scaleSmoothingMoleculeForcesOuter();
         virial += _physicalData->getVirial();
         virial += virial::intraMolecularVirialCorrection(*_simulationBox);
-        addCurrentForcesToOuterAndReset(atoms);
+        _addCurrentForcesToOuterAndReset(atoms);
 
         _physicalData->setVirial(virial);
     }
@@ -421,7 +421,7 @@ namespace engine
      * outer molecules. The count is stored in physical data and then all
      * molecules are reactivated to restore the original state.
      */
-    void QMMMMDEngine::setNumberOfQMAtoms()
+    void QMMMMDEngine::_setNumberOfQMAtoms()
     {
         configurator::HybridConfigurator::activateMolecules(*_simulationBox);
         configurator::HybridConfigurator::deactivateOuterMolecules(
@@ -442,7 +442,7 @@ namespace engine
      * @throws HybridMDEngineException if any non-core molecule has moltype
      * == 0
      */
-    void QMMMMDEngine::moltypeCheck()
+    void QMMMMDEngine::_moltypeCheck()
     {
         size_t count = 0;
         for (const auto &mol : _simulationBox->getMolecules())
@@ -471,7 +471,7 @@ namespace engine
      * @param globalSmF Global smoothing factor for the current
      * configuration.
      */
-    void QMMMMDEngine::scaleAndAccumulateEnergies(double globalSmF)
+    void QMMMMDEngine::_scaleAndAccumulateEnergies(double globalSmF)
     {
         // clang-format off
         _qmmmPhysicalData.addQMEnergy             ( _physicalData->getQMEnergy()              * globalSmF);
@@ -491,7 +491,7 @@ namespace engine
      * PhysicalData object to PhysicalData and reset the internal object.
      * Used for the exact smoothing method.
      */
-    void QMMMMDEngine::moveEnergiesToPhysicalData()
+    void QMMMMDEngine::_moveEnergiesToPhysicalData()
     {
         // clang-format off
         _physicalData->setQMEnergy              ( _qmmmPhysicalData.getQMEnergy()              );
@@ -530,7 +530,7 @@ namespace engine
      * @throws HybridMDEngineException if no CORE/LAYER recipient molecules
      * are available for redistribution.
      */
-    void QMMMMDEngine::distributeSmoothingMolQMForces()
+    void QMMMMDEngine::_distributeSmoothingMolQMForces()
     {
         const auto type = settings::HybridSettings::getQMForceDist();
         std::vector<std::reference_wrapper<molsys::Molecule>>
@@ -574,7 +574,7 @@ namespace engine
 
                 case NONE: continue;
                 case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1); break;
-                case RANDOM: weights = getRandomWeights(recipientMolecules); break;
+                case RANDOM: weights = _getRandomWeights(recipientMolecules); break;
                 case DISTANCE_WEIGHTED: weights = getDistanceWeights(smoothingMol, recipientMolecules); break;
             }
             // clang-format on
@@ -620,7 +620,7 @@ namespace engine
      * @details The returned values are intentionally unnormalized. The
      * caller performs normalization and handles zero-sum fallback logic.
      */
-    std::vector<double> QMMMMDEngine::getRandomWeights(
+    std::vector<double> QMMMMDEngine::_getRandomWeights(
         const std::vector<std::reference_wrapper<molsys::Molecule>>
             &recipientMolecules
     )

@@ -51,17 +51,19 @@ namespace setup
        private:
         engine::Engine &_engine;
 
-        void makeInterWater();
-        void makeIntraWater();
-        void checkTopologyFile();
-        void checkMoldescriptorWaterCharge(const waterModel::InterWaterState &);
-        void shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
+        void _makeInterWater();
+        void _makeIntraWater();
+        void _checkTopologyFile();
+        void _checkMoldescriptorWaterCharge(
+            const waterModel::InterWaterState &
+        );
+        void _shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
 
         [[nodiscard]]
-        static std::optional<RigidWaterGeometry> getRigidWaterGeometry(
+        static std::optional<RigidWaterGeometry> _getRigidWaterGeometry(
             settings::WaterIntraModel intraModel
         );
-        static void addReferences();
+        static void _addReferences();
 
        public:
         explicit WaterModelSetup(engine::MDEngine &engine);

@@ -62,10 +62,10 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         5.0,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
-    setNonCoulombPairsMatrix(
+    _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
-    setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
+    _setNonCoulombPairsMatrix(1, 1, nonCoulombPair);
 
     auto molecule = molsys::Molecule();
 

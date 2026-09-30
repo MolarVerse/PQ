@@ -1,6 +1,7 @@
 set(source_files
     testConstraints.cpp
     testBondConstraint.cpp
+    testDistanceConstraint.cpp
     testMShake.cpp
 )
 

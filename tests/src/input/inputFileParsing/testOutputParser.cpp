@@ -48,7 +48,7 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::OutputFileSettings::getOutputFrequency(), 1000);
 
-    clearParser(parser);
+    _clearParser(parser);
 
     lineElements = {"output_freq", "=", "-1000"};
     EXPECT_THROW_MSG(
@@ -512,32 +512,32 @@ TEST_F(TestInputFileReader, parseOverwriteOutput)
     parseFunc({"overwrite_output", "=", "true"}, 0);
     EXPECT_TRUE(settings::OutputFileSettings::getOverwriteOutputFiles());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "yes"}, 0);
     EXPECT_TRUE(settings::OutputFileSettings::getOverwriteOutputFiles());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "on"}, 0);
     EXPECT_TRUE(settings::OutputFileSettings::getOverwriteOutputFiles());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "false"}, 0);
     EXPECT_FALSE(settings::OutputFileSettings::getOverwriteOutputFiles());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "no"}, 0);
     EXPECT_FALSE(settings::OutputFileSettings::getOverwriteOutputFiles());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "off"}, 0);
     EXPECT_FALSE(settings::OutputFileSettings::getOverwriteOutputFiles());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"overwrite_output", "=", "notABool"}, 0),
@@ -563,12 +563,12 @@ TEST_F(TestInputFileReader, parseIncludeOutputMetadata)
     parseFunc({"include_output_metadata", "=", "true"}, 0);
     EXPECT_TRUE(settings::OutputFileSettings::getIncludeOutputMetadata());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     parseFunc({"include_output_metadata", "=", "false"}, 0);
     EXPECT_FALSE(settings::OutputFileSettings::getIncludeOutputMetadata());
 
-    clearParser(parser);
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
         parseFunc({"include_output_metadata", "=", "notABool"}, 0),

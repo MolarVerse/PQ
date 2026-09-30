@@ -41,11 +41,11 @@ namespace molsys
     class SimulationBoxView
     {
        private:
-        auto& getAtoms() const;
-        auto& getAtoms();
+        auto& _getAtoms() const;
+        auto& _getAtoms();
 
-        auto& getMolecules() const;
-        auto& getMolecules();
+        auto& _getMolecules() const;
+        auto& _getMolecules();
 
        public:
         auto getQMAtoms();
@@ -78,7 +78,7 @@ namespace molsys
      * @return const auto& a reference to the atoms vector
      */
     template <typename Derived>
-    auto& SimulationBoxView<Derived>::getAtoms() const
+    auto& SimulationBoxView<Derived>::_getAtoms() const
     {
         return static_cast<const Derived&>(*this).getAtoms();
     }
@@ -89,7 +89,7 @@ namespace molsys
      * @return auto& a reference to the atoms vector
      */
     template <typename Derived>
-    auto& SimulationBoxView<Derived>::getAtoms()
+    auto& SimulationBoxView<Derived>::_getAtoms()
     {
         return static_cast<Derived&>(*this).getAtoms();
     }
@@ -100,7 +100,7 @@ namespace molsys
      * @return const auto& a reference to the molecules vector
      */
     template <typename Derived>
-    auto& SimulationBoxView<Derived>::getMolecules() const
+    auto& SimulationBoxView<Derived>::_getMolecules() const
     {
         return static_cast<const Derived&>(*this).getMolecules();
     }
@@ -111,7 +111,7 @@ namespace molsys
      * @return auto& a reference to the molecules vector
      */
     template <typename Derived>
-    auto& SimulationBoxView<Derived>::getMolecules()
+    auto& SimulationBoxView<Derived>::_getMolecules()
     {
         return static_cast<Derived&>(*this).getMolecules();
     }
@@ -128,7 +128,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getQMAtoms()
     {
-        return getAtoms() |
+        return _getAtoms() |
                pqviews::filter([](auto& atom) { return atom->isQMAtom(); });
     }
 
@@ -144,8 +144,8 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getQMAtoms() const
     {
-        return getAtoms() | pqviews::filter([](const auto& atom)
-                                            { return atom->isQMAtom(); });
+        return _getAtoms() | pqviews::filter([](const auto& atom)
+                                             { return atom->isQMAtom(); });
     }
 
     /**
@@ -177,7 +177,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getMMMolecules()
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([](auto& mol) { return mol.isMMMolecule(); });
     }
 
@@ -197,8 +197,9 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getMMMolecules() const
     {
-        return getMolecules() | pqviews::filter([](const auto& mol)
-                                                { return mol.isMMMolecule(); });
+        return _getMolecules() |
+               pqviews::filter([](const auto& mol)
+                               { return mol.isMMMolecule(); });
     }
 
     /**
@@ -214,7 +215,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getMoleculesInsideZone(HybridZone zone)
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([zone](auto& mol)
                                { return mol.getHybridZone() == zone; });
     }
@@ -234,7 +235,7 @@ namespace molsys
         HybridZone zone
     ) const
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([zone](const auto& mol)
                                { return mol.getHybridZone() == zone; });
     }
@@ -253,7 +254,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getMoleculesOutsideZone(HybridZone zone)
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([zone](auto& mol)
                                { return mol.getHybridZone() != zone; });
     }
@@ -274,7 +275,7 @@ namespace molsys
         HybridZone zone
     ) const
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([zone](const auto& mol)
                                { return mol.getHybridZone() != zone; });
     }
@@ -291,7 +292,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getActiveMolecules()
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([](auto& mol) { return mol.isActive(); });
     }
 
@@ -307,7 +308,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getActiveMolecules() const
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([](const auto& mol) { return mol.isActive(); });
     }
 
@@ -323,7 +324,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getInactiveMolecules()
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([](auto& mol) { return !mol.isActive(); });
     }
 
@@ -339,7 +340,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getInactiveMolecules() const
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter([](const auto& mol) { return !mol.isActive(); });
     }
 
@@ -356,7 +357,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getWaterTypeMolecules()
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter(
                    [waterType =
                         static_cast<Derived&>(*this).getWaterType()](auto& mol)
@@ -380,7 +381,7 @@ namespace molsys
     template <typename Derived>
     auto SimulationBoxView<Derived>::getWaterTypeMolecules() const
     {
-        return getMolecules() |
+        return _getMolecules() |
                pqviews::filter(
                    [waterType = static_cast<const Derived&>(*this).getWaterType(
                     )](const auto& mol)
