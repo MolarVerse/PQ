@@ -7,6 +7,7 @@ Runs inside the CI job (Python standard library only) and writes, into --out:
                        `kind: "build-analysis"` record, see SCHEMA.md)
   ninja_log.txt        the raw `.ninja_log`, if there was one
   ccache-stats.txt     the raw `ccache --print-stats` output, if available
+  ninja-pending.txt    why `ninja -n` still sees work, only if it does
 
 Every part is optional and this script never fails a job because of missing
 inputs: it exits 0 and records what it could not read.
@@ -24,6 +25,7 @@ from pathlib import Path
 SCHEMA_VERSION = 1
 SLOWEST = 20
 SUPPORTED_LOG_VERSIONS = (5, 6, 7)
+EXPLAIN_LINES = 300
 SUMMARY_NAME = "build-analysis.json"
 
 COMPILE_SUFFIXES = (".o", ".obj", ".gch", ".pch")
@@ -167,30 +169,32 @@ def parse_ccache_stats(text):
 
 
 def run(command):
-    """stdout of a command, or None if it is missing or fails."""
+    """The finished process of a command, or None if it cannot be run."""
     try:
-        result = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        return subprocess.run(command, capture_output=True, text=True, timeout=120)
     except (OSError, subprocess.SubprocessError):
         return None
-    return result.stdout if result.returncode == 0 else None
 
 
-def pending_ninja_steps(build_dir):
-    """Steps `ninja -n` would still run: 0 means the build is complete.
+def ninja_dry_run(build_dir):
+    """Returns (pending steps, explanation) from `ninja -n -d explain`.
 
-    After `ninja -k 0` with failures, the failed targets and everything that
-    depends on them are still pending.
+    Pending 0 means the build is complete. After `ninja -k 0` with failures, the
+    failed targets and everything that depends on them are still pending. The
+    explanation says why ninja considers each step dirty (capped), so a wrong
+    verdict can be diagnosed from the artifact.
     """
-    output = run(["ninja", "-C", str(build_dir), "-n"])
-    if output is None:
-        return None
-    if "no work to do" in output:
-        return 0
-    for line in output.splitlines():
+    result = run(["ninja", "-C", str(build_dir), "-n", "-d", "explain"])
+    if result is None or result.returncode != 0:
+        return None, None
+    explanation = "\n".join((result.stderr + result.stdout).splitlines()[:EXPLAIN_LINES]) + "\n"
+    if "no work to do" in result.stdout:
+        return 0, explanation
+    for line in result.stdout.splitlines():
         match = STEP_COUNT.match(line)
         if match:
-            return int(match.group(1))
-    return None
+            return int(match.group(1)), explanation
+    return None, explanation
 
 
 def build_summary(args, env):
@@ -212,13 +216,16 @@ def build_summary(args, env):
     if ninja_log.is_file():
         text = ninja_log.read_text(encoding="utf-8", errors="replace")
         shutil.copyfile(ninja_log, out / "ninja_log.txt")
-        summary["ninja"] = summarise_ninja(text, pending_ninja_steps(args.build_dir))
+        pending, explanation = ninja_dry_run(args.build_dir)
+        summary["ninja"] = summarise_ninja(text, pending)
+        if pending != 0 and explanation:
+            (out / "ninja-pending.txt").write_text(explanation, encoding="utf-8")
 
     if args.ccache:
-        stats = run(["ccache", "--print-stats"])
-        if stats is not None:
-            (out / "ccache-stats.txt").write_text(stats, encoding="utf-8")
-            summary["ccache"] = parse_ccache_stats(stats)
+        result = run(["ccache", "--print-stats"])
+        if result is not None and result.returncode == 0:
+            (out / "ccache-stats.txt").write_text(result.stdout, encoding="utf-8")
+            summary["ccache"] = parse_ccache_stats(result.stdout)
     return summary
 
 

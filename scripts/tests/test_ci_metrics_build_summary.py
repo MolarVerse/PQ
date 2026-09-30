@@ -163,25 +163,38 @@ class CcacheTests(unittest.TestCase):
         self.assertIsNone(summary_module.parse_ccache_stats("ccache: command not found\n"))
 
 
-class PendingStepsTests(unittest.TestCase):
-    def pending(self, stdout=None, raises=None, returncode=0):
+class DryRunTests(unittest.TestCase):
+    def dry_run(self, stdout="", stderr="", raises=None, returncode=0):
         with mock.patch.object(summary_module.subprocess, "run") as run:
             if raises:
                 run.side_effect = raises
             else:
-                run.return_value = subprocess.CompletedProcess([], returncode, stdout=stdout, stderr="")
-            return summary_module.pending_ninja_steps("build")
+                run.return_value = subprocess.CompletedProcess([], returncode, stdout=stdout, stderr=stderr)
+            result = summary_module.ninja_dry_run("build")
+            self.command = run.call_args[0][0] if run.call_args else None
+            return result
 
     def test_no_work_to_do_means_complete(self):
-        self.assertEqual(0, self.pending("ninja: no work to do.\n"))
+        self.assertEqual(0, self.dry_run("ninja: no work to do.\n")[0])
+        self.assertEqual(["ninja", "-C", "build", "-n", "-d", "explain"], self.command)
 
-    def test_counts_the_steps_ninja_would_still_run(self):
-        self.assertEqual(3, self.pending("[1/3] Building CXX a.o\n[2/3] Building CXX b.o\n[3/3] Linking x\n"))
+    def test_counts_the_steps_ninja_would_still_run_and_keeps_the_explanation(self):
+        pending, explanation = self.dry_run(
+            "[1/3] Building CXX a.o\n[2/3] Building CXX b.o\n[3/3] Linking x\n",
+            stderr="ninja explain: output x older than most recent input a.o\n",
+        )
+        self.assertEqual(3, pending)
+        self.assertIn("ninja explain: output x older than most recent input a.o", explanation)
+        self.assertIn("[3/3] Linking x", explanation)
+
+    def test_the_explanation_is_capped(self):
+        _, explanation = self.dry_run("[1/1] x\n", stderr="explain\n" * 1000)
+        self.assertEqual(summary_module.EXPLAIN_LINES, len(explanation.splitlines()))
 
     def test_unknown_output_a_failing_ninja_or_a_missing_ninja_is_unknown(self):
-        self.assertIsNone(self.pending("something else\n"))
-        self.assertIsNone(self.pending("", returncode=1))
-        self.assertIsNone(self.pending(raises=FileNotFoundError()))
+        self.assertIsNone(self.dry_run("something else\n")[0])
+        self.assertEqual((None, None), self.dry_run("", returncode=1))
+        self.assertEqual((None, None), self.dry_run(raises=FileNotFoundError()))
 
 
 class EndToEndTests(unittest.TestCase):
@@ -199,7 +212,7 @@ class EndToEndTests(unittest.TestCase):
 
         def fake_run(command, **_):
             if command[0] in tools and tools[command[0]] is not None:
-                return subprocess.CompletedProcess(command, 0, stdout=tools[command[0]], stderr="")
+                return subprocess.CompletedProcess(command, 0, stdout=tools[command[0]], stderr="explained\n")
             return subprocess.CompletedProcess(command, 1, stdout="", stderr="")
 
         out = io.StringIO()
@@ -241,6 +254,13 @@ class EndToEndTests(unittest.TestCase):
         _, data, _ = self.run_main(tools={"ninja": "[1/2] Building CXX broken.o\n[2/2] Linking x\n"})
         self.assertFalse(data["ninja"]["complete"])
         self.assertEqual(2, data["ninja"]["pending_steps"])
+        self.assertIn("explained", (self.out / "ninja-pending.txt").read_text())
+
+    def test_a_complete_build_writes_no_explanation(self):
+        self.build.mkdir()
+        (self.build / ".ninja_log").write_text(SAMPLE)
+        self.run_main(tools={"ninja": "ninja: no work to do.\n"})
+        self.assertFalse((self.out / "ninja-pending.txt").exists())
 
     def test_without_any_input_it_still_succeeds_and_records_nulls(self):
         code, data, _ = self.run_main()
