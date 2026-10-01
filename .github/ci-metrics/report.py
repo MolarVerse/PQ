@@ -58,6 +58,7 @@ class LoadStats:
     records: int = 0
     ignored: int = 0
     invalid: int = 0
+    analyses: int = 0
 
 
 def parse_timestamp(text):
@@ -99,7 +100,11 @@ def load_jobs(data_dir):
                     continue
                 stats.records += 1
                 try:
-                    job = parse_job(json.loads(line))
+                    record = json.loads(line)
+                    if isinstance(record, dict) and record.get("kind") == "build-analysis":
+                        stats.analyses += 1
+                        continue
+                    job = parse_job(record)
                 except (ValueError, KeyError, TypeError, AttributeError):
                     stats.invalid += 1
                     continue

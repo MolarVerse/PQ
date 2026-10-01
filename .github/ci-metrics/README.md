@@ -9,7 +9,7 @@ instead of guessed. Tracked in #720.
 | Collector script (GitHub API to JSONL), see [Running the collector](#running-the-collector) | implemented, #715 |
 | Collector workflow, see [The workflow](#the-workflow) | implemented, #716 (inert until it reaches `main`) |
 | Overview report for `dev` | planned, #717 |
-| Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented on the job side, #718; collector ingest and overview planned |
+| Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented on the job side (#718) and ingested by the collector as `build-analysis` records; overview extension planned |
 | clang `-ftime-trace` analysis | planned, #719 |
 
 ## Layout
@@ -19,7 +19,8 @@ instead of guessed. Tracked in #720.
   README.md      this file
   SCHEMA.md      field definitions and derivation rules
   schema.json    JSON Schema for one record
-  config.json    repository, recorded workflows, infrastructure-failure signatures
+  schema-build-analysis.json  JSON Schema for a build-analysis record
+  config.json    repository, recorded workflows, workflows with build analysis, infrastructure-failure signatures
   collect.py     the collector (Python standard library only, uses the gh CLI)
   publish.sh     commits and pushes new data (used by the workflow)
   data/          weekly JSONL shards, written only by the collector
@@ -225,8 +226,22 @@ the link, and so `ninja -n` reports a finished `build-static-lto` build as havin
 165 steps left.
 
 Reading the file fields: see "Build analysis summary" in [`SCHEMA.md`](SCHEMA.md).
-Ingesting the artifacts into the JSONL data and showing them in the overview
-are the next steps of #718.
+
+**Ingestion.** For every new run of the workflows in `build_analysis_workflows`
+(`BUILD`, `LINT`), the collector lists the run's artifacts, downloads the
+`build-timings-*` ones and writes one `kind: "build-analysis"` record per job
+next to the job records, in the same shard. Cost: one more API call per `BUILD`
+or `LINT` run plus one per artifact (about 7 per `BUILD` run), which is the
+largest part of the daily budget against the 1,000 requests per hour of
+`GITHUB_TOKEN`. An artifact that expired or does not pass validation is counted
+in the summary line (`dropped jobs: ...`) and skipped; any other API error makes
+the whole run be retried on the next collection, so a transient failure does not
+lose its analysis. Artifacts only exist from the day the jobs started uploading
+them (#735), so nothing can be backfilled. Each record is 0.5 KB (ccache only) to
+3.5 KB (with `.ninja_log` figures); expect about 6 MB a month on top of the job
+records.
+
+Showing the new data in the overview is the next step of #718.
 
 ## Reading the data
 

@@ -13,9 +13,10 @@ This page explains what each field means and how the collector derives it.
   in its shard. It keeps no other state.
 - `schema_version` is bumped on any incompatible change. Readers must ignore
   records whose version they do not know.
-- `kind` is `"job"` today. `"build-analysis"` is reserved for per-target build
-  timings (`.ninja_log`, ccache, clang `-ftime-trace`) and will get its own
-  definition when those are added.
+- `kind` is `"job"` (one per finished job, `schema.json`) or `"build-analysis"`
+  (one per build job that uploaded a summary, see below,
+  `schema-build-analysis.json`). Clang `-ftime-trace` data will get its own kind.
+  Readers that only want job timings must skip records whose `kind` is not `"job"`.
 
 ## Fields
 
@@ -49,9 +50,29 @@ This page explains what each field means and how the collector derives it.
 
 ## Build analysis summary (job side, version 1)
 
-Written by `summarise_build.py` inside a CI job and uploaded as an artifact; the
-collector will turn it into a `kind: "build-analysis"` record joined to the job
-record by `job_id` (not implemented yet). Every part may be `null`.
+Written by `summarise_build.py` inside a CI job and uploaded as an artifact
+(`build-timings-<job>-a<attempt>`). The collector turns it into a `kind:
+"build-analysis"` record (`schema-build-analysis.json`) next to the job record,
+for the workflows listed in `config.json` under `build_analysis_workflows`
+(`BUILD` and `LINT`). Every part may be `null`.
+
+**The record.** `workflow`, `run_id`, `run_attempt`, `event`, `branch`,
+`head_sha`, `job_id`, `job`, `created_at` and `conclusion` are copied from the
+job record and so are never taken from the artifact; `ninja` and `ccache` are the
+fields below. Join to the job record on `job_id`. The collector accepts an
+artifact only if its `run_id`, `run_attempt` and `job_id` match a job of that run.
+
+**Trust.** An artifact of a pull request run is produced by code from that pull
+request, so the collector never copies it: `sanitise_summary()` rebuilds every
+field from a whitelist with type and range checks (finite numbers up to fixed
+limits, at most 20 slow steps, at most 200 ccache counters with names matching
+`[a-z0-9_]{1,64}`, printable targets of at most 300 characters, artifacts of at
+most 1 MB) and drops an artifact that does not pass, counting it in the summary
+line. Values inside those limits can still be wrong if a pull request wants them
+to be, so treat these records as measurements, not as proof.
+
+**Fields of the artifact.** (`run_id`, `run_attempt` and `job_id` are only used
+for the join; `job_key` and `artifact` are not stored.)
 
 | Field | Meaning |
 | --- | --- |
