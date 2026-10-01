@@ -45,6 +45,8 @@ jobs:
               - 'benchmarks/.clang-tidy'
               - 'scripts/clang_tidy.sh'
               - '.github/workflows/lint.yml'
+              - '.github/actions/upload-build-timings/**'
+              - '.github/ci-metrics/summarise_build.py'
 
   lint:
     needs: changes
@@ -100,6 +102,7 @@ jobs:
         shell: bash
 
       - name: Configure and build (generate compile_commands.json)
+        id: build
         run: |
           # Enable tests and both benchmark suites so their sources are part
           # of the compile database and actually compile with their deps
@@ -128,11 +131,24 @@ jobs:
           # let that fail this job. `-k 0` keeps Ninja building past
           # failures instead of stopping at the first one, to maximize how
           # much of the compile database has real build output behind it.
-          cmake --build build --parallel "$(nproc)" -- -k 0 || \
+          status=0
+          cmake --build build --parallel "$(nproc)" -- -k 0 || {
+            status=$?
             echo "::warning::Full project build had errors (see log) — continuing, since this job only needs a usable compile_commands.json and ci_build.yml is the build/warnings gate."
+          }
+          # read by the build-timings step below: a build with errors is partial
+          echo "status=$status" >> "$GITHUB_OUTPUT"
         env:
           CC: gcc-13
           CXX: g++-13
+
+      - name: Collect build timings
+        if: always()
+        uses: ./.github/actions/upload-build-timings
+        with:
+          name: lint
+          job-id: ${{ job.check_run_id }}
+          build-status: ${{ steps.build.outputs.status == '0' && 'success' || 'failure' }}
 
       - name: Run clangd-tidy on changed files
         run: |

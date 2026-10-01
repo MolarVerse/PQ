@@ -47,6 +47,34 @@ This page explains what each field means and how the collector derives it.
 | `is_rerun` | `true` if `run_attempt > 1`. |
 | `infra_failure` | For `failure` jobs only: `true` if the job log contains a known infrastructure-outage signature (currently `GitLab is currently unable to handle this request`), `false` if it failed without one, `null` if the job did not fail or its log was unavailable (logs expire after 90 days). |
 
+## Build analysis summary (job side, version 1)
+
+Written by `summarise_build.py` inside a CI job and uploaded as an artifact; the
+collector will turn it into a `kind: "build-analysis"` record joined to the job
+record by `job_id` (not implemented yet). Every part may be `null`.
+
+| Field | Meaning |
+| --- | --- |
+| `run_id`, `run_attempt` | From the job's environment. |
+| `job_id` | REST API id of the job (`job.check_run_id`), the join key to the `job` record. `null` if the runner did not provide it. |
+| `job_key` | `GITHUB_JOB`, the job's key in the workflow file. |
+| `artifact` | Name the summary was uploaded under. |
+| `ninja` | `null` if the build directory has no `.ninja_log`. |
+| `ninja.log_version` | `.ninja_log` format version; 5, 6 and 7 are read. |
+| `ninja.complete` | `true` if the job's build step succeeded, `false` if it failed (for example `lint`'s `-k 0` build with errors), `null` if the job did not say. A `false` build must not be compared with full builds. It is not derived from `ninja -n`, which is wrong for LTO links. |
+| `ninja.steps`, `wall_s`, `cpu_s` | Distinct commands run, time from the first start to the last end, sum of step times. A rebuilt output keeps its last entry; outputs of one command count once. |
+| `ninja.parallelism` | `cpu_s / wall_s`. |
+| `ninja.tail_after_compile_s` | Time from the last compile step ending to the end of the build (mostly linking). |
+| `ninja.by_kind` | `steps` and `cpu_s` per `compile` (`.o`, `.gch`), `archive` (`.a`), `link` (executables and shared libraries) and `other`, classified by output file name. |
+| `ninja.slowest` | The 20 slowest steps: `target`, `kind`, `seconds`. |
+| `ninja.error` | Present instead of the figures if the log had an unsupported version or no steps. |
+| `ccache` | `null` if ccache statistics were unavailable. |
+| `ccache.hits`, `misses`, `hit_rate` | Direct plus preprocessed hits, misses, and `hits / (hits + misses)` (of *cacheable* calls; `null` if there were none). |
+| `ccache.counters` | Every non-zero counter of `ccache --print-stats`, including the reasons calls were uncacheable. |
+
+The ccache counters cover the job only, because the setup action zeroes them at
+the start.
+
 ## What is and is not recorded
 
 - Runs are collected only once `completed`.
