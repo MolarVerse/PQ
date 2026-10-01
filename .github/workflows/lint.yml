@@ -17,6 +17,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+# ccache does not cache compiles that use a precompiled header unless it may
+# ignore the header's defines and __DATE__/__TIME__ (measured: about 65% of the
+# compiler calls of every build job were uncacheable, counter
+# could_not_use_precompiled_header, #732). The cost is that an object restored
+# from the cache keeps the compile date of the run that built it (printed in the
+# output header; nothing built by CI is shipped).
+env:
+  CCACHE_SLOPPINESS: pch_defines,time_macros
+
 jobs:
   changes:
     runs-on: ubuntu-24.04
