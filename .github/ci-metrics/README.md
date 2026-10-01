@@ -9,7 +9,7 @@ instead of guessed. Tracked in #720.
 | Collector script (GitHub API to JSONL), see [Running the collector](#running-the-collector) | implemented, #715 |
 | Collector workflow, see [The workflow](#the-workflow) | implemented, #716 (inert until it reaches `main`) |
 | Overview report for `dev` | planned, #717 |
-| Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented on the job side (#718) and ingested by the collector as `build-analysis` records; overview extension planned |
+| Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented (#718): job side, collector ingest and the overview section |
 | clang `-ftime-trace` analysis | planned, #719 |
 
 ## Layout
@@ -186,6 +186,13 @@ What it shows, per recorded workflow:
   they would pull the medians down.
 - **Trend:** weekly median wall-clock of BUILD (Mermaid `xychart-beta`, no binary
   files), and the weekly Eigen cache hit rate (the effect of #703).
+- **Build analysis** (from the `build-analysis` records; says so if there are none yet):
+  per job the median ccache hit rate of cacheable calls, the calls blocked by the
+  precompiled header (#732) and whether the cache is full; for complete ninja builds
+  the wall and CPU time, parallelism, the link tail after the last compile and the
+  link share of CPU time (does a bigger runner help?); and the slowest build steps
+  of pushes to `dev`. Builds with `complete` false (`lint`) are left out of the ninja
+  table and counted; each build keeps only its 20 slowest steps.
 - **Exclusions:** what was left out and how many, so the numbers can be
   reproduced: cancelled, other events, pushes to branches other than `dev`,
   reruns, infrastructure failures and failed jobs.
@@ -241,7 +248,7 @@ them (#735), so nothing can be backfilled. Each record is 0.5 KB (ccache only) t
 3.5 KB (with `.ninja_log` figures); expect about 6 MB a month on top of the job
 records.
 
-Showing the new data in the overview is the next step of #718.
+The overview shows the data in its "Build analysis" section (below).
 
 ## Reading the data
 

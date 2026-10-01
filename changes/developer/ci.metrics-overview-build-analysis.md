@@ -1,0 +1,1 @@
+- Add a build analysis section to the CI timings overview: ccache hit rate and precompiled-header blocked calls per job, ninja wall/CPU/link-tail figures for complete builds, and the slowest build steps on dev.
