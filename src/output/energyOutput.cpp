@@ -123,7 +123,7 @@ namespace out
         }
 
         if (settings::ThermostatSettings::getThermostatType() ==
-            settings::ThermostatType::NOSE_HOOVER)
+            ThermostatType::NOSE_HOOVER)
         {
             _fp << std::format(
                 "{:20.12f}\t",

@@ -170,13 +170,13 @@ namespace thermostat
      */
     size_t Thermostat::getRampingFrequency() const { return _rampingFrequency; }
     /**
-     * @brief get the settings::ThermostatType
+     * @brief get the ThermostatType
      *
-     * @return settings::ThermostatType
+     * @return ThermostatType
      */
-    settings::ThermostatType Thermostat::getThermostatType() const
+    ThermostatType Thermostat::getThermostatType() const
     {
-        return settings::ThermostatType::NONE;
+        return ThermostatType::NONE;
     }
 
 }   // namespace thermostat

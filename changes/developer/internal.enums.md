@@ -8,3 +8,4 @@
 - use new enum aliases strategy from mstd to make life easier for QM enums later
 - move all `QM` related enums from settings to enum
 - move all enums from `settings.hpp` to enum
+- move `InitVelocities` and `ThermostatType` from settings to enum

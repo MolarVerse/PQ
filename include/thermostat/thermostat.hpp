@@ -106,7 +106,7 @@ namespace thermostat
         [[nodiscard]] size_t getRampingFrequency() const;
 
         [[nodiscard]]
-        virtual settings::ThermostatType getThermostatType() const;
+        virtual ThermostatType getThermostatType() const;
     };
 
 }   // namespace thermostat

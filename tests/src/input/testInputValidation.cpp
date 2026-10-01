@@ -63,9 +63,7 @@ class TestInputValidation : public ::testing::Test
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
-        settings::ThermostatSettings::setThermostatType(
-            settings::ThermostatType::NONE
-        );
+        settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
         settings::ThermostatSettings::setTargetTemperature(0.0);
         settings::ThermostatSettings::setStartTemperature(0.0);
         settings::ThermostatSettings::setEndTemperature(0.0);
@@ -81,7 +79,7 @@ class TestInputValidation : public ::testing::Test
             defaults::LANGEVIN_THERMOSTAT_FRICTION
         );
         settings::SimulationBoxSettings::setInitializeVelocities(
-            settings::InitVelocities::FALSE
+            InitVelocities::FALSE
         );
 
         settings::PotentialSettings::setCoulombLongRangeType(
@@ -220,9 +218,7 @@ TEST_F(TestInputValidation, requiresQMProgramForQMJob)
 
 TEST_F(TestInputValidation, requiresTemperatureForThermostat)
 {
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::BERENDSEN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -233,9 +229,7 @@ TEST_F(TestInputValidation, requiresTemperatureForThermostat)
 
 TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
 {
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::BERENDSEN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     _setKeyword("temp");
     _setKeyword("end_temp");
 
@@ -250,9 +244,7 @@ TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
 TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::BERENDSEN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     settings::ThermostatSettings::setEndTemperature(300.0);
     _setKeyword("end_temp");
 
@@ -268,7 +260,7 @@ TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
 {
     _configureMDJob(JobType::MM_MD);
     settings::SimulationBoxSettings::setInitializeVelocities(
-        settings::InitVelocities::FORCE
+        InitVelocities::FORCE
     );
 
     ASSERT_THROW_MSG(
@@ -282,7 +274,7 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
 {
     _configureMDJob(JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::VELOCITY_RESCALING
+        ThermostatType::VELOCITY_RESCALING
     );
     settings::ThermostatSettings::setTargetTemperature(300.0);
     settings::ThermostatSettings::setRelaxationTime(0.0001);
@@ -298,9 +290,7 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
 TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::LANGEVIN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
     settings::ThermostatSettings::setTargetTemperature(300.0);
     settings::ThermostatSettings::setFriction(
         std::numeric_limits<double>::max()
@@ -318,9 +308,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::LANGEVIN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
     settings::ThermostatSettings::setTargetTemperature(300.0);
     settings::ThermostatSettings::setStartTemperature(
         std::numeric_limits<double>::max()
@@ -365,7 +353,7 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
 TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
 {
     settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::NOSE_HOOVER
+        ThermostatType::NOSE_HOOVER
     );
     settings::ThermostatSettings::setTargetTemperature(0.0);
     _setKeyword("temp");
@@ -379,9 +367,7 @@ TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
 
 TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
 {
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::BERENDSEN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     settings::ThermostatSettings::setTargetTemperature(0.0);
     _setKeyword("temp");
 
@@ -391,9 +377,7 @@ TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
 TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::BERENDSEN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     settings::ThermostatSettings::setTemperatureRampSteps(200);
     _setKeyword("temp");
     _setKeyword("start_temp");
@@ -409,9 +393,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::BERENDSEN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     settings::ThermostatSettings::setTemperatureRampSteps(2);
     settings::ThermostatSettings::setTemperatureRampFrequency(4);
     _setKeyword("temp");
@@ -428,9 +410,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
 TEST_F(TestInputValidation, acceptsDefaultTemperatureRampLength)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::BERENDSEN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     settings::ThermostatSettings::setTemperatureRampFrequency(100);
     _setKeyword("temp");
     _setKeyword("start_temp");
@@ -626,9 +606,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     settings::QMSettings::setQMMethod(QMMethod::MACE);
     settings::QMSettings::setMaceModel(MaceModel::CUSTOM);
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::BERENDSEN
-    );
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     _setKeyword("mace_model_path");
     _setKeyword("pressure");
     _setKeyword("temp");

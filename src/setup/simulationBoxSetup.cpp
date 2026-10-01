@@ -438,9 +438,9 @@ namespace setup
     void SimulationBoxSetup::initVelocities()
     {
         if (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                settings::InitVelocities::FALSE ||
+                InitVelocities::FALSE ||
             (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                 settings::InitVelocities::TRUE &&
+                 InitVelocities::TRUE &&
              !getZeroVelocities()))
             return;
 
@@ -514,7 +514,7 @@ namespace setup
         log.writeEmptyLine();
 
         if (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                settings::InitVelocities::TRUE &&
+                InitVelocities::TRUE &&
             !getZeroVelocities())
         {
             log.writeSetupWarning(
@@ -534,10 +534,10 @@ namespace setup
         }
 
         if ((settings::SimulationBoxSettings::getInitializeVelocities() ==
-                 settings::InitVelocities::TRUE &&
+                 InitVelocities::TRUE &&
              getZeroVelocities()) ||
             settings::SimulationBoxSettings::getInitializeVelocities() ==
-                settings::InitVelocities::FORCE)
+                InitVelocities::FORCE)
         {
             log.writeSetupInfo(
                 "velocities initialized with Maxwell-Boltzmann distribution"

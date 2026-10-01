@@ -86,7 +86,7 @@ namespace thermostat
         [[nodiscard]] double getFriction() const;
         [[nodiscard]] double getSigma() const;
         [[nodiscard]]
-        settings::ThermostatType getThermostatType() const override;
+        ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat

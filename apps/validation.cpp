@@ -435,8 +435,7 @@ namespace
         cli::ValidationResult        &result
     )
     {
-        using settings::ThermostatSettings;
-        using settings::ThermostatType;
+        using enum ThermostatType;
 
         if (reader.getKeywordSet("mace_model_size"))
         {
@@ -446,10 +445,10 @@ namespace
                  std::nullopt}
             );
         }
-        if (ThermostatSettings::getThermostatType() ==
+        if (settings::ThermostatSettings::getThermostatType() ==
                 ThermostatType::NOSE_HOOVER &&
             utilities::isZero(
-                ThermostatSettings::getNoseHooverCouplingFrequency()
+                settings::ThermostatSettings::getNoseHooverCouplingFrequency()
             ))
         {
             result.diagnostics.push_back(
@@ -460,9 +459,9 @@ namespace
             );
         }
 
-        if (ThermostatSettings::getThermostatType() ==
+        if (settings::ThermostatSettings::getThermostatType() ==
                 ThermostatType::LANGEVIN &&
-            utilities::isZero(ThermostatSettings::getFriction()))
+            utilities::isZero(settings::ThermostatSettings::getFriction()))
         {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
