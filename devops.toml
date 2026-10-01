@@ -28,6 +28,8 @@ ast_check_enabled_ids = [
     "memberFunctionLeadingUnderscore",
     "classMemberOrder",
     "noPublicLeadingUnderscore",
+    "noDeleteInGtestTeardown",
+    "noNewInGtestSetup",
 ]
 
 # Per-check configuration — one sub-table per check id.

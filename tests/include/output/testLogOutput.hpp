@@ -37,13 +37,15 @@
 class TestLogOutput : public ::testing::Test
 {
    protected:
-    out::LogOutput *_logOutput;
+    std::unique_ptr<out::LogOutput> _logOutput;
 
-    void SetUp() override { _logOutput = new out::LogOutput("default.log"); }
+    void SetUp() override
+    {
+        _logOutput = std::make_unique<out::LogOutput>("default.log");
+    }
 
     void TearDown() override
     {
-        delete _logOutput;
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     }

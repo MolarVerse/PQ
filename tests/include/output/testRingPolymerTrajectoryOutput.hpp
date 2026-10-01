@@ -44,19 +44,20 @@
 class TestRingPolymerTrajectoryOutput : public ::testing::Test
 {
    protected:
-    out::RingPolymerTrajectoryOutput  *_trajectoryOutput;
-    molsys::SimulationBox             *_simulationBox1;
-    molsys::SimulationBox             *_simulationBox2;
-    std::vector<molsys::SimulationBox> _beads;
+    std::unique_ptr<out::RingPolymerTrajectoryOutput> _trajectoryOutput;
+    std::unique_ptr<molsys::SimulationBox>            _simulationBox1;
+    std::unique_ptr<molsys::SimulationBox>            _simulationBox2;
+    std::vector<molsys::SimulationBox>                _beads;
 
     void SetUp() override
     {
         settings::RingPolymerSettings::setNumberOfBeads(2);
 
-        _trajectoryOutput =
-            new out::RingPolymerTrajectoryOutput("default.rpmd.xyz");
-        _simulationBox1 = new molsys::SimulationBox();
-        _simulationBox2 = new molsys::SimulationBox();
+        _trajectoryOutput = std::make_unique<out::RingPolymerTrajectoryOutput>(
+            "default.rpmd.xyz"
+        );
+        _simulationBox1 = std::make_unique<molsys::SimulationBox>();
+        _simulationBox2 = std::make_unique<molsys::SimulationBox>();
 
         _simulationBox1->setBoxDimensions({10.0, 10.0, 10.0});
         _simulationBox2->setBoxDimensions({10.0, 10.0, 10.0});
@@ -137,9 +138,6 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
 
     void TearDown() override
     {
-        delete _trajectoryOutput;
-        delete _simulationBox1;
-        delete _simulationBox2;
         const auto errorCode = std::remove("default.rpmd.xyz");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.xyz";
     }

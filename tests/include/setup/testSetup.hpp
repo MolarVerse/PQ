@@ -35,8 +35,8 @@
 class TestSetup : public ::testing::Test
 {
    protected:
-    engine::Engine   *_engine;
-    engine::MDEngine *_mdEngine;
+    std::unique_ptr<engine::Engine>   _engine;
+    std::unique_ptr<engine::MDEngine> _mdEngine;
 
     void SetUp() override
     {
@@ -44,8 +44,8 @@ class TestSetup : public ::testing::Test
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine   = new engine::OptEngine();
-        _mdEngine = new engine::MMMDEngine();
+        _engine   = std::make_unique<engine::OptEngine>();
+        _mdEngine = std::make_unique<engine::MMMDEngine>();
     }
 
     void TearDown() override

@@ -45,11 +45,11 @@ class TestInputFileReader : public ::testing::Test
    protected:
     std::string _fileName;
 
-    engine::Engine         *_engine;
-    input::InputFileReader *_inputFileReader;
+    std::unique_ptr<engine::Engine>         _engine;
+    std::unique_ptr<input::InputFileReader> _inputFileReader;
 
-    engine::MDEngine       *_mdEngine;
-    input::InputFileReader *_inputFileReader_mdEngine;
+    std::unique_ptr<engine::MDEngine>       _mdEngine;
+    std::unique_ptr<input::InputFileReader> _inputFileReader_mdEngine;
 
     void SetUp() override
     {
@@ -57,21 +57,15 @@ class TestInputFileReader : public ::testing::Test
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine          = new engine::OptEngine();
-        _mdEngine        = new engine::MMMDEngine();
-        _inputFileReader = new input::InputFileReader("input.in", *_engine);
+        _engine   = std::make_unique<engine::OptEngine>();
+        _mdEngine = std::make_unique<engine::MMMDEngine>();
+        _inputFileReader =
+            std::make_unique<input::InputFileReader>("input.in", *_engine);
         _inputFileReader_mdEngine =
-            new input::InputFileReader("input.in", *_mdEngine);
+            std::make_unique<input::InputFileReader>("input.in", *_mdEngine);
     }
 
-    void TearDown() override
-    {
-        delete _inputFileReader;
-        delete _inputFileReader_mdEngine;
-        delete _engine;
-        delete _mdEngine;
-        _removeFile();
-    }
+    void TearDown() override { _removeFile(); }
 
     static void _clearParser(input::InputFileParser &parser)
     {

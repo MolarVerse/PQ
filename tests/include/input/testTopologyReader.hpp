@@ -27,7 +27,6 @@
 #include <gtest/gtest.h>   // for Test
 
 #include <memory>
-#include <string>   // for allocator
 
 #include "fileSettings.hpp"     // for FileSettings
 #include "mmmdEngine.hpp"       // for Engine
@@ -43,8 +42,8 @@
 class TestTopologyReader : public ::testing::Test
 {
    protected:
-    engine::Engine                  *_engine;
-    input::topology::TopologyReader *_topologyReader;
+    std::unique_ptr<engine::Engine>                  _engine;
+    std::unique_ptr<input::topology::TopologyReader> _topologyReader;
 
     void SetUp() override
     {
@@ -62,22 +61,16 @@ class TestTopologyReader : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>();
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
-        _topologyReader = new input::topology::TopologyReader(
+        _topologyReader = std::make_unique<input::topology::TopologyReader>(
             "data/topologyReader/topology.top",
             *_engine
         );
         settings::FileSettings::setIsTopologyFileNameSet();
-    }
-
-    void TearDown() override
-    {
-        delete _topologyReader;
-        delete _engine;
     }
 };
 

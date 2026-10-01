@@ -41,83 +41,77 @@
 class TestBoxSection : public ::testing::Test
 {
    protected:
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
 
     void SetUp() override
     {
-        _section = new input::restartFile::BoxSection;
+        _section = std::make_unique<input::restartFile::BoxSection>();
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>();
     }
-
-    void TearDown() override { delete _section; }
 };
 
 /**
- * @class TestBondSection
+ * @class TestNoseHooverSection
  *
- * @brief Test fixture for testing the BondSection class.
+ * @brief Test fixture for testing the NoseHooverSection class.
  *
  */
 class TestNoseHooverSection : public ::testing::Test
 {
    protected:
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
 
     void SetUp() override
     {
-        _section = new input::restartFile::NoseHooverSection;
+        _section = std::make_unique<input::restartFile::NoseHooverSection>();
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>();
     }
-
-    void TearDown() override { delete _section; }
 };
 
 /**
- * @class TestBondSection
+ * @class TestStepCountSection
  *
- * @brief Test fixture for testing the BondSection class.
+ * @brief Test fixture for testing the StepCountSection class.
  *
  */
 class TestStepCountSection : public ::testing::Test
 {
    protected:
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
 
     void SetUp() override
     {
-        _section = new input::restartFile::StepCountSection;
+        _section = std::make_unique<input::restartFile::StepCountSection>();
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>();
     }
-
-    void TearDown() override { delete _section; }
 };
 
 /**
- * @class TestBondSection
+ * @class TestAtomSection
  *
- * @brief Test fixture for testing the BondSection class.
+ * @brief Test fixture for testing the AtomSection class.
  *
  */
 class TestAtomSection : public ::testing::Test
 {
    protected:
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
 
     static void _processAtomLine(
         std::vector<std::string> &line,
@@ -145,15 +139,13 @@ class TestAtomSection : public ::testing::Test
 
     void SetUp() override
     {
-        _section = new input::restartFile::AtomSection;
+        _section = std::make_unique<input::restartFile::AtomSection>();
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>();
     }
-
-    void TearDown() override { delete _section; }
 };
 
 #endif   // _TEST_RESTART_FILE_SECTION_HPP_

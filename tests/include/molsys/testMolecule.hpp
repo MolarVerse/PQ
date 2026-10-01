@@ -34,11 +34,11 @@
 class TestMolecule : public ::testing::Test
 {
    protected:
-    molsys::Molecule *_molecule;
+    std::unique_ptr<molsys::Molecule> _molecule;
 
     void SetUp() override
     {
-        _molecule = new molsys::Molecule();
+        _molecule = std::make_unique<molsys::Molecule>();
 
         auto _atom1 = std::make_shared<molsys::Atom>();
         auto _atom2 = std::make_shared<molsys::Atom>();
@@ -68,8 +68,6 @@ class TestMolecule : public ::testing::Test
         _molecule->addAtom(_atom2);
         _molecule->addAtom(_atom3);
     }
-
-    void TearDown() override { delete _molecule; }
 };
 
 #endif   // _TEST_MOLECULE_HPP_

@@ -107,7 +107,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
             simulationBox.getBoxDimensions(),
             physicalData,
             &coulombPotential,
-            _nonCoulombPotential
+            _nonCoulombPotential.get()
         );
 
     EXPECT_NEAR(coulombEnergy, -67.242901903583757 * 0.75, 1e-6);
@@ -144,7 +144,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
 
     intraNonBondedMap.calculate(
         &coulombPotential,
-        _nonCoulombPotential,
+        _nonCoulombPotential.get(),
         simulationBox,
         physicalData
     );
