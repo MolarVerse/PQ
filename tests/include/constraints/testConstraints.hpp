@@ -43,8 +43,8 @@
 class TestConstraints : public ::testing::Test
 {
    protected:
-    molsys::SimulationBox    *_box;
-    constraints::Constraints *_constraints;
+    std::unique_ptr<molsys::SimulationBox>    _box;
+    std::unique_ptr<constraints::Constraints> _constraints;
 
     void SetUp() override
     {
@@ -83,12 +83,12 @@ class TestConstraints : public ::testing::Test
         molecule2.addAtom(atom4);
         molecule2.addAtom(atom5);
 
-        _box = new molsys::SimulationBox();
+        _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
         _box->addMolecule(molecule2);
         _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
-        _constraints = new constraints::Constraints();
+        _constraints = std::make_unique<constraints::Constraints>();
 
         auto bondConstraint1 = constraints::BondConstraint(
             _box->getMolecules().data(),
@@ -109,12 +109,6 @@ class TestConstraints : public ::testing::Test
         _constraints->addBondConstraint(bondConstraint2);
 
         _constraints->activateShake();
-    }
-
-    void TearDown() override
-    {
-        delete _box;
-        delete _constraints;
     }
 };
 

@@ -57,41 +57,45 @@ TEST_F(TestParameterFileReader, isNeeded)
  */
 TEST_F(TestParameterFileReader, determineSection)
 {
-    auto *reader = _parameterFileReader;
-    EXPECT_EQ(reader->getParameterFileSections().size(), 7);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 7);
 
-    const auto *section = reader->determineSection({"types"});
+    const auto *section = _parameterFileReader->determineSection({"types"});
     EXPECT_EQ(typeid(*section), typeid(input::parameterFile::TypesSection));
 
-    const auto *section1 = reader->determineSection({"bonds"});
+    const auto *section1 = _parameterFileReader->determineSection({"bonds"});
     EXPECT_EQ(typeid(*section1), typeid(input::parameterFile::BondSection));
 
-    const auto *section2 = reader->determineSection({"angles"});
+    const auto *section2 = _parameterFileReader->determineSection({"angles"});
     EXPECT_EQ(typeid(*section2), typeid(input::parameterFile::AngleSection));
 
-    const auto *section3 = reader->determineSection({"dihedrals"});
+    const auto *section3 =
+        _parameterFileReader->determineSection({"dihedrals"});
     EXPECT_EQ(typeid(*section3), typeid(input::parameterFile::DihedralSection));
 
-    const auto *section4 = reader->determineSection({"impropers"});
+    const auto *section4 =
+        _parameterFileReader->determineSection({"impropers"});
     EXPECT_EQ(
         typeid(*section4),
         typeid(input::parameterFile::ImproperDihedralSection)
     );
 
-    const auto *section5 = reader->determineSection({"nonCoulombics"});
+    const auto *section5 =
+        _parameterFileReader->determineSection({"nonCoulombics"});
     EXPECT_EQ(
         typeid(*section5),
         typeid(input::parameterFile::NonCoulombicsSection)
     );
 
-    const auto *section6 = reader->determineSection({"j_couplings"});
+    const auto *section6 =
+        _parameterFileReader->determineSection({"j_couplings"});
     EXPECT_EQ(
         typeid(*section6),
         typeid(input::parameterFile::JCouplingSection)
     );
 
     EXPECT_THROW_MSG(
-        [[maybe_unused]] const auto dummy = reader->determineSection({"N.A."}),
+        [[maybe_unused]] const auto dummy =
+            _parameterFileReader->determineSection({"N.A."}),
         exc::ParameterFileException,
         "Unknown or already parsed keyword \"N.A.\" in parameter file"
     );
@@ -105,36 +109,39 @@ TEST_F(TestParameterFileReader, determineSection)
  */
 TEST_F(TestParameterFileReader, deleteSection)
 {
-    auto *reader = _parameterFileReader;
-    EXPECT_EQ(reader->getParameterFileSections().size(), 7);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 7);
 
-    const auto *section = reader->determineSection({"types"});
-    reader->deleteSection(section);
-    EXPECT_EQ(reader->getParameterFileSections().size(), 6);
+    const auto *section = _parameterFileReader->determineSection({"types"});
+    _parameterFileReader->deleteSection(section);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 6);
 
-    const auto *section1 = reader->determineSection({"bonds"});
-    reader->deleteSection(section1);
-    EXPECT_EQ(reader->getParameterFileSections().size(), 5);
+    const auto *section1 = _parameterFileReader->determineSection({"bonds"});
+    _parameterFileReader->deleteSection(section1);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 5);
 
-    const auto *section2 = reader->determineSection({"angles"});
-    reader->deleteSection(section2);
-    EXPECT_EQ(reader->getParameterFileSections().size(), 4);
+    const auto *section2 = _parameterFileReader->determineSection({"angles"});
+    _parameterFileReader->deleteSection(section2);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 4);
 
-    const auto *section3 = reader->determineSection({"dihedrals"});
-    reader->deleteSection(section3);
-    EXPECT_EQ(reader->getParameterFileSections().size(), 3);
+    const auto *section3 =
+        _parameterFileReader->determineSection({"dihedrals"});
+    _parameterFileReader->deleteSection(section3);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 3);
 
-    const auto *section4 = reader->determineSection({"impropers"});
-    reader->deleteSection(section4);
-    EXPECT_EQ(reader->getParameterFileSections().size(), 2);
+    const auto *section4 =
+        _parameterFileReader->determineSection({"impropers"});
+    _parameterFileReader->deleteSection(section4);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 2);
 
-    const auto *section5 = reader->determineSection({"nonCoulombics"});
-    reader->deleteSection(section5);
-    EXPECT_EQ(reader->getParameterFileSections().size(), 1);
+    const auto *section5 =
+        _parameterFileReader->determineSection({"nonCoulombics"});
+    _parameterFileReader->deleteSection(section5);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 1);
 
-    const auto *section6 = reader->determineSection({"j_couplings"});
-    reader->deleteSection(section6);
-    EXPECT_EQ(reader->getParameterFileSections().size(), 0);
+    const auto *section6 =
+        _parameterFileReader->determineSection({"j_couplings"});
+    _parameterFileReader->deleteSection(section6);
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 0);
 }
 
 /**

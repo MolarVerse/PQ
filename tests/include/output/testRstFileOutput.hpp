@@ -42,13 +42,13 @@
 class TestRstFileOutput : public ::testing::Test
 {
    protected:
-    out::RstFileOutput    *_rstFileOutput;
-    molsys::SimulationBox *_simulationBox;
+    std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
+    std::unique_ptr<molsys::SimulationBox> _simulationBox;
 
     void SetUp() override
     {
-        _rstFileOutput = new out::RstFileOutput("default.rst");
-        _simulationBox = new molsys::SimulationBox();
+        _rstFileOutput = std::make_unique<out::RstFileOutput>("default.rst");
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
 
@@ -89,8 +89,6 @@ class TestRstFileOutput : public ::testing::Test
 
     void TearDown() override
     {
-        delete _rstFileOutput;
-        delete _simulationBox;
         const auto errorCode = std::remove("default.rst");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rst";
     }

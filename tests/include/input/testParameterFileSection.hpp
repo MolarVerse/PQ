@@ -42,8 +42,8 @@
 class TestParameterFileSection : public ::testing::Test
 {
    protected:
-    engine::Engine *_engine;
-    std::string     _parameterFileName = "param.param";
+    std::unique_ptr<engine::Engine> _engine;
+    std::string                     _parameterFileName = "param.param";
 
     void SetUp() override
     {
@@ -53,7 +53,7 @@ class TestParameterFileSection : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>();
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
@@ -65,7 +65,6 @@ class TestParameterFileSection : public ::testing::Test
 
     void TearDown() override
     {
-        delete _engine;
         static_cast<void>(std::filesystem::remove(_parameterFileName));
     }
 };

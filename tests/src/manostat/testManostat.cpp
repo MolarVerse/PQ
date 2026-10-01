@@ -309,7 +309,12 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _box->addMolecule(molecule);
 
     settings::TimingsSettings::setTimeStep(0.5);
-    _manostat = new manostat::BerendsenManostat(1.0, 0.1, 4.5, FixedAxis::NONE);
+    _manostat = std::make_unique<manostat::BerendsenManostat>(
+        1.0,
+        0.1,
+        4.5,
+        FixedAxis::NONE
+    );
 
     const auto scaleFactors = linalg::Vec3D(
         ::pow(
@@ -342,9 +347,13 @@ TEST_F(TestManostat, testApplyBerendsenManostatPreservesCutMoleculeGeometry)
 {
     setupCutMolecule(*_box, *_data);
 
-    auto manostat =
-        manostat::BerendsenManostat(1.0, 1.0, 0.058808, FixedAxis::NONE);
-    manostat.applyManostat(*_box, *_data);
+    auto manostat = std::make_unique<manostat::BerendsenManostat>(
+        1.0,
+        1.0,
+        0.058808,
+        FixedAxis::NONE
+    );
+    manostat->applyManostat(*_box, *_data);
 
     expectCutMoleculeScaled(*_box);
 }
@@ -428,7 +437,7 @@ TEST_F(
     _box->setBoxDimensions({2.0, 2.0, 2.0});
 
     settings::TimingsSettings::setTimeStep(0.5);
-    _manostat = new manostat::BerendsenManostat(
+    _manostat = std::make_unique<manostat::BerendsenManostat>(
         3.0 * PRESSURE_FACTOR,
         0.1,
         4.5,
@@ -505,7 +514,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     molecule.calculateCenterOfMass(_box->getBox());
     _box->addMolecule(molecule);
 
-    _manostat = new manostat::StochasticRescalingManostat(
+    _manostat = std::make_unique<manostat::StochasticRescalingManostat>(
         7.0,
         0.25,
         0.12,

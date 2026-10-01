@@ -36,11 +36,11 @@
 class TestSimulationBox : public ::testing::Test
 {
    protected:
-    molsys::SimulationBox *_simulationBox;
+    std::unique_ptr<molsys::SimulationBox> _simulationBox;
 
     void SetUp() override
     {
-        _simulationBox = new molsys::SimulationBox();
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         auto molecule1 = molsys::Molecule();
         auto molecule2 = molsys::Molecule();
@@ -94,8 +94,6 @@ class TestSimulationBox : public ::testing::Test
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
     }
-
-    void TearDown() override { delete _simulationBox; }
 };
 
 #endif   // _TEST_SIMULATION_BOX_HPP_

@@ -26,6 +26,8 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
+
 #include "celllist.hpp"            // for CellList
 #include "potentialSettings.hpp"   // for PotentialSettings
 #include "simulationBox.hpp"       // for SimulationBox
@@ -33,25 +35,19 @@
 class TestCellList : public ::testing::Test
 {
    protected:
-    molsys::CellList      *_cellList;
-    molsys::SimulationBox *_simulationBox;
+    std::unique_ptr<molsys::CellList>      _cellList;
+    std::unique_ptr<molsys::SimulationBox> _simulationBox;
 
     void SetUp() override
     {
-        _cellList = new molsys::CellList();
+        _cellList = std::make_unique<molsys::CellList>();
         _cellList->setNumberOfCells(2);
         _cellList->setNumberOfNeighbourCells(1);
         _cellList->resizeCells();
 
-        _simulationBox = new molsys::SimulationBox();
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
         settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
-    }
-
-    void TearDown() override
-    {
-        delete _cellList;
-        delete _simulationBox;
     }
 };
 

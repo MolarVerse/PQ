@@ -37,11 +37,12 @@
 class TestStdoutOutput : public ::testing::Test
 {
    protected:
-    out::StdoutOutput *_stdoutOutput;
+    std::unique_ptr<out::StdoutOutput> _stdoutOutput;
 
-    void SetUp() override { _stdoutOutput = new out::StdoutOutput("stdout"); }
-
-    void TearDown() override { delete _stdoutOutput; }
+    void SetUp() override
+    {
+        _stdoutOutput = std::make_unique<out::StdoutOutput>("stdout");
+    }
 };
 
 #endif   // _TEST_STDOUTOUTPUT_HPP_

@@ -44,16 +44,16 @@
 class TestIntegrator : public ::testing::Test
 {
    protected:
-    integrator::Integrator *_integrator;
-    molsys::Molecule       *_molecule1;
-    molsys::SimulationBox  *_box;
+    std::unique_ptr<integrator::Integrator> _integrator;
+    std::unique_ptr<molsys::Molecule>       _molecule1;
+    std::unique_ptr<molsys::SimulationBox>  _box;
 
     void SetUp() override
     {
-        _integrator = new integrator::VelocityVerlet();
+        _integrator = std::make_unique<integrator::VelocityVerlet>();
         settings::TimingsSettings::setTimeStep(0.1);
 
-        _molecule1 = new molsys::Molecule();
+        _molecule1 = std::make_unique<molsys::Molecule>();
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
@@ -73,19 +73,12 @@ class TestIntegrator : public ::testing::Test
         _molecule1->addAtom(atom1);
         _molecule1->addAtom(atom2);
 
-        _box = new molsys::SimulationBox();
+        _box = std::make_unique<molsys::SimulationBox>();
         _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
         _box->addMolecule(*_molecule1);
         _box->addAtom(atom1);
         _box->addAtom(atom2);
-    }
-
-    void TearDown() override
-    {
-        delete _integrator;
-        delete _molecule1;
-        delete _box;
     }
 };
 

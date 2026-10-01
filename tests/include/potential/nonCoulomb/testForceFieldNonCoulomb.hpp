@@ -25,6 +25,8 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
+
 #include "forceFieldNonCoulomb.hpp"
 #include "forceFieldNonCoulombImpl.hpp"
 #include "lennardJonesPair.hpp"
@@ -33,11 +35,11 @@
 class TestNonCoulombPotentialFF : public ::testing::Test
 {
    protected:
-    pot::ForceFieldNonCoulomb *_nonCoulombPotential;
+    std::unique_ptr<pot::ForceFieldNonCoulomb> _nonCoulombPotential;
 
     void SetUp() override
     {
-        _nonCoulombPotential = new pot::ForceFieldNonCoulomb();
+        _nonCoulombPotential = std::make_unique<pot::ForceFieldNonCoulomb>();
     }
 
     [[nodiscard]]
@@ -90,8 +92,6 @@ class TestNonCoulombPotentialFF : public ::testing::Test
         potential._nonCoulPairsMatPtr->matrix(row, col) =
             std::make_shared<pot::LennardJonesPair>(pair);
     }
-
-    void TearDown() override { delete _nonCoulombPotential; }
 };
 
 #endif   // _TEST_FORCE_FIELD_NON_COULOMB_HPP_

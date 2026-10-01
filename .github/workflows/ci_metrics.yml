@@ -89,6 +89,10 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           echo "code=$code" >> "$GITHUB_OUTPUT"
 
+      - name: Generate report
+        if: always() && steps.collect.outcome != 'skipped'
+        run: python3 .github/ci-metrics/report.py
+
       - name: Publish
         if: always() && steps.collect.outcome != 'skipped'
         env:

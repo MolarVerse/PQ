@@ -37,16 +37,16 @@
 class TestThermostat : public ::testing::Test
 {
    protected:
-    physicalData::PhysicalData *_data;
-    molsys::SimulationBox      *_simulationBox;
-    thermostat::Thermostat     *_thermostat;
+    std::unique_ptr<physicalData::PhysicalData> _data;
+    std::unique_ptr<molsys::SimulationBox>      _simulationBox;
+    std::unique_ptr<thermostat::Thermostat>     _thermostat;
 
     void SetUp() override
     {
-        _thermostat = new thermostat::Thermostat();
-        _data       = new physicalData::PhysicalData();
+        _thermostat = std::make_unique<thermostat::Thermostat>();
+        _data       = std::make_unique<physicalData::PhysicalData>();
 
-        _simulationBox = new molsys::SimulationBox();
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         auto molecule1 = molsys::Molecule();
 
@@ -76,13 +76,6 @@ class TestThermostat : public ::testing::Test
         _simulationBox->addAtom(atom3);
 
         _simulationBox->calculateDegreesOfFreedom();
-    }
-
-    void TearDown() override
-    {
-        delete _data;
-        delete _simulationBox;
-        delete _thermostat;
     }
 };
 

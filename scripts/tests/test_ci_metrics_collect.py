@@ -5,6 +5,7 @@ import json
 import re
 import subprocess
 import sys
+import zipfile
 import tempfile
 import unittest
 from datetime import date, datetime, timedelta
@@ -21,6 +22,7 @@ sys.modules["ci_metrics_collect"] = collect
 SPEC.loader.exec_module(collect)
 
 SCHEMA = json.loads((METRICS / "schema.json").read_text())
+ANALYSIS_SCHEMA = json.loads((METRICS / "schema-build-analysis.json").read_text())
 CONFIG = json.loads((METRICS / "config.json").read_text())
 
 
@@ -32,6 +34,8 @@ CONFIG = json.loads((METRICS / "config.json").read_text())
 def _is_type(value, name):
     if name == "integer":
         return isinstance(value, int) and not isinstance(value, bool)
+    if name == "number":
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
     return {
         "string": isinstance(value, str),
         "boolean": isinstance(value, bool),
@@ -62,7 +66,7 @@ def validation_errors(value, schema=SCHEMA, path="$"):
             errors.append(f"{path}: too short")
         if "pattern" in schema and not re.search(schema["pattern"], value):
             errors.append(f"{path}: does not match {schema['pattern']}")
-    if _is_type(value, "integer") and value < schema.get("minimum", value):
+    if _is_type(value, "number") and value < schema.get("minimum", value):
         errors.append(f"{path}: below minimum")
     if isinstance(value, dict):
         properties = schema.get("properties", {})
@@ -167,8 +171,12 @@ def records_for(run, jobs, pr=None, logs=None, signatures=("GitLab is currently"
 class FakeApi:
     """Stands in for GhApi: serves runs, jobs, PRs and logs from dicts."""
 
-    def __init__(self, runs=(), jobs=None, pulls=None, logs=None, job_errors=None, branch_prs=None):
+    def __init__(
+        self, runs=(), jobs=None, pulls=None, logs=None, job_errors=None, branch_prs=None, artifacts=None, blobs=None
+    ):
         self.runs = list(runs)
+        self.artifacts = artifacts or {}  # run id -> artifact dicts
+        self.blobs = blobs or {}  # artifact id -> zip bytes (or an exception to raise)
         self.jobs = jobs or {}
         self.pulls = pulls or {}  # commit sha -> PRs that GitHub associates with the commit
         self.branch_prs = branch_prs or {}  # head branch -> all PRs from that branch
@@ -186,6 +194,8 @@ class FakeApi:
             start, end = query["created"][0].split("..")
             matching = [r for r in self.runs if start <= r["created_at"] <= end]
             return {"workflow_runs": self._page(matching, query)}
+        if segments[:2] == ["actions", "runs"] and segments[-1] == "artifacts":
+            return {"artifacts": self._page(self.artifacts.get(int(segments[2]), []), query)}
         if segments[:2] == ["actions", "runs"] and segments[-1] == "jobs":
             run_id = int(segments[2])
             if run_id in self.job_errors:
@@ -211,6 +221,13 @@ class FakeApi:
     def _page(items, query):
         size, page = int(query["per_page"][0]), int(query["page"][0])
         return items[(page - 1) * size : page * size]
+
+    def get_bytes(self, path):
+        self.calls.append(path)
+        result = self.blobs[int(path.split("/")[2])]
+        if isinstance(result, Exception):
+            raise result
+        return result
 
     def get_text(self, path):
         self.calls.append(path)
@@ -901,6 +918,360 @@ class CollectTests(unittest.TestCase):
         api = FakeApi(runs=runs, jobs={n: [make_job(n * 10)] for n in range(1, 7)})
         collect_into(api, runs, self.data, workers=4)
         self.assertEqual([10, 20, 30, 40, 50, 60], sorted(r["job_id"] for r in read_shard(self.data)))
+
+
+# --- build-analysis artifacts -------------------------------------------------
+
+
+def make_summary(job_id=1000, run_id=100, attempt=1, **overrides):
+    """What summarise_build.py writes (field for field)."""
+    summary = {
+        "schema_version": 1,
+        "kind": "build-analysis",
+        "run_id": run_id,
+        "run_attempt": attempt,
+        "job_id": job_id,
+        "job_key": "lint",
+        "artifact": f"build-timings-lint-a{attempt}",
+        "ninja": {
+            "log_version": 7,
+            "complete": False,
+            "steps": 550,
+            "wall_s": 338.5,
+            "cpu_s": 1138.4,
+            "parallelism": 3.36,
+            "tail_after_compile_s": 0.0,
+            "by_kind": {
+                "compile": {"steps": 445, "cpu_s": 1132.9},
+                "archive": {"steps": 0, "cpu_s": 0.0},
+                "link": {"steps": 104, "cpu_s": 5.3},
+                "other": {"steps": 1, "cpu_s": 0.2},
+            },
+            "slowest": [
+                {"target": "tests/CMakeFiles/t.dir/t.cpp.o", "kind": "compile", "seconds": 9.3},
+                {"target": "apps/PQ", "kind": "link", "seconds": 2.0},
+            ],
+        },
+        "ccache": {
+            "hits": 179,
+            "misses": 2,
+            "hit_rate": 0.989,
+            "counters": {"cache_miss": 2, "could_not_use_precompiled_header": 269, "direct_cache_hit": 179},
+        },
+    }
+    summary.update(overrides)
+    return summary
+
+
+def make_zip(summary, name="build-analysis.json", extra=None):
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr(name, json.dumps(summary) if not isinstance(summary, (bytes, str)) else summary)
+        for other, content in (extra or {}).items():
+            archive.writestr(other, content)
+    return buffer.getvalue()
+
+
+def make_artifact(artifact_id=5, name="build-timings-lint-a1", size=900, expired=False):
+    return {"id": artifact_id, "name": name, "size_in_bytes": size, "expired": expired}
+
+
+class SanitiseSummaryTests(unittest.TestCase):
+    def test_a_real_looking_summary_passes_and_unknown_fields_are_dropped(self):
+        summary = make_summary(evil="x", ninja=dict(make_summary()["ninja"], extra="y"))
+        clean = collect.sanitise_summary(summary)
+        self.assertEqual((100, 1, 1000), (clean["run_id"], clean["run_attempt"], clean["job_id"]))
+        self.assertNotIn("evil", clean)
+        self.assertNotIn("extra", clean["ninja"])
+        self.assertEqual(269, clean["ccache"]["counters"]["could_not_use_precompiled_header"])
+
+    def test_missing_parts_may_be_null(self):
+        clean = collect.sanitise_summary(make_summary(ninja=None, ccache=None))
+        self.assertEqual((None, None), (clean["ninja"], clean["ccache"]))
+
+    def test_an_unusable_ninja_log_keeps_its_error(self):
+        ninja = {"log_version": 4, "complete": None, "steps": 0, "error": "no usable .ninja_log"}
+        self.assertEqual("no usable .ninja_log", collect.sanitise_summary(make_summary(ninja=ninja))["ninja"]["error"])
+
+    def rejected(self, **overrides):
+        with self.assertRaises(ValueError, msg=str(overrides)[:80]):
+            collect.sanitise_summary(make_summary(**overrides))
+
+    def test_rejects_wrong_identity_and_types(self):
+        self.rejected(kind="job")
+        self.rejected(schema_version=2)
+        self.rejected(job_id="1000")
+        self.rejected(job_id=True)
+        self.rejected(job_id=-1)
+        self.rejected(run_attempt=0)
+
+    def mutated(self, path, value):
+        summary = make_summary()
+        node = summary
+        for key in path[:-1]:
+            node = node[key]
+        node[path[-1]] = value
+        with self.assertRaises(ValueError, msg=f"{path}={value!r}"):
+            collect.sanitise_summary(summary)
+
+    def test_rejects_hostile_numbers(self):
+        self.mutated(["ninja", "wall_s"], float("nan"))
+        self.mutated(["ninja", "wall_s"], float("inf"))
+        self.mutated(["ninja", "wall_s"], -1)
+        self.mutated(["ninja", "wall_s"], 10**9)
+        self.mutated(["ninja", "wall_s"], "10")
+        self.mutated(["ninja", "steps"], 1.5)
+        self.mutated(["ccache", "hit_rate"], 1.5)
+        self.mutated(["ccache", "counters", "cache_miss"], 10**15)
+        self.mutated(["ccache", "counters", "cache_miss"], "2")
+
+    def test_rejects_hostile_text(self):
+        self.mutated(["ninja", "slowest", 0, "target"], "a\nb")
+        self.mutated(["ninja", "slowest", 0, "target"], "x" * (collect.MAX_TARGET_CHARS + 1))
+        self.mutated(["ninja", "slowest", 0, "target"], "")
+        self.mutated(["ninja", "slowest", 0, "kind"], "evil")
+        self.mutated(["ccache", "counters", "Evil Key"], 1)
+        self.mutated(["ccache", "counters", "x" * 65], 1)
+
+    def test_rejects_oversized_structures(self):
+        self.mutated(["ninja", "slowest"], [make_summary()["ninja"]["slowest"][0]] * (collect.MAX_SLOWEST + 1))
+        self.mutated(["ccache", "counters"], {f"c{i}": 1 for i in range(collect.MAX_COUNTERS + 1)})
+        self.mutated(["ninja", "by_kind", "gpu"], {"steps": 1, "cpu_s": 1})
+
+    def test_the_clean_summary_is_independent_of_the_input(self):
+        summary = make_summary()
+        clean = collect.sanitise_summary(summary)
+        summary["ninja"]["slowest"][0]["target"] = "changed"
+        self.assertEqual("tests/CMakeFiles/t.dir/t.cpp.o", clean["ninja"]["slowest"][0]["target"])
+
+
+class ReadSummaryTests(unittest.TestCase):
+    def test_reads_the_json_from_the_zip(self):
+        self.assertEqual(1000, collect.read_summary(make_zip(make_summary()))["job_id"])
+
+    def test_wrong_inputs_raise_what_the_collector_catches(self):
+        with self.assertRaises(zipfile.BadZipFile):
+            collect.read_summary(b"not a zip")
+        with self.assertRaises(KeyError):
+            collect.read_summary(make_zip(make_summary(), name="other.json"))
+        with self.assertRaises(json.JSONDecodeError):
+            collect.read_summary(make_zip("{not json"))
+        with self.assertRaises(ValueError):
+            collect.read_summary(make_zip(" " * (collect.MAX_ARTIFACT_BYTES + 10)))
+
+
+def analysis_api(artifacts, blobs, run=None, jobs=None):
+    run = run or make_run(100, "BUILD", "push", "dev")
+    jobs = jobs if jobs is not None else [make_job(1000, "lint"), make_job(1001, "other")]
+    return run, FakeApi(runs=[run], jobs={run["id"]: jobs}, artifacts={run["id"]: artifacts}, blobs=blobs)
+
+
+class BuildAnalysisRecordsTests(unittest.TestCase):
+    def build(self, artifacts, blobs, **kwargs):
+        run, api = analysis_api(artifacts, blobs, **kwargs)
+        job_records, _, _ = records_for(run, api.jobs[run["id"]])
+        records, dropped = collect.build_analysis_records(api, run, job_records)
+        return records, dropped, api, job_records
+
+    def test_joins_to_the_job_record_using_api_values(self):
+        records, dropped, _, job_records = self.build([make_artifact()], {5: make_zip(make_summary())})
+        self.assertEqual(0, sum(dropped.values()))
+        record = records[0]
+        self.assertEqual([], validation_errors(record, ANALYSIS_SCHEMA))
+        job = next(j for j in job_records if j["job_id"] == 1000)
+        for key in ("workflow", "run_id", "run_attempt", "event", "branch", "head_sha", "job_id", "job", "created_at", "conclusion"):
+            self.assertEqual(job[key], record[key], key)
+        self.assertEqual("lint", record["job"])
+        self.assertEqual(269, record["ccache"]["counters"]["could_not_use_precompiled_header"])
+
+    def test_the_artifact_cannot_override_join_keys(self):
+        summary = make_summary(workflow="Evil", branch="evil", head_sha="e" * 40, event="schedule", job="evil")
+        records, _, _, job_records = self.build([make_artifact()], {5: make_zip(summary)})
+        self.assertEqual("BUILD", records[0]["workflow"])
+        self.assertEqual("dev", records[0]["branch"])
+        self.assertEqual(SHA, records[0]["head_sha"])
+
+    def test_artifacts_that_do_not_match_are_dropped_not_recorded(self):
+        cases = {
+            "other run": make_summary(run_id=999),
+            "other attempt": make_summary(attempt=2),
+            "unknown job": make_summary(job_id=4242),
+            "null job id": make_summary(job_id=None),
+        }
+        for label, summary in cases.items():
+            records, dropped, _, _ = self.build([make_artifact()], {5: make_zip(summary)})
+            self.assertEqual([], records, label)
+            self.assertEqual(1, sum(dropped.values()), label)
+
+    def test_invalid_content_is_dropped(self):
+        for blob in (b"junk", make_zip("{broken"), make_zip(make_summary(), name="x.json"), make_zip(make_summary(kind="job"))):
+            records, dropped, _, _ = self.build([make_artifact()], {5: blob})
+            self.assertEqual([], records)
+            self.assertEqual({"invalid build-analysis artifact": 1}, dict(dropped))
+
+    def test_unrelated_expired_and_oversized_artifacts_are_not_downloaded(self):
+        artifacts = [
+            make_artifact(5, "docs-site"),
+            make_artifact(6, expired=True),
+            make_artifact(7, size=collect.MAX_ARTIFACT_BYTES + 1),
+        ]
+        records, dropped, api, _ = self.build(artifacts, {})  # no blobs: a download would raise KeyError
+        self.assertEqual([], records)
+        self.assertEqual([], [c for c in api.calls if c.endswith("/zip")])
+        self.assertEqual(
+            {"build-analysis artifact expired": 1, "build-analysis artifact too large": 1}, dict(dropped)
+        )
+
+    def test_a_vanished_artifact_is_dropped_but_other_api_errors_propagate(self):
+        records, dropped, _, _ = self.build([make_artifact()], {5: collect.ApiError("gone", status=410)})
+        self.assertEqual({"build-analysis artifact expired": 1}, dict(dropped))
+        with self.assertRaises(collect.ApiError):
+            self.build([make_artifact()], {5: collect.ApiError("boom", status=500)})
+        with self.assertRaises(collect.ApiError) as raised:
+            self.build([make_artifact()], {5: collect.ApiError("limit", rate_limited=True)})
+        self.assertTrue(raised.exception.rate_limited)
+
+    def test_two_artifacts_for_one_job_give_one_record(self):
+        blob = make_zip(make_summary())
+        records, _, _, _ = self.build([make_artifact(5), make_artifact(6, "build-timings-lint-a1-copy")], {5: blob, 6: blob})
+        self.assertEqual(1, len(records))
+
+    def test_a_job_without_an_artifact_gets_no_record(self):
+        records, _, _, _ = self.build([], {})
+        self.assertEqual([], records)
+
+    def test_every_attempt_of_a_rerun_run_can_have_its_own_record(self):
+        jobs = [make_job(1000, "lint"), make_job(2000, "lint", attempt=2)]
+        run = make_run(100, "BUILD", "push", "dev", attempt=2)
+        artifacts = [make_artifact(5, "build-timings-lint-a1"), make_artifact(6, "build-timings-lint-a2")]
+        blobs = {5: make_zip(make_summary(1000, attempt=1)), 6: make_zip(make_summary(2000, attempt=2))}
+        _, api = analysis_api(artifacts, blobs, run=run, jobs=jobs)
+        job_records, _, _ = records_for(run, jobs)
+        records, _ = collect.build_analysis_records(api, run, job_records)
+        self.assertEqual([(1000, 1), (2000, 2)], sorted((r["job_id"], r["run_attempt"]) for r in records))
+
+
+class CollectBuildAnalysisTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.data = Path(self.directory.name)
+
+    def lines(self):
+        return [json.loads(line) for line in (self.data / "2026-W40.jsonl").read_text().splitlines()]
+
+    def test_writes_job_and_analysis_records_once(self):
+        run, api = analysis_api([make_artifact()], {5: make_zip(make_summary())})
+        result = collect_into(api, [run], self.data)
+        self.assertEqual(3, result.records_written)
+        self.assertEqual(1, result.analyses_written)
+        kinds = sorted((r["job_id"], r["kind"]) for r in self.lines())
+        self.assertEqual([(1000, "build-analysis"), (1000, "job"), (1001, "job")], kinds)
+        # a job record always precedes its analysis
+        order = [(r["job_id"], r["kind"]) for r in self.lines()]
+        self.assertLess(order.index((1000, "job")), order.index((1000, "build-analysis")))
+
+        before = (self.data / "2026-W40.jsonl").read_text()
+        again = collect_into(api, [run], self.data)
+        self.assertEqual(0, again.records_written)
+        self.assertEqual(before, (self.data / "2026-W40.jsonl").read_text())
+
+    def test_other_workflows_are_not_asked_for_artifacts(self):
+        run = make_run(100, "Docs", "push", "dev")
+        _, api = analysis_api([make_artifact()], {}, run=run)
+        collect_into(api, [run], self.data)
+        self.assertEqual([], [c for c in api.calls if "artifacts" in c])
+
+    def test_a_failing_download_retries_the_whole_run_later(self):
+        run, api = analysis_api([make_artifact()], {5: collect.ApiError("boom", status=500)})
+        result = collect_into(api, [run], self.data)
+        self.assertEqual(1, len(result.errors))
+        self.assertFalse((self.data / "2026-W40.jsonl").exists())
+
+        api.blobs[5] = make_zip(make_summary())
+        result = collect_into(api, [run], self.data)
+        self.assertEqual((0, 3), (len(result.errors), result.records_written))
+
+    def test_a_rate_limit_during_the_download_stops_without_writing(self):
+        run, api = analysis_api([make_artifact()], {5: collect.ApiError("limit", rate_limited=True)})
+        result = collect_into(api, [run], self.data)
+        self.assertTrue(result.rate_limited)
+        self.assertFalse((self.data / "2026-W40.jsonl").exists())
+
+    def test_dry_run_writes_nothing_but_counts(self):
+        run, api = analysis_api([make_artifact()], {5: make_zip(make_summary())})
+        result = collect_into(api, [run], self.data, dry_run=True)
+        self.assertEqual((3, 1), (result.records_written, result.analyses_written))
+        self.assertFalse((self.data / "2026-W40.jsonl").exists())
+
+    def test_summary_mentions_the_analyses_and_dropped_artifacts(self):
+        run, api = analysis_api([make_artifact(), make_artifact(6, "build-timings-x-a1")], {5: make_zip(make_summary()), 6: b"junk"})
+        result = collect_into(api, [run], self.data)
+        lines = []
+        collect.summarize(result, False, out=lines.append)
+        self.assertIn("(incl. 1 build analyses)", lines[0])
+        self.assertTrue(any("invalid build-analysis artifact=1" in line for line in lines))
+
+
+class ShardIndexKindTests(unittest.TestCase):
+    def test_jobs_and_analyses_are_tracked_separately(self):
+        with tempfile.TemporaryDirectory() as directory:
+            job = {"kind": "job", "job_id": 1, "run_id": 9, "run_attempt": 1}
+            analysis = {"kind": "build-analysis", "job_id": 2, "run_id": 9, "run_attempt": 1}
+            (Path(directory) / "2026-W40.jsonl").write_text(json.dumps(job) + "\n" + json.dumps(analysis) + "\n")
+            index = collect.ShardIndex(directory)
+            self.assertTrue(index.has_record("2026-W40.jsonl", job))
+            self.assertTrue(index.has_record("2026-W40.jsonl", analysis))
+            self.assertFalse(index.has_record("2026-W40.jsonl", dict(analysis, job_id=1)))
+            self.assertFalse(index.has_record("2026-W40.jsonl", dict(job, job_id=2)))
+
+    def test_old_records_without_a_kind_count_as_jobs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            (Path(directory) / "2026-W40.jsonl").write_text(json.dumps({"job_id": 1, "run_id": 9, "run_attempt": 2}) + "\n")
+            index = collect.ShardIndex(directory)
+            self.assertTrue(index.has_attempt("2026-W40.jsonl", 9, 2))
+
+
+class FixPrNumbersIgnoresAnalysesTests(unittest.TestCase):
+    def test_build_analysis_records_are_left_alone(self):
+        with tempfile.TemporaryDirectory() as directory:
+            analysis = make_analysis_line()
+            path = Path(directory) / "2026-W40.jsonl"
+            path.write_text(analysis + "\n")
+            found, fixed = collect.fix_pr_numbers(FakeApi(), CONFIG, directory, out=lambda *_: None)
+            self.assertEqual((0, 0), (found, fixed))
+            self.assertEqual(analysis + "\n", path.read_text())
+
+
+def make_analysis_line():
+    run, api = analysis_api([make_artifact()], {5: make_zip(make_summary())}, run=make_run(100, "BUILD", "pull_request", "feature/x"))
+    job_records, _, _ = records_for(run, api.jobs[100], pr=None)
+    records, _ = collect.build_analysis_records(api, run, job_records)
+    return json.dumps(records[0], separators=(",", ":"))
+
+
+class GhApiBinaryTests(unittest.TestCase):
+    def api(self, proc):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append((command, kwargs))
+            return proc
+
+        return collect.GhApi("MolarVerse/PQ", run=run, sleep=lambda _: None), calls
+
+    def test_get_bytes_returns_raw_bytes_and_asks_for_binary_output(self):
+        api, calls = self.api(subprocess.CompletedProcess([], 0, stdout=b"PK\x03\x04\xff", stderr=b""))
+        self.assertEqual(b"PK\x03\x04\xff", api.get_bytes("actions/artifacts/5/zip"))
+        command, kwargs = calls[0]
+        self.assertEqual("repos/MolarVerse/PQ/actions/artifacts/5/zip", command[-1])
+        self.assertFalse(kwargs["text"])
+
+    def test_binary_errors_are_classified_like_text_ones(self):
+        api, _ = self.api(subprocess.CompletedProcess([], 1, stdout=b"", stderr=b"gh: Not Found (HTTP 404)"))
+        with self.assertRaises(collect.ApiError) as raised:
+            api.get_bytes("actions/artifacts/5/zip")
+        self.assertEqual(404, raised.exception.status)
 
 
 class MainTests(unittest.TestCase):

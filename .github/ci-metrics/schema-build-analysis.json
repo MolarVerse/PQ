@@ -1,0 +1,290 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ci-metrics/build-analysis-record.v1",
+  "title": "CI build analysis record (schema_version 1)",
+  "description": "One line of a data/<ISO-week>.jsonl file with kind \"build-analysis\": what a build job's .ninja_log and ccache statistics say. Joins to the kind \"job\" record by job_id. See SCHEMA.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "workflow",
+    "run_id",
+    "run_attempt",
+    "event",
+    "branch",
+    "head_sha",
+    "job_id",
+    "job",
+    "created_at",
+    "conclusion",
+    "ninja",
+    "ccache"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "build-analysis"
+    },
+    "workflow": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "run_attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event": {
+      "enum": [
+        "pull_request",
+        "push",
+        "schedule",
+        "workflow_dispatch"
+      ]
+    },
+    "branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "head_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "job_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "job": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "conclusion": {
+      "enum": [
+        "success",
+        "failure",
+        "cancelled",
+        "timed_out",
+        "neutral",
+        "action_required"
+      ]
+    },
+    "ninja": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "log_version",
+        "complete",
+        "steps"
+      ],
+      "properties": {
+        "log_version": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "complete": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "wall_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cpu_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "parallelism": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "tail_after_compile_s": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "by_kind": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "compile",
+            "archive",
+            "link",
+            "other"
+          ],
+          "properties": {
+            "compile": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "steps",
+                "cpu_s"
+              ],
+              "properties": {
+                "steps": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cpu_s": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "archive": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "steps",
+                "cpu_s"
+              ],
+              "properties": {
+                "steps": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cpu_s": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "link": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "steps",
+                "cpu_s"
+              ],
+              "properties": {
+                "steps": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cpu_s": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "other": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "steps",
+                "cpu_s"
+              ],
+              "properties": {
+                "steps": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cpu_s": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "slowest": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "target",
+              "kind",
+              "seconds"
+            ],
+            "properties": {
+              "target": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "enum": [
+                  "compile",
+                  "archive",
+                  "link",
+                  "other"
+                ]
+              },
+              "seconds": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "ignored_lines": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "ccache": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "hits",
+        "misses",
+        "hit_rate",
+        "counters"
+      ],
+      "properties": {
+        "hits": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "misses": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hit_rate": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "counters": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

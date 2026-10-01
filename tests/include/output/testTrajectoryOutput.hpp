@@ -42,13 +42,14 @@
 class TestTrajectoryOutput : public ::testing::Test
 {
    protected:
-    out::TrajectoryOutput *_trajectoryOutput;
-    molsys::SimulationBox *_simulationBox;
+    std::unique_ptr<out::TrajectoryOutput> _trajectoryOutput;
+    std::unique_ptr<molsys::SimulationBox> _simulationBox;
 
     void SetUp() override
     {
-        _trajectoryOutput = new out::TrajectoryOutput("default.xyz");
-        _simulationBox    = new molsys::SimulationBox();
+        _trajectoryOutput =
+            std::make_unique<out::TrajectoryOutput>("default.xyz");
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
 
@@ -92,8 +93,6 @@ class TestTrajectoryOutput : public ::testing::Test
 
     void TearDown() override
     {
-        delete _trajectoryOutput;
-        delete _simulationBox;
         const auto errorCode = std::remove("default.xyz");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.xyz";
     }

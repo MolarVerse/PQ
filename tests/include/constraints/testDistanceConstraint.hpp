@@ -42,8 +42,8 @@
 class TestDistanceConstraint : public ::testing::Test
 {
    protected:
-    molsys::SimulationBox           *_box;
-    constraints::DistanceConstraint *_distanceConstraint;
+    std::unique_ptr<molsys::SimulationBox>           _box;
+    std::unique_ptr<constraints::DistanceConstraint> _distanceConstraint;
 
     std::shared_ptr<molsys::Atom> _atom1;
     std::shared_ptr<molsys::Atom> _atom2;
@@ -69,11 +69,11 @@ class TestDistanceConstraint : public ::testing::Test
         molecule1.addAtom(_atom1);
         molecule1.addAtom(_atom2);
 
-        _box = new molsys::SimulationBox();
+        _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
         _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
 
-        _distanceConstraint = new constraints::DistanceConstraint(
+        _distanceConstraint = std::make_unique<constraints::DistanceConstraint>(
             _box->getMolecules().data(),
             _box->getMolecules().data(),
             AtomIndex{0},
@@ -83,12 +83,6 @@ class TestDistanceConstraint : public ::testing::Test
             _springConstant,
             _dSpringConstantDt
         );
-    }
-
-    void TearDown() override
-    {
-        delete _box;
-        delete _distanceConstraint;
     }
 };
 

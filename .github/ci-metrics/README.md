@@ -9,7 +9,8 @@ instead of guessed. Tracked in #720.
 | Collector script (GitHub API to JSONL), see [Running the collector](#running-the-collector) | implemented, #715 |
 | Collector workflow, see [The workflow](#the-workflow) | implemented, #716 (inert until it reaches `main`) |
 | Overview report for `dev` | planned, #717 |
-| Build timings (`.ninja_log`, ccache, clang `-ftime-trace`) | planned, #718 and #719 |
+| Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented on the job side (#718) and ingested by the collector as `build-analysis` records; overview extension planned |
+| clang `-ftime-trace` analysis | planned, #719 |
 
 ## Layout
 
@@ -18,7 +19,8 @@ instead of guessed. Tracked in #720.
   README.md      this file
   SCHEMA.md      field definitions and derivation rules
   schema.json    JSON Schema for one record
-  config.json    repository, recorded workflows, infrastructure-failure signatures
+  schema-build-analysis.json  JSON Schema for a build-analysis record
+  config.json    repository, recorded workflows, workflows with build analysis, infrastructure-failure signatures
   collect.py     the collector (Python standard library only, uses the gh CLI)
   publish.sh     commits and pushes new data (used by the workflow)
   data/          weekly JSONL shards, written only by the collector
@@ -27,8 +29,8 @@ instead of guessed. Tracked in #720.
 The workflow is `.github/workflows/ci_metrics.yml`. Tests:
 `scripts/tests/test_ci_metrics_publish.py` (real local git repositories).
 
-Tests: `scripts/tests/test_ci_metrics_collect.py` (offline; runs with the other
-script tests in CI).
+Tests: `scripts/tests/test_ci_metrics_{collect,publish,report,build_summary}.py` (offline; run
+with the other script tests in CI).
 
 Nothing under `data/` is edited by hand.
 
@@ -160,6 +162,86 @@ the new records to `dev` with `publish.sh`.
   read`; 455 runs were listed, 437 skipped as already collected, 18 collected
   and nothing pushed. The push itself is covered by `publish.sh`'s tests
   against local git repositories, not by a run against `dev`.
+
+## Overview report
+
+[`data/CI_TIMINGS.md`](data/CI_TIMINGS.md) is rendered by GitHub and regenerated
+by the workflow after every collector run (`python3 .github/ci-metrics/report.py`;
+options `--window-days`, `--regression-percent`, `--min-samples`, `--out`). It
+lives in `data/` so the publish step commits it together with the new records.
+It is generated only from the records and uses the newest record as "now", so
+unchanged data gives identical bytes and never a commit.
+
+What it shows, per recorded workflow:
+
+- **Jobs:** median and p90 of the job duration over the current window (14 days
+  by default), split into `push (dev)` and `pull_request`, next to the median of
+  the 14 days before, the change, and the queue time apart from the duration.
+- **Regressions:** a median up by more than 20% *and* at least 30 seconds, with
+  at least 5 samples in both windows, is flagged and listed at the top.
+- **Wall-clock per workflow:** first job created to last job finished, per run,
+  and the job that usually finishes last (what a pull request waits for). Runs
+  with any non-successful job, second attempts, and runs where the paths filter
+  skipped every real job (only `changes` and `*-gate` ran) are left out, because
+  they would pull the medians down.
+- **Trend:** weekly median wall-clock of BUILD (Mermaid `xychart-beta`, no binary
+  files), and the weekly Eigen cache hit rate (the effect of #703).
+- **Exclusions:** what was left out and how many, so the numbers can be
+  reproduced: cancelled, other events, pushes to branches other than `dev`,
+  reruns, infrastructure failures and failed jobs.
+
+Windows are measured in days, not in runs, so the current and the previous window
+are comparable. The Eigen table starts in the week the `Cache Eigen source` step
+was introduced; before that the flag is `null`.
+
+## Build timings (#718)
+
+Job and step durations say how long a build took, not why. The jobs that build
+the project (`build` matrix, `build-static-lto`, `mpi-build`, `lint`) therefore
+run the composite action `.github/actions/upload-build-timings` as a last step
+(`if: always()`, never fails the job). It runs `summarise_build.py`, which writes:
+
+- `build-analysis.json`: total build time, CPU time and parallelism, the split
+  between compile, archive and link steps, the time between the last compile
+  finishing and the build ending (`tail_after_compile_s`, what a link-bound
+  build such as `build-static-lto` spends alone on one core), the 20 slowest
+  steps, and the ccache counters with the hit rate of cacheable calls. The
+  ccache counters include every "uncacheable" reason, see #732.
+- the raw `.ninja_log` and `ccache --print-stats` output.
+
+All of it is uploaded as the artifact `build-timings-<job>-a<run attempt>` with a
+retention of 14 days, so the collector has time to ingest it; raw logs are never
+committed. Only `build-static-lto` and `lint` use Ninja today, so the matrix and
+MPI jobs have ccache data only until #705 lands.
+
+A build that did not finish is flagged, not treated as a full build. The job
+passes the outcome of its build step to the action (`build-status`), and
+`complete` is true only if that step succeeded. This matters for `lint`, which
+builds with `-k 0` and tolerates errors: its step records the real `ninja` exit
+code for this purpose, and in practice its builds are partial (a GCC/Eigen
+`-Werror` false positive in `mShake.cpp` and a few test objects fail). `ninja -n`
+is deliberately not used to decide this: with LTO, GCC lists its temporary
+`/tmp/cc*.ltrans*.o` files as dependencies of every link step, they are gone after
+the link, and so `ninja -n` reports a finished `build-static-lto` build as having
+165 steps left.
+
+Reading the file fields: see "Build analysis summary" in [`SCHEMA.md`](SCHEMA.md).
+
+**Ingestion.** For every new run of the workflows in `build_analysis_workflows`
+(`BUILD`, `LINT`), the collector lists the run's artifacts, downloads the
+`build-timings-*` ones and writes one `kind: "build-analysis"` record per job
+next to the job records, in the same shard. Cost: one more API call per `BUILD`
+or `LINT` run plus one per artifact (about 7 per `BUILD` run), which is the
+largest part of the daily budget against the 1,000 requests per hour of
+`GITHUB_TOKEN`. An artifact that expired or does not pass validation is counted
+in the summary line (`dropped jobs: ...`) and skipped; any other API error makes
+the whole run be retried on the next collection, so a transient failure does not
+lose its analysis. Artifacts only exist from the day the jobs started uploading
+them (#735), so nothing can be backfilled. Each record is 0.5 KB (ccache only) to
+3.5 KB (with `.ninja_log` figures); expect about 6 MB a month on top of the job
+records.
+
+Showing the new data in the overview is the next step of #718.
 
 ## Reading the data
 

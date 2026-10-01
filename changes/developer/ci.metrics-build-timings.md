@@ -1,0 +1,1 @@
+- Upload a per-job build summary (`.ninja_log` timings with a partial-build flag, ccache counters) as a short-lived artifact from the build and lint jobs via a new `build-timings` composite action.
