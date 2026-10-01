@@ -24,13 +24,12 @@
 
 #include <cmath>   // for sqrt
 
-#include "exceptions.hpp"           // for UserInputException
-#include "globalTimer.hpp"          // for GlobalTimer
-#include "mathUtilities.hpp"        // for isZero
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for settings::ThermostatType
-#include "timingsSettings.hpp"      // for TimingsSettings
+#include "exceptions.hpp"        // for UserInputException
+#include "globalTimer.hpp"       // for GlobalTimer
+#include "mathUtilities.hpp"     // for isZero
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 namespace thermostat
 {
@@ -161,12 +160,11 @@ namespace thermostat
     /**
      * @brief Get thermostat type
      *
-     * @return settings::ThermostatType
+     * @return ThermostatType
      */
-    settings::ThermostatType VelocityRescalingThermostat::getThermostatType(
-    ) const
+    ThermostatType VelocityRescalingThermostat::getThermostatType() const
     {
-        return settings::ThermostatType::VELOCITY_RESCALING;
+        return ThermostatType::VELOCITY_RESCALING;
     }
 
 }   // namespace thermostat

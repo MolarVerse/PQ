@@ -71,7 +71,7 @@ namespace thermostat
         [[nodiscard]] double              getCouplingFrequency() const;
 
         [[nodiscard]]
-        settings::ThermostatType getThermostatType() const override;
+        ThermostatType getThermostatType() const override;
 
         /***************************
          * standard setter methods *

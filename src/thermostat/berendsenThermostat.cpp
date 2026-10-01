@@ -26,11 +26,10 @@
 
 #include "exceptions.hpp"   // for exc::UserInputException
 #include "globalTimer.hpp"
-#include "mathUtilities.hpp"        // for isZero
-#include "physicalData.hpp"         // for physicalData::PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for settings::ThermostatType
-#include "timingsSettings.hpp"      // for settings::TimingsSettings
+#include "mathUtilities.hpp"     // for isZero
+#include "physicalData.hpp"      // for physicalData::PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for settings::TimingsSettings
 
 namespace thermostat
 {
@@ -106,11 +105,11 @@ namespace thermostat
     /**
      * @brief Get thermostat type
      *
-     * @return settings::ThermostatType
+     * @return ThermostatType
      */
-    settings::ThermostatType BerendsenThermostat::getThermostatType() const
+    ThermostatType BerendsenThermostat::getThermostatType() const
     {
-        return settings::ThermostatType::BERENDSEN;
+        return ThermostatType::BERENDSEN;
     }
 
 }   // namespace thermostat

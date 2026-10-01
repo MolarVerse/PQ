@@ -234,14 +234,14 @@ namespace input
         const auto startTempDefined  = getKeywordSet("start_temp");
         const auto endTempDefined    = getKeywordSet("end_temp");
 
-        if (thermostatType != settings::ThermostatType::NONE)
+        if (thermostatType != ThermostatType::NONE)
         {
             if (!targetTempDefined && !endTempDefined)
             {
                 throw exc::InputFileException(
                     std::format(
                         "Target or end temperature not set for {} thermostat",
-                        settings::ThermostatTypeMeta::toString(thermostatType)
+                        ThermostatTypeMeta::toString(thermostatType)
                     )
                 );
             }
@@ -254,22 +254,22 @@ namespace input
                         "thermostat. "
                         "They are mutually exclusive as they are treated as "
                         "synonyms",
-                        settings::ThermostatTypeMeta::toString(thermostatType)
+                        ThermostatTypeMeta::toString(thermostatType)
                     )
                 );
             }
         }
 
         if (settings::SimulationBoxSettings::getInitializeVelocities() !=
-                settings::InitVelocities::FALSE &&
+                InitVelocities::FALSE &&
             !targetTempDefined && !startTempDefined && !endTempDefined)
             throw exc::InputFileException(
                 "Initializing velocities requires temp, start_temp, or end_temp"
             );
 
         if (settings::Settings::isMDJobType() &&
-            (thermostatType == settings::ThermostatType::BERENDSEN ||
-             thermostatType == settings::ThermostatType::VELOCITY_RESCALING))
+            (thermostatType == ThermostatType::BERENDSEN ||
+             thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
             const auto relaxationTime =
                 settings::ThermostatSettings::getRelaxationTime() * PS_TO_FS;
@@ -283,7 +283,7 @@ namespace input
             }
         }
 
-        if (thermostatType == settings::ThermostatType::LANGEVIN)
+        if (thermostatType == ThermostatType::LANGEVIN)
         {
             auto maxTemperature = 0.0;
 
@@ -326,7 +326,7 @@ namespace input
             }
         }
 
-        if (thermostatType == settings::ThermostatType::NOSE_HOOVER)
+        if (thermostatType == ThermostatType::NOSE_HOOVER)
         {
             if (targetTempDefined &&
                 settings::ThermostatSettings::getTargetTemperature() <= 0.0)

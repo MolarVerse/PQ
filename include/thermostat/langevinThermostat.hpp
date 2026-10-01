@@ -26,7 +26,6 @@
 
 #include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
 #include "thermostat.hpp"
-#include "thermostatSettings.hpp"
 
 namespace physicalData
 {
@@ -86,7 +85,7 @@ namespace thermostat
         [[nodiscard]] double getFriction() const;
         [[nodiscard]] double getSigma() const;
         [[nodiscard]]
-        settings::ThermostatType getThermostatType() const override;
+        ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat

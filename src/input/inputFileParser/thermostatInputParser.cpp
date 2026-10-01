@@ -72,40 +72,37 @@ namespace input
                 "Specifies the type of thermostat used in the simulation"
         };
 
-        const auto setValue = [&](settings::ThermostatType value)
+        const auto setValue = [&](ThermostatType value)
         {
             settings::ThermostatSettings::setThermostatType(value);
             switch (value)
             {
-                case settings::ThermostatType::BERENDSEN:
+                case ThermostatType::BERENDSEN:
                     references::ReferencesOutput::addReferenceFile(
                         references::BERENDSEN_FILE
                     );
                     break;
-                case settings::ThermostatType::VELOCITY_RESCALING:
+                case ThermostatType::VELOCITY_RESCALING:
                     references::ReferencesOutput::addReferenceFile(
                         references::VELOCITY_RESCALING_FILE
                     );
                     break;
-                case settings::ThermostatType::LANGEVIN:
+                case ThermostatType::LANGEVIN:
                     references::ReferencesOutput::addReferenceFile(
                         references::LANGEVIN_FILE
                     );
                     break;
-                case settings::ThermostatType::NOSE_HOOVER:
+                case ThermostatType::NOSE_HOOVER:
                     references::ReferencesOutput::addReferenceFile(
                         references::NOSE_HOOVER_CHAIN_FILE
                     );
                     break;
-                case settings::ThermostatType::NONE: break;
+                case ThermostatType::NONE: break;
             }
         };
 
         auto &key = _getRegistry().registerKey(
-            KeyRegistry<settings::ThermostatType>{
-                .metadata = metaData,
-                .onSet    = setValue
-            }
+            KeyRegistry<ThermostatType>{.metadata = metaData, .onSet = setValue}
         );
 
         addKeyword(metaData.name, adapt(key), false);

@@ -30,7 +30,6 @@
 #include "molecule.hpp"               // for Molecule
 #include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
 #include "simulationBox.hpp"          // for SimulationBox
-#include "thermostatSettings.hpp"     // for ThermostatType
 
 namespace out
 {
@@ -97,8 +96,7 @@ namespace out
 
         buffer << "Box   " << boxDim << "  " << boxAng << '\n';
 
-        if (thermostat.getThermostatType() ==
-            settings::ThermostatType::NOSE_HOOVER)
+        if (thermostat.getThermostatType() == ThermostatType::NOSE_HOOVER)
             writeNHChain(thermostat, buffer);
 
         for (const auto &molecule : simulationBox.getMolecules())

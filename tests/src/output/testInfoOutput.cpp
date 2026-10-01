@@ -526,7 +526,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     settings::Settings::setJobtype(JobType::MM_MD);
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::NOSE_HOOVER
+        ThermostatType::NOSE_HOOVER
     );
 
     _infoOutput->setFilename("default.info");

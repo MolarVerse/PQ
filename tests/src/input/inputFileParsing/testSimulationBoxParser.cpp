@@ -113,7 +113,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
     parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
-        settings::InitVelocities::TRUE
+        InitVelocities::TRUE
     );
 
     _clearParser(parser);
@@ -126,7 +126,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
     parseFunc(lineElements2, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
-        settings::InitVelocities::FALSE
+        InitVelocities::FALSE
     );
 
     _clearParser(parser);
@@ -139,7 +139,7 @@ TEST_F(TestInputFileReader, parseInitVelocities)
     parseFunc(lineElements3, 0);
     EXPECT_EQ(
         settings::SimulationBoxSettings::getInitializeVelocities(),
-        settings::InitVelocities::FORCE
+        InitVelocities::FORCE
     );
 
     _clearParser(parser);

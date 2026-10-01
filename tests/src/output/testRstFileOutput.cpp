@@ -83,7 +83,7 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     thermostat.setZeta({3.0, 2.0, 1.0, 0.0});
 
     settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::NOSE_HOOVER
+        ThermostatType::NOSE_HOOVER
     );
 
     _rstFileOutput->setFilename("default.rst");

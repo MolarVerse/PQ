@@ -30,8 +30,7 @@
 #include "globalTimer.hpp"                           // for GlobalTimer
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
-#include "thermostatSettings.hpp"   // for settings::ThermostatType
-#include "timingsSettings.hpp"      // for TimingsSettings
+#include "timingsSettings.hpp"                       // for TimingsSettings
 
 namespace thermostat
 {
@@ -246,13 +245,13 @@ namespace thermostat
     }
 
     /**
-     * @brief get the settings::ThermostatType
+     * @brief get the ThermostatType
      *
-     * @return settings::ThermostatType
+     * @return ThermostatType
      */
-    settings::ThermostatType NoseHooverThermostat::getThermostatType() const
+    ThermostatType NoseHooverThermostat::getThermostatType() const
     {
-        return settings::ThermostatType::NOSE_HOOVER;
+        return ThermostatType::NOSE_HOOVER;
     }
 
 }   // namespace thermostat

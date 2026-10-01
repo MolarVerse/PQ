@@ -284,7 +284,7 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     settings::Settings::deactivateRingPolymerMD();
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::NOSE_HOOVER
+        ThermostatType::NOSE_HOOVER
     );
 
     _energyOutput->setFilename("default.en");

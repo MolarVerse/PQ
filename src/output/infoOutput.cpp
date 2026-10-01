@@ -133,7 +133,7 @@ namespace out
         }
 
         if (settings::ThermostatSettings::getThermostatType() ==
-            settings::ThermostatType::NOSE_HOOVER)
+            ThermostatType::NOSE_HOOVER)
         {
             _writeLeft(
                 physicalData.getNoseHooverMomentumEnergy(),

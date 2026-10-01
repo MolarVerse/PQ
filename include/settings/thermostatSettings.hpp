@@ -25,36 +25,16 @@
 #define _THERMOSTAT_SETTINGS_HPP_
 
 #include <cstddef>   // for size_t
-#include <cstdint>
-#include <map>   // for map
+#include <map>       // for map
 #include <mstd/enum.hpp>
 #include <mstd/enum/enum_string.hpp>
 #include <string_view>   // for string_view
 
 #include "defaults.hpp"
+#include "enums/thermostat.hpp"
 
 namespace settings
 {
-
-    /**
-     * @enum ThermostatType
-     *
-     * @brief enum class to store the type of thermostat
-     *
-     */
-    enum class ThermostatType : std::uint8_t;
-
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define THERMOSTAT_TYPE_LIST(X) \
-    X(NONE)                     \
-    X(BERENDSEN)                \
-    X(VELOCITY_RESCALING)       \
-    X(LANGEVIN)                 \
-    X(NOSE_HOOVER)
-
-    MSTD_ENUM(ThermostatType, std::uint8_t, THERMOSTAT_TYPE_LIST)
-
-#undef THERMOSTAT_TYPE_LIST
 
     /**
      * @class ThermostatSettings
@@ -149,27 +129,5 @@ namespace settings
         [[nodiscard]] static std::map<size_t, double> getZeta();
     };
 }   // namespace settings
-
-// TODO: move this to enum as soon as it is done
-
-namespace mstd
-{
-    /**
-     * @brief Provides a mapping between string aliases and the ThermostatType
-     * enum values.
-     *
-     * @tparam  settings::ThermostatType The enum type for which the input
-     * aliases are defined.
-     */
-    template <>
-    struct EnumAliases<settings::ThermostatType>
-    {
-        static constexpr auto value = makeAliases<settings::ThermostatType>(
-            {{"nh_chain", settings::ThermostatType::NOSE_HOOVER},
-             {"rescale", settings::ThermostatType::VELOCITY_RESCALING}}
-        );
-    };
-
-}   // namespace mstd
 
 #endif   // _THERMOSTAT_SETTINGS_HPP_
