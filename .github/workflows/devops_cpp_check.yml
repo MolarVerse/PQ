@@ -32,7 +32,6 @@ jobs:
               - '**/*.h'
               - 'devops.toml'
               - '.github/workflows/devops_cpp_check.yml'
-              - '!external/**'
 
   cpp-check:
     needs: changes

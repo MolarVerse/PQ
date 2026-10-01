@@ -36,7 +36,6 @@ jobs:
               - '**/*.hh'
               - '**/*.hpp'
               - '**/*.hxx'
-              - '!external/**'
 
   clang-format:
     needs: changes
