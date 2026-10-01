@@ -30,7 +30,6 @@
 #include "globalTimer.hpp"                   // for GlobalTimer
 #include "physicalData.hpp"                  // for PhysicalData
 #include "simulationBox.hpp"                 // for SimulationBox
-#include "thermostatSettings.hpp"            // for ThermostatType
 #include "timingsSettings.hpp"               // for TimingsSettings
 
 namespace thermostat

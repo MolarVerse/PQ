@@ -30,7 +30,6 @@
 #include "molecule.hpp"               // for Molecule
 #include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
 #include "simulationBox.hpp"          // for SimulationBox
-#include "thermostatSettings.hpp"     // for ThermostatType
 
 namespace out
 {

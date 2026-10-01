@@ -34,7 +34,6 @@
 #include "noseHooverThermostat.hpp"                  // for NoseHooverThermostat
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
-#include "thermostatSettings.hpp"                    // for ThermostatType
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"               // for TimingsSettings
 #include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat

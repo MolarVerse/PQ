@@ -24,13 +24,12 @@
 
 #include <cmath>   // for sqrt
 
-#include "exceptions.hpp"           // for UserInputException
-#include "globalTimer.hpp"          // for GlobalTimer
-#include "mathUtilities.hpp"        // for isZero
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for ThermostatType
-#include "timingsSettings.hpp"      // for TimingsSettings
+#include "exceptions.hpp"        // for UserInputException
+#include "globalTimer.hpp"       // for GlobalTimer
+#include "mathUtilities.hpp"     // for isZero
+#include "physicalData.hpp"      // for PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for TimingsSettings
 
 namespace thermostat
 {

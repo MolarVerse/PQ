@@ -26,7 +26,7 @@
 
 #include <cstddef>   // for size_t
 
-#include "thermostatSettings.hpp"
+#include "enums/thermostat.hpp"
 
 namespace physicalData
 {

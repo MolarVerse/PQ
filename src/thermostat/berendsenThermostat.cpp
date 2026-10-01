@@ -26,11 +26,10 @@
 
 #include "exceptions.hpp"   // for exc::UserInputException
 #include "globalTimer.hpp"
-#include "mathUtilities.hpp"        // for isZero
-#include "physicalData.hpp"         // for physicalData::PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for ThermostatType
-#include "timingsSettings.hpp"      // for settings::TimingsSettings
+#include "mathUtilities.hpp"     // for isZero
+#include "physicalData.hpp"      // for physicalData::PhysicalData
+#include "simulationBox.hpp"     // for SimulationBox
+#include "timingsSettings.hpp"   // for settings::TimingsSettings
 
 namespace thermostat
 {
