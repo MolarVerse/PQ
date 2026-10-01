@@ -139,13 +139,19 @@ class CompareTests(unittest.TestCase):
 class LoadTests(DataDirTestCase):
     def test_reads_all_shards_and_counts_bad_lines_without_failing(self):
         self.write([record()], raw=["not json", '{"schema_version": 1, "kind": "job"}', ""])
-        self.write([record(schema_version=2), record(kind="build-analysis")], name="2026-W41.jsonl")
+        self.write([record(schema_version=2), record(kind="mystery")], name="2026-W41.jsonl")
         jobs, stats = report.load_jobs(self.data)
         self.assertEqual(1, len(jobs))
         self.assertEqual(2, stats.files)
         self.assertEqual(2, stats.invalid)
         self.assertEqual(2, stats.ignored)
         self.assertEqual(5, stats.records)
+
+    def test_build_analysis_records_are_counted_but_not_unread(self):
+        self.write([record(), record(kind="build-analysis")])
+        jobs, stats = report.load_jobs(self.data)
+        self.assertEqual((1, 1, 0, 0), (len(jobs), stats.analyses, stats.ignored, stats.invalid))
+        self.assertNotIn("Unread records", report.render(jobs, stats, Options()))
 
     def test_ignores_files_that_are_not_shards(self):
         self.write([record()])

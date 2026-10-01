@@ -2,7 +2,9 @@
 """Collect finished CI job timings from the GitHub Actions API into JSONL.
 
 Writes one record per job to data/<ISO year>-W<week>.jsonl following
-schema.json (field meanings and derivation rules: SCHEMA.md).
+schema.json (field meanings and derivation rules: SCHEMA.md), plus one
+`build-analysis` record per job of the workflows in config.json
+(`build_analysis_workflows`) that uploaded a build-timings artifact.
 
 Stateless and idempotent: a job whose job_id is already in its shard is never
 written twice, so the script can be re-run over overlapping windows (a daily
@@ -22,12 +24,14 @@ the API rate limit was hit (data collected so far is still written).
 """
 
 import argparse
+import io
 import json
 import re
 import subprocess
 import sys
 import threading
 import time
+import zipfile
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
@@ -53,6 +57,19 @@ EIGEN_CACHE_STEP = "Cache Eigen source"
 EIGEN_CLONE_STEP = "Clone Eigen (cache miss)"
 
 WORKERS = 8
+
+# Build-analysis artifacts (see SCHEMA.md): written by .github/ci-metrics/summarise_build.py
+# inside the jobs. Artifacts of pull request runs are produced by code from the pull
+# request, so nothing from them is copied unchecked: sanitise_summary() rebuilds
+# every field from a whitelist and the join keys come from the API.
+ARTIFACT_PREFIX = "build-timings-"
+SUMMARY_NAME = "build-analysis.json"
+MAX_ARTIFACT_BYTES = 1_000_000
+MAX_TARGET_CHARS = 300
+MAX_SLOWEST = 20
+MAX_COUNTERS = 200
+STEP_KINDS = ("compile", "archive", "link", "other")
+COUNTER_NAME = re.compile(r"^[a-z0-9_]{1,64}$")
 
 
 class ApiError(Exception):
@@ -95,7 +112,7 @@ class GhApi:
         self._run = run
         self._sleep = sleep
 
-    def _call(self, args):
+    def _call(self, args, binary=False):
         failures = 0
         waited = 0
         pause = RATE_LIMIT_FIRST_PAUSE
@@ -104,7 +121,7 @@ class GhApi:
                 proc = self._run(
                     ["gh", "api", *args],
                     capture_output=True,
-                    text=True,
+                    text=not binary,
                     timeout=self.timeout,
                 )
             except subprocess.TimeoutExpired:
@@ -112,7 +129,8 @@ class GhApi:
             else:
                 if proc.returncode == 0:
                     return proc.stdout
-                error = _classify_error(proc.stderr)
+                stderr = proc.stderr if isinstance(proc.stderr, str) else proc.stderr.decode(errors="replace")
+                error = _classify_error(stderr)
 
             if error.rate_limited:
                 delay = min(pause, self.rate_limit_wait - waited)
@@ -134,6 +152,9 @@ class GhApi:
 
     def get_text(self, path):
         return self._call(["--allow-escape-sequences", f"repos/{self.repo}/{path}"])
+
+    def get_bytes(self, path):
+        return self._call([f"repos/{self.repo}/{path}"], binary=True)
 
 
 def short_message(error):
@@ -368,18 +389,207 @@ def build_records(run, jobs, resolve_pr, fetch_log, signatures):
     return records, dropped
 
 
+def _integer(value, what, *, low=0, high=10**12):
+    if not isinstance(value, int) or isinstance(value, bool) or not low <= value <= high:
+        raise ValueError(f"{what}: expected an integer from {low} to {high}")
+    return value
+
+
+def _number(value, what, *, high=10**7, nullable=False):
+    if value is None and nullable:
+        return None
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{what}: expected a number")
+    if not 0 <= value <= high:  # also false for NaN
+        raise ValueError(f"{what}: out of range")
+    return round(float(value), 4)
+
+
+def _flag(value, what):
+    if value is not None and not isinstance(value, bool):
+        raise ValueError(f"{what}: expected true, false or null")
+    return value
+
+
+def _object(value, what):
+    if not isinstance(value, dict):
+        raise ValueError(f"{what}: expected an object")
+    return value
+
+
+def _sanitise_ninja(raw):
+    raw = _object(raw, "ninja")
+    version = raw.get("log_version")
+    ninja = {
+        "log_version": None if version is None else _integer(version, "ninja.log_version", high=1000),
+        "complete": _flag(raw.get("complete"), "ninja.complete"),
+        "steps": _integer(raw.get("steps"), "ninja.steps"),
+    }
+    if "error" in raw:
+        ninja["error"] = _text(raw["error"], "ninja.error")
+        return ninja
+    ninja["wall_s"] = _number(raw.get("wall_s"), "ninja.wall_s")
+    ninja["cpu_s"] = _number(raw.get("cpu_s"), "ninja.cpu_s")
+    ninja["parallelism"] = _number(raw.get("parallelism"), "ninja.parallelism", high=10**4, nullable=True)
+    ninja["tail_after_compile_s"] = _number(
+        raw.get("tail_after_compile_s"), "ninja.tail_after_compile_s", nullable=True
+    )
+    by_kind = _object(raw.get("by_kind"), "ninja.by_kind")
+    if set(by_kind) != set(STEP_KINDS):
+        raise ValueError("ninja.by_kind: unexpected kinds")
+    ninja["by_kind"] = {}
+    for kind in STEP_KINDS:
+        entry = _object(by_kind[kind], f"ninja.by_kind.{kind}")
+        ninja["by_kind"][kind] = {
+            "steps": _integer(entry.get("steps"), f"ninja.by_kind.{kind}.steps"),
+            "cpu_s": _number(entry.get("cpu_s"), f"ninja.by_kind.{kind}.cpu_s"),
+        }
+    slowest = raw.get("slowest")
+    if not isinstance(slowest, list) or len(slowest) > MAX_SLOWEST:
+        raise ValueError(f"ninja.slowest: expected a list of at most {MAX_SLOWEST}")
+    ninja["slowest"] = []
+    for number, entry in enumerate(slowest):
+        entry = _object(entry, f"ninja.slowest[{number}]")
+        if entry.get("kind") not in STEP_KINDS:
+            raise ValueError(f"ninja.slowest[{number}].kind: unknown")
+        ninja["slowest"].append(
+            {
+                "target": _text(entry.get("target"), f"ninja.slowest[{number}].target", limit=MAX_TARGET_CHARS),
+                "kind": entry["kind"],
+                "seconds": _number(entry.get("seconds"), f"ninja.slowest[{number}].seconds"),
+            }
+        )
+    if "ignored_lines" in raw:
+        ninja["ignored_lines"] = _integer(raw["ignored_lines"], "ninja.ignored_lines")
+    return ninja
+
+
+def _text(value, what, *, limit=200):
+    if not isinstance(value, str) or not value or len(value) > limit or not value.isprintable():
+        raise ValueError(f"{what}: expected short printable text")
+    return value
+
+
+def _sanitise_ccache(raw):
+    raw = _object(raw, "ccache")
+    counters = _object(raw.get("counters"), "ccache.counters")
+    if len(counters) > MAX_COUNTERS:
+        raise ValueError("ccache.counters: too many entries")
+    clean = {}
+    for name, value in counters.items():
+        if not COUNTER_NAME.match(name):
+            raise ValueError(f"ccache.counters: bad name {name!r}")
+        clean[name] = _integer(value, f"ccache.counters.{name}")
+    return {
+        "hits": _integer(raw.get("hits"), "ccache.hits"),
+        "misses": _integer(raw.get("misses"), "ccache.misses"),
+        "hit_rate": _number(raw.get("hit_rate"), "ccache.hit_rate", high=1, nullable=True),
+        "counters": dict(sorted(clean.items())),
+    }
+
+
+def sanitise_summary(raw):
+    """Validate the JSON a job uploaded and return only whitelisted parts.
+
+    Returns {"run_id", "run_attempt", "job_id", "ninja", "ccache"}; raises
+    ValueError on anything unexpected.
+    """
+    raw = _object(raw, "summary")
+    if raw.get("schema_version") != SCHEMA_VERSION or raw.get("kind") != "build-analysis":
+        raise ValueError("not a version 1 build-analysis summary")
+    return {
+        "run_id": _integer(raw.get("run_id"), "run_id", high=10**15),
+        "run_attempt": _integer(raw.get("run_attempt"), "run_attempt", low=1, high=10**4),
+        "job_id": _integer(raw.get("job_id"), "job_id", high=10**15),
+        "ninja": None if raw.get("ninja") is None else _sanitise_ninja(raw["ninja"]),
+        "ccache": None if raw.get("ccache") is None else _sanitise_ccache(raw["ccache"]),
+    }
+
+
+def read_summary(blob):
+    """The parsed build-analysis.json inside an artifact zip."""
+    with zipfile.ZipFile(io.BytesIO(blob)) as archive:
+        info = archive.getinfo(SUMMARY_NAME)
+        if info.file_size > MAX_ARTIFACT_BYTES:
+            raise ValueError("summary too large")
+        with archive.open(info) as handle:
+            return json.loads(handle.read(MAX_ARTIFACT_BYTES + 1))
+
+
+def build_analysis_records(api, run, job_records):
+    """One `build-analysis` record per job of the run that uploaded a summary.
+
+    Join keys come from the job records (which come from the API), never from the
+    artifact; an artifact only counts if it names the same run, attempt and job.
+    Returns (records, dropped counter). API errors other than an expired
+    artifact propagate, so that the whole run is retried later.
+    """
+    dropped = Counter()
+    by_job = {record["job_id"]: record for record in job_records}
+    found = {}
+    for artifact in paged(api, f"actions/runs/{run['id']}/artifacts", "artifacts"):
+        if not artifact["name"].startswith(ARTIFACT_PREFIX):
+            continue
+        if artifact.get("expired"):
+            dropped["build-analysis artifact expired"] += 1
+            continue
+        if artifact.get("size_in_bytes", 0) > MAX_ARTIFACT_BYTES:
+            dropped["build-analysis artifact too large"] += 1
+            continue
+        try:
+            blob = api.get_bytes(f"actions/artifacts/{artifact['id']}/zip")
+        except ApiError as error:
+            if error.status in (404, 410):
+                dropped["build-analysis artifact expired"] += 1
+                continue
+            raise
+        try:
+            summary = sanitise_summary(read_summary(blob))
+        except (ValueError, KeyError, zipfile.BadZipFile, json.JSONDecodeError):
+            dropped["invalid build-analysis artifact"] += 1
+            continue
+        job = by_job.get(summary["job_id"])
+        if job is None or summary["run_id"] != run["id"] or summary["run_attempt"] != job["run_attempt"]:
+            dropped["build-analysis artifact without a matching job"] += 1
+            continue
+        found.setdefault(job["job_id"], (job, summary))
+
+    records = []
+    for job, summary in found.values():
+        records.append(
+            {
+                "schema_version": SCHEMA_VERSION,
+                "kind": "build-analysis",
+                "workflow": job["workflow"],
+                "run_id": job["run_id"],
+                "run_attempt": job["run_attempt"],
+                "event": job["event"],
+                "branch": job["branch"],
+                "head_sha": job["head_sha"],
+                "job_id": job["job_id"],
+                "job": job["job"],
+                "created_at": job["created_at"],
+                "conclusion": job["conclusion"],
+                "ninja": summary["ninja"],
+                "ccache": summary["ccache"],
+            }
+        )
+    return records, dropped
+
+
 class ShardIndex:
-    """Which jobs and run attempts each shard already contains (lazy)."""
+    """Which jobs, build analyses and run attempts each shard already holds (lazy)."""
 
     def __init__(self, data_dir):
         self.data_dir = Path(data_dir)
         self._jobs = {}
+        self._analyses = {}
         self._attempts = {}
 
     def _load(self, shard):
         if shard in self._jobs:
             return
-        jobs, attempts = set(), set()
+        jobs, analyses, attempts = set(), set(), set()
         path = self.data_dir / shard
         if path.exists():
             for number, line in enumerate(path.read_text().splitlines(), 1):
@@ -390,22 +600,29 @@ class ShardIndex:
                 except json.JSONDecodeError as error:
                     # Carrying on would risk writing duplicates.
                     raise ValueError(f"{path}:{number}: not valid JSON ({error})") from error
-                jobs.add(record["job_id"])
-                attempts.add((record["run_id"], record["run_attempt"]))
-        self._jobs[shard], self._attempts[shard] = jobs, attempts
+                if record.get("kind", "job") == "job":
+                    jobs.add(record["job_id"])
+                    attempts.add((record["run_id"], record["run_attempt"]))
+                elif record["kind"] == "build-analysis":
+                    analyses.add(record["job_id"])
+        self._jobs[shard], self._analyses[shard], self._attempts[shard] = jobs, analyses, attempts
 
     def has_attempt(self, shard, run_id, attempt):
         self._load(shard)
         return (run_id, attempt) in self._attempts[shard]
 
-    def has_job(self, shard, job_id):
+    def has_record(self, shard, record):
         self._load(shard)
-        return job_id in self._jobs[shard]
+        known = self._jobs if record["kind"] == "job" else self._analyses
+        return record["job_id"] in known[shard]
 
     def add(self, shard, record):
         self._load(shard)
-        self._jobs[shard].add(record["job_id"])
-        self._attempts[shard].add((record["run_id"], record["run_attempt"]))
+        if record["kind"] == "job":
+            self._jobs[shard].add(record["job_id"])
+            self._attempts[shard].add((record["run_id"], record["run_attempt"]))
+        else:
+            self._analyses[shard].add(record["job_id"])
 
 
 def append_records(path, records):
@@ -424,6 +641,7 @@ class Result:
         self.runs_already_collected = 0
         self.runs_collected = 0
         self.records_written = 0
+        self.analyses_written = 0
         self.per_shard = Counter()
         self.dropped = Counter()
         self.errors = []
@@ -440,6 +658,7 @@ def collect(api, config, data_dir, runs, *, workers=WORKERS, dry_run=False, max_
     result = Result()
     index = ShardIndex(data_dir)
     signatures = config["infra_failure_signatures"]
+    analysis_workflows = set(config.get("build_analysis_workflows", []))
 
     resolve_pr = PrResolver(api, config["repo"].split("/")[0]).resolve
 
@@ -470,6 +689,10 @@ def collect(api, config, data_dir, runs, *, workers=WORKERS, dry_run=False, max_
         try:
             jobs = list(paged(api, f"actions/runs/{run['id']}/jobs?filter=all", "jobs"))
             records, dropped = build_records(run, jobs, resolve_pr, fetch_log, signatures)
+            if records and run["name"] in analysis_workflows:
+                analyses, analysis_dropped = build_analysis_records(api, run, records)
+                records = records + analyses
+                dropped.update(analysis_dropped)
             return run, records, dropped, None
         except Exception as error:  # one bad run must not abort the others
             if getattr(error, "rate_limited", False):
@@ -491,13 +714,14 @@ def collect(api, config, data_dir, runs, *, workers=WORKERS, dry_run=False, max_
             result.runs_collected += 1
             result.dropped.update(dropped)
             shard = shard_name(run["created_at"])
-            fresh = [r for r in records if not index.has_job(shard, r["job_id"])]
-            fresh.sort(key=lambda r: (r["created_at"], r["job_id"]))
+            fresh = [r for r in records if not index.has_record(shard, r)]
+            fresh.sort(key=lambda r: (r["created_at"], r["job_id"], r["kind"] != "job"))
             if fresh and not dry_run:
                 append_records(Path(data_dir) / shard, fresh)
             for record in fresh:
                 index.add(shard, record)
             result.records_written += len(fresh)
+            result.analyses_written += sum(1 for r in fresh if r["kind"] != "job")
             result.per_shard[shard] += len(fresh)
             if number % 25 == 0:
                 out(f"  {number}/{len(todo)} runs processed")
@@ -518,7 +742,12 @@ def fix_pr_numbers(api, config, data_dir, *, dry_run=False, out=print):
         lines, changed = [], 0
         for line in path.read_text().splitlines():
             record = json.loads(line) if line.strip() else None
-            if record and record["event"] == "pull_request" and record["pr_number"] is None:
+            if (
+                record
+                and record.get("kind", "job") == "job"
+                and record["event"] == "pull_request"
+                and record["pr_number"] is None
+            ):
                 found += 1
                 number = resolver.resolve(record["head_sha"], record["branch"], record["created_at"])
                 if number is not None:
@@ -543,6 +772,7 @@ def summarize(result, dry_run, out=print):
     out(
         f"{result.runs_seen} runs listed, {result.runs_already_collected} already collected, "
         f"{result.runs_collected} processed; {verb} {result.records_written} records"
+        + (f" (incl. {result.analyses_written} build analyses)" if result.analyses_written else "")
     )
     for shard, count in sorted(result.per_shard.items()):
         out(f"  {shard}: +{count}")

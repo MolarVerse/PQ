@@ -12,6 +12,10 @@
     "Dismiss Stale Approvals",
     "Docs"
   ],
+  "build_analysis_workflows": [
+    "BUILD",
+    "LINT"
+  ],
   "infra_failure_signatures": [
     "GitLab is currently unable to handle this request"
   ]
