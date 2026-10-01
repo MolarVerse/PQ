@@ -148,6 +148,10 @@ Jobs with no run in the current window are omitted. "Previous median" is n/a wit
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | perf-regression | pull_request | 132 | 2m 40s | 3m 50s | 1m 47s | +50% **regression** | 3s | 23s |
 
+## Build analysis
+
+No build analysis records yet. They come from the `build-timings-*` artifacts of `BUILD` and `LINT` runs, which the collector ingests from the day those jobs started uploading them (nothing can be backfilled).
+
 ## Eigen cache hit rate
 
 Share of jobs that restored the Eigen source from the cache instead of cloning it from GitLab (only jobs that have the `Cache Eigen source` step; see `eigen_cache_hit` in SCHEMA.md). Weeks are ISO weeks of the job's creation.

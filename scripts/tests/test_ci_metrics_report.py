@@ -60,6 +60,66 @@ def record(
     return data
 
 
+def analysis(
+    *,
+    workflow="BUILD",
+    job="build-static-lto",
+    event="push",
+    branch="dev",
+    attempt=1,
+    conclusion="success",
+    created=NEWEST,
+    ninja="default",
+    ccache="default",
+    **extra,
+):
+    if ninja == "default":
+        ninja = {
+            "log_version": 7,
+            "complete": True,
+            "steps": 600,
+            "wall_s": 900.0,
+            "cpu_s": 5000.0,
+            "parallelism": 5.5,
+            "tail_after_compile_s": 700.0,
+            "by_kind": {
+                "compile": {"steps": 400, "cpu_s": 400.0},
+                "archive": {"steps": 50, "cpu_s": 100.0},
+                "link": {"steps": 150, "cpu_s": 4500.0},
+                "other": {"steps": 0, "cpu_s": 0.0},
+            },
+            "slowest": [
+                {"target": "tests/testA", "kind": "link", "seconds": 68.0},
+                {"target": "tests/testB", "kind": "link", "seconds": 60.0},
+            ],
+        }
+    if ccache == "default":
+        ccache = {
+            "hits": 140,
+            "misses": 2,
+            "hit_rate": 0.9859,
+            "counters": {report.PCH_COUNTER: 263, "cache_size_kibibyte": 80000, "max_cache_size_kibibyte": 488281},
+        }
+    data = {
+        "schema_version": 1,
+        "kind": "build-analysis",
+        "workflow": workflow,
+        "run_id": next(_ids),
+        "run_attempt": attempt,
+        "event": event,
+        "branch": branch,
+        "head_sha": "a" * 40,
+        "job_id": next(_ids),
+        "job": job,
+        "created_at": stamp(created),
+        "conclusion": conclusion,
+        "ninja": ninja,
+        "ccache": ccache,
+    }
+    data.update(extra)
+    return data
+
+
 def days_ago(days, hours=0):
     return NEWEST - timedelta(days=days, hours=hours)
 
@@ -148,10 +208,17 @@ class LoadTests(DataDirTestCase):
         self.assertEqual(5, stats.records)
 
     def test_build_analysis_records_are_counted_but_not_unread(self):
-        self.write([record(), record(kind="build-analysis")])
+        self.write([record(), analysis()])
         jobs, stats = report.load_jobs(self.data)
         self.assertEqual((1, 1, 0, 0), (len(jobs), stats.analyses, stats.ignored, stats.invalid))
-        self.assertNotIn("Unread records", report.render(jobs, stats, Options()))
+        self.assertEqual(1, len(stats.analysis_records))
+        self.assertEqual(("BUILD", "build-static-lto"), (stats.analysis_records[0].workflow, stats.analysis_records[0].job))
+
+    def test_analysis_records_of_another_version_or_a_broken_shape_are_not_used(self):
+        self.write([record(), analysis(schema_version=2)], raw=[json.dumps({"schema_version": 1, "kind": "build-analysis"})])
+        jobs, stats = report.load_jobs(self.data)
+        self.assertEqual((0, 1, 1), (stats.analyses, stats.ignored, stats.invalid))
+        self.assertIn("Unread records: 1 of an unknown schema version or kind, 1 malformed", report.render(jobs, stats, Options()))
 
     def test_ignores_files_that_are_not_shards(self):
         self.write([record()])
@@ -324,6 +391,119 @@ class TrendTests(DataDirTestCase):
 
     def test_no_chart_without_enough_runs(self):
         self.assertIn("Not enough BUILD runs yet", self.render([record()]))
+
+
+def builds(count, **fields):
+    """`count` analyses spread over the last days (one every 6 hours)."""
+    return [analysis(created=days_ago(0, 6 * i + 1), **fields) for i in range(count)]
+
+
+class BuildAnalysisSectionTests(DataDirTestCase):
+    def render_with(self, analyses, extra_jobs=(), **options):
+        return self.render([record(created=NEWEST), *extra_jobs, *analyses], **options)
+
+    def test_without_records_it_says_so(self):
+        text = self.render([record()])
+        self.assertIn("## Build analysis", text)
+        self.assertIn("No build analysis records yet", text)
+        self.assertNotIn("### ccache", text)
+
+    def test_ccache_row_has_hit_rate_pch_blocked_calls_and_cache_full(self):
+        full = {"hits": 179, "misses": 2, "hit_rate": 0.989, "counters": {report.PCH_COUNTER: 269, "cache_size_kibibyte": 488692, "max_cache_size_kibibyte": 488281}}
+        text = self.render_with(builds(5, job="lint", ccache=full))
+        self.assertIn("| BUILD / lint | push (dev) | 5 | 99% | - | n/a | 269 | 60% | 5/5 |", text)
+
+    def test_cache_full_means_at_least_95_percent_of_the_limit(self):
+        def with_size(kib):
+            return {"hits": 1, "misses": 1, "hit_rate": 0.5, "counters": {"cache_size_kibibyte": kib, "max_cache_size_kibibyte": 1000}}
+
+        rows = report.ccache_rows(
+            [report.parse_analysis(analysis(job=f"j{kib}", ccache=with_size(kib))) for kib in (900, 949, 950, 1000)],
+            report.Windows(NEWEST, 14),
+            Options(),
+        )
+        self.assertEqual({"j900": "0/1", "j949": "0/1", "j950": "1/1", "j1000": "1/1"}, {r[0].split(" / ")[1]: r[-1] for r in rows})
+
+    def test_hit_rate_is_compared_with_the_previous_window_in_points(self):
+        now = [analysis(created=days_ago(1, i), ccache={"hits": 90, "misses": 10, "hit_rate": 0.9, "counters": {}}) for i in range(5)]
+        before = [analysis(created=days_ago(20, i), ccache={"hits": 80, "misses": 20, "hit_rate": 0.8, "counters": {}}) for i in range(5)]
+        text = self.render_with(now + before)
+        self.assertIn("| BUILD / build-static-lto | push (dev) | 5 | 90% | 80% | +10.0 pp | 0 | 0% | - |", text)
+
+    def test_builds_without_ccache_or_cacheable_calls_are_handled(self):
+        empty = {"hits": 0, "misses": 0, "hit_rate": None, "counters": {}}
+        text = self.render_with(builds(2, ccache=None) + builds(2, job="idle", ccache=empty))
+        self.assertIn("| BUILD / idle | push (dev) | 2 | - | - | n/a | 0 | - | - |", text)
+        self.assertNotIn("BUILD / build-static-lto | push (dev) | 2 |", text.split("### Ninja builds")[0])
+
+    def test_excluded_analyses_are_not_counted(self):
+        extra = [
+            analysis(attempt=2),
+            analysis(conclusion="cancelled"),
+            analysis(branch="main"),
+            analysis(event="schedule"),
+        ]
+        text = self.render_with(builds(2) + extra)
+        self.assertIn("From 2 build analysis records", text)
+
+    def test_ninja_row_uses_complete_builds_only_and_reports_the_rest(self):
+        partial = dict(analysis()["ninja"], complete=False, wall_s=1.0)
+        unknown = dict(analysis()["ninja"], complete=None, wall_s=2.0)
+        text = self.render_with(builds(3) + builds(2, job="lint", ninja=partial) + builds(1, job="x", ninja=unknown))
+        self.assertIn("| BUILD / build-static-lto | push (dev) | 3 | 15m 00s | 83m 20s | 5.5 | 11m 40s | 90% |", text)
+        self.assertNotIn("| BUILD / lint | push (dev) | 2 | 1", text.split("### Slowest")[0].split("### Ninja builds")[1])
+        self.assertIn("not full builds: 3 with `complete` false or unknown", text)
+
+    def test_a_build_with_an_error_is_ignored(self):
+        broken = {"log_version": 4, "complete": None, "steps": 0, "error": "no usable .ninja_log"}
+        text = self.render_with(builds(2, ninja=broken))
+        self.assertIn("No complete ninja builds in the current window.", text)
+        self.assertIn("No ninja builds of pushes to `dev`", text)
+
+    def test_slowest_steps_aggregate_over_dev_pushes_only(self):
+        def with_times(a, b):
+            ninja = dict(analysis()["ninja"])
+            ninja["slowest"] = [
+                {"target": "tests/testA", "kind": "link", "seconds": a},
+                {"target": "tests/testB", "kind": "link", "seconds": b},
+            ]
+            return ninja
+
+        pushes = [analysis(created=days_ago(1, i), ninja=with_times(60 + i, 50)) for i in range(3)]
+        pushes.append(analysis(created=days_ago(1), ninja=dict(with_times(10, 10), slowest=[{"target": "tests/testB", "kind": "link", "seconds": 10.0}])))
+        pr = analysis(event="pull_request", branch="feature/x", ninja=with_times(999, 999))
+        text = self.render_with(pushes + [pr])
+        section = text.split("### Slowest build steps on `dev`")[1]
+        self.assertIn("#### BUILD / build-static-lto (4 of 4 builds complete)", section)
+        self.assertIn("| `tests/testA` | link | 3/4 | 1m 01s | 1m 02s |", section)
+        self.assertIn("| `tests/testB` | link | 4/4 | 50.0s | 50.0s |", section)
+        self.assertNotIn("999", section)
+        self.assertLess(section.index("testA"), section.index("testB"))
+
+    def test_slowest_steps_are_capped(self):
+        ninja = dict(analysis()["ninja"])
+        ninja["slowest"] = [{"target": f"t{i:02d}", "kind": "compile", "seconds": 20.0 - i} for i in range(20)]
+        text = self.render_with(builds(1, ninja=ninja))
+        section = text.split("### Slowest build steps on `dev`")[1]
+        self.assertEqual(report.SLOWEST_SHOWN, section.count("| `t"))
+
+    def test_partial_builds_still_show_their_slowest_steps_with_the_complete_count(self):
+        partial = dict(analysis()["ninja"], complete=False)
+        text = self.render_with(builds(3, job="lint", ninja=partial))
+        self.assertIn("#### BUILD / lint (0 of 3 builds complete)", text)
+
+    def test_weekly_chart_needs_enough_builds_per_week(self):
+        many = [analysis(created=days_ago(0, i)) for i in range(3)] + [analysis(created=days_ago(7, i)) for i in range(3)] + [analysis(created=days_ago(14))]
+        text = self.render_with(many)
+        self.assertIn('title "Share of compiler calls blocked by the PCH, weekly median (%)"', text)
+        self.assertIn('x-axis ["W39", "W40"]', text)
+        self.assertIn("line [64.9, 64.9]", text)
+        self.assertNotIn("Share of compiler calls blocked", self.render_with(builds(2)))
+
+    def test_old_analyses_fall_out_of_the_current_window(self):
+        text = self.render_with([analysis(created=days_ago(20))])
+        self.assertIn("From 1 build analysis records", text)
+        self.assertIn("No ccache statistics in the current window.", text)
 
 
 class RenderTests(DataDirTestCase):
