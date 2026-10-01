@@ -23,9 +23,10 @@
 #include "celllistSetup.hpp"
 
 #include "celllist.hpp"
-#include "engine.hpp"   // for Engine
+#include "engine.hpp"
 #include "potentialBruteForce.hpp"
-#include "potentialCellList.hpp"   // for PotentialCellList
+#include "potentialCellList.hpp"
+#include "settings.hpp"
 
 namespace setup
 {

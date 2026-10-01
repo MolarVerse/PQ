@@ -26,60 +26,15 @@
 
 #include <cstdint>   // for uint_fast32_t
 #include <mstd/enum.hpp>
-#include <string_view>   // for string_view
 
 #include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
+#include "enums/general.hpp"
+#include "enums/integrator.hpp"
+#include "enums/jobtype.hpp"
+#include "enums/virial.hpp"
 
 namespace settings
 {
-    /**
-     * @enum JobType
-     *
-     * @brief enum class to store the type of the job
-     *
-     */
-    enum class JobType : std::uint8_t
-    {
-        MM_MD,
-        QM_MD,
-        QMMM_MD,
-        RING_POLYMER_QM_MD,
-        MM_OPT,
-        MM_HESSIAN,
-        NONE
-    };
-
-    /**
-     * @enum FPType
-     *
-     * @brief enum class to store the floating point type
-     *
-     */
-    enum class FPType : std::uint8_t
-    {
-        FLOAT,
-        DOUBLE
-    };
-
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define VIRIAL_TYPE_LIST(X) \
-    X(ATOMIC)               \
-    X(MOLECULAR)
-
-    MSTD_ENUM(VirialType, std::uint8_t, VIRIAL_TYPE_LIST)
-
-#undef VIRIAL_TYPE_LIST
-
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define INTEGRATOR_TYPE_LIST(X) \
-    X(NONE)                     \
-    X(VELOCITY_VERLET)
-
-    MSTD_ENUM(IntegratorType, std::uint8_t, INTEGRATOR_TYPE_LIST)
-
-#undef INTEGRATOR_TYPE_LIST
-
-    [[nodiscard]] std::string string(JobType jobtype);
 
     /**
      * @class Settings
@@ -121,10 +76,8 @@ namespace settings
          * standard setter methods *
          ***************************/
 
-        static void setJobtype(std::string_view jobtype);
         static void setJobtype(JobType jobtype);
 
-        static void setFloatingPointType(std::string_view);
         static void setFloatingPointType(FPType);
 
         static void setRandomSeed(uint_fast32_t randomSeed);
@@ -176,20 +129,5 @@ namespace settings
     };
 
 }   // namespace settings
-
-// TODO: move this to deidcated enum file as soon as it is done
-
-/**
- * @brief Input alias for IntegratorType
- *
- * @details Maps string representations to IntegratorType enum values
- */
-template <>
-struct mstd::EnumAliases<settings::IntegratorType>
-{
-    static constexpr auto value = mstd::makeAliases<settings::IntegratorType>(
-        {{"v_verlet", settings::IntegratorType::VELOCITY_VERLET}}
-    );
-};
 
 #endif   // _SETTINGS_HPP_

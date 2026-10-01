@@ -57,7 +57,7 @@ TEST_F(TestBoxSection, testNumberOfArguments)
 
 TEST_F(TestBoxSection, testProcess)
 {
-    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    settings::Settings::setJobtype(JobType::QM_MD);
 
     EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), false);
 

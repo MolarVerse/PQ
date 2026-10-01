@@ -59,7 +59,7 @@ namespace input
                 "Specifies the integrator type to be used in the simulation",
         };
 
-        const auto setValue = [](settings::IntegratorType integratorType)
+        const auto setValue = [](IntegratorType integratorType)
         {
             // TODO: remove this via general setup
             if (!settings::Settings::isMDJobType())
@@ -78,9 +78,9 @@ namespace input
         };
 
         auto& key = _getRegistry().registerKey(
-            KeyRegistry<settings::IntegratorType>{
+            KeyRegistry<IntegratorType>{
                 .metadata     = metaData,
-                .defaultValue = settings::IntegratorType::VELOCITY_VERLET,
+                .defaultValue = IntegratorType::VELOCITY_VERLET,
                 .onSet        = setValue,
             }
         );

@@ -53,8 +53,7 @@ namespace input
         {
             const auto optimizerActive =
                 settings::Settings::isOptJobType() ||
-                (settings::Settings::getJobtype() ==
-                     settings::JobType::MM_HESSIAN &&
+                (settings::Settings::getJobtype() == JobType::MM_HESSIAN &&
                  settings::HessianSettings::optimizeBeforeHessian());
 
             if (!optimizerActive)
@@ -91,7 +90,7 @@ namespace input
      */
     void InputFileReader::_validateTimings() const
     {
-        using enum settings::JobType;
+        using enum JobType;
 
         const auto jobType = settings::Settings::getJobtype();
         const auto requiresNumberOfSteps =
@@ -105,7 +104,7 @@ namespace input
             throw exc::UserInputException(
                 std::format(
                     "Job type {} selected. Please set nstep in the input file.",
-                    string(jobType)
+                    JobTypeMeta::toString(jobType)
                 )
             );
         }
@@ -116,7 +115,7 @@ namespace input
                 std::format(
                     "Molecular Dynamics job type {} selected. Please set the "
                     "time step in the input file.",
-                    string(jobType)
+                    JobTypeMeta::toString(jobType)
                 )
             );
         }

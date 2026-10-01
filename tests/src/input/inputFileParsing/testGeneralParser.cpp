@@ -53,36 +53,33 @@ TEST_F(TestInputFileReader, JobType)
     std::vector<std::string>  lineElements = {"jobtype", "=", "mm-md"};
     auto                      engine       = std::unique_ptr<engine::Engine>();
     input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::MM_MD);
+    EXPECT_EQ(settings::Settings::getJobtype(), JobType::MM_MD);
     EXPECT_EQ(settings::Settings::isMMActivated(), true);
     test::checkType(engine, typeid(engine::MMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-md"};
     input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::QM_MD);
+    EXPECT_EQ(settings::Settings::getJobtype(), JobType::QM_MD);
     EXPECT_EQ(settings::Settings::isQMActivated(), true);
     test::checkType(engine, typeid(engine::QMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-rpmd"};
     input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(
-        settings::Settings::getJobtype(),
-        settings::JobType::RING_POLYMER_QM_MD
-    );
+    EXPECT_EQ(settings::Settings::getJobtype(), JobType::RING_POLYMER_QM_MD);
     EXPECT_EQ(settings::Settings::isQMActivated(), true);
     EXPECT_EQ(settings::Settings::isRingPolymerMDActivated(), true);
     test::checkType(engine, typeid(engine::RingPolymerQMMDEngine));
 
     lineElements = {"jobtype", "=", "mm-opt"};
     input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::MM_OPT);
+    EXPECT_EQ(settings::Settings::getJobtype(), JobType::MM_OPT);
     EXPECT_EQ(settings::Settings::isOptJobType(), true);
     EXPECT_EQ(settings::Settings::isMMActivated(), true);
     test::checkType(engine, typeid(engine::OptEngine));
 
     lineElements = {"jobtype", "=", "mm-hessian"};
     input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::MM_HESSIAN);
+    EXPECT_EQ(settings::Settings::getJobtype(), JobType::MM_HESSIAN);
     EXPECT_EQ(settings::Settings::isMMActivated(), true);
     test::checkType(engine, typeid(engine::HessianEngine));
 
@@ -102,9 +99,9 @@ TEST_F(TestInputFileReader, JobType)
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
 
     settings::Settings::setIsRingPolymerMDActivated(true);
-    settings::Settings::setJobtype(settings::JobType::NONE);
+    settings::Settings::setJobtype(JobType::NONE);
     EXPECT_FALSE(settings::Settings::isRingPolymerMDActivated());
-    EXPECT_EQ(string(settings::JobType::NONE), "NONE");
+    EXPECT_EQ(JobTypeMeta::toString(JobType::NONE), "NONE");
 }
 
 /**
@@ -156,17 +153,11 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
     input::GeneralInputParser parser;
     std::vector<std::string> lineElements = {"floatingPointType", "=", "float"};
     input::GeneralInputParser::parseFloatingPointType(lineElements, 0);
-    EXPECT_EQ(
-        settings::Settings::getFloatingPointType(),
-        settings::FPType::FLOAT
-    );
+    EXPECT_EQ(settings::Settings::getFloatingPointType(), FPType::FLOAT);
 
     lineElements = {"floatingPointType", "=", "double"};
     input::GeneralInputParser::parseFloatingPointType(lineElements, 0);
-    EXPECT_EQ(
-        settings::Settings::getFloatingPointType(),
-        settings::FPType::DOUBLE
-    );
+    EXPECT_EQ(settings::Settings::getFloatingPointType(), FPType::DOUBLE);
 
     lineElements = {"floatingPointType", "=", "notValid"};
     EXPECT_THROW_MSG(

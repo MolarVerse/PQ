@@ -38,6 +38,7 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 

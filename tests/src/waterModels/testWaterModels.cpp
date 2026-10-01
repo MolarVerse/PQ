@@ -582,7 +582,7 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 
 TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 {
-    settings::Settings::setJobtype(settings::JobType::QMMM_MD);
+    settings::Settings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
     settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
@@ -701,7 +701,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 
 TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
-    settings::Settings::setJobtype(settings::JobType::QMMM_MD);
+    settings::Settings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
     settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);

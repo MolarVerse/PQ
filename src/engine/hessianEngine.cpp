@@ -315,7 +315,7 @@ namespace engine
     {
         std::shared_ptr<opt::Evaluator> evaluator;
 
-        if (settings::Settings::getJobtype() == settings::JobType::MM_HESSIAN)
+        if (settings::Settings::getJobtype() == JobType::MM_HESSIAN)
             evaluator = std::make_shared<opt::MMEvaluator>();
 
         else

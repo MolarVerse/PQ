@@ -94,7 +94,7 @@ namespace
 
     void configureNoInterModel()
     {
-        settings::Settings::setJobtype(settings::JobType::MM_MD);
+        settings::Settings::setJobtype(JobType::MM_MD);
         settings::WaterModelSettings::setWaterInterModel(
             settings::WaterInterModel::NONE
         );
@@ -227,7 +227,7 @@ TEST_F(TestSetup, waterModelSetupRejectsQmOnlyJobs)
         settings::WaterIntraModel::NONE
     );
     addWaterSystem(*_mdEngine);
-    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    settings::Settings::setJobtype(JobType::QM_MD);
     EXPECT_THROW_MSG(
 
         setup::WaterModelSetup(*_mdEngine).setup(),
