@@ -17,6 +17,11 @@ inputs:
   job-id:
     description: REST API id of the calling job (pass `job.check_run_id`).
     default: ''
+  clang-traces:
+    description: >-
+      Also summarise the clang -ftime-trace files under the build directory
+      (summary plus the raw traces of the slowest files go into the artifact).
+    default: 'false'
   build-status:
     description: >-
       Outcome of the job's build step (success, failure, cancelled or skipped);
@@ -41,6 +46,16 @@ runs:
         [[ -n "$JOB_ID" ]] && args+=(--job-id "$JOB_ID")
         [[ -n "$BUILD_STATUS" ]] && args+=(--build-status "$BUILD_STATUS")
         python3 "$GITHUB_WORKSPACE/.github/ci-metrics/summarise_build.py" "${args[@]}"
+
+    - name: Summarise clang time traces
+      if: inputs.clang-traces == 'true'
+      shell: bash
+      continue-on-error: true
+      env:
+        BUILD_DIR: ${{ inputs.build-dir }}
+      run: |
+        python3 "$GITHUB_WORKSPACE/.github/ci-metrics/summarise_traces.py" \
+          --build-dir "$BUILD_DIR" --source-root "$GITHUB_WORKSPACE" --out "$RUNNER_TEMP/build-timings"
 
     - name: Upload build timings
       uses: actions/upload-artifact@v4

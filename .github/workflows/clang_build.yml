@@ -22,6 +22,7 @@ on:
       - '.github/workflows/clang_build.yml'
       - '.github/actions/upload-build-timings/**'
       - '.github/ci-metrics/summarise_build.py'
+      - '.github/ci-metrics/summarise_traces.py'
   push:
     branches:
       - dev
@@ -36,6 +37,7 @@ on:
       - '.github/workflows/clang_build.yml'
       - '.github/actions/upload-build-timings/**'
       - '.github/ci-metrics/summarise_build.py'
+      - '.github/ci-metrics/summarise_traces.py'
   workflow_dispatch:
 
 # Only superseded pull_request runs are cancelled; push and manual runs each
@@ -103,19 +105,12 @@ jobs:
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
 
-      # The input of the clang build-time analysis (#719).
-      - name: Report -ftime-trace output
-        if: always()
-        run: |
-          count=$(find build -name '*.cpp.json' | wc -l)
-          echo "$count -ftime-trace files, $(find build -name '*.cpp.json' -print0 | du -ch --files0-from=- | tail -1 | cut -f1) in total"
-        shell: bash
-
       - name: Collect build timings
         if: always()
         uses: ./.github/actions/upload-build-timings
         with:
           name: clang
           ccache: 'false'
+          clang-traces: 'true'
           job-id: ${{ job.check_run_id }}
           build-status: ${{ steps.build.outcome }}

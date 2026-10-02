@@ -8,9 +8,9 @@ instead of guessed. Tracked in #720.
 | Storage layout and record schema (this directory) | defined, see [`SCHEMA.md`](SCHEMA.md) |
 | Collector script (GitHub API to JSONL), see [Running the collector](#running-the-collector) | implemented, #715 |
 | Collector workflow, see [The workflow](#the-workflow) | implemented, #716 (inert until it reaches `main`) |
-| Overview report for `dev` | planned, #717 |
+| Overview report for `dev`, see [`data/CI_TIMINGS.md`](data/CI_TIMINGS.md) and [Overview report](#overview-report) | implemented, #717 (build analysis section: #718) |
 | Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented (#718): job side, collector ingest and the overview section |
-| clang `-ftime-trace` analysis | planned, #719 |
+| clang `-ftime-trace` analysis | in progress, #719: clang job (#747) and trace summariser (#748) done; ingest, PR comment and noise study planned |
 
 ## Layout
 
@@ -23,14 +23,16 @@ instead of guessed. Tracked in #720.
   config.json    repository, recorded workflows, workflows with build analysis, infrastructure-failure signatures
   collect.py     the collector (Python standard library only, uses the gh CLI)
   publish.sh     commits and pushes new data (used by the workflow)
-  data/          weekly JSONL shards, written only by the collector
+  report.py      generates data/CI_TIMINGS.md from the shards (standard library only)
+  summarise_build.py   runs in a CI job: summarises .ninja_log and ccache statistics
+  summarise_traces.py  runs in the clang job: summarises the -ftime-trace files
+  data/          weekly JSONL shards and the generated CI_TIMINGS.md, written only by the tools above
 ```
 
 The workflow is `.github/workflows/ci_metrics.yml`. Tests:
-`scripts/tests/test_ci_metrics_publish.py` (real local git repositories).
-
-Tests: `scripts/tests/test_ci_metrics_{collect,publish,report,build_summary}.py` (offline; run
-with the other script tests in CI).
+`scripts/tests/test_ci_metrics_{collect,publish,report,build_summary,traces}.py`
+(offline, the publish tests use real local git repositories; they run with the
+other script tests in CI).
 
 Nothing under `data/` is edited by hand.
 
