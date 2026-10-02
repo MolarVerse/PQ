@@ -6,6 +6,12 @@ name: Clang Build
 # building with clang and as the basis for the clang build-time analysis
 # (#719). No ccache: a cache hit restores the object file but, as far as we
 # know, not the -ftime-trace JSON the analysis needs.
+#
+# Pull requests get one build-time comment (like the performance gate). The
+# clang-build job runs PR code and has no write token; it only renders the
+# Markdown (clang_report.py) and uploads it. The clang-comment job posts that
+# file and never runs anything from the pull request. Pushes to dev store
+# their summary in the Actions cache; pull requests compare with the newest.
 
 on:
   pull_request:
@@ -23,6 +29,7 @@ on:
       - '.github/actions/upload-build-timings/**'
       - '.github/ci-metrics/summarise_build.py'
       - '.github/ci-metrics/summarise_traces.py'
+      - '.github/ci-metrics/clang_report.py'
   push:
     branches:
       - dev
@@ -38,6 +45,7 @@ on:
       - '.github/actions/upload-build-timings/**'
       - '.github/ci-metrics/summarise_build.py'
       - '.github/ci-metrics/summarise_traces.py'
+      - '.github/ci-metrics/clang_report.py'
   workflow_dispatch:
 
 # Only superseded pull_request runs are cancelled; push and manual runs each
@@ -114,3 +122,120 @@ jobs:
           clang-traces: 'true'
           job-id: ${{ job.check_run_id }}
           build-status: ${{ steps.build.outcome }}
+
+      # --- informational build time report (#719, phase 3) -----------------
+
+      - name: Restore the dev baseline
+        id: baseline
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/clang-baseline
+          key: clang-times-none
+          restore-keys: clang-times-
+
+      - name: Render the build time report
+        if: always() && github.event_name == 'pull_request'
+        env:
+          MATCHED_KEY: ${{ steps.baseline.outputs.cache-matched-key }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/clang-report"
+          python3 .github/ci-metrics/clang_report.py \
+            --pr "$RUNNER_TEMP/build-timings/clang-traces-detail.json" \
+            --baseline "$RUNNER_TEMP/clang-baseline/clang-traces-detail.json" \
+            --baseline-sha "${MATCHED_KEY#clang-times-}" \
+            --status "$BUILD_OUTCOME" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --out "$RUNNER_TEMP/clang-report/clang_report.md"
+          cat "$RUNNER_TEMP/clang-report/clang_report.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the report
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: clang-report
+          path: ${{ runner.temp }}/clang-report
+          retention-days: 3
+          if-no-files-found: ignore
+
+      # The baseline for pull requests: the newest dev run (cache keys are
+      # immutable, so every dev commit gets its own small entry).
+      - name: Stage the baseline
+        id: stage
+        if: github.event_name == 'push' && steps.build.outcome == 'success'
+        run: |
+          detail="$RUNNER_TEMP/build-timings/clang-traces-detail.json"
+          if [[ -f "$detail" ]]; then
+            mkdir -p "$RUNNER_TEMP/clang-baseline"
+            cp "$detail" "$RUNNER_TEMP/clang-baseline/"
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Store the baseline
+        if: steps.stage.outputs.ready == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/clang-baseline
+          key: clang-times-${{ github.sha }}
+
+  # Posts the report of clang-build. Needs a write token, so it runs nothing
+  # from the pull request: it only downloads the Markdown file and posts it.
+  # Skipped for forks (no secrets) and for bot branches, like the perf gate.
+  clang-comment:
+    needs: clang-build
+    if: >-
+      always() && github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !startsWith(github.event.pull_request.head.ref, 'pq-bot/')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Download the report
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: clang-report
+          path: report
+
+      - name: Mint PQ Perf Bot installation token
+        id: app-token
+        continue-on-error: true
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PQ_PERF_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_PERF_BOT_PRIVATE_KEY }}
+
+      - name: Post / update the build time comment
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          # Author is pq-perf-bot[bot] when the token mint succeeds, else
+          # github-actions[bot] so that the comment still posts.
+          github-token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- clang-build-times-comment -->';
+            const botLogin = 'pq-perf-bot[bot]';
+            let body;
+            try { body = fs.readFileSync('report/clang_report.md', 'utf8'); }
+            catch (e) { core.info('no report, skipping comment'); return; }
+            if (!body.includes(marker)) { core.info('report has no marker, skipping'); return; }
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } =
+              await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            // A comment's author is fixed at creation: if an older comment was
+            // posted under another login, replace it so the author is the bot.
+            if (existing && existing.user.login !== botLogin) {
+              await github.rest.issues.deleteComment({ owner, repo, comment_id: existing.id });
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            } else if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }

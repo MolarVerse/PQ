@@ -103,11 +103,15 @@ next to every object file (`foo.cpp.o` gives `foo.cpp.json`), as `clang-traces.j
 in the `build-timings-<job>-a<attempt>` artifact of the clang job. It is not part
 of the collected data yet (#749). A copy of the raw traces of the 20 slowest files is
 in the artifact's `traces/` directory (all traces together are far too large).
-Times are seconds.
+Times are seconds. The same script also writes `clang-traces-detail.json` (kind
+`"clang-trace-detail"`, same fields, lists of 100 files, 300 headers and 150
+templates) which the pull request comment compares against the `dev` baseline; it is
+not part of the collected data.
 
 | Field | Meaning |
 | --- | --- |
-| `schema_version`, `kind` | `1`, `"clang-trace-summary"`. |
+| `schema_version`, `kind` | `1`, `"clang-trace-summary"` (or `"clang-trace-detail"`). |
+| `limits` | The list lengths used: `files`, `headers`, `templates` (20, 30, 30 in the summary). A reader of the longer detail file uses them to tell a header that is missing from a full list from one that is just not listed. |
 | `files` | Translation units analysed. |
 | `unreadable` | Trace files that were truncated, not traces, or without a compiler total; they are counted and left out. |
 | `total_s`, `frontend_s`, `backend_s` | Sums over the translation units of the `ExecuteCompiler`, `Frontend` and `Backend` events. `backend_s` is 0 or small when nothing is optimised or generated in the trace. |

@@ -281,7 +281,7 @@ def object_path(name, directory="src"):
     return f"{directory}/CMakeFiles/lib.dir/{name}.json"
 
 
-class SummariseTests(unittest.TestCase):
+class BuildDirTestCase(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
@@ -298,6 +298,8 @@ class SummariseTests(unittest.TestCase):
     def summary(self):
         return traces.summarise(self.build, self.root)
 
+
+class SummariseTests(BuildDirTestCase):
     def test_totals_and_slowest_files_are_ordered_and_named_after_the_source(self):
         self.put("a.cpp", unit(total=1_000_000))
         self.put("b.cpp", unit(total=3_000_000, frontend=2_000_000, backend=900_000))
@@ -385,6 +387,40 @@ class SummariseTests(unittest.TestCase):
         self.put("a.cpp", unit(extra=[ev("InstantiateClass", 600_000, 1000, "T<" + "x" * 1000 + ">")]))
         summary, _ = self.summary()
         self.assertTrue(all(len(t["name"]) <= traces.MAX_NAME_CHARS for t in summary["templates"]))
+
+
+class DetailTests(BuildDirTestCase):
+    """The comparison file: same data, longer lists, recorded limits."""
+
+    def test_limits_are_recorded_and_lists_can_be_longer(self):
+        self.put("a.cpp", unit())
+        summary, _ = self.summary()
+        self.assertEqual({"files": 20, "headers": 30, "templates": 30}, summary["limits"])
+        detail, _ = traces.summarise(self.build, self.root, top_files=5, top_headers=1, top_templates=7, kind="clang-trace-detail")
+        self.assertEqual({"files": 5, "headers": 1, "templates": 7}, detail["limits"])
+        self.assertEqual("clang-trace-detail", detail["kind"])
+        self.assertEqual(1, len(detail["headers"]))
+        self.assertEqual(2, len(detail["templates"]))
+
+    def test_main_writes_both_files_and_the_detail_has_the_longer_lists(self):
+        for i in range(25):
+            self.put(f"f{i}.cpp", unit(total=1_000_000 + i))
+        out = self.root / "out"
+        with contextlib.redirect_stdout(io.StringIO()):
+            traces.main(["--build-dir", str(self.build), "--source-root", str(self.root), "--out", str(out)])
+        summary = json.loads((out / "clang-traces.json").read_text())
+        detail = json.loads((out / "clang-traces-detail.json").read_text())
+        self.assertEqual((20, 25), (len(summary["slowest_files"]), len(detail["slowest_files"])))
+        self.assertEqual((summary["total_s"], summary["files"]), (detail["total_s"], detail["files"]))
+        self.assertEqual("clang-trace-summary", summary["kind"])
+
+    def test_no_detail_flag_skips_the_second_file(self):
+        self.put("a.cpp", unit())
+        out = self.root / "out"
+        with contextlib.redirect_stdout(io.StringIO()):
+            traces.main(["--build-dir", str(self.build), "--out", str(out), "--no-detail"])
+        self.assertTrue((out / "clang-traces.json").exists())
+        self.assertFalse((out / "clang-traces-detail.json").exists())
 
 
 class RawTraceTests(unittest.TestCase):

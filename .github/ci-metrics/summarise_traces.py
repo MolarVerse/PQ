@@ -5,8 +5,10 @@ clang writes one Chrome-trace JSON file next to every object file
 (`foo.cpp.o` -> `foo.cpp.json`). This script reads them all and writes, into
 --out:
 
-  clang-traces.json   the summary (see SCHEMA.md "Clang trace summary")
-  traces/             the raw traces of the slowest files, flattened names
+  clang-traces.json         the summary (see SCHEMA.md "Clang trace summary")
+  clang-traces-detail.json  the same with longer lists, for comparing two builds
+                            (the pull request comment); not part of the collected data
+  traces/                   the raw traces of the slowest files, flattened names
 
 The summary has the totals (compiler, frontend, backend), the slowest files,
 the heaviest headers by inclusion time, the most expensive template
@@ -47,6 +49,10 @@ TOP_HEADERS = 30
 TOP_TEMPLATES = 30
 RAW_TRACES = 20
 MAX_NAME_CHARS = 200
+DETAIL_NAME = "clang-traces-detail.json"
+DETAIL_FILES = 100
+DETAIL_HEADERS = 300
+DETAIL_TEMPLATES = 150
 
 SOURCE = "Source"
 TEMPLATE_EVENTS = ("InstantiateClass", "InstantiateFunction")
@@ -200,8 +206,24 @@ def round_s(value):
     return None if value is None else round(value, 3)
 
 
-def summarise(build_dir, source_root):
-    """(summary dict, [(total seconds, trace path)] of the readable traces)."""
+def summarise(
+    build_dir,
+    source_root,
+    *,
+    top_files=None,
+    top_headers=None,
+    top_templates=None,
+    kind="clang-trace-summary",
+):
+    """(summary dict, [(total seconds, trace path)] of the readable traces).
+
+    The list lengths default to TOP_FILES, TOP_HEADERS and TOP_TEMPLATES and are
+    recorded in the result as `limits`, so a reader can tell a header that is
+    missing from a full list from one that is just not listed.
+    """
+    top_files = TOP_FILES if top_files is None else top_files
+    top_headers = TOP_HEADERS if top_headers is None else top_headers
+    top_templates = TOP_TEMPLATES if top_templates is None else top_templates
     roots = [str(Path(source_root).resolve()), str(Path(build_dir).resolve())]
     files, unreadable = [], 0
     header_totals = defaultdict(lambda: [0.0, 0.0, 0, set()])  # inclusive, self, events, files
@@ -239,12 +261,13 @@ def summarise(build_dir, source_root):
         heaviest.append((result["total_s"], path))
 
     files.sort(key=lambda item: (-item[0], item[1]))
-    headers = sorted(header_totals.items(), key=lambda item: (-item[1][1], item[0]))[:TOP_HEADERS]
-    templates = sorted(template_totals.items(), key=lambda item: (-item[1][1], item[0]))[:TOP_TEMPLATES]
+    headers = sorted(header_totals.items(), key=lambda item: (-item[1][1], item[0]))[:top_headers]
+    templates = sorted(template_totals.items(), key=lambda item: (-item[1][1], item[0]))[:top_templates]
     count = len(files)
     summary = {
         "schema_version": SCHEMA_VERSION,
-        "kind": "clang-trace-summary",
+        "kind": kind,
+        "limits": {"files": top_files, "headers": top_headers, "templates": top_templates},
         "files": count,
         "unreadable": unreadable,
         "total_s": round_s(sums["total_s"]),
@@ -254,7 +277,7 @@ def summarise(build_dir, source_root):
         "instantiation_events": instantiation_events,
         "slowest_files": [
             {"file": clip(name), "total_s": round_s(total), "frontend_s": round_s(front), "backend_s": round_s(back)}
-            for total, name, front, back in files[:TOP_FILES]
+            for total, name, front, back in files[:top_files]
         ],
         "headers": [
             {
@@ -292,6 +315,7 @@ def parse_args(argv):
     parser.add_argument("--source-root", default=".", help="repository root, stripped from paths")
     parser.add_argument("--out", required=True, help="directory for the summary and the raw traces")
     parser.add_argument("--no-raw", action="store_true", help="do not copy the heaviest raw traces")
+    parser.add_argument("--no-detail", action="store_true", help=f"do not write {DETAIL_NAME}")
     return parser.parse_args(argv)
 
 
@@ -301,6 +325,16 @@ def main(argv=None):
     out.mkdir(parents=True, exist_ok=True)
     summary, heaviest = summarise(args.build_dir, args.source_root)
     (out / SUMMARY_NAME).write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    if not args.no_detail:
+        detail, _ = summarise(
+            args.build_dir,
+            args.source_root,
+            top_files=DETAIL_FILES,
+            top_headers=DETAIL_HEADERS,
+            top_templates=DETAIL_TEMPLATES,
+            kind="clang-trace-detail",
+        )
+        (out / DETAIL_NAME).write_text(json.dumps(detail, separators=(",", ":")) + "\n", encoding="utf-8")
     if not args.no_raw and heaviest:
         copy_raw_traces(heaviest, args.build_dir, out)
     print(
