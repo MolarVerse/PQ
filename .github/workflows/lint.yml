@@ -77,10 +77,13 @@ jobs:
           sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
         shell: bash
 
+      # The Debug build with tests and benchmarks needs more than the default
+      # 500 MB (it was at 662 MB, evicting entries, #745).
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: lint
+          max-size: 1500MB
 
       - name: Cache Eigen source
         id: cache-eigen

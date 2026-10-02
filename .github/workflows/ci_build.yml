@@ -77,11 +77,16 @@ jobs:
           sudo apt install gcc-14 g++-14 mold
         shell: bash
 
-      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects)
+      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects).
+      # A Debug build (with coverage on x86) does not fit into the default
+      # 500 MB: the cache stayed at its limit, evicting what the next build
+      # needs, so only 56% (x86) and 78% (arm) of the calls hit on a rebuild of
+      # the same code (#745). Release builds need about 140 MB.
       - name: setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: ${{ matrix.os }}-${{ matrix.build }}
+          max-size: ${{ matrix.build == 'Debug' && '1500MB' || '500MB' }}
 
       # Eigen is a header-only FetchContent dependency fetched from GitLab on
       # every job that configures CMake; cache the cloned source once and
