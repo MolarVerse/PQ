@@ -54,12 +54,13 @@ Written by `summarise_build.py` inside a CI job and uploaded as an artifact
 (`build-timings-<job>-a<attempt>`). The collector turns it into a `kind:
 "build-analysis"` record (`schema-build-analysis.json`) next to the job record,
 for the workflows listed in `config.json` under `build_analysis_workflows`
-(`BUILD` and `LINT`). Every part may be `null`.
+(`BUILD`, `LINT` and `Clang Build`). Every part may be `null`.
 
 **The record.** `workflow`, `run_id`, `run_attempt`, `event`, `branch`,
 `head_sha`, `job_id`, `job`, `created_at` and `conclusion` are copied from the
-job record and so are never taken from the artifact; `ninja` and `ccache` are the
-fields below. Join to the job record on `job_id`. The collector accepts an
+job record and so are never taken from the artifact; `ninja`, `ccache`, `includes`
+and `clang` are the parts below (`clang` only on records of pushes, see "Clang trace
+summary"). Records written before `includes` and `clang` existed lack those keys. Join to the job record on `job_id`. The collector accepts an
 artifact only if its `run_id`, `run_attempt` and `job_id` match a job of that run.
 
 **Trust.** An artifact of a pull request run is produced by code from that pull
@@ -121,9 +122,12 @@ not part of the collected data.
 
 Written by `summarise_traces.py` from the `-ftime-trace` JSON files clang writes
 next to every object file (`foo.cpp.o` gives `foo.cpp.json`), as `clang-traces.json`
-in the `build-timings-<job>-a<attempt>` artifact of the clang job. It is not part
-of the collected data yet (#749). A copy of the raw traces of the 20 slowest files is
-in the artifact's `traces/` directory (all traces together are far too large).
+in the `build-timings-<job>-a<attempt>` artifact of the clang job. The collector
+reads it from there and stores it as the `clang` part of the `build-analysis` record
+**of pushes to `dev`** (about 15 KB per record, which is why pull requests do not get
+it; the include graph and ninja parts are kept for every event). A copy of the raw
+traces of the 20 slowest files is in a **separate artifact**, `clang-traces-<job>-a<attempt>`
+(7 days), that the collector never downloads; all traces together are far too large.
 Times are seconds. The same script also writes `clang-traces-detail.json` (kind
 `"clang-trace-detail"`, same fields, lists of 100 files, 300 headers and 150
 templates) which the pull request comment compares against the `dev` baseline; it is

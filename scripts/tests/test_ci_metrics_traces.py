@@ -423,6 +423,17 @@ class DetailTests(BuildDirTestCase):
         self.assertFalse((out / "clang-traces-detail.json").exists())
 
 
+class RawOutTests(BuildDirTestCase):
+    def test_raw_traces_can_go_to_a_separate_directory(self):
+        self.put("a.cpp", unit())
+        out, raw = self.root / "out", self.root / "raw"
+        with contextlib.redirect_stdout(io.StringIO()):
+            traces.main(["--build-dir", str(self.build), "--source-root", str(self.root), "--out", str(out), "--raw-out", str(raw)])
+        self.assertTrue((out / "clang-traces.json").exists())
+        self.assertFalse((out / "traces").exists())
+        self.assertEqual(1, len(list((raw / "traces").iterdir())))
+
+
 class RawTraceTests(unittest.TestCase):
     def test_only_the_heaviest_are_copied_with_flattened_names(self):
         with tempfile.TemporaryDirectory() as directory:

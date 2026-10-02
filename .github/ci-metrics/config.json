@@ -10,11 +10,13 @@
     "Changelog Fragment Check",
     "Check PR Has Linked Issue",
     "Dismiss Stale Approvals",
-    "Docs"
+    "Docs",
+    "Clang Build"
   ],
   "build_analysis_workflows": [
     "BUILD",
-    "LINT"
+    "LINT",
+    "Clang Build"
   ],
   "infra_failure_signatures": [
     "GitLab is currently unable to handle this request"

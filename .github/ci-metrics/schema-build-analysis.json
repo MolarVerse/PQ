@@ -285,6 +285,248 @@
           "type": "object"
         }
       }
+    },
+    "includes": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "Exact include graph from ninja -t deps (see SCHEMA.md). Deterministic: equal digests mean identical graphs.",
+      "required": [
+        "objects",
+        "unique_files",
+        "include_pairs",
+        "project_files",
+        "project_pairs",
+        "digest",
+        "top_project_files"
+      ],
+      "properties": {
+        "objects": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unique_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "include_pairs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "project_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "project_pairs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "top_project_files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "fan_in"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fan_in": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "clang": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "Clang -ftime-trace summary (see SCHEMA.md), only on records of pushes. Times depend on runner speed.",
+      "required": [
+        "limits",
+        "files",
+        "unreadable",
+        "total_s",
+        "frontend_s",
+        "backend_s",
+        "source_events",
+        "instantiation_events",
+        "slowest_files",
+        "headers",
+        "templates"
+      ],
+      "properties": {
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files",
+            "headers",
+            "templates"
+          ],
+          "properties": {
+            "files": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "headers": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "templates": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unreadable": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "frontend_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "backend_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "source_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "instantiation_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "slowest_files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "total_s",
+              "frontend_s",
+              "backend_s"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "total_s": {
+                "type": "number",
+                "minimum": 0
+              },
+              "frontend_s": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "backend_s": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "header",
+              "inclusive_s",
+              "self_s",
+              "events",
+              "files"
+            ],
+            "properties": {
+              "header": {
+                "type": "string",
+                "minLength": 1
+              },
+              "inclusive_s": {
+                "type": "number",
+                "minimum": 0
+              },
+              "self_s": {
+                "type": "number",
+                "minimum": 0
+              },
+              "events": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "files": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "templates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "count",
+              "inclusive_s",
+              "self_s"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "inclusive_s": {
+                "type": "number",
+                "minimum": 0
+              },
+              "self_s": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
