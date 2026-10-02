@@ -157,8 +157,12 @@ jobs:
           print("targets with deps:", len(objects), "| unique dependency files:", len(per_header), "| include pairs:", len(pairs))
           print("sha256 of all (object, dependency) pairs:", digest)
           home = os.environ.get("GITHUB_WORKSPACE", "")
-          for header, count in per_header.most_common(8):
+          for header, count in per_header.most_common(3):
               print(f"  {count:4} {header.replace(home + '/', '')}")
+          for name in ("include/engine/engineOutput.hpp", "include/exceptions/exceptionTypes.hpp", "/usr/include/c++/14/format", "include/config/enums/qm.hpp", "include/config/enums/hybrid.hpp", "include/molsys/simulationBox.hpp"):
+              print(f"  fan-in {per_header.get(name if name.startswith('/') else home + '/' + name, 0):4} {name}")
+          repo = [h for h in per_header if h.startswith(home + "/include/")]
+          print("repo headers under include/:", len(repo), "| their include pairs:", sum(per_header[h] for h in repo))
           json.dump({"targets": len(objects), "unique_files": len(per_header), "pairs": len(pairs), "sha256": digest}, open(os.environ["RUNNER_TEMP"] + "/exp/deps-summary.json", "w"))
           PY
         shell: bash
