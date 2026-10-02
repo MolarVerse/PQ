@@ -112,13 +112,16 @@ Times are seconds.
 | `unreadable` | Trace files that were truncated, not traces, or without a compiler total; they are counted and left out. |
 | `total_s`, `frontend_s`, `backend_s` | Sums over the translation units of the `ExecuteCompiler`, `Frontend` and `Backend` events. `backend_s` is 0 or small when nothing is optimised or generated in the trace. |
 | `source_events`, `instantiation_events` | Number of header inclusions (`Source` events) and of template instantiations (`InstantiateClass` / `InstantiateFunction`) over all translation units. **These depend little on runner speed**, but they count only events at least as long as clang's trace granularity (0.5 ms by default), so events near that size can come and go. |
-| `slowest_files` | Top 20 translation units: `file` (repository-relative, taken from the main source file of the trace), `total_s`, `frontend_s`, `backend_s`. |
-| `headers` | Top 30 headers by **self** time summed over all translation units: `header` (repository-relative if inside the repository), `inclusive_s` (time including what the header includes), `self_s` (without), `events` (inclusions) and `files` (translation units that include it). The main source file of a trace is not a header. |
+| `slowest_files` | Top 20 translation units: `file` (the source file, derived from the trace path: `<dir>/CMakeFiles/<target>.dir/<file>.json` is `<dir>/<file>`; clang does not write the main source file into the trace), `total_s`, `frontend_s`, `backend_s`. |
+| `headers` | Top 30 headers by **self** time summed over all translation units: `header` (repository-relative if inside the repository), `inclusive_s` (time including what the header includes), `self_s` (without), `events` (inclusions) and `files` (translation units that include it). Paths are normalised (`..` removed) and made relative to the repository where possible. |
 | `templates` | Top 30 template instantiations by self time: `name` (clipped to 200 characters), `count`, `inclusive_s`, `self_s`. |
 
 Self time is the inclusive time minus the time of the directly nested events of the
-same kind, so an umbrella header is not blamed for what it includes. Inclusive and
-self time of nested events are computed from the timestamps of each trace.
+same kind, so an umbrella header is not blamed for what it includes; it is computed
+from the timestamps of each trace. Include events (`Source`) are async begin/end
+pairs in clang 20 traces and complete events in older ones; both are read. This was
+checked on traces of clang 20.1.2 (the test fixture `scripts/tests/data/clang_trace_sample.json`
+is a trimmed real one).
 
 ## What is and is not recorded
 
