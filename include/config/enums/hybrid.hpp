@@ -26,8 +26,6 @@
 #include <cstdint>
 #include <mstd/enum.hpp>
 
-#include "enums/shake.hpp"   // TEMPORARY (verification of #768)
-
 /**
  * @enum SmoothingMethod
  *
