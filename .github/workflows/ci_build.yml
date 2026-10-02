@@ -74,7 +74,7 @@ jobs:
       - name: install gcc13
         run: |
           sudo apt update
-          sudo apt install gcc-14 g++-14 mold
+          sudo apt install gcc-14 g++-14 mold ninja-build
         shell: bash
 
       # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects).
@@ -126,27 +126,25 @@ jobs:
         shell: bash
 
       - name: Build and Test Project
+        id: build
         if : ${{ matrix.os != 'ubuntu-24.04' || (matrix.os == 'ubuntu-24.04' && matrix.build != 'Debug') }}
         run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off \
-            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src" ..
-          make -j$(nproc)
-          make test
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
         env:
           CC: gcc-14
           CXX: g++-14
 
       - name: Build and Test Project with coverage
+        id: build-coverage
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' }}
         run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off \
-            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src" ..
-          make -j$(nproc)
-          make coverage_xml
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)"
+          cmake --build build --target coverage_xml
         env:
           CC: gcc-14
           CXX: g++-14
@@ -157,6 +155,7 @@ jobs:
         with:
           name: build-${{ matrix.os }}-${{ matrix.build }}
           job-id: ${{ job.check_run_id }}
+          build-status: ${{ steps.build.outcome != 'skipped' && steps.build.outcome || steps.build-coverage.outcome }}
 
       - name: Upload coverage to Codecov
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'pq-bot/')) }}
