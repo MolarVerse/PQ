@@ -117,22 +117,26 @@ jobs:
       - name: EXPERIMENT trace size and summariser cost
         if: always()
         run: |
-          echo "traces: $(find build -name '*.cpp.json' | wc -l) files, $(find build -name '*.cpp.json' -print0 | du -ch --files0-from=- | tail -1 | cut -f1) total"
-          echo "largest traces:"; find build -name '*.cpp.json' -printf '%s %p\n' | sort -rn | head -3
-          df -h / | tail -1
+          set +e +o pipefail
           mkdir -p "$RUNNER_TEMP/exp"
-          /usr/bin/time -v python3 .github/ci-metrics/summarise_traces.py --build-dir build --source-root "$GITHUB_WORKSPACE" --out "$RUNNER_TEMP/exp" --no-raw 2> "$RUNNER_TEMP/exp/time.txt" || true
+          echo "traces: $(find build -name '*.cpp.json' | wc -l) files, $(find build -name '*.cpp.json' -print0 | du -ch --files0-from=- | tail -1 | cut -f1) total"
+          df -h / | tail -1
+          echo "start $(date +%s)"
+          timeout 1500 /usr/bin/time -v python3 .github/ci-metrics/summarise_traces.py --build-dir build --source-root "$GITHUB_WORKSPACE" --out "$RUNNER_TEMP/exp" --no-raw 2> "$RUNNER_TEMP/exp/time.txt"
+          echo "summariser exit: $?"
           grep -E "Elapsed|Maximum resident" "$RUNNER_TEMP/exp/time.txt"
-          python3 - <<'PY'
+          python3 -c "
           import json, os
-          d = json.load(open(os.environ["RUNNER_TEMP"] + "/exp/clang-traces.json"))
-          print({k: d[k] for k in ("files", "unreadable", "total_s", "frontend_s", "backend_s", "source_events", "instantiation_events")})
-          PY
+          d = json.load(open(os.environ['RUNNER_TEMP'] + '/exp/clang-traces.json'))
+          print({k: d[k] for k in ('files', 'unreadable', 'total_s', 'frontend_s', 'backend_s', 'source_events', 'instantiation_events')})
+          "
+          exit 0
         shell: bash
 
       - name: EXPERIMENT include data from ninja -t deps
         if: always()
         run: |
+          mkdir -p "$RUNNER_TEMP/exp"
           ninja -C build -t deps > "$RUNNER_TEMP/exp/ninja-deps.txt"
           python3 - <<'PY'
           import collections, hashlib, json, os
