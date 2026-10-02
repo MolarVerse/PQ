@@ -41,7 +41,7 @@ runs:
         JOB_ID: ${{ inputs.job-id }}
         BUILD_STATUS: ${{ inputs.build-status }}
       run: |
-        args=(--out "$RUNNER_TEMP/build-timings" --name "$ARTIFACT_NAME" --build-dir "$BUILD_DIR")
+        args=(--out "$RUNNER_TEMP/build-timings" --name "$ARTIFACT_NAME" --build-dir "$BUILD_DIR" --source-root "$GITHUB_WORKSPACE")
         [[ "$USE_CCACHE" == "true" ]] && args+=(--ccache)
         [[ -n "$JOB_ID" ]] && args+=(--job-id "$JOB_ID")
         [[ -n "$BUILD_STATUS" ]] && args+=(--build-status "$BUILD_STATUS")
