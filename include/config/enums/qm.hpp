@@ -153,15 +153,33 @@ namespace mstd
     /**
      * @brief Input aliases for XtbMethod enum
      *
+     * @details We definitely need these here for the external connections to
+     * recognize the xTB methods correctly.
+     *
      * @tparam XtbMethod The enum type for which input aliases are defined.
      */
     template <>
     struct EnumNames<XtbMethod>
     {
         static constexpr auto value = makeNames<XtbMethod>(
-            {{XtbMethod::GFN1, "GFN1_xTB"},
-             {XtbMethod::GFN2, "GFN2_xTB"},
-             {XtbMethod::IPEA1, "IPEA1_xTB"}}
+            {{XtbMethod::GFN1, "GFN1-xTB"},
+             {XtbMethod::GFN2, "GFN2-xTB"},
+             {XtbMethod::IPEA1, "IPEA1-xTB"}}
+        );
+    };
+
+    /**
+     * @brief Input aliases for XtbMethod enum
+     *
+     * @tparam XtbMethod The enum type for which input aliases are defined.
+     */
+    template <>
+    struct EnumAliases<XtbMethod>
+    {
+        static constexpr auto value = makeAliases<XtbMethod>(
+            {{"gfn1_xTB", XtbMethod::GFN1},
+             {"gfn2_xTB", XtbMethod::GFN2},
+             {"ipea1_xTB", XtbMethod::IPEA1}}
         );
     };
 }   // namespace mstd

@@ -618,8 +618,8 @@ TEST_F(TestInputFileReader, parseXtbMethod)
         xtbMethodParseFunc({"xtb_method", "=", "notAnXtbMethod"}, 0),
         exc::InputFileException,
         "Invalid value \"notAnXtbMethod\" for key \"xtb_method\" at line 0 in "
-        "input file. Allowed values: gfn1, gfn2, ipea1, gfn1_xtb, gfn2_xtb, "
-        "ipea1_xtb"
+        "input file. Allowed values: gfn1, gfn2, ipea1, gfn1-xtb, gfn2-xtb, "
+        "ipea1-xtb, gfn1_xtb, gfn2_xtb, ipea1_xtb"
     )
 }
 
