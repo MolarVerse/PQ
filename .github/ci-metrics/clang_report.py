@@ -363,7 +363,9 @@ def render(pr, base, *, baseline_sha=None, run_url=None, includes=None, base_inc
             more += ["**Template instantiations that changed most**", ""] + simple_rows(shown_templates, "Instantiation") + [""]
         if more:
             lines += ["<details><summary>More changes</summary>", ""] + more + ["</details>", ""]
-    lines += [""] + detail_tables(pr) + ["", NOTES]
+    if lines[-1] != "":
+        lines.append("")
+    lines += detail_tables(pr) + ["", NOTES]
     if run_url:
         lines += ["", f"[Workflow run]({run_url})"]
     return fit("\n".join(lines) + "\n")
