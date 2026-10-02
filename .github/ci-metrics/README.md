@@ -263,9 +263,12 @@ informational and never a failing check.
 - **Baseline.** A push to `dev` stores `clang-traces-detail.json` in the Actions cache
   (`clang-times-<dev sha>`, about 100 KB); a pull request restores the newest one and
   compares against it. Without one the comment says "No baseline yet" and shows only the
-  pull request's numbers (the baseline is not built in the pull request).
+  pull request's numbers (the baseline is not built in the pull request). `ninja-includes.json`
+  is stored next to it.
 - **What it shows.** The totals (compiler, frontend, backend CPU time, header inclusions,
-  template instantiation events) against `dev`, the headers that got heavier, and
+  template instantiation events) against `dev`, the **exact include graph** (include
+  pairs and the project headers whose fan-in changed, from `ninja -t deps`: deterministic,
+  so every change is real and there is no threshold), the headers that got heavier, and
   collapsed: lighter headers, the files and template instantiations that changed most
   and this pull request's slowest files, heaviest headers and templates.
 - **Speed-adjusted.** The same code took between 882 s and 1,707 s of compiler time in five runs on shared

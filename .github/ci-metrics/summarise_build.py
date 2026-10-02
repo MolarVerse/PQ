@@ -6,6 +6,8 @@ Runs inside the CI job (Python standard library only) and writes, into --out:
   build-analysis.json  the summary (what the collector later turns into a
                        `kind: "build-analysis"` record, see SCHEMA.md)
   ninja_log.txt        the raw `.ninja_log`, if there was one
+  ninja-includes.json  the fan-in of every project header (kind "ninja-includes-detail"),
+                       from `ninja -t deps`; used to compare two builds (the clang comment)
   ccache-stats.txt     the raw `ccache --print-stats` output, if available
 
 Every part is optional and this script never fails a job because of missing
@@ -14,7 +16,9 @@ inputs: it exits 0 and records what it could not read.
 
 import argparse
 import json
+import hashlib
 import os
+import posixpath
 import re
 import shutil
 import subprocess
@@ -26,6 +30,11 @@ SLOWEST = 20
 SUPPORTED_LOG_VERSIONS = (5, 6, 7)
 SUMMARY_NAME = "build-analysis.json"
 BUILD_STATUSES = ("success", "failure", "cancelled", "skipped")
+INCLUDES_NAME = "ninja-includes.json"
+TOP_HEADERS = 30
+MAX_FAN_IN_ENTRIES = 5000
+OBJECT_SUFFIXES = (".o", ".obj")
+SOURCE_SUFFIXES = (".c", ".cc", ".cpp", ".cxx")
 
 COMPILE_SUFFIXES = (".o", ".obj", ".gch", ".pch")
 SHARED_LIBRARY = re.compile(r"\.(so(\.\d+)*|dylib|dll)$")
@@ -181,6 +190,99 @@ def run(command):
         return None
 
 
+def parse_ninja_deps(text):
+    """{target: [dependency, ...]} from the output of `ninja -t deps`.
+
+    Each target line (`obj.o: #deps 12, deps mtime 123 (VALID)`) is followed by
+    its indented dependencies.
+    """
+    targets = {}
+    current = None
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        if not line[0].isspace():
+            current = line.split(": #deps", 1)[0] if ": #deps" in line else None
+            if current is not None:
+                targets[current] = []
+        elif current is not None:
+            targets[current].append(line.strip())
+    return targets
+
+
+def normalise_dependency(path, build_dir, source_root):
+    """(path, is_project_file): relative to the source root if it is a project file.
+
+    Relative dependencies are relative to the build directory. A file inside the
+    build directory (generated headers) is not a project file.
+    """
+    raw = path if posixpath.isabs(path) else posixpath.join(build_dir, path)
+    path = posixpath.normpath(raw)
+    in_build = path == build_dir or path.startswith(build_dir + "/")
+    if not in_build and path.startswith(source_root + "/"):
+        return path[len(source_root) + 1 :], True
+    if in_build and path.startswith(source_root + "/"):
+        return path[len(source_root) + 1 :], False
+    return path, False
+
+
+def include_graph(targets, build_dir, source_root):
+    """(summary, {project file: fan-in}) from parsed `ninja -t deps` output.
+
+    Only object files count as translation units, and a translation unit's own
+    source file is not one of its dependencies here. The fan-in of a file is the
+    number of translation units that depend on it (for example include it);
+    unlike clang's trace it does not depend on how long anything took, so two
+    builds of the same code give the same numbers.
+    """
+    build_dir = posixpath.normpath(str(build_dir))
+    source_root = posixpath.normpath(str(source_root))
+    pairs = set()
+    project = set()
+    objects = 0
+    for target, dependencies in targets.items():
+        if not target.endswith(OBJECT_SUFFIXES):
+            continue
+        objects += 1
+        name = posixpath.normpath(target)
+        for dependency in dependencies:
+            if dependency.endswith(SOURCE_SUFFIXES):
+                continue
+            path, is_project = normalise_dependency(dependency, build_dir, source_root)
+            pairs.add((name, path))
+            if is_project:
+                project.add(path)
+    fan_in = {}
+    project_pairs = 0
+    for _, path in pairs:
+        if path in project:
+            fan_in[path] = fan_in.get(path, 0) + 1
+            project_pairs += 1
+    digest = hashlib.sha256("\n".join(f"{t}\t{d}" for t, d in sorted(pairs)).encode()).hexdigest()
+    top = sorted(fan_in.items(), key=lambda item: (-item[1], item[0]))[:TOP_HEADERS]
+    summary = {
+        "objects": objects,
+        "unique_files": len({path for _, path in pairs}),
+        "include_pairs": len(pairs),
+        "project_files": len(fan_in),
+        "project_pairs": project_pairs,
+        "digest": digest,
+        "top_project_files": [{"file": file, "fan_in": count} for file, count in top],
+    }
+    return summary, fan_in
+
+
+def read_includes(build_dir, source_root):
+    """(summary, fan-in map) from `ninja -t deps`, or (None, None) if it cannot be read."""
+    result = run(["ninja", "-C", str(build_dir), "-t", "deps"])
+    if result is None or result.returncode != 0:
+        return None, None
+    targets = parse_ninja_deps(result.stdout)
+    if not any(target.endswith(OBJECT_SUFFIXES) for target in targets):
+        return None, None
+    return include_graph(targets, Path(build_dir).resolve().as_posix(), Path(source_root).resolve().as_posix())
+
+
 def build_summary(args, env):
     summary = {
         "schema_version": SCHEMA_VERSION,
@@ -192,6 +294,7 @@ def build_summary(args, env):
         "artifact": args.name,
         "ninja": None,
         "ccache": None,
+        "includes": None,
     }
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -201,6 +304,18 @@ def build_summary(args, env):
         text = ninja_log.read_text(encoding="utf-8", errors="replace")
         shutil.copyfile(ninja_log, out / "ninja_log.txt")
         summary["ninja"] = summarise_ninja(text, build_succeeded(args.build_status))
+        includes, fan_in = read_includes(args.build_dir, args.source_root)
+        if includes is not None:
+            summary["includes"] = includes
+            detail = {
+                "schema_version": SCHEMA_VERSION,
+                "kind": "ninja-includes-detail",
+                "include_pairs": includes["include_pairs"],
+                "project_pairs": includes["project_pairs"],
+                "digest": includes["digest"],
+                "fan_in": dict(sorted(fan_in.items(), key=lambda item: (-item[1], item[0]))[:MAX_FAN_IN_ENTRIES]),
+            }
+            (out / INCLUDES_NAME).write_text(json.dumps(detail, separators=(",", ":")) + "\n", encoding="utf-8")
 
     if args.ccache:
         result = run(["ccache", "--print-stats"])
@@ -221,6 +336,7 @@ def parse_args(argv):
         default=None,
         help="outcome of the job's build step; decides `ninja.complete` (default: unknown)",
     )
+    parser.add_argument("--source-root", default=".", help="repository root, to tell project files from system headers")
     parser.add_argument("--ccache", action="store_true", help="also record `ccache --print-stats`")
     parser.add_argument("--job-id", type=int, default=None, help="REST API id of this job (job.check_run_id)")
     return parser.parse_args(argv)
@@ -236,7 +352,8 @@ def main(argv=None, env=None):
     ccache = summary["ccache"] or {}
     print(
         f"wrote {path}: ninja steps={ninja.get('steps', '-')} complete={ninja.get('complete', '-')}, "
-        f"ccache hit rate={ccache.get('hit_rate', '-')}"
+        f"ccache hit rate={ccache.get('hit_rate', '-')}, "
+        f"include pairs={(summary['includes'] or {}).get('include_pairs', '-')}"
     )
     return 0
 

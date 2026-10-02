@@ -89,12 +89,33 @@ for the join; `job_key` and `artifact` are not stored.)
 | `ninja.by_kind` | `steps` and `cpu_s` per `compile` (`.o`, `.gch`), `archive` (`.a`), `link` (executables and shared libraries) and `other`, classified by output file name. |
 | `ninja.slowest` | The 20 slowest steps: `target`, `kind`, `seconds`. |
 | `ninja.error` | Present instead of the figures if the log had an unsupported version or no steps. |
+| `includes` | `null` unless the job has a `.ninja_log` and `ninja -t deps` could be read. The exact include graph of the build, see below. |
 | `ccache` | `null` if ccache statistics were unavailable. |
 | `ccache.hits`, `misses`, `hit_rate` | Direct plus preprocessed hits, misses, and `hits / (hits + misses)` (of *cacheable* calls; `null` if there were none). |
 | `ccache.counters` | Every non-zero counter of `ccache --print-stats`, including the reasons calls were uncacheable. |
 
 The ccache counters cover the job only, because the setup action zeroes them at
 the start.
+
+**Include graph (`includes`).** From `ninja -t deps` after the build: for every
+object file the headers it depends on (its own source file is not counted).
+Unlike times and clang trace events this is **deterministic**: two builds of the same
+code give the same numbers, so any change is a real change (the SHA-256 of all pairs
+was identical in two clang runs, and the fan-in of expensive repository headers
+equals the number of files clang's trace reports for them).
+
+| Field | Meaning |
+| --- | --- |
+| `includes.objects` | Object files (translation units) with dependency data. |
+| `includes.unique_files` | Distinct files they depend on (system headers included). |
+| `includes.include_pairs` | Distinct (object, file) pairs. |
+| `includes.project_files`, `project_pairs` | The same restricted to project files: inside the repository and not in the build directory (generated headers are not project files). |
+| `includes.digest` | SHA-256 over all sorted (object, file) pairs with repository-relative project paths; equal digests mean identical include graphs, also across checkouts. |
+| `includes.top_project_files` | The 30 project files with the highest **fan-in** (number of objects that depend on them): `file`, `fan_in`. |
+
+A longer file, `ninja-includes.json` (kind `"ninja-includes-detail"`, the fan-in of every
+project file, at most 5,000), is in the artifact for the pull request comment; it is
+not part of the collected data.
 
 ## Clang trace summary (job side, version 1)
 
