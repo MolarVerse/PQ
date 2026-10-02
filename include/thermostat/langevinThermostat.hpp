@@ -24,7 +24,7 @@
 
 #define _LANGEVIN_THERMOSTAT_HPP_
 
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
+#include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
 #include "thermostatSettings.hpp"
 

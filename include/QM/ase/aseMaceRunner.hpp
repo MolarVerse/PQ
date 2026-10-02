@@ -24,7 +24,7 @@
 
 #define _MACE_RUNNER_HPP_
 
-#include "aseQMRunner.hpp"   // for InternalQMRunner
+#include "aseQMRunner.hpp"
 
 namespace QM
 {

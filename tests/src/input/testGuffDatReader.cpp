@@ -22,28 +22,28 @@
 
 #include "testGuffDatReader.hpp"
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <cmath>    // for pow, exp
-#include <format>   // for format
-#include <memory>   // for allocator, shared_ptr
-#include <string>   // for string, basic_string, char_traits
-#include <vector>   // for vector
+#include <cmath>
+#include <format>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "buckinghamPair.hpp"   // for pot::BuckinghamPair
-#include "constants.hpp"        // for _COULOMB_PREFACTOR_
-#include "defaults.hpp"         // for _NUMBER_OF_GUFF_ENTRIES_
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"   // for exc::GuffDatException, exc::UserInputException
-#include "gmock/gmock.h"    // for ElementsAre, MakePredicateFormatter
-#include "guffPair.hpp"     // for pot::GuffPair
-#include "lennardJonesPair.hpp"    // for pot::LennardJonesPair
-#include "morsePair.hpp"           // for pot::MorsePair
-#include "potentialSettings.hpp"   // for settings::PotentialSettings, string
-#include "settings.hpp"            // for Settings
+#include "buckinghamPair.hpp"
+#include "constants.hpp"
+#include "defaults.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "gmock/gmock.h"
+#include "guffPair.hpp"
+#include "lennardJonesPair.hpp"
+#include "morsePair.hpp"
+#include "potentialSettings.hpp"
+#include "settings.hpp"
 #include "strongTypes.hpp"
 #include "testNonCoulombPairUtils.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parseLine function of input::guffdat::GuffDatReader

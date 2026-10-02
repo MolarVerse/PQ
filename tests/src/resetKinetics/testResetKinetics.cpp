@@ -36,7 +36,7 @@
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
+#include "vector3d.hpp"
 
 namespace
 {

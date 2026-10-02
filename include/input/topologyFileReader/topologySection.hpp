@@ -24,9 +24,9 @@
 
 #define _TOPOLOGY_SECTION_HPP_
 
-#include <iosfwd>   // for ifstream
-#include <string>   // for string, allocator
-#include <vector>   // for vector
+#include <iosfwd>
+#include <string>
+#include <vector>
 
 namespace engine
 {

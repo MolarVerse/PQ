@@ -24,14 +24,14 @@
 
 #define _MTR_INTRA_WATER_TPP_
 
-#include "mTRIntraWater.hpp"   // for MTRIntraWater
+#include "mTRIntraWater.hpp"
 
 #include <cmath>
 
 #include "globalTimer.hpp"
-#include "hybridSettings.hpp"   // for HybridSettings
-#include "physicalData.hpp"     // for PhysicalData
-#include "simulationBox.hpp"    // for SimulationBox
+#include "hybridSettings.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace waterModel
 {

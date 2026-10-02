@@ -22,17 +22,17 @@
 
 #include "moldescriptorReader.hpp"
 
-#include <cstddef>       // for size_t
-#include <format>        // for format
-#include <string>        // for basic_string, string
-#include <string_view>   // for string_view
+#include <cstddef>
+#include <format>
+#include <string>
+#include <string_view>
 
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for MolDescriptorException
-#include "fileSettings.hpp"      // for FileSettings
-#include "moleculeType.hpp"      // for Molecule
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for removeComments, splitString
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "moleculeType.hpp"
+#include "simulationBox.hpp"
+#include "stringUtilities.hpp"
 
 namespace input::molDescriptor
 {

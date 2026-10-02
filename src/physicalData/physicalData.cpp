@@ -22,13 +22,13 @@
 
 #include "physicalData.hpp"
 
-#include <algorithm>   // for __for_each_fn
+#include <algorithm>
 #include <utility>
 
-#include "constants/conversionFactors.hpp"           // for _FS_TO_S_
-#include "constants/internalConversionFactors.hpp"   // for _KINETIC_ENERGY_FACTOR_
-#include "globalTimer.hpp"                           // for GlobalTimer
-#include "simulationBox.hpp"                         // for SimulationBox
+#include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
+#include "globalTimer.hpp"
+#include "simulationBox.hpp"
 
 namespace physicalData
 {

@@ -22,9 +22,9 @@
 
 #include "stressOutput.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "physicalData.hpp"   // for PhysicalData
+#include "physicalData.hpp"
 
 namespace out
 {

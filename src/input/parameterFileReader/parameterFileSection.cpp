@@ -22,10 +22,10 @@
 
 #include "parameterFileSection.hpp"
 
-#include <fstream>   // for getline
+#include <fstream>
 
-#include "exceptions.hpp"        // for ParameterFileException
-#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
+#include "exceptions.hpp"
+#include "stringUtilities.hpp"
 
 namespace input::parameterFile
 {

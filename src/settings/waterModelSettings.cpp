@@ -25,8 +25,8 @@
 #include <format>
 #include <utility>
 
-#include "exceptions.hpp"        // for customException
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "exceptions.hpp"
+#include "stringUtilities.hpp"
 
 namespace settings
 {

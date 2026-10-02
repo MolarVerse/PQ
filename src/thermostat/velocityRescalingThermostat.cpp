@@ -22,15 +22,15 @@
 
 #include "velocityRescalingThermostat.hpp"
 
-#include <cmath>   // for sqrt
+#include <cmath>
 
-#include "exceptions.hpp"           // for UserInputException
-#include "globalTimer.hpp"          // for GlobalTimer
-#include "mathUtilities.hpp"        // for isZero
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for settings::ThermostatType
-#include "timingsSettings.hpp"      // for TimingsSettings
+#include "exceptions.hpp"
+#include "globalTimer.hpp"
+#include "mathUtilities.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
 
 namespace thermostat
 {

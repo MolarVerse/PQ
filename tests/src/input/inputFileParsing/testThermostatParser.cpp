@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"            // for InputFileException
-#include "testInputFileReader.hpp"   // for TestInputFileReader
+#include "exceptions.hpp"
+#include "testInputFileReader.hpp"
 #include "thermostatInputParser.hpp"
-#include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG
+#include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "temp" command

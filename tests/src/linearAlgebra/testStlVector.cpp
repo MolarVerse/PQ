@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <vector>   // for allocator, vector
+#include <vector>
 
 // for Message, TestPartResult
-#include "stlVector.hpp"   // for max, mean, sum
+#include "stlVector.hpp"
 
 TEST(TestStlVector, sum)
 {

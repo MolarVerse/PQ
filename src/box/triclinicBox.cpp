@@ -23,8 +23,8 @@
 #include "triclinicBox.hpp"
 
 #include "box.hpp"
-#include "constants.hpp"          // for constants
-#include "manostatSettings.hpp"   // for ManostatSettings
+#include "constants.hpp"
+#include "manostatSettings.hpp"
 
 namespace molsys
 {

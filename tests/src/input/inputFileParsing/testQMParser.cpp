@@ -20,15 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator
+#include <string>
 
-#include "QMInputParser.hpp"   // for InputFileParserQM
-#include "exceptions.hpp"      // for exc::InputFileException, customException
-#include "qmSettings.hpp"      // for settings::QMSettings
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
+#include "QMInputParser.hpp"
+#include "exceptions.hpp"
+#include "qmSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestInputFileReader, parseQMMethod)
 {

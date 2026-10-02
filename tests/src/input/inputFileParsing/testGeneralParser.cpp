@@ -20,25 +20,25 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
 #include <format>
-#include <memory>   // for unique_ptr
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "engine.hpp"                  // for Engine
-#include "exceptions.hpp"              // for InputFileException
-#include "generalInputParser.hpp"      // for input::GeneralInputParser
-#include "hessianEngine.hpp"           // for HessianEngine
-#include "mmmdEngine.hpp"              // for MMMDEngine
-#include "optEngine.hpp"               // for MMOptEngine
-#include "qmmdEngine.hpp"              // for QMMDEngine
-#include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
-#include "settings.hpp"                // for settings::Settings
-#include "testInputFileReader.hpp"     // for TestInputFileReader
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "generalInputParser.hpp"
+#include "hessianEngine.hpp"
+#include "mmmdEngine.hpp"
+#include "optEngine.hpp"
+#include "qmmdEngine.hpp"
+#include "ringPolymerqmmdEngine.hpp"
+#include "settings.hpp"
+#include "testInputFileReader.hpp"
 #include "testUtils.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "jobtype" command

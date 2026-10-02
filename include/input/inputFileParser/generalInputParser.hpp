@@ -24,12 +24,12 @@
 
 #define _GENERAL_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 
 namespace engine
 {

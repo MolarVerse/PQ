@@ -22,29 +22,29 @@
 
 #include "simulationBoxSetup.hpp"
 
-#include <algorithm>     // for __for_each_fn, for_each
-#include <format>        // for format
-#include <map>           // for map
-#include <numeric>       // for accumulate
-#include <string>        // for string, allocator, operator+
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <algorithm>
+#include <format>
+#include <map>
+#include <numeric>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include "atom.hpp"            // for Atom, simulationBox
-#include "atomNumberMap.hpp"   // for atomNumberMap
-#include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
-#include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"              // for MolDescriptorException
-#include "fileSettings.hpp"            // for FileSettings
-#include "logOutput.hpp"               // for LogOutput
-#include "maxwellBoltzmann.hpp"        // for MaxwellBoltzmann
-#include "molecule.hpp"                // for Molecule
-#include "outputMessages.hpp"          // for _ANGSTROM_
-#include "potentialSettings.hpp"       // for PotentialSettings
-#include "simulationBox.hpp"           // for SimulationBox
-#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "stdoutOutput.hpp"            // for StdoutOutput
-#include "stringUtilities.hpp"   // for toLowerCopy, firstLetterToUpperCaseCopy
+#include "atom.hpp"
+#include "atomNumberMap.hpp"
+#include "constants/conversionFactors.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "logOutput.hpp"
+#include "maxwellBoltzmann.hpp"
+#include "molecule.hpp"
+#include "outputMessages.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
+#include "simulationBoxSettings.hpp"
+#include "stdoutOutput.hpp"
+#include "stringUtilities.hpp"
 #include "strongTypes.hpp"
 
 namespace setup

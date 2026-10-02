@@ -20,23 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <vector>   // for vector, allocator
+#include <vector>
 
-#include "angleForceField.hpp"      // for AngleForceField
-#include "angleType.hpp"            // for AngleType
-#include "bondForceField.hpp"       // for BondForceField
-#include "bondType.hpp"             // for BondType
-#include "dihedralForceField.hpp"   // for DihedralForceField
-#include "dihedralType.hpp"         // for DihedralType
-#include "engine.hpp"               // for Engine
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "forceFieldSetup.hpp"      // for ForceFieldSetup, setupForceField
+#include "angleForceField.hpp"
+#include "angleType.hpp"
+#include "bondForceField.hpp"
+#include "bondType.hpp"
+#include "dihedralForceField.hpp"
+#include "dihedralType.hpp"
+#include "engine.hpp"
+#include "forceFieldSettings.hpp"
+#include "forceFieldSetup.hpp"
                                     // for Message, TestPartResult
-#include "molecule.hpp"             // for Molecule
+#include "molecule.hpp"
 #include "strongTypes.hpp"
-#include "testSetup.hpp"   // for TestSetup
+#include "testSetup.hpp"
 
 /**
  * @brief test setupBonds function

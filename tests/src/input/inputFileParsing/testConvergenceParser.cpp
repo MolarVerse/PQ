@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include "convergenceInputParser.hpp"   // for InputFileParserOptimizer
-#include "convergenceSettings.hpp"      // for ConvSettings
-#include "exceptions.hpp"   // for exc::InputFileException, customException
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
+#include "convergenceInputParser.hpp"
+#include "convergenceSettings.hpp"
+#include "exceptions.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {

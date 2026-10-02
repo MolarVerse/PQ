@@ -24,13 +24,13 @@
 
 #define _MOLECULE_HPP_
 
-#include <cstddef>       // for size_t
-#include <memory>        // for shared_ptr
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include "atom.hpp"   // for Atom
+#include "atom.hpp"
 #include "strongTypes.hpp"
 
 namespace molsys

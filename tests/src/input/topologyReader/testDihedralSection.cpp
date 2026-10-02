@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW_MSG, TestInfo...
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "dihedralSection.hpp"   // for DihedralSection
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for TopologyException
+#include "dihedralSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 #include "strongTypes.hpp"
-#include "testTopologySection.hpp"   // for TestTopologySection
+#include "testTopologySection.hpp"
 #include "throwWithMessage.hpp"
 
 /**

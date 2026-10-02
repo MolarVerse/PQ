@@ -22,15 +22,15 @@
 
 #include "rstFileOutput.hpp"
 
-#include <format>    // for format
-#include <ostream>   // for basic_ostream, operator<<, flush, std
-#include <sstream>   // for ostringstream
-#include <vector>    // for vector
+#include <format>
+#include <ostream>
+#include <sstream>
+#include <vector>
 
-#include "molecule.hpp"               // for Molecule
-#include "noseHooverThermostat.hpp"   // for NoseHooverThermostat
-#include "simulationBox.hpp"          // for SimulationBox
-#include "thermostatSettings.hpp"     // for ThermostatType
+#include "molecule.hpp"
+#include "noseHooverThermostat.hpp"
+#include "simulationBox.hpp"
+#include "thermostatSettings.hpp"
 
 namespace out
 {

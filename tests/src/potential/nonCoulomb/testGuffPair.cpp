@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, InitGo...
+#include <gtest/gtest.h>
 
-#include <cmath>   // for ::pow, ::exp
+#include <cmath>
 
 // for Message, TestPartResult
-#include "guffPair.hpp"   // for GuffPair
+#include "guffPair.hpp"
 
 /**
  * @brief tests the calculation of the energy and force of a GuffPair

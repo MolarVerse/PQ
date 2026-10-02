@@ -24,14 +24,14 @@
 
 #define _TEST_RSTFILEOUTPUT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for allocator
+#include <memory>
 
-#include "atom.hpp"            // for Atom
-#include "molecule.hpp"        // for Molecule
-#include "rstFileOutput.hpp"   // for RstFileOutput
-#include "simulationBox.hpp"   // for SimulationBox
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "rstFileOutput.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class TestRstFileOutput

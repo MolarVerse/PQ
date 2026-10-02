@@ -24,11 +24,11 @@
 
 #define _RING_POLYMER_ENGINE_HPP_
 
-#include <vector>   // for vector
+#include <vector>
 
-#include "mdEngine.hpp"        // for Engine
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "mdEngine.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace engine
 {

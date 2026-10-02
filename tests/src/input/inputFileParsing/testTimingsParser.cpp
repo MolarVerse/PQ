@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for std::vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"            // for InputFileException
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 #include "timingsInputParser.hpp"
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "timingsSettings.hpp"
 
 /**
  * @brief tests parsing the "timestep" command

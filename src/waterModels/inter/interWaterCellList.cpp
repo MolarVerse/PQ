@@ -23,12 +23,12 @@
 #include <algorithm>
 #include <vector>
 
-#include "atom.hpp"   // for Atom
+#include "atom.hpp"
 #include "atomNumberMap.hpp"
-#include "celllist.hpp"     // for CellList
-#include "interWater.hpp"   // for InterWater
+#include "celllist.hpp"
+#include "interWater.hpp"
 #include "physicalData.hpp"
-#include "potential.hpp"   // for ChargeTag
+#include "potential.hpp"
 
 namespace waterModel
 {

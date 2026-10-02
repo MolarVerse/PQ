@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <filesystem>   // for filesystem
-#include <format>       // for format
-#include <string>       // for string
+#include <filesystem>
+#include <format>
+#include <string>
 
-#include "exceptions.hpp"           // for InputFileException
-#include "output.hpp"               // for Output
-#include "outputFileSettings.hpp"   // for settings::OutputFileSettings
-#include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "output.hpp"
+#include "outputFileSettings.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests setting output filename

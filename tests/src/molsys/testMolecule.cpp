@@ -23,11 +23,11 @@
 #include "testMolecule.hpp"
 
 // for Message, TestPartResult
-#include "manostatSettings.hpp"   // for ManostatSettings
-#include "mathUtilities.hpp"      // for compare
-#include "moleculeType.hpp"       // for MoleculeType
-#include "orthorhombicBox.hpp"    // for OrthorhombicBox
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "manostatSettings.hpp"
+#include "mathUtilities.hpp"
+#include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {

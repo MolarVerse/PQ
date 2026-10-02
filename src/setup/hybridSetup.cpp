@@ -22,17 +22,17 @@
 
 #include "hybridSetup.hpp"
 
-#include <format>   // for format
-#include <string>   // for string
-#include <vector>   // for vector
+#include <format>
+#include <string>
+#include <vector>
 
-#include "engine.hpp"   // for Engine
+#include "engine.hpp"
 #include "enums/hybrid.hpp"
 #include "enums/qm.hpp"
-#include "exceptions.hpp"       // for InputFileException
-#include "hybridSettings.hpp"   // for settings::HybridSettings
-#include "qmSettings.hpp"       // for QMSettings
-#include "settings.hpp"         // for settings::Settings
+#include "exceptions.hpp"
+#include "hybridSettings.hpp"
+#include "qmSettings.hpp"
+#include "settings.hpp"
 
 namespace setup
 {

@@ -24,9 +24,9 @@
 
 #define _QM_INPUT_PARSER_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 #include "logOutput.hpp"
 
 namespace input

@@ -22,8 +22,8 @@
 
 #include "potential.hpp"
 
-#include "coulombPotential.hpp"      // for CoulombPotential
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+#include "coulombPotential.hpp"
+#include "nonCoulombPotential.hpp"
 
 namespace pot
 {

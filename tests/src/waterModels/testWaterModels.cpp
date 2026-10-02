@@ -35,6 +35,7 @@
 #include "guffNonCoulomb.hpp"
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
+#include "interWaterParamters.hpp"
 #include "lennardJonesPair.hpp"
 #include "mTRIntraWater.hpp"
 #include "molecule.hpp"

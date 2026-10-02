@@ -22,16 +22,16 @@
 
 #include "stochasticRescalingManostat.hpp"
 
-#include <algorithm>   // for __for_each_fn
-#include <cmath>       // for exp, pow, sqrt
+#include <algorithm>
+#include <cmath>
 
-#include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_
-#include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
 #include "globalTimer.hpp"
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for ThermostatSettings
-#include "timingsSettings.hpp"      // for TimingsSettings
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
 
 namespace manostat
 {

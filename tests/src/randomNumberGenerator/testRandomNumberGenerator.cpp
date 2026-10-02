@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
 // for Message, TestPartResult
-#include "randomNumberGenerator.hpp"   // for rng::RandomNumberGenerator
-#include "settings.hpp"                // for settings::Settings
+#include "randomNumberGenerator.hpp"
+#include "settings.hpp"
 
 /**
  * @brief test randomNumberGenerator uniform real distribution range

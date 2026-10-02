@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+#include <gtest/gtest.h>
 
 // for Message, TestPartResult
-#include "thermostatSettings.hpp"   // for ThermostatSettings, ThermostatType
+#include "thermostatSettings.hpp"
 
 TEST(ThermostatSettingsTest, SetThermostatTypeTest)
 {

@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ
+#include <gtest/gtest.h>
 
-#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
+#include "constants/internalConversionFactors.hpp"
+#include "coulombShiftedPotential.hpp"
                                          // for Message, TestPartResult
 
 /**

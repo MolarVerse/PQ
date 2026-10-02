@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for allocator, basic_string
+#include <string>
 
 // for Message, TestPartResult
-#include "qmmdEngine.hpp"                   // for QMMDEngine
-#include "randomNumberGeneratorSetup.hpp"   // for randomNumberGeneratorSetup
-#include "settings.hpp"                     // for settings::Settings
+#include "qmmdEngine.hpp"
+#include "randomNumberGeneratorSetup.hpp"
+#include "settings.hpp"
 
 TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
 {

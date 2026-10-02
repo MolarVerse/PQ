@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_ALL...
+#include <gtest/gtest.h>
 
-#include "angleType.hpp"   // for AngleType
+#include "angleType.hpp"
 
 /**
  * @brief tests operator== for AngleType

@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
+#include <gtest/gtest.h>
 
 // for Message, TestPartResult
 

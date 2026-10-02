@@ -22,12 +22,12 @@
 
 #include "testRstFileOutput.hpp"
 
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, allocator, string
+#include <iosfwd>
+#include <string>
 
-#include "noseHooverThermostat.hpp"   // for thermostat::NoseHooverThermostat
-#include "thermostat.hpp"             // for thermostat::Thermostat
-#include "thermostatSettings.hpp"     // for ThermostatType
+#include "noseHooverThermostat.hpp"
+#include "thermostat.hpp"
+#include "thermostatSettings.hpp"
 
 /**
  * @brief tests writing the restart file

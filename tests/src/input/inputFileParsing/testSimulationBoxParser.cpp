@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "engine.hpp"                     // for Engine
-#include "exceptions.hpp"                 // for InputFileException
-#include "potentialSettings.hpp"          // for PotentialSettings
-#include "simulationBoxInputParser.hpp"   // for InputFileParserSimulationBox
-#include "simulationBoxSettings.hpp"      // for SimulationBoxSettings
-#include "testInputFileReader.hpp"        // for TestInputFileReader
-#include "throwWithMessage.hpp"           // for EXPECT_THROW_MSG
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBoxInputParser.hpp"
+#include "simulationBoxSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "density" command

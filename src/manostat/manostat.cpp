@@ -22,12 +22,12 @@
 
 #include "manostat.hpp"
 
-#include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "globalTimer.hpp"
-#include "manostatSettings.hpp"   // for ManostatType, Isotropy
-#include "physicalData.hpp"       // for PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
+#include "manostatSettings.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace manostat
 {

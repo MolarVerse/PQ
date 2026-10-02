@@ -24,9 +24,9 @@
 
 #define _M_SHAKE_READER_HPP_
 
-#include <cstddef>   // for size_t
-#include <fstream>   // for ifstream
-#include <string>    // for string
+#include <cstddef>
+#include <fstream>
+#include <string>
 #include <vector>
 
 namespace constraints

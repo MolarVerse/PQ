@@ -24,7 +24,7 @@
 
 #define _PYSCF_RUNNER_HPP_
 
-#include "externalQMRunner.hpp"   // for ExternalQMRunner
+#include "externalQMRunner.hpp"
 
 namespace QM
 {

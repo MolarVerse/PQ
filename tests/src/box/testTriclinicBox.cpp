@@ -24,12 +24,12 @@
 
 #include <array>
 
-#include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
-#include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
-#include "manostatSettings.hpp"   // for ManostatSettings
-#include "matrixNear.hpp"         // for EXPECT_MATRIX_NEAR
-#include "triclinicBox.hpp"       // for molsys::TriclinicBox
-#include "vectorNear.hpp"         // for EXPECT_VECTOR_NEAR
+#include "constants/conversionFactors.hpp"
+#include "defaults.hpp"
+#include "manostatSettings.hpp"
+#include "matrixNear.hpp"
+#include "triclinicBox.hpp"
+#include "vectorNear.hpp"
 
 TEST(TestTriclinicBox, setBoxDimensions)
 {

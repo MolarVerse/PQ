@@ -24,11 +24,11 @@
 
 #define _LEARNING_RATE_STRATEGY_HPP_
 
-#include <cstddef>    // for size_t
-#include <memory>     // for shared_ptr
-#include <optional>   // for optional
-#include <string>     // for string
-#include <vector>     // for vector
+#include <cstddef>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
 
 namespace opt
 {

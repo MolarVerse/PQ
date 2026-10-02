@@ -22,27 +22,27 @@
 
 #include "dftbplusRunner.hpp"
 
-#include <algorithm>    // for std::ranges:find
-#include <cmath>        // for isfinite
-#include <cstddef>      // for size_t
-#include <filesystem>   // for remove
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <iterator>     // for std::ranges::distance
+#include <algorithm>
+#include <cmath>
+#include <cstddef>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <iterator>
 #include <mstd/file.hpp>
-#include <set>      // for set
-#include <string>   // for string
+#include <set>
+#include <string>
 
-#include "box.hpp"   // for molsys::Periodicity
+#include "box.hpp"
 #include "constants.hpp"
-#include "exceptions.hpp"           // for InputFileException
-#include "fileSettings.hpp"         // for FileSettings
-#include "hybridConfigurator.hpp"   // for HybridConfigurator
-#include "hybridSettings.hpp"       // for SmoothingMethod
-#include "physicalData.hpp"         // for PhysicalData
-#include "qmSettings.hpp"           // for QMSettings
-#include "simulationBox.hpp"        // for SimulationBox
-#include "stringUtilities.hpp"      // for fileExists
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "hybridConfigurator.hpp"
+#include "hybridSettings.hpp"
+#include "physicalData.hpp"
+#include "qmSettings.hpp"
+#include "simulationBox.hpp"
+#include "stringUtilities.hpp"
 
 namespace QM
 {

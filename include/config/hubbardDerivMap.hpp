@@ -25,7 +25,7 @@
 #define _HUBBARD_DERIV_MAP_HPP_
 
 #include <string>
-#include <unordered_map>   // for unordered_map
+#include <unordered_map>
 
 /**
  * @brief Map of Hubbard Derivatives for the 3OB Parameter Set

@@ -22,16 +22,16 @@
 
 #include "langevinThermostat.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cmath>       // for sqrt
+#include <algorithm>
+#include <cmath>
 
-#include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
-#include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
-#include "globalTimer.hpp"                   // for GlobalTimer
-#include "physicalData.hpp"                  // for PhysicalData
-#include "simulationBox.hpp"                 // for SimulationBox
-#include "thermostatSettings.hpp"            // for settings::ThermostatType
-#include "timingsSettings.hpp"               // for TimingsSettings
+#include "constants/conversionFactors.hpp"
+#include "constants/natureConstants.hpp"
+#include "globalTimer.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
 
 namespace thermostat
 {

@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+#include <gtest/gtest.h>
 
 #include <cstdlib>
 #include <filesystem>
 
 #include "enums/qm.hpp"
-#include "exceptions.hpp"         // for exc::UserInputException
+#include "exceptions.hpp"
                                   // for Message, TestPartResult
-#include "qmSettings.hpp"         // for settings::QMSettings, QMMethod
-#include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
+#include "qmSettings.hpp"
+#include "throwWithMessage.hpp"
 
 TEST(QMSettingsTest, SetMaceModelTypeTest)
 {

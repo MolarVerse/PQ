@@ -20,26 +20,26 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <memory>   // for make_shared
+#include <memory>
 
-#include "coulombReactionField.hpp"      // for pot::CoulombReactionField
-#include "coulombShiftedPotential.hpp"   // for pot::CoulombShiftedPotential
-#include "coulombWolf.hpp"               // for pot::CoulombWolf
-#include "engine.hpp"                    // for Engine
-#include "exceptions.hpp"                // for ParameterFileException
-#include "forceFieldNonCoulomb.hpp"      // for pot::ForceFieldNonCoulomb
+#include "coulombReactionField.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "coulombWolf.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
                                          // for Message, TestPartResult
-#include "guffNonCoulomb.hpp"            // for pot::GuffNonCoulomb
-#include "lennardJonesPair.hpp"          // for pot::LennardJonesPair
-#include "moleculeType.hpp"              // for MoleculeType
-#include "potentialSettings.hpp"         // for settings::PotentialSettings
-#include "potentialSetup.hpp"   // for setup::PotentialSetup, setupPotential
+#include "guffNonCoulomb.hpp"
+#include "lennardJonesPair.hpp"
+#include "moleculeType.hpp"
+#include "potentialSettings.hpp"
+#include "potentialSetup.hpp"
 #include "strongTypes.hpp"
-#include "testSetup.hpp"   // for TestSetup
+#include "testSetup.hpp"
 #include "testUtils.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "throwWithMessage.hpp"
 
 /**
  * @brief setup the reaction-field Coulomb potential

@@ -22,26 +22,26 @@
 
 #include "externalQMRunner.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <array>        // for array
-#include <cmath>        // for isfinite
-#include <cstdlib>      // for system
-#include <filesystem>   // for is_regular_file, path, remove
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <string>       // for string
-#include <thread>       // for sleep_for
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdlib>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <string>
+#include <thread>
 
 #include "box.hpp"
-#include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
-#include "exceptions.hpp"                    // for InputFileException
-#include "executablePath.hpp"                // for executablePath
-#include "fileSettings.hpp"                  // for FileSettings
+#include "constants/conversionFactors.hpp"
+#include "exceptions.hpp"
+#include "executablePath.hpp"
+#include "fileSettings.hpp"
 #include "globalTimer.hpp"
-#include "physicalData.hpp"   // for PhysicalData
-#include "qmSettings.hpp"     // for QMSettings
+#include "physicalData.hpp"
+#include "qmSettings.hpp"
 #include "settings.hpp"
-#include "simulationBox.hpp"   // for SimulationBox
+#include "simulationBox.hpp"
 
 namespace QM
 {

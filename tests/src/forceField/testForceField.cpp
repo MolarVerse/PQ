@@ -20,31 +20,31 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperNE, TestInfo
+#include <gtest/gtest.h>
 
-#include <memory>   // for shared_ptr, allocator
+#include <memory>
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
-#include "angleForceField.hpp"           // for AngleForceField
-#include "angleType.hpp"                 // for AngleType
-#include "atom.hpp"                      // for Atom
-#include "bondForceField.hpp"            // for BondForceField
-#include "bondType.hpp"                  // for BondType
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "dihedralForceField.hpp"        // for DihedralForceField
-#include "dihedralType.hpp"              // for DihedralType
-#include "exceptions.hpp"                // for TopologyException
-#include "forceField.hpp"             // IWYU pragma: keep - for correctLinker
-#include "forceFieldClass.hpp"        // for ForceField
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "lennardJonesPair.hpp"       // for LennardJonesPair
-#include "matrix.hpp"                 // for Matrix
-#include "molecule.hpp"               // for Molecule
-#include "physicalData.hpp"           // for PhysicalData
-#include "potentialSettings.hpp"      // for PotentialSettings
-#include "simulationBox.hpp"          // for SimulationBox
+#include "angleForceField.hpp"
+#include "angleType.hpp"
+#include "atom.hpp"
+#include "bondForceField.hpp"
+#include "bondType.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "dihedralForceField.hpp"
+#include "dihedralType.hpp"
+#include "exceptions.hpp"
+#include "forceField.hpp"
+#include "forceFieldClass.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "lennardJonesPair.hpp"
+#include "matrix.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
 #include "strongTypes.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "throwWithMessage.hpp"
 
 namespace pot
 {

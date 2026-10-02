@@ -24,13 +24,13 @@
 
 #define _SPC_INTRA_WATER_TPP_
 
-#include <cmath>   // for sin
+#include <cmath>
 
-#include "SPCIntraWater.hpp"   // for SPCIntraWater
+#include "SPCIntraWater.hpp"
 #include "globalTimer.hpp"
-#include "hybridSettings.hpp"   // for HybridSettings
-#include "physicalData.hpp"     // for PhysicalData
-#include "simulationBox.hpp"    // for SimulationBox
+#include "hybridSettings.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @brief Calculate intramolecular SPC water interactions for all water

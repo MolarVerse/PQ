@@ -24,7 +24,7 @@
 
 #define _TRICLINIC_BOX_HPP_
 
-#include "box.hpp"   // for Box
+#include "box.hpp"
 
 namespace molsys
 {

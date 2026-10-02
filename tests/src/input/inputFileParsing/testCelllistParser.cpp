@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, TEST_F, TestPartResult
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "cellListInputParser.hpp"   // for input::CellListInputParser
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for InputFileException
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "cellListInputParser.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "cell-list" command

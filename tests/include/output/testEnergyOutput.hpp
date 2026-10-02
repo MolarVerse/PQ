@@ -24,15 +24,15 @@
 
 #define _TEST_ENERGY_OUTPUT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
 #include <filesystem>
 #include <memory>
 
-#include "energyOutput.hpp"     // for EnergyOutput
-#include "infoOutput.hpp"       // for InfoOutput
-#include "momentumOutput.hpp"   // for MomentumOutput
-#include "physicalData.hpp"     // for PhysicalDat
+#include "energyOutput.hpp"
+#include "infoOutput.hpp"
+#include "momentumOutput.hpp"
+#include "physicalData.hpp"
 
 /**
  * @class TestEnergyOutput

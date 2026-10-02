@@ -64,7 +64,7 @@ namespace linalg
 }   // namespace linalg
 
 #ifndef _MATRIX_CLASS_TPP_
-#include "matrixClass.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#include "matrixClass.tpp.hpp"   // IWYU pragma: export
 #endif
 
 #endif   // _MATRIX_CLASS_HPP_

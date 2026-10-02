@@ -24,11 +24,11 @@
 
 #define _SETTINGS_HPP_
 
-#include <cstdint>   // for uint_fast32_t
+#include <cstdint>
 #include <mstd/enum.hpp>
-#include <string_view>   // for string_view
+#include <string_view>
 
-#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
+#include "defaults.hpp"
 
 namespace settings
 {

@@ -24,7 +24,7 @@
 
 #define _THERMOSTAT_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 #include "thermostatSettings.hpp"
 

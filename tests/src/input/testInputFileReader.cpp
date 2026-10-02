@@ -22,13 +22,13 @@
 
 #include "testInputFileReader.hpp"
 
-#include <gtest/gtest.h>   // for Message, TestPartResult
+#include <gtest/gtest.h>
 
-#include <fstream>   // for ofstream
-#include <map>       // for map
-#include <memory>    // for unique_ptr
-#include <sstream>   // for basic_istringstream
-#include <vector>    // for vector, _Bit_iterator, _Bit_reference
+#include <fstream>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <vector>
 
 #include "exceptions.hpp"
 #include "mmmdEngine.hpp"

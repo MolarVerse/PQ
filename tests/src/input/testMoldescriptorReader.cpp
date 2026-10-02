@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
+#include <gtest/gtest.h>
 
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for exc::MolDescriptorException
-#include "fileSettings.hpp"          // for FileSettings
-#include "moldescriptorReader.hpp"   // for input::molDescriptor::MoldescriptorReader
-#include "testMoldesctripotReader.hpp"   // for TestMoldescriptorReader
-#include "throwWithMessage.hpp"          // for ASSERT_THROW_MSG
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "moldescriptorReader.hpp"
+#include "testMoldesctripotReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests constructor of input::molDescriptor::MoldescriptorReader

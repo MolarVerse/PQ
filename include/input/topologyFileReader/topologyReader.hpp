@@ -24,11 +24,11 @@
 
 #define _TOPOLOGY_READER_HPP_
 
-#include <fstream>   // for ifstream
+#include <fstream>
 #include <memory>
 #include <string>
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <string_view>
+#include <vector>
 
 #include "topologySection.hpp"
 

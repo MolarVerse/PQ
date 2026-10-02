@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
+#include <gtest/gtest.h>
 
-#include "coulombPotential.hpp"          // for CoulombPotential, potential
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
+#include "coulombPotential.hpp"
+#include "coulombShiftedPotential.hpp"
                                          // for Message, TestPartResult
 
 /**

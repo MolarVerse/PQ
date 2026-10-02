@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, Init...
+#include <gtest/gtest.h>
 
-#include <cmath>   // for erfc, exp, sqrt, M_PI
+#include <cmath>
 
-#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
-#include "coulombWolf.hpp"                           // for CoulombWolf
+#include "constants/internalConversionFactors.hpp"
+#include "coulombWolf.hpp"
 // for Message, TestPartResult
 
 /**

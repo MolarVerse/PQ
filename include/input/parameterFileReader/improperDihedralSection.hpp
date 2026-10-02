@@ -24,9 +24,9 @@
 
 #define _IMPROPER_DIHEDRAL_SECTION_HPP_
 
-#include <string>   // for allocator, string
+#include <string>
 
-#include "parameterFileSection.hpp"   // for ParameterFileSection
+#include "parameterFileSection.hpp"
 
 namespace input::parameterFile
 {

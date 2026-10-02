@@ -24,7 +24,7 @@
 
 #define _BERENDSEN_MANOSTAT_HPP_
 
-#include "manostat.hpp"   // for Manostat
+#include "manostat.hpp"
 
 namespace manostat
 {

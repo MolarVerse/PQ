@@ -22,9 +22,9 @@
 
 #include "thermostatInputParser.hpp"
 
-#include <cmath>     // for sqrt
-#include <cstddef>   // for size_t, std
-#include <limits>    // for numeric_limits
+#include <cmath>
+#include <cstddef>
+#include <limits>
 #include <optional>
 
 #include "constants.hpp"
@@ -32,9 +32,9 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "references.hpp"           // for References
-#include "referencesOutput.hpp"     // for references::ReferencesOutput
-#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
+#include "references.hpp"
+#include "referencesOutput.hpp"
+#include "thermostatSettings.hpp"
 
 namespace input
 {

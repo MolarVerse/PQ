@@ -22,15 +22,15 @@
 
 #include "ringPolymerTrajectoryOutput.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cstddef>     // for size_t
-#include <format>      // for format
-#include <ostream>     // for basic_ostream, ofstream, operator<<
-#include <sstream>     // for ostringstream
+#include <algorithm>
+#include <cstddef>
+#include <format>
+#include <ostream>
+#include <sstream>
 
-#include "molecule.hpp"              // for Molecule
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "simulationBox.hpp"         // for SimulationBox
+#include "molecule.hpp"
+#include "ringPolymerSettings.hpp"
+#include "simulationBox.hpp"
 
 namespace out
 {

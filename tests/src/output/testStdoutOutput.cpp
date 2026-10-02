@@ -22,12 +22,12 @@
 
 #include "testStdoutOutput.hpp"
 
-#include <format>   // for format
-#include <iosfwd>   // for stringstream
-#include <string>   // for allocator, string
+#include <format>
+#include <iosfwd>
+#include <string>
 
-#include "outputMessages.hpp"   // for _OUTPUT_
-#include "systemInfo.hpp"       // for _AUTHOR_, _EMAIL_
+#include "outputMessages.hpp"
+#include "systemInfo.hpp"
 
 /**
  * @brief tests writing header to stdout

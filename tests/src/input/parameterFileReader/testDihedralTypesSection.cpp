@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "dihedralSection.hpp"   // for input::parameterFile::DihedralSection
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for ParameterFileException
+#include "constants/conversionFactors.hpp"
+#include "dihedralSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
                                  // for Message, TestPartResult
-#include "testParameterFileSection.hpp"   // for TestParameterFileSection
-#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
+#include "testParameterFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test bonds section processing one line

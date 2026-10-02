@@ -24,9 +24,9 @@
 
 #define _TEST_LOGOUTPUT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include "logOutput.hpp"   // for LogOutput
+#include "logOutput.hpp"
 
 /**
  * @class TestLogOutput

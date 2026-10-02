@@ -24,8 +24,8 @@
 
 #include <gtest/gtest.h>
 
-#include "exceptions.hpp"         // for ShakeException
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests that no force is applied while the distance is within bounds

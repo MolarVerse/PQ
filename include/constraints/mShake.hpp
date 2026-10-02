@@ -24,8 +24,8 @@
 
 #define _M_SHAKE_HPP_
 
-#include <memory>   // for unique_ptr
-#include <vector>   // for vector
+#include <memory>
+#include <vector>
 
 #include "mShakeReference.hpp"
 

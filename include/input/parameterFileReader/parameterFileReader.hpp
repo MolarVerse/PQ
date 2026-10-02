@@ -24,10 +24,10 @@
 
 #define _PARAMETER_FILE_READER_HPP_
 
-#include <fstream>   // for ifstream
-#include <memory>    // for unique_ptr
+#include <fstream>
+#include <memory>
 #include <string>
-#include <string_view>   // for string_view
+#include <string_view>
 #include <vector>
 
 #include "parameterFileSection.hpp"

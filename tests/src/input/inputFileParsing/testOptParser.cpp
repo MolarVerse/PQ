@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
 #include "enums/optimizer.hpp"
-#include "exceptions.hpp"       // for exc::InputFileException, customException
-#include "optInputParser.hpp"   // for InputFileParserOptimizer
-#include "optimizerSettings.hpp"     // for settings::OptimizerSettings
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
+#include "exceptions.hpp"
+#include "optInputParser.hpp"
+#include "optimizerSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test parsing the optimizer input key

@@ -24,7 +24,7 @@
 
 #define _ADAM_HPP_
 
-#include <vector>   // for vector
+#include <vector>
 
 #include "optimizer.hpp"
 

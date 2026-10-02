@@ -22,12 +22,12 @@
 
 #include "ringPolymerEnergyOutput.hpp"
 
-#include <algorithm>   // for for_each
-#include <format>      // for format
+#include <algorithm>
+#include <format>
 #include <numeric>
-#include <vector>   // for vector
+#include <vector>
 
-#include "physicalData.hpp"   // for PhysicalData
+#include "physicalData.hpp"
 
 namespace out
 {

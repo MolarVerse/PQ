@@ -24,9 +24,9 @@
 
 #define _TEST_STDOUTOUTPUT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include "stdoutOutput.hpp"   // for StdoutOutput
+#include "stdoutOutput.hpp"
 
 /**
  * @class TestStdoutOutput

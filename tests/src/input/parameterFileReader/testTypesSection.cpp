@@ -22,15 +22,15 @@
 
 #include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"                 // for ParameterFileException
+#include "exceptions.hpp"
                                           // for Message, TestPartResult, tes...
-#include "potentialSettings.hpp"          // for PotentialSettings
-#include "testParameterFileSection.hpp"   // for TestParameterFileSection
-#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
-#include "typesSection.hpp"               // for TypesSection
+#include "potentialSettings.hpp"
+#include "testParameterFileSection.hpp"
+#include "throwWithMessage.hpp"
+#include "typesSection.hpp"
 
 /**
  * @brief test types section processing one line

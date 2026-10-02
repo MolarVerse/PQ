@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+#include <gtest/gtest.h>
 
 // #include <memory>   // for allocator
 
-#include "settings.hpp"   // for settings::Settings
+#include "settings.hpp"
 // #include "exceptions.hpp"         // for UserInputException
 // #include gtest.h"          // for Message, TestPartResult
 // #include "qmSettings.hpp"         // for QMSettings, QMMethod

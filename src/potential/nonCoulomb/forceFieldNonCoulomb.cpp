@@ -22,16 +22,15 @@
 
 #include "forceFieldNonCoulomb.hpp"
 
-#include <algorithm>     // for copy, max
-#include <format>        // for std::format
-#include <ranges>        // for __find_if_fn, find_if
-#include <string_view>   // for string_view
+#include <algorithm>
+#include <format>
+#include <ranges>
+#include <string_view>
 
-#include "exceptions.hpp"   // for ParameterFileException
+#include "exceptions.hpp"
 #include "forceFieldNonCoulombImpl.hpp"
-#include "lennardJonesPair.hpp"   // IWYU pragma: keep -- for template instantiation
 #include "matrix.hpp"
-#include "nonCoulombPair.hpp"   // for NonCoulombPair
+#include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"
 
 namespace pot

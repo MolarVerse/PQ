@@ -20,28 +20,28 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
+#include <gtest/gtest.h>
 
-#include <memory>   // for shared_ptr, allocator, make_shared
-#include <vector>   // for vector
+#include <memory>
+#include <vector>
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
-#include "atom.hpp"                      // for Atom
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "exceptions.hpp"                // for IntraNonBondedException
-#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
+#include "atom.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
                                          // for Message, TestPartResult
-#include "intraNonBonded.hpp"            // for IntraNonBonded
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
-#include "lennardJonesPair.hpp"          // for LennardJonesPair
-#include "matrix.hpp"                    // for Matrix
-#include "molecule.hpp"                  // for Molecule
-#include "physicalData.hpp"              // for PhysicalData
-#include "potentialSettings.hpp"         // for PotentialSettings
-#include "simulationBox.hpp"             // for SimulationBox
+#include "intraNonBonded.hpp"
+#include "intraNonBondedContainer.hpp"
+#include "intraNonBondedMap.hpp"
+#include "lennardJonesPair.hpp"
+#include "matrix.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
 #include "strongTypes.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "throwWithMessage.hpp"
 
 namespace pot
 {

@@ -22,7 +22,7 @@
 
 #include "inputFileParser.hpp"
 
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "stringUtilities.hpp"
 
 namespace input
 {

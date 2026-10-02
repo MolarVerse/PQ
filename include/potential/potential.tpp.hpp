@@ -24,13 +24,13 @@
 
 #define _POTENTIAL_TPP_
 
-#include <cmath>     // for sqrt
-#include <cstdlib>   // for abort
+#include <cmath>
+#include <cstdlib>
 
 #include "atom.hpp"
 #include "box.hpp"
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "hybridSettings.hpp"     // for HybridSettings
+#include "coulombPotential.hpp"
+#include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "potential.hpp"
 

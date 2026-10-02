@@ -23,7 +23,7 @@
 #ifndef __FILTER_ITERATOR_HPP__
 #define __FILTER_ITERATOR_HPP__
 
-#include <iterator>   // clang-format on
+#include <iterator>
 
 namespace pqviews
 {
