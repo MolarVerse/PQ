@@ -342,7 +342,7 @@ def render(pr, base, *, baseline_sha=None, run_url=None, includes=None, base_inc
         scale = speed_factor(pr, base)
         lines += ["", f"The compiler time of this run was {scale:.2f} times the baseline's; per-item changes below are measured after scaling the baseline by that factor.", ""]
         if includes is not None:
-            lines += [""] + include_section(includes, base_includes) + ["", "<sub>The baseline is the newest dev build, so commits merged to dev since then also show up here.</sub>"]
+            lines += include_section(includes, base_includes) + ["", "<sub>The baseline is the newest dev build, so commits merged to dev since then also show up here.</sub>", ""]
         heavier, lighter, render_headers = header_section(pr, base, scale, includes, base_includes)
         lines += ["#### Headers that got heavier", ""]
         if heavier:

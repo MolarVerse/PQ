@@ -342,6 +342,20 @@ class IncludeGraphTests(unittest.TestCase):
         self.assertIn("| `include/a.hpp` | 10.0 s | 14.0 s | +4.0 s (+40%) | 40 → 41 |", heavier)
         self.assertIn("| `/usr/include/c++/14/format` | 5.0 s | 9.0 s | +4.0 s (+80%) | ~100 → ~90 |", heavier)
 
+    def test_every_heading_is_preceded_by_a_blank_line_and_blank_lines_do_not_pile_up(self):
+        base = summary(headers=[header("a.hpp", 5.0)])
+        for text in (
+            report.render(summary(headers=[header("a.hpp", 9.0)]), base, includes=inc(fan_in={"a.hpp": 2}), base_includes=inc(digest="d2", fan_in={"a.hpp": 1})),
+            report.render(summary(), None, includes=inc()),
+            report.render(summary(), base, includes=inc(), base_includes=inc()),
+        ):
+            lines = text.splitlines()
+            for number, line in enumerate(lines):
+                if line.startswith("#") and number > 1:  # the title follows the marker comment
+                    self.assertEqual("", lines[number - 1], line)
+                if number and lines[number - 1] == "" and line == "":
+                    self.fail(f"two blank lines before line {number}")
+
     def test_hostile_header_names_are_made_safe(self):
         evil = "x|y`z\n</details>"
         text = self.render(inc(digest="d2", fan_in={evil: 5}), inc(digest="d1", fan_in={}))
