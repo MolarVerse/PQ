@@ -55,7 +55,8 @@ runs:
         BUILD_DIR: ${{ inputs.build-dir }}
       run: |
         python3 "$GITHUB_WORKSPACE/.github/ci-metrics/summarise_traces.py" \
-          --build-dir "$BUILD_DIR" --source-root "$GITHUB_WORKSPACE" --out "$RUNNER_TEMP/build-timings"
+          --build-dir "$BUILD_DIR" --source-root "$GITHUB_WORKSPACE" \
+          --out "$RUNNER_TEMP/build-timings" --raw-out "$RUNNER_TEMP/build-traces"
 
     - name: Upload build timings
       uses: actions/upload-artifact@v4
@@ -64,4 +65,16 @@ runs:
         name: build-timings-${{ inputs.name }}-a${{ github.run_attempt }}
         path: ${{ runner.temp }}/build-timings
         retention-days: 14
+        if-no-files-found: ignore
+
+    # The raw traces are large and only for people; they go into their own
+    # artifact so that the collector never downloads them.
+    - name: Upload raw clang traces
+      if: inputs.clang-traces == 'true'
+      uses: actions/upload-artifact@v4
+      continue-on-error: true
+      with:
+        name: clang-traces-${{ inputs.name }}-a${{ github.run_attempt }}
+        path: ${{ runner.temp }}/build-traces
+        retention-days: 7
         if-no-files-found: ignore

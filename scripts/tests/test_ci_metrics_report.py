@@ -506,6 +506,210 @@ class BuildAnalysisSectionTests(DataDirTestCase):
         self.assertIn("No ccache statistics in the current window.", text)
 
 
+def clang_summary(total=1000.0, headers=(), files=(), frontend=None, backend=None, source_events=50000, instantiation_events=300000):
+    return {
+        "schema_version": 1,
+        "kind": "clang-trace-summary",
+        "limits": {"files": 20, "headers": 30, "templates": 30},
+        "files": 400,
+        "unreadable": 0,
+        "total_s": total,
+        "frontend_s": frontend if frontend is not None else total * 0.6,
+        "backend_s": backend if backend is not None else total * 0.4,
+        "source_events": source_events,
+        "instantiation_events": instantiation_events,
+        "slowest_files": [{"file": n, "total_s": v, "frontend_s": v / 2, "backend_s": v / 2} for n, v in files],
+        "headers": [{"header": n, "inclusive_s": v, "self_s": v, "events": 10, "files": 10} for n, v in headers],
+        "templates": [],
+    }
+
+
+def include_summary(pairs=1000, project=300, digest="d" * 64, top=()):
+    return {
+        "objects": 403,
+        "unique_files": 100,
+        "include_pairs": pairs,
+        "project_files": 50,
+        "project_pairs": project,
+        "digest": digest,
+        "top_project_files": [{"file": f, "fan_in": n} for f, n in top],
+    }
+
+
+def clang_builds(count, start_hours=1, step_hours=6, job="clang-build", **fields):
+    return [
+        analysis(workflow="Clang Build", job=job, created=days_ago(0, start_hours + step_hours * i), **fields)
+        for i in range(count)
+    ]
+
+
+class ClangSectionTests(DataDirTestCase):
+    def render_with(self, analyses, extra_jobs=(), **options):
+        return self.render([record(created=NEWEST), *extra_jobs, *analyses], **options)
+
+    def section(self, text):
+        return text.split("### Clang build times")[1].split("### Include graph")[0]
+
+    def test_without_clang_summaries_it_says_so(self):
+        text = self.render_with([analysis()])
+        self.assertIn("No clang trace summaries yet", self.section(text))
+
+    def test_medians_of_the_current_window_and_the_change_against_the_previous_one(self):
+        now = [analysis(workflow="Clang Build", created=days_ago(1, i), clang=clang_summary(total=t)) for i, t in enumerate((1000.0, 1200.0, 1100.0, 1100.0, 1100.0))]
+        before = [analysis(workflow="Clang Build", created=days_ago(20, i), clang=clang_summary(total=900.0)) for i in range(5)]
+        text = self.section(self.render_with(now + before))
+        self.assertIn("5 builds in the current window, 5 in the previous one (medians).", text)
+        self.assertIn("| Compiler time | 18m 20s | 15m 00s | +22.2% |", text)
+        self.assertIn("| Header inclusions (events of at least 0.5 ms) | 50,000 | 50,000 | n/a |", text)
+
+    def test_too_few_builds_give_no_change(self):
+        now = [analysis(workflow="Clang Build", created=days_ago(1, i), clang=clang_summary(total=1100.0)) for i in range(2)]
+        before = [analysis(workflow="Clang Build", created=days_ago(20), clang=clang_summary(total=900.0))]
+        self.assertIn("| Compiler time | 18m 20s | 15m 00s | n/a |", self.section(self.render_with(now + before)))
+
+    def test_only_pushes_to_dev_count(self):
+        pr = analysis(workflow="Clang Build", event="pull_request", branch="feature/x", clang=clang_summary(total=9999.0))
+        other = analysis(workflow="Clang Build", branch="main", clang=clang_summary(total=9999.0))
+        text = self.section(self.render_with(clang_builds(3, clang=clang_summary(total=1000.0)) + [pr, other]))
+        self.assertIn("3 builds in the current window", text)
+        self.assertIn("| Compiler time | 16m 40s |", text)
+
+    def test_headers_are_ranked_by_their_share_of_the_total_not_by_seconds(self):
+        slow = analysis(workflow="Clang Build", created=days_ago(0, 1), clang=clang_summary(total=2000.0, headers=[("include/x.hpp", 100.0), ("include/y.hpp", 90.0)]))
+        fast = analysis(workflow="Clang Build", created=days_ago(0, 7), clang=clang_summary(total=1000.0, headers=[("include/x.hpp", 50.0), ("include/y.hpp", 49.0)]))
+        text = self.section(self.render_with([slow, fast]))
+        rows = [line for line in text.split("#### Slowest files")[0].splitlines() if line.startswith("| `")]
+        self.assertTrue(rows[0].startswith("| `include/x.hpp` | 2/2 | 1m 15s | 5.00% |"), rows[0])
+        self.assertTrue(rows[1].startswith("| `include/y.hpp` | 2/2 | "), rows[1])
+        self.assertIn("4.70%", rows[1])
+
+    def test_a_header_with_more_seconds_but_a_smaller_share_ranks_lower(self):
+        slow = [analysis(workflow="Clang Build", created=days_ago(0, 1 + 6 * i), clang=clang_summary(total=3000.0, headers=[("include/a.hpp", 120.0)])) for i in range(3)]
+        fast = [analysis(workflow="Clang Build", created=days_ago(1, 1 + 6 * i), clang=clang_summary(total=1000.0, headers=[("include/b.hpp", 50.0)])) for i in range(3)]
+        text = self.section(self.render_with(slow + fast))
+        rows = [line for line in text.split("#### Slowest files")[0].splitlines() if line.startswith("| `")]
+        self.assertTrue(rows[0].startswith("| `include/b.hpp` | 3/6 | 50.0s | 5.00% |"), rows[0])
+        self.assertTrue(rows[1].startswith("| `include/a.hpp` | 3/6 | 2m 00s | 4.00% |"), rows[1])
+
+    def test_a_header_missing_from_some_builds_shows_how_often_it_appeared(self):
+        builds = [analysis(workflow="Clang Build", created=days_ago(0, 1 + 6 * i), clang=clang_summary(total=1000.0, headers=[("include/rare.hpp", 30.0)] if i == 0 else [])) for i in range(3)]
+        self.assertIn("| `include/rare.hpp` | 1/3 |", self.section(self.render_with(builds)))
+
+    def test_share_change_needs_enough_builds_in_both_windows(self):
+        now = [analysis(workflow="Clang Build", created=days_ago(1, i), clang=clang_summary(total=1000.0, headers=[("include/h.hpp", 50.0)])) for i in range(5)]
+        before = [analysis(workflow="Clang Build", created=days_ago(20, i), clang=clang_summary(total=1000.0, headers=[("include/h.hpp", 40.0)])) for i in range(5)]
+        text = self.section(self.render_with(now + before))
+        self.assertIn("| `include/h.hpp` | 5/5 | 50.0s | 5.00% | 4.00% | +1.00 pp |", text)
+        few = self.section(self.render_with(now + before[:2]))
+        self.assertIn("| `include/h.hpp` | 5/5 | 50.0s | 5.00% | 4.00% | n/a |", few)
+
+    def test_slowest_files_are_listed_with_their_share(self):
+        builds = clang_builds(3, clang=clang_summary(total=1000.0, files=[("src/a.cpp", 20.0), ("src/b.cpp", 10.0)]))
+        text = self.section(self.render_with(builds))
+        files = text.split("#### Slowest files")[1]
+        self.assertIn("| `src/a.cpp` | 3/3 | 20.0s | 2.00% |", files)
+        self.assertLess(files.index("src/a.cpp"), files.index("src/b.cpp"))
+
+    def test_the_weekly_chart_needs_enough_builds(self):
+        text = self.section(self.render_with(clang_builds(3, clang=clang_summary(total=1200.0))))
+        self.assertIn('title "Clang compiler time, dev pushes, weekly median (minutes)"', text)
+        self.assertIn("line [20]", text)
+        self.assertNotIn("xychart-beta", self.section(self.render_with(clang_builds(2, clang=clang_summary()))))
+
+    def test_hostile_names_are_made_safe(self):
+        evil = "x|y`z\n</details>"
+        text = self.section(self.render_with(clang_builds(3, clang=clang_summary(headers=[(evil, 30.0)], files=[(evil, 9.0)]))))
+        rows = [line for line in text.splitlines() if "x/y" in line]
+        self.assertEqual(2, len(rows))
+        for row in rows:
+            self.assertEqual(5 if "Share" in row or row.count("|") == 5 else row.count("|"), row.count("|"))
+            self.assertNotIn("`z", row)
+
+    def test_old_records_without_the_new_parts_do_not_break_anything(self):
+        old = analysis()
+        old.pop("includes", None)
+        old.pop("clang", None)
+        text = self.render_with([old])
+        self.assertIn("No clang trace summaries yet", text)
+        self.assertIn("No include graph records yet", text)
+
+
+class IncludeSectionTests(DataDirTestCase):
+    def render_with(self, analyses):
+        return self.render([record(created=NEWEST), *analyses])
+
+    def section(self, text):
+        return text.split("### Include graph (exact)")[1].split("## Eigen cache")[0]
+
+    def test_latest_values_and_the_exact_change_against_the_previous_window(self):
+        builds = [
+            analysis(workflow="Clang Build", job="clang-build", created=days_ago(1), includes=include_summary(1030, 330, "a" * 64)),
+            analysis(workflow="Clang Build", job="clang-build", created=days_ago(2), includes=include_summary(1000, 300, "b" * 64)),
+            analysis(workflow="Clang Build", job="clang-build", created=days_ago(20), includes=include_summary(990, 295, "c" * 64)),
+            analysis(workflow="Clang Build", job="clang-build", created=days_ago(21), includes=include_summary(900, 250, "d" * 64)),
+        ]
+        text = self.section(self.render_with(builds))
+        self.assertIn("| Clang Build / clang-build | 2 | 1,030 | +40 | 330 | +35 | 2 |", text)
+
+    def test_one_distinct_graph_and_no_previous_window(self):
+        builds = [analysis(workflow="Clang Build", job="clang-build", created=days_ago(1, i), includes=include_summary()) for i in range(3)]
+        self.assertIn("| Clang Build / clang-build | 3 | 1,000 | n/a | 300 | n/a | 1 |", self.section(self.render_with(builds)))
+
+    def test_jobs_are_listed_separately_and_only_dev_pushes_count(self):
+        builds = [
+            analysis(job="build-static-lto", created=days_ago(1), includes=include_summary(500, 100)),
+            analysis(job="lint", created=days_ago(1), includes=include_summary(700, 200)),
+            analysis(job="lint", event="pull_request", branch="feature/x", created=days_ago(0, 1), includes=include_summary(9999, 9999)),
+            analysis(job="lint", branch="main", created=days_ago(0, 2), includes=include_summary(9999, 9999)),
+        ]
+        text = self.section(self.render_with(builds))
+        self.assertIn("| BUILD / build-static-lto | 1 | 500 |", text)
+        self.assertIn("| BUILD / lint | 1 | 700 |", text)
+        self.assertNotIn("9,999", text)
+
+    def test_the_highest_fan_in_headers_of_the_latest_clang_build(self):
+        old = analysis(workflow="Clang Build", job="clang-build", created=days_ago(3), includes=include_summary(top=[("include/old.hpp", 1)]))
+        new = analysis(workflow="Clang Build", job="clang-build", created=days_ago(1), includes=include_summary(top=[("include/a.hpp", 300), ("include/b.hpp", 120)]))
+        text = self.section(self.render_with([old, new]))
+        self.assertIn("#### Project headers with the highest fan-in (latest clang build)", text)
+        self.assertIn("| `include/a.hpp` | 300 |", text)
+        self.assertLess(text.index("include/a.hpp"), text.index("include/b.hpp"))
+        self.assertNotIn("old.hpp", text)
+
+    def test_without_records_it_says_so(self):
+        self.assertIn("No include graph records yet", self.section(self.render_with([analysis()])))
+
+    def test_older_than_the_current_window_gives_no_current_graph(self):
+        build = analysis(workflow="Clang Build", job="clang-build", created=days_ago(20), includes=include_summary())
+        self.assertIn("No include graph in the current window.", self.section(self.render_with([build])))
+
+
+class NonGatingTests(DataDirTestCase):
+    def test_the_clang_workflow_is_not_in_the_critical_path_table_but_in_the_job_table(self):
+        records = []
+        for i in range(5):
+            run = 7000 + i
+            records.append(record(workflow="Clang Build", job="clang-build", run_id=run, created=days_ago(1, i), duration_s=500))
+            records.append(record(workflow="BUILD", job="build", run_id=run + 100, created=days_ago(1, i), duration_s=500))
+        text = self.render(records)
+        critical = text.split("## Wall-clock per workflow (critical path)")[1].split("## Trend")[0]
+        self.assertNotIn("Clang Build", critical.split("| Workflow |")[1])
+        self.assertIn("Non-gating workflows (Clang Build)", critical)
+        jobs = text.split("## Jobs")[1]
+        self.assertIn("### Clang Build", jobs)
+
+
+class AnalysisParsingTests(unittest.TestCase):
+    def test_includes_and_clang_are_parsed_and_optional(self):
+        parsed = report.parse_analysis(analysis(includes=include_summary(), clang=clang_summary()))
+        self.assertEqual(1000, parsed.includes["include_pairs"])
+        self.assertEqual(1000.0, parsed.clang["total_s"])
+        data = analysis()
+        data.pop("includes", None); data.pop("clang", None)
+        old = report.parse_analysis(data)
+        self.assertEqual((None, None), (old.includes, old.clang))
+
+
 class RenderTests(DataDirTestCase):
     def test_output_is_deterministic(self):
         records = [record(created=days_ago(1, i), eigen=i % 2 == 0) for i in range(8)]

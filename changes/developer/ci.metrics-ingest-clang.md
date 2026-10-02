@@ -1,0 +1,1 @@
+- Ingest the clang trace summary (pushes to dev) and the exact include graph into the CI metrics build-analysis records, register the Clang Build workflow, and add clang build time and include graph sections to the CI timings overview without putting the non-gating clang job into the critical-path numbers.

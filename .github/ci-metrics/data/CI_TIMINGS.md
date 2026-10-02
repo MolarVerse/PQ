@@ -17,7 +17,7 @@ A median that rose by more than 20% and at least 30 seconds against the previous
 
 ## Wall-clock per workflow (critical path)
 
-Time from the first job of a run being created to the last job finishing (includes queue time and job dependencies such as `changes` before `build`). Only first-attempt runs whose jobs all succeeded and in which at least one real job ran (see Exclusions). "Usually last" is the job that finished last most often, i.e. the job a pull request waits for.
+Time from the first job of a run being created to the last job finishing (includes queue time and job dependencies such as `changes` before `build`). Only first-attempt runs whose jobs all succeeded and in which at least one real job ran (see Exclusions). "Usually last" is the job that finished last most often, i.e. the job a pull request waits for. Non-gating workflows (Clang Build) are not in this table because nothing waits for them; their jobs are in the job tables.
 
 | Workflow | Event | Runs | Median | p90 | Previous median | Change | Usually last |
 | --- | --- | --- | --- | --- | --- | --- | --- |
