@@ -26,9 +26,9 @@
 
 #include <optional>
 
+#include "enums/waterModels.hpp"
 #include "interWater.hpp"
 #include "mdEngine.hpp"
-#include "waterModelSettings.hpp"
 
 namespace setup
 {
@@ -67,7 +67,7 @@ namespace setup
 
         [[nodiscard]]
         static std::optional<RigidWaterGeometry> _getRigidWaterGeometry(
-            settings::WaterIntraModel intraModel
+            WaterIntraModel intraModel
         );
         static void _addReferences();
     };

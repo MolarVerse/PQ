@@ -9,3 +9,4 @@
 - move all `QM` related enums from settings to enum
 - move all enums from `settings.hpp` to enum
 - move `InitVelocities` and `ThermostatType` from settings to enum
+- move `WaterIntraModel` and `WaterInterModel` from settings to enum

@@ -123,7 +123,7 @@ namespace setup
         _makeIntraWater();
 
         if (settings::WaterModelSettings::getWaterIntraModel() !=
-            settings::WaterIntraModel::NONE)
+            WaterIntraModel::NONE)
             _checkTopologyFile();
 
         if (const auto geometry = _getRigidWaterGeometry(
@@ -133,13 +133,13 @@ namespace setup
             _shakeSetupForRigidWater(geometry.value());
 
         if (settings::WaterModelSettings::getWaterInterModel() !=
-            settings::WaterInterModel::NONE)
+            WaterInterModel::NONE)
             _makeInterWater();
 
         _engine.getLogOutput().writeSetupInfo(
             std::format(
                 "Intramolecular water model: {}",
-                settings::WaterIntraModelMeta::toString(
+                WaterIntraModelMeta::toString(
                     settings::WaterModelSettings::getWaterIntraModel()
                 )
             )
@@ -148,7 +148,7 @@ namespace setup
         _engine.getLogOutput().writeSetupInfo(
             std::format(
                 "Intermolecular water model: {}",
-                settings::WaterInterModelMeta::toString(
+                WaterInterModelMeta::toString(
                     settings::WaterModelSettings::getWaterInterModel()
                 )
             )
@@ -203,7 +203,7 @@ namespace setup
                         "topology file.",
                         settings::FileSettings::getTopologyFileName(),
                         bondIndex,
-                        settings::WaterIntraModelMeta::toString(
+                        WaterIntraModelMeta::toString(
                             settings::WaterModelSettings::getWaterIntraModel()
                         )
                     )
@@ -241,7 +241,7 @@ namespace setup
                         "the topology file.",
                         settings::FileSettings::getTopologyFileName(),
                         angleIndex,
-                        settings::WaterIntraModelMeta::toString(
+                        WaterIntraModelMeta::toString(
                             settings::WaterModelSettings::getWaterIntraModel()
                         )
                     )
@@ -266,7 +266,7 @@ namespace setup
         const waterModel::InterWaterState &state
     )
     {
-        const auto modelName = settings::WaterInterModelMeta::toString(
+        const auto modelName = WaterInterModelMeta::toString(
             settings::WaterModelSettings::getWaterInterModel()
         );
         const auto checkCharge = [&modelName](
@@ -315,10 +315,10 @@ namespace setup
      * the model is not rigid.
      */
     std::optional<RigidWaterGeometry> WaterModelSetup::_getRigidWaterGeometry(
-        settings::WaterIntraModel intraModel
+        WaterIntraModel intraModel
     )
     {
-        using enum settings::WaterIntraModel;
+        using enum WaterIntraModel;
 
         switch (intraModel)
         {
@@ -426,7 +426,7 @@ namespace setup
      */
     void WaterModelSetup::_makeIntraWater()
     {
-        using enum settings::WaterIntraModel;
+        using enum WaterIntraModel;
 
         const auto intraModel =
             settings::WaterModelSettings::getWaterIntraModel();
@@ -468,7 +468,7 @@ namespace setup
      */
     void WaterModelSetup::_makeInterWater()
     {
-        using enum settings::WaterInterModel;
+        using enum WaterInterModel;
         auto state = waterModel::InterWaterState();
 
         const auto model = settings::WaterModelSettings::getWaterInterModel();
@@ -555,7 +555,7 @@ namespace setup
 
         switch (intraModel)
         {
-            using enum settings::WaterIntraModel;
+            using enum WaterIntraModel;
             case SPC:
                 references::ReferencesOutput::addReferenceFile(
                     references::SPC_FILE
@@ -611,7 +611,7 @@ namespace setup
 
         switch (interModel)
         {
-            using enum settings::WaterInterModel;
+            using enum WaterInterModel;
             case SPC:
                 references::ReferencesOutput::addReferenceFile(
                     references::SPC_FILE

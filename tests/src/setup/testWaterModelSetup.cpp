@@ -79,10 +79,7 @@ namespace
     }
 
     template <typename Parameter>
-    void setupInterModel(
-        engine::MDEngine               &engine,
-        const settings::WaterInterModel model
-    )
+    void setupInterModel(engine::MDEngine &engine, const WaterInterModel model)
     {
         const auto state = waterModel::makeInterWaterState<Parameter>();
         engine.getSimulationBox().getMolecule(0).setPartialCharges(
@@ -95,9 +92,7 @@ namespace
     void configureNoInterModel()
     {
         settings::Settings::setJobtype(JobType::MM_MD);
-        settings::WaterModelSettings::setWaterInterModel(
-            settings::WaterInterModel::NONE
-        );
+        settings::WaterModelSettings::setWaterInterModel(WaterInterModel::NONE);
     }
 
 }   // namespace
@@ -105,52 +100,50 @@ namespace
 TEST_F(TestSetup, waterModelSetupCoversAllIntermolecularModels)
 {
     configureNoInterModel();
-    settings::WaterModelSettings::setWaterIntraModel(
-        settings::WaterIntraModel::NONE
-    );
+    settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
     addWaterSystem(*_mdEngine);
 
     setupInterModel<waterModel::SPCInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::SPC
+        WaterInterModel::SPC
     );
     setupInterModel<waterModel::SPCEInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::SPC_E
+        WaterInterModel::SPC_E
     );
     setupInterModel<waterModel::SPCFwInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::SPC_FW
+        WaterInterModel::SPC_FW
     );
     setupInterModel<waterModel::qSPCFwInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::QSPC_FW
+        WaterInterModel::QSPC_FW
     );
     setupInterModel<waterModel::SPCDCInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::SPC_DC
+        WaterInterModel::SPC_DC
     );
     setupInterModel<waterModel::H2ODCInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::H2O_DC
+        WaterInterModel::H2O_DC
     );
     setupInterModel<waterModel::TIP3PInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::TIP3P
+        WaterInterModel::TIP3P
     );
     setupInterModel<waterModel::OPC3InterParam>(
         *_mdEngine,
-        settings::WaterInterModel::OPC3
+        WaterInterModel::OPC3
     );
     setupInterModel<waterModel::SPCmTRInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::SPC_MTR
+        WaterInterModel::SPC_MTR
     );
 
     settings::Settings::activateCellList();
     setupInterModel<waterModel::TIP3PmTRInterParam>(
         *_mdEngine,
-        settings::WaterInterModel::TIP3P_MTR
+        WaterInterModel::TIP3P_MTR
     );
 }
 
@@ -160,17 +153,17 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntramolecularModels)
     addWaterSystem(*_mdEngine);
 
     constexpr std::array models{
-        settings::WaterIntraModel::SPC,
-        settings::WaterIntraModel::SPC_E,
-        settings::WaterIntraModel::SPC_FW,
-        settings::WaterIntraModel::QSPC_FW,
-        settings::WaterIntraModel::SPC_DC,
-        settings::WaterIntraModel::H2O_DC,
-        settings::WaterIntraModel::TIP3P,
-        settings::WaterIntraModel::OPC3,
-        settings::WaterIntraModel::SPC_MTR,
-        settings::WaterIntraModel::TIP3P_MTR,
-        settings::WaterIntraModel::NONE,
+        WaterIntraModel::SPC,
+        WaterIntraModel::SPC_E,
+        WaterIntraModel::SPC_FW,
+        WaterIntraModel::QSPC_FW,
+        WaterIntraModel::SPC_DC,
+        WaterIntraModel::H2O_DC,
+        WaterIntraModel::TIP3P,
+        WaterIntraModel::OPC3,
+        WaterIntraModel::SPC_MTR,
+        WaterIntraModel::TIP3P_MTR,
+        WaterIntraModel::NONE,
     };
 
     settings::WaterModelSettings::setWaterIntraModel(models.front());
@@ -190,9 +183,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntramolecularModels)
 TEST_F(TestSetup, waterModelSetupRejectsMissingWaterType)
 {
     configureNoInterModel();
-    settings::WaterModelSettings::setWaterIntraModel(
-        settings::WaterIntraModel::NONE
-    );
+    settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
     EXPECT_THROW_MSG(
 
         setup::WaterModelSetup(*_mdEngine).setup(),
@@ -206,9 +197,7 @@ TEST_F(TestSetup, waterModelSetupRejectsMissingWaterType)
 TEST_F(TestSetup, waterModelSetupRejectsInvalidAtomOrder)
 {
     configureNoInterModel();
-    settings::WaterModelSettings::setWaterIntraModel(
-        settings::WaterIntraModel::NONE
-    );
+    settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
     addWaterSystem(*_mdEngine, {"H", "O", "H"});
     EXPECT_THROW_MSG(
 
@@ -223,9 +212,7 @@ TEST_F(TestSetup, waterModelSetupRejectsInvalidAtomOrder)
 TEST_F(TestSetup, waterModelSetupRejectsQmOnlyJobs)
 {
     configureNoInterModel();
-    settings::WaterModelSettings::setWaterIntraModel(
-        settings::WaterIntraModel::NONE
-    );
+    settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
     addWaterSystem(*_mdEngine);
     settings::Settings::setJobtype(JobType::QM_MD);
     EXPECT_THROW_MSG(
@@ -241,12 +228,8 @@ TEST_F(TestSetup, waterModelSetupRejectsQmOnlyJobs)
 TEST_F(TestSetup, waterModelSetupRejectsMismatchedCharges)
 {
     configureNoInterModel();
-    settings::WaterModelSettings::setWaterIntraModel(
-        settings::WaterIntraModel::NONE
-    );
-    settings::WaterModelSettings::setWaterInterModel(
-        settings::WaterInterModel::SPC
-    );
+    settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
+    settings::WaterModelSettings::setWaterInterModel(WaterInterModel::SPC);
     addWaterSystem(*_mdEngine);
     EXPECT_THROW_MSG(
 
@@ -261,9 +244,7 @@ TEST_F(TestSetup, waterModelSetupRejectsMismatchedCharges)
 TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
 {
     configureNoInterModel();
-    settings::WaterModelSettings::setWaterIntraModel(
-        settings::WaterIntraModel::SPC_FW
-    );
+    settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::SPC_FW);
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addBond(
@@ -285,9 +266,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
 TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
 {
     configureNoInterModel();
-    settings::WaterModelSettings::setWaterIntraModel(
-        settings::WaterIntraModel::SPC_FW
-    );
+    settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::SPC_FW);
     addWaterSystem(*_mdEngine);
     auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
     _mdEngine->getForceField()->addAngle(
