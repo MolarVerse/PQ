@@ -226,6 +226,13 @@ class RenderTests(unittest.TestCase):
         self.assertNotIn("Compared with", text)
         self.assertIn("`a.hpp`", text)
 
+    def test_html_blocks_and_tables_are_separated_by_a_blank_line(self):
+        for base in (None, summary()):
+            lines = self.render(summary(headers=[header("a.hpp", 3.0)]), base).splitlines()
+            for number, line in enumerate(lines):
+                if line.startswith("<details>"):
+                    self.assertEqual("", lines[number - 1], line)
+
     def test_the_run_link_and_the_notes_are_included(self):
         text = self.render(summary(), summary(), run_url="https://example.invalid/run/1")
         self.assertIn("[Workflow run](https://example.invalid/run/1)", text)

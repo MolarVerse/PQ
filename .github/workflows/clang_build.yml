@@ -163,7 +163,8 @@ jobs:
       # immutable, so every dev commit gets its own small entry).
       - name: Stage the baseline
         id: stage
-        if: github.event_name == 'push' && steps.build.outcome == 'success'
+        # TEMPORARY (verification of #755): also store a baseline on pull requests.
+        if: (github.event_name == 'push' || github.event_name == 'pull_request') && steps.build.outcome == 'success'
         run: |
           detail="$RUNNER_TEMP/build-timings/clang-traces-detail.json"
           if [[ -f "$detail" ]]; then
