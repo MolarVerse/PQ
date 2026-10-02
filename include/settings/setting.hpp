@@ -37,7 +37,7 @@ namespace settings
     {
        private:
         std::optional<T> _default = std::nullopt;
-        std::optional<T> value_   = std::nullopt;
+        std::optional<T> _value   = std::nullopt;
 
        public:
         [[nodiscard]]

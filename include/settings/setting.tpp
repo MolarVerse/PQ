@@ -36,7 +36,7 @@ namespace settings
     template <typename T>
     bool Setting<T>::isSet() const
     {
-        return value_.has_value();
+        return _value.has_value();
     }
 
     /**
@@ -49,15 +49,15 @@ namespace settings
     template <typename T>
     const T& Setting<T>::get() const
     {
-        if (!value_.has_value() && !_default.has_value())
+        if (!_value.has_value() && !_default.has_value())
             throw exc::SettingsException(
                 "Setting value is not set and no default is available."
             );
 
-        if (!value_.has_value())
+        if (!_value.has_value())
             return _default.value();
 
-        return value_.value();
+        return _value.value();
     }
 
     /**
@@ -68,7 +68,7 @@ namespace settings
     template <typename T>
     void Setting<T>::set(const T& value)
     {
-        value_ = value;
+        _value = value;
     }
 }   // namespace settings
 
