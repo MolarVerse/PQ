@@ -242,10 +242,9 @@ jobs:
   # Pull requests and pushes only build the static LTO application: linking
   # the 165 test executables, each with its own whole-program LTO link, took
   # 78% of this job's CPU time (#746) and the regular build matrix already
-  # runs every test. The nightly run builds and runs the tests too, on dev.
-  # Scheduled workflows run from the default branch's copy of this file and
-  # on its code, hence the explicit checkout of dev; the nightly part only
-  # starts working once a release brings this file to main.
+  # runs every test. The nightly run builds and runs the tests too. Scheduled
+  # workflows run on the default branch (main), so the nightly part checks
+  # main and only starts working once a release brings this file to main.
   build-static-lto:
     if: >-
       !cancelled() && (
@@ -257,8 +256,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'schedule' && 'dev' || github.ref }}
 
       - name: Install GCC 14
         run: |
