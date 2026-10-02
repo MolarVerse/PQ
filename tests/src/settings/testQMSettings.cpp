@@ -217,9 +217,9 @@ TEST(QMSettingsTest, ReturnMaceModeTest)
 
 TEST(QMSettingsTest, ReturnXtbMethodTest)
 {
-    EXPECT_EQ(XtbMethodMeta::toString(XtbMethod::GFN1), "GFN1-xTB");
-    EXPECT_EQ(XtbMethodMeta::toString(XtbMethod::GFN2), "GFN2-xTB");
-    EXPECT_EQ(XtbMethodMeta::toString(XtbMethod::IPEA1), "IPEA1-xTB");
+    EXPECT_EQ(XtbMethodMeta::toString(XtbMethod::GFN1), "GFN1_xTB");
+    EXPECT_EQ(XtbMethodMeta::toString(XtbMethod::GFN2), "GFN2_xTB");
+    EXPECT_EQ(XtbMethodMeta::toString(XtbMethod::IPEA1), "IPEA1_xTB");
 }
 
 TEST(QMSettingsTest, SetFennolModelPath)

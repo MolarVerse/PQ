@@ -29,7 +29,6 @@
 
 #include "exceptions.hpp"   // for ParameterFileException
 #include "forceFieldNonCoulombImpl.hpp"
-#include "lennardJonesPair.hpp"   // IWYU pragma: keep -- for template instantiation
 #include "matrix.hpp"
 #include "nonCoulombPair.hpp"   // for NonCoulombPair
 #include "strongTypes.hpp"

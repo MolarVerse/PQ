@@ -23,6 +23,9 @@
 #ifndef _INPUT_CONVERTER_TPP_
 #define _INPUT_CONVERTER_TPP_
 
+#include <mstd/string/join.hpp>
+#include <set>
+
 #include "inputConverter.hpp"
 #include "stringUtilities.hpp"
 
@@ -104,7 +107,7 @@ namespace input
     {
         using Meta = mstd::enum_meta_t<T>;
 
-        std::string allowed;
+        std::vector<std::string> allowed;
         for (const auto& spelling : Meta::spellings())
         {
             const auto& name  = spelling.text;
@@ -113,13 +116,15 @@ namespace input
             if (std::ranges::find(notAllowed, value) != notAllowed.end())
                 continue;
 
-            if (!allowed.empty())
-                allowed += ", ";
+            const auto lowerName = utilities::toLowerCopy(name);
 
-            allowed += utilities::toLowerCopy(name);
+            if (std::ranges::find(allowed, lowerName) != allowed.end())
+                continue;
+
+            allowed.push_back(lowerName);
         }
 
-        return "Allowed values: " + allowed;
+        return "Allowed values: " + mstd::join(allowed, ", ");
     }
 
     /**

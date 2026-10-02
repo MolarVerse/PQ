@@ -159,9 +159,9 @@ namespace mstd
     struct EnumNames<XtbMethod>
     {
         static constexpr auto value = makeNames<XtbMethod>(
-            {{XtbMethod::GFN1, "GFN1-xTB"},
-             {XtbMethod::GFN2, "GFN2-xTB"},
-             {XtbMethod::IPEA1, "IPEA1-xTB"}}
+            {{XtbMethod::GFN1, "GFN1_xTB"},
+             {XtbMethod::GFN2, "GFN2_xTB"},
+             {XtbMethod::IPEA1, "IPEA1_xTB"}}
         );
     };
 }   // namespace mstd
