@@ -109,9 +109,55 @@ jobs:
         env:
           CC: clang-20
           CXX: clang++-20
+          CXXFLAGS: -ftime-trace-granularity=0
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
+
+      - name: EXPERIMENT trace size and summariser cost
+        if: always()
+        run: |
+          echo "traces: $(find build -name '*.cpp.json' | wc -l) files, $(find build -name '*.cpp.json' -print0 | du -ch --files0-from=- | tail -1 | cut -f1) total"
+          echo "largest traces:"; find build -name '*.cpp.json' -printf '%s %p\n' | sort -rn | head -3
+          df -h / | tail -1
+          mkdir -p "$RUNNER_TEMP/exp"
+          /usr/bin/time -v python3 .github/ci-metrics/summarise_traces.py --build-dir build --source-root "$GITHUB_WORKSPACE" --out "$RUNNER_TEMP/exp" --no-raw 2> "$RUNNER_TEMP/exp/time.txt" || true
+          grep -E "Elapsed|Maximum resident" "$RUNNER_TEMP/exp/time.txt"
+          python3 - <<'PY'
+          import json, os
+          d = json.load(open(os.environ["RUNNER_TEMP"] + "/exp/clang-traces.json"))
+          print({k: d[k] for k in ("files", "unreadable", "total_s", "frontend_s", "backend_s", "source_events", "instantiation_events")})
+          PY
+        shell: bash
+
+      - name: EXPERIMENT include data from ninja -t deps
+        if: always()
+        run: |
+          ninja -C build -t deps > "$RUNNER_TEMP/exp/ninja-deps.txt"
+          python3 - <<'PY'
+          import collections, hashlib, json, os
+          targets = {}
+          current = None
+          for line in open(os.environ["RUNNER_TEMP"] + "/exp/ninja-deps.txt", encoding="utf-8", errors="replace"):
+              if not line.strip():
+                  continue
+              if not line.startswith(" "):
+                  current = line.split(":", 1)[0]
+                  targets[current] = []
+              elif current is not None:
+                  targets[current].append(line.strip())
+          objects = {t: d for t, d in targets.items() if t.endswith(".o")}
+          pairs = sorted((t, d) for t, ds in objects.items() for d in set(ds))
+          per_header = collections.Counter(d for _, d in pairs)
+          digest = hashlib.sha256("\n".join(f"{t}\t{d}" for t, d in pairs).encode()).hexdigest()
+          print("targets with deps:", len(objects), "| unique dependency files:", len(per_header), "| include pairs:", len(pairs))
+          print("sha256 of all (object, dependency) pairs:", digest)
+          home = os.environ.get("GITHUB_WORKSPACE", "")
+          for header, count in per_header.most_common(8):
+              print(f"  {count:4} {header.replace(home + '/', '')}")
+          json.dump({"targets": len(objects), "unique_files": len(per_header), "pairs": len(pairs), "sha256": digest}, open(os.environ["RUNNER_TEMP"] + "/exp/deps-summary.json", "w"))
+          PY
+        shell: bash
 
       - name: Collect build timings
         if: always()
@@ -119,7 +165,7 @@ jobs:
         with:
           name: clang
           ccache: 'false'
-          clang-traces: 'true'
+          clang-traces: 'false'
           job-id: ${{ job.check_run_id }}
           build-status: ${{ steps.build.outcome }}
 
