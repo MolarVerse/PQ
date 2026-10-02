@@ -29,6 +29,16 @@
 namespace settings
 {
     /**
+     * Construct a setting with a default value.
+     *
+     * @param defaultValue the default value for the setting.
+     */
+    template <typename T>
+    Setting<T>::Setting(const T& defaultValue) : _default(defaultValue)
+    {
+    }
+
+    /**
      * Check if the setting has been set.
      *
      * @return true if the setting has a value, false otherwise.

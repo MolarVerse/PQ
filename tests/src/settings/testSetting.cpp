@@ -25,7 +25,9 @@
 #include <string>
 #include <type_traits>
 
+#include "exceptions.hpp"
 #include "setting.hpp"
+#include "throwWithMessage.hpp"
 
 namespace
 {
@@ -182,6 +184,118 @@ namespace
     }
 
     // ---------------------------------------------------------------------
+    // Default value behavior
+    // ---------------------------------------------------------------------
+
+    TYPED_TEST(SettingTypedTest, constructedWithDefaultIsNotSet)
+    {
+        const settings::Setting<TypeParam> setting(
+            SampleValues<TypeParam>::first()
+        );
+
+        EXPECT_FALSE(setting.isSet());
+    }
+
+    TYPED_TEST(SettingTypedTest, getReturnsDefaultWhenNotSet)
+    {
+        const settings::Setting<TypeParam> setting(
+            SampleValues<TypeParam>::first()
+        );
+
+        EXPECT_EQ(setting.get(), SampleValues<TypeParam>::first());
+    }
+
+    TYPED_TEST(SettingTypedTest, getDoesNotThrowWhenOnlyDefaultAvailable)
+    {
+        const settings::Setting<TypeParam> setting(
+            SampleValues<TypeParam>::first()
+        );
+
+        EXPECT_NO_THROW(static_cast<void>(setting.get()));
+    }
+
+    TYPED_TEST(SettingTypedTest, setValueTakesPrecedenceOverDefault)
+    {
+        settings::Setting<TypeParam> setting(SampleValues<TypeParam>::first());
+
+        setting.set(SampleValues<TypeParam>::second());
+
+        EXPECT_TRUE(setting.isSet());
+        EXPECT_EQ(setting.get(), SampleValues<TypeParam>::second());
+    }
+
+    // isSet() tracks "was explicitly set", even if the value equals the default
+    TYPED_TEST(SettingTypedTest, settingValueEqualToDefaultCountsAsSet)
+    {
+        settings::Setting<TypeParam> setting(SampleValues<TypeParam>::first());
+
+        setting.set(SampleValues<TypeParam>::first());
+
+        EXPECT_TRUE(setting.isSet());
+        EXPECT_EQ(setting.get(), SampleValues<TypeParam>::first());
+    }
+
+    TYPED_TEST(SettingTypedTest, copyPreservesDefault)
+    {
+        const settings::Setting<TypeParam> original(
+            SampleValues<TypeParam>::first()
+        );
+
+        const auto copy = original;
+
+        EXPECT_FALSE(copy.isSet());
+        EXPECT_EQ(copy.get(), SampleValues<TypeParam>::first());
+    }
+
+    TYPED_TEST(SettingTypedTest, copyOfSetSettingWithDefaultKeepsSetValue)
+    {
+        settings::Setting<TypeParam> original(SampleValues<TypeParam>::first());
+        original.set(SampleValues<TypeParam>::second());
+
+        const auto copy = original;
+
+        EXPECT_TRUE(copy.isSet());
+        EXPECT_EQ(copy.get(), SampleValues<TypeParam>::second());
+    }
+
+    // ---------------------------------------------------------------------
+    // No value and no default -> throws
+    // ---------------------------------------------------------------------
+
+    TYPED_TEST(SettingTypedTest, getWithoutValueAndWithoutDefaultThrows)
+    {
+        const settings::Setting<TypeParam> setting;
+
+        EXPECT_THROW_MSG(
+            static_cast<void>(setting.get()),
+            exc::SettingsException,
+            "Setting value is not set and no default is available."
+        );
+    }
+
+    TYPED_TEST(SettingTypedTest, getDoesNotThrowOnceValueIsSet)
+    {
+        settings::Setting<TypeParam> setting;
+
+        setting.set(SampleValues<TypeParam>::first());
+
+        EXPECT_NO_THROW(static_cast<void>(setting.get()));
+    }
+
+    TYPED_TEST(SettingTypedTest, copyOfSettingWithoutValueAndDefaultThrows)
+    {
+        const settings::Setting<TypeParam> original;
+
+        const auto copy = original;
+
+        EXPECT_THROW_MSG(
+            static_cast<void>(copy.get()),
+            exc::SettingsException,
+            "Setting value is not set and no default is available."
+        );
+    }
+
+    // ---------------------------------------------------------------------
     // API / const-correctness (compile-time)
     // ---------------------------------------------------------------------
 
@@ -224,12 +338,12 @@ namespace
 
     TEST(SettingTest, differentInstancesAreIndependent)
     {
-        settings::Setting<int> settingA;
-        settings::Setting<int> settingB;
+        settings::Setting<int> settingsA;
+        settings::Setting<int> settingsB;
 
-        settingA.set(10);
+        settingsA.set(10);
 
-        EXPECT_TRUE(settingA.isSet());
-        EXPECT_FALSE(settingB.isSet());
+        EXPECT_TRUE(settingsA.isSet());
+        EXPECT_FALSE(settingsB.isSet());
     }
 }   // namespace

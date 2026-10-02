@@ -40,6 +40,9 @@ namespace settings
         std::optional<T> _value   = std::nullopt;
 
        public:
+        explicit Setting() = default;
+        explicit Setting(const T& defaultValue);
+
         [[nodiscard]]
         const T& get() const;
 
