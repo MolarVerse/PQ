@@ -52,7 +52,8 @@
     X(CompileTimeError)            \
     X(HybridConfiguratorError)     \
     X(HybridMDEngineError)         \
-    X(TimerError)
+    X(TimerError)                  \
+    X(SettingsError)
 
 MSTD_ENUM(ExceptionType, std::uint8_t, EXCEPTION_TYPES)
 
