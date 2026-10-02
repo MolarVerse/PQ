@@ -1,0 +1,1 @@
+- Build the static LTO application without the test executables on pull requests and pushes (their 165 LTO links took 78% of the job's CPU time) and build and run the tests in the nightly run, which checks out dev.

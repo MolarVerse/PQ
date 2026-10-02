@@ -239,13 +239,26 @@ jobs:
         run: |
           ctest --test-dir build-benchmark -L benchmark --output-on-failure
 
+  # Pull requests and pushes only build the static LTO application: linking
+  # the 165 test executables, each with its own whole-program LTO link, took
+  # 78% of this job's CPU time (#746) and the regular build matrix already
+  # runs every test. The nightly run builds and runs the tests too, on dev.
+  # Scheduled workflows run from the default branch's copy of this file and
+  # on its code, hence the explicit checkout of dev; the nightly part only
+  # starts working once a release brings this file to main.
   build-static-lto:
-    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    if: >-
+      !cancelled() && (
+        github.event_name == 'schedule' ||
+        (needs.changes.result == 'success' && needs.changes.outputs.relevant == 'true')
+      )
     needs: changes
     runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || github.ref }}
 
       - name: Install GCC 14
         run: |
@@ -275,7 +288,7 @@ jobs:
           git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
         shell: bash
 
-      - name: Build and test static LTO
+      - name: Build static LTO (with tests in the nightly run)
         id: build
         run: |
           cmake -S . -B build -G Ninja \
@@ -284,12 +297,16 @@ jobs:
             -DBUILD_WITH_ASE=OFF \
             -DBUILD_WITH_LTO=ON \
             -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS="$WITH_TESTS" \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel
-          ctest --test-dir build --output-on-failure -j1
+          if [[ "$WITH_TESTS" == "ON" ]]; then
+            ctest --test-dir build --output-on-failure -j1
+          fi
         env:
           CC: gcc-14
           CXX: g++-14
+          WITH_TESTS: ${{ github.event_name == 'schedule' && 'ON' || 'OFF' }}
 
       - name: Collect build timings
         if: always()
