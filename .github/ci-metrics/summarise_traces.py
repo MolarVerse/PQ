@@ -12,7 +12,8 @@ clang writes one Chrome-trace JSON file next to every object file
 
 The summary has the totals (compiler, frontend, backend), the slowest files,
 the heaviest headers by inclusion time, the most expensive template
-instantiations and two counts that depend little on runner noise. Times are
+instantiations and two counts of trace events (which, like everything in a trace,
+depend on runner speed, see below). Times are
 seconds. It never fails a job: unreadable traces are counted and skipped.
 
 Format notes (checked on clang 20 traces). Most events are complete events

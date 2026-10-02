@@ -268,12 +268,16 @@ informational and never a failing check.
   template instantiation events) against `dev`, the headers that got heavier, and
   collapsed: lighter headers, the files and template instantiations that changed most
   and this pull request's slowest files, heaviest headers and templates.
-- **Speed-adjusted.** The same build differed by about 30% between two runs on shared
+- **Speed-adjusted.** The same code took between 882 s and 1,707 s of compiler time in five runs on shared
   runners, so the change of a single header, file or template is computed after scaling
   the baseline by the ratio of the two total compile times (a uniformly slower runner
   shows no changes). A change is listed only if it is at least 0.5 s (files 1 s) and
-  15% (files and templates 20%). The two counts do not depend on runner speed. These
-  thresholds are provisional until the noise study (#751).
+  15% (files and templates 20%). **This is a first-order correction only:** clang leaves
+  events shorter than 0.5 ms out of the trace, so a faster run also records fewer events.
+  The counts (shown without a percentage), the files-including-it column and the self time
+  of headers made of many small events therefore depend on runner speed, and the
+  "lighter" lists can show false changes (seen on identical code). The thresholds are
+  provisional until the noise study (#751).
 - **Limits.** Only the longest lists (100 files, 300 headers, 150 templates) are
   compared; a header that is not in the baseline's list is compared with the cut-off of
   that list and marked "new in the list".

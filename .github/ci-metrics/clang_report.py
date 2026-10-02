@@ -7,11 +7,15 @@ for a single, updated-in-place pull request comment. Informational only: it
 never fails and always writes a report, also when there is no baseline or no
 trace data.
 
-Timings on shared runners are noisy (the same build differed by about 30%
-between two runs), so the per-header, per-file and per-template changes are
-*speed-adjusted*: the baseline value is scaled by the ratio of the two total
-compile times before the difference is taken. The counts of header inclusions
-and template instantiations do not depend on runner speed.
+Timings on shared runners are noisy (the same code took 882 s to 1707 s of
+compiler time in five runs), so the per-header, per-file and per-template
+changes are *speed-adjusted*: the baseline value is scaled by the ratio of the
+two total compile times before the difference is taken. This is only a
+first-order correction: clang leaves events shorter than 0.5 ms out of the
+trace, so a faster run records fewer events, and the counts of header
+inclusions and template instantiations (and the self time of headers made of
+many small events) are speed-dependent too. Counts are therefore shown without
+a percentage change.
 """
 
 import argparse
@@ -39,8 +43,8 @@ HEADLINE = (
     ("Compiler time (CPU, all files)", "total_s", "time"),
     ("Frontend (parsing, templates)", "frontend_s", "time"),
     ("Backend (optimisation, code generation)", "backend_s", "time"),
-    ("Header inclusions", "source_events", "count"),
-    ("Template instantiation events", "instantiation_events", "count"),
+    ("Header inclusions (events of at least 0.5 ms)", "source_events", "count"),
+    ("Template instantiation events (at least 0.5 ms)", "instantiation_events", "count"),
 )
 
 
@@ -165,7 +169,8 @@ def headline_rows(pr, base):
             rows.append([label, shown])
             continue
         before = format_seconds(base[key]) if kind == "time" else f"{int(base[key]):,}"
-        rows.append([label, before, shown, format_percent_change(base[key], value)])
+        change = format_percent_change(base[key], value) if kind == "time" else "-"
+        rows.append([label, before, shown, change])
     return rows
 
 
@@ -183,7 +188,7 @@ def header_section(pr, base, scale):
 
     def render(selected):
         return table(
-            ["Header", "Self time before", "Self time now", "Change (speed-adjusted)", "Files including it"],
+            ["Header", "Self time before", "Self time now", "Change (speed-adjusted)", "Files including it (approx.)"],
             [
                 [
                     code(row[0]),
@@ -233,9 +238,12 @@ def detail_tables(pr):
 
 NOTES = (
     "<sub>Informational, never a failing check. Clang 20, Debug, no ccache, on a shared runner: "
-    "the same build differed by about 30% between two runs, so changes of single headers, files and "
-    "templates are speed-adjusted (the baseline is scaled by the ratio of the total compile times); "
-    "the counts of header inclusions and template instantiations do not depend on runner speed. "
+    "the same code took between 15 and 28 minutes of compiler time in different runs, so changes of "
+    "single headers, files and templates are speed-adjusted (the baseline is scaled by the ratio of "
+    "the total compile times). That is only a first-order correction: clang leaves events shorter "
+    "than 0.5 ms out of the trace, so a faster run also records fewer events. The counts, the "
+    "files-including-it column and the self time of headers made of many small events therefore "
+    "depend on runner speed too, and small changes in them are not meaningful. "
     "Only the longest lists of both builds are compared, so a header can appear as new when it "
     "crossed the cut-off of the baseline's list.</sub>"
 )

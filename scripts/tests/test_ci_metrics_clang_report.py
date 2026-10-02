@@ -166,8 +166,9 @@ class RenderTests(unittest.TestCase):
         self.assertIn(report.MARKER, text)
         self.assertIn("Compared with `dev` `abcdef0`.", text)
         self.assertIn("| Compiler time (CPU, all files) | 16m 40s | 18m 20s | +10.0% |", text)
-        self.assertIn("| Header inclusions | 1,000 | 1,010 | +1.0% |", text)
-        self.assertIn("| Template instantiation events | 2,000 | 2,000 | +0.0% |", text)
+        # counts depend on runner speed (events under 0.5 ms are left out), so they get no percentage
+        self.assertIn("| Header inclusions (events of at least 0.5 ms) | 1,000 | 1,010 | - |", text)
+        self.assertIn("| Template instantiation events (at least 0.5 ms) | 2,000 | 2,000 | - |", text)
 
     def test_headers_that_got_heavier_are_listed_with_files_and_speed_adjustment(self):
         base = summary(headers=[header("include/a.hpp", 10.0, files=30), header("include/same.hpp", 5.0)])
@@ -237,6 +238,7 @@ class RenderTests(unittest.TestCase):
         text = self.render(summary(), summary(), run_url="https://example.invalid/run/1")
         self.assertIn("[Workflow run](https://example.invalid/run/1)", text)
         self.assertIn("never a failing check", text)
+        self.assertIn("depend on runner speed too", text)
 
     def test_hostile_names_cannot_break_the_tables_or_the_details_block(self):
         evil = "x|y`z\n</details>| | |"
