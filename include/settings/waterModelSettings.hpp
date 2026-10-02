@@ -24,48 +24,13 @@
 
 #define _WATER_MODEL_SETTINGS_HPP_
 
-#include <cstdint>
 #include <mstd/enum.hpp>
 #include <string_view>
 
+#include "enums/waterModels.hpp"
+
 namespace settings
 {
-
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define WATER_INTRA_MODEL_LIST(X) \
-    X(NONE)                       \
-    X(SPC)                        \
-    X(SPC_E)                      \
-    X(SPC_FW)                     \
-    X(QSPC_FW)                    \
-    X(SPC_DC)                     \
-    X(H2O_DC)                     \
-    X(TIP3P)                      \
-    X(OPC3)                       \
-    X(SPC_MTR)                    \
-    X(TIP3P_MTR)
-
-    MSTD_ENUM(WaterIntraModel, std::uint8_t, WATER_INTRA_MODEL_LIST)
-
-#undef WATER_INTRA_MODEL_LIST
-
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define WATER_INTER_MODEL_LIST(X) \
-    X(NONE)                       \
-    X(SPC)                        \
-    X(SPC_E)                      \
-    X(SPC_FW)                     \
-    X(QSPC_FW)                    \
-    X(SPC_DC)                     \
-    X(H2O_DC)                     \
-    X(TIP3P)                      \
-    X(OPC3)                       \
-    X(SPC_MTR)                    \
-    X(TIP3P_MTR)
-
-    MSTD_ENUM(WaterInterModel, std::uint8_t, WATER_INTER_MODEL_LIST)
-
-#undef WATER_INTER_MODEL_LIST
 
     /**
      * @class WaterModelSettings
