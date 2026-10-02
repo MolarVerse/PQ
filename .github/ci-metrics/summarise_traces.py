@@ -13,6 +13,13 @@ the heaviest headers by inclusion time, the most expensive template
 instantiations and two counts that depend little on runner noise. Times are
 seconds. It never fails a job: unreadable traces are counted and skipped.
 
+Format notes (checked on clang 20 traces). Most events are complete events
+(`ph` "X"), but include events (`Source`) are async begin/end pairs (`ph` "b" and
+"e", all with id 0), written adjacent to each other when the include finishes,
+so they are paired by order and turned into complete events. The main source
+file is not an event at all: a translation unit is named from the trace path
+(`<dir>/CMakeFiles/<target>.dir/<file>.json` is `<dir>/<file>`).
+
 Time notes. Events shorter than clang's trace granularity (0.5 ms by default)
 are not in the trace, so the counts are of events above that size. "Inclusive"
 time contains the time of nested events (an included header's own includes),
@@ -23,6 +30,7 @@ header is not blamed for what it includes.
 import argparse
 import json
 import os
+import posixpath
 import re
 import shutil
 import sys
@@ -32,6 +40,7 @@ from pathlib import Path
 SCHEMA_VERSION = 1
 SUMMARY_NAME = "clang-traces.json"
 TRACE_NAME = re.compile(r"\.(cpp|cc|cxx|c)\.json$")
+OBJECT_DIR = re.compile(r"(^|/)CMakeFiles/[^/]+\.dir/")
 
 TOP_FILES = 20
 TOP_HEADERS = 30
@@ -43,25 +52,51 @@ SOURCE = "Source"
 TEMPLATE_EVENTS = ("InstantiateClass", "InstantiateFunction")
 
 
+def is_number(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def complete_events(raw):
+    """Complete events of a trace: "X" events plus paired async "b"/"e" events."""
+    events = []
+    open_events = defaultdict(list)
+    for event in raw:
+        if not isinstance(event, dict) or not isinstance(event.get("name"), str) or not is_number(event.get("ts")):
+            continue
+        phase = event.get("ph")
+        if phase == "X" and is_number(event.get("dur")):
+            events.append(event)
+            continue
+        key = (event.get("pid"), event.get("tid"), event.get("cat"), event.get("name"), event.get("id"))
+        if phase == "b":
+            open_events[key].append(event)
+        elif phase == "e" and open_events[key]:
+            begin = open_events[key].pop()
+            if event["ts"] >= begin["ts"]:
+                events.append(
+                    {
+                        "ph": "X",
+                        "name": begin["name"],
+                        "ts": begin["ts"],
+                        "dur": event["ts"] - begin["ts"],
+                        "tid": begin.get("tid", 0),
+                        "args": begin.get("args") if isinstance(begin.get("args"), dict) else {},
+                    }
+                )
+    return events
+
+
 def load_trace(path):
-    """The complete events (`ph` == "X") of one trace file; ValueError if unusable."""
+    """The complete events of one trace file; ValueError if it is unusable."""
     try:
         with open(path, encoding="utf-8") as handle:
             data = json.load(handle)
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
         raise ValueError(f"{path}: {error}") from error
-    events = data.get("traceEvents") if isinstance(data, dict) else None
-    if not isinstance(events, list):
+    raw = data.get("traceEvents") if isinstance(data, dict) else None
+    if not isinstance(raw, list):
         raise ValueError(f"{path}: no traceEvents")
-    return [
-        event
-        for event in events
-        if isinstance(event, dict)
-        and event.get("ph") == "X"
-        and isinstance(event.get("ts"), (int, float))
-        and isinstance(event.get("dur"), (int, float))
-        and isinstance(event.get("name"), str)
-    ]
+    return complete_events(raw)
 
 
 def detail(event):
@@ -104,12 +139,8 @@ def analyse_trace(events):
         return sum(e["dur"] for e in named.get(name, [])) / 1e6 or None
 
     sources = with_self_times(named.get(SOURCE, []))
-    top_level = [item for item in sources if item[1] == 0]
-    main = max(top_level, key=lambda item: item[0]["dur"], default=None)
     headers = [
-        (detail(event), event["dur"] / 1e6, self_us / 1e6)
-        for event, depth, self_us in sources
-        if detail(event) and (main is None or event is not main[0])
+        (detail(event), event["dur"] / 1e6, self_us / 1e6) for event, _, self_us in sources if detail(event)
     ]
     templates = [
         (detail(event), event["dur"] / 1e6, self_us / 1e6)
@@ -123,7 +154,6 @@ def analyse_trace(events):
     if compiler is None and (frontend or backend):
         compiler = (frontend or 0) + (backend or 0)
     return {
-        "main": detail(main[0]) if main else "",
         "total_s": compiler,
         "frontend_s": frontend,
         "backend_s": backend,
@@ -135,12 +165,22 @@ def analyse_trace(events):
 
 
 def clean_path(path, roots):
-    """Path relative to the first matching root, or the path itself."""
+    """Normalised path, relative to the first matching root if there is one."""
+    path = posixpath.normpath(path) if path else path
     for root in roots:
         prefix = root.rstrip("/") + "/"
         if path.startswith(prefix):
             return path[len(prefix):]
     return path
+
+
+def tu_name(trace_path, build_dir):
+    """`<dir>/CMakeFiles/<target>.dir/<file>.json` -> `<dir>/<file>` (relative to the build dir)."""
+    try:
+        relative = Path(trace_path).resolve().relative_to(Path(build_dir).resolve()).as_posix()
+    except ValueError:
+        relative = Path(trace_path).name
+    return OBJECT_DIR.sub(r"\1", relative[: -len(".json")])
 
 
 def clip(text, limit=MAX_NAME_CHARS):
@@ -179,7 +219,7 @@ def summarise(build_dir, source_root):
         if result["total_s"] is None:
             unreadable += 1
             continue
-        name = clean_path(result["main"], roots) or clean_path(str(path.resolve().with_suffix("")), [roots[1]])
+        name = tu_name(path, build_dir)
         for key in sums:
             sums[key] += result[key] or 0.0
         source_events += result["source_events"]
