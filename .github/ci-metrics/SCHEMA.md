@@ -103,15 +103,19 @@ next to every object file (`foo.cpp.o` gives `foo.cpp.json`), as `clang-traces.j
 in the `build-timings-<job>-a<attempt>` artifact of the clang job. It is not part
 of the collected data yet (#749). A copy of the raw traces of the 20 slowest files is
 in the artifact's `traces/` directory (all traces together are far too large).
-Times are seconds.
+Times are seconds. The same script also writes `clang-traces-detail.json` (kind
+`"clang-trace-detail"`, same fields, lists of 100 files, 300 headers and 150
+templates) which the pull request comment compares against the `dev` baseline; it is
+not part of the collected data.
 
 | Field | Meaning |
 | --- | --- |
-| `schema_version`, `kind` | `1`, `"clang-trace-summary"`. |
+| `schema_version`, `kind` | `1`, `"clang-trace-summary"` (or `"clang-trace-detail"`). |
+| `limits` | The list lengths used: `files`, `headers`, `templates` (20, 30, 30 in the summary). A reader of the longer detail file uses them to tell a header that is missing from a full list from one that is just not listed. |
 | `files` | Translation units analysed. |
 | `unreadable` | Trace files that were truncated, not traces, or without a compiler total; they are counted and left out. |
 | `total_s`, `frontend_s`, `backend_s` | Sums over the translation units of the `ExecuteCompiler`, `Frontend` and `Backend` events. `backend_s` is 0 or small when nothing is optimised or generated in the trace. |
-| `source_events`, `instantiation_events` | Number of header inclusions (`Source` events) and of template instantiations (`InstantiateClass` / `InstantiateFunction`) over all translation units. **These depend little on runner speed**, but they count only events at least as long as clang's trace granularity (0.5 ms by default), so events near that size can come and go. |
+| `source_events`, `instantiation_events` | Number of header inclusions (`Source` events) and of template instantiations (`InstantiateClass` / `InstantiateFunction`) over all translation units. **These depend on runner speed**: only events at least as long as clang's trace granularity (0.5 ms by default) are in a trace, so a faster run records fewer of them. Measured on identical code: compiler time 882 s to 1,707 s and, with it, 243,391 to 496,033 instantiation events and 49,789 to 58,839 inclusions in five runs. Do not read small changes in them as changes of the code. |
 | `slowest_files` | Top 20 translation units: `file` (the source file, derived from the trace path: `<dir>/CMakeFiles/<target>.dir/<file>.json` is `<dir>/<file>`; clang does not write the main source file into the trace), `total_s`, `frontend_s`, `backend_s`. |
 | `headers` | Top 30 headers by **self** time summed over all translation units: `header` (repository-relative if inside the repository), `inclusive_s` (time including what the header includes), `self_s` (without), `events` (inclusions) and `files` (translation units that include it). Paths are normalised (`..` removed) and made relative to the repository where possible. |
 | `templates` | Top 30 template instantiations by self time: `name` (clipped to 200 characters), `count`, `inclusive_s`, `self_s`. |

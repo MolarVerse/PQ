@@ -10,7 +10,7 @@ instead of guessed. Tracked in #720.
 | Collector workflow, see [The workflow](#the-workflow) | implemented, #716 (inert until it reaches `main`) |
 | Overview report for `dev`, see [`data/CI_TIMINGS.md`](data/CI_TIMINGS.md) and [Overview report](#overview-report) | implemented, #717 (build analysis section: #718) |
 | Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented (#718): job side, collector ingest and the overview section |
-| clang `-ftime-trace` analysis | in progress, #719: clang job (#747) and trace summariser (#748) done; ingest, PR comment and noise study planned |
+| clang `-ftime-trace` analysis | in progress, #719: clang job (#747), trace summariser (#748) and PR comment (#750) done; ingest and noise study planned |
 
 ## Layout
 
@@ -26,11 +26,12 @@ instead of guessed. Tracked in #720.
   report.py      generates data/CI_TIMINGS.md from the shards (standard library only)
   summarise_build.py   runs in a CI job: summarises .ninja_log and ccache statistics
   summarise_traces.py  runs in the clang job: summarises the -ftime-trace files
+  clang_report.py      renders the clang build time comment of a pull request
   data/          weekly JSONL shards and the generated CI_TIMINGS.md, written only by the tools above
 ```
 
 The workflow is `.github/workflows/ci_metrics.yml`. Tests:
-`scripts/tests/test_ci_metrics_{collect,publish,report,build_summary,traces}.py`
+`scripts/tests/test_ci_metrics_{collect,publish,report,build_summary,traces,clang_report}.py`
 (offline, the publish tests use real local git repositories; they run with the
 other script tests in CI).
 
@@ -251,6 +252,41 @@ them (#735), so nothing can be backfilled. Each record is 0.5 KB (ccache only) t
 records.
 
 The overview shows the data in its "Build analysis" section (below).
+
+## Clang build time comment (#750)
+
+Every pull request that runs the `Clang Build` workflow (C++-relevant paths) gets one
+comment with the clang build times, updated in place (marker
+`<!-- clang-build-times-comment -->`), in the style of the performance gate. It is
+informational and never a failing check.
+
+- **Baseline.** A push to `dev` stores `clang-traces-detail.json` in the Actions cache
+  (`clang-times-<dev sha>`, about 100 KB); a pull request restores the newest one and
+  compares against it. Without one the comment says "No baseline yet" and shows only the
+  pull request's numbers (the baseline is not built in the pull request).
+- **What it shows.** The totals (compiler, frontend, backend CPU time, header inclusions,
+  template instantiation events) against `dev`, the headers that got heavier, and
+  collapsed: lighter headers, the files and template instantiations that changed most
+  and this pull request's slowest files, heaviest headers and templates.
+- **Speed-adjusted.** The same code took between 882 s and 1,707 s of compiler time in five runs on shared
+  runners, so the change of a single header, file or template is computed after scaling
+  the baseline by the ratio of the two total compile times (a uniformly slower runner
+  shows no changes). A change is listed only if it is at least 0.5 s (files 1 s) and
+  15% (files and templates 20%). **This is a first-order correction only:** clang leaves
+  events shorter than 0.5 ms out of the trace, so a faster run also records fewer events.
+  The counts (shown without a percentage), the files-including-it column and the self time
+  of headers made of many small events therefore depend on runner speed, and the
+  "lighter" lists can show false changes (seen on identical code). The thresholds are
+  provisional until the noise study (#751).
+- **Limits.** Only the longest lists (100 files, 300 headers, 150 templates) are
+  compared; a header that is not in the baseline's list is compared with the cut-off of
+  that list and marked "new in the list".
+- **Who runs what.** `clang-build` runs the pull request's code and has no write token:
+  it renders the Markdown (`clang_report.py`), appends it to the job summary (the only
+  output for forks) and uploads it. `clang-comment` has `pull-requests: write`, mints
+  the `pq-perf-bot` token and only posts the downloaded file; it runs nothing from the
+  pull request and is skipped for forks and `pq-bot/` branches, like the performance
+  gate.
 
 ## Reading the data
 
