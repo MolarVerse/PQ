@@ -134,10 +134,7 @@ namespace input
         _parsers.push_back(std::make_unique<ConvInputParser>());
         _parsers.push_back(std::make_unique<OptInputParser>());
         _parsers.push_back(
-            std::make_unique<QMInputParser>(
-                engine.getLogOutput(),
-                resolveBuiltInSlakosPath
-            )
+            std::make_unique<QMInputParser>(resolveBuiltInSlakosPath)
         );
 
         addKeywords();

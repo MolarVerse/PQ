@@ -23,3 +23,4 @@
 - migrate `OptInputParser`
 - migrate `ThermostatInputParser`
 - migrate `ConvergenceInputParser`
+- migrate `QMInputParser`

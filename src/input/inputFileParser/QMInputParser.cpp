@@ -23,18 +23,18 @@
 #include "QMInputParser.hpp"
 
 #include <format>
-#include <sstream>
-#include <stdexcept>
+#include <mstd/string.hpp>
 #include <unordered_map>
 
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "hubbardDerivMap.hpp"
-#include "parserUtils.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
 #include "qmSettings.hpp"
 #include "references.hpp"
 #include "referencesOutput.hpp"
-#include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 
 namespace input
@@ -48,12 +48,8 @@ namespace input
      * qm_script
      * "<string>"
      *
-     * @param logOutput
      */
-    QMInputParser::QMInputParser(out::LogOutput &logOutput)
-        : QMInputParser(logOutput, true)
-    {
-    }
+    QMInputParser::QMInputParser() : QMInputParser(true) {}
 
     /**
      * @brief Construct a new QMInputParser:: QMInputParser object
@@ -63,374 +59,440 @@ namespace input
      * qm_script
      * "<string>"
      *
-     * @param logOutput
      * @param resolveBuiltInSlakosPath
      */
-    QMInputParser::QMInputParser(
-        out::LogOutput &logOutput,
-        const bool      resolveBuiltInSlakosPath
-    )
-        : _logOutput(&logOutput),
-          _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
+    QMInputParser::QMInputParser(const bool resolveBuiltInSlakosPath)
+        : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
     {
-        addKeyword(
-            std::string("qm_prog"),
-            bindMember(&QMInputParser::parseQMMethod, this),
-            false
-        );
-
-        addKeyword(
-            std::string("qm_script"),
-            bindMember(&QMInputParser::parseQMScript, this),
-            false
-        );
-
-        addKeyword(
-            std::string("qm_script_full_path"),
-            bindMember(&QMInputParser::parseQMScriptFullPath, this),
-            false
-        );
-
-        addKeyword(
-            std::string("qm_loop_time_limit"),
-            bindMember(&QMInputParser::parseQMLoopTimeLimit, this),
-            false
-        );
-
-        addKeyword(
-            std::string("dispersion"),
-            bindMember(&QMInputParser::parseDispersion, this),
-            false
-        );
-
-        addKeyword(
-            std::string("remove_net_force"),
-            bindMember(&QMInputParser::parseRemoveNetForce, this),
-            false
-        );
-
-        addKeyword(
-            std::string("mace_model_size"),
-            bindMember(&QMInputParser::parseMaceModel, this),
-            false
-        );
-
-        addKeyword(
-            std::string("mace_model"),
-            bindMember(&QMInputParser::parseMaceModel, this),
-            false
-        );
-
-        addKeyword(
-            std::string("mace_mode"),
-            bindMember(&QMInputParser::parseMaceMode, this),
-            false
-        );
-
-        addKeyword(
-            std::string("mace_model_path"),
-            bindMember(&QMInputParser::parseMaceModelPath, this),
-            false
-        );
-
-        addKeyword(
-            std::string("slakos"),
-            bindMember(&QMInputParser::parseSlakosType, this),
-            false
-        );
-
-        addKeyword(
-            std::string("slakos_path"),
-            bindMember(&QMInputParser::parseSlakosPath, this),
-            false
-        );
-
-        addKeyword(
-            std::string("third_order"),
-            bindMember(&QMInputParser::parseThirdOrder, this),
-            false
-        );
-
-        addKeyword(
-            std::string("hubbard_derivs"),
-            bindMember(&QMInputParser::parseHubbardDerivs, this),
-            false
-        );
-
-        addKeyword(
-            std::string("xtb_method"),
-            bindMember(&QMInputParser::parseXtbMethod, this),
-            false
-        );
-
-        addKeyword(
-            std::string("fennol_model_path"),
-            bindMember(&QMInputParser::parseFennolModelPath, this),
-            false
-        );
-
-        addKeyword(
-            std::string("gpu_preprocessing"),
-            bindMember(&QMInputParser::parseGPUPreprocessing, this),
-            false
-        );
+        addQMMethodKey();
+        addQMScriptKey();
+        addQMScriptFullPathKey();
+        addQMLoopTimeLimitKey();
+        addDispersionKey();
+        addRemoveNetForceKey();
+        addMaceModelKey();
+        addMaceModeKey();
+        addMaceModelPathKey();
+        addSlakosTypeKey();
+        addSlakosPathKey();
+        addThirdOrderKey();
+        addHubbardDerivsKey();
+        addXtbMethodKey();
+        addFennolModelPathKey();
+        addGPUPreprocessingKey();
     }
 
-    /**
-     * @brief parse external QM Program which should be used
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if the method is not recognized
-     */
-    void QMInputParser::parseQMMethod(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void QMInputParser::addQMMethodKey()
     {
-        using enum QMMethod;
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name  = "qm_prog",
+            .title = "QM Method",
+            .description =
+                "Specifies the quantum mechanical method to be used.",
+        };
 
-        const auto method =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
-
-        const auto qmMethodOpt =
-            QMMethodMeta::from_stringCaseInsensitive(method);
-
-        if (!qmMethodOpt.has_value())
+        const auto setValue = [](QMMethod value)
         {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid qm_prog \"{}\" in input file.\n"
-                    "Possible values are: dftbplus, ase_dftbplus, ase_xtb, "
-                    "pyscf, turbomole, fennol, mace, mace_mp, mace_off",
-                    lineElements[2]
-                )
-            );
-        }
+            settings::QMSettings::setQMMethod(value);
 
-        settings::QMSettings::setQMMethod(qmMethodOpt.value());
+            switch (value)
+            {
+                case QMMethod::ASE_DFTBPLUS:
+                case QMMethod::DFTBPLUS:
+                    references::ReferencesOutput::addReferenceFile(
+                        references::DFTBPLUS_FILE
+                    );
+                    break;
+                case QMMethod::TURBOMOLE:
+                    references::ReferencesOutput::addReferenceFile(
+                        references::TURBOMOLE_FILE
+                    );
+                    break;
+                case QMMethod::FENNOL:
+                    references::ReferencesOutput::addReferenceFile(
+                        references::FENNOL_FILE
+                    );
+                    break;
+                case QMMethod::PYSCF:
+                    references::ReferencesOutput::addReferenceFile(
+                        references::PYSCF_FILE
+                    );
+                    break;
+                case QMMethod::MACE:
+                case QMMethod::ASE_XTB:
+                case QMMethod::NONE: break;
+            }
+        };
 
-        switch (qmMethodOpt.value())
+        const auto finalize = [](const std::string &value, QMMethod method)
         {
-            case ASE_DFTBPLUS:
-            case DFTBPLUS:
-                references::ReferencesOutput::addReferenceFile(
-                    references::DFTBPLUS_FILE
-                );
-                break;
-            case TURBOMOLE:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TURBOMOLE_FILE
-                );
-                break;
-            case FENNOL:
-                references::ReferencesOutput::addReferenceFile(
-                    references::FENNOL_FILE
-                );
-                break;
-            case PYSCF:
-                references::ReferencesOutput::addReferenceFile(
-                    references::PYSCF_FILE
-                );
-                break;
-            case MACE: parseMaceQMMethod(method); break;
-            case ASE_XTB: break;
-            case NONE:
-                throw exc::InputFileException(
-                    std::format(
-                        "Invalid qm_prog \"{}\" in input file.\n"
-                        "Possible values are: dftbplus, ase_dftbplus, ase_xtb, "
-                        "pyscf, turbomole, fennol, mace, mace_mp, mace_off",
-                        lineElements[2]
-                    )
-                );
-        }
-    }
+            if (method == QMMethod::MACE)
+                parseMaceQMMethod(value);
+        };
 
-    /**
-     * @brief parse external QM Script name
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseQMScript(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::QMSettings::setQMScript(lineElements[2]);
-    }
-
-    /**
-     * @brief parse external QM script name
-     *
-     * @details this keyword is used for singularity builds to ensure that the
-     * user knows what he is doing. With a singularity build the script has to
-     * be accessed from outside of the container and therefore the general
-     * keyword qm_script is not applicable.
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseQMScriptFullPath(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::QMSettings::setQMScriptFullPath(lineElements[2]);
-    }
-
-    /**
-     * @brief parse the time limit for the QM loop
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseQMLoopTimeLimit(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::QMSettings::setQMLoopTimeLimit(
-            utilities::stringToFiniteDouble(lineElements[2])
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<QMMethod>{
+                .metadata   = metaData,
+                .notAllowed = {QMMethod::NONE},
+                .onSet      = setValue,
+                .finalizer  = finalize,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse the dispersion correction
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseDispersion(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void QMInputParser::addQMScriptKey()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::QMSettings::setUseDispersionCorrection(
-            utilities::keywordToBool(lineElements)
+        const auto metaData = KeyMetadata{
+            .name        = "qm_script",
+            .title       = "QM Script",
+            .description = "Specifies the external QM script to be used.",
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::QMSettings::setQMScript(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse the remove net force option
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseRemoveNetForce(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void QMInputParser::addQMScriptFullPathKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name        = "qm_script_full_path",
+            .title       = "QM Script Full Path",
+            .description = "Specifies the full path to the external QM script.",
+        };
 
-        settings::QMSettings::setRemoveNetForce(
-            utilities::keywordToBool(lineElements)
+        const auto setValue = [](const std::string &value)
+        { settings::QMSettings::setQMScriptFullPath(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse the Mace model
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if the model is not recognized
-     */
-    void QMInputParser::parseMaceModel(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void QMInputParser::addQMLoopTimeLimitKey()
     {
-        using enum MaceModel;
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name        = "qm_loop_time_limit",
+            .title       = "QM Loop Time Limit",
+            .description = "Specifies the time limit for the QM loop.",
+        };
 
-        const auto *const modelSizeWarning =
-            "The keyword \"mace_model_size\" is deprecated and has been "
-            "renamed to "
-            "\"mace_model\". It will be removed in a future release.";
+        const auto setValue = [](double value)
+        { settings::QMSettings::setQMLoopTimeLimit(value); };
 
-        if (lineElements[0] == "mace_model_size")
-        {
-            _logOutput->queueWarning(modelSizeWarning);
-            out::StdoutOutput::writeSetupWarning(modelSizeWarning);
-        }
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
 
-        const auto size =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
-
-        const auto modelOpt = MaceModelMeta::from_stringCaseInsensitive(size);
-
-        if (modelOpt.has_value())
-        {
-            settings::QMSettings::setMaceModel(modelOpt.value());
-        }
-        else
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid mace_model \"{}\" in input file.\n"
-                    "Possible values are: small, medium, large, small-0b,\n"
-                    "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
-                    "medium-mpa-0, medium-omat-0, custom",
-                    lineElements[2]
-                )
-            );
-        }
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse the MACE evaluation mode
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseMaceMode(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void QMInputParser::addDispersionKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name        = "dispersion",
+            .title       = "Dispersion Correction",
+            .description = "Specifies whether to use dispersion correction.",
+        };
 
-        const auto modeStr =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+        const auto setValue = [](bool value)
+        { settings::QMSettings::setUseDispersionCorrection(value); };
 
-        const auto mode = MaceModeMeta::from_stringCaseInsensitive(modeStr);
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
 
-        if (!mode.has_value())
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid mace_mode \"{}\" in input file.\n"
-                    "Possible values are: accurate, fast",
-                    lineElements[2]
-                )
-            );
-        }
-
-        settings::QMSettings::setMaceMode(mode.value());
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse external MACE model url
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseMaceModelPath(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void QMInputParser::addRemoveNetForceKey()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::QMSettings::setMaceModelPath(lineElements[2]);
+        const auto metaData = KeyMetadata{
+            .name        = "remove_net_force",
+            .title       = "Remove Net Force",
+            .description = "Specifies whether to remove the net force.",
+        };
+
+        const auto setValue = [](bool value)
+        { settings::QMSettings::setRemoveNetForce(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addMaceModelKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "mace_model",
+            .title       = "MACE Model",
+            .description = "Specifies the MACE model to use.",
+        };
+
+        const auto setValue = [](MaceModel value)
+        { settings::QMSettings::setMaceModel(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<MaceModel>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addMaceModeKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "mace_mode",
+            .title       = "MACE Mode",
+            .description = "Specifies the MACE evaluation mode.",
+        };
+
+        const auto setValue = [](MaceMode value)
+        { settings::QMSettings::setMaceMode(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<MaceMode>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addMaceModelPathKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "mace_model_path",
+            .title       = "MACE Model Path",
+            .description = "Specifies the path to the external MACE model.",
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::QMSettings::setMaceModelPath(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addSlakosTypeKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "slakos",
+            .title       = "SLAKOS Type",
+            .description = "Specifies the SLAKOS type to use.",
+        };
+
+        const auto setValue = [this](SlakosType value)
+        {
+            switch (value)
+            {
+                case SlakosType::THREEOB:
+                    settings::QMSettings::setSlakosType(
+                        SlakosType::THREEOB,
+                        _resolveBuiltInSlakosPath
+                    );
+                    settings::QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
+                    references::ReferencesOutput::addReferenceFile(
+                        references::THREEOB_FILE
+                    );
+                    break;
+                case SlakosType::MATSCI:
+                    settings::QMSettings::setSlakosType(
+                        SlakosType::MATSCI,
+                        _resolveBuiltInSlakosPath
+                    );
+                    references::ReferencesOutput::addReferenceFile(
+                        references::MATSCI_FILE
+                    );
+                    break;
+                case SlakosType::CUSTOM:
+                    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
+                    break;
+                case SlakosType::NONE: break;
+            }
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<SlakosType>{
+                .metadata   = metaData,
+                .notAllowed = {SlakosType::NONE},
+                .onSet      = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addSlakosPathKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "slakos_path",
+            .title       = "SLAKOS Path",
+            .description = "Specifies the path to the SLAKOS executable.",
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::QMSettings::setSlakosPath(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addThirdOrderKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "third_order",
+            .title       = "Third Order DFTB",
+            .description = "Specifies whether third order DFTB is used.",
+        };
+
+        const auto setValue = [](bool value)
+        {
+            settings::QMSettings::setUseThirdOrderDftb(value);
+            settings::QMSettings::setIsThirdOrderDftbSet(true);
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addHubbardDerivsKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "hubbard_derivs",
+            .title = "Hubbard Derivatives",
+            .description =
+                "Specifies custom Hubbard Derivatives for the system.",
+        };
+
+        const auto setValue =
+            [](const std::unordered_map<std::string, double> &value)
+        {
+            settings::QMSettings::setHubbardDerivs(value);
+            settings::QMSettings::setIsHubbardDerivsSet(true);
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::unordered_map<std::string, double>>{
+                .metadata = metaData,
+                .isArray  = true,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addXtbMethodKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "xtb_method",
+            .title       = "xTB Method",
+            .description = "Specifies the xTB method to be used.",
+        };
+
+        const auto setValue = [](XtbMethod value)
+        { settings::QMSettings::setXtbMethod(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<XtbMethod>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addFennolModelPathKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "fennol_model_path",
+            .title       = "FeNNol Model Path",
+            .description = "Specifies the path to the FeNNol model file.",
+        };
+
+        const auto setValue = [](const std::string &value)
+        { settings::QMSettings::setFennolModelPath(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addGPUPreprocessingKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "gpu_preprocessing",
+            .title = "GPU Preprocessing",
+            .description =
+                "Specifies whether GPU pre-processing is enabled for FeNNol.",
+        };
+
+        const auto setValue = [](bool value)
+        { settings::QMSettings::setUseGPUPreprocessing(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
@@ -440,18 +502,26 @@ namespace input
      *
      * @throws exc::InputFileException if the model is not recognized
      */
-    void QMInputParser::parseMaceQMMethod(const std::string_view &model)
+    void QMInputParser::parseMaceQMMethod(const std::string &model)
     {
-        const auto modelTypeOpt =
-            MaceModelTypeMeta::from_stringCaseInsensitive(model);
+        const auto modelTypeOpt = MaceModelTypeMeta::from_stringCaseInsensitive(
+            utilities::toLowerAndReplaceDashesCopy(model)
+        );
 
         if (!modelTypeOpt.has_value())
         {
+            const auto allowedValues = mstd::join(
+                MaceModelTypeMeta::spellingNames(),
+                ", ",
+                [](auto &&value) { return utilities::toLowerCopy(value); }
+            );
+
             throw exc::InputFileException(
                 std::format(
                     "Invalid mace type qm_method \"{}\" in input file.\n"
-                    "Possible values are: mace (mace_mp), mace_off, mace_ani",
-                    model
+                    "Possible values are: {}",
+                    model,
+                    allowedValues
                 )
             );
         }
@@ -480,237 +550,4 @@ namespace input
 
         settings::QMSettings::setMaceModelType(modelTypeOpt.value());
     }
-
-    /**
-     * @brief parse the Slakos type to be used
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if the slakos type is not recognized
-     */
-    void QMInputParser::parseSlakosType(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    ) const
-    {
-        using enum SlakosType;
-        checkCommand(lineElements, lineNumber);
-
-        const auto slakos = utilities::toLowerCopy(lineElements[2]);
-
-        if ("3ob" == slakos)
-        {
-            settings::QMSettings::setSlakosType(
-                THREEOB,
-                _resolveBuiltInSlakosPath
-            );
-            settings::QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
-            references::ReferencesOutput::addReferenceFile(
-                references::THREEOB_FILE
-            );
-        }
-
-        else if ("matsci" == slakos)
-        {
-            settings::QMSettings::setSlakosType(
-                MATSCI,
-                _resolveBuiltInSlakosPath
-            );
-            references::ReferencesOutput::addReferenceFile(
-                references::MATSCI_FILE
-            );
-        }
-
-        else if ("custom" == slakos)
-        {
-            settings::QMSettings::setSlakosType(CUSTOM);
-        }
-        else
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid slakos type \"{}\" in input file.\n"
-                    "Possible values are: 3ob, matsci, custom",
-                    lineElements[2]
-                )
-            );
-        }
-    }
-
-    /**
-     * @brief parse external Slakos path
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseSlakosPath(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::QMSettings::setSlakosPath(lineElements[2]);
-    }
-
-    /**
-     * @brief parse if third order DFTB is used
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseThirdOrder(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-
-        settings::QMSettings::setUseThirdOrderDftb(
-            utilities::keywordToBool(lineElements)
-        );
-        settings::QMSettings::setIsThirdOrderDftbSet(true);
-    }
-
-    /**
-     * @brief parse custom Hubbard Derivative dictionary
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseHubbardDerivs(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommandArray(lineElements, lineNumber);
-
-        std::unordered_map<std::string, double> hubbardDerivs;
-        std::string                             derivs;
-
-        for (size_t i = 2; i < lineElements.size(); ++i)
-        {
-            derivs += lineElements[i];
-        }
-
-        std::stringstream sstream(derivs);
-        std::string       item;
-        while (std::getline(sstream, item, ','))
-        {
-            const auto separator = item.find(':');
-
-            if (separator == std::string::npos || 0 == separator ||
-                separator + 1 == item.size() ||
-                item.find(':', separator + 1) != std::string::npos)
-            {
-                throw exc::InputFileException(
-                    std::format(
-                        "Invalid hubbard_derivs format \"{}\" in input file.",
-                        derivs
-                    )
-                );
-            }
-
-            const auto element = item.substr(0, separator);
-            try
-            {
-                hubbardDerivs[element] =
-                    utilities::stringToFiniteDouble(item.substr(separator + 1));
-            }
-            catch (const std::invalid_argument &)
-            {
-                throw exc::InputFileException(
-                    std::format(
-                        "Invalid hubbard_derivs format \"{}\" in input file.",
-                        derivs
-                    )
-                );
-            }
-            catch (const std::out_of_range &)
-            {
-                throw exc::InputFileException(
-                    std::format(
-                        "Invalid hubbard_derivs format \"{}\" in input file.",
-                        derivs
-                    )
-                );
-            }
-        }
-
-        settings::QMSettings::setHubbardDerivs(hubbardDerivs);
-        settings::QMSettings::setIsHubbardDerivsSet(true);
-    }
-
-    /**
-     * @brief parse the xTB method to be used
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if the xTB method is not recognized
-     */
-    void QMInputParser::parseXtbMethod(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        using enum XtbMethod;
-        checkCommand(lineElements, lineNumber);
-
-        const auto slakos =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
-
-        if ("gfn1_xtb" == slakos)
-            settings::QMSettings::setXtbMethod(GFN1);
-
-        else if ("gfn2_xtb" == slakos)
-            settings::QMSettings::setXtbMethod(GFN2);
-
-        else if ("ipea1_xtb" == slakos)
-            settings::QMSettings::setXtbMethod(IPEA1);
-
-        else
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid xTB method \"{}\" in input file.\n"
-                    "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB",
-                    lineElements[2]
-                )
-            );
-        }
-    }
-
-    /**
-     * @brief parse FeNNol model path
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseFennolModelPath(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::QMSettings::setFennolModelPath(lineElements[2]);
-    }
-
-    /**
-     * @brief parse if GPU pre-processing is enabled for FeNNol
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void QMInputParser::parseGPUPreprocessing(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::QMSettings::setUseGPUPreprocessing(
-            utilities::keywordToBool(lineElements)
-        );
-    }
-
 }   // namespace input

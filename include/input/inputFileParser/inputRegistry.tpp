@@ -23,6 +23,8 @@
 #ifndef _INPUT_REGISTRY_TPP_
 #define _INPUT_REGISTRY_TPP_
 
+#include <memory>
+
 #include "inputRegistry.hpp"
 
 namespace input
@@ -48,6 +50,21 @@ namespace input
             throw std::logic_error(
                 std::format("Key \"{}\" registered twice", name)
             );
+
+        auto aliases = keyRegistry.metadata.aliases;
+
+        for (const auto &alias : aliases)
+        {
+            auto aliasKey = std::make_unique<InputKey<T>>(keyRegistry);
+            auto [aliasIt, aliasInserted] =
+                _keys.try_emplace(alias, std::move(aliasKey));
+
+            if (!aliasInserted)
+                throw std::logic_error(
+                    std::format("Alias \"{}\" registered twice", alias)
+                );
+        }
+
         return static_cast<InputKey<T> &>(*it->second);
     }
 

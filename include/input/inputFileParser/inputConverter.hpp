@@ -30,6 +30,8 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <unordered_map>
+#include <vector>
 
 /**
  * @namespace input
@@ -183,6 +185,22 @@ namespace input
     {
         [[nodiscard]]
         static std::optional<std::string> tryParse(std::string_view raw);
+    };
+
+    template <>
+    struct Converter<std::unordered_map<std::string, double>>
+        : public ConverterBase<std::unordered_map<std::string, double>>
+    {
+        [[nodiscard]]
+        static std::optional<std::unordered_map<std::string, double>> tryParse(
+            std::string_view raw
+        );
+
+        [[nodiscard]]
+        static std::string describeDomain(
+            const std::vector<std::unordered_map<std::string, double>>
+                &notAllowed
+        );
     };
 
 }   // namespace input

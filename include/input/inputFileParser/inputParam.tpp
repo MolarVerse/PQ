@@ -44,7 +44,9 @@ namespace input
           _notAllowed(registry.notAllowed),
           _customParser(registry.customParser),
           _onSet(registry.onSet),
-          _validators(registry.validators)
+          _validators(registry.validators),
+          _finalizer(registry.finalizer),
+          _isArray(registry.isArray)
     {
     }
 
@@ -63,7 +65,11 @@ namespace input
         size_t                          lineNumber
     )
     {
-        const auto &raw = lineElements.at(2);
+        const auto rawElements = std::vector<std::string>(
+            lineElements.begin() + 2,
+            lineElements.end()
+        );
+        const auto raw = mstd::join(rawElements);
 
         std::optional<T> parsed =
             _customParser ? _customParser(raw) : Converter<T>::tryParse(raw);
@@ -131,6 +137,9 @@ namespace input
                 )
             );
         }
+
+        if (_finalizer)
+            _finalizer(raw, *parsed);
 
         _value = std::move(parsed);
 
@@ -293,6 +302,22 @@ namespace input
             return value ? "true" : "false";
         else if constexpr (std::same_as<T, mstd::File>)
             return value.fileName();
+        else if constexpr (std::same_as<
+                               T,
+                               std::unordered_map<std::string, double>>)
+        {
+            std::string result = "{";
+            size_t      count  = 0;
+            for (const auto &pair : value)
+            {
+                if (count != 0)
+                    result += ", ";
+                result += std::format("{}: {}", pair.first, pair.second);
+                ++count;
+            }
+            result += "}";
+            return result;
+        }
         else
             return std::format("{}", value);
     }

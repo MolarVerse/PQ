@@ -25,6 +25,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace input
 {
@@ -46,6 +47,11 @@ namespace input
         std::string                description;
         std::optional<std::string> unit         = std::nullopt;
         std::optional<std::string> errorMessage = std::nullopt;
+
+        // NOTE: here we keep the member init for struct initializer list
+        // handling!
+        // NOLINTNEXTLINE(readability-redundant-member-init)
+        std::vector<std::string> aliases = {};
     };
 
 }   // namespace input

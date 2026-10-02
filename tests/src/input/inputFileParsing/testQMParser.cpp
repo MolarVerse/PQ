@@ -35,72 +35,103 @@ TEST_F(TestInputFileReader, parseQMMethod)
     using enum QMMethod;
     EXPECT_EQ(settings::QMSettings::getQMMethod(), NONE);
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "dftbplus"}, 0);
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("qm_prog"));
+    const auto& parseFunc = funcMap.at("qm_prog");
+
+    parseFunc({"qm_prog", "=", "dftbplus"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), DFTBPLUS);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "pyscf"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "pyscf"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), PYSCF);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "turbomole"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "turbomole"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), TURBOMOLE);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "mace"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "mace"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "ase_dftbplus"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "ase_dftbplus"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), ASE_DFTBPLUS);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "ase_xtb"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "ase_xtb"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), ASE_XTB);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "fennol"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "fennol"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), FENNOL);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "mace"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "mace"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "mace_mp"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "mace_mp"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
 
-    input::QMInputParser::parseQMMethod({"qm_prog", "=", "mace_off"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"qm_prog", "=", "mace_off"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+
+    _clearParser(parser);
 
     EXPECT_THROW_MSG(
-        parser.parseQMMethod({"qm_prog", "=", "mace-ani"}, 0),
+        parseFunc({"qm_prog", "=", "mace-ani"}, 0),
         exc::InputFileException,
         "The mace ani model is not supported in this version of PQ.\n"
     );
 
+    _clearParser(parser);
+
     EXPECT_THROW_MSG(
-        parser.parseQMMethod({"qm_prog", "=", "mace-anicc"}, 0),
+        parseFunc({"qm_prog", "=", "mace-anicc"}, 0),
         exc::InputFileException,
         "The mace ani model is not supported in this version of PQ.\n"
     );
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseQMMethod({"qm_prog", "=", "notAMethod"}, 0),
+        parseFunc({"qm_prog", "=", "notAMethod"}, 0),
         exc::InputFileException,
-        "Invalid qm_prog \"notAMethod\" in input file.\n"
-        "Possible values are: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
-        "turbomole, fennol, mace, mace_mp, mace_off"
+        "Invalid value \"notAMethod\" for key \"qm_prog\" at line 0 in input "
+        "file. Allowed values: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
+        "turbomole, mace, fennol, mace_mp, mace_off, mace_anicc, mace_ani"
     )
 }
 
 TEST_F(TestInputFileReader, parseQMScript)
 {
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    input::QMInputParser::parseQMScript({"qm_script", "=", "script.sh"}, 0);
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("qm_script"));
+    const auto& parseFunc = funcMap.at("qm_script");
+    parseFunc({"qm_script", "=", "script.sh"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMScript(), "script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMScriptFullPath)
 {
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    input::QMInputParser::parseQMScriptFullPath(
-        {"qm_script_full_path", "=", "/path/to/QM/Script.sh"},
-        0
-    );
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("qm_script_full_path"));
+    const auto& parseFunc = funcMap.at("qm_script_full_path");
+    parseFunc({"qm_script_full_path", "=", "/path/to/QM/Script.sh"}, 0);
     EXPECT_EQ(
         settings::QMSettings::getQMScriptFullPath(),
         "/path/to/QM/Script.sh"
@@ -109,17 +140,16 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
 
 TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
 {
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    input::QMInputParser::parseQMLoopTimeLimit(
-        {"qm_loop_time_limit", "=", "10"},
-        0
-    );
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("qm_loop_time_limit"));
+    const auto& parseFunc = funcMap.at("qm_loop_time_limit");
+    parseFunc({"qm_loop_time_limit", "=", "10"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMLoopTimeLimit(), 10);
 
-    input::QMInputParser::parseQMLoopTimeLimit(
-        {"qm_loop_time_limit", "=", "-1"},
-        0
-    );
+    _clearParser(parser);
+
+    parseFunc({"qm_loop_time_limit", "=", "-1"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMLoopTimeLimit(), -1);
 }
 
@@ -127,31 +157,46 @@ TEST_F(TestInputFileReader, parseDispersion)
 {
     EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    input::QMInputParser::parseDispersion({"dispersion", "=", "true"}, 0);
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("dispersion"));
+    const auto& parseFunc = funcMap.at("dispersion");
+
+    parseFunc({"dispersion", "=", "true"}, 0);
     EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
 
-    input::QMInputParser::parseDispersion({"dispersion", "=", "yes"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"dispersion", "=", "yes"}, 0);
     EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
 
-    input::QMInputParser::parseDispersion({"dispersion", "=", "on"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"dispersion", "=", "on"}, 0);
     EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
 
-    input::QMInputParser::parseDispersion({"dispersion", "=", "false"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"dispersion", "=", "false"}, 0);
     EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
 
-    input::QMInputParser::parseDispersion({"dispersion", "=", "no"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"dispersion", "=", "no"}, 0);
     EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
 
-    input::QMInputParser::parseDispersion({"dispersion", "=", "off"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"dispersion", "=", "off"}, 0);
     EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseDispersion({"dispersion", "=", "notABool"}, 0),
+        parseFunc({"dispersion", "=", "notABool"}, 0),
         exc::InputFileException,
-        "Invalid boolean option \"notABool\" for keyword \"dispersion\" in "
-        "input file.\n"
-        "Possible values are: on, yes, true, off, no, false."
+        "Invalid value \"notABool\" for key \"dispersion\" at line 0 in input "
+        "file. Allowed values: on|off|true|false|yes|no"
     )
 }
 
@@ -159,50 +204,47 @@ TEST_F(TestInputFileReader, parseRemoveNetForce)
 {
     EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    input::QMInputParser::parseRemoveNetForce(
-        {"remove_net_force", "=", "true"},
-        0
-    );
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("remove_net_force"));
+    const auto& parseFunc = funcMap.at("remove_net_force");
+
+    parseFunc({"remove_net_force", "=", "true"}, 0);
     EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
 
-    input::QMInputParser::parseRemoveNetForce(
-        {"remove_net_force", "=", "yes"},
-        0
-    );
+    _clearParser(parser);
+
+    parseFunc({"remove_net_force", "=", "yes"}, 0);
     EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
 
-    input::QMInputParser::parseRemoveNetForce(
-        {"remove_net_force", "=", "on"},
-        0
-    );
+    _clearParser(parser);
+
+    parseFunc({"remove_net_force", "=", "on"}, 0);
     EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
 
-    input::QMInputParser::parseRemoveNetForce(
-        {"remove_net_force", "=", "false"},
-        0
-    );
+    _clearParser(parser);
+
+    parseFunc({"remove_net_force", "=", "false"}, 0);
     EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
 
-    input::QMInputParser::parseRemoveNetForce(
-        {"remove_net_force", "=", "no"},
-        0
-    );
+    _clearParser(parser);
+
+    parseFunc({"remove_net_force", "=", "no"}, 0);
     EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
 
-    input::QMInputParser::parseRemoveNetForce(
-        {"remove_net_force", "=", "off"},
-        0
-    );
+    _clearParser(parser);
+
+    parseFunc({"remove_net_force", "=", "off"}, 0);
     EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseRemoveNetForce({"remove_net_force", "=", "notABool"}, 0),
+        parseFunc({"remove_net_force", "=", "notABool"}, 0),
         exc::InputFileException,
-        "Invalid boolean option \"notABool\" for keyword \"remove_net_force\" "
-        "in input file.\n"
-        "Possible values are: on, yes, true, off, no, false."
-    )
+        "Invalid value \"notABool\" for key \"remove_net_force\" at line 0 in "
+        "input file. Allowed values: on|off|true|false|yes|no"
+    );
 }
 
 TEST_F(TestInputFileReader, parseMaceQMMethod)
@@ -210,7 +252,7 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
     using enum QMMethod;
     using enum MaceModelType;
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
+    auto parser = input::QMInputParser();
 
     input::QMInputParser::parseMaceQMMethod("mace");
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
@@ -237,7 +279,7 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
         parser.parseMaceQMMethod("notAMaceModel"),
         exc::InputFileException,
         "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
-        "Possible values are: mace (mace_mp), mace_off, mace_ani"
+        "Possible values are: mace_mp, mace_off, mace_anicc, mace, mace_ani"
     )
 }
 
@@ -245,50 +287,78 @@ TEST_F(TestInputFileReader, parseMaceModel)
 {
     using enum MaceModel;
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    parser.parseMaceModel({"mace_model", "=", "small"}, 0);
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("mace_model"));
+    const auto& parseFunc = funcMap.at("mace_model");
+
+    parseFunc({"mace_model", "=", "small"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL);
 
-    parser.parseMaceModel({"mace_model", "=", "medium"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "medium"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM);
 
-    parser.parseMaceModel({"mace_model", "=", "large"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "large"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE);
 
-    parser.parseMaceModel({"mace_model", "=", "small_0b"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "small_0b"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL_0B);
 
-    parser.parseMaceModel({"mace_model", "=", "medium_0b"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "medium_0b"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B);
 
-    parser.parseMaceModel({"mace_model", "=", "small_0b2"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "small_0b2"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL_0B2);
 
-    parser.parseMaceModel({"mace_model", "=", "medium_0b2"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "medium_0b2"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B2);
 
-    parser.parseMaceModel({"mace_model", "=", "large_0b2"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "large_0b2"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE_0B2);
 
-    parser.parseMaceModel({"mace_model", "=", "medium_0b3"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "medium_0b3"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B3);
 
-    parser.parseMaceModel({"mace_model", "=", "medium_mpa_0"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "medium_mpa_0"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_MPA_0);
 
-    parser.parseMaceModel({"mace_model", "=", "medium_omat_0"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "medium_omat_0"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_OMAT_0);
 
-    parser.parseMaceModel({"mace_model", "=", "custom"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_model", "=", "custom"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModel(), CUSTOM);
 
+    _clearParser(parser);
+
     ASSERT_THROW_MSG(
-        parser.parseMaceModel({"mace_model", "=", "notASize"}, 0),
+        parseFunc({"mace_model", "=", "notASize"}, 0),
         exc::InputFileException,
-        "Invalid mace_model \"notASize\" in input file.\n"
-        "Possible values are: small, medium, large, small-0b,\n"
-        "medium-0b, small-0b2, medium-0b2, large-0b2, medium-0b3,\n"
-        "medium-mpa-0, medium-omat-0, custom"
+        "Invalid value \"notASize\" for key \"mace_model\" at line 0 in input "
+        "file. Allowed values: small, medium, large, small_0b, medium_0b, "
+        "small_0b2, medium_0b2, large_0b2, medium_0b3, medium_mpa_0, "
+        "medium_omat_0, custom"
     )
 }
 
@@ -296,32 +366,39 @@ TEST_F(TestInputFileReader, parseMaceMode)
 {
     using enum MaceMode;
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("mace_mode"));
+    const auto& parseFunc = funcMap.at("mace_mode");
 
-    input::QMInputParser::parseMaceMode({"mace_mode", "=", "accurate"}, 0);
+    parseFunc({"mace_mode", "=", "accurate"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceMode(), ACCURATE);
 
-    input::QMInputParser::parseMaceMode({"mace_mode", "=", "fast"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"mace_mode", "=", "fast"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceMode(), FAST);
 
+    _clearParser(parser);
+
     ASSERT_THROW_MSG(
-        parser.parseMaceMode({"mace_mode", "=", "notAMode"}, 0),
+        parseFunc({"mace_mode", "=", "notAMode"}, 0),
         exc::InputFileException,
-        "Invalid mace_mode \"notAMode\" in input file.\n"
-        "Possible values are: accurate, fast"
+        "Invalid value \"notAMode\" for key \"mace_mode\" at line 0 in input "
+        "file. Allowed values: accurate, fast"
     )
 }
 
 TEST_F(TestInputFileReader, parseMaceModelPath)
 {
-    auto parser = input::QMInputParser(_engine->getLogOutput());
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("mace_model_path"));
+    const auto& parseFunc = funcMap.at("mace_model_path");
 
     settings::QMSettings::setMaceModelPath("");
     EXPECT_EQ(settings::QMSettings::getMaceModelPath(), "");
-    input::QMInputParser::parseMaceModelPath(
-        {"mace_model_path", "=", "/pAth/to/mace.model"},
-        0
-    );
+    parseFunc({"mace_model_path", "=", "/pAth/to/mace.model"}, 0);
     EXPECT_EQ(settings::QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
 }
 
@@ -329,38 +406,51 @@ TEST_F(TestInputFileReader, parseSlakosType)
 {
     using enum QMMethod;
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("slakos"));
+    const auto& parseFunc = funcMap.at("slakos");
 
 #ifdef WITH_ASE
-    parser.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    parseFunc({"slakos", "=", "3ob"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
 
-    parser.parseSlakosType({"slakos", "=", "matsci"}, 0);
+    _clearParser(parser);
+
+    parseFunc({"slakos", "=", "matsci"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::MATSCI);
+
+    _clearParser(parser);
 #else
     ASSERT_THROW_MSG(
-        parser.parseSlakosType({"slakos", "=", "3ob"}, 0),
+        parseFunc({"slakos", "=", "3ob"}, 0),
         exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
 
+    _clearParser(parser);
+
     ASSERT_THROW_MSG(
-        parser.parseSlakosType({"slakos", "=", "matsci"}, 0),
+        parseFunc({"slakos", "=", "matsci"}, 0),
         exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
+
+    _clearParser(parser);
 #endif
 
-    parser.parseSlakosType({"slakos", "=", "custom"}, 0);
+    parseFunc({"slakos", "=", "custom"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::CUSTOM);
 
+    _clearParser(parser);
+
     ASSERT_THROW_MSG(
-        parser.parseSlakosType({"slakos", "=", "notASlakosType"}, 0),
+        parseFunc({"slakos", "=", "notASlakosType"}, 0),
         exc::InputFileException,
-        "Invalid slakos type \"notASlakosType\" in input file.\n"
-        "Possible values are: 3ob, matsci, custom"
+        "Invalid value \"notASlakosType\" for key \"slakos\" at line 0 in "
+        "input file. Allowed values: threeob, matsci, custom, 3ob"
     )
 }
 
@@ -369,16 +459,23 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 {
     using enum QMMethod;
 
-    auto parser1 = input::QMInputParser(_engine->getLogOutput());
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("slakos"));
+    const auto& slakosParseFunc = funcMap.at("slakos");
+    ASSERT_TRUE(funcMap.contains("third_order"));
+    const auto& thirdOrderParseFunc = funcMap.at("third_order");
 
-    input::QMInputParser::parseThirdOrder({"third_order", "=", "off"}, 0);
-    parser1.parseSlakosType({"slakos", "=", "3ob"}, 0);
+    thirdOrderParseFunc({"third_order", "=", "off"}, 0);
+    slakosParseFunc({"slakos", "=", "3ob"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
-    auto parser2 = input::QMInputParser(_engine->getLogOutput());
-    parser2.parseSlakosType({"slakos", "=", "3ob"}, 0);
-    input::QMInputParser::parseThirdOrder({"third_order", "=", "off"}, 0);
+    _clearParser(parser);
+
+    auto parser2 = input::QMInputParser();
+    slakosParseFunc({"slakos", "=", "3ob"}, 0);
+    thirdOrderParseFunc({"third_order", "=", "off"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 }
@@ -388,12 +485,15 @@ TEST_F(TestInputFileReader, parseSlakosPath)
 {
     using enum QMMethod;
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    parser.parseSlakosType({"slakos", "=", "custom"}, 0);
-    input::QMInputParser::parseSlakosPath(
-        {"slakos_path", "=", "/path/to/slakos"},
-        0
-    );
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("slakos"));
+    const auto& slakosParseFunc = funcMap.at("slakos");
+    ASSERT_TRUE(funcMap.contains("slakos_path"));
+    const auto& slakosPathParseFunc = funcMap.at("slakos_path");
+
+    slakosParseFunc({"slakos", "=", "custom"}, 0);
+    slakosPathParseFunc({"slakos_path", "=", "/path/to/slakos"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosPath(), "/path/to/slakos");
 }
 
@@ -401,88 +501,125 @@ TEST_F(TestInputFileReader, parseThirdOrder)
 {
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
-    input::QMInputParser::parseThirdOrder({"third_order", "=", "on"}, 0);
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("third_order"));
+    const auto& thirdOrderParseFunc = funcMap.at("third_order");
+
+    thirdOrderParseFunc({"third_order", "=", "on"}, 0);
     EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
 
-    input::QMInputParser::parseThirdOrder({"third_order", "=", "off"}, 0);
+    _clearParser(parser);
+
+    thirdOrderParseFunc({"third_order", "=", "off"}, 0);
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
-    input::QMInputParser::parseThirdOrder({"third_order", "=", "true"}, 0);
+    _clearParser(parser);
+
+    thirdOrderParseFunc({"third_order", "=", "true"}, 0);
     EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
 
-    input::QMInputParser::parseThirdOrder({"third_order", "=", "false"}, 0);
+    _clearParser(parser);
+
+    thirdOrderParseFunc({"third_order", "=", "false"}, 0);
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
-    input::QMInputParser::parseThirdOrder({"third_order", "=", "yes"}, 0);
+    _clearParser(parser);
+
+    thirdOrderParseFunc({"third_order", "=", "yes"}, 0);
     EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
 
-    input::QMInputParser::parseThirdOrder({"third_order", "=", "no"}, 0);
+    _clearParser(parser);
+
+    thirdOrderParseFunc({"third_order", "=", "no"}, 0);
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
     EXPECT_TRUE(settings::QMSettings::isThirdOrderDftbSet());
 
+    _clearParser(parser);
+
     ASSERT_THROW_MSG(
-        parser.parseThirdOrder({"third_order", "=", "notABool"}, 0),
+        thirdOrderParseFunc({"third_order", "=", "notABool"}, 0),
         exc::InputFileException,
-        "Invalid boolean option \"notABool\" for keyword \"third_order\" in "
-        "input file.\n"
-        "Possible values are: on, yes, true, off, no, false."
+        "Invalid value \"notABool\" for key \"third_order\" at line 0 in input "
+        "file. Allowed values: on|off|true|false|yes|no"
     )
 }
 
 TEST_F(TestInputFileReader, parseHubbardDerivs)
 {
-    auto parser = input::QMInputParser(_engine->getLogOutput());
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("hubbard_derivs"));
+    const auto& hubbardDerivsParseFunc = funcMap.at("hubbard_derivs");
 
-    input::QMInputParser::parseHubbardDerivs(
-        {"hubbard_derivs", "=", "H:1.0,He:2.0"},
-        0
-    );
+    hubbardDerivsParseFunc({"hubbard_derivs", "=", "H:1.0,He:2.0"}, 0);
 
     const auto hubbardDerivs = settings::QMSettings::getHubbardDerivs();
     EXPECT_EQ(hubbardDerivs.size(), 2);
     EXPECT_EQ(hubbardDerivs.at("H"), 1.0);
     EXPECT_EQ(hubbardDerivs.at("He"), 2.0);
 
-    ASSERT_THROW_MSG(
-        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:1.0,He"}, 0),
-        exc::InputFileException,
-        "Invalid hubbard_derivs format \"H:1.0,He\" in input file."
-    )
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:0.1junk"}, 0),
+        hubbardDerivsParseFunc({"hubbard_derivs", "=", "H:1.0,He"}, 0),
         exc::InputFileException,
-        "Invalid hubbard_derivs format \"H:0.1junk\" in input file."
-    )
+        "Invalid value \"H:1.0,He\" for key \"hubbard_derivs\" at line 0 in "
+        "input file. Value must be a comma-separated list of key:value pairs, "
+        "where the key is a string and the value is a double."
+    );
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseHubbardDerivs({"hubbard_derivs", "=", "H:nan"}, 0),
+        hubbardDerivsParseFunc({"hubbard_derivs", "=", "H:0.1junk"}, 0),
         exc::InputFileException,
-        "Invalid hubbard_derivs format \"H:nan\" in input file."
-    )
+        "Invalid value \"H:0.1junk\" for key \"hubbard_derivs\" at line 0 in "
+        "input file. Value must be a comma-separated list of key:value pairs, "
+        "where the key is a string and the value is a double."
+    );
+
+    _clearParser(parser);
+
+    ASSERT_THROW_MSG(
+        hubbardDerivsParseFunc({"hubbard_derivs", "=", "H:nan"}, 0),
+        exc::InputFileException,
+        "Invalid value \"H:nan\" for key \"hubbard_derivs\" at line 0 in input "
+        "file. Value must be a comma-separated list of key:value pairs, where "
+        "the key is a string and the value is a double."
+    );
 }
 
 TEST_F(TestInputFileReader, parseXtbMethod)
 {
     using enum QMMethod;
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("xtb_method"));
+    const auto& xtbMethodParseFunc = funcMap.at("xtb_method");
 
-    input::QMInputParser::parseXtbMethod({"xtb_method", "=", "Gfn1-XTb"}, 0);
+    xtbMethodParseFunc({"xtb_method", "=", "Gfn1-XTb"}, 0);
     EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::GFN1);
 
-    input::QMInputParser::parseXtbMethod({"xtb_method", "=", "gfN2-XTb"}, 0);
+    _clearParser(parser);
+
+    xtbMethodParseFunc({"xtb_method", "=", "gfN2-XTb"}, 0);
     EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::GFN2);
 
-    input::QMInputParser::parseXtbMethod({"xtb_method", "=", "iPEa1-XTb"}, 0);
+    _clearParser(parser);
+
+    xtbMethodParseFunc({"xtb_method", "=", "iPEa1-XTb"}, 0);
     EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::IPEA1);
 
+    _clearParser(parser);
+
     ASSERT_THROW_MSG(
-        parser.parseXtbMethod({"xtb_method", "=", "notAnXtbMethod"}, 0),
+        xtbMethodParseFunc({"xtb_method", "=", "notAnXtbMethod"}, 0),
         exc::InputFileException,
-        "Invalid xTB method \"notAnXtbMethod\" in input file.\n"
-        "Possible values are: GFN1-xTB, GFN2-xTB, IPEA1-xTB"
+        "Invalid value \"notAnXtbMethod\" for key \"xtb_method\" at line 0 in "
+        "input file. Allowed values: gfn1, gfn2, ipea1, gfn1-xtb, gfn2-xtb, "
+        "ipea1-xtb, gfn1_xtb, gfn2_xtb, ipea1_xtb"
     )
 }
 
@@ -490,49 +627,47 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
 {
     using enum QMMethod;
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("fennol_model_path"));
+    const auto& fennolModelPathParseFunc = funcMap.at("fennol_model_path");
 
-    // clang-format off
     EXPECT_EQ(settings::QMSettings::getFennolModelPath(), "");
-    input::QMInputParser::parseFennolModelPath({"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"}, 0);
-    EXPECT_EQ(settings::QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
-    // clang-format on
-
-    ASSERT_THROW_MSG(
-        parser.parseFennolModelPath(
-            {"fennol_model_path", "=", "/path/to/model.fnx", "extra"},
-            42
-        ),
-        exc::InputFileException,
-        "Invalid number of arguments at line 42 in input file"
-    )
+    fennolModelPathParseFunc(
+        {"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"},
+        0
+    );
+    EXPECT_EQ(
+        settings::QMSettings::getFennolModelPath(),
+        "/pAth/to/fennol_model.fnx"
+    );
 }
 
 TEST_F(TestInputFileReader, parseGPUPreprocessing)
 {
     using enum QMMethod;
 
-    auto parser = input::QMInputParser(_engine->getLogOutput());
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("gpu_preprocessing"));
+    const auto& gpuPreprocessingParseFunc = funcMap.at("gpu_preprocessing");
 
     EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), true);
-    input::QMInputParser::parseGPUPreprocessing(
-        {"GPU-Preprocessing", "=", "false"},
-        0
-    );
+    gpuPreprocessingParseFunc({"GPU-Preprocessing", "=", "false"}, 0);
     EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), false);
 
-    input::QMInputParser::parseGPUPreprocessing(
-        {"gpu_preprocessing", "=", "on"},
-        0
-    );
+    _clearParser(parser);
+
+    gpuPreprocessingParseFunc({"gpu_preprocessing", "=", "on"}, 0);
     EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), true);
 
+    _clearParser(parser);
+
     ASSERT_THROW_MSG(
-        parser.parseGPUPreprocessing({"gpu_preprocessing", "=", "notABool"}, 0),
+        gpuPreprocessingParseFunc({"gpu_preprocessing", "=", "notABool"}, 0),
         exc::InputFileException,
-        "Invalid boolean option \"notABool\" for keyword \"gpu_preprocessing\" "
-        "in input file.\n"
-        "Possible values are: on, yes, true, off, no, false."
+        "Invalid value \"notABool\" for key \"gpu_preprocessing\" at line 0 in "
+        "input file. Allowed values: on|off|true|false|yes|no"
     )
 }
 
