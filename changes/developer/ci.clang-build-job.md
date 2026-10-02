@@ -1,0 +1,1 @@
+- Add a non-gating Clang Build workflow that builds and tests the project with clang-20 on pull requests and dev pushes, as the basis for clang build-time analysis.

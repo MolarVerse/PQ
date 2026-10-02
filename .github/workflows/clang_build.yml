@@ -1,0 +1,123 @@
+name: Clang Build
+
+# Builds and tests the project with clang-20 (Debug, which already adds
+# -ftime-trace for clang). Non-gating on purpose: it is not part of
+# ci-build-gate and not a required check. It exists to keep the project
+# building with clang and as the basis for the clang build-time analysis
+# (#719). No ccache: a cache hit restores the object file but, as far as we
+# know, not the -ftime-trace JSON the analysis needs.
+
+on:
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'apps/**'
+      - 'benchmarks/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
+      - '.cmake/**'
+      - '.github/workflows/clang_build.yml'
+      - '.github/actions/upload-build-timings/**'
+      - '.github/ci-metrics/summarise_build.py'
+  push:
+    branches:
+      - dev
+    paths:
+      - 'src/**'
+      - 'include/**'
+      - 'apps/**'
+      - 'benchmarks/**'
+      - 'tests/**'
+      - 'CMakeLists.txt'
+      - '.cmake/**'
+      - '.github/workflows/clang_build.yml'
+      - '.github/actions/upload-build-timings/**'
+      - '.github/ci-metrics/summarise_build.py'
+  workflow_dispatch:
+
+# Only superseded pull_request runs are cancelled; push and manual runs each
+# get their own group (see ci_build.yml for the rationale).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  clang-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # clang uses the newest libstdc++ it finds, so install GCC 14's for
+      # C++23 <format>. libclang-rt provides the profile runtime that the
+      # Debug flags (-coverage) link against.
+      - name: Install clang
+        run: |
+          sudo apt update
+          sudo apt install -y clang-20 g++-14 ninja-build mold
+          sudo apt install -y libclang-rt-20-dev \
+            || echo "::warning::libclang-rt-20-dev is not available"
+          clang++-20 --version
+        shell: bash
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      # -k 0 keeps building past failures so that one run lists every file
+      # that does not build with clang; the exit status is passed on to the
+      # build-timings step and fails the job at the end of this step.
+      - name: Configure and build
+        id: build
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_TESTS=ON \
+            -DBUILD_WITH_DOCS=OFF \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          status=0
+          cmake --build build --parallel "$(nproc)" -- -k 0 || status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+        env:
+          CC: clang-20
+          CXX: clang++-20
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure -j1
+
+      # The input of the clang build-time analysis (#719).
+      - name: Report -ftime-trace output
+        if: always()
+        run: |
+          count=$(find build -name '*.cpp.json' | wc -l)
+          echo "$count -ftime-trace files, $(find build -name '*.cpp.json' -print0 | du -ch --files0-from=- | tail -1 | cut -f1) in total"
+        shell: bash
+
+      - name: Collect build timings
+        if: always()
+        uses: ./.github/actions/upload-build-timings
+        with:
+          name: clang
+          ccache: 'false'
+          job-id: ${{ job.check_run_id }}
+          build-status: ${{ steps.build.outcome }}
