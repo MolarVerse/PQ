@@ -61,9 +61,7 @@ jobs:
       - name: Install clang
         run: |
           sudo apt update
-          sudo apt install -y clang-20 g++-14 ninja-build mold
-          sudo apt install -y libclang-rt-20-dev \
-            || echo "::warning::libclang-rt-20-dev is not available"
+          sudo apt install -y clang-20 libclang-rt-20-dev g++-14 ninja-build mold
           clang++-20 --version
         shell: bash
 
