@@ -196,6 +196,9 @@ What it shows, per recorded workflow:
   link share of CPU time (does a bigger runner help?); and the slowest build steps
   of pushes to `dev`. Builds with `complete` false (`lint`) are left out of the ninja
   table and counted; each build keeps only its 20 slowest steps.
+  A "Runner hardware" table gives, for jobs that ran on more than one CPU model, the
+  median wall time per model (x86 runners only; the clang comment names the CPU of the
+  run and of its baseline).
 - **Clang build times** (from the `clang` part of the records of pushes to `dev`; the
   `Clang Build` workflow is non-gating and is **not in the critical-path table**, its jobs
   are in the job tables): medians of compiler, frontend and backend time against the

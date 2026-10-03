@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <cmath>    // for exp, pow
-#include <vector>   // for vector
+#include <cmath>
+#include <vector>
 
-// for AssertionResult, Message, TestPartResult
-#include "morsePair.hpp"   // for pot::MorsePair
+#include "morsePair.hpp"
 #include "strongTypes.hpp"
 
 /**

@@ -22,20 +22,20 @@
 
 #include "maxwellBoltzmann.hpp"
 
-#include <algorithm>   // for __for_each_fn
-#include <cmath>       // for sqrt
+#include <algorithm>
+#include <cmath>
 
-#include "constants/conversionFactors.hpp"           // for _AMU_TO_KG_
-#include "constants/internalConversionFactors.hpp"   // for _VELOCITY_UNIT_TO_SI_
-#include "constants/natureConstants.hpp"             // for _BOLTZMANN_CONSTANT_
-#include "resetKinetics.hpp"        // for resetKinetics::ResetKinetics
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
+#include "constants/natureConstants.hpp"
+#include "resetKinetics.hpp"
+#include "simulationBox.hpp"
+#include "thermostatSettings.hpp"
 
 #ifdef WITH_MPI
-#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
+#include <mpi.h>
 
-#include "mpi.hpp"   // for MPI
+#include "mpi.hpp"
 #endif
 
 namespace maxwellBoltzmann

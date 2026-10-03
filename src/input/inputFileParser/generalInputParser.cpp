@@ -22,21 +22,21 @@
 
 #include "generalInputParser.hpp"
 
-#include <cstdint>     // for uint_fast32_t and UINT32_MAX
-#include <format>      // for format
-#include <stdexcept>   // for out_of_range and invalid_argument
+#include <cstdint>
+#include <format>
+#include <stdexcept>
 
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for exc::InputFileException, customException
-#include "generalSettings.hpp"   // for settings::Settings
-#include "hessianEngine.hpp"     // for HessianEngine
-#include "mmmdEngine.hpp"        // for MMMDEngine
-#include "optEngine.hpp"         // for MMOptEngine
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "hessianEngine.hpp"
+#include "mmmdEngine.hpp"
+#include "optEngine.hpp"
 #include "parserUtils.hpp"
-#include "qmmdEngine.hpp"              // for QMMDEngine
-#include "qmmmMDEngine.hpp"            // for QMMMMDEngine
-#include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
-#include "stringUtilities.hpp"         // for toLowerCopy
+#include "qmmdEngine.hpp"
+#include "qmmmMDEngine.hpp"
+#include "ringPolymerqmmdEngine.hpp"
+#include "stringUtilities.hpp"
 
 namespace input
 {

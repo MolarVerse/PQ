@@ -24,14 +24,15 @@
 
 #define _MTR_INTRA_WATER_TPP_
 
-#include "mTRIntraWater.hpp"   // for MTRIntraWater
+#include "mTRIntraWater.hpp"
 
 #include <cmath>
 
+#include "degenerateGeometry.hpp"
 #include "globalTimer.hpp"
-#include "hybridSettings.hpp"   // for HybridSettings
-#include "physicalData.hpp"     // for PhysicalData
-#include "simulationBox.hpp"    // for SimulationBox
+#include "hybridSettings.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace waterModel
 {
@@ -73,6 +74,10 @@ namespace waterModel
             const auto distOH1 = norm(dOH1);
             const auto distOH2 = norm(dOH2);
             const auto distHH  = norm(dHH);
+
+            checkNonDegenerate(distOH1, "O-H1 distance");
+            checkNonDegenerate(distOH2, "O-H2 distance");
+            checkNonDegenerate(distHH, "H-H distance");
 
             const auto deltaOH1 = distOH1 - eqOHDistance;
             const auto deltaOH2 = distOH2 - eqOHDistance;

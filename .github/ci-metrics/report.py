@@ -67,6 +67,7 @@ class Analysis:
     ccache: dict | None
     includes: dict | None = None
     clang: dict | None = None
+    runner: dict | None = None
 
 
 @dataclass
@@ -122,6 +123,7 @@ def parse_analysis(record):
         ccache=record["ccache"],
         includes=record.get("includes"),
         clang=record.get("clang"),
+        runner=record.get("runner"),
     )
 
 
@@ -559,6 +561,25 @@ def ninja_rows(analyses, windows):
     return rows, skipped
 
 
+def runner_rows(analyses, windows):
+    """Median wall time of complete ninja builds per (workflow, job, CPU model) in the current window."""
+    groups = defaultdict(list)
+    for analysis in analyses:
+        ninja = analysis.ninja
+        if not analysis.runner or not ninja or "error" in ninja or ninja["complete"] is not True:
+            continue
+        if windows.current(analysis.created):
+            groups[(analysis.workflow, analysis.job, analysis.runner["cpu_model"], analysis.runner["cores"])].append(ninja["wall_s"])
+    jobs = defaultdict(int)
+    for workflow, job, _, _ in groups:
+        jobs[(workflow, job)] += 1
+    return [
+        [f"{workflow} / {job}", model, cores, len(walls), fmt_seconds(median_of(walls))]
+        for (workflow, job, model, cores), walls in sorted(groups.items(), key=lambda item: (item[0][:2], median_of(item[1])))
+        if jobs[(workflow, job)] > 1
+    ]
+
+
 def slowest_steps(analyses, windows):
     """Per (workflow, job): rows of the slowest steps of dev pushes plus build counts."""
     builds = defaultdict(list)
@@ -824,6 +845,21 @@ def build_analysis_lines(analyses, windows, options):
             f"Left out because they are not full builds: {skipped:,} with `complete` false or unknown "
             "(for example `lint`, which builds with `-k 0` and tolerates errors).",
         ]
+    lines.append("")
+
+    lines += ["### Runner hardware", ""]
+    lines += [
+        "GitHub assigns runners of different CPU generations to the same job, and the same code "
+        "builds up to 1.8x slower on the slower ones. Complete ninja builds per CPU model, for jobs "
+        "that ran on more than one; x86 runners only. Wall time also depends on the ccache hit rate, "
+        "so read this together with the ccache table.",
+        "",
+    ]
+    rows = runner_rows(kept, windows)
+    if rows:
+        lines += table(["Job", "CPU model", "Cores", "Builds", "Median wall"], rows)
+    else:
+        lines.append("No job ran on more than one CPU model in the current window (or no runner data yet).")
     lines.append("")
 
     lines += [f"### Slowest build steps on `{PUSH_BRANCH}`", ""]

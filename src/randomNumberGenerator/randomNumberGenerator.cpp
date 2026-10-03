@@ -22,7 +22,7 @@
 
 #include "randomNumberGenerator.hpp"
 
-#include "generalSettings.hpp"   // for Settings
+#include "generalSettings.hpp"
 
 namespace rng
 {

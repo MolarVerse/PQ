@@ -594,7 +594,10 @@ function(setup_target_for_coverage_gcovr_html)
         COMMAND ${GCOVR_HTML_FOLDER_CMD}
         COMMAND ${GCOVR_HTML_CMD}
 
-        BYPRODUCTS ${PROJECT_BINARY_DIR}/${Coverage_OUTPUT_PATH}/index.html # report directory
+        # No BYPRODUCTS: every module has its own coverage target and they all
+        # write their report to the same directory, and the Ninja generator
+        # rejects several rules that generate the same file ("multiple rules
+        # generate coverage/index.html"). Nothing depends on the report file.
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
         DEPENDS ${Coverage_DEPENDENCIES}
         VERBATIM # Protect arguments to commands

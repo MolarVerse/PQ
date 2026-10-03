@@ -22,9 +22,9 @@
 
 #include "coulombWolf.hpp"
 
-#include <cmath>   // for exp, sqrt, erfc
+#include <cmath>
 
-#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "constants/internalConversionFactors.hpp"
 
 #ifndef M_PI
 #define M_PI std::numbers::pi

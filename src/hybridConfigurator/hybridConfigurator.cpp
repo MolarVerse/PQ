@@ -22,12 +22,12 @@
 
 #include "hybridConfigurator.hpp"
 
-#include <limits>          // for numeric_limits
-#include <unordered_set>   // for unordered_set
+#include <limits>
+#include <unordered_set>
 
-#include "atom.hpp"             // for Atom
-#include "exceptions.hpp"       // for HybridConfiguratorException
-#include "hybridSettings.hpp"   // for settings::HybridSettings
+#include "atom.hpp"
+#include "exceptions.hpp"
+#include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
 

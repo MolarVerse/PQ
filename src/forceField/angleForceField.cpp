@@ -22,15 +22,15 @@
 
 #include "angleForceField.hpp"
 
-#include <cmath>   // for sqrt, sin
+#include <cmath>
 
 #include "constants.hpp"
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
-#include "hybridSettings.hpp"     // for HybridSettings
-#include "molecule.hpp"           // for Molecule
-#include "physicalData.hpp"       // for physicalData::PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
+#include "coulombPotential.hpp"
+#include "forceField.hpp"
+#include "hybridSettings.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace ff
 {

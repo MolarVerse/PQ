@@ -22,10 +22,10 @@
 
 #include "cellListInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
+#include <cstddef>
+#include <format>
 #include <optional>
-#include <string>   // for allocator, operator==, string
+#include <string>
 
 #include "celllist.hpp"
 #include "generalSettings.hpp"

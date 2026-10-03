@@ -35,7 +35,7 @@
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
+#include "vector3d.hpp"
 
 namespace
 {
@@ -46,7 +46,7 @@ namespace
     {
         auto *box = new molsys::SimulationBox();
 
-        const std::vector<double> masses = {1.0, 12.0, 14.0, 16.0};
+        const std::vector<double> masses{1.0, 12.0, 14.0, 16.0};
 
         auto totalMass = 0.0;
         for (size_t i = 0; i < 27; ++i)

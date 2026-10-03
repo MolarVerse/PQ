@@ -25,19 +25,19 @@
 #include <memory>
 #include <utility>
 
-#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
+#include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
-#include "exceptions.hpp"   // for InputFileException, exc::CompileTimeException
-#include "generalSettings.hpp"   // for Settings
-#include "pyscfRunner.hpp"       // for PySCFRunner
-#include "qmSettings.hpp"        // for settings::QMSettings
-#include "turbomoleRunner.hpp"   // for TurbomoleRunner
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "pyscfRunner.hpp"
+#include "qmSettings.hpp"
+#include "turbomoleRunner.hpp"
 
 #ifdef WITH_ASE
-#include "aseDftbRunner.hpp"     // for AseDftbRunner
-#include "aseFennolRunner.hpp"   // for AseFennolRunner
-#include "aseMaceRunner.hpp"     // for AseMaceRunner
-#include "aseXtbRunner.hpp"      // for AseXtbRunner
+#include "aseDftbRunner.hpp"
+#include "aseFennolRunner.hpp"
+#include "aseMaceRunner.hpp"
+#include "aseXtbRunner.hpp"
 #endif
 
 namespace engine

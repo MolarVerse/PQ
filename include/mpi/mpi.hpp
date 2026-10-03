@@ -26,9 +26,9 @@
 
 #define _PQ_MPI_HPP_
 
-#include <cstddef>    // for size_t
-#include <fstream>    // for ofstream
-#include <iostream>   // for cout, cerr
+#include <cstddef>
+#include <fstream>
+#include <iostream>
 
 namespace mpi
 {

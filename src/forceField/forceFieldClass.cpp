@@ -23,7 +23,7 @@
 #include "forceFieldClass.hpp"
 
 #include <algorithm>
-#include <format>   // for format
+#include <format>
 
 #include "dihedralType.hpp"
 #include "exceptions.hpp"

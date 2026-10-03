@@ -20,23 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGo...
+#include <gtest/gtest.h>
 
-#include <cmath>   // for sqrt
+#include <cmath>
 
-#include "berendsenThermostat.hpp"           // for BerendsenThermostat
-#include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _KG_TO_GRAM_
-#include "constants/natureConstants.hpp"     // for _UNIVERSAL_GAS_CONSTANT_
-#include "exceptions.hpp"                    // for InputFileException
-#include "inputFileReader.hpp"               // for InputFileReader
-#include "langevinThermostat.hpp"            // for LangevinThermostat
-#include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
-#include "testSetup.hpp"                     // for TestSetup
-#include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "thermostatSetup.hpp"   // for setup::ThermostatSetup, setupThermostat
+#include "berendsenThermostat.hpp"
+#include "constants/conversionFactors.hpp"
+#include "constants/natureConstants.hpp"
+#include "exceptions.hpp"
+#include "inputFileReader.hpp"
+#include "langevinThermostat.hpp"
+#include "noseHooverThermostat.hpp"
+#include "testSetup.hpp"
+#include "thermostatSettings.hpp"
+#include "thermostatSetup.hpp"
 #include "throwWithMessage.hpp"
-#include "timingsSettings.hpp"               // for TimingsSettings
-#include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
+#include "timingsSettings.hpp"
+#include "velocityRescalingThermostat.hpp"
 
 TEST_F(TestSetup, setupThermostatNoThermostat)
 {

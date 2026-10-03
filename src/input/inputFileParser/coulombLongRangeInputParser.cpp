@@ -25,7 +25,7 @@
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
-#include "potentialSettings.hpp"   // for settings::PotentialSettings
+#include "potentialSettings.hpp"
 #include "rangeValidator.hpp"
 
 namespace input

@@ -22,9 +22,12 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <memory>
+#include <numbers>
+#include <string>
 #include <utility>
 
 #include "SPCIntraWater.hpp"
@@ -32,10 +35,12 @@
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
+#include "interWaterParamters.hpp"
 #include "lennardJonesPair.hpp"
 #include "mTRIntraWater.hpp"
 #include "molecule.hpp"
@@ -178,6 +183,76 @@ namespace
         EXPECT_TRUE(std::isfinite(data.getBondEnergy()));
         EXPECT_TRUE(std::isfinite(data.getAngleEnergy()));
         EXPECT_GT(data.getBondEnergy(), 0.0);
+    }
+
+    /**
+     * Near a singularity the forces are huge, so the net force is compared
+     * with the largest single force, not with an absolute tolerance.
+     */
+    template <typename Model>
+    void expectFiniteAndConservative(
+        Model               &model,
+        const WaterGeometry &geometry
+    )
+    {
+        auto                       simBox = makeIntraWaterBox(geometry);
+        physicalData::PhysicalData data;
+
+        model.calculate(simBox, data);
+
+        const auto mol     = simBox.getMolecule(0);
+        auto       total   = linalg::Vec3D{0.0, 0.0, 0.0};
+        auto       biggest = 1.0;
+
+        for (std::size_t atom = 0; atom < 3; ++atom)
+        {
+            const auto force = mol.getAtomForce(AtomIndex{atom});
+            for (std::size_t axis = 0; axis < 3; ++axis)
+            {
+                EXPECT_TRUE(std::isfinite(force[axis]))
+                    << "atom " << atom << " axis " << axis;
+                biggest = std::max(biggest, std::fabs(force[axis]));
+            }
+            total += force;
+        }
+
+        for (std::size_t axis = 0; axis < 3; ++axis)
+            EXPECT_NEAR(total[axis], 0.0, 1.0e-9 * biggest);
+
+        EXPECT_TRUE(std::isfinite(data.getBondEnergy()));
+        EXPECT_TRUE(std::isfinite(data.getAngleEnergy()));
+    }
+
+    /**
+     * The model must refuse a degenerate geometry with a descriptive
+     * exception instead of silently producing NaN forces and energies.
+     */
+    template <typename Model>
+    void expectDegenerateGeometryThrows(
+        Model               &model,
+        const WaterGeometry &geometry,
+        const std::string   &expectedQuantity
+    )
+    {
+        auto                       simBox = makeIntraWaterBox(geometry);
+        physicalData::PhysicalData data;
+
+        try
+        {
+            model.calculate(simBox, data);
+            FAIL() << "no exception for a degenerate geometry ("
+                   << expectedQuantity << ")";
+        }
+        catch (const exc::WaterModelException &error)
+        {
+            const std::string message = error.what();
+            EXPECT_NE(
+                message.find("Degenerate water geometry"),
+                std::string::npos
+            ) << message;
+            EXPECT_NE(message.find(expectedQuantity), std::string::npos)
+                << message;
+        }
     }
 
     std::shared_ptr<pot::GuffNonCoulomb> makeNonCoulombPotential()
@@ -417,6 +492,138 @@ TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
     );
     EXPECT_DOUBLE_EQ(tip3pMtr.getEqOHDistance(), 0.9572);
     EXPECT_DOUBLE_EQ(tip3pMtr.getEqHHDistance(), 1.5139);
+}
+
+TEST(IntraWater, SpcModelsRejectDegenerateGeometry)
+{
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
+
+    waterModel::SPCFwIntraWater  spcFw;
+    waterModel::qSPCFwIntraWater qSpcFw;
+
+    // a hydrogen on top of the oxygen: the bond force divides by a zero
+    // distance
+    expectDegenerateGeometryThrows(
+        spcFw,
+        {.oh1 = 0.0, .oh2 = 1.0, .angle = 1.9},
+        "O-H1 distance"
+    );
+    expectDegenerateGeometryThrows(
+        spcFw,
+        {.oh1 = 1.0, .oh2 = 0.0, .angle = 1.9},
+        "O-H2 distance"
+    );
+    expectDegenerateGeometryThrows(
+        qSpcFw,
+        {.oh1 = 0.0, .oh2 = 1.0, .angle = 1.9},
+        "O-H1 distance"
+    );
+    expectDegenerateGeometryThrows(
+        qSpcFw,
+        {.oh1 = 1.0, .oh2 = 0.0, .angle = 1.9},
+        "O-H2 distance"
+    );
+
+    // both hydrogens on the same ray from the oxygen (angle 0, also with
+    // different bond lengths): the angle force divides by sin(angle) = 0
+    expectDegenerateGeometryThrows(
+        spcFw,
+        {.oh1 = 1.0, .oh2 = 1.0, .angle = 0.0},
+        "H-O-H angle"
+    );
+    expectDegenerateGeometryThrows(
+        spcFw,
+        {.oh1 = 1.0, .oh2 = 0.5, .angle = 0.0},
+        "H-O-H angle"
+    );
+    expectDegenerateGeometryThrows(
+        qSpcFw,
+        {.oh1 = 1.0, .oh2 = 1.0, .angle = 0.0},
+        "H-O-H angle"
+    );
+}
+
+TEST(IntraWater, SpcModelsStayFiniteNextToTheDegenerateGeometries)
+{
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
+
+    // a linear molecule is not degenerate: sin(pi) does not vanish in floating
+    // point and the cross product is exactly zero
+    waterModel::SPCFwIntraWater spcFw;
+    expectFiniteAndConservative(
+        spcFw,
+        {.oh1 = 1.04, .oh2 = 0.97, .angle = std::numbers::pi}
+    );
+
+    // a tiny but non-zero angle and a very short bond are finite as well
+    expectFiniteAndConservative(
+        spcFw,
+        {.oh1 = 1.04, .oh2 = 0.97, .angle = 1.0e-6}
+    );
+    expectFiniteAndConservative(
+        spcFw,
+        {.oh1 = 1.0e-6, .oh2 = 0.97, .angle = 1.9}
+    );
+}
+
+TEST(IntraWater, MtrModelsRejectDegenerateGeometry)
+{
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
+
+    waterModel::SPCMTRIntraWater   spcMtr;
+    waterModel::TIP3PMTRIntraWater tip3pMtr;
+
+    expectDegenerateGeometryThrows(
+        spcMtr,
+        {.oh1 = 0.0, .oh2 = 1.0, .angle = 1.9},
+        "O-H1 distance"
+    );
+    expectDegenerateGeometryThrows(
+        spcMtr,
+        {.oh1 = 1.0, .oh2 = 0.0, .angle = 1.9},
+        "O-H2 distance"
+    );
+    expectDegenerateGeometryThrows(
+        tip3pMtr,
+        {.oh1 = 0.0, .oh2 = 1.0, .angle = 1.9},
+        "O-H1 distance"
+    );
+    expectDegenerateGeometryThrows(
+        tip3pMtr,
+        {.oh1 = 1.0, .oh2 = 0.0, .angle = 1.9},
+        "O-H2 distance"
+    );
+
+    // equal bond lengths and angle 0 put the two hydrogens on top of each other
+    expectDegenerateGeometryThrows(
+        spcMtr,
+        {.oh1 = 1.0, .oh2 = 1.0, .angle = 0.0},
+        "H-H distance"
+    );
+    expectDegenerateGeometryThrows(
+        tip3pMtr,
+        {.oh1 = 0.9, .oh2 = 0.9, .angle = 0.0},
+        "H-H distance"
+    );
+}
+
+TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
+{
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
+
+    waterModel::SPCMTRIntraWater spcMtr;
+
+    // angle 0 with different bond lengths: the hydrogens are apart (no divisor
+    // vanishes)
+    expectFiniteAndConservative(
+        spcMtr,
+        {.oh1 = 1.04, .oh2 = 0.97, .angle = 0.0}
+    );
+    // a linear molecule
+    expectFiniteAndConservative(
+        spcMtr,
+        {.oh1 = 1.04, .oh2 = 0.97, .angle = std::numbers::pi}
+    );
 }
 
 TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)

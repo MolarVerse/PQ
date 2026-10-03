@@ -20,23 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <algorithm>   // for max
-#include <cmath>       // for isfinite
-#include <format>      // for format
+#include <algorithm>
+#include <cmath>
+#include <format>
 
 #include "constants/conversionFactors.hpp"
 #include "enums/qm.hpp"
-#include "exceptions.hpp"        // for exc::InputFileException
-#include "generalSettings.hpp"   // for settings::Settings
-#include "hessianSettings.hpp"   // for settings::HessianSettings
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "hessianSettings.hpp"
 #include "inputFileReader.hpp"
-#include "manostatSettings.hpp"        // for settings::ManostatSettings
-#include "optimizerSettings.hpp"       // for settings::OptimizerSettings
-#include "potentialSettings.hpp"       // for settings::PotentialSettings
-#include "qmSettings.hpp"              // for settings::QMSettings
-#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "thermostatSettings.hpp"      // for settings::ThermostatSettings
-#include "timingsSettings.hpp"         // for settings::TimingsSettings
+#include "manostatSettings.hpp"
+#include "optimizerSettings.hpp"
+#include "potentialSettings.hpp"
+#include "qmSettings.hpp"
+#include "simulationBoxSettings.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
 
 namespace input
 {

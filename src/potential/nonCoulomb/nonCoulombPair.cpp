@@ -22,7 +22,7 @@
 
 #include "nonCoulombPair.hpp"
 
-#include "mathUtilities.hpp"   // for utilities::compare
+#include "mathUtilities.hpp"
 
 namespace pot
 {

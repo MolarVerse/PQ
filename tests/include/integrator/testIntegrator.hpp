@@ -24,16 +24,16 @@
 
 #define _TEST_INTEGRATOR_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
+#include <memory>
 
-#include "atom.hpp"   // for Atom
+#include "atom.hpp"
 #include "integrator.hpp"
-#include "molecule.hpp"          // for Molecule
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
-#include "velocityVerlet.hpp"    // for VelocityVerlet
+#include "molecule.hpp"
+#include "simulationBox.hpp"
+#include "timingsSettings.hpp"
+#include "velocityVerlet.hpp"
 
 /**
  * class TestIntegrator

@@ -22,21 +22,21 @@
 
 #include "qmSetup.hpp"
 
-#include <format>        // for format
-#include <string_view>   // for string_view
+#include <format>
+#include <string_view>
 
-#include "engine.hpp"   // for Engine
+#include "engine.hpp"
 #include "enums/qm.hpp"
-#include "exceptions.hpp"          // for exc::InputFileException
-#include "externalQMRunner.hpp"    // for ExternalQMRunner
-#include "generalSettings.hpp"     // for settings::Settings
-#include "potentialSettings.hpp"   // for settings::PotentialSettings
-#include "qmCapableEngine.hpp"     // for QMCapableEngine
-#include "qmSettings.hpp"          // for QMMethod, settings::QMSettings
-#include "references.hpp"          // for references::ReferencesOutput
-#include "referencesOutput.hpp"    // for references::ReferencesOutput
-#include "stdoutOutput.hpp"        // for StdoutOutput
-#include "stringUtilities.hpp"     // for toLowerCopy
+#include "exceptions.hpp"
+#include "externalQMRunner.hpp"
+#include "generalSettings.hpp"
+#include "potentialSettings.hpp"
+#include "qmCapableEngine.hpp"
+#include "qmSettings.hpp"
+#include "references.hpp"
+#include "referencesOutput.hpp"
+#include "stdoutOutput.hpp"
+#include "stringUtilities.hpp"
 
 namespace setup
 {

@@ -22,7 +22,7 @@
 
 #include "morsePair.hpp"
 
-#include <cmath>   // for exp
+#include <cmath>
 
 namespace pot
 {

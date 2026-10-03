@@ -26,10 +26,10 @@
 #include <iterator>
 #include <numeric>
 
-#include "box.hpp"   // for Box
+#include "box.hpp"
 #include "collectionUtilities.hpp"
-#include "generalSettings.hpp"    // for Settings
-#include "manostatSettings.hpp"   // for ManostatSettings
+#include "generalSettings.hpp"
+#include "manostatSettings.hpp"
 #include "strongTypes.hpp"
 
 namespace molsys

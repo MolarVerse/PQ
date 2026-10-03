@@ -24,14 +24,14 @@
 
 #define _TEST_PARAMETER_FILE_SECTION_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <filesystem>   // for remove
-#include <string>       // for allocator, string
+#include <filesystem>
+#include <string>
 
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "mmmdEngine.hpp"             // for Engine
-#include "molecule.hpp"               // for Molecule
+#include "forceFieldNonCoulomb.hpp"
+#include "mmmdEngine.hpp"
+#include "molecule.hpp"
 
 /**
  * @class TestParameterFileSection

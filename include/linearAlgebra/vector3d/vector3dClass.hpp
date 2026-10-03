@@ -24,9 +24,9 @@
 
 #define _VECTOR3D_CLASS_HPP_
 
-#include <array>     // for array
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <array>
+#include <cstddef>
+#include <vector>
 
 #include "concepts/vector3dConcepts.hpp"
 

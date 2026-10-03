@@ -24,7 +24,7 @@
 
 #define _DEFAULTS_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 /**
  * @brief struct containing all default file names

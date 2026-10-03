@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <algorithm>   // for std::ranges:find
-#include <optional>    // for std::optional
+#include <algorithm>
+#include <optional>
 
 #include "simulationBox.hpp"
 

@@ -24,11 +24,11 @@
 
 #define _CELL_LIST_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cstddef>
+#include <vector>
 
-#include "cell.hpp"       // for Cell
-#include "defaults.hpp"   // for _NUMBER_OF_CELLS_DEFAULT_, _CELL_LIST_IS_ACT...
+#include "cell.hpp"
+#include "defaults.hpp"
 #include "vector3d.hpp"
 
 namespace molsys

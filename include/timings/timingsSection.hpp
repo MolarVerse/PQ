@@ -24,9 +24,9 @@
 
 #define _TIMINGS_SECTION_HPP_
 
-#include <cstddef>   // for size_t
-#include <memory>    // for unique_ptr
-#include <string>    // for string, allocator, basic_string
+#include <cstddef>
+#include <memory>
+#include <string>
 
 namespace timings
 {

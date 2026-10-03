@@ -31,18 +31,19 @@
 #include <utility>
 
 #include "SPCIntraWater.hpp"
-#include "bondConstraint.hpp"   // for constraints::BondConstraint
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for customException
-#include "fileSettings.hpp"     // for FileSettings
+#include "bondConstraint.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
 #include "generalSettings.hpp"
-#include "interWater.hpp"   // for InterWater
+#include "interWater.hpp"
+#include "interWaterParamters.hpp"
 #include "mTRIntraWater.hpp"
-#include "mdEngine.hpp"           // for MDEngine
-#include "references.hpp"         // for References
-#include "referencesOutput.hpp"   // for references::ReferencesOutput
+#include "mdEngine.hpp"
+#include "references.hpp"
+#include "referencesOutput.hpp"
 #include "rigidWaterGeometry.hpp"
-#include "waterModelSettings.hpp"   // for settings::WaterModelSettings
+#include "waterModelSettings.hpp"
 
 namespace setup
 {

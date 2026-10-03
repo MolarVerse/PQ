@@ -20,21 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), ASSER...
+#include <gtest/gtest.h>
 
-#include <cmath>      // for sqrt
-#include <iostream>   // for cout, ostream
-#include <limits>     // for numeric_limits
-#include <string>     // for allocator, string
+#include <cmath>
+#include <iostream>
+#include <limits>
+#include <string>
 
-// for Message, TestPartResult, AssertionResult
-#include "vector3d.hpp"   // IWYU pragma: keep - for linalg::Vec3D, linalg::Vec3Di, linalg::Vec3Dul, maximum, minimum
-
-/**
- * @file testVector3d.cpp
- *
- * @brief Contains tests for double, int and size_t linalg::Vector3D
- */
+#include "vector3d.hpp"
 
 /**
  * @brief tests constructors for linalg::Vector3D

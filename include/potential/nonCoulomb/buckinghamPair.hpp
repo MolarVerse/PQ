@@ -24,7 +24,7 @@
 
 #define _BUCKINGHAM_PAIR_HPP_
 
-#include <utility>   // pair
+#include <utility>
 
 #include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"

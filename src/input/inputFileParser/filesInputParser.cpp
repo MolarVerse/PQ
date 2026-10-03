@@ -25,7 +25,7 @@
 #include <mstd/file.hpp>
 #include <utility>
 
-#include "fileSettings.hpp"   // for settings::FileSettings
+#include "fileSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyRegistry.hpp"
 

@@ -22,16 +22,16 @@
 
 #include "restartFileReader.hpp"
 
-#include <fstream>   // for basic_istream, ifstream
-#include <string>    // for basic_string, string
+#include <fstream>
+#include <string>
 
 #include "atomSection.hpp"
-#include "boxSection.hpp"          // for BoxSection
-#include "engine.hpp"              // for Engine
-#include "fileSettings.hpp"        // for FileSettings
-#include "noseHooverSection.hpp"   // for NoseHooverSection
-#include "stepCountSection.hpp"    // for StepCountSection
-#include "stringUtilities.hpp"     // for removeComments, splitString
+#include "boxSection.hpp"
+#include "engine.hpp"
+#include "fileSettings.hpp"
+#include "noseHooverSection.hpp"
+#include "stepCountSection.hpp"
+#include "stringUtilities.hpp"
 
 namespace input::restartFile
 {

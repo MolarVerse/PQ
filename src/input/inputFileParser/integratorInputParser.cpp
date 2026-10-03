@@ -22,15 +22,15 @@
 
 #include "integratorInputParser.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "exceptions.hpp"        // for InputFileException, customException
-#include "generalSettings.hpp"   // for Settings
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
-#include "references.hpp"         // for ReferencesOutput
-#include "referencesOutput.hpp"   // for ReferencesOutput
+#include "references.hpp"
+#include "referencesOutput.hpp"
 
 namespace input
 {

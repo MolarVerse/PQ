@@ -24,10 +24,10 @@
 
 #define _DIHEDRAL_SECTION_HPP_
 
-#include <string>   // for allocator, string
+#include <string>
 #include <vector>
 
-#include "parameterFileSection.hpp"   // for ParameterFileSection
+#include "parameterFileSection.hpp"
 
 namespace input::parameterFile
 {

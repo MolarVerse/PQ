@@ -22,20 +22,20 @@
 
 #include "outputFilesSetup.hpp"
 
-#include <string>   // for string
+#include <string>
 
-#include "engine.hpp"               // for Engine
-#include "generalSettings.hpp"      // for Settings
-#include "hessianEngine.hpp"        // for HessianEngine
-#include "hessianSettings.hpp"      // for HessianSettings
-#include "infoOutput.hpp"           // for InfoOutput
-#include "logOutput.hpp"            // for LogOutput
-#include "mdEngine.hpp"             // for MDEngine
-#include "optEngine.hpp"            // for OptEngine
-#include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "stdoutOutput.hpp"         // for StdoutOutput
-#include "timingsSettings.hpp"      // for TimingsSettings
-#include "trajectoryOutput.hpp"     // for TrajectoryOutput
+#include "engine.hpp"
+#include "generalSettings.hpp"
+#include "hessianEngine.hpp"
+#include "hessianSettings.hpp"
+#include "infoOutput.hpp"
+#include "logOutput.hpp"
+#include "mdEngine.hpp"
+#include "optEngine.hpp"
+#include "outputFileSettings.hpp"
+#include "stdoutOutput.hpp"
+#include "timingsSettings.hpp"
+#include "trajectoryOutput.hpp"
 
 namespace setup
 {

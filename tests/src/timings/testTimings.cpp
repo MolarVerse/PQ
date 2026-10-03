@@ -24,10 +24,10 @@
 
 #include <gtest/gtest.h>
 
-#include <cmath>   // for isfinite
+#include <cmath>
 
-#include "exceptions.hpp"         // for TimerException
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests that getName returns the constructor-provided name

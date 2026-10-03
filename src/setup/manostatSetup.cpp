@@ -22,17 +22,17 @@
 
 #include "manostatSetup.hpp"
 
-#include <format>   // for format
-#include <string>   // for operator==
+#include <format>
+#include <string>
 
-#include "berendsenManostat.hpp"             // for BerendsenManostat
-#include "constants/conversionFactors.hpp"   // for _PS_TO_FS_
+#include "berendsenManostat.hpp"
+#include "constants/conversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
-#include "generalSettings.hpp"    // for IsMDJobType
-#include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
-#include "manostatSettings.hpp"   // for settings::ManostatSettings
-#include "mdEngine.hpp"           // for Engine
+#include "generalSettings.hpp"
+#include "manostat.hpp"
+#include "manostatSettings.hpp"
+#include "mdEngine.hpp"
 #include "stochasticRescalingManostat.hpp"
 
 namespace setup

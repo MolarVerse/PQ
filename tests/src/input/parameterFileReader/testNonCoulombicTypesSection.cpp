@@ -20,20 +20,20 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include "buckinghamPair.hpp"         // for pot::BuckinghamPair
-#include "engine.hpp"                 // for Engine
-#include "exceptions.hpp"             // for exc::ParameterFileException
-#include "forceFieldNonCoulomb.hpp"   // for pot::ForceFieldNonCoulomb
-#include "lennardJonesPair.hpp"       // for pot::LennardJonesPair
-#include "morsePair.hpp"              // for pot::MorsePair
-#include "nonCoulombicsSection.hpp"   // for NonCoulombicsSection
-#include "potentialSettings.hpp"      // for settings::PotentialSettings
+#include "buckinghamPair.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "lennardJonesPair.hpp"
+#include "morsePair.hpp"
+#include "nonCoulombicsSection.hpp"
+#include "potentialSettings.hpp"
 #include "strongTypes.hpp"
 #include "testNonCoulombPairUtils.hpp"
-#include "testParameterFileSection.hpp"   // for TestParameterFileSection
-#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
+#include "testParameterFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestParameterFileSection, processSectionLennardJones)
 {

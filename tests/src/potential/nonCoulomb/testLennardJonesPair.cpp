@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <cmath>    // for pow
-#include <vector>   // for vector
+#include <cmath>
+#include <vector>
 
-// for AssertionResult, Message, TestPartResult
-#include "lennardJonesPair.hpp"   // for LennardJonesPair
+#include "lennardJonesPair.hpp"
 
 /**
  * @brief tests the equals operator of LennardJonesPair

@@ -24,7 +24,7 @@
 
 #define _RANDOM_NUMBER_GENERATOR_HPP_
 
-#include <random>   // for std::random_device and std::mt19937
+#include <random>
 
 namespace rng
 {

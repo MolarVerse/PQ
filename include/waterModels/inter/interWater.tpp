@@ -24,12 +24,12 @@
 
 #define _INTER_WATER_TPP_
 
-#include "atom.hpp"               // for Atom
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "hybridSettings.hpp"     // for HybridSettings
+#include "atom.hpp"
+#include "coulombPotential.hpp"
+#include "hybridSettings.hpp"
 #include "interWater.hpp"
-#include "potential.hpp"       // for ChargeTag
-#include "simulationBox.hpp"   // for SimulationBox
+#include "potential.hpp"
+#include "simulationBox.hpp"
 
 namespace waterModel
 {

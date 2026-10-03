@@ -24,7 +24,7 @@
 
 #define _COULOMB_REACTION_FIELD_HPP_
 
-#include <utility>   // for pair
+#include <utility>
 
 #include "coulombPotential.hpp"
 

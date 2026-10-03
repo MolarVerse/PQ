@@ -20,4 +20,4 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ, InitGoogleTest
+#include <gtest/gtest.h>

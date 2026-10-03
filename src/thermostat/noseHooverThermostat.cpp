@@ -22,15 +22,15 @@
 
 #include "noseHooverThermostat.hpp"
 
-#include <algorithm>   // for __for_each_fn
-#include <cstddef>     // for size_t
+#include <algorithm>
+#include <cstddef>
 
-#include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_, _FS_TO_S_
-#include "constants/internalConversionFactors.hpp"   // for _MOMENTUM_TO_FORCE_
-#include "globalTimer.hpp"                           // for GlobalTimer
-#include "physicalData.hpp"                          // for PhysicalData
-#include "simulationBox.hpp"                         // for SimulationBox
-#include "timingsSettings.hpp"                       // for TimingsSettings
+#include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
+#include "globalTimer.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "timingsSettings.hpp"
 
 namespace thermostat
 {

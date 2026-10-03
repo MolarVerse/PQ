@@ -24,7 +24,7 @@
 
 #define _MAXWELL_BOLTZMANN_HPP_
 
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
+#include "randomNumberGenerator.hpp"
 
 namespace molsys
 {

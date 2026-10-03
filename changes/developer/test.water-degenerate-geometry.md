@@ -1,0 +1,1 @@
+- Add regression tests for degenerate geometries of the intramolecular water models, and a WaterModelException type with a shared guard.

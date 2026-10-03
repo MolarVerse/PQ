@@ -24,10 +24,10 @@
 
 #define _CELL_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cstddef>
+#include <vector>
 
-#include "molecule.hpp"   // for Molecule
+#include "molecule.hpp"
 #include "simulationBox.hpp"
 
 namespace molsys

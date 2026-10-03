@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Message, TestPartResult
+#include <gtest/gtest.h>
 
-#include <fstream>   // for ifstream
-#include <string>    // for getline, allocator, string
+#include <fstream>
+#include <string>
 
-#include "momentumOutput.hpp"     // for MomentumOutput
-#include "physicalData.hpp"       // for PhysicalData
-#include "testEnergyOutput.hpp"   // for TestEnergyOutput
+#include "momentumOutput.hpp"
+#include "physicalData.hpp"
+#include "testEnergyOutput.hpp"
 #include "vector3d.hpp"
 
 /**

@@ -22,32 +22,32 @@
 
 #include "guffDatReader.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cmath>       // for sqrt
-#include <exception>   // for exception
-#include <format>      // for format
-#include <fstream>     // for basic_istream, std::ifstream, std
-#include <memory>      // for make_shared
-#include <ranges>      // for views::drop, for_each, ranges
+#include <algorithm>
+#include <cmath>
+#include <exception>
+#include <format>
+#include <fstream>
+#include <memory>
+#include <ranges>
 #include <tuple>
 
-#include "buckinghamPair.hpp"   // for BuckinghamPair
-#include "constants.hpp"        // for _COULOMB_PREFACTOR_
-#include "defaults.hpp"         // for _NUMBER_OF_GUFF_ENTRIES_
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for exc::GuffDatException, InputFileException
-#include "fileSettings.hpp"     // for settings::FileSettings
-#include "generalSettings.hpp"     // for settings
-#include "guffNonCoulomb.hpp"      // for GuffNonCoulomb
-#include "guffPair.hpp"            // for GuffPair
-#include "lennardJonesPair.hpp"    // for LennardJonesPair
-#include "mathUtilities.hpp"       // for sign, utilities
-#include "molecule.hpp"            // for Molecule
-#include "morsePair.hpp"           // for MorsePair
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "simulationBox.hpp"       // for SimulationBox
-#include "stringUtilities.hpp"   // for fileExists, getLineCommands, removeComments, splitString
-#include "waterModelSettings.hpp"   // for settings::WaterModelSettings
+#include "buckinghamPair.hpp"
+#include "constants.hpp"
+#include "defaults.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "generalSettings.hpp"
+#include "guffNonCoulomb.hpp"
+#include "guffPair.hpp"
+#include "lennardJonesPair.hpp"
+#include "mathUtilities.hpp"
+#include "molecule.hpp"
+#include "morsePair.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
+#include "stringUtilities.hpp"
+#include "waterModelSettings.hpp"
 
 namespace input::guffdat
 {

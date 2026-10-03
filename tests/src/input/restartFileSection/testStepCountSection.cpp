@@ -20,18 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F, InitG...
+#include <gtest/gtest.h>
 
-#include <cstddef>   // for size_t
-#include <string>    // for string, allocator, basic_string
-#include <vector>    // for vector
+#include <cstddef>
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"   // for RstFileException, customException
-// for AssertionResult, Message, TestPart...
-#include "restartFileReader/restartFileSection.hpp"   // for RstFileSection, readInput
-#include "testRestartFileSection.hpp"   // for TestStepCountSection
+#include "exceptions.hpp"
+#include "restartFileReader/restartFileSection.hpp"
+#include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "timingsSettings.hpp"
 
 TEST_F(TestStepCountSection, testKeyword)
 {

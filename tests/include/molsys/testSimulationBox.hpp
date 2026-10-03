@@ -24,14 +24,14 @@
 
 #define _TEST_SIMULATION_BOX_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for make_shared, __shared_ptr_access, share...
+#include <memory>
 
-#include "atom.hpp"            // for Atom
-#include "molecule.hpp"        // for Molecule
-#include "moleculeType.hpp"    // for MoleculeType
-#include "simulationBox.hpp"   // for SimulationBox
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
+#include "simulationBox.hpp"
 
 class TestSimulationBox : public ::testing::Test
 {

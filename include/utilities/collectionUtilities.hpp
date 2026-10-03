@@ -24,8 +24,8 @@
 
 #define _COLLECTION_UTILITIES_HPP_
 
-#include <algorithm>   // for ranges::sort, ranges::unique
-#include <vector>      // for vector
+#include <algorithm>
+#include <vector>
 
 namespace utilities
 {

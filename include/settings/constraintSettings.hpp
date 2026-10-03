@@ -24,7 +24,7 @@
 
 #define _CONSTRAINT_SETTINGS_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 #include <mstd/enum.hpp>
 
 #include "defaults.hpp"

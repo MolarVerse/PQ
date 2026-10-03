@@ -24,8 +24,8 @@
 
 #define _GUFF_NON_COULOMB_HPP_
 
-#include <cstddef>   // size_t
-#include <vector>    // vector
+#include <cstddef>
+#include <vector>
 
 #include "nonCoulombPotential.hpp"
 

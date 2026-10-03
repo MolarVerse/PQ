@@ -22,14 +22,14 @@
 
 #include "infoOutput.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "constraintSettings.hpp"   // for ConstraintSettings
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "generalSettings.hpp"      // for Settings
-#include "manostatSettings.hpp"     // for ManostatSettings
-#include "physicalData.hpp"         // for PhysicalData
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "constraintSettings.hpp"
+#include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
+#include "manostatSettings.hpp"
+#include "physicalData.hpp"
+#include "thermostatSettings.hpp"
 
 namespace out
 {

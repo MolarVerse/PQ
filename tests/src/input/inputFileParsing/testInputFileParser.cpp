@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <map>      // for map
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <map>
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"           // for InputFileException
-#include "generalInputParser.hpp"   // for InputFileParserGeneral
-#include "inputFileParser.hpp"      // for ParseFunc, input::checkCommand
+#include "exceptions.hpp"
+#include "generalInputParser.hpp"
+#include "inputFileParser.hpp"
 #include "parserUtils.hpp"
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests input::checkCommand function

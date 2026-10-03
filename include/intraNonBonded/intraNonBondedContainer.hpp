@@ -24,7 +24,7 @@
 
 #define _INTRA_NON_BONDED_CONTAINER_HPP_
 
-#include <vector>   // for vector
+#include <vector>
 
 #include "strongTypes.hpp"
 

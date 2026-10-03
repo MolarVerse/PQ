@@ -22,7 +22,7 @@
 
 #include "guffPair.hpp"
 
-#include <cmath>   // for exp, pow
+#include <cmath>
 
 namespace pot
 {

@@ -24,20 +24,20 @@
 
 #define _TEST_GUFFDAT_READER_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for __shared_ptr_access, make_shared
+#include <memory>
 
-#include "atom.hpp"                      // for Atom
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "fileSettings.hpp"              // for FileSettings
-#include "guffDatReader.hpp"             // for GuffDatReader
-#include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
-#include "mmmdEngine.hpp"                // for Engine
-#include "molecule.hpp"                  // for Molecule
-#include "moleculeType.hpp"              // for MoleculeType
+#include "atom.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "fileSettings.hpp"
+#include "guffDatReader.hpp"
+#include "guffNonCoulomb.hpp"
+#include "mmmdEngine.hpp"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
 #include "potentialBruteForce.hpp"
-#include "potentialSettings.hpp"   // for PotentialSettings
+#include "potentialSettings.hpp"
 
 /**
  * @class TestGuffDatReader

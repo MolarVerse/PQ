@@ -20,27 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <cstddef>   // for size_t
-#include <fstream>   // for ifstream, std
-#include <memory>    // for shared_ptr, __shared_ptr_access
-#include <string>    // for string, stod, allocator, basic_string
-#include <vector>    // for vector
+#include <cstddef>
+#include <fstream>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "atom.hpp"          // for Atom
-#include "atomSection.hpp"   // for AtomSection
-#include "engine.hpp"        // for Engine
-#include "exceptions.hpp"    // for RstFileException, customException
+#include "atom.hpp"
+#include "atomSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 #include "generalSettings.hpp"
-#include "gmock/gmock.h"      // for ElementsAre, MakePredicateFormatter
-#include "molecule.hpp"       // for Molecule
-#include "moleculeType.hpp"   // for MoleculeType
+#include "gmock/gmock.h"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
 #include "restartFileReader/atomSection.hpp"
 #include "restartFileReader/restartFileSection.hpp"
-#include "restartFileSection.hpp"       // for RstFileSection, AtomSection
-#include "testRestartFileSection.hpp"   // for TestAtomSection
-#include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
+#include "restartFileSection.hpp"
+#include "testRestartFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests the keyword function

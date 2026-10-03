@@ -24,8 +24,8 @@
 
 #include <format>
 
-#include "engine.hpp"            // for Engine
-#include "generalSettings.hpp"   // for Settings
+#include "engine.hpp"
+#include "generalSettings.hpp"
 
 namespace setup
 {

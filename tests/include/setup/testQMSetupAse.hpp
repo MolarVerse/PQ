@@ -24,11 +24,11 @@
 
 #define _TEST_QMSETUP_ASE_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include "qmSettings.hpp"   // for QMMethod, QMSettings
-#include "qmSetup.hpp"      // for QMSetup, setupQM
-#include "qmmdEngine.hpp"   // for QMMDEngine
+#include "qmSettings.hpp"
+#include "qmSetup.hpp"
+#include "qmmdEngine.hpp"
 
 /**
  * @class TestQMSetupAse

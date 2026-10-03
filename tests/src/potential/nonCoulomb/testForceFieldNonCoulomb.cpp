@@ -22,21 +22,20 @@
 
 #include "nonCoulomb/testForceFieldNonCoulomb.hpp"
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
+#include <gtest/gtest.h>
 
-#include <memory>     // for make_shared, shared_ptr
-#include <optional>   // for optional, nullopt
-#include <utility>    // for move
-#include <vector>     // for vector
+#include <memory>
+#include <optional>
+#include <utility>
+#include <vector>
 
-#include "exceptions.hpp"             // for ParameterFileException
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-                                      // for Message, TestPartResult
-#include "lennardJonesPair.hpp"       // for LennardJonesPair
-#include "matrix.hpp"                 // for Matrix
-#include "nonCoulombPair.hpp"         // for NonCoulombPair
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "lennardJonesPair.hpp"
+#include "matrix.hpp"
+#include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "throwWithMessage.hpp"
 
 TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 {

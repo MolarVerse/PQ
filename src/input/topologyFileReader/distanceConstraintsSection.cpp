@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
+#include "distanceConstraintsSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "distanceConstraint.hpp"   // for DistanceConstraint
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for exc::TopologyException
-#include "simulationBox.hpp"        // for SimulationBox
+#include "distanceConstraint.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "simulationBox.hpp"
 
 namespace input::topology
 {

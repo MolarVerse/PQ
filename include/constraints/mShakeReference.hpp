@@ -24,10 +24,10 @@
 
 #define _M_SHAKE_REFERENCE_HPP_
 
-#include <atom.hpp>   // for Atom
-#include <cstddef>    // for size_t
-#include <memory>     // for unique_ptr
-#include <vector>     // for vector
+#include <atom.hpp>
+#include <cstddef>
+#include <memory>
+#include <vector>
 
 namespace molsys
 {

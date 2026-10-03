@@ -22,13 +22,13 @@
 
 #include "testEnergyOutput.hpp"
 
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, allocator, string
+#include <iosfwd>
+#include <string>
 
 #include "forceFieldSettings.hpp"
-#include "generalSettings.hpp"      // for settings::Settings
-#include "manostatSettings.hpp"     // for settings::ManostatSettings
-#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
+#include "generalSettings.hpp"
+#include "manostatSettings.hpp"
+#include "thermostatSettings.hpp"
 #include "vector3d.hpp"
 
 /**

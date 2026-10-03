@@ -22,15 +22,15 @@
 
 #include "constraints.hpp"
 
-#include <algorithm>   // for ranges::for_each
-#include <format>      // for format
-#include <vector>      // for vector
+#include <algorithm>
+#include <format>
+#include <vector>
 
-#include "exceptions.hpp"   // for exc::ShakeException
+#include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "mShake.hpp"
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace constraints
 {

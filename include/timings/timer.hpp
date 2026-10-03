@@ -24,12 +24,12 @@
 
 #define _TIMER_HPP_
 
-#include <cstddef>   // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
+#include <cstddef>
+#include <string>
+#include <vector>
 
 #include "timerId.hpp"
-#include "timingsSection.hpp"   // for TimingsManager
+#include "timingsSection.hpp"
 #include "timingsSectionGuard.hpp"
 
 namespace timings

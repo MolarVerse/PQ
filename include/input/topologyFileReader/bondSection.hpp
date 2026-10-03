@@ -24,9 +24,9 @@
 
 #define _BOND_SECTION_HPP_
 
-#include <string>   // for allocator, string
+#include <string>
 
-#include "topologySection.hpp"   // for TopologySection
+#include "topologySection.hpp"
 
 namespace input::topology
 {

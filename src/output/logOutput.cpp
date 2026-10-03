@@ -22,11 +22,11 @@
 
 #include "logOutput.hpp"
 
-#include <format>    // for format
-#include <ostream>   // for basic_ostream, operator<<, flush, std
-#include <string>    // for char_traits, operator<<
+#include <format>
+#include <ostream>
+#include <string>
 
-#include "outputMessages.hpp"   // for initialMomentumMessage
+#include "outputMessages.hpp"
 
 namespace out
 {

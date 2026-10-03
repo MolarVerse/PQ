@@ -22,20 +22,19 @@
 
 #include "testParameterFileReader.hpp"
 
-#include "angleSection.hpp"      // for AngleSection
-#include "bondSection.hpp"       // for BondSection
-#include "dihedralSection.hpp"   // for DihedralSection
-#include "exceptions.hpp"     // for InputFileException, ParameterFileException
-#include "fileSettings.hpp"   // for FileSettings
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "forceFieldSettings.hpp"     // for ForceFieldSettings
-// for Message, TestPartResult, AssertHelper, Test
-#include "improperDihedralSection.hpp"   // for ImproperDihedralSection
-#include "jCouplingSection.hpp"          // for JCouplingSection
-#include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
-#include "parameterFileReader.hpp"       // for ParameterFileReader
-#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
-#include "typesSection.hpp"              // for TypesSection
+#include "angleSection.hpp"
+#include "bondSection.hpp"
+#include "dihedralSection.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "forceFieldSettings.hpp"
+#include "improperDihedralSection.hpp"
+#include "jCouplingSection.hpp"
+#include "nonCoulombicsSection.hpp"
+#include "parameterFileReader.hpp"
+#include "throwWithMessage.hpp"
+#include "typesSection.hpp"
 
 /**
  * @brief tests isNeeded function

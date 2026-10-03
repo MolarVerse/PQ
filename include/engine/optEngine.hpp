@@ -24,7 +24,7 @@
 
 #define _OPT_ENGINE_HPP_
 
-#include <memory>   // for unique_ptr
+#include <memory>
 
 #include "engine.hpp"
 #include "evaluator.hpp"

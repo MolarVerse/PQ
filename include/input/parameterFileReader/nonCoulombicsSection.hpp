@@ -24,10 +24,10 @@
 
 #define _NON_COULOMBICS_SECTION_HPP_
 
-#include <string>   // for allocator, string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "parameterFileSection.hpp"   // for ParameterFileSection
+#include "parameterFileSection.hpp"
 
 namespace engine
 {
