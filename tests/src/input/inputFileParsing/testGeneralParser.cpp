@@ -51,44 +51,38 @@ TEST_F(TestInputFileReader, JobType)
 {
     input::GeneralInputParser parser;
     std::vector<std::string>  lineElements = {"jobtype", "=", "mm-md"};
-    auto                      engine       = std::unique_ptr<engine::Engine>();
-    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_MD);
     EXPECT_EQ(settings::GeneralSettings::isMMActivated(), true);
-    test::checkType(engine, typeid(engine::MMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-md"};
-    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::QM_MD);
     EXPECT_EQ(settings::GeneralSettings::isQMActivated(), true);
-    test::checkType(engine, typeid(engine::QMMDEngine));
 
     lineElements = {"jobtype", "=", "qm-rpmd"};
-    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
     EXPECT_EQ(
         settings::GeneralSettings::getJobtype(),
         JobType::RING_POLYMER_QM_MD
     );
     EXPECT_EQ(settings::GeneralSettings::isQMActivated(), true);
     EXPECT_EQ(settings::GeneralSettings::isRingPolymerMDActivated(), true);
-    test::checkType(engine, typeid(engine::RingPolymerQMMDEngine));
 
     lineElements = {"jobtype", "=", "mm-opt"};
-    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_OPT);
     EXPECT_EQ(settings::GeneralSettings::isOptJobType(), true);
     EXPECT_EQ(settings::GeneralSettings::isMMActivated(), true);
-    test::checkType(engine, typeid(engine::OptEngine));
 
     lineElements = {"jobtype", "=", "mm-hessian"};
-    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0, engine);
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_HESSIAN);
     EXPECT_EQ(settings::GeneralSettings::isMMActivated(), true);
-    test::checkType(engine, typeid(engine::HessianEngine));
 
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseJobTypeForEngine(lineElements, 0, engine),
+        input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0),
         exc::InputFileException,
         "Invalid jobtype \"notValid\" in input file - possible values are:\n"
         "- mm-opt\n"
