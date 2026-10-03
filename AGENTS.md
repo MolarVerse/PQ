@@ -120,6 +120,7 @@ make -j<#procs>
 | `BUILD_WITH_IWYU`             | `OFF`   | Build with include-what-you-use                 |
 | `BUILD_WITH_GCOVR`            | `OFF`   | Build with gcovr coverage                       |
 | `BUILD_WITH_DOCS`             | `ON`    | Build documentation                             |
+| `PQ_DOXYGEN_GRAPHS`           | `ON`    | Draw dot graphs in Doxygen (off in PR docs CI)  |
 | `BUILD_WITH_BENCHMARKING`     | `OFF`   | Build the Google Benchmark suite                |
 | `BUILD_WITH_ASE`              | `ON`    | Build with ASE (QM runner integration)          |
 | `BUILD_WITH_SINGULARITY`      | `OFF`   | Build with Singularity                          |
