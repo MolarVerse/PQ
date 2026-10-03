@@ -270,9 +270,9 @@ TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
 
 namespace
 {
-    bool velocitiesAreFinite(const molsys::SimulationBox &box)
+    bool velocitiesAreFinite(const molsys::SimulationBox &simulationBox)
     {
-        for (const auto &atom : box.getAtoms())
+        for (const auto &atom : simulationBox.getAtoms())
         {
             for (size_t axis = 0; axis < 3; ++axis)
             {
@@ -309,9 +309,11 @@ TEST_F(TestThermostat, berendsenRejectsRelaxationTimeJustBelowTimestep)
         std::make_unique<thermostat::BerendsenThermostat>(300.0, 0.09);
     settings::TimingsSettings::setTimeStep(0.1);
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _thermostat->applyThermostat(*_simulationBox, *_data),
-        exc::UserInputException
+        exc::UserInputException,
+        "The relaxation time of the Berendsen thermostat must not be shorter "
+        "than the time step."
     );
 }
 
