@@ -958,6 +958,7 @@ def make_summary(job_id=1000, run_id=100, attempt=1, **overrides):
             "hit_rate": 0.989,
             "counters": {"cache_miss": 2, "could_not_use_precompiled_header": 269, "direct_cache_hit": 179},
         },
+        "runner": {"cpu_model": "AMD EPYC 7763 64-Core Processor", "cores": 4},
     }
     summary.update(overrides)
     return summary
@@ -988,6 +989,26 @@ class SanitiseSummaryTests(unittest.TestCase):
     def test_missing_parts_may_be_null(self):
         clean = collect.sanitise_summary(make_summary(ninja=None, ccache=None))
         self.assertEqual((None, None), (clean["ninja"], clean["ccache"]))
+
+    def test_the_runner_passes_and_may_be_missing(self):
+        self.assertEqual({"cpu_model": "AMD EPYC 7763 64-Core Processor", "cores": 4}, collect.sanitise_summary(make_summary())["runner"])
+        old = make_summary()
+        del old["runner"]
+        self.assertIsNone(collect.sanitise_summary(old)["runner"])
+        self.assertIsNone(collect.sanitise_summary(make_summary(runner=None))["runner"])
+
+    def test_rejects_a_hostile_runner(self):
+        self.mutated(["runner", "cpu_model"], "x\n| injected |")
+        self.mutated(["runner", "cpu_model"], "`code`")
+        self.mutated(["runner", "cpu_model"], "<b>x</b>")
+        self.mutated(["runner", "cpu_model"], "x" * 81)
+        self.mutated(["runner", "cpu_model"], "")
+        self.mutated(["runner", "cpu_model"], 7)
+        self.mutated(["runner", "cores"], 0)
+        self.mutated(["runner", "cores"], 1025)
+        self.mutated(["runner", "cores"], "4")
+        self.mutated(["runner", "cores"], True)
+        self.rejected(runner="AMD")
 
     def test_an_unusable_ninja_log_keeps_its_error(self):
         ninja = {"log_version": 4, "complete": None, "steps": 0, "error": "no usable .ninja_log"}
@@ -1281,6 +1302,7 @@ class BuildAnalysisRecordsTests(unittest.TestCase):
             self.assertEqual(job[key], record[key], key)
         self.assertEqual("lint", record["job"])
         self.assertEqual(269, record["ccache"]["counters"]["could_not_use_precompiled_header"])
+        self.assertEqual({"cpu_model": "AMD EPYC 7763 64-Core Processor", "cores": 4}, record["runner"])
 
     def test_the_artifact_cannot_override_join_keys(self):
         summary = make_summary(workflow="Evil", branch="evil", head_sha="e" * 40, event="schedule", job="evil")

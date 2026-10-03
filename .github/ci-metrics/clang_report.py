@@ -25,12 +25,14 @@ include them) changed are shown as they are.
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
 MARKER = "<!-- clang-build-times-comment -->"
 DETAIL_KIND = "clang-trace-detail"
 INCLUDES_KIND = "ninja-includes-detail"
+CPU_MODEL = re.compile(r"[A-Za-z0-9 ()@.,_+/-]{1,80}")
 SUMMARY_KINDS = (DETAIL_KIND, "clang-trace-summary")
 
 # A change is listed only if it is both large enough in seconds and in percent.
@@ -69,6 +71,29 @@ def load_summary(path):
         if not is_number(data.get(key)):
             return None
     return data
+
+
+def load_runner(path):
+    """The CPU model recorded in a build-analysis.json, or None if missing or not usable."""
+    if not path:
+        return None
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        model = data["runner"]["cpu_model"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    return model if isinstance(model, str) and CPU_MODEL.fullmatch(model) else None
+
+
+def runner_line(model, base_model):
+    """One sentence on the CPUs of this run and of the baseline, or None without data."""
+    if model is None:
+        return None
+    if base_model is None:
+        return f"Runner CPU: `{model}`."
+    if model == base_model:
+        return f"Both runs used the runner CPU `{model}`."
+    return f"Runner CPU: `{model}` here, `{base_model}` for the baseline. Runner CPUs differ in speed, so part of the change can be the hardware."
 
 
 def load_includes(path):
@@ -327,17 +352,19 @@ NOTES = (
 )
 
 
-def render(pr, base, *, baseline_sha=None, run_url=None, includes=None, base_includes=None):
+def render(pr, base, *, baseline_sha=None, run_url=None, includes=None, base_includes=None, runner=None, base_runner=None):
     """The Markdown comment for a pull request with trace data."""
     lines = [MARKER, "### Clang build times (clang-20, Debug), informational", ""]
+    note = runner_line(runner, base_runner if base is not None else None)
     if base is None:
         lines += ["No baseline yet: no `dev` run has stored its clang summary (or it expired), so only this pull request's numbers are shown.", ""]
+        lines += [note, ""] if note else []
         lines += table(["", "This pull request"], headline_rows(pr, None))
         if includes is not None:
             lines += [""] + include_section(includes, None)
     else:
         sha = f"`{str(baseline_sha)[:7]}`" if baseline_sha else "a recent run"
-        lines += [f"Compared with `dev` {sha}.", ""]
+        lines += [f"Compared with `dev` {sha}.", ""] + ([note, ""] if note else [])
         lines += table(["", "dev", "This pull request", "Change"], headline_rows(pr, base))
         scale = speed_factor(pr, base)
         lines += ["", f"The compiler time of this run was {scale:.2f} times the baseline's; per-item changes below are measured after scaling the baseline by that factor.", ""]
@@ -407,6 +434,8 @@ def parse_args(argv):
     parser.add_argument("--baseline-sha", help="dev commit of the baseline")
     parser.add_argument("--includes", help="ninja-includes.json of this build (exact include graph)")
     parser.add_argument("--baseline-includes", help="ninja-includes.json of the dev build")
+    parser.add_argument("--runner", help="build-analysis.json of this build (runner CPU)")
+    parser.add_argument("--baseline-runner", help="build-analysis.json of the dev build")
     parser.add_argument("--run-url", help="link to this workflow run")
     parser.add_argument("--status", default="success", help="outcome of the clang build step")
     parser.add_argument("--out", required=True, help="Markdown file to write")
@@ -426,6 +455,8 @@ def main(argv=None):
             run_url=args.run_url,
             includes=load_includes(args.includes),
             base_includes=load_includes(args.baseline_includes),
+            runner=load_runner(args.runner),
+            base_runner=load_runner(args.baseline_runner),
         )
     Path(args.out).write_text(text, encoding="utf-8")
     print(f"wrote {args.out} ({len(text):,} characters, {'no trace data' if pr is None else 'baseline ' + ('found' if args.baseline and load_summary(args.baseline) else 'missing')})")

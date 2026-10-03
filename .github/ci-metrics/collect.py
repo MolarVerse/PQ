@@ -75,6 +75,7 @@ MAX_SLOWEST = 20
 MAX_COUNTERS = 200
 STEP_KINDS = ("compile", "archive", "link", "other")
 COUNTER_NAME = re.compile(r"^[a-z0-9_]{1,64}$")
+CPU_MODEL = re.compile(r"[A-Za-z0-9 ()@.,_+/-]{1,80}")
 
 
 class ApiError(Exception):
@@ -475,6 +476,14 @@ def _text(value, what, *, limit=200):
     return value
 
 
+def _sanitise_runner(raw):
+    raw = _object(raw, "runner")
+    model = raw.get("cpu_model")
+    if not isinstance(model, str) or not CPU_MODEL.fullmatch(model):
+        raise ValueError("runner.cpu_model: unexpected characters or length")
+    return {"cpu_model": model, "cores": _integer(raw.get("cores"), "runner.cores", low=1, high=1024)}
+
+
 def _sanitise_ccache(raw):
     raw = _object(raw, "ccache")
     counters = _object(raw.get("counters"), "ccache.counters")
@@ -585,7 +594,7 @@ def sanitise_summary(raw, clang=None):
     """Validate the JSON a job uploaded and return only whitelisted parts.
 
     `clang` is the parsed clang-traces.json of the same artifact, if any. Returns
-    {"run_id", "run_attempt", "job_id", "ninja", "ccache", "includes", "clang"};
+    {"run_id", "run_attempt", "job_id", "runner", "ninja", "ccache", "includes", "clang"};
     raises ValueError on anything unexpected.
     """
     raw = _object(raw, "summary")
@@ -595,6 +604,7 @@ def sanitise_summary(raw, clang=None):
         "run_id": _integer(raw.get("run_id"), "run_id", high=10**15),
         "run_attempt": _integer(raw.get("run_attempt"), "run_attempt", low=1, high=10**4),
         "job_id": _integer(raw.get("job_id"), "job_id", high=10**15),
+        "runner": None if raw.get("runner") is None else _sanitise_runner(raw["runner"]),
         "ninja": None if raw.get("ninja") is None else _sanitise_ninja(raw["ninja"]),
         "ccache": None if raw.get("ccache") is None else _sanitise_ccache(raw["ccache"]),
         "includes": None if raw.get("includes") is None else _sanitise_includes(raw["includes"]),
@@ -682,6 +692,7 @@ def build_analysis_records(api, run, job_records):
                 "job": job["job"],
                 "created_at": job["created_at"],
                 "conclusion": job["conclusion"],
+                "runner": summary["runner"],
                 "ninja": summary["ninja"],
                 "ccache": summary["ccache"],
                 "includes": summary["includes"],
