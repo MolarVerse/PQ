@@ -49,14 +49,11 @@ namespace input
        public:
         GeneralInputParser();
 
+        void addFloatingPointTypeKey();
+
         void parseJobType(const std::vector<std::string> &, size_t);
 
         static void parseDimensionality(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseFloatingPointType(
             const std::vector<std::string> &,
             size_t
         );

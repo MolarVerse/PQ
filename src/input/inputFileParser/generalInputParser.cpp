@@ -27,9 +27,13 @@
 #include <stdexcept>
 
 #include "engine.hpp"
+#include "enums/general.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "hessianEngine.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
 #include "mmmdEngine.hpp"
 #include "optEngine.hpp"
 #include "parserUtils.hpp"
@@ -64,11 +68,7 @@ namespace input
             false
         );
 
-        addKeyword(
-            std::string("floating_point_type"),
-            bindMember(&GeneralInputParser::parseFloatingPointType, this),
-            false
-        );
+        addFloatingPointTypeKey();
 
         addKeyword(
             std::string("random_seed"),
@@ -201,43 +201,24 @@ namespace input
         }
     }
 
-    /**
-     * @brief parse floating point type of simulation
-     *
-     * @details Possible options are:
-     * 1) float
-     * 2) double
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throw exc::InputFileException if floating point type is not
-     * recognised
-     */
-    void GeneralInputParser::parseFloatingPointType(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void GeneralInputParser::addFloatingPointTypeKey()
     {
-        using enum FPType;
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name  = "floating_point_type",
+            .title = "Floating Point Type",
+            .description =
+                "Specifies the floating point type for the simulation (float "
+                "or double)"
+        };
 
-        const auto floatingPointType = utilities::toLowerCopy(lineElements[2]);
+        const auto setValue = [](FPType value)
+        { settings::GeneralSettings::setFloatingPointType(value); };
 
-        if (floatingPointType == "float")
-            settings::GeneralSettings::setFloatingPointType(FLOAT);
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<FPType>{.metadata = metaData, .onSet = setValue}
+        );
 
-        else if (floatingPointType == "double")
-            settings::GeneralSettings::setFloatingPointType(DOUBLE);
-
-        else
-        {
-            throw exc::InputFileException(format(
-                "Invalid floating point type \"{}\" in input file\n"
-                "Possible values are: float, double",
-                lineElements[2]
-            ));
-        }
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**

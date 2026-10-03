@@ -25,3 +25,4 @@
 - migrate `ConvergenceInputParser`
 - migrate `QMInputParser`
 - migrate `HybridInputParser`
+- migrate `FPType` key of `GeneralInputParser`
