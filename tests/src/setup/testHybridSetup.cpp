@@ -30,12 +30,12 @@
 #include "atom.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "hybridSetup.hpp"
 #include "inputFileParser/hybridInputParser.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "qmSettings.hpp"
-#include "settings.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
 
@@ -56,7 +56,7 @@ namespace
 
     void configureValidHybridSettings(engine::Engine &engine)
     {
-        settings::Settings::setJobtype(JobType::QMMM_MD);
+        settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
         settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
         settings::HybridSettings::setForcedCoreList({});
         settings::HybridSettings::setForcedLayerList({});
@@ -75,7 +75,7 @@ namespace
 
 TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
 {
-    settings::Settings::setJobtype(JobType::MM_MD);   // not QMMM_MD
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);   // not QMMM_MD
     EXPECT_NO_THROW(setup::setupHybrid(*_engine));
 }
 

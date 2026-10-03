@@ -28,17 +28,17 @@
 #include <string>    // for string, stod, allocator, basic_string
 #include <vector>    // for vector
 
-#include "atom.hpp"           // for Atom
-#include "atomSection.hpp"    // for AtomSection
-#include "engine.hpp"         // for Engine
-#include "exceptions.hpp"     // for RstFileException, customException
+#include "atom.hpp"          // for Atom
+#include "atomSection.hpp"   // for AtomSection
+#include "engine.hpp"        // for Engine
+#include "exceptions.hpp"    // for RstFileException, customException
+#include "generalSettings.hpp"
 #include "gmock/gmock.h"      // for ElementsAre, MakePredicateFormatter
 #include "molecule.hpp"       // for Molecule
 #include "moleculeType.hpp"   // for MoleculeType
 #include "restartFileReader/atomSection.hpp"
 #include "restartFileReader/restartFileSection.hpp"
-#include "restartFileSection.hpp"   // for RstFileSection, AtomSection
-#include "settings.hpp"
+#include "restartFileSection.hpp"       // for RstFileSection, AtomSection
 #include "testRestartFileSection.hpp"   // for TestAtomSection
 #include "throwWithMessage.hpp"         // for ASSERT_THROW_MSG
 
@@ -184,7 +184,7 @@ TEST_F(TestAtomSection, testProcess)
 
     _section->process(line, *_engine);
 
-    settings::Settings::setJobtype(JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
     EXPECT_EQ(_engine->getSimulationBox().getMolecules().size(), 3);
 
@@ -217,7 +217,7 @@ TEST_F(TestAtomSection, testProcess)
 
     EXPECT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 10);
 
-    settings::Settings::setJobtype(JobType::NONE);
+    settings::GeneralSettings::setJobtype(JobType::NONE);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)
@@ -262,7 +262,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
 
     _processQMAtomLine(line, _engine->getSimulationBox());
 
-    settings::Settings::setJobtype(JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
     auto atoms      = _engine->getSimulationBox().getQMAtoms();
     auto first_atom = *atoms.begin();
 
@@ -282,5 +282,5 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
 
     ASSERT_EQ(first_atom->getAtomTypeName(), line[0]);
 
-    settings::Settings::setJobtype(JobType::NONE);
+    settings::GeneralSettings::setJobtype(JobType::NONE);
 }

@@ -28,9 +28,9 @@
 
 #include "constants.hpp"    // for _TEMPERATURE_FACTOR_
 #include "exceptions.hpp"   // for exc::RstFileException, exc::UserInputException
+#include "generalSettings.hpp"         // for Settings
 #include "potentialSettings.hpp"       // for PotentialSettings
 #include "randomNumberGenerator.hpp"   // for randomNumberGenerator
-#include "settings.hpp"                // for Settings
 #include "stlVector.hpp"               // for rms
 
 namespace molsys
@@ -530,7 +530,7 @@ namespace molsys
         const auto nAtoms = getNumberOfAtoms();
 
         _degreesOfFreedom =
-            3 * nAtoms - settings::Settings::getDimensionality();
+            3 * nAtoms - settings::GeneralSettings::getDimensionality();
     }
 
     /**

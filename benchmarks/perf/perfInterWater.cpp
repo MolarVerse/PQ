@@ -40,13 +40,13 @@
 #include "atom.hpp"
 #include "celllist.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "generalSettings.hpp"
 #include "interWater.hpp"
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "vector3d.hpp"
 #include "waterModelSettings.hpp"
@@ -151,7 +151,7 @@ int main()
 
     auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
 
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
 
     molsys::CellList cellList;
     cellList.setNumberOfCells(3);

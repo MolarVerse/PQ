@@ -23,8 +23,8 @@
 #include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
 
 // for Message, TestPartResult
+#include "generalSettings.hpp"         // for settings::Settings
 #include "randomNumberGenerator.hpp"   // for rng::RandomNumberGenerator
-#include "settings.hpp"                // for settings::Settings
 
 /**
  * @brief test randomNumberGenerator uniform real distribution range
@@ -94,8 +94,8 @@ TEST(TestRandomNumberGenerator, normalDistributionMean)
  */
 TEST(TestRandomNumberGenerator, determinismWithSeed)
 {
-    settings::Settings::setIsRandomSeedSet(true);
-    settings::Settings::setRandomSeed(73);
+    settings::GeneralSettings::setIsRandomSeedSet(true);
+    settings::GeneralSettings::setRandomSeed(73);
 
     rng::RandomNumberGenerator rng1{};
     rng::RandomNumberGenerator rng2{};

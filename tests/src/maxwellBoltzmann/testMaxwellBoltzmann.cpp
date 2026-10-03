@@ -30,8 +30,8 @@
 
 #include "atom.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "maxwellBoltzmann.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
@@ -86,11 +86,11 @@ namespace
         SeedGuard &operator=(SeedGuard &&) = delete;
         explicit SeedGuard(uint_fast32_t seed)
         {
-            settings::Settings::setRandomSeed(seed);
-            settings::Settings::setIsRandomSeedSet(true);
+            settings::GeneralSettings::setRandomSeed(seed);
+            settings::GeneralSettings::setIsRandomSeedSet(true);
         }
 
-        ~SeedGuard() { settings::Settings::setIsRandomSeedSet(false); }
+        ~SeedGuard() { settings::GeneralSettings::setIsRandomSeedSet(false); }
 
         SeedGuard(const SeedGuard &)            = delete;
         SeedGuard &operator=(const SeedGuard &) = delete;

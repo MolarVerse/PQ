@@ -29,10 +29,10 @@
 #include "constants/conversionFactors.hpp"   // for _PS_TO_FS_
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"    // for IsMDJobType
 #include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
 #include "manostatSettings.hpp"   // for settings::ManostatSettings
 #include "mdEngine.hpp"           // for Engine
-#include "settings.hpp"           // for IsMDJobType
 #include "stochasticRescalingManostat.hpp"
 
 namespace setup
@@ -45,7 +45,7 @@ namespace setup
      */
     void setupManostat(engine::Engine &engine)
     {
-        if (!settings::Settings::isMDJobType())
+        if (!settings::GeneralSettings::isMDJobType())
             return;
 
         out::StdoutOutput::writeSetup("Manostat");

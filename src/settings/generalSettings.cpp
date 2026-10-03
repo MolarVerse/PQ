@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "settings.hpp"
+#include "generalSettings.hpp"
 
 #include <string>   // for operator==, string
 #include <utility>
@@ -39,7 +39,7 @@ namespace settings
      *
      * @param jobtype
      */
-    void Settings::setJobtype(JobType jobtype)
+    void GeneralSettings::setJobtype(JobType jobtype)
     {
         _jobtype = jobtype;
 
@@ -62,7 +62,7 @@ namespace settings
      *
      * @param floatingPointType
      */
-    void Settings::setFloatingPointType(FPType floatingPointType)
+    void GeneralSettings::setFloatingPointType(FPType floatingPointType)
     {
         _floatingPointType = floatingPointType;
     }
@@ -72,7 +72,7 @@ namespace settings
      *
      * @param randomSeed
      */
-    void Settings::setRandomSeed(uint_fast32_t randomSeed)
+    void GeneralSettings::setRandomSeed(uint_fast32_t randomSeed)
     {
         _randomSeed = randomSeed;
     }
@@ -82,7 +82,7 @@ namespace settings
      *
      * @param isRandomSeedSet
      */
-    void Settings::setIsRandomSeedSet(bool isRandomSeedSet)
+    void GeneralSettings::setIsRandomSeedSet(bool isRandomSeedSet)
     {
         _isRandomSeedset = isRandomSeedSet;
     }
@@ -92,7 +92,7 @@ namespace settings
      *
      * @param isRingPolymerMD
      */
-    void Settings::setIsRingPolymerMDActivated(bool isRingPolymerMD)
+    void GeneralSettings::setIsRingPolymerMDActivated(bool isRingPolymerMD)
     {
         _isRingPolymerMDActivated = isRingPolymerMD;
     }
@@ -102,7 +102,7 @@ namespace settings
      *
      * @param dimensionality
      */
-    void Settings::setDimensionality(size_t dimensionality)
+    void GeneralSettings::setDimensionality(size_t dimensionality)
     {
         _dimensionality = dimensionality;
     }
@@ -112,7 +112,7 @@ namespace settings
      *
      * @param virialType
      */
-    void Settings::setVirialType(VirialType virialType)
+    void GeneralSettings::setVirialType(VirialType virialType)
     {
         _virial = virialType;
     }
@@ -122,7 +122,7 @@ namespace settings
      *
      * @param integratorType
      */
-    void Settings::setIntegratorType(IntegratorType integratorType)
+    void GeneralSettings::setIntegratorType(IntegratorType integratorType)
     {
         _integrator = integratorType;
     }
@@ -138,21 +138,24 @@ namespace settings
      *
      * @return JobType
      */
-    JobType Settings::getJobtype() { return _jobtype; }
+    JobType GeneralSettings::getJobtype() { return _jobtype; }
 
     /**
      * @brief get the floating point type
      *
      * @return FPType
      */
-    FPType Settings::getFloatingPointType() { return _floatingPointType; }
+    FPType GeneralSettings::getFloatingPointType()
+    {
+        return _floatingPointType;
+    }
 
     /**
      * @brief get the floating point string representation used in pybind11
      * bindings
      *
      */
-    std::string Settings::getFloatingPointPybindString()
+    std::string GeneralSettings::getFloatingPointPybindString()
     {
         if (_floatingPointType == FPType::FLOAT)
             return "float32";
@@ -165,35 +168,35 @@ namespace settings
      *
      * @return uint_fast32_t
      */
-    uint_fast32_t Settings::getRandomSeed() { return _randomSeed; }
+    uint_fast32_t GeneralSettings::getRandomSeed() { return _randomSeed; }
 
     /**
      * @brief get if the random seed value has been set
      *
      * @return bool
      */
-    bool Settings::isRandomSeedSet() { return _isRandomSeedset; }
+    bool GeneralSettings::isRandomSeedSet() { return _isRandomSeedset; }
 
     /**
      * @brief get the dimensionality
      *
      * @return size_t
      */
-    size_t Settings::getDimensionality() { return _dimensionality; }
+    size_t GeneralSettings::getDimensionality() { return _dimensionality; }
 
     /**
      * @brief get the virial type
      *
      * @return VirialType
      */
-    VirialType Settings::getVirialType() { return _virial; }
+    VirialType GeneralSettings::getVirialType() { return _virial; }
 
     /**
      * @brief get the integrator type
      *
      * @return IntegratorType
      */
-    IntegratorType Settings::getIntegratorType() { return _integrator; }
+    IntegratorType GeneralSettings::getIntegratorType() { return _integrator; }
 
     /******************************
      *                            *
@@ -207,7 +210,7 @@ namespace settings
      * @return true/false if the jobtype does not use any MM type simulations
      *
      */
-    bool Settings::isQMOnlyJobtype()
+    bool GeneralSettings::isQMOnlyJobtype()
     {
         using enum JobType;
 
@@ -231,7 +234,10 @@ namespace settings
      * @return true/false if the jobtype does not use any QM type simulations
      *
      */
-    bool Settings::isMMOnlyJobtype() { return _jobtype == JobType::MM_MD; }
+    bool GeneralSettings::isMMOnlyJobtype()
+    {
+        return _jobtype == JobType::MM_MD;
+    }
 
     /**
      * @brief Returns true if the jobtype is a hybrid type simulation
@@ -239,7 +245,10 @@ namespace settings
      * @return true/false if the jobtype is a hybrid type simulation
      *
      */
-    bool Settings::isHybridJobtype() { return _jobtype == JobType::QMMM_MD; }
+    bool GeneralSettings::isHybridJobtype()
+    {
+        return _jobtype == JobType::QMMM_MD;
+    }
 
     /**
      * @brief Returns true if the jobtype performs an MD simulation
@@ -247,7 +256,7 @@ namespace settings
      * @return true/false
      *
      */
-    bool Settings::isMDJobType()
+    bool GeneralSettings::isMDJobType()
     {
         using enum JobType;
 
@@ -266,7 +275,7 @@ namespace settings
      * @return true/false
      *
      */
-    bool Settings::isOptJobType() { return _jobtype == JobType::MM_OPT; }
+    bool GeneralSettings::isOptJobType() { return _jobtype == JobType::MM_OPT; }
 
     /**
      * @brief Returns true if the MM simulations are activated
@@ -274,7 +283,7 @@ namespace settings
      * @return true/false
      *
      */
-    bool Settings::isMMActivated()
+    bool GeneralSettings::isMMActivated()
     {
         using enum JobType;
 
@@ -294,7 +303,7 @@ namespace settings
      * @return true/false
      *
      */
-    bool Settings::isQMActivated()
+    bool GeneralSettings::isQMActivated()
     {
         using enum JobType;
 
@@ -313,7 +322,7 @@ namespace settings
      * @return true/false
      *
      */
-    bool Settings::isQMOnlyActivated()
+    bool GeneralSettings::isQMOnlyActivated()
     {
         return isQMActivated() && !isMMActivated();
     }
@@ -324,7 +333,7 @@ namespace settings
      * @return true/false
      *
      */
-    bool Settings::isMMOnlyActivated()
+    bool GeneralSettings::isMMOnlyActivated()
     {
         return isMMActivated() && !isQMActivated();
     }
@@ -335,7 +344,7 @@ namespace settings
      * @return true/false
      *
      */
-    bool Settings::isRingPolymerMDActivated()
+    bool GeneralSettings::isRingPolymerMDActivated()
     {
         return _isRingPolymerMDActivated;
     }
@@ -346,7 +355,7 @@ namespace settings
      * @return true/false
      *
      */
-    bool Settings::isCellListActivated() { return _isCellListActivated; }
+    bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
 
     /*****************************
      *                           *
@@ -358,13 +367,16 @@ namespace settings
      * @brief activate ring polymer MD simulations
      *
      */
-    void Settings::activateRingPolymerMD() { _isRingPolymerMDActivated = true; }
+    void GeneralSettings::activateRingPolymerMD()
+    {
+        _isRingPolymerMDActivated = true;
+    }
 
     /**
      * @brief deactivate ring polymer MD simulations
      *
      */
-    void Settings::deactivateRingPolymerMD()
+    void GeneralSettings::deactivateRingPolymerMD()
     {
         _isRingPolymerMDActivated = false;
     }
@@ -373,12 +385,12 @@ namespace settings
      * @brief activate cell list
      *
      */
-    void Settings::activateCellList() { _isCellListActivated = true; }
+    void GeneralSettings::activateCellList() { _isCellListActivated = true; }
 
     /**
      * @brief deactivate cell list
      *
      */
-    void Settings::deactivateCellList() { _isCellListActivated = false; }
+    void GeneralSettings::deactivateCellList() { _isCellListActivated = false; }
 
 }   // namespace settings

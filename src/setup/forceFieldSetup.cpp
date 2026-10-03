@@ -27,7 +27,7 @@
 
 #include "engine.hpp"               // for Engine
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "settings.hpp"             // for Settings
+#include "generalSettings.hpp"      // for Settings
 
 namespace setup
 {
@@ -79,7 +79,7 @@ namespace setup
         const auto &nonCoulombPot = potential->getNonCoulombPotSharedPtr();
         const auto &coulombPot    = potential->getCoulombPotSharedPtr();
 
-        if (settings::Settings::isMMActivated())
+        if (settings::GeneralSettings::isMMActivated())
         {
             forceField->setNonCoulombPotential(nonCoulombPot);
             forceField->setCoulombPotential(coulombPot);

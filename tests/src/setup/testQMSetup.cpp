@@ -31,13 +31,13 @@
 #include "enums/qm.hpp"
 #include "exceptions.hpp"   // for InputFileException
 #include "externalQMRunner.hpp"
+#include "generalSettings.hpp"   // for settings::Settings
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "pyscfRunner.hpp"   // for PySCFRunner
 #include "qmSettings.hpp"    // for QMMethod, settings::QMSettings
 #include "qmSetup.hpp"       // for setup::QMSetup, setupQM
 #include "qmmdEngine.hpp"    // for QMMDEngine
-#include "settings.hpp"      // for settings::Settings
 #include "simulationBox.hpp"
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
@@ -363,7 +363,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     settings::QMSettings::setQMMethod(QMMethod::FENNOL);
     settings::QMSettings::setFennolModelPath("path/To/fennol_model.fnx");
     settings::QMSettings::setUseGPUPreprocessing(false);
-    settings::Settings::setFloatingPointType(FPType::FLOAT);
+    settings::GeneralSettings::setFloatingPointType(FPType::FLOAT);
 
     _qmSetup->setupWriteInfo();
 

@@ -37,14 +37,14 @@
 #include "engine.hpp"           // for Engine
 #include "exceptions.hpp"       // for exc::GuffDatException, InputFileException
 #include "fileSettings.hpp"     // for settings::FileSettings
-#include "guffNonCoulomb.hpp"   // for GuffNonCoulomb
-#include "guffPair.hpp"         // for GuffPair
+#include "generalSettings.hpp"     // for settings
+#include "guffNonCoulomb.hpp"      // for GuffNonCoulomb
+#include "guffPair.hpp"            // for GuffPair
 #include "lennardJonesPair.hpp"    // for LennardJonesPair
 #include "mathUtilities.hpp"       // for sign, utilities
 #include "molecule.hpp"            // for Molecule
 #include "morsePair.hpp"           // for MorsePair
 #include "potentialSettings.hpp"   // for PotentialSettings
-#include "settings.hpp"            // for settings
 #include "simulationBox.hpp"       // for SimulationBox
 #include "stringUtilities.hpp"   // for fileExists, getLineCommands, removeComments, splitString
 #include "waterModelSettings.hpp"   // for settings::WaterModelSettings
@@ -94,7 +94,7 @@ namespace input::guffdat
      */
     bool isNeeded(engine::Engine &engine)
     {
-        if (!settings::Settings::isMMActivated())
+        if (!settings::GeneralSettings::isMMActivated())
             return false;
 
         if (engine.getForceField()->isNonCoulombicActivated())

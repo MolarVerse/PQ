@@ -35,9 +35,9 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
+#include "generalSettings.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
-#include "settings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
@@ -47,7 +47,7 @@ int main()
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
 
     auto physicalData = physicalData::PhysicalData();
-    settings::Settings::setVirialType(VirialType::MOLECULAR);
+    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
 
     CALLGRIND_ZERO_STATS;
 

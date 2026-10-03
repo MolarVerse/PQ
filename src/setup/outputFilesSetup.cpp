@@ -25,6 +25,7 @@
 #include <string>   // for string
 
 #include "engine.hpp"               // for Engine
+#include "generalSettings.hpp"      // for Settings
 #include "hessianEngine.hpp"        // for HessianEngine
 #include "hessianSettings.hpp"      // for HessianSettings
 #include "infoOutput.hpp"           // for InfoOutput
@@ -32,7 +33,6 @@
 #include "mdEngine.hpp"             // for MDEngine
 #include "optEngine.hpp"            // for OptEngine
 #include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "settings.hpp"             // for Settings
 #include "stdoutOutput.hpp"         // for StdoutOutput
 #include "timingsSettings.hpp"      // for TimingsSettings
 #include "trajectoryOutput.hpp"     // for TrajectoryOutput
@@ -102,7 +102,7 @@ namespace setup
         _engine.getInfoOutput().setFilename(infoFileName);
         _engine.getForceOutput().setFilename(forceFileName);
 
-        if (settings::Settings::isMDJobType())
+        if (settings::GeneralSettings::isMDJobType())
         {
             auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
 
@@ -128,7 +128,7 @@ namespace setup
             mdEngine.getStressOutput().setFilename(stressFile);
             mdEngine.getBoxFileOutput().setFilename(boxFile);
 
-            if (settings::Settings::isHybridJobtype())
+            if (settings::GeneralSettings::isHybridJobtype())
             {
                 const auto hybridCenterFile =
                     settings::OutputFileSettings::getHybridCenterFileName();
@@ -144,7 +144,7 @@ namespace setup
                 mdEngine.getInstantEnergyOutput().writeHeader(timeStep);
             }
 
-            if (settings::Settings::isRingPolymerMDActivated())
+            if (settings::GeneralSettings::isRingPolymerMDActivated())
             {
                 const auto rstFile_ =
                     settings::OutputFileSettings::getRPMDRestartFileName();
@@ -168,7 +168,7 @@ namespace setup
             }
         }
 
-        if (settings::Settings::isOptJobType())
+        if (settings::GeneralSettings::isOptJobType())
         {
             auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
 
@@ -178,7 +178,7 @@ namespace setup
             optEngine.getOptOutput().setFilename(optFileName);
         }
 
-        if (settings::Settings::getJobtype() == JobType::MM_HESSIAN &&
+        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN &&
             settings::HessianSettings::optimizeBeforeHessian())
         {
             auto &hessianEngine =

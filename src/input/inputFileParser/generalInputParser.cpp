@@ -26,16 +26,16 @@
 #include <format>      // for format
 #include <stdexcept>   // for out_of_range and invalid_argument
 
-#include "engine.hpp"          // for Engine
-#include "exceptions.hpp"      // for exc::InputFileException, customException
-#include "hessianEngine.hpp"   // for HessianEngine
-#include "mmmdEngine.hpp"      // for MMMDEngine
-#include "optEngine.hpp"       // for MMOptEngine
+#include "engine.hpp"            // for Engine
+#include "exceptions.hpp"        // for exc::InputFileException, customException
+#include "generalSettings.hpp"   // for settings::Settings
+#include "hessianEngine.hpp"     // for HessianEngine
+#include "mmmdEngine.hpp"        // for MMMDEngine
+#include "optEngine.hpp"         // for MMOptEngine
 #include "parserUtils.hpp"
 #include "qmmdEngine.hpp"              // for QMMDEngine
 #include "qmmmMDEngine.hpp"            // for QMMMMDEngine
 #include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
-#include "settings.hpp"                // for settings::Settings
 #include "stringUtilities.hpp"         // for toLowerCopy
 
 namespace input
@@ -116,32 +116,32 @@ namespace input
 
         if (jobtype == "mm_opt")
         {
-            settings::Settings::setJobtype(MM_OPT);
+            settings::GeneralSettings::setJobtype(MM_OPT);
             engine = std::make_unique<engine::OptEngine>();
         }
         else if (jobtype == "mm_hessian")
         {
-            settings::Settings::setJobtype(MM_HESSIAN);
+            settings::GeneralSettings::setJobtype(MM_HESSIAN);
             engine = std::make_unique<engine::HessianEngine>();
         }
         else if (jobtype == "mm_md")
         {
-            settings::Settings::setJobtype(MM_MD);
+            settings::GeneralSettings::setJobtype(MM_MD);
             engine = std::make_unique<engine::MMMDEngine>();
         }
         else if (jobtype == "qm_md")
         {
-            settings::Settings::setJobtype(QM_MD);
+            settings::GeneralSettings::setJobtype(QM_MD);
             engine = std::make_unique<engine::QMMDEngine>();
         }
         else if (jobtype == "qm_rpmd")
         {
-            settings::Settings::setJobtype(RING_POLYMER_QM_MD);
+            settings::GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
             engine = std::make_unique<engine::RingPolymerQMMDEngine>();
         }
         else if (jobtype == "qmmm_md")
         {
-            settings::Settings::setJobtype(QMMM_MD);
+            settings::GeneralSettings::setJobtype(QMMM_MD);
             engine = std::make_unique<engine::QMMMMDEngine>();
         }
         else
@@ -187,7 +187,7 @@ namespace input
 
         if (dimensionality == 3)
         {
-            settings::Settings::setDimensionality(
+            settings::GeneralSettings::setDimensionality(
                 static_cast<size_t>(dimensionality)
             );
         }
@@ -225,10 +225,10 @@ namespace input
         const auto floatingPointType = utilities::toLowerCopy(lineElements[2]);
 
         if (floatingPointType == "float")
-            settings::Settings::setFloatingPointType(FLOAT);
+            settings::GeneralSettings::setFloatingPointType(FLOAT);
 
         else if (floatingPointType == "double")
-            settings::Settings::setFloatingPointType(DOUBLE);
+            settings::GeneralSettings::setFloatingPointType(DOUBLE);
 
         else
         {
@@ -295,8 +295,8 @@ namespace input
             throwRangeError(lineElements[2]);
         }
 
-        settings::Settings::setIsRandomSeedSet(true);
-        settings::Settings::setRandomSeed(randomSeed);
+        settings::GeneralSettings::setIsRandomSeedSet(true);
+        settings::GeneralSettings::setRandomSeed(randomSeed);
     }
 
 }   // namespace input

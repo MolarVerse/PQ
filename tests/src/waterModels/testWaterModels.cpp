@@ -32,6 +32,7 @@
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
@@ -43,7 +44,6 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "waterModelSettings.hpp"
@@ -357,7 +357,7 @@ namespace
 
     molsys::CellList makeCellList(molsys::SimulationBox &simulationBox)
     {
-        settings::Settings::activateCellList();
+        settings::GeneralSettings::activateCellList();
 
         molsys::CellList cellList;
         cellList.setNumberOfCells(3);
@@ -582,7 +582,7 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 
 TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 {
-    settings::Settings::setJobtype(JobType::QMMM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
     settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
@@ -701,7 +701,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 
 TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
-    settings::Settings::setJobtype(JobType::QMMM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
     settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);

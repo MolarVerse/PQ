@@ -30,9 +30,9 @@
 
 #include "atom.hpp"
 #include "enums/jobtype.hpp"
+#include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
@@ -44,10 +44,10 @@ class TestVirial : public ::testing::Test
 
     void SetUp() override
     {
-        _jobType = settings::Settings::getJobtype();
+        _jobType = settings::GeneralSettings::getJobtype();
 
         _simBox = std::make_unique<molsys::SimulationBox>();
-        settings::Settings::setVirialType(VirialType::ATOMIC);
+        settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
 
         auto molecule1 = molsys::Molecule();
 
@@ -84,7 +84,10 @@ class TestVirial : public ::testing::Test
         _simBox->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
     }
 
-    void TearDown() override { settings::Settings::setJobtype(_jobType); }
+    void TearDown() override
+    {
+        settings::GeneralSettings::setJobtype(_jobType);
+    }
 };
 
 #endif

@@ -31,10 +31,10 @@
 
 #include "celllist.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "hybridSettings.hpp"
 #include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
-#include "settings.hpp"
 #include "vector3d.hpp"
 #include "virial.hpp"
 
@@ -228,7 +228,7 @@ namespace engine
                 *_simulationBox
             );
 
-            if (settings::Settings::isCellListActivated())
+            if (settings::GeneralSettings::isCellListActivated())
             {
                 getCellList().assignMoleculeHybridZoneIndices();
                 getCellList().assignWaterMoleculeIndices(*_simulationBox);
@@ -333,7 +333,7 @@ namespace engine
             *_simulationBox
         );
 
-        if (settings::Settings::isCellListActivated())
+        if (settings::GeneralSettings::isCellListActivated())
         {
             getCellList().assignMoleculeHybridZoneIndices();
             getCellList().assignWaterMoleculeIndices(*_simulationBox);

@@ -30,6 +30,7 @@
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
@@ -38,7 +39,6 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 
@@ -198,7 +198,7 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     molsys::CellList dummyCellList;
     bruteForce.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
 
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
 
     molsys::CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);

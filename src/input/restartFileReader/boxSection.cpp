@@ -31,8 +31,8 @@
 #include "constants.hpp"
 #include "engine.hpp"                  // for engine::Engine
 #include "exceptions.hpp"              // for exc::RstFileException
+#include "generalSettings.hpp"         // for Settings
 #include "mathUtilities.hpp"           // for compare
-#include "settings.hpp"                // for Settings
 #include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
 #include "triclinicBox.hpp"            // for TriclinicBox
 
@@ -120,7 +120,7 @@ namespace input::restartFile
             box.setBoxDimensions(boxDimensions);
             engine.getSimulationBox().setBox(box);
 
-            const auto jobType = settings::Settings::getJobtype();
+            const auto jobType = settings::GeneralSettings::getJobtype();
 
             // TODO: implement triclinic box for MM-MD
             if (jobType != JobType::QM_MD &&

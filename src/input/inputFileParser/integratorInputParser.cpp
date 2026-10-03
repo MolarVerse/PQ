@@ -24,13 +24,13 @@
 
 #include <format>   // for format
 
-#include "exceptions.hpp"   // for InputFileException, customException
+#include "exceptions.hpp"        // for InputFileException, customException
+#include "generalSettings.hpp"   // for Settings
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "references.hpp"         // for ReferencesOutput
 #include "referencesOutput.hpp"   // for ReferencesOutput
-#include "settings.hpp"           // for Settings
 
 namespace input
 {
@@ -62,7 +62,7 @@ namespace input
         const auto setValue = [](IntegratorType integratorType)
         {
             // TODO: remove this via general setup
-            if (!settings::Settings::isMDJobType())
+            if (!settings::GeneralSettings::isMDJobType())
             {
                 throw exc::InputFileException(
                     std::format(
@@ -71,7 +71,7 @@ namespace input
                 );
             }
 
-            settings::Settings::setIntegratorType(integratorType);
+            settings::GeneralSettings::setIntegratorType(integratorType);
             references::ReferencesOutput::addReferenceFile(
                 references::VELOCITY_VERLET_FILE
             );

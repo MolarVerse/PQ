@@ -27,6 +27,7 @@
 #include "engine.hpp"               // for Engine
 #include "forceFieldSettings.hpp"   // for ForceFieldSettings
 #include "forceFieldSetup.hpp"      // for setupForceField
+#include "generalSettings.hpp"      // for Settings
 #include "globalTimer.hpp"
 #include "guffDatReader.hpp"                // for readGuffDat, readInput
 #include "hybridSetup.hpp"                  // for setupQMMM
@@ -44,7 +45,6 @@
 #include "resetKineticsSetup.hpp"           // for setupResetKinetics
 #include "restartFileReader.hpp"            // for readRestartFile
 #include "ringPolymerSetup.hpp"             // for setupRingPolymer
-#include "settings.hpp"                     // for Settings
 #include "simulationBoxSetup.hpp"           // for setupSimulationBox
 #include "thermostatSetup.hpp"              // for setupThermostat
 #include "topologyReader.hpp"               // for readTopologyFile
@@ -126,12 +126,12 @@ namespace setup
      */
     void setupEngine(engine::Engine& engine)
     {
-        if (settings::Settings::isQMActivated())
+        if (settings::GeneralSettings::isQMActivated())
             setupQM(engine);
 
-        if (settings::Settings::isMDJobType())
+        if (settings::GeneralSettings::isMDJobType())
         {
-            switch (settings::Settings::getIntegratorType())
+            switch (settings::GeneralSettings::getIntegratorType())
             {
                 case IntegratorType::VELOCITY_VERLET:
                 {
@@ -156,14 +156,14 @@ namespace setup
 
         setupCellList(engine);
 
-        if (settings::Settings::isMDJobType())
+        if (settings::GeneralSettings::isMDJobType())
         {
             setupThermostat(engine);
 
             setupManostat(engine);
         }
 
-        if (settings::Settings::isMMActivated())
+        if (settings::GeneralSettings::isMMActivated())
         {
             setupPotential(engine);
 
@@ -178,13 +178,13 @@ namespace setup
 
         setupConstraints(engine);
 
-        if (settings::Settings::isMDJobType())
+        if (settings::GeneralSettings::isMDJobType())
             setupRingPolymer(engine);
 
-        if (settings::Settings::isHybridJobtype())
+        if (settings::GeneralSettings::isHybridJobtype())
             setupHybrid(engine);
 
-        if (settings::Settings::isOptJobType())
+        if (settings::GeneralSettings::isOptJobType())
             setupOptimizer(engine);
 
         engine.getLogOutput().flushQueuedWarnings();

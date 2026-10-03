@@ -22,7 +22,7 @@
 
 #include "randomNumberGenerator.hpp"
 
-#include "settings.hpp"   // for Settings
+#include "generalSettings.hpp"   // for Settings
 
 namespace rng
 {
@@ -44,8 +44,8 @@ namespace rng
     // NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c)
     RandomNumberGenerator::RandomNumberGenerator()
     {
-        if (settings::Settings::isRandomSeedSet())
-            _generator.seed(settings::Settings::getRandomSeed());
+        if (settings::GeneralSettings::isRandomSeedSet())
+            _generator.seed(settings::GeneralSettings::getRandomSeed());
         else
             _generator.seed(_randomDevice());
     }

@@ -40,12 +40,12 @@
 #include "externalQMScripts.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "inputFileReader.hpp"
 #include "jsonOutput.hpp"
 #include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "qmSettings.hpp"
-#include "settings.hpp"
 #include "thermostatSettings.hpp"
 
 namespace
@@ -178,10 +178,8 @@ namespace
 
     void validateExternalQMScriptSelection()
     {
-        using settings::QMSettings;
-        using settings::Settings;
-
-        if (!Settings::isQMActivated() || !QMSettings::isExternalQMRunner())
+        if (!settings::GeneralSettings::isQMActivated() ||
+            !settings::QMSettings::isExternalQMRunner())
             return;
 
         const auto script         = settings::QMSettings::getQMScript();
@@ -203,14 +201,18 @@ namespace
             );
         }
 
-        if (!script.empty() &&
-            !cli::isExternalQMScript(QMSettings::getQMMethod(), script))
+        if (!script.empty() && !cli::isExternalQMScript(
+                                   settings::QMSettings::getQMMethod(),
+                                   script
+                               ))
         {
             throw exc::InputFileException(
                 std::format(
                     "Bundled QM script \"{}\" is not available for {}",
                     script,
-                    cli::externalQMProgramName(QMSettings::getQMMethod())
+                    cli::externalQMProgramName(
+                        settings::QMSettings::getQMMethod()
+                    )
                 )
             );
         }
@@ -218,10 +220,8 @@ namespace
 
     void validateInstalledExternalQMScript()
     {
-        using settings::QMSettings;
-        using settings::Settings;
-
-        if (!Settings::isQMActivated() || !QMSettings::isExternalQMRunner())
+        if (!settings::GeneralSettings::isQMActivated() ||
+            !settings::QMSettings::isExternalQMRunner())
             return;
 
         const auto script         = settings::QMSettings::getQMScript();
@@ -251,7 +251,8 @@ namespace
 
         requireFile(bundledQMScriptPath(script), "Bundled QM script");
 
-        const auto scripts  = cli::externalQMScripts(QMSettings::getQMMethod());
+        const auto scripts =
+            cli::externalQMScripts(settings::QMSettings::getQMMethod());
         const auto selected = std::ranges::find_if(
             scripts,
             [&script](const auto &candidate)
@@ -269,20 +270,17 @@ namespace
 
     void validateInputDependencies(engine::Engine &engine)
     {
-        using settings::FileSettings;
-        using settings::ForceFieldSettings;
-
         if (engine.isConstraintsActivated() ||
             settings::ForceFieldSettings::isActive())
         {
-            if (!FileSettings::isTopologyFileNameSet())
+            if (!settings::FileSettings::isTopologyFileNameSet())
                 throw exc::InputFileException(
                     "Topology file needed for requested simulation setup"
                 );
         }
 
-        if (ForceFieldSettings::isActive() &&
-            !FileSettings::isParameterFileNameSet())
+        if (settings::ForceFieldSettings::isActive() &&
+            !settings::FileSettings::isParameterFileNameSet())
             throw exc::InputFileException(
                 "Parameter file needed for requested simulation setup"
             );
@@ -316,7 +314,7 @@ namespace
             );
         }
 
-        if (settings::Settings::isMMActivated() ||
+        if (settings::GeneralSettings::isMMActivated() ||
             settings::ManostatSettings::getManostatType() != ManostatType::NONE)
         {
             requireFile(
@@ -325,7 +323,7 @@ namespace
             );
         }
 
-        if (settings::Settings::isMMActivated() &&
+        if (settings::GeneralSettings::isMMActivated() &&
             !engine.isForceFieldNonCoulombicsActivated())
         {
             requireFile(
@@ -359,7 +357,7 @@ namespace
             );
         }
 
-        if (!settings::Settings::isQMActivated())
+        if (!settings::GeneralSettings::isQMActivated())
             return;
 
         const auto method = settings::QMSettings::getQMMethod();
@@ -413,7 +411,7 @@ namespace
 
     void validateCompiledCapabilities()
     {
-        if (PQ_BUILD_WITH_ASE || !settings::Settings::isQMActivated())
+        if (PQ_BUILD_WITH_ASE || !settings::GeneralSettings::isQMActivated())
             return;
 
         const auto method = settings::QMSettings::getQMMethod();

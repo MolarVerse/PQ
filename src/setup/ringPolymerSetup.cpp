@@ -26,11 +26,11 @@
 #include <cstddef>     // for size_t
 
 #include "fileSettings.hpp"                   // for FileSettings
+#include "generalSettings.hpp"                // for Settings
 #include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
 #include "ringPolymerEngine.hpp"              // for RingPolymerEngine
 #include "ringPolymerRestartFileReader.hpp"   // for readRingPolymerRestartFile
 #include "ringPolymerSettings.hpp"            // for RingPolymerSettings
-#include "settings.hpp"                       // for Settings
 #include "simulationBox.hpp"                  // for SimulationBox
 
 #ifdef WITH_MPI
@@ -47,7 +47,7 @@ namespace setup
      */
     void setupRingPolymer(engine::Engine &engine)
     {
-        if (!settings::Settings::isRingPolymerMDActivated())
+        if (!settings::GeneralSettings::isRingPolymerMDActivated())
         {
 #ifdef WITH_MPI
             if (mpi::MPI::getSize() > 1)

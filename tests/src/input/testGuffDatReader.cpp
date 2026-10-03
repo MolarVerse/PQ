@@ -35,12 +35,12 @@
 #include "defaults.hpp"         // for _NUMBER_OF_GUFF_ENTRIES_
 #include "engine.hpp"           // for Engine
 #include "exceptions.hpp"   // for exc::GuffDatException, exc::UserInputException
-#include "gmock/gmock.h"    // for ElementsAre, MakePredicateFormatter
-#include "guffPair.hpp"     // for pot::GuffPair
+#include "generalSettings.hpp"     // for Settings
+#include "gmock/gmock.h"           // for ElementsAre, MakePredicateFormatter
+#include "guffPair.hpp"            // for pot::GuffPair
 #include "lennardJonesPair.hpp"    // for pot::LennardJonesPair
 #include "morsePair.hpp"           // for pot::MorsePair
 #include "potentialSettings.hpp"   // for settings::PotentialSettings, string
-#include "settings.hpp"            // for Settings
 #include "strongTypes.hpp"
 #include "testNonCoulombPairUtils.hpp"
 #include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
@@ -776,7 +776,7 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
     settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
@@ -785,7 +785,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
@@ -793,7 +793,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
