@@ -23,21 +23,13 @@
 #include <gtest/gtest.h>
 
 #include <format>
-#include <memory>
 #include <string>
 #include <vector>
 
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "generalInputParser.hpp"
 #include "generalSettings.hpp"
-#include "hessianEngine.hpp"
-#include "mmmdEngine.hpp"
-#include "optEngine.hpp"
-#include "qmmdEngine.hpp"
-#include "ringPolymerqmmdEngine.hpp"
 #include "testInputFileReader.hpp"
-#include "testUtils.hpp"
 #include "throwWithMessage.hpp"
 
 /**
