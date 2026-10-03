@@ -22,11 +22,11 @@
 
 #include "thermostat.hpp"
 
-#include "exceptions.hpp"   // for UserInputException
+#include "exceptions.hpp"
 #include "globalTimer.hpp"
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "thermostatSettings.hpp"
 
 namespace thermostat
 {

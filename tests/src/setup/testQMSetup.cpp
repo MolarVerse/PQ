@@ -20,28 +20,28 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
 #include <cstdlib>
 #include <filesystem>
-#include <string>        // for allocator, basic_string
-#include <string_view>   // for string_view
+#include <string>
+#include <string_view>
 
-#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
+#include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
-#include "exceptions.hpp"   // for InputFileException
+#include "exceptions.hpp"
 #include "externalQMRunner.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
-#include "pyscfRunner.hpp"   // for PySCFRunner
-#include "qmSettings.hpp"    // for QMMethod, settings::QMSettings
-#include "qmSetup.hpp"       // for setup::QMSetup, setupQM
-#include "qmmdEngine.hpp"    // for QMMDEngine
-#include "settings.hpp"      // for settings::Settings
+#include "pyscfRunner.hpp"
+#include "qmSettings.hpp"
+#include "qmSetup.hpp"
+#include "qmmdEngine.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "testUtils.hpp"
-#include "throwWithMessage.hpp"   // for ASSERT_THROW_MSG
-#include "turbomoleRunner.hpp"    // for TurbomoleRunner
+#include "throwWithMessage.hpp"
+#include "turbomoleRunner.hpp"
 
 namespace
 {

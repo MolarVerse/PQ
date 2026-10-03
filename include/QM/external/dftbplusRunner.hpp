@@ -24,7 +24,7 @@
 
 #define _DFTBPLUS_RUNNER_HPP_
 
-#include "externalQMRunner.hpp"   // for ExternalQMRunner
+#include "externalQMRunner.hpp"
 
 namespace physicalData
 {

@@ -24,7 +24,7 @@
 
 #define _NON_COULOMB_PAIR_HPP_
 
-#include <utility>   // for pair
+#include <utility>
 
 #include "strongTypes.hpp"
 

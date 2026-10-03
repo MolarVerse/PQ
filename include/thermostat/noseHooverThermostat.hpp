@@ -24,7 +24,7 @@
 
 #define _NOSE_HOOVER_THERMOSTAT_HPP_
 
-#include <vector>   // for std::vector
+#include <vector>
 
 #include "thermostat.hpp"
 

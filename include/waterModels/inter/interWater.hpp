@@ -329,11 +329,7 @@ namespace waterModel
 }   // namespace waterModel
 
 #ifndef _INTER_WATER_TPP_
-#include "interWater.tpp"   // DO NOT MOVE THIS LINE
-#endif
-
-#ifndef _INTER_WATER_PARAMETERS_HPP_
-#include "interWaterParamters.hpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
+#include "interWater.tpp"
 #endif
 
 #endif   //  _INTER_WATER_HPP_

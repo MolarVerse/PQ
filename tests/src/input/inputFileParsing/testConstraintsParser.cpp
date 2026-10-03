@@ -20,17 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "constraintSettings.hpp"   // for settings::ConstraintSettings
+#include "constraintSettings.hpp"
 #include "constraintsInputParser.hpp"
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for InputFileException
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "shake" command

@@ -23,8 +23,8 @@
 #ifndef __SENTINEL_HPP__
 #define __SENTINEL_HPP__
 
-#include <iterator>      // for std::iterator_traits
-#include <type_traits>   // for std::conditional_t
+#include <iterator>
+#include <type_traits>
 
 namespace pqviews
 {

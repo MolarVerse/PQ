@@ -22,33 +22,10 @@
 
 #include "thermostatSettings.hpp"
 
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "stringUtilities.hpp"
 
 namespace settings
 {
-
-    /**
-     * @brief return string of thermostatType
-     *
-     * @param thermostatType
-     * @return std::string
-     */
-    std::string string(const ThermostatType &thermostatType)
-    {
-        switch (thermostatType)
-        {
-            using enum ThermostatType;
-
-            case BERENDSEN: return "berendsen";
-            case VELOCITY_RESCALING: return "velocity_rescaling";
-            case LANGEVIN: return "langevin";
-            case NOSE_HOOVER: return "nh-chain";
-
-            case NONE: break;
-        }
-
-        return "none";
-    }
 
     /**
      * @brief add chi to the index map

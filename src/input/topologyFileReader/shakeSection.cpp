@@ -22,12 +22,12 @@
 
 #include "shakeSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "bondConstraint.hpp"   // for BondConstraint
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for exc::TopologyException
-#include "simulationBox.hpp"    // for SimulationBox
+#include "bondConstraint.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "simulationBox.hpp"
 
 namespace input::topology
 {

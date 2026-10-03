@@ -24,7 +24,7 @@
 
 #define _RING_POLYMER_SETTINGS_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 namespace settings
 {

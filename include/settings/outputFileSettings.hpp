@@ -24,9 +24,9 @@
 
 #define _OUTPUT_FILE_SETTINGS_HPP_
 
-#include <cstddef>       // for size_t
-#include <string>        // for string, allocator
-#include <string_view>   // for string_view
+#include <cstddef>
+#include <string>
+#include <string_view>
 
 #include "defaults.hpp"
 

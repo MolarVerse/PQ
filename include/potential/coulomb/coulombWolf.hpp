@@ -24,7 +24,7 @@
 
 #define _COULOMB_WOLF_HPP_
 
-#include <utility>   // for pair
+#include <utility>
 
 #include "coulombPotential.hpp"
 

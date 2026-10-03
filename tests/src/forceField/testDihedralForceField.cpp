@@ -20,23 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gmock/gmock.h>   // for DoubleNear, ElementsAre
-#include <gtest/gtest.h>   // for EXPECT_NEAR, Test, InitGoogleTest, RUN_ALL_TESTS
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
-#include <cmath>    // for sqrt
-#include <memory>   // for shared_ptr, allocator
+#include <cmath>
+#include <memory>
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
-#include "atom.hpp"                      // for Atom
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "dihedralForceField.hpp"        // for BondForceField
-#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "lennardJonesPair.hpp"          // for LennardJonesPair
-#include "matrix.hpp"                    // for Matrix
-#include "molecule.hpp"                  // for Molecule
-#include "physicalData.hpp"              // for PhysicalData
-#include "potentialSettings.hpp"         // for PotentialSettings
-#include "simulationBox.hpp"             // for SimulationBox
+#include "atom.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "dihedralForceField.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "lennardJonesPair.hpp"
+#include "matrix.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
 #include "strongTypes.hpp"
 
 namespace pot

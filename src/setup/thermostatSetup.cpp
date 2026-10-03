@@ -22,22 +22,22 @@
 
 #include "thermostatSetup.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cstddef>     // for size_t
-#include <format>      // for format
-#include <string>      // for string
-#include <vector>      // for vector
+#include <algorithm>
+#include <cstddef>
+#include <format>
+#include <string>
+#include <vector>
 
-#include "berendsenThermostat.hpp"           // for BerendsenThermostat
-#include "constants/conversionFactors.hpp"   // for _PS_TO_FS_, _PER_CM_TO_HZ_
-#include "exceptions.hpp"                    // for InputFileException
-#include "langevinThermostat.hpp"            // for LangevinThermostat
-#include "mdEngine.hpp"                      // for Engine
-#include "noseHooverThermostat.hpp"          // for NoseHooverThermostat
-#include "thermostat.hpp"                    // for Thermostat
-#include "thermostatSettings.hpp"   // for settings::ThermostatSettings, ThermostatType
-#include "timingsSettings.hpp"               // for settings::TimingsSettings
-#include "velocityRescalingThermostat.hpp"   // for VelocityRescalingThermostat
+#include "berendsenThermostat.hpp"
+#include "constants/conversionFactors.hpp"
+#include "exceptions.hpp"
+#include "langevinThermostat.hpp"
+#include "mdEngine.hpp"
+#include "noseHooverThermostat.hpp"
+#include "thermostat.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
+#include "velocityRescalingThermostat.hpp"
 
 namespace setup
 {

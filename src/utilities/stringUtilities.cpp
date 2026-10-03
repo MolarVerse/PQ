@@ -22,18 +22,18 @@
 
 #include "stringUtilities.hpp"
 
-#include <algorithm>   // for __for_each_fn
-#include <cctype>      // for isspace
-#include <cmath>       // for isfinite
-#include <cstdint>     // for uint_fast32_t and UINT32_MAX
-#include <format>      // for format
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <cstdint>
+#include <format>
 #include <limits>
-#include <ranges>   // for begin, end, operator|, views::split, views::transform
+#include <ranges>
 #include <sstream>
-#include <stdexcept>     // for out_of_range and invalid_argument
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <vector>
 
 #include "exceptions.hpp"
 

@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, allocator, string
+#include <iosfwd>
+#include <string>
 
 #include "forceFieldSettings.hpp"
-#include "infoOutput.hpp"           // for InfoOutput
-#include "manostatSettings.hpp"     // for settings::ManostatSettings
-#include "physicalData.hpp"         // for PhysicalData
-#include "settings.hpp"             // for settings::Settings
-#include "testEnergyOutput.hpp"     // for TestEnergyOutput
-#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
+#include "infoOutput.hpp"
+#include "manostatSettings.hpp"
+#include "physicalData.hpp"
+#include "settings.hpp"
+#include "testEnergyOutput.hpp"
+#include "thermostatSettings.hpp"
 #include "vector3d.hpp"
 
 /**

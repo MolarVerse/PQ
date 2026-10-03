@@ -24,10 +24,10 @@
 
 #define _SETTINGS_HPP_
 
-#include <cstdint>   // for uint_fast32_t
+#include <cstdint>
 #include <mstd/enum.hpp>
 
-#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
+#include "defaults.hpp"
 #include "enums/general.hpp"
 #include "enums/integrator.hpp"
 #include "enums/jobtype.hpp"

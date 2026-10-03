@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "bondSection.hpp"                // for BondSection
-#include "engine.hpp"                     // for Engine
-#include "exceptions.hpp"                 // for ParameterFileException
-#include "testParameterFileSection.hpp"   // for TestParameterFileSection
-#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
+#include "bondSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "testParameterFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test bonds section processing one line

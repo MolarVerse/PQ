@@ -23,10 +23,9 @@
 #include "waterModelSettings.hpp"
 
 #include <format>
-#include <utility>
 
-#include "exceptions.hpp"        // for customException
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "exceptions.hpp"
+#include "stringUtilities.hpp"
 
 namespace settings
 {
@@ -184,68 +183,6 @@ namespace settings
     void WaterModelSettings::setWaterInterModel(WaterInterModel model)
     {
         _waterInterModel = model;
-    }
-
-    /**
-     * @brief Convert a water intramolecular model enum to its string
-     * representation.
-     *
-     * @param waterIntraModel The water intramolecular model enum value.
-     *
-     * @return A human-readable string for the model (e.g., "SPC/Fw", "TIP3P"),
-     * or "none" if the model is unknown.
-     */
-    std::string string(const WaterIntraModel &waterIntraModel)
-    {
-        switch (waterIntraModel)
-        {
-            using enum WaterIntraModel;
-
-            case SPC: return "SPC";
-            case SPC_E: return "SPC/E";
-            case SPC_FW: return "SPC/Fw";
-            case QSPC_FW: return "qSPC/Fw";
-            case SPC_DC: return "SPC/DC";
-            case H2O_DC: return "H2O-DC";
-            case TIP3P: return "TIP3P";
-            case OPC3: return "OPC3";
-            case SPC_MTR: return "SPC-mTR";
-            case TIP3P_MTR: return "TIP3P-mTR";
-            case NONE: return "none";
-        }
-
-        std::unreachable();
-    }
-
-    /**
-     * @brief Convert a water intermolecular model enum to its string
-     * representation.
-     *
-     * @param waterInterModel The water intermolecular model enum value.
-     *
-     * @return A human-readable string for the model (e.g., "SPC/Fw", "TIP3P"),
-     * or "none" if the model is unknown.
-     */
-    std::string string(const WaterInterModel &waterInterModel)
-    {
-        switch (waterInterModel)
-        {
-            using enum WaterInterModel;
-
-            case SPC: return "SPC";
-            case SPC_E: return "SPC/E";
-            case SPC_FW: return "SPC/Fw";
-            case QSPC_FW: return "qSPC/Fw";
-            case SPC_DC: return "SPC/DC";
-            case H2O_DC: return "H2O-DC";
-            case TIP3P: return "TIP3P";
-            case OPC3: return "OPC3";
-            case SPC_MTR: return "SPC-mTR";
-            case TIP3P_MTR: return "TIP3P-mTR";
-            case NONE: return "none";
-        }
-
-        std::unreachable();
     }
 
 }   // namespace settings

@@ -22,7 +22,7 @@
 
 #include "aseMaceRunner.hpp"
 
-#include <cstdio>   // for fprintf, stderr
+#include <cstdio>
 #include <format>
 #include <iostream>
 

@@ -26,7 +26,7 @@
 
 #include <vector>
 
-#include "molecule.hpp"   // for Molecule
+#include "molecule.hpp"
 #include "strongTypes.hpp"
 
 namespace connectivity

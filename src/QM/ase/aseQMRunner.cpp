@@ -29,11 +29,11 @@
 
 #include <thread>
 
-#include "box.hpp"         // for molsys::Periodicity
-#include "constants.hpp"   // for _DEG_TO_RAD_
+#include "box.hpp"
+#include "constants.hpp"
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
-#include "qmSettings.hpp"   // for QMSettings
+#include "qmSettings.hpp"
 #include "simulationBox.hpp"
 
 namespace QM

@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
-
-// for Message, TestPartResult
+#include <gtest/gtest.h>
 
 TEST(TestPotential, placeholder) { EXPECT_TRUE(true); }

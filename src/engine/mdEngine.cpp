@@ -22,13 +22,13 @@
 
 #include "mdEngine.hpp"
 
-#include "constants/conversionFactors.hpp"   // for _FS_TO_PS_
+#include "constants/conversionFactors.hpp"
 #include "globalTimer.hpp"
-#include "outputFileSettings.hpp"   // for settings::OutputFileSettings
-#include "progressbar.hpp"          // for progressbar
-#include "referencesOutput.hpp"     // for ReferencesOutput
-#include "settings.hpp"             // for Settings
-#include "timingsSettings.hpp"      // for settings::TimingsSettings
+#include "outputFileSettings.hpp"
+#include "progressbar.hpp"
+#include "referencesOutput.hpp"
+#include "settings.hpp"
+#include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
 
 namespace engine

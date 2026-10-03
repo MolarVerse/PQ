@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"     // for InputFileException
-#include "fileSettings.hpp"   // for FileSettings
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
 #include "filesInputParser.hpp"
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "topology_file" command

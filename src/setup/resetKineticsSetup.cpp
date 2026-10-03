@@ -22,14 +22,14 @@
 
 #include "resetKineticsSetup.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "engine.hpp"          // for Engine
-#include "mdEngine.hpp"        // for MDEngine
-#include "resetKinetics.hpp"   // for ResetMomentum, ResetTemperature, resetK...
-#include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
-#include "settings.hpp"                // for Settings
-#include "timingsSettings.hpp"         // for TimingsSettings
+#include "engine.hpp"
+#include "mdEngine.hpp"
+#include "resetKinetics.hpp"
+#include "resetKineticsSettings.hpp"
+#include "settings.hpp"
+#include "timingsSettings.hpp"
 
 namespace setup
 {

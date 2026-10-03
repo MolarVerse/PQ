@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ, Init...
+#include <gtest/gtest.h>
 
-#include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
-#include "constraintsSetup.hpp"   // for setup::ConstraintsSetup, setupConstraints
-#include "engine.hpp"             // for Engine
-                                  // for Message, TestPartResult
-#include "testSetup.hpp"          // for TestSetup
+#include "constraintSettings.hpp"
+#include "constraintsSetup.hpp"
+#include "engine.hpp"
+#include "testSetup.hpp"
 
 /**
  * @brief tests setupConstraints function for tolerances

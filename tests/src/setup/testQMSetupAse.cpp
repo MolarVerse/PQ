@@ -20,19 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "testQMSetupAse.hpp"   // for TestQMSetupAse
+#include "testQMSetupAse.hpp"
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for allocator, basic_string
+#include <string>
 
 #ifdef WITH_ASE
-#include "aseFennolRunner.hpp"   // for AseFennolRunner
-#include "aseMaceRunner.hpp"     // for AseMaceRunner
-#include "pybind11/embed.h"      // for scoped_interpreter
+#include "aseFennolRunner.hpp"
+#include "aseMaceRunner.hpp"
+#include "pybind11/embed.h"
 #endif
-
-// for Message, TestPartResult
 
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)

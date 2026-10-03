@@ -24,10 +24,10 @@
 
 #define _MOLECULE_TYPE_HPP_
 
-#include <map>           // for map
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <map>
+#include <string>
+#include <string_view>
+#include <vector>
 
 #include "strongTypes.hpp"
 

@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"   // for InputFileException
+#include "exceptions.hpp"
 #include "resetKineticsInputParser.hpp"
-#include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
-#include "testInputFileReader.hpp"     // for TestInputFileReader
-#include "throwWithMessage.hpp"        // for EXPECT_THROW_MSG
+#include "resetKineticsSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "nscale" command

@@ -20,17 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
 #include <cstdint>
 #include <mstd/enum.hpp>
 #include <string>
 #include <vector>
 
-#include "exceptions.hpp"   // for InputFileException
-#include "inputParam.hpp"   // for input::InputKey, InputRegistry, input::KeyMetadata
+#include "exceptions.hpp"
+#include "inputParam.hpp"
 #include "inputRegistry.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "throwWithMessage.hpp"
 
 // A small MSTD_ENUM used purely to exercise the has_enum_meta<T> path of
 // Converter<T> / input::InputKey<T> -- not a real project enum.

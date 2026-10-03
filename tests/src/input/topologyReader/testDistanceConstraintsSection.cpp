@@ -20,16 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
-#include "engine.hpp"                       // for Engine
-#include "exceptions.hpp"                   // for TopologyException
-                                            // for Message, TestPartResult
-#include "testTopologySection.hpp"          // for TestTopologySection
+#include "distanceConstraintsSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "testTopologySection.hpp"
 #include "throwWithMessage.hpp"
 
 /*

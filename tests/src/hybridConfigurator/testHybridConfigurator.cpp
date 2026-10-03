@@ -20,20 +20,20 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TEST, EXPECT_THROW_WITH_MESSAGE
+#include <gtest/gtest.h>
 
-#include <memory>          // for shared_ptr, make_shared
-#include <unordered_set>   // for unordered_set
+#include <memory>
+#include <unordered_set>
 
-#include "atom.hpp"                 // for Atom
-#include "exceptions.hpp"           // for exc::HybridConfiguratorException
-#include "hybridConfigurator.hpp"   // for configurator::HybridConfigurator
-#include "hybridSettings.hpp"       // for settings::HybridSettings
-#include "molecule.hpp"             // for Molecule
-#include "simulationBox.hpp"        // for SimulationBox
-#include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG
-#include "vector3d.hpp"             // for linalg::Vec3D
-#include "vectorNear.hpp"           // for EXPECT_VECTOR_NEAR
+#include "atom.hpp"
+#include "exceptions.hpp"
+#include "hybridConfigurator.hpp"
+#include "hybridSettings.hpp"
+#include "molecule.hpp"
+#include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
+#include "vector3d.hpp"
+#include "vectorNear.hpp"
 
 TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 {

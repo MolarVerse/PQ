@@ -22,7 +22,7 @@
 
 #include "buckinghamPair.hpp"
 
-#include <cmath>   // for exp
+#include <cmath>
 
 namespace pot
 {

@@ -22,16 +22,16 @@
 
 #include "simulationBox.hpp"
 
-#include <algorithm>   // for sort, unique
-#include <format>      // for format
-#include <numeric>     // for accumulate
+#include <algorithm>
+#include <format>
+#include <numeric>
 
-#include "constants.hpp"    // for _TEMPERATURE_FACTOR_
-#include "exceptions.hpp"   // for exc::RstFileException, exc::UserInputException
-#include "potentialSettings.hpp"       // for PotentialSettings
-#include "randomNumberGenerator.hpp"   // for randomNumberGenerator
-#include "settings.hpp"                // for Settings
-#include "stlVector.hpp"               // for rms
+#include "constants.hpp"
+#include "exceptions.hpp"
+#include "potentialSettings.hpp"
+#include "randomNumberGenerator.hpp"
+#include "settings.hpp"
+#include "stlVector.hpp"
 
 namespace molsys
 {

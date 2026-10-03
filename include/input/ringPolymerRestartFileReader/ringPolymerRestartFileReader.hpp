@@ -25,7 +25,7 @@
 #define _RING_POLYMER_RESTART_FILE_READER_HPP_
 
 #include <fstream>
-#include <string>   // for string
+#include <string>
 
 namespace engine
 {

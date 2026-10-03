@@ -24,7 +24,7 @@
 
 #define _REFERENCES_OUTPUT_HPP_
 
-#include <string>   // for string
+#include <string>
 #include <unordered_set>
 
 #define REFERENCES_PATH_ _REFERENCES_PATH_

@@ -22,14 +22,14 @@
 
 #include "angleSection.hpp"
 
-#include <format>   // for format
-#include <string>   // for stoul, string, operator==, char_traits
-#include <vector>   // for vector
+#include <format>
+#include <string>
+#include <vector>
 
-#include "angleForceField.hpp"   // for AngleForceField
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for exc::TopologyException
-#include "simulationBox.hpp"     // for SimulationBox
+#include "angleForceField.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "simulationBox.hpp"
 
 namespace input::topology
 {

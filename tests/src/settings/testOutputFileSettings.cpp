@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
 #include <cstdint>
 
-#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "outputFileSettings.hpp"
 
 /**
  * @brief tests setting output frequency

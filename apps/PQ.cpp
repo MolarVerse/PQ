@@ -20,27 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <cstdlib>     // for EXIT_FAILURE, EXIT_SUCCESS
-#include <exception>   // for exception
-#include <iostream>    // for operator<<
-#include <string>      // for string, char_traits
-#include <vector>      // for vector
+#include <cstdlib>
+#include <exception>
+#include <iostream>
+#include <string>
+#include <vector>
 
 #include "baseException.hpp"
-#include "capabilities.hpp"      // for writeCapabilities
-#include "commandLineArgs.hpp"   // for CommandLineArgs
+#include "capabilities.hpp"
+#include "commandLineArgs.hpp"
 #include "driver.hpp"
-#include "systemInfo.hpp"   // for _VERSION_
-#include "validation.hpp"   // for validation
+#include "systemInfo.hpp"
+#include "validation.hpp"
 
 #ifdef WITH_MPI
-#include <mpi.h>   // for MPI_Abort, MPI_COMM_WORLD, MPI_Finalize
+#include <mpi.h>
 
-#include "mpi.hpp"   // for MPI
+#include "mpi.hpp"
 #endif
 
 #ifdef WITH_PYBIND11
-#include <pybind11/embed.h>   // for scoped_interpreter
+#include <pybind11/embed.h>
 #endif
 namespace
 {

@@ -24,12 +24,12 @@
 
 #include <gtest/gtest.h>
 
-#include <vector>   // for vector
+#include <vector>
 
-#include "exceptions.hpp"                // for exc::IntraNonBondedException
-#include "fileSettings.hpp"              // for FileSettings
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "intraNonBondedContainer.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestIntraNonBondedReader, findMoleculeType)
 {

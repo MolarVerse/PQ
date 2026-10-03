@@ -20,16 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <vector>   // for vector, allocator
+#include <vector>
 
-#include "engine.hpp"                    // for Engine
-                                         // for Message, TestPartResult
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "intraNonBondedSetup.hpp"       // for setupIntraNonBonded
-#include "molecule.hpp"                  // for Molecule
-#include "testSetup.hpp"                 // for TestSetup
+#include "engine.hpp"
+#include "intraNonBondedContainer.hpp"
+#include "intraNonBondedSetup.hpp"
+#include "molecule.hpp"
+#include "testSetup.hpp"
 
 /**
  * @brief tests the setup of the intra non bonded interactions

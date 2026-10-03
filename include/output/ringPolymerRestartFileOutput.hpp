@@ -24,7 +24,7 @@
 
 #define _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
 
-#include <vector>   // for vector
+#include <vector>
 
 #include "output.hpp"
 

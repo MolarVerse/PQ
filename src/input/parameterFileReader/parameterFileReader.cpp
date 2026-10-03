@@ -22,18 +22,18 @@
 
 #include "parameterFileReader.hpp"
 
-#include "angleSection.hpp"      // for AngleSection
-#include "bondSection.hpp"       // for BondSection
-#include "dihedralSection.hpp"   // for DihedralSection
-#include "engine.hpp"            // for engine::Engine
-#include "exceptions.hpp"        // for InputFileException, ParameterFileExce...
-#include "fileSettings.hpp"      // for FileSettings
-#include "forceFieldSettings.hpp"        // for ForceFieldSettings
-#include "improperDihedralSection.hpp"   // for ImproperDihedralSection
-#include "jCouplingSection.hpp"          // for JCouplingSection
-#include "nonCoulombicsSection.hpp"      // for NonCoulombicsSection
-#include "stringUtilities.hpp"   // for utilities::removeComments, utilities::splitString, toLowerCopy
-#include "typesSection.hpp"   // for TypesSection
+#include "angleSection.hpp"
+#include "bondSection.hpp"
+#include "dihedralSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
+#include "improperDihedralSection.hpp"
+#include "jCouplingSection.hpp"
+#include "nonCoulombicsSection.hpp"
+#include "stringUtilities.hpp"
+#include "typesSection.hpp"
 
 namespace input::parameterFile
 {

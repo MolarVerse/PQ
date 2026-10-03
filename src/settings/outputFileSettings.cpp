@@ -22,10 +22,10 @@
 
 #include "outputFileSettings.hpp"
 
-#include <algorithm>   // for for_each
-#include <cstdint>     // for UINT64_MAX
-#include <string>      // for string, allocator
-#include <vector>      // for vector
+#include <algorithm>
+#include <cstdint>
+#include <string>
+#include <vector>
 
 #include "defaults.hpp"
 

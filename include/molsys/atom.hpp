@@ -24,9 +24,9 @@
 
 #define _ATOM_HPP_
 
-#include <optional>      // for optional
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <optional>
+#include <string>
+#include <string_view>
 
 #include "staticMatrix.hpp"
 #include "strongTypes.hpp"

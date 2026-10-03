@@ -20,15 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "potentialBruteForce.hpp"   // for PotentialBruteForce
+#include "potentialBruteForce.hpp"
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 #include "globalTimer.hpp"
-#include "molecule.hpp"             // for Molecule
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "waterModelSettings.hpp"   // for WaterModelSettings
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "waterModelSettings.hpp"
 
 namespace pot
 {

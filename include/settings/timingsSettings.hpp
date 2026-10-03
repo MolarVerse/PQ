@@ -24,7 +24,7 @@
 
 #define _TIMINGS_SETTINGS_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 namespace settings
 {

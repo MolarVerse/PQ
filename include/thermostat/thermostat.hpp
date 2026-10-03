@@ -24,8 +24,8 @@
 
 #define _THERMOSTAT_HPP_
 
-#include <cstddef>   // for size_t
-#include <string>    // for string
+#include <cstddef>
+#include <string>
 
 #include "enums/thermostat.hpp"
 

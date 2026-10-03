@@ -22,23 +22,23 @@
 
 #include "hybridInputParser.hpp"
 
-#include <algorithm>     // for min, unique
-#include <cstddef>       // for size_t
-#include <format>        // for format
-#include <ranges>        // for sort
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <algorithm>
+#include <cstddef>
+#include <format>
+#include <ranges>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include "exceptions.hpp"        // for exc::InputFileException, customException
-#include "hybridSettings.hpp"    // for settings::HybridSettings
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "exceptions.hpp"
+#include "hybridSettings.hpp"
+#include "inputFileParser.hpp"
 #include "parserUtils.hpp"
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "stringUtilities.hpp"
 
 #ifdef PYTHON_ENABLED
-#include "fileSettings.hpp"   // for FileSettings
-#include "selection.hpp"      // for parseSelection
+#include "fileSettings.hpp"
+#include "selection.hpp"
 #endif
 
 namespace input

@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogl...
+#include <gtest/gtest.h>
 
-#include <string>   // for allocator, basic_string, operator+
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "commandLineArgs.hpp"    // for CommandLineArgs
-#include "exceptions.hpp"         // for UserInputException
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "commandLineArgs.hpp"
+#include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing an input file name

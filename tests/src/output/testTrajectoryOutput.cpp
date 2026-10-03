@@ -22,8 +22,8 @@
 
 #include "testTrajectoryOutput.hpp"
 
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, allocator, string
+#include <iosfwd>
+#include <string>
 
 #include "hybridConfigurator.hpp"
 #include "outputFileSettings.hpp"

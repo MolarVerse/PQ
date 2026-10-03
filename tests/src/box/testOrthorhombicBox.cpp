@@ -24,11 +24,11 @@
 
 #include <array>
 
-#include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
-#include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
-#include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
-#include "orthorhombicBox.hpp"               // for molsys::OrthorhombicBox
-#include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
+#include "constants/conversionFactors.hpp"
+#include "defaults.hpp"
+#include "matrixNear.hpp"
+#include "orthorhombicBox.hpp"
+#include "vectorNear.hpp"
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
 {

@@ -22,12 +22,12 @@
 
 #include "testTopologyReader.hpp"
 
-#include "exceptions.hpp"           // for InputFileException, TopologyException
-#include "fileSettings.hpp"         // for FileSettings
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
 // for AssertionResult, Message, TestPartResult
 #include "throwWithMessage.hpp"
-#include "topologyReader.hpp"   // for TopologyReader
+#include "topologyReader.hpp"
 
 /**
  * @brief tests isNeeded function

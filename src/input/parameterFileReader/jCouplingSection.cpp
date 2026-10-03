@@ -22,12 +22,12 @@
 
 #include "jCouplingSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "engine.hpp"                        // for engine::Engine
-#include "exceptions.hpp"                    // for ParameterFileException
-#include "jCouplingType.hpp"                 // for JCouplingType
+#include "constants/conversionFactors.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "jCouplingType.hpp"
 
 namespace input::parameterFile
 {

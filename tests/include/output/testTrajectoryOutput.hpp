@@ -24,14 +24,14 @@
 
 #define _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
+#include <memory>
 
-#include "atom.hpp"               // for Atom
-#include "molecule.hpp"           // for Molecule
-#include "simulationBox.hpp"      // for SimulationBox
-#include "trajectoryOutput.hpp"   // for TrajectoryOutput
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "simulationBox.hpp"
+#include "trajectoryOutput.hpp"
 
 /**
  * @class TestTrajectoryOutput

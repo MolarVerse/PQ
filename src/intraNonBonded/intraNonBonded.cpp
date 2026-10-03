@@ -22,8 +22,8 @@
 
 #include "intraNonBonded.hpp"
 
-#include <algorithm>   // for for_each
-#include <format>      // for format
+#include <algorithm>
+#include <format>
 
 #include "coulombPotential.hpp"
 #include "exceptions.hpp"

@@ -22,7 +22,7 @@
 
 #include "testIntegrator.hpp"
 
-#include <vector>   // for vector
+#include <vector>
 
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"

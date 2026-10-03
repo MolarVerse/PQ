@@ -24,9 +24,9 @@
 
 #define _ASE_DFTB_RUNNER_HPP_
 
-#include <unordered_map>   // for unordered_map
+#include <unordered_map>
 
-#include "aseQMRunner.hpp"   // for InternalQMRunner
+#include "aseQMRunner.hpp"
 
 namespace QM
 {

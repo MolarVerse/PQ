@@ -22,12 +22,12 @@
 
 #include "testRingPolymerRestartFileOutput.hpp"
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, string
+#include <iosfwd>
+#include <string>
 
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
+#include "ringPolymerSettings.hpp"
 
 /**
  * @brief tests writing restart file for ring polymer
