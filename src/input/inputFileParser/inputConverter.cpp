@@ -25,6 +25,7 @@
 #include <ranges>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 #include "stringUtilities.hpp"
 
@@ -296,13 +297,14 @@ namespace input
                 return "The selection is empty.";
             case SelectionError::None: return "Unknown selection error.";
         }
+
+        std::unreachable();
     }
 
     /**
      * @brief parses a selection string without using Python
      *
      * @param selection the selection string
-     * @param key the input key
      * @return an optional vector of atom indices, or std::nullopt if parsing
      * fails
      */
