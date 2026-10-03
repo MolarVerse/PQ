@@ -22,19 +22,18 @@
 
 #include "testCelllist.hpp"
 
-#include <limits>   // for numeric_limits
-#include <memory>   // for make_shared, __shared_ptr_access
-#include <vector>   // for vector
+#include <limits>
+#include <memory>
+#include <vector>
 
-#include "atom.hpp"                // for Atom
-#include "cell.hpp"                // for Cell
-#include "exceptions.hpp"          // for CellListException
-                                   // for Message, TestPartResult
-#include "molecule.hpp"            // for Molecule
-#include "potentialSettings.hpp"   // for PotentialSettings
+#include "atom.hpp"
+#include "cell.hpp"
+#include "exceptions.hpp"
+#include "molecule.hpp"
+#include "potentialSettings.hpp"
 #include "settings.hpp"
-#include "simulationBox.hpp"      // for SimulationBox
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 #include "vector3d.hpp"
 
 TEST_F(TestCellList, determineCellSize)

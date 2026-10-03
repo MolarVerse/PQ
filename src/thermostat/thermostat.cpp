@@ -23,8 +23,8 @@
 #include "thermostat.hpp"
 
 #include "globalTimer.hpp"
-#include "physicalData.hpp"         // for PhysicalData
-#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
+#include "physicalData.hpp"
+#include "thermostatSettings.hpp"
 
 namespace thermostat
 {

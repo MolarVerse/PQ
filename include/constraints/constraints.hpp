@@ -24,13 +24,13 @@
 
 #define _CONSTRAINTS_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cstddef>
+#include <vector>
 
-#include "bondConstraint.hpp"       // for BondConstraint
-#include "defaults.hpp"             // for defaults
-#include "distanceConstraint.hpp"   // for DistanceConstraint
-#include "mShakeReference.hpp"      // for MShakeReference
+#include "bondConstraint.hpp"
+#include "defaults.hpp"
+#include "distanceConstraint.hpp"
+#include "mShakeReference.hpp"
 
 namespace physicalData
 {

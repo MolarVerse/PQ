@@ -22,12 +22,12 @@
 
 #include "atom.hpp"
 
-#include "atomMassMap.hpp"        // for atomMassMap
-#include "box.hpp"                // for Box
-#include "exceptions.hpp"         // for MolDescriptorException
-#include "manostatSettings.hpp"   // for ManostatSettings
-#include "settings.hpp"           // for Settings
-#include "stringUtilities.hpp"    // for toLowerCopy
+#include "atomMassMap.hpp"
+#include "box.hpp"
+#include "exceptions.hpp"
+#include "manostatSettings.hpp"
+#include "settings.hpp"
+#include "stringUtilities.hpp"
 
 namespace molsys
 {

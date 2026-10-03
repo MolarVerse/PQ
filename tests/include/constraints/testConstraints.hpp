@@ -24,15 +24,15 @@
 
 #define _TEST_CONSTRAINTS_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+#include <memory>
 
-#include "atom.hpp"             // for Atom
-#include "bondConstraint.hpp"   // for BondConstraint
-#include "constraints.hpp"      // for Constraints
-#include "molecule.hpp"         // for Molecule
-#include "simulationBox.hpp"    // for SimulationBox
+#include "atom.hpp"
+#include "bondConstraint.hpp"
+#include "constraints.hpp"
+#include "molecule.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class TestConstraints

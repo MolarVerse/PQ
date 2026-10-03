@@ -24,7 +24,7 @@
 
 #define _BOX_SECTION_HPP_
 
-#include <string>   // for string
+#include <string>
 
 #include "restartFileSection.hpp"
 

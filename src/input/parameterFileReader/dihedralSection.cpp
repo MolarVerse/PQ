@@ -22,12 +22,12 @@
 
 #include "dihedralSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "dihedralType.hpp"                  // for DihedralType
-#include "engine.hpp"                        // for engine::Engine
-#include "exceptions.hpp"                    // for exc::ParameterFileException
+#include "constants/conversionFactors.hpp"
+#include "dihedralType.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 
 namespace input::parameterFile
 {

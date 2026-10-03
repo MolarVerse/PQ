@@ -32,6 +32,7 @@
 #include "bondForceField.hpp"
 #include "exceptions.hpp"
 #include "interWater.hpp"
+#include "interWaterParamters.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "settings.hpp"

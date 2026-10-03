@@ -24,7 +24,7 @@
 
 #define _COULOMB_POTENTIAL_HPP_
 
-#include <utility>   // for pair
+#include <utility>
 
 namespace pot
 {

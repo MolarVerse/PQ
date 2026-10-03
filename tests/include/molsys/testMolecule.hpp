@@ -24,12 +24,12 @@
 
 #define _TEST_MOLECULE_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
+#include <memory>
 
-#include "atom.hpp"       // for Atom
-#include "molecule.hpp"   // for Molecule
+#include "atom.hpp"
+#include "molecule.hpp"
 
 class TestMolecule : public ::testing::Test
 {

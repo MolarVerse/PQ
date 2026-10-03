@@ -24,14 +24,14 @@
 
 #define _TEST_DISTANCE_CONSTRAINT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+#include <memory>
 
-#include "atom.hpp"                 // for Atom
-#include "distanceConstraint.hpp"   // for DistanceConstraint
-#include "molecule.hpp"             // for Molecule
-#include "simulationBox.hpp"        // for SimulationBox
+#include "atom.hpp"
+#include "distanceConstraint.hpp"
+#include "molecule.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class TestDistanceConstraint

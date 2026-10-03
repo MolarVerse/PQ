@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CaptureStdout, GetCapturedStdout
+#include <gtest/gtest.h>
 
-#include <string>        // for allocator, string
-#include <string_view>   // for string_view
+#include <string>
+#include <string_view>
 
 #include "baseException.hpp"
-#include "color.hpp"   // for Code
+#include "color.hpp"
 #include "exceptionTypes.hpp"
 
 /**

@@ -22,12 +22,12 @@
 
 #include "testLogOutput.hpp"
 
-#include <format>   // for format
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, allocator, string
+#include <format>
+#include <iosfwd>
+#include <string>
 
-#include "outputMessages.hpp"   // for _ANGSTROM_
-#include "systemInfo.hpp"       // for _AUTHOR_, _EMAIL_
+#include "outputMessages.hpp"
+#include "systemInfo.hpp"
 
 /**
  * @brief tests writing header to log file

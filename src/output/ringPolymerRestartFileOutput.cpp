@@ -22,14 +22,14 @@
 
 #include "ringPolymerRestartFileOutput.hpp"
 
-#include <format>    // for format
-#include <ostream>   // for basic_ostream, operator<<, flush, std
-#include <sstream>   // for ostringstream
-#include <vector>    // for vector
+#include <format>
+#include <ostream>
+#include <sstream>
+#include <vector>
 
-#include "molecule.hpp"              // for Molecule
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "simulationBox.hpp"         // for SimulationBox
+#include "molecule.hpp"
+#include "ringPolymerSettings.hpp"
+#include "simulationBox.hpp"
 
 namespace out
 {

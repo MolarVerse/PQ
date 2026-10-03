@@ -24,10 +24,10 @@
 
 #define _STL_VECTOR_HPP_
 
-#include <algorithm>   // for max_element
-#include <cmath>       // for sqrt
-#include <numeric>     // for accumulate
-#include <vector>      // for vector
+#include <algorithm>
+#include <cmath>
+#include <numeric>
+#include <vector>
 
 namespace stl
 {

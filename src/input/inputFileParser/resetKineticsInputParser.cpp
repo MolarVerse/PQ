@@ -22,10 +22,10 @@
 
 #include "resetKineticsInputParser.hpp"
 
-#include <cstddef>   // for size_t, std
+#include <cstddef>
 
 #include "inputKeyAdapter.hpp"
-#include "resetKineticsSettings.hpp"   // for settings::ResetKineticsSettings
+#include "resetKineticsSettings.hpp"
 
 namespace input
 {

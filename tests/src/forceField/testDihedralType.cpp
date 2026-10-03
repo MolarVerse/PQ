@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_FALSE, InitGoogleTest, RUN_...
+#include <gtest/gtest.h>
 
-#include "dihedralType.hpp"   // for DihedralType
+#include "dihedralType.hpp"
 
 /**
  * @brief tests operator== for DihedralType

@@ -22,12 +22,11 @@
 
 #include "testTopologySection.hpp"
 
-#include <ostream>   // for operator<<, basic_ostream, ofstream
-#include <vector>    // for vector
+#include <ostream>
+#include <vector>
 
-#include "exceptions.hpp"     // for TopologyException
-                              // for Message, TestPartResult
-#include "shakeSection.hpp"   // for ShakeSection
+#include "exceptions.hpp"
+#include "shakeSection.hpp"
 #include "throwWithMessage.hpp"
 
 /**

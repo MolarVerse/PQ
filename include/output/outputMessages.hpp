@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <string>   // for operator==
+#include <string>
 
 #ifndef _OUTPUT_MESSAGES_HPP_
 #define _OUTPUT_MESSAGES_HPP_

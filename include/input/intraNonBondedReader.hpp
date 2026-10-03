@@ -24,10 +24,10 @@
 
 #define _INTRA_NON_BONDED_READER_HPP_
 
-#include <cstddef>   // for size_t
-#include <fstream>   // for ifstream
-#include <iosfwd>    // for ifstream
-#include <string>    // for string
+#include <cstddef>
+#include <fstream>
+#include <iosfwd>
+#include <string>
 
 #include "strongTypes.hpp"
 

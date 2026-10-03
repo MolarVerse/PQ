@@ -23,7 +23,7 @@
 #include <gtest/gtest.h>
 
 #ifdef WITH_MPI
-#include "mpi.hpp"   // for MPI
+#include "mpi.hpp"
 #endif
 
 int main(int argc, char **argv)

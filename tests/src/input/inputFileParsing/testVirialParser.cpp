@@ -20,15 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"   // for InputFileException
+#include "exceptions.hpp"
 #include "settings.hpp"
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 #include "virialInputParser.hpp"
 
 /**

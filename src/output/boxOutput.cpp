@@ -22,11 +22,11 @@
 
 #include "boxOutput.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <ostream>   // for ofstream, basic_ostream, operator<<
+#include <cstddef>
+#include <format>
+#include <ostream>
 
-#include "box.hpp"   // for SimulationBox
+#include "box.hpp"
 
 namespace out
 {

@@ -22,10 +22,10 @@
 
 #include "typesSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "exceptions.hpp"          // for exc::ParameterFileException
-#include "potentialSettings.hpp"   // for settings::PotentialSettings
+#include "exceptions.hpp"
+#include "potentialSettings.hpp"
 
 namespace input::parameterFile
 {

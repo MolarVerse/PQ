@@ -24,9 +24,9 @@
 
 #define _ENERGY_OUTPUT_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace physicalData
 {

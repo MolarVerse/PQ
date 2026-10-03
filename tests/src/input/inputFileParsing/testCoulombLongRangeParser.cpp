@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only)
+#include <gtest/gtest.h>
 
 #include "coulombLongRangeInputParser.hpp"
-#include "exceptions.hpp"            // for exc::InputFileException
-#include "potentialSettings.hpp"     // for PotentialSettings
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "potentialSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "long-range" command

@@ -22,14 +22,14 @@
 
 #include "jCouplingSection.hpp"
 
-#include <algorithm>   // for sort, unique
-#include <format>      // for format
-#include <string>      // for string, allocator
-#include <vector>      // for vector
+#include <algorithm>
+#include <format>
+#include <string>
+#include <vector>
 
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for TopologyException
-#include "jCouplingForceField.hpp"   // for JCouplingForceField
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "jCouplingForceField.hpp"
 
 namespace input::topology
 {

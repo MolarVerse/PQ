@@ -22,18 +22,18 @@
 
 #include "ringPolymerEngine.hpp"
 
-#include <algorithm>   // for __for_each_fn
-#include <cstddef>     // for size_t
+#include <algorithm>
+#include <cstddef>
 
-#include "atom.hpp"                                  // for Atom
-#include "constants/internalConversionFactors.hpp"   // for _RPMD_PREFACTOR_
-#include "engineOutput.hpp"                          // for EngineOutput
+#include "atom.hpp"
+#include "constants/internalConversionFactors.hpp"
+#include "engineOutput.hpp"
 #include "globalTimer.hpp"
-#include "outputFileSettings.hpp"    // for OutputFileSettings
-#include "physicalData.hpp"          // for physicalData::PhysicalData
-#include "ringPolymerSettings.hpp"   // for settings::RingPolymerSettings
-#include "thermostatSettings.hpp"    // for settings::ThermostatSettings
-#include "timingsSettings.hpp"       // for TimingsSettings
+#include "outputFileSettings.hpp"
+#include "physicalData.hpp"
+#include "ringPolymerSettings.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
 
 namespace engine
 {

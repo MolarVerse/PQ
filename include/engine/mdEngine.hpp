@@ -114,7 +114,7 @@ namespace engine
 }   // namespace engine
 
 #ifndef _MD_ENGINE_TPP_
-#include "mdEngine.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#include "mdEngine.tpp.hpp"   // IWYU pragma: export
 #endif
 
 #endif   // _MD_ENGINE_HPP_

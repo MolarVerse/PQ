@@ -22,7 +22,7 @@
 
 #include "coulombShiftedPotential.hpp"
 
-#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "constants/internalConversionFactors.hpp"
 
 namespace pot
 {

@@ -24,7 +24,7 @@
 
 #define _TYPES_SECTION_HPP_
 
-#include <string>   // for allocator, string
+#include <string>
 
 #include "parameterFileSection.hpp"
 

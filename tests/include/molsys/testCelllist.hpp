@@ -28,9 +28,9 @@
 
 #include <memory>
 
-#include "celllist.hpp"            // for CellList
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "simulationBox.hpp"       // for SimulationBox
+#include "celllist.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
 
 class TestCellList : public ::testing::Test
 {

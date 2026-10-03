@@ -22,7 +22,7 @@
 
 #include "orthorhombicBox.hpp"
 
-#include "constants.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
+#include "constants.hpp"
 
 namespace molsys
 {

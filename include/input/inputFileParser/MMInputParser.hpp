@@ -25,7 +25,7 @@
 #define _MM_INPUT_PARSER_HPP_
 
 #include "forceFieldClass.hpp"
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 #include "potential.hpp"
 
 namespace input

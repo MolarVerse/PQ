@@ -24,13 +24,13 @@
 
 #define _TEST_TOPOLOGY_SECTION_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
 #include <filesystem>
-#include <string>   // for allocator, string
+#include <string>
 
-#include "mmmdEngine.hpp"   // for Engine
-#include "molecule.hpp"     // for Molecule
+#include "mmmdEngine.hpp"
+#include "molecule.hpp"
 
 /**
  * @class TestTopologySection

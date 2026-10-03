@@ -24,10 +24,10 @@
 
 #define _OPTIMIZER_SETTINGS_HPP_
 
-#include <cstddef>    // for size_t
-#include <optional>   // for optional
+#include <cstddef>
+#include <optional>
 
-#include "defaults.hpp"   // for _OPTIMIZER_DEFAULT_
+#include "defaults.hpp"
 #include "enums/optimizer.hpp"
 
 namespace settings

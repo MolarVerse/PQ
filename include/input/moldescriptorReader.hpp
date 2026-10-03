@@ -24,9 +24,9 @@
 
 #define _MOLDESCRIPTOR_READER_HPP_
 
-#include <fstream>   // for ifstream
-#include <string>    // for string
-#include <vector>    // for vector
+#include <fstream>
+#include <string>
+#include <vector>
 
 #include "defaults.hpp"
 

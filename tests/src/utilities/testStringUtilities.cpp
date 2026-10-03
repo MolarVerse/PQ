@@ -20,22 +20,22 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <climits>      // for INT_MAX, INT_MIN
-#include <cstdint>      // for UINT32_MAX
-#include <cstdio>       // for remove
-#include <filesystem>   // for create_directory
+#include <climits>
+#include <cstdint>
+#include <cstdio>
+#include <filesystem>
 #include <format>
-#include <fstream>   // for ofstream
+#include <fstream>
 #include <mstd/file.hpp>
-#include <stdexcept>   // for out_of_range and invalid_argument
-#include <string>      // for string, allocator
+#include <stdexcept>
+#include <string>
 
-#include "exceptions.hpp"        // for InputFileException
-#include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
-#include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
+#include "exceptions.hpp"
+#include "gmock/gmock.h"
+#include "stringUtilities.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief removeComments test by comment character

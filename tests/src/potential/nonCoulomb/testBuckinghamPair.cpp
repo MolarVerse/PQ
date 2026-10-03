@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <cmath>    // for pow, exp
-#include <vector>   // for vector
+#include <cmath>
+#include <vector>
 
-#include "buckinghamPair.hpp"   // for BuckinghamPair
-                                // for AssertionResult, Message, TestPartResult
+#include "buckinghamPair.hpp"
+// for AssertionResult, Message, TestPartResult
 
 /**
  * @brief tests the equals operator of BuckinghamPair

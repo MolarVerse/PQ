@@ -22,9 +22,9 @@
 
 #include "topologySection.hpp"
 
-#include <fstream>   // for getline
+#include <fstream>
 
-#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
+#include "stringUtilities.hpp"
 
 namespace input::topology
 {

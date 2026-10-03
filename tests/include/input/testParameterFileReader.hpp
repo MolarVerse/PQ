@@ -24,12 +24,12 @@
 
 #define _TEST_PARAMETER_FILE_READER_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include "fileSettings.hpp"          // for FileSettings
-#include "mmmdEngine.hpp"            // for Engine
-#include "molecule.hpp"              // for Molecule
-#include "parameterFileReader.hpp"   // for ParameterFileReader
+#include "fileSettings.hpp"
+#include "mmmdEngine.hpp"
+#include "molecule.hpp"
+#include "parameterFileReader.hpp"
 
 /**
  * @class TestParameterFileReader

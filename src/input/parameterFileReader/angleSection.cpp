@@ -22,12 +22,12 @@
 
 #include "angleSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "angleType.hpp"                     // for AngleType
-#include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"                    // for exc::ParameterFileException
+#include "angleType.hpp"
+#include "constants/conversionFactors.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 
 namespace input::parameterFile
 {

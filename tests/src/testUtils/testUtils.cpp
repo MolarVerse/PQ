@@ -24,16 +24,32 @@
 
 #include <memory>
 
-#include "coulombPotential.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
-#include "dftbplusRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
-#include "engine.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
-#include "nonCoulombPotential.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
-#include "pyscfRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
-#include "qmRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
-#include "turbomoleRunner.hpp"   // IWYU pragma: keep -- needed for explicit template instantiation
+#include "coulombPotential.hpp"
+#include "dftbplusRunner.hpp"
+#include "engine.hpp"
+#include "nonCoulombPotential.hpp"
+#include "pyscfRunner.hpp"
+#include "qmRunner.hpp"
+#include "turbomoleRunner.hpp"
 
 namespace test
 {
+    // Explicit template instantiation below needs the complete type of
+    // each of these (e.g. for typeid), not just a forward declaration.
+    // These give the linter a direct use so the includes above aren't
+    // mistaken for unused.
+    [[maybe_unused]] constexpr std::size_t engineSize = sizeof(engine::Engine);
+    [[maybe_unused]] constexpr std::size_t coulombPotentialSize =
+        sizeof(pot::CoulombPotential);
+    [[maybe_unused]] constexpr std::size_t nonCoulombPotentialSize =
+        sizeof(pot::NonCoulombPotential);
+    [[maybe_unused]] constexpr std::size_t qmRunnerSize = sizeof(QM::QMRunner);
+    [[maybe_unused]] constexpr std::size_t dftbPlusRunnerSize =
+        sizeof(QM::DFTBPlusRunner);
+    [[maybe_unused]] constexpr std::size_t pyscfRunnerSize =
+        sizeof(QM::PySCFRunner);
+    [[maybe_unused]] constexpr std::size_t turbomoleRunnerSize =
+        sizeof(QM::TurbomoleRunner);
     /**
      * @brief check that the dynamic type of obj matches expectedType
      *

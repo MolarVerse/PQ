@@ -24,14 +24,14 @@
 
 #include "mpi.hpp"
 
-#include <mpi.h>   // for MPI_Comm_rank, MPI_Comm_size, MPI_Init, MPI_Finalize
-#include <sys/stat.h>   // for mkdir
-#include <unistd.h>     // for chdir
+#include <mpi.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
-#include <filesystem>   // for remove_all
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <iostream>     // for cout, cerr
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <iostream>
 
 using mpi::MPI;
 

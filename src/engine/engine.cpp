@@ -22,15 +22,15 @@
 
 #include "engine.hpp"
 
-#include <filesystem>   // for remove
+#include <filesystem>
 #include <memory>
 
 #include "celllist.hpp"
-#include "fileSettings.hpp"   // for settings::FileSettings
-#include "logOutput.hpp"      // for LogOutput
+#include "fileSettings.hpp"
+#include "logOutput.hpp"
 #include "potentialBruteForce.hpp"
-#include "stdoutOutput.hpp"      // for StdoutOutput
-#include "timingsSettings.hpp"   // for settings::TimingsSettings
+#include "stdoutOutput.hpp"
+#include "timingsSettings.hpp"
 
 namespace engine
 {

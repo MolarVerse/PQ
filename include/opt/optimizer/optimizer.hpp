@@ -24,11 +24,11 @@
 
 #define _OPTIMIZER_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 #include <deque>
 #include <memory>
 
-#include "convergence.hpp"   // for Convergence
+#include "convergence.hpp"
 #include "vector3d.hpp"
 
 namespace molsys

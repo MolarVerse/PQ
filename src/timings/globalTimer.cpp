@@ -22,7 +22,7 @@
 
 #include "globalTimer.hpp"
 
-#include <algorithm>   // for ranges::sort
+#include <algorithm>
 #include <vector>
 
 #include "timer.hpp"

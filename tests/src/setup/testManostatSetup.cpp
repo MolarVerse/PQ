@@ -20,19 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_NO_THROW, InitGoog...
+#include <gtest/gtest.h>
 
-#include "berendsenManostat.hpp"   // for manostat::BerendsenManostat
+#include "berendsenManostat.hpp"
 #include "enums/manostat.hpp"
-#include "exceptions.hpp"         // for UserInputException
-#include "manostat.hpp"           // for manostat::BerendsenManostat, Manostat
-#include "manostatSettings.hpp"   // for settings::ManostatSettings
-#include "manostatSetup.hpp"   // for setup::ManostatSetup, setupManostat, setup
-#include "mdEngine.hpp"        // for MDEngine
-#include "settings.hpp"        // for JobType, settings::Settings
-#include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
-#include "testSetup.hpp"                     // for TestSetup
-#include "throwWithMessage.hpp"              // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "manostat.hpp"
+#include "manostatSettings.hpp"
+#include "manostatSetup.hpp"
+#include "mdEngine.hpp"
+#include "settings.hpp"
+#include "stochasticRescalingManostat.hpp"
+#include "testSetup.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
 {

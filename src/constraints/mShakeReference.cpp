@@ -22,10 +22,10 @@
 
 #include "mShakeReference.hpp"
 
-#include <memory>   // for make_shared
+#include <memory>
 
-#include "atom.hpp"           // for Atom
-#include "moleculeType.hpp"   // for MoleculeType
+#include "atom.hpp"
+#include "moleculeType.hpp"
 
 namespace constraints
 {

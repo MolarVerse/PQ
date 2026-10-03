@@ -24,12 +24,12 @@
 
 #define _INTRA_NON_BONDED_HPP_
 
-#include <memory>   // for shared_ptr
-#include <vector>   // for vector
+#include <memory>
+#include <vector>
 
 #include "coulombPotential.hpp"
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
+#include "intraNonBondedContainer.hpp"
+#include "intraNonBondedMap.hpp"
 
 namespace intraNonBonded
 {

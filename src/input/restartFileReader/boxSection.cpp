@@ -22,19 +22,19 @@
 
 #include "boxSection.hpp"
 
-#include <algorithm>     // for __any_of_fn, any_of
-#include <format>        // for format
-#include <string>        // for stod, string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <algorithm>
+#include <format>
+#include <string>
+#include <string_view>
+#include <vector>
 
 #include "constants.hpp"
-#include "engine.hpp"                  // for engine::Engine
-#include "exceptions.hpp"              // for exc::RstFileException
-#include "mathUtilities.hpp"           // for compare
-#include "settings.hpp"                // for Settings
-#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "triclinicBox.hpp"            // for TriclinicBox
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "mathUtilities.hpp"
+#include "settings.hpp"
+#include "simulationBoxSettings.hpp"
+#include "triclinicBox.hpp"
 
 namespace input::restartFile
 {

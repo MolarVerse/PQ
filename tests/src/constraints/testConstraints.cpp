@@ -24,10 +24,10 @@
 
 #include <gtest/gtest.h>
 
-#include "exceptions.hpp"         // for ShakeException
-#include "gmock/gmock.h"          // for DoubleNear, ElementsAre, MakePredica...
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
-#include "timingsSettings.hpp"    // for TimingsSettings
+#include "exceptions.hpp"
+#include "gmock/gmock.h"
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"
 
 /**
  * @brief tests calculation of all bond constraints ref bond lengths

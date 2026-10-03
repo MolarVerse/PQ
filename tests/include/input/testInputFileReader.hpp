@@ -24,15 +24,15 @@
 
 #define _TEST_INPUT_FILE_READER_H_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <cstdio>   // for remove
-#include <string>   // for allocator, string
+#include <cstdio>
+#include <string>
 
 #include "inputFileParser.hpp"
-#include "inputFileReader.hpp"   // for InputFileReader
-#include "mmmdEngine.hpp"        // for MDEngine
-#include "optEngine.hpp"         // for MDEngine
+#include "inputFileReader.hpp"
+#include "mmmdEngine.hpp"
+#include "optEngine.hpp"
 
 /**
  * @class TestInputFileReader

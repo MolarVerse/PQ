@@ -22,7 +22,7 @@
 
 #include "settings.hpp"
 
-#include <string>   // for operator==, string
+#include <string>
 #include <utility>
 
 namespace settings

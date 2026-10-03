@@ -25,7 +25,7 @@
 #define _PHYSICAL_DATA_HPP_
 
 #include <memory>
-#include <vector>   // for vector
+#include <vector>
 
 #include "enums/virial.hpp"
 #include "staticMatrix.hpp"

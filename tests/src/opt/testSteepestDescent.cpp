@@ -27,7 +27,7 @@
 #include "atom.hpp"
 #include "simulationBox.hpp"
 #include "steepestDescent.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
+#include "vector3d.hpp"
 
 namespace
 {

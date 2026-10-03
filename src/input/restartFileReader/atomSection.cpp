@@ -22,20 +22,20 @@
 
 #include "atomSection.hpp"
 
-#include <cstddef>    // for size_t
-#include <format>     // for format
-#include <iostream>   // for operator<<, basic_ostream::operator<<
-#include <memory>     // for unique_ptr, make_unique
-#include <string>     // for string, stod, stoul, getline, char_traits
-#include <vector>     // for vector
+#include <cstddef>
+#include <format>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "atom.hpp"              // for Atom
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for RstFileException
-#include "molecule.hpp"          // for Molecule
-#include "moleculeType.hpp"      // for MoleculeType
-#include "simulationBox.hpp"     // for SimulationBox
-#include "stringUtilities.hpp"   // for removeComments, splitString
+#include "atom.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
+#include "simulationBox.hpp"
+#include "stringUtilities.hpp"
 
 namespace input::restartFile
 {
