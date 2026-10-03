@@ -105,28 +105,27 @@ namespace references
 
         std::ostringstream rendered;
 
-        // clang-format off
-    rendered << "########################################################################\n";
-    rendered << "#                                                                      #\n";
-    rendered << "#  This file contains all references to the software and theory used.  #\n";
-    rendered << "#                                                                      #\n";
-    rendered << "########################################################################\n";
-    rendered << '\n';
-        // clang-format on
+        std::string text = R"(
+########################################################################
+#                                                                      #
+#  This file contains all references to the software and theory used.  #
+#                                                                      #
+########################################################################
+)";
+        rendered << text << '\n';
 
         renderReferenceFile(sourceDirectory / PQ_FILE, rendered);
         for (const auto &referenceFileName : _referenceFileNames)
             renderReferenceFile(sourceDirectory / referenceFileName, rendered);
 
-        // clang-format off
-    rendered << '\n';
-    rendered << "########################################################################\n";
-    rendered << "#                                                                      #\n";
-    rendered << "#                            BIBTEX ENTRIES                            #\n";
-    rendered << "#                                                                      #\n";
-    rendered << "########################################################################\n";
-    rendered << '\n';
-        // clang-format on
+        text = R"(
+########################################################################
+#                                                                      #
+#                            BIBTEX ENTRIES                            #
+#                                                                      #
+########################################################################
+)";
+        rendered << '\n' << text << '\n';
 
         renderReferenceFile(
             sourceDirectory / (static_cast<std::string>(PQ_FILE) + ".bib"),

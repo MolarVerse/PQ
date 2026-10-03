@@ -62,51 +62,48 @@ static constexpr double BOHR_TO_ANGSTROM = 1.0 / ANGSTROM_TO_BOHR;
 /**
  * @brief Conversion factors for area units
  */
-// clang-format off
-    static constexpr double ANGSTROM2_TO_M2 = ANGSTROM_TO_M * ANGSTROM_TO_M;
-    static constexpr double M2_TO_ANGSTROM2 = 1 / ANGSTROM2_TO_M2;
-// clang-format on
+static constexpr double ANGSTROM2_TO_M2 = ANGSTROM_TO_M * ANGSTROM_TO_M;
+static constexpr double M2_TO_ANGSTROM2 = 1 / ANGSTROM2_TO_M2;
 
 /**
  * @brief Conversion factors for volume units
  */
-// clang-format off
-    static constexpr double ANGSTROM3_TO_M3     = ANGSTROM_TO_M * ANGSTROM_TO_M * ANGSTROM_TO_M;
-    static constexpr double M3_TO_ANGSTROM3    = 1.0 / ANGSTROM3_TO_M3;
-    static constexpr double ANGSTROM3_TO_L     = ANGSTROM3_TO_M3 * 1.0e3;
-    static constexpr double L_TO_ANGSTROM3     = 1.0 / ANGSTROM3_TO_L;
-    static constexpr double BOHR3_TO_ANGSTROM3 = BOHR_TO_ANGSTROM * BOHR_TO_ANGSTROM * BOHR_TO_ANGSTROM;
-// clang-format on
+static constexpr double ANGSTROM3_TO_M3 =
+    ANGSTROM_TO_M * ANGSTROM_TO_M * ANGSTROM_TO_M;
+static constexpr double M3_TO_ANGSTROM3 = 1.0 / ANGSTROM3_TO_M3;
+static constexpr double ANGSTROM3_TO_L  = ANGSTROM3_TO_M3 * 1.0e3;
+static constexpr double L_TO_ANGSTROM3  = 1.0 / ANGSTROM3_TO_L;
+static constexpr double BOHR3_TO_ANGSTROM3 =
+    BOHR_TO_ANGSTROM * BOHR_TO_ANGSTROM * BOHR_TO_ANGSTROM;
 
 /**
  * @brief Conversion factors for density units
  */
-// clang-format off
-    static constexpr double KG_PER_L_TO_AMU_PER_ANGSTROM3 = KG_TO_AMU / L_TO_ANGSTROM3;
-    static constexpr double AMU_PER_ANGSTROM3_TO_KG_PER_L = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
-// clang-format on
+static constexpr double KG_PER_L_TO_AMU_PER_ANGSTROM3 =
+    KG_TO_AMU / L_TO_ANGSTROM3;
+static constexpr double AMU_PER_ANGSTROM3_TO_KG_PER_L =
+    1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
 
 /**
  * @brief Conversion factors for energy units
  */
-// clang-format off
-    static constexpr double KCAL_TO_J                          = 4184.0;
-    static constexpr double J_TO_KCAL                          = 1.0 / KCAL_TO_J;
-    static constexpr double J_TO_KCAL_PER_MOL                  = J_TO_KCAL * AVOGADRO_NUMBER;
-    static constexpr double KCAL_PER_MOL_TO_J                  = 1.0 / J_TO_KCAL_PER_MOL;
-    static constexpr double EV_TO_J                            = 1.602176634e-19;
-    static constexpr double EV_TO_KCAL_PER_MOL                 = EV_TO_J * J_TO_KCAL_PER_MOL;
-    static constexpr double HARTREE_TO_KCAL_PER_MOL            = 627.5096080305927;
-    static constexpr double BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL = BOLTZMANN_CONSTANT * J_TO_KCAL_PER_MOL;
-// clang-format on
+static constexpr double KCAL_TO_J               = 4184.0;
+static constexpr double J_TO_KCAL               = 1.0 / KCAL_TO_J;
+static constexpr double J_TO_KCAL_PER_MOL       = J_TO_KCAL * AVOGADRO_NUMBER;
+static constexpr double KCAL_PER_MOL_TO_J       = 1.0 / J_TO_KCAL_PER_MOL;
+static constexpr double EV_TO_J                 = 1.602176634e-19;
+static constexpr double EV_TO_KCAL_PER_MOL      = EV_TO_J * J_TO_KCAL_PER_MOL;
+static constexpr double HARTREE_TO_KCAL_PER_MOL = 627.5096080305927;
+static constexpr double BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL =
+    BOLTZMANN_CONSTANT * J_TO_KCAL_PER_MOL;
 
 /**
  * @brief Conversion factors for squared energy units
  */
-// clang-format off
-    static constexpr double BOLTZMANN_CONSTANT2      = BOLTZMANN_CONSTANT * BOLTZMANN_CONSTANT;
-    static constexpr double REDUCED_PLANCK_CONSTANT2 = REDUCED_PLANCK_CONSTANT * REDUCED_PLANCK_CONSTANT;
-// clang-format on
+static constexpr double BOLTZMANN_CONSTANT2 =
+    BOLTZMANN_CONSTANT * BOLTZMANN_CONSTANT;
+static constexpr double REDUCED_PLANCK_CONSTANT2 =
+    REDUCED_PLANCK_CONSTANT * REDUCED_PLANCK_CONSTANT;
 
 /**
  * @brief Conversion factors for force units

@@ -45,7 +45,6 @@ namespace waterModel
 {
     struct InterWaterState
     {
-        // clang-format off
         double oxygenCharge{0.0};
         double hydrogenCharge{0.0};
         bool   oxygenOnlyNonCoulomb{false};
@@ -53,7 +52,6 @@ namespace waterModel
         std::unique_ptr<pot::NonCoulombPair> nonCoulombPairOO;
         std::unique_ptr<pot::NonCoulombPair> nonCoulombPairOH;
         std::unique_ptr<pot::NonCoulombPair> nonCoulombPairHH;
-        // clang-format on
     };
 
     class InterWaterStrategy

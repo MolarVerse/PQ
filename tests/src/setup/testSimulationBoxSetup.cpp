@@ -567,11 +567,17 @@ TEST_F(TestSetup, testWriteSetupInfo)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    // clang-format off
-    EXPECT_EQ(line,"         box dimensions:         5.73000 \u212b        9.93000 \u212b       11.14000 \u212b");
+    EXPECT_EQ(
+        line,
+        "         box dimensions:         5.73000 \u212b        9.93000 \u212b "
+        "      11.14000 \u212b"
+    );
     getline(file, line);
-    EXPECT_EQ(line,"         box angles:            90.00000°        90.00000°        90.00000°");
-    // clang-format on
+    EXPECT_EQ(
+        line,
+        "         box angles:            90.00000°        90.00000°        "
+        "90.00000°"
+    );
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);

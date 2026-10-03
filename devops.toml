@@ -30,6 +30,7 @@ ast_check_enabled_ids = [
     "noPublicLeadingUnderscore",
     "noDeleteInGtestTeardown",
     "noNewInGtestSetup",
+    "noClangFormatToggle",
 ]
 
 # Per-check configuration — one sub-table per check id.

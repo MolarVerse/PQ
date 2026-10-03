@@ -57,9 +57,8 @@ namespace settings
 
         static inline std::optional<ConvStrategy> _energyConvStrategy;
 
-        // clang-format off
-        static inline std::string _defaultEnergyConvStrategy = defaults::EN_CONV_STRATEGY_DEFAULT;
-        // clang-format on
+        static inline std::string _defaultEnergyConvStrategy =
+            defaults::EN_CONV_STRATEGY_DEFAULT;
 
        public:
         [[nodiscard]] static ConvStrategy getConvStrategy(

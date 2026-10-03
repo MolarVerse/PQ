@@ -47,46 +47,82 @@ namespace waterModel
             physicalData::PhysicalData &physicalData
         ) final;
 
-        // clang-format off
-        [[nodiscard]] virtual double getEqOHDistance() const = 0;          // Angström
-        [[nodiscard]] virtual double getEqHOHAngle() const = 0;            // radians
-        [[nodiscard]] virtual double getForceConstantOHBond() const = 0;   // kcal mol^-1 Angström^-2
-        [[nodiscard]] virtual double getForceConstantHOHAngle() const = 0; // kcal mol^-1 rad^-2
-        // clang-format on
+        [[nodiscard]]
+        virtual double getEqOHDistance() const = 0;   // Angström
+        [[nodiscard]]
+        virtual double getEqHOHAngle() const = 0;   // radians
+        [[nodiscard]]
+        virtual double getForceConstantOHBond(
+        ) const = 0;   // kcal mol^-1 Angström^-2
+        [[nodiscard]]
+        virtual double getForceConstantHOHAngle(
+        ) const = 0;   // kcal mol^-1 rad^-2
     };
 
     class SPCFwIntraWater : public SPCIntraWater
     {
-        // clang-format off
        private:
-        static constexpr double _eqOHDistance          = 1.012;                 // Angström
-        static constexpr double _eqHOHAngle            = 113.24 * DEG_TO_RAD;
-        static constexpr double _forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
-        static constexpr double _forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
+        static constexpr double _eqOHDistance = 1.012;   // Angström
+        static constexpr double _eqHOHAngle   = 113.24 * DEG_TO_RAD;
+        static constexpr double _forceConstantOHBond =
+            1059.162;   // kcal mol^-1 Angström^-2
+        static constexpr double _forceConstantHOHAngle =
+            75.9;   // kcal mol^-1 rad^-2
 
        public:
-        [[nodiscard]] double getEqOHDistance() const final          { return _eqOHDistance; }         
-        [[nodiscard]] double getEqHOHAngle() const final            { return _eqHOHAngle; }           
-        [[nodiscard]] double getForceConstantOHBond() const final   { return _forceConstantOHBond; }  
-        [[nodiscard]] double getForceConstantHOHAngle() const final { return _forceConstantHOHAngle; }
-        // clang-format on
+        [[nodiscard]]
+        double getEqOHDistance() const final
+        {
+            return _eqOHDistance;
+        }
+        [[nodiscard]]
+        double getEqHOHAngle() const final
+        {
+            return _eqHOHAngle;
+        }
+        [[nodiscard]]
+        double getForceConstantOHBond() const final
+        {
+            return _forceConstantOHBond;
+        }
+        [[nodiscard]]
+        double getForceConstantHOHAngle() const final
+        {
+            return _forceConstantHOHAngle;
+        }
     };
 
     class qSPCFwIntraWater : public SPCIntraWater
     {
-        // clang-format off
        private:
-        static constexpr double _eqOHDistance          = 1.0;                  // Angström
-        static constexpr double _eqHOHAngle            = 112.0 * DEG_TO_RAD;
-        static constexpr double _forceConstantOHBond   = 1059.162;             // kcal mol^-1 Angström^-2
-        static constexpr double _forceConstantHOHAngle = 75.9;                 // kcal mol^-1 rad^-2
+        static constexpr double _eqOHDistance = 1.0;   // Angström
+        static constexpr double _eqHOHAngle   = 112.0 * DEG_TO_RAD;
+        static constexpr double _forceConstantOHBond =
+            1059.162;   // kcal mol^-1 Angström^-2
+        static constexpr double _forceConstantHOHAngle =
+            75.9;   // kcal mol^-1 rad^-2
 
        public:
-        [[nodiscard]] double getEqOHDistance() const final          { return _eqOHDistance; }         
-        [[nodiscard]] double getEqHOHAngle() const final            { return _eqHOHAngle; }           
-        [[nodiscard]] double getForceConstantOHBond() const final   { return _forceConstantOHBond; }  
-        [[nodiscard]] double getForceConstantHOHAngle() const final { return _forceConstantHOHAngle; }
-        // clang-format on
+        [[nodiscard]]
+        double getEqOHDistance() const final
+        {
+            return _eqOHDistance;
+        }
+        [[nodiscard]]
+        double getEqHOHAngle() const final
+        {
+            return _eqHOHAngle;
+        }
+        [[nodiscard]]
+        double getForceConstantOHBond() const final
+        {
+            return _forceConstantOHBond;
+        }
+        [[nodiscard]]
+        double getForceConstantHOHAngle() const final
+        {
+            return _forceConstantHOHAngle;
+        }
     };
 
 }   // namespace waterModel

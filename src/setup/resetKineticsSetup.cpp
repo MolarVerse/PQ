@@ -142,12 +142,17 @@ namespace setup
         const auto fResetForcesMsg =
             std::format("every {:5d} steps", fResetForces);
 
-        // clang-format off
-    const auto scaleMsg      = std::format("reset temperature:      {} {}", nScaleMsg, fScaleMsg);
-    const auto resetMsg      = std::format("reset momentum:         {} {}", nResetMsg, fResetMsg);
-    const auto resetAngMsg   = std::format("reset angular momentum: {} {}", nResetAngMsg, fResetAngMsg);
-    const auto resetForceMsg = std::format("reset forces:           {}   ", fResetForcesMsg);
-        // clang-format on
+        const auto scaleMsg =
+            std::format("reset temperature:      {} {}", nScaleMsg, fScaleMsg);
+        const auto resetMsg =
+            std::format("reset momentum:         {} {}", nResetMsg, fResetMsg);
+        const auto resetAngMsg = std::format(
+            "reset angular momentum: {} {}",
+            nResetAngMsg,
+            fResetAngMsg
+        );
+        const auto resetForceMsg =
+            std::format("reset forces:           {}   ", fResetForcesMsg);
 
         auto &log = _engine.getLogOutput();
 

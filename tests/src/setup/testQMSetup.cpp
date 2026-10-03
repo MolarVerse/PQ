@@ -367,7 +367,6 @@ TEST(TestQMSetup, setupQMRunnerFennol)
 
     _qmSetup->setupWriteInfo();
 
-    // clang-format off
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
@@ -375,12 +374,14 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         Model path:               path/To/fennol_model.fnx");
+    EXPECT_EQ(
+        line,
+        "         Model path:               path/To/fennol_model.fnx"
+    );
     getline(file, line);
     EXPECT_EQ(line, "         Using GPU pre-processing: false");
     getline(file, line);
     EXPECT_EQ(line, "         Using float64:            false");
-    // clang-format on
 
     const auto errorCode = std::remove("default.log");
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
