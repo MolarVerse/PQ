@@ -497,11 +497,18 @@ namespace setup
         const auto betaStr  = std::format("{:14.5f}°", beta);
         const auto gammaStr = std::format("{:14.5f}°", gamma);
 
-        // clang-format off
-    log.writeSetupInfo(std::format("box dimensions:  {} {} {}", boxAStr, boxBStr, boxCstr));
-    log.writeSetupInfo(std::format("box angles:      {}  {}  {}", alphaStr, betaStr, gammaStr));
-    log.writeEmptyLine();
-        // clang-format on
+        log.writeSetupInfo(
+            std::format("box dimensions:  {} {} {}", boxAStr, boxBStr, boxCstr)
+        );
+        log.writeSetupInfo(
+            std::format(
+                "box angles:      {}  {}  {}",
+                alphaStr,
+                betaStr,
+                gammaStr
+            )
+        );
+        log.writeEmptyLine();
 
         const auto coulombCutoff =
             settings::PotentialSettings::getCoulombRadiusCutOff();

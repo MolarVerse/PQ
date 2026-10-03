@@ -474,17 +474,31 @@ namespace engine
      */
     void QMMMMDEngine::_scaleAndAccumulateEnergies(double globalSmF)
     {
-        // clang-format off
-        _qmmmPhysicalData.addQMEnergy             ( _physicalData->getQMEnergy()              * globalSmF);
-        _qmmmPhysicalData.addCoulombEnergy        ( _physicalData->getCoulombEnergy()         * globalSmF);
-        _qmmmPhysicalData.addNonCoulombEnergy     ( _physicalData->getNonCoulombEnergy()      * globalSmF);
-        _qmmmPhysicalData.addBondEnergy           ( _physicalData->getBondEnergy()            * globalSmF);
-        _qmmmPhysicalData.addAngleEnergy          ( _physicalData->getAngleEnergy()           * globalSmF);
-        _qmmmPhysicalData.addDihedralEnergy       ( _physicalData->getDihedralEnergy()        * globalSmF);
-        _qmmmPhysicalData.addImproperEnergy       ( _physicalData->getImproperEnergy()        * globalSmF);
-        _qmmmPhysicalData.addIntraCoulombEnergy   ( _physicalData->getIntraCoulombEnergy()    * globalSmF);
-        _qmmmPhysicalData.addIntraNonCoulombEnergy( _physicalData->getIntraNonCoulombEnergy() * globalSmF);
-        // clang-format on
+        _qmmmPhysicalData.addQMEnergy(_physicalData->getQMEnergy() * globalSmF);
+        _qmmmPhysicalData.addCoulombEnergy(
+            _physicalData->getCoulombEnergy() * globalSmF
+        );
+        _qmmmPhysicalData.addNonCoulombEnergy(
+            _physicalData->getNonCoulombEnergy() * globalSmF
+        );
+        _qmmmPhysicalData.addBondEnergy(
+            _physicalData->getBondEnergy() * globalSmF
+        );
+        _qmmmPhysicalData.addAngleEnergy(
+            _physicalData->getAngleEnergy() * globalSmF
+        );
+        _qmmmPhysicalData.addDihedralEnergy(
+            _physicalData->getDihedralEnergy() * globalSmF
+        );
+        _qmmmPhysicalData.addImproperEnergy(
+            _physicalData->getImproperEnergy() * globalSmF
+        );
+        _qmmmPhysicalData.addIntraCoulombEnergy(
+            _physicalData->getIntraCoulombEnergy() * globalSmF
+        );
+        _qmmmPhysicalData.addIntraNonCoulombEnergy(
+            _physicalData->getIntraNonCoulombEnergy() * globalSmF
+        );
     }
 
     /**
@@ -494,17 +508,21 @@ namespace engine
      */
     void QMMMMDEngine::_moveEnergiesToPhysicalData()
     {
-        // clang-format off
-        _physicalData->setQMEnergy              ( _qmmmPhysicalData.getQMEnergy()              );
-        _physicalData->setCoulombEnergy         ( _qmmmPhysicalData.getCoulombEnergy()         );
-        _physicalData->setNonCoulombEnergy      ( _qmmmPhysicalData.getNonCoulombEnergy()      );
-        _physicalData->setBondEnergy            ( _qmmmPhysicalData.getBondEnergy()            );
-        _physicalData->setAngleEnergy           ( _qmmmPhysicalData.getAngleEnergy()           );
-        _physicalData->setDihedralEnergy        ( _qmmmPhysicalData.getDihedralEnergy()        );
-        _physicalData->setImproperEnergy        ( _qmmmPhysicalData.getImproperEnergy()        );
-        _physicalData->setIntraCoulombEnergy    ( _qmmmPhysicalData.getIntraCoulombEnergy()    );
-        _physicalData->setIntraNonCoulombEnergy ( _qmmmPhysicalData.getIntraNonCoulombEnergy() );
-        // clang-format on
+        _physicalData->setQMEnergy(_qmmmPhysicalData.getQMEnergy());
+        _physicalData->setCoulombEnergy(_qmmmPhysicalData.getCoulombEnergy());
+        _physicalData->setNonCoulombEnergy(
+            _qmmmPhysicalData.getNonCoulombEnergy()
+        );
+        _physicalData->setBondEnergy(_qmmmPhysicalData.getBondEnergy());
+        _physicalData->setAngleEnergy(_qmmmPhysicalData.getAngleEnergy());
+        _physicalData->setDihedralEnergy(_qmmmPhysicalData.getDihedralEnergy());
+        _physicalData->setImproperEnergy(_qmmmPhysicalData.getImproperEnergy());
+        _physicalData->setIntraCoulombEnergy(
+            _qmmmPhysicalData.getIntraCoulombEnergy()
+        );
+        _physicalData->setIntraNonCoulombEnergy(
+            _qmmmPhysicalData.getIntraNonCoulombEnergy()
+        );
 
         _qmmmPhysicalData.reset();
     }
@@ -568,17 +586,22 @@ namespace engine
 
             auto weights = std::vector<double>(recipientMolecules.size(), 0.0);
 
-            // clang-format off
             switch (type)
             {
                 using enum QMForceDist;
 
                 case NONE: continue;
-                case EQUAL: weights = std::vector<double>(recipientMolecules.size(), 1); break;
-                case RANDOM: weights = _getRandomWeights(recipientMolecules); break;
-                case DISTANCE_WEIGHTED: weights = getDistanceWeights(smoothingMol, recipientMolecules); break;
+                case EQUAL:
+                    weights = std::vector<double>(recipientMolecules.size(), 1);
+                    break;
+                case RANDOM:
+                    weights = _getRandomWeights(recipientMolecules);
+                    break;
+                case DISTANCE_WEIGHTED:
+                    weights =
+                        getDistanceWeights(smoothingMol, recipientMolecules);
+                    break;
             }
-            // clang-format on
 
             // normalize weights to sum to 1
             auto weightSum = 0.0;

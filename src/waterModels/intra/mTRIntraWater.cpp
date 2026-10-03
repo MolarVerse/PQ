@@ -113,11 +113,9 @@ namespace waterModel
             const auto forceOH2   = fOH2 * dOH2 / distOH2;
             const auto forceAngle = fAngle * dHH / distHH;
 
-            // clang-format off
-        oxygen.addForce(   - forceOH1 - forceOH2             );
-        hydrogen1.addForce(+ forceOH1            - forceAngle);
-        hydrogen2.addForce(           + forceOH2 + forceAngle);
-            // clang-format on
+            oxygen.addForce(-forceOH1 - forceOH2);
+            hydrogen1.addForce(+forceOH1 - forceAngle);
+            hydrogen2.addForce(+forceOH2 + forceAngle);
 
             using enum molsys::HybridZone;
             using enum SmoothingMethod;

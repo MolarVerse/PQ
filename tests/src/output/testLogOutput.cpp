@@ -242,14 +242,18 @@ TEST_F(TestLogOutput, TestAddAndFlushQueuedWarnings)
     _logOutput->close();
     std::ifstream file("default.log");
     std::string   line;
-    // clang-format off
     getline(file, line);
-    EXPECT_EQ(line, std::format("WARNING: This keyword is deprecated and will be removed."));
-    getline(file, line);
-    EXPECT_EQ(line, std::format(""));
-    getline(file, line);
-    EXPECT_EQ(line, std::format("WARNING: Combining these two methods is discouraged."));
+    EXPECT_EQ(
+        line,
+        std::format("WARNING: This keyword is deprecated and will be removed.")
+    );
     getline(file, line);
     EXPECT_EQ(line, std::format(""));
-    // clang-format on
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        std::format("WARNING: Combining these two methods is discouraged.")
+    );
+    getline(file, line);
+    EXPECT_EQ(line, std::format(""));
 }

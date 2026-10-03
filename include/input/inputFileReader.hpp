@@ -101,12 +101,11 @@ namespace input
         [[nodiscard]] bool   getKeywordSet(const std::string &keyword) const;
         [[nodiscard]] bool getKeywordRequired(const std::string &keyword) const;
 
-        // clang-format off
         [[nodiscard]] std::map<std::string, size_t> getKeywordCountMap() const;
-        [[nodiscard]] std::map<std::string, bool> getKeywordSetMap() const;
+        [[nodiscard]] std::map<std::string, bool>   getKeywordSetMap() const;
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
-        [[nodiscard]] std::map<std::string, InputFileParser::ParseFunc> getKeywordFuncMap() const;
-        // clang-format on
+        [[nodiscard]] std::map<std::string, InputFileParser::ParseFunc> getKeywordFuncMap(
+        ) const;
 
        private:
         /******************************

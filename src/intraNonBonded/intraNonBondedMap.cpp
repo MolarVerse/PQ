@@ -158,10 +158,10 @@ namespace intraNonBonded
             const auto atomType1 = _molecule->getAtomType(atomIdx1);
             const auto atomType2 = _molecule->getAtomType(atomIdx2);
 
-            // clang-format off
-        const auto globalVdwType1 = _molecule->getInternalGlobalVDWType(atomIdx1);
-        const auto globalVdwType2 = _molecule->getInternalGlobalVDWType(atomIdx2);
-            // clang-format on
+            const auto globalVdwType1 =
+                _molecule->getInternalGlobalVDWType(atomIdx1);
+            const auto globalVdwType2 =
+                _molecule->getInternalGlobalVDWType(atomIdx2);
 
             const auto moltype = _molecule->getMoltype();
 
