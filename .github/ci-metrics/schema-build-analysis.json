@@ -253,6 +253,29 @@
         }
       }
     },
+    "runner": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "description": "CPU of the runner that ran the job; null on non-x86 runners and in records written before this field existed.",
+      "required": [
+        "cpu_model",
+        "cores"
+      ],
+      "properties": {
+        "cpu_model": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9 ()@.,_+/-]{1,80}$"
+        },
+        "cores": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        }
+      }
+    },
     "ccache": {
       "type": [
         "object",

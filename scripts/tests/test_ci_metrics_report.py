@@ -543,6 +543,39 @@ def clang_builds(count, start_hours=1, step_hours=6, job="clang-build", **fields
     ]
 
 
+class RunnerSectionTests(DataDirTestCase):
+    def on(self, model, wall, cores=4, **kwargs):
+        ninja = analysis()["ninja"]
+        return analysis(ninja=dict(ninja, wall_s=wall), runner={"cpu_model": model, "cores": cores}, **kwargs)
+
+    def rows(self, items):
+        return report.runner_rows([report.parse_analysis(item) for item in items], report.Windows(NEWEST, 14))
+
+    def test_a_job_on_two_cpus_gets_one_row_per_cpu_sorted_by_speed(self):
+        rows = self.rows([self.on("EPYC 7763", 900.0), self.on("EPYC 7763", 800.0), self.on("EPYC 9V45", 500.0)])
+        self.assertEqual(
+            [["BUILD / build-static-lto", "EPYC 9V45", 4, 1, "8m 20s"], ["BUILD / build-static-lto", "EPYC 7763", 4, 2, "14m 10s"]],
+            rows,
+        )
+
+    def test_a_job_on_one_cpu_has_nothing_to_compare(self):
+        self.assertEqual([], self.rows([self.on("EPYC 7763", 900.0), self.on("EPYC 7763", 800.0)]))
+
+    def test_records_without_runner_or_complete_ninja_are_ignored(self):
+        incomplete = self.on("EPYC 9V45", 500.0)
+        incomplete["ninja"]["complete"] = False
+        self.assertEqual([], self.rows([self.on("EPYC 7763", 900.0), analysis(), incomplete]))
+
+    def test_the_section_is_rendered(self):
+        text = BuildAnalysisSectionTests.render_with(self, [self.on("EPYC 7763", 900.0), self.on("EPYC 9V45", 500.0)])
+        self.assertIn("### Runner hardware", text)
+        self.assertIn("| BUILD / build-static-lto | EPYC 9V45 | 4 | 1 | 8m 20s |", text)
+
+    def test_the_section_says_so_without_data(self):
+        text = BuildAnalysisSectionTests.render_with(self, [analysis()])
+        self.assertIn("No job ran on more than one CPU model", text)
+
+
 class ClangSectionTests(DataDirTestCase):
     def render_with(self, analyses, extra_jobs=(), **options):
         return self.render([record(created=NEWEST), *extra_jobs, *analyses], **options)

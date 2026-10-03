@@ -157,6 +157,37 @@ class ChangesTests(unittest.TestCase):
         self.assertEqual(0.0, report.cut_off(data, "headers", {}))
 
 
+class RunnerLineTests(unittest.TestCase):
+    def load(self, content):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "b.json"
+            path.write_text(content if isinstance(content, str) else json.dumps(content))
+            return report.load_runner(path)
+
+    def test_loads_a_valid_model_only(self):
+        self.assertEqual("AMD EPYC 7763", self.load({"runner": {"cpu_model": "AMD EPYC 7763", "cores": 4}}))
+        for bad in ({"runner": None}, {}, {"runner": {"cpu_model": "`x`"}}, {"runner": {"cpu_model": "a\nb"}}, {"runner": {"cpu_model": 5}}, [], "{broken"):
+            self.assertIsNone(self.load(bad), bad)
+        self.assertIsNone(report.load_runner(None))
+        self.assertIsNone(report.load_runner("/nonexistent/b.json"))
+
+    def test_the_comment_names_both_cpus_when_they_differ(self):
+        text = report.render(summary(), summary(), runner="EPYC 7763", base_runner="EPYC 9V45")
+        self.assertIn("Runner CPU: `EPYC 7763` here, `EPYC 9V45` for the baseline.", text)
+
+    def test_the_same_cpu_is_said_once(self):
+        text = report.render(summary(), summary(), runner="EPYC 7763", base_runner="EPYC 7763")
+        self.assertIn("Both runs used the runner CPU `EPYC 7763`.", text)
+
+    def test_an_old_baseline_without_runner_shows_this_cpu_only(self):
+        self.assertIn("Runner CPU: `EPYC 7763`.", report.render(summary(), summary(), runner="EPYC 7763"))
+        self.assertIn("Runner CPU: `EPYC 7763`.", report.render(summary(), None, runner="EPYC 7763", base_runner="EPYC 9V45"))
+
+    def test_without_data_there_is_no_line(self):
+        self.assertNotIn("Runner CPU", report.render(summary(), summary()))
+        self.assertNotIn("runner CPU", report.render(summary(), summary(), base_runner="EPYC 9V45"))
+
+
 class RenderTests(unittest.TestCase):
     def render(self, pr, base, **kwargs):
         return report.render(pr, base, **kwargs)

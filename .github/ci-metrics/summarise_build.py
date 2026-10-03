@@ -18,6 +18,7 @@ import argparse
 import json
 import hashlib
 import os
+import platform
 import posixpath
 import re
 import shutil
@@ -182,6 +183,29 @@ def parse_ccache_stats(text):
     }
 
 
+def read_runner(cpuinfo="/proc/cpuinfo", machine=None, cores=None):
+    """CPU model and core count of this machine, or None.
+
+    Only x86 is recorded: the `model name` line of /proc/cpuinfo is how the runner
+    hardware generations (which differ in speed by up to 1.8x) tell themselves apart.
+    """
+    machine = platform.machine() if machine is None else machine
+    if machine not in ("x86_64", "AMD64"):
+        return None
+    try:
+        text = Path(cpuinfo).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    for line in text.splitlines():
+        name, _, value = line.partition(":")
+        model = " ".join(value.split())
+        if name.strip() == "model name" and model:
+            if cores is None:
+                cores = len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else os.cpu_count()
+            return {"cpu_model": model, "cores": cores or 1}
+    return None
+
+
 def run(command):
     """The finished process of a command, or None if it cannot be run."""
     try:
@@ -292,6 +316,7 @@ def build_summary(args, env):
         "job_id": args.job_id,
         "job_key": env.get("GITHUB_JOB"),
         "artifact": args.name,
+        "runner": read_runner(),
         "ninja": None,
         "ccache": None,
         "includes": None,
@@ -353,6 +378,7 @@ def main(argv=None, env=None):
     print(
         f"wrote {path}: ninja steps={ninja.get('steps', '-')} complete={ninja.get('complete', '-')}, "
         f"ccache hit rate={ccache.get('hit_rate', '-')}, "
+        f"cpu={(summary['runner'] or {}).get('cpu_model', '-')}, "
         f"include pairs={(summary['includes'] or {}).get('include_pairs', '-')}"
     )
     return 0

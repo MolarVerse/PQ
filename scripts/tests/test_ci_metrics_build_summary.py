@@ -138,6 +138,33 @@ class SummariseNinjaTests(unittest.TestCase):
         self.assertEqual(0.0, s["wall_s"])
 
 
+CPUINFO = "processor\t: 0\nvendor_id\t: AuthenticAMD\nmodel name\t: AMD EPYC  7763 64-Core Processor\nprocessor\t: 1\nmodel name\t: AMD EPYC 7763 64-Core Processor\n"
+
+
+class RunnerTests(unittest.TestCase):
+    def read(self, text, **kwargs):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cpuinfo"
+            path.write_text(text)
+            return summary_module.read_runner(path, **kwargs)
+
+    def test_reads_the_first_model_name_with_collapsed_blanks(self):
+        self.assertEqual({"cpu_model": "AMD EPYC 7763 64-Core Processor", "cores": 4}, self.read(CPUINFO, machine="x86_64", cores=4))
+
+    def test_arm_is_not_recorded(self):
+        self.assertIsNone(self.read(CPUINFO, machine="aarch64", cores=4))
+
+    def test_no_model_line_or_no_file_gives_none(self):
+        self.assertIsNone(self.read("processor\t: 0\nCPU part\t: 0xd0c\n", machine="x86_64", cores=4))
+        self.assertIsNone(self.read("model name\t: \n", machine="x86_64", cores=4))
+        self.assertIsNone(summary_module.read_runner("/nonexistent/cpuinfo", machine="x86_64", cores=4))
+
+    def test_the_summary_carries_the_runner(self):
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(summary_module, "read_runner", return_value={"cpu_model": "X", "cores": 2}):
+            args = summary_module.parse_args(["--out", directory, "--name", "n", "--build-dir", directory])
+            self.assertEqual({"cpu_model": "X", "cores": 2}, summary_module.build_summary(args, {})["runner"])
+
+
 class CcacheTests(unittest.TestCase):
     def test_parses_counters_and_the_hit_rate_of_cacheable_calls(self):
         c = summary_module.parse_ccache_stats(CCACHE_STATS)

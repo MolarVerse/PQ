@@ -91,6 +91,7 @@ for the join; `job_key` and `artifact` are not stored.)
 | `ninja.slowest` | The 20 slowest steps: `target`, `kind`, `seconds`. |
 | `ninja.error` | Present instead of the figures if the log had an unsupported version or no steps. |
 | `includes` | `null` unless the job has a `.ninja_log` and `ninja -t deps` could be read. The exact include graph of the build, see below. |
+| `runner` | `null` on non-x86 runners and in records written before this field existed. Otherwise `cpu_model` (the `model name` line of `/proc/cpuinfo`, at most 80 characters from `A-Za-z0-9 ()@.,_+/-`) and `cores` (usable logical CPUs). The same code compiles up to 1.8x faster on one runner CPU than on another. |
 | `ccache` | `null` if ccache statistics were unavailable. |
 | `ccache.hits`, `misses`, `hit_rate` | Direct plus preprocessed hits, misses, and `hits / (hits + misses)` (of *cacheable* calls; `null` if there were none). |
 | `ccache.counters` | Every non-zero counter of `ccache --print-stats`, including the reasons calls were uncacheable. |

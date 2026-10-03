@@ -147,6 +147,8 @@ jobs:
             --baseline-sha "${MATCHED_KEY#clang-times-}" \
             --includes "$RUNNER_TEMP/build-timings/ninja-includes.json" \
             --baseline-includes "$RUNNER_TEMP/clang-baseline/ninja-includes.json" \
+            --runner "$RUNNER_TEMP/build-timings/build-analysis.json" \
+            --baseline-runner "$RUNNER_TEMP/clang-baseline/build-analysis.json" \
             --status "$BUILD_OUTCOME" \
             --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             --out "$RUNNER_TEMP/clang-report/clang_report.md"
@@ -172,6 +174,7 @@ jobs:
             mkdir -p "$RUNNER_TEMP/clang-baseline"
             cp "$detail" "$RUNNER_TEMP/clang-baseline/"
             cp "$RUNNER_TEMP/build-timings/ninja-includes.json" "$RUNNER_TEMP/clang-baseline/" || true
+            cp "$RUNNER_TEMP/build-timings/build-analysis.json" "$RUNNER_TEMP/clang-baseline/" || true
             echo "ready=true" >> "$GITHUB_OUTPUT"
           fi
 
