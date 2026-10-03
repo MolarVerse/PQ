@@ -1,1 +1,1 @@
-- Build the documentation without Doxygen dot graphs on pull requests (new CMake option PQ_DOXYGEN_GRAPHS); they are only drawn for the site deployed from main. The PR docs check took about 5 minutes, almost all of it Doxygen.
+- Build the documentation without Doxygen dot graphs on pull requests (new CMake option PQ_DOXYGEN_GRAPHS) and without LaTeX output, which nothing uses. The PR docs check took about 5 minutes, almost all of it Doxygen.
