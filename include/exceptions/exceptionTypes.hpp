@@ -52,7 +52,9 @@
     X(CompileTimeError)            \
     X(HybridConfiguratorError)     \
     X(HybridMDEngineError)         \
-    X(TimerError)
+    X(TimerError)                  \
+    X(SettingsError)               \
+    X(WaterModelError)
 
 MSTD_ENUM(ExceptionType, std::uint8_t, EXCEPTION_TYPES)
 

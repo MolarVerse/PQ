@@ -74,14 +74,19 @@ jobs:
       - name: install gcc13
         run: |
           sudo apt update
-          sudo apt install gcc-14 g++-14 mold
+          sudo apt install gcc-14 g++-14 mold ninja-build
         shell: bash
 
-      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects)
+      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects).
+      # A Debug build (with coverage on x86) does not fit into the default
+      # 500 MB: the cache stayed at its limit, evicting what the next build
+      # needs, so only 56% (x86) and 78% (arm) of the calls hit on a rebuild of
+      # the same code (#745). Release builds need about 140 MB.
       - name: setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: ${{ matrix.os }}-${{ matrix.build }}
+          max-size: ${{ matrix.build == 'Debug' && '1500MB' || '500MB' }}
 
       # Eigen is a header-only FetchContent dependency fetched from GitLab on
       # every job that configures CMake; cache the cloned source once and
@@ -121,27 +126,25 @@ jobs:
         shell: bash
 
       - name: Build and Test Project
+        id: build
         if : ${{ matrix.os != 'ubuntu-24.04' || (matrix.os == 'ubuntu-24.04' && matrix.build != 'Debug') }}
         run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off \
-            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src" ..
-          make -j$(nproc)
-          make test
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure
         env:
           CC: gcc-14
           CXX: g++-14
 
       - name: Build and Test Project with coverage
+        id: build-coverage
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' }}
         run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off \
-            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src" ..
-          make -j$(nproc)
-          make coverage_xml
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)"
+          cmake --build build --target coverage_xml
         env:
           CC: gcc-14
           CXX: g++-14
@@ -152,6 +155,7 @@ jobs:
         with:
           name: build-${{ matrix.os }}-${{ matrix.build }}
           job-id: ${{ job.check_run_id }}
+          build-status: ${{ steps.build.outcome != 'skipped' && steps.build.outcome || steps.build-coverage.outcome }}
 
       - name: Upload coverage to Codecov
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'pq-bot/')) }}
@@ -239,8 +243,18 @@ jobs:
         run: |
           ctest --test-dir build-benchmark -L benchmark --output-on-failure
 
+  # Pull requests and pushes only build the static LTO application: linking
+  # the 165 test executables, each with its own whole-program LTO link, took
+  # 78% of this job's CPU time (#746) and the regular build matrix already
+  # runs every test. The nightly run builds and runs the tests too. Scheduled
+  # workflows run on the default branch (main), so the nightly part checks
+  # main and only starts working once a release brings this file to main.
   build-static-lto:
-    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    if: >-
+      !cancelled() && (
+        github.event_name == 'schedule' ||
+        (needs.changes.result == 'success' && needs.changes.outputs.relevant == 'true')
+      )
     needs: changes
     runs-on: ubuntu-24.04
 
@@ -275,7 +289,7 @@ jobs:
           git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
         shell: bash
 
-      - name: Build and test static LTO
+      - name: Build static LTO (with tests in the nightly run)
         id: build
         run: |
           cmake -S . -B build -G Ninja \
@@ -284,12 +298,16 @@ jobs:
             -DBUILD_WITH_ASE=OFF \
             -DBUILD_WITH_LTO=ON \
             -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS="$WITH_TESTS" \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel
-          ctest --test-dir build --output-on-failure -j1
+          if [[ "$WITH_TESTS" == "ON" ]]; then
+            ctest --test-dir build --output-on-failure -j1
+          fi
         env:
           CC: gcc-14
           CXX: g++-14
+          WITH_TESTS: ${{ github.event_name == 'schedule' && 'ON' || 'OFF' }}
 
       - name: Collect build timings
         if: always()

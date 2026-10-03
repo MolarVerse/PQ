@@ -1,0 +1,1 @@
+- Ingest the clang trace summary (dev pushes) and the exact include graph into the build-analysis records and show them in the CI timings overview; the non-gating clang job stays out of the critical-path numbers.

@@ -138,6 +138,33 @@ class SummariseNinjaTests(unittest.TestCase):
         self.assertEqual(0.0, s["wall_s"])
 
 
+CPUINFO = "processor\t: 0\nvendor_id\t: AuthenticAMD\nmodel name\t: AMD EPYC  7763 64-Core Processor\nprocessor\t: 1\nmodel name\t: AMD EPYC 7763 64-Core Processor\n"
+
+
+class RunnerTests(unittest.TestCase):
+    def read(self, text, **kwargs):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cpuinfo"
+            path.write_text(text)
+            return summary_module.read_runner(path, **kwargs)
+
+    def test_reads_the_first_model_name_with_collapsed_blanks(self):
+        self.assertEqual({"cpu_model": "AMD EPYC 7763 64-Core Processor", "cores": 4}, self.read(CPUINFO, machine="x86_64", cores=4))
+
+    def test_arm_is_not_recorded(self):
+        self.assertIsNone(self.read(CPUINFO, machine="aarch64", cores=4))
+
+    def test_no_model_line_or_no_file_gives_none(self):
+        self.assertIsNone(self.read("processor\t: 0\nCPU part\t: 0xd0c\n", machine="x86_64", cores=4))
+        self.assertIsNone(self.read("model name\t: \n", machine="x86_64", cores=4))
+        self.assertIsNone(summary_module.read_runner("/nonexistent/cpuinfo", machine="x86_64", cores=4))
+
+    def test_the_summary_carries_the_runner(self):
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(summary_module, "read_runner", return_value={"cpu_model": "X", "cores": 2}):
+            args = summary_module.parse_args(["--out", directory, "--name", "n", "--build-dir", directory])
+            self.assertEqual({"cpu_model": "X", "cores": 2}, summary_module.build_summary(args, {})["runner"])
+
+
 class CcacheTests(unittest.TestCase):
     def test_parses_counters_and_the_hit_rate_of_cacheable_calls(self):
         c = summary_module.parse_ccache_stats(CCACHE_STATS)
@@ -169,6 +196,102 @@ class BuildSucceededTests(unittest.TestCase):
         self.assertFalse(f("cancelled"))
         self.assertIsNone(f("skipped"))
         self.assertIsNone(f(None))
+
+
+DEPS = (
+    "a.o: #deps 5, deps mtime 1790000000000000000 (VALID)\n"
+    "    /repo/src/a.cpp\n"
+    "    /repo/include/x.hpp\n"
+    "    /repo/include/y.hpp\n"
+    "    /usr/include/stdio.h\n"
+    "    /repo/include/../include/x.hpp\n"
+    "\n"
+    "b.o: #deps 3, deps mtime 1790000000000000000 (VALID)\n"
+    "    /repo/src/b.cpp\n"
+    "    /repo/include/x.hpp\n"
+    "    /repo/build/gen/config.hpp\n"
+    "\n"
+    "libfoo.a: #deps 1, deps mtime 1790000000000000000 (VALID)\n"
+    "    /repo/include/not-counted.hpp\n"
+    "\n"
+    "garbage line without a target\n"
+)
+
+
+class IncludeGraphTests(unittest.TestCase):
+    def graph(self, text=DEPS, build="/repo/build", root="/repo"):
+        return summary_module.include_graph(summary_module.parse_ninja_deps(text), build, root)
+
+    def test_parse_reads_targets_and_their_dependencies(self):
+        targets = summary_module.parse_ninja_deps(DEPS)
+        self.assertEqual({"a.o", "b.o", "libfoo.a"}, set(targets))
+        self.assertEqual(5, len(targets["a.o"]))
+        self.assertEqual(["/repo/include/not-counted.hpp"], targets["libfoo.a"])
+
+    def test_counts_translation_units_pairs_and_project_files(self):
+        summary, fan_in = self.graph()
+        self.assertEqual(2, summary["objects"])
+        self.assertEqual(4, summary["unique_files"])  # x, y, stdio, config; the sources are not dependencies
+        self.assertEqual(5, summary["include_pairs"])
+        self.assertEqual({"include/x.hpp": 2, "include/y.hpp": 1}, fan_in)
+        self.assertEqual((2, 3), (summary["project_files"], summary["project_pairs"]))
+
+    def test_the_translation_units_own_source_and_generated_or_system_files_are_not_project_headers(self):
+        _, fan_in = self.graph()
+        self.assertNotIn("src/a.cpp", fan_in)
+        self.assertNotIn("build/gen/config.hpp", fan_in)
+        self.assertNotIn("/usr/include/stdio.h", fan_in)
+
+    def test_only_object_targets_count(self):
+        self.assertNotIn("include/not-counted.hpp", self.graph()[1])
+
+    def test_dot_dot_segments_are_normalised_and_deduplicated(self):
+        # x.hpp appears twice for a.o (once through ..): one pair
+        summary, fan_in = self.graph()
+        self.assertEqual(2, fan_in["include/x.hpp"])
+
+    def test_relative_dependencies_are_relative_to_the_build_directory(self):
+        text = "a.o: #deps 2, deps mtime 1 (VALID)\n    ../src/a.c\n    ../include/r.hpp\n"
+        self.assertEqual({"include/r.hpp": 1}, self.graph(text)[1])
+
+    def test_top_files_are_sorted_by_fan_in_then_name_and_capped(self):
+        lines = []
+        for i in range(40):
+            lines.append(f"o{i}.o: #deps 1, deps mtime 1 (VALID)\n    /repo/include/h{34 - i % 35:02d}.hpp\n\n")
+        summary, fan_in = self.graph("".join(lines))
+        top = summary["top_project_files"]
+        self.assertEqual(summary_module.TOP_HEADERS, len(top))
+        self.assertEqual({"file": "include/h30.hpp", "fan_in": 2}, top[0])  # the late names have the high fan-in
+        self.assertEqual(35, len(fan_in))
+        self.assertEqual(top, sorted(top, key=lambda e: (-e["fan_in"], e["file"])))
+
+    def test_the_digest_does_not_depend_on_the_order_of_a_large_graph(self):
+        blocks = []
+        for i in range(80):
+            deps = "".join(f"    /repo/include/h{(i * 7 + j * 13) % 97}.hpp\n" for j in range(6))
+            blocks.append(f"t{i}.o: #deps 6, deps mtime 1 (VALID)\n{deps}")
+        forward = "\n".join(blocks)
+        backward = "\n".join(reversed(blocks))
+        shuffled = "\n".join(blocks[40:] + blocks[:40])
+        digests = {self.graph(text)[0]["digest"] for text in (forward, backward, shuffled)}
+        self.assertEqual(1, len(digests))
+
+    def test_the_digest_ignores_order_and_workspace_root_but_sees_changed_includes(self):
+        reordered = "\n\n".join(reversed(DEPS.split("\n\n")))
+        moved = DEPS.replace("/repo/", "/other/checkout/")
+        base = self.graph()[0]["digest"]
+        self.assertEqual(base, self.graph(reordered)[0]["digest"])
+        self.assertEqual(base, self.graph(moved, build="/other/checkout/build", root="/other/checkout")[0]["digest"])
+        changed = DEPS.replace("    /repo/include/y.hpp\n", "    /repo/include/z.hpp\n")
+        self.assertNotEqual(base, self.graph(changed)[0]["digest"])
+
+    def test_no_objects_or_failing_ninja_give_none(self):
+        for output, code in (("", 0), ("libfoo.a: #deps 1, deps mtime 1 (VALID)\n    /x.h\n", 0), (DEPS, 1)):
+            with mock.patch.object(summary_module.subprocess, "run") as run:
+                run.return_value = subprocess.CompletedProcess([], code, stdout=output, stderr="")
+                self.assertEqual((None, None), summary_module.read_includes("/repo/build", "/repo"))
+        with mock.patch.object(summary_module.subprocess, "run", side_effect=FileNotFoundError()):
+            self.assertEqual((None, None), summary_module.read_includes("/repo/build", "/repo"))
 
 
 class EndToEndTests(unittest.TestCase):
@@ -235,24 +358,31 @@ class EndToEndTests(unittest.TestCase):
         self.assertIsNone(data["ninja"]["complete"])
         self.assertEqual(5, data["ninja"]["steps"])
 
-    def test_ninja_is_never_run(self):
+    def test_without_ccache_only_ninja_deps_is_run(self):
         self.build.mkdir()
         (self.build / ".ninja_log").write_text(SAMPLE)
         with mock.patch.object(summary_module.subprocess, "run") as run:
+            run.return_value = subprocess.CompletedProcess([], 1, stdout="", stderr="")
             summary_module.main(["--out", str(self.out), "--name", "n", "--build-dir", str(self.build)], env=self.env)
-        run.assert_not_called()
+        self.assertEqual([["ninja", "-C", str(self.build), "-t", "deps"]], [call.args[0] for call in run.call_args_list])
 
-    def test_without_any_input_it_still_succeeds_and_records_nulls(self):
-        code, data, _ = self.run_main()
-        self.assertEqual(0, code)
-        self.assertIsNone(data["ninja"])
-        self.assertIsNone(data["ccache"])
-        self.assertIsNone(data["job_id"])
-        self.assertFalse((self.out / "ninja_log.txt").exists())
+    def test_the_include_graph_goes_into_the_summary_and_a_detail_file(self):
+        self.build.mkdir()
+        (self.build / ".ninja_log").write_text(SAMPLE)
+        deps = DEPS.replace("/repo/", f"{self.root.resolve()}/")
+        _, data, printed = self.run_main("--source-root", str(self.root), tools={"ninja": deps})
+        self.assertEqual(2, data["includes"]["objects"])
+        self.assertEqual(3, data["includes"]["project_pairs"])
+        detail = json.loads((self.out / "ninja-includes.json").read_text())
+        self.assertEqual(("ninja-includes-detail", 1), (detail["kind"], detail["schema_version"]))
+        self.assertEqual({"include/x.hpp": 2, "include/y.hpp": 1}, detail["fan_in"])
+        self.assertEqual(data["includes"]["digest"], detail["digest"])
+        self.assertIn("include pairs=5", printed)
 
-    def test_ccache_is_only_queried_when_asked_for(self):
-        _, data, _ = self.run_main(tools={"ccache": CCACHE_STATS})
-        self.assertIsNone(data["ccache"])
+    def test_no_ninja_log_means_no_include_graph(self):
+        _, data, _ = self.run_main(tools={"ninja": DEPS})
+        self.assertIsNone(data["includes"])
+        self.assertFalse((self.out / "ninja-includes.json").exists())
 
     def test_a_failing_ccache_leaves_the_rest_intact(self):
         self.build.mkdir()

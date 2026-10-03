@@ -157,6 +157,37 @@ class ChangesTests(unittest.TestCase):
         self.assertEqual(0.0, report.cut_off(data, "headers", {}))
 
 
+class RunnerLineTests(unittest.TestCase):
+    def load(self, content):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "b.json"
+            path.write_text(content if isinstance(content, str) else json.dumps(content))
+            return report.load_runner(path)
+
+    def test_loads_a_valid_model_only(self):
+        self.assertEqual("AMD EPYC 7763", self.load({"runner": {"cpu_model": "AMD EPYC 7763", "cores": 4}}))
+        for bad in ({"runner": None}, {}, {"runner": {"cpu_model": "`x`"}}, {"runner": {"cpu_model": "a\nb"}}, {"runner": {"cpu_model": 5}}, [], "{broken"):
+            self.assertIsNone(self.load(bad), bad)
+        self.assertIsNone(report.load_runner(None))
+        self.assertIsNone(report.load_runner("/nonexistent/b.json"))
+
+    def test_the_comment_names_both_cpus_when_they_differ(self):
+        text = report.render(summary(), summary(), runner="EPYC 7763", base_runner="EPYC 9V45")
+        self.assertIn("Runner CPU: `EPYC 7763` here, `EPYC 9V45` for the baseline.", text)
+
+    def test_the_same_cpu_is_said_once(self):
+        text = report.render(summary(), summary(), runner="EPYC 7763", base_runner="EPYC 7763")
+        self.assertIn("Both runs used the runner CPU `EPYC 7763`.", text)
+
+    def test_an_old_baseline_without_runner_shows_this_cpu_only(self):
+        self.assertIn("Runner CPU: `EPYC 7763`.", report.render(summary(), summary(), runner="EPYC 7763"))
+        self.assertIn("Runner CPU: `EPYC 7763`.", report.render(summary(), None, runner="EPYC 7763", base_runner="EPYC 9V45"))
+
+    def test_without_data_there_is_no_line(self):
+        self.assertNotIn("Runner CPU", report.render(summary(), summary()))
+        self.assertNotIn("runner CPU", report.render(summary(), summary(), base_runner="EPYC 9V45"))
+
+
 class RenderTests(unittest.TestCase):
     def render(self, pr, base, **kwargs):
         return report.render(pr, base, **kwargs)
@@ -175,7 +206,7 @@ class RenderTests(unittest.TestCase):
         pr = summary(total=1000.0, headers=[header("include/a.hpp", 14.0, files=38), header("include/same.hpp", 5.1)])
         text = self.render(pr, base)
         self.assertIn("#### Headers that got heavier", text)
-        self.assertIn("| `include/a.hpp` | 10.0 s | 14.0 s | +4.0 s (+40%) | 30 → 38 |", text)
+        self.assertIn("| `include/a.hpp` | 10.0 s | 14.0 s | +4.0 s (+40%) | ~30 → ~38 |", text)
         self.assertNotIn("include/same.hpp` | 5.0 s", text.split("<details>")[0])
 
     def test_a_slower_runner_alone_changes_nothing(self):
@@ -202,7 +233,7 @@ class RenderTests(unittest.TestCase):
         base = summary(headers=[header("a.hpp", 5.0), header("b.hpp", 6.0)], limits={"files": 100, "headers": 2, "templates": 150})
         pr = summary(headers=[header("big.hpp", 9.0, files=12)])
         text = self.render(pr, base)
-        self.assertIn("| `big.hpp` | - | 9.0 s | +4.0 s (new in the list) | - → 12 |", text)
+        self.assertIn("| `big.hpp` | - | 9.0 s | +4.0 s (new in the list) | ~- → ~12 |", text)
 
     def test_the_most_changed_are_capped(self):
         base = summary(headers=[header(f"h{i}.hpp", 1.0) for i in range(30)])
@@ -264,6 +295,114 @@ class RenderTests(unittest.TestCase):
         pr = summary(headers=[header(f"h{i}.hpp", 5.0 + i % 3) for i in range(20)])
         base = summary(headers=[header(f"h{i}.hpp", 1.0) for i in range(20)])
         self.assertEqual(self.render(pr, base), self.render(pr, base))
+
+
+def inc(pairs=1000, project=300, digest="d1", fan_in=None):
+    return {"schema_version": 1, "kind": "ninja-includes-detail", "include_pairs": pairs, "project_pairs": project, "digest": digest, "fan_in": fan_in or {}}
+
+
+class IncludeGraphTests(unittest.TestCase):
+    def render(self, includes, base_includes, **kwargs):
+        return report.render(summary(), summary(), includes=includes, base_includes=base_includes, **kwargs)
+
+    def section(self, text):
+        return text.split("#### Include graph")[1].split("#### Headers that")[0]
+
+    def test_load_includes_validates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "i.json"
+            path.write_text(json.dumps(inc(fan_in={"a.hpp": 3, "bad": "x", "neg": -1})))
+            loaded = report.load_includes(path)
+            self.assertEqual({"a.hpp": 3}, loaded["fan_in"])
+            for content in ("{broken", "[]", json.dumps(dict(inc(), kind="job")), json.dumps(dict(inc(), include_pairs="1")), json.dumps(dict(inc(), fan_in=[]))):
+                path.write_text(content)
+                self.assertIsNone(report.load_includes(path), content)
+        self.assertIsNone(report.load_includes(None))
+        self.assertIsNone(report.load_includes("/nonexistent/i.json"))
+
+    def test_an_identical_graph_says_so_and_needs_no_table(self):
+        text = self.section(self.render(inc(digest="same", fan_in={"a.hpp": 1}), inc(digest="same", fan_in={"a.hpp": 1})))
+        self.assertIn("The include graph is identical to dev's (1,000 include pairs, 300 of them project headers).", text)
+        self.assertNotIn("| Header |", text)
+
+    def test_changed_fan_in_is_listed_exactly_largest_first_with_new_and_removed_headers(self):
+        base = inc(1000, 300, "d1", {"include/a.hpp": 120, "include/b.hpp": 10, "include/same.hpp": 7})
+        now = inc(1030, 330, "d2", {"include/a.hpp": 150, "include/c.hpp": 5, "include/same.hpp": 7})
+        text = self.section(self.render(now, base))
+        self.assertIn("| Include pairs (translation unit, header) | 1,000 | 1,030 | +30 (+3.0%) |", text)
+        self.assertIn("| ... of which project headers | 300 | 330 | +30 |", text)
+        self.assertIn("(3 in total, the 3 largest changes)", text)
+        rows = [line for line in text.splitlines() if line.startswith("| `")]
+        self.assertEqual(
+            ["| `include/a.hpp` | 120 | 150 | +30 |", "| `include/b.hpp` | 10 | - | -10 |", "| `include/c.hpp` | - | 5 | +5 |"],
+            rows,
+        )
+        self.assertNotIn("same.hpp", text)
+
+    def test_any_change_counts_there_is_no_threshold(self):
+        text = self.section(self.render(inc(digest="d2", fan_in={"a.hpp": 101}), inc(digest="d1", fan_in={"a.hpp": 100})))
+        self.assertIn("| `a.hpp` | 100 | 101 | +1 |", text)
+
+    def test_the_list_is_capped_and_says_how_many_changed(self):
+        base = inc(digest="d1", fan_in={f"h{i}.hpp": 1 for i in range(30)})
+        now = inc(digest="d2", fan_in={f"h{i}.hpp": 1 + i for i in range(30)})
+        text = self.section(self.render(now, base))
+        self.assertIn("(29 in total, the 10 largest changes)", text)
+        rows = [line for line in text.splitlines() if line.startswith("| `")]
+        self.assertEqual(report.SHOW_FAN_IN, len(rows))
+        self.assertTrue(rows[0].startswith("| `h29.hpp`"))
+
+    def test_a_different_graph_without_a_project_fan_in_change_is_explained(self):
+        text = self.section(self.render(inc(1010, 300, "d2", {"a.hpp": 1}), inc(1000, 300, "d1", {"a.hpp": 1})))
+        self.assertIn("No project header changed the number of files that include it", text)
+
+    def test_without_a_baseline_only_the_totals_are_shown(self):
+        text = report.render(summary(), None, includes=inc(5000, 700))
+        self.assertIn("| Include pairs (translation unit, header) | 5,000 |", text)
+        self.assertIn("| ... of which project headers | 700 |", text)
+
+    def test_without_include_data_there_is_no_section(self):
+        self.assertNotIn("Include graph", report.render(summary(), summary()))
+        self.assertNotIn("Include graph", report.render(summary(), None))
+
+    def test_exact_fan_in_replaces_the_approximate_files_column(self):
+        base = summary(headers=[header("include/a.hpp", 10.0, files=30), header("/usr/include/c++/14/format", 5.0, files=100)])
+        pr = summary(headers=[header("include/a.hpp", 14.0, files=38), header("/usr/include/c++/14/format", 9.0, files=90)])
+        text = report.render(pr, base, includes=inc(fan_in={"include/a.hpp": 41}), base_includes=inc(fan_in={"include/a.hpp": 40}))
+        heavier = text.split("#### Headers that got heavier")[1].split("<details>")[0]
+        self.assertIn("| `include/a.hpp` | 10.0 s | 14.0 s | +4.0 s (+40%) | 40 → 41 |", heavier)
+        self.assertIn("| `/usr/include/c++/14/format` | 5.0 s | 9.0 s | +4.0 s (+80%) | ~100 → ~90 |", heavier)
+
+    def test_every_heading_is_preceded_by_a_blank_line_and_blank_lines_do_not_pile_up(self):
+        base = summary(headers=[header("a.hpp", 5.0)])
+        for text in (
+            report.render(summary(headers=[header("a.hpp", 9.0)]), base, includes=inc(fan_in={"a.hpp": 2}), base_includes=inc(digest="d2", fan_in={"a.hpp": 1})),
+            report.render(summary(), None, includes=inc()),
+            report.render(summary(), base, includes=inc(), base_includes=inc()),
+        ):
+            lines = text.splitlines()
+            for number, line in enumerate(lines):
+                if line.startswith("#") and number > 1:  # the title follows the marker comment
+                    self.assertEqual("", lines[number - 1], line)
+                if number and lines[number - 1] == "" and line == "":
+                    self.fail(f"two blank lines before line {number}")
+
+    def test_hostile_header_names_are_made_safe(self):
+        evil = "x|y`z\n</details>"
+        text = self.render(inc(digest="d2", fan_in={evil: 5}), inc(digest="d1", fan_in={}))
+        row = [line for line in self.section(text).splitlines() if line.startswith("| `x")][0]
+        self.assertEqual(5, row.count("|"))
+        self.assertIn("x/y'z", row)
+
+    def test_main_passes_the_include_files_through(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name, data in (("pr.json", summary()), ("base.json", summary()), ("i.json", inc(digest="d2", fan_in={"a.hpp": 2})), ("bi.json", inc(digest="d1", fan_in={"a.hpp": 1}))):
+                (root / name).write_text(json.dumps(data))
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                report.main(["--pr", str(root / "pr.json"), "--baseline", str(root / "base.json"), "--includes", str(root / "i.json"), "--baseline-includes", str(root / "bi.json"), "--out", str(root / "r.md")])
+            self.assertIn("| `a.hpp` | 1 | 2 | +1 |", (root / "r.md").read_text())
 
 
 class FitAndUnavailableTests(unittest.TestCase):

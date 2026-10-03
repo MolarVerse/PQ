@@ -1,0 +1,1 @@
+- introduce new base type `Settings<T>` for settings

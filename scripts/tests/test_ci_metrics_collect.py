@@ -958,6 +958,7 @@ def make_summary(job_id=1000, run_id=100, attempt=1, **overrides):
             "hit_rate": 0.989,
             "counters": {"cache_miss": 2, "could_not_use_precompiled_header": 269, "direct_cache_hit": 179},
         },
+        "runner": {"cpu_model": "AMD EPYC 7763 64-Core Processor", "cores": 4},
     }
     summary.update(overrides)
     return summary
@@ -988,6 +989,26 @@ class SanitiseSummaryTests(unittest.TestCase):
     def test_missing_parts_may_be_null(self):
         clean = collect.sanitise_summary(make_summary(ninja=None, ccache=None))
         self.assertEqual((None, None), (clean["ninja"], clean["ccache"]))
+
+    def test_the_runner_passes_and_may_be_missing(self):
+        self.assertEqual({"cpu_model": "AMD EPYC 7763 64-Core Processor", "cores": 4}, collect.sanitise_summary(make_summary())["runner"])
+        old = make_summary()
+        del old["runner"]
+        self.assertIsNone(collect.sanitise_summary(old)["runner"])
+        self.assertIsNone(collect.sanitise_summary(make_summary(runner=None))["runner"])
+
+    def test_rejects_a_hostile_runner(self):
+        self.mutated(["runner", "cpu_model"], "x\n| injected |")
+        self.mutated(["runner", "cpu_model"], "`code`")
+        self.mutated(["runner", "cpu_model"], "<b>x</b>")
+        self.mutated(["runner", "cpu_model"], "x" * 81)
+        self.mutated(["runner", "cpu_model"], "")
+        self.mutated(["runner", "cpu_model"], 7)
+        self.mutated(["runner", "cores"], 0)
+        self.mutated(["runner", "cores"], 1025)
+        self.mutated(["runner", "cores"], "4")
+        self.mutated(["runner", "cores"], True)
+        self.rejected(runner="AMD")
 
     def test_an_unusable_ninja_log_keeps_its_error(self):
         ninja = {"log_version": 4, "complete": None, "steps": 0, "error": "no usable .ninja_log"}
@@ -1045,6 +1066,204 @@ class SanitiseSummaryTests(unittest.TestCase):
         self.assertEqual("tests/CMakeFiles/t.dir/t.cpp.o", clean["ninja"]["slowest"][0]["target"])
 
 
+def make_includes(**overrides):
+    includes = {
+        "objects": 403,
+        "unique_files": 1080,
+        "include_pairs": 189520,
+        "project_files": 402,
+        "project_pairs": 27820,
+        "digest": "a" * 64,
+        "top_project_files": [
+            {"file": "external/mstd/include/mstd/enum.hpp", "fan_in": 353},
+            {"file": "include/engine/engineOutput.hpp", "fan_in": 124},
+        ],
+    }
+    includes.update(overrides)
+    return includes
+
+
+def make_clang(**overrides):
+    clang = {
+        "schema_version": 1,
+        "kind": "clang-trace-summary",
+        "limits": {"files": 20, "headers": 30, "templates": 30},
+        "files": 403,
+        "unreadable": 0,
+        "total_s": 1234.198,
+        "frontend_s": 800.5,
+        "backend_s": 433.7,
+        "source_events": 54899,
+        "instantiation_events": 341005,
+        "slowest_files": [{"file": "src/constraints/mShake.cpp", "total_s": 18.3, "frontend_s": 7.7, "backend_s": 10.6}],
+        "headers": [{"header": "include/engine/engineOutput.hpp", "inclusive_s": 52.7, "self_s": 42.8, "events": 124, "files": 124}],
+        "templates": [{"name": "std::span<const ExceptionType>", "count": 298, "inclusive_s": 12.0, "self_s": 4.4}],
+    }
+    clang.update(overrides)
+    return clang
+
+
+class SanitiseIncludesTests(unittest.TestCase):
+    def clean(self, **overrides):
+        return collect.sanitise_summary(make_summary(includes=make_includes(**overrides)))["includes"]
+
+    def test_a_real_looking_graph_passes_and_extra_fields_are_dropped(self):
+        includes = make_includes(evil="x")
+        clean = collect.sanitise_summary(make_summary(includes=includes))["includes"]
+        self.assertEqual(("a" * 64, 189520), (clean["digest"], clean["include_pairs"]))
+        self.assertNotIn("evil", clean)
+        self.assertEqual(353, clean["top_project_files"][0]["fan_in"])
+
+    def test_missing_graph_is_none(self):
+        self.assertIsNone(collect.sanitise_summary(make_summary())["includes"])
+
+    def test_rejects_bad_digest_numbers_and_lists(self):
+        for overrides in (
+            {"digest": "A" * 64},
+            {"digest": "a" * 63},
+            {"digest": 5},
+            {"include_pairs": -1},
+            {"include_pairs": 1.5},
+            {"objects": "403"},
+            {"project_pairs": 10**13},
+            {"top_project_files": "x"},
+            {"top_project_files": [{"file": "a.hpp", "fan_in": 1}] * (collect.MAX_CLANG_LIST + 1)},
+            {"top_project_files": [{"file": "a\nb", "fan_in": 1}]},
+            {"top_project_files": [{"file": "", "fan_in": 1}]},
+            {"top_project_files": [{"file": "a.hpp", "fan_in": "2"}]},
+        ):
+            with self.assertRaises(ValueError, msg=str(overrides)[:60]):
+                self.clean(**overrides)
+
+
+class SanitiseClangTests(unittest.TestCase):
+    def clean(self, **overrides):
+        return collect.sanitise_summary(make_summary(), make_clang(**overrides))["clang"]
+
+    def test_a_real_looking_summary_passes_and_extra_fields_are_dropped(self):
+        clang = make_clang(evil=1)
+        clang["headers"][0]["evil"] = 1
+        clean = collect.sanitise_summary(make_summary(), clang)["clang"]
+        self.assertEqual((403, 1234.198), (clean["files"], clean["total_s"]))
+        self.assertNotIn("evil", clean)
+        self.assertNotIn("evil", clean["headers"][0])
+        self.assertEqual(124, clean["headers"][0]["files"])
+
+    def test_no_clang_part_is_none(self):
+        self.assertIsNone(collect.sanitise_summary(make_summary())["clang"])
+
+    def test_frontend_and_backend_of_a_file_may_be_null(self):
+        entry = {"file": "a.cpp", "total_s": 1.0, "frontend_s": None, "backend_s": None}
+        self.assertIsNone(self.clean(slowest_files=[entry])["slowest_files"][0]["frontend_s"])
+
+    def test_rejects_the_wrong_identity(self):
+        for overrides in ({"kind": "clang-trace-detail"}, {"kind": "job"}, {"schema_version": 2}):
+            with self.assertRaises(ValueError, msg=str(overrides)):
+                self.clean(**overrides)
+
+    def test_rejects_hostile_numbers_text_and_sizes(self):
+        header = make_clang()["headers"][0]
+        for overrides in (
+            {"total_s": float("nan")},
+            {"total_s": -1},
+            {"total_s": 10**9},
+            {"files": "403"},
+            {"source_events": 1.5},
+            {"limits": {"files": 0, "headers": 30, "templates": 30}},
+            {"limits": {"files": 20, "headers": 30}},
+            {"limits": "x"},
+            {"slowest_files": [{"file": "a", "total_s": 1.0, "frontend_s": 1.0, "backend_s": 1.0}] * (collect.MAX_CLANG_FILES + 1)},
+            {"slowest_files": [{"file": "a\nb", "total_s": 1.0, "frontend_s": 1.0, "backend_s": 1.0}]},
+            {"headers": [header] * (collect.MAX_CLANG_LIST + 1)},
+            {"headers": [dict(header, header="x" * (collect.MAX_TARGET_CHARS + 1))]},
+            {"headers": [dict(header, self_s=float("inf"))]},
+            {"headers": [dict(header, files=-1)]},
+            {"headers": "x"},
+            {"templates": [{"name": "", "count": 1, "inclusive_s": 1.0, "self_s": 1.0}]},
+            {"templates": [{"name": "T", "count": "1", "inclusive_s": 1.0, "self_s": 1.0}]},
+        ):
+            with self.assertRaises(ValueError, msg=str(overrides)[:70]):
+                self.clean(**overrides)
+
+    def test_the_clean_summary_is_independent_of_the_input(self):
+        clang = make_clang()
+        clean = collect.sanitise_summary(make_summary(), clang)["clang"]
+        clang["headers"][0]["header"] = "changed"
+        self.assertEqual("include/engine/engineOutput.hpp", clean["headers"][0]["header"])
+
+
+class ReadArtifactTests(unittest.TestCase):
+    def test_reads_both_members_and_ignores_the_others(self):
+        blob = make_zip(make_summary(), extra={"clang-traces.json": json.dumps(make_clang()), "ninja_log.txt": "x" * 100, "traces/big.json": "{}"})
+        summary, clang = collect.read_artifact(blob)
+        self.assertEqual(1000, summary["job_id"])
+        self.assertEqual("clang-trace-summary", clang["kind"])
+
+    def test_the_clang_member_is_optional_but_the_summary_is_not(self):
+        self.assertIsNone(collect.read_artifact(make_zip(make_summary()))[1])
+        with self.assertRaises(KeyError):
+            collect.read_artifact(make_zip(make_summary(), name="other.json", extra={"clang-traces.json": "{}"}))
+
+    def test_an_oversized_or_broken_clang_member_raises_what_the_collector_catches(self):
+        with self.assertRaises(ValueError) as raised:
+            collect.read_artifact(make_zip(make_summary(), extra={"clang-traces.json": " " * (collect.MAX_ARTIFACT_BYTES + 10)}))
+        self.assertNotIsInstance(raised.exception, json.JSONDecodeError)  # rejected by the size check, not by parsing
+        self.assertIn("too large", str(raised.exception))
+        with self.assertRaises(json.JSONDecodeError):
+            collect.read_artifact(make_zip(make_summary(), extra={"clang-traces.json": "{broken"}))
+
+
+class ClangRecordsTests(unittest.TestCase):
+    def build(self, event, zip_extra=True, summary=None):
+        run = make_run(100, "Clang Build", event, "dev" if event == "push" else "feature/x")
+        jobs = [make_job(1000, "clang-build")]
+        extra = {"clang-traces.json": json.dumps(make_clang())} if zip_extra else None
+        blob = make_zip(summary or make_summary(includes=make_includes()), extra=extra)
+        api = FakeApi(runs=[run], jobs={100: jobs}, artifacts={100: [make_artifact(5, "build-timings-clang-a1")]}, blobs={5: blob})
+        job_records, _, _ = records_for(run, jobs)
+        return collect.build_analysis_records(api, run, job_records)
+
+    def test_pushes_get_the_clang_summary_and_the_include_graph(self):
+        records, dropped = self.build("push")
+        self.assertEqual(0, sum(dropped.values()))
+        self.assertEqual([], validation_errors(records[0], ANALYSIS_SCHEMA))
+        self.assertEqual(1234.198, records[0]["clang"]["total_s"])
+        self.assertEqual("a" * 64, records[0]["includes"]["digest"])
+
+    def test_pull_requests_keep_the_include_graph_but_not_the_clang_summary(self):
+        records, _ = self.build("pull_request")
+        self.assertIsNone(records[0]["clang"])
+        self.assertEqual(189520, records[0]["includes"]["include_pairs"])
+        self.assertEqual([], validation_errors(records[0], ANALYSIS_SCHEMA))
+
+    def test_records_without_the_new_parts_still_validate(self):
+        records, _ = self.build("push", zip_extra=False, summary=make_summary())
+        self.assertEqual((None, None), (records[0]["clang"], records[0]["includes"]))
+        self.assertEqual([], validation_errors(records[0], ANALYSIS_SCHEMA))
+
+    def test_an_invalid_clang_part_drops_the_artifact_and_counts_it(self):
+        run = make_run(100, "Clang Build", "push", "dev")
+        jobs = [make_job(1000, "clang-build")]
+        bad = make_zip(make_summary(), extra={"clang-traces.json": json.dumps(make_clang(total_s=-5))})
+        api = FakeApi(runs=[run], jobs={100: jobs}, artifacts={100: [make_artifact(5, "build-timings-clang-a1")]}, blobs={5: bad})
+        job_records, _, _ = records_for(run, jobs)
+        records, dropped = collect.build_analysis_records(api, run, job_records)
+        self.assertEqual(([], {"invalid build-analysis artifact": 1}), (records, dict(dropped)))
+
+    def test_the_raw_trace_artifact_is_never_downloaded(self):
+        run = make_run(100, "Clang Build", "push", "dev")
+        jobs = [make_job(1000, "clang-build")]
+        artifacts = [make_artifact(5, "build-timings-clang-a1"), make_artifact(6, "clang-traces-clang-a1", size=30_000_000)]
+        api = FakeApi(runs=[run], jobs={100: jobs}, artifacts={100: artifacts}, blobs={5: make_zip(make_summary())})
+        job_records, _, _ = records_for(run, jobs)
+        collect.build_analysis_records(api, run, job_records)
+        self.assertEqual(["actions/artifacts/5/zip"], [c for c in api.calls if c.endswith("/zip")])
+
+    def test_the_clang_workflow_is_configured(self):
+        self.assertIn("Clang Build", CONFIG["workflows"])
+        self.assertIn("Clang Build", CONFIG["build_analysis_workflows"])
+
+
 class ReadSummaryTests(unittest.TestCase):
     def test_reads_the_json_from_the_zip(self):
         self.assertEqual(1000, collect.read_summary(make_zip(make_summary()))["job_id"])
@@ -1083,6 +1302,7 @@ class BuildAnalysisRecordsTests(unittest.TestCase):
             self.assertEqual(job[key], record[key], key)
         self.assertEqual("lint", record["job"])
         self.assertEqual(269, record["ccache"]["counters"]["could_not_use_precompiled_header"])
+        self.assertEqual({"cpu_model": "AMD EPYC 7763 64-Core Processor", "cores": 4}, record["runner"])
 
     def test_the_artifact_cannot_override_join_keys(self):
         summary = make_summary(workflow="Evil", branch="evil", head_sha="e" * 40, event="schedule", job="evil")

@@ -54,12 +54,13 @@ Written by `summarise_build.py` inside a CI job and uploaded as an artifact
 (`build-timings-<job>-a<attempt>`). The collector turns it into a `kind:
 "build-analysis"` record (`schema-build-analysis.json`) next to the job record,
 for the workflows listed in `config.json` under `build_analysis_workflows`
-(`BUILD` and `LINT`). Every part may be `null`.
+(`BUILD`, `LINT` and `Clang Build`). Every part may be `null`.
 
 **The record.** `workflow`, `run_id`, `run_attempt`, `event`, `branch`,
 `head_sha`, `job_id`, `job`, `created_at` and `conclusion` are copied from the
-job record and so are never taken from the artifact; `ninja` and `ccache` are the
-fields below. Join to the job record on `job_id`. The collector accepts an
+job record and so are never taken from the artifact; `ninja`, `ccache`, `includes`
+and `clang` are the parts below (`clang` only on records of pushes, see "Clang trace
+summary"). Records written before `includes` and `clang` existed lack those keys. Join to the job record on `job_id`. The collector accepts an
 artifact only if its `run_id`, `run_attempt` and `job_id` match a job of that run.
 
 **Trust.** An artifact of a pull request run is produced by code from that pull
@@ -89,6 +90,8 @@ for the join; `job_key` and `artifact` are not stored.)
 | `ninja.by_kind` | `steps` and `cpu_s` per `compile` (`.o`, `.gch`), `archive` (`.a`), `link` (executables and shared libraries) and `other`, classified by output file name. |
 | `ninja.slowest` | The 20 slowest steps: `target`, `kind`, `seconds`. |
 | `ninja.error` | Present instead of the figures if the log had an unsupported version or no steps. |
+| `includes` | `null` unless the job has a `.ninja_log` and `ninja -t deps` could be read. The exact include graph of the build, see below. |
+| `runner` | `null` on non-x86 runners and in records written before this field existed. Otherwise `cpu_model` (the `model name` line of `/proc/cpuinfo`, at most 80 characters from `A-Za-z0-9 ()@.,_+/-`) and `cores` (usable logical CPUs). The same code compiles up to 1.8x faster on one runner CPU than on another. |
 | `ccache` | `null` if ccache statistics were unavailable. |
 | `ccache.hits`, `misses`, `hit_rate` | Direct plus preprocessed hits, misses, and `hits / (hits + misses)` (of *cacheable* calls; `null` if there were none). |
 | `ccache.counters` | Every non-zero counter of `ccache --print-stats`, including the reasons calls were uncacheable. |
@@ -96,13 +99,36 @@ for the join; `job_key` and `artifact` are not stored.)
 The ccache counters cover the job only, because the setup action zeroes them at
 the start.
 
+**Include graph (`includes`).** From `ninja -t deps` after the build: for every
+object file the headers it depends on (its own source file is not counted).
+Unlike times and clang trace events this is **deterministic**: two builds of the same
+code give the same numbers, so any change is a real change (the SHA-256 of all pairs
+was identical in two clang runs, and the fan-in of expensive repository headers
+equals the number of files clang's trace reports for them).
+
+| Field | Meaning |
+| --- | --- |
+| `includes.objects` | Object files (translation units) with dependency data. |
+| `includes.unique_files` | Distinct files they depend on (system headers included). |
+| `includes.include_pairs` | Distinct (object, file) pairs. |
+| `includes.project_files`, `project_pairs` | The same restricted to project files: inside the repository and not in the build directory (generated headers are not project files). |
+| `includes.digest` | SHA-256 over all sorted (object, file) pairs with repository-relative project paths; equal digests mean identical include graphs, also across checkouts. |
+| `includes.top_project_files` | The 30 project files with the highest **fan-in** (number of objects that depend on them): `file`, `fan_in`. |
+
+A longer file, `ninja-includes.json` (kind `"ninja-includes-detail"`, the fan-in of every
+project file, at most 5,000), is in the artifact for the pull request comment; it is
+not part of the collected data.
+
 ## Clang trace summary (job side, version 1)
 
 Written by `summarise_traces.py` from the `-ftime-trace` JSON files clang writes
 next to every object file (`foo.cpp.o` gives `foo.cpp.json`), as `clang-traces.json`
-in the `build-timings-<job>-a<attempt>` artifact of the clang job. It is not part
-of the collected data yet (#749). A copy of the raw traces of the 20 slowest files is
-in the artifact's `traces/` directory (all traces together are far too large).
+in the `build-timings-<job>-a<attempt>` artifact of the clang job. The collector
+reads it from there and stores it as the `clang` part of the `build-analysis` record
+**of pushes to `dev`** (about 15 KB per record, which is why pull requests do not get
+it; the include graph and ninja parts are kept for every event). A copy of the raw
+traces of the 20 slowest files is in a **separate artifact**, `clang-traces-<job>-a<attempt>`
+(7 days), that the collector never downloads; all traces together are far too large.
 Times are seconds. The same script also writes `clang-traces-detail.json` (kind
 `"clang-trace-detail"`, same fields, lists of 100 files, 300 headers and 150
 templates) which the pull request comment compares against the `dev` baseline; it is

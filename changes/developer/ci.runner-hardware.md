@@ -1,0 +1,1 @@
+- Record the runner CPU model and core count (x86 only) in the build analysis, add a per-CPU table to the CI timings overview and name the CPUs of the run and the baseline in the clang build time comment.

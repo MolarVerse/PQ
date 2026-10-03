@@ -64,12 +64,18 @@ WORKERS = 8
 # every field from a whitelist and the join keys come from the API.
 ARTIFACT_PREFIX = "build-timings-"
 SUMMARY_NAME = "build-analysis.json"
+CLANG_NAME = "clang-traces.json"
+CLANG_EVENTS = {"push"}
+MAX_CLANG_LIST = 30
+MAX_CLANG_FILES = 20
+DIGEST = re.compile(r"^[0-9a-f]{64}$")
 MAX_ARTIFACT_BYTES = 1_000_000
 MAX_TARGET_CHARS = 300
 MAX_SLOWEST = 20
 MAX_COUNTERS = 200
 STEP_KINDS = ("compile", "archive", "link", "other")
 COUNTER_NAME = re.compile(r"^[a-z0-9_]{1,64}$")
+CPU_MODEL = re.compile(r"[A-Za-z0-9 ()@.,_+/-]{1,80}")
 
 
 class ApiError(Exception):
@@ -470,6 +476,14 @@ def _text(value, what, *, limit=200):
     return value
 
 
+def _sanitise_runner(raw):
+    raw = _object(raw, "runner")
+    model = raw.get("cpu_model")
+    if not isinstance(model, str) or not CPU_MODEL.fullmatch(model):
+        raise ValueError("runner.cpu_model: unexpected characters or length")
+    return {"cpu_model": model, "cores": _integer(raw.get("cores"), "runner.cores", low=1, high=1024)}
+
+
 def _sanitise_ccache(raw):
     raw = _object(raw, "ccache")
     counters = _object(raw.get("counters"), "ccache.counters")
@@ -488,11 +502,100 @@ def _sanitise_ccache(raw):
     }
 
 
-def sanitise_summary(raw):
+def _sanitise_includes(raw):
+    raw = _object(raw, "includes")
+    digest = raw.get("digest")
+    if not isinstance(digest, str) or not DIGEST.match(digest):
+        raise ValueError("includes.digest: expected a SHA-256 hex digest")
+    top = raw.get("top_project_files")
+    if not isinstance(top, list) or len(top) > MAX_CLANG_LIST:
+        raise ValueError(f"includes.top_project_files: expected a list of at most {MAX_CLANG_LIST}")
+    clean = {
+        "objects": _integer(raw.get("objects"), "includes.objects"),
+        "unique_files": _integer(raw.get("unique_files"), "includes.unique_files"),
+        "include_pairs": _integer(raw.get("include_pairs"), "includes.include_pairs"),
+        "project_files": _integer(raw.get("project_files"), "includes.project_files"),
+        "project_pairs": _integer(raw.get("project_pairs"), "includes.project_pairs"),
+        "digest": digest,
+        "top_project_files": [],
+    }
+    for number, entry in enumerate(top):
+        entry = _object(entry, f"includes.top_project_files[{number}]")
+        clean["top_project_files"].append(
+            {
+                "file": _text(entry.get("file"), f"includes.top_project_files[{number}].file", limit=MAX_TARGET_CHARS),
+                "fan_in": _integer(entry.get("fan_in"), f"includes.top_project_files[{number}].fan_in"),
+            }
+        )
+    return clean
+
+
+def _list_of(raw, key, maximum):
+    items = raw.get(key)
+    if not isinstance(items, list) or len(items) > maximum:
+        raise ValueError(f"clang.{key}: expected a list of at most {maximum}")
+    return items
+
+
+def _sanitise_clang(raw):
+    """The clang trace summary (summarise_traces.py), rebuilt from a whitelist."""
+    raw = _object(raw, "clang")
+    if raw.get("schema_version") != SCHEMA_VERSION or raw.get("kind") != "clang-trace-summary":
+        raise ValueError("not a version 1 clang-trace-summary")
+    limits = _object(raw.get("limits"), "clang.limits")
+    clean = {
+        "limits": {key: _integer(limits.get(key), f"clang.limits.{key}", low=1, high=10**5) for key in ("files", "headers", "templates")},
+        "files": _integer(raw.get("files"), "clang.files"),
+        "unreadable": _integer(raw.get("unreadable"), "clang.unreadable"),
+        "total_s": _number(raw.get("total_s"), "clang.total_s", high=10**8),
+        "frontend_s": _number(raw.get("frontend_s"), "clang.frontend_s", high=10**8),
+        "backend_s": _number(raw.get("backend_s"), "clang.backend_s", high=10**8),
+        "source_events": _integer(raw.get("source_events"), "clang.source_events"),
+        "instantiation_events": _integer(raw.get("instantiation_events"), "clang.instantiation_events"),
+        "slowest_files": [],
+        "headers": [],
+        "templates": [],
+    }
+    for number, entry in enumerate(_list_of(raw, "slowest_files", MAX_CLANG_FILES)):
+        entry = _object(entry, f"clang.slowest_files[{number}]")
+        clean["slowest_files"].append(
+            {
+                "file": _text(entry.get("file"), f"clang.slowest_files[{number}].file", limit=MAX_TARGET_CHARS),
+                "total_s": _number(entry.get("total_s"), f"clang.slowest_files[{number}].total_s"),
+                "frontend_s": _number(entry.get("frontend_s"), f"clang.slowest_files[{number}].frontend_s", nullable=True),
+                "backend_s": _number(entry.get("backend_s"), f"clang.slowest_files[{number}].backend_s", nullable=True),
+            }
+        )
+    for number, entry in enumerate(_list_of(raw, "headers", MAX_CLANG_LIST)):
+        entry = _object(entry, f"clang.headers[{number}]")
+        clean["headers"].append(
+            {
+                "header": _text(entry.get("header"), f"clang.headers[{number}].header", limit=MAX_TARGET_CHARS),
+                "inclusive_s": _number(entry.get("inclusive_s"), f"clang.headers[{number}].inclusive_s"),
+                "self_s": _number(entry.get("self_s"), f"clang.headers[{number}].self_s"),
+                "events": _integer(entry.get("events"), f"clang.headers[{number}].events"),
+                "files": _integer(entry.get("files"), f"clang.headers[{number}].files"),
+            }
+        )
+    for number, entry in enumerate(_list_of(raw, "templates", MAX_CLANG_LIST)):
+        entry = _object(entry, f"clang.templates[{number}]")
+        clean["templates"].append(
+            {
+                "name": _text(entry.get("name"), f"clang.templates[{number}].name", limit=MAX_TARGET_CHARS),
+                "count": _integer(entry.get("count"), f"clang.templates[{number}].count"),
+                "inclusive_s": _number(entry.get("inclusive_s"), f"clang.templates[{number}].inclusive_s"),
+                "self_s": _number(entry.get("self_s"), f"clang.templates[{number}].self_s"),
+            }
+        )
+    return clean
+
+
+def sanitise_summary(raw, clang=None):
     """Validate the JSON a job uploaded and return only whitelisted parts.
 
-    Returns {"run_id", "run_attempt", "job_id", "ninja", "ccache"}; raises
-    ValueError on anything unexpected.
+    `clang` is the parsed clang-traces.json of the same artifact, if any. Returns
+    {"run_id", "run_attempt", "job_id", "runner", "ninja", "ccache", "includes", "clang"};
+    raises ValueError on anything unexpected.
     """
     raw = _object(raw, "summary")
     if raw.get("schema_version") != SCHEMA_VERSION or raw.get("kind") != "build-analysis":
@@ -501,19 +604,38 @@ def sanitise_summary(raw):
         "run_id": _integer(raw.get("run_id"), "run_id", high=10**15),
         "run_attempt": _integer(raw.get("run_attempt"), "run_attempt", low=1, high=10**4),
         "job_id": _integer(raw.get("job_id"), "job_id", high=10**15),
+        "runner": None if raw.get("runner") is None else _sanitise_runner(raw["runner"]),
         "ninja": None if raw.get("ninja") is None else _sanitise_ninja(raw["ninja"]),
         "ccache": None if raw.get("ccache") is None else _sanitise_ccache(raw["ccache"]),
+        "includes": None if raw.get("includes") is None else _sanitise_includes(raw["includes"]),
+        "clang": None if clang is None else _sanitise_clang(clang),
     }
+
+
+def read_member(archive, name):
+    """The parsed JSON member of an artifact zip, or None if it is not in the archive."""
+    try:
+        info = archive.getinfo(name)
+    except KeyError:
+        return None
+    if info.file_size > MAX_ARTIFACT_BYTES:
+        raise ValueError(f"{name} too large")
+    with archive.open(info) as handle:
+        return json.loads(handle.read(MAX_ARTIFACT_BYTES + 1))
+
+
+def read_artifact(blob):
+    """(build-analysis.json, clang-traces.json or None) of an artifact zip."""
+    with zipfile.ZipFile(io.BytesIO(blob)) as archive:
+        summary = read_member(archive, SUMMARY_NAME)
+        if summary is None:
+            raise KeyError(SUMMARY_NAME)
+        return summary, read_member(archive, CLANG_NAME)
 
 
 def read_summary(blob):
     """The parsed build-analysis.json inside an artifact zip."""
-    with zipfile.ZipFile(io.BytesIO(blob)) as archive:
-        info = archive.getinfo(SUMMARY_NAME)
-        if info.file_size > MAX_ARTIFACT_BYTES:
-            raise ValueError("summary too large")
-        with archive.open(info) as handle:
-            return json.loads(handle.read(MAX_ARTIFACT_BYTES + 1))
+    return read_artifact(blob)[0]
 
 
 def build_analysis_records(api, run, job_records):
@@ -544,7 +666,7 @@ def build_analysis_records(api, run, job_records):
                 continue
             raise
         try:
-            summary = sanitise_summary(read_summary(blob))
+            summary = sanitise_summary(*read_artifact(blob))
         except (ValueError, KeyError, zipfile.BadZipFile, json.JSONDecodeError):
             dropped["invalid build-analysis artifact"] += 1
             continue
@@ -570,8 +692,11 @@ def build_analysis_records(api, run, job_records):
                 "job": job["job"],
                 "created_at": job["created_at"],
                 "conclusion": job["conclusion"],
+                "runner": summary["runner"],
                 "ninja": summary["ninja"],
                 "ccache": summary["ccache"],
+                "includes": summary["includes"],
+                "clang": summary["clang"] if job["event"] in CLANG_EVENTS else None,
             }
         )
     return records, dropped

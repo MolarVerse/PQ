@@ -16,15 +16,23 @@ trace, so a faster run records fewer events, and the counts of header
 inclusions and template instantiations (and the self time of headers made of
 many small events) are speed-dependent too. Counts are therefore shown without
 a percentage change.
+
+The include graph (from `ninja -t deps`, see summarise_build.py) is exact and
+the same for two builds of the same code, so its changes need no threshold or
+speed adjustment: the totals and the headers whose fan-in (number of files that
+include them) changed are shown as they are.
 """
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
 MARKER = "<!-- clang-build-times-comment -->"
 DETAIL_KIND = "clang-trace-detail"
+INCLUDES_KIND = "ninja-includes-detail"
+CPU_MODEL = re.compile(r"[A-Za-z0-9 ()@.,_+/-]{1,80}")
 SUMMARY_KINDS = (DETAIL_KIND, "clang-trace-summary")
 
 # A change is listed only if it is both large enough in seconds and in percent.
@@ -33,6 +41,7 @@ FILE_MIN_S, FILE_MIN_REL = 1.0, 0.20
 TEMPLATE_MIN_S, TEMPLATE_MIN_REL = 0.5, 0.20
 SHOW_HEAVIER = 10
 SHOW_LIGHTER = 5
+SHOW_FAN_IN = 10
 SHOW_FILES = 5
 SHOW_TEMPLATES = 5
 DETAIL_FILES, DETAIL_HEADERS, DETAIL_TEMPLATES = 20, 30, 30
@@ -62,6 +71,46 @@ def load_summary(path):
         if not is_number(data.get(key)):
             return None
     return data
+
+
+def load_runner(path):
+    """The CPU model recorded in a build-analysis.json, or None if missing or not usable."""
+    if not path:
+        return None
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        model = data["runner"]["cpu_model"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    return model if isinstance(model, str) and CPU_MODEL.fullmatch(model) else None
+
+
+def runner_line(model, base_model):
+    """One sentence on the CPUs of this run and of the baseline, or None without data."""
+    if model is None:
+        return None
+    if base_model is None:
+        return f"Runner CPU: `{model}`."
+    if model == base_model:
+        return f"Both runs used the runner CPU `{model}`."
+    return f"Runner CPU: `{model}` here, `{base_model}` for the baseline. Runner CPUs differ in speed, so part of the change can be the hardware."
+
+
+def load_includes(path):
+    """The parsed include graph detail, or None if missing or not usable."""
+    if not path:
+        return None
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(data, dict) or data.get("kind") != INCLUDES_KIND:
+        return None
+    fan_in = data.get("fan_in")
+    if not is_number(data.get("include_pairs")) or not is_number(data.get("project_pairs")) or not isinstance(fan_in, dict):
+        return None
+    clean = {name: count for name, count in fan_in.items() if isinstance(name, str) and is_number(count) and count >= 0}
+    return dict(data, fan_in=clean)
 
 
 def is_number(value):
@@ -174,7 +223,7 @@ def headline_rows(pr, base):
     return rows
 
 
-def header_section(pr, base, scale):
+def header_section(pr, base, scale, includes=None, base_includes=None):
     pr_self = {e["header"]: e["self_s"] for e in entries(pr, "headers", "header", ("self_s",))}
     pr_files = {e["header"]: e.get("files") for e in entries(pr, "headers", "header", ("self_s",))}
     base_entries = entries(base, "headers", "header", ("self_s",))
@@ -182,13 +231,19 @@ def header_section(pr, base, scale):
     base_files = {e["header"]: e.get("files") for e in base_entries}
     rows = changes(base_self, pr_self, scale, cut_off(base, "headers", base_self), HEADER_MIN_S, HEADER_MIN_REL)
 
+    exact_before = base_includes["fan_in"] if base_includes else {}
+    exact_after = includes["fan_in"] if includes else {}
+
     def files_cell(name):
+        if name in exact_before or name in exact_after:
+            before, after = exact_before.get(name), exact_after.get(name)
+            return f"{before if before is not None else '-'} → {after if after is not None else '-'}"
         before, after = base_files.get(name), pr_files.get(name)
-        return f"{before if before is not None else '-'} → {after if after is not None else '-'}"
+        return f"~{before if before is not None else '-'} → ~{after if after is not None else '-'}"
 
     def render(selected):
         return table(
-            ["Header", "Self time before", "Self time now", "Change (speed-adjusted)", "Files including it (approx.)"],
+            ["Header", "Self time before", "Self time now", "Change (speed-adjusted)", "Files including it (exact, ~ = from the trace)"],
             [
                 [
                     code(row[0]),
@@ -210,6 +265,54 @@ def simple_changes(pr, base, scale, key, name_key, value_key, minimum, relative)
     pr_values = {e[name_key]: e[value_key] for e in entries(pr, key, name_key, (value_key,))}
     base_values = {e[name_key]: e[value_key] for e in entries(base, key, name_key, (value_key,))}
     return changes(base_values, pr_values, scale, cut_off(base, key, base_values), minimum, relative)
+
+
+def fan_in_changes(base, pr):
+    """[(header, before or None, now or None, delta)] for every project header whose fan-in changed."""
+    rows = []
+    for name in set(base) | set(pr):
+        before, after = base.get(name), pr.get(name)
+        delta = (after or 0) - (before or 0)
+        if delta:
+            rows.append((name, before, after, delta))
+    return sorted(rows, key=lambda row: (-abs(row[3]), row[0]))
+
+
+def signed(value):
+    return f"{value:+,}"
+
+
+def include_section(includes, base_includes):
+    """The exact include graph part of the comment (Markdown lines)."""
+    lines = ["#### Include graph (exact, from `ninja -t deps`)", ""]
+    pairs, project = includes["include_pairs"], includes["project_pairs"]
+    if base_includes is None:
+        lines += table(["", "This pull request"], [["Include pairs (translation unit, header)", f"{int(pairs):,}"], ["... of which project headers", f"{int(project):,}"]])
+        return lines
+    if includes.get("digest") and includes.get("digest") == base_includes.get("digest"):
+        lines += [f"The include graph is identical to dev's ({int(pairs):,} include pairs, {int(project):,} of them project headers)."]
+        return lines
+    lines += table(
+        ["", "dev", "This pull request", "Change"],
+        [
+            ["Include pairs (translation unit, header)", f"{int(base_includes['include_pairs']):,}", f"{int(pairs):,}", f"{signed(int(pairs - base_includes['include_pairs']))} ({format_percent_change(base_includes['include_pairs'], pairs)})"],
+            ["... of which project headers", f"{int(base_includes['project_pairs']):,}", f"{int(project):,}", signed(int(project - base_includes["project_pairs"]))],
+        ],
+    )
+    changed = fan_in_changes(base_includes["fan_in"], includes["fan_in"])
+    lines.append("")
+    if not changed:
+        lines.append("No project header changed the number of files that include it (the graph differs elsewhere, for example in system headers).")
+        return lines
+    lines += [f"**Project headers whose fan-in (number of files including them) changed** ({len(changed)} in total, the {min(SHOW_FAN_IN, len(changed))} largest changes):", ""]
+    lines += table(
+        ["Header", "Included by before", "Included by now", "Change"],
+        [
+            [code(name), "-" if before is None else str(int(before)), "-" if after is None else str(int(after)), signed(int(delta))]
+            for name, before, after, delta in changed[:SHOW_FAN_IN]
+        ],
+    )
+    return lines
 
 
 def detail_tables(pr):
@@ -249,19 +352,25 @@ NOTES = (
 )
 
 
-def render(pr, base, *, baseline_sha=None, run_url=None):
+def render(pr, base, *, baseline_sha=None, run_url=None, includes=None, base_includes=None, runner=None, base_runner=None):
     """The Markdown comment for a pull request with trace data."""
     lines = [MARKER, "### Clang build times (clang-20, Debug), informational", ""]
+    note = runner_line(runner, base_runner if base is not None else None)
     if base is None:
         lines += ["No baseline yet: no `dev` run has stored its clang summary (or it expired), so only this pull request's numbers are shown.", ""]
+        lines += [note, ""] if note else []
         lines += table(["", "This pull request"], headline_rows(pr, None))
+        if includes is not None:
+            lines += [""] + include_section(includes, None)
     else:
         sha = f"`{str(baseline_sha)[:7]}`" if baseline_sha else "a recent run"
-        lines += [f"Compared with `dev` {sha}.", ""]
+        lines += [f"Compared with `dev` {sha}.", ""] + ([note, ""] if note else [])
         lines += table(["", "dev", "This pull request", "Change"], headline_rows(pr, base))
         scale = speed_factor(pr, base)
         lines += ["", f"The compiler time of this run was {scale:.2f} times the baseline's; per-item changes below are measured after scaling the baseline by that factor.", ""]
-        heavier, lighter, render_headers = header_section(pr, base, scale)
+        if includes is not None:
+            lines += include_section(includes, base_includes) + ["", "<sub>The baseline is the newest dev build, so commits merged to dev since then also show up here.</sub>", ""]
+        heavier, lighter, render_headers = header_section(pr, base, scale, includes, base_includes)
         lines += ["#### Headers that got heavier", ""]
         if heavier:
             lines += render_headers(heavier)
@@ -281,7 +390,9 @@ def render(pr, base, *, baseline_sha=None, run_url=None):
             more += ["**Template instantiations that changed most**", ""] + simple_rows(shown_templates, "Instantiation") + [""]
         if more:
             lines += ["<details><summary>More changes</summary>", ""] + more + ["</details>", ""]
-    lines += [""] + detail_tables(pr) + ["", NOTES]
+    if lines[-1] != "":
+        lines.append("")
+    lines += detail_tables(pr) + ["", NOTES]
     if run_url:
         lines += ["", f"[Workflow run]({run_url})"]
     return fit("\n".join(lines) + "\n")
@@ -321,6 +432,10 @@ def parse_args(argv):
     parser.add_argument("--pr", required=True, help="clang-traces-detail.json of this build")
     parser.add_argument("--baseline", help="clang-traces-detail.json of a recent dev build")
     parser.add_argument("--baseline-sha", help="dev commit of the baseline")
+    parser.add_argument("--includes", help="ninja-includes.json of this build (exact include graph)")
+    parser.add_argument("--baseline-includes", help="ninja-includes.json of the dev build")
+    parser.add_argument("--runner", help="build-analysis.json of this build (runner CPU)")
+    parser.add_argument("--baseline-runner", help="build-analysis.json of the dev build")
     parser.add_argument("--run-url", help="link to this workflow run")
     parser.add_argument("--status", default="success", help="outcome of the clang build step")
     parser.add_argument("--out", required=True, help="Markdown file to write")
@@ -333,7 +448,16 @@ def main(argv=None):
     if pr is None:
         text = render_unavailable(args.status, args.run_url)
     else:
-        text = render(pr, load_summary(args.baseline), baseline_sha=args.baseline_sha, run_url=args.run_url)
+        text = render(
+            pr,
+            load_summary(args.baseline),
+            baseline_sha=args.baseline_sha,
+            run_url=args.run_url,
+            includes=load_includes(args.includes),
+            base_includes=load_includes(args.baseline_includes),
+            runner=load_runner(args.runner),
+            base_runner=load_runner(args.baseline_runner),
+        )
     Path(args.out).write_text(text, encoding="utf-8")
     print(f"wrote {args.out} ({len(text):,} characters, {'no trace data' if pr is None else 'baseline ' + ('found' if args.baseline and load_summary(args.baseline) else 'missing')})")
     return 0

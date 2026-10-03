@@ -215,7 +215,7 @@ All pipelines are in `.github/workflows/`:
 
 | Workflow                           | Trigger                     | Purpose                                              |
 | ----------------------------------- | ---------------------------- | ----------------------------------------------------- |
-| `ci_build.yml`                      | PRs (any branch), push to `dev`/`main` | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build + MPI build |
+| `ci_build.yml`                      | PRs (any branch), push to `dev`/`main` | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build |
 | `clang_format.yml`                   | PRs to `main`/`dev`          | `git-clang-format` on changed C/C++ lines             |
 | `license_check.yml`                 | PRs (any branch), push to `main`/`master` | Exact GPL header check on all C/C++ files       |
 | `perf.yml`                           | PRs to `main`/`dev`          | Callgrind instruction-count regression gate           |

@@ -9,6 +9,8 @@ clang writes one Chrome-trace JSON file next to every object file
   clang-traces-detail.json  the same with longer lists, for comparing two builds
                             (the pull request comment); not part of the collected data
   traces/                   the raw traces of the slowest files, flattened names
+                            (or --raw-out: a separate directory, so that the large raw
+                            traces can be uploaded apart from the small summaries)
 
 The summary has the totals (compiler, frontend, backend), the slowest files,
 the heaviest headers by inclusion time, the most expensive template
@@ -316,6 +318,7 @@ def parse_args(argv):
     parser.add_argument("--source-root", default=".", help="repository root, stripped from paths")
     parser.add_argument("--out", required=True, help="directory for the summary and the raw traces")
     parser.add_argument("--no-raw", action="store_true", help="do not copy the heaviest raw traces")
+    parser.add_argument("--raw-out", help="directory for the raw traces (default: <out>/traces)")
     parser.add_argument("--no-detail", action="store_true", help=f"do not write {DETAIL_NAME}")
     return parser.parse_args(argv)
 
@@ -337,7 +340,7 @@ def main(argv=None):
         )
         (out / DETAIL_NAME).write_text(json.dumps(detail, separators=(",", ":")) + "\n", encoding="utf-8")
     if not args.no_raw and heaviest:
-        copy_raw_traces(heaviest, args.build_dir, out)
+        copy_raw_traces(heaviest, args.build_dir, Path(args.raw_out) if args.raw_out else out)
     print(
         f"wrote {out / SUMMARY_NAME}: {summary['files']} traces ({summary['unreadable']} unreadable), "
         f"total {summary['total_s']} s (frontend {summary['frontend_s']} s, backend {summary['backend_s']} s)"

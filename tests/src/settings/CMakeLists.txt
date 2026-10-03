@@ -12,6 +12,7 @@ set(source_files
     testConvergenceSettings.cpp
     testHessianSettings.cpp
     testWaterModelSettings.cpp
+    testSetting.cpp
 )
 
 foreach(source_file ${source_files})
