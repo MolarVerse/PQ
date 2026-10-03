@@ -26,6 +26,7 @@
 #include <cmath>
 #include <cstddef>
 #include <memory>
+#include <numbers>
 #include <string>
 #include <utility>
 
@@ -545,12 +546,13 @@ TEST(IntraWater, SpcModelsStayFiniteNextToTheDegenerateGeometries)
 {
     settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
 
-    constexpr double pi = 3.14159265358979323846;
-
     // a linear molecule is not degenerate: sin(pi) does not vanish in floating
     // point and the cross product is exactly zero
     waterModel::SPCFwIntraWater spcFw;
-    expectFiniteAndConservative(spcFw, {.oh1 = 1.04, .oh2 = 0.97, .angle = pi});
+    expectFiniteAndConservative(
+        spcFw,
+        {.oh1 = 1.04, .oh2 = 0.97, .angle = std::numbers::pi}
+    );
 
     // a tiny but non-zero angle and a very short bond are finite as well
     expectFiniteAndConservative(
@@ -608,8 +610,6 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
 {
     settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
 
-    constexpr double pi = 3.14159265358979323846;
-
     waterModel::SPCMTRIntraWater spcMtr;
 
     // angle 0 with different bond lengths: the hydrogens are apart (no divisor
@@ -621,7 +621,7 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
     // a linear molecule
     expectFiniteAndConservative(
         spcMtr,
-        {.oh1 = 1.04, .oh2 = 0.97, .angle = pi}
+        {.oh1 = 1.04, .oh2 = 0.97, .angle = std::numbers::pi}
     );
 }
 
