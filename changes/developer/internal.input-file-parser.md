@@ -24,3 +24,4 @@
 - migrate `ThermostatInputParser`
 - migrate `ConvergenceInputParser`
 - migrate `QMInputParser`
+- migrate `HybridInputParser`

@@ -23,6 +23,7 @@
 #ifndef _INPUT_PARAM_TPP_
 #define _INPUT_PARAM_TPP_
 
+#include <concepts>
 #include <mstd/type_traits.hpp>
 
 #include "exceptions.hpp"
@@ -71,8 +72,10 @@ namespace input
         );
         const auto raw = mstd::join(rawElements);
 
+        auto converter = Converter<T>(_metadata.name, raw);
+
         std::optional<T> parsed =
-            _customParser ? _customParser(raw) : Converter<T>::tryParse(raw);
+            _customParser ? _customParser(raw) : converter.tryParse(raw);
 
         if (!parsed)
         {
@@ -89,23 +92,26 @@ namespace input
                           raw,
                           _metadata.name,
                           lineNumber,
-                          Converter<T>::describeDomain(_notAllowed)
+                          converter.describeDomain(_notAllowed)
                       )
             );
         }
 
-        if (!_notAllowed.empty() &&
-            std::ranges::find(_notAllowed, *parsed) != _notAllowed.end())
+        if constexpr (!std::same_as<T, SelectionTag>)
         {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid value \"{}\" for key \"{}\" at line {} in "
-                    "input file: not allowed",
-                    raw,
-                    _metadata.name,
-                    lineNumber
-                )
-            );
+            if (!_notAllowed.empty() &&
+                std::ranges::find(_notAllowed, *parsed) != _notAllowed.end())
+            {
+                throw exc::InputFileException(
+                    std::format(
+                        "Invalid value \"{}\" for key \"{}\" at line {} in "
+                        "input file: not allowed",
+                        raw,
+                        _metadata.name,
+                        lineNumber
+                    )
+                );
+            }
         }
 
         if (!_validators.empty())
@@ -318,8 +324,14 @@ namespace input
             result += "}";
             return result;
         }
+        else if constexpr (std::same_as<T, SelectionTag>)
+        {
+            return mstd::join(value.indices, ", ");
+        }
         else
+        {
             return std::format("{}", value);
+        }
     }
 }   // namespace input
 

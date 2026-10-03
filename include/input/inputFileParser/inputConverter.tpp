@@ -146,6 +146,18 @@ namespace input
     }
 
     /**
+     * @brief Constructor for ConverterBase
+     *
+     * @param key the key associated with the input value
+     * @param raw the raw input value as a string
+     */
+    template <typename T>
+    ConverterBase<T>::ConverterBase(std::string key, std::string raw)
+        : _key(std::move(key)), _raw(std::move(raw))
+    {
+    }
+
+    /**
      * @brief describes the valid domain of T for error messages
      *
      * @details falls back to a generic placeholder for types without a

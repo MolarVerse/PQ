@@ -23,9 +23,15 @@
 #include "inputConverter.hpp"
 
 #include <ranges>
+#include <string>
 #include <unordered_map>
 
 #include "stringUtilities.hpp"
+
+#ifdef PYTHON_ENABLED
+#include "fileSettings.hpp"   // for FileSettings
+#include "selection.hpp"      // for parseSelection
+#endif
 
 namespace input
 {
@@ -148,6 +154,57 @@ namespace input
     }
 
     /**
+     * @brief attempts to parse a SelectionTag from a raw input-file token
+     *
+     * @param raw the raw input-file token
+     * @return an optional containing the parsed SelectionTag if successful,
+     *         std::nullopt otherwise
+     */
+    std::optional<SelectionTag> Converter<SelectionTag>::tryParse(
+        std::string_view raw
+    )
+    {
+        std::vector<int> selectionVec;
+
+        if (raw.empty())
+            return SelectionTag{.indices = {0}};
+
+        auto needsPython = false;
+        if (raw.find_first_not_of("0123456789,-") != std::string::npos)
+            needsPython = true;
+
+#ifdef PYTHON_ENABLED
+        std::string restartFile = FileSettings::getStartFileName();
+        std::string moldescFile = FileSettings::getMolDescriptorFileName();
+
+        if (needsPython)
+            selectionVec = pq_python::select(raw, restartFile, moldescFile);
+#else
+
+        // check if string contains any characters that are not digits or commas
+        if (needsPython)
+        {
+            _selectionError = SelectionError::NeedsPython;
+            return std::nullopt;
+        }
+#endif
+
+        if (!needsPython)
+        {
+            const auto result = _parseSelectionNoPython(std::string(raw));
+            if (!result)
+                return std::nullopt;
+            selectionVec = result.value();
+        }
+
+        std::ranges::sort(selectionVec);
+        auto ret = std::ranges::unique(selectionVec);
+        selectionVec.erase(ret.begin(), ret.end());
+
+        return SelectionTag{.indices = std::move(selectionVec)};
+    }
+
+    /**
      * @brief describes the domain of valid File inputs
      *
      * @return a string describing the domain
@@ -200,6 +257,164 @@ namespace input
     {
         return "Value must be a comma-separated list of key:value pairs, where "
                "the key is a string and the value is a double.";
+    }
+
+    std::string Converter<SelectionTag>::describeDomain(
+        const std::vector<SelectionTag>& /*notAllowed*/
+    )
+    {
+        switch (_selectionError)
+        {
+            case SelectionError::NeedsPython:
+                return std::format(
+                    "The value {} contains characters that are not "
+                    "digits, \"-\" or commas. The current build of PQ was "
+                    "compiled without Python bindings, so the string must be a "
+                    "comma-separated list of integers, representing the atom "
+                    "indices in the restart file that should be treated as the "
+                    "desired key. In order to use the full selection parser "
+                    "power of the PQAnalysis Python package, the PQ build must "
+                    "be compiled with Python bindings.",
+                    _getRaw()
+                );
+            case SelectionError::InvalidStartIndex:
+                return "The start index of the selection is invalid. Must be a "
+                       "valid integer.";
+            case SelectionError::OutOfRangeStartIndex:
+                return "The start index of the selection is out of range.";
+            case SelectionError::InvalidEndIndex:
+                return "The end index of the selection is invalid. Must be a "
+                       "valid integer.";
+            case SelectionError::OutOfRangeEndIndex:
+                return "The end index of the selection is out of range.";
+            case SelectionError::InvalidAtomIndex:
+                return "An atom index in the selection is invalid. Must be a "
+                       "valid integer.";
+            case SelectionError::OutOfRangeAtomIndex:
+                return "An atom index in the selection is out of range.";
+            case SelectionError::EmptySelection:
+                return "The selection is empty.";
+            case SelectionError::None: return "Unknown selection error.";
+        }
+    }
+
+    /**
+     * @brief parses a selection string without using Python
+     *
+     * @param selection the selection string
+     * @param key the input key
+     * @return an optional vector of atom indices, or std::nullopt if parsing
+     * fails
+     */
+    std::optional<std::vector<int>> Converter<
+        SelectionTag>::_parseSelectionNoPython(const std::string& selection)
+    {
+        std::vector<int> selectionVec;
+
+        size_t pos = 0;
+        while (pos < selection.size())
+        {
+            size_t nextPos = selection.find(',', pos);
+            if (nextPos == std::string::npos)
+                nextPos = selection.size();
+
+            auto atomIndexStr =
+                std::string_view(selection).substr(pos, nextPos - pos);
+
+            // remove all whitespaces from the atom index string
+            atomIndexStr.remove_prefix(
+                std::min(
+                    atomIndexStr.find_first_not_of(' '),
+                    atomIndexStr.size()
+                )
+            );
+            const auto min = std::min(
+                atomIndexStr.find_last_not_of(' ') + 1,
+                atomIndexStr.size()
+            );
+            atomIndexStr.remove_suffix(atomIndexStr.size() - min);
+
+            // check if the atom index string is a range of indices
+            size_t rangePos = atomIndexStr.find('-');
+            if (rangePos != std::string::npos)
+            {
+                const auto startString = atomIndexStr.substr(0, rangePos);
+                const auto endString   = atomIndexStr.substr(rangePos + 1);
+
+                int start = -1;
+                int end   = -1;
+
+                try
+                {
+                    start = std::stoi(std::string(startString));
+                }
+                catch (const std::invalid_argument&)
+                {
+                    _selectionError = SelectionError::InvalidStartIndex;
+                    return std::nullopt;
+                }
+                catch (const std::out_of_range&)
+                {
+                    _selectionError = SelectionError::OutOfRangeStartIndex;
+                    return std::nullopt;
+                }
+                catch (const std::exception&)
+                {
+                    // unknown exception occurred while parsing start index
+                    return std::nullopt;
+                }
+
+                try
+                {
+                    end = std::stoi(std::string(endString));
+                }
+                catch (const std::invalid_argument&)
+                {
+                    _selectionError = SelectionError::InvalidEndIndex;
+                    return std::nullopt;
+                }
+                catch (const std::out_of_range&)
+                {
+                    _selectionError = SelectionError::OutOfRangeEndIndex;
+                    return std::nullopt;
+                }
+                catch (const std::exception&)
+                {
+                    // unknown exception occurred while parsing end index
+                    return std::nullopt;
+                }
+
+                for (int i = start; i <= end; ++i) selectionVec.push_back(i);
+
+                pos = nextPos + 1;
+                continue;
+            }
+
+            try
+            {
+                selectionVec.push_back(std::stoi(std::string(atomIndexStr)));
+            }
+            catch (const std::invalid_argument&)
+            {
+                _selectionError = SelectionError::InvalidAtomIndex;
+                return std::nullopt;
+            }
+            catch (const std::out_of_range&)
+            {
+                _selectionError = SelectionError::OutOfRangeAtomIndex;
+                return std::nullopt;
+            }
+            pos = nextPos + 1;
+        }
+
+        // check if the selection vector is empty
+        if (selectionVec.empty())
+        {
+            _selectionError = SelectionError::EmptySelection;
+            return std::nullopt;
+        }
+
+        return selectionVec;
     }
 
 }   // namespace input
