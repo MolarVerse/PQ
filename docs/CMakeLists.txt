@@ -1,5 +1,15 @@
 find_package(Doxygen)
 
+# Class, call and caller graphs need dot and make up most of the Doxygen run.
+# Switch them off to only check that the documentation builds.
+option(PQ_DOXYGEN_GRAPHS "Draw class, call and caller graphs with dot" ON)
+
+if(PQ_DOXYGEN_GRAPHS)
+    set(PQ_DOXYGEN_GRAPH_SETTING YES)
+else()
+    set(PQ_DOXYGEN_GRAPH_SETTING NO)
+endif()
+
 if(DOXYGEN_FOUND)
     # set input and output files
     set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in)

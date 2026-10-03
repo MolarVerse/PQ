@@ -50,8 +50,12 @@ jobs:
           && pip3 install sphinx==7.2.6
           && pip3 install m2r
 
+      # The dot graphs take most of the doxygen time and only matter for the
+      # site deployed from main; pull requests just check that the docs build.
       - name: configure
-        run: cmake -S . -B build -DBUILD_WITH_DOCS=ON -DBUILD_WITH_ASE=OFF -DBUILD_WITH_TESTS=OFF
+        env:
+          DOXYGEN_GRAPHS: ${{ github.event_name == 'push' && 'ON' || 'OFF' }}
+        run: cmake -S . -B build -DBUILD_WITH_DOCS=ON -DBUILD_WITH_ASE=OFF -DBUILD_WITH_TESTS=OFF -DPQ_DOXYGEN_GRAPHS="$DOXYGEN_GRAPHS"
 
       - name: build docs
         run: |
