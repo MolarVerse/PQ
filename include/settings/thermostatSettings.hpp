@@ -24,11 +24,11 @@
 
 #define _THERMOSTAT_SETTINGS_HPP_
 
-#include <cstddef>   // for size_t
-#include <map>       // for map
+#include <cstddef>
+#include <map>
 #include <mstd/enum.hpp>
 #include <mstd/enum/enum_string.hpp>
-#include <string_view>   // for string_view
+#include <string_view>
 
 #include "defaults.hpp"
 #include "enums/thermostat.hpp"

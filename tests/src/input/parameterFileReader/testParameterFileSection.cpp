@@ -22,11 +22,10 @@
 
 #include "testParameterFileSection.hpp"
 
-#include <ostream>   // for operator<<, ofstream, basic_ostream, endl
-#include <vector>    // for vector
+#include <ostream>
+#include <vector>
 
-#include "bondSection.hpp"   // for BondSection
-                             // for Message, TestPartResult
+#include "bondSection.hpp"
 
 /**
  * @brief tests full process function TODO: think of a clever way to test this

@@ -24,12 +24,12 @@
 
 #define _GUFF_DAT_READER_HPP_
 
-#include <cstddef>       // for size_t
-#include <string>        // for allocator, string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <cstddef>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include "defaults.hpp"   // for _GUFF_FILENAME_DEFAULT_
+#include "defaults.hpp"
 #include "strongTypes.hpp"
 
 namespace engine

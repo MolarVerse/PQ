@@ -1,5 +1,7 @@
 set(source_files
     testEngine.cpp
+    testOptEngine.cpp
+    testQMRunnerManager.cpp
 )
 
 foreach(source_file ${source_files})

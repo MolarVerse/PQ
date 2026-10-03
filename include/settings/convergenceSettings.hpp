@@ -24,12 +24,12 @@
 
 #define _CONVERGENCE_SETTINGS_HPP_
 
-#include <optional>      // for optional
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <optional>
+#include <string>
+#include <string_view>
 
-#include "defaults.hpp"            // for _OPTIMIZER_DEFAULT_
-#include "enums/convergence.hpp"   // for ConvergenceType
+#include "defaults.hpp"
+#include "enums/convergence.hpp"
 
 namespace settings
 {

@@ -22,19 +22,19 @@
 
 #include "constraintsInputParser.hpp"
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 #include <optional>
 #include <utility>
 
-#include "constraintSettings.hpp"   // for settings::ConstraintSettings
+#include "constraintSettings.hpp"
 #include "constraints.hpp"
 #include "enums/shake.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "references.hpp"         // for references::ReferencesOutput
-#include "referencesOutput.hpp"   // for references::ReferencesOutput
+#include "references.hpp"
+#include "referencesOutput.hpp"
 
 namespace input
 {

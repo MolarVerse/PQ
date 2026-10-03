@@ -24,7 +24,7 @@
 
 #define _BOX_FILE_OUTPUT_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 #include "output.hpp"
 

@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, allocator, string
+#include <iosfwd>
+#include <string>
 
 #include "forceFieldSettings.hpp"
-#include "infoOutput.hpp"           // for InfoOutput
-#include "manostatSettings.hpp"     // for settings::ManostatSettings
-#include "physicalData.hpp"         // for PhysicalData
-#include "settings.hpp"             // for settings::Settings
-#include "testEnergyOutput.hpp"     // for TestEnergyOutput
-#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
+#include "generalSettings.hpp"
+#include "infoOutput.hpp"
+#include "manostatSettings.hpp"
+#include "physicalData.hpp"
+#include "testEnergyOutput.hpp"
+#include "thermostatSettings.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -53,7 +53,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -141,7 +141,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::activate();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -240,7 +240,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 
     settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -335,7 +335,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -437,7 +437,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info");
@@ -523,7 +523,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
         ThermostatType::NOSE_HOOVER

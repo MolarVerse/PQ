@@ -29,9 +29,9 @@
 #include <type_traits>
 
 #include "defaults.hpp"
-#include "guffCoefficients.hpp"   // for Guff coefficients
-#include "interWater.hpp"         // for InterWater
-#include "lennardJonesPair.hpp"   // for LennardJonesPair
+#include "guffCoefficients.hpp"
+#include "interWater.hpp"
+#include "lennardJonesPair.hpp"
 
 namespace waterModel
 {

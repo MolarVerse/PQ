@@ -24,8 +24,8 @@
 
 #include <format>
 
-#include "engine.hpp"     // for Engine
-#include "settings.hpp"   // for Settings
+#include "engine.hpp"
+#include "generalSettings.hpp"
 
 namespace setup
 {
@@ -69,9 +69,9 @@ namespace setup
     {
         auto &logOutput = _engine.getLogOutput();
 
-        if (settings::Settings::isRandomSeedSet())
+        if (settings::GeneralSettings::isRandomSeedSet())
         {
-            const auto randomSeed = settings::Settings::getRandomSeed();
+            const auto randomSeed = settings::GeneralSettings::getRandomSeed();
             const auto randomNumberGeneratorMessage =
                 std::format("Random seed has been set to: {}", randomSeed);
 

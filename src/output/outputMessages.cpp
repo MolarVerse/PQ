@@ -22,11 +22,11 @@
 
 #include "outputMessages.hpp"
 
-#include <format>    // for format
-#include <sstream>   // for stringstream
-#include <string>    // for string
+#include <format>
+#include <sstream>
+#include <string>
 
-#include "systemInfo.hpp"   // for _AUTHOR_
+#include "systemInfo.hpp"
 
 namespace out
 {

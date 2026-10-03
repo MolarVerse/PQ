@@ -1,0 +1,1 @@
+- Make the dev-to-NEXT sync workflow run on every push to dev (the cron only fires from main) and mint its token from the installed pq-release-bot app, since the pq-bot app is not installed on the repository.

@@ -22,15 +22,15 @@
 
 #include "trajectoryOutput.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <ostream>   // for ofstream, basic_ostream, operator<<
-#include <sstream>   // for ostringstream
+#include <cstddef>
+#include <format>
+#include <ostream>
+#include <sstream>
 
 #include "defaults.hpp"
 #include "hybridConfigurator.hpp"
-#include "molecule.hpp"        // for Molecule
-#include "simulationBox.hpp"   // for SimulationBox
+#include "molecule.hpp"
+#include "simulationBox.hpp"
 
 namespace out
 {

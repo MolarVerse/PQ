@@ -24,7 +24,7 @@
 
 #define __TIMINGS_OUTPUT_HPP__
 
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace timings
 {

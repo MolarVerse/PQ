@@ -20,28 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for CmpHelperFloatingPointEQ
+#include <gtest/gtest.h>
 
-#include <cmath>    // for cbrt
-#include <memory>   // for make_shared, __shared_ptr_access
-#include <string>   // for basic_string
-#include <vector>   // for vector
+#include <cmath>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "atom.hpp"                          // for Atom
-#include "constants/conversionFactors.hpp"   // for _AMU_PER_ANGSTROM_CUBIC_TO_KG_PER_LITER_CUBIC_
-#include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"     // for MolDescriptorException, InputFileException
-#include "fileSettings.hpp"   // for FileSettings
-#include "forceFieldSettings.hpp"      // for ForceFieldSettings
-                                       // for Message, TestPartResult
-#include "molecule.hpp"                // for Molecule
-#include "moleculeType.hpp"            // for MoleculeType
-#include "potentialSettings.hpp"       // for PotentialSettings
-#include "simulationBox.hpp"           // for SimulationBox
-#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "simulationBoxSetup.hpp"   // for setup::SimulationBoxSetup, setupSimulationBox
+#include "atom.hpp"
+#include "constants/conversionFactors.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
+#include "simulationBoxSettings.hpp"
+#include "simulationBoxSetup.hpp"
 #include "strongTypes.hpp"
-#include "testSetup.hpp"   // for TestSetup
+#include "testSetup.hpp"
 #include "throwWithMessage.hpp"
 
 TEST_F(TestSetup, setAtomNames)

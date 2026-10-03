@@ -22,21 +22,21 @@
 
 #include "intraNonBondedReader.hpp"
 
-#include <algorithm>     // for for_each
-#include <cstdlib>       // for abs, size_t
-#include <format>        // for format
-#include <optional>      // for operator==, optional, nullopt
-#include <ranges>        // for drop
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <algorithm>
+#include <cstdlib>
+#include <format>
+#include <optional>
+#include <ranges>
+#include <string_view>
+#include <vector>
 
-#include "engine.hpp"                    // for Engine
-#include "exceptions.hpp"                // for exc::IntraNonBondedException
-#include "fileSettings.hpp"              // for FileSettings
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "mathUtilities.hpp"             // for sign, utilities
-#include "simulationBox.hpp"             // for SimulationBox
-#include "stringUtilities.hpp"           // for removeComments, splitString
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "intraNonBondedContainer.hpp"
+#include "mathUtilities.hpp"
+#include "simulationBox.hpp"
+#include "stringUtilities.hpp"
 
 namespace input::intraNonBondedReader
 {

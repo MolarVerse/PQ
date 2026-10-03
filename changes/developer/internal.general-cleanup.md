@@ -7,4 +7,5 @@
 - remove `cell.hpp` 50x transitive includes by removing `molsys::CellList` public include in `engine.hpp`
 - fix ordering of members and methods in classes and structs + disallow public members starting with an underscore
 - do not use raw pointers in tests with new and delete (enforced by devops)
+- remove useless comments next to includes for less PR review garbage
 - diasllow the use of `clang-format` `on/off` in source code

@@ -31,10 +31,11 @@
 #include "atom.hpp"
 #include "bondForceField.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "interWater.hpp"
+#include "interWaterParamters.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
-#include "settings.hpp"
 #include "strongTypes.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
@@ -91,7 +92,7 @@ namespace
 
     void configureNoInterModel()
     {
-        settings::Settings::setJobtype(JobType::MM_MD);
+        settings::GeneralSettings::setJobtype(JobType::MM_MD);
         settings::WaterModelSettings::setWaterInterModel(WaterInterModel::NONE);
     }
 
@@ -140,7 +141,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntermolecularModels)
         WaterInterModel::SPC_MTR
     );
 
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
     setupInterModel<waterModel::TIP3PmTRInterParam>(
         *_mdEngine,
         WaterInterModel::TIP3P_MTR
@@ -214,7 +215,7 @@ TEST_F(TestSetup, waterModelSetupRejectsQmOnlyJobs)
     configureNoInterModel();
     settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::NONE);
     addWaterSystem(*_mdEngine);
-    settings::Settings::setJobtype(JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
     EXPECT_THROW_MSG(
 
         setup::WaterModelSetup(*_mdEngine).setup(),

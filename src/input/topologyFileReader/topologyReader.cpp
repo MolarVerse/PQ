@@ -22,21 +22,21 @@
 
 #include "topologyReader.hpp"
 
-#include <string>   // for string, basic_string, operator==, operator!=
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "angleSection.hpp"                 // for AngleSection
-#include "bondSection.hpp"                  // for BondSection
-#include "dihedralSection.hpp"              // for DihedralSection
-#include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
-#include "engine.hpp"                       // for Engine
-#include "exceptions.hpp"     // for exc::InputFileException, TopologyException
-#include "fileSettings.hpp"   // for FileSettings
-#include "forceFieldSettings.hpp"        // for ForceFieldSettings
-#include "improperDihedralSection.hpp"   // for ImproperDihedralSection
-#include "jCouplingSection.hpp"          // for JCouplingSection
-#include "shakeSection.hpp"              // for ShakeSection
-#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
+#include "angleSection.hpp"
+#include "bondSection.hpp"
+#include "dihedralSection.hpp"
+#include "distanceConstraintsSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
+#include "improperDihedralSection.hpp"
+#include "jCouplingSection.hpp"
+#include "shakeSection.hpp"
+#include "stringUtilities.hpp"
 
 namespace input::topology
 {

@@ -24,15 +24,16 @@
 
 #define _TEST_INPUT_FILE_READER_H_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <cstdio>   // for remove
-#include <string>   // for allocator, string
+#include <cstdio>
+#include <string>
 
+#include "inputConverter.hpp"
 #include "inputFileParser.hpp"
-#include "inputFileReader.hpp"   // for InputFileReader
-#include "mmmdEngine.hpp"        // for MDEngine
-#include "optEngine.hpp"         // for MDEngine
+#include "inputFileReader.hpp"
+#include "mmmdEngine.hpp"
+#include "optEngine.hpp"
 
 /**
  * @class TestInputFileReader
@@ -75,6 +76,14 @@ class TestInputFileReader : public ::testing::Test
     void _removeFile() const
     {
         static_cast<void>(std::remove(_fileName.c_str()));
+    }
+
+    static auto _parseSelectionNoPython(
+        input::Converter<input::SelectionTag> &converter,
+        const std::string                     &key
+    )
+    {
+        return converter._parseSelectionNoPython(key);
     }
 };
 

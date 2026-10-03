@@ -24,10 +24,10 @@
 
 #define _TEST_TIMINGS_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include "timer.hpp"            // for Timer
-#include "timingsSection.hpp"   // for TimingsSection
+#include "timer.hpp"
+#include "timingsSection.hpp"
 
 /**
  * @class TestTimingsSection

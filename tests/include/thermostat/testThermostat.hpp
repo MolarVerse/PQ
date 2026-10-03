@@ -24,15 +24,15 @@
 
 #define _TEST_THERMOSTAT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
+#include <memory>
 
-#include "atom.hpp"            // for Atom
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
-#include "thermostat.hpp"      // for Thermostat
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "thermostat.hpp"
 
 class TestThermostat : public ::testing::Test
 {

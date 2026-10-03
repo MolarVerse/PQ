@@ -24,8 +24,8 @@
 
 #define _POTENTIAL_HPP_
 
-#include <memory>    // for shared_ptr
-#include <utility>   // for pair
+#include <memory>
+#include <utility>
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
@@ -173,7 +173,7 @@ namespace pot
 }   // namespace pot
 
 #ifndef _POTENTIAL_TPP_
-#include "potential.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#include "potential.tpp.hpp"   // IWYU pragma: export
 #endif
 
 #endif   // _POTENTIAL_HPP_

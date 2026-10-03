@@ -215,4 +215,17 @@ namespace mstd
 
 #undef SLAKOS_TYPE_LIST
 
+/**
+ * @brief enum QMCharges
+ */
+enum class QMCharges : std::uint8_t;
+
+#define QM_CHARGES_LIST(X) \
+    X(QM)                  \
+    X(MM)
+
+MSTD_ENUM(QMCharges, std::uint8_t, QM_CHARGES_LIST)
+
+#undef QM_CHARGES_LIST
+
 #endif   // _QM_ENUM_HPP_

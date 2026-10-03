@@ -22,8 +22,8 @@
 
 #include "qmRunner.hpp"
 
-#include <cmath>    // for ceil
-#include <thread>   // for sleep_for
+#include <cmath>
+#include <thread>
 
 #include "box.hpp"
 #include "constants.hpp"

@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST
+#include <gtest/gtest.h>
 
 #include <iosfwd>
 

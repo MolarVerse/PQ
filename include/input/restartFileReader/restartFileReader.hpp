@@ -24,9 +24,9 @@
 
 #define _RESTART_FILE_READER_HPP_
 
-#include <fstream>   // for ifstream
-#include <memory>    // for unique_ptr, make_unique
-#include <string>    // for string
+#include <fstream>
+#include <memory>
+#include <string>
 #include <vector>
 
 namespace engine

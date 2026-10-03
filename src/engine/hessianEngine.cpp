@@ -39,18 +39,19 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
 #include "logOutput.hpp"
 #include "mmEvaluator.hpp"
+#include "optEngine.hpp"
 #include "optimizer.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
 #include "progressbar.hpp"
 #include "referencesOutput.hpp"
-#include "settings.hpp"
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
@@ -315,7 +316,7 @@ namespace engine
     {
         std::shared_ptr<opt::Evaluator> evaluator;
 
-        if (settings::Settings::getJobtype() == JobType::MM_HESSIAN)
+        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN)
             evaluator = std::make_shared<opt::MMEvaluator>();
 
         else
@@ -379,34 +380,13 @@ namespace engine
             deleteTmpFiles();
         }
 
-        if (!_converged)
-        {
-            throw exc::OptException(
-                std::format(
-                    "Optimizer did not converge after {} epochs.",
-                    _optimizer->getNEpochs()
-                )
-            );
-        }
-
-        if (_optStopped)
-        {
-            auto msg = std::format(
-                "Optimizer stopped after {} epochs out of {}. The following "
-                "error "
-                "messages were raised:\n",
-                _step,
-                _optimizer->getNEpochs()
-            );
-
-            const auto &errorMessages =
-                _learningRateStrategy->getErrorMessages();
-
-            for (size_t i = 0; i < errorMessages.size(); ++i)
-                msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
-
-            throw exc::OptException(msg);
-        }
+        OptEngine::throwOnFailure(
+            _converged,
+            _optStopped,
+            _step,
+            _optimizer->getNEpochs(),
+            _learningRateStrategy->getErrorMessages()
+        );
 
         const auto msg =
             std::format("Optimizer converged after {} epochs.", _step);

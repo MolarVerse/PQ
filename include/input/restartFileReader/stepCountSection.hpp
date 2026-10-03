@@ -24,9 +24,9 @@
 
 #define _STEP_COUNT_SECTION_HPP_
 
-#include <string>   // for string
+#include <string>
 
-#include "restartFileSection.hpp"   // for RestartFileSection
+#include "restartFileSection.hpp"
 
 namespace input::restartFile
 {

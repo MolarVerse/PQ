@@ -20,15 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include "celllistSetup.hpp"   // for setup::CellListSetup, setupCellList, setup
-#include "engine.hpp"          // for Engine
-                               // for Message, TestPartResult
+#include "celllistSetup.hpp"
+#include "engine.hpp"
 #include "potentialBruteForce.hpp"
-#include "potentialCellList.hpp"   // for PotentialCellList
+#include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
-#include "testSetup.hpp"   // for TestSetup
+#include "testSetup.hpp"
 #include "testUtils.hpp"
 
 /**
@@ -43,7 +42,7 @@ TEST_F(TestSetup, setupCellList)
     test::checkType(_engine->getPotential(), typeid(pot::PotentialBruteForce));
 
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
     _engine->getSimulationBox().setBoxDimensions({15.0, 15.0, 15.0});
     _engine->getCellList().setNumberOfCells(3);
     cellListSetup.setup();

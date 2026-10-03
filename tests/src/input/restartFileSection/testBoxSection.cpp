@@ -28,9 +28,9 @@
 
 #include "engine.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "gmock/gmock.h"
 #include "restartFileReader/restartFileSection.hpp"
-#include "settings.hpp"
 #include "simulationBoxSettings.hpp"
 #include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"
@@ -57,7 +57,7 @@ TEST_F(TestBoxSection, testNumberOfArguments)
 
 TEST_F(TestBoxSection, testProcess)
 {
-    settings::Settings::setJobtype(JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
     EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), false);
 

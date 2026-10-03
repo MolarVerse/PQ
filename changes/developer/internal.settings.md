@@ -1,1 +1,2 @@
-- introduce new base type `Settings<T>` for settings
+- introduce new base type `Setting<T>` for settings
+- rename `Settings` class to `GeneralSettings` 

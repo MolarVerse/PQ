@@ -22,22 +22,22 @@
 
 #include "potentialSetup.hpp"
 
-#include <algorithm>     // for __for_each_fn, __sort_fn
-#include <format>        // for vector
-#include <string>        // for operator==
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <algorithm>
+#include <format>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include "coulombReactionField.hpp"      // for CoulombReactionField
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "coulombWolf.hpp"               // for CoulombWolf
-#include "engine.hpp"                    // for Engine
-#include "exceptions.hpp"                // for ParameterFileException
-#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
-#include "potential.hpp"                 // for Potential
-#include "potentialSettings.hpp"         // for settings::PotentialSettings
-#include "simulationBox.hpp"             // for SimulationBox
+#include "coulombReactionField.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "coulombWolf.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "guffNonCoulomb.hpp"
+#include "potential.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
 
 namespace setup
 {

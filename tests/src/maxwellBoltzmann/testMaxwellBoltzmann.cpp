@@ -30,12 +30,12 @@
 
 #include "atom.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "maxwellBoltzmann.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
+#include "vector3d.hpp"
 
 namespace
 {
@@ -46,7 +46,7 @@ namespace
     {
         auto *box = new molsys::SimulationBox();
 
-        const std::vector<double> masses = {1.0, 12.0, 14.0, 16.0};
+        const std::vector<double> masses{1.0, 12.0, 14.0, 16.0};
 
         auto totalMass = 0.0;
         for (size_t i = 0; i < 27; ++i)
@@ -86,11 +86,11 @@ namespace
         SeedGuard &operator=(SeedGuard &&) = delete;
         explicit SeedGuard(uint_fast32_t seed)
         {
-            settings::Settings::setRandomSeed(seed);
-            settings::Settings::setIsRandomSeedSet(true);
+            settings::GeneralSettings::setRandomSeed(seed);
+            settings::GeneralSettings::setIsRandomSeedSet(true);
         }
 
-        ~SeedGuard() { settings::Settings::setIsRandomSeedSet(false); }
+        ~SeedGuard() { settings::GeneralSettings::setIsRandomSeedSet(false); }
 
         SeedGuard(const SeedGuard &)            = delete;
         SeedGuard &operator=(const SeedGuard &) = delete;

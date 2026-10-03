@@ -22,11 +22,11 @@
 
 #include "bondSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "bondType.hpp"     // for ff::BondType
-#include "engine.hpp"       // for engine::Engine
-#include "exceptions.hpp"   // for exc::ParameterFileException
+#include "bondType.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 
 namespace input::parameterFile
 {

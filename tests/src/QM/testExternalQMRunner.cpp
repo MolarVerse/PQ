@@ -35,10 +35,10 @@
 #include "exceptions.hpp"
 #include "externalQMRunner.hpp"
 #include "fileSettings.hpp"
+#include "generalSettings.hpp"
 #include "physicalData.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
 #include "throwWithMessage.hpp"
@@ -152,7 +152,7 @@ class ExternalQMRunnerTest : public testing::Test
     void SetUp() override
     {
         _qmMethod       = settings::QMSettings::getQMMethod();
-        _jobType        = settings::Settings::getJobtype();
+        _jobType        = settings::GeneralSettings::getJobtype();
         _removeNetForce = settings::QMSettings::getRemoveNetForce();
         _timeLimit      = settings::QMSettings::getQMLoopTimeLimit();
         _qmScript       = settings::QMSettings::getQMScript();
@@ -169,7 +169,7 @@ class ExternalQMRunnerTest : public testing::Test
         settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
         settings::QMSettings::setRemoveNetForce(false);
         settings::QMSettings::setQMLoopTimeLimit(0.0);
-        settings::Settings::setJobtype(JobType::QM_MD);
+        settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName("H");
@@ -184,7 +184,7 @@ class ExternalQMRunnerTest : public testing::Test
         settings::QMSettings::setQMLoopTimeLimit(_timeLimit);
         settings::QMSettings::setQMScript(_qmScript);
         settings::FileSettings::setDFTBFileName(_dftbFile);
-        settings::Settings::setJobtype(_jobType);
+        settings::GeneralSettings::setJobtype(_jobType);
 
         std::filesystem::current_path(_originalPath);
         std::error_code error;

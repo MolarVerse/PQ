@@ -24,10 +24,10 @@
 
 #define _OUTPUT_HPP_
 
-#include <cstddef>       // for size_t
-#include <fstream>       // for ofstream
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <cstddef>
+#include <fstream>
+#include <string>
+#include <string_view>
 #include <utility>
 
 class TestOutput_testSpecialSetFilename_Test;   // Friend test class

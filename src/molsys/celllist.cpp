@@ -22,19 +22,19 @@
 
 #include "celllist.hpp"
 
-#include <algorithm>     // for ranges::for_each
-#include <array>         // for array
-#include <format>        // for format
-#include <map>           // for map
-#include <string_view>   // for string_view
+#include <algorithm>
+#include <array>
+#include <format>
+#include <map>
+#include <string_view>
 
-#include "cell.hpp"                // for Cell
-#include "exceptions.hpp"          // for exc::CellListException
-#include "globalTimer.hpp"         // for GlobalTimer
-#include "molecule.hpp"            // for Molecule
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "settings.hpp"            // for Settings
-#include "simulationBox.hpp"       // for SimulationBox
+#include "cell.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "globalTimer.hpp"
+#include "molecule.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
 
 namespace molsys
 {
@@ -256,7 +256,7 @@ namespace molsys
      */
     void CellList::updateCellList(SimulationBox &simulationBox)
     {
-        if (!settings::Settings::isCellListActivated())
+        if (!settings::GeneralSettings::isCellListActivated())
             return;
 
         auto _ = scopedTimer(TimerId::CellList, "Update");

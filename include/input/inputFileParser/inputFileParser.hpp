@@ -24,10 +24,10 @@
 
 #define _INPUT_FILE_PARSER_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 #include <functional>
-#include <map>      // for map
-#include <string>   // for string
+#include <map>
+#include <string>
 
 #include "inputRegistry.hpp"
 

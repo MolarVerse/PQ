@@ -24,8 +24,8 @@
 
 #define _FILE_SETTINGS_HPP_
 
-#include <string>        // for string, allocator
-#include <string_view>   // for string_view
+#include <string>
+#include <string_view>
 
 #include "defaults.hpp"
 

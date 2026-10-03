@@ -22,14 +22,14 @@
 
 #include "velocityRescalingThermostat.hpp"
 
-#include <cmath>   // for sqrt
+#include <cmath>
 
-#include "exceptions.hpp"        // for UserInputException
-#include "globalTimer.hpp"       // for GlobalTimer
-#include "mathUtilities.hpp"     // for isZero
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "exceptions.hpp"
+#include "globalTimer.hpp"
+#include "mathUtilities.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "timingsSettings.hpp"
 
 namespace thermostat
 {
@@ -92,6 +92,8 @@ namespace thermostat
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Velocity Rescaling");
+
+        _requireDegreesOfFreedom(simulationBox, "velocity rescaling");
 
         physicalData.calculateTemperature(simulationBox);
 

@@ -24,11 +24,11 @@
 
 #include <gtest/gtest.h>
 
-#include <limits>   // for numeric_limits
+#include <limits>
 
 #include "constants/conversionFactors.hpp"
-#include "exceptions.hpp"         // for ShakeException
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 
 /**

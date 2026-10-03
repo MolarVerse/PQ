@@ -22,13 +22,13 @@
 
 #include "intraNonBondedMap.hpp"
 
-#include <cstdlib>   // for abs, size_t
+#include <cstdlib>
 
-#include "coulombPotential.hpp"      // for CoulombPotential
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "physicalData.hpp"          // for physicalData::PhysicalData
-#include "potentialSettings.hpp"     // for settings::PotentialSettings
-#include "simulationBox.hpp"         // for SimulationBox
+#include "coulombPotential.hpp"
+#include "nonCoulombPotential.hpp"
+#include "physicalData.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
 
 namespace intraNonBonded
 {

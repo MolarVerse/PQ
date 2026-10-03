@@ -24,7 +24,7 @@
 
 #define _GUFF_PAIR_HPP_
 
-#include <utility>   // pair
+#include <utility>
 
 #include "defaults.hpp"
 #include "nonCoulombPair.hpp"

@@ -22,7 +22,7 @@
 
 #ifdef WITH_MPI
 
-#include <algorithm>   // for for_each
+#include <algorithm>
 
 #include "simulationBox.hpp"
 

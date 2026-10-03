@@ -24,7 +24,10 @@
 
 #define _OPT_ENGINE_HPP_
 
-#include <memory>   // for unique_ptr
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "engine.hpp"
 #include "evaluator.hpp"
@@ -56,6 +59,14 @@ namespace engine
         void run() final;
         void takeStep();
         void writeOutput() final;
+
+        static void throwOnFailure(
+            bool                            converged,
+            bool                            optStopped,
+            size_t                          step,
+            size_t                          nEpochs,
+            const std::vector<std::string> &errorMessages
+        );
 
         /***************************
          * standard setter methods *

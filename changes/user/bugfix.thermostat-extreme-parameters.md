@@ -1,0 +1,1 @@
+- Berendsen thermostat: a relaxation time shorter than the time step now gives a clear error instead of NaN velocities. Nose-Hoover rejects a zero target temperature; it and velocity rescaling reject zero degrees of freedom.

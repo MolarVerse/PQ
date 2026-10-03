@@ -24,8 +24,8 @@
 
 #define _SPC_INTRA_WATER_HPP_
 
-#include "constants/conversionFactors.hpp"   // for constants
-#include "intraWater.hpp"                    // for IntraWater
+#include "constants/conversionFactors.hpp"
+#include "intraWater.hpp"
 
 namespace molsys
 {

@@ -22,21 +22,25 @@
 
 #include "generalInputParser.hpp"
 
-#include <cstdint>     // for uint_fast32_t and UINT32_MAX
-#include <format>      // for format
-#include <stdexcept>   // for out_of_range and invalid_argument
+#include <cstdint>
+#include <format>
+#include <stdexcept>
 
-#include "engine.hpp"          // for Engine
-#include "exceptions.hpp"      // for exc::InputFileException, customException
-#include "hessianEngine.hpp"   // for HessianEngine
-#include "mmmdEngine.hpp"      // for MMMDEngine
-#include "optEngine.hpp"       // for MMOptEngine
+#include "engine.hpp"
+#include "enums/general.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "hessianEngine.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "mmmdEngine.hpp"
+#include "optEngine.hpp"
 #include "parserUtils.hpp"
-#include "qmmdEngine.hpp"              // for QMMDEngine
-#include "qmmmMDEngine.hpp"            // for QMMMMDEngine
-#include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
-#include "settings.hpp"                // for settings::Settings
-#include "stringUtilities.hpp"         // for toLowerCopy
+#include "qmmdEngine.hpp"
+#include "qmmmMDEngine.hpp"
+#include "ringPolymerqmmdEngine.hpp"
+#include "stringUtilities.hpp"
 
 namespace input
 {
@@ -64,11 +68,7 @@ namespace input
             false
         );
 
-        addKeyword(
-            std::string("floating_point_type"),
-            bindMember(&GeneralInputParser::parseFloatingPointType, this),
-            false
-        );
+        addFloatingPointTypeKey();
 
         addKeyword(
             std::string("random_seed"),
@@ -116,32 +116,32 @@ namespace input
 
         if (jobtype == "mm_opt")
         {
-            settings::Settings::setJobtype(MM_OPT);
+            settings::GeneralSettings::setJobtype(MM_OPT);
             engine = std::make_unique<engine::OptEngine>();
         }
         else if (jobtype == "mm_hessian")
         {
-            settings::Settings::setJobtype(MM_HESSIAN);
+            settings::GeneralSettings::setJobtype(MM_HESSIAN);
             engine = std::make_unique<engine::HessianEngine>();
         }
         else if (jobtype == "mm_md")
         {
-            settings::Settings::setJobtype(MM_MD);
+            settings::GeneralSettings::setJobtype(MM_MD);
             engine = std::make_unique<engine::MMMDEngine>();
         }
         else if (jobtype == "qm_md")
         {
-            settings::Settings::setJobtype(QM_MD);
+            settings::GeneralSettings::setJobtype(QM_MD);
             engine = std::make_unique<engine::QMMDEngine>();
         }
         else if (jobtype == "qm_rpmd")
         {
-            settings::Settings::setJobtype(RING_POLYMER_QM_MD);
+            settings::GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
             engine = std::make_unique<engine::RingPolymerQMMDEngine>();
         }
         else if (jobtype == "qmmm_md")
         {
-            settings::Settings::setJobtype(QMMM_MD);
+            settings::GeneralSettings::setJobtype(QMMM_MD);
             engine = std::make_unique<engine::QMMMMDEngine>();
         }
         else
@@ -187,7 +187,7 @@ namespace input
 
         if (dimensionality == 3)
         {
-            settings::Settings::setDimensionality(
+            settings::GeneralSettings::setDimensionality(
                 static_cast<size_t>(dimensionality)
             );
         }
@@ -201,43 +201,24 @@ namespace input
         }
     }
 
-    /**
-     * @brief parse floating point type of simulation
-     *
-     * @details Possible options are:
-     * 1) float
-     * 2) double
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throw exc::InputFileException if floating point type is not
-     * recognised
-     */
-    void GeneralInputParser::parseFloatingPointType(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void GeneralInputParser::addFloatingPointTypeKey()
     {
-        using enum FPType;
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name  = "floating_point_type",
+            .title = "Floating Point Type",
+            .description =
+                "Specifies the floating point type for the simulation (float "
+                "or double)"
+        };
 
-        const auto floatingPointType = utilities::toLowerCopy(lineElements[2]);
+        const auto setValue = [](FPType value)
+        { settings::GeneralSettings::setFloatingPointType(value); };
 
-        if (floatingPointType == "float")
-            settings::Settings::setFloatingPointType(FLOAT);
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<FPType>{.metadata = metaData, .onSet = setValue}
+        );
 
-        else if (floatingPointType == "double")
-            settings::Settings::setFloatingPointType(DOUBLE);
-
-        else
-        {
-            throw exc::InputFileException(format(
-                "Invalid floating point type \"{}\" in input file\n"
-                "Possible values are: float, double",
-                lineElements[2]
-            ));
-        }
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**
@@ -295,8 +276,8 @@ namespace input
             throwRangeError(lineElements[2]);
         }
 
-        settings::Settings::setIsRandomSeedSet(true);
-        settings::Settings::setRandomSeed(randomSeed);
+        settings::GeneralSettings::setIsRandomSeedSet(true);
+        settings::GeneralSettings::setRandomSeed(randomSeed);
     }
 
 }   // namespace input

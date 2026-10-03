@@ -22,13 +22,13 @@
 
 #include "mShakeReader.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for MShakeFileException
-#include "fileSettings.hpp"      // for FileSettings
-#include "mShakeReference.hpp"   // for MShakeReference
-#include "stringUtilities.hpp"   // for utilities::removeComments
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "mShakeReference.hpp"
+#include "stringUtilities.hpp"
 
 namespace input::mShake
 {

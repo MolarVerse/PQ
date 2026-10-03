@@ -22,12 +22,12 @@
 
 #include "stdoutOutput.hpp"
 
-#include <format>     // for format
-#include <iostream>   // for operator<<, char_traits, basic_ostream, cout
-#include <string>     // for operator<<
+#include <format>
+#include <iostream>
+#include <string>
 
-#include "exceptions.hpp"   // for UserInputExceptionWarning, customException
-#include "outputMessages.hpp"   // for initialMomentumMessage
+#include "exceptions.hpp"
+#include "outputMessages.hpp"
 
 namespace out
 {

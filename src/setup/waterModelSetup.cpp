@@ -31,18 +31,19 @@
 #include <utility>
 
 #include "SPCIntraWater.hpp"
-#include "bondConstraint.hpp"   // for constraints::BondConstraint
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for customException
-#include "fileSettings.hpp"     // for FileSettings
-#include "interWater.hpp"       // for InterWater
+#include "bondConstraint.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "generalSettings.hpp"
+#include "interWater.hpp"
+#include "interWaterParamters.hpp"
 #include "mTRIntraWater.hpp"
-#include "mdEngine.hpp"           // for MDEngine
-#include "references.hpp"         // for References
-#include "referencesOutput.hpp"   // for references::ReferencesOutput
+#include "mdEngine.hpp"
+#include "references.hpp"
+#include "referencesOutput.hpp"
 #include "rigidWaterGeometry.hpp"
-#include "settings.hpp"
-#include "waterModelSettings.hpp"   // for settings::WaterModelSettings
+#include "waterModelSettings.hpp"
 
 namespace setup
 {
@@ -115,7 +116,7 @@ namespace setup
             );
         }
 
-        if (settings::Settings::isQMOnlyJobtype())
+        if (settings::GeneralSettings::isQMOnlyJobtype())
             throw exc::UserInputException(
                 "Water models are not supported for QM-only job types."
             );
@@ -525,7 +526,7 @@ namespace setup
 
         std::unique_ptr<waterModel::InterWaterStrategy> strategy;
 
-        if (settings::Settings::isCellListActivated())
+        if (settings::GeneralSettings::isCellListActivated())
             strategy =
                 std::make_unique<waterModel::InterWaterStrategyCellList>();
         else

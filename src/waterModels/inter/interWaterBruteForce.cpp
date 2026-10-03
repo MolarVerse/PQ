@@ -20,9 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "interWater.hpp"   // for InterWater
+#include "interWater.hpp"
 #include "physicalData.hpp"
-#include "potential.hpp"   // for ChargeTag
+#include "potential.hpp"
 
 namespace waterModel
 {

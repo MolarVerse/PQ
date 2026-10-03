@@ -22,16 +22,16 @@
 
 #include "cellListInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
+#include <cstddef>
+#include <format>
 #include <optional>
-#include <string>   // for allocator, operator==, string
+#include <string>
 
 #include "celllist.hpp"
+#include "generalSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "settings.hpp"
 
 namespace input
 {
@@ -75,9 +75,9 @@ namespace input
         const auto setValue = [](bool isActivated)
         {
             if (isActivated)
-                settings::Settings::activateCellList();
+                settings::GeneralSettings::activateCellList();
             else
-                settings::Settings::deactivateCellList();
+                settings::GeneralSettings::deactivateCellList();
         };
 
         auto &key = _getRegistry().registerKey<bool>(KeyRegistry<bool>{

@@ -22,9 +22,9 @@
 
 #include "virialInputParser.hpp"
 
+#include "generalSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyRegistry.hpp"
-#include "settings.hpp"
 
 namespace input
 {
@@ -52,7 +52,7 @@ namespace input
         };
 
         const auto onSet = [](VirialType virial)
-        { settings::Settings::setVirialType(virial); };
+        { settings::GeneralSettings::setVirialType(virial); };
 
         auto& key = _getRegistry().registerKey(
             KeyRegistry<VirialType>{

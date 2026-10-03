@@ -22,7 +22,7 @@
 
 #include "learningRateStrategy.hpp"
 
-#include <format>   // for format
+#include <format>
 
 namespace opt
 {

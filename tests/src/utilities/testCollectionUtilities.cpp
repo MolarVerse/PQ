@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <string>   // for string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "collectionUtilities.hpp"   // for getUniqueElements
+#include "collectionUtilities.hpp"
 
 /**
  * @brief getUniqueElements sorts elements and removes duplicates.

@@ -24,7 +24,7 @@
 
 #define _NOSE_HOOVER_THERMOSTAT_HPP_
 
-#include <vector>   // for std::vector
+#include <vector>
 
 #include "thermostat.hpp"
 
@@ -82,6 +82,9 @@ namespace thermostat
         void setZeta(size_t index, double zeta);
         void setZeta(const std::vector<double> &zeta);
         void setCouplingFrequency(double couplingFrequency);
+
+       private:
+        void _requireCoupling(const molsys::SimulationBox &simulationBox) const;
     };
 }   // namespace thermostat
 

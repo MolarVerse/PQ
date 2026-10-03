@@ -22,7 +22,7 @@
 
 #include "timer.hpp"
 
-#include <algorithm>   // for ranges::sort
+#include <algorithm>
 
 #include "exceptions.hpp"
 

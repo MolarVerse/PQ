@@ -22,20 +22,20 @@
 
 #include "resetKinetics.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cmath>       // for sqrt
-#include <cstddef>     // for size_t
+#include <algorithm>
+#include <cmath>
+#include <cstddef>
 
-#include "constants/conversionFactors.hpp"   // for _FS_TO_S_, _S_TO_FS_
-#include "exceptions.hpp"                    // for UserInputException
+#include "constants/conversionFactors.hpp"
+#include "exceptions.hpp"
 #include "globalTimer.hpp"
-#include "mathUtilities.hpp"   // for isZero
-#include "physicalData.hpp"    // for physicalData::PhysicalData
-#include "simulationBox.hpp"   // for molsys::SimulationBox
-#include "staticMatrix.hpp"    // for operator*, operator+=
+#include "mathUtilities.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "staticMatrix.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
-#include "thermostatSettings.hpp"   // for settings::ThermostatSettings
-#include "vector3d.hpp"             // for linalg::Vec3D, Vector3D, cross
+#include "thermostatSettings.hpp"
+#include "vector3d.hpp"
 
 namespace resetKinetics
 {

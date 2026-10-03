@@ -24,10 +24,10 @@
 
 #define _FORCE_FIELD_HPP_
 
-#include "coulombPotential.hpp"      // for CoulombPotential
-#include "molecule.hpp"              // for Molecule
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "physicalData.hpp"          // for PhysicalData
+#include "coulombPotential.hpp"
+#include "molecule.hpp"
+#include "nonCoulombPotential.hpp"
+#include "physicalData.hpp"
 
 namespace ff
 {

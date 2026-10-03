@@ -22,14 +22,14 @@
 
 #include "resetKineticsSetup.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "engine.hpp"          // for Engine
-#include "mdEngine.hpp"        // for MDEngine
-#include "resetKinetics.hpp"   // for ResetMomentum, ResetTemperature, resetK...
-#include "resetKineticsSettings.hpp"   // for ResetKineticsSettings
-#include "settings.hpp"                // for Settings
-#include "timingsSettings.hpp"         // for TimingsSettings
+#include "engine.hpp"
+#include "generalSettings.hpp"
+#include "mdEngine.hpp"
+#include "resetKinetics.hpp"
+#include "resetKineticsSettings.hpp"
+#include "timingsSettings.hpp"
 
 namespace setup
 {
@@ -42,7 +42,7 @@ namespace setup
      */
     void setupResetKinetics(engine::Engine &engine)
     {
-        if (!settings::Settings::isMDJobType())
+        if (!settings::GeneralSettings::isMDJobType())
             return;
 
         out::StdoutOutput::writeSetup("Reset Kinetics");

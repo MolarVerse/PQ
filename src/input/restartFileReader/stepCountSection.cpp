@@ -22,14 +22,14 @@
 
 #include "stepCountSection.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <string>    // for string, stoi
-#include <vector>    // for vector
+#include <cstddef>
+#include <format>
+#include <string>
+#include <vector>
 
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for RstFileException
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "timingsSettings.hpp"
 
 namespace input::restartFile
 {

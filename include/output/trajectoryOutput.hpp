@@ -24,10 +24,10 @@
 
 #define _TRAJECTORY_OUTPUT_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 #include "hybridConfigurator.hpp"
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace molsys
 {

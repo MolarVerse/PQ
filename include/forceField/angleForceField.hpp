@@ -24,7 +24,7 @@
 
 #define _ANGLE_FORCE_FIELD_HPP_
 
-#include <vector>   // for vector
+#include <vector>
 
 #include "angle.hpp"
 

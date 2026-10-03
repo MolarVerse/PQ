@@ -24,10 +24,10 @@
 
 #define _TEST_ENGINE_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include "mmmdEngine.hpp"        // for MMMDEngine
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "mmmdEngine.hpp"
+#include "timingsSettings.hpp"
 
 /**
  * @class TestEngine

@@ -22,24 +22,24 @@
 
 #include <gtest/gtest.h>
 
-#include <limits>   // for numeric_limits
-#include <memory>   // for make_unique, unique_ptr
-#include <string>   // for string
+#include <limits>
+#include <memory>
+#include <string>
 
-#include "defaults.hpp"                // for default settings
-#include "exceptions.hpp"              // for exc::InputFileException
-#include "hessianSettings.hpp"         // for settings::HessianSettings
-#include "inputFileReader.hpp"         // for InputFileReader
-#include "manostatSettings.hpp"        // for settings::ManostatSettings
-#include "optEngine.hpp"               // for OptEngine
-#include "optimizerSettings.hpp"       // for settings::OptimizerSettings
-#include "potentialSettings.hpp"       // for settings::PotentialSettings
-#include "qmSettings.hpp"              // for settings::QMSettings
-#include "settings.hpp"                // for Settings
-#include "simulationBoxSettings.hpp"   // for settings::SimulationBoxSettings
-#include "thermostatSettings.hpp"      // for settings::ThermostatSettings
-#include "throwWithMessage.hpp"        // for ASSERT_THROW_MSG
-#include "timingsSettings.hpp"         // for settings::TimingsSettings
+#include "defaults.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "hessianSettings.hpp"
+#include "inputFileReader.hpp"
+#include "manostatSettings.hpp"
+#include "optEngine.hpp"
+#include "optimizerSettings.hpp"
+#include "potentialSettings.hpp"
+#include "qmSettings.hpp"
+#include "simulationBoxSettings.hpp"
+#include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"
 
 class TestInputValidation : public ::testing::Test
 {
@@ -49,7 +49,7 @@ class TestInputValidation : public ::testing::Test
 
     void SetUp() override
     {
-        settings::Settings::setJobtype(JobType::NONE);
+        settings::GeneralSettings::setJobtype(JobType::NONE);
         settings::HessianSettings::setOptimizeBeforeHessian(false);
 
         settings::OptimizerSettings::setLearningRateStrategy(
@@ -112,7 +112,7 @@ class TestInputValidation : public ::testing::Test
 
     void _configureMDJob(const JobType jobType)
     {
-        settings::Settings::setJobtype(jobType);
+        settings::GeneralSettings::setJobtype(jobType);
         settings::TimingsSettings::setNumberOfSteps(100);
         _setKeyword("nstep");
         _setKeyword("timestep");
@@ -120,12 +120,15 @@ class TestInputValidation : public ::testing::Test
             _setKeyword("qm_prog");
     }
 
-    void TearDown() override { settings::Settings::deactivateCellList(); }
+    void TearDown() override
+    {
+        settings::GeneralSettings::deactivateCellList();
+    }
 };
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 {
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     _setKeyword("timestep");
 
     ASSERT_THROW_MSG(
@@ -137,7 +140,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 {
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -148,7 +151,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 {
-    settings::Settings::setJobtype(JobType::MM_HESSIAN);
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
     settings::HessianSettings::setOptimizeBeforeHessian(true);
 
     ASSERT_THROW_MSG(
@@ -160,14 +163,14 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 
 TEST_F(TestInputValidation, hessianWithoutOptimizationNeedsNoTimings)
 {
-    settings::Settings::setJobtype(JobType::MM_HESSIAN);
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration());
 }
 
 TEST_F(TestInputValidation, requiresTimeStepForMD)
 {
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
@@ -205,7 +208,7 @@ TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 
 TEST_F(TestInputValidation, requiresQMProgramForQMJob)
 {
-    settings::Settings::setJobtype(JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
     _setKeyword("nstep");
     _setKeyword("timestep");
 
@@ -327,7 +330,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
     settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
 
     ASSERT_THROW_MSG(
@@ -341,7 +344,7 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
     _configureMDJob(JobType::QM_MD);
     settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(),
@@ -616,7 +619,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
 
 TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::CONSTANT_DECAY
@@ -633,7 +636,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 
 TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 {
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::EXPONENTIAL_DECAY
@@ -650,7 +653,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 
 TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::CONSTANT
@@ -662,7 +665,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 
 TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::LINESEARCH_WOLFE
@@ -678,7 +681,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 
 TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::CONSTANT

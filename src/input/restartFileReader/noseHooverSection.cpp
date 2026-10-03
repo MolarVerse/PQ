@@ -22,11 +22,11 @@
 
 #include "noseHooverSection.hpp"
 
-#include <format>   // for format
-#include <string>   // for string
+#include <format>
+#include <string>
 
-#include "exceptions.hpp"           // for exc::RstFileException
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "exceptions.hpp"
+#include "thermostatSettings.hpp"
 
 namespace input::restartFile
 {

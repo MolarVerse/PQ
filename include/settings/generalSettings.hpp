@@ -20,14 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTINGS_HPP_
+#ifndef _GENERAL_SETTINGS_HPP_
 
-#define _SETTINGS_HPP_
+#define _GENERAL_SETTINGS_HPP_
 
-#include <cstdint>   // for uint_fast32_t
+#include <cstdint>
 #include <mstd/enum.hpp>
 
-#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
+#include "defaults.hpp"
 #include "enums/general.hpp"
 #include "enums/integrator.hpp"
 #include "enums/jobtype.hpp"
@@ -42,7 +42,7 @@ namespace settings
      * @brief Stores the general settings of the simulation
      *
      */
-    class Settings
+    class GeneralSettings
     {
        private:
         static inline JobType       _jobtype;
@@ -67,9 +67,6 @@ namespace settings
             defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
 
        public:
-        Settings()  = default;
-        ~Settings() = default;
-
         /***************************
          * standard setter methods *
          ***************************/
@@ -128,4 +125,4 @@ namespace settings
 
 }   // namespace settings
 
-#endif   // _SETTINGS_HPP_
+#endif   // _GENERAL_SETTINGS_HPP_

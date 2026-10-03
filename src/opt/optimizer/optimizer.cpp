@@ -22,11 +22,11 @@
 
 #include "optimizer.hpp"
 
-#include <memory>   // for std::shared_ptr
+#include <memory>
 
-#include "exceptions.hpp"      // for exc::OptException
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "exceptions.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace opt
 {

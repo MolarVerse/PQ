@@ -24,9 +24,9 @@
 
 #define _ENGINE_OUTPUT_HPP_
 
-#include <cstddef>   // for size_t
-#include <memory>    // for make_unique, unique_ptr
-#include <vector>    // for vector
+#include <cstddef>
+#include <memory>
+#include <vector>
 
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"

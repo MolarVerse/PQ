@@ -24,8 +24,8 @@
 
 #define _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cstddef>
+#include <vector>
 
 #include "output.hpp"
 

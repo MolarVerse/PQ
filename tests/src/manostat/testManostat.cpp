@@ -22,24 +22,23 @@
 
 #include "testManostat.hpp"
 
-#include <cmath>    // for pow
-#include <memory>   // for make_shared, __shared_ptr_access
+#include <cmath>
+#include <memory>
 
-#include "atom.hpp"                                  // for Atom
-#include "berendsenManostat.hpp"                     // for BerendsenManostat
-#include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "atom.hpp"
+#include "berendsenManostat.hpp"
+#include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
-#include "exceptions.hpp"   // for ManostatException
-// for Message, TestPartResult
-#include "manostatSettings.hpp"    // for ManostatType, Isotropy
-#include "mathUtilities.hpp"       // for compare
-#include "molecule.hpp"            // for Molecule
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "settings.hpp"
-#include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
-#include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "throwWithMessage.hpp"              // for EXPECT_THROW_MSG
-#include "timingsSettings.hpp"               // for TimingsSettings
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "manostatSettings.hpp"
+#include "mathUtilities.hpp"
+#include "molecule.hpp"
+#include "potentialSettings.hpp"
+#include "stochasticRescalingManostat.hpp"
+#include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"
 
 namespace
 {
@@ -281,13 +280,13 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
  */
 TEST_F(TestManostat, ChangeVirialToAtomic)
 {
-    settings::Settings::setVirialType(VirialType::ATOMIC);
+    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * PRESSURE_FACTOR);
 
     // set virial type back to molecular for other tests
-    settings::Settings::setVirialType(VirialType::MOLECULAR);
+    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
 }
 
 /**

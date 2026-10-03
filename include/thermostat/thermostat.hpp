@@ -24,7 +24,8 @@
 
 #define _THERMOSTAT_HPP_
 
-#include <cstddef>   // for size_t
+#include <cstddef>
+#include <string>
 
 #include "enums/thermostat.hpp"
 
@@ -107,6 +108,12 @@ namespace thermostat
 
         [[nodiscard]]
         virtual ThermostatType getThermostatType() const;
+
+       protected:
+        static void _requireDegreesOfFreedom(
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &thermostatName
+        );
     };
 
 }   // namespace thermostat

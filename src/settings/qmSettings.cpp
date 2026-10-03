@@ -23,11 +23,11 @@
 #include "qmSettings.hpp"
 
 #include <filesystem>
-#include <format>   // for std::format
+#include <format>
 #include <utility>
 
 #include "enums/qm.hpp"
-#include "exceptions.hpp"   // for customException
+#include "exceptions.hpp"
 #include "executablePath.hpp"
 
 namespace settings

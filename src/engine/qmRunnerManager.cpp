@@ -25,19 +25,19 @@
 #include <memory>
 #include <utility>
 
-#include "dftbplusRunner.hpp"   // for DFTBPlusRunner
+#include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
-#include "exceptions.hpp"   // for InputFileException, exc::CompileTimeException
-#include "pyscfRunner.hpp"       // for PySCFRunner
-#include "qmSettings.hpp"        // for settings::QMSettings
-#include "settings.hpp"          // for Settings
-#include "turbomoleRunner.hpp"   // for TurbomoleRunner
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "pyscfRunner.hpp"
+#include "qmSettings.hpp"
+#include "turbomoleRunner.hpp"
 
 #ifdef WITH_ASE
-#include "aseDftbRunner.hpp"     // for AseDftbRunner
-#include "aseFennolRunner.hpp"   // for AseFennolRunner
-#include "aseMaceRunner.hpp"     // for AseMaceRunner
-#include "aseXtbRunner.hpp"      // for AseXtbRunner
+#include "aseDftbRunner.hpp"
+#include "aseFennolRunner.hpp"
+#include "aseMaceRunner.hpp"
+#include "aseXtbRunner.hpp"
 #endif
 
 namespace engine
@@ -97,7 +97,8 @@ namespace engine
         );
         const auto modelPath = settings::QMSettings::getMaceModelPath();
         const auto useDFTD   = settings::QMSettings::useDispersionCorr();
-        const auto fpType = settings::Settings::getFloatingPointPybindString();
+        const auto fpType =
+            settings::GeneralSettings::getFloatingPointPybindString();
         const auto useCueq =
             settings::QMSettings::getMaceMode() == MaceMode::FAST;
 
@@ -194,7 +195,7 @@ namespace engine
         const auto gpuPreprocessing =
             settings::QMSettings::useGPUPreprocessing();
         const bool useFloat64 =
-            settings::Settings::getFloatingPointType() == DOUBLE;
+            settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 
         return std::make_shared<QM::AseFennolRunner>(
             modelPath,

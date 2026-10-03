@@ -24,8 +24,8 @@
 
 #define _MONTE_CARLO_MANOSTAT_HPP_
 
-#include "manostat.hpp"                // for Manostat
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
+#include "manostat.hpp"
+#include "randomNumberGenerator.hpp"
 
 namespace manostat
 {

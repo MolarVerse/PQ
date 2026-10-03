@@ -24,16 +24,16 @@
 
 #define _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
-#include <vector>   // for vector
+#include <memory>
+#include <vector>
 
-#include "atom.hpp"                          // for Atom
-#include "molecule.hpp"                      // for Molecule
-#include "ringPolymerSettings.hpp"           // for RingPolymerSettings
-#include "ringPolymerTrajectoryOutput.hpp"   // for RingPolymerTrajectoryOutput
-#include "simulationBox.hpp"                 // for SimulationBox
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "ringPolymerSettings.hpp"
+#include "ringPolymerTrajectoryOutput.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class TestRingPolymerTrajectoryOutput

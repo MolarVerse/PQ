@@ -22,7 +22,7 @@
 
 #include "commandLineArgs.hpp"
 
-#include "exceptions.hpp"   // for exc::UserInputException
+#include "exceptions.hpp"
 
 /**
  * @brief Construct a new CommandLineArgs::CommandLineArgs object

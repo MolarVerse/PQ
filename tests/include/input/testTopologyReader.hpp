@@ -24,14 +24,14 @@
 
 #define _TEST_TOPOLOGY_READER_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
 #include <memory>
 
-#include "fileSettings.hpp"     // for FileSettings
-#include "mmmdEngine.hpp"       // for Engine
-#include "molecule.hpp"         // for Molecule
-#include "topologyReader.hpp"   // for TopologyReader
+#include "fileSettings.hpp"
+#include "mmmdEngine.hpp"
+#include "molecule.hpp"
+#include "topologyReader.hpp"
 
 /**
  * @class TestTopologyReader

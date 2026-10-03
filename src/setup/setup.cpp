@@ -22,35 +22,35 @@
 
 #include "setup.hpp"
 
-#include "celllistSetup.hpp"        // for setupCellList
-#include "constraintsSetup.hpp"     // for setupConstraints
-#include "engine.hpp"               // for Engine
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "forceFieldSetup.hpp"      // for setupForceField
+#include "celllistSetup.hpp"
+#include "constraintsSetup.hpp"
+#include "engine.hpp"
+#include "forceFieldSettings.hpp"
+#include "forceFieldSetup.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
-#include "guffDatReader.hpp"                // for readGuffDat, readInput
-#include "hybridSetup.hpp"                  // for setupQMMM
-#include "inputFileReader.hpp"              // for readInputFile
-#include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
-#include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
-#include "manostatSetup.hpp"                // for setupManostat
-#include "moldescriptorReader.hpp"          // for readMolDescriptor
-#include "optimizerSetup.hpp"               // for setupOptimizer
-#include "outputFilesSetup.hpp"             // for setupOutputFiles
-#include "parameterFileReader.hpp"          // for readParameterFile
-#include "potentialSetup.hpp"               // for setupPotential
-#include "qmSetup.hpp"                      // for setupQM
-#include "randomNumberGeneratorSetup.hpp"   // for setupRandomNumberGenerator
-#include "resetKineticsSetup.hpp"           // for setupResetKinetics
-#include "restartFileReader.hpp"            // for readRestartFile
-#include "ringPolymerSetup.hpp"             // for setupRingPolymer
-#include "settings.hpp"                     // for Settings
-#include "simulationBoxSetup.hpp"           // for setupSimulationBox
-#include "thermostatSetup.hpp"              // for setupThermostat
-#include "topologyReader.hpp"               // for readTopologyFile
+#include "guffDatReader.hpp"
+#include "hybridSetup.hpp"
+#include "inputFileReader.hpp"
+#include "intraNonBondedReader.hpp"
+#include "intraNonBondedSetup.hpp"
+#include "manostatSetup.hpp"
+#include "moldescriptorReader.hpp"
+#include "optimizerSetup.hpp"
+#include "outputFilesSetup.hpp"
+#include "parameterFileReader.hpp"
+#include "potentialSetup.hpp"
+#include "qmSetup.hpp"
+#include "randomNumberGeneratorSetup.hpp"
+#include "resetKineticsSetup.hpp"
+#include "restartFileReader.hpp"
+#include "ringPolymerSetup.hpp"
+#include "simulationBoxSetup.hpp"
+#include "thermostatSetup.hpp"
+#include "topologyReader.hpp"
 #include "velocityVerlet.hpp"
-#include "waterModelSettings.hpp"   // for WaterModelSettings
-#include "waterModelSetup.hpp"      // for setupWaterModel
+#include "waterModelSettings.hpp"
+#include "waterModelSetup.hpp"
 
 namespace setup
 {
@@ -126,12 +126,12 @@ namespace setup
      */
     void setupEngine(engine::Engine& engine)
     {
-        if (settings::Settings::isQMActivated())
+        if (settings::GeneralSettings::isQMActivated())
             setupQM(engine);
 
-        if (settings::Settings::isMDJobType())
+        if (settings::GeneralSettings::isMDJobType())
         {
-            switch (settings::Settings::getIntegratorType())
+            switch (settings::GeneralSettings::getIntegratorType())
             {
                 case IntegratorType::VELOCITY_VERLET:
                 {
@@ -156,14 +156,14 @@ namespace setup
 
         setupCellList(engine);
 
-        if (settings::Settings::isMDJobType())
+        if (settings::GeneralSettings::isMDJobType())
         {
             setupThermostat(engine);
 
             setupManostat(engine);
         }
 
-        if (settings::Settings::isMMActivated())
+        if (settings::GeneralSettings::isMMActivated())
         {
             setupPotential(engine);
 
@@ -178,13 +178,13 @@ namespace setup
 
         setupConstraints(engine);
 
-        if (settings::Settings::isMDJobType())
+        if (settings::GeneralSettings::isMDJobType())
             setupRingPolymer(engine);
 
-        if (settings::Settings::isHybridJobtype())
+        if (settings::GeneralSettings::isHybridJobtype())
             setupHybrid(engine);
 
-        if (settings::Settings::isOptJobType())
+        if (settings::GeneralSettings::isOptJobType())
             setupOptimizer(engine);
 
         engine.getLogOutput().flushQueuedWarnings();

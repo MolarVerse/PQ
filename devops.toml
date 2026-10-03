@@ -30,6 +30,7 @@ ast_check_enabled_ids = [
     "noPublicLeadingUnderscore",
     "noDeleteInGtestTeardown",
     "noNewInGtestSetup",
+    "includeIwyuPragmaOnly",
     "noClangFormatToggle",
 ]
 
@@ -47,6 +48,9 @@ type_to_name = { "molsys::SimulationBox" = [
 
 [cpp.ast_check_config.classMemberOrder]
 excluded_macros = ["MSTD_ENUM", "MSTD_ENUM_BITFLAG", "TEST", "TEST_F"]
+
+[cpp.ast_check_config.includeIwyuPragmaOnly]
+allowed_pragmas = ["export"]
 
 [logging]
 cpp_level = "INFO"

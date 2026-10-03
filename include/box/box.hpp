@@ -24,8 +24,8 @@
 
 #define _BOX_HPP_
 
-#include "staticMatrix.hpp"   // for tensor3D
-#include "vector3d.hpp"       // for Vec3D
+#include "staticMatrix.hpp"
+#include "vector3d.hpp"
 
 namespace molsys
 {

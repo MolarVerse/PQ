@@ -24,7 +24,7 @@
 
 #define _SIMULATION_BOX_INPUT_PARSER_HPP_
 
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 
 namespace molsys
 {
