@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <limits>   // for numeric_limits
+#include <limits>
 
-#include "mathUtilities.hpp"   // for utilities::compare, sign, utilities
-#include "vector3d.hpp"        // IWYU pragma: keep - for Vec3D
+#include "mathUtilities.hpp"
+#include "vector3d.hpp"
 
 /**
  * @brief tests utilities::compare function for double type

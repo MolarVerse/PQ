@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), TEST, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <optional>      // for optional
-#include <string_view>   // for string_view
+#include <optional>
+#include <string_view>
 
-#include "exceptions.hpp"         // for GuffDatException, InputFileException
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests throwing input file exception

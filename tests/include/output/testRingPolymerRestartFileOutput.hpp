@@ -24,16 +24,16 @@
 
 #define _TEST_RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
 
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
-#include <cstdio>   // for remove
-#include <memory>   // for __shared_ptr_access, shared_ptr
-#include <vector>   // for vector
+#include <cstdio>
+#include <memory>
+#include <vector>
 
-#include "atom.hpp"                           // for Atom
-#include "molecule.hpp"                       // for Molecule
-#include "ringPolymerRestartFileOutput.hpp"   // for RingPolymerRestartFileOutput
-#include "simulationBox.hpp"                  // for SimulationBox
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "ringPolymerRestartFileOutput.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class TestRingPolymerRestartFileOutput

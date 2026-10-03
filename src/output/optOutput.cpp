@@ -22,9 +22,9 @@
 
 #include "optOutput.hpp"
 
-#include <format>   // for std::format
+#include <format>
 
-#include "optimizer.hpp"   // for Optimizer
+#include "optimizer.hpp"
 
 namespace out
 {

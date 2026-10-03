@@ -22,24 +22,23 @@
 
 #include "testManostat.hpp"
 
-#include <cmath>    // for pow
-#include <memory>   // for make_shared, __shared_ptr_access
+#include <cmath>
+#include <memory>
 
-#include "atom.hpp"                                  // for Atom
-#include "berendsenManostat.hpp"                     // for BerendsenManostat
-#include "constants/internalConversionFactors.hpp"   // for _PRESSURE_FACTOR_
+#include "atom.hpp"
+#include "berendsenManostat.hpp"
+#include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
-#include "exceptions.hpp"   // for ManostatException
-// for Message, TestPartResult
-#include "manostatSettings.hpp"    // for ManostatType, Isotropy
-#include "mathUtilities.hpp"       // for compare
-#include "molecule.hpp"            // for Molecule
-#include "potentialSettings.hpp"   // for PotentialSettings
+#include "exceptions.hpp"
+#include "manostatSettings.hpp"
+#include "mathUtilities.hpp"
+#include "molecule.hpp"
+#include "potentialSettings.hpp"
 #include "settings.hpp"
-#include "stochasticRescalingManostat.hpp"   // for StochasticRescalingManostat
-#include "thermostatSettings.hpp"            // for ThermostatSettings
-#include "throwWithMessage.hpp"              // for EXPECT_THROW_MSG
-#include "timingsSettings.hpp"               // for TimingsSettings
+#include "stochasticRescalingManostat.hpp"
+#include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"
 
 namespace
 {

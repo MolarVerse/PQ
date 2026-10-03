@@ -22,13 +22,13 @@
 
 #include "berendsenManostat.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cmath>       // for cbrt
+#include <algorithm>
+#include <cmath>
 
 #include "globalTimer.hpp"
-#include "physicalData.hpp"      // for PhysicalData
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "timingsSettings.hpp"
 
 namespace manostat
 {

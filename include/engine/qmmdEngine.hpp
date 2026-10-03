@@ -24,8 +24,8 @@
 
 #define _QM_MD_ENGINE_HPP_
 
-#include "mdEngine.hpp"          // for Engine
-#include "qmCapableEngine.hpp"   // for QMCapableEngine
+#include "mdEngine.hpp"
+#include "qmCapableEngine.hpp"
 
 namespace engine
 {

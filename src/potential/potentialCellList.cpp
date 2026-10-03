@@ -20,19 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "potentialCellList.hpp"   // for PotentialCellList
+#include "potentialCellList.hpp"
 
-#include <algorithm>   // for find
-#include <cstddef>     // for size_t
-#include <vector>      // for vector
+#include <algorithm>
+#include <cstddef>
+#include <vector>
 
-#include "cell.hpp"                 // for Cell, simulationBox
-#include "celllist.hpp"             // for CellList
-#include "globalTimer.hpp"          // for GlobalTimer
-#include "molecule.hpp"             // for Molecule
-#include "physicalData.hpp"         // for PhysicalData
-#include "simulationBox.hpp"        // for SimulationBox
-#include "waterModelSettings.hpp"   // for WaterModelSettings
+#include "cell.hpp"
+#include "celllist.hpp"
+#include "globalTimer.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "waterModelSettings.hpp"
 
 namespace pot
 {

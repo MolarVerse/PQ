@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"           // for InputFileException
-#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "exceptions.hpp"
+#include "outputFileSettings.hpp"
 #include "outputInputParser.hpp"
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "outputfreq" command

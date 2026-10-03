@@ -24,7 +24,7 @@
 
 #define _EXP_DECAY_HPP_
 
-#include <cmath>   // for exp
+#include <cmath>
 
 #include "learningRateStrategy.hpp"
 

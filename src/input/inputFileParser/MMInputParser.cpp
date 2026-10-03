@@ -24,15 +24,15 @@
 
 #include <utility>
 
-#include "forceFieldClass.hpp"        // for ForceField
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "forceFieldSettings.hpp"     // for settings::ForceFieldSettings
+#include "forceFieldClass.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "forceFieldSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
-#include "potential.hpp"            // for Potential
-#include "potentialSettings.hpp"    // for PotentialSettings
-#include "waterModelSettings.hpp"   // for settings::WaterModelSettings
+#include "potential.hpp"
+#include "potentialSettings.hpp"
+#include "waterModelSettings.hpp"
 
 namespace input
 {

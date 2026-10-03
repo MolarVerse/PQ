@@ -22,11 +22,11 @@
 
 #include "output.hpp"
 
-#include <format>    // for format
-#include <fstream>   // for ifstream, ofstream, std
+#include <format>
+#include <fstream>
 
-#include "exceptions.hpp"           // for InputFileException, customException
-#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "exceptions.hpp"
+#include "outputFileSettings.hpp"
 
 namespace out
 {

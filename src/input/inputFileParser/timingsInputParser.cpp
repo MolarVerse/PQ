@@ -26,7 +26,7 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "timingsSettings.hpp"   // for settings::TimingsSettings
+#include "timingsSettings.hpp"
 
 namespace input
 {

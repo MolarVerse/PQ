@@ -24,10 +24,10 @@
 
 #define _INTRA_NON_BONDED_MAP_HPP_
 
-#include <utility>   // for pair
-#include <vector>    // for vector
+#include <utility>
+#include <vector>
 
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
+#include "intraNonBondedContainer.hpp"
 #include "molecule.hpp"
 
 namespace molsys

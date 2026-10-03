@@ -20,10 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (ptr only), InitG...
+#include <gtest/gtest.h>
 
-// for Message, TestPartResult
-#include "matrix.hpp"   // for Matrix, linearAlgebra
+#include "matrix.hpp"
 
 /**
  * @brief tests constructors for Matrix

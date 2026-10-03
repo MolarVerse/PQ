@@ -22,7 +22,7 @@
 
 #include "optEngine.hpp"
 
-#include <format>   // for format
+#include <format>
 
 #include "constants.hpp"
 #include "exceptions.hpp"

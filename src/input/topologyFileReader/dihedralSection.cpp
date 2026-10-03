@@ -22,14 +22,14 @@
 
 #include "dihedralSection.hpp"
 
-#include <algorithm>   // for sort, unique
-#include <format>      // for format
-#include <string>      // for string, allocator
-#include <vector>      // for vector
+#include <algorithm>
+#include <format>
+#include <string>
+#include <vector>
 
-#include "dihedralForceField.hpp"   // for BondForceField
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for exc::TopologyException
+#include "dihedralForceField.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 #include "strongTypes.hpp"
 
 namespace input::topology

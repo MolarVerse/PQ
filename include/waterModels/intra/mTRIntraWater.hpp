@@ -24,7 +24,7 @@
 
 #define _MTR_INTRA_WATER_HPP_
 
-#include "intraWater.hpp"   // for IntraWater
+#include "intraWater.hpp"
 
 namespace waterModel
 {

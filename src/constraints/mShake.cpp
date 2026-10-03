@@ -22,17 +22,17 @@
 
 #include "mShake.hpp"
 
-#include <format>   // for std::format
+#include <format>
 
-#include "constants.hpp"            // for constants
-#include "constraintSettings.hpp"   // for settings::ConstraintSettings
-#include "distanceKernels.hpp"      // for kernel::distVecAndDist2
-#include "mShakeReference.hpp"      // for MShakeReference
-#include "mathUtilities.hpp"        // for dot
-#include "matrix.hpp"               // for Matrix
-#include "simulationBox.hpp"        // for SimulationBox
-#include "stlVector.hpp"            // for dot
-#include "timingsSettings.hpp"      // for settings
+#include "constants.hpp"
+#include "constraintSettings.hpp"
+#include "distanceKernels.hpp"
+#include "mShakeReference.hpp"
+#include "mathUtilities.hpp"
+#include "matrix.hpp"
+#include "simulationBox.hpp"
+#include "stlVector.hpp"
+#include "timingsSettings.hpp"
 #include "vector3d.hpp"
 
 namespace constraints

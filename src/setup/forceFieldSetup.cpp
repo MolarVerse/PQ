@@ -25,9 +25,9 @@
 #include <algorithm>
 #include <format>
 
-#include "engine.hpp"               // for Engine
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "settings.hpp"             // for Settings
+#include "engine.hpp"
+#include "forceFieldSettings.hpp"
+#include "settings.hpp"
 
 namespace setup
 {

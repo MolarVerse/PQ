@@ -24,8 +24,8 @@
 
 #define _RESTART_FILE_SECTION_HPP_
 
-#include <fstream>   // for ifstream
-#include <string>    // for string, allocator
+#include <fstream>
+#include <string>
 #include <vector>
 
 namespace engine

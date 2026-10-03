@@ -22,14 +22,14 @@
 
 #include "bondForceField.hpp"
 
-#include <vector>   // for vector
+#include <vector>
 
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
-#include "hybridSettings.hpp"     // for settings::HybridSettings
-#include "molecule.hpp"           // for Molecule
-#include "physicalData.hpp"       // for physicalData::PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
+#include "coulombPotential.hpp"
+#include "forceField.hpp"
+#include "hybridSettings.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace ff
 {

@@ -22,24 +22,24 @@
 
 #include <gtest/gtest.h>
 
-#include <limits>   // for numeric_limits
-#include <memory>   // for make_unique, unique_ptr
-#include <string>   // for string
+#include <limits>
+#include <memory>
+#include <string>
 
-#include "defaults.hpp"                // for default settings
-#include "exceptions.hpp"              // for exc::InputFileException
-#include "hessianSettings.hpp"         // for settings::HessianSettings
-#include "inputFileReader.hpp"         // for InputFileReader
-#include "manostatSettings.hpp"        // for settings::ManostatSettings
-#include "optEngine.hpp"               // for OptEngine
-#include "optimizerSettings.hpp"       // for settings::OptimizerSettings
-#include "potentialSettings.hpp"       // for settings::PotentialSettings
-#include "qmSettings.hpp"              // for settings::QMSettings
-#include "settings.hpp"                // for Settings
-#include "simulationBoxSettings.hpp"   // for settings::SimulationBoxSettings
-#include "thermostatSettings.hpp"      // for settings::ThermostatSettings
-#include "throwWithMessage.hpp"        // for ASSERT_THROW_MSG
-#include "timingsSettings.hpp"         // for settings::TimingsSettings
+#include "defaults.hpp"
+#include "exceptions.hpp"
+#include "hessianSettings.hpp"
+#include "inputFileReader.hpp"
+#include "manostatSettings.hpp"
+#include "optEngine.hpp"
+#include "optimizerSettings.hpp"
+#include "potentialSettings.hpp"
+#include "qmSettings.hpp"
+#include "settings.hpp"
+#include "simulationBoxSettings.hpp"
+#include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"
 
 class TestInputValidation : public ::testing::Test
 {

@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo
+#include <gtest/gtest.h>
 
-#include <cmath>   // for M_PI
+#include <cmath>
 
-#include "constants/conversionFactors.hpp"           // for _ANGSTROM_TO_METER_
-#include "constants/internalConversionFactors.hpp"   // for _FORCE_UNIT_TO_SI_, ...
-#include "constants/natureConstants.hpp"             // for _AVOGADRO_NUMBER_
+#include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
+#include "constants/natureConstants.hpp"
 
 /*********************
  * natural constants *

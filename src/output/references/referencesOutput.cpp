@@ -22,16 +22,16 @@
 
 #include "referencesOutput.hpp"
 
-#include <filesystem>   // for is_directory, is_regular_file, path
-#include <format>       // for format
-#include <fstream>      // for fstream
-#include <sstream>      // for ostringstream
-#include <stdexcept>    // for runtime_error
-#include <string>       // for string
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
-#include "executablePath.hpp"       // for executablePath
-#include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "references.hpp"           // for ReferencesOutput
+#include "executablePath.hpp"
+#include "outputFileSettings.hpp"
+#include "references.hpp"
 
 namespace references
 {

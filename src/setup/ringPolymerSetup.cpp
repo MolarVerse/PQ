@@ -22,19 +22,19 @@
 
 #include "ringPolymerSetup.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cstddef>     // for size_t
+#include <algorithm>
+#include <cstddef>
 
-#include "fileSettings.hpp"                   // for FileSettings
-#include "maxwellBoltzmann.hpp"               // for MaxwellBoltzmann
-#include "ringPolymerEngine.hpp"              // for RingPolymerEngine
-#include "ringPolymerRestartFileReader.hpp"   // for readRingPolymerRestartFile
-#include "ringPolymerSettings.hpp"            // for RingPolymerSettings
-#include "settings.hpp"                       // for Settings
-#include "simulationBox.hpp"                  // for SimulationBox
+#include "fileSettings.hpp"
+#include "maxwellBoltzmann.hpp"
+#include "ringPolymerEngine.hpp"
+#include "ringPolymerRestartFileReader.hpp"
+#include "ringPolymerSettings.hpp"
+#include "settings.hpp"
+#include "simulationBox.hpp"
 
 #ifdef WITH_MPI
-#include "mpi.hpp"   // for MPI
+#include "mpi.hpp"
 #endif
 
 namespace setup

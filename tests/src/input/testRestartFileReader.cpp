@@ -24,13 +24,13 @@
 
 #include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "fileSettings.hpp"          // for FileSettings
-#include "moldescriptorReader.hpp"   // for MoldescriptorReader
-#include "restartFileReader.hpp"     // for RstFileReader, readRstFile
-#include "restartFileSection.hpp"    // for RstFileSection, readInput
+#include "fileSettings.hpp"
+#include "moldescriptorReader.hpp"
+#include "restartFileReader.hpp"
+#include "restartFileSection.hpp"
 
 /**
  * @brief tests determineSection base on the first element of the line

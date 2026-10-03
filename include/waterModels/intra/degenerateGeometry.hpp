@@ -24,11 +24,11 @@
 
 #define _DEGENERATE_GEOMETRY_HPP_
 
-#include <cmath>         // for isfinite
-#include <format>        // for format
-#include <string_view>   // for string_view
+#include <cmath>
+#include <format>
+#include <string_view>
 
-#include "exceptions.hpp"   // for exc::WaterModelException
+#include "exceptions.hpp"
 
 namespace waterModel
 {

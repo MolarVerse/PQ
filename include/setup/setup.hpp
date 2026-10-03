@@ -24,7 +24,7 @@
 
 #define _SETUP_HPP_
 
-#include <string>   // for string
+#include <string>
 
 namespace engine
 {

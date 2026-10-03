@@ -22,17 +22,17 @@
 
 #include "ringPolymerqmmdEngine.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <memory>      // for unique_ptr
+#include <algorithm>
+#include <memory>
 
-#include "integrator.hpp"   // for Integrator
-#include "manostat.hpp"     // for Manostat
-#include "thermostat.hpp"   // for Thermostat
+#include "integrator.hpp"
+#include "manostat.hpp"
+#include "thermostat.hpp"
 
 #ifdef WITH_MPI
-#include <mpi.h>   // for MPI_Bcast, MPI_DOUBLE, MPI_COMM_WORLD
+#include <mpi.h>
 
-#include "mpi.hpp"   // for MPI
+#include "mpi.hpp"
 #endif
 
 namespace engine

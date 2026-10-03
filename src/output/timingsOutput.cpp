@@ -22,10 +22,10 @@
 
 #include "timingsOutput.hpp"
 
-#include <format>   // for std::format
+#include <format>
 
 #include "constants/conversionFactors.hpp"
-#include "globalTimer.hpp"   // for GlobalTimer
+#include "globalTimer.hpp"
 
 namespace out
 {

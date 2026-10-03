@@ -22,9 +22,9 @@
 
 #include "cell.hpp"
 
-#include "molecule.hpp"             // for Molecule
-#include "simulationBox.hpp"        // for SimulationBox
-#include "waterModelSettings.hpp"   // for WaterModelSettings
+#include "molecule.hpp"
+#include "simulationBox.hpp"
+#include "waterModelSettings.hpp"
 
 namespace molsys
 {

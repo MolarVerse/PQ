@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "interWater.hpp"   // for InterWater
+#include "interWater.hpp"
 
 #include <utility>
 
-#include "globalTimer.hpp"         // for GlobalTimer
-#include "potentialSettings.hpp"   // for PotentialSettings
+#include "globalTimer.hpp"
+#include "potentialSettings.hpp"
 
 namespace waterModel
 {

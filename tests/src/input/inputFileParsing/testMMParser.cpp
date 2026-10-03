@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_FALSE, EXPECT_TRUE
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
 #include "MMInputParser.hpp"
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for InputFileException, customException
-#include "forceFieldSettings.hpp"    // for ForceFieldSettings
-#include "potentialSettings.hpp"     // for PotentialSettings
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "forceFieldSettings.hpp"
+#include "potentialSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "force-field" command

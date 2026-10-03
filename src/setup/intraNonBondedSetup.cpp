@@ -22,7 +22,7 @@
 
 #include "intraNonBondedSetup.hpp"
 
-#include "engine.hpp"   // for Engine
+#include "engine.hpp"
 
 namespace setup
 {

@@ -22,16 +22,16 @@
 
 #include "ringPolymerRestartFileReader.hpp"
 
-#include <cstddef>       // for size_t
-#include <format>        // for format
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <cstddef>
+#include <format>
+#include <string_view>
+#include <vector>
 
-#include "exceptions.hpp"            // for RingPolymerRestartFileException
-#include "fileSettings.hpp"          // for FileSettings
-#include "ringPolymerEngine.hpp"     // for RingPolymerEngine
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "stringUtilities.hpp"       // for removeComments, splitString
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "ringPolymerEngine.hpp"
+#include "ringPolymerSettings.hpp"
+#include "stringUtilities.hpp"
 
 namespace input::ringPolymer
 {

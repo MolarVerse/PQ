@@ -25,18 +25,18 @@
 #define _SIMULATION_BOX_HPP_
 
 #include <memory>
-#include <optional>   // for optional
+#include <optional>
 #include <set>
-#include <string>   // for string
+#include <string>
 #include <unordered_map>
-#include <vector>   // for vector
+#include <vector>
 
-#include "atom.hpp"                // for Atom
-#include "box.hpp"                 // for Box
-#include "molecule.hpp"            // for Molecule
-#include "moleculeType.hpp"        // for MoleculeType
-#include "orthorhombicBox.hpp"     // for OrthorhombicBox
-#include "simulationBoxView.hpp"   // for SimulationBoxView
+#include "atom.hpp"
+#include "box.hpp"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
+#include "simulationBoxView.hpp"
 #include "strongTypes.hpp"
 
 /**

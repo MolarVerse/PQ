@@ -22,18 +22,18 @@
 
 #include "nonCoulombicsSection.hpp"
 
-#include <format>   // for format
-#include <memory>   // for make_shared
-#include <string>   // for stod, stoul, string, operator==
+#include <format>
+#include <memory>
+#include <string>
 
-#include "buckinghamPair.hpp"         // for BuckinghamPair
-#include "engine.hpp"                 // for Engine
-#include "exceptions.hpp"             // for exc::ParameterFileException
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "lennardJonesPair.hpp"       // for LennardJonesPair
-#include "morsePair.hpp"              // for MorsePair
-#include "potentialSettings.hpp"      // for settings::PotentialSettings
-#include "stringUtilities.hpp"        // for toLowerCopy
+#include "buckinghamPair.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "lennardJonesPair.hpp"
+#include "morsePair.hpp"
+#include "potentialSettings.hpp"
+#include "stringUtilities.hpp"
 #include "strongTypes.hpp"
 
 namespace input::parameterFile

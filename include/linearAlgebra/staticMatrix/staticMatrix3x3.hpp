@@ -24,9 +24,9 @@
 
 #define _STATIC_MATRIX_3X3_HPP_
 
-#include <ostream>   // for operator<<, ostream
+#include <ostream>
 
-#include "staticMatrix3x3Class.hpp"   // for StaticMatrix3x3
+#include "staticMatrix3x3Class.hpp"
 
 namespace linalg
 {
@@ -164,7 +164,7 @@ namespace linalg
 }   // namespace linalg
 
 #ifndef _STATIC_MATRIX_3X3_TPP_
-#include "staticMatrix3x3.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#include "staticMatrix3x3.tpp.hpp"   // IWYU pragma: export
 #endif
 
 #endif   // _STATIC_MATRIX_3X3_HPP_

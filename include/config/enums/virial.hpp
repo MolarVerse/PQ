@@ -23,7 +23,7 @@
 #ifndef _VIRIAL_ENUM_HPP_
 #define _VIRIAL_ENUM_HPP_
 
-#include <cstdint>   // for uint8_t
+#include <cstdint>
 #include <mstd/enum.hpp>
 
 /**

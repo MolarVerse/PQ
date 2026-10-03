@@ -24,10 +24,10 @@
 
 #include <format>
 
-#include "constraintSettings.hpp"   // for getShakeMaxIter, getShakeTolerance, getRattleMaxIter, getRattleTolerance
-#include "constraints.hpp"    // for Constraints
-#include "engine.hpp"         // for Engine
-#include "mShakeReader.hpp"   // for readMShake
+#include "constraintSettings.hpp"
+#include "constraints.hpp"
+#include "engine.hpp"
+#include "mShakeReader.hpp"
 
 namespace setup
 {
