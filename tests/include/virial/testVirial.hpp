@@ -29,8 +29,10 @@
 #include <memory>
 
 #include "atom.hpp"
+#include "enums/jobtype.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
@@ -38,14 +40,14 @@ class TestVirial : public ::testing::Test
 {
    protected:
     std::unique_ptr<molsys::SimulationBox> _simBox;
-    settings::JobType                      _jobType;
+    JobType                                _jobType;
 
     void SetUp() override
     {
         _jobType = settings::Settings::getJobtype();
 
         _simBox = std::make_unique<molsys::SimulationBox>();
-        settings::Settings::setVirialType(settings::VirialType::ATOMIC);
+        settings::Settings::setVirialType(VirialType::ATOMIC);
 
         auto molecule1 = molsys::Molecule();
 

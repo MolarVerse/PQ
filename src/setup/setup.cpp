@@ -133,13 +133,13 @@ namespace setup
         {
             switch (settings::Settings::getIntegratorType())
             {
-                case settings::IntegratorType::VELOCITY_VERLET:
+                case IntegratorType::VELOCITY_VERLET:
                 {
                     auto& mdEngine = dynamic_cast<engine::MDEngine&>(engine);
                     mdEngine.makeIntegrator(integrator::VelocityVerlet());
                     break;
                 }
-                case settings::IntegratorType::NONE:
+                case IntegratorType::NONE:
                 {
                     throw exc::InputFileException(
                         "Integrator is not set for MD simulation - please set "

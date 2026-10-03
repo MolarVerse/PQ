@@ -78,7 +78,7 @@ namespace setup
      */
     void ThermostatSetup::setup()
     {
-        using enum settings::ThermostatType;
+        using enum ThermostatType;
 
         const auto thermostatType =
             settings::ThermostatSettings::getThermostatType();
@@ -310,29 +310,29 @@ namespace setup
         const auto thermostatType =
             settings::ThermostatSettings::getThermostatType();
 
-        if (thermostatType == settings::ThermostatType::NONE)
+        if (thermostatType == ThermostatType::NONE)
             log.writeSetupInfo("No thermostat selected");
         else
         {
             log.writeSetupInfo(
                 std::format(
                     "Thermostat type: {}",
-                    settings::ThermostatTypeMeta::toString(thermostatType)
+                    ThermostatTypeMeta::toString(thermostatType)
                 )
             );
             log.writeEmptyLine();
         }
 
-        if (thermostatType == settings::ThermostatType::BERENDSEN)
+        if (thermostatType == ThermostatType::BERENDSEN)
             writeBerendsenInfo();
 
-        else if (thermostatType == settings::ThermostatType::VELOCITY_RESCALING)
+        else if (thermostatType == ThermostatType::VELOCITY_RESCALING)
             writeVelocityRescalingInfo();
 
-        else if (thermostatType == settings::ThermostatType::LANGEVIN)
+        else if (thermostatType == ThermostatType::LANGEVIN)
             writeLangevinInfo();
 
-        else if (thermostatType == settings::ThermostatType::NOSE_HOOVER)
+        else if (thermostatType == ThermostatType::NOSE_HOOVER)
             writeNoseHooverInfo();
 
         if (settings::ThermostatSettings::isStartTemperatureSet())

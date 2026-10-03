@@ -152,13 +152,13 @@ namespace input
                 "Maxwell-Boltzmann distribution"
         };
 
-        const auto setValue = [](settings::InitVelocities value)
+        const auto setValue = [](InitVelocities value)
         { settings::SimulationBoxSettings::setInitializeVelocities(value); };
 
         auto &key = _getRegistry().registerKey(
-            KeyRegistry<settings::InitVelocities>{
+            KeyRegistry<InitVelocities>{
                 .metadata     = metaData,
-                .defaultValue = settings::InitVelocities::FALSE,
+                .defaultValue = InitVelocities::FALSE,
                 .onSet        = setValue
             }
         );

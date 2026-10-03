@@ -107,6 +107,9 @@ namespace exc
     using TimerException =
         BaseException<Color::Code::FG_RED, ExceptionType::TimerError>;
 
+    using SettingsException =
+        BaseException<Color::Code::FG_RED, ExceptionType::SettingsError>;
+
 }   // namespace exc
 
 #endif   // _EXCEPTIONS_HPP_

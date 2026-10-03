@@ -37,6 +37,7 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "settings.hpp"
 
 namespace
 {

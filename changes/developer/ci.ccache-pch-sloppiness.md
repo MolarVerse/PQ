@@ -1,0 +1,1 @@
+- Let ccache cache compiles that use the precompiled headers in the BUILD and LINT workflows (`CCACHE_SLOPPINESS=pch_defines,time_macros`); about 65% of the compiler calls were uncacheable before.

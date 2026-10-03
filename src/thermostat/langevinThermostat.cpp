@@ -30,7 +30,6 @@
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
 
 namespace thermostat
@@ -232,13 +231,13 @@ namespace thermostat
     double LangevinThermostat::getSigma() const { return _sigma; }
 
     /**
-     * @brief get the settings::ThermostatType
+     * @brief get the ThermostatType
      *
-     * @return settings::ThermostatType
+     * @return ThermostatType
      */
-    settings::ThermostatType LangevinThermostat::getThermostatType() const
+    ThermostatType LangevinThermostat::getThermostatType() const
     {
-        return settings::ThermostatType::LANGEVIN;
+        return ThermostatType::LANGEVIN;
     }
 
 }   // namespace thermostat

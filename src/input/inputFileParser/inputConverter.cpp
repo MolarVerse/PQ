@@ -23,6 +23,7 @@
 #include "inputConverter.hpp"
 
 #include <ranges>
+#include <unordered_map>
 
 #include "stringUtilities.hpp"
 
@@ -102,6 +103,51 @@ namespace input
     }
 
     /**
+     * @brief attempts to parse a std::unordered_map<std::string, double> from a
+     * raw input-file token
+     *
+     * @param raw the raw input-file token
+     * @return an optional containing the parsed std::unordered_map<std::string,
+     * double> if successful, std::nullopt otherwise
+     */
+    std::optional<std::unordered_map<std::string, double>> Converter<
+        std::unordered_map<std::string, double>>::tryParse(std::string_view raw)
+    {
+        std::unordered_map<std::string, double> result;
+        std::string                             input(raw);
+
+        std::stringstream sstream(input);
+        std::string       item;
+        while (std::getline(sstream, item, ','))
+        {
+            const auto separator = item.find(':');
+            if (separator == std::string::npos || 0 == separator ||
+                separator + 1 == item.size() ||
+                item.find(':', separator + 1) != std::string::npos)
+            {
+                return std::nullopt;
+            }
+
+            const auto key = item.substr(0, separator);
+            try
+            {
+                result[key] =
+                    utilities::stringToFiniteDouble(item.substr(separator + 1));
+            }
+            catch (const std::invalid_argument&)
+            {
+                return std::nullopt;
+            }
+            catch (const std::out_of_range&)
+            {
+                return std::nullopt;
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * @brief describes the domain of valid File inputs
      *
      * @return a string describing the domain
@@ -138,6 +184,22 @@ namespace input
             options += negative;
         }
         return "Allowed values: " + options;
+    }
+
+    /**
+     * @brief describes the domain of valid std::unordered_map<std::string,
+     * double> inputs
+     *
+     * @return a string describing the domain
+     */
+    std::string Converter<std::unordered_map<std::string, double>>::
+        describeDomain(
+            const std::vector<
+                std::unordered_map<std::string, double>>& /*notAllowed*/
+        )
+    {
+        return "Value must be a comma-separated list of key:value pairs, where "
+               "the key is a string and the value is a double.";
     }
 
 }   // namespace input

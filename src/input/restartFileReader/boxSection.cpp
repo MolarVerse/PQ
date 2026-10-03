@@ -123,8 +123,8 @@ namespace input::restartFile
             const auto jobType = settings::Settings::getJobtype();
 
             // TODO: implement triclinic box for MM-MD
-            if (jobType != settings::JobType::QM_MD &&
-                jobType != settings::JobType::RING_POLYMER_QM_MD)
+            if (jobType != JobType::QM_MD &&
+                jobType != JobType::RING_POLYMER_QM_MD)
                 throw exc::InputFileException(
                     "Triclinic box is only supported for QM-MD and RP-QM-MD"
                 );

@@ -139,7 +139,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
     parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::NONE
+        ThermostatType::NONE
     );
 
     _clearParser(parser);
@@ -148,7 +148,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
     parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::BERENDSEN
+        ThermostatType::BERENDSEN
     );
 
     _clearParser(parser);
@@ -157,7 +157,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
     parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::LANGEVIN
+        ThermostatType::LANGEVIN
     );
 
     _clearParser(parser);
@@ -166,7 +166,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
     parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::VELOCITY_RESCALING
+        ThermostatType::VELOCITY_RESCALING
     );
 
     _clearParser(parser);
@@ -175,7 +175,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
     parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::VELOCITY_RESCALING
+        ThermostatType::VELOCITY_RESCALING
     );
 
     _clearParser(parser);
@@ -184,7 +184,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
     parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::NOSE_HOOVER
+        ThermostatType::NOSE_HOOVER
     );
 
     _clearParser(parser);

@@ -29,7 +29,6 @@
 #include "mathUtilities.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
 
 namespace thermostat
@@ -106,11 +105,11 @@ namespace thermostat
     /**
      * @brief Get thermostat type
      *
-     * @return settings::ThermostatType
+     * @return ThermostatType
      */
-    settings::ThermostatType BerendsenThermostat::getThermostatType() const
+    ThermostatType BerendsenThermostat::getThermostatType() const
     {
-        return settings::ThermostatType::BERENDSEN;
+        return ThermostatType::BERENDSEN;
     }
 
 }   // namespace thermostat

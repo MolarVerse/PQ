@@ -1,0 +1,1 @@
+- Stop the DevOps C++ check and the clang-format check from running on pull requests that change no C++ files: a negated path filter made every change count as relevant.

@@ -34,7 +34,6 @@
 #include "noseHooverThermostat.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 #include "velocityRescalingThermostat.hpp"
@@ -178,7 +177,7 @@ TEST_F(TestThermostat, velocityRescalingThermostatType)
     auto thermostat = thermostat::VelocityRescalingThermostat(300.0, 100.0);
     EXPECT_EQ(
         thermostat.getThermostatType(),
-        settings::ThermostatType::VELOCITY_RESCALING
+        ThermostatType::VELOCITY_RESCALING
     );
 }
 
@@ -329,7 +328,7 @@ TEST_F(TestThermostat, langevinSetFrictionRecomputesSigma)
 TEST_F(TestThermostat, langevinThermostatType)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
-    EXPECT_EQ(langevin.getThermostatType(), settings::ThermostatType::LANGEVIN);
+    EXPECT_EQ(langevin.getThermostatType(), ThermostatType::LANGEVIN);
 }
 
 /* ---------- NoseHooverThermostat ---------- */
@@ -342,10 +341,7 @@ TEST_F(TestThermostat, noseHooverThermostatType)
         std::vector<double>{0.0, 0.0, 0.0},
         1.0e13
     );
-    EXPECT_EQ(
-        thermostat.getThermostatType(),
-        settings::ThermostatType::NOSE_HOOVER
-    );
+    EXPECT_EQ(thermostat.getThermostatType(), ThermostatType::NOSE_HOOVER);
 }
 
 TEST_F(TestThermostat, noseHooverCouplingFrequencySetterGetter)

@@ -26,6 +26,7 @@
 #include "engine.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
+#include "settings.hpp"
 
 namespace setup
 {

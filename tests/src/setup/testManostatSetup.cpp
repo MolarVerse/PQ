@@ -37,7 +37,7 @@
 TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
 {
     const auto jobType = settings::Settings::getJobtype();
-    settings::Settings::setJobtype(settings::JobType::MM_OPT);
+    settings::Settings::setJobtype(JobType::MM_OPT);
 
     EXPECT_NO_THROW(setup::setupManostat(*_engine));
 

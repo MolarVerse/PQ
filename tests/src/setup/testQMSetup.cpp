@@ -363,7 +363,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     settings::QMSettings::setQMMethod(QMMethod::FENNOL);
     settings::QMSettings::setFennolModelPath("path/To/fennol_model.fnx");
     settings::QMSettings::setUseGPUPreprocessing(false);
-    settings::Settings::setFloatingPointType(settings::FPType::FLOAT);
+    settings::Settings::setFloatingPointType(FPType::FLOAT);
 
     _qmSetup->setupWriteInfo();
 

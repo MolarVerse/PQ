@@ -13,7 +13,7 @@ import argparse
 import json
 import sys
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -31,6 +31,8 @@ EVENTS = ("push", "pull_request")
 EVENT_LABEL = {"push": "push (dev)", "pull_request": "pull_request"}
 
 CHART_WORKFLOW = "BUILD"
+NON_GATING_WORKFLOWS = ("Clang Build",)
+CLANG_SECTION_SHOWN = 10
 CHART_MIN_RUNS = 3
 
 
@@ -52,6 +54,21 @@ class Job:
     infra_failure: bool | None
 
 
+@dataclass(frozen=True)
+class Analysis:
+    workflow: str
+    job: str
+    event: str
+    branch: str
+    attempt: int
+    conclusion: str
+    created: datetime
+    ninja: dict | None
+    ccache: dict | None
+    includes: dict | None = None
+    clang: dict | None = None
+
+
 @dataclass
 class LoadStats:
     files: int = 0
@@ -59,6 +76,7 @@ class LoadStats:
     ignored: int = 0
     invalid: int = 0
     analyses: int = 0
+    analysis_records: list = field(default_factory=list)
 
 
 def parse_timestamp(text):
@@ -88,6 +106,25 @@ def parse_job(record):
     )
 
 
+def parse_analysis(record):
+    """An Analysis from a build-analysis record; None for another schema version."""
+    if record.get("schema_version") != SCHEMA_VERSION:
+        return None
+    return Analysis(
+        workflow=record["workflow"],
+        job=record["job"],
+        event=record["event"],
+        branch=record["branch"],
+        attempt=int(record["run_attempt"]),
+        conclusion=record["conclusion"],
+        created=parse_timestamp(record["created_at"]),
+        ninja=record["ninja"],
+        ccache=record["ccache"],
+        includes=record.get("includes"),
+        clang=record.get("clang"),
+    )
+
+
 def load_jobs(data_dir):
     """Read all shards. Returns (jobs, LoadStats); bad lines are counted, not fatal."""
     jobs = []
@@ -102,7 +139,12 @@ def load_jobs(data_dir):
                 try:
                     record = json.loads(line)
                     if isinstance(record, dict) and record.get("kind") == "build-analysis":
-                        stats.analyses += 1
+                        analysis = parse_analysis(record)
+                        if analysis is None:
+                            stats.ignored += 1
+                        else:
+                            stats.analyses += 1
+                            stats.analysis_records.append(analysis)
                         continue
                     job = parse_job(record)
                 except (ValueError, KeyError, TypeError, AttributeError):
@@ -174,6 +216,10 @@ def format_change(change, regression):
     return f"{text} **regression**" if regression else text
 
 
+def format_percent_change(before, now):
+    return f"{(now - before) / before * 100:+.1f}%"
+
+
 def format_percent(part, whole):
     return f"{100 * part / whole:.0f}%" if whole else "-"
 
@@ -220,7 +266,7 @@ def collect_runs(jobs):
     """
     by_run = defaultdict(list)
     for job in jobs:
-        if job.attempt != 1 or job.event not in EVENTS:
+        if job.attempt != 1 or job.event not in EVENTS or job.workflow in NON_GATING_WORKFLOWS:
             continue
         if job.event == "push" and job.branch != PUSH_BRANCH:
             continue
@@ -393,6 +439,413 @@ def chart_maximum(values, step):
     return int(max(values) // step + 1) * step
 
 
+PCH_COUNTER = "could_not_use_precompiled_header"
+CACHE_FULL_RATIO = 0.95
+SLOWEST_SHOWN = 10
+
+
+def analysis_kept(analysis):
+    """Build analyses compared like jobs: first attempts, not cancelled, allowed events."""
+    if analysis.event not in EVENTS or analysis.attempt != 1 or analysis.conclusion == "cancelled":
+        return False
+    return analysis.event != "push" or analysis.branch == PUSH_BRANCH
+
+
+def ccache_figures(analysis):
+    """(hit rate, PCH-blocked calls, PCH-blocked share, cache full) of one build, or None."""
+    ccache = analysis.ccache
+    if not ccache:
+        return None
+    cacheable = ccache["hits"] + ccache["misses"]
+    blocked = ccache["counters"].get(PCH_COUNTER, 0)
+    counters = ccache["counters"]
+    size, limit = counters.get("cache_size_kibibyte"), counters.get("max_cache_size_kibibyte")
+    return (
+        ccache["hits"] / cacheable if cacheable else None,
+        blocked,
+        blocked / (cacheable + blocked) if cacheable + blocked else None,
+        size >= CACHE_FULL_RATIO * limit if size is not None and limit else None,
+    )
+
+
+def fmt_seconds(value):
+    if value is None:
+        return "-"
+    return f"{value:.1f}s" if value < 60 else format_duration(value)
+
+
+def format_points(current, previous, current_n, previous_n, min_samples):
+    if current is None or previous is None or current_n < min_samples or previous_n < min_samples:
+        return "n/a"
+    return f"{(current - previous) * 100:+.1f} pp"
+
+
+def median_of(values):
+    values = [value for value in values if value is not None]
+    return percentile(values, 50) if values else None
+
+
+def ccache_rows(analyses, windows, options):
+    current, previous = defaultdict(list), defaultdict(list)
+    for analysis in analyses:
+        figures = ccache_figures(analysis)
+        if figures is None:
+            continue
+        key = (analysis.workflow, analysis.job, analysis.event)
+        if windows.current(analysis.created):
+            current[key].append(figures)
+        elif windows.previous(analysis.created):
+            previous[key].append(figures)
+    rows = []
+    for key in sorted(current):
+        now = current[key]
+        rates = [f[0] for f in now if f[0] is not None]
+        before = [f[0] for f in previous.get(key, []) if f[0] is not None]
+        full = [f[3] for f in now if f[3] is not None]
+        rows.append(
+            [
+                f"{key[0]} / {key[1]}",
+                EVENT_LABEL[key[2]],
+                len(now),
+                format_percent(median_of(rates) or 0, 1) if rates else "-",
+                format_percent(median_of(before) or 0, 1) if before else "-",
+                format_points(median_of(rates), median_of(before), len(rates), len(before), options.min_samples),
+                f"{median_of([f[1] for f in now]):.0f}",
+                format_percent(median_of([f[2] for f in now]) or 0, 1) if any(f[2] is not None for f in now) else "-",
+                f"{sum(full)}/{len(full)}" if full else "-",
+            ]
+        )
+    return rows
+
+
+def weekly_blocked_share(analyses):
+    """ISO week -> median share of compiler calls blocked by the PCH (>= CHART_MIN_RUNS builds)."""
+    weeks = defaultdict(list)
+    for analysis in analyses:
+        figures = ccache_figures(analysis)
+        if figures is not None and figures[2] is not None:
+            weeks[iso_week(analysis.created)].append(figures[2])
+    return {w: median_of(v) for w, v in sorted(weeks.items()) if len(v) >= CHART_MIN_RUNS}
+
+
+def ninja_rows(analyses, windows):
+    """Complete ninja builds per (workflow, job, event) in the current window."""
+    groups = defaultdict(list)
+    skipped = 0
+    for analysis in analyses:
+        ninja = analysis.ninja
+        if not ninja or "error" in ninja or not windows.current(analysis.created):
+            continue
+        if ninja["complete"] is not True:
+            skipped += 1
+            continue
+        groups[(analysis.workflow, analysis.job, analysis.event)].append(ninja)
+    rows = []
+    for key in sorted(groups):
+        builds = groups[key]
+        link_share = [b["by_kind"]["link"]["cpu_s"] / b["cpu_s"] for b in builds if b["cpu_s"]]
+        rows.append(
+            [
+                f"{key[0]} / {key[1]}",
+                EVENT_LABEL[key[2]],
+                len(builds),
+                fmt_seconds(median_of([b["wall_s"] for b in builds])),
+                fmt_seconds(median_of([b["cpu_s"] for b in builds])),
+                f"{median_of([b['parallelism'] for b in builds]):.1f}" if any(b["parallelism"] for b in builds) else "-",
+                fmt_seconds(median_of([b["tail_after_compile_s"] for b in builds])),
+                format_percent(median_of(link_share) or 0, 1) if link_share else "-",
+            ]
+        )
+    return rows, skipped
+
+
+def slowest_steps(analyses, windows):
+    """Per (workflow, job): rows of the slowest steps of dev pushes plus build counts."""
+    builds = defaultdict(list)
+    for analysis in analyses:
+        if analysis.event != "push" or not windows.current(analysis.created):
+            continue
+        if analysis.ninja and "error" not in analysis.ninja:
+            builds[(analysis.workflow, analysis.job)].append(analysis.ninja)
+    result = {}
+    for key, members in sorted(builds.items()):
+        seen = defaultdict(list)
+        kinds = {}
+        for ninja in members:
+            for step in ninja["slowest"]:
+                seen[step["target"]].append(step["seconds"])
+                kinds[step["target"]] = step["kind"]
+        ranked = sorted(seen.items(), key=lambda item: (-median_of(item[1]), item[0]))[:SLOWEST_SHOWN]
+        complete = sum(1 for ninja in members if ninja["complete"] is True)
+        result[key] = (
+            len(members),
+            complete,
+            [
+                [f"`{target}`", kinds[target], f"{len(values)}/{len(members)}", fmt_seconds(median_of(values)), fmt_seconds(max(values))]
+                for target, values in ranked
+            ],
+        )
+    return result
+
+
+def weekly(items, reducer):
+    """ISO week -> reducer(values) for [(moment, value)], weeks with at least CHART_MIN_RUNS values."""
+    weeks = defaultdict(list)
+    for moment, value in items:
+        weeks[iso_week(moment)].append((moment, value))
+    return {
+        week: reducer(entries)
+        for week, entries in sorted(weeks.items())
+        if len(entries) >= CHART_MIN_RUNS
+    }
+
+
+def median_value(entries):
+    return median_of([value for _, value in entries])
+
+
+def latest_value(entries):
+    return max(entries, key=lambda entry: entry[0])[1]
+
+
+def clang_builds(analyses):
+    return [a for a in analyses if a.clang is not None and a.event == "push"]
+
+
+def clang_lines(analyses, windows, options):
+    """The clang build time section: dev pushes only, see the notes in the text."""
+    builds = clang_builds(analyses)
+    lines = ["### Clang build times", ""]
+    if not builds:
+        return lines + ["No clang trace summaries yet (they are collected for pushes to `dev` only).", ""]
+    current = [b for b in builds if windows.current(b.created)]
+    previous = [b for b in builds if windows.previous(b.created)]
+    lines += [
+        f"From the non-gating `Clang Build` workflow, pushes to `{PUSH_BRANCH}` only. Compiler time is CPU "
+        "time summed over all files on a shared runner; the same code took between 15 and 28 minutes in "
+        "different runs, so absolute values are noisy. The header and file rankings therefore use each "
+        "header's **share of the build's total compile time**, which cancels a uniform runner speed. "
+        "The two event counts also depend on runner speed (clang drops events under 0.5 ms).",
+        "",
+    ]
+    if not current:
+        return lines + ["No clang build in the current window.", ""]
+
+    def med(builds_, key):
+        return median_of([b.clang[key] for b in builds_])
+
+    rows = []
+    for label, key, kind in (
+        ("Compiler time", "total_s", "time"),
+        ("Frontend", "frontend_s", "time"),
+        ("Backend", "backend_s", "time"),
+        ("Header inclusions (events of at least 0.5 ms)", "source_events", "count"),
+        ("Template instantiation events (at least 0.5 ms)", "instantiation_events", "count"),
+    ):
+        now, before = med(current, key), med(previous, key) if previous else None
+        shown = format_duration(now) if kind == "time" else f"{now:,.0f}"
+        old = "-" if before is None else (format_duration(before) if kind == "time" else f"{before:,.0f}")
+        change = format_percent_change(before, now) if kind == "time" and before and len(previous) >= options.min_samples and len(current) >= options.min_samples else "n/a"
+        rows.append([label, shown, old, change])
+    lines += [f"{len(current)} builds in the current window, {len(previous)} in the previous one (medians).", ""]
+    lines += table(["", "Now", "Previous window", "Change"], rows)
+    lines.append("")
+
+    totals = weekly([(b.created, b.clang["total_s"]) for b in builds], median_value)
+    if totals:
+        minutes = [round(value / 60, 1) for value in totals.values()]
+        lines += chart("Clang compiler time, dev pushes, weekly median (minutes)", "minutes", list(totals), minutes, chart_maximum(minutes, 5))
+        lines.append("")
+
+    def shares(builds_, list_key, name_key, value_key):
+        """name -> [(share of total compile time, seconds)] over the builds that list it."""
+        result = defaultdict(list)
+        for build in builds_:
+            total = build.clang["total_s"]
+            if not total:
+                continue
+            for entry in build.clang[list_key]:
+                result[entry[name_key]].append((entry[value_key] / total, entry[value_key]))
+        return result
+
+    now_headers = shares(current, "headers", "header", "self_s")
+    before_headers = shares(previous, "headers", "header", "self_s")
+    ranked = sorted(now_headers.items(), key=lambda item: (-median_of([x[0] for x in item[1]]), item[0]))[:CLANG_SECTION_SHOWN]
+    lines += ["#### Heaviest headers (self time, share of compile time)", ""]
+    header_rows = []
+    for name, values in ranked:
+        share = median_of([x[0] for x in values])
+        old = before_headers.get(name)
+        old_share = median_of([x[0] for x in old]) if old else None
+        enough = old is not None and len(old) >= options.min_samples and len(values) >= options.min_samples
+        header_rows.append(
+            [
+                code_text(name),
+                f"{len(values)}/{len(current)}",
+                fmt_seconds(median_of([x[1] for x in values])),
+                f"{share * 100:.2f}%",
+                "-" if old_share is None else f"{old_share * 100:.2f}%",
+                f"{(share - old_share) * 100:+.2f} pp" if enough else "n/a",
+            ]
+        )
+    lines += table(["Header", "In builds", "Median self time", "Share now", "Share before", "Change"], header_rows)
+    lines += ["", "\"In builds\": the header was in the build's list of the 30 heaviest headers.", ""]
+
+    now_files = shares(current, "slowest_files", "file", "total_s")
+    ranked_files = sorted(now_files.items(), key=lambda item: (-median_of([x[1] for x in item[1]]), item[0]))[:CLANG_SECTION_SHOWN]
+    lines += ["#### Slowest files", ""]
+    lines += table(
+        ["File", "In builds", "Median time", "Share of compile time"],
+        [[code_text(name), f"{len(v)}/{len(current)}", fmt_seconds(median_of([x[1] for x in v])), f"{median_of([x[0] for x in v]) * 100:.2f}%"] for name, v in ranked_files],
+    )
+    lines.append("")
+    return lines
+
+
+def code_text(text, limit=120):
+    """Inline code for a name from the data: no backticks, pipes or line breaks, clipped."""
+    text = "".join(ch if ch.isprintable() else " " for ch in str(text)).replace("`", "'").replace("|", "/")
+    return f"`{text[: limit - 1] + '…' if len(text) > limit else text}`"
+
+
+def include_lines(analyses, windows, options):
+    """The exact include graph section (ninja -t deps), dev pushes only."""
+    builds = [a for a in analyses if a.includes is not None and a.event == "push"]
+    lines = ["### Include graph (exact)", ""]
+    if not builds:
+        return lines + ["No include graph records yet.", ""]
+    lines += [
+        f"From `ninja -t deps` of builds of pushes to `{PUSH_BRANCH}`: for every object file the headers it "
+        "depends on. Unlike times and clang events this is **deterministic**, so any change between two "
+        "builds is a real change of the code; no threshold is applied. Project files are inside the "
+        "repository and not generated; the fan-in of a header is the number of object files that depend on it.",
+        "",
+    ]
+    groups = defaultdict(list)
+    for build in builds:
+        groups[(build.workflow, build.job)].append(build)
+    rows = []
+    for key in sorted(groups):
+        now = [b for b in groups[key] if windows.current(b.created)]
+        if not now:
+            continue
+        before = [b for b in groups[key] if windows.previous(b.created)]
+        last = max(now, key=lambda b: b.created)
+        last_before = max(before, key=lambda b: b.created) if before else None
+        digests = {b.includes["digest"] for b in now}
+        def change(field):
+            if last_before is None:
+                return "n/a"
+            delta = last.includes[field] - last_before.includes[field]
+            return f"{delta:+,}"
+        rows.append(
+            [
+                f"{key[0]} / {key[1]}",
+                str(len(now)),
+                f"{last.includes['include_pairs']:,}",
+                change("include_pairs"),
+                f"{last.includes['project_pairs']:,}",
+                change("project_pairs"),
+                str(len(digests)),
+            ]
+        )
+    if not rows:
+        return lines + ["No include graph in the current window.", ""]
+    lines += table(["Job", "Builds", "Include pairs (latest)", "Change vs previous window", "Project pairs (latest)", "Change", "Distinct graphs in window"], rows)
+    lines.append("")
+    clang_now = [b for b in builds if b.job == "clang-build" and windows.current(b.created)]
+    if clang_now:
+        latest = max(clang_now, key=lambda b: b.created)
+        lines += ["#### Project headers with the highest fan-in (latest clang build)", ""]
+        lines += table(
+            ["Header", "Included by (object files)"],
+            [[code_text(e["file"]), str(e["fan_in"])] for e in latest.includes["top_project_files"][:CLANG_SECTION_SHOWN]],
+        )
+        lines.append("")
+    return lines
+
+
+def build_analysis_lines(analyses, windows, options):
+    lines = ["## Build analysis", ""]
+    kept = [analysis for analysis in analyses if analysis_kept(analysis)]
+    if not kept:
+        lines += [
+            "No build analysis records yet. They come from the `build-timings-*` artifacts of "
+            "`BUILD` and `LINT` runs, which the collector ingests from the day those jobs started "
+            "uploading them (nothing can be backfilled).",
+            "",
+        ]
+        return lines
+    lines += [
+        f"From {len(kept):,} build analysis records (first attempts, not cancelled; `push` only "
+        f"to `{PUSH_BRANCH}`), over the current window.",
+        "",
+        "### ccache",
+        "",
+        "Per job: the median hit rate of cacheable calls, and the calls that never reach ccache "
+        f"because they use the precompiled header (`{PCH_COUNTER}`; see #732). "
+        "\"Cache full\" counts builds whose cache was at least 95% of its size limit, which "
+        "means it is evicting entries.",
+        "",
+    ]
+    rows = ccache_rows(kept, windows, options)
+    if rows:
+        lines += table(
+            ["Job", "Event", "Builds", "Hit rate", "Previous", "Change", "PCH-blocked calls", "PCH-blocked share", "Cache full"],
+            rows,
+        )
+    else:
+        lines.append("No ccache statistics in the current window.")
+    lines.append("")
+    shares = weekly_blocked_share(kept)
+    if shares:
+        values = [round(100 * value, 1) for value in shares.values()]
+        lines += chart(
+            "Share of compiler calls blocked by the PCH, weekly median (%)", "percent", list(shares), values, 100
+        )
+        lines.append("")
+
+    rows, skipped = ninja_rows(kept, windows)
+    lines += ["### Ninja builds", ""]
+    lines += [
+        "Complete builds only. `Tail` is the time from the last compile step finishing to the "
+        "end of the build (linking); `Link share` is the part of all step time spent linking; "
+        "`Parallelism` is CPU time divided by wall time. A large tail with low parallelism "
+        "means a bigger runner would not help much.",
+        "",
+    ]
+    if rows:
+        lines += table(["Job", "Event", "Builds", "Wall", "CPU", "Parallelism", "Tail", "Link share"], rows)
+    else:
+        lines.append("No complete ninja builds in the current window.")
+    if skipped:
+        lines += [
+            "",
+            f"Left out because they are not full builds: {skipped:,} with `complete` false or unknown "
+            "(for example `lint`, which builds with `-k 0` and tolerates errors).",
+        ]
+    lines.append("")
+
+    lines += [f"### Slowest build steps on `{PUSH_BRANCH}`", ""]
+    lines += [
+        "From `push` builds in the current window. Each build records only its 20 slowest steps, "
+        "so \"In\" says in how many builds a step made that list. With a warm ccache the compiles "
+        "that really ran are the uncacheable ones, so this is what is rebuilt every time, not a "
+        "cold-build ranking.",
+        "",
+    ]
+    steps = slowest_steps(kept, windows)
+    if not steps:
+        lines += [f"No ninja builds of pushes to `{PUSH_BRANCH}` in the current window.", ""]
+    for (workflow, job), (count, complete, rows) in steps.items():
+        lines += [f"#### {workflow} / {job} ({complete} of {count} builds complete)", ""]
+        lines += table(["Step", "Kind", "In", "Median", "Max"], rows)
+        lines.append("")
+    lines += clang_lines(kept, windows, options)
+    lines += include_lines(kept, windows, options)
+    return lines
+
+
 def render(jobs, stats, options):
     lines = ["# CI timings", ""]
     if not jobs:
@@ -455,7 +908,9 @@ def render(jobs, stats, options):
         "(includes queue time and job dependencies such as `changes` before `build`). "
         "Only first-attempt runs whose jobs all succeeded and in which at least one real job "
         "ran (see Exclusions). \"Usually last\" is the "
-        "job that finished last most often, i.e. the job a pull request waits for.",
+        "job that finished last most often, i.e. the job a pull request waits for. "
+        f"Non-gating workflows ({', '.join(NON_GATING_WORKFLOWS)}) are not in this table because "
+        "nothing waits for them; their jobs are in the job tables.",
         "",
     ]
     lines += table(
@@ -526,6 +981,8 @@ def render(jobs, stats, options):
             ],
         )
         lines.append("")
+
+    lines += build_analysis_lines(stats.analysis_records, windows, options)
 
     lines += ["## Eigen cache hit rate", ""]
     weeks = eigen_weeks(kept)

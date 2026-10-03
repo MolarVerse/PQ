@@ -41,13 +41,13 @@ namespace physicalData
      * @return const linalg::tensor3D&
      */
     const linalg::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
-        settings::VirialType virialType
+        VirialType virialType
     ) const
     {
         switch (virialType)
         {
-            case settings::VirialType::ATOMIC: return atomic;
-            case settings::VirialType::MOLECULAR: return molecular;
+            case VirialType::ATOMIC: return atomic;
+            case VirialType::MOLECULAR: return molecular;
         }
 
         std::unreachable();

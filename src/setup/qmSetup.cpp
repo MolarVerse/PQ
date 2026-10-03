@@ -270,7 +270,7 @@ namespace setup
      */
     void QMSetup::setupCoulombRadiusCutOff()
     {
-        using enum settings::JobType;
+        using enum JobType;
 
         const auto jobType = settings::Settings::getJobtype();
 
@@ -350,7 +350,7 @@ namespace setup
 
         if (qmMethod == FENNOL)
         {
-            using enum settings::FPType;
+            using enum FPType;
 
             const auto modelPath = settings::QMSettings::getFennolModelPath();
             const auto useGPUPreprocessing =

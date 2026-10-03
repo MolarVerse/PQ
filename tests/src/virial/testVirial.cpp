@@ -96,14 +96,14 @@ TEST_F(TestVirial, calculateQMVirialWithNoQMAtomsIsZero)
 {
     // an MM-only jobtype makes every atom non-QM regardless of its
     // isActive() state
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
 
     EXPECT_EQ(virial::calculateQMVirial(*_simBox), linalg::tensor3D{0.0});
 }
 
 TEST_F(TestVirial, calculateQMVirialSumsOnlyQMAtomContributions)
 {
-    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    settings::Settings::setJobtype(JobType::QM_MD);
 
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);
@@ -129,7 +129,7 @@ TEST_F(TestVirial, calculateQMVirialSumsOnlyQMAtomContributions)
 
 TEST_F(TestVirial, calculateMolecularVirial)
 {
-    settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
+    settings::Settings::setVirialType(VirialType::MOLECULAR);
 
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);

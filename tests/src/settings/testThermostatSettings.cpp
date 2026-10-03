@@ -30,10 +30,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
     settings::ThermostatSettings::setThermostatType("berendsen");
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::BERENDSEN
+        ThermostatType::BERENDSEN
     );
     EXPECT_EQ(
-        settings::ThermostatTypeMeta::toString(
+        ThermostatTypeMeta::toString(
             settings::ThermostatSettings::getThermostatType()
         ),
         "BERENDSEN"
@@ -42,10 +42,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
     settings::ThermostatSettings::setThermostatType("none");
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::NONE
+        ThermostatType::NONE
     );
     EXPECT_EQ(
-        settings::ThermostatTypeMeta::toString(
+        ThermostatTypeMeta::toString(
             settings::ThermostatSettings::getThermostatType()
         ),
         "NONE"
@@ -54,10 +54,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
     settings::ThermostatSettings::setThermostatType("langevin");
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::LANGEVIN
+        ThermostatType::LANGEVIN
     );
     EXPECT_EQ(
-        settings::ThermostatTypeMeta::toString(
+        ThermostatTypeMeta::toString(
             settings::ThermostatSettings::getThermostatType()
         ),
         "LANGEVIN"
@@ -66,10 +66,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
     settings::ThermostatSettings::setThermostatType("NH-chain");
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::NOSE_HOOVER
+        ThermostatType::NOSE_HOOVER
     );
     EXPECT_EQ(
-        settings::ThermostatTypeMeta::toString(
+        ThermostatTypeMeta::toString(
             settings::ThermostatSettings::getThermostatType()
         ),
         "NOSE_HOOVER"
@@ -78,10 +78,10 @@ TEST(ThermostatSettingsTest, SetThermostatTypeTest)
     settings::ThermostatSettings::setThermostatType("velocity_rescaling");
     EXPECT_EQ(
         settings::ThermostatSettings::getThermostatType(),
-        settings::ThermostatType::VELOCITY_RESCALING
+        ThermostatType::VELOCITY_RESCALING
     );
     EXPECT_EQ(
-        settings::ThermostatTypeMeta::toString(
+        ThermostatTypeMeta::toString(
             settings::ThermostatSettings::getThermostatType()
         ),
         "VELOCITY_RESCALING"

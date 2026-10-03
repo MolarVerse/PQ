@@ -27,6 +27,7 @@
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 
 namespace manostat

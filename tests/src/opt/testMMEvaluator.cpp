@@ -27,12 +27,14 @@
 #include "atom.hpp"
 #include "celllist.hpp"
 #include "constraints.hpp"
+#include "enums/virial.hpp"
 #include "forceFieldClass.hpp"
 #include "intraNonBonded.hpp"
 #include "mmEvaluator.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 
 namespace
@@ -77,7 +79,7 @@ namespace
         );
         eval.setConstraints(std::make_shared<constraints::Constraints>());
 
-        settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
+        settings::Settings::setVirialType(VirialType::MOLECULAR);
     }
 }   // namespace
 
@@ -138,7 +140,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
     eval2.setConstraints(std::make_shared<constraints::Constraints>());
 
-    settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
+    settings::Settings::setVirialType(VirialType::MOLECULAR);
 
     eval2.evaluate();
 

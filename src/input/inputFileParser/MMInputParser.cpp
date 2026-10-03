@@ -152,15 +152,14 @@ namespace input
                 "spc_mtr, tip3p_mtr)",
         };
 
-        const auto setValue =
-            [potential = _potential](settings::WaterIntraModel value)
+        const auto setValue = [potential = _potential](WaterIntraModel value)
         {
             settings::WaterModelSettings::setWaterIntraModel(value);
             settings::WaterModelSettings::setIsWaterModelSet(true);
         };
 
         auto &key = _getRegistry().registerKey(
-            KeyRegistry<settings::WaterIntraModel>{
+            KeyRegistry<WaterIntraModel>{
                 .metadata = metaData,
                 .onSet    = setValue
             }
@@ -183,8 +182,7 @@ namespace input
                 "spc_mtr, tip3p_mtr)",
         };
 
-        const auto setValue =
-            [potential = _potential](settings::WaterInterModel value)
+        const auto setValue = [potential = _potential](WaterInterModel value)
         {
             settings::WaterModelSettings::setWaterInterModel(value);
             settings::WaterModelSettings::setIsWaterModelSet(true);
@@ -192,7 +190,7 @@ namespace input
         };
 
         auto &key = _getRegistry().registerKey(
-            KeyRegistry<settings::WaterInterModel>{
+            KeyRegistry<WaterInterModel>{
                 .metadata = metaData,
                 .onSet    = setValue
             }

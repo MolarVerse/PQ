@@ -54,7 +54,7 @@ namespace thermostat
 
         [[nodiscard]] double getTau() const;
         [[nodiscard]]
-        settings::ThermostatType getThermostatType() const override;
+        ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat

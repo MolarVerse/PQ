@@ -315,7 +315,7 @@ TEST_F(TestInputFileReader, testReadJobType)
     std::string filename = "data/inputFileReader/inputFile.txt";
     auto        engine   = std::unique_ptr<engine::Engine>();
     ASSERT_NO_THROW(input::readJobType(filename, engine));
-    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::MM_MD);
+    EXPECT_EQ(settings::Settings::getJobtype(), JobType::MM_MD);
     test::checkType(engine, typeid(engine::MMMDEngine));
 
     filename = "fileNotFound";

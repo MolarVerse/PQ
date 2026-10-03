@@ -32,37 +32,20 @@
 
 TEST(TestSettings, stringJobtypeTest)
 {
-    EXPECT_EQ(string(settings::JobType::MM_MD), "MM_MD");
-    EXPECT_EQ(string(settings::JobType::QM_MD), "QM_MD");
-    EXPECT_EQ(string(settings::JobType::QMMM_MD), "QMMM_MD");
+    EXPECT_EQ(JobTypeMeta::toString(JobType::MM_MD), "MM_MD");
+    EXPECT_EQ(JobTypeMeta::toString(JobType::QM_MD), "QM_MD");
+    EXPECT_EQ(JobTypeMeta::toString(JobType::QMMM_MD), "QMMM_MD");
     EXPECT_EQ(
-        string(settings::JobType::RING_POLYMER_QM_MD),
+        JobTypeMeta::toString(JobType::RING_POLYMER_QM_MD),
         "RING_POLYMER_QM_MD"
     );
-    EXPECT_EQ(string(settings::JobType::MM_OPT), "MM_OPT");
-    EXPECT_EQ(string(settings::JobType::NONE), "NONE");
+    EXPECT_EQ(JobTypeMeta::toString(JobType::MM_OPT), "MM_OPT");
+    EXPECT_EQ(JobTypeMeta::toString(JobType::NONE), "NONE");
 }
 
 TEST(TestSettings, setJobtypeTest)
 {
-    using enum settings::JobType;
-    settings::Settings::setJobtype("MmMD");
-    EXPECT_EQ(settings::Settings::getJobtype(), MM_MD);
-
-    settings::Settings::setJobtype("qMMd");
-    EXPECT_EQ(settings::Settings::getJobtype(), QM_MD);
-
-    settings::Settings::setJobtype("RinG-POLymer_QMMd");
-    EXPECT_EQ(settings::Settings::getJobtype(), RING_POLYMER_QM_MD);
-
-    settings::Settings::setJobtype("qMmmMd");
-    EXPECT_EQ(settings::Settings::getJobtype(), QMMM_MD);
-
-    settings::Settings::setJobtype("MMoPT");
-    EXPECT_EQ(settings::Settings::getJobtype(), MM_OPT);
-
-    settings::Settings::setJobtype("not-a-jobtype");
-    EXPECT_EQ(settings::Settings::getJobtype(), NONE);
+    using enum JobType;
 
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::getJobtype(), MM_MD);
@@ -85,15 +68,7 @@ TEST(TestSettings, setJobtypeTest)
 
 TEST(TestSettings, setFloatingPointTypeTest)
 {
-    using enum settings::FPType;
-    settings::Settings::setFloatingPointType("FlOAt");
-    EXPECT_EQ(settings::Settings::getFloatingPointType(), FLOAT);
-
-    settings::Settings::setFloatingPointType("DOUble");
-    EXPECT_EQ(settings::Settings::getFloatingPointType(), DOUBLE);
-
-    settings::Settings::setFloatingPointType("not-a-floating-point-type");
-    EXPECT_EQ(settings::Settings::getFloatingPointType(), DOUBLE);
+    using enum FPType;
 
     settings::Settings::setFloatingPointType(FLOAT);
     EXPECT_EQ(settings::Settings::getFloatingPointType(), FLOAT);
@@ -140,7 +115,7 @@ TEST(TestSettings, setDimensionalityTest)
 
 TEST(TestSettings, isQMOnlyJobtypeTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isQMOnlyJobtype(), false);
 
@@ -162,7 +137,7 @@ TEST(TestSettings, isQMOnlyJobtypeTest)
 
 TEST(TestSettings, isMMOnlyJobtypeTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isMMOnlyJobtype(), true);
 
@@ -184,7 +159,7 @@ TEST(TestSettings, isMMOnlyJobtypeTest)
 
 TEST(TestSettings, isHybridJobtypeTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isHybridJobtype(), false);
 
@@ -206,7 +181,7 @@ TEST(TestSettings, isHybridJobtypeTest)
 
 TEST(TestSettings, isMDJobtypeTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isMDJobType(), true);
 
@@ -228,7 +203,7 @@ TEST(TestSettings, isMDJobtypeTest)
 
 TEST(TestSettings, isOptJobtypeTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isOptJobType(), false);
 
@@ -250,7 +225,7 @@ TEST(TestSettings, isOptJobtypeTest)
 
 TEST(TestSettings, isMMActivatedTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isMMActivated(), true);
 
@@ -272,7 +247,7 @@ TEST(TestSettings, isMMActivatedTest)
 
 TEST(TestSettings, isQMActivatedTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isQMActivated(), false);
 
@@ -294,7 +269,7 @@ TEST(TestSettings, isQMActivatedTest)
 
 TEST(TestSettings, isQMOnlyActivatedTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isQMOnlyActivated(), false);
 
@@ -316,7 +291,7 @@ TEST(TestSettings, isQMOnlyActivatedTest)
 
 TEST(TestSettings, isMMOnlyActivatedTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isMMOnlyActivated(), true);
 
@@ -338,7 +313,7 @@ TEST(TestSettings, isMMOnlyActivatedTest)
 
 TEST(TestSettings, isRingPolymerMDActivatedTest)
 {
-    using enum settings::JobType;
+    using enum JobType;
     settings::Settings::setJobtype(MM_MD);
     EXPECT_EQ(settings::Settings::isRingPolymerMDActivated(), false);
 

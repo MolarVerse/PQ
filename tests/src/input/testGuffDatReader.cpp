@@ -776,7 +776,7 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
     settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
@@ -785,7 +785,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
@@ -793,7 +793,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
     _engine->getForceField()->activateNonCoulombic();
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }

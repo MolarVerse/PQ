@@ -590,7 +590,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
 
     settings::SimulationBoxSettings::setInitializeVelocities(
-        settings::InitVelocities::TRUE
+        InitVelocities::TRUE
     );
     setup::SimulationBoxSetup::setZeroVelocities(false);
     settings::FileSettings::setStartFileName("input.rst");
@@ -620,7 +620,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
 
     settings::SimulationBoxSettings::setInitializeVelocities(
-        settings::InitVelocities::TRUE
+        InitVelocities::TRUE
     );
     setup::SimulationBoxSetup::setZeroVelocities(true);
 
@@ -646,7 +646,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
 
     settings::SimulationBoxSettings::setInitializeVelocities(
-        settings::InitVelocities::FORCE
+        InitVelocities::FORCE
     );
     setup::SimulationBoxSetup::setZeroVelocities(false);
 

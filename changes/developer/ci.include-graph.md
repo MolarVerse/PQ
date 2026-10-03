@@ -1,0 +1,1 @@
+- Record the exact include graph of Ninja builds (`ninja -t deps`: include pairs, fan-in of project headers, a digest) in the build summary and show the headers whose fan-in changed in the clang build time comment.

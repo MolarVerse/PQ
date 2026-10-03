@@ -178,7 +178,7 @@ namespace setup
             optEngine.getOptOutput().setFilename(optFileName);
         }
 
-        if (settings::Settings::getJobtype() == settings::JobType::MM_HESSIAN &&
+        if (settings::Settings::getJobtype() == JobType::MM_HESSIAN &&
             settings::HessianSettings::optimizeBeforeHessian())
         {
             auto &hessianEngine =

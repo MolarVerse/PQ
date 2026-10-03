@@ -17,7 +17,7 @@ A median that rose by more than 20% and at least 30 seconds against the previous
 
 ## Wall-clock per workflow (critical path)
 
-Time from the first job of a run being created to the last job finishing (includes queue time and job dependencies such as `changes` before `build`). Only first-attempt runs whose jobs all succeeded and in which at least one real job ran (see Exclusions). "Usually last" is the job that finished last most often, i.e. the job a pull request waits for.
+Time from the first job of a run being created to the last job finishing (includes queue time and job dependencies such as `changes` before `build`). Only first-attempt runs whose jobs all succeeded and in which at least one real job ran (see Exclusions). "Usually last" is the job that finished last most often, i.e. the job a pull request waits for. Non-gating workflows (Clang Build) are not in this table because nothing waits for them; their jobs are in the job tables.
 
 | Workflow | Event | Runs | Median | p90 | Previous median | Change | Usually last |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -147,6 +147,10 @@ Jobs with no run in the current window are omitted. "Previous median" is n/a wit
 | Job | Event | Runs | Median | p90 | Previous median | Change | Queue median | Queue p90 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | perf-regression | pull_request | 132 | 2m 40s | 3m 50s | 1m 47s | +50% **regression** | 3s | 23s |
+
+## Build analysis
+
+No build analysis records yet. They come from the `build-timings-*` artifacts of `BUILD` and `LINT` runs, which the collector ingests from the day those jobs started uploading them (nothing can be backfilled).
 
 ## Eigen cache hit rate
 

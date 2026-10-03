@@ -64,7 +64,7 @@ namespace
 TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
 {
     cleanupPrefix();
-    settings::Settings::setJobtype(settings::JobType::MM_OPT);
+    settings::Settings::setJobtype(JobType::MM_OPT);
     settings::Settings::setIsRingPolymerMDActivated(false);
     settings::OutputFileSettings::setFilePrefix(PREFIX);
 
@@ -86,7 +86,7 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
 TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
 {
     cleanupPrefix();
-    settings::Settings::setJobtype(settings::JobType::QMMM_MD);
+    settings::Settings::setJobtype(JobType::QMMM_MD);
     settings::Settings::setIsRingPolymerMDActivated(false);
     settings::OutputFileSettings::setFilePrefix(PREFIX);
 
@@ -105,7 +105,7 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
 TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
 {
     cleanupPrefix();
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
     settings::Settings::setIsRingPolymerMDActivated(false);
     settings::OutputFileSettings::setFilePrefix(PREFIX);
     settings::OutputFileSettings::setIncludeOutputMetadata(false);
@@ -130,7 +130,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
 TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
 {
     cleanupPrefix();
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
     settings::Settings::setIsRingPolymerMDActivated(false);
     settings::OutputFileSettings::setFilePrefix(PREFIX);
     settings::OutputFileSettings::setIncludeOutputMetadata(true);
@@ -158,7 +158,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
 TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
 {
     cleanupPrefix();
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
     settings::Settings::setIsRingPolymerMDActivated(true);
     settings::OutputFileSettings::setFilePrefix(PREFIX);
 

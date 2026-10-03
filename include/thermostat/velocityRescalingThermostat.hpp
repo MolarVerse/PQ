@@ -72,7 +72,7 @@ namespace thermostat
         void setTau(double tau);
 
         [[nodiscard]]
-        settings::ThermostatType getThermostatType() const override;
+        ThermostatType getThermostatType() const override;
 
         [[nodiscard]] double getTau() const;
     };

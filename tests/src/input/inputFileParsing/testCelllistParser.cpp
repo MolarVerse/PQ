@@ -28,6 +28,7 @@
 #include "cellListInputParser.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
+#include "settings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 

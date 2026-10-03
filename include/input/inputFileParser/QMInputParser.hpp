@@ -24,10 +24,7 @@
 
 #define _QM_INPUT_PARSER_HPP_
 
-#include <cstddef>
-
 #include "inputFileParser.hpp"
-#include "logOutput.hpp"
 
 namespace input
 {
@@ -40,57 +37,29 @@ namespace input
     class QMInputParser : public InputFileParser
     {
        private:
-        out::LogOutput *_logOutput;
-
         bool _resolveBuiltInSlakosPath;
 
        public:
-        explicit QMInputParser(out::LogOutput &, bool resolveBuiltInSlakosPath);
-        explicit QMInputParser(out::LogOutput &);
+        explicit QMInputParser(bool resolveBuiltInSlakosPath);
+        explicit QMInputParser();
 
-        static void parseQMMethod(const std::vector<std::string> &, size_t);
-        static void parseQMScript(const std::vector<std::string> &, size_t);
-        static void parseQMScriptFullPath(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseQMLoopTimeLimit(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseDispersion(const std::vector<std::string> &, size_t);
-        static void parseRemoveNetForce(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        void        parseMaceModel(const std::vector<std::string> &, size_t);
-        static void parseMaceMode(const std::vector<std::string> &, size_t);
-        static void parseMaceModelPath(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseMaceQMMethod(const std::string_view &);
-
-        void parseSlakosType(const std::vector<std::string> &, size_t) const;
-        static void parseSlakosPath(const std::vector<std::string> &, size_t);
-        static void parseThirdOrder(const std::vector<std::string> &, size_t);
-        static void parseHubbardDerivs(
-            const std::vector<std::string> &,
-            size_t
-        );
-
-        static void parseXtbMethod(const std::vector<std::string> &, size_t);
-
-        static void parseFennolModelPath(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseGPUPreprocessing(
-            const std::vector<std::string> &,
-            size_t
-        );
+        static void parseMaceQMMethod(const std::string &);
+        void        addQMMethodKey();
+        void        addQMScriptKey();
+        void        addQMScriptFullPathKey();
+        void        addQMLoopTimeLimitKey();
+        void        addDispersionKey();
+        void        addRemoveNetForceKey();
+        void        addMaceModelKey();
+        void        addMaceModeKey();
+        void        addMaceModelPathKey();
+        void        addSlakosTypeKey();
+        void        addSlakosPathKey();
+        void        addThirdOrderKey();
+        void        addHubbardDerivsKey();
+        void        addXtbMethodKey();
+        void        addFennolModelPathKey();
+        void        addGPUPreprocessingKey();
     };
 
 }   // namespace input

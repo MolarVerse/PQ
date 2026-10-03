@@ -34,6 +34,7 @@
 #include "hybridSettings.hpp"
 #include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
+#include "settings.hpp"
 #include "vector3d.hpp"
 #include "virial.hpp"
 

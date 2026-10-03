@@ -53,7 +53,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -141,7 +141,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::activate();
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -240,7 +240,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 
     settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -335,7 +335,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData);
@@ -437,7 +437,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    settings::Settings::setJobtype(JobType::QM_MD);
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info");
@@ -523,10 +523,10 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(settings::JobType::MM_MD);
+    settings::Settings::setJobtype(JobType::MM_MD);
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
-        settings::ThermostatType::NOSE_HOOVER
+        ThermostatType::NOSE_HOOVER
     );
 
     _infoOutput->setFilename("default.info");

@@ -108,7 +108,7 @@ namespace input
         std::unique_ptr<engine::Engine> &engine
     )
     {
-        using enum settings::JobType;
+        using enum JobType;
         checkCommand(lineElements, lineNumber);
 
         const auto jobtype =
@@ -219,7 +219,7 @@ namespace input
         size_t                          lineNumber
     )
     {
-        using enum settings::FPType;
+        using enum FPType;
         checkCommand(lineElements, lineNumber);
 
         const auto floatingPointType = utilities::toLowerCopy(lineElements[2]);
