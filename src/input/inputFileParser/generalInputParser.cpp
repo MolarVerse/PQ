@@ -26,20 +26,13 @@
 #include <format>
 #include <stdexcept>
 
-#include "engine.hpp"
 #include "enums/general.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
-#include "hessianEngine.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
-#include "mmmdEngine.hpp"
-#include "optEngine.hpp"
 #include "parserUtils.hpp"
-#include "qmmdEngine.hpp"
-#include "qmmmMDEngine.hpp"
-#include "ringPolymerqmmdEngine.hpp"
 #include "stringUtilities.hpp"
 
 namespace input
@@ -98,7 +91,6 @@ namespace input
      *
      * @param lineElements
      * @param lineNumber
-     * @param engine
      *
      * @throw exc::InputFileException if jobtype is not recognised
      */
