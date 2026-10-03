@@ -27,6 +27,7 @@
 
 #include "constants/conversionFactors.hpp"   // for _BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL_, _FS_TO_S_
 #include "constants/internalConversionFactors.hpp"   // for _MOMENTUM_TO_FORCE_
+#include "exceptions.hpp"                            // for UserInputException
 #include "globalTimer.hpp"                           // for GlobalTimer
 #include "physicalData.hpp"                          // for PhysicalData
 #include "simulationBox.hpp"                         // for SimulationBox
@@ -58,6 +59,30 @@ namespace thermostat
     }
 
     /**
+     * @brief throw if the Nose-Hoover equations divide by zero
+     *
+     * @details they divide by the thermal energy of the target temperature
+     * and by the degrees of freedom
+     *
+     * @param simulationBox
+     *
+     * @throw exc::UserInputException for a zero target temperature or zero
+     * degrees of freedom
+     */
+    void NoseHooverThermostat::requireCoupling(
+        const molsys::SimulationBox &simulationBox
+    ) const
+    {
+        if (_targetTemperature <= 0.0)
+            throw exc::UserInputException(
+                "Cannot apply the Nose-Hoover thermostat with a target "
+                "temperature of zero or below."
+            );
+
+        requireDegreesOfFreedom(simulationBox, "the Nose-Hoover thermostat");
+    }
+
+    /**
      * @brief applies the Nose-Hoover thermostat on the forces
      *
      * @details the Nose-Hoover thermostat is applied on the forces of the atoms
@@ -70,6 +95,8 @@ namespace thermostat
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
+
+        requireCoupling(simulationBox);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
         const auto kT_target         = boltzmannConstant * _targetTemperature;
@@ -104,6 +131,8 @@ namespace thermostat
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
+
+        requireCoupling(simulationBox);
 
         physicalData.calculateTemperature(simulationBox);
 

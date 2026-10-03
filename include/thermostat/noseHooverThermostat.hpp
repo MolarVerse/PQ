@@ -44,6 +44,8 @@ namespace thermostat
 
         double _couplingFrequency = 0.0;   // in 1/s
 
+        void requireCoupling(const molsys::SimulationBox &simulationBox) const;
+
        public:
         NoseHooverThermostat() = default;
         explicit NoseHooverThermostat(

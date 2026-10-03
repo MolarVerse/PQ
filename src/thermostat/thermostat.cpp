@@ -22,8 +22,10 @@
 
 #include "thermostat.hpp"
 
+#include "exceptions.hpp"   // for UserInputException
 #include "globalTimer.hpp"
 #include "physicalData.hpp"         // for PhysicalData
+#include "simulationBox.hpp"        // for SimulationBox
 #include "thermostatSettings.hpp"   // for settings::ThermostatSettings
 
 namespace thermostat
@@ -37,6 +39,29 @@ namespace thermostat
     Thermostat::Thermostat(double targetTemperature)
         : _targetTemperature(targetTemperature)
     {
+    }
+
+    /**
+     * @brief throw if the system has no degrees of freedom
+     *
+     * @details a system with zero degrees of freedom (for example a single
+     * atom with the centre of mass removed) has no temperature to couple to
+     *
+     * @param simulationBox
+     * @param thermostatName name used in the error message
+     *
+     * @throw exc::UserInputException if there are no degrees of freedom
+     */
+    void Thermostat::requireDegreesOfFreedom(
+        const molsys::SimulationBox &simulationBox,
+        const std::string           &thermostatName
+    )
+    {
+        if (simulationBox.getDegreesOfFreedom() == 0)
+            throw exc::UserInputException(
+                "Cannot apply " + thermostatName +
+                " to a system with zero degrees of freedom."
+            );
     }
 
     /**

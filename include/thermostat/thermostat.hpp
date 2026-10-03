@@ -25,6 +25,7 @@
 #define _THERMOSTAT_HPP_
 
 #include <cstddef>   // for size_t
+#include <string>    // for string
 
 #include "enums/thermostat.hpp"
 
@@ -58,6 +59,11 @@ namespace thermostat
         double _temperatureIncrease = 0.0;
         size_t _rampingStepsLeft    = 0;
         size_t _rampingFrequency    = 0;
+
+        static void requireDegreesOfFreedom(
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &thermostatName
+        );
 
        public:
         explicit Thermostat(double targetTemperature);
