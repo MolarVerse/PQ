@@ -61,10 +61,12 @@ namespace thermostat
         // the radicand 1 + dt / tau * (target / T - 1) is negative for a hot
         // system if tau < dt, which would turn all velocities into NaN
         if (_tau < settings::TimingsSettings::getTimeStep())
+        {
             throw exc::UserInputException(
                 "The relaxation time of the Berendsen thermostat must not be "
                 "shorter than the time step."
             );
+        }
 
         physicalData.calculateTemperature(simulationBox);
 

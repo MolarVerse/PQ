@@ -93,7 +93,7 @@ namespace thermostat
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Velocity Rescaling");
 
-        requireDegreesOfFreedom(simulationBox, "velocity rescaling");
+        _requireDegreesOfFreedom(simulationBox, "velocity rescaling");
 
         physicalData.calculateTemperature(simulationBox);
 

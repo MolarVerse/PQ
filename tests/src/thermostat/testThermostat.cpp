@@ -273,9 +273,15 @@ namespace
     bool velocitiesAreFinite(const molsys::SimulationBox &box)
     {
         for (const auto &atom : box.getAtoms())
+        {
             for (size_t axis = 0; axis < 3; ++axis)
+            {
                 if (!std::isfinite(atom->getVelocity()[axis]))
+                {
                     return false;
+                }
+            }
+        }
         return true;
     }
 }   // namespace

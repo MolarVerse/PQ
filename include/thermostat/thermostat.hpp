@@ -60,11 +60,6 @@ namespace thermostat
         size_t _rampingStepsLeft    = 0;
         size_t _rampingFrequency    = 0;
 
-        static void requireDegreesOfFreedom(
-            const molsys::SimulationBox &simulationBox,
-            const std::string           &thermostatName
-        );
-
        public:
         explicit Thermostat(double targetTemperature);
 
@@ -113,6 +108,12 @@ namespace thermostat
 
         [[nodiscard]]
         virtual ThermostatType getThermostatType() const;
+
+       protected:
+        static void _requireDegreesOfFreedom(
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &thermostatName
+        );
     };
 
 }   // namespace thermostat

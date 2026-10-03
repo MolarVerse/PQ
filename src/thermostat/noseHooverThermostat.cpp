@@ -69,17 +69,19 @@ namespace thermostat
      * @throw exc::UserInputException for a zero target temperature or zero
      * degrees of freedom
      */
-    void NoseHooverThermostat::requireCoupling(
+    void NoseHooverThermostat::_requireCoupling(
         const molsys::SimulationBox &simulationBox
     ) const
     {
         if (_targetTemperature <= 0.0)
+        {
             throw exc::UserInputException(
                 "Cannot apply the Nose-Hoover thermostat with a target "
                 "temperature of zero or below."
             );
+        }
 
-        requireDegreesOfFreedom(simulationBox, "the Nose-Hoover thermostat");
+        _requireDegreesOfFreedom(simulationBox, "the Nose-Hoover thermostat");
     }
 
     /**
@@ -96,7 +98,7 @@ namespace thermostat
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
 
-        requireCoupling(simulationBox);
+        _requireCoupling(simulationBox);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
         const auto kT_target         = boltzmannConstant * _targetTemperature;
@@ -132,7 +134,7 @@ namespace thermostat
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
-        requireCoupling(simulationBox);
+        _requireCoupling(simulationBox);
 
         physicalData.calculateTemperature(simulationBox);
 

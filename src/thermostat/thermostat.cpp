@@ -52,16 +52,18 @@ namespace thermostat
      *
      * @throw exc::UserInputException if there are no degrees of freedom
      */
-    void Thermostat::requireDegreesOfFreedom(
+    void Thermostat::_requireDegreesOfFreedom(
         const molsys::SimulationBox &simulationBox,
         const std::string           &thermostatName
     )
     {
         if (simulationBox.getDegreesOfFreedom() == 0)
+        {
             throw exc::UserInputException(
                 "Cannot apply " + thermostatName +
                 " to a system with zero degrees of freedom."
             );
+        }
     }
 
     /**
