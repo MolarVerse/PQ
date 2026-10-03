@@ -28,6 +28,7 @@
 
 #include <cmath>
 
+#include "degenerateGeometry.hpp"   // for checkNonDegenerate
 #include "globalTimer.hpp"
 #include "hybridSettings.hpp"   // for HybridSettings
 #include "physicalData.hpp"     // for PhysicalData
@@ -73,6 +74,10 @@ namespace waterModel
             const auto distOH1 = norm(dOH1);
             const auto distOH2 = norm(dOH2);
             const auto distHH  = norm(dHH);
+
+            checkNonDegenerate(distOH1, "O-H1 distance");
+            checkNonDegenerate(distOH2, "O-H2 distance");
+            checkNonDegenerate(distHH, "H-H distance");
 
             const auto deltaOH1 = distOH1 - eqOHDistance;
             const auto deltaOH2 = distOH2 - eqOHDistance;

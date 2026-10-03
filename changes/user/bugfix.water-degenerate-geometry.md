@@ -1,0 +1,1 @@
+- Fix the flexible intramolecular water models (SPC and MTR variants) silently producing NaN forces and energies for degenerate geometries (a hydrogen on top of the oxygen, or both hydrogens on the same ray from it); they now stop with a descriptive error.
