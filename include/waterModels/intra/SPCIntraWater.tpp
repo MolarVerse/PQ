@@ -27,6 +27,7 @@
 #include <cmath>
 
 #include "SPCIntraWater.hpp"
+#include "degenerateGeometry.hpp"
 #include "globalTimer.hpp"
 #include "hybridSettings.hpp"
 #include "physicalData.hpp"
@@ -79,7 +80,9 @@ void waterModel::SPCIntraWater::calculate(
 
         simulationBox.applyPBC(dOH1);
 
-        const auto distOH1          = norm(dOH1);
+        const auto distOH1 = norm(dOH1);
+        waterModel::checkNonDegenerate(distOH1, "O-H1 distance");
+
         const auto deltaDistanceOH1 = distOH1 - eqOHDistance;
 
         auto forceMagnitudeOH1 = -kOHBond * deltaDistanceOH1;
@@ -96,7 +99,9 @@ void waterModel::SPCIntraWater::calculate(
 
         simulationBox.applyPBC(dOH2);
 
-        const auto distOH2          = norm(dOH2);
+        const auto distOH2 = norm(dOH2);
+        waterModel::checkNonDegenerate(distOH2, "O-H2 distance");
+
         const auto deltaDistanceOH2 = distOH2 - eqOHDistance;
 
         auto forceMagnitudeOH2 = -kOHBond * deltaDistanceOH2;
@@ -129,6 +134,11 @@ void waterModel::SPCIntraWater::calculate(
         physicalData.addAngleEnergy(-forceMagnitudeAngle * deltaAngle / 2.0);
 
         const auto normalDistance = distOH1 * distOH2 * ::sin(alpha);
+        waterModel::checkNonDegenerate(
+            normalDistance,
+            "sine of the H-O-H angle times both O-H distances (an angle of "
+            "0, both hydrogens on the same ray from the oxygen)"
+        );
 
         auto normalPosition  = cross(dOH2, dOH1);
         normalPosition      /= normalDistance;

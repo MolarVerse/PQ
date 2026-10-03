@@ -110,6 +110,9 @@ namespace exc
     using SettingsException =
         BaseException<Color::Code::FG_RED, ExceptionType::SettingsError>;
 
+    using WaterModelException =
+        BaseException<Color::Code::FG_RED, ExceptionType::WaterModelError>;
+
 }   // namespace exc
 
 #endif   // _EXCEPTIONS_HPP_
