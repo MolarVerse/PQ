@@ -25,7 +25,6 @@
 #define _GENERAL_INPUT_PARSER_HPP_
 
 #include <cstddef>
-#include <memory>
 #include <string>
 #include <vector>
 
