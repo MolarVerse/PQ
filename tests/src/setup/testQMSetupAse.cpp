@@ -32,8 +32,6 @@
 #include "pybind11/embed.h"
 #endif
 
-// for Message, TestPartResult
-
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {

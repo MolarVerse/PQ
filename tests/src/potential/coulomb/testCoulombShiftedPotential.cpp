@@ -24,7 +24,6 @@
 
 #include "constants/internalConversionFactors.hpp"
 #include "coulombShiftedPotential.hpp"
-                                         // for Message, TestPartResult
 
 /**
  * @brief tests calculation of shifted Coulomb potential

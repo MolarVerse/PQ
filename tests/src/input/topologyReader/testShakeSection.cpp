@@ -27,7 +27,6 @@
 
 #include "engine.hpp"
 #include "exceptions.hpp"
-                                     // for Message, TestPartResult
 #include "shakeSection.hpp"
 #include "testTopologySection.hpp"
 #include "throwWithMessage.hpp"

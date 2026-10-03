@@ -29,7 +29,6 @@
 #include "constants/conversionFactors.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
-                                             // for Message, TestPartResult
 #include "testParameterFileSection.hpp"
 #include "throwWithMessage.hpp"
 

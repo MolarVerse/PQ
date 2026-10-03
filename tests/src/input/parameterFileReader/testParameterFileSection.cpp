@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "bondSection.hpp"
-                             // for Message, TestPartResult
 
 /**
  * @brief tests full process function TODO: think of a clever way to test this

@@ -25,7 +25,6 @@
 #include "constraintSettings.hpp"
 #include "constraintsSetup.hpp"
 #include "engine.hpp"
-                                  // for Message, TestPartResult
 #include "testSetup.hpp"
 
 /**

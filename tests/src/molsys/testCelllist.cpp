@@ -29,7 +29,6 @@
 #include "atom.hpp"
 #include "cell.hpp"
 #include "exceptions.hpp"
-                                   // for Message, TestPartResult
 #include "molecule.hpp"
 #include "potentialSettings.hpp"
 #include "settings.hpp"

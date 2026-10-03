@@ -22,7 +22,6 @@
 
 #include "testMolecule.hpp"
 
-// for Message, TestPartResult
 #include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "moleculeType.hpp"

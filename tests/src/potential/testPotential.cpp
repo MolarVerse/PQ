@@ -22,6 +22,4 @@
 
 #include <gtest/gtest.h>
 
-// for Message, TestPartResult
-
 TEST(TestPotential, placeholder) { EXPECT_TRUE(true); }

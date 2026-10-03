@@ -24,7 +24,6 @@
 
 #include <string>
 
-// for Message, TestPartResult
 #include "qmmdEngine.hpp"
 #include "randomNumberGeneratorSetup.hpp"
 #include "settings.hpp"

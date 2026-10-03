@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>
 
-// for Message, TestPartResult
 #include "thermostatSettings.hpp"
 
 TEST(ThermostatSettingsTest, SetThermostatTypeTest)

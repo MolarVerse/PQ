@@ -26,7 +26,6 @@
 
 #include "constants/internalConversionFactors.hpp"
 #include "coulombWolf.hpp"
-// for Message, TestPartResult
 
 /**
  * @brief tests calculation of Coulomb potential with wolf long-range correction

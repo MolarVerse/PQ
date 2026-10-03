@@ -28,7 +28,6 @@
 #include "distanceConstraintsSection.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
-                                            // for Message, TestPartResult
 #include "testTopologySection.hpp"
 #include "throwWithMessage.hpp"
 

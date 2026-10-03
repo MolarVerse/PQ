@@ -24,7 +24,6 @@
 
 #include <vector>
 
-// for Message, TestPartResult
 #include "stlVector.hpp"
 
 TEST(TestStlVector, sum)

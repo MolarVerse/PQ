@@ -31,7 +31,6 @@
 
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
-                                      // for Message, TestPartResult
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "nonCoulombPair.hpp"

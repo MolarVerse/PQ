@@ -24,7 +24,6 @@
 
 #include <cmath>
 
-// for Message, TestPartResult
 #include "guffPair.hpp"
 
 /**

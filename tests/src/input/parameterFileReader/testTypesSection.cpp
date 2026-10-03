@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "exceptions.hpp"
-                                          // for Message, TestPartResult, tes...
 #include "potentialSettings.hpp"
 #include "testParameterFileSection.hpp"
 #include "throwWithMessage.hpp"

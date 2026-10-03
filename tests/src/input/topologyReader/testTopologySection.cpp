@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "exceptions.hpp"
-                              // for Message, TestPartResult
 #include "shakeSection.hpp"
 #include "throwWithMessage.hpp"
 

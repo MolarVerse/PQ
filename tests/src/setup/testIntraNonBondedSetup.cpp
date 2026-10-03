@@ -25,7 +25,6 @@
 #include <vector>
 
 #include "engine.hpp"
-                                         // for Message, TestPartResult
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedSetup.hpp"
 #include "molecule.hpp"

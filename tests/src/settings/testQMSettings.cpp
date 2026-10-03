@@ -27,7 +27,6 @@
 
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
-                                  // for Message, TestPartResult
 #include "qmSettings.hpp"
 #include "throwWithMessage.hpp"
 

@@ -33,7 +33,6 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
-                                       // for Message, TestPartResult
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "potentialSettings.hpp"

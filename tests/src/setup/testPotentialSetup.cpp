@@ -30,7 +30,6 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
-                                         // for Message, TestPartResult
 #include "guffNonCoulomb.hpp"
 #include "lennardJonesPair.hpp"
 #include "moleculeType.hpp"

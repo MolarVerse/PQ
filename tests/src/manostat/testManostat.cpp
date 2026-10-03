@@ -30,7 +30,6 @@
 #include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
-// for Message, TestPartResult
 #include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "molecule.hpp"

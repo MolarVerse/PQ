@@ -24,7 +24,6 @@
 
 #include "coulombPotential.hpp"
 #include "coulombShiftedPotential.hpp"
-                                         // for Message, TestPartResult
 
 /**
  * @brief tests the general constructor of a coulombPotential

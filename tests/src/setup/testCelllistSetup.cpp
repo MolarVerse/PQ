@@ -24,7 +24,6 @@
 
 #include "celllistSetup.hpp"
 #include "engine.hpp"
-                               // for Message, TestPartResult
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"

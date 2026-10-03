@@ -29,7 +29,6 @@
 #include "atom.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "forceFieldNonCoulomb.hpp"
-                                         // for Message, TestPartResult
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedMap.hpp"
 #include "lennardJonesPair.hpp"

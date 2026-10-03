@@ -29,7 +29,6 @@
 #include "fileSettings.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "forceFieldSettings.hpp"
-// for Message, TestPartResult, AssertHelper, Test
 #include "improperDihedralSection.hpp"
 #include "jCouplingSection.hpp"
 #include "nonCoulombicsSection.hpp"
