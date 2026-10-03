@@ -1,0 +1,78 @@
+name: CPU Probe (experiment)
+
+# Throwaway experiment, not to be merged: what CPU models does the runner pool
+# hand out, and how fast is each at a fixed compile?
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/cpu_probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {runner: ubuntu-24.04, n: 1}
+          - {runner: ubuntu-24.04, n: 2}
+          - {runner: ubuntu-24.04, n: 3}
+          - {runner: ubuntu-24.04, n: 4}
+          - {runner: ubuntu-24.04, n: 5}
+          - {runner: ubuntu-24.04, n: 6}
+          - {runner: ubuntu-24.04, n: 7}
+          - {runner: ubuntu-24.04, n: 8}
+          - {runner: ubuntu-24.04, n: 9}
+          - {runner: ubuntu-24.04, n: 10}
+          - {runner: ubuntu-24.04, n: 11}
+          - {runner: ubuntu-24.04, n: 12}
+          - {runner: ubuntu-24.04, n: 13}
+          - {runner: ubuntu-24.04, n: 14}
+          - {runner: ubuntu-24.04, n: 15}
+          - {runner: ubuntu-24.04, n: 16}
+          - {runner: ubuntu-24.04, n: 17}
+          - {runner: ubuntu-24.04, n: 18}
+          - {runner: ubuntu-24.04, n: 19}
+          - {runner: ubuntu-24.04, n: 20}
+          - {runner: ubuntu-24.04, n: 21}
+          - {runner: ubuntu-24.04, n: 22}
+          - {runner: ubuntu-24.04, n: 23}
+          - {runner: ubuntu-24.04, n: 24}
+          - {runner: ubuntu-24.04-arm, n: 1}
+          - {runner: ubuntu-24.04-arm, n: 2}
+          - {runner: ubuntu-24.04-arm, n: 3}
+          - {runner: ubuntu-24.04-arm, n: 4}
+          - {runner: ubuntu-24.04-arm, n: 5}
+          - {runner: ubuntu-24.04-arm, n: 6}
+          - {runner: ubuntu-24.04-arm, n: 7}
+          - {runner: ubuntu-24.04-arm, n: 8}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    steps:
+      - name: Probe
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          n = 600
+          lines = ['#include <algorithm>', '#include <format>', '#include <map>', '#include <string>', '#include <vector>']
+          for i in range(n):
+              lines.append(f'template <int N> struct S{i} {{ std::map<int, std::vector<std::string>> m; int f(int x) {{ std::vector<int> v(x); std::sort(v.begin(), v.end()); return static_cast<int>(v.size()) + N + static_cast<int>(std::format("{{}}-{{}}", x, N).size()); }} }};')
+              lines.append(f'int use{i}() {{ S{i}<{i}> s; return s.f({i}); }}')
+          open('probe.cpp', 'w').write("\n".join(lines) + "\n")
+          PY
+          model=$(grep -m1 -E "model name|Model name" /proc/cpuinfo | sed 's/.*: *//')
+          [[ -z "$model" ]] && model=$(lscpu | grep -m1 "Model name" | sed 's/.*: *//')
+          [[ -z "$model" ]] && model=$(lscpu | grep -m1 "Vendor ID" | sed 's/.*: *//')
+          hyper=$(lscpu | grep -m1 "Hypervisor vendor" | sed 's/.*: *//')
+          cores=$(nproc)
+          times=""
+          for i in 1 2 3; do
+            start=$(date +%s.%N)
+            g++ -std=c++23 -O2 -c probe.cpp -o /dev/null
+            end=$(date +%s.%N)
+            times="$times $(python3 -c "print(round($end-$start,2))")"
+          done
+          echo "PROBE|${{ matrix.runner }}|$model|$hyper|$cores|$(g++ --version | head -1)|$times"
