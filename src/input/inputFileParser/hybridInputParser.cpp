@@ -30,11 +30,14 @@
 #include <string_view>
 #include <vector>
 
+#include "enums/hybrid.hpp"
+#include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "hybridSettings.hpp"
-#include "inputFileParser.hpp"
-#include "parserUtils.hpp"
-#include "stringUtilities.hpp"
+#include "inputConverter.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
 
 #ifdef PYTHON_ENABLED
 #include "fileSettings.hpp"
@@ -54,396 +57,298 @@ namespace input
      */
     HybridInputParser::HybridInputParser()
     {
-        addKeyword(
-            std::string("inner_region_center"),
-            bindMember(&HybridInputParser::parseInnerRegionCenter, this),
-            false
-        );
-        addKeyword(
-            std::string("forced_core_list"),
-            bindMember(&HybridInputParser::parseForcedCoreList, this),
-            false
-        );
-        addKeyword(
-            std::string("forced_layer_list"),
-            bindMember(&HybridInputParser::parseForcedLayerList, this),
-            false
-        );
-        addKeyword(
-            std::string("forced_outer_list"),
-            bindMember(&HybridInputParser::parseForcedOuterList, this),
-            false
-        );
-        addKeyword(
-            std::string("qm_charges"),
-            bindMember(&HybridInputParser::parseUseQMCharges, this),
-            false
-        );
-        addKeyword(
-            std::string("core_radius"),
-            bindMember(&HybridInputParser::parseCoreRadius, this),
-            false
-        );
-        addKeyword(
-            std::string("layer_radius"),
-            bindMember(&HybridInputParser::parseLayerRadius, this),
-            false
-        );
-        addKeyword(
-            std::string("smoothing_region_thickness"),
-            bindMember(&HybridInputParser::parseSmoothingRegionThickness, this),
-            false
-        );
-        addKeyword(
-            std::string("point_charge_thickness"),
-            bindMember(&HybridInputParser::parsePointChargeThickness, this),
-            false
-        );
-        addKeyword(
-            std::string("smoothing_method"),
-            bindMember(&HybridInputParser::parseSmoothingMethod, this),
-            false
-        );
-        addKeyword(
-            std::string("qm_force_distribution"),
-            bindMember(&HybridInputParser::parseQMForceDistribution, this),
-            false
-        );
+        addInnerRegionCenterKey();
+        addForcedCoreListKey();
+        addForcedLayerListKey();
+        addForcedOuterListKey();
+        addUseQMChargesKey();
+        addCoreRadiusKey();
+        addLayerRadiusKey();
+        addSmoothingRegionThicknessKey();
+        addPointChargeThicknessKey();
+        addSmoothingMethodKey();
+        addQMForceDistributionKey();
     }
 
-    /**
-     * @brief parse atom index selection which defines the core region
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void HybridInputParser::parseInnerRegionCenter(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addInnerRegionCenterKey()
     {
-        checkCommand(lineElements, lineNumber);
-        const auto parsedIndices =
-            parseSelection(lineElements[2], lineElements[0]);
+        const auto metaData = input::KeyMetadata{
+            .name  = "inner_region_center",
+            .title = "Inner Region Center",
+            .description =
+                "Specifies the center of the inner region in hybrid "
+                "calculations",
+        };
 
-        std::vector<size_t> indices;
-
-        for (const auto &index : parsedIndices)
+        const auto setValue = [](const SelectionTag &selection)
         {
-            // check if indices are positive
-            if (index <= 0)
+            std::vector<size_t> convertedIndices;
+
+            for (const auto &index : selection.indices)
             {
-                throw exc::InputFileException(
-                    std::format(
-                        "Invalid atom index \"{}\" in input file\n"
-                        "Atom indices must be positive",
-                        index
-                    )
-                );
+                // check if indices are positive
+                if (index <= 0)
+                {
+                    throw exc::InputFileException(
+                        std::format(
+                            "Invalid atom index \"{}\" in input file\n"
+                            "Atom indices must be positive",
+                            index
+                        )
+                    );
+                }
+                convertedIndices.push_back(static_cast<size_t>(index));
             }
-            indices.push_back(static_cast<size_t>(index));
-        }
 
-        settings::HybridSettings::setInnerRegionCenter(indices);
-    }
+            settings::HybridSettings::setInnerRegionCenter(convertedIndices);
+        };
 
-    /**
-     * @brief parse list of molecules which are forced to the CORE region in
-     * hybrid calculations
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void HybridInputParser::parseForcedCoreList(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-        settings::HybridSettings::setForcedCoreList(
-            parseSelection(lineElements[2], lineElements[0])
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<SelectionTag>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse list of molecules which are forced to the LAYER region in
-     * hybrid calculations
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void HybridInputParser::parseForcedLayerList(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addForcedCoreListKey()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::HybridSettings::setForcedLayerList(
-            parseSelection(lineElements[2], lineElements[0])
+        const auto metaData = input::KeyMetadata{
+            .name  = "forced_core_list",
+            .title = "Forced Core List",
+            .description =
+                "Specifies the list of molecules which are forced to the CORE "
+                "region in hybrid calculations",
+        };
+
+        const auto setValue = [](const SelectionTag &selection)
+        { settings::HybridSettings::setForcedCoreList(selection.indices); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<SelectionTag>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse list of molecules which are forced to the outer region in
-     * hybrid calculations
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void HybridInputParser::parseForcedOuterList(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addForcedLayerListKey()
     {
-        checkCommand(lineElements, lineNumber);
-        settings::HybridSettings::setForcedOuterList(
-            parseSelection(lineElements[2], lineElements[0])
+        const auto metaData = input::KeyMetadata{
+            .name  = "forced_layer_list",
+            .title = "Forced Layer List",
+            .description =
+                "Specifies the list of molecules which are forced to the LAYER "
+                "region in hybrid calculations",
+        };
+
+        const auto setValue = [](const SelectionTag &selection)
+        { settings::HybridSettings::setForcedLayerList(selection.indices); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<SelectionTag>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse if QM charges should be used
-     *
-     * @param lineElements
-     * @param lineNumber
-     */
-    void HybridInputParser::parseUseQMCharges(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addForcedOuterListKey()
     {
-        checkCommand(lineElements, lineNumber);
-        auto use_qm_charges =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+        const auto metaData = input::KeyMetadata{
+            .name  = "forced_outer_list",
+            .title = "Forced Outer List",
+            .description =
+                "Specifies the list of molecules which are forced to the OUTER "
+                "region in hybrid calculations",
+        };
 
-        if ("qm" == use_qm_charges)
-            settings::HybridSettings::setUseQMCharges(true);
+        const auto setValue = [](const SelectionTag &selection)
+        { settings::HybridSettings::setForcedOuterList(selection.indices); };
 
-        else if ("mm" == use_qm_charges)
-            settings::HybridSettings::setUseQMCharges(false);
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<SelectionTag>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
 
-        else
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid qm_charges \"{}\" in input file\n"
-                    "Possible values are: qm, mm",
-                    lineElements[2]
-                )
-            );
-        }
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse core radius
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if the radius is negative
-     */
-    void HybridInputParser::parseCoreRadius(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addUseQMChargesKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = input::KeyMetadata{
+            .name  = "use_qm_charges",
+            .title = "Use QM Charges",
+            .description =
+                "Specifies whether QM charges should be used in the hybrid "
+                "calculations",
+        };
 
-        const auto coreRadius =
-            utilities::stringToFiniteDouble(lineElements[2]);
-
-        if (coreRadius < 0.0)
+        const auto setValue = [](QMCharges value)
         {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid {} {} in input file - must be a positive number",
-                    lineElements[0],
-                    lineElements[2]
-                )
-            );
-        }
+            switch (value)
+            {
+                case QMCharges::QM:
+                    settings::HybridSettings::setUseQMCharges(true);
+                    break;
+                case QMCharges::MM:
+                    settings::HybridSettings::setUseQMCharges(false);
+                    break;
+            }
+        };
 
-        settings::HybridSettings::setCoreRadius(coreRadius);
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<QMCharges>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse layer radius
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if the radius is negative
-     */
-    void HybridInputParser::parseLayerRadius(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addCoreRadiusKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = input::KeyMetadata{
+            .name        = "core_radius",
+            .title       = "Core Radius",
+            .description = "Specifies the core radius in hybrid calculations",
+        };
 
-        const auto layerRadius =
-            utilities::stringToFiniteDouble(lineElements[2]);
+        const auto setValue = [](double value)
+        { settings::HybridSettings::setCoreRadius(value); };
 
-        if (layerRadius < 0.0)
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid {} {} in input file - must be a positive number",
-                    lineElements[0],
-                    lineElements[2]
-                )
-            );
-        }
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
+            }
+        );
 
-        settings::HybridSettings::setLayerRadius(layerRadius);
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse smoothing region thickness
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if the thickness is negative
-     */
-    void HybridInputParser::parseSmoothingRegionThickness(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addLayerRadiusKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = input::KeyMetadata{
+            .name        = "layer_radius",
+            .title       = "Layer Radius",
+            .description = "Specifies the layer radius in hybrid calculations",
+        };
 
-        const auto thickness = std::stod(lineElements[2]);
+        const auto setValue = [](double value)
+        { settings::HybridSettings::setLayerRadius(value); };
 
-        if (thickness < 0.0)
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid {} {} in input file - must be a positive number",
-                    lineElements[0],
-                    lineElements[2]
-                )
-            );
-        }
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
+            }
+        );
 
-        settings::HybridSettings::setSmoothingRegionThickness(thickness);
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse point charge thickness
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if the radius is negative
-     */
-    void HybridInputParser::parsePointChargeThickness(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addSmoothingRegionThicknessKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = input::KeyMetadata{
+            .name  = "smoothing_region_thickness",
+            .title = "Smoothing Region Thickness",
+            .description =
+                "Specifies the smoothing region thickness in hybrid "
+                "calculations",
+        };
 
-        const auto radius = std::stod(lineElements[2]);
+        const auto setValue = [](double value)
+        { settings::HybridSettings::setSmoothingRegionThickness(value); };
 
-        if (radius < 0.0)
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid {} {} in input file - must be a positive number",
-                    lineElements[0],
-                    lineElements[2]
-                )
-            );
-        }
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
+            }
+        );
 
-        settings::HybridSettings::setPointChargeThickness(radius);
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse smoothing method
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if no valid smoothing method has been
-     * selected
-     */
-    void HybridInputParser::parseSmoothingMethod(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addPointChargeThicknessKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = input::KeyMetadata{
+            .name  = "point_charge_thickness",
+            .title = "Point Charge Thickness",
+            .description =
+                "Specifies the point charge thickness in hybrid calculations",
+        };
 
-        const auto method =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+        const auto setValue = [](double value)
+        { settings::HybridSettings::setPointChargeThickness(value); };
 
-        using enum SmoothingMethod;
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
+            }
+        );
 
-        if (method == "hotspot")
-            settings::HybridSettings::setSmoothingMethod(HOTSPOT);
-
-        else if (method == "exact")
-            settings::HybridSettings::setSmoothingMethod(EXACT);
-
-        else
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid smoothing method \"{}\" in input file\n"
-                    "Possible values are: hotspot, exact",
-                    lineElements[2]
-                )
-            );
-        }
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse QM force distribution method in hotspot smoothing
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if no valid qm force distribution method
-     * has been selected
-     */
-    void HybridInputParser::parseQMForceDistribution(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void HybridInputParser::addSmoothingMethodKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = input::KeyMetadata{
+            .name  = "smoothing_method",
+            .title = "Smoothing Method",
+            .description =
+                "Specifies the smoothing method in hybrid calculations",
+        };
 
-        const auto method =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+        const auto setValue = [](SmoothingMethod value)
+        { settings::HybridSettings::setSmoothingMethod(value); };
 
-        using enum QMForceDist;
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<SmoothingMethod>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
 
-        if (method == "none")
-            settings::HybridSettings::setQMForceDist(NONE);
+        addKeyword(metaData.name, adapt(key), false);
+    }
 
-        else if (method == "equal")
-            settings::HybridSettings::setQMForceDist(EQUAL);
+    void HybridInputParser::addQMForceDistributionKey()
+    {
+        const auto metaData = input::KeyMetadata{
+            .name  = "qm_force_distribution",
+            .title = "QM Force Distribution",
+            .description =
+                "Specifies the QM force distribution method in hybrid "
+                "calculations",
+        };
 
-        else if (method == "random")
-            settings::HybridSettings::setQMForceDist(RANDOM);
+        const auto setValue = [](QMForceDist value)
+        { settings::HybridSettings::setQMForceDist(value); };
 
-        else if (method == "distance_weighted")
-            settings::HybridSettings::setQMForceDist(DISTANCE_WEIGHTED);
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<QMForceDist>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
 
-        else
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Invalid qm force distribution method \"{}\" in input "
-                    "file\n"
-                    "Possible options are: none, equal, random and "
-                    "distance-weighted",
-                    lineElements[2]
-                )
-            );
-        }
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     /**

@@ -24,8 +24,6 @@
 
 #define _HYBRID_INPUT_PARSER_HPP_
 
-#include <cstddef>
-
 #include "inputFileParser.hpp"
 
 namespace input
@@ -41,41 +39,17 @@ namespace input
        public:
         HybridInputParser();
 
-        static void parseInnerRegionCenter(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseForcedCoreList(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseForcedLayerList(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseForcedOuterList(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseUseQMCharges(const std::vector<std::string> &, size_t);
-        static void parseCoreRadius(const std::vector<std::string> &, size_t);
-        static void parseLayerRadius(const std::vector<std::string> &, size_t);
-        static void parseSmoothingRegionThickness(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parsePointChargeThickness(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseSmoothingMethod(
-            const std::vector<std::string> &,
-            size_t
-        );
-        static void parseQMForceDistribution(
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addInnerRegionCenterKey();
+        void addForcedCoreListKey();
+        void addForcedLayerListKey();
+        void addForcedOuterListKey();
+        void addUseQMChargesKey();
+        void addCoreRadiusKey();
+        void addLayerRadiusKey();
+        void addSmoothingRegionThicknessKey();
+        void addPointChargeThicknessKey();
+        void addSmoothingMethodKey();
+        void addQMForceDistributionKey();
 
         static std::vector<int> parseSelection(
             const std::string &,

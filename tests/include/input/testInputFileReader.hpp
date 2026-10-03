@@ -29,6 +29,7 @@
 #include <cstdio>
 #include <string>
 
+#include "inputConverter.hpp"
 #include "inputFileParser.hpp"
 #include "inputFileReader.hpp"
 #include "mmmdEngine.hpp"
@@ -75,6 +76,14 @@ class TestInputFileReader : public ::testing::Test
     void _removeFile() const
     {
         static_cast<void>(std::remove(_fileName.c_str()));
+    }
+
+    static auto _parseSelectionNoPython(
+        input::Converter<input::SelectionTag> &converter,
+        const std::string                     &key
+    )
+    {
+        return converter._parseSelectionNoPython(key);
     }
 };
 

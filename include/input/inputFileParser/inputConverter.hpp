@@ -24,6 +24,7 @@
 #define _INPUT_CONVERTER_HPP_
 
 #include <concepts>
+#include <cstdint>
 #include <map>
 #include <mstd/file.hpp>
 #include <mstd/type_traits.hpp>
@@ -32,6 +33,8 @@
 #include <string_view>
 #include <unordered_map>
 #include <vector>
+
+class TestInputFileReader;   // forward declaration
 
 /**
  * @namespace input
@@ -42,7 +45,7 @@
 namespace input
 {
 
-    static const std::map<std::string, std::string> boolKeywords = {
+    const std::map<std::string, std::string> boolKeywords = {
         {"on", "off"},
         {"true", "false"},
         {"yes", "no"}
@@ -56,8 +59,28 @@ namespace input
     template <typename T>
     struct ConverterBase
     {
+       private:
+        std::string _key;
+        std::string _raw;
+
+       public:
+        ConverterBase(std::string key, std::string raw);
+
         [[nodiscard]]
         static std::string describeDomain(const std::vector<T> &notAllowed);
+
+       protected:
+        [[nodiscard]]
+        const std::string &_getKey() const
+        {
+            return _key;
+        }
+
+        [[nodiscard]]
+        const std::string &_getRaw() const
+        {
+            return _raw;
+        }
     };
 
     /**
@@ -82,6 +105,8 @@ namespace input
     template <>
     struct Converter<double> : public ConverterBase<double>
     {
+        using ConverterBase<double>::ConverterBase;
+
         [[nodiscard]]
         static std::optional<double> tryParse(std::string_view raw);
     };
@@ -93,6 +118,8 @@ namespace input
     template <>
     struct Converter<bool> : public ConverterBase<bool>
     {
+        using ConverterBase<bool>::ConverterBase;
+
         [[nodiscard]]
         static std::optional<bool> tryParse(std::string_view raw);
 
@@ -114,6 +141,8 @@ namespace input
     requires(!std::same_as<T, bool>)
     struct Converter<T> : public ConverterBase<T>
     {
+        using ConverterBase<T>::ConverterBase;
+
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
     };
@@ -132,6 +161,8 @@ namespace input
     requires(!std::same_as<T, bool>)
     struct Converter<T> : public ConverterBase<T>
     {
+        using ConverterBase<T>::ConverterBase;
+
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
 
@@ -153,6 +184,8 @@ namespace input
     template <mstd::has_enum_meta T>
     struct Converter<T> : public ConverterBase<T>
     {
+        using ConverterBase<T>::ConverterBase;
+
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
 
@@ -167,6 +200,8 @@ namespace input
     template <>
     struct Converter<mstd::File> : public ConverterBase<mstd::File>
     {
+        using ConverterBase<mstd::File>::ConverterBase;
+
         [[nodiscard]]
         static std::optional<mstd::File> tryParse(std::string_view raw);
 
@@ -183,14 +218,24 @@ namespace input
     template <>
     struct Converter<std::string> : public ConverterBase<std::string>
     {
+        using ConverterBase<std::string>::ConverterBase;
+
         [[nodiscard]]
         static std::optional<std::string> tryParse(std::string_view raw);
     };
 
+    /**
+     * @brief Converter specialization for std::unordered_map<std::string,
+     * double>
+     *
+     */
     template <>
     struct Converter<std::unordered_map<std::string, double>>
         : public ConverterBase<std::unordered_map<std::string, double>>
     {
+        using ConverterBase<
+            std::unordered_map<std::string, double>>::ConverterBase;
+
         [[nodiscard]]
         static std::optional<std::unordered_map<std::string, double>> tryParse(
             std::string_view raw
@@ -200,6 +245,55 @@ namespace input
         static std::string describeDomain(
             const std::vector<std::unordered_map<std::string, double>>
                 &notAllowed
+        );
+    };
+
+    /**
+     * @brief Tag type for selections
+     *
+     */
+    struct SelectionTag
+    {
+        std::vector<int> indices;
+    };
+
+    enum class SelectionError : std::uint8_t
+    {
+        None,
+        NeedsPython,
+        InvalidStartIndex,
+        OutOfRangeStartIndex,
+        InvalidEndIndex,
+        OutOfRangeEndIndex,
+        InvalidAtomIndex,
+        OutOfRangeAtomIndex,
+        EmptySelection
+    };
+
+    /**
+     * @brief Converter specialization for SelectionTag
+     *
+     */
+    template <>
+    struct Converter<SelectionTag> : public ConverterBase<SelectionTag>
+    {
+        using ConverterBase<SelectionTag>::ConverterBase;
+        friend class ::TestInputFileReader;
+
+       private:
+        SelectionError _selectionError = SelectionError::None;
+
+       public:
+        [[nodiscard]]
+        std::optional<SelectionTag> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        std::string describeDomain(const std::vector<SelectionTag> &notAllowed);
+
+       private:
+        [[nodiscard]]
+        std::optional<std::vector<int>> _parseSelectionNoPython(
+            const std::string &selection
         );
     };
 
