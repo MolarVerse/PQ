@@ -26,9 +26,9 @@
 
 #include "constraintSettings.hpp"
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
-#include "settings.hpp"
 #include "thermostatSettings.hpp"
 
 namespace out
@@ -61,7 +61,7 @@ namespace out
 
         _writeHeader();
 
-        if (settings::Settings::isMDJobType())
+        if (settings::GeneralSettings::isMDJobType())
             _writeLeft(simulationTime, "SIMULATION-TIME", "ps");
         else
             _writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
@@ -71,7 +71,7 @@ namespace out
         _writeLeft(physicalData.getPressure(), "PRESSURE", "bar");
         _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
 
-        if (settings::Settings::isQMActivated())
+        if (settings::GeneralSettings::isQMActivated())
         {
             _writeLeft(physicalData.getQMEnergy(), "E(QM)", "kcal/mol");
             _writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
@@ -80,7 +80,7 @@ namespace out
         _writeLeft(physicalData.getKineticEnergy(), "E(KIN)", "kcal/mol");
         _writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
-        if (settings::Settings::isMMActivated())
+        if (settings::GeneralSettings::isMMActivated())
         {
             _writeLeft(physicalData.getCoulombEnergy(), "E(COUL)", "kcal/mol");
             _writeRight(
@@ -106,7 +106,7 @@ namespace out
             );
         }
 
-        if (settings::Settings::isHybridJobtype())
+        if (settings::GeneralSettings::isHybridJobtype())
         {
             _writeLeft(
                 physicalData.getNumberOfSmoothingMolecules(),

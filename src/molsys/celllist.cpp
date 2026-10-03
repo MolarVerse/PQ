@@ -30,10 +30,10 @@
 
 #include "cell.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "molecule.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 
 namespace molsys
@@ -256,7 +256,7 @@ namespace molsys
      */
     void CellList::updateCellList(SimulationBox &simulationBox)
     {
-        if (!settings::Settings::isCellListActivated())
+        if (!settings::GeneralSettings::isCellListActivated())
             return;
 
         auto _ = scopedTimer(TimerId::CellList, "Update");

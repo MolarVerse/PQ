@@ -1,5 +1,5 @@
 add_library(settings
-    settings.cpp
+    generalSettings.cpp
     simulationBoxSettings.cpp
     manostatSettings.cpp
     thermostatSettings.cpp

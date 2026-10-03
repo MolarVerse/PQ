@@ -22,8 +22,8 @@
 
 #include "virial.hpp"
 
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "timerId.hpp"
 
@@ -121,7 +121,7 @@ namespace virial
 
         linalg::tensor3D virial{0.0};
 
-        if (settings::Settings::getVirialType() == VirialType::ATOMIC)
+        if (settings::GeneralSettings::getVirialType() == VirialType::ATOMIC)
             return virial;
 
         for (const auto &molecule : simulationBox.getMolecules())

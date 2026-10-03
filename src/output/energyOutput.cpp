@@ -27,9 +27,9 @@
 
 #include "constraintSettings.hpp"
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
-#include "settings.hpp"
 #include "thermostatSettings.hpp"
 
 namespace out
@@ -71,7 +71,7 @@ namespace out
         _fp << std::format("{:20.12f}\t", physicalData.getPressure());
         _fp << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
 
-        if (settings::Settings::isQMActivated())
+        if (settings::GeneralSettings::isQMActivated())
         {
             _fp << std::format("{:20.12f}\t", physicalData.getQMEnergy());
             _fp << std::format(
@@ -83,7 +83,7 @@ namespace out
         _fp << std::format("{:20.12f}\t", physicalData.getKineticEnergy());
         _fp << std::format("{:20.12f}\t", physicalData.getIntraEnergy());
 
-        if (settings::Settings::isMMActivated())
+        if (settings::GeneralSettings::isMMActivated())
         {
             _fp << std::format("{:20.12f}\t", physicalData.getCoulombEnergy());
             _fp << std::format(
@@ -100,7 +100,7 @@ namespace out
             _fp << std::format("{:20.12f}\t", physicalData.getImproperEnergy());
         }
 
-        if (settings::Settings::isHybridJobtype())
+        if (settings::GeneralSettings::isHybridJobtype())
         {
             _fp << std::format(
                 "{:20.12f}\t",

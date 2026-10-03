@@ -25,7 +25,6 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
-// for AssertionResult, Message, TestPartResult
 #include "throwWithMessage.hpp"
 #include "topologyReader.hpp"
 

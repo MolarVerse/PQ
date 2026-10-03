@@ -28,8 +28,8 @@
 
 #include "box.hpp"
 #include "collectionUtilities.hpp"
+#include "generalSettings.hpp"
 #include "manostatSettings.hpp"
-#include "settings.hpp"
 #include "strongTypes.hpp"
 
 namespace molsys
@@ -263,10 +263,10 @@ namespace molsys
      */
     bool Molecule::isMMMolecule() const
     {
-        if (settings::Settings::isMMOnlyJobtype())
+        if (settings::GeneralSettings::isMMOnlyJobtype())
             return true;
 
-        if (settings::Settings::isQMOnlyJobtype())
+        if (settings::GeneralSettings::isQMOnlyJobtype())
             return false;
 
         if (isActive())

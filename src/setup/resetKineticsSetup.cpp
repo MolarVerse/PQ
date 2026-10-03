@@ -25,10 +25,10 @@
 #include <format>
 
 #include "engine.hpp"
+#include "generalSettings.hpp"
 #include "mdEngine.hpp"
 #include "resetKinetics.hpp"
 #include "resetKineticsSettings.hpp"
-#include "settings.hpp"
 #include "timingsSettings.hpp"
 
 namespace setup
@@ -42,7 +42,7 @@ namespace setup
      */
     void setupResetKinetics(engine::Engine &engine)
     {
-        if (!settings::Settings::isMDJobType())
+        if (!settings::GeneralSettings::isMDJobType())
             return;
 
         out::StdoutOutput::writeSetup("Reset Kinetics");

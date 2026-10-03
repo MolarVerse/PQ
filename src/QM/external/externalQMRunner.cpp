@@ -37,10 +37,10 @@
 #include "exceptions.hpp"
 #include "executablePath.hpp"
 #include "fileSettings.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 
 namespace QM
@@ -281,7 +281,7 @@ namespace QM
             writeCoordsFile(simulationBox);
         }
 
-        if (settings::Settings::isHybridJobtype())
+        if (settings::GeneralSettings::isHybridJobtype())
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
             writePointChargeFile(simulationBox);

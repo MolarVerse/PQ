@@ -23,11 +23,11 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "referencesOutput.hpp"
-#include "settings.hpp"
 #include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
 
@@ -115,7 +115,7 @@ namespace engine
 
         _constraints->calculateConstraintBondRefs(*_simulationBox);
 
-        if (!settings::Settings::isHybridJobtype())
+        if (!settings::GeneralSettings::isHybridJobtype())
         {
             const auto virial =
                 virial::intraMolecularVirialCorrection(*_simulationBox);
@@ -138,7 +138,7 @@ namespace engine
 
         _thermostat->applyTemperatureRamping();
 
-        if (settings::Settings::isQMOnlyJobtype())
+        if (settings::GeneralSettings::isQMOnlyJobtype())
         {
             const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
             _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
@@ -198,7 +198,7 @@ namespace engine
 
             _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
 
-            if (settings::Settings::isHybridJobtype())
+            if (settings::GeneralSettings::isHybridJobtype())
                 _engineOutput.writeHybridCenterXyzFile(_configurator, effStep);
         }
 

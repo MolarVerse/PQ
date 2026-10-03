@@ -24,9 +24,9 @@
 
 #include "celllist.hpp"
 #include "engine.hpp"
+#include "generalSettings.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
-#include "settings.hpp"
 
 namespace setup
 {
@@ -38,7 +38,7 @@ namespace setup
      */
     void setupCellList(engine::Engine &engine)
     {
-        if (settings::Settings::isCellListActivated())
+        if (settings::GeneralSettings::isCellListActivated())
         {
             out::StdoutOutput::writeSetup("Cell List");
             engine.getLogOutput().writeSetup("Cell List");
@@ -69,7 +69,7 @@ namespace setup
         const auto &potential     = _engine.getPotential();
         const auto  nonCoulombPot = potential->getNonCoulombPotSharedPtr();
 
-        if (settings::Settings::isCellListActivated())
+        if (settings::GeneralSettings::isCellListActivated())
         {
             auto &cellList = _engine.getCellList();
             cellList.resizeCells();

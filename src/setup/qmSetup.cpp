@@ -29,12 +29,12 @@
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "externalQMRunner.hpp"
+#include "generalSettings.hpp"
 #include "potentialSettings.hpp"
 #include "qmCapableEngine.hpp"
 #include "qmSettings.hpp"
 #include "references.hpp"
 #include "referencesOutput.hpp"
-#include "settings.hpp"
 #include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 
@@ -58,7 +58,7 @@ namespace setup
      */
     void setupQM(engine::Engine &engine)
     {
-        if (!settings::Settings::isQMActivated())
+        if (!settings::GeneralSettings::isQMActivated())
             return;
 
         out::StdoutOutput::writeSetup("QM runner");
@@ -272,7 +272,7 @@ namespace setup
     {
         using enum JobType;
 
-        const auto jobType = settings::Settings::getJobtype();
+        const auto jobType = settings::GeneralSettings::getJobtype();
 
         if (jobType == QM_MD || jobType == RING_POLYMER_QM_MD)
             settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
@@ -311,7 +311,7 @@ namespace setup
             const auto modelSize = settings::QMSettings::getMaceModel();
             const auto modelPath = settings::QMSettings::getMaceModelPath();
             const auto floatingPointStr =
-                settings::Settings::getFloatingPointPybindString();
+                settings::GeneralSettings::getFloatingPointPybindString();
             const auto        maceMode = settings::QMSettings::getMaceMode();
             const auto *const useDisp =
                 settings::QMSettings::useDispersionCorr() ? "on" : "off";
@@ -356,7 +356,7 @@ namespace setup
             const auto useGPUPreprocessing =
                 settings::QMSettings::useGPUPreprocessing();
             const bool useFloat64 =
-                settings::Settings::getFloatingPointType() == DOUBLE;
+                settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 
             // clang-format off
         const auto modelPathMsg  = std::format("Model path:               {}", modelPath);

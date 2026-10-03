@@ -27,7 +27,6 @@
 #include <vector>
 
 #include "exceptions.hpp"
-// for AssertionResult, Message, TestPart...
 #include "restartFileReader/restartFileSection.hpp"
 #include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"

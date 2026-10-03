@@ -31,9 +31,9 @@
 #include <vector>
 
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "mmmdEngine.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"
 
@@ -315,7 +315,7 @@ TEST_F(TestInputFileReader, testReadJobType)
     std::string filename = "data/inputFileReader/inputFile.txt";
     auto        engine   = std::unique_ptr<engine::Engine>();
     ASSERT_NO_THROW(input::readJobType(filename, engine));
-    EXPECT_EQ(settings::Settings::getJobtype(), JobType::MM_MD);
+    EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_MD);
     test::checkType(engine, typeid(engine::MMMDEngine));
 
     filename = "fileNotFound";

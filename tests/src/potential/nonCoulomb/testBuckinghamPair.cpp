@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "buckinghamPair.hpp"
-// for AssertionResult, Message, TestPartResult
 
 /**
  * @brief tests the equals operator of BuckinghamPair

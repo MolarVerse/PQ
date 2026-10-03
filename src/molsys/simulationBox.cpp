@@ -28,9 +28,9 @@
 
 #include "constants.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "potentialSettings.hpp"
 #include "randomNumberGenerator.hpp"
-#include "settings.hpp"
 #include "stlVector.hpp"
 
 namespace molsys
@@ -530,7 +530,7 @@ namespace molsys
         const auto nAtoms = getNumberOfAtoms();
 
         _degreesOfFreedom =
-            3 * nAtoms - settings::Settings::getDimensionality();
+            3 * nAtoms - settings::GeneralSettings::getDimensionality();
     }
 
     /**

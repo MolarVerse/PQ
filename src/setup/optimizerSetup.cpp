@@ -33,10 +33,10 @@
 #include "engine.hpp"
 #include "enums/convergence.hpp"
 #include "expDecay.hpp"
+#include "generalSettings.hpp"
 #include "mmEvaluator.hpp"
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
-#include "settings.hpp"
 #include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
 
@@ -50,7 +50,7 @@ namespace setup
      */
     void setupOptimizer(engine::Engine &engine)
     {
-        if (!settings::Settings::isOptJobType())
+        if (!settings::GeneralSettings::isOptJobType())
             return;
 
         out::StdoutOutput::writeSetup("Optimizer");
@@ -227,7 +227,7 @@ namespace setup
     {
         std::shared_ptr<opt::Evaluator> evaluator;
 
-        if (settings::Settings::getJobtype() == JobType::MM_OPT)
+        if (settings::GeneralSettings::getJobtype() == JobType::MM_OPT)
             evaluator = std::make_shared<opt::MMEvaluator>();
         else
         {

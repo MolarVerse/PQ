@@ -29,10 +29,10 @@
 #include "constants/conversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "manostat.hpp"
 #include "manostatSettings.hpp"
 #include "mdEngine.hpp"
-#include "settings.hpp"
 #include "stochasticRescalingManostat.hpp"
 
 namespace setup
@@ -45,7 +45,7 @@ namespace setup
      */
     void setupManostat(engine::Engine &engine)
     {
-        if (!settings::Settings::isMDJobType())
+        if (!settings::GeneralSettings::isMDJobType())
             return;
 
         out::StdoutOutput::writeSetup("Manostat");

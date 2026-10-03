@@ -29,9 +29,9 @@
 #include "atom.hpp"
 #include "cell.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "vector3d.hpp"
@@ -278,7 +278,7 @@ TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
 {
     _cellList->setNumberOfCells(4);
     _cellList->setNumberOfNeighbourCells(2);
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
 
     const auto cloned = _cellList->clone();
 
@@ -358,7 +358,7 @@ TEST_F(TestCellList, updateCellList)
     _cellList->resizeCells();
 
     EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
 
     auto molecule = molsys::Molecule();
 

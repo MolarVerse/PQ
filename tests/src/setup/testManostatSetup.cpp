@@ -25,23 +25,23 @@
 #include "berendsenManostat.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "manostat.hpp"
 #include "manostatSettings.hpp"
 #include "manostatSetup.hpp"
 #include "mdEngine.hpp"
-#include "settings.hpp"
 #include "stochasticRescalingManostat.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
 
 TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
 {
-    const auto jobType = settings::Settings::getJobtype();
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    const auto jobType = settings::GeneralSettings::getJobtype();
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
 
     EXPECT_NO_THROW(setup::setupManostat(*_engine));
 
-    settings::Settings::setJobtype(jobType);
+    settings::GeneralSettings::setJobtype(jobType);
 }
 
 TEST_F(TestSetup, setupManostatNone)
