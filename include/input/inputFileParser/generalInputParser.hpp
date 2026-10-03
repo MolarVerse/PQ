@@ -25,7 +25,6 @@
 #define _GENERAL_INPUT_PARSER_HPP_
 
 #include <cstddef>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -62,8 +61,7 @@ namespace input
 
         static void parseJobTypeForEngine(
             const std::vector<std::string> &,
-            size_t,
-            std::unique_ptr<engine::Engine> &
+            size_t
         );
     };
 

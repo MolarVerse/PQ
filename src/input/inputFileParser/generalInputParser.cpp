@@ -26,20 +26,13 @@
 #include <format>
 #include <stdexcept>
 
-#include "engine.hpp"
 #include "enums/general.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
-#include "hessianEngine.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
-#include "mmmdEngine.hpp"
-#include "optEngine.hpp"
 #include "parserUtils.hpp"
-#include "qmmdEngine.hpp"
-#include "qmmmMDEngine.hpp"
-#include "ringPolymerqmmdEngine.hpp"
 #include "stringUtilities.hpp"
 
 namespace input
@@ -98,14 +91,12 @@ namespace input
      *
      * @param lineElements
      * @param lineNumber
-     * @param engine
      *
      * @throw exc::InputFileException if jobtype is not recognised
      */
     void GeneralInputParser::parseJobTypeForEngine(
-        const std::vector<std::string>  &lineElements,
-        size_t                           lineNumber,
-        std::unique_ptr<engine::Engine> &engine
+        const std::vector<std::string> &lineElements,
+        size_t                          lineNumber
     )
     {
         using enum JobType;
@@ -117,32 +108,26 @@ namespace input
         if (jobtype == "mm_opt")
         {
             settings::GeneralSettings::setJobtype(MM_OPT);
-            engine = std::make_unique<engine::OptEngine>();
         }
         else if (jobtype == "mm_hessian")
         {
             settings::GeneralSettings::setJobtype(MM_HESSIAN);
-            engine = std::make_unique<engine::HessianEngine>();
         }
         else if (jobtype == "mm_md")
         {
             settings::GeneralSettings::setJobtype(MM_MD);
-            engine = std::make_unique<engine::MMMDEngine>();
         }
         else if (jobtype == "qm_md")
         {
             settings::GeneralSettings::setJobtype(QM_MD);
-            engine = std::make_unique<engine::QMMDEngine>();
         }
         else if (jobtype == "qm_rpmd")
         {
             settings::GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-            engine = std::make_unique<engine::RingPolymerQMMDEngine>();
         }
         else if (jobtype == "qmmm_md")
         {
             settings::GeneralSettings::setJobtype(QMMM_MD);
-            engine = std::make_unique<engine::QMMMMDEngine>();
         }
         else
         {
