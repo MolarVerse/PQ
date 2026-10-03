@@ -151,20 +151,32 @@ TEST_F(TestInputFileReader, parseDimensionality)
 TEST_F(TestInputFileReader, parseFloatingPointType)
 {
     input::GeneralInputParser parser;
-    std::vector<std::string> lineElements = {"floatingPointType", "=", "float"};
-    input::GeneralInputParser::parseFloatingPointType(lineElements, 0);
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("floating_point_type"));
+    const auto& parseFunc = funcMap.at("floating_point_type");
+
+    std::vector<std::string> lineElements = {
+        "floating_point_type",
+        "=",
+        "float"
+    };
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::Settings::getFloatingPointType(), FPType::FLOAT);
 
-    lineElements = {"floatingPointType", "=", "double"};
-    input::GeneralInputParser::parseFloatingPointType(lineElements, 0);
+    _clearParser(parser);
+
+    lineElements = {"floating_point_type", "=", "double"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::Settings::getFloatingPointType(), FPType::DOUBLE);
 
-    lineElements = {"floatingPointType", "=", "notValid"};
+    _clearParser(parser);
+
+    lineElements = {"floating_point_type", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseFloatingPointType(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid floating point type \"notValid\" in input file\n"
-        "Possible values are: float, double"
+        "Invalid value \"notValid\" for key \"floating_point_type\" at line 0 "
+        "in input file. Allowed values: float, double"
     );
 }
 
