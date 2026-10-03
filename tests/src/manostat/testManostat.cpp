@@ -30,11 +30,11 @@
 #include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "molecule.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
 #include "stochasticRescalingManostat.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
@@ -280,13 +280,13 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
  */
 TEST_F(TestManostat, ChangeVirialToAtomic)
 {
-    settings::Settings::setVirialType(VirialType::ATOMIC);
+    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * PRESSURE_FACTOR);
 
     // set virial type back to molecular for other tests
-    settings::Settings::setVirialType(VirialType::MOLECULAR);
+    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
 }
 
 /**

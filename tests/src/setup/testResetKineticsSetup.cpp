@@ -22,10 +22,10 @@
 
 #include <gtest/gtest.h>
 
+#include "generalSettings.hpp"
 #include "mdEngine.hpp"
 #include "resetKineticsSettings.hpp"
 #include "resetKineticsSetup.hpp"
-#include "settings.hpp"
 #include "testSetup.hpp"
 #include "timingsSettings.hpp"
 
@@ -46,14 +46,14 @@ namespace
 TEST_F(TestSetup, setupResetKineticsIsNoOpWhenNotMDJob)
 {
     resetSettings();
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     EXPECT_NO_THROW(setup::setupResetKinetics(*_engine));
 }
 
 TEST_F(TestSetup, setupResetKineticsPopulatesResetKineticsOnMDEngine)
 {
     resetSettings();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::TimingsSettings::setNumberOfSteps(100);
 
     EXPECT_NO_THROW(setup::setupResetKinetics(*_mdEngine));
@@ -63,7 +63,7 @@ TEST_F(TestSetup, setupResetKineticsPopulatesResetKineticsOnMDEngine)
 TEST_F(TestSetup, setupConvertsZeroFrequenciesToNumberOfStepsPlusOne)
 {
     resetSettings();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::TimingsSettings::setNumberOfSteps(42);
 
     setup::ResetKineticsSetup setup(*_mdEngine);
@@ -73,7 +73,7 @@ TEST_F(TestSetup, setupConvertsZeroFrequenciesToNumberOfStepsPlusOne)
 TEST_F(TestSetup, setupAcceptsNonZeroFrequencies)
 {
     resetSettings();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::TimingsSettings::setNumberOfSteps(50);
     settings::ResetKineticsSettings::setFScale(10);
     settings::ResetKineticsSettings::setFReset(5);

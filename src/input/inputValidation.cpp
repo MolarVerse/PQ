@@ -27,13 +27,13 @@
 #include "constants/conversionFactors.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "hessianSettings.hpp"
 #include "inputFileReader.hpp"
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "potentialSettings.hpp"
 #include "qmSettings.hpp"
-#include "settings.hpp"
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
@@ -52,8 +52,9 @@ namespace input
         void validateOptimizer()
         {
             const auto optimizerActive =
-                settings::Settings::isOptJobType() ||
-                (settings::Settings::getJobtype() == JobType::MM_HESSIAN &&
+                settings::GeneralSettings::isOptJobType() ||
+                (settings::GeneralSettings::getJobtype() ==
+                     JobType::MM_HESSIAN &&
                  settings::HessianSettings::optimizeBeforeHessian());
 
             if (!optimizerActive)
@@ -92,10 +93,10 @@ namespace input
     {
         using enum JobType;
 
-        const auto jobType = settings::Settings::getJobtype();
+        const auto jobType = settings::GeneralSettings::getJobtype();
         const auto requiresNumberOfSteps =
-            settings::Settings::isMDJobType() ||
-            settings::Settings::isOptJobType() ||
+            settings::GeneralSettings::isMDJobType() ||
+            settings::GeneralSettings::isOptJobType() ||
             (jobType == MM_HESSIAN &&
              settings::HessianSettings::optimizeBeforeHessian());
 
@@ -109,7 +110,8 @@ namespace input
             );
         }
 
-        if (settings::Settings::isMDJobType() && !getKeywordSet("timestep"))
+        if (settings::GeneralSettings::isMDJobType() &&
+            !getKeywordSet("timestep"))
         {
             throw exc::UserInputException(
                 std::format(
@@ -129,7 +131,7 @@ namespace input
      */
     void InputFileReader::_validateQM() const
     {
-        if (!settings::Settings::isQMActivated())
+        if (!settings::GeneralSettings::isQMActivated())
             return;
 
         if (!getKeywordSet("qm_prog"))
@@ -267,7 +269,7 @@ namespace input
                 "Initializing velocities requires temp, start_temp, or end_temp"
             );
 
-        if (settings::Settings::isMDJobType() &&
+        if (settings::GeneralSettings::isMDJobType() &&
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
@@ -424,10 +426,10 @@ namespace input
      */
     void InputFileReader::_validateCellList()
     {
-        if (!settings::Settings::isCellListActivated())
+        if (!settings::GeneralSettings::isCellListActivated())
             return;
 
-        if (settings::Settings::isQMOnlyActivated())
+        if (settings::GeneralSettings::isQMOnlyActivated())
             throw exc::InputFileException(
                 "Cell lists are not available for pure QM simulations"
             );
@@ -473,7 +475,7 @@ namespace input
      */
     void InputFileReader::_validateRingPolymer() const
     {
-        if (settings::Settings::isRingPolymerMDActivated() &&
+        if (settings::GeneralSettings::isRingPolymerMDActivated() &&
             !getKeywordSet("rpmd_n_replica"))
             throw exc::InputFileException(
                 "Number of beads not set for ring polymer simulation"

@@ -27,9 +27,9 @@
 #include <gtest/gtest.h>
 
 #include "engine.hpp"
+#include "generalSettings.hpp"
 #include "mmmdEngine.hpp"
 #include "optEngine.hpp"
-#include "settings.hpp"
 #include "thermostatSettings.hpp"
 
 class TestSetup : public ::testing::Test
@@ -53,7 +53,7 @@ class TestSetup : public ::testing::Test
         settings::ThermostatSettings::setEndTemperatureSet(false);
         settings::ThermostatSettings::setStartTemperatureSet(false);
         settings::ThermostatSettings::setTemperatureSet(false);
-        settings::Settings::deactivateCellList();
+        settings::GeneralSettings::deactivateCellList();
     }
 };
 

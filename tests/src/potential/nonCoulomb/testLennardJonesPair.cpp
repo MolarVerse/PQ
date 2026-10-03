@@ -25,7 +25,6 @@
 #include <cmath>
 #include <vector>
 
-// for AssertionResult, Message, TestPartResult
 #include "lennardJonesPair.hpp"
 
 /**

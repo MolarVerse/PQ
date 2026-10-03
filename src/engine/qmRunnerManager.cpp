@@ -28,9 +28,9 @@
 #include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
-#include "settings.hpp"
 #include "turbomoleRunner.hpp"
 
 #ifdef WITH_ASE
@@ -97,7 +97,8 @@ namespace engine
         );
         const auto modelPath = settings::QMSettings::getMaceModelPath();
         const auto useDFTD   = settings::QMSettings::useDispersionCorr();
-        const auto fpType = settings::Settings::getFloatingPointPybindString();
+        const auto fpType =
+            settings::GeneralSettings::getFloatingPointPybindString();
         const auto useCueq =
             settings::QMSettings::getMaceMode() == MaceMode::FAST;
 
@@ -194,7 +195,7 @@ namespace engine
         const auto gpuPreprocessing =
             settings::QMSettings::useGPUPreprocessing();
         const bool useFloat64 =
-            settings::Settings::getFloatingPointType() == DOUBLE;
+            settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 
         return std::make_shared<QM::AseFennolRunner>(
             modelPath,

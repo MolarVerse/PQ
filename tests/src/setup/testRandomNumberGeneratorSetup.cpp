@@ -24,9 +24,9 @@
 
 #include <string>
 
+#include "generalSettings.hpp"
 #include "qmmdEngine.hpp"
 #include "randomNumberGeneratorSetup.hpp"
-#include "settings.hpp"
 
 TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
 {
@@ -34,8 +34,8 @@ TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
     auto setupRandomNumberGenerator = setup::RandomNumberGeneratorSetup(engine);
     engine.getEngineOutput().getLogOutput().setFilename("default.log");
 
-    settings::Settings::setIsRandomSeedSet(false);
-    settings::Settings::setRandomSeed(1);
+    settings::GeneralSettings::setIsRandomSeedSet(false);
+    settings::GeneralSettings::setRandomSeed(1);
 
     setupRandomNumberGenerator.setup();
 
@@ -54,8 +54,8 @@ TEST(TestRandomNumberGeneratorSetup, setupWithRandomSeed)
     auto setupRandomNumberGenerator = setup::RandomNumberGeneratorSetup(engine);
     engine.getEngineOutput().getLogOutput().setFilename("default.log");
 
-    settings::Settings::setIsRandomSeedSet(true);
-    settings::Settings::setRandomSeed(73);
+    settings::GeneralSettings::setIsRandomSeedSet(true);
+    settings::GeneralSettings::setRandomSeed(73);
 
     setupRandomNumberGenerator.setup();
 

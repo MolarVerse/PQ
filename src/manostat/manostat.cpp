@@ -24,10 +24,10 @@
 
 #include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
-#include "settings.hpp"
 #include "simulationBox.hpp"
 
 namespace manostat
@@ -54,7 +54,7 @@ namespace manostat
     )
     {
         auto ekinVirial = physicalData.getKinEnergyVirialTensor(
-            settings::Settings::getVirialType()
+            settings::GeneralSettings::getVirialType()
         );
         auto       forceVirial = physicalData.getVirial();
         const auto volume      = simulationBox.getVolume();

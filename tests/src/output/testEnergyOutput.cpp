@@ -26,8 +26,8 @@
 #include <string>
 
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "manostatSettings.hpp"
-#include "settings.hpp"
 #include "thermostatSettings.hpp"
 #include "vector3d.hpp"
 
@@ -66,7 +66,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
     _energyOutput->write(100.0, *_physicalData);
@@ -108,7 +108,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::activate();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
     _energyOutput->write(100.0, *_physicalData);
@@ -151,7 +151,7 @@ TEST_F(TestEnergyOutput, manostatActive)
 
     settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
     _energyOutput->write(100.0, *_physicalData);
@@ -195,7 +195,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     settings::ForceFieldSettings::deactivate();
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
     _energyOutput->write(100.0, *_physicalData);
@@ -240,7 +240,7 @@ TEST_F(TestEnergyOutput, qmActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
 
     _energyOutput->setFilename("default.en");
@@ -280,8 +280,8 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     _physicalData->setLoopTime(0.1);
 
     settings::ForceFieldSettings::deactivate();
-    settings::Settings::setJobtype(JobType::MM_MD);
-    settings::Settings::deactivateRingPolymerMD();
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::deactivateRingPolymerMD();
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
         ThermostatType::NOSE_HOOVER

@@ -39,6 +39,7 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
@@ -50,7 +51,6 @@
 #include "physicalData.hpp"
 #include "progressbar.hpp"
 #include "referencesOutput.hpp"
-#include "settings.hpp"
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
@@ -315,7 +315,7 @@ namespace engine
     {
         std::shared_ptr<opt::Evaluator> evaluator;
 
-        if (settings::Settings::getJobtype() == JobType::MM_HESSIAN)
+        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN)
             evaluator = std::make_shared<opt::MMEvaluator>();
 
         else

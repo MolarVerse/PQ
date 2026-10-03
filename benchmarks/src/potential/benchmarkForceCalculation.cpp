@@ -31,13 +31,13 @@
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "lennardJonesPair.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
 
 namespace
 {
@@ -83,7 +83,7 @@ namespace
         molsys::CellList cellList;
         if constexpr (std::is_same_v<PotentialType, pot::PotentialCellList>)
         {
-            settings::Settings::activateCellList();
+            settings::GeneralSettings::activateCellList();
             cellList.setNumberOfCells(cellsPerSide);
             cellList.resizeCells();
             cellList.setup(simBox);

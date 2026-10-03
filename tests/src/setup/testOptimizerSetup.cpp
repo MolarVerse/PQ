@@ -27,12 +27,12 @@
 #include "convergenceSettings.hpp"
 #include "enums/optimizer.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "hessianEngine.hpp"
 #include "hessianSettings.hpp"
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "optimizerSetup.hpp"
-#include "settings.hpp"
 #include "steepestDescent.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
@@ -61,7 +61,7 @@ namespace
 TEST_F(TestSetup, setupOptimizerIsNoOpWhenNotOptJob)
 {
     resetOptimizerSettings();
-    settings::Settings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     EXPECT_NO_THROW(setup::setupOptimizer(*_engine));
 }
 
@@ -236,7 +236,7 @@ TEST_F(TestSetup, setupConvergenceWritesIntoOptimizer)
 TEST_F(TestSetup, setupEvaluatorMMOpt)
 {
     resetOptimizerSettings();
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
 
     setup::OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
     EXPECT_NO_THROW(const auto _ = setup.setupEvaluator());
@@ -245,7 +245,7 @@ TEST_F(TestSetup, setupEvaluatorMMOpt)
 TEST_F(TestSetup, setupEvaluatorUnknownJobThrows)
 {
     resetOptimizerSettings();
-    settings::Settings::setJobtype(JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
     setup::OptimizerSetup setup(dynamic_cast<engine::OptEngine &>(*_engine));
     EXPECT_THROW_MSG(
@@ -263,7 +263,7 @@ TEST_F(TestSetup, setupEvaluatorUnknownJobThrows)
 TEST_F(TestSetup, setupWiresOptimizerAndLearningRateAndEvaluator)
 {
     resetOptimizerSettings();
-    settings::Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::OptimizerSettings::setOptimizer(OptimizerType::STEEPEST_DESCENT);
     settings::OptimizerSettings::setLearningRateStrategy(
         LearningRate::CONSTANT
@@ -279,7 +279,7 @@ TEST_F(TestSetup, setupWiresOptimizerAndLearningRateAndEvaluator)
 TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
 {
     resetOptimizerSettings();
-    settings::Settings::setJobtype(JobType::MM_HESSIAN);
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
     settings::HessianSettings::setOptimizeBeforeHessian(true);
     settings::OptimizerSettings::setMinLearningRate(0.5);
     settings::OptimizerSettings::setMaxLearningRate(0.5);

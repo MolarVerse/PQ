@@ -25,8 +25,8 @@
 #include "atomMassMap.hpp"
 #include "box.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "manostatSettings.hpp"
-#include "settings.hpp"
 #include "stringUtilities.hpp"
 
 namespace molsys
@@ -213,10 +213,10 @@ namespace molsys
      */
     bool Atom::isQMAtom() const
     {
-        if (settings::Settings::isQMOnlyJobtype())
+        if (settings::GeneralSettings::isQMOnlyJobtype())
             return true;
 
-        if (settings::Settings::isMMOnlyJobtype())
+        if (settings::GeneralSettings::isMMOnlyJobtype())
             return false;
 
         if (isActive())
@@ -237,10 +237,10 @@ namespace molsys
      */
     bool Atom::isMMAtom() const
     {
-        if (settings::Settings::isMMOnlyJobtype())
+        if (settings::GeneralSettings::isMMOnlyJobtype())
             return true;
 
-        if (settings::Settings::isQMOnlyJobtype())
+        if (settings::GeneralSettings::isQMOnlyJobtype())
             return false;
 
         if (isActive())

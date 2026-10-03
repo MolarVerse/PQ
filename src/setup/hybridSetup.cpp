@@ -30,9 +30,9 @@
 #include "enums/hybrid.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "hybridSettings.hpp"
 #include "qmSettings.hpp"
-#include "settings.hpp"
 
 namespace setup
 {
@@ -44,7 +44,7 @@ namespace setup
      */
     void setupHybrid(engine::Engine &engine)
     {
-        if (!settings::Settings::isHybridJobtype())
+        if (!settings::GeneralSettings::isHybridJobtype())
             return;
 
         out::StdoutOutput::writeSetup("Hybrid Configuration");
@@ -292,7 +292,7 @@ namespace setup
     {
         auto &logOutput = _engine.getLogOutput();
 
-        const auto jobtype = settings::Settings::getJobtype();
+        const auto jobtype = settings::GeneralSettings::getJobtype();
         const auto smoothingMethod =
             settings::HybridSettings::getSmoothingMethod();
         const auto innerRegionCenterSettings =

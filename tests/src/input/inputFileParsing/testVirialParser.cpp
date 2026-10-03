@@ -26,7 +26,7 @@
 #include <vector>
 
 #include "exceptions.hpp"
-#include "settings.hpp"
+#include "generalSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 #include "virialInputParser.hpp"
@@ -47,13 +47,16 @@ TEST_F(TestInputFileReader, testParseVirial)
 
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::Settings::getVirialType(), VirialType::ATOMIC);
+    EXPECT_EQ(settings::GeneralSettings::getVirialType(), VirialType::ATOMIC);
 
     _clearParser(parser);
 
     lineElements = {"virial", "=", "molecular"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::Settings::getVirialType(), VirialType::MOLECULAR);
+    EXPECT_EQ(
+        settings::GeneralSettings::getVirialType(),
+        VirialType::MOLECULAR
+    );
 
     _clearParser(parser);
 

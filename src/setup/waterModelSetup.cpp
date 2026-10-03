@@ -35,6 +35,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
+#include "generalSettings.hpp"
 #include "interWater.hpp"
 #include "interWaterParamters.hpp"
 #include "mTRIntraWater.hpp"
@@ -42,7 +43,6 @@
 #include "references.hpp"
 #include "referencesOutput.hpp"
 #include "rigidWaterGeometry.hpp"
-#include "settings.hpp"
 #include "waterModelSettings.hpp"
 
 namespace setup
@@ -116,7 +116,7 @@ namespace setup
             );
         }
 
-        if (settings::Settings::isQMOnlyJobtype())
+        if (settings::GeneralSettings::isQMOnlyJobtype())
             throw exc::UserInputException(
                 "Water models are not supported for QM-only job types."
             );
@@ -526,7 +526,7 @@ namespace setup
 
         std::unique_ptr<waterModel::InterWaterStrategy> strategy;
 
-        if (settings::Settings::isCellListActivated())
+        if (settings::GeneralSettings::isCellListActivated())
             strategy =
                 std::make_unique<waterModel::InterWaterStrategyCellList>();
         else

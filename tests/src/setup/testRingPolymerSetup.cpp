@@ -22,15 +22,15 @@
 
 #include <gtest/gtest.h>
 
+#include "generalSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "ringPolymerSetup.hpp"
 #include "ringPolymerqmmdEngine.hpp"
-#include "settings.hpp"
 #include "testSetup.hpp"
 
 TEST_F(TestSetup, setupRingPolymerIsNoOpWhenNotActivated)
 {
-    settings::Settings::setIsRingPolymerMDActivated(false);
+    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     EXPECT_NO_THROW(setup::setupRingPolymer(*_engine));
 }
 
