@@ -89,7 +89,6 @@ namespace engine
 
         [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const;
         [[nodiscard]] bool isGuffActivated() const;
-        [[nodiscard]] bool isIntraNonBondedActivated() const;
 
         /***************************
          * standard getter methods *

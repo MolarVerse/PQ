@@ -68,6 +68,8 @@ namespace settings
 
         static inline size_t _numberOfCells = defaults::NUMBER_OF_CELLS_DEFAULT;
 
+        static inline bool _isIntraNonBondedActivated = false;
+
        public:
         /***************************
          * standard setter methods *
@@ -114,6 +116,8 @@ namespace settings
         static void deactivateRingPolymerMD();
         static void activateCellList();
         static void deactivateCellList();
+        static void activateIntraNonBonded();
+        static void deactivateIntraNonBonded();
 
         [[nodiscard]] static bool isQMOnlyJobtype();
         [[nodiscard]] static bool isMMOnlyJobtype();
@@ -126,6 +130,7 @@ namespace settings
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
         [[nodiscard]] static bool isCellListActivated();
+        [[nodiscard]] static bool isIntraNonBondedActivated();
     };
 
 }   // namespace settings

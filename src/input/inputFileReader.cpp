@@ -102,10 +102,7 @@ namespace input
         _parsers.push_back(std::make_unique<ConstraintsInputParser>());
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
-            std::make_unique<FilesInputParser>(
-                engine.getIntraNonBonded(),
-                validateFilePaths
-            )
+            std::make_unique<FilesInputParser>(validateFilePaths)
         );
         _parsers.push_back(
             std::make_unique<MMInputParser>(

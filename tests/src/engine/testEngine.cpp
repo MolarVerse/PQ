@@ -88,21 +88,3 @@ TEST_F(TestEngine, isForceFieldNonCoulombicsActivatedTracksForceField)
     EXPECT_FALSE(_engine->isForceFieldNonCoulombicsActivated());
     EXPECT_TRUE(_engine->isGuffActivated());
 }
-
-/**
- * @brief tests isIntraNonBondedActivated reflects the underlying
- * intra-non-bonded object's active state
- *
- */
-TEST_F(TestEngine, isIntraNonBondedActivatedTracksIntraNonBonded)
-{
-    EXPECT_FALSE(_engine->isIntraNonBondedActivated());
-
-    _engine->getIntraNonBonded()->activate();
-
-    EXPECT_TRUE(_engine->isIntraNonBondedActivated());
-
-    _engine->getIntraNonBonded()->deactivate();
-
-    EXPECT_FALSE(_engine->isIntraNonBondedActivated());
-}

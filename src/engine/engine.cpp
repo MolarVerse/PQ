@@ -127,17 +127,6 @@ namespace engine
     }
 
     /**
-     * @brief checks if the intra non bonded interactions are activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isIntraNonBondedActivated() const
-    {
-        return _intraNonBonded->isActive();
-    }
-
-    /**
      * @brief get the reference to the simulation box
      *
      * @return SimulationBox&

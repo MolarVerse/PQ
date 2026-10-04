@@ -374,6 +374,17 @@ namespace settings
      */
     bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
 
+    /**
+     * @brief Returns true if the intra non-bonded interactions are activated
+     *
+     * @return true/false
+     *
+     */
+    bool GeneralSettings::isIntraNonBondedActivated()
+    {
+        return _isIntraNonBondedActivated;
+    }
+
     /*****************************
      *                           *
      * standard activate methods *
@@ -409,5 +420,23 @@ namespace settings
      *
      */
     void GeneralSettings::deactivateCellList() { _isCellListActivated = false; }
+
+    /**
+     * @brief activate intra non-bonded interactions
+     *
+     */
+    void GeneralSettings::activateIntraNonBonded()
+    {
+        _isIntraNonBondedActivated = true;
+    }
+
+    /**
+     * @brief deactivate intra non-bonded interactions
+     *
+     */
+    void GeneralSettings::deactivateIntraNonBonded()
+    {
+        _isIntraNonBondedActivated = false;
+    }
 
 }   // namespace settings

@@ -27,6 +27,7 @@
 #include <gtest/gtest.h>
 
 #include "fileSettings.hpp"
+#include "generalSettings.hpp"
 #include "intraNonBondedReader.hpp"
 #include "mmmdEngine.hpp"
 #include "moleculeType.hpp"
@@ -57,7 +58,7 @@ class TestIntraNonBondedReader : public ::testing::Test
         _engine = std::make_unique<engine::MMMDEngine>();
 
         _engine->getSimulationBox().addMoleculeType(molecule1);
-        _engine->getIntraNonBonded()->activate();
+        settings::GeneralSettings::activateIntraNonBonded();
 
         _intraNonBondedReader =
             std::make_unique<input::intraNonBondedReader::IntraNonBondedReader>(
