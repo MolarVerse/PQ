@@ -70,16 +70,37 @@ namespace setup
      * @details if forceFieldNonCoulombics are activated it sets up also the
      * nonCoulombic pairs
      *
+     * @note the non-Coulomb potential type itself is set up earlier, via
+     * setupNonCoulombPotentialType(), before the parameter file is read -
+     * see setupRequestedJob(). Re-creating it here would discard the
+     * nonCoulombic pairs already read from the parameter file.
+     *
      */
     void PotentialSetup::setup()
     {
         setupCoulomb();
-        setupNonCoulomb();
 
         if (settings::ForceFieldSettings::isNonCoulombicActive())
             setupNonCoulombicPairs();
 
         writeSetupInfo();
+    }
+
+    /**
+     * @brief wrapper to create the non-Coulomb potential of the correct
+     * concrete type before any files are read
+     *
+     * @details the parameter file reader needs to dynamic_cast the
+     * non-Coulomb potential to ForceFieldNonCoulomb while reading the
+     * NONCOULOMBICS section, so the potential has to already have its
+     * final concrete type by the time readFiles() runs.
+     *
+     * @param engine
+     */
+    void setupNonCoulombPotentialType(engine::Engine &engine)
+    {
+        PotentialSetup potentialSetup(engine);
+        potentialSetup.setupNonCoulomb();
     }
 
     /**
