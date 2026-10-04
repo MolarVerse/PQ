@@ -206,6 +206,8 @@ Run with `make test` or `ctest --output-on-failure` from the build directory. Wh
 
 **Integration tests** are `pytest`-based in `integration_tests/` (see `pytest.ini`). They require `pytest`, `pytest-cov`, `pqanalysis`, `ase`, `pyscf`, plus `dftbplus` and `xtb` (installed via conda in CI). Run with `pytest integration_tests`.
 
+**Integration tests run on both x86 and arm Release builds** (decided in #706, kept on purpose): dftbplus, xtb and pyscf come from architecture-specific conda-forge builds, so the arm run exercises different binaries. It costs no wall-clock time (the arm Release job has a median of about 3.6 min against 5.3 min for the slowest x86 job) and the repository is public, so runner minutes are free. Looking back over about 380 runs, no failure was specific to one architecture. Do not edit `.github/workflows/ci_build.yml` just to annotate this: the conda environment cache key hashes that file, so every edit forces a cold conda install.
+
 **Performance regression gate** (`perf.yml`): for PRs touching `src/`, `include/`, `apps/`, `benchmarks/`, or build config, CI builds `benchmarks/perf` (fixed-work benchmarks, `BUILD_WITH_PERF_BENCH=ON`) for both the PR and its base branch, runs them under `callgrind`, and fails if instruction counts regress beyond threshold (`scripts/perf_gate.sh`). Results are posted as a PR comment.
 
 ---
