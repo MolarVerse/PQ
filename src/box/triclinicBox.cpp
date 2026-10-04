@@ -59,7 +59,7 @@ namespace molsys
      */
     void TriclinicBox::setBoxDimensions(const linalg::Vec3D &boxDimensions)
     {
-        _boxDimensions = boxDimensions;
+        Box::setBoxDimensions(boxDimensions);
 
         _calculateBoxMatrix();
     }
@@ -70,14 +70,16 @@ namespace molsys
      */
     void TriclinicBox::_calculateBoxMatrix()
     {
-        _boxMatrix[0][0] = _boxDimensions[0];
-        _boxMatrix[0][1] = _boxDimensions[1] * _transformationMatrix[0][1];
-        _boxMatrix[0][2] = _boxDimensions[2] * _transformationMatrix[0][2];
+        const auto &boxDimensions = getBoxDimensions();
 
-        _boxMatrix[1][1] = _boxDimensions[1] * _transformationMatrix[1][1];
-        _boxMatrix[1][2] = _boxDimensions[2] * _transformationMatrix[1][2];
+        _boxMatrix[0][0] = boxDimensions[0];
+        _boxMatrix[0][1] = boxDimensions[1] * _transformationMatrix[0][1];
+        _boxMatrix[0][2] = boxDimensions[2] * _transformationMatrix[0][2];
 
-        _boxMatrix[2][2] = _boxDimensions[2] * _transformationMatrix[2][2];
+        _boxMatrix[1][1] = boxDimensions[1] * _transformationMatrix[1][1];
+        _boxMatrix[1][2] = boxDimensions[2] * _transformationMatrix[1][2];
+
+        _boxMatrix[2][2] = boxDimensions[2] * _transformationMatrix[2][2];
     }
 
     /**
@@ -251,7 +253,7 @@ namespace molsys
     {
         if (settings::ManostatSettings::getIsotropy() !=
             Isotropy::FULL_ANISOTROPIC)
-            setBoxDimensions(diagonal(scalingTensor) * _boxDimensions);
+            setBoxDimensions(diagonal(scalingTensor) * getBoxDimensions());
 
         else
         {
@@ -264,7 +266,7 @@ namespace molsys
             setBoxAngles(boxAngles);
         }
 
-        _volume = calculateVolume();
+        setVolume(calculateVolume());
     }
 
     /**

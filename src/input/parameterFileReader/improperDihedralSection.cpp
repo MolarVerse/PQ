@@ -60,7 +60,8 @@ namespace input::parameterFile
      */
     void ImproperDihedralSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         if (lineElements.size() != 4)
@@ -71,7 +72,7 @@ namespace input::parameterFile
                     "section "
                     "at "
                     "line {} - number of elements has to be 4!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -89,7 +90,7 @@ namespace input::parameterFile
                     "has "
                     "to "
                     "be positive!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

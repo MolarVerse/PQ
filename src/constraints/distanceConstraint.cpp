@@ -84,8 +84,12 @@ namespace constraints
         if (timeInterval < 0.0)
             return;
 
-        const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-        const auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+        auto      *molecule1   = getMolecule1();
+        auto      *molecule2   = getMolecule2();
+        const auto atomIndices = getAtomIndices();
+
+        const auto pos1 = molecule1->getAtomPosition(atomIndices[0]);
+        const auto pos2 = molecule2->getAtomPosition(atomIndices[1]);
 
         auto dPos = pos2 - pos1;
         simulationBox.applyPBC(dPos);
@@ -121,8 +125,8 @@ namespace constraints
             return;
         }
 
-        _molecules[0]->addAtomForce(_atomIndices[0], _force);
-        _molecules[1]->addAtomForce(_atomIndices[1], -_force);
+        molecule1->addAtomForce(atomIndices[0], _force);
+        molecule2->addAtomForce(atomIndices[1], -_force);
     }
 
     /***************************

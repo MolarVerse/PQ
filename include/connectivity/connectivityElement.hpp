@@ -40,7 +40,7 @@ namespace connectivity
      */
     class ConnectivityElement
     {
-       protected:
+       private:
         std::vector<molsys::Molecule *> _molecules;
         std::vector<AtomIndex>          _atomIndices;
 

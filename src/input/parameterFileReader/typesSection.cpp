@@ -46,10 +46,11 @@ namespace input::parameterFile
      */
     void TypesSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                   &lineNumber
     )
     {
-        processSection(lineElements, engine);
+        processSection(lineElements, engine, lineNumber);
     }
 
     /**
@@ -73,7 +74,8 @@ namespace input::parameterFile
      */
     void TypesSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine & /*engine*/
+        engine::Engine & /*engine*/,
+        size_t lineNumber
     )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -85,7 +87,7 @@ namespace input::parameterFile
                     "at "
                     "line "
                     "{} - number of elements has to be 8!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -102,7 +104,7 @@ namespace input::parameterFile
                     "line {} "
                     "- "
                     "has to be between 0 and 1!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -114,7 +116,7 @@ namespace input::parameterFile
                     "Wrong scaleVanDerWaals in parameter file types section at "
                     "line {} "
                     "- has to be between 0 and 1!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

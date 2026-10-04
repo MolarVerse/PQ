@@ -56,7 +56,8 @@ namespace input::parameterFile
      */
     void AngleSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         if (lineElements.size() != 3)
@@ -67,7 +68,7 @@ namespace input::parameterFile
                     "at "
                     "line "
                     "{} - number of elements has to be 3!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

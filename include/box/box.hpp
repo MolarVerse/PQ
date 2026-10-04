@@ -52,7 +52,7 @@ namespace molsys
      */
     class Box
     {
-       protected:
+       private:
         linalg::Vec3D _boxDimensions;
 
         bool   _boxSizeHasChanged = false;

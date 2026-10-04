@@ -54,13 +54,15 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber
      *
      * @throw exc::ParameterFileException if type of nonCoulombic is not
      * lj, buckingham or morse
      */
     void NonCoulombicsSection::processHeader(
         std::vector<std::string> &lineElements,
-        engine::Engine & /*engine*/
+        engine::Engine & /*engine*/,
+        size_t lineNumber
     )
     {
         using enum NonCoulombType;
@@ -86,7 +88,7 @@ namespace input::parameterFile
                         "nonCoulombic "
                         "section at line {} - has to be lj, buckingham or "
                         "morse!",
-                        _lineNumber
+                        lineNumber
                     )
                 );
             }
@@ -109,16 +111,19 @@ namespace input::parameterFile
      */
     void NonCoulombicsSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         using enum NonCoulombType;
 
         switch (settings::PotentialSettings::getNonCoulombType())
         {
-            case LJ: processLJ(lineElements, engine); break;
-            case BUCKINGHAM: processBuckingham(lineElements, engine); break;
-            case MORSE: processMorse(lineElements, engine); break;
+            case LJ: processLJ(lineElements, engine, lineNumber); break;
+            case BUCKINGHAM:
+                processBuckingham(lineElements, engine, lineNumber);
+                break;
+            case MORSE: processMorse(lineElements, engine, lineNumber); break;
 
             case LJ_9_12:
             case GUFF:
@@ -129,7 +134,7 @@ namespace input::parameterFile
                         "nonCoulombic "
                         "section at line {}  - has to be lj, buckingham or "
                         "morse!",
-                        _lineNumber
+                        lineNumber
                     )
                 );
         }
@@ -155,8 +160,9 @@ namespace input::parameterFile
      */
     void NonCoulombicsSection::processLJ(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
-    ) const
+        engine::Engine           &engine,
+        size_t                    lineNumber
+    )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 4 && lineElements.size() != 5)
@@ -167,7 +173,7 @@ namespace input::parameterFile
                     "Jones "
                     "nonCoulombics section at line {} - number of "
                     "elements has to be 4 or 5!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -221,8 +227,9 @@ namespace input::parameterFile
      */
     void NonCoulombicsSection::processBuckingham(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
-    ) const
+        engine::Engine           &engine,
+        size_t                    lineNumber
+    )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 5 && lineElements.size() != 6)
@@ -232,7 +239,7 @@ namespace input::parameterFile
                     "Wrong number of arguments in parameter file in Buckingham "
                     "nonCoulombics section at line {} - number of "
                     "elements has to be 5 or 6!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -287,8 +294,9 @@ namespace input::parameterFile
      */
     void NonCoulombicsSection::processMorse(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
-    ) const
+        engine::Engine           &engine,
+        size_t                    lineNumber
+    )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 5 && lineElements.size() != 6)
@@ -298,7 +306,7 @@ namespace input::parameterFile
                     "Wrong number of arguments in parameter file in Morse "
                     "nonCoulombics section at line {} - number of "
                     "elements has to be 5 or 6!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
