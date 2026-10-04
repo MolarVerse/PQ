@@ -50,7 +50,8 @@ namespace input::restartFile
      */
     void StepCountSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine & /*engine*/
+        engine::Engine & /*engine*/,
+        size_t &lineNumber
     )
     {
         if (lineElements.size() != 2)
@@ -58,7 +59,7 @@ namespace input::restartFile
             throw exc::RstFileException(
                 std::format(
                     "Error in line {}: Step count section must have 2 elements",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -70,7 +71,7 @@ namespace input::restartFile
             throw exc::RstFileException(
                 std::format(
                     "Error in line {}: Step count must be positive",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

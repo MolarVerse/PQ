@@ -207,12 +207,13 @@ namespace input::restartFile
      */
     void AtomSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                   &lineNumber
     )
     {
         auto &simulationBox = engine.getSimulationBox();
 
-        checkNumberOfLineArguments(lineElements);
+        _checkNumberOfLineArguments(lineElements, lineNumber);
 
         /**********************************
          * find molecule by molecule type *
@@ -237,7 +238,7 @@ namespace input::restartFile
         catch (const exc::RstFileException &e)
         {
             std::cout << e.what() << '\n'
-                      << "Error in linenumber " << _lineNumber
+                      << "Error in linenumber " << lineNumber
                       << " in restart file; Moltype not found\n";
 
             throw;
@@ -263,7 +264,7 @@ namespace input::restartFile
                 throw exc::RstFileException(
                     std::format(
                         "Error in line {}: Molecule must have {} atoms",
-                        _lineNumber,
+                        lineNumber,
                         molecule->getNumberOfAtoms()
                     )
                 );
@@ -283,16 +284,16 @@ namespace input::restartFile
              * should break before                         *
              ***********************************************/
 
-            _checkAtomLine(lineElements, *molecule);
+            _checkAtomLine(lineElements, *molecule, lineNumber);
 
             while (lineElements.empty())
-                _checkAtomLine(lineElements, *molecule);
+                _checkAtomLine(lineElements, *molecule, lineNumber);
 
-            checkNumberOfLineArguments(lineElements);
+            _checkNumberOfLineArguments(lineElements, lineNumber);
 
             moltype = MolType{stoul(lineElements[2])};
 
-            ++_lineNumber;
+            ++lineNumber;
         }
 
         simulationBox.addMolecule(*molecule);
@@ -310,12 +311,13 @@ namespace input::restartFile
      */
     void AtomSection::_checkAtomLine(
         std::vector<std::string> &lineElements,
-        const molsys::Molecule   &molecule
+        const molsys::Molecule   &molecule,
+        size_t                   &lineNumber
     )
     {
-        ++_lineNumber;
+        ++lineNumber;
 
-        if (std::string line; getline(*_fp, line))
+        if (std::string line; getline(*_getFilePointer(), line))
         {
             line         = utilities::removeComments(line, "#");
             lineElements = utilities::splitString(line);
@@ -325,7 +327,7 @@ namespace input::restartFile
         throw exc::RstFileException(
             std::format(
                 "Error in line {}: Molecule must have {} atoms",
-                _lineNumber,
+                lineNumber,
                 molecule.getNumberOfAtoms()
             )
         );
@@ -340,9 +342,10 @@ namespace input::restartFile
      * @throws RstFileException if the number of elements in
      * the line is not 12 or 21
      */
-    void AtomSection::checkNumberOfLineArguments(
-        std::vector<std::string> &lineElements
-    ) const
+    void AtomSection::_checkNumberOfLineArguments(
+        std::vector<std::string> &lineElements,
+        size_t                    lineNumber
+    )
     {
         const auto lineSize = lineElements.size();
 
@@ -354,7 +357,7 @@ namespace input::restartFile
                     "Error in line {}: Atom section must have 6, 9, 12, 15, 18 "
                     "or "
                     "21 elements",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
