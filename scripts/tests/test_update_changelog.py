@@ -143,6 +143,47 @@ class ChangelogTests(unittest.TestCase):
             self.assertFalse(user_fragment.exists())
             self.assertFalse(developer_fragment.exists())
 
+    def test_release_keeps_the_placeholder_files_of_the_fragment_folders(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            user_changelog = root / "CHANGELOG.md"
+            dev_changelog = root / "DEV-CHANGELOG.md"
+            for path, title in (
+                (user_changelog, "# Changelog"),
+                (dev_changelog, "# Developer Changelog"),
+            ):
+                path.write_text(
+                    f"{title}\n\n## Next Release\n\n"
+                    "<!-- insertion marker -->\n"
+                    "## [v1.0.0](release-url) - 2025-01-01\n",
+                    encoding="utf-8",
+                )
+            changes_dir = root / "changes"
+            for audience in ("user", "developer"):
+                (changes_dir / audience).mkdir(parents=True)
+                (changes_dir / audience / ".gitkeep").touch()
+            fragment = changes_dir / "user" / "bugfix.output.md"
+            fragment.write_text("- Fix the output.\n", encoding="utf-8")
+
+            with (
+                mock.patch.object(CHANGELOG, "USER_CHANGELOG", user_changelog),
+                mock.patch.object(CHANGELOG, "DEV_CHANGELOG", dev_changelog),
+                mock.patch.object(CHANGELOG, "CHANGES_DIR", changes_dir),
+            ):
+                CHANGELOG.update_changelogs("v1.1.0")
+
+            self.assertFalse(fragment.exists())
+            self.assertTrue((changes_dir / "user" / ".gitkeep").is_file())
+            self.assertTrue((changes_dir / "developer" / ".gitkeep").is_file())
+
+    def test_the_repository_tracks_a_placeholder_in_each_fragment_folder(self):
+        # Git does not track empty folders, so without these files a release
+        # (which consumes every fragment) removes changes/user and
+        # changes/developer from the tree.
+        changes_dir = Path(__file__).resolve().parents[2] / "changes"
+        for audience in ("user", "developer"):
+            self.assertTrue((changes_dir / audience / ".gitkeep").is_file(), audience)
+
     def test_developer_only_release_leaves_user_changelog_unchanged(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
