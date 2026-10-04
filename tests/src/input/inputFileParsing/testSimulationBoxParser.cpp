@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBoxInputParser.hpp"
