@@ -29,6 +29,7 @@
 #include <cstdio>
 #include <string>
 
+#include "constraintSettings.hpp"
 #include "inputConverter.hpp"
 #include "inputFileParser.hpp"
 #include "inputFileReader.hpp"
@@ -51,8 +52,7 @@ class TestInputFileReader : public ::testing::Test
     std::unique_ptr<engine::Engine>         _engine;
     std::unique_ptr<input::InputFileReader> _inputFileReader;
 
-    std::unique_ptr<engine::MDEngine>       _mdEngine;
-    std::unique_ptr<input::InputFileReader> _inputFileReader_mdEngine;
+    std::unique_ptr<engine::MDEngine> _mdEngine;
 
     void SetUp() override
     {
@@ -63,16 +63,7 @@ class TestInputFileReader : public ::testing::Test
         //       where optEngine is not supported
         _engine          = std::make_unique<engine::OptEngine>();
         _mdEngine        = std::make_unique<engine::MMMDEngine>();
-        _inputFileReader = std::make_unique<input::InputFileReader>(
-            "input.in",
-            *_engine,
-            *_settings
-        );
-        _inputFileReader_mdEngine = std::make_unique<input::InputFileReader>(
-            "input.in",
-            *_mdEngine,
-            *_settings
-        );
+        _inputFileReader = std::make_unique<input::InputFileReader>("input.in");
     }
 
     void TearDown() override { _removeFile(); }
@@ -80,6 +71,9 @@ class TestInputFileReader : public ::testing::Test
     static void _clearParser(input::InputFileParser &parser)
     {
         parser._clear();
+        settings::ConstraintSettings::deactivateShake();
+        settings::ConstraintSettings::deactivateMShake();
+        settings::ConstraintSettings::deactivateDistanceConstraints();
     }
 
     void _removeFile() const

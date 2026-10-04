@@ -127,13 +127,6 @@ TEST_F(TestInputFileReader, testGetKeywordSetFromSetKeywordCount)
     EXPECT_TRUE(_inputFileReader->getKeywordSet(keyword));
 }
 
-TEST_F(TestInputFileReader, testRead)
-{
-    std::string filename = "data/inputFileReader/inputFile.txt";
-    _inputFileReader_mdEngine->setFilename(filename);
-    ASSERT_NO_THROW(_inputFileReader_mdEngine->read());
-}
-
 TEST_F(TestInputFileReader, testReadFileNotFound)
 {
     std::string filename = "data/inputFileReader/inputFileNotFound.txt";
@@ -148,7 +141,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(input::readInputFile(filename, *_mdEngine));
+    ASSERT_NO_THROW(input::readInputFile(filename));
 }
 
 TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
@@ -166,7 +159,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
     }
 
     ASSERT_THROW_MSG(
-        input::readInputFile(_fileName, *_mdEngine),
+        input::readInputFile(_fileName),
         exc::InputFileException,
         "Missing required keyword \"rf_epsilon\" in input file: it must be "
         "set when the Coulomb long-range correction is set to "
@@ -189,7 +182,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
-    ASSERT_NO_THROW(input::readInputFile(_fileName, *_mdEngine));
+    ASSERT_NO_THROW(input::readInputFile(_fileName));
     EXPECT_EQ(
         settings::PotentialSettings::getCoulombLongRangeType(),
         CoulombLongRangeType::REACTION_FIELD

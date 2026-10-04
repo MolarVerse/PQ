@@ -127,6 +127,23 @@ namespace settings
         _integrator = integratorType;
     }
 
+    /**
+     * @brief sets the number of cells for the cell list
+     *
+     * @param numberOfCells
+     */
+    void GeneralSettings::setNumberOfCells(size_t numberOfCells)
+    {
+        _numberOfCells = numberOfCells;
+    }
+
+    /**
+     * @brief gets the number of cells for the cell list
+     *
+     * @return size_t
+     */
+    size_t GeneralSettings::getNumberOfCells() { return _numberOfCells; }
+
     /***************************
      *                         *
      * standard getter methods *
@@ -357,6 +374,17 @@ namespace settings
      */
     bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
 
+    /**
+     * @brief Returns true if the intra non-bonded interactions are activated
+     *
+     * @return true/false
+     *
+     */
+    bool GeneralSettings::isIntraNonBondedActivated()
+    {
+        return _isIntraNonBondedActivated;
+    }
+
     /*****************************
      *                           *
      * standard activate methods *
@@ -392,5 +420,23 @@ namespace settings
      *
      */
     void GeneralSettings::deactivateCellList() { _isCellListActivated = false; }
+
+    /**
+     * @brief activate intra non-bonded interactions
+     *
+     */
+    void GeneralSettings::activateIntraNonBonded()
+    {
+        _isIntraNonBondedActivated = true;
+    }
+
+    /**
+     * @brief deactivate intra non-bonded interactions
+     *
+     */
+    void GeneralSettings::deactivateIntraNonBonded()
+    {
+        _isIntraNonBondedActivated = false;
+    }
 
 }   // namespace settings

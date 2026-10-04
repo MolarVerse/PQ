@@ -70,7 +70,13 @@ namespace setup
 
         startSetup();
 
-        input::readInputFile(inputFileName, engine);
+        input::readInputFile(inputFileName);
+
+        // needs to happen before readFiles(): the parameter file reader
+        // dynamic_casts the non-Coulomb potential to its concrete type
+        // while parsing the NONCOULOMBICS section
+        if (settings::GeneralSettings::isMMActivated())
+            setupNonCoulombPotentialType(engine);
 
         setupOutputFiles(engine);
 

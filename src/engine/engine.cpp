@@ -106,50 +106,6 @@ namespace engine
     }
 
     /**
-     * @brief checks if the force field is activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isForceFieldNonCoulombicsActivated() const
-    {
-        return _forceField->isNonCoulombicActivated();
-    }
-
-    /**
-     * @brief checks if the guff formalism is activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isGuffActivated() const
-    {
-        return !_forceField->isNonCoulombicActivated();
-    }
-
-    /**
-     * @brief checks if any constraints are activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isConstraintsActivated() const
-    {
-        return _constraints->isActive();
-    }
-
-    /**
-     * @brief checks if the intra non bonded interactions are activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isIntraNonBondedActivated() const
-    {
-        return _intraNonBonded->isActive();
-    }
-
-    /**
      * @brief get the reference to the simulation box
      *
      * @return SimulationBox&

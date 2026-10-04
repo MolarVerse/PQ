@@ -57,38 +57,92 @@ namespace molsys
 namespace engine
 {
 
-    // clang-format off
-/**
- * @brief constructor
- */
-EngineOutput::EngineOutput()
-    : _energyOutput(std::make_unique<out::EnergyOutput>(DefaultFiles::energyFile)), 
-      _instantEnergyOutput(std::make_unique<out::EnergyOutput>(DefaultFiles::instEnFile)),
-      _infoOutput(std::make_unique<out::InfoOutput>(DefaultFiles::infoFile)),
-      _xyzOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::trajFile)),
-      _xyzHybridCenterOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::hybridCenterFile)),
-      _velOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::velFile)),
-      _forceOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::forceFile)),
-      _chargeOutput(std::make_unique<out::TrajectoryOutput>(DefaultFiles::chargeFile)),
-      _rstFileOutput(std::make_unique<out::RstFileOutput>(DefaultFiles::restartFile)),
-      _logOutput(std::make_unique<out::LogOutput>(DefaultFiles::logFile)),
-      _stdoutOutput(std::make_unique<out::StdoutOutput>(DefaultFiles::stdoutFile)),
-      _momentumOutput(std::make_unique<out::MomentumOutput>(DefaultFiles::momentumFile)),
-      _virialOutput(std::make_unique<out::VirialOutput>(DefaultFiles::virialFile)),
-      _stressOutput(std::make_unique<out::StressOutput>(DefaultFiles::stressFile)),
-      _boxFileOutput(std::make_unique<out::BoxFileOutput>(DefaultFiles::boxFile)),
-      _optOutput(std::make_unique<out::OptOutput>(DefaultFiles::optFile)),
-      _rpmdRstFileOutput(std::make_unique<out::RingPolymerRestartFileOutput>(DefaultFiles::rpmdRstFile)),
-      _rpmdXyzOutput(std::make_unique<out::RingPolymerTrajectoryOutput>(DefaultFiles::rpmdTrajFile)),
-      _rpmdVelOutput(std::make_unique<out::RingPolymerTrajectoryOutput>(DefaultFiles::rpmdVelFile)),
-      _rpmdForceOutput(std::make_unique<out::RingPolymerTrajectoryOutput>(DefaultFiles::rpmdForceFile)),
-      _rpmdChargeOutput(std::make_unique<out::RingPolymerTrajectoryOutput>(DefaultFiles::rpmdChargeFile)),
-      _rpmdEnergyOutput(std::make_unique<out::RingPolymerEnergyOutput>(DefaultFiles::rpmdEnergyFile)),
-      _timingsOutput(std::make_unique<out::TimingsOutput>(DefaultFiles::timingsFile))
+    /**
+     * @brief constructor
+     */
+    EngineOutput::EngineOutput()
+        : _energyOutput(
+              std::make_unique<out::EnergyOutput>(DefaultFiles::energyFile)
+          ),
+          _instantEnergyOutput(
+              std::make_unique<out::EnergyOutput>(DefaultFiles::instEnFile)
+          ),
+          _infoOutput(
+              std::make_unique<out::InfoOutput>(DefaultFiles::infoFile)
+          ),
+          _xyzOutput(
+              std::make_unique<out::TrajectoryOutput>(DefaultFiles::trajFile)
+          ),
+          _xyzHybridCenterOutput(
+              std::make_unique<out::TrajectoryOutput>(
+                  DefaultFiles::hybridCenterFile
+              )
+          ),
+          _velOutput(
+              std::make_unique<out::TrajectoryOutput>(DefaultFiles::velFile)
+          ),
+          _forceOutput(
+              std::make_unique<out::TrajectoryOutput>(DefaultFiles::forceFile)
+          ),
+          _chargeOutput(
+              std::make_unique<out::TrajectoryOutput>(DefaultFiles::chargeFile)
+          ),
+          _rstFileOutput(
+              std::make_unique<out::RstFileOutput>(DefaultFiles::restartFile)
+          ),
+          _logOutput(std::make_unique<out::LogOutput>(DefaultFiles::logFile)),
+          _stdoutOutput(
+              std::make_unique<out::StdoutOutput>(DefaultFiles::stdoutFile)
+          ),
+          _momentumOutput(
+              std::make_unique<out::MomentumOutput>(DefaultFiles::momentumFile)
+          ),
+          _virialOutput(
+              std::make_unique<out::VirialOutput>(DefaultFiles::virialFile)
+          ),
+          _stressOutput(
+              std::make_unique<out::StressOutput>(DefaultFiles::stressFile)
+          ),
+          _boxFileOutput(
+              std::make_unique<out::BoxFileOutput>(DefaultFiles::boxFile)
+          ),
+          _optOutput(std::make_unique<out::OptOutput>(DefaultFiles::optFile)),
+          _rpmdRstFileOutput(
+              std::make_unique<out::RingPolymerRestartFileOutput>(
+                  DefaultFiles::rpmdRstFile
+              )
+          ),
+          _rpmdXyzOutput(
+              std::make_unique<out::RingPolymerTrajectoryOutput>(
+                  DefaultFiles::rpmdTrajFile
+              )
+          ),
+          _rpmdVelOutput(
+              std::make_unique<out::RingPolymerTrajectoryOutput>(
+                  DefaultFiles::rpmdVelFile
+              )
+          ),
+          _rpmdForceOutput(
+              std::make_unique<out::RingPolymerTrajectoryOutput>(
+                  DefaultFiles::rpmdForceFile
+              )
+          ),
+          _rpmdChargeOutput(
+              std::make_unique<out::RingPolymerTrajectoryOutput>(
+                  DefaultFiles::rpmdChargeFile
+              )
+          ),
+          _rpmdEnergyOutput(
+              std::make_unique<out::RingPolymerEnergyOutput>(
+                  DefaultFiles::rpmdEnergyFile
+              )
+          ),
+          _timingsOutput(
+              std::make_unique<out::TimingsOutput>(DefaultFiles::timingsFile)
+          )
 
-{
-}
-    // clang-format on
+    {
+    }
 
     /**
      * @brief wrapper for energy file output function

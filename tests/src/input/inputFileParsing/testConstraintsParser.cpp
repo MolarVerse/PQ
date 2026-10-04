@@ -27,7 +27,6 @@
 
 #include "constraintSettings.hpp"
 #include "constraintsInputParser.hpp"
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
@@ -41,47 +40,39 @@
  */
 TEST_F(TestInputFileReader, testParseShakeActivated)
 {
-    const auto                   &constraints = _engine->getConstraints();
-    input::ConstraintsInputParser parser(constraints);
+    input::ConstraintsInputParser parser;
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("shake"));
     const auto &parseFunc = funcMap.at("shake");
 
     std::vector<std::string> lineElements = {"shake", "=", "off"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(constraints->isActive());
-    EXPECT_FALSE(constraints->isShakeActive());
+    EXPECT_FALSE(settings::ConstraintSettings::isActive());
     EXPECT_FALSE(settings::ConstraintSettings::isShakeActivated());
 
     _clearParser(parser);
 
     lineElements = {"shake", "=", "on"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(constraints->isActive());
-    EXPECT_TRUE(constraints->isShakeActive());
+    EXPECT_TRUE(settings::ConstraintSettings::isActive());
     EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
 
     _clearParser(parser);
 
     settings::ConstraintSettings::deactivateShake();
-    constraints->deactivateShake();
 
     lineElements = {"shake", "=", "shake"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(constraints->isActive());
-    EXPECT_TRUE(constraints->isShakeActive());
+    EXPECT_TRUE(settings::ConstraintSettings::isActive());
     EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
 
     _clearParser(parser);
 
     settings::ConstraintSettings::deactivateShake();
-    constraints->deactivateShake();
 
     lineElements = {"shake", "=", "mshake"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(constraints->isActive());
-    EXPECT_TRUE(constraints->isMShakeActive());
-    EXPECT_TRUE(constraints->isShakeActive());
+    EXPECT_TRUE(settings::ConstraintSettings::isActive());
     EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
     EXPECT_TRUE(settings::ConstraintSettings::isMShakeActivated());
 
@@ -104,7 +95,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
  */
 TEST_F(TestInputFileReader, testParseShakeTolerance)
 {
-    input::ConstraintsInputParser parser(_engine->getConstraints());
+    input::ConstraintsInputParser parser;
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("shake_tolerance"));
     const auto &parseFunc = funcMap.at("shake_tolerance");
@@ -143,7 +134,7 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseShakeIteration)
 {
-    input::ConstraintsInputParser parser(_engine->getConstraints());
+    input::ConstraintsInputParser parser;
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("shake_iter"));
     const auto &parseFunc = funcMap.at("shake_iter");
@@ -182,7 +173,7 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseRattleTolerance)
 {
-    input::ConstraintsInputParser parser(_engine->getConstraints());
+    input::ConstraintsInputParser parser;
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rattle_tolerance"));
     const auto &parseFunc = funcMap.at("rattle_tolerance");
@@ -221,7 +212,7 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
  */
 TEST_F(TestInputFileReader, testParseRattleIteration)
 {
-    input::ConstraintsInputParser parser(_engine->getConstraints());
+    input::ConstraintsInputParser parser;
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rattle_iter"));
     const auto &parseFunc = funcMap.at("rattle_iter");
@@ -260,7 +251,7 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
  */
 TEST_F(TestInputFileReader, testParseMShakeTolerance)
 {
-    input::ConstraintsInputParser parser(_engine->getConstraints());
+    input::ConstraintsInputParser parser;
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mshake_tolerance"));
     const auto &parseFunc = funcMap.at("mshake_tolerance");
@@ -299,7 +290,7 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseMShakeIteration)
 {
-    input::ConstraintsInputParser parser(_engine->getConstraints());
+    input::ConstraintsInputParser parser;
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mshake_iter"));
     const auto &parseFunc = funcMap.at("mshake_iter");
@@ -336,24 +327,23 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
 {
-    const auto                   &constraints = _engine->getConstraints();
-    input::ConstraintsInputParser parser(constraints);
+    input::ConstraintsInputParser parser;
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("distance_constraints"));
     const auto &parseFunc = funcMap.at("distance_constraints");
 
     std::vector<std::string> lineElements = {"distance-constraints", "=", "on"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(constraints->isActive());
-    EXPECT_TRUE(constraints->isDistanceConstraintsActive());
+    EXPECT_TRUE(settings::ConstraintSettings::isActive());
     EXPECT_TRUE(settings::ConstraintSettings::isDistanceConstraintsActivated());
+
+    settings::ConstraintSettings::deactivateDistanceConstraints();
 
     _clearParser(parser);
 
     lineElements = {"distance-constraints", "=", "off"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(constraints->isActive());
-    EXPECT_FALSE(constraints->isDistanceConstraintsActive());
+    EXPECT_FALSE(settings::ConstraintSettings::isActive());
     EXPECT_FALSE(
         settings::ConstraintSettings::isDistanceConstraintsActivated()
     );

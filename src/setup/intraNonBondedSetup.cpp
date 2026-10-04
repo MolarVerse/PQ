@@ -23,6 +23,7 @@
 #include "intraNonBondedSetup.hpp"
 
 #include "engine.hpp"
+#include "generalSettings.hpp"
 
 namespace setup
 {
@@ -35,7 +36,7 @@ namespace setup
      */
     void setupIntraNonBonded(engine::Engine &engine)
     {
-        if (!engine.isIntraNonBondedActivated())
+        if (!settings::GeneralSettings::isIntraNonBondedActivated())
             return;
 
         out::StdoutOutput::writeSetup("Intra Non-Bonded Interactions");

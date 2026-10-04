@@ -37,9 +37,11 @@
 #include "convergenceInputParser.hpp"
 #include "coulombLongRangeInputParser.hpp"
 #include "engine.hpp"
+#include "engineFactory.hpp"
 #include "exceptions.hpp"
 #include "filesInputParser.hpp"
 #include "generalInputParser.hpp"
+#include "generalSettings.hpp"
 #include "hessianInputParser.hpp"
 #include "hybridInputParser.hpp"
 #include "integratorInputParser.hpp"
@@ -66,15 +68,9 @@ namespace input
      * _keywordCountMap
      *
      * @param fileName
-     * @param engine
-     * @param settings
      */
-    InputFileReader::InputFileReader(
-        const std::string_view &fileName,
-        engine::Engine         &engine,
-        Settings               &settings
-    )
-        : InputFileReader(fileName, engine, settings, true, true)
+    InputFileReader::InputFileReader(const std::string_view &fileName)
+        : InputFileReader(fileName, true, true)
     {
     }
 
@@ -86,52 +82,31 @@ namespace input
      * _keywordCountMap
      *
      * @param fileName
-     * @param engine
      * @param validateFilePaths
      * @param resolveBuiltInSlakosPath
      */
     InputFileReader::InputFileReader(
         const std::string_view &fileName,
-        engine::Engine         &engine,
-        Settings               &settings,
         bool                    validateFilePaths,
         bool                    resolveBuiltInSlakosPath
     )
         : _fileName(fileName)
     {
         // TODO: remove engine after rework
-        _parsers.push_back(
-            std::make_unique<CellListInputParser>(engine.getCellList())
-        );
-        _parsers.push_back(
-            std::make_unique<ConstraintsInputParser>(engine.getConstraints())
-        );
+        _parsers.push_back(std::make_unique<CellListInputParser>());
+        _parsers.push_back(std::make_unique<ConstraintsInputParser>());
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
-            std::make_unique<FilesInputParser>(
-                engine.getIntraNonBonded(),
-                validateFilePaths
-            )
+            std::make_unique<FilesInputParser>(validateFilePaths)
         );
-        _parsers.push_back(
-            std::make_unique<MMInputParser>(
-                engine.getForceField(),
-                engine.getPotential()
-            )
-        );
+        _parsers.push_back(std::make_unique<MMInputParser>());
         _parsers.push_back(std::make_unique<GeneralInputParser>());
         _parsers.push_back(std::make_unique<HessianInputParser>());
         _parsers.push_back(std::make_unique<IntegratorInputParser>());
         _parsers.push_back(std::make_unique<ManostatInputParser>());
         _parsers.push_back(std::make_unique<OutputInputParser>());
-        _parsers.push_back(
-            std::make_unique<ResetKineticsInputParser>(settings.resetKinetics)
-        );
-        _parsers.push_back(
-            std::make_unique<SimulationBoxInputParser>(
-                engine.getSharedSimulationBox()
-            )
-        );
+        _parsers.push_back(std::make_unique<ResetKineticsInputParser>());
+        _parsers.push_back(std::make_unique<SimulationBoxInputParser>());
         _parsers.push_back(std::make_unique<ThermostatInputParser>());
         _parsers.push_back(std::make_unique<TimingsInputParser>());
         _parsers.push_back(std::make_unique<VirialInputParser>());
@@ -354,9 +329,10 @@ namespace input
                 {
                     GeneralInputParser::parseJobTypeForEngine(
                         lineElements,
-                        lineNumber,
-                        engine
+                        lineNumber
                     );
+                    engine = engine::engineFactory
+                                 .at(settings::GeneralSettings::getJobtype())();
                     jobtypeFound = true;
                 }
             };
@@ -388,19 +364,13 @@ namespace input
      * postProcess()
      *
      * @param fileName
-     * @param engine
-     * @param settings
      *
      */
-    void readInputFile(
-        const std::string_view &fileName,
-        engine::Engine         &engine,
-        Settings               &settings
-    )
+    void readInputFile(const std::string_view &fileName)
     {
         out::StdoutOutput::writeRead("Input File", std::string(fileName));
 
-        InputFileReader inputFileReader(fileName, engine, settings);
+        InputFileReader inputFileReader(fileName);
         inputFileReader.read();
         inputFileReader.postProcess();
         inputFileReader.validateInputConfiguration();

@@ -37,8 +37,9 @@ namespace settings
     class SimulationBoxSettings
     {
        private:
-        static inline bool _isDensitySet = false;
-        static inline bool _isBoxSet     = false;
+        static inline double _density      = 0.0;
+        static inline bool   _isDensitySet = false;
+        static inline bool   _isBoxSet     = false;
 
         static inline InitVelocities _initializeVelocities =
             InitVelocities::FALSE;
@@ -57,6 +58,7 @@ namespace settings
          * standard setters *
          ********************/
 
+        static void setDensity(double density);
         static void setDensitySet(bool densitySet);
         static void setBoxSet(bool boxSet);
         static void setInitializeVelocities(
@@ -67,6 +69,7 @@ namespace settings
          * standard getters *
          ********************/
 
+        [[nodiscard]] static double         getDensity();
         [[nodiscard]] static bool           getDensitySet();
         [[nodiscard]] static bool           getBoxSet();
         [[nodiscard]] static InitVelocities getInitializeVelocities();

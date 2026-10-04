@@ -30,6 +30,7 @@
 
 #include "atom.hpp"
 #include "bondConstraint.hpp"
+#include "constraintSettings.hpp"
 #include "constraints.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
@@ -108,7 +109,7 @@ class TestConstraints : public ::testing::Test
         _constraints->addBondConstraint(bondConstraint1);
         _constraints->addBondConstraint(bondConstraint2);
 
-        _constraints->activateShake();
+        settings::ConstraintSettings::activateShake();
     }
 };
 

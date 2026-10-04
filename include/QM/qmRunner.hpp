@@ -53,7 +53,7 @@ namespace QM
     class QMRunner
     {
        protected:
-        molsys::Periodicity _periodicity;
+        molsys::Periodicity _periodicity = molsys::Periodicity::NON_PERIODIC;
 
        public:
         virtual ~QMRunner() = default;

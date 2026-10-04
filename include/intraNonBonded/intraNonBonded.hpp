@@ -54,7 +54,6 @@ namespace intraNonBonded
     {
        protected:
         IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
-        bool               _isActivated        = false;
 
         std::shared_ptr<pot::NonCoulombPotential> _nonCoulombPot;
         std::shared_ptr<pot::CoulombPotential>    _coulombPotential;
@@ -82,14 +81,6 @@ namespace intraNonBonded
 
         void addIntraNonBondedContainer(const IntraNonBondedContainer &type);
         void addIntraNonBondedMap(const IntraNonBondedMap &interaction);
-
-        /*****************************
-         * standard activate methods *
-         *****************************/
-
-        void               activate();
-        void               deactivate();
-        [[nodiscard]] bool isActive() const;
 
         /***************************
          * standard setter methods *

@@ -25,7 +25,6 @@
 #define _FILES_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"
-#include "intraNonBonded.hpp"
 
 namespace input
 {
@@ -37,19 +36,11 @@ namespace input
      */
     class FilesInputParser : public InputFileParser
     {
-       private:
-        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
-
         bool _validateFilePaths;
 
        public:
-        explicit FilesInputParser(
-            std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
-            bool                                            validateFilePaths
-        );
-        explicit FilesInputParser(
-            std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
-        );
+        explicit FilesInputParser(bool validateFilePaths);
+        explicit FilesInputParser();
 
         void addIntraNonBondedFileKey();
         void addTopologyFileKey();

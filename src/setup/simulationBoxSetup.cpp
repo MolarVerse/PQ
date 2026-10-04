@@ -36,6 +36,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
 #include "logOutput.hpp"
 #include "maxwellBoltzmann.hpp"
 #include "molecule.hpp"
@@ -82,7 +83,7 @@ namespace setup
     {
         setAtomNames();
         setAtomTypes();
-        if (_engine.getForceField()->isNonCoulombicActivated())
+        if (settings::ForceFieldSettings::isNonCoulombicActive())
             setExternalVDWTypes();
         setPartialCharges();
 
@@ -345,12 +346,13 @@ namespace setup
 
         if (!isBoxSet)
         {
+            simBox.setDensity(settings::SimulationBoxSettings::getDensity());
             const auto boxDimensions = simBox.calcBoxDimFromDensity();
 
             simBox.setBoxDimensions(boxDimensions);
             simBox.setVolume(simBox.calculateVolume());
         }
-        else if (!settings::SimulationBoxSettings::getDensitySet())
+        else if (!isDensitySet)
         {
             const auto volume = simBox.calculateVolume();
             const auto density =
@@ -361,6 +363,7 @@ namespace setup
         }
         else
         {
+            simBox.setDensity(settings::SimulationBoxSettings::getDensity());
             const auto volume     = simBox.calculateVolume();
             const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
             const auto density    = simBox.getTotalMass() / volume * convFactor;
@@ -497,11 +500,18 @@ namespace setup
         const auto betaStr  = std::format("{:14.5f}°", beta);
         const auto gammaStr = std::format("{:14.5f}°", gamma);
 
-        // clang-format off
-    log.writeSetupInfo(std::format("box dimensions:  {} {} {}", boxAStr, boxBStr, boxCstr));
-    log.writeSetupInfo(std::format("box angles:      {}  {}  {}", alphaStr, betaStr, gammaStr));
-    log.writeEmptyLine();
-        // clang-format on
+        log.writeSetupInfo(
+            std::format("box dimensions:  {} {} {}", boxAStr, boxBStr, boxCstr)
+        );
+        log.writeSetupInfo(
+            std::format(
+                "box angles:      {}  {}  {}",
+                alphaStr,
+                betaStr,
+                gammaStr
+            )
+        );
+        log.writeEmptyLine();
 
         const auto coulombCutoff =
             settings::PotentialSettings::getCoulombRadiusCutOff();

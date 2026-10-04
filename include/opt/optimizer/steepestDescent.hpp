@@ -34,7 +34,7 @@ namespace opt
      * @brief Steepest Descent optimizer
      *
      */
-    class SteepestDescent final : public Optimizer
+    class SteepestDescent : public Optimizer
     {
        private:
         constexpr static size_t _maxHistoryLength = 2;

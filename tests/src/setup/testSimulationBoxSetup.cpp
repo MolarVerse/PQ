@@ -368,7 +368,7 @@ TEST_F(TestSetup, noDensity)
 TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
+    settings::SimulationBoxSettings::setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
     settings::SimulationBoxSettings::setBoxSet(false);
     settings::SimulationBoxSettings::setDensitySet(true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
@@ -452,7 +452,7 @@ TEST_F(TestSetup, testCheckZeroVelocities)
  */
 TEST_F(TestSetup, testFullSetup)
 {
-    settings::ForceFieldSettings::activate();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
 
     ::molsys::Molecule molecule1{MolType{1}};
     const auto         atom1 = std::make_shared<::molsys::Atom>();
@@ -566,11 +566,17 @@ TEST_F(TestSetup, testWriteSetupInfo)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    // clang-format off
-    EXPECT_EQ(line,"         box dimensions:         5.73000 \u212b        9.93000 \u212b       11.14000 \u212b");
+    EXPECT_EQ(
+        line,
+        "         box dimensions:         5.73000 \u212b        9.93000 \u212b "
+        "      11.14000 \u212b"
+    );
     getline(file, line);
-    EXPECT_EQ(line,"         box angles:            90.00000°        90.00000°        90.00000°");
-    // clang-format on
+    EXPECT_EQ(
+        line,
+        "         box angles:            90.00000°        90.00000°        "
+        "90.00000°"
+    );
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);

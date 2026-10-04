@@ -52,9 +52,7 @@ namespace settings
 
         static inline bool _isRingPolymerMDActivated = false;
 
-        // clang-format off
         static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
-        // clang-format on
 
         static inline VirialType _virial = VirialType::MOLECULAR;
 
@@ -67,6 +65,10 @@ namespace settings
 
         static inline bool _isCellListActivated =
             defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
+
+        static inline size_t _numberOfCells = defaults::NUMBER_OF_CELLS_DEFAULT;
+
+        static inline bool _isIntraNonBondedActivated = false;
 
        public:
         /***************************
@@ -86,6 +88,8 @@ namespace settings
         static void setVirialType(VirialType virialType);
         static void setIntegratorType(IntegratorType integratorType);
 
+        static void setNumberOfCells(size_t numberOfCells);
+
         /***************************
          * standard getter methods *
          ***************************/
@@ -102,6 +106,7 @@ namespace settings
 
         [[nodiscard]] static VirialType     getVirialType();
         [[nodiscard]] static IntegratorType getIntegratorType();
+        [[nodiscard]] static size_t         getNumberOfCells();
 
         /******************************
          * standard is-active methods *
@@ -111,6 +116,8 @@ namespace settings
         static void deactivateRingPolymerMD();
         static void activateCellList();
         static void deactivateCellList();
+        static void activateIntraNonBonded();
+        static void deactivateIntraNonBonded();
 
         [[nodiscard]] static bool isQMOnlyJobtype();
         [[nodiscard]] static bool isMMOnlyJobtype();
@@ -123,6 +130,7 @@ namespace settings
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();
         [[nodiscard]] static bool isCellListActivated();
+        [[nodiscard]] static bool isIntraNonBondedActivated();
     };
 
 }   // namespace settings

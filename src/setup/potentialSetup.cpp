@@ -34,6 +34,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "forceFieldSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "potential.hpp"
 #include "potentialSettings.hpp"
@@ -69,16 +70,41 @@ namespace setup
      * @details if forceFieldNonCoulombics are activated it sets up also the
      * nonCoulombic pairs
      *
+     * @note setupNonCoulomb() is idempotent: it only (re-)creates the
+     * non-Coulomb potential if it does not already have the concrete type
+     * required by the current settings. This matters because
+     * setupNonCoulombPotentialType() already creates it before the
+     * parameter file is read (see setupRequestedJob()), and calling
+     * setupNonCoulomb() again here must not discard the nonCoulombic pairs
+     * already read from the parameter file.
+     *
      */
     void PotentialSetup::setup()
     {
         setupCoulomb();
         setupNonCoulomb();
 
-        if (_engine.isForceFieldNonCoulombicsActivated())
+        if (settings::ForceFieldSettings::isNonCoulombicActive())
             setupNonCoulombicPairs();
 
         writeSetupInfo();
+    }
+
+    /**
+     * @brief wrapper to create the non-Coulomb potential of the correct
+     * concrete type before any files are read
+     *
+     * @details the parameter file reader needs to dynamic_cast the
+     * non-Coulomb potential to ForceFieldNonCoulomb while reading the
+     * NONCOULOMBICS section, so the potential has to already have its
+     * final concrete type by the time readFiles() runs.
+     *
+     * @param engine
+     */
+    void setupNonCoulombPotentialType(engine::Engine &engine)
+    {
+        PotentialSetup potentialSetup(engine);
+        potentialSetup.setupNonCoulomb();
     }
 
     /**
@@ -124,19 +150,30 @@ namespace setup
     /**
      * @brief sets nonCoulomb potential type
      *
-     * @details decides wether to use Guff or ForceFieldNonCoulomb potential
+     * @details decides wether to use Guff or ForceFieldNonCoulomb potential.
+     * If the non-Coulomb potential already has the required concrete type
+     * (e.g. because setupNonCoulombPotentialType() already created it
+     * before the parameter file was read) this is a no-op, so that any
+     * nonCoulombic pairs already added to it are not discarded.
      *
      */
     void PotentialSetup::setupNonCoulomb()
     {
-        const auto &potential = _engine.getPotential();
+        const auto &potential   = _engine.getPotential();
+        const auto  existingPot = potential->getNonCoulombPotSharedPtr();
 
-        // NOTE: no else branch needed ForceFieldNonCoulomb is default
-        //       makeForceFieldNonCoulomb is a no-op if already set
-        //       However, it does also throw errors atm - thus the else
-        //       statement is left out
-        if (!_engine.getForceField()->isNonCoulombicActivated())
-            potential->makeNonCoulombPotential(pot::GuffNonCoulomb());
+        if (!settings::ForceFieldSettings::isNonCoulombicActive())
+        {
+            if (dynamic_cast<pot::GuffNonCoulomb *>(existingPot.get()) ==
+                nullptr)
+                potential->makeNonCoulombPotential(pot::GuffNonCoulomb());
+        }
+        else
+        {
+            if (dynamic_cast<pot::ForceFieldNonCoulomb *>(existingPot.get()) ==
+                nullptr)
+                potential->makeNonCoulombPotential(pot::ForceFieldNonCoulomb());
+        }
     }
 
     /**
@@ -160,10 +197,10 @@ namespace setup
         const auto &pot    = _engine.getPotential();
         auto       &simBox = _engine.getSimulationBox();
 
-        // clang-format off
-    auto &nonCoulPot = dynamic_cast<pot::ForceFieldNonCoulomb&>(pot->getNonCoulombPotential());
-    nonCoulPot.setupNonCoulombicCutoffs();
-        // clang-format on
+        auto &nonCoulPot = dynamic_cast<pot::ForceFieldNonCoulomb &>(
+            pot->getNonCoulombPotential()
+        );
+        nonCoulPot.setupNonCoulombicCutoffs();
 
         const auto &extToIntVDWTypes =
             simBox.getExternalToInternalGlobalVDWTypes();
@@ -219,10 +256,13 @@ namespace setup
         const auto coulLRType =
             settings::PotentialSettings::getCoulombLongRangeType();
 
-        // clang-format off
-    log.writeSetupInfo(std::format("Coulomb long range type: {}", CoulombLongRangeTypeMeta::toString(coulLRType)));
-    log.writeEmptyLine();
-        // clang-format on
+        log.writeSetupInfo(
+            std::format(
+                "Coulomb long range type: {}",
+                CoulombLongRangeTypeMeta::toString(coulLRType)
+            )
+        );
+        log.writeEmptyLine();
 
         const auto coulRCut =
             settings::PotentialSettings::getCoulombRadiusCutOff();
@@ -235,23 +275,26 @@ namespace setup
         if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
             rfEpsilon = settings::PotentialSettings::getReactionFieldEpsilon();
 
-        // clang-format off
-    const auto coulRCutStr  = std::format("Coulomb radius cut-off: {}", coulRCut);
-    log.writeSetupInfo(coulRCutStr);
+        const auto coulRCutStr =
+            std::format("Coulomb radius cut-off: {}", coulRCut);
+        log.writeSetupInfo(coulRCutStr);
 
-    if (coulLRType == CoulombLongRangeType::WOLF)
-    {
-        const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
-        log.writeSetupInfo(wolfParamStr);
-    }
-    else if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
-    {
-        const auto rfEpsilonStr = std::format("Reaction-field static relative permittivity: {}", rfEpsilon);
-        log.writeSetupInfo(rfEpsilonStr);
-    }
+        if (coulLRType == CoulombLongRangeType::WOLF)
+        {
+            const auto wolfParamStr =
+                std::format("Wolf parameter:         {}", wolfParam);
+            log.writeSetupInfo(wolfParamStr);
+        }
+        else if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
+        {
+            const auto rfEpsilonStr = std::format(
+                "Reaction-field static relative permittivity: {}",
+                rfEpsilon
+            );
+            log.writeSetupInfo(rfEpsilonStr);
+        }
 
-    log.writeEmptyLine();
-        // clang-format on
+        log.writeEmptyLine();
     }
 
     /**
@@ -262,16 +305,18 @@ namespace setup
     {
         auto &log = _engine.getLogOutput();
 
-        if (_engine.getForceField()->isNonCoulombicActivated())
+        if (settings::ForceFieldSettings::isNonCoulombicActive())
         {
             auto      &simBox = _engine.getSimulationBox();
             const auto nGlobalVdwTypes =
                 simBox.getExternalGlobalVdwTypes().size();
 
-            // clang-format off
-        log.writeSetupInfo(std::format("Non-coulombic potential: ForceField"));
-        log.writeSetupInfo(std::format("Total Global VDW types:  {}", nGlobalVdwTypes));
-            // clang-format on
+            log.writeSetupInfo(
+                std::format("Non-coulombic potential: ForceField")
+            );
+            log.writeSetupInfo(
+                std::format("Total Global VDW types:  {}", nGlobalVdwTypes)
+            );
         }
         else
         {

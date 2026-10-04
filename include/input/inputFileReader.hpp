@@ -46,11 +46,7 @@ struct Settings;   // forward declaration
  */
 namespace input
 {
-    void readInputFile(
-        const std::string_view &fileName,
-        engine::Engine         &engine,
-        Settings               &settings
-    );
+    void readInputFile(const std::string_view &fileName);
     void readJobType(
         const std::string &fileName,
         std::unique_ptr<engine::Engine> &
@@ -79,17 +75,11 @@ namespace input
 
        public:
         explicit InputFileReader(
-            const std::string_view &filename,
-            engine::Engine         &engine,
-            Settings               &settings,
+            const std::string_view &fileName,
             bool                    validateFilePaths,
             bool                    resolveBuiltInSlakosPath
         );
-        explicit InputFileReader(
-            const std::string_view &filename,
-            engine::Engine         &engine,
-            Settings               &settings
-        );
+        explicit InputFileReader(const std::string_view &fileName);
 
         void read();
         void addKeywords();
@@ -112,12 +102,11 @@ namespace input
         [[nodiscard]] bool   getKeywordSet(const std::string &keyword) const;
         [[nodiscard]] bool getKeywordRequired(const std::string &keyword) const;
 
-        // clang-format off
         [[nodiscard]] std::map<std::string, size_t> getKeywordCountMap() const;
-        [[nodiscard]] std::map<std::string, bool> getKeywordSetMap() const;
+        [[nodiscard]] std::map<std::string, bool>   getKeywordSetMap() const;
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
-        [[nodiscard]] std::map<std::string, InputFileParser::ParseFunc> getKeywordFuncMap() const;
-        // clang-format on
+        [[nodiscard]] std::map<std::string, InputFileParser::ParseFunc> getKeywordFuncMap(
+        ) const;
 
        private:
         /******************************

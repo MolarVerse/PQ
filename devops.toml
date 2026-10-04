@@ -31,6 +31,8 @@ ast_check_enabled_ids = [
     "noDeleteInGtestTeardown",
     "noNewInGtestSetup",
     "includeIwyuPragmaOnly",
+    "noClangFormatToggle",
+    "noFinalKeyword",
 ]
 
 # Per-check configuration — one sub-table per check id.
