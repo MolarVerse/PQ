@@ -25,6 +25,7 @@
 #include "celllistSetup.hpp"
 #include "constraintsSetup.hpp"
 #include "engine.hpp"
+#include "forceFieldNonCoulomb.hpp"
 #include "forceFieldSettings.hpp"
 #include "forceFieldSetup.hpp"
 #include "generalSettings.hpp"
@@ -71,6 +72,14 @@ namespace setup
         startSetup();
 
         input::readInputFile(inputFileName);
+
+        // TODO: needed before reading file, needs refactoring later
+        if (settings::ForceFieldSettings::isNonCoulombicActive())
+        {
+            engine.getPotential()->makeNonCoulombPotential(
+                pot::ForceFieldNonCoulomb()
+            );
+        }
 
         setupOutputFiles(engine);
 

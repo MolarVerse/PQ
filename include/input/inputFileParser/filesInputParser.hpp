@@ -25,7 +25,6 @@
 #define _FILES_INPUT_PARSER_HPP_
 
 #include "inputFileParser.hpp"
-#include "intraNonBonded.hpp"
 
 namespace input
 {

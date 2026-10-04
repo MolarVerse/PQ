@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "cellListInputParser.hpp"
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "testInputFileReader.hpp"
