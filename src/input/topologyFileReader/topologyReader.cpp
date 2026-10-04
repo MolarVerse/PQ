@@ -161,8 +161,6 @@ namespace input::topology
     /**
      * @brief checks if reading topology file is needed
      *
-     * @param engine
-     *
      * @return true if shake is activated
      * @return true if force field is activated
      * @return false
