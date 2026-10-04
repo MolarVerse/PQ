@@ -70,15 +70,19 @@ namespace setup
      * @details if forceFieldNonCoulombics are activated it sets up also the
      * nonCoulombic pairs
      *
-     * @note the non-Coulomb potential type itself is set up earlier, via
-     * setupNonCoulombPotentialType(), before the parameter file is read -
-     * see setupRequestedJob(). Re-creating it here would discard the
-     * nonCoulombic pairs already read from the parameter file.
+     * @note setupNonCoulomb() is idempotent: it only (re-)creates the
+     * non-Coulomb potential if it does not already have the concrete type
+     * required by the current settings. This matters because
+     * setupNonCoulombPotentialType() already creates it before the
+     * parameter file is read (see setupRequestedJob()), and calling
+     * setupNonCoulomb() again here must not discard the nonCoulombic pairs
+     * already read from the parameter file.
      *
      */
     void PotentialSetup::setup()
     {
         setupCoulomb();
+        setupNonCoulomb();
 
         if (settings::ForceFieldSettings::isNonCoulombicActive())
             setupNonCoulombicPairs();
@@ -146,21 +150,30 @@ namespace setup
     /**
      * @brief sets nonCoulomb potential type
      *
-     * @details decides wether to use Guff or ForceFieldNonCoulomb potential
+     * @details decides wether to use Guff or ForceFieldNonCoulomb potential.
+     * If the non-Coulomb potential already has the required concrete type
+     * (e.g. because setupNonCoulombPotentialType() already created it
+     * before the parameter file was read) this is a no-op, so that any
+     * nonCoulombic pairs already added to it are not discarded.
      *
      */
     void PotentialSetup::setupNonCoulomb()
     {
-        const auto &potential = _engine.getPotential();
+        const auto &potential    = _engine.getPotential();
+        const auto  existingPot  = potential->getNonCoulombPotSharedPtr();
 
-        // NOTE: no else branch needed ForceFieldNonCoulomb is default
-        //       makeForceFieldNonCoulomb is a no-op if already set
-        //       However, it does also throw errors atm - thus the else
-        //       statement is left out
         if (!settings::ForceFieldSettings::isNonCoulombicActive())
-            potential->makeNonCoulombPotential(pot::GuffNonCoulomb());
+        {
+            if (dynamic_cast<pot::GuffNonCoulomb *>(existingPot.get()) ==
+                nullptr)
+                potential->makeNonCoulombPotential(pot::GuffNonCoulomb());
+        }
         else
-            potential->makeNonCoulombPotential(pot::ForceFieldNonCoulomb());
+        {
+            if (dynamic_cast<pot::ForceFieldNonCoulomb *>(existingPot.get()
+                ) == nullptr)
+                potential->makeNonCoulombPotential(pot::ForceFieldNonCoulomb());
+        }
     }
 
     /**
