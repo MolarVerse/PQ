@@ -25,17 +25,21 @@
 
 #include <chrono>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <string_view>
 
 #include "atom.hpp"
+#include "constants.hpp"
 #include "dftbplusRunner.hpp"
 #include "exceptions.hpp"
 #include "externalQMRunner.hpp"
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
+#include "molecule.hpp"
 #include "physicalData.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
@@ -51,6 +55,20 @@ namespace
         auto file = std::ofstream(std::string(fileName));
         file << text;
     }
+
+    std::string readFile(const std::string_view fileName)
+    {
+        auto file   = std::ifstream(std::string(fileName));
+        auto buffer = std::stringstream();
+        buffer << file.rdbuf();
+        return buffer.str();
+    }
+
+    class PeriodicDftbRunner : public QM::DFTBPlusRunner
+    {
+       public:
+        PeriodicDftbRunner() { _periodicity = molsys::Periodicity::XYZ; }
+    };
 
     class ExternalQMRunnerHarness : public QM::ExternalQMRunner
     {
@@ -474,5 +492,241 @@ TEST_F(ExternalQMRunnerTest, turbomoleExecuteRejectsMissingScript)
             "does not exist.",
             scriptDirectory
         )
+    );
+}
+
+namespace
+{
+    const auto NON_PERIODIC_COORDS = std::string(
+        "3  C\n"
+        "H  O  \n"
+        "    1     1\t  0.000000000000\t  0.000000000000\t  0.000000000000\n"
+        "    2     2\t  1.500000000000\t  2.250000000000\t -3.000000000000\n"
+        "    3     1\t  0.500000000000\t  0.500000000000\t  0.500000000000\n"
+    );
+
+    const auto CELL_LINES = std::string(
+        "           \t  0.000000000000\t  0.000000000000\t  0.000000000000\n"
+        "           \t 10.000000000000\t  0.000000000000\t  0.000000000000\n"
+        "           \t  0.000000000000\t 12.000000000000\t  0.000000000000\n"
+        "           \t  0.000000000000\t  0.000000000000\t 14.000000000000\n"
+    );
+
+    const auto POINT_CHARGES = std::string(
+        "  1.000000000000\t  2.000000000000\t  3.000000000000\t  "
+        "0.500000000000\n"
+        "  4.000000000000\t  5.000000000000\t  6.000000000000\t "
+        "-0.800000000000\n"
+    );
+
+    std::string expectedTurbomolePointCharges()
+    {
+        const auto line = [](double x, double y, double z, double charge)
+        {
+            return std::format(
+                "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
+                x * ANGSTROM_TO_BOHR,
+                y * ANGSTROM_TO_BOHR,
+                z * ANGSTROM_TO_BOHR,
+                charge
+            );
+        };
+
+        return line(1.0, 2.0, 3.0, 0.5) + line(4.0, 5.0, 6.0, -0.8);
+    }
+}   // namespace
+
+class QMWriterTest : public ExternalQMRunnerTest
+{
+   protected:
+    void SetUp() override
+    {
+        ExternalQMRunnerTest::SetUp();
+
+        // the fixture's atom "H" sits at the origin; add an O and a second H
+        _addAtom("O", {1.5, 2.25, -3.0});
+        _addAtom("H", {0.5, 0.5, 0.5});
+        _simulationBox.setBoxDimensions({10.0, 12.0, 14.0});
+    }
+
+    void _addAtom(const std::string &name, const linalg::Vec3D &position)
+    {
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setName(name);
+        atom->setPosition(position);
+        _simulationBox.addAtom(atom);
+    }
+
+    void _addMolecule(
+        const molsys::HybridZone zone,
+        const bool               active,
+        const linalg::Vec3D     &position,
+        const double             charge
+    )
+    {
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setName("X");
+        atom->setPosition(position);
+        atom->setPartialCharge(charge);
+
+        auto molecule = molsys::Molecule();
+        molecule.addAtom(atom);
+        molecule.setHybridZone(zone);
+
+        if (!active)
+            molecule.deactivateMolecule();
+
+        _simulationBox.addMolecule(molecule);
+    }
+
+    void _addPointChargeMolecules()
+    {
+        using enum molsys::HybridZone;
+
+        _addMolecule(SMOOTHING, false, {1.0, 2.0, 3.0}, 0.5);
+        _addMolecule(POINT_CHARGE, false, {4.0, 5.0, 6.0}, -0.8);
+        _addMolecule(OUTER, false, {7.0, 8.0, 9.0}, 0.1);
+        _addMolecule(POINT_CHARGE, true, {1.0, 1.0, 1.0}, 0.3);
+    }
+};
+
+TEST_F(QMWriterTest, dftbCoordsOfAnIsolatedSystemUseTheClusterFlag)
+{
+    _dftbRunner.writeCoordsFile(_simulationBox);
+
+    EXPECT_EQ(NON_PERIODIC_COORDS, readFile("coords"));
+}
+
+TEST_F(QMWriterTest, dftbCoordsOfAPeriodicSystemAppendTheCell)
+{
+    auto runner = PeriodicDftbRunner();
+
+    runner.writeCoordsFile(_simulationBox);
+
+    auto expected = NON_PERIODIC_COORDS;
+    expected.replace(0, 4, "3  S");
+    EXPECT_EQ(expected + CELL_LINES, readFile("coords"));
+}
+
+TEST_F(QMWriterTest, dftbPointChargesAreOnlyTheInactiveSmoothingAndPointCharge)
+{
+    _addPointChargeMolecules();
+
+    _dftbRunner.writePointChargeFile(_simulationBox);
+
+    EXPECT_EQ(
+        POINT_CHARGES,
+        readFile(settings::FileSettings::getPointChargeFileName())
+    );
+}
+
+TEST_F(QMWriterTest, dftbWithoutPointChargesLeavesNoFile)
+{
+    _addMolecule(molsys::HybridZone::OUTER, false, {7.0, 8.0, 9.0}, 0.1);
+
+    _dftbRunner.writePointChargeFile(_simulationBox);
+
+    EXPECT_FALSE(
+        std::filesystem::exists(
+            settings::FileSettings::getPointChargeFileName()
+        )
+    );
+}
+
+TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
+{
+    auto       runner = CommandCaptureRunner<QM::DFTBPlusRunner>();
+    const auto path   = _configureQuotedScript(runner);
+    const auto suffix = [](const int usePointCharges)
+    {
+        return std::format(
+            " {} {} {}",
+            usePointCharges,
+            utilities::shellQuote(settings::FileSettings::getDFTBFileName()),
+            utilities::shellQuote(
+                settings::FileSettings::getPointChargeFileName()
+            )
+        );
+    };
+
+    _addPointChargeMolecules();
+    runner.writePointChargeFile(_simulationBox);
+    runner.execute(_simulationBox);
+    EXPECT_TRUE(runner.getCommand().ends_with(suffix(1)))
+        << runner.getCommand();
+
+    runner.execute(_simulationBox);
+    EXPECT_TRUE(runner.getCommand().ends_with(suffix(0)))
+        << runner.getCommand();
+    EXPECT_TRUE(
+        runner.getCommand().starts_with(utilities::shellQuote(path.string()))
+    );
+}
+
+TEST_F(QMWriterTest, turbomoleCoordsAreInBohr)
+{
+    auto runner = QM::TurbomoleRunner();
+
+    runner.writeCoordsFile(_simulationBox);
+
+    const auto line = [](const double       x,
+                         const double       y,
+                         const double       z,
+                         const std::string &name)
+    {
+        return std::format(
+            "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
+            x * ANGSTROM_TO_BOHR,
+            y * ANGSTROM_TO_BOHR,
+            z * ANGSTROM_TO_BOHR,
+            name
+        );
+    };
+
+    EXPECT_EQ(
+        "$coord\n" + line(0.0, 0.0, 0.0, "H") + line(1.5, 2.25, -3.0, "O") +
+            line(0.5, 0.5, 0.5, "H") + "$end\n",
+        readFile("coord")
+    );
+}
+
+TEST_F(QMWriterTest, turbomolePointChargesAreInBohrAndOnlyTheOuterShells)
+{
+    auto runner = QM::TurbomoleRunner();
+    _addPointChargeMolecules();
+
+    runner.writePointChargeFile(_simulationBox);
+
+    EXPECT_EQ(
+        expectedTurbomolePointCharges(),
+        readFile(settings::FileSettings::getPointChargeFileName())
+    );
+}
+
+TEST_F(QMWriterTest, turbomoleWithoutPointChargesLeavesNoFile)
+{
+    auto runner = QM::TurbomoleRunner();
+
+    runner.writePointChargeFile(_simulationBox);
+
+    EXPECT_FALSE(
+        std::filesystem::exists(
+            settings::FileSettings::getPointChargeFileName()
+        )
+    );
+}
+
+TEST_F(QMWriterTest, pyscfCoordsAreAnXyzFile)
+{
+    auto runner = QM::PySCFRunner();
+
+    runner.writeCoordsFile(_simulationBox);
+
+    EXPECT_EQ(
+        "3\n\n"
+        "H    \t  0.000000000000\t  0.000000000000\t  0.000000000000\n"
+        "O    \t  1.500000000000\t  2.250000000000\t -3.000000000000\n"
+        "H    \t  0.500000000000\t  0.500000000000\t  0.500000000000\n",
+        readFile("coords.xyz")
     );
 }
