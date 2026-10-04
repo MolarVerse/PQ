@@ -23,6 +23,9 @@ Example: `changes/user/bugfix.kinetic-virial.md` containing:
 - Fix wrong virial mode when using atomic virial after copying physical data.
 ```
 
+`changes/user/.gitkeep` and `changes/developer/.gitkeep` are placeholders, not fragments: a release consumes every fragment,
+and git does not track empty folders, so without them the two folders would disappear from the tree. Do not delete them.
+
 ## Multiple points in one fragment
 
 A fragment can contain more than one Markdown bullet, one per line, with no
