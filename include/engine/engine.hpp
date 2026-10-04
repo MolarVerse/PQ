@@ -83,15 +83,6 @@ namespace engine
 
         [[nodiscard]] double calculateTotalSimulationTime() const;
 
-        /**********************************
-         * information about active parts *
-         **********************************/
-
-        [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const;
-        [[nodiscard]] bool isGuffActivated() const;
-        [[nodiscard]] bool isConstraintsActivated() const;
-        [[nodiscard]] bool isIntraNonBondedActivated() const;
-
         /***************************
          * standard getter methods *
          ***************************/

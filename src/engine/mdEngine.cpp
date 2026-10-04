@@ -23,6 +23,7 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"
+#include "constraintSettings.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
@@ -91,7 +92,7 @@ namespace engine
     {
         _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
 
-        if (_constraints->isMShakeActive())
+        if (settings::ConstraintSettings::isMShakeActivated())
             _simulationBox->updateOldPositions();
 
         _integrator->firstStep(*_simulationBox);

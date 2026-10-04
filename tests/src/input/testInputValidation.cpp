@@ -101,8 +101,7 @@ class TestInputValidation : public ::testing::Test
         settings::QMSettings::setFennolModelPath("");
 
         _engine = std::make_unique<engine::OptEngine>();
-        _reader =
-            std::make_unique<input::InputFileReader>("input.in", *_engine);
+        _reader = std::make_unique<input::InputFileReader>("input.in");
     }
 
     void _setKeyword(const std::string &keyword)

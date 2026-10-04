@@ -22,15 +22,10 @@
 
 #include "MMInputParser.hpp"
 
-#include <utility>
-
-#include "forceFieldClass.hpp"
-#include "forceFieldNonCoulomb.hpp"
 #include "forceFieldSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
-#include "potential.hpp"
 #include "potentialSettings.hpp"
 #include "waterModelSettings.hpp"
 
@@ -45,14 +40,8 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) force-field
      * "<on/off/bonded>"
      *
-     * @param forceField
-     * @param potential
      */
-    MMInputParser::MMInputParser(
-        std::shared_ptr<ff::ForceField> forceField,
-        std::shared_ptr<pot::Potential> potential
-    )
-        : _forceField(std::move(forceField)), _potential(std::move(potential))
+    MMInputParser::MMInputParser()
     {
         addForceFieldTypeKey();
         addNonCoulombTypeKey();
@@ -77,28 +66,8 @@ namespace input
                 "bonded)",
         };
 
-        const auto setValue = [forceField = _forceField,
-                               potential  = _potential](ForceFieldType value)
-        {
-            switch (value)
-            {
-                case ForceFieldType::ON:
-                    settings::ForceFieldSettings::activate();
-                    forceField->activateNonCoulombic();
-                    potential->makeNonCoulombPotential(
-                        pot::ForceFieldNonCoulomb()
-                    );
-                    break;
-                case ForceFieldType::OFF:
-                    settings::ForceFieldSettings::deactivate();
-                    forceField->deactivateNonCoulombic();
-                    break;
-                case ForceFieldType::BONDED:
-                    settings::ForceFieldSettings::activate();
-                    forceField->deactivateNonCoulombic();
-                    break;
-            }
-        };
+        const auto setValue = [](ForceFieldType value)
+        { settings::ForceFieldSettings::setType(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ForceFieldType>{
@@ -124,7 +93,7 @@ namespace input
                 "(guff, lj, buck, morse)",
         };
 
-        const auto setValue = [potential = _potential](NonCoulombType value)
+        const auto setValue = [](NonCoulombType value)
         { settings::PotentialSettings::setNonCoulombType(value); };
 
         auto &key = _getRegistry().registerKey(
@@ -152,7 +121,7 @@ namespace input
                 "spc_mtr, tip3p_mtr)",
         };
 
-        const auto setValue = [potential = _potential](WaterIntraModel value)
+        const auto setValue = [](WaterIntraModel value)
         {
             settings::WaterModelSettings::setWaterIntraModel(value);
             settings::WaterModelSettings::setIsWaterModelSet(true);
@@ -182,7 +151,7 @@ namespace input
                 "spc_mtr, tip3p_mtr)",
         };
 
-        const auto setValue = [potential = _potential](WaterInterModel value)
+        const auto setValue = [](WaterInterModel value)
         {
             settings::WaterModelSettings::setWaterInterModel(value);
             settings::WaterModelSettings::setIsWaterModelSet(true);

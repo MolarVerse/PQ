@@ -44,7 +44,7 @@ namespace engine
  */
 namespace input
 {
-    void readInputFile(const std::string_view &fileName, engine::Engine &);
+    void readInputFile(const std::string_view &fileName);
     void readJobType(
         const std::string &fileName,
         std::unique_ptr<engine::Engine> &
@@ -73,12 +73,11 @@ namespace input
 
        public:
         explicit InputFileReader(
-            const std::string_view &,
-            engine::Engine &,
-            bool validateFilePaths,
-            bool resolveBuiltInSlakosPath
+            const std::string_view &fileName,
+            bool                    validateFilePaths,
+            bool                    resolveBuiltInSlakosPath
         );
-        explicit InputFileReader(const std::string_view &, engine::Engine &);
+        explicit InputFileReader(const std::string_view &fileName);
 
         void read();
         void addKeywords();

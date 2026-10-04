@@ -65,7 +65,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _physicalData->setIntraNonCoulombEnergy(10.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::deactivate();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
@@ -107,7 +107,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _physicalData->setImproperEnergy(22.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::activate();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
@@ -149,7 +149,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::deactivate();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
@@ -192,7 +192,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::deactivate();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
@@ -239,7 +239,7 @@ TEST_F(TestEnergyOutput, qmActive)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::deactivate();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
 
@@ -279,7 +279,7 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     _physicalData->setNoseHooverFrictionEnergy(12.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::deactivate();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::deactivateRingPolymerMD();
     settings::ManostatSettings::setManostatType(ManostatType::NONE);

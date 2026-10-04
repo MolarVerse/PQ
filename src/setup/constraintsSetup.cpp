@@ -40,7 +40,7 @@ namespace setup
      */
     void setupConstraints(engine::Engine &engine)
     {
-        if (!engine.isConstraintsActivated())
+        if (!settings::ConstraintSettings::isActive())
             return;
 
         out::StdoutOutput::writeSetup("Constraints");
@@ -84,7 +84,7 @@ namespace setup
     {
         const auto &constraints = _engine.getConstraints();
 
-        if (!constraints->isMShakeActive())
+        if (!settings::ConstraintSettings::isMShakeActivated())
             return;
 
         input::mShake::readMShake(_engine);
@@ -159,17 +159,15 @@ namespace setup
      */
     void ConstraintsSetup::writeSetupInfo()
     {
-        const auto &constraints = _engine.getConstraints();
-
         writeEnabled();
 
-        if (constraints->isShakeLikeActive())
+        if (settings::ConstraintSettings::isShakeLikeActive())
         {
             writeNConstraintBonds();
             writeTolerance();
         }
 
-        if (constraints->isShakeActive())
+        if (settings::ConstraintSettings::isShakeActivated())
             writeMaxIter();
 
         writeDof();
@@ -181,12 +179,12 @@ namespace setup
      */
     void ConstraintsSetup::writeEnabled()
     {
-        const auto &constraints = _engine.getConstraints();
-
-        std::string shakeMsg =
-            constraints->isShakeActive() ? "enabled" : "disabled";
+        std::string shakeMsg = settings::ConstraintSettings::isShakeActivated()
+                                   ? "enabled"
+                                   : "disabled";
         std::string mShakeMsg =
-            constraints->isMShakeActive() ? "enabled" : "disabled";
+            settings::ConstraintSettings::isMShakeActivated() ? "enabled"
+                                                              : "disabled";
 
         shakeMsg  = std::format("SHAKE:   {}", shakeMsg);
         mShakeMsg = std::format("M-SHAKE: {}", mShakeMsg);

@@ -67,7 +67,7 @@ TEST_F(TestIntraNonBondedReader, noFileSetByUser)
 TEST_F(TestIntraNonBondedReader, readingNotNeeded)
 {
     _intraNonBondedReader->setFileName("");
-    _engine->getIntraNonBonded()->deactivate();
+    settings::GeneralSettings::deactivateIntraNonBonded();
     EXPECT_NO_THROW(_intraNonBondedReader->read());
 }
 

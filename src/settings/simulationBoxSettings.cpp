@@ -30,6 +30,15 @@ namespace settings
      * standard setters *
      *                  *
      ********************/
+    /**
+     * @brief Set the density
+     *
+     * @param density
+     */
+    void SimulationBoxSettings::setDensity(double density)
+    {
+        _density = density;
+    }
 
     /**
      * @brief Set the density set
@@ -65,6 +74,12 @@ namespace settings
      * standard getters *
      *                  *
      ********************/
+    /**
+     * @brief Get the density
+     *
+     * @return double
+     */
+    double SimulationBoxSettings::getDensity() { return _density; }
 
     /**
      * @brief get if the density is set
