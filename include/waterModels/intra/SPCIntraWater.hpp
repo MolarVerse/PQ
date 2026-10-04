@@ -45,7 +45,7 @@ namespace waterModel
         void calculate(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
-        ) final;
+        ) override;
 
         [[nodiscard]]
         virtual double getEqOHDistance() const = 0;   // Angström
@@ -71,22 +71,22 @@ namespace waterModel
 
        public:
         [[nodiscard]]
-        double getEqOHDistance() const final
+        double getEqOHDistance() const override
         {
             return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHOHAngle() const final
+        double getEqHOHAngle() const override
         {
             return _eqHOHAngle;
         }
         [[nodiscard]]
-        double getForceConstantOHBond() const final
+        double getForceConstantOHBond() const override
         {
             return _forceConstantOHBond;
         }
         [[nodiscard]]
-        double getForceConstantHOHAngle() const final
+        double getForceConstantHOHAngle() const override
         {
             return _forceConstantHOHAngle;
         }
@@ -104,22 +104,22 @@ namespace waterModel
 
        public:
         [[nodiscard]]
-        double getEqOHDistance() const final
+        double getEqOHDistance() const override
         {
             return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHOHAngle() const final
+        double getEqHOHAngle() const override
         {
             return _eqHOHAngle;
         }
         [[nodiscard]]
-        double getForceConstantOHBond() const final
+        double getForceConstantOHBond() const override
         {
             return _forceConstantOHBond;
         }
         [[nodiscard]]
-        double getForceConstantHOHAngle() const final
+        double getForceConstantHOHAngle() const override
         {
             return _forceConstantHOHAngle;
         }

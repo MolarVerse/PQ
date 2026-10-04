@@ -34,7 +34,7 @@ namespace opt
      * @class Adam
      *
      */
-    class Adam final : public Optimizer
+    class Adam : public Optimizer
     {
        private:
         constexpr static size_t _maxHistoryLength = 2;

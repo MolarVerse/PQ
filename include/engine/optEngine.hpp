@@ -56,9 +56,9 @@ namespace engine
         bool _optStopped = false;
 
        public:
-        void run() final;
+        void run() override;
         void takeStep();
-        void writeOutput() final;
+        void writeOutput() override;
 
         static void throwOnFailure(
             bool                            converged,
