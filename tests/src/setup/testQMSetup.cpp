@@ -45,7 +45,7 @@
 
 namespace
 {
-    class DefaultExternalQMRunner final : public QM::ExternalQMRunner
+    class DefaultExternalQMRunner : public QM::ExternalQMRunner
     {
        public:
         void execute(molsys::SimulationBox & /*simBox*/) override {}

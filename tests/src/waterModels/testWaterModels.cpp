@@ -305,7 +305,7 @@ namespace
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
 
@@ -315,7 +315,7 @@ namespace
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
 
@@ -325,7 +325,7 @@ namespace
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
 
@@ -335,7 +335,7 @@ namespace
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
 
@@ -345,7 +345,7 @@ namespace
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
     };

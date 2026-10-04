@@ -64,7 +64,7 @@ namespace manostat
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
 
-        [[nodiscard]] ManostatType getManostatType() const final;
+        [[nodiscard]] ManostatType getManostatType() const override;
     };
 
     /**

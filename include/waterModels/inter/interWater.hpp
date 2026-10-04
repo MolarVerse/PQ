@@ -191,7 +191,7 @@ namespace waterModel
             physicalData::PhysicalData & /*physicalData*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
 
@@ -201,7 +201,7 @@ namespace waterModel
             physicalData::PhysicalData & /*physicalData*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
 
@@ -211,7 +211,7 @@ namespace waterModel
             physicalData::PhysicalData & /*physicalData*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
 
@@ -221,7 +221,7 @@ namespace waterModel
             physicalData::PhysicalData & /*physicalData*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
 
@@ -231,7 +231,7 @@ namespace waterModel
             physicalData::PhysicalData & /*physicalData*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
             const molsys::CellList & /*cellList*/
-        ) final
+        ) override
         {
         }
     };
@@ -245,7 +245,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulPot,
             const molsys::CellList & /*cellList*/
-        ) final;
+        ) override;
 
         void calculateCoreToOuterForces(
             const InterWaterState & /*state*/,
@@ -253,7 +253,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             const molsys::CellList & /*cellList*/
-        ) final;
+        ) override;
 
         void calculateLayerToOuterForces(
             const InterWaterState                        &state,
@@ -261,7 +261,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             const molsys::CellList & /*cellList*/
-        ) final;
+        ) override;
 
         void calculateOuterToOuterForces(
             const InterWaterState                        &state,
@@ -269,7 +269,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             const molsys::CellList & /*cellList*/
-        ) final;
+        ) override;
 
         void calculateHotspotSmoothingMMForces(
             const InterWaterState                        &state,
@@ -277,7 +277,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             const molsys::CellList & /*cellList*/
-        ) final;
+        ) override;
     };
 
     class InterWaterStrategyCellList : public InterWaterStrategy
@@ -289,7 +289,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulPot,
             const molsys::CellList                       &cellList
-        ) final;
+        ) override;
 
         void calculateCoreToOuterForces(
             const InterWaterState & /*state*/,
@@ -297,7 +297,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             const molsys::CellList                       &cellList
-        ) final;
+        ) override;
 
         void calculateLayerToOuterForces(
             const InterWaterState                        &state,
@@ -305,7 +305,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             const molsys::CellList                       &cellList
-        ) final;
+        ) override;
 
         void calculateOuterToOuterForces(
             const InterWaterState                        &state,
@@ -313,7 +313,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulPot,
             const molsys::CellList                       &cellList
-        ) final;
+        ) override;
 
         void calculateHotspotSmoothingMMForces(
             const InterWaterState                        &state,
@@ -321,7 +321,7 @@ namespace waterModel
             physicalData::PhysicalData                   &physicalData,
             const std::shared_ptr<pot::CoulombPotential> &coulPot,
             const molsys::CellList                       &cellList
-        ) final;
+        ) override;
     };
 
 }   // namespace waterModel

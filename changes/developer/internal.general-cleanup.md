@@ -9,3 +9,4 @@
 - do not use raw pointers in tests with new and delete (enforced by devops)
 - remove useless comments next to includes for less PR review garbage
 - diasllow the use of `clang-format` `on/off` in source code
+- disallow the use of `final` key for dependency injection (mocking in tests)
