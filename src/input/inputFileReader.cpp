@@ -37,9 +37,11 @@
 #include "convergenceInputParser.hpp"
 #include "coulombLongRangeInputParser.hpp"
 #include "engine.hpp"
+#include "engineFactory.hpp"
 #include "exceptions.hpp"
 #include "filesInputParser.hpp"
 #include "generalInputParser.hpp"
+#include "generalSettings.hpp"
 #include "hessianInputParser.hpp"
 #include "hybridInputParser.hpp"
 #include "integratorInputParser.hpp"
@@ -348,9 +350,10 @@ namespace input
                 {
                     GeneralInputParser::parseJobTypeForEngine(
                         lineElements,
-                        lineNumber,
-                        engine
+                        lineNumber
                     );
+                    engine = engine::engineFactory
+                                 .at(settings::GeneralSettings::getJobtype())();
                     jobtypeFound = true;
                 }
             };
