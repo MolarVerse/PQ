@@ -37,7 +37,6 @@ namespace integrator
     class VelocityVerlet : public Integrator
     {
        public:
-        explicit VelocityVerlet();
         ~VelocityVerlet() override = default;
 
         void firstStep(molsys::SimulationBox &simulationBox) override;
