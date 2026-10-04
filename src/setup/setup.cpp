@@ -70,7 +70,7 @@ namespace setup
 
         startSetup();
 
-        input::readInputFile(inputFileName, engine);
+        input::readInputFile(inputFileName);
 
         setupOutputFiles(engine);
 

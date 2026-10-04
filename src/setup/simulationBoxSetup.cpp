@@ -36,6 +36,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
 #include "logOutput.hpp"
 #include "maxwellBoltzmann.hpp"
 #include "molecule.hpp"
@@ -82,7 +83,7 @@ namespace setup
     {
         setAtomNames();
         setAtomTypes();
-        if (_engine.getForceField()->isNonCoulombicActivated())
+        if (settings::ForceFieldSettings::isNonCoulombicActive())
             setExternalVDWTypes();
         setPartialCharges();
 

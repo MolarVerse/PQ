@@ -34,6 +34,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "forceFieldSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "potential.hpp"
 #include "potentialSettings.hpp"
@@ -75,7 +76,7 @@ namespace setup
         setupCoulomb();
         setupNonCoulomb();
 
-        if (_engine.isForceFieldNonCoulombicsActivated())
+        if (settings::ForceFieldSettings::isNonCoulombicActive())
             setupNonCoulombicPairs();
 
         writeSetupInfo();
@@ -135,8 +136,10 @@ namespace setup
         //       makeForceFieldNonCoulomb is a no-op if already set
         //       However, it does also throw errors atm - thus the else
         //       statement is left out
-        if (!_engine.getForceField()->isNonCoulombicActivated())
+        if (!settings::ForceFieldSettings::isNonCoulombicActive())
             potential->makeNonCoulombPotential(pot::GuffNonCoulomb());
+        else
+            potential->makeNonCoulombPotential(pot::ForceFieldNonCoulomb());
     }
 
     /**
@@ -268,7 +271,7 @@ namespace setup
     {
         auto &log = _engine.getLogOutput();
 
-        if (_engine.getForceField()->isNonCoulombicActivated())
+        if (settings::ForceFieldSettings::isNonCoulombicActive())
         {
             auto      &simBox = _engine.getSimulationBox();
             const auto nGlobalVdwTypes =

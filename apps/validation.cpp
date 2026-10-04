@@ -295,7 +295,7 @@ namespace
         validateExternalQMScriptSelection();
     }
 
-    void validateEffectiveFiles(engine::Engine &engine)
+    void validateEffectiveFiles()
     {
         requireFile(settings::FileSettings::getStartFileName(), "Start file");
 
@@ -325,7 +325,7 @@ namespace
         }
 
         if (settings::GeneralSettings::isMMActivated() &&
-            !engine.isForceFieldNonCoulombicsActivated())
+            !settings::ForceFieldSettings::isNonCoulombicActive())
         {
             requireFile(
                 settings::FileSettings::getGuffDatFileName(),
@@ -503,7 +503,6 @@ cli::ValidationResult cli::validateInputFile(
 
         input::InputFileReader reader(
             inputFile,
-            *engine,
             scope == ValidationScope::INSTALLED,
             false
         );
@@ -514,7 +513,7 @@ cli::ValidationResult cli::validateInputFile(
         if (scope == ValidationScope::INSTALLED)
         {
             validateCompiledCapabilities();
-            validateEffectiveFiles(*engine);
+            validateEffectiveFiles();
         }
 
         auto result = ValidationResult{

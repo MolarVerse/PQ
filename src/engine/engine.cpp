@@ -105,28 +105,6 @@ namespace engine
     }
 
     /**
-     * @brief checks if the force field is activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isForceFieldNonCoulombicsActivated() const
-    {
-        return _forceField->isNonCoulombicActivated();
-    }
-
-    /**
-     * @brief checks if the guff formalism is activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isGuffActivated() const
-    {
-        return !_forceField->isNonCoulombicActivated();
-    }
-
-    /**
      * @brief get the reference to the simulation box
      *
      * @return SimulationBox&

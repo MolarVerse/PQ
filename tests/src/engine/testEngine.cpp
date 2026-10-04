@@ -66,25 +66,3 @@ TEST_F(TestEngine, calculateTotalSimulationTimeScalesWithTimeStep)
 
     EXPECT_DOUBLE_EQ(_engine->calculateTotalSimulationTime(), 2.0);
 }
-
-/**
- * @brief tests isForceFieldNonCoulombicsActivated / isGuffActivated
- * reflect the underlying force field's non-Coulombic flag, and are always
- * each other's inverse
- *
- */
-TEST_F(TestEngine, isForceFieldNonCoulombicsActivatedTracksForceField)
-{
-    EXPECT_FALSE(_engine->isForceFieldNonCoulombicsActivated());
-    EXPECT_TRUE(_engine->isGuffActivated());
-
-    _engine->getForceField()->activateNonCoulombic();
-
-    EXPECT_TRUE(_engine->isForceFieldNonCoulombicsActivated());
-    EXPECT_FALSE(_engine->isGuffActivated());
-
-    _engine->getForceField()->deactivateNonCoulombic();
-
-    EXPECT_FALSE(_engine->isForceFieldNonCoulombicsActivated());
-    EXPECT_TRUE(_engine->isGuffActivated());
-}

@@ -67,13 +67,9 @@ namespace input
      * _keywordCountMap
      *
      * @param fileName
-     * @param engine
      */
-    InputFileReader::InputFileReader(
-        const std::string_view &fileName,
-        engine::Engine         &engine
-    )
-        : InputFileReader(fileName, engine, true, true)
+    InputFileReader::InputFileReader(const std::string_view &fileName)
+        : InputFileReader(fileName, true, true)
     {
     }
 
@@ -85,13 +81,11 @@ namespace input
      * _keywordCountMap
      *
      * @param fileName
-     * @param engine
      * @param validateFilePaths
      * @param resolveBuiltInSlakosPath
      */
     InputFileReader::InputFileReader(
         const std::string_view &fileName,
-        engine::Engine         &engine,
         bool                    validateFilePaths,
         bool                    resolveBuiltInSlakosPath
     )
@@ -104,12 +98,7 @@ namespace input
         _parsers.push_back(
             std::make_unique<FilesInputParser>(validateFilePaths)
         );
-        _parsers.push_back(
-            std::make_unique<MMInputParser>(
-                engine.getForceField(),
-                engine.getPotential()
-            )
-        );
+        _parsers.push_back(std::make_unique<MMInputParser>());
         _parsers.push_back(std::make_unique<GeneralInputParser>());
         _parsers.push_back(std::make_unique<HessianInputParser>());
         _parsers.push_back(std::make_unique<IntegratorInputParser>());
@@ -374,14 +363,13 @@ namespace input
      * postProcess()
      *
      * @param fileName
-     * @param engine
      *
      */
-    void readInputFile(const std::string_view &fileName, engine::Engine &engine)
+    void readInputFile(const std::string_view &fileName)
     {
         out::StdoutOutput::writeRead("Input File", std::string(fileName));
 
-        InputFileReader inputFileReader(fileName, engine);
+        InputFileReader inputFileReader(fileName);
         inputFileReader.read();
         inputFileReader.postProcess();
         inputFileReader.validateInputConfiguration();
