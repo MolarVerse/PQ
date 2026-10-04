@@ -544,12 +544,12 @@ class QMWriterTest : public ExternalQMRunnerTest
         ExternalQMRunnerTest::SetUp();
 
         // the fixture's atom "H" sits at the origin; add an O and a second H
-        addAtom("O", {1.5, 2.25, -3.0});
-        addAtom("H", {0.5, 0.5, 0.5});
+        _addAtom("O", {1.5, 2.25, -3.0});
+        _addAtom("H", {0.5, 0.5, 0.5});
         _simulationBox.setBoxDimensions({10.0, 12.0, 14.0});
     }
 
-    void addAtom(const std::string &name, const linalg::Vec3D &position)
+    void _addAtom(const std::string &name, const linalg::Vec3D &position)
     {
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName(name);
@@ -557,7 +557,7 @@ class QMWriterTest : public ExternalQMRunnerTest
         _simulationBox.addAtom(atom);
     }
 
-    void addMolecule(
+    void _addMolecule(
         const molsys::HybridZone zone,
         const bool               active,
         const linalg::Vec3D     &position,
@@ -579,14 +579,14 @@ class QMWriterTest : public ExternalQMRunnerTest
         _simulationBox.addMolecule(molecule);
     }
 
-    void addPointChargeMolecules()
+    void _addPointChargeMolecules()
     {
         using enum molsys::HybridZone;
 
-        addMolecule(SMOOTHING, false, {1.0, 2.0, 3.0}, 0.5);
-        addMolecule(POINT_CHARGE, false, {4.0, 5.0, 6.0}, -0.8);
-        addMolecule(OUTER, false, {7.0, 8.0, 9.0}, 0.1);
-        addMolecule(POINT_CHARGE, true, {1.0, 1.0, 1.0}, 0.3);
+        _addMolecule(SMOOTHING, false, {1.0, 2.0, 3.0}, 0.5);
+        _addMolecule(POINT_CHARGE, false, {4.0, 5.0, 6.0}, -0.8);
+        _addMolecule(OUTER, false, {7.0, 8.0, 9.0}, 0.1);
+        _addMolecule(POINT_CHARGE, true, {1.0, 1.0, 1.0}, 0.3);
     }
 };
 
@@ -610,7 +610,7 @@ TEST_F(QMWriterTest, dftbCoordsOfAPeriodicSystemAppendTheCell)
 
 TEST_F(QMWriterTest, dftbPointChargesAreOnlyTheInactiveSmoothingAndPointCharge)
 {
-    addPointChargeMolecules();
+    _addPointChargeMolecules();
 
     _dftbRunner.writePointChargeFile(_simulationBox);
 
@@ -622,7 +622,7 @@ TEST_F(QMWriterTest, dftbPointChargesAreOnlyTheInactiveSmoothingAndPointCharge)
 
 TEST_F(QMWriterTest, dftbWithoutPointChargesLeavesNoFile)
 {
-    addMolecule(molsys::HybridZone::OUTER, false, {7.0, 8.0, 9.0}, 0.1);
+    _addMolecule(molsys::HybridZone::OUTER, false, {7.0, 8.0, 9.0}, 0.1);
 
     _dftbRunner.writePointChargeFile(_simulationBox);
 
@@ -649,7 +649,7 @@ TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
         );
     };
 
-    addPointChargeMolecules();
+    _addPointChargeMolecules();
     runner.writePointChargeFile(_simulationBox);
     runner.execute(_simulationBox);
     EXPECT_TRUE(runner.getCommand().ends_with(suffix(1)))
@@ -693,7 +693,7 @@ TEST_F(QMWriterTest, turbomoleCoordsAreInBohr)
 TEST_F(QMWriterTest, turbomolePointChargesAreInBohrAndOnlyTheOuterShells)
 {
     auto runner = QM::TurbomoleRunner();
-    addPointChargeMolecules();
+    _addPointChargeMolecules();
 
     runner.writePointChargeFile(_simulationBox);
 
