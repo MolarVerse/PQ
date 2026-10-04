@@ -14,12 +14,10 @@ execute_process(
 
 if(PQANALYSIS_INSTALLED EQUAL 1)
     execute_process(
-
-        # TODO: as soon as next release is out, change this to <pip install pqanalysis>
-        COMMAND ${Python_EXECUTABLE} -m pip install update PQAnalysis
+        COMMAND ${Python_EXECUTABLE} -m pip install PQAnalysis
         RESULT_VARIABLE PIP_INSTALL_RESULT
     )
-    set(PQANALYSIS_INSTALLED PIP_INSTALL_RESULT)
+    set(PQANALYSIS_INSTALLED ${PIP_INSTALL_RESULT})
 endif()
 
 if(NOT PQANALYSIS_INSTALLED EQUAL 0)
