@@ -159,8 +159,8 @@ namespace setup
      */
     void PotentialSetup::setupNonCoulomb()
     {
-        const auto &potential    = _engine.getPotential();
-        const auto  existingPot  = potential->getNonCoulombPotSharedPtr();
+        const auto &potential   = _engine.getPotential();
+        const auto  existingPot = potential->getNonCoulombPotSharedPtr();
 
         if (!settings::ForceFieldSettings::isNonCoulombicActive())
         {
@@ -170,8 +170,8 @@ namespace setup
         }
         else
         {
-            if (dynamic_cast<pot::ForceFieldNonCoulomb *>(existingPot.get()
-                ) == nullptr)
+            if (dynamic_cast<pot::ForceFieldNonCoulomb *>(existingPot.get()) ==
+                nullptr)
                 potential->makeNonCoulombPotential(pot::ForceFieldNonCoulomb());
         }
     }
