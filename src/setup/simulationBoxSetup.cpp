@@ -345,12 +345,13 @@ namespace setup
 
         if (!isBoxSet)
         {
+            simBox.setDensity(settings::SimulationBoxSettings::getDensity());
             const auto boxDimensions = simBox.calcBoxDimFromDensity();
 
             simBox.setBoxDimensions(boxDimensions);
             simBox.setVolume(simBox.calculateVolume());
         }
-        else if (!settings::SimulationBoxSettings::getDensitySet())
+        else if (!isDensitySet)
         {
             const auto volume = simBox.calculateVolume();
             const auto density =
@@ -361,6 +362,7 @@ namespace setup
         }
         else
         {
+            simBox.setDensity(settings::SimulationBoxSettings::getDensity());
             const auto volume     = simBox.calculateVolume();
             const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
             const auto density    = simBox.getTotalMass() / volume * convFactor;

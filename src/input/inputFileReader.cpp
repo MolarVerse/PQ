@@ -116,11 +116,7 @@ namespace input
         _parsers.push_back(std::make_unique<ManostatInputParser>());
         _parsers.push_back(std::make_unique<OutputInputParser>());
         _parsers.push_back(std::make_unique<ResetKineticsInputParser>());
-        _parsers.push_back(
-            std::make_unique<SimulationBoxInputParser>(
-                engine.getSharedSimulationBox()
-            )
-        );
+        _parsers.push_back(std::make_unique<SimulationBoxInputParser>());
         _parsers.push_back(std::make_unique<ThermostatInputParser>());
         _parsers.push_back(std::make_unique<TimingsInputParser>());
         _parsers.push_back(std::make_unique<VirialInputParser>());

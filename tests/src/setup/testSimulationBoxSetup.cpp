@@ -368,7 +368,7 @@ TEST_F(TestSetup, noDensity)
 TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
+    settings::SimulationBoxSettings::setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
     settings::SimulationBoxSettings::setBoxSet(false);
     settings::SimulationBoxSettings::setDensitySet(true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
