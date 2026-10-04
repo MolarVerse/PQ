@@ -152,6 +152,17 @@ namespace engine
     }
 
     /**
+     * @brief Creates the ResetKinetics object.
+     *
+     * @param settings The settings for the ResetKinetics object.
+     */
+    void MDEngine::makeResetKinetics(const ResetKineticsSettings &settings)
+    {
+        _resetKinetics =
+            std::make_unique<resetKinetics::ResetKinetics>(settings);
+    }
+
+    /**
      * @brief Takes one step in the simulation.
      *
      */

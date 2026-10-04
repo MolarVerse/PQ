@@ -38,13 +38,19 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+struct Settings;   // forward declaration
+
 /**
  * @brief namespace for reading input files
  *
  */
 namespace input
 {
-    void readInputFile(const std::string_view &fileName, engine::Engine &);
+    void readInputFile(
+        const std::string_view &fileName,
+        engine::Engine         &engine,
+        Settings               &settings
+    );
     void readJobType(
         const std::string &fileName,
         std::unique_ptr<engine::Engine> &
@@ -73,12 +79,17 @@ namespace input
 
        public:
         explicit InputFileReader(
-            const std::string_view &,
-            engine::Engine &,
-            bool validateFilePaths,
-            bool resolveBuiltInSlakosPath
+            const std::string_view &filename,
+            engine::Engine         &engine,
+            Settings               &settings,
+            bool                    validateFilePaths,
+            bool                    resolveBuiltInSlakosPath
         );
-        explicit InputFileReader(const std::string_view &, engine::Engine &);
+        explicit InputFileReader(
+            const std::string_view &filename,
+            engine::Engine         &engine,
+            Settings               &settings
+        );
 
         void read();
         void addKeywords();

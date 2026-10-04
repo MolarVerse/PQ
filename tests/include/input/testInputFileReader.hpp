@@ -34,6 +34,7 @@
 #include "inputFileReader.hpp"
 #include "mmmdEngine.hpp"
 #include "optEngine.hpp"
+#include "settings.hpp"
 
 /**
  * @class TestInputFileReader
@@ -46,6 +47,7 @@ class TestInputFileReader : public ::testing::Test
    protected:
     std::string _fileName;
 
+    std::unique_ptr<Settings>               _settings;
     std::unique_ptr<engine::Engine>         _engine;
     std::unique_ptr<input::InputFileReader> _inputFileReader;
 
@@ -54,16 +56,23 @@ class TestInputFileReader : public ::testing::Test
 
     void SetUp() override
     {
+        _settings = std::make_unique<Settings>();
         // NOTE: here the MMOPTEngine is used as dummy engine
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine   = std::make_unique<engine::OptEngine>();
-        _mdEngine = std::make_unique<engine::MMMDEngine>();
-        _inputFileReader =
-            std::make_unique<input::InputFileReader>("input.in", *_engine);
-        _inputFileReader_mdEngine =
-            std::make_unique<input::InputFileReader>("input.in", *_mdEngine);
+        _engine          = std::make_unique<engine::OptEngine>();
+        _mdEngine        = std::make_unique<engine::MMMDEngine>();
+        _inputFileReader = std::make_unique<input::InputFileReader>(
+            "input.in",
+            *_engine,
+            *_settings
+        );
+        _inputFileReader_mdEngine = std::make_unique<input::InputFileReader>(
+            "input.in",
+            *_mdEngine,
+            *_settings
+        );
     }
 
     void TearDown() override { _removeFile(); }

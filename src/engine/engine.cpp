@@ -29,6 +29,7 @@
 #include "fileSettings.hpp"
 #include "logOutput.hpp"
 #include "potentialBruteForce.hpp"
+#include "settings.hpp"
 #include "stdoutOutput.hpp"
 #include "timingsSettings.hpp"
 

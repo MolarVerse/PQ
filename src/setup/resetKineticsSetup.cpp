@@ -75,26 +75,7 @@ namespace setup
      */
     void ResetKineticsSetup::setup()
     {
-        const auto nScale = settings::ResetKineticsSettings::getNScale();
-        auto       fScale = settings::ResetKineticsSettings::getFScale();
-        const auto nReset = settings::ResetKineticsSettings::getNReset();
-        auto       fReset = settings::ResetKineticsSettings::getFReset();
-        const auto nResetAngular =
-            settings::ResetKineticsSettings::getNResetAngular();
-        auto fResetAngular =
-            settings::ResetKineticsSettings::getFResetAngular();
-        auto fResetForces = settings::ResetKineticsSettings::getFResetForces();
-
-        const auto numberOfSteps =
-            settings::TimingsSettings::getNumberOfSteps();
-
-        fScale = (0 == fScale) ? numberOfSteps + 1 : fScale;
-        fReset = (0 == fReset) ? numberOfSteps + 1 : fReset;
-        fResetAngular =
-            (0 == fResetAngular) ? numberOfSteps + 1 : fResetAngular;
-        fResetForces = (0 == fResetForces) ? numberOfSteps + 1 : fResetForces;
-
-        _engine.getResetKinetics() = ::resetKinetics::ResetKinetics(
+        _engine.makeResetKinetics(::resetKinetics::ResetKinetics(
             nScale,
             fScale,
             nReset,

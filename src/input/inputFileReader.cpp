@@ -48,6 +48,7 @@
 #include "outputInputParser.hpp"
 #include "resetKineticsInputParser.hpp"
 #include "ringPolymerInputParser.hpp"
+#include "settings.hpp"
 #include "simulationBoxInputParser.hpp"
 #include "stringUtilities.hpp"
 #include "thermostatInputParser.hpp"
@@ -66,12 +67,14 @@ namespace input
      *
      * @param fileName
      * @param engine
+     * @param settings
      */
     InputFileReader::InputFileReader(
         const std::string_view &fileName,
-        engine::Engine         &engine
+        engine::Engine         &engine,
+        Settings               &settings
     )
-        : InputFileReader(fileName, engine, true, true)
+        : InputFileReader(fileName, engine, settings, true, true)
     {
     }
 
@@ -90,6 +93,7 @@ namespace input
     InputFileReader::InputFileReader(
         const std::string_view &fileName,
         engine::Engine         &engine,
+        Settings               &settings,
         bool                    validateFilePaths,
         bool                    resolveBuiltInSlakosPath
     )
@@ -120,7 +124,9 @@ namespace input
         _parsers.push_back(std::make_unique<IntegratorInputParser>());
         _parsers.push_back(std::make_unique<ManostatInputParser>());
         _parsers.push_back(std::make_unique<OutputInputParser>());
-        _parsers.push_back(std::make_unique<ResetKineticsInputParser>());
+        _parsers.push_back(
+            std::make_unique<ResetKineticsInputParser>(settings.resetKinetics)
+        );
         _parsers.push_back(
             std::make_unique<SimulationBoxInputParser>(
                 engine.getSharedSimulationBox()
@@ -383,13 +389,18 @@ namespace input
      *
      * @param fileName
      * @param engine
+     * @param settings
      *
      */
-    void readInputFile(const std::string_view &fileName, engine::Engine &engine)
+    void readInputFile(
+        const std::string_view &fileName,
+        engine::Engine         &engine,
+        Settings               &settings
+    )
     {
         out::StdoutOutput::writeRead("Input File", std::string(fileName));
 
-        InputFileReader inputFileReader(fileName, engine);
+        InputFileReader inputFileReader(fileName, engine, settings);
         inputFileReader.read();
         inputFileReader.postProcess();
         inputFileReader.validateInputConfiguration();

@@ -25,7 +25,9 @@
 #define _RESET_KINETICS_HPP_
 
 #include <cstddef>
+#include <mstd/types.hpp>
 
+#include "resetKineticsSettings.hpp"
 #include "vector3d.hpp"
 
 namespace physicalData
@@ -50,25 +52,10 @@ namespace resetKinetics
     class ResetKinetics
     {
        protected:
-        size_t _nStepsTemperatureReset;
-        size_t _frequencyTemperatureReset;
-        size_t _nStepsMomentumReset;
-        size_t _frequencyMomentumReset;
-        size_t _nStepsAngularReset;
-        size_t _frequencyAngularReset;
-        size_t _nStepsForcesReset;
+        mstd::ConstRef<ResetKineticsSettings> _settings;
 
        public:
-        ResetKinetics() = default;
-        ResetKinetics(
-            size_t nStepsTemperatureReset,
-            size_t frequencyTemperatureReset,
-            size_t nStepsMomentumReset,
-            size_t frequencyMomentumReset,
-            size_t nStepsAngularReset,
-            size_t frequencyAngularReset,
-            size_t nStepsForcesReset
-        );
+        explicit ResetKinetics(const ResetKineticsSettings &settings);
 
         void reset(
             size_t step,
@@ -89,16 +76,6 @@ namespace resetKinetics
             molsys::SimulationBox &,
             const linalg::Vec3D &angularMomentum
         );
-
-        /********************
-         * standard getters *
-         *******************/
-
-        [[nodiscard]] size_t getNStepsTemperatureReset() const;
-        [[nodiscard]] size_t getFrequencyTemperatureReset() const;
-        [[nodiscard]] size_t getNStepsMomentumReset() const;
-        [[nodiscard]] size_t getFrequencyMomentumReset() const;
-        [[nodiscard]] size_t getNStepsForcesReset() const;
     };
 
 }   // namespace resetKinetics
