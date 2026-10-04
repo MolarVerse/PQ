@@ -116,8 +116,3 @@ namespace
         ->Arg(8)
         ->Arg(12);
 }   // namespace
-
-namespace
-{
-    [[maybe_unused]] int gateProbeBenchmark(double value) { return value; }
-}   // namespace

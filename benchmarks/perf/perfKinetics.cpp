@@ -57,8 +57,3 @@ int main()
     std::cout << std::format("{:.6f}\n", sink);
     return 0;
 }
-
-namespace
-{
-    [[maybe_unused]] int gateProbePerf(double value) { return value; }
-}   // namespace
