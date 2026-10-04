@@ -27,3 +27,4 @@
 - migrate `HybridInputParser`
 - migrate `FPType` key of `GeneralInputParser`
 - construct engine type outside of parser
+- remove `Engine` completely from `InputFileReader`
