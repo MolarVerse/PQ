@@ -32,6 +32,7 @@
 
 #include "SPCIntraWater.hpp"
 #include "bondConstraint.hpp"
+#include "constraintSettings.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
@@ -414,7 +415,7 @@ namespace setup
             constraints->addBondConstraint(bondConstraintHH);
         }
 
-        constraints->activateShake();
+        settings::ConstraintSettings::activateShake();
     }
 
     /**

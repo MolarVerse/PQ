@@ -127,17 +127,6 @@ namespace engine
     }
 
     /**
-     * @brief checks if any constraints are activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isConstraintsActivated() const
-    {
-        return _constraints->isActive();
-    }
-
-    /**
      * @brief checks if the intra non bonded interactions are activated
      *
      * @return true

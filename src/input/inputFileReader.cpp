@@ -98,12 +98,8 @@ namespace input
         : _fileName(fileName)
     {
         // TODO: remove engine after rework
-        _parsers.push_back(
-            std::make_unique<CellListInputParser>(engine.getCellList())
-        );
-        _parsers.push_back(
-            std::make_unique<ConstraintsInputParser>(engine.getConstraints())
-        );
+        _parsers.push_back(std::make_unique<CellListInputParser>());
+        _parsers.push_back(std::make_unique<ConstraintsInputParser>());
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
             std::make_unique<FilesInputParser>(

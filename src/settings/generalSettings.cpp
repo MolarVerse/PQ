@@ -127,6 +127,23 @@ namespace settings
         _integrator = integratorType;
     }
 
+    /**
+     * @brief sets the number of cells for the cell list
+     *
+     * @param numberOfCells
+     */
+    void GeneralSettings::setNumberOfCells(size_t numberOfCells)
+    {
+        _numberOfCells = numberOfCells;
+    }
+
+    /**
+     * @brief gets the number of cells for the cell list
+     *
+     * @return size_t
+     */
+    size_t GeneralSettings::getNumberOfCells() { return _numberOfCells; }
+
     /***************************
      *                         *
      * standard getter methods *

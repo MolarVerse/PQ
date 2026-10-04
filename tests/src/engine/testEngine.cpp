@@ -90,24 +90,6 @@ TEST_F(TestEngine, isForceFieldNonCoulombicsActivatedTracksForceField)
 }
 
 /**
- * @brief tests isConstraintsActivated reflects the underlying constraints
- * object's active state
- *
- */
-TEST_F(TestEngine, isConstraintsActivatedTracksConstraints)
-{
-    EXPECT_FALSE(_engine->isConstraintsActivated());
-
-    _engine->getConstraints()->activateShake();
-
-    EXPECT_TRUE(_engine->isConstraintsActivated());
-
-    _engine->getConstraints()->deactivateShake();
-
-    EXPECT_FALSE(_engine->isConstraintsActivated());
-}
-
-/**
  * @brief tests isIntraNonBondedActivated reflects the underlying
  * intra-non-bonded object's active state
  *

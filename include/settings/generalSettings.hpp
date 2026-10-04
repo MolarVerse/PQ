@@ -66,6 +66,8 @@ namespace settings
         static inline bool _isCellListActivated =
             defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
 
+        static inline size_t _numberOfCells = defaults::NUMBER_OF_CELLS_DEFAULT;
+
        public:
         /***************************
          * standard setter methods *
@@ -84,6 +86,8 @@ namespace settings
         static void setVirialType(VirialType virialType);
         static void setIntegratorType(IntegratorType integratorType);
 
+        static void setNumberOfCells(size_t numberOfCells);
+
         /***************************
          * standard getter methods *
          ***************************/
@@ -100,6 +104,7 @@ namespace settings
 
         [[nodiscard]] static VirialType     getVirialType();
         [[nodiscard]] static IntegratorType getIntegratorType();
+        [[nodiscard]] static size_t         getNumberOfCells();
 
         /******************************
          * standard is-active methods *

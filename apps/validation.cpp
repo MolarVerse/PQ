@@ -33,6 +33,7 @@
 #include <string>
 #include <string_view>
 
+#include "constraintSettings.hpp"
 #include "engine.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
@@ -268,9 +269,9 @@ namespace
         }
     }
 
-    void validateInputDependencies(engine::Engine &engine)
+    void validateInputDependencies()
     {
-        if (engine.isConstraintsActivated() ||
+        if (settings::ConstraintSettings::isActive() ||
             settings::ForceFieldSettings::isActive())
         {
             if (!settings::FileSettings::isTopologyFileNameSet())
@@ -285,7 +286,7 @@ namespace
                 "Parameter file needed for requested simulation setup"
             );
 
-        if (engine.getConstraints()->isMShakeActive() &&
+        if (settings::ConstraintSettings::isMShakeActivated() &&
             settings::FileSettings::getMShakeFileName().empty())
             throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
@@ -332,7 +333,7 @@ namespace
             );
         }
 
-        if (engine.isConstraintsActivated() ||
+        if (settings::ConstraintSettings::isActive() ||
             settings::ForceFieldSettings::isActive())
         {
             requireFile(
@@ -509,7 +510,7 @@ cli::ValidationResult cli::validateInputFile(
         reader.read();
         reader.postProcess();
         reader.validateInputConfiguration();
-        validateInputDependencies(*engine);
+        validateInputDependencies();
         if (scope == ValidationScope::INSTALLED)
         {
             validateCompiledCapabilities();
