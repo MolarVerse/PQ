@@ -136,7 +136,6 @@ namespace defaults
     static constexpr double RMS_FORCE_CONV_DEFAULT      = 1.0e-6;
 
     static constexpr auto NUM_GUFF_COEFFICIENTS = 22;
-    // clang-format on
 
 }   // namespace defaults
 

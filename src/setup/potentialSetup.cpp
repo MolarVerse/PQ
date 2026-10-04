@@ -160,10 +160,10 @@ namespace setup
         const auto &pot    = _engine.getPotential();
         auto       &simBox = _engine.getSimulationBox();
 
-        // clang-format off
-    auto &nonCoulPot = dynamic_cast<pot::ForceFieldNonCoulomb&>(pot->getNonCoulombPotential());
-    nonCoulPot.setupNonCoulombicCutoffs();
-        // clang-format on
+        auto &nonCoulPot = dynamic_cast<pot::ForceFieldNonCoulomb &>(
+            pot->getNonCoulombPotential()
+        );
+        nonCoulPot.setupNonCoulombicCutoffs();
 
         const auto &extToIntVDWTypes =
             simBox.getExternalToInternalGlobalVDWTypes();
@@ -219,10 +219,13 @@ namespace setup
         const auto coulLRType =
             settings::PotentialSettings::getCoulombLongRangeType();
 
-        // clang-format off
-    log.writeSetupInfo(std::format("Coulomb long range type: {}", CoulombLongRangeTypeMeta::toString(coulLRType)));
-    log.writeEmptyLine();
-        // clang-format on
+        log.writeSetupInfo(
+            std::format(
+                "Coulomb long range type: {}",
+                CoulombLongRangeTypeMeta::toString(coulLRType)
+            )
+        );
+        log.writeEmptyLine();
 
         const auto coulRCut =
             settings::PotentialSettings::getCoulombRadiusCutOff();
@@ -235,23 +238,26 @@ namespace setup
         if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
             rfEpsilon = settings::PotentialSettings::getReactionFieldEpsilon();
 
-        // clang-format off
-    const auto coulRCutStr  = std::format("Coulomb radius cut-off: {}", coulRCut);
-    log.writeSetupInfo(coulRCutStr);
+        const auto coulRCutStr =
+            std::format("Coulomb radius cut-off: {}", coulRCut);
+        log.writeSetupInfo(coulRCutStr);
 
-    if (coulLRType == CoulombLongRangeType::WOLF)
-    {
-        const auto wolfParamStr = std::format("Wolf parameter:         {}", wolfParam);
-        log.writeSetupInfo(wolfParamStr);
-    }
-    else if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
-    {
-        const auto rfEpsilonStr = std::format("Reaction-field static relative permittivity: {}", rfEpsilon);
-        log.writeSetupInfo(rfEpsilonStr);
-    }
+        if (coulLRType == CoulombLongRangeType::WOLF)
+        {
+            const auto wolfParamStr =
+                std::format("Wolf parameter:         {}", wolfParam);
+            log.writeSetupInfo(wolfParamStr);
+        }
+        else if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
+        {
+            const auto rfEpsilonStr = std::format(
+                "Reaction-field static relative permittivity: {}",
+                rfEpsilon
+            );
+            log.writeSetupInfo(rfEpsilonStr);
+        }
 
-    log.writeEmptyLine();
-        // clang-format on
+        log.writeEmptyLine();
     }
 
     /**
@@ -268,10 +274,12 @@ namespace setup
             const auto nGlobalVdwTypes =
                 simBox.getExternalGlobalVdwTypes().size();
 
-            // clang-format off
-        log.writeSetupInfo(std::format("Non-coulombic potential: ForceField"));
-        log.writeSetupInfo(std::format("Total Global VDW types:  {}", nGlobalVdwTypes));
-            // clang-format on
+            log.writeSetupInfo(
+                std::format("Non-coulombic potential: ForceField")
+            );
+            log.writeSetupInfo(
+                std::format("Total Global VDW types:  {}", nGlobalVdwTypes)
+            );
         }
         else
         {

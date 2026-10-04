@@ -230,9 +230,9 @@ namespace input::restartFile
 
         try
         {
-            // clang-format off
-        moleculeType = std::make_unique<molsys::MoleculeType>(simulationBox.findMoleculeType(moltype));
-            // clang-format on
+            moleculeType = std::make_unique<molsys::MoleculeType>(
+                simulationBox.findMoleculeType(moltype)
+            );
         }
         catch (const exc::RstFileException &e)
         {

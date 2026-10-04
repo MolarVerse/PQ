@@ -34,17 +34,17 @@
 /**
  * @brief Conversion factors to SI units
  */
-// clang-format off
-    static constexpr double FORCE_UNIT_TO_SI    = KCAL_TO_J / AVOGADRO_NUMBER / ANGSTROM_TO_M;
-    static constexpr double MASS_UNIT_TO_SI     = AMU_TO_KG;
-    static constexpr double TIME_UNIT_TO_SI     = FS_TO_S;
-    static constexpr double VELOCITY_UNIT_TO_SI = ANGSTROM_TO_M;
-    static constexpr double ENERGY_UNIT_TO_SI   = KCAL_TO_J / AVOGADRO_NUMBER;
-    static constexpr double VOLUME_UNIT_TO_SI   = ANGSTROM3_TO_M3;
-    static constexpr double PRESSURE_UNIT_TO_SI = BAR_TO_P;
-    static constexpr double LENGTH_UNIT_TO_SI   = ANGSTROM_TO_M;
-    static constexpr double MOMENTUM_UNIT_TO_SI = G_TO_KG * ANGSTROM_TO_M / AVOGADRO_NUMBER;
-// clang-format on
+static constexpr double FORCE_UNIT_TO_SI =
+    KCAL_TO_J / AVOGADRO_NUMBER / ANGSTROM_TO_M;
+static constexpr double MASS_UNIT_TO_SI     = AMU_TO_KG;
+static constexpr double TIME_UNIT_TO_SI     = FS_TO_S;
+static constexpr double VELOCITY_UNIT_TO_SI = ANGSTROM_TO_M;
+static constexpr double ENERGY_UNIT_TO_SI   = KCAL_TO_J / AVOGADRO_NUMBER;
+static constexpr double VOLUME_UNIT_TO_SI   = ANGSTROM3_TO_M3;
+static constexpr double PRESSURE_UNIT_TO_SI = BAR_TO_P;
+static constexpr double LENGTH_UNIT_TO_SI   = ANGSTROM_TO_M;
+static constexpr double MOMENTUM_UNIT_TO_SI =
+    G_TO_KG * ANGSTROM_TO_M / AVOGADRO_NUMBER;
 
 /**
  * @brief Conversion factors to internal units

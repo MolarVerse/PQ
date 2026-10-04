@@ -52,9 +52,7 @@ namespace settings
 
         static inline bool _isRingPolymerMDActivated = false;
 
-        // clang-format off
         static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
-        // clang-format on
 
         static inline VirialType _virial = VirialType::MOLECULAR;
 

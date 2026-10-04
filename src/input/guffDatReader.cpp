@@ -294,12 +294,15 @@ namespace input::guffdat
             { guffCoefficients.push_back(stod(entry)); }
         );
 
-        // clang-format off
-    _guffCoulombCoeffs[moltype1.get() - 1][moltype2.get() - 1][atomType1.get()][atomType2.get()] = coulombCoeff;
-    _guffCoulombCoeffs[moltype2.get() - 1][moltype1.get() - 1][atomType2.get()][atomType1.get()] = coulombCoeff;
-    _isGuffPairSet[moltype1.get() - 1][moltype2.get() - 1][atomType1.get()][atomType2.get()]     = true;
-    _isGuffPairSet[moltype2.get() - 1][moltype1.get() - 1][atomType2.get()][atomType1.get()]     = true;
-        // clang-format on
+        _guffCoulombCoeffs[moltype1.get() - 1][moltype2.get() - 1]
+                          [atomType1.get()][atomType2.get()] = coulombCoeff;
+        _guffCoulombCoeffs[moltype2.get() - 1][moltype1.get() - 1]
+                          [atomType2.get()][atomType1.get()] = coulombCoeff;
+
+        _isGuffPairSet[moltype1.get() - 1][moltype2.get() - 1][atomType1.get()]
+                      [atomType2.get()] = true;
+        _isGuffPairSet[moltype2.get() - 1][moltype1.get() - 1][atomType2.get()]
+                      [atomType1.get()] = true;
 
         addNonCoulombPair(
             moltype1,
@@ -668,10 +671,9 @@ namespace input::guffdat
 
             for (AtomIndex j{0}; j.get() < nAtoms; ++j)
             {
-                // clang-format off
-            const auto atomType     = moleculeType->getAtomType(j);
-            const auto coulombCoeff = _guffCoulombCoeffs[i][i][atomType.get()][atomType.get()];
-                // clang-format on
+                const auto atomType = moleculeType->getAtomType(j);
+                const auto coulombCoeff =
+                    _guffCoulombCoeffs[i][i][atomType.get()][atomType.get()];
 
                 const auto prefactor     = coulombCoeff / COULOMB_PREFACTOR;
                 const auto prefactorSqrt = ::sqrt(prefactor);

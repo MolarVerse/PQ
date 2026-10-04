@@ -316,14 +316,24 @@ namespace setup
             const auto *const useDisp =
                 settings::QMSettings::useDispersionCorr() ? "on" : "off";
 
-            // clang-format off
-        const auto modelTypeMsg = std::format("Model type:            {}", MaceModelTypeMeta::toString(modelType));
-        const auto modelSizeMsg = std::format("Model size:            {}", MaceModelMeta::toString(modelSize));
-        const auto modelPathMsg = std::format("Model path:            {}", modelPath);
-        const auto fpMsg        = std::format("Floating point type:   {}", floatingPointStr);
-        const auto dispCorrMsg  = std::format("Dispersion Correction: {}", useDisp);
-        const auto modeMsg      = std::format("Evaluation mode:       {}", MaceModeMeta::toString(maceMode));
-            // clang-format on
+            const auto modelTypeMsg = std::format(
+                "Model type:            {}",
+                MaceModelTypeMeta::toString(modelType)
+            );
+            const auto modelSizeMsg = std::format(
+                "Model size:            {}",
+                MaceModelMeta::toString(modelSize)
+            );
+            const auto modelPathMsg =
+                std::format("Model path:            {}", modelPath);
+            const auto fpMsg =
+                std::format("Floating point type:   {}", floatingPointStr);
+            const auto dispCorrMsg =
+                std::format("Dispersion Correction: {}", useDisp);
+            const auto modeMsg = std::format(
+                "Evaluation mode:       {}",
+                MaceModeMeta::toString(maceMode)
+            );
 
             logOutput.writeSetupInfo(modelTypeMsg);
             logOutput.writeSetupInfo(modelSizeMsg);
@@ -358,11 +368,14 @@ namespace setup
             const bool useFloat64 =
                 settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 
-            // clang-format off
-        const auto modelPathMsg  = std::format("Model path:               {}", modelPath);
-        const auto gpuPreprocMsg = std::format("Using GPU pre-processing: {}", useGPUPreprocessing);
-        const auto fpMsg         = std::format("Using float64:            {}", useFloat64);
-            // clang-format on
+            const auto modelPathMsg =
+                std::format("Model path:               {}", modelPath);
+            const auto gpuPreprocMsg = std::format(
+                "Using GPU pre-processing: {}",
+                useGPUPreprocessing
+            );
+            const auto fpMsg =
+                std::format("Using float64:            {}", useFloat64);
 
             logOutput.writeSetupInfo(modelPathMsg);
             logOutput.writeSetupInfo(gpuPreprocMsg);
@@ -379,15 +392,32 @@ namespace setup
                 settings::QMSettings::isHubbardDerivsSet();
             const auto dispersion = settings::QMSettings::useDispersionCorr();
 
-            // clang-format off
-        const auto slakosTypeMsg           = std::format("DFTB approach:        {}", SlakosTypeMeta::toString(slakosType));
-        const auto slakosPathMsg           = std::format("sk file path:         {}", slakosPath);
-        const auto dispersionMsg           = std::format("Dispersion is turned: {}", dispersion ? "on" : "off");
-        const auto thirdOrderMsg           = std::format("3rd order is turned:  {}", thirdOrder ? "on" : "off");
-        const auto threeOBThirdOrderMsg    = std::format("3ob approach has been chosen while disabling 3rd order DFTB. This setup is not recommended.");
-        const auto hubbardDerivsMsg        = std::format("Hubbard derivatives:  {}", settings::string(hubbardDerivs));
-        const auto threeOBHubbardDerivsMsg = std::format("3ob approach has been chosen while setting custom Hubbard derivatives. This setup is not recommended.");
-            // clang-format on
+            const auto slakosTypeMsg = std::format(
+                "DFTB approach:        {}",
+                SlakosTypeMeta::toString(slakosType)
+            );
+            const auto slakosPathMsg =
+                std::format("sk file path:         {}", slakosPath);
+            const auto dispersionMsg = std::format(
+                "Dispersion is turned: {}",
+                dispersion ? "on" : "off"
+            );
+            const auto thirdOrderMsg = std::format(
+                "3rd order is turned:  {}",
+                thirdOrder ? "on" : "off"
+            );
+            const auto threeOBThirdOrderMsg = std::format(
+                "3ob approach has been chosen while disabling 3rd order DFTB. "
+                "This setup is not recommended."
+            );
+            const auto hubbardDerivsMsg = std::format(
+                "Hubbard derivatives:  {}",
+                settings::string(hubbardDerivs)
+            );
+            const auto threeOBHubbardDerivsMsg = std::format(
+                "3ob approach has been chosen while setting custom Hubbard "
+                "derivatives. This setup is not recommended."
+            );
 
             logOutput.writeSetupInfo(slakosTypeMsg);
             logOutput.writeSetupInfo(slakosPathMsg);
@@ -416,9 +446,10 @@ namespace setup
         {
             const auto xtbMethod = settings::QMSettings::getXtbMethod();
 
-            // clang-format off
-        const auto xtbMethodMsg = std::format("xTB Parametrization:   {}", XtbMethodMeta::toString(xtbMethod));
-            // clang-format on
+            const auto xtbMethodMsg = std::format(
+                "xTB Parametrization:   {}",
+                XtbMethodMeta::toString(xtbMethod)
+            );
 
             logOutput.writeSetupInfo(xtbMethodMsg);
         }

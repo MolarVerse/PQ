@@ -224,12 +224,14 @@ namespace setup
         const auto nImproperMsg =
             std::format("Impropers: {}", nImproperDihedrals);
 
-        // clang-format off
-    const auto nBondTypeMsg     = std::format("Bond Types:     {}", _nBondTypes);
-    const auto nAngleTypeMsg    = std::format("Angle Types:    {}", _nAngleTypes);
-    const auto nDihedralTypeMsg = std::format("Dihedral Types: {}", _nDihedralTypes);
-    const auto nImproperTypeMsg = std::format("Improper Types: {}", _nImproperTypes);
-        // clang-format on
+        const auto nBondTypeMsg =
+            std::format("Bond Types:     {}", _nBondTypes);
+        const auto nAngleTypeMsg =
+            std::format("Angle Types:    {}", _nAngleTypes);
+        const auto nDihedralTypeMsg =
+            std::format("Dihedral Types: {}", _nDihedralTypes);
+        const auto nImproperTypeMsg =
+            std::format("Improper Types: {}", _nImproperTypes);
 
         auto &logOutput = _engine.getLogOutput();
 
