@@ -33,6 +33,7 @@
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "resetKinetics.hpp"
+#include "resetKineticsSettings.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
@@ -213,17 +214,29 @@ namespace
 
         simulationBox.setTotalMass(7.0);
     }
-}   // namespace
 
-TEST(TestResetKinetics, constructorStoresStepAndFrequencyParameters)
-{
-    resetKinetics::ResetKinetics reset(1U, 2U, 3U, 4U, 50U, 100U, 11U);
-    EXPECT_EQ(reset.getNStepsTemperatureReset(), 1U);
-    EXPECT_EQ(reset.getFrequencyTemperatureReset(), 2U);
-    EXPECT_EQ(reset.getNStepsMomentumReset(), 3U);
-    EXPECT_EQ(reset.getFrequencyMomentumReset(), 4U);
-    EXPECT_EQ(reset.getNStepsForcesReset(), 11U);
-}
+    ResetKineticsSettings makeSettings(
+        size_t nScale,
+        size_t fScale,
+        size_t nReset,
+        size_t fReset,
+        size_t nResetAngular,
+        size_t fResetAngular,
+        size_t fResetForces
+    )
+    {
+        ResetKineticsSettings settings;
+        settings.setNScale(nScale);
+        settings.setFScale(fScale);
+        settings.setNReset(nReset);
+        settings.setFReset(fReset);
+        settings.setNResetAngular(nResetAngular);
+        settings.setFResetAngular(fResetAngular);
+        settings.setFResetForces(fResetForces);
+        settings.finalize();
+        return settings;
+    }
+}   // namespace
 
 TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
 {
@@ -345,8 +358,9 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
 
 TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
 {
-    auto                        *box = makeBox();
-    resetKinetics::ResetKinetics reset(0U, 0U, 0U, 0U, 0U, 0U, 1U);
+    auto                 *box      = makeBox();
+    ResetKineticsSettings settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 1U);
+    resetKinetics::ResetKinetics reset{settings};
 
     // Seed atom forces with non-zero values.
     for (auto &atom : box->getAtoms())
@@ -359,25 +373,6 @@ TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
             EXPECT_DOUBLE_EQ(atom->getForce()[i], 0.0);
 
     delete box;
-}
-
-/*********************************************
- *                                           *
- * default construction (value-initialised)  *
- *                                           *
- ********************************************/
-
-TEST(TestResetKinetics, valueInitialisedObjectHasZeroedParameters)
-{
-    // MDEngine holds the object as `_resetKinetics{}`; value-initialisation
-    // has to zero the members instead of leaving them indeterminate
-    const resetKinetics::ResetKinetics reset{};
-
-    EXPECT_EQ(reset.getNStepsTemperatureReset(), 0U);
-    EXPECT_EQ(reset.getFrequencyTemperatureReset(), 0U);
-    EXPECT_EQ(reset.getNStepsMomentumReset(), 0U);
-    EXPECT_EQ(reset.getFrequencyMomentumReset(), 0U);
-    EXPECT_EQ(reset.getNStepsForcesReset(), 0U);
 }
 
 /*****************************
@@ -867,8 +862,8 @@ TEST(TestResetKinetics, resetWithoutScheduledResetLeavesBoxUntouched)
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
     // reset() must be callable on a const object
-    const resetKinetics::ResetKinetics
-        reset(0U, never, 0U, never, 0U, never, 1U);
+    const auto settings = makeSettings(0U, never, 0U, never, 0U, never, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     const auto velocities      = velocitiesOf(*box);
     const auto temp            = data.getTemperature();
@@ -896,8 +891,8 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics
-        reset(0U, never, 0U, never, 0U, never, 1U);
+    const auto settings = makeSettings(0U, never, 0U, never, 0U, never, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     // values in PhysicalData deliberately do not match the box
     const linalg::Vec3D momentum(1.0, 2.0, 3.0);
@@ -930,7 +925,8 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics reset(0U, 7U, 0U, never, 0U, never, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, never, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     const auto before = velocitiesOf(*box);
     const auto vCom   = box->calculateMomentum() / box->getTotalMass();
@@ -975,7 +971,8 @@ TEST(TestResetKinetics, resetMomentumBranchOnlyShiftsVelocities)
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics reset(0U, never, 0U, 7U, 0U, never, 1U);
+    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, never, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     const auto before = velocitiesOf(*box);
     const auto vCom   = box->calculateMomentum() / box->getTotalMass();
@@ -1008,7 +1005,8 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics reset(0U, never, 0U, never, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, never, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     const auto momentum = box->calculateMomentum();
     const auto T_before = data.getTemperature();
@@ -1047,10 +1045,14 @@ TEST(TestResetKinetics, resetTemperatureAndMomentumDueTogetherActOnlyOnce)
     auto *boxBoth         = makeBox();
     auto  dataBoth        = makeData(*boxBoth);
 
-    const resetKinetics::ResetKinetics
-        onlyTemperature(0U, 7U, 0U, never, 0U, never, 1U);
-    const resetKinetics::ResetKinetics
-        temperatureAndMomentum(0U, 7U, 0U, 7U, 0U, never, 1U);
+    const auto settingsOnlyTemperature =
+        makeSettings(0U, 7U, 0U, never, 0U, never, 1U);
+    const auto settingsTemperatureAndMomentum =
+        makeSettings(0U, 7U, 0U, 7U, 0U, never, 1U);
+    const resetKinetics::ResetKinetics onlyTemperature{settingsOnlyTemperature};
+    const resetKinetics::ResetKinetics temperatureAndMomentum{
+        settingsTemperatureAndMomentum
+    };
 
     onlyTemperature.reset(7U, dataTemperature, *boxTemperature);
     temperatureAndMomentum.reset(7U, dataBoth, *boxBoth);
@@ -1074,7 +1076,8 @@ TEST(TestResetKinetics, resetAllBranchesMatchSequentialStaticCalls)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const resetKinetics::ResetKinetics reset(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     // reference: temperature -> momentum -> angular momentum
     auto *expectedBox = makeBox();
@@ -1134,7 +1137,8 @@ TEST(TestResetKinetics, resetTemperatureAndAngularDueTogetherKeepMomentumZero)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const resetKinetics::ResetKinetics reset(0U, 7U, 0U, never, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     reset.reset(7U, data, *box);
 
@@ -1160,7 +1164,8 @@ TEST(TestResetKinetics, resetMomentumAndAngularDueTogetherZeroBoth)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const resetKinetics::ResetKinetics reset(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     reset.reset(7U, data, *box);
 
@@ -1189,8 +1194,8 @@ TEST(TestResetKinetics, resetTemperatureIsScheduledByStepsAndFrequency)
 {
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics
-        reset(5U, 1000U, 0U, never, 0U, never, 1U);
+    const auto settings = makeSettings(5U, 1000U, 0U, never, 0U, never, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     EXPECT_TRUE(resetModifiesVelocities(reset, 1U));      // within nSteps
     EXPECT_TRUE(resetModifiesVelocities(reset, 5U));      // nSteps inclusive
@@ -1205,8 +1210,8 @@ TEST(TestResetKinetics, resetMomentumIsScheduledByStepsAndFrequency)
 {
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics
-        reset(0U, never, 5U, 1000U, 0U, never, 1U);
+    const auto settings = makeSettings(0U, never, 5U, 1000U, 0U, never, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     EXPECT_TRUE(resetModifiesVelocities(reset, 1U));
     EXPECT_TRUE(resetModifiesVelocities(reset, 5U));
@@ -1221,8 +1226,8 @@ TEST(TestResetKinetics, resetAngularMomentumIsScheduledByStepsAndFrequency)
 {
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics
-        reset(0U, never, 0U, never, 5U, 1000U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, never, 5U, 1000U, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     EXPECT_TRUE(resetModifiesVelocities(reset, 1U));
     EXPECT_TRUE(resetModifiesVelocities(reset, 5U));
@@ -1241,8 +1246,8 @@ TEST(TestResetKinetics, stepZeroTriggersEveryResetIndependentOfSchedule)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const resetKinetics::ResetKinetics
-        reset(0U, never, 0U, never, 0U, never, 1U);
+    const auto settings = makeSettings(0U, never, 0U, never, 0U, never, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     reset.reset(0U, data, *box);
 
@@ -1276,7 +1281,8 @@ TEST(TestResetKinetics, resetThrowsForZeroTemperatureInDataWhenScheduled)
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics reset(0U, 7U, 0U, never, 0U, never, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, never, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     const auto velocities = velocitiesOf(*box);
 
@@ -1301,7 +1307,8 @@ TEST(TestResetKinetics, resetOfMomentumAndAngularDoesNotNeedTemperature)
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics reset(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     EXPECT_NO_THROW(reset.reset(7U, data, *box));
 
@@ -1319,7 +1326,8 @@ TEST(TestResetKinetics, resetIsIdempotentForMomentumAndAngularMomentum)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const resetKinetics::ResetKinetics reset(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     reset.reset(7U, data, *box);
     const auto once = velocitiesOf(*box);
@@ -1336,7 +1344,8 @@ TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
 {
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
-    const resetKinetics::ResetKinetics reused(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics reused{settings};
 
     // first call with a very different system
     auto *boxA = makeBox();
@@ -1349,7 +1358,8 @@ TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
     auto  dataB = makeData(*boxB);
     reused.reset(7U, dataB, *boxB);
 
-    const resetKinetics::ResetKinetics fresh(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const auto freshSettings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics fresh{freshSettings};
     auto                              *boxC  = makeBox();
     auto                               dataC = makeData(*boxC);
     fresh.reset(7U, dataC, *boxC);
@@ -1366,8 +1376,9 @@ TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
 
 TEST(TestResetKinetics, resetForcesRespectsStepFrequency)
 {
-    auto                              *box = makeBox();
-    const resetKinetics::ResetKinetics reset(0U, 0U, 0U, 0U, 0U, 0U, 3U);
+    auto      *box      = makeBox();
+    const auto settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 3U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     for (auto &atom : box->getAtoms())
         atom->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
@@ -1400,7 +1411,8 @@ TEST(TestResetKinetics, resetAngularBranchUsesFreshCentreOfMass)
     data.calculateKinetics(*box);
     data.calculateTemperature(*box);
 
-    const resetKinetics::ResetKinetics reset(0U, never, 0U, never, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, never, 0U, 7U, 1U);
+    const resetKinetics::ResetKinetics reset{settings};
 
     reset.reset(7U, data, *box);
 

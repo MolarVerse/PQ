@@ -499,10 +499,12 @@ cli::ValidationResult cli::validateInputFile(
 
     try
     {
-        input::readJobType(std::string(inputFile), engine);
+        Settings   settings;
+        const auto _ = input::readJobType(std::string(inputFile));
 
         input::InputFileReader reader(
             inputFile,
+            settings,
             scope == ValidationScope::INSTALLED,
             false
         );

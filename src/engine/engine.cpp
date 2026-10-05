@@ -52,13 +52,14 @@ namespace engine
      * @details Initializes virial, potential, physical data, simulation box,
      * cell list, intra-non-bonded handler, force field, and constraints.
      */
-    Engine::Engine()
+    Engine::Engine(Settings settings)
         : _potential{std::make_shared<pot::PotentialBruteForce>()},
           _physicalData{std::make_shared<physicalData::PhysicalData>()},
           _simulationBox{std::make_shared<molsys::SimulationBox>()},
           _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
           _forceField{std::make_shared<ff::ForceField>()},
           _constraints{std::make_shared<constraints::Constraints>()},
+          _settings{settings},
           _impl{std::make_unique<Impl>()}
     {
     }
@@ -340,5 +341,12 @@ namespace engine
     {
         return _constraints;
     }
+
+    /**
+     * @brief get the reference to the settings
+     *
+     * @return const Settings&
+     */
+    const Settings &Engine::getSettings() const { return _settings; }
 
 }   // namespace engine

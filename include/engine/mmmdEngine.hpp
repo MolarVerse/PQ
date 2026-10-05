@@ -38,6 +38,8 @@ namespace engine
     class MMMDEngine : virtual public MDEngine
     {
        public:
+        using MDEngine::MDEngine;
+
         ~MMMDEngine() override = default;
 
         void calculateForces() override;

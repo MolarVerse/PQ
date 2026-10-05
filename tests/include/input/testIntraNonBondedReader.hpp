@@ -31,6 +31,7 @@
 #include "intraNonBondedReader.hpp"
 #include "mmmdEngine.hpp"
 #include "moleculeType.hpp"
+#include "settings.hpp"
 
 /**
  * @class TestIntraNonBondedReader
@@ -41,6 +42,7 @@
 class TestIntraNonBondedReader : public ::testing::Test
 {
    protected:
+    Settings                        _settings;
     std::unique_ptr<engine::Engine> _engine;
     std::unique_ptr<input::intraNonBondedReader::IntraNonBondedReader>
         _intraNonBondedReader;
@@ -55,7 +57,7 @@ class TestIntraNonBondedReader : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
         _engine->getSimulationBox().addMoleculeType(molecule1);
         settings::GeneralSettings::activateIntraNonBonded();

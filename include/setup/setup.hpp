@@ -24,8 +24,6 @@
 
 #define _SETUP_HPP_
 
-#include <string>
-
 namespace engine
 {
     class Engine;   // forward declaration
@@ -47,7 +45,7 @@ namespace timings
  */
 namespace setup
 {
-    void setupRequestedJob(const std::string &inputFileName, engine::Engine &);
+    void setupRequestedJob(engine::Engine &engine);
 
     void startSetup();
     void endSetup(engine::Engine &);

@@ -49,15 +49,15 @@ namespace engine
     class MDEngine : public Engine
     {
        protected:
-        std::unique_ptr<resetKinetics::ResetKinetics> _resetKinetics;
-        configurator::HybridConfigurator              _configurator{};
+        resetKinetics::ResetKinetics     _resetKinetics;
+        configurator::HybridConfigurator _configurator{};
 
         std::unique_ptr<integrator::Integrator> _integrator;
         std::unique_ptr<thermostat::Thermostat> _thermostat;
         std::unique_ptr<manostat::Manostat>     _manostat;
 
        public:
-        MDEngine();
+        explicit MDEngine(Settings settings);
         ~MDEngine() override = default;
 
         void         run() override;
@@ -80,8 +80,6 @@ namespace engine
         void makeThermostat(T thermostat);
         template <typename T>
         void makeManostat(T manostat);
-
-        void makeResetKinetics(const ResetKineticsSettings &settings);
 
         /***************************
          * standard getter methods *

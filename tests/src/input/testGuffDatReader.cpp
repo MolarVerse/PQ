@@ -615,7 +615,8 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
 
 TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
 {
-    engine::MMMDEngine   engine;
+    Settings             settings;
+    engine::MMMDEngine   engine{settings};
     molsys::Molecule     molecule1{MolType{1}};
     molsys::Molecule     molecule2{MolType{2}};
     molsys::MoleculeType moleculeType1(MolType{1});

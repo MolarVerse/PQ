@@ -103,7 +103,7 @@ TEST_F(TestSetup, setupThermostatTempRamping)
 TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
-    input::InputFileReader reader("input.in");
+    input::InputFileReader reader("input.in", _settings);
 
     reader.process({"nstep", "=", "10"});
     reader.process({"thermostat", "=", "berendsen"});
