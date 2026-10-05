@@ -43,7 +43,7 @@ namespace resetKinetics
     /**
      * @brief Construct a new Reset Kinetics:: Reset Kinetics object
      *
-     * @param nStepsForcesReset
+     * @param settings The settings for resetting kinetics
      */
     ResetKinetics::ResetKinetics(const ResetKineticsSettings &settings)
         : _settings(settings)
