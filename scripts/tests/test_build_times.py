@@ -11,6 +11,7 @@ from unittest import mock
 TOOL_DIR = Path(__file__).resolve().parents[1] / "pq_build_times"
 sys.path.insert(0, str(TOOL_DIR))
 
+import bt_compare as compare  # noqa: E402
 import bt_fingerprint as fp  # noqa: E402
 import bt_ninja as ninja  # noqa: E402
 import bt_report as report  # noqa: E402
@@ -555,6 +556,191 @@ class CliTests(unittest.TestCase):
         ):
             pqbt.main(["--data-dir", str(self.root), "snapshot"])
         self.assertIn("busy", str(caught.exception))
+
+
+
+def scenario(wall, steps, spread=0.01, runs=3, file=None, cpu=None, stable=True):
+    data = {"wall_s": wall, "steps": steps, "cpu_s": cpu if cpu is not None else wall * 4, "spread": spread,
+            "runs": [{"wall_s": wall}] * runs, "steps_stable": stable}
+    if file:
+        data["file"] = file
+    return data
+
+
+def compared_snapshot(ident, scenarios, fid="abc123abc123", pairs=1000, digest="d" * 64, load=0.1, **fingerprint_changes):
+    snapshot = make_snapshot(ident, fid=fid)
+    snapshot["scenarios"] = scenarios
+    snapshot["include_graph"] = {"objects": 10, "unique_files": 50, "include_pairs": pairs, "project_files": 20,
+                                 "project_pairs": pairs // 2, "digest": digest}
+    snapshot["load"] = {"start": load, "end": load}
+    snapshot["fingerprint"] = fingerprint(**fingerprint_changes)
+    return snapshot
+
+
+class JudgeTests(unittest.TestCase):
+    def verdict(self, steps_a, steps_b, wall_a, wall_b, threshold=0.05):
+        return compare.judge(steps_a, steps_b, wall_a, wall_b, threshold)
+
+    def test_every_combination_of_steps_and_timing(self):
+        self.assertEqual(("faster", "improved"), self.verdict(40, 20, 4.0, 2.0))
+        self.assertEqual(("slower", "regressed"), self.verdict(20, 40, 2.0, 4.0))
+        self.assertEqual(("same", "fewer steps, time within noise"), self.verdict(40, 20, 4.0, 3.95))
+        self.assertEqual(("same", "more steps, time within noise"), self.verdict(20, 40, 4.0, 4.05))
+        self.assertEqual(("same", "unchanged"), self.verdict(40, 40, 4.0, 4.05))
+        self.assertEqual("faster with the same steps: check noise", self.verdict(40, 40, 4.0, 2.0)[1])
+        self.assertEqual("slower with the same steps: check noise", self.verdict(40, 40, 2.0, 4.0)[1])
+        self.assertEqual("more steps but faster: check noise", self.verdict(20, 40, 4.0, 2.0)[1])
+        self.assertEqual("fewer steps but slower: check noise", self.verdict(40, 20, 2.0, 4.0)[1])
+
+    def test_a_change_must_exceed_the_relative_threshold_and_the_absolute_floor(self):
+        self.assertEqual("same", self.verdict(5, 5, 10.0, 10.9, threshold=0.10)[0])   # +9% under a 10% threshold
+        self.assertEqual("slower", self.verdict(5, 5, 10.0, 11.1, threshold=0.10)[0])
+        self.assertEqual("same", self.verdict(0, 0, 0.01, 0.05)[0])   # a no-op build: 0.04 s is below the 0.05 s floor
+        self.assertEqual("slower", self.verdict(0, 0, 0.01, 0.2)[0])
+
+
+class NoiseTests(unittest.TestCase):
+    def test_the_threshold_follows_twice_the_larger_spread_with_a_floor(self):
+        self.assertEqual((0.05, False), compare.noise_threshold(scenario(1, 1, spread=0.01), scenario(1, 1, spread=0.02)))
+        self.assertEqual((0.30, False), compare.noise_threshold(scenario(1, 1, spread=0.15), scenario(1, 1, spread=0.01)))
+
+    def test_a_single_run_widens_the_floor(self):
+        self.assertEqual((0.10, True), compare.noise_threshold(scenario(1, 1, spread=0.0, runs=1), scenario(1, 1, spread=0.01)))
+
+
+class CompareTests(unittest.TestCase):
+    def pair(self, a_scenarios, b_scenarios, **kwargs):
+        return (compared_snapshot("20261001T100000Z", a_scenarios, **kwargs.get("a", {})),
+                compared_snapshot("20261002T100000Z", b_scenarios, **kwargs.get("b", {})))
+
+    def test_different_fingerprints_are_refused_and_the_difference_is_named(self):
+        a = compared_snapshot("20261001T100000Z", {}, fid="aaaaaaaaaaaa")
+        b = compared_snapshot("20261002T100000Z", {}, fid="bbbbbbbbbbbb", compiler="clang 20", jobs=4)
+        with self.assertRaises(compare.CompareError) as caught:
+            compare.compare(a, b)
+        message = str(caught.exception)
+        self.assertIn("aaaaaaaaaaaa vs bbbbbbbbbbbb", message)
+        self.assertIn("compiler: 'g++ 15' vs 'clang 20'", message)
+        self.assertIn("jobs: 8 vs 4", message)
+
+    def test_rows_follow_the_scenario_order_and_skip_missing_ones(self):
+        a, b = self.pair(
+            {"touch_leaf": scenario(1.0, 6), "cold": scenario(100.0, 500, runs=1), "noop": scenario(0.01, 0)},
+            {"touch_leaf": scenario(1.0, 6), "cold": scenario(100.0, 500, runs=1)},
+        )
+        self.assertEqual(["cold", "touch_leaf"], [row["scenario"] for row in compare.compare(a, b)["rows"]])
+
+    def test_an_improvement_is_reported_with_its_changes(self):
+        a, b = self.pair({"touch_header_top": scenario(4.0, 40, file="h.hpp")}, {"touch_header_top": scenario(2.0, 20, file="h.hpp")})
+        row = compare.compare(a, b)["rows"][0]
+        self.assertEqual("improved", row["verdict"])
+        self.assertAlmostEqual(-0.5, row["wall_change"])
+        self.assertAlmostEqual(-0.5, row["steps_change"])
+
+    def test_scenarios_that_touched_different_files_are_not_compared(self):
+        a, b = self.pair({"touch_leaf": scenario(1.0, 6, file="src/a.cpp")}, {"touch_leaf": scenario(9.0, 60, file="src/b.cpp")})
+        row = compare.compare(a, b)["rows"][0]
+        self.assertFalse(row["comparable"])
+        self.assertIn("src/a.cpp vs src/b.cpp", row["verdict"])
+        self.assertNotIn("wall_change", row)
+
+    def test_the_include_graph_changes_and_digest_are_reported(self):
+        a, b = self.pair({}, {}, a={"pairs": 1000}, b={"pairs": 900, "digest": "e" * 64})
+        result = compare.compare(a, b)
+        pairs = next(row for row in result["graph"] if row["key"] == "include_pairs")
+        self.assertAlmostEqual(-0.1, pairs["change"])
+        self.assertTrue(result["digest_changed"])
+        self.assertFalse(compare.compare(*self.pair({}, {}))["digest_changed"])
+
+    def test_a_busy_start_is_flagged(self):
+        a, b = self.pair({}, {}, a={"load": 9.0})
+        self.assertEqual([a["id"]], compare.compare(a, b)["busy"])
+        self.assertEqual([], compare.compare(*self.pair({}, {}))["busy"])
+
+    def test_the_text_has_the_verdicts_the_noise_and_the_warnings(self):
+        a, b = self.pair(
+            {"cold": scenario(100.0, 500, runs=1), "touch_header_top": scenario(4.0, 40, file="h.hpp", stable=False)},
+            {"cold": scenario(80.0, 500, runs=1), "touch_header_top": scenario(2.0, 20, file="h.hpp")},
+            a={"load": 9.0},
+        )
+        text = compare.render(compare.compare(a, b))
+        for expected in ("before: 20261001T100000Z", "after : 20261002T100000Z", "improved", "-50.0%", "+-10%*", "identical",
+                         "single run per scenario", "was busy", "number of steps varied", "touch top header"):
+            self.assertIn(expected, text)
+
+
+class ResolveTests(unittest.TestCase):
+    def setUp(self):
+        self.snapshots = [make_snapshot(f"2026100{i}T100000Z") for i in (1, 2, 3)]
+        self.baseline = self.snapshots[0]
+
+    def resolve(self, reference, baseline="default"):
+        return compare.resolve(self.snapshots, self.baseline if baseline == "default" else baseline, reference)
+
+    def test_symbolic_references(self):
+        self.assertEqual("20261003T100000Z", self.resolve("latest")["id"])
+        self.assertEqual("20261002T100000Z", self.resolve("previous")["id"])
+        self.assertEqual("20261001T100000Z", self.resolve("baseline")["id"])
+
+    def test_ids_and_unique_prefixes(self):
+        self.assertEqual("20261002T100000Z", self.resolve("20261002T100000Z")["id"])
+        self.assertEqual("20261002T100000Z", self.resolve("20261002")["id"])
+
+    def test_errors(self):
+        for reference in ("2026", "nope"):
+            with self.assertRaises(compare.CompareError):
+                self.resolve(reference)
+        with self.assertRaises(compare.CompareError):
+            self.resolve("baseline", baseline=None)
+        with self.assertRaises(compare.CompareError):
+            compare.resolve(self.snapshots[:1], None, "previous")
+        with self.assertRaises(compare.CompareError):
+            compare.resolve([], None, "latest")
+
+
+class CompareCliTests(unittest.TestCase):
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        for ident, wall in (("20261001T100000Z", 4.0), ("20261002T100000Z", 3.0), ("20261003T100000Z", 2.0)):
+            store.save_snapshot(self.root, compared_snapshot(ident, {"touch_leaf": scenario(wall, 6, file="a.cpp")}))
+        store.save_snapshot(self.root, compared_snapshot("20261004T100000Z", {}, fid="bbbbbbbbbbbb", compiler="clang 20"))
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def run_cli(self, *args):
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            pqbt.main(["--data-dir", str(self.root), "compare", "--fingerprint", "abc123abc123", *args])
+        return output.getvalue()
+
+    def test_without_a_baseline_the_latest_is_compared_with_the_previous(self):
+        text = self.run_cli()
+        self.assertIn("before: 20261002T100000Z", text)
+        self.assertIn("after : 20261003T100000Z", text)
+
+    def test_with_a_baseline_the_latest_is_compared_with_it(self):
+        store.set_baseline(self.root, "abc123abc123", "20261001T100000Z")
+        self.assertIn("before: 20261001T100000Z", self.run_cli())
+
+    def test_the_baseline_is_not_compared_with_itself(self):
+        store.set_baseline(self.root, "abc123abc123", "20261003T100000Z")
+        self.assertIn("before: 20261002T100000Z", self.run_cli())
+
+    def test_one_argument_is_compared_with_the_latest_and_two_arguments_explicitly(self):
+        self.assertIn("before: 20261001T100000Z", self.run_cli("20261001"))
+        text = self.run_cli("20261001", "20261002")
+        self.assertIn("before: 20261001T100000Z", text)
+        self.assertIn("after : 20261002T100000Z", text)
+
+    def test_other_fingerprints_and_the_same_snapshot_are_refused(self):
+        with self.assertRaises(SystemExit) as caught:
+            self.run_cli("20261001T100000Z", "20261004T100000Z")
+        self.assertIn("different fingerprints", str(caught.exception))
+        with self.assertRaises(SystemExit) as caught:
+            self.run_cli("20261001T100000Z", "20261001T100000Z")
+        self.assertIn("same snapshot", str(caught.exception))
 
 
 if __name__ == "__main__":

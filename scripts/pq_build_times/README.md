@@ -8,6 +8,7 @@ it has its own parsers and schema, and its data never leaves your machine.
 python3 scripts/pq_build_times/pqbt.py snapshot --note "what changed"   # measure and store
 python3 scripts/pq_build_times/pqbt.py baseline set                     # pin the newest snapshot as the baseline
 python3 scripts/pq_build_times/pqbt.py report                           # HTML graph + terminal table
+python3 scripts/pq_build_times/pqbt.py compare [BEFORE] [AFTER]         # what did my change do?
 python3 scripts/pq_build_times/pqbt.py list                             # stored fingerprints
 ```
 
@@ -49,6 +50,23 @@ Data lives in `$PQ_BUILD_TIMES_DIR`, else `$XDG_DATA_HOME/pq-build-times`, else 
 `report` prints a table (the change against the baseline in brackets) and writes one self-contained HTML file with
 SVG charts: wall time per scenario over the snapshots, the rebuild scope (steps) and include-graph size, the
 baseline as a dashed line and every `--note` as a marker. It needs no network and no packages.
+
+## Comparing two snapshots
+
+`compare` (no arguments: the baseline, or the previous snapshot if there is none, against the latest; one argument:
+that snapshot against the latest; or `baseline`, `previous`, `latest`, an id or a unique id prefix) prints, in this
+order:
+
+1. the **deterministic figures**: include graph size and digest (`identical` means the include graph did not change),
+2. per scenario the **steps rebuilt** and the wall and CPU time with their change, the **noise threshold** and a verdict.
+
+The noise threshold is twice the larger run-to-run spread of the two snapshots, at least 5% (10% if a snapshot has
+only one run, e.g. the cold build, marked `*`), and a change below 0.05 s is never a change. The verdicts combine both
+kinds of evidence, as in the improvement loop: `improved` / `regressed` need fewer or more steps **and** a timing
+change beyond the noise. A timing change with unchanged steps (or the opposite direction) is reported as `check noise`
+and not as an effect of your change. Touch scenarios that touched different files are not compared.
+
+Snapshots with different fingerprints are refused, naming the differing keys.
 
 ## Habits that keep the numbers honest
 

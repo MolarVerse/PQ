@@ -1,0 +1,1 @@
+- Add "pqbt.py compare" to the local build-time tooling: compares two snapshots of one fingerprint, deterministic figures first, with timing verdicts judged against the measured run-to-run noise.
