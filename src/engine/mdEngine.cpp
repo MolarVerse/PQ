@@ -58,7 +58,7 @@ namespace engine
             norm(getPhysicalDataPtr()->getMomentum())
         );
 
-        _setStep(settings::TimingsSettings::getNumberOfSteps());
+        _setNSteps(settings::TimingsSettings::getNumberOfSteps());
         progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
 
         for (; getStep() <= _getNSteps(); _setStep(getStep() + 1))
