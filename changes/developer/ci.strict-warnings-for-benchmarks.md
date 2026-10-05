@@ -1,0 +1,1 @@
+- Build the perf and Google Benchmark sources in the arm Debug job, so they are held to the -Werror strict warning set (before, only lint built them, with errors tolerated). The benchmark smoke tests stay in the benchmark job.

@@ -125,17 +125,24 @@ jobs:
           python -m pip install gcovr
         shell: bash
 
+      # The Debug build uses -Werror and the strict warning set, which makes it
+      # the gate for the benchmark sources too (#620): lint builds them with
+      # errors tolerated, and the Release jobs do not use the strict flags.
+      # Only the arm Debug job runs this step with Debug, and it is the
+      # fastest job. The benchmark smoke tests are left to the benchmark job.
       - name: Build and Test Project
         id: build
         if : ${{ matrix.os != 'ubuntu-24.04' || (matrix.os == 'ubuntu-24.04' && matrix.build != 'Debug') }}
         run: |
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH="$BENCH_SOURCES" -DBUILD_WITH_BENCHMARKING="$BENCH_SOURCES" \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
-          ctest --test-dir build --output-on-failure
+          ctest --test-dir build --output-on-failure -LE benchmark
         env:
           CC: gcc-14
           CXX: g++-14
+          BENCH_SOURCES: ${{ matrix.build == 'Debug' && 'On' || 'Off' }}
 
       - name: Build and Test Project with coverage
         id: build-coverage
