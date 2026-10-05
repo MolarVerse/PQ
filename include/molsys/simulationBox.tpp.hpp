@@ -33,11 +33,13 @@ namespace molsys
      *
      * @tparam T
      * @param box
+     * @param boxSetViaStartFile Indicates if the box was set via the start file
      */
     template <typename T>
-    void SimulationBox::setBox(const T& box)
+    void SimulationBox::setBox(const T& box, bool boxSetViaStartFile)
     {
-        _box = std::make_shared<T>(box);
+        _box                = std::make_shared<T>(box);
+        _boxSetViaStartFile = boxSetViaStartFile;
     }
 
 }   // namespace molsys

@@ -34,6 +34,7 @@
 #include "optimizerSettings.hpp"
 #include "potentialSettings.hpp"
 #include "qmSettings.hpp"
+#include "settings.hpp"
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
@@ -71,12 +72,14 @@ namespace input
      * @details this is intended for cross-keyword checks that cannot be
      * verified within a single keyword parser.
      */
-    void InputFileReader::validateInputConfiguration() const
+    void InputFileReader::validateInputConfiguration(
+        const Settings& settings
+    ) const
     {
         _validateTimings();
         validateOptimizer();
         _validateQM();
-        _validateThermostat();
+        _validateThermostat(settings.simulationBoxSettings);
         _validateManostat();
         _validateCellList();
         _validateReactionFieldCoulomb();
@@ -228,7 +231,9 @@ namespace input
      * @throws exc::InputFileException if temperature keywords are missing,
      * contradictory, or define an invalid ramp
      */
-    void InputFileReader::_validateThermostat() const
+    void InputFileReader::_validateThermostat(
+        const SimulationBoxSettings& simBoxSettings
+    ) const
     {
         const auto thermostatType =
             settings::ThermostatSettings::getThermostatType();
@@ -262,8 +267,7 @@ namespace input
             }
         }
 
-        if (settings::SimulationBoxSettings::getInitializeVelocities() !=
-                InitVelocities::FALSE &&
+        if (simBoxSettings.getInitializeVelocities() != InitVelocities::FALSE &&
             !targetTempDefined && !startTempDefined && !endTempDefined)
             throw exc::InputFileException(
                 "Initializing velocities requires temp, start_temp, or end_temp"

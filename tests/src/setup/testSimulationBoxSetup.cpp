@@ -35,6 +35,7 @@
 #include "forceFieldSettings.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "simulationBoxSettings.hpp"
@@ -339,8 +340,6 @@ TEST_F(TestSetup, testSetTotalCharge)
 
 TEST_F(TestSetup, noDensityNoBox)
 {
-    settings::SimulationBoxSettings::setDensitySet(false);
-    settings::SimulationBoxSettings::setBoxSet(false);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW_MSG(
         simulationBoxSetup.checkBoxSettings(),
@@ -352,9 +351,9 @@ TEST_F(TestSetup, noDensityNoBox)
 TEST_F(TestSetup, noDensity)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
-    settings::SimulationBoxSettings::setDensitySet(false);
-    settings::SimulationBoxSettings::setBoxSet(true);
+    molsys::OrthorhombicBox box;
+    box.setBoxDimensions({10.0, 20.0, 30.0});
+    _engine->getSimulationBox().setBox(box, true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -368,9 +367,7 @@ TEST_F(TestSetup, noDensity)
 TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    settings::SimulationBoxSettings::setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
-    settings::SimulationBoxSettings::setBoxSet(false);
-    settings::SimulationBoxSettings::setDensitySet(true);
+    _settings->simulationBoxSettings.setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -387,9 +384,10 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     _engine->getSimulationBox().setDensity(
         12341243.1234
     );   // this should be ignored
-    _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
-    settings::SimulationBoxSettings::setDensitySet(true);
-    settings::SimulationBoxSettings::setBoxSet(true);
+    molsys::OrthorhombicBox box2;
+    box2.setBoxDimensions({10.0, 20.0, 30.0});
+    _engine->getSimulationBox().setBox(box2, true);
+    _settings->simulationBoxSettings.setDensity(0.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -593,8 +591,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
 TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
 {
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-
-    settings::SimulationBoxSettings::setInitializeVelocities(
+    _settings->simulationBoxSettings.setInitializeVelocities(
         InitVelocities::TRUE
     );
     setup::SimulationBoxSetup::setZeroVelocities(false);
@@ -624,7 +621,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
 {
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
 
-    settings::SimulationBoxSettings::setInitializeVelocities(
+    _settings->simulationBoxSettings.setInitializeVelocities(
         InitVelocities::TRUE
     );
     setup::SimulationBoxSetup::setZeroVelocities(true);
@@ -650,7 +647,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
 {
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
 
-    settings::SimulationBoxSettings::setInitializeVelocities(
+    _settings->simulationBoxSettings.setInitializeVelocities(
         InitVelocities::FORCE
     );
     setup::SimulationBoxSetup::setZeroVelocities(false);

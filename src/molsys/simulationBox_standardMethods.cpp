@@ -605,4 +605,14 @@ namespace molsys
         _box->setBoxSizeHasChanged(boxSizeHasChanged);
     }
 
+    /**
+     * @brief checks if the box was set via the start file
+     *
+     * @return bool
+     */
+    bool SimulationBox::wasBoxSetViaStartFile() const
+    {
+        return _boxSetViaStartFile;
+    }
+
 }   // namespace molsys

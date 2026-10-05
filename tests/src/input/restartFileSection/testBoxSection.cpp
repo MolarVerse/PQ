@@ -59,7 +59,7 @@ TEST_F(TestBoxSection, testProcess)
 {
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
-    EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), false);
+    EXPECT_EQ(wasBoxSetViaStartFile(), false);
 
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
     _section->process(line, *_engine);
@@ -104,5 +104,5 @@ TEST_F(TestBoxSection, testProcess)
         "Box angles must be positive and smaller than 180°"
     );
 
-    EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), true);
+    EXPECT_EQ(wasBoxSetViaStartFile(), true);
 }

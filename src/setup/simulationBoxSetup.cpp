@@ -47,6 +47,7 @@
 #include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 #include "strongTypes.hpp"
+#include "vector3d.hpp"
 
 namespace setup
 {
@@ -338,15 +339,17 @@ namespace setup
         auto &simBox = _engine.getSimulationBox();
 
         const auto isDensitySet =
-            settings::SimulationBoxSettings::getDensitySet();
-        const auto isBoxSet = settings::SimulationBoxSettings::getBoxSet();
+            _engine.getSettings().simulationBoxSettings.isDensitySet();
+        const auto isBoxSet = simBox.wasBoxSetViaStartFile();
 
         if (!isDensitySet && !isBoxSet)
             throw exc::UserInputException("Box dimensions and density not set");
 
         if (!isBoxSet)
         {
-            simBox.setDensity(settings::SimulationBoxSettings::getDensity());
+            simBox.setDensity(
+                _engine.getSettings().simulationBoxSettings.getDensity()
+            );
             const auto boxDimensions = simBox.calcBoxDimFromDensity();
 
             simBox.setBoxDimensions(boxDimensions);
@@ -363,7 +366,9 @@ namespace setup
         }
         else
         {
-            simBox.setDensity(settings::SimulationBoxSettings::getDensity());
+            simBox.setDensity(
+                _engine.getSettings().simulationBoxSettings.getDensity()
+            );
             const auto volume     = simBox.calculateVolume();
             const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
             const auto density    = simBox.getTotalMass() / volume * convFactor;
@@ -440,10 +445,11 @@ namespace setup
      */
     void SimulationBoxSetup::initVelocities()
     {
-        if (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                InitVelocities::FALSE ||
-            (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                 InitVelocities::TRUE &&
+        const auto initializeVelocities =
+            _engine.getSettings().simulationBoxSettings.getInitializeVelocities(
+            );
+        if (initializeVelocities == InitVelocities::FALSE ||
+            (initializeVelocities == InitVelocities::TRUE &&
              !getZeroVelocities()))
             return;
 
@@ -523,18 +529,14 @@ namespace setup
         );
         log.writeEmptyLine();
 
-        if (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                InitVelocities::TRUE &&
-            !getZeroVelocities())
-        {
-            log.writeSetupWarning(
-                std::format(
-                    "Ignoring 'init_velocities' because non-zero velocities in "
-                    "\"{}\"",
-                    settings::FileSettings::getStartFileName()
-                )
+        const auto initVelocities =
+            _engine.getSettings().simulationBoxSettings.getInitializeVelocities(
             );
-            out::StdoutOutput::writeSetupWarning(
+
+        if (initVelocities == InitVelocities::TRUE && !getZeroVelocities())
+        {
+            writeSetupWarning(
+                log,
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "
                     "\"{}\"",
@@ -543,11 +545,8 @@ namespace setup
             );
         }
 
-        if ((settings::SimulationBoxSettings::getInitializeVelocities() ==
-                 InitVelocities::TRUE &&
-             getZeroVelocities()) ||
-            settings::SimulationBoxSettings::getInitializeVelocities() ==
-                InitVelocities::FORCE)
+        if ((initVelocities == InitVelocities::TRUE && getZeroVelocities()) ||
+            initVelocities == InitVelocities::FORCE)
         {
             log.writeSetupInfo(
                 "velocities initialized with Maxwell-Boltzmann distribution"

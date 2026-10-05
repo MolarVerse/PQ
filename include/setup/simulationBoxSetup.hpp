@@ -24,6 +24,7 @@
 
 #define _SIMULATION_BOX_SETUP_HPP_
 
+#include "setupBase.hpp"
 namespace engine
 {
     class Engine;   // forward declaration
@@ -39,7 +40,7 @@ namespace setup
      * @brief Setup simulation box
      *
      */
-    class SimulationBoxSetup
+    class SimulationBoxSetup : public SetupBase
     {
        private:
         engine::Engine    &_engine;

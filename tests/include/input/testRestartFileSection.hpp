@@ -54,6 +54,12 @@ class TestBoxSection : public ::testing::Test
         //       and works therefore for all derived classes
         _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
+
+    [[nodiscard]]
+    bool wasBoxSetViaStartFile() const
+    {
+        return _engine->getSimulationBox().wasBoxSetViaStartFile();
+    }
 };
 
 /**

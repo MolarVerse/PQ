@@ -25,55 +25,38 @@
 #define _SIMULATION_BOX_SETTINGS_HPP_
 
 #include "enums/simulationBox.hpp"
-namespace settings
+#include "setting.hpp"
+
+/**
+ * @brief SimulationBoxSettings
+ *
+ * @details class to store settings of the simulation box
+ *
+ */
+class SimulationBoxSettings
 {
+   private:
+    Setting<double> _density;
 
-    /**
-     * @brief SimulationBoxSettings
-     *
-     * @details static class to store settings of the simulation box
-     *
-     */
-    class SimulationBoxSettings
-    {
-       private:
-        static inline double _density      = 0.0;
-        static inline bool   _isDensitySet = false;
-        static inline bool   _isBoxSet     = false;
+    Setting<InitVelocities> _initializeVelocities;
 
-        static inline InitVelocities _initializeVelocities =
-            InitVelocities::FALSE;
+   public:
+    SimulationBoxSettings();
 
-       public:
-        SimulationBoxSettings()  = delete;
-        ~SimulationBoxSettings() = delete;
+    /********************
+     * standard setters *
+     ********************/
 
-        SimulationBoxSettings(const SimulationBoxSettings &)       = delete;
-        SimulationBoxSettings(SimulationBoxSettings &&)            = delete;
-        SimulationBoxSettings &operator=(const SimulationBoxSettings &
-        )                                                          = delete;
-        SimulationBoxSettings &operator=(SimulationBoxSettings &&) = delete;
+    void setDensity(double density);
+    void setInitializeVelocities(InitVelocities initializeVelocities);
 
-        /********************
-         * standard setters *
-         ********************/
+    /********************
+     * standard getters *
+     ********************/
 
-        static void setDensity(double density);
-        static void setDensitySet(bool densitySet);
-        static void setBoxSet(bool boxSet);
-        static void setInitializeVelocities(
-            InitVelocities initializeVelocities
-        );
-
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] static double         getDensity();
-        [[nodiscard]] static bool           getDensitySet();
-        [[nodiscard]] static bool           getBoxSet();
-        [[nodiscard]] static InitVelocities getInitializeVelocities();
-    };
-}   // namespace settings
+    [[nodiscard]] double         getDensity() const;
+    [[nodiscard]] bool           isDensitySet() const;
+    [[nodiscard]] InitVelocities getInitializeVelocities() const;
+};
 
 #endif   // _SIMULATION_BOX_SETTINGS_HPP_

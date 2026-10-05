@@ -39,7 +39,8 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-struct Settings;   // forward declaration
+struct Settings;               // forward declaration
+class SimulationBoxSettings;   // forward declaration
 
 /**
  * @brief namespace for reading input files
@@ -88,7 +89,7 @@ namespace input
         void addKeywords();
         void process(const std::vector<std::string> &lineElements);
         void postProcess();
-        void validateInputConfiguration() const;
+        void validateInputConfiguration(const Settings &settings) const;
 
         /***************************
          * standard setter methods *
@@ -116,9 +117,11 @@ namespace input
          * input validation functions *
          ******************************/
 
-        void        _validateTimings() const;
-        void        _validateQM() const;
-        void        _validateThermostat() const;
+        void _validateTimings() const;
+        void _validateQM() const;
+        void _validateThermostat(
+            const SimulationBoxSettings &simBoxSettings
+        ) const;
         void        _validateManostat() const;
         void        _validateReactionFieldCoulomb() const;
         void        _validateRingPolymer() const;

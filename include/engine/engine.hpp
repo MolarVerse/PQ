@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <mstd/types.hpp>
 
 #include "constraints.hpp"
 #include "engineOutput.hpp"
@@ -71,7 +72,7 @@ namespace engine
             std::make_unique<waterModel::InterWater>();
 
        private:
-        Settings _settings;
+        mstd::ConstRef<Settings> _settings;
 
         struct Impl;
         std::unique_ptr<Impl> _impl;
