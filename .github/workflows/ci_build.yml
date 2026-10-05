@@ -430,9 +430,74 @@ jobs:
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
 
+  # BUILD_WITH_PYTHON_BINDINGS is off in every other job (#543). It installs
+  # PQAnalysis through pip while CMake configures and then has to report the
+  # capability, which testPQCli checks. Only the PQ executable is built, which
+  # is all that check needs.
+  python-bindings:
+    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    needs: changes
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install gcc-14 g++-14 mold ninja-build
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: python-bindings-release
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      - name: Build PQ with the Python bindings option
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_PYTHON_BINDINGS=ON \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=ON \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)" --target PQ
+        env:
+          CC: gcc-14
+          CXX: g++-14
+
+      - name: Collect build timings
+        if: always()
+        uses: ./.github/actions/upload-build-timings
+        with:
+          name: python-bindings
+          job-id: ${{ job.check_run_id }}
+
+      - name: Check the reported capabilities
+        run: ctest --test-dir build --output-on-failure -R testPQCli
+
   ci-build-gate:
     if: always()
-    needs: [changes, build, benchmark, build-static-lto, mpi-build]
+    needs: [changes, build, benchmark, build-static-lto, mpi-build, python-bindings]
     runs-on: ubuntu-24.04
     steps:
       - name: Check CI build results
@@ -441,7 +506,8 @@ jobs:
             "${{ needs.build.result }}" \
             "${{ needs.benchmark.result }}" \
             "${{ needs.build-static-lto.result }}" \
-            "${{ needs.mpi-build.result }}"; do
+            "${{ needs.mpi-build.result }}" \
+            "${{ needs.python-bindings.result }}"; do
             if [[ "$result" == "failure" ]]; then
               exit 1
             fi
