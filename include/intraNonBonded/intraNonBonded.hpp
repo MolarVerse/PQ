@@ -52,7 +52,7 @@ namespace intraNonBonded
      */
     class IntraNonBonded
     {
-       protected:
+       private:
         IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
         bool               _isActivated        = false;
 

@@ -29,7 +29,6 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "integratorInputParser.hpp"
-#include "mdEngine.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 

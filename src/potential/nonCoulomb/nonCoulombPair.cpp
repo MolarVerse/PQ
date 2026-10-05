@@ -39,8 +39,7 @@ namespace pot
         ExtVdwType vanDerWaalsType2,
         double     cutOff
     )
-        : _vanDerWaalsType1(vanDerWaalsType1),
-          _vanDerWaalsType2(vanDerWaalsType2),
+        : _vanDerWaalsTypes{vanDerWaalsType1, vanDerWaalsType2},
           _radialCutOff(cutOff)
     {
     }
@@ -84,13 +83,16 @@ namespace pot
     bool NonCoulombPair::operator==(const NonCoulombPair &other) const
     {
         auto isEq = true;
-        isEq      = isEq && _vanDerWaalsType1 == other._vanDerWaalsType1;
-        isEq      = isEq && _vanDerWaalsType2 == other._vanDerWaalsType2;
+        isEq = isEq && _vanDerWaalsTypes.first == other._vanDerWaalsTypes.first;
+        isEq =
+            isEq && _vanDerWaalsTypes.second == other._vanDerWaalsTypes.second;
         isEq = isEq && utilities::compare(_radialCutOff, other._radialCutOff);
 
         auto isEqSymm = true;
-        isEqSymm = isEqSymm && _vanDerWaalsType1 == other._vanDerWaalsType2;
-        isEqSymm = isEqSymm && _vanDerWaalsType2 == other._vanDerWaalsType1;
+        isEqSymm      = isEqSymm &&
+                   _vanDerWaalsTypes.first == other._vanDerWaalsTypes.second;
+        isEqSymm = isEqSymm &&
+                   _vanDerWaalsTypes.second == other._vanDerWaalsTypes.first;
         isEqSymm =
             isEqSymm && utilities::compare(_radialCutOff, other._radialCutOff);
 
@@ -110,7 +112,7 @@ namespace pot
      */
     void NonCoulombPair::setInternalType1(VdwType internalType1)
     {
-        _internalType1 = internalType1;
+        _internalTypes.first = internalType1;
     }
 
     /**
@@ -120,7 +122,7 @@ namespace pot
      */
     void NonCoulombPair::setInternalType2(VdwType internalType2)
     {
-        _internalType2 = internalType2;
+        _internalTypes.second = internalType2;
     }
 
     /**
@@ -166,7 +168,7 @@ namespace pot
      */
     ExtVdwType NonCoulombPair::getVanDerWaalsType1() const
     {
-        return _vanDerWaalsType1;
+        return _vanDerWaalsTypes.first;
     }
 
     /**
@@ -176,7 +178,7 @@ namespace pot
      */
     ExtVdwType NonCoulombPair::getVanDerWaalsType2() const
     {
-        return _vanDerWaalsType2;
+        return _vanDerWaalsTypes.second;
     }
 
     /**
@@ -184,14 +186,20 @@ namespace pot
      *
      * @return VdwType
      */
-    VdwType NonCoulombPair::getInternalType1() const { return _internalType1; }
+    VdwType NonCoulombPair::getInternalType1() const
+    {
+        return _internalTypes.first;
+    }
 
     /**
      * @brief get internal type 2
      *
      * @return VdwType
      */
-    VdwType NonCoulombPair::getInternalType2() const { return _internalType2; }
+    VdwType NonCoulombPair::getInternalType2() const
+    {
+        return _internalTypes.second;
+    }
 
     /**
      * @brief get energy cut off

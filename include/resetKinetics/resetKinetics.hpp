@@ -49,7 +49,7 @@ namespace resetKinetics
      */
     class ResetKinetics
     {
-       protected:
+       private:
         size_t _nStepsTemperatureReset;
         size_t _frequencyTemperatureReset;
         size_t _nStepsMomentumReset;

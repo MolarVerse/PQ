@@ -48,7 +48,7 @@ namespace timings
      */
     class Timer
     {
-       protected:
+       private:
         TimerId _id = TimerId::DefaultTimings;
 
         std::vector<TimingsSection> _timingDetails;

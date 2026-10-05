@@ -236,7 +236,7 @@ namespace pot
 
         if (nonCoulPair1 == std::nullopt && nonCoulPair2 == std::nullopt)
         {
-            if (_mixingRule == MixingRule::NONE)
+            if (getMixingRule() == MixingRule::NONE)
             {
                 throw exc::ParameterFileException(
                     "Not all combinations of global van der Waals types are "

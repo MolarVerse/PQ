@@ -65,9 +65,9 @@ namespace engine
 
         qmCalculation();
 
-        _constraints->applyDistanceConstraints(
-            *_simulationBox,
-            *_physicalData,
+        getConstraints()->applyDistanceConstraints(
+            getSimulationBox(),
+            getPhysicalData(),
             calculateTotalSimulationTime()
         );
 
@@ -98,7 +98,7 @@ namespace engine
             auto &data = _ringPolymerBeadsPhysicalData[i];
             auto &bead = _ringPolymerBeads[i];
 
-            _resetKinetics.reset(_step, data, bead);
+            _resetKinetics.reset(getStep(), data, bead);
         }
 
         combineBeads();

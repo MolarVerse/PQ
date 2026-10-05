@@ -106,12 +106,12 @@ namespace pot
 
         auto energy =
             _params.dissociationEnergy * oneMinusExpTerm * oneMinusExpTerm;
-        energy -= _energyCutOff;
-        energy -= _forceCutOff * (_radialCutOff - distance);
+        energy -= getEnergyCutOff();
+        energy -= getForceCutOff() * (getRadialCutOff() - distance);
 
         auto force  = -2.0 * _params.dissociationEnergy * _params.wellWidth;
         force      *= expTerm * oneMinusExpTerm;
-        force      -= _forceCutOff;
+        force      -= getForceCutOff();
 
         return {energy, force};
     }

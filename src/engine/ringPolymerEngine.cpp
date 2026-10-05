@@ -63,21 +63,31 @@ namespace engine
         const auto outputFreq =
             settings::OutputFileSettings::getOutputFrequency();
         const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = _step + step0;
+        const auto effStep = getStep() + step0;
 
-        if (0 == _step % outputFreq)
+        if (0 == getStep() % outputFreq)
         {
-            _engineOutput.writeXyzFile(*_simulationBox, effStep);
-            _engineOutput.writeVelFile(*_simulationBox, effStep);
-            _engineOutput.writeForceFile(*_simulationBox, effStep);
-            _engineOutput.writeChargeFile(*_simulationBox, effStep);
-            _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
+            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
+            getEngineOutput().writeVelFile(getSimulationBox(), effStep);
+            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+            getEngineOutput().writeChargeFile(getSimulationBox(), effStep);
+            getEngineOutput()
+                .writeRstFile(getSimulationBox(), *_thermostat, effStep);
 
-            _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads);
-            _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads, effStep);
-            _engineOutput.writeRingPolymerVelFile(_ringPolymerBeads, effStep);
-            _engineOutput.writeRingPolymerForceFile(_ringPolymerBeads, effStep);
-            _engineOutput.writeRingPolymerChargeFile(
+            getEngineOutput().writeRingPolymerRstFile(_ringPolymerBeads);
+            getEngineOutput().writeRingPolymerXyzFile(
+                _ringPolymerBeads,
+                effStep
+            );
+            getEngineOutput().writeRingPolymerVelFile(
+                _ringPolymerBeads,
+                effStep
+            );
+            getEngineOutput().writeRingPolymerForceFile(
+                _ringPolymerBeads,
+                effStep
+            );
+            getEngineOutput().writeRingPolymerChargeFile(
                 _ringPolymerBeads,
                 effStep
             );
@@ -99,34 +109,43 @@ namespace engine
             averageRPMDData[i].updateAverages(rpmdData[i]);
         }
 
-        if (0 == _step % outputFreq)
+        if (0 == getStep() % outputFreq)
         {
             for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
                 averageRPMDData[i].makeAverages(
                     static_cast<double>(outputFreq)
                 );
 
-            _physicalData->copy(mean(rpmdData));
-            _averagePhysicalData = mean(averageRPMDData);
+            getPhysicalData().copy(mean(rpmdData));
+            getAveragePhysicalData() = mean(averageRPMDData);
 
             const auto timeStep      = settings::TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
             const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
 
-            _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-            _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
-            _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
-            _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
+            getEngineOutput().writeEnergyFile(
+                effStep,
+                getAveragePhysicalData()
+            );
+            getEngineOutput().writeInstantEnergyFile(
+                effStep,
+                getPhysicalData()
+            );
+            getEngineOutput().writeMomentumFile(
+                effStep,
+                getAveragePhysicalData()
+            );
+            getEngineOutput().writeInfoFile(simTime, getAveragePhysicalData());
 
-            _engineOutput.writeRingPolymerEnergyFile(
-                step0 + _step,
+            getEngineOutput().writeRingPolymerEnergyFile(
+                step0 + getStep(),
                 averageRPMDData
             );
 
             for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
                 averageRPMDData[i] = physicalData::PhysicalData();
 
-            _averagePhysicalData = physicalData::PhysicalData();
+            getAveragePhysicalData() = physicalData::PhysicalData();
         }
 
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
@@ -187,7 +206,7 @@ namespace engine
             settings::RingPolymerSettings::getNumberOfBeads();
 
         std::ranges::for_each(
-            _simulationBox->getAtoms(),
+            getSimulationBox().getAtoms(),
             [](auto &atom)
             {
                 atom->setPosition({0.0, 0.0, 0.0});
@@ -207,9 +226,9 @@ namespace engine
                 const auto vel   = atom.getVelocity() / nBeads;
                 const auto force = atom.getForce() / nBeads;
 
-                _simulationBox->getAtom(i).addPosition(pos);
-                _simulationBox->getAtom(i).addVelocity(vel);
-                _simulationBox->getAtom(i).addForce(force);
+                getSimulationBox().getAtom(i).addPosition(pos);
+                getSimulationBox().getAtom(i).addVelocity(vel);
+                getSimulationBox().getAtom(i).addForce(force);
             }
         };
 
