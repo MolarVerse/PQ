@@ -3,6 +3,7 @@
 
   pqbt.py snapshot --note "what changed"   run the scenarios and store a snapshot
   pqbt.py report                           write the HTML graph and print the table
+  pqbt.py compare [BEFORE] [AFTER]         compare two snapshots (default: baseline or previous vs latest)
   pqbt.py baseline set [ID]                pin a snapshot as the baseline of its fingerprint
   pqbt.py list                             show the stored fingerprints
 
@@ -16,6 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import bt_compare  # noqa: E402
 import bt_fingerprint  # noqa: E402
 import bt_report  # noqa: E402
 import bt_snapshot  # noqa: E402
@@ -50,6 +52,11 @@ def parse_args(argv):
     report.add_argument("--fingerprint", help="fingerprint id (default: the one of the newest snapshot)")
     report.add_argument("--out", help="HTML file (default: <data dir>/report-<fingerprint>.html)")
     report.add_argument("--no-html", action="store_true", help="only print the table")
+
+    compare = commands.add_parser("compare", help="compare two snapshots of one fingerprint")
+    compare.add_argument("before", nargs="?", help="snapshot id (or prefix), 'baseline', 'previous' or 'latest'")
+    compare.add_argument("after", nargs="?", help="snapshot id (or prefix) or 'latest' (default)")
+    compare.add_argument("--fingerprint", help="fingerprint id (default: the one of the newest snapshot)")
 
     baseline = commands.add_parser("baseline", help="pin or show the baseline")
     baseline.add_argument("action", choices=["set", "show"])
@@ -113,6 +120,33 @@ def command_report(args, root):
     return 0
 
 
+def command_compare(args, root):
+    all_snapshots = bt_store.load_snapshots(root)
+    by_id = {snapshot["id"]: snapshot for snapshot in all_snapshots}
+    fingerprint = resolve_fingerprint(root, args.fingerprint)
+    snapshots = bt_store.load_snapshots(root, fingerprint)
+    baseline = bt_store.baseline_snapshot(root, fingerprint, snapshots)
+
+    def pick(reference):
+        # an id of another series is looked up as well, so that comparing across fingerprints is refused loudly
+        if reference in by_id:
+            return by_id[reference]
+        return bt_compare.resolve(snapshots, baseline, reference)
+
+    try:
+        after = pick(args.after or "latest")
+        if args.before:
+            before = pick(args.before)
+        else:
+            before = baseline if baseline and baseline["id"] != after["id"] else bt_compare.resolve(snapshots, None, "previous")
+        if before["id"] == after["id"]:
+            raise bt_compare.CompareError("both references are the same snapshot")
+        print(bt_compare.render(bt_compare.compare(before, after)))
+    except bt_compare.CompareError as error:
+        raise SystemExit(f"error: {error}")
+    return 0
+
+
 def command_baseline(args, root):
     fingerprint = resolve_fingerprint(root, args.fingerprint)
     snapshots = bt_store.load_snapshots(root, fingerprint)
@@ -143,7 +177,10 @@ def command_list(args, root):
 def main(argv=None):
     args = parse_args(sys.argv[1:] if argv is None else argv)
     root = bt_store.data_dir(args.data_dir)
-    handlers = {"snapshot": command_snapshot, "report": command_report, "baseline": command_baseline, "list": command_list}
+    handlers = {
+        "snapshot": command_snapshot, "report": command_report, "compare": command_compare,
+        "baseline": command_baseline, "list": command_list,
+    }
     return handlers[args.command](args, root)
 
 
