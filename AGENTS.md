@@ -83,6 +83,7 @@ PQ/
 ├── include/               # Header files (.hpp), mirrors src/ module layout
 ├── integration_tests/     # pytest-based end-to-end tests
 ├── scripts/               # Build/Singularity/conda scripts, changelog tooling + its tests
+│   └── pq_build_times/    # local build-time tracking (snapshots, baseline, graph); see its README
 ├── src/                   # Implementation files (.cpp), one CMakeLists.txt per module
 ├── tests/                 # GoogleTest unit tests, mirrors src/ + include/ layout
 ├── CMakeLists.txt         # Root build configuration
