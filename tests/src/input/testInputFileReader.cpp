@@ -32,9 +32,7 @@
 
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
-#include "mmmdEngine.hpp"
 #include "potentialSettings.hpp"
-#include "testUtils.hpp"
 #include "throwWithMessage.hpp"
 
 namespace
@@ -141,7 +139,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(input::readInputFile(filename));
+    ASSERT_NO_THROW(input::readInputFile(filename, _settings));
 }
 
 TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
@@ -159,7 +157,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
     }
 
     ASSERT_THROW_MSG(
-        input::readInputFile(_fileName),
+        input::readInputFile(_fileName, _settings),
         exc::InputFileException,
         "Missing required keyword \"rf_epsilon\" in input file: it must be "
         "set when the Coulomb long-range correction is set to "
@@ -182,7 +180,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
-    ASSERT_NO_THROW(input::readInputFile(_fileName));
+    ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
         settings::PotentialSettings::getCoulombLongRangeType(),
         CoulombLongRangeType::REACTION_FIELD
@@ -306,21 +304,19 @@ TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
 TEST_F(TestInputFileReader, testReadJobType)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    auto        engine   = std::unique_ptr<engine::Engine>();
-    ASSERT_NO_THROW(input::readJobType(filename, engine));
+    ASSERT_EQ(input::readJobType(filename), JobType::MM_MD);
     EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_MD);
-    test::checkType(engine, typeid(engine::MMMDEngine));
 
     filename = "fileNotFound";
     ASSERT_THROW_MSG(
-        input::readJobType(filename, engine),
+        const auto _ = input::readJobType(filename),
         exc::InputFileException,
         "\"fileNotFound\" File not found"
     );
 
     filename = "data/inputFileReader/missingJobType.txt";
     ASSERT_THROW_MSG(
-        input::readJobType(filename, engine),
+        const auto _ = input::readJobType(filename),
         exc::InputFileException,
         "Missing keyword \"jobtype\" in input file"
     );

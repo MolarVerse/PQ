@@ -35,6 +35,7 @@
 #include "intraWater.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
@@ -70,11 +71,13 @@ namespace engine
             std::make_unique<waterModel::InterWater>();
 
        private:
+        Settings _settings;
+
         struct Impl;
         std::unique_ptr<Impl> _impl;
 
        public:
-        Engine();
+        explicit Engine(Settings settings);
         virtual ~Engine();
 
         virtual void run()         = 0;
@@ -104,6 +107,8 @@ namespace engine
         [[nodiscard]] molsys::SimulationBox      &getSimulationBox();
         [[nodiscard]] physicalData::PhysicalData &getPhysicalData();
         [[nodiscard]] physicalData::PhysicalData &getAveragePhysicalData();
+
+        [[nodiscard]] const Settings &getSettings() const;
 
         /*************************
          * output getter methods *

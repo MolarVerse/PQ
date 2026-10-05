@@ -44,6 +44,7 @@
 class TestInputValidation : public ::testing::Test
 {
    protected:
+    Settings                                _settings;
     std::unique_ptr<engine::OptEngine>      _engine;
     std::unique_ptr<input::InputFileReader> _reader;
 
@@ -100,8 +101,9 @@ class TestInputValidation : public ::testing::Test
         settings::QMSettings::setIsHubbardDerivsSet(false);
         settings::QMSettings::setFennolModelPath("");
 
-        _engine = std::make_unique<engine::OptEngine>();
-        _reader = std::make_unique<input::InputFileReader>("input.in");
+        _engine = std::make_unique<engine::OptEngine>(_settings);
+        _reader =
+            std::make_unique<input::InputFileReader>("input.in", _settings);
     }
 
     void _setKeyword(const std::string &keyword)

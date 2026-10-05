@@ -33,8 +33,7 @@
 #include "inputConverter.hpp"
 #include "inputFileParser.hpp"
 #include "inputFileReader.hpp"
-#include "mmmdEngine.hpp"
-#include "optEngine.hpp"
+#include "settings.hpp"
 
 /**
  * @class TestInputFileReader
@@ -47,10 +46,8 @@ class TestInputFileReader : public ::testing::Test
    protected:
     std::string _fileName;
 
-    std::unique_ptr<engine::Engine>         _engine;
+    Settings                                _settings;
     std::unique_ptr<input::InputFileReader> _inputFileReader;
-
-    std::unique_ptr<engine::MDEngine> _mdEngine;
 
     void SetUp() override
     {
@@ -58,9 +55,8 @@ class TestInputFileReader : public ::testing::Test
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine          = std::make_unique<engine::OptEngine>();
-        _mdEngine        = std::make_unique<engine::MMMDEngine>();
-        _inputFileReader = std::make_unique<input::InputFileReader>("input.in");
+        _inputFileReader =
+            std::make_unique<input::InputFileReader>("input.in", _settings);
     }
 
     void TearDown() override { _removeFile(); }

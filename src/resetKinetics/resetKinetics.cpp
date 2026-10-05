@@ -43,30 +43,10 @@ namespace resetKinetics
     /**
      * @brief Construct a new Reset Kinetics:: Reset Kinetics object
      *
-     * @param nStepsTemperatureReset
-     * @param frequencyTemperatureReset
-     * @param nStepsMomentumReset
-     * @param frequencyMomentumReset
-     * @param nStepsAngularReset
-     * @param frequencyAngularReset
-     * @param nStepsForcesReset
+     * @param settings The settings for resetting kinetics
      */
-    ResetKinetics::ResetKinetics(
-        size_t nStepsTemperatureReset,
-        size_t frequencyTemperatureReset,
-        size_t nStepsMomentumReset,
-        size_t frequencyMomentumReset,
-        size_t nStepsAngularReset,
-        size_t frequencyAngularReset,
-        size_t nStepsForcesReset
-    )
-        : _nStepsTemperatureReset(nStepsTemperatureReset),
-          _frequencyTemperatureReset(frequencyTemperatureReset),
-          _nStepsMomentumReset(nStepsMomentumReset),
-          _frequencyMomentumReset(frequencyMomentumReset),
-          _nStepsAngularReset(nStepsAngularReset),
-          _frequencyAngularReset(frequencyAngularReset),
-          _nStepsForcesReset(nStepsForcesReset)
+    ResetKinetics::ResetKinetics(const ResetKineticsSettings &settings)
+        : _settings(settings)
     {
     }
 
@@ -89,14 +69,15 @@ namespace resetKinetics
         auto angularMomentum = physicalData.getAngularMomentum() * S_TO_FS;
         auto temperature     = physicalData.getTemperature();
 
-        auto resetTemp = (step <= _nStepsTemperatureReset);
-        resetTemp      = resetTemp || (0 == step % _frequencyTemperatureReset);
+        auto resetTemp = (step <= _settings->getNScale());
+        resetTemp      = resetTemp || (0 == step % _settings->getFScale());
 
-        auto resetMom = (step <= _nStepsMomentumReset);
-        resetMom      = resetMom || (0 == step % _frequencyMomentumReset);
+        auto resetMom = (step <= _settings->getNReset());
+        resetMom      = resetMom || (0 == step % _settings->getFReset());
 
-        auto resetAngular = (step <= _nStepsAngularReset);
-        resetAngular = resetAngular || (0 == step % _frequencyAngularReset);
+        auto resetAngular = (step <= _settings->getNResetAngular());
+        resetAngular =
+            resetAngular || (0 == step % _settings->getFResetAngular());
 
         if (resetTemp)
         {
@@ -243,7 +224,7 @@ namespace resetKinetics
         molsys::SimulationBox &simulationBox
     ) const
     {
-        if (0 != step % _nStepsForcesReset)
+        if (0 != step % _settings->getFResetForces())
             return;
 
         const auto forceVector = simulationBox.calculateTotalForceVector();
@@ -254,62 +235,6 @@ namespace resetKinetics
             simulationBox.getAtoms(),
             [forceCorrection](auto &atom) { atom->addForce(-forceCorrection); }
         );
-    }
-
-    /********************
-     *                  *
-     * standard getters *
-     *                  *
-     *******************/
-
-    /**
-     * @brief get the number of steps for temperature reset
-     *
-     * @return size_t
-     */
-    size_t ResetKinetics::getNStepsTemperatureReset() const
-    {
-        return _nStepsTemperatureReset;
-    }
-
-    /**
-     * @brief get the frequency for temperature reset
-     *
-     * @return size_t
-     */
-    size_t ResetKinetics::getFrequencyTemperatureReset() const
-    {
-        return _frequencyTemperatureReset;
-    }
-
-    /**
-     * @brief get the number of steps for momentum reset
-     *
-     * @return size_t
-     */
-    size_t ResetKinetics::getNStepsMomentumReset() const
-    {
-        return _nStepsMomentumReset;
-    }
-
-    /**
-     * @brief get the frequency for momentum reset
-     *
-     * @return size_t
-     */
-    size_t ResetKinetics::getFrequencyMomentumReset() const
-    {
-        return _frequencyMomentumReset;
-    }
-
-    /**
-     * @brief get the number of steps for force reset
-     *
-     * @return size_t
-     */
-    size_t ResetKinetics::getNStepsForcesReset() const
-    {
-        return _nStepsForcesReset;
     }
 
 }   // namespace resetKinetics

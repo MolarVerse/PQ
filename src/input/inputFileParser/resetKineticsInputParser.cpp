@@ -38,7 +38,10 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) nscale "<size_t>" 2) fscale
      * "<size_t>" 3) nreset "<size_t>" 4) freset "<size_t>"
      */
-    ResetKineticsInputParser::ResetKineticsInputParser()
+    ResetKineticsInputParser::ResetKineticsInputParser(
+        ResetKineticsSettings &settings
+    )
+        : _settings(settings)
     {
         addNScaleKeyword();
         addFScaleKeyword();
@@ -65,14 +68,13 @@ namespace input
                 "the temperature is reset"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::ResetKineticsSettings::setNScale(value); };
+        const auto setValue = [settings = _settings](size_t value)
+        { settings.get().setNScale(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
-                .metadata     = metaData,
-                .defaultValue = 0,
-                .onSet        = setValue,
+                .metadata = metaData,
+                .onSet    = setValue,
             }
         );
 
@@ -94,14 +96,13 @@ namespace input
                 "simulation"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::ResetKineticsSettings::setFScale(value); };
+        const auto setValue = [settings = _settings](size_t value)
+        { settings.get().setFScale(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
-                .metadata     = metaData,
-                .defaultValue = 0,
-                .onSet        = setValue,
+                .metadata = metaData,
+                .onSet    = setValue,
             }
         );
 
@@ -124,14 +125,13 @@ namespace input
                 "the momentum is reset"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::ResetKineticsSettings::setNReset(value); };
+        const auto setValue = [settings = _settings](size_t value)
+        { settings.get().setNReset(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
-                .metadata     = metaData,
-                .defaultValue = 0,
-                .onSet        = setValue,
+                .metadata = metaData,
+                .onSet    = setValue,
             }
         );
 
@@ -153,14 +153,13 @@ namespace input
                 "simulation"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::ResetKineticsSettings::setFReset(value); };
+        const auto setValue = [settings = _settings](size_t value)
+        { settings.get().setFReset(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
-                .metadata     = metaData,
-                .defaultValue = 0,
-                .onSet        = setValue,
+                .metadata = metaData,
+                .onSet    = setValue,
             }
         );
 
@@ -183,14 +182,13 @@ namespace input
                 "the angular momentum is reset"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::ResetKineticsSettings::setNResetAngular(value); };
+        const auto setValue = [settings = _settings](size_t value)
+        { settings.get().setNResetAngular(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
-                .metadata     = metaData,
-                .defaultValue = 0,
-                .onSet        = setValue,
+                .metadata = metaData,
+                .onSet    = setValue,
             }
         );
 
@@ -213,14 +211,13 @@ namespace input
                 "simulation"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::ResetKineticsSettings::setFResetAngular(value); };
+        const auto setValue = [settings = _settings](size_t value)
+        { settings.get().setFResetAngular(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
-                .metadata     = metaData,
-                .defaultValue = 0,
-                .onSet        = setValue,
+                .metadata = metaData,
+                .onSet    = setValue,
             }
         );
 
@@ -242,14 +239,13 @@ namespace input
                 "simulation"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::ResetKineticsSettings::setFResetForces(value); };
+        const auto setValue = [settings = _settings](size_t value)
+        { settings.get().setFResetForces(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
-                .metadata     = metaData,
-                .defaultValue = 0,
-                .onSet        = setValue,
+                .metadata = metaData,
+                .onSet    = setValue,
             }
         );
 

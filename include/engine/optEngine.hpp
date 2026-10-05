@@ -56,6 +56,8 @@ namespace engine
         bool _optStopped = false;
 
        public:
+        using Engine::Engine;
+
         void run() override;
         void takeStep();
         void writeOutput() override;

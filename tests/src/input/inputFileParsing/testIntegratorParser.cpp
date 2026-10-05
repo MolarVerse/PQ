@@ -25,9 +25,10 @@
 #include <string>
 #include <vector>
 
+#include "enums/integrator.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "integratorInputParser.hpp"
-#include "mdEngine.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
@@ -46,7 +47,10 @@ TEST_F(TestInputFileReader, testParseIntegrator)
 
     std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
+    EXPECT_EQ(
+        settings::GeneralSettings::getIntegratorType(),
+        IntegratorType::VELOCITY_VERLET
+    );
 
     _clearParser(parser);
 

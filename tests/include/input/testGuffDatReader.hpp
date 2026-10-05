@@ -48,6 +48,7 @@
 class TestGuffDatReader : public ::testing::Test
 {
    protected:
+    Settings                                       _settings;
     std::unique_ptr<input::guffdat::GuffDatReader> _guffDatReader;
     std::unique_ptr<engine::Engine>                _engine;
 
@@ -101,7 +102,7 @@ class TestGuffDatReader : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
         _engine->getSimulationBox().addMoleculeType(moleculeType1);
         _engine->getSimulationBox().addMoleculeType(moleculeType2);

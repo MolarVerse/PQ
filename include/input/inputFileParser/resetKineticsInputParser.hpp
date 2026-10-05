@@ -24,7 +24,10 @@
 
 #define _RESET_KINETICS_INPUT_PARSER_HPP_
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+#include "resetKineticsSettings.hpp"
 
 namespace input
 {
@@ -36,8 +39,10 @@ namespace input
      */
     class ResetKineticsInputParser : public InputFileParser
     {
+        mstd::Ref<ResetKineticsSettings> _settings;
+
        public:
-        ResetKineticsInputParser();
+        explicit ResetKineticsInputParser(ResetKineticsSettings& settings);
 
         void addNScaleKeyword();
         void addFScaleKeyword();

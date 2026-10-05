@@ -20,39 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_ENGINE_HPP_
+#include "settings.hpp"
 
-#define _TEST_ENGINE_HPP_
-
-#include <gtest/gtest.h>
-
-#include "mmmdEngine.hpp"
-#include "timingsSettings.hpp"
+#include "resetKineticsSettings.hpp"
 
 /**
- * @class TestEngine
- *
- * @brief Fixture for base Engine behavior, exercised through the concrete
- * MMMDEngine (an MM MD engine, used as a plain default-constructible
- * stand-in the same way other test suites already do).
- *
+ * @brief Finalize the settings by finalizing each individual setting component
  */
-class TestEngine : public ::testing::Test
-{
-   protected:
-    Settings                            _settings;
-    std::unique_ptr<engine::MMMDEngine> _engine;
-
-    void SetUp() override
-    {
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
-    }
-
-    void TearDown() override
-    {
-        settings::TimingsSettings::setStepCount(0);
-        settings::TimingsSettings::setTimeStep(0.0);
-    }
-};
-
-#endif   // _TEST_ENGINE_HPP_
+void Settings::finalize() { resetKinetics.finalize(); }

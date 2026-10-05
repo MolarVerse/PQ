@@ -39,6 +39,8 @@ namespace engine
     class QMMDEngine : virtual public MDEngine, public QMCapableEngine
     {
        public:
+        using MDEngine::MDEngine;
+
         ~QMMDEngine() override = default;
 
         void calculateForces() override;

@@ -58,19 +58,13 @@ namespace setup
     /**
      * @brief setup the engine
      *
-     * @param inputFileName
-     * @param engine
+     * @param engine The engine to set up.
      */
-    void setupRequestedJob(
-        const std::string& inputFileName,
-        engine::Engine&    engine
-    )
+    void setupRequestedJob(engine::Engine& engine)
     {
         auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
 
         startSetup();
-
-        input::readInputFile(inputFileName);
 
         // needs to happen before readFiles(): the parameter file reader
         // dynamic_casts the non-Coulomb potential to its concrete type
