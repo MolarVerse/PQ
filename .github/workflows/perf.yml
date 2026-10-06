@@ -30,6 +30,9 @@ permissions:
 
 jobs:
   perf-regression:
+    # This job builds PR code and later mints a write token. Bot-authored
+    # branches require a human-run performance check on a trusted branch.
+    if: github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'pq-bot/')
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout PR
