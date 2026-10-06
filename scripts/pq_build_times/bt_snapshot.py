@@ -7,6 +7,7 @@ import subprocess
 import time
 from datetime import datetime, timezone
 
+import bt_detail
 import bt_fingerprint
 import bt_ninja
 import bt_store
@@ -44,6 +45,8 @@ class Builder:
         self.jobs = jobs
         self.run = run
         self.clock = clock
+        self.last_steps = []    # the log entries the last build() added
+        self.cold_entries = []  # the log entries of the last cold build
         self.cmake_args = list(DEFAULT_ARGS) + [f"-DCMAKE_BUILD_TYPE={build_type}"] + list(cmake_args)
         self.fetch_args = [f"-DFETCHCONTENT_BASE_DIR={self.deps_dir}", "-DFETCHCONTENT_UPDATES_DISCONNECTED=ON"]
 
@@ -96,9 +99,18 @@ class Builder:
         if code != 0:
             raise SnapshotError("build failed:\n" + "\n".join(output.splitlines()[-25:]))
         after = self._read_log()
-        result = bt_ninja.summarise_steps(bt_ninja.parse_log(after - before))
+        self.last_steps = bt_ninja.parse_log(after - before)
+        result = bt_ninja.summarise_steps(self.last_steps)
         result["wall_s"] = round(wall, 3)
         return result
+
+    def all_entries(self):
+        """The newest log entry of every output: when each file was last built, whatever build that was."""
+        try:
+            with open(self._log_path(), encoding="utf-8", errors="replace") as handle:
+                return bt_ninja.latest_per_output(bt_ninja.parse_log(bt_ninja.ordered_lines(handle.read())))
+        except OSError:
+            return []
 
     def cold(self):
         """Configure and build from nothing. The dependency cache is filled first so the network is not timed."""
@@ -108,6 +120,7 @@ class Builder:
         self.wipe_build_dir()
         configure_s = self.configure()
         result = self.build()
+        self.cold_entries = self.last_steps
         result["configure_s"] = round(configure_s, 3)
         return result
 
@@ -161,6 +174,27 @@ def aggregate(runs):
     return aggregated
 
 
+def submodule_problems(source_root, run=bt_fingerprint.default_run):
+    """[(path, reason, used by the build)] for submodules that are not at the commit the repository records.
+
+    A stale submodule makes the build fail (or measure something else), so it is worth knowing before the
+    long cold build starts. A submodule is "used" if a CMake file mentions its path.
+    """
+    reasons = {"+": "is checked out at a different commit than the one recorded", "-": "is not initialised",
+               "U": "has merge conflicts"}
+    problems = []
+    for line in run(["git", "-C", source_root, "submodule", "status"]).splitlines():
+        if not line or line[0] not in reasons:
+            continue
+        parts = line[1:].split()
+        if len(parts) < 2:
+            continue
+        used = bool(run(["git", "-C", source_root, "grep", "-l", "-F", parts[1], "--",
+                         ":(glob)**/CMakeLists.txt", ":(glob)**/*.cmake"]).strip())
+        problems.append((parts[1], reasons[line[0]], used))
+    return problems
+
+
 def git_state(source_root, run=bt_fingerprint.default_run):
     def git(*args):
         return run(["git", "-C", source_root, *args]).strip()
@@ -179,14 +213,16 @@ def git_state(source_root, run=bt_fingerprint.default_run):
 
 
 def take_snapshot(builder, store_root, scenarios, repeat, cold_runs, note, overrides, ccache,
-                  now=lambda: datetime.now(timezone.utc), loadavg=os.getloadavg, log=print):
-    """Run the scenarios and return the snapshot (not yet saved)."""
+                  now=lambda: datetime.now(timezone.utc), loadavg=os.getloadavg, log=print,
+                  churn_days=bt_detail.CHURN_DAYS):
+    """Run the scenarios and return (snapshot, detail), not yet saved."""
     unknown = [name for name in scenarios if name not in SCENARIOS]
     if unknown:
         raise SnapshotError(f"unknown scenario(s): {', '.join(unknown)}; choose from {', '.join(SCENARIOS)}")
     started = now()
     load_start = loadavg()[0]
     results = {}
+    touches = {}
 
     if "cold" in scenarios:
         log(f"cold build x{cold_runs} (this is the long one)")
@@ -194,7 +230,8 @@ def take_snapshot(builder, store_root, scenarios, repeat, cold_runs, note, overr
     else:
         builder.ensure_built()
 
-    graph = bt_ninja.include_graph(bt_ninja.parse_deps(builder.deps_text()), builder.source_root, builder.build_dir)
+    deps = bt_ninja.parse_deps(builder.deps_text())
+    graph = bt_ninja.include_graph(deps, builder.source_root, builder.build_dir)
     fingerprint = bt_fingerprint.collect(
         builder.compiler_path(), builder.build_type, builder.target, builder.cmake_args, builder.jobs, ccache
     )
@@ -215,17 +252,26 @@ def take_snapshot(builder, store_root, scenarios, repeat, cold_runs, note, overr
             continue
         runs = []
         log(f"{scenario} ({targets[key]}) x{repeat}")
-        for _ in range(repeat):
+        for number in range(repeat):
             builder.touch(targets[key])
             runs.append(builder.build())
+            if number == 0:
+                touches[scenario] = {"file": targets[key], "wall_s": runs[0]["wall_s"], "entries": list(builder.last_steps)}
         results[scenario] = aggregate(runs)
         results[scenario]["file"] = targets[key]
 
     load_end = loadavg()[0]
-    return {
+    churn, churn_ref = bt_detail.git_churn(builder.source_root, churn_days)
+    ident = bt_store.snapshot_id(started)
+    detail = bt_detail.make_detail(
+        ident, fingerprint_id, builder.jobs, "cold" if "cold" in scenarios else "log",
+        builder.cold_entries if "cold" in scenarios else builder.all_entries(), deps, touches,
+        builder.source_root, builder.build_dir, churn, churn_ref, churn_days,
+    )
+    snapshot = {
         "schema_version": bt_store.SCHEMA_VERSION,
         "kind": bt_store.KIND,
-        "id": bt_store.snapshot_id(started),
+        "id": ident,
         "created_at": started.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "note": note or "",
         "fingerprint_id": fingerprint_id,
@@ -238,3 +284,4 @@ def take_snapshot(builder, store_root, scenarios, repeat, cold_runs, note, overr
         "scenarios": results,
         "include_graph": graph["metrics"],
     }
+    return snapshot, detail
