@@ -263,8 +263,6 @@ namespace molsys
             setBoxDimensions(boxDimensions);
             setBoxAngles(boxAngles);
         }
-
-        _volume = calculateVolume();
     }
 
     /**

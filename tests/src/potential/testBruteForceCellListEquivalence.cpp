@@ -76,8 +76,10 @@ namespace
         const std::vector<Placement> &placements
     )
     {
-        molsys::SimulationBox simBox;
-        simBox.setBoxDimensions({kBoxEdge, kBoxEdge, kBoxEdge});
+        molsys::SimulationBox   simBox;
+        molsys::OrthorhombicBox orthoBox;
+        orthoBox.setBoxDimensions({kBoxEdge, kBoxEdge, kBoxEdge});
+        simBox.setBox(orthoBox, false);
 
         auto buildMoleculeType = [](MolType molType, double charge)
         {

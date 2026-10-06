@@ -74,7 +74,9 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
     simBox.addAtom(std::make_shared<molsys::Atom>(atom3));
     simBox.addAtom(std::make_shared<molsys::Atom>(atom4));
 
-    simBox.setBoxDimensions({10.0, 10.0, 10.0});
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({10.0, 10.0, 10.0});
+    simBox.setBox(oBox, false);
     simBox.addInnerRegionCenterAtoms({0, 1, 2});
 
     hybridConfigurator.calculateInnerRegionCenter(simBox);
@@ -137,7 +139,9 @@ TEST(testHybridConfigurator, assignHybridZones)
     configurator::HybridConfigurator hybridConfigurator;
     molsys::SimulationBox            simBox;
 
-    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({100.0, 100.0, 100.0});
+    simBox.setBox(oBox, false);
 
     settings::HybridSettings::setCoreRadius(6.0);
     settings::HybridSettings::setLayerRadius(12.0);
@@ -213,7 +217,9 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     configurator::HybridConfigurator hybridConfigurator;
     molsys::SimulationBox            simBox;
 
-    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({100.0, 100.0, 100.0});
+    simBox.setBox(oBox, false);
 
     settings::HybridSettings::setCoreRadius(0.0);
     settings::HybridSettings::setLayerRadius(7.0);
@@ -245,7 +251,9 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     configurator::HybridConfigurator hybridConfigurator;
     molsys::SimulationBox            simBox;
 
-    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({100.0, 100.0, 100.0});
+    simBox.setBox(oBox, false);
 
     settings::HybridSettings::setCoreRadius(2.0);
     settings::HybridSettings::setLayerRadius(4.0);
@@ -371,7 +379,9 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     configurator::HybridConfigurator hybridConfigurator;
     molsys::SimulationBox            simBox;
 
-    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({100.0, 100.0, 100.0});
+    simBox.setBox(oBox, false);
 
     settings::HybridSettings::setLayerRadius(12.0);
     settings::HybridSettings::setSmoothingRegionThickness(2.0);

@@ -204,8 +204,10 @@ TEST_F(TestForceField, findImproperDihedralTypeByIdNotFoundError)
  */
 TEST_F(TestForceField, calculateBondedInteractions)
 {
-    auto box = molsys::SimulationBox();
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+    auto                    box = molsys::SimulationBox();
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({10.0, 10.0, 10.0});
+    box.setBox(oBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(20.0);

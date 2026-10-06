@@ -541,7 +541,7 @@ namespace molsys
      *
      * @return double
      */
-    double SimulationBox::getVolume() const { return _box->getVolume(); }
+    double SimulationBox::getVolume() const { return _box->calculateVolume(); }
 
     /**
      * @brief gets if the box size has changed
@@ -571,28 +571,6 @@ namespace molsys
     linalg::Vec3D SimulationBox::getBoxAngles() const
     {
         return _box->getBoxAngles();
-    }
-
-    /**
-     * @brief sets the volume
-     *
-     * @param volume
-     */
-    void SimulationBox::setVolume(const double volume) const
-    {
-        _box->setVolume(volume);
-    }
-
-    /**
-     * @brief sets the box dimensions
-     *
-     * @param boxDimensions
-     */
-    void SimulationBox::setBoxDimensions(
-        const linalg::Vec3D &boxDimensions
-    ) const
-    {
-        _box->setBoxDimensions(boxDimensions);
     }
 
     /**

@@ -46,7 +46,9 @@ class TestCellList : public ::testing::Test
         _cellList->resizeCells();
 
         _simulationBox = std::make_unique<molsys::SimulationBox>();
-        _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
+        molsys::OrthorhombicBox orthoBox;
+        orthoBox.setBoxDimensions({10.0, 10.0, 10.0});
+        _simulationBox->setBox(orthoBox, false);
         settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
     }
 };

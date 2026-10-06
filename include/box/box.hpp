@@ -55,8 +55,7 @@ namespace molsys
        protected:
         linalg::Vec3D _boxDimensions;
 
-        bool   _boxSizeHasChanged = false;
-        double _volume;
+        bool _boxSizeHasChanged = false;
 
        public:
         virtual ~Box() = default;
@@ -103,14 +102,12 @@ namespace molsys
          ********************/
 
         [[nodiscard]] bool          getBoxSizeHasChanged() const;
-        [[nodiscard]] double        getVolume() const;
         [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
 
         /********************
          * standard setters *
          ********************/
 
-        void setVolume(double volume);
         void setBoxSizeHasChanged(bool boxSizeHasChanged);
     };
 

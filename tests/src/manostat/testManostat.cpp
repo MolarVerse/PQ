@@ -150,7 +150,9 @@ namespace
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
         settings::TimingsSettings::setTimeStep(1.0);
 
-        simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+        molsys::OrthorhombicBox oBox;
+        oBox.setBoxDimensions({10.0, 10.0, 10.0});
+        simulationBox.setBox(oBox, false);
         simulationBox.setVolume(simulationBox.calculateVolume());
         simulationBox.setTotalMass(2.0);
 
@@ -296,7 +298,9 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
 TEST_F(TestManostat, testApplyBerendsenManostat)
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(0.99);
-    _box->setBoxDimensions({2.0, 2.0, 2.0});
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({2.0, 2.0, 2.0});
+    _box->setBox(oBox, false);
     const auto boxOld = _box->getBoxDimensions();
 
     auto       molecule = molsys::Molecule();
@@ -433,7 +437,9 @@ TEST_F(
 )
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(10.0);
-    _box->setBoxDimensions({2.0, 2.0, 2.0});
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({2.0, 2.0, 2.0});
+    _box->setBox(oBox, false);
 
     settings::TimingsSettings::setTimeStep(0.5);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
@@ -486,7 +492,9 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     settings::ThermostatSettings::setActualTargetTemperature(0.0);
     settings::TimingsSettings::setTimeStep(0.5);
 
-    _box->setBoxDimensions({10.0, 10.0, 10.0});
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({10.0, 10.0, 10.0});
+    _box->setBox(oBox, false);
     _box->setVolume(1000.0);
 
     _data->setVirial(linalg::tensor3D(0.0));

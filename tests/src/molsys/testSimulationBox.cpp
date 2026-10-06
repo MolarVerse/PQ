@@ -30,6 +30,7 @@
 #include <vector>
 
 #include "exceptions.hpp"
+#include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
@@ -194,7 +195,9 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(1.0);
-    _simulationBox->setBoxDimensions({1.99, 10.0, 10.0});
+    molsys::OrthorhombicBox orthoBox;
+    orthoBox.setBoxDimensions({1.99, 10.0, 10.0});
+    _simulationBox->setBox(orthoBox, false);
 
     EXPECT_THROW_MSG(
         _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
@@ -210,7 +213,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
         "dimension"
     );
 
-    _simulationBox->setBoxDimensions({10.0, 1.99, 10.0});
+    orthoBox.setBoxDimensions({10.0, 1.99, 10.0});
+    _simulationBox->setBox(orthoBox, false);
 
     EXPECT_THROW_MSG(
         _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
@@ -219,7 +223,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
         "dimension"
     );
 
-    _simulationBox->setBoxDimensions({10.0, 10.0, 1.99});
+    orthoBox.setBoxDimensions({10.0, 10.0, 1.99});
+    _simulationBox->setBox(orthoBox, false);
 
     EXPECT_THROW_MSG(
         _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),

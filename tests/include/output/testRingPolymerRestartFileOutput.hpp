@@ -57,8 +57,13 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
         _simulationBox1 = std::make_unique<molsys::SimulationBox>();
         _simulationBox2 = std::make_unique<molsys::SimulationBox>();
 
-        _simulationBox1->setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox2->setBoxDimensions({10.0, 10.0, 10.0});
+        molsys::OrthorhombicBox oBox1;
+        oBox1.setBoxDimensions({10.0, 10.0, 10.0});
+        _simulationBox1->setBox(oBox1, false);
+
+        molsys::OrthorhombicBox oBox2;
+        oBox2.setBoxDimensions({10.0, 10.0, 10.0});
+        _simulationBox2->setBox(oBox2, false);
 
         auto molecule1_1 = molsys::Molecule();
         auto molecule1_2 = molsys::Molecule();

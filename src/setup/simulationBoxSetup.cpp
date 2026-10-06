@@ -350,9 +350,7 @@ namespace setup
             simBox.setDensity(
                 _engine.getSettings().simulationBoxSettings.getDensity()
             );
-            const auto boxDimensions = simBox.calcBoxDimFromDensity();
-
-            simBox.setBoxDimensions(boxDimensions);
+            simBox.calcBoxDimFromDensity();
             simBox.setVolume(simBox.calculateVolume());
         }
         else if (!isDensitySet)

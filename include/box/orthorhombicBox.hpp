@@ -47,7 +47,10 @@ namespace molsys
         ) const override;
 
         [[nodiscard]]
-        linalg::Vec3D calcBoxDimFromDensity(double totalMass, double density);
+        static linalg::Vec3D calcBoxDimFromDensity(
+            double totalMass,
+            double density
+        );
 
         [[nodiscard]] linalg::Vec3D wrapPositionIntoBox(
             const linalg::Vec3D &pos

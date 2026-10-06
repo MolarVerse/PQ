@@ -756,12 +756,15 @@ namespace molsys
     /**
      * @brief calculate box dimensions from density
      *
-     * @return linalg::Vec3D
      */
-    linalg::Vec3D SimulationBox::calcBoxDimFromDensity() const
+    void SimulationBox::calcBoxDimFromDensity() const
     {
         auto& orthoBox = dynamic_cast<OrthorhombicBox&>(*_box);
-        return orthoBox.calcBoxDimFromDensity(_totalMass, _density);
+
+        const auto dimensions =
+            orthoBox.calcBoxDimFromDensity(_totalMass, _density);
+
+        orthoBox.setBoxDimensions(dimensions);
     }
 
     int SimulationBox::calcActiveMolCharge() const

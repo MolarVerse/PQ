@@ -151,8 +151,10 @@ namespace benchSetup
     // center-of-mass/virial) are filled, and the box totals are computed.
     inline molsys::SimulationBox makePopulatedBox(const BoxParams& params)
     {
-        auto box = molsys::SimulationBox();
-        box.setBoxDimensions({30.0, 30.0, 30.0});
+        auto                    box = molsys::SimulationBox();
+        molsys::OrthorhombicBox oBox;
+        oBox.setBoxDimensions({30.0, 30.0, 30.0});
+        box.setBox(oBox, false);
 
         for (std::size_t mol = 0; mol < params.nMolecules; ++mol)
         {

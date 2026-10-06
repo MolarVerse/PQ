@@ -400,7 +400,9 @@ TEST_F(TestSetup, testBoxAndDensitySet)
 
 TEST_F(TestSetup, testCheckRcCutoff)
 {
-    _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+    molsys::OrthorhombicBox orthoBox;
+    orthoBox.setBoxDimensions({10.0, 20.0, 30.0});
+    _engine->getSimulationBox().setBox(orthoBox, false);
     settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     EXPECT_THROW_MSG(
@@ -517,7 +519,10 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().setDensity(
         12341243.1234
     );   // this should be ignored
-    _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+
+    molsys::OrthorhombicBox orthoBox;
+    orthoBox.setBoxDimensions({10.0, 20.0, 30.0});
+    _engine->getSimulationBox().setBox(orthoBox, true);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
     EXPECT_NO_THROW(setup::setupSimulationBox(*_engine));
@@ -540,7 +545,10 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setDegreesOfFreedom(4);
     simBox.setDensity(12341243.1234);
     simBox.setVolume(758373.194);
-    simBox.setBoxDimensions({5.73, 9.93, 11.14});
+
+    molsys::OrthorhombicBox orthoBox2;
+    orthoBox2.setBoxDimensions({5.73, 9.93, 11.14});
+    simBox.setBox(orthoBox2, false);
     settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
     settings::FileSettings::setStartFileName("input.rst");
 

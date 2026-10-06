@@ -81,8 +81,10 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     mShake.initMShake();   // builds the (3, 3) mShake inverse matrix
 
     // --- molsys::SimulationBox with one slightly-stretched triangle ---
-    auto simBox = molsys::SimulationBox();
-    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+    auto                    simBox = molsys::SimulationBox();
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({100.0, 100.0, 100.0});
+    simBox.setBox(oBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
@@ -162,8 +164,10 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     mShake.addMShakeReference(mShakeRef);
     mShake.initMShake();
 
-    auto simBox = molsys::SimulationBox();
-    simBox.setBoxDimensions({100.0, 100.0, 100.0});
+    auto                    simBox = molsys::SimulationBox();
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({100.0, 100.0, 100.0});
+    simBox.setBox(oBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});

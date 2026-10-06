@@ -130,7 +130,7 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D calculateAngularMomentum(
             const linalg::Vec3D&
         );
-        [[nodiscard]] linalg::Vec3D calcBoxDimFromDensity() const;
+        void                        calcBoxDimFromDensity() const;
         [[nodiscard]] linalg::Vec3D calcShiftVector(
             const linalg::Vec3D& position
         ) const
@@ -265,8 +265,6 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
         [[nodiscard]] linalg::Vec3D getBoxAngles() const;
 
-        void setVolume(double volume) const;
-        void setBoxDimensions(const linalg::Vec3D& boxDimensions) const;
         void setBoxSizeHasChanged(bool boxSizeHasChanged) const;
     };
 

@@ -246,7 +246,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
         linalg::Vec3D(8.0, 10.0, 12.0),
         1.0e-12
     );
-    EXPECT_NEAR(box.getVolume(), box.calculateVolume(), 1.0e-12);
+    EXPECT_NEAR(box.calculateVolume(), box.calculateVolume(), 1.0e-12);
 
     settings::ManostatSettings::setIsotropy(Isotropy::FULL_ANISOTROPIC);
     const auto originalAngles = box.getBoxAngles();

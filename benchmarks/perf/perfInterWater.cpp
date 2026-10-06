@@ -70,7 +70,10 @@ int main()
     constexpr double spacing = 4.5;
 
     molsys::SimulationBox simBox;
-    simBox.setBoxDimensions({30.0, 30.0, 30.0});
+
+    molsys::OrthorhombicBox oBox;
+    oBox.setBoxDimensions({30.0, 30.0, 30.0});
+    simBox.setBox(oBox, false);
     simBox.setWaterType(WATER_TYPE);
 
     molsys::MoleculeType waterType;

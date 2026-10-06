@@ -164,13 +164,6 @@ namespace molsys
     bool Box::getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
 
     /**
-     * @brief get the volume of the box
-     *
-     * @return double
-     */
-    double Box::getVolume() const { return _volume; }
-
-    /**
      * @brief get the minimal box dimension
      *
      * @return double
@@ -190,13 +183,6 @@ namespace molsys
     /********************
      * standard setters *
      ********************/
-
-    /**
-     * @brief set the volume of the box
-     *
-     * @param volume
-     */
-    void Box::setVolume(double volume) { _volume = volume; }
 
     /**
      * @brief set if the box size has changed

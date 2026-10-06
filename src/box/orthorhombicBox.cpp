@@ -34,9 +34,7 @@ namespace molsys
      */
     double OrthorhombicBox::calculateVolume()
     {
-        _volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
-
-        return _volume;
+        return _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
     }
 
     /**
@@ -72,9 +70,9 @@ namespace molsys
         double density
     )
     {
-        _volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
+        double volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 
-        return {::cbrt(_volume)};
+        return {::cbrt(volume)};
     }
 
     linalg::Vec3D OrthorhombicBox::wrapPositionIntoBox(
@@ -94,7 +92,6 @@ namespace molsys
     void OrthorhombicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
         setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
-        _volume = calculateVolume();
     }
 
 }   // namespace molsys
