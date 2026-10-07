@@ -471,6 +471,11 @@ class ReportTests(FixtureCase):
         self.assertEqual(("2.5k", "12k", "1.5M", "7", "0.5"),
                          tuple(report.format_value(v) for v in (2500, 12345, 1.5e6, 7, 0.5)))
 
+    def test_to_number_converts_valid_and_returns_none_for_invalid(self):
+        self.assertEqual(3.5, report.to_number("3.5"))
+        self.assertIsNone(report.to_number("not a number"))
+        self.assertIsNone(report.to_number(None))
+
 
 class CliTests(FixtureCase):
     def setUp(self):

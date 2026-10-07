@@ -1,0 +1,1 @@
+- Add a unit test for the numeric conversion helper in the code statistics report, covering valid strings, invalid strings, and None.
