@@ -1,0 +1,1 @@
+- Add an arithmetic mean helper for repository tooling.
