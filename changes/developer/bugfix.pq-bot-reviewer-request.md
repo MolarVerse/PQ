@@ -1,0 +1,1 @@
+- Keep PQ Bot draft publication successful when GitHub cannot add the invoking user as reviewer.

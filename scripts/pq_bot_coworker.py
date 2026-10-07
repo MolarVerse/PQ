@@ -911,8 +911,11 @@ def publish(outdir):
         "draft": draft,
         "maintainer_can_modify": True,
     })
-    api("POST", repo, f"pulls/{pull['number']}/requested_reviewers", token, {"reviewers": [context["actor"]]})
     api("POST", repo, f"issues/{context['thread']}/comments", token, {"body": f"PQ Bot opened draft PR #{pull['number']}: {pull['html_url']}"})
+    try:
+        api("POST", repo, f"pulls/{pull['number']}/requested_reviewers", token, {"reviewers": [context["actor"]]})
+    except urllib.error.URLError as error:
+        print(f"PQ Bot could not request the reviewer: {error}", file=sys.stderr)
 
 
 def main():
