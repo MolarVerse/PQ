@@ -553,5 +553,12 @@ class CliTests(FixtureCase):
         self.assertEqual(Path("/xdg/pq-code-stats"), pqstats.data_dir(None, {"XDG_DATA_HOME": "/xdg"}))
 
 
+class ToNumberTests(unittest.TestCase):
+    def test_valid_invalid_and_missing_values(self):
+        self.assertEqual(42.0, report.to_number("42"))
+        self.assertIsNone(report.to_number("not-a-number"))
+        self.assertIsNone(report.to_number(None))
+
+
 if __name__ == "__main__":
     unittest.main()
