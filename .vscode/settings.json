@@ -276,6 +276,5 @@
         "editor.defaultFormatter": "ms-python.autopep8"
     },
     "python.formatting.provider": "none",
-    "esbonio.sphinx.confDir": "",
-    "sonarlint.pathToCompileCommands": "${workspaceFolder}/.build/compile_commands.json"
+    "esbonio.sphinx.confDir": ""
 }
