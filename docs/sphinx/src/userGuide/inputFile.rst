@@ -984,8 +984,10 @@ Possible options are:
    3. **stochastic_rescaling** - stochastic cell rescaling manostat
 
 Berendsen and stochastic cell rescaling move molecular centers while preserving
-internal molecular coordinates. They require ``virial = molecular``;
-``virial = atomic`` is available when pressure coupling is disabled.
+internal molecular coordinates. Multi-atom molecules require
+``virial = molecular``. Monatomic systems also support ``virial = atomic``,
+where both pressure estimators coincide. Atomic virial is available for any
+system when pressure coupling is disabled.
 
 .. _pressureRelaxationKey:
 

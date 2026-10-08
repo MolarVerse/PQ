@@ -409,3 +409,18 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     reset.reset(1, _data, _box);
     EXPECT_NEAR(_box.calculateMomentum()[0] / speed, 0.0, 1e-12);
 }
+
+TEST_F(ManostatRegression, atomicVirialSupportsMonatomicPressureCoupling)
+{
+    _addMolecule({-1.0}, 1e13);
+    _addMolecule({1.0}, -1e13);
+    _data.calculateKinetics(_box);
+    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
+    manostat::BerendsenManostat berendsen(1.0, 1.0, 0.001, FixedAxis::NONE);
+    manostat::StochasticRescalingManostat
+        stochastic(1.0, 1.0, 0.001, FixedAxis::NONE);
+    EXPECT_NO_THROW(berendsen.applyManostat(_box, _data));
+    EXPECT_NO_THROW(stochastic.applyManostat(_box, _data));
+    EXPECT_TRUE(std::isfinite(_box.getVolume()));
+    EXPECT_GT(_box.getVolume(), 0.0);
+}

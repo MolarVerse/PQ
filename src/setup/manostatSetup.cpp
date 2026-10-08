@@ -22,6 +22,7 @@
 
 #include "manostatSetup.hpp"
 
+#include <algorithm>
 #include <format>
 #include <string>
 
@@ -33,6 +34,7 @@
 #include "manostat.hpp"
 #include "manostatSettings.hpp"
 #include "mdEngine.hpp"
+#include "simulationBox.hpp"
 #include "stochasticRescalingManostat.hpp"
 
 namespace setup
@@ -75,9 +77,15 @@ namespace setup
         const auto manostatType = settings::ManostatSettings::getManostatType();
 
         if (settings::ManostatSettings::isBerendsenBased() &&
-            settings::GeneralSettings::getVirialType() == VirialType::ATOMIC)
+            settings::GeneralSettings::getVirialType() == VirialType::ATOMIC &&
+            std::ranges::any_of(
+                _engine.getSimulationBox().getMolecules(),
+                [](const auto &molecule)
+                { return molecule.getNumberOfAtoms() > 1; }
+            ))
             throw exc::UserInputException(
-                "Molecular pressure coupling requires virial = molecular"
+                "Pressure coupling of multi-atom molecules requires "
+                "virial = molecular"
             );
 
         if (manostatType == BERENDSEN)

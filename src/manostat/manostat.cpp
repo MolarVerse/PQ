@@ -22,6 +22,7 @@
 
 #include "manostat.hpp"
 
+#include <algorithm>
 #include <cmath>
 
 #include "constants/internalConversionFactors.hpp"
@@ -113,9 +114,15 @@ namespace manostat
         const linalg::tensor3D      &mu
     )
     {
-        if (settings::GeneralSettings::getVirialType() != VirialType::MOLECULAR)
+        if (settings::GeneralSettings::getVirialType() == VirialType::ATOMIC &&
+            std::ranges::any_of(
+                simulationBox.getMolecules(),
+                [](const auto &molecule)
+                { return molecule.getNumberOfAtoms() > 1; }
+            ))
             throw exc::ManostatException(
-                "Molecular pressure coupling requires virial = molecular"
+                "Pressure coupling of multi-atom molecules requires "
+                "virial = molecular"
             );
 
         const auto finiteMatrix = [](const auto &matrix)

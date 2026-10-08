@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>
 
+#include "atom.hpp"
 #include "berendsenManostat.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
@@ -30,6 +31,8 @@
 #include "manostatSettings.hpp"
 #include "manostatSetup.hpp"
 #include "mdEngine.hpp"
+#include "molecule.hpp"
+#include "simulationBox.hpp"
 #include "stochasticRescalingManostat.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
@@ -305,6 +308,14 @@ TEST_F(TestSetup, setupManostatWithFixedAxis)
 
 TEST_F(TestSetup, setupMolecularManostatsRejectAtomicVirial)
 {
+    molsys::Molecule molecule;
+    for (size_t i = 0; i < 2; ++i)
+    {
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setMass(1.0);
+        molecule.addAtom(atom);
+    }
+    _mdEngine->getSimulationBox().addMolecule(molecule);
     settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
     settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
     settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
