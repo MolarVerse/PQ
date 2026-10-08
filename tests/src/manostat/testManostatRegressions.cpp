@@ -42,6 +42,7 @@
 #include "simulationBox.hpp"
 #include "stochasticRescalingManostat.hpp"
 #include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 #include "triclinicBox.hpp"
 
@@ -194,9 +195,11 @@ TEST_F(ManostatRegression, molecularCouplingRejectsAtomicVirial)
     for (auto* coupling :
          std::vector<manostat::Manostat*>{&berendsen, &stochastic})
     {
-        EXPECT_THROW(
+        EXPECT_THROW_MSG(
             coupling->applyManostat(_box, _data),
-            exc::ManostatException
+            exc::ManostatException,
+            "Pressure coupling of multi-atom molecules requires "
+            "virial = molecular"
         );
         EXPECT_DOUBLE_EQ(_box.getVolume(), 1000.0);
         EXPECT_DOUBLE_EQ(_box.getAtom(0).getPosition()[0], -0.2);
@@ -240,9 +243,13 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
             i == 0 ? Isotropy::SEMI_ISOTROPIC_XY : Isotropy::ISOTROPIC
         );
         settings::PotentialSettings::setCoulombRadiusCutOff(i == 4 ? 3.0 : 0.1);
-        EXPECT_THROW(
+        EXPECT_THROW_MSG(
             proposals[i]->applyManostat(_box, _data),
-            exc::ManostatException
+            exc::ManostatException,
+            i == 4
+                ? "Coulomb radius cut off is larger than half of the minimal "
+                  "box dimension"
+                : "Invalid manostat scaling matrix"
         );
         EXPECT_EQ(_box.getBoxDimensions(), linalg::Vec3D(10.0));
         EXPECT_DOUBLE_EQ(_box.getVolume(), 1000.0);

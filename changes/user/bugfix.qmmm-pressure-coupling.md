@@ -1,0 +1,3 @@
+- Preserve molecular geometry during QM/MM pressure coupling and correct molecular and triclinic pressure calculations.
+- Correct Berendsen relaxation rates, stochastic cell noise, and cached kinetics after velocity rescaling.
+- Reject atomic virial for pressure coupling of multi-atom molecules and reject invalid cell updates before changing the simulation state.

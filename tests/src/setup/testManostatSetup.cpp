@@ -324,7 +324,12 @@ TEST_F(TestSetup, setupMolecularManostatsRejectAtomicVirial)
     {
         settings::ManostatSettings::setManostatType(type);
         setup::ManostatSetup setup(*_mdEngine);
-        EXPECT_THROW(setup.setup(), exc::UserInputException);
+        EXPECT_THROW_MSG(
+            setup.setup(),
+            exc::UserInputException,
+            "Pressure coupling of multi-atom molecules requires "
+            "virial = molecular"
+        );
     }
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
     setup::ManostatSetup setup(*_mdEngine);
