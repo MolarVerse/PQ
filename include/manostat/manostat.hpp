@@ -70,6 +70,12 @@ namespace manostat
         static void rotateMu(linalg::tensor3D &mu);
 
         [[nodiscard]] virtual ManostatType getManostatType() const;
+
+       protected:
+        static void _validateScaling(
+            const molsys::SimulationBox &,
+            const linalg::tensor3D &
+        );
     };
 
 }   // namespace manostat

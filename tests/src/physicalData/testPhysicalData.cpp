@@ -113,15 +113,12 @@ TEST_F(TestPhysicalData, calculateKinetics)
         mass_mol1_atom2 * velocity_mol1_atom2 * velocity_mol1_atom2 +
         mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1;
 
+    const auto molecularMomentum = velocity_mol1_atom1 * mass_mol1_atom1 +
+                                   velocity_mol1_atom2 * mass_mol1_atom2;
     const auto kineticEnergyMolecularVector =
-        (mass_mol1_atom1 * mass_mol1_atom1 * velocity_mol1_atom1 *
-             velocity_mol1_atom1 +
-         mass_mol1_atom2 * mass_mol1_atom2 * velocity_mol1_atom2 *
-             velocity_mol1_atom2) /
+        molecularMomentum * molecularMomentum /
             (mass_mol1_atom1 + mass_mol1_atom2) +
-        (mass_mol2_atom1 * mass_mol2_atom1 * velocity_mol2_atom1 *
-         velocity_mol2_atom1) /
-            mass_mol2_atom1;
+        mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1;
 
     EXPECT_EQ(_physicalData->getMomentum(), momentumVector * FS_TO_S);
     EXPECT_EQ(
@@ -334,4 +331,44 @@ TEST_F(TestPhysicalData, addVirialAccumulates)
     _physicalData->setVirial(virial0);
     _physicalData->addVirial(virial1);
     EXPECT_EQ(_physicalData->getVirial(), virial0 + virial1);
+}
+
+TEST(PhysicalDataKinetics, molecularPressureExcludesInternalMotion)
+{
+    for (const auto opposing : {false, true})
+    {
+        molsys::SimulationBox box;
+        molsys::Molecule      molecule;
+        for (const auto sign : {1.0, opposing ? -1.0 : 1.0})
+        {
+            auto atom = std::make_shared<molsys::Atom>();
+            atom->setMass(1.0);
+            atom->setPosition({0.0, 0.0, 0.0});
+            atom->setVelocity(sign * linalg::Vec3D{1.0, 2.0, 0.0});
+            molecule.addAtom(atom);
+            box.addAtom(atom);
+        }
+        box.addMolecule(molecule);
+        box.calculateTotalMass();
+        physicalData::PhysicalData data;
+        data.calculateKinetics(box);
+
+        const auto expected = opposing ? linalg::tensor3D{0.0}
+                                       : linalg::tensor3D{
+                                             {2.0, 4.0, 0.0},
+                                             {4.0, 8.0, 0.0},
+                                             {0.0, 0.0, 0.0}
+                                         };
+        for (size_t i = 0; i < 3; ++i)
+        {
+            for (size_t j = 0; j < 3; ++j)
+            {
+                EXPECT_DOUBLE_EQ(
+                    data.getKinEnergyMolTensor()[i][j],
+                    expected[i][j] * KINETIC_ENERGY_FACTOR
+                );
+            }
+        }
+        EXPECT_DOUBLE_EQ(data.getKineticEnergy(), 10.0 * KINETIC_ENERGY_FACTOR);
+    }
 }

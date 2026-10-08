@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <unordered_set>
+#include <vector>
 
 #include "atom.hpp"
 #include "exceptions.hpp"
@@ -444,5 +445,42 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
         exc::HybridConfiguratorException,
         "Cannot calculate smoothing factor for molecule outside the "
         "smoothing region"
+    );
+}
+
+TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
+{
+    molsys::SimulationBox box;
+    box.setBoxDimensions({10.0, 10.0, 10.0});
+    for (const auto &positions :
+         {std::vector<double>{4.9}, std::vector<double>{-0.2, 0.2}})
+    {
+        molsys::Molecule molecule;
+        for (const auto x : positions)
+        {
+            auto atom = std::make_shared<molsys::Atom>();
+            atom->setPosition({x, 0.0, 0.0});
+            atom->setMass(1.0);
+            box.addAtom(atom);
+            molecule.addAtom(atom);
+        }
+        box.addMolecule(molecule);
+    }
+    box.addInnerRegionCenterAtoms({0});
+    configurator::HybridConfigurator configurator;
+    configurator.calculateInnerRegionCenter(box);
+    configurator.shiftAtomsToInnerRegionCenter(box);
+    configurator::HybridConfigurator::assignHybridZones(box);
+    configurator.shiftAtomsBackToInitialPositions(box);
+
+    EXPECT_NEAR(box.getMolecule(0).getCenterOfMass()[0], 4.9, 1e-12);
+    EXPECT_NEAR(box.getMolecule(1).getCenterOfMass()[0], 0.0, 1e-12);
+    auto &molecule = box.getMolecule(1);
+    molecule.reconstructAtomsAroundCenterOfMass(box.getBox());
+    EXPECT_NEAR(
+        molecule.getAtomPosition(AtomIndex{1})[0] -
+            molecule.getAtomPosition(AtomIndex{0})[0],
+        0.4,
+        1e-12
     );
 }

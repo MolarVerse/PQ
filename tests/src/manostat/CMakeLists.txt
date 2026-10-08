@@ -1,5 +1,6 @@
 set(source_files
     testManostat.cpp
+    testManostatRegressions.cpp
 )
 
 foreach(source_file ${source_files})
@@ -24,6 +25,8 @@ foreach(source_file ${source_files})
 
     set_property(TEST ${test_name} PROPERTY LABELS manostat)
 endforeach()
+
+target_link_libraries(testManostatRegressions PRIVATE resetKinetics)
 
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
