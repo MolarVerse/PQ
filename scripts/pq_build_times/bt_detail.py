@@ -13,6 +13,7 @@ import hashlib
 import os
 from collections import Counter, defaultdict
 
+import bt_compare
 import bt_fingerprint
 import bt_ninja
 
@@ -46,6 +47,11 @@ def module_of(source):
 
 def group_of(module):
     return "src (project)" if module == "src" or module.startswith("src/") else module
+
+
+def churn_count(name, external, churn):
+    """How many changes touched a file; for a header of a submodule the bumps of the submodule are counted."""
+    return churn.get("/".join(name.split("/")[:2]) if external else name, 0)
 
 
 def git_churn(source_root, days=CHURN_DAYS, run=bt_fingerprint.default_run):
@@ -132,8 +138,8 @@ def concurrency(steps, buckets=CONCURRENCY_BUCKETS):
 
 
 def make_detail(snapshot_id, fingerprint_id, jobs, source_name, cold_entries, deps, touches, source_root, build_dir,
-                churn, churn_ref, churn_days=CHURN_DAYS):
-    """The detail of a snapshot. touches: {scenario: {"file", "wall_s", "entries"}}."""
+                churn, churn_ref, churn_days=CHURN_DAYS, trace=None):
+    """The detail of a snapshot. touches: {scenario: {"file", "wall_s", "entries"}}; trace: see bt_trace.collect."""
     steps = build_steps(cold_entries, deps, source_root, build_dir, churn)
     seconds = {step["o"]: step["s"] for step in steps if step["k"] == "compile"}
     objects, fan_in, cpu, external, sets = header_costs(deps, seconds, source_root, build_dir)
@@ -143,7 +149,7 @@ def make_detail(snapshot_id, fingerprint_id, jobs, source_name, cold_entries, de
         header = {"f": name, "fan_in": fan_in[name], "cpu_s": round(cpu[name], 2), "x": external[name], "g": sets[name]}
         if churn is not None:
             # a header of a submodule changes when the submodule pointer is bumped, which is a change of "external/<name>"
-            header["ch"] = churn.get("/".join(name.split("/")[:2]) if external[name] else name, 0)
+            header["ch"] = churn_count(name, external[name], churn)
         headers.append(header)
     touch_detail = {}
     for scenario, touch in touches.items():
@@ -153,7 +159,12 @@ def make_detail(snapshot_id, fingerprint_id, jobs, source_name, cold_entries, de
             "steps": sorted(({"o": e.output, "k": bt_ninja.kind_of_output(e.output), "s": round((e.end - e.start) / 1000, 3)}
                              for e in entries), key=lambda s: (-s["s"], s["o"])),
         }
+    if trace is not None and churn is not None:
+        for header in trace["headers"]:
+            if not header["f"].startswith(("<", "/")):   # repository and submodule files; system headers are not ours to change
+                header["ch"] = churn_count(header["f"], header["f"].startswith("external" + os.sep) or header["f"].startswith("external/"), churn)
     return {
+        "trace": trace,
         "schema_version": SCHEMA_VERSION, "kind": KIND, "id": snapshot_id, "fingerprint_id": fingerprint_id,
         "source": source_name, "jobs": jobs, "objects": objects, "steps": steps, "headers": headers,
         "fan_in": {name: fan_in[name] for name in sorted(fan_in)},   # all headers, exact: the top list is cut by timing
@@ -295,6 +306,11 @@ def section_slowest(detail, steps, wall, cpu, top):
     return lines
 
 
+def section_trace(detail, top):
+    import bt_trace_report   # imported here: it uses the helpers of this module
+    return bt_trace_report.render_section(detail, top)
+
+
 def section_headers(detail, steps, top):
     compiles = [s for s in steps if s["k"] == "compile"]
     compile_cpu = sum(s["s"] for s in compiles)
@@ -391,12 +407,14 @@ def render(detail, snapshot, top=12):
         f"snapshot {snapshot['id']}  {git.get('commit', '?')}{'*' if git.get('dirty') else ''}"
         + (f'  "{snapshot["note"]}"' if snapshot.get("note") else ""),
         f"fingerprint {snapshot['fingerprint_id']}: {bt_fingerprint.describe(snapshot['fingerprint'])}",
+        *bt_compare.interference_warnings(snapshot),
         f"per-file times {source}",
         f"(with {detail['jobs']} jobs they include contention for cores and caches: read them as relative cost, not as the time of the file alone)",
         "",
         "== Build at a glance ==", *section_glance(detail, steps, wall, cpu),
         "", "== Where the CPU goes ==", *section_groups(steps, cpu, top),
         "", "== Slowest compile steps ==", *section_slowest(detail, steps, wall, cpu, top),
+        "", "== Compiler time (clang -ftime-trace) ==", *section_trace(detail, top),
         "", "== Headers: what a change rebuilds ==", *section_headers(detail, steps, top),
         "", "== What small changes rebuild ==", *section_touches(detail, top),
         "", "== Linking ==", *section_links(steps, cpu, top),
@@ -492,4 +510,7 @@ def render_changes(before, after, top=8):
         [f"{ca} -> {cb}", f"{duration(a)} -> {duration(b)}", f"{(b - a) / a * 100:+.0f}%" if a else "new",
          f"{beyond:+.0f}s ({beyond / expected * 100:+.0f}%)" if expected else f"{beyond:+.0f}s", module]
         for _, module, ca, cb, a, b, beyond, expected in sorted(rows)[:top]]) if rows else "no module changed beyond the noise")
+    if before.get("trace") and after.get("trace"):
+        import bt_trace_report
+        lines += ["", "== Compiler time changes (clang -ftime-trace) =="] + bt_trace_report.render_changes(before["trace"], after["trace"], top)
     return "\n".join(lines)

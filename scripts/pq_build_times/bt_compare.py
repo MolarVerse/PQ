@@ -17,6 +17,10 @@ GRAPH_KEYS = (
     ("objects", "objects"), ("unique_files", "files (all)"), ("include_pairs", "include pairs"),
     ("project_files", "project files"), ("project_pairs", "project include pairs"),
 )
+# Other processes' CPU during a build. On an idle machine 24-26 s of a 1,220 s clang cold build are not attributed to the
+# build's own processes (kernel and I/O work), about 2%; a clearly disturbed run uses a multiple of that.
+FOREIGN_MIN_S = 10.0
+FOREIGN_SHARE = 0.05
 NOISE_FLOOR = 0.05          # relative, whatever the spread says
 SINGLE_RUN_FLOOR = 0.10     # relative, when a snapshot has no repetitions to judge noise from
 ABSOLUTE_FLOOR_S = 0.05     # seconds; below this nothing is a change (a no-op build takes ~0.01 s)
@@ -25,6 +29,24 @@ BUSY_LOAD_FRACTION = 0.25
 
 class CompareError(ValueError):
     pass
+
+
+def interference(snapshot):
+    """[(scenario, foreign CPU seconds, the build's CPU seconds)] for builds during which other processes used a lot of CPU."""
+    found = []
+    for scenario in SCENARIO_ORDER:
+        data = snapshot.get("scenarios", {}).get(scenario)
+        if not data or data.get("foreign_cpu_s") is None:
+            continue
+        if data["foreign_cpu_s"] >= max(FOREIGN_MIN_S, FOREIGN_SHARE * data["cpu_s"]):
+            found.append((scenario, data["foreign_cpu_s"], data["cpu_s"]))
+    return found
+
+
+def interference_warnings(snapshot):
+    return [f"warning: other processes used about {foreign:.0f} s of CPU during the {SCENARIO_NAMES[scenario]} of {snapshot['id']} "
+            f"({foreign / cpu:.0%} of the build's CPU); its timings are inflated, repeat it on an idle machine"
+            for scenario, foreign, cpu in interference(snapshot)]
 
 
 def fingerprint_differences(a, b):
@@ -189,6 +211,8 @@ def render(result):
         notes.append("* a snapshot with a single run per scenario (for example the cold build): noise cannot be measured, so a wider threshold is used.")
     if result["busy"]:
         notes.append(f"warning: the machine was busy when {', '.join(result['busy'])} started; its timings are less reliable.")
+    for snapshot in (a, b):
+        notes += interference_warnings(snapshot)
     unstable = [SCENARIO_NAMES[row["scenario"]] for row in result["rows"]
                 if not (row["a"].get("steps_stable", True) and row["b"].get("steps_stable", True))]
     if unstable:
