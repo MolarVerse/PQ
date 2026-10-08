@@ -360,11 +360,15 @@ TEST(PhysicalDataKinetics, molecularPressureExcludesInternalMotion)
                                              {0.0, 0.0, 0.0}
                                          };
         for (size_t i = 0; i < 3; ++i)
+        {
             for (size_t j = 0; j < 3; ++j)
+            {
                 EXPECT_DOUBLE_EQ(
                     data.getKinEnergyMolTensor()[i][j],
                     expected[i][j] * KINETIC_ENERGY_FACTOR
                 );
+            }
+        }
         EXPECT_DOUBLE_EQ(data.getKineticEnergy(), 10.0 * KINETIC_ENERGY_FACTOR);
     }
 }

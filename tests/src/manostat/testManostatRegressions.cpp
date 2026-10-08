@@ -73,7 +73,7 @@ namespace
 
         void _addMolecule(
             const std::vector<double>& positions,
-            const double               speed = 0.0
+            const double               speed
         )
         {
             molsys::Molecule molecule;
@@ -104,8 +104,8 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
     cell->setBoxDimensions({10.0, 10.0, 10.0});
     cell->setVolume(cell->calculateVolume());
     _box.setBox(*cell);
-    _addMolecule({0.0});
-    _addMolecule({1.0});
+    _addMolecule({0.0}, 0.0);
+    _addMolecule({1.0}, 0.0);
     _data.setVirial(linalg::diagonalMatrix(_box.getVolume() / PRESSURE_FACTOR));
     settings::ManostatSettings::setIsotropy(Isotropy::FULL_ANISOTROPIC);
     manostat::FullAnisotropicBerendsenManostat
@@ -119,12 +119,16 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
         coupling->applyManostat(_box, _data);
         EXPECT_NEAR(_data.getPressure(), 1.0, 1e-12);
         for (size_t i = 0; i < 3; ++i)
+        {
             for (size_t j = 0; j < 3; ++j)
+            {
                 EXPECT_NEAR(
                     _box.getBox().getBoxMatrix()[i][j],
                     oldCell[i][j],
                     1e-12
                 );
+            }
+        }
     }
 }
 
@@ -187,7 +191,7 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
 
 TEST_F(ManostatRegression, molecularCouplingRejectsAtomicVirial)
 {
-    _addMolecule({-0.2, 0.2});
+    _addMolecule({-0.2, 0.2}, 0.0);
     settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
     manostat::BerendsenManostat berendsen(1.0, 1.0, 0.03, FixedAxis::NONE);
     manostat::StochasticRescalingManostat
@@ -244,7 +248,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
         );
         settings::PotentialSettings::setCoulombRadiusCutOff(i == 4 ? 3.0 : 0.1);
         EXPECT_THROW_MSG(
-            proposals[i]->applyManostat(_box, _data),
+            proposals.at(i)->applyManostat(_box, _data),
             exc::ManostatException,
             i == 4
                 ? "Coulomb radius cut off is larger than half of the minimal "
@@ -277,9 +281,11 @@ namespace
             ++count;
             for (size_t i = 0; i < N; ++i)
             {
-                sums[i] += sample[i];
+                sums.at(i) += sample.at(i);
                 for (size_t j = 0; j < N; ++j)
-                    products[i][j] += sample[i] * sample[j];
+                {
+                    products.at(i).at(j) += sample.at(i) * sample.at(j);
+                }
             }
         }
 
@@ -288,12 +294,13 @@ namespace
             const auto sampleCount = static_cast<double>(count);
             for (size_t i = 0; i < N; ++i)
             {
-                const auto mean = sums[i] / sampleCount;
+                const auto mean = sums.at(i) / sampleCount;
                 EXPECT_NEAR(mean, 0.0, 0.06);
                 for (size_t j = 0; j < N; ++j)
                 {
-                    const auto covariance = products[i][j] / sampleCount -
-                                            mean * sums[j] / sampleCount;
+                    const auto covariance =
+                        (products.at(i).at(j) / sampleCount) -
+                        (mean * sums.at(j) / sampleCount);
                     EXPECT_NEAR(covariance, i == j ? 1.0 : 0.0, 0.08);
                 }
             }
@@ -324,43 +331,48 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
          std::vector<manostat::Manostat*>{&semi, &aniso, &full, &fixed})
         coupling->calculatePressure(_box, _data);
 
-    const auto q = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL * temperature *
-                   compressibility * PRESSURE_FACTOR /
-                   (3.0 * tau * _box.getVolume());
-    const auto      lengthSigma = std::sqrt(2.0 * q);
-    const auto      shearSigma  = std::sqrt(4.0 * q);
-    const auto      volumeSigma = std::sqrt(6.0 * q);
+    const auto noiseFactor = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL * temperature *
+                             compressibility * PRESSURE_FACTOR /
+                             (3.0 * tau * _box.getVolume());
+    const auto      lengthSigma = std::sqrt(2.0 * noiseFactor);
+    const auto      shearSigma  = std::sqrt(4.0 * noiseFactor);
+    const auto      volumeSigma = std::sqrt(6.0 * noiseFactor);
     NoiseMoments<2> areaHeight;
-    NoiseMoments<3> lengths, shape, fixedShape;
-    NoiseMoments<1> semiVolume, anisoVolume, fullVolume;
+    NoiseMoments<3> lengths;
+    NoiseMoments<3> shape;
+    NoiseMoments<3> fixedShape;
+    NoiseMoments<1> semiVolume;
+    NoiseMoments<1> anisoVolume;
+    NoiseMoments<1> fullVolume;
     for (size_t sample = 0; sample < 8192; ++sample)
     {
-        const auto a = semi.calculateMu(_box.getVolume());
-        const auto b = aniso.calculateMu(_box.getVolume());
-        const auto c = full.calculateMu(_box.getVolume());
-        const auto d = fixed.calculateMu(_box.getVolume());
+        const auto semiMu  = semi.calculateMu(_box.getVolume());
+        const auto anisoMu = aniso.calculateMu(_box.getVolume());
+        const auto fullMu  = full.calculateMu(_box.getVolume());
+        const auto fixedMu = fixed.calculateMu(_box.getVolume());
         areaHeight.add(
-            {std::log(a[0][0] * a[1][1]) / (2.0 * std::sqrt(q)),
-             std::log(a[2][2]) / lengthSigma}
+            {std::log(semiMu[0][0] * semiMu[1][1]) /
+                 (2.0 * std::sqrt(noiseFactor)),
+             std::log(semiMu[2][2]) / lengthSigma}
         );
         lengths.add(
-            {std::log(b[0][0]) / lengthSigma,
-             std::log(b[1][1]) / lengthSigma,
-             std::log(b[2][2]) / lengthSigma}
+            {std::log(anisoMu[0][0]) / lengthSigma,
+             std::log(anisoMu[1][1]) / lengthSigma,
+             std::log(anisoMu[2][2]) / lengthSigma}
         );
         shape.add(
-            {(c[0][0] - 1.0) / lengthSigma,
-             (c[1][1] - 1.0) / lengthSigma,
-             c[0][1] / shearSigma}
+            {(fullMu[0][0] - 1.0) / lengthSigma,
+             (fullMu[1][1] - 1.0) / lengthSigma,
+             fullMu[0][1] / shearSigma}
         );
         fixedShape.add(
-            {(d[0][0] - 1.0) / lengthSigma,
-             (d[2][2] - 1.0) / lengthSigma,
-             d[0][2] / shearSigma}
+            {(fixedMu[0][0] - 1.0) / lengthSigma,
+             (fixedMu[2][2] - 1.0) / lengthSigma,
+             fixedMu[0][2] / shearSigma}
         );
-        semiVolume.add({std::log(det(a)) / volumeSigma});
-        anisoVolume.add({std::log(det(b)) / volumeSigma});
-        fullVolume.add({std::log(det(c)) / volumeSigma});
+        semiVolume.add({std::log(det(semiMu)) / volumeSigma});
+        anisoVolume.add({std::log(det(anisoMu)) / volumeSigma});
+        fullVolume.add({std::log(det(fullMu)) / volumeSigma});
     }
     areaHeight.expectIndependentStandardNormals();
     lengths.expectIndependentStandardNormals();
@@ -383,7 +395,7 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     manostat::Manostat pressure;
     pressure.calculatePressure(_box, _data);
     manostat::StochasticRescalingManostat stochastic(
-        _data.getPressure() - 3.0 * std::log(scale),
+        _data.getPressure() - (3.0 * std::log(scale)),
         1.0,
         1.0,
         FixedAxis::NONE

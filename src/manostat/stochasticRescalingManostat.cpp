@@ -333,11 +333,13 @@ namespace manostat
         for (size_t i = 0; i < 3; ++i)
         {
             if (!isAxisFixed(_fixedAxis, i))
+            {
                 mu[i] = ::exp(
-                    -compress * deltaP[i] / linalg::tensor3D::size +
-                    stochasticFactor *
-                        _randomNumberGenerator.getNormalDistribution(0.0, 1.0)
+                    (-compress * deltaP[i] / linalg::tensor3D::size) +
+                    (stochasticFactor *
+                     _randomNumberGenerator.getNormalDistribution(0.0, 1.0))
                 );
+            }
         }
 
         return diagonalMatrix(mu);

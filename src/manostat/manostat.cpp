@@ -120,17 +120,25 @@ namespace manostat
                 [](const auto &molecule)
                 { return molecule.getNumberOfAtoms() > 1; }
             ))
+        {
             throw exc::ManostatException(
                 "Pressure coupling of multi-atom molecules requires "
                 "virial = molecular"
             );
+        }
 
         const auto finiteMatrix = [](const auto &matrix)
         {
             for (size_t i = 0; i < 3; ++i)
+            {
                 for (size_t j = 0; j < 3; ++j)
+                {
                     if (!std::isfinite(matrix[i][j]))
+                    {
                         return false;
+                    }
+                }
+            }
             return true;
         };
 
@@ -138,7 +146,9 @@ namespace manostat
         if (!finiteMatrix(mu) || !std::isfinite(determinant) ||
             determinant <= 0.0 || mu[0][0] <= 0.0 || mu[1][1] <= 0.0 ||
             mu[2][2] <= 0.0 || !finiteMatrix(inverse(mu)))
+        {
             throw exc::ManostatException("Invalid manostat scaling matrix");
+        }
 
         const auto validateCandidate = [&](auto candidate)
         {
@@ -149,33 +159,46 @@ namespace manostat
             const auto matrix     = candidate.getBoxMatrix();
             if (!std::isfinite(volume) || volume <= 0.0 ||
                 !finiteMatrix(matrix) || !finiteMatrix(inverse(matrix)))
+            {
                 throw exc::ManostatException("Invalid manostat cell geometry");
+            }
 
+            constexpr double straightAngle = 180.0;
             for (size_t i = 0; i < 3; ++i)
+            {
                 if (!std::isfinite(dimensions[i]) || dimensions[i] <= 0.0 ||
                     !std::isfinite(angles[i]) || angles[i] <= 0.0 ||
-                    angles[i] >= 180.0)
+                    angles[i] >= straightAngle)
+                {
                     throw exc::ManostatException(
                         "Invalid manostat cell geometry"
                     );
+                }
+            }
 
             if (candidate.getMinimalBoxDimension() <
                 2.0 * settings::PotentialSettings::getCoulombRadiusCutOff())
+            {
                 throw exc::ManostatException(
                     "Coulomb radius cut off is larger than half of the minimal "
                     "box "
                     "dimension"
                 );
+            }
         };
 
         const auto &box = simulationBox.getBox();
         if (const auto *triclinic =
                 dynamic_cast<const molsys::TriclinicBox *>(&box))
+        {
             validateCandidate(*triclinic);
+        }
         else
+        {
             validateCandidate(
                 dynamic_cast<const molsys::OrthorhombicBox &>(box)
             );
+        }
     }
 
     /**

@@ -83,10 +83,12 @@ namespace setup
                 [](const auto &molecule)
                 { return molecule.getNumberOfAtoms() > 1; }
             ))
+        {
             throw exc::UserInputException(
                 "Pressure coupling of multi-atom molecules requires "
                 "virial = molecular"
             );
+        }
 
         if (manostatType == BERENDSEN)
             setupBerendsenManostat();
