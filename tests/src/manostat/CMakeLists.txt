@@ -1,5 +1,6 @@
 set(source_files
     testManostat.cpp
+    testManostatRegressions.cpp
 )
 
 foreach(source_file ${source_files})

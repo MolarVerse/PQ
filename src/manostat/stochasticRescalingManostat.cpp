@@ -141,6 +141,8 @@ namespace manostat
 
         const auto mu = calculateMu(simulationBox.getVolume());
 
+        validateScaling(simulationBox, mu);
+
         // Reconstruction temporarily unwraps atoms. Molecule::scale() below
         // wraps every position into the resized box.
         auto reconstructMolecule = [&simulationBox](auto &molecule)
@@ -157,8 +159,6 @@ namespace manostat
 
         physicalData.setVolume(simulationBox.getVolume());
         physicalData.setDensity(simulationBox.getDensity());
-
-        simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
         auto scalePositions = [&mu, &simulationBox](auto &molecule)
         { molecule.scale(mu, simulationBox.getBox()); };

@@ -302,3 +302,21 @@ TEST_F(TestSetup, setupManostatWithFixedAxis)
 
     settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
 }
+
+TEST_F(TestSetup, setupMolecularManostatsRejectAtomicVirial)
+{
+    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
+    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
+    settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
+    for (const auto type :
+         {ManostatType::BERENDSEN, ManostatType::STOCHASTIC_RESCALING})
+    {
+        settings::ManostatSettings::setManostatType(type);
+        setup::ManostatSetup setup(*_mdEngine);
+        EXPECT_THROW(setup.setup(), exc::UserInputException);
+    }
+    settings::ManostatSettings::setManostatType(ManostatType::NONE);
+    setup::ManostatSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
+    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+}

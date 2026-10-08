@@ -52,6 +52,11 @@ namespace manostat
         double           _pressure;
         double           _targetPressure;   // no default value, must be set
 
+        static void validateScaling(
+            const molsys::SimulationBox &,
+            const linalg::tensor3D &
+        );
+
        public:
         explicit Manostat(double targetPressure);
         Manostat()          = default;

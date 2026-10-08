@@ -74,6 +74,12 @@ namespace setup
 
         const auto manostatType = settings::ManostatSettings::getManostatType();
 
+        if (settings::ManostatSettings::isBerendsenBased() &&
+            settings::GeneralSettings::getVirialType() == VirialType::ATOMIC)
+            throw exc::UserInputException(
+                "Molecular pressure coupling requires virial = molecular"
+            );
+
         if (manostatType == BERENDSEN)
             setupBerendsenManostat();
 
