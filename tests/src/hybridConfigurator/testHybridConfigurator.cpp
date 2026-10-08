@@ -452,7 +452,7 @@ TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
 {
     molsys::SimulationBox box;
     box.setBoxDimensions({10.0, 10.0, 10.0});
-    for (const auto positions :
+    for (const auto &positions :
          {std::vector<double>{4.9}, std::vector<double>{-0.2, 0.2}})
     {
         molsys::Molecule molecule;

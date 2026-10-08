@@ -26,6 +26,8 @@ foreach(source_file ${source_files})
     set_property(TEST ${test_name} PROPERTY LABELS manostat)
 endforeach()
 
+target_link_libraries(testManostatRegressions PRIVATE resetKinetics)
+
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(

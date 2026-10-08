@@ -108,7 +108,7 @@ namespace manostat
     }
 
     /** @brief Validate a resize without changing the live cell or atoms. */
-    void Manostat::validateScaling(
+    void Manostat::_validateScaling(
         const molsys::SimulationBox &simulationBox,
         const linalg::tensor3D      &mu
     )

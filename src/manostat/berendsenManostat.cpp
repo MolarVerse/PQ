@@ -94,7 +94,7 @@ namespace manostat
 
         const auto mu = calculateMu();
 
-        validateScaling(simulationBox, mu);
+        _validateScaling(simulationBox, mu);
 
         // Reconstruction temporarily unwraps atoms. Molecule::scale() below
         // wraps every position into the resized box.
