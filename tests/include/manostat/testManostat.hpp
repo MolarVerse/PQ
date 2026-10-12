@@ -26,9 +26,11 @@
 
 #include <gtest/gtest.h>
 
+#include <cmath>
 #include <memory>
 
 #include "manostat.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 
@@ -60,7 +62,7 @@ class TestManostat : public ::testing::Test
         );
 
         _box = std::make_unique<molsys::SimulationBox>();
-        _box->setVolume(2.0);
+        _box->setBoxDimensions({cbrt(2.0)});
     }
 };
 

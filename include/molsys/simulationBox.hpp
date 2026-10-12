@@ -253,16 +253,14 @@ namespace molsys
         void applyPBC(linalg::Vec3D& position) const;
         void scaleBox(const linalg::tensor3D& scalingTensor);
 
-        [[nodiscard]] double calculateVolume() const;
-        [[nodiscard]] double getMinimalBoxDimension() const;
         [[nodiscard]] double getVolume() const;
+        [[nodiscard]] double getMinimalBoxDimension() const;
 
         [[nodiscard]] bool getBoxSizeHasChanged() const;
 
         [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
         [[nodiscard]] linalg::Vec3D getBoxAngles() const;
 
-        void setVolume(double volume) const;
         void setBoxDimensions(const linalg::Vec3D& boxDimensions) const;
         void setBoxSizeHasChanged(bool boxSizeHasChanged) const;
     };

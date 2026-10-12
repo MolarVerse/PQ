@@ -28,15 +28,15 @@ namespace molsys
 {
 
     /**
-     * @brief Calculate the volume of the box
+     * @brief get the volume of the box
      *
-     * @return volume
+     * @return double
      */
-    double OrthorhombicBox::calculateVolume()
+    double OrthorhombicBox::getVolume() const
     {
-        _volume = _boxDimensions[0] * _boxDimensions[1] * _boxDimensions[2];
-
-        return _volume;
+        // NOTE: here we do not use cached values as the overhead is negligible
+        // or even negative
+        return prod(_boxDimensions.get());
     }
 
     /**
@@ -46,7 +46,8 @@ namespace molsys
      */
     void OrthorhombicBox::applyPBC(linalg::Vec3D &position) const
     {
-        position -= _boxDimensions * round(position / _boxDimensions);
+        const auto boxDims  = _boxDimensions.get();
+        position           -= boxDims * round(position / boxDims);
     }
 
     /**
@@ -59,7 +60,8 @@ namespace molsys
         const linalg::Vec3D &shiftVector
     ) const
     {
-        return _boxDimensions * round(shiftVector / _boxDimensions);
+        const auto boxDims = _boxDimensions.get();
+        return boxDims * round(shiftVector / boxDims);
     }
 
     /**
@@ -72,9 +74,7 @@ namespace molsys
         double density
     )
     {
-        _volume = totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
-
-        return {::cbrt(_volume)};
+        return totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
     }
 
     linalg::Vec3D OrthorhombicBox::wrapPositionIntoBox(
@@ -93,8 +93,8 @@ namespace molsys
      */
     void OrthorhombicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
-        setBoxDimensions(_boxDimensions *= diagonal(scalingTensor));
-        _volume = calculateVolume();
+        const auto boxDims = _boxDimensions.get() * diagonal(scalingTensor);
+        setBoxDimensions(boxDims);
     }
 
 }   // namespace molsys

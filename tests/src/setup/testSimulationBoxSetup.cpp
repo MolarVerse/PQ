@@ -541,7 +541,6 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setTotalCharge(-7.03);
     simBox.setDegreesOfFreedom(4);
     simBox.setDensity(12341243.1234);
-    simBox.setVolume(758373.194);
     simBox.setBoxDimensions({5.73, 9.93, 11.14});
     settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
     settings::FileSettings::setStartFileName("input.rst");

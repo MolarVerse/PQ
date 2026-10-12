@@ -27,6 +27,23 @@
 namespace molsys
 {
 
+    /**
+     * @brief Construct a new Box object
+     *
+     */
+    Box::Box() : _boxDimensions(linalg::Vec3D{defaults::VACUUM_BOX_DIMENSION})
+    {
+    }
+
+    /**
+     * @brief Construct a new Box object with specified dimensions
+     *
+     * @param boxDimensions
+     */
+    Box::Box(const linalg::Vec3D &boxDimensions) : _boxDimensions(boxDimensions)
+    {
+    }
+
     /******************************************************
      *                                                    *
      * virtual methods that are overriden in triclinicBox *
@@ -51,7 +68,7 @@ namespace molsys
      */
     linalg::StaticMatrix3x3<double> Box::getBoxMatrix() const
     {
-        return diagonalMatrix(_boxDimensions);
+        return diagonalMatrix(_boxDimensions.get());
     }
 
     /**
@@ -146,7 +163,7 @@ namespace molsys
      */
     void Box::setBoxDimensions(const linalg::Vec3D &boxDimensions)
     {
-        _boxDimensions = boxDimensions;
+        _boxDimensions.set(boxDimensions);
     }
 
     /***************************
@@ -164,20 +181,13 @@ namespace molsys
     bool Box::getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
 
     /**
-     * @brief get the volume of the box
-     *
-     * @return double
-     */
-    double Box::getVolume() const { return _volume; }
-
-    /**
      * @brief get the minimal box dimension
      *
      * @return double
      */
     double Box::getMinimalBoxDimension() const
     {
-        return minimum(_boxDimensions);
+        return minimum(_boxDimensions.get());
     }
 
     /**
@@ -185,18 +195,11 @@ namespace molsys
      *
      * @return linalg::Vec3D
      */
-    linalg::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
+    linalg::Vec3D Box::getBoxDimensions() const { return _boxDimensions.get(); }
 
     /********************
      * standard setters *
      ********************/
-
-    /**
-     * @brief set the volume of the box
-     *
-     * @param volume
-     */
-    void Box::setVolume(double volume) { _volume = volume; }
 
     /**
      * @brief set if the box size has changed

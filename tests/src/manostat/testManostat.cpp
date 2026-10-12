@@ -151,7 +151,6 @@ namespace
         settings::TimingsSettings::setTimeStep(1.0);
 
         simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
-        simulationBox.setVolume(simulationBox.calculateVolume());
         simulationBox.setTotalMass(2.0);
 
         physicalData.setVirial(diagonalMatrix(linalg::Vec3D(0.0)));
@@ -487,7 +486,6 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     settings::TimingsSettings::setTimeStep(0.5);
 
     _box->setBoxDimensions({10.0, 10.0, 10.0});
-    _box->setVolume(1000.0);
 
     _data->setVirial(linalg::tensor3D(0.0));
     _data->setKineticEnergyMolecularVector(linalg::tensor3D(0.0));

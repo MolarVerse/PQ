@@ -52,7 +52,7 @@ TEST(TestOrthoRhombicBox, calculateVolume)
     auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
-    EXPECT_EQ(box.calculateVolume(), 6.0);
+    EXPECT_EQ(box.getVolume(), 6.0);
 }
 
 TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
@@ -163,9 +163,4 @@ TEST(TestOrthoRhombicBox, baseTransformsAndStateAccessors)
     EXPECT_EQ(box.toSimSpace(vector), vector);
     EXPECT_MATRIX_NEAR(box.toOrthoSpace(tensor), tensor, 0.0);
     EXPECT_MATRIX_NEAR(box.toSimSpace(tensor), tensor, 0.0);
-
-    box.setVolume(24.0);
-    box.setBoxSizeHasChanged(true);
-    EXPECT_DOUBLE_EQ(box.getVolume(), 24.0);
-    EXPECT_TRUE(box.getBoxSizeHasChanged());
 }

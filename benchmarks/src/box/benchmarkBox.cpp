@@ -38,9 +38,7 @@ namespace
 
     molsys::TriclinicBox makeTriclinicBox()
     {
-        molsys::TriclinicBox box;
-        box.setBoxDimensions({20.0, 25.0, 30.0});
-        box.setBoxAngles({80.0, 90.0, 100.0});
+        molsys::TriclinicBox box{{20.0, 25.0, 30.0}, {80.0, 90.0, 100.0}};
         return box;
     }
 

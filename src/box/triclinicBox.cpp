@@ -25,16 +25,42 @@
 #include "box.hpp"
 #include "constants.hpp"
 #include "manostatSettings.hpp"
+#include "staticMatrix.hpp"
+#include "vector3d.hpp"
 
 namespace molsys
 {
+
+    /**
+     * @brief Construct a new Triclinic Box object
+     *
+     * @param boxDimensions
+     * @param boxAngles
+     */
+    TriclinicBox::TriclinicBox(
+        const linalg::Vec3D &boxDimensions,
+        const linalg::Vec3D &boxAngles
+    )
+        : Box(boxDimensions), _angles(boxAngles * DEG_TO_RAD)
+    {
+    }
 
     /**
      * @brief Calculate the volume of the box
      *
      * @return volume
      */
-    double TriclinicBox::calculateVolume() { return det(_boxMatrix); }
+    double TriclinicBox::_calculateVolume(const linalg::tensor3D &boxMatrix)
+    {
+        return det(boxMatrix);
+    }
+
+    /**
+     * @brief Get the volume of the box (cached)
+     *
+     * @return volume
+     */
+    double TriclinicBox::getVolume() const { return _volume.get(*this); }
 
     /**
      * @brief set box angles and recalculate the box matrix
@@ -46,10 +72,7 @@ namespace molsys
      */
     void TriclinicBox::setBoxAngles(const linalg::Vec3D &boxAngles)
     {
-        _boxAngles = boxAngles * DEG_TO_RAD;
-
-        _calculateTransformationMatrix();
-        _calculateBoxMatrix();
+        _angles.set(boxAngles * DEG_TO_RAD);
     }
 
     /**
@@ -59,45 +82,73 @@ namespace molsys
      */
     void TriclinicBox::setBoxDimensions(const linalg::Vec3D &boxDimensions)
     {
-        _boxDimensions = boxDimensions;
-
-        _calculateBoxMatrix();
+        _boxDimensions.set(boxDimensions);
     }
 
     /**
      * @brief Calculate the box matrix from the box dimensions and angles
      *
      */
-    void TriclinicBox::_calculateBoxMatrix()
+    linalg::tensor3D TriclinicBox::_calculateBoxMatrix(
+        const linalg::Vec3D    &boxDimensions,
+        const linalg::tensor3D &transformationMatrix
+    )
     {
-        _boxMatrix[0][0] = _boxDimensions[0];
-        _boxMatrix[0][1] = _boxDimensions[1] * _transformationMatrix[0][1];
-        _boxMatrix[0][2] = _boxDimensions[2] * _transformationMatrix[0][2];
+        linalg::tensor3D boxMatrix{0.0};
 
-        _boxMatrix[1][1] = _boxDimensions[1] * _transformationMatrix[1][1];
-        _boxMatrix[1][2] = _boxDimensions[2] * _transformationMatrix[1][2];
+        boxMatrix[0][0] = boxDimensions[0];
+        boxMatrix[0][1] = boxDimensions[1] * transformationMatrix[0][1];
+        boxMatrix[0][2] = boxDimensions[2] * transformationMatrix[0][2];
 
-        _boxMatrix[2][2] = _boxDimensions[2] * _transformationMatrix[2][2];
+        boxMatrix[1][1] = boxDimensions[1] * transformationMatrix[1][1];
+        boxMatrix[1][2] = boxDimensions[2] * transformationMatrix[1][2];
+
+        boxMatrix[2][2] = boxDimensions[2] * transformationMatrix[2][2];
+
+        return boxMatrix;
     }
 
     /**
      * @brief Calculate the rotation matrix
      *
      */
-    void TriclinicBox::_calculateTransformationMatrix()
+    linalg::tensor3D TriclinicBox::_calculateTransformationMatrix(
+        const linalg::Vec3D &boxAngles
+    )
     {
-        _transformationMatrix[0][0] = 1;
-        _transformationMatrix[0][1] = cosGamma();
-        _transformationMatrix[0][2] = cosBeta();
+        const auto cosGamma = _cosGamma(boxAngles);
+        const auto sinGamma = _sinGamma(boxAngles);
+        const auto cosBeta  = _cosBeta(boxAngles);
 
-        _transformationMatrix[1][1]  = sinGamma();
-        _transformationMatrix[1][2]  = cosAlpha() - cosBeta() * cosGamma();
-        _transformationMatrix[1][2] /= sinGamma();
+        linalg::tensor3D transformationMatrix{0.0};
 
-        const auto sumcos_2          = sum(cos(_boxAngles) * cos(_boxAngles));
-        const auto prodcos           = prod(cos(_boxAngles));
-        _transformationMatrix[2][2]  = ::sqrt(1 - sumcos_2 + (2 * prodcos));
-        _transformationMatrix[2][2] /= sinGamma();
+        transformationMatrix[0][0] = 1;
+        transformationMatrix[0][1] = cosGamma;
+        transformationMatrix[0][2] = cosBeta;
+
+        transformationMatrix[1][1]  = sinGamma;
+        transformationMatrix[1][2]  = _cosAlpha(boxAngles) - cosBeta * cosGamma;
+        transformationMatrix[1][2] /= sinGamma;
+
+        const auto cosAngles = cos(boxAngles);
+        const auto sumcos_2  = sum(cosAngles * cosAngles);
+        const auto prodcos   = prod(cosAngles);
+
+        transformationMatrix[2][2]  = ::sqrt(1 - sumcos_2 + (2 * prodcos));
+        transformationMatrix[2][2] /= sinGamma;
+
+        return transformationMatrix;
+    }
+
+    /**
+     * @brief Calculate the inverse of the box matrix
+     *
+     */
+    linalg::tensor3D TriclinicBox::_calculateInverse(
+        const linalg::tensor3D &boxMatrix
+    )
+    {
+        return inverse(boxMatrix);
     }
 
     /**
@@ -108,12 +159,13 @@ namespace molsys
     void TriclinicBox::applyPBC(linalg::Vec3D &position) const
     {
         const auto originalPosition = position;
+        const auto boxMatrix        = getBoxMatrix();
 
-        auto fractionalPosition = inverse(_boxMatrix) * position;
+        auto fractionalPosition = inverse(boxMatrix) * position;
 
         fractionalPosition -= round(fractionalPosition);
 
-        position = _boxMatrix * fractionalPosition;
+        position = boxMatrix * fractionalPosition;
 
         const auto distance = norm(position);
 
@@ -131,11 +183,11 @@ namespace molsys
                     for (int k = -1; k <= 1; ++k)
                     {
                         const auto shift =
-                            _boxMatrix * linalg::Vec3D{
-                                             static_cast<double>(i),
-                                             static_cast<double>(j),
-                                             static_cast<double>(k),
-                                         };
+                            boxMatrix * linalg::Vec3D{
+                                            static_cast<double>(i),
+                                            static_cast<double>(j),
+                                            static_cast<double>(k),
+                                        };
 
                         const auto newPosition = originalPosition + shift;
 
@@ -171,13 +223,14 @@ namespace molsys
         const linalg::Vec3D &pos
     ) const
     {
-        auto fractionalPosition = inverse(_boxMatrix) * pos;
+        const auto boxMatrix          = getBoxMatrix();
+        auto       fractionalPosition = inverse(boxMatrix) * pos;
 
         constexpr auto shiftFraction = 0.5;
 
         fractionalPosition -= floor(fractionalPosition + shiftFraction);
 
-        return _boxMatrix * fractionalPosition;
+        return boxMatrix * fractionalPosition;
     }
 
     /**
@@ -188,7 +241,7 @@ namespace molsys
      */
     linalg::Vec3D TriclinicBox::calcShiftVector(const linalg::Vec3D &vec) const
     {
-        return _boxMatrix * round(inverse(_boxMatrix) * vec);
+        return _boxMatrix.get(*this) * round(_inverse.get(*this) * vec);
     }
 
     /**
@@ -199,7 +252,7 @@ namespace molsys
      */
     linalg::Vec3D TriclinicBox::toOrthoSpace(const linalg::Vec3D &vec) const
     {
-        return inverse(_transformationMatrix) * vec;
+        return _invTrafoMatrix.get(*this) * vec;
     }
 
     /**
@@ -212,7 +265,7 @@ namespace molsys
         const linalg::tensor3D &mat
     ) const
     {
-        return inverse(_transformationMatrix) * mat;
+        return _invTrafoMatrix.get(*this) * mat;
     }
 
     /**
@@ -223,7 +276,7 @@ namespace molsys
      */
     linalg::Vec3D TriclinicBox::toSimSpace(const linalg::Vec3D &vec) const
     {
-        return _transformationMatrix * vec;
+        return _trafoMatrix.get(*this) * vec;
     }
 
     /**
@@ -234,7 +287,7 @@ namespace molsys
      */
     linalg::tensor3D TriclinicBox::toSimSpace(const linalg::tensor3D &mat) const
     {
-        return _transformationMatrix * mat;
+        return _trafoMatrix.get(*this) * mat;
     }
 
     /**
@@ -251,11 +304,12 @@ namespace molsys
     {
         if (settings::ManostatSettings::getIsotropy() !=
             Isotropy::FULL_ANISOTROPIC)
-            setBoxDimensions(diagonal(scalingTensor) * _boxDimensions);
-
+        {
+            setBoxDimensions(diagonal(scalingTensor) * _boxDimensions.get());
+        }
         else
         {
-            const auto boxMatrix = scalingTensor * _boxMatrix;
+            const auto boxMatrix = scalingTensor * _boxMatrix.get(*this);
 
             const auto &[boxDimensions, boxAngles] =
                 calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);
@@ -263,8 +317,6 @@ namespace molsys
             setBoxDimensions(boxDimensions);
             setBoxAngles(boxAngles);
         }
-
-        _volume = calculateVolume();
     }
 
     /**
@@ -312,7 +364,7 @@ namespace molsys
      */
     double TriclinicBox::getMinimalBoxDimension() const
     {
-        return minimum(diagonal(_boxMatrix));
+        return minimum(diagonal(_boxMatrix.get(*this)));
     }
 
     /**
@@ -320,42 +372,60 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::cosAlpha() const { return ::cos(_boxAngles[0]); }
+    double TriclinicBox::_cosAlpha(const linalg::Vec3D &boxAngles)
+    {
+        return ::cos(boxAngles[0]);
+    }
 
     /**
      * @brief calculate cos of beta
      *
      * @return double
      */
-    double TriclinicBox::cosBeta() const { return ::cos(_boxAngles[1]); }
+    double TriclinicBox::_cosBeta(const linalg::Vec3D &boxAngles)
+    {
+        return ::cos(boxAngles[1]);
+    }
 
     /**
      * @brief calculate cos of gamma
      *
      * @return double
      */
-    double TriclinicBox::cosGamma() const { return ::cos(_boxAngles[2]); }
+    double TriclinicBox::_cosGamma(const linalg::Vec3D &boxAngles)
+    {
+        return ::cos(boxAngles[2]);
+    }
 
     /**
      * @brief calculate sin of alpha
      *
      * @return double
      */
-    double TriclinicBox::sinAlpha() const { return ::sin(_boxAngles[0]); }
+    double TriclinicBox::_sinAlpha(const linalg::Vec3D &boxAngles)
+    {
+        return ::sin(boxAngles[0]);
+    }
 
     /**
      * @brief calculate sin of beta
      *
      * @return double
      */
-    double TriclinicBox::sinBeta() const { return ::sin(_boxAngles[1]); }
+    double TriclinicBox::_sinBeta(const linalg::Vec3D &boxAngles)
+    {
+        return ::sin(boxAngles[1]);
+    }
 
     /**
      * @brief calculate sin of gamma
      *
      * @return double
      */
-    double TriclinicBox::sinGamma() const { return ::sin(_boxAngles[2]); }
+    double TriclinicBox::_sinGamma(const linalg::Vec3D &boxAngles)
+    {
+        return ::sin(boxAngles[2]);
+    }
 
     /**
      * @brief get the box angles
@@ -364,7 +434,7 @@ namespace molsys
      */
     linalg::Vec3D TriclinicBox::getBoxAngles() const
     {
-        return _boxAngles * RAD_TO_DEG;
+        return _angles.get() * RAD_TO_DEG;
     }
 
     /**
@@ -372,7 +442,10 @@ namespace molsys
      *
      * @return linalg::tensor3D
      */
-    linalg::tensor3D TriclinicBox::getBoxMatrix() const { return _boxMatrix; }
+    linalg::tensor3D TriclinicBox::getBoxMatrix() const
+    {
+        return _boxMatrix.get(*this);
+    }
 
     /**
      * @brief get the box matrix
@@ -472,7 +545,7 @@ namespace molsys
      */
     linalg::tensor3D TriclinicBox::getTransformationMatrix() const
     {
-        return _transformationMatrix;
+        return _trafoMatrix.get(*this);
     }
 
 }   // namespace molsys

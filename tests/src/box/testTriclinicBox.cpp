@@ -31,32 +31,61 @@
 #include "triclinicBox.hpp"
 #include "vectorNear.hpp"
 
+struct TestTriclinicBox
+{
+    [[nodiscard]]
+    static double cosAlpha(const linalg::Vec3D &boxAngles)
+    {
+        return molsys::TriclinicBox::_cosAlpha(boxAngles * DEG_TO_RAD);
+    }
+    [[nodiscard]]
+    static double cosBeta(const linalg::Vec3D &boxAngles)
+    {
+        return molsys::TriclinicBox::_cosBeta(boxAngles * DEG_TO_RAD);
+    }
+    [[nodiscard]]
+    static double cosGamma(const linalg::Vec3D &boxAngles)
+    {
+        return molsys::TriclinicBox::_cosGamma(boxAngles * DEG_TO_RAD);
+    }
+    [[nodiscard]]
+    static double sinAlpha(const linalg::Vec3D &boxAngles)
+    {
+        return molsys::TriclinicBox::_sinAlpha(boxAngles * DEG_TO_RAD);
+    }
+    [[nodiscard]]
+    static double sinBeta(const linalg::Vec3D &boxAngles)
+    {
+        return molsys::TriclinicBox::_sinBeta(boxAngles * DEG_TO_RAD);
+    }
+    [[nodiscard]]
+    static double sinGamma(const linalg::Vec3D &boxAngles)
+    {
+        return molsys::TriclinicBox::_sinGamma(boxAngles * DEG_TO_RAD);
+    }
+};
+
 TEST(TestTriclinicBox, setBoxDimensions)
 {
-    auto                box           = molsys::TriclinicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
-    EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
+    auto box = molsys::TriclinicBox(boxDimensions, {90.0, 90.0, 90.0});
 
-    // only first entry should be set to boxDimensions[0] because angles are not
-    // set yet
-    EXPECT_EQ(
+    EXPECT_MATRIX_NEAR(
         box.getBoxMatrix(),
         linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
-            {0.0, 0.0, 0.0},
-            {0.0, 0.0, 0.0}
-        )
+            {0.0, 2.0, 0.0},
+            {0.0, 0.0, 3.0}
+        ),
+        1e-15
     );
 }
 
 TEST(TestTriclinicBox, setBoxAngles)
 {
-    auto                box           = molsys::TriclinicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     const linalg::Vec3D boxAngles     = {90.0, 90.0, 90.0};
-    box.setBoxDimensions(boxDimensions);
-    box.setBoxAngles(boxAngles);
+    auto                box = molsys::TriclinicBox(boxDimensions, boxAngles);
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
     EXPECT_EQ(box.getBoxAngles(), boxAngles);
     EXPECT_MATRIX_NEAR(
@@ -111,9 +140,7 @@ TEST(TestTriclinicBox, setBoxAngles)
 
 TEST(TestTriclinicBox, calculateVolume)
 {
-    auto box = molsys::TriclinicBox();
-    box.setBoxDimensions({1.0, 2.0, 3.0});
-    box.setBoxAngles({30.0, 60.0, 45.0});
+    auto box = molsys::TriclinicBox({1.0, 2.0, 3.0}, {30.0, 60.0, 45.0});
 
     const auto alpha = 30.0 * DEG_TO_RAD;
     const auto beta  = 60.0 * DEG_TO_RAD;
@@ -127,14 +154,12 @@ TEST(TestTriclinicBox, calculateVolume)
             (2 * ::cos(alpha) * ::cos(beta) * ::cos(gamma))
         );
 
-    EXPECT_DOUBLE_EQ(box.calculateVolume(), volume);
+    EXPECT_DOUBLE_EQ(box.getVolume(), volume);
 }
 
 TEST(TestTriclinicBox, applyPBC)
 {
-    auto box = molsys::TriclinicBox();
-    box.setBoxDimensions({1.0, 2.0, 3.0});
-    box.setBoxAngles({30.0, 60.0, 45.0});
+    auto box = molsys::TriclinicBox({1.0, 2.0, 3.0}, {30.0, 60.0, 45.0});
 
     auto position = linalg::Vec3D({1.3, 2.3, 3.3});
 
@@ -151,9 +176,7 @@ TEST(TestTriclinicBox, applyPBC)
 
 TEST(TestTriclinicBox, calculateShiftVectors)
 {
-    auto box = molsys::TriclinicBox();
-    box.setBoxDimensions({1.0, 2.0, 3.0});
-    box.setBoxAngles({30.0, 60.0, 45.0});
+    auto box = molsys::TriclinicBox({1.0, 2.0, 3.0}, {30.0, 60.0, 45.0});
 
     const auto position    = linalg::Vec3D({1.3, 2.3, 3.3});
     const auto newPosition = linalg::Vec3D(
@@ -167,9 +190,7 @@ TEST(TestTriclinicBox, calculateShiftVectors)
 
 TEST(TestTriclinicBox, wrapPositionIntoBox)
 {
-    auto box = molsys::TriclinicBox();
-    box.setBoxDimensions({60.0, 60.0, 4.542});
-    box.setBoxAngles({90.0, 90.0, 120.0});
+    auto box = molsys::TriclinicBox({60.0, 60.0, 4.542}, {90.0, 90.0, 120.0});
 
     auto outsidePos = linalg::Vec3D({5.0, -30.0, -0.1});
 
@@ -186,9 +207,7 @@ TEST(TestTriclinicBox, wrapPositionIntoBox)
 
 TEST(TestTriclinicBox, transformsRoundTrip)
 {
-    molsys::TriclinicBox box;
-    box.setBoxDimensions({4.0, 5.0, 6.0});
-    box.setBoxAngles({80.0, 75.0, 70.0});
+    molsys::TriclinicBox box({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0});
 
     const linalg::Vec3D vector{1.0, 2.0, 3.0};
     const auto          tensor =
@@ -204,20 +223,42 @@ TEST(TestTriclinicBox, transformsRoundTrip)
         tensor,
         1.0e-12
     );
-    EXPECT_NEAR(box.cosAlpha(), std::cos(80.0 * DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.cosBeta(), std::cos(75.0 * DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.cosGamma(), std::cos(70.0 * DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.sinAlpha(), std::sin(80.0 * DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.sinBeta(), std::sin(75.0 * DEG_TO_RAD), 1e-15);
-    EXPECT_NEAR(box.sinGamma(), std::sin(70.0 * DEG_TO_RAD), 1e-15);
+    EXPECT_NEAR(
+        TestTriclinicBox::cosAlpha(box.getBoxAngles()),
+        std::cos(80.0 * DEG_TO_RAD),
+        1e-15
+    );
+    EXPECT_NEAR(
+        TestTriclinicBox::cosBeta(box.getBoxAngles()),
+        std::cos(75.0 * DEG_TO_RAD),
+        1e-15
+    );
+    EXPECT_NEAR(
+        TestTriclinicBox::cosGamma(box.getBoxAngles()),
+        std::cos(70.0 * DEG_TO_RAD),
+        1e-15
+    );
+    EXPECT_NEAR(
+        TestTriclinicBox::sinAlpha(box.getBoxAngles()),
+        std::sin(80.0 * DEG_TO_RAD),
+        1e-15
+    );
+    EXPECT_NEAR(
+        TestTriclinicBox::sinBeta(box.getBoxAngles()),
+        std::sin(75.0 * DEG_TO_RAD),
+        1e-15
+    );
+    EXPECT_NEAR(
+        TestTriclinicBox::sinGamma(box.getBoxAngles()),
+        std::sin(70.0 * DEG_TO_RAD),
+        1e-15
+    );
     EXPECT_GT(box.getMinimalBoxDimension(), 0.0);
 }
 
 TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
 {
-    molsys::TriclinicBox box;
-    box.setBoxDimensions({4.0, 5.0, 6.0});
-    box.setBoxAngles({80.0, 75.0, 70.0});
+    molsys::TriclinicBox box({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0});
 
     using enum molsys::Periodicity;
     constexpr std::array periodicities{NON_PERIODIC, X, Y, Z, XY, XZ, YZ, XYZ};
@@ -235,9 +276,7 @@ TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
 
 TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
 {
-    molsys::TriclinicBox box;
-    box.setBoxDimensions({4.0, 5.0, 6.0});
-    box.setBoxAngles({80.0, 75.0, 70.0});
+    molsys::TriclinicBox box({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0});
 
     settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
     box.scaleBox(diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0}));
@@ -246,7 +285,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
         linalg::Vec3D(8.0, 10.0, 12.0),
         1.0e-12
     );
-    EXPECT_NEAR(box.getVolume(), box.calculateVolume(), 1.0e-12);
+    EXPECT_NEAR(box.getVolume(), box.getVolume(), 1.0e-12);
 
     settings::ManostatSettings::setIsotropy(Isotropy::FULL_ANISOTROPIC);
     const auto originalAngles = box.getBoxAngles();

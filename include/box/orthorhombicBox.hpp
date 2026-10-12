@@ -37,8 +37,6 @@ namespace molsys
     class OrthorhombicBox : public Box
     {
        public:
-        [[nodiscard]] double calculateVolume() override;
-
         void applyPBC(linalg::Vec3D &position) const override;
         void scaleBox(const linalg::tensor3D &scalingTensor) override;
 
@@ -47,11 +45,16 @@ namespace molsys
         ) const override;
 
         [[nodiscard]]
-        linalg::Vec3D calcBoxDimFromDensity(double totalMass, double density);
+        static linalg::Vec3D calcBoxDimFromDensity(
+            double totalMass,
+            double density
+        );
 
         [[nodiscard]] linalg::Vec3D wrapPositionIntoBox(
             const linalg::Vec3D &pos
         ) const override;
+
+        [[nodiscard]] double getVolume() const override;
     };
 
 }   // namespace molsys

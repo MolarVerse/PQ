@@ -24,6 +24,9 @@
 
 #define _BOX_HPP_
 
+#include <mstd/types.hpp>
+#include <mstd/types/property.hpp>
+
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
@@ -44,6 +47,11 @@ namespace molsys
         XYZ
     };
 
+    struct BoxTag
+    {
+    };
+    using BoxVec = mstd::CacheProperty<linalg::Vec3D, BoxTag>;
+
     /**
      * @class Box
      *
@@ -53,12 +61,13 @@ namespace molsys
     class Box
     {
        protected:
-        linalg::Vec3D _boxDimensions;
+        BoxVec _boxDimensions;
 
-        bool   _boxSizeHasChanged = false;
-        double _volume;
+        bool _boxSizeHasChanged = false;
 
        public:
+        Box();
+        explicit Box(const linalg::Vec3D &boxDimensions);
         virtual ~Box() = default;
 
         virtual void applyPBC(linalg::Vec3D &position) const = 0;
@@ -70,7 +79,7 @@ namespace molsys
 
         virtual void scaleBox(const linalg::tensor3D &scalingFactors) = 0;
 
-        [[nodiscard]] virtual double calculateVolume() = 0;
+        [[nodiscard]] virtual double getVolume() const = 0;
 
         [[nodiscard]]
         virtual linalg::Vec3D calcShiftVector(const linalg::Vec3D &) const = 0;
@@ -103,14 +112,12 @@ namespace molsys
          ********************/
 
         [[nodiscard]] bool          getBoxSizeHasChanged() const;
-        [[nodiscard]] double        getVolume() const;
         [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
 
         /********************
          * standard setters *
          ********************/
 
-        void setVolume(double volume);
         void setBoxSizeHasChanged(bool boxSizeHasChanged);
     };
 
