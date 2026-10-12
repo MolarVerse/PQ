@@ -74,7 +74,10 @@ namespace molsys
         double density
     )
     {
-        return totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
+        const auto volume =
+            totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
+
+        return {::cbrt(volume)};
     }
 
     linalg::Vec3D OrthorhombicBox::wrapPositionIntoBox(

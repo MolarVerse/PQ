@@ -316,7 +316,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     const auto scaleFactors = linalg::Vec3D(
         ::pow(
-            1.0 - (4.5 * 0.5 / 0.1 * (1.0 - (3.0 * PRESSURE_FACTOR))),
+            1.0 - (4.5 * 0.5 / 0.1 * (1.0 - (0.75 * PRESSURE_FACTOR))),
             1.0 / 3.0
         )
     );
@@ -324,7 +324,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _manostat->applyManostat(*_box, *_data);
     auto boxNew = _box->getBoxDimensions();
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(_data->getPressure(), 0.75 * PRESSURE_FACTOR);
     EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
     EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
