@@ -57,8 +57,6 @@ namespace molsys
         template <auto... Members>
         using TensorCache = BoxCache<linalg::tensor3D, Members...>;
 
-        BoxVec _angles;
-
         static constexpr auto  anglesPtr = &Self::_angles;
         TensorCache<anglesPtr> _trafoMatrix{_calculateTransformationMatrix};
 
@@ -95,14 +93,9 @@ namespace molsys
         void applyPBC(linalg::Vec3D &position) const override;
         void scaleBox(const linalg::tensor3D &scalingTensor) override;
 
-        void setBoxAngles(const linalg::Vec3D &boxAngles);
-        void setBoxDimensions(const linalg::Vec3D &boxDimensions) override;
-
         [[nodiscard]] double getMinimalBoxDimension() const override;
         [[nodiscard]] double getVolume() const override;
 
-        [[nodiscard]] linalg::Vec3D    getBoxAngles() const override;
-        [[nodiscard]] linalg::tensor3D getBoxMatrix() const override;
         [[nodiscard]] linalg::tensor3D getBoxMatrix(
             Periodicity periodicity
         ) const override;

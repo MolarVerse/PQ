@@ -28,6 +28,7 @@
 #include "defaults.hpp"
 #include "manostatSettings.hpp"
 #include "matrixNear.hpp"
+#include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "triclinicBox.hpp"
 #include "vectorNear.hpp"
 
@@ -63,6 +64,20 @@ struct TestTriclinicBox
     {
         return molsys::TriclinicBox::_sinGamma(boxAngles * DEG_TO_RAD);
     }
+
+    [[nodiscard]]
+    static linalg::tensor3D getBoxMatrix(molsys::TriclinicBox &box)
+    {
+        return box._boxMatrix.get(box);
+    }
+
+    static void setBoxAngles(
+        molsys::TriclinicBox &box,
+        const linalg::Vec3D  &boxAngles
+    )
+    {
+        box._angles.set(boxAngles * DEG_TO_RAD);
+    }
 };
 
 TEST(TestTriclinicBox, setBoxDimensions)
@@ -71,7 +86,7 @@ TEST(TestTriclinicBox, setBoxDimensions)
     auto box = molsys::TriclinicBox(boxDimensions, {90.0, 90.0, 90.0});
 
     EXPECT_MATRIX_NEAR(
-        box.getBoxMatrix(),
+        TestTriclinicBox::getBoxMatrix(box),
         linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 2.0, 0.0},
@@ -89,7 +104,7 @@ TEST(TestTriclinicBox, setBoxAngles)
     EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
     EXPECT_EQ(box.getBoxAngles(), boxAngles);
     EXPECT_MATRIX_NEAR(
-        box.getBoxMatrix(),
+        TestTriclinicBox::getBoxMatrix(box),
         linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 2.0, 0.0},
@@ -107,7 +122,7 @@ TEST(TestTriclinicBox, setBoxAngles)
         1e-15
     );
 
-    box.setBoxAngles({30.0, 60.0, 45.0});
+    TestTriclinicBox::setBoxAngles(box, {30.0, 60.0, 45.0});
 
     const auto alpha = 30.0 * DEG_TO_RAD;
     const auto beta  = 60.0 * DEG_TO_RAD;
@@ -135,7 +150,7 @@ TEST(TestTriclinicBox, setBoxAngles)
     boxMatrix[0] = {box.getTransformationMatrix()[0] * box.getBoxDimensions()};
     boxMatrix[1] = {box.getTransformationMatrix()[1] * box.getBoxDimensions()};
     boxMatrix[2] = {box.getTransformationMatrix()[2] * box.getBoxDimensions()};
-    EXPECT_MATRIX_NEAR(box.getBoxMatrix(), boxMatrix, 1.0e-15);
+    EXPECT_MATRIX_NEAR(TestTriclinicBox::getBoxMatrix(box), boxMatrix, 1.0e-15);
 }
 
 TEST(TestTriclinicBox, calculateVolume)
@@ -271,7 +286,7 @@ TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
     EXPECT_DOUBLE_EQ(nonPeriodic[2][2], defaults::VACUUM_BOX_DIMENSION);
     EXPECT_DOUBLE_EQ(nonPeriodic[0][1], 0.0);
     EXPECT_DOUBLE_EQ(nonPeriodic[0][2], 0.0);
-    EXPECT_EQ(box.getBoxMatrix(XYZ), box.getBoxMatrix());
+    EXPECT_EQ(box.getBoxMatrix(XYZ), TestTriclinicBox::getBoxMatrix(box));
 }
 
 TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
@@ -297,8 +312,10 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     );
     EXPECT_VECTOR_NEAR(box.getBoxAngles(), originalAngles, 1.0e-12);
 
-    const auto [dimensions, angles] =
-        molsys::calcBoxDimAndAnglesFromBoxMatrix(box.getBoxMatrix());
+    auto [dimensions, angles] = molsys::calcBoxDimAndAnglesFromBoxMatrix(
+        TestTriclinicBox::getBoxMatrix(box)
+    );
+    angles *= RAD_TO_DEG;
     EXPECT_VECTOR_NEAR(dimensions, box.getBoxDimensions(), 1.0e-12);
     EXPECT_VECTOR_NEAR(angles, box.getBoxAngles(), 1.0e-12);
 }

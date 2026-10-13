@@ -534,16 +534,6 @@ namespace molsys
     }
 
     /**
-     * @brief gets if the box size has changed
-     *
-     * @return bool
-     */
-    bool SimulationBox::getBoxSizeHasChanged() const
-    {
-        return _box->getBoxSizeHasChanged();
-    }
-
-    /**
      * @brief gets the box dimensions
      *
      * @return linalg::Vec3D
@@ -561,28 +551,6 @@ namespace molsys
     linalg::Vec3D SimulationBox::getBoxAngles() const
     {
         return _box->getBoxAngles();
-    }
-
-    /**
-     * @brief sets the box dimensions
-     *
-     * @param boxDimensions
-     */
-    void SimulationBox::setBoxDimensions(
-        const linalg::Vec3D &boxDimensions
-    ) const
-    {
-        _box->setBoxDimensions(boxDimensions);
-    }
-
-    /**
-     * @brief sets if the box size has changed
-     *
-     * @param boxSizeHasChanged
-     */
-    void SimulationBox::setBoxSizeHasChanged(const bool boxSizeHasChanged) const
-    {
-        _box->setBoxSizeHasChanged(boxSizeHasChanged);
     }
 
 }   // namespace molsys

@@ -31,8 +31,7 @@ namespace
 {
     molsys::OrthorhombicBox makeOrthorhombicBox()
     {
-        molsys::OrthorhombicBox box;
-        box.setBoxDimensions({20.0, 25.0, 30.0});
+        molsys::OrthorhombicBox box({20.0, 25.0, 30.0});
         return box;
     }
 

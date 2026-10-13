@@ -69,12 +69,12 @@ TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
 {
     DefaultExternalQMRunner    runner;
     molsys::SimulationBox      simBox;
-    molsys::OrthorhombicBox    box;
     physicalData::PhysicalData physicalData;
     QM::ExternalQMRunner *volatile baseRunner = &runner;
 
     EXPECT_NO_THROW(baseRunner->writePointChargeFile(simBox));
-    EXPECT_NO_THROW(baseRunner->readStressTensor(box, physicalData));
+    EXPECT_NO_THROW(baseRunner->readStressTensor(simBox.getBox(), physicalData)
+    );
 }
 
 TEST(TestQMSetup, resolvesBundledQMScript)

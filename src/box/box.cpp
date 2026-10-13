@@ -22,148 +22,21 @@
 
 #include "box.hpp"
 
+#include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
+#include "staticMatrix.hpp"
 
 namespace molsys
 {
-
     /**
      * @brief Construct a new Box object
      *
-     */
-    Box::Box() : _boxDimensions(linalg::Vec3D{defaults::VACUUM_BOX_DIMENSION})
-    {
-    }
-
-    /**
-     * @brief Construct a new Box object with specified dimensions
-     *
      * @param boxDimensions
+     * @param angles
      */
-    Box::Box(const linalg::Vec3D &boxDimensions) : _boxDimensions(boxDimensions)
+    Box::Box(const linalg::Vec3D &boxDimensions, const linalg::Vec3D &angles)
+        : _boxDimensions(boxDimensions), _angles(angles)
     {
-    }
-
-    /******************************************************
-     *                                                    *
-     * virtual methods that are overriden in triclinicBox *
-     *                                                    *
-     ******************************************************/
-
-    /**
-     * @brief get the box angles
-     *
-     * @return linalg::Vec3D
-     */
-    linalg::Vec3D Box::getBoxAngles() const
-    {
-        constexpr auto ninetyDegrees = 90.0;
-        return linalg::Vec3D{ninetyDegrees};
-    }
-
-    /**
-     * @brief get the box matrix
-     *
-     * @return linalg::StaticMatrix3x3<double>
-     */
-    linalg::StaticMatrix3x3<double> Box::getBoxMatrix() const
-    {
-        return diagonalMatrix(_boxDimensions.get());
-    }
-
-    /**
-     * @brief get the box matrix
-     *
-     * @return linalg::StaticMatrix3x3<double>
-     */
-    linalg::StaticMatrix3x3<double> Box::getBoxMatrix(
-        Periodicity periodicity
-    ) const
-    {
-        auto boxMatrix = getBoxMatrix();
-
-        using enum Periodicity;
-
-        switch (periodicity)
-        {
-            case NON_PERIODIC:
-                boxMatrix[0][0] = defaults::VACUUM_BOX_DIMENSION;
-                boxMatrix[1][1] = defaults::VACUUM_BOX_DIMENSION;
-                boxMatrix[2][2] = defaults::VACUUM_BOX_DIMENSION;
-                break;
-            case X:
-                boxMatrix[1][1] = defaults::VACUUM_BOX_DIMENSION;
-                boxMatrix[2][2] = defaults::VACUUM_BOX_DIMENSION;
-                break;
-            case Y:
-                boxMatrix[0][0] = defaults::VACUUM_BOX_DIMENSION;
-                boxMatrix[2][2] = defaults::VACUUM_BOX_DIMENSION;
-                break;
-            case Z:
-                boxMatrix[0][0] = defaults::VACUUM_BOX_DIMENSION;
-                boxMatrix[1][1] = defaults::VACUUM_BOX_DIMENSION;
-                break;
-            case XY: boxMatrix[2][2] = defaults::VACUUM_BOX_DIMENSION; break;
-            case XZ: boxMatrix[1][1] = defaults::VACUUM_BOX_DIMENSION; break;
-            case YZ: boxMatrix[0][0] = defaults::VACUUM_BOX_DIMENSION; break;
-            case XYZ: break;
-        }
-
-        return boxMatrix;
-    }
-
-    /**
-     * @brief transform a vector into orthogonal space
-     *
-     * @param position
-     * @return linalg::Vec3D
-     */
-    linalg::Vec3D Box::toOrthoSpace(const linalg::Vec3D &position) const
-    {
-        return position;
-    }
-
-    /**
-     * @brief transform a tensor into orthogonal space
-     *
-     * @param position
-     * @return linalg::tensor3D
-     */
-    linalg::tensor3D Box::toOrthoSpace(const linalg::tensor3D &position) const
-    {
-        return position;
-    }
-
-    /**
-     * @brief transform a vector into simulation space
-     *
-     * @param position
-     * @return linalg::Vec3D
-     */
-    linalg::Vec3D Box::toSimSpace(const linalg::Vec3D &position) const
-    {
-        return position;
-    }
-
-    /**
-     * @brief transform a tensor into simulation space
-     *
-     * @param position
-     * @return linalg::tensor3D
-     */
-    linalg::tensor3D Box::toSimSpace(const linalg::tensor3D &position) const
-    {
-        return position;
-    }
-
-    /**
-     * @brief set the box dimensions
-     *
-     * @param boxDimensions
-     */
-    void Box::setBoxDimensions(const linalg::Vec3D &boxDimensions)
-    {
-        _boxDimensions.set(boxDimensions);
     }
 
     /***************************
@@ -173,42 +46,23 @@ namespace molsys
      ***************************/
 
     /**
-     * @brief get if the box size has changed
-     *
-     * @return true
-     * @return false
-     */
-    bool Box::getBoxSizeHasChanged() const { return _boxSizeHasChanged; }
-
-    /**
-     * @brief get the minimal box dimension
-     *
-     * @return double
-     */
-    double Box::getMinimalBoxDimension() const
-    {
-        return minimum(_boxDimensions.get());
-    }
-
-    /**
      * @brief get the box dimensions
      *
      * @return linalg::Vec3D
      */
-    linalg::Vec3D Box::getBoxDimensions() const { return _boxDimensions.get(); }
-
-    /********************
-     * standard setters *
-     ********************/
+    const linalg::Vec3D &Box::getBoxDimensions() const
+    {
+        return _boxDimensions.get();
+    }
 
     /**
-     * @brief set if the box size has changed
+     * @brief get the box angles
      *
-     * @param boxSizeHasChanged
+     * @return linalg::Vec3D
      */
-    void Box::setBoxSizeHasChanged(bool boxSizeHasChanged)
+    linalg::Vec3D Box::getBoxAngles() const
     {
-        _boxSizeHasChanged = boxSizeHasChanged;
+        return _angles.get() * RAD_TO_DEG;
     }
 
 }   // namespace molsys

@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include "distanceKernels.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 TEST(TestDistanceKernels, distVecNoPBCIsSimpleSubtraction)
@@ -49,8 +50,9 @@ TEST(TestDistanceKernels, distVecWithPBCChoosesMinimumImage)
 {
     // 10 x 10 x 10 orthorhombic box. Two atoms at (0.5, 0, 0) and
     // (9.5, 0, 0) should be 1.0 apart under minimum image, not 9.0.
-    auto box = molsys::SimulationBox();
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    auto                    box = molsys::SimulationBox();
+    box.setBox(orthoBox);
 
     const auto vec1 = linalg::Vec3D(0.5, 0.0, 0.0);
     const auto vec2 = linalg::Vec3D(9.5, 0.0, 0.0);
@@ -61,8 +63,9 @@ TEST(TestDistanceKernels, distVecWithPBCChoosesMinimumImage)
 
 TEST(TestDistanceKernels, distVecAndDist2WithPBCConsistentWithDistVec)
 {
-    auto box = molsys::SimulationBox();
-    box.setBoxDimensions({8.0, 8.0, 8.0});
+    auto                    box = molsys::SimulationBox();
+    molsys::OrthorhombicBox orthoBox{{8.0, 8.0, 8.0}};
+    box.setBox(orthoBox);
 
     const auto vec1 = linalg::Vec3D(0.0, 0.0, 0.0);
     const auto vec2 = linalg::Vec3D(3.0, 4.0, 0.0);
@@ -75,8 +78,9 @@ TEST(TestDistanceKernels, distVecAndDist2WithPBCConsistentWithDistVec)
 
 TEST(TestDistanceKernels, distVecWithPBCIsSymmetricAcrossAllAxes)
 {
-    auto box = molsys::SimulationBox();
-    box.setBoxDimensions({10.0, 12.0, 14.0});
+    auto                    box = molsys::SimulationBox();
+    molsys::OrthorhombicBox orthoBox{{10.0, 12.0, 14.0}};
+    box.setBox(orthoBox);
 
     const auto vec1 = linalg::Vec3D(4.8, -5.5, 6.2);
     const auto vec2 = linalg::Vec3D(-4.7, 5.6, -6.1);
@@ -104,8 +108,9 @@ TEST(TestDistanceKernels, distVecWithPBCIsSymmetricAcrossAllAxes)
 
 TEST(TestDistanceKernels, distSquaredWithPBCMinimumImageDistance)
 {
-    auto box = molsys::SimulationBox();
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+    auto                    box = molsys::SimulationBox();
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    box.setBox(orthoBox);
 
     const auto vec1 = linalg::Vec3D(0.5, 0.0, 0.0);
     const auto vec2 = linalg::Vec3D(9.5, 0.0, 0.0);

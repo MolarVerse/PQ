@@ -62,12 +62,9 @@ namespace molsys
     {
        protected:
         BoxVec _boxDimensions;
-
-        bool _boxSizeHasChanged = false;
+        BoxVec _angles;
 
        public:
-        Box();
-        explicit Box(const linalg::Vec3D &boxDimensions);
         virtual ~Box() = default;
 
         virtual void applyPBC(linalg::Vec3D &position) const = 0;
@@ -79,46 +76,42 @@ namespace molsys
 
         virtual void scaleBox(const linalg::tensor3D &scalingFactors) = 0;
 
-        [[nodiscard]] virtual double getVolume() const = 0;
+        [[nodiscard]]
+        virtual double getVolume() const = 0;
 
         [[nodiscard]]
         virtual linalg::Vec3D calcShiftVector(const linalg::Vec3D &) const = 0;
 
-        /*****************************************************
-         * virtual methods that are overriden in triclinicBox *
-         ******************************************************/
-
-        virtual void setBoxDimensions(const linalg::Vec3D &boxDimensions);
-
-        [[nodiscard]] virtual double getMinimalBoxDimension() const;
-
-        [[nodiscard]] virtual linalg::Vec3D    getBoxAngles() const;
-        [[nodiscard]] virtual linalg::tensor3D getBoxMatrix() const;
         [[nodiscard]]
-        virtual linalg::tensor3D getBoxMatrix(Periodicity per) const;
+        virtual double getMinimalBoxDimension() const = 0;
 
         [[nodiscard]]
-        virtual linalg::Vec3D toOrthoSpace(const linalg::Vec3D &) const;
-        [[nodiscard]]
-        virtual linalg::tensor3D toOrthoSpace(const linalg::tensor3D &) const;
+        virtual linalg::tensor3D getBoxMatrix(Periodicity per) const = 0;
 
         [[nodiscard]]
-        virtual linalg::Vec3D toSimSpace(const linalg::Vec3D &) const;
+        virtual linalg::Vec3D toOrthoSpace(const linalg::Vec3D &) const = 0;
         [[nodiscard]]
-        virtual linalg::tensor3D toSimSpace(const linalg::tensor3D &) const;
+        virtual linalg::tensor3D toOrthoSpace(
+            const linalg::tensor3D &
+        ) const = 0;
+
+        [[nodiscard]]
+        virtual linalg::Vec3D toSimSpace(const linalg::Vec3D &) const = 0;
+        [[nodiscard]]
+        virtual linalg::tensor3D toSimSpace(const linalg::tensor3D &) const = 0;
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] bool          getBoxSizeHasChanged() const;
-        [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
+        [[nodiscard]] const linalg::Vec3D &getBoxDimensions() const;
+        [[nodiscard]] linalg::Vec3D        getBoxAngles() const;
 
-        /********************
-         * standard setters *
-         ********************/
-
-        void setBoxSizeHasChanged(bool boxSizeHasChanged);
+       protected:
+        explicit Box(
+            const linalg::Vec3D &boxDimensions,
+            const linalg::Vec3D &angles
+        );
     };
 
 }   // namespace molsys

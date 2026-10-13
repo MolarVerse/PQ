@@ -37,6 +37,11 @@ namespace molsys
     class OrthorhombicBox : public Box
     {
        public:
+        explicit OrthorhombicBox(const linalg::Vec3D &boxDimensions);
+
+        [[nodiscard]]
+        static OrthorhombicBox makeVacuumBox();
+
         void applyPBC(linalg::Vec3D &position) const override;
         void scaleBox(const linalg::tensor3D &scalingTensor) override;
 
@@ -55,6 +60,28 @@ namespace molsys
         ) const override;
 
         [[nodiscard]] double getVolume() const override;
+
+        [[nodiscard]]
+        double getMinimalBoxDimension() const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getBoxMatrix(Periodicity per) const override;
+
+        [[nodiscard]]
+        linalg::Vec3D toOrthoSpace(
+            const linalg::Vec3D &position
+        ) const override;
+        [[nodiscard]]
+        linalg::tensor3D toOrthoSpace(
+            const linalg::tensor3D &position
+        ) const override;
+
+        [[nodiscard]]
+        linalg::Vec3D toSimSpace(const linalg::Vec3D &position) const override;
+        [[nodiscard]]
+        linalg::tensor3D toSimSpace(
+            const linalg::tensor3D &position
+        ) const override;
     };
 
 }   // namespace molsys

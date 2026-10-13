@@ -164,6 +164,34 @@ namespace linalg
         }
         return result;
     }
+
+    /**
+     * @brief set the diagonal elements to the given value
+     *
+     * @tparam T
+     * @param value
+     */
+    template <typename T>
+    void StaticMatrix3x3<T>::setDiagonal(const T &value)
+    {
+        _data[0][0] = value;
+        _data[1][1] = value;
+        _data[2][2] = value;
+    }
+
+    /**
+     * @brief set the diagonal elements to the given values
+     *
+     * @tparam T
+     * @param values
+     */
+    template <typename T>
+    void StaticMatrix3x3<T>::setDiagonal(const Vector3D<T> &values)
+    {
+        _data[0][0] = values[0];
+        _data[1][1] = values[1];
+        _data[2][2] = values[2];
+    }
 }   // namespace linalg
 
 #endif   // _STATIC_MATRIX_CLASS_3x3_TPP_

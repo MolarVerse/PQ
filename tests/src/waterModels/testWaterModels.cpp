@@ -150,7 +150,9 @@ namespace
     molsys::SimulationBox makeIntraWaterBox(const WaterGeometry &geometry)
     {
         molsys::SimulationBox simBox;
-        simBox.setBoxDimensions({20.0, 20.0, 20.0});
+
+        molsys::OrthorhombicBox orthoBox{{20.0, 20.0, 20.0}};
+        simBox.setBox(orthoBox);
         simBox.setWaterType(kWaterType);
         addWater(
             simBox,
@@ -358,8 +360,9 @@ namespace
             .angle = 1.82
         };
 
-        molsys::SimulationBox simBox;
-        simBox.setBoxDimensions({15.0, 15.0, 15.0});
+        molsys::SimulationBox   simBox;
+        molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+        simBox.setBox(orthoBox);
         simBox.setWaterType(kWaterType);
 
         addWater(
@@ -633,8 +636,9 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
-    molsys::SimulationBox simBox;
-    simBox.setBoxDimensions({15.0, 15.0, 15.0});
+    molsys::SimulationBox   simBox;
+    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    simBox.setBox(orthoBox);
 
     molsys::Atom atom1;
     atom1.setPosition({0.0, 0.0, 0.0});
@@ -861,8 +865,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     potential.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
     potential.setNonCoulombPotential(makeNonCoulombPotential());
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({15.0, 15.0, 15.0});
+    molsys::OrthorhombicBox box({15.0, 15.0, 15.0});
 
     molsys::Molecule mol1;
     mol1.setMoltype(MolType{1});
@@ -981,7 +984,8 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
 {
     constexpr WaterGeometry geometry{.oh1 = 0.96, .oh2 = 0.96, .angle = 1.82};
     molsys::SimulationBox   simBox;
-    simBox.setBoxDimensions({15.0, 15.0, 15.0});
+    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    simBox.setBox(orthoBox);
     simBox.setWaterType(kWaterType);
     addWater(simBox, {-2.0, 0.0, 0.0}, geometry, molsys::HybridZone::OUTER);
     addWater(

@@ -129,8 +129,7 @@ namespace input::restartFile
         }
         else
         {
-            molsys::OrthorhombicBox box;
-            box.setBoxDimensions(boxDimensions);
+            molsys::OrthorhombicBox box(boxDimensions);
             engine.getSimulationBox().setBox(box);
         }
 

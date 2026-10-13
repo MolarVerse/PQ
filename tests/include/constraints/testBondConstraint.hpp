@@ -67,7 +67,9 @@ class TestBondConstraint : public ::testing::Test
 
         _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
-        _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
+
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _box->setBox(orthoBox);
 
         _bondConstraint = std::make_unique<constraints::BondConstraint>(
             _box->getMolecules().data(),

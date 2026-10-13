@@ -349,7 +349,8 @@ namespace setup
             simBox.setDensity(settings::SimulationBoxSettings::getDensity());
             const auto boxDimensions = simBox.calcBoxDimFromDensity();
 
-            simBox.setBoxDimensions(boxDimensions);
+            molsys::OrthorhombicBox orthoBox{boxDimensions};
+            simBox.setBox(orthoBox);
         }
         else if (!isDensitySet)
         {
