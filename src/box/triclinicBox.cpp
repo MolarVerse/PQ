@@ -490,14 +490,4 @@ namespace molsys
         return boxMatrix;
     }
 
-    /**
-     * @brief get the transformation matrix
-     *
-     * @return linalg::tensor3D
-     */
-    linalg::tensor3D TriclinicBox::getTransformationMatrix() const
-    {
-        return _trafoMatrix.get(*this);
-    }
-
 }   // namespace molsys

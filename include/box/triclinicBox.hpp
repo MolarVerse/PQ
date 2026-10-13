@@ -96,13 +96,12 @@ namespace molsys
         [[nodiscard]] double getMinimalBoxDimension() const override;
         [[nodiscard]] double getVolume() const override;
 
-        [[nodiscard]] linalg::tensor3D getBoxMatrix(
-            Periodicity periodicity
+        [[nodiscard]]
+        linalg::tensor3D getBoxMatrix(Periodicity periodicity) const override;
+        [[nodiscard]]
+        linalg::Vec3D wrapPositionIntoBox(
+            const linalg::Vec3D &pos
         ) const override;
-        [[nodiscard]] linalg::tensor3D getTransformationMatrix() const;
-        [[nodiscard]] linalg::Vec3D    wrapPositionIntoBox(
-               const linalg::Vec3D &pos
-           ) const override;
 
        private:
         [[nodiscard]]

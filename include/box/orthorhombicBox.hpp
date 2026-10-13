@@ -55,11 +55,13 @@ namespace molsys
             double density
         );
 
-        [[nodiscard]] linalg::Vec3D wrapPositionIntoBox(
+        [[nodiscard]]
+        linalg::Vec3D wrapPositionIntoBox(
             const linalg::Vec3D &pos
         ) const override;
 
-        [[nodiscard]] double getVolume() const override;
+        [[nodiscard]]
+        double getVolume() const override;
 
         [[nodiscard]]
         double getMinimalBoxDimension() const override;

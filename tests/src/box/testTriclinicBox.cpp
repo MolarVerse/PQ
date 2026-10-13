@@ -78,6 +78,11 @@ struct TestTriclinicBox
     {
         box._angles.set(boxAngles * DEG_TO_RAD);
     }
+
+    static linalg::tensor3D getTransformationMatrix(molsys::TriclinicBox &box)
+    {
+        return box._trafoMatrix.get(box);
+    }
 };
 
 TEST(TestTriclinicBox, setBoxDimensions)
@@ -113,7 +118,7 @@ TEST(TestTriclinicBox, setBoxAngles)
         1e-15
     );
     EXPECT_MATRIX_NEAR(
-        box.getTransformationMatrix(),
+        TestTriclinicBox::getTransformationMatrix(box),
         linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 1.0, 0.0},
@@ -129,7 +134,7 @@ TEST(TestTriclinicBox, setBoxAngles)
     const auto gamma = 45.0 * DEG_TO_RAD;
 
     EXPECT_MATRIX_NEAR(
-        box.getTransformationMatrix(),
+        TestTriclinicBox::getTransformationMatrix(box),
         linalg::StaticMatrix3x3<double>(
             {1.0, sqrt(0.5), ::cos(beta)},
             {0.0,
@@ -146,10 +151,11 @@ TEST(TestTriclinicBox, setBoxAngles)
         1e-15
     );
 
-    auto boxMatrix = linalg::StaticMatrix3x3<double>();
-    boxMatrix[0] = {box.getTransformationMatrix()[0] * box.getBoxDimensions()};
-    boxMatrix[1] = {box.getTransformationMatrix()[1] * box.getBoxDimensions()};
-    boxMatrix[2] = {box.getTransformationMatrix()[2] * box.getBoxDimensions()};
+    auto       boxMatrix   = linalg::StaticMatrix3x3<double>();
+    const auto trafoMatrix = TestTriclinicBox::getTransformationMatrix(box);
+    boxMatrix[0]           = {trafoMatrix[0] * box.getBoxDimensions()};
+    boxMatrix[1]           = {trafoMatrix[1] * box.getBoxDimensions()};
+    boxMatrix[2]           = {trafoMatrix[2] * box.getBoxDimensions()};
     EXPECT_MATRIX_NEAR(TestTriclinicBox::getBoxMatrix(box), boxMatrix, 1.0e-15);
 }
 
