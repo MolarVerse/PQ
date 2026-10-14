@@ -83,7 +83,7 @@ namespace input::topology
     {
         std::string              line;
         std::vector<std::string> lineElements;
-        int                      lineNumber = 1;
+        size_t                   lineNumber = 1;
 
         if (!settings::FileSettings::isTopologyFileNameSet())
             throw exc::InputFileException(
@@ -103,10 +103,8 @@ namespace input::topology
 
             auto *section = determineSection(lineElements);
             ++lineNumber;
-            section->setLineNumber(lineNumber);
             section->setFp(&_fp);
-            section->process(lineElements, _engine);
-            lineNumber = section->getLineNumber();
+            section->process(lineElements, _engine, lineNumber);
         }
     }
 

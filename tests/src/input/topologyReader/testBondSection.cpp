@@ -39,7 +39,7 @@ TEST_F(TestTopologySection, processSectionBond)
 {
     std::vector<std::string>     lineElements = {"1", "2", "7"};
     input::topology::BondSection bondSection;
-    bondSection.processSection(lineElements, *_engine);
+    bondSection.processSection(lineElements, *_engine, 0);
     const auto &bonds = _engine->getForceField()->getBonds();
     EXPECT_EQ(bonds.size(), 1);
     EXPECT_EQ(
@@ -56,19 +56,19 @@ TEST_F(TestTopologySection, processSectionBond)
     EXPECT_EQ(bonds[0].isLinker(), false);
 
     lineElements = {"1", "2", "7", "*"};
-    bondSection.processSection(lineElements, *_engine);
+    bondSection.processSection(lineElements, *_engine, 0);
     EXPECT_EQ(bonds[1].isLinker(), true);
 
     lineElements = {"1", "1", "7"};
     EXPECT_THROW_MSG(
-        bondSection.processSection(lineElements, *_engine),
+        bondSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Topology file bond section at line 0 - atoms cannot be the same!"
     );
 
     lineElements = {"1", "2", "7", "1", "2"};
     EXPECT_THROW_MSG(
-        bondSection.processSection(lineElements, *_engine),
+        bondSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Wrong number of arguments in topology file bond section at line 0 - "
         "number of elements has to be 3 or 4!"
@@ -76,7 +76,7 @@ TEST_F(TestTopologySection, processSectionBond)
 
     lineElements = {"1", "2", "7", "#"};
     EXPECT_THROW_MSG(
-        bondSection.processSection(lineElements, *_engine),
+        bondSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Forth entry in topology file in bond section has to be a '*' or empty "
         "at line 0!"
@@ -91,9 +91,9 @@ TEST_F(TestTopologySection, endedNormallyBond)
 {
     input::topology::BondSection bondSection;
     EXPECT_THROW_MSG(
-        bondSection.endedNormally(false),
+        bondSection.endedNormally(false, 0),
         exc::TopologyException,
         "Topology file bond section at line 0 - no end of section found!"
     );
-    EXPECT_NO_THROW(bondSection.endedNormally(true));
+    EXPECT_NO_THROW(bondSection.endedNormally(true, 0));
 }

@@ -24,8 +24,6 @@
 
 #define _INTEGRATOR_HPP_
 
-#include <string_view>
-
 namespace molsys
 {
     class Atom;            // forward declaration

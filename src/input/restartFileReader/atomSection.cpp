@@ -200,6 +200,7 @@ namespace input::restartFile
      *
      * @param lineElements all elements of the line
      * @param engine
+     * @param lineNumber the line number in the rst file being processed
      *
      * @throws RstFileException if the molecule type is not found
      * @throws RstFileException if the number of atoms in the
@@ -305,6 +306,7 @@ namespace input::restartFile
      *
      * @param lineElements
      * @param molecule
+     * @param lineNumber the line number in the rst file being processed
      *
      * @throws RstFileException if the next line of the rst
      * file does not exist
@@ -338,6 +340,7 @@ namespace input::restartFile
      * section must have 12 or 21 elements.
      *
      * @param lineElements
+     * @param lineNumber the line number in the rst file being processed
      *
      * @throws RstFileException if the number of elements in
      * the line is not 12 or 21

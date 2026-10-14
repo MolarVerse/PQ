@@ -42,8 +42,8 @@ namespace ff
      * @param coulombPotential
      * @param nonCoulombPotential
      * @param physicalData
-     * @param molecule1
-     * @param molecule2
+     * @param molecule_i
+     * @param molecule_j
      * @param atomIndex1
      * @param atomIndex2
      * @param distance
@@ -54,15 +54,15 @@ namespace ff
         const pot::CoulombPotential &coulombPotential,
         pot::NonCoulombPotential    &nonCoulombPotential,
         physicalData::PhysicalData  &physicalData,
-        const molsys::Molecule      *molecule1,
-        const molsys::Molecule      *molecule2,
+        const molsys::Molecule      *molecule_i,
+        const molsys::Molecule      *molecule_j,
         AtomIndex                    atomIndex1,
         AtomIndex                    atomIndex2,
         double                       distance
     )
     {
-        const auto charge1 = molecule1->getPartialCharge(atomIndex1);
-        const auto charge2 = molecule2->getPartialCharge(atomIndex2);
+        const auto charge1 = molecule_i->getPartialCharge(atomIndex1);
+        const auto charge2 = molecule_j->getPartialCharge(atomIndex2);
 
         const auto chargeProduct = charge1 * charge2;
 
@@ -82,12 +82,12 @@ namespace ff
         auto forceMagnitude = -coulombForce;
         physicalData.addCoulombEnergy(-coulombEnergy);
 
-        const auto molType1  = molecule1->getMoltype();
-        const auto molType2  = molecule2->getMoltype();
-        const auto atomType1 = molecule1->getAtomType(atomIndex1);
-        const auto atomType2 = molecule2->getAtomType(atomIndex2);
-        const auto vdwType1  = molecule1->getInternalGlobalVDWType(atomIndex1);
-        const auto vdwType2  = molecule2->getInternalGlobalVDWType(atomIndex2);
+        const auto molType1  = molecule_i->getMoltype();
+        const auto molType2  = molecule_j->getMoltype();
+        const auto atomType1 = molecule_i->getAtomType(atomIndex1);
+        const auto atomType2 = molecule_j->getAtomType(atomIndex2);
+        const auto vdwType1  = molecule_i->getInternalGlobalVDWType(atomIndex1);
+        const auto vdwType2  = molecule_j->getInternalGlobalVDWType(atomIndex2);
 
         const std::tuple indices{molType1, molType2, atomType1, atomType2};
 

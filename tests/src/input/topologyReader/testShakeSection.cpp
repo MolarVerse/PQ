@@ -39,7 +39,7 @@ TEST_F(TestTopologySection, processSectionShake)
 {
     std::vector<std::string>      lineElements = {"1", "2", "1.0", "0"};
     input::topology::ShakeSection shakeSection;
-    shakeSection.processSection(lineElements, *_engine);
+    shakeSection.processSection(lineElements, *_engine, 0);
 
     const auto& constraints = _engine->getConstraints();
 
@@ -64,14 +64,14 @@ TEST_F(TestTopologySection, processSectionShake)
 
     lineElements = {"1", "1", "1.0", "0"};
     EXPECT_THROW_MSG(
-        shakeSection.processSection(lineElements, *_engine),
+        shakeSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Topology file shake section at line 0 - atoms cannot be the same!"
     );
 
     lineElements = {"1", "1", "1.0", "0", "1"};
     EXPECT_THROW_MSG(
-        shakeSection.processSection(lineElements, *_engine),
+        shakeSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Wrong number of arguments in topology file shake section at line 0 - "
         "number of elements has to be 3 or 4!"
@@ -86,9 +86,9 @@ TEST_F(TestTopologySection, endedNormallyShake)
 {
     input::topology::ShakeSection shakeSection;
     EXPECT_THROW_MSG(
-        shakeSection.endedNormally(false),
+        shakeSection.endedNormally(false, 0),
         exc::TopologyException,
         "Topology file shake section at line 0 - no end of section found!"
     );
-    EXPECT_NO_THROW(shakeSection.endedNormally(true));
+    EXPECT_NO_THROW(shakeSection.endedNormally(true, 0));
 }

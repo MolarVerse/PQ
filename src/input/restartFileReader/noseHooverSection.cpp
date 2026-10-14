@@ -35,6 +35,7 @@ namespace input::restartFile
      * @brief checks the number of arguments in the line
      *
      * @param lineElements all elements of the line
+     * @param lineNumber the line number in the rst file being processed
      *
      * @throws exc::RstFileException if the number of arguments is not
      * correct

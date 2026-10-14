@@ -39,6 +39,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      */
     void ParameterFileSection::process(
         std::vector<std::string> &lineElements,

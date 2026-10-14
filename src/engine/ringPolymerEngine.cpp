@@ -72,7 +72,7 @@ namespace engine
             getEngineOutput().writeForceFile(getSimulationBox(), effStep);
             getEngineOutput().writeChargeFile(getSimulationBox(), effStep);
             getEngineOutput()
-                .writeRstFile(getSimulationBox(), *_thermostat, effStep);
+                .writeRstFile(getSimulationBox(), getThermostat(), effStep);
 
             getEngineOutput().writeRingPolymerRstFile(_ringPolymerBeads);
             getEngineOutput().writeRingPolymerXyzFile(

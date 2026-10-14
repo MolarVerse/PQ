@@ -53,6 +53,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
      * @throw exc::ParameterFileException if number of elements in line
      * is not 4

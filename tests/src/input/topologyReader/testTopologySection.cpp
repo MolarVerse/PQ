@@ -52,9 +52,9 @@ TEST_F(TestTopologySection, processShakeSection)
     getline(file, lineElements[0]);
 
     shakeSection.setFp(&file);
-    shakeSection.setLineNumber(1);
+    size_t lineNumber = 1;
 
-    EXPECT_NO_THROW(shakeSection.process(lineElements, *_engine));
+    EXPECT_NO_THROW(shakeSection.process(lineElements, *_engine, lineNumber));
     const auto& constraints = _engine->getConstraints();
 
     EXPECT_EQ(constraints->getBondConstraints().size(), 2);
@@ -95,7 +95,7 @@ TEST_F(TestTopologySection, processShakeSection)
     );
     EXPECT_EQ(constraints->getBondConstraints()[1].getTargetBondLength(), 1.2);
 
-    EXPECT_EQ(shakeSection.getLineNumber(), 5);
+    EXPECT_EQ(lineNumber, 5);
 }
 
 /**
@@ -119,8 +119,9 @@ TEST_F(TestTopologySection, processShakeSectionIncorrectNumberOfElements)
     getline(file, lineElements[0]);
     shakeSection.setFp(&file);
 
+    size_t lineNumber = 0;
     EXPECT_THROW_MSG(
-        shakeSection.process(lineElements, *_engine),
+        shakeSection.process(lineElements, *_engine, lineNumber),
         exc::TopologyException,
         "Wrong number of arguments in topology file shake section at line 0 - "
         "number of elements has to be 3 or 4!"
@@ -147,9 +148,9 @@ TEST_F(TestTopologySection, processShakeSectionSameAtomTwice)
     std::ifstream file(_topologyFileName.c_str());
     getline(file, lineElements[0]);
     shakeSection.setFp(&file);
-
+    size_t lineNumber = 0;
     EXPECT_THROW_MSG(
-        shakeSection.process(lineElements, *_engine),
+        shakeSection.process(lineElements, *_engine, lineNumber),
         exc::TopologyException,
         "Topology file shake section at line 0 - atoms cannot be the same!"
     );
@@ -178,8 +179,10 @@ TEST_F(TestTopologySection, processShakeSectionMissingEnd)
     getline(file, lineElements[0]);
     shakeSection.setFp(&file);
 
+    size_t lineNumber = 0;
+
     EXPECT_THROW_MSG(
-        shakeSection.process(lineElements, *_engine),
+        shakeSection.process(lineElements, *_engine, lineNumber),
         exc::TopologyException,
         "Topology file shake section at line 4 - no end of section found!"
     );

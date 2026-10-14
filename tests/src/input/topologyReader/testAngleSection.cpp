@@ -40,7 +40,7 @@ TEST_F(TestTopologySection, processSectionAngle)
 {
     std::vector<std::string>      lineElements = {"2", "1", "3", "7"};
     input::topology::AngleSection angleSection;
-    angleSection.processSection(lineElements, *_engine);
+    angleSection.processSection(lineElements, *_engine, 0);
 
     const auto& angles = _engine->getForceField()->getAngles();
 
@@ -64,19 +64,19 @@ TEST_F(TestTopologySection, processSectionAngle)
     EXPECT_EQ(angles[0].isLinker(), false);
 
     lineElements = {"2", "1", "3", "7", "*"};
-    angleSection.processSection(lineElements, *_engine);
+    angleSection.processSection(lineElements, *_engine, 0);
     EXPECT_EQ(angles[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3"};
     EXPECT_THROW_MSG(
-        angleSection.processSection(lineElements, *_engine),
+        angleSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Topology file angle section at line 0 - atoms cannot be the same!"
     );
 
     lineElements = {"1", "2", "7"};
     EXPECT_THROW_MSG(
-        angleSection.processSection(lineElements, *_engine),
+        angleSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Wrong number of arguments in topology file angle section at line 0 - "
         "number of elements has to be 4 or 5!"
@@ -84,7 +84,7 @@ TEST_F(TestTopologySection, processSectionAngle)
 
     lineElements = {"1", "2", "3", "7", "#"};
     EXPECT_THROW_MSG(
-        angleSection.processSection(lineElements, *_engine),
+        angleSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Fifth entry in topology file in angle section has to be a '*' or "
         "empty at line 0!"
@@ -99,9 +99,9 @@ TEST_F(TestTopologySection, endedNormallyAngle)
 {
     input::topology::AngleSection angleSection;
     EXPECT_THROW_MSG(
-        angleSection.endedNormally(false),
+        angleSection.endedNormally(false, 0),
         exc::TopologyException,
         "Topology file angle section at line 0 - no end of section found!"
     );
-    EXPECT_NO_THROW(angleSection.endedNormally(true));
+    EXPECT_NO_THROW(angleSection.endedNormally(true, 0));
 }

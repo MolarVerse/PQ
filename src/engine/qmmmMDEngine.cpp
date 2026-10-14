@@ -110,8 +110,10 @@ namespace engine
      */
     void QMMMMDEngine::calculateForces()
     {
-        _configurator.calculateInnerRegionCenter(getSimulationBox());
-        _configurator.shiftAtomsToInnerRegionCenter(getSimulationBox());
+        _getHybridConfigurator().calculateInnerRegionCenter(getSimulationBox());
+        _getHybridConfigurator().shiftAtomsToInnerRegionCenter(
+            getSimulationBox()
+        );
         configurator::HybridConfigurator::assignHybridZones(getSimulationBox());
         _moltypeCheck();
         configurator::HybridConfigurator::calculateSmoothingFactors(
@@ -129,7 +131,9 @@ namespace engine
         _applySmoothing();
 
         _combineInnerOuterForces();
-        _configurator.shiftAtomsBackToInitialPositions(getSimulationBox());
+        _getHybridConfigurator().shiftAtomsBackToInitialPositions(
+            getSimulationBox()
+        );
     }
 
     /**
@@ -217,7 +221,8 @@ namespace engine
             for (auto &atom : getSimulationBox().getAtoms())
                 atom->getQMCharge().reset();
 
-            _qmRunner->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+            getQMRunner()
+                ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
             virial +=
@@ -323,7 +328,7 @@ namespace engine
             getSimulationBox()
         );
 
-        _qmRunner->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+        getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
             _scaleSmoothingMoleculeForcesInner();

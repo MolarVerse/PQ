@@ -71,6 +71,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
      * @throw ParameterFileException if number of elements in line
      * is not 7 or 8

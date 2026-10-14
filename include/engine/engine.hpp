@@ -69,7 +69,6 @@ namespace engine
         std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
 
-       private:
         struct Impl;
         std::unique_ptr<Impl> _impl;
 

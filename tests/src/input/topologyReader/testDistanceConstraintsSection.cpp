@@ -39,7 +39,7 @@ TEST_F(TestTopologySection, processSectionDistanceConstraints)
 {
     std::vector<std::string> lineElements = {"1", "2", "1.0", "2.0", "4", "6"};
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
-    distanceConstraintsSection.processSection(lineElements, *_engine);
+    distanceConstraintsSection.processSection(lineElements, *_engine, 0);
 
     const auto& constraints = _engine->getConstraints();
 
@@ -68,7 +68,7 @@ TEST_F(TestTopologySection, processSectionDistanceConstraints)
     // not enough elements
     lineElements = {"1", "1", "1.0", "2", "1"};
     EXPECT_THROW_MSG(
-        distanceConstraintsSection.processSection(lineElements, *_engine),
+        distanceConstraintsSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Wrong number of arguments in topology file \"Distance Constraints\" "
         "section at line 0 - number of elements has to be 6!"
@@ -77,7 +77,7 @@ TEST_F(TestTopologySection, processSectionDistanceConstraints)
     // same atom indices
     lineElements = {"1", "1", "1.0", "2", "1", "2"};
     EXPECT_THROW_MSG(
-        distanceConstraintsSection.processSection(lineElements, *_engine),
+        distanceConstraintsSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Topology file \"Distance Constraints\" at line 0 - atoms cannot be "
         "the same!"
@@ -86,7 +86,7 @@ TEST_F(TestTopologySection, processSectionDistanceConstraints)
     // lower distance greater than upper distance
     lineElements = {"1", "2", "2.0", "1.0", "1", "2"};
     EXPECT_THROW_MSG(
-        distanceConstraintsSection.processSection(lineElements, *_engine),
+        distanceConstraintsSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Topology file \"Distance Constraints\" at line 0 - lower distance "
         "cannot be greater than upper distance!"
@@ -102,10 +102,10 @@ TEST_F(TestTopologySection, endedNormallyDistanceConstraints)
 {
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
     EXPECT_THROW_MSG(
-        distanceConstraintsSection.endedNormally(false),
+        distanceConstraintsSection.endedNormally(false, 0),
         exc::TopologyException,
         "Topology file error in \"Distance Constraints\" section at line 0 - "
         "no end of section found!"
     );
-    EXPECT_NO_THROW(distanceConstraintsSection.endedNormally(true));
+    EXPECT_NO_THROW(distanceConstraintsSection.endedNormally(true, 0));
 }

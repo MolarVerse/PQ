@@ -39,7 +39,7 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
 {
     std::vector<std::string> lineElements = {"1", "2", "3", "4", "7"};
     input::topology::ImproperDihedralSection improperDihedralSection;
-    improperDihedralSection.processSection(lineElements, *_engine);
+    improperDihedralSection.processSection(lineElements, *_engine, 0);
 
     const auto &improperDihedrals =
         _engine->getForceField()->getImproperDihedrals();
@@ -58,7 +58,7 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
 
     lineElements = {"1", "1", "2", "3", "4"};
     EXPECT_THROW_MSG(
-        improperDihedralSection.processSection(lineElements, *_engine),
+        improperDihedralSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Topology file improper dihedral section at line 0 - atoms cannot be "
         "the same!"
@@ -66,7 +66,7 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
 
     lineElements = {"1", "2", "7"};
     EXPECT_THROW_MSG(
-        improperDihedralSection.processSection(lineElements, *_engine),
+        improperDihedralSection.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Wrong number of arguments in topology file improper dihedral section "
         "at line 0 - number of elements has to be 5!"
@@ -81,10 +81,10 @@ TEST_F(TestTopologySection, endedNormallyImproperDihedral)
 {
     input::topology::ImproperDihedralSection improperDihedralSection;
     EXPECT_THROW_MSG(
-        improperDihedralSection.endedNormally(false),
+        improperDihedralSection.endedNormally(false, 0),
         exc::TopologyException,
         "Topology file improper dihedral section at line 0 - no end of section "
         "found!"
     );
-    EXPECT_NO_THROW(improperDihedralSection.endedNormally(true));
+    EXPECT_NO_THROW(improperDihedralSection.endedNormally(true, 0));
 }

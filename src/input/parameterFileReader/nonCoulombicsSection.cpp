@@ -105,6 +105,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
      * @throw exc::ParameterFileException if nonCoulombic type is not
      * lj, buckingham or morse
@@ -154,6 +155,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
      * @throw exc::ParameterFileException if number of elements in line
      * is not 4 or 5
@@ -221,6 +223,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
      * @throw exc::ParameterFileException if number of elements in line
      * is not 5 or 6
@@ -288,6 +291,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
      * @throw exc::ParameterFileException if number of elements in line
      * is not 5 or 6

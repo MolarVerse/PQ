@@ -25,6 +25,7 @@
 #include "constants/conversionFactors.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
+#include "hybridConfigurator.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "referencesOutput.hpp"
@@ -208,10 +209,12 @@ namespace engine
             );
 
             if (settings::GeneralSettings::isHybridJobtype())
+            {
                 getEngineOutput().writeHybridCenterXyzFile(
                     _configurator,
                     effStep
                 );
+            }
         }
 
         // NOTE:
@@ -428,4 +431,24 @@ namespace engine
         return getEngineOutput().getRingPolymerEnergyOutput();
     }
 
+    /**
+     * @brief get the reference to the hybrid configurator
+     *
+     * @return configurator::HybridConfigurator&
+     */
+    configurator::HybridConfigurator &MDEngine::_getHybridConfigurator()
+    {
+        return _configurator;
+    }
+
+    /**
+     * @brief get the reference to the hybrid configurator (const)
+     *
+     * @return const configurator::HybridConfigurator&
+     */
+    const configurator::HybridConfigurator &MDEngine::_getHybridConfigurator(
+    ) const
+    {
+        return _configurator;
+    }
 }   // namespace engine

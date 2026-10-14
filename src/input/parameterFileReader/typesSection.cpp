@@ -43,6 +43,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      */
     void TypesSection::process(
         std::vector<std::string> &lineElements,
@@ -64,6 +65,7 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
      * @throw exc::ParameterFileException if number of elements in line
      * is not 8

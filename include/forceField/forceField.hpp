@@ -36,8 +36,8 @@ namespace ff
         const pot::CoulombPotential &coulombPotential,
         pot::NonCoulombPotential    &nonCoulombPotential,
         physicalData::PhysicalData  &physicalData,
-        const molsys::Molecule      *molecule1,
-        const molsys::Molecule      *molecule2,
+        const molsys::Molecule      *molecule_i,
+        const molsys::Molecule      *molecule_j,
         AtomIndex                    atomIndex1,
         AtomIndex                    atomIndex2,
         double                       distance

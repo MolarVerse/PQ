@@ -40,107 +40,107 @@
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 
+class TestableStochasticRescalingManostat
+    : public manostat::StochasticRescalingManostat
+{
+   public:
+    using StochasticRescalingManostat::StochasticRescalingManostat;
+
+    void setPressure(const double pressure) { _setPressure(pressure); }
+    void setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _setPressureTensor(pTensor);
+    }
+};
+
+class TestableAnisotropicStochasticRescalingManostat
+    : public manostat::AnisotropicStochasticRescalingManostat
+{
+   public:
+    using AnisotropicStochasticRescalingManostat::
+        AnisotropicStochasticRescalingManostat;
+
+    void setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _setPressureTensor(pTensor);
+    }
+};
+
+class TestableSemiIsotropicStochasticRescalingManostat
+    : public manostat::SemiIsotropicStochasticRescalingManostat
+{
+   public:
+    using SemiIsotropicStochasticRescalingManostat::
+        SemiIsotropicStochasticRescalingManostat;
+
+    void setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _setPressureTensor(pTensor);
+    }
+};
+
+class TestableFullAnisotropicStochasticRescalingManostat
+    : public manostat::FullAnisotropicStochasticRescalingManostat
+{
+   public:
+    using FullAnisotropicStochasticRescalingManostat::
+        FullAnisotropicStochasticRescalingManostat;
+
+    void setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _setPressureTensor(pTensor);
+    }
+};
+
+class TestableBerendsenManostat : public manostat::BerendsenManostat
+{
+   public:
+    using BerendsenManostat::BerendsenManostat;
+
+    void setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _setPressureTensor(pTensor);
+    }
+};
+
+class TestableSemiIsotropicBerendsenManostat
+    : public manostat::SemiIsotropicBerendsenManostat
+{
+   public:
+    using SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat;
+
+    void setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _setPressureTensor(pTensor);
+    }
+};
+
+class TestableAnisotropicBerendsenManostat
+    : public manostat::AnisotropicBerendsenManostat
+{
+   public:
+    using AnisotropicBerendsenManostat::AnisotropicBerendsenManostat;
+
+    void setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _setPressureTensor(pTensor);
+    }
+};
+
+class TestableFullAnisotropicBerendsenManostat
+    : public manostat::FullAnisotropicBerendsenManostat
+{
+   public:
+    using FullAnisotropicBerendsenManostat::FullAnisotropicBerendsenManostat;
+
+    void setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _setPressureTensor(pTensor);
+    }
+};
+
 namespace
 {
-    class TestableStochasticRescalingManostat
-        : public manostat::StochasticRescalingManostat
-    {
-       public:
-        using StochasticRescalingManostat::StochasticRescalingManostat;
-
-        void setPressure(const double pressure) { _pressure = pressure; }
-        void setPressureTensor(const linalg::tensor3D& pTensor)
-        {
-            _pressureTensor = pTensor;
-        }
-    };
-
-    class TestableAnisotropicStochasticRescalingManostat
-        : public manostat::AnisotropicStochasticRescalingManostat
-    {
-       public:
-        using AnisotropicStochasticRescalingManostat::
-            AnisotropicStochasticRescalingManostat;
-
-        void setPressureTensor(const linalg::tensor3D& pTensor)
-        {
-            _pressureTensor = pTensor;
-        }
-    };
-
-    class TestableSemiIsotropicStochasticRescalingManostat
-        : public manostat::SemiIsotropicStochasticRescalingManostat
-    {
-       public:
-        using SemiIsotropicStochasticRescalingManostat::
-            SemiIsotropicStochasticRescalingManostat;
-
-        void setPressureTensor(const linalg::tensor3D& pTensor)
-        {
-            _pressureTensor = pTensor;
-        }
-    };
-
-    class TestableFullAnisotropicStochasticRescalingManostat
-        : public manostat::FullAnisotropicStochasticRescalingManostat
-    {
-       public:
-        using FullAnisotropicStochasticRescalingManostat::
-            FullAnisotropicStochasticRescalingManostat;
-
-        void setPressureTensor(const linalg::tensor3D& pTensor)
-        {
-            _pressureTensor = pTensor;
-        }
-    };
-
-    class TestableBerendsenManostat : public manostat::BerendsenManostat
-    {
-       public:
-        using BerendsenManostat::BerendsenManostat;
-
-        void setPressureTensor(const linalg::tensor3D& pTensor)
-        {
-            _pressureTensor = pTensor;
-        }
-    };
-
-    class TestableSemiIsotropicBerendsenManostat
-        : public manostat::SemiIsotropicBerendsenManostat
-    {
-       public:
-        using SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat;
-
-        void setPressureTensor(const linalg::tensor3D& pTensor)
-        {
-            _pressureTensor = pTensor;
-        }
-    };
-
-    class TestableAnisotropicBerendsenManostat
-        : public manostat::AnisotropicBerendsenManostat
-    {
-       public:
-        using AnisotropicBerendsenManostat::AnisotropicBerendsenManostat;
-
-        void setPressureTensor(const linalg::tensor3D& pTensor)
-        {
-            _pressureTensor = pTensor;
-        }
-    };
-
-    class TestableFullAnisotropicBerendsenManostat
-        : public manostat::FullAnisotropicBerendsenManostat
-    {
-       public:
-        using FullAnisotropicBerendsenManostat::
-            FullAnisotropicBerendsenManostat;
-
-        void setPressureTensor(const linalg::tensor3D& pTensor)
-        {
-            _pressureTensor = pTensor;
-        }
-    };
 
     void setupCutMolecule(
         molsys::SimulationBox&      simulationBox,

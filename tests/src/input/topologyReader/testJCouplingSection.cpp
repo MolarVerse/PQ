@@ -40,9 +40,9 @@ TEST_F(TestTopologySection, jCouplingSectionKeyword)
 TEST_F(TestTopologySection, jCouplingSectionEndedNormally)
 {
     input::topology::JCouplingSection section;
-    EXPECT_NO_THROW(section.endedNormally(true));
+    EXPECT_NO_THROW(section.endedNormally(true, 0));
     EXPECT_THROW_MSG(
-        section.endedNormally(false),
+        section.endedNormally(false, 0),
         exc::TopologyException,
         "Topology file j-coupling section at line 0 - no end of section found!"
     );
@@ -53,7 +53,7 @@ TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
     input::topology::JCouplingSection section;
     // atom1, atom2, atom3, atom4, type
     std::vector<std::string> lineElements = {"1", "2", "3", "4", "9"};
-    section.processSection(lineElements, *_engine);
+    section.processSection(lineElements, *_engine, 0);
 
     const auto &jCouplings = _engine->getForceField()->getJCouplings();
     ASSERT_EQ(jCouplings.size(), 1U);
@@ -73,7 +73,7 @@ TEST_F(TestTopologySection, jCouplingSectionThrowsOnWrongElementCount)
     input::topology::JCouplingSection section;
     std::vector<std::string>          lineElements = {"1", "2", "3"};
     EXPECT_THROW_MSG(
-        section.processSection(lineElements, *_engine),
+        section.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Wrong number of arguments in topology file j-coupling section at line "
         "0 - number of elements has to be 5!"
@@ -81,7 +81,7 @@ TEST_F(TestTopologySection, jCouplingSectionThrowsOnWrongElementCount)
 
     lineElements = {"1", "2", "3", "4", "9", "extra"};
     EXPECT_THROW_MSG(
-        section.processSection(lineElements, *_engine),
+        section.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Wrong number of arguments in topology file j-coupling section at line "
         "0 - number of elements has to be 5!"
@@ -94,7 +94,7 @@ TEST_F(TestTopologySection, jCouplingSectionThrowsOnDuplicateAtomIndices)
     // atom1 == atom2 — unique check should fire.
     std::vector<std::string> lineElements = {"1", "1", "2", "3", "9"};
     EXPECT_THROW_MSG(
-        section.processSection(lineElements, *_engine),
+        section.processSection(lineElements, *_engine, 0),
         exc::TopologyException,
         "Topology file j-coupling section at line 0 - atoms cannot be the same!"
     );
