@@ -25,7 +25,6 @@
 #define _TRICLINIC_BOX_HPP_
 
 #include <mstd/types.hpp>
-#include <mstd/types/member_cache.hpp>
 
 #include "box.hpp"
 #include "vector3d.hpp"
