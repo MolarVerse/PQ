@@ -33,6 +33,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
+#include "generalSettings.hpp"
 #include "intraNonBondedContainer.hpp"
 #include "mathUtilities.hpp"
 #include "simulationBox.hpp"
@@ -44,12 +45,11 @@ namespace input::intraNonBondedReader
     /**
      * @brief checks if the intra non bonded interactions are needed
      *
-     * @param engine
      * @return bool
      */
-    bool isNeeded(const engine::Engine &engine)
+    bool isNeeded()
     {
-        return engine.isIntraNonBondedActivated();
+        return settings::GeneralSettings::isIntraNonBondedActivated();
     }
 
     /**
@@ -59,7 +59,7 @@ namespace input::intraNonBondedReader
      */
     void readIntraNonBondedFile(engine::Engine &engine)
     {
-        if (!isNeeded(engine))
+        if (!isNeeded())
             return;
 
         auto &log = engine.getLogOutput();

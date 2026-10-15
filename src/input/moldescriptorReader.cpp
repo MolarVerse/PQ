@@ -30,6 +30,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
 #include "moleculeType.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
@@ -248,7 +249,7 @@ namespace input::molDescriptor
                 );
             }
 
-            if (_engine.getForceField()->isNonCoulombicActivated())
+            if (settings::ForceFieldSettings::isNonCoulombicActive())
             {
                 if (lineElements.size() != 4)
                 {

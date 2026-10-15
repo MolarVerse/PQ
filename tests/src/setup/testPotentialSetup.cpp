@@ -30,6 +30,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "forceFieldSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "lennardJonesPair.hpp"
 #include "moleculeType.hpp"
@@ -99,7 +100,7 @@ TEST_F(TestSetup, setupCoulombPotential)
  */
 TEST_F(TestSetup, setupNonCoulombPotential)
 {
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );
@@ -111,7 +112,7 @@ TEST_F(TestSetup, setupNonCoulombPotential)
         typeid(pot::ForceFieldNonCoulomb)
     );
 
-    _engine->getForceField()->deactivateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     setup::PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setupNonCoulomb();
 
@@ -126,7 +127,7 @@ TEST_F(TestSetup, setupNonCoulombPotential)
  */
 TEST_F(TestSetup, setupNonCoulombicPairs)
 {
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );
@@ -193,7 +194,7 @@ TEST_F(TestSetup, setupPotential)
 {
     EXPECT_NO_THROW(setup::setupPotential(*_engine));
 
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );

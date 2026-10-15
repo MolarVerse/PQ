@@ -37,6 +37,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "guffPair.hpp"
@@ -64,7 +65,7 @@ namespace input::guffdat
      */
     void readGuffDat(engine::Engine &engine)
     {
-        if (!isNeeded(engine))
+        if (!isNeeded())
             return;
 
         out::StdoutOutput::writeRead(
@@ -92,12 +93,12 @@ namespace input::guffdat
      * @return true
      * @return false
      */
-    bool isNeeded(engine::Engine &engine)
+    bool isNeeded()
     {
         if (!settings::GeneralSettings::isMMActivated())
             return false;
 
-        if (engine.getForceField()->isNonCoulombicActivated())
+        if (settings::ForceFieldSettings::isNonCoulombicActive())
             return false;
 
         return true;

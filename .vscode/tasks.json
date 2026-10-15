@@ -89,6 +89,69 @@
             "group": "build"
         },
         {
+            "label": "devops cpp_checks (changed)",
+            "type": "shell",
+            "command": "cpp_checks",
+            "args": [
+                "--base-ref",
+                "origin/dev"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                {
+                    "owner": "devops-cpp-checks",
+                    "severity": "warning",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ],
+                    "pattern": {
+                        "regexp": "^([^\\s:][^:]*):(\\d+):(\\d+):\\s*(error|warning|style|info|note):\\s*(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                }
+            ],
+            "group": "build",
+            "detail": "Style rules of the CI check on files changed since origin/dev. Needs `pip install -e \"external/devops[ast]\"` and a compile database in .build (cmake -S . -B .build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON)."
+        },
+        {
+            "label": "devops cpp_checks (all)",
+            "type": "shell",
+            "command": "cpp_checks",
+            "args": [
+                "--no-fail-fast"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                {
+                    "owner": "devops-cpp-checks",
+                    "severity": "warning",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ],
+                    "pattern": {
+                        "regexp": "^([^\\s:][^:]*):(\\d+):(\\d+):\\s*(error|warning|style|info|note):\\s*(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                }
+            ],
+            "group": "build",
+            "detail": "Style rules of the CI check on all files. Needs `pip install -e \"external/devops[ast]\"` and a compile database in .build (cmake -S . -B .build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON)."
+        },
+        {
             "type": "cmake",
             "label": "CMake: build",
             "command": "build",

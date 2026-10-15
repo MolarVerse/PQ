@@ -7,7 +7,6 @@ add_library(settings
     potentialSettings.cpp
     fileSettings.cpp
     hybridSettings.cpp
-    resetKineticsSettings.cpp
     timingsSettings.cpp
     forceFieldSettings.cpp
     qmSettings.cpp
@@ -17,6 +16,9 @@ add_library(settings
     convergenceSettings.cpp
     waterModelSettings.cpp
     hessianSettings.cpp
+
+    settings.cpp
+    resetKineticsSettings.cpp
 )
 
 target_include_directories(settings

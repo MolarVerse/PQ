@@ -175,11 +175,13 @@ namespace input
             needsPython = true;
 
 #ifdef PYTHON_ENABLED
-        std::string restartFile = FileSettings::getStartFileName();
-        std::string moldescFile = FileSettings::getMolDescriptorFileName();
+        std::string restartFile = settings::FileSettings::getStartFileName();
+        std::string moldescFile =
+            settings::FileSettings::getMolDescriptorFileName();
 
         if (needsPython)
-            selectionVec = pq_python::select(raw, restartFile, moldescFile);
+            selectionVec =
+                pq_python::select(std::string(raw), restartFile, moldescFile);
 #else
 
         // check if string contains any characters that are not digits or commas

@@ -22,15 +22,12 @@
 
 #include "simulationBoxInputParser.hpp"
 
-#include <utility>
-
 #include "defaults.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "potentialSettings.hpp"
 #include "rangeValidator.hpp"
-#include "simulationBox.hpp"
 #include "simulationBoxSettings.hpp"
 
 namespace input
@@ -45,12 +42,8 @@ namespace input
      * density
      * "<double>"
      *
-     * @param simulationBox
      */
-    SimulationBoxInputParser::SimulationBoxInputParser(
-        std::shared_ptr<molsys::SimulationBox> simulationBox
-    )
-        : _simulationBox(std::move(simulationBox))
+    SimulationBoxInputParser::SimulationBoxInputParser()
     {
         addCoulombRadiusKey();
         addNonCoulombRadiusKey();
@@ -122,10 +115,10 @@ namespace input
             .description = "Specifies the density of the simulation box"
         };
 
-        const auto setValue = [simulationBox = _simulationBox](double value)
+        const auto setValue = [](double value)
         {
+            settings::SimulationBoxSettings::setDensity(value);
             settings::SimulationBoxSettings::setDensitySet(true);
-            simulationBox->setDensity(value);
         };
 
         auto &key = _getRegistry().registerKey(

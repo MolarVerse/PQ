@@ -340,7 +340,7 @@ TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
  */
 TEST_F(TestSetup, forceFieldSetupSetupForceField)
 {
-    settings::ForceFieldSettings::activate();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
 
     auto molecule1 = molsys::Molecule();
     _engine->getSimulationBox().addMolecule(molecule1);
@@ -437,7 +437,7 @@ TEST_F(TestSetup, forceFieldSetupSetupForceField)
  */
 TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
 {
-    settings::ForceFieldSettings::activate();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
 
     auto molecule1 = molsys::Molecule();
     _engine->getSimulationBox().addMolecule(molecule1);
@@ -501,7 +501,7 @@ TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
     _engine->getForceField()->addDihedralType(dihedralType);
     _engine->getForceField()->addImproperDihedralType(improperDihedralType);
 
-    settings::ForceFieldSettings::deactivate();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     setup::setupForceField(*_engine);
 
     const auto &bonds     = _engine->getForceField()->getBonds();

@@ -1,0 +1,1 @@
+- Fix the build with BUILD_WITH_PYTHON_BINDINGS=ON: the first configure no longer aborts after a successful pip install of PQAnalysis (and no longer installs a stray "update" package), and the Python-enabled selection code compiles again.

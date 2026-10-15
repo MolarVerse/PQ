@@ -23,6 +23,7 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"
+#include "constraintSettings.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
@@ -40,8 +41,10 @@ namespace engine
      *
      * @details This constructor initializes the MDEngine with default settings.
      */
-    MDEngine::MDEngine()
-        : _integrator(std::make_unique<integrator::VelocityVerlet>()),
+    MDEngine::MDEngine(Settings settings)
+        : Engine(settings),
+          _resetKinetics(getSettings().resetKinetics),
+          _integrator(std::make_unique<integrator::VelocityVerlet>()),
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(std::make_unique<manostat::Manostat>())
     {
@@ -95,10 +98,10 @@ namespace engine
             getPhysicalData()
         );
 
-        if (getConstraints()->isMShakeActive())
+        if (settings::ConstraintSettings::isMShakeActivated())
             getSimulationBox().updateOldPositions();
 
-        _integrator->firstStep(getSimulationBox());
+        getIntegrator().firstStep(getSimulationBox());
 
         getConstraints()->applyShake(getSimulationBox());
     }

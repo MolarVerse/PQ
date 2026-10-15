@@ -38,6 +38,7 @@
 #endif
 
 #include "bondConstraint.hpp"
+#include "constraintSettings.hpp"
 #include "constraints.hpp"
 #include "perfBenchSetup.hpp"
 #include "simulationBox.hpp"
@@ -58,7 +59,7 @@ int main()
     constr.setRattleMaxIter(100);
     constr.setShakeTolerance(1.0e-8);
     constr.setRattleTolerance(1.0e-8);
-    constr.activateShake();
+    settings::ConstraintSettings::activateShake();
 
     for (auto &molecule : molecules)
     {

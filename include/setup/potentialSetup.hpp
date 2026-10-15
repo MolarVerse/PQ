@@ -33,6 +33,12 @@ namespace setup
 {
     void setupPotential(engine::Engine &);
 
+    // NOTE: must run before the parameter file is read, since the
+    //       parameter file reader needs the non-Coulomb potential to
+    //       already have its final concrete type (ForceFieldNonCoulomb
+    //       or GuffNonCoulomb) to perform its dynamic_cast.
+    void setupNonCoulombPotentialType(engine::Engine &);
+
     /**
      * @class PotentialSetup
      *

@@ -50,7 +50,7 @@ namespace engine
     class MDEngine : public Engine
     {
        private:
-        resetKinetics::ResetKinetics     _resetKinetics{};
+        resetKinetics::ResetKinetics     _resetKinetics;
         configurator::HybridConfigurator _configurator{};
 
         std::unique_ptr<integrator::Integrator> _integrator;
@@ -58,7 +58,7 @@ namespace engine
         std::unique_ptr<manostat::Manostat>     _manostat;
 
        public:
-        MDEngine();
+        explicit MDEngine(Settings settings);
         ~MDEngine() override = default;
 
         void         run() override;
@@ -70,6 +70,17 @@ namespace engine
 
         void         calculateForcesWrapper();
         virtual void calculateForces() = 0;
+
+        /***************************
+         * make unique_ptr methods *
+         ***************************/
+
+        template <typename T>
+        void makeIntegrator(T integrator);
+        template <typename T>
+        void makeThermostat(T thermostat);
+        template <typename T>
+        void makeManostat(T manostat);
 
         /***************************
          * standard getter methods *
@@ -100,17 +111,6 @@ namespace engine
         out::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
         [[nodiscard]]
         out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
-
-        /***************************
-         * make unique_ptr methods *
-         ***************************/
-
-        template <typename T>
-        void makeIntegrator(T integrator);
-        template <typename T>
-        void makeThermostat(T thermostat);
-        template <typename T>
-        void makeManostat(T manostat);
 
        protected:
         [[nodiscard]]

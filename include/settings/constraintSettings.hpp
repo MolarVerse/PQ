@@ -61,6 +61,12 @@ namespace settings
         ConstraintSettings()  = default;
         ~ConstraintSettings() = default;
 
+        [[nodiscard]]
+        static bool isActive();
+
+        [[nodiscard]]
+        static bool isShakeLikeActive();
+
         /*****************************
          * standard activate methods *
          *****************************/

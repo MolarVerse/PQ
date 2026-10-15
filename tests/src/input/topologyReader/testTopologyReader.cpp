@@ -22,6 +22,7 @@
 
 #include "testTopologyReader.hpp"
 
+#include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
@@ -37,16 +38,14 @@
  */
 TEST_F(TestTopologyReader, isNeeded)
 {
-    EXPECT_FALSE(input::topology::isNeeded(*_engine));
+    EXPECT_FALSE(input::topology::isNeeded());
 
-    const auto& constraints = _engine->getConstraints();
+    settings::ConstraintSettings::activateShake();
+    EXPECT_TRUE(input::topology::isNeeded());
 
-    constraints->activateShake();
-    EXPECT_TRUE(input::topology::isNeeded(*_engine));
-
-    constraints->deactivateShake();
-    settings::ForceFieldSettings::activate();
-    EXPECT_TRUE(input::topology::isNeeded(*_engine));
+    settings::ConstraintSettings::deactivateShake();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    EXPECT_TRUE(input::topology::isNeeded());
 }
 
 /**
@@ -73,7 +72,7 @@ TEST_F(TestTopologyReader, read)
 {
     EXPECT_NO_THROW(_topologyReader->read());
 
-    _engine->getConstraints()->activateShake();
+    settings::ConstraintSettings::activateShake();
     EXPECT_NO_THROW(_topologyReader->read());
 
     settings::FileSettings::unsetIsTopologyFileNameSet();

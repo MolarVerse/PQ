@@ -153,29 +153,6 @@ namespace intraNonBonded
         _intraNonBondedMaps.push_back(interaction);
     }
 
-    /*****************************
-     *                           *
-     * standard activate methods *
-     *                           *
-     *****************************/
-
-    /**
-     * @brief activate the IntraNonBonded object
-     */
-    void IntraNonBonded::activate() { _isActivated = true; }
-
-    /**
-     * @brief deactivate the IntraNonBonded object
-     */
-    void IntraNonBonded::deactivate() { _isActivated = false; }
-
-    /**
-     * @brief check if the IntraNonBonded object is active
-     *
-     * @return bool
-     */
-    bool IntraNonBonded::isActive() const { return _isActivated; }
-
     /***************************
      *                         *
      * standard setter methods *

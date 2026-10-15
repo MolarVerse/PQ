@@ -72,6 +72,9 @@ namespace setup
         if (settings::GeneralSettings::isCellListActivated())
         {
             auto &cellList = _engine.getCellList();
+            cellList.setNumberOfCells(
+                settings::GeneralSettings::getNumberOfCells()
+            );
             cellList.resizeCells();
             cellList.setup(_engine.getSimulationBox());
             _engine.makePotential(pot::PotentialCellList());

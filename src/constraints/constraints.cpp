@@ -26,6 +26,7 @@
 #include <format>
 #include <vector>
 
+#include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "mShake.hpp"
@@ -75,13 +76,13 @@ namespace constraints
      */
     void Constraints::applyShake(molsys::SimulationBox &simulationBox)
     {
-        if (!_shakeActivated && !_mShakeActivated)
+        if (!settings::ConstraintSettings::isShakeLikeActive())
             return;
 
-        if (_shakeActivated)
+        if (settings::ConstraintSettings::isShakeActivated())
             _applyShake(simulationBox);
 
-        if (_mShakeActivated)
+        if (settings::ConstraintSettings::isMShakeActivated())
             _applyMShake(simulationBox);
     }
 
@@ -158,13 +159,13 @@ namespace constraints
      */
     void Constraints::applyRattle(molsys::SimulationBox &simulationBox)
     {
-        if (!_shakeActivated && !_mShakeActivated)
+        if (!settings::ConstraintSettings::isShakeLikeActive())
             return;
 
-        if (_shakeActivated)
+        if (settings::ConstraintSettings::isShakeActivated())
             _applyRattle();
 
-        if (_mShakeActivated)
+        if (settings::ConstraintSettings::isMShakeActivated())
             _applyMRattle(simulationBox);
     }
 
@@ -242,7 +243,7 @@ namespace constraints
         double                       time
     )
     {
-        if (!_distanceConstActivated)
+        if (!settings::ConstraintSettings::isDistanceConstraintsActivated())
             return;
 
         auto effective_time = time - _startTime;
@@ -277,76 +278,6 @@ namespace constraints
 
         physicalData.setLowerDistanceConstraints(lowerEnergy);
         physicalData.setUpperDistanceConstraints(upperEnergy);
-    }
-
-    /*****************************
-     *                           *
-     * standard activate methods *
-     *                           *
-     *****************************/
-
-    /**
-     * @brief activates the shake algorithm
-     *
-     */
-    void Constraints::activateDistanceConstraints()
-    {
-        _distanceConstActivated = true;
-    }
-
-    /**
-     * @brief deactivates the shake algorithm
-     *
-     */
-    void Constraints::deactivateDistanceConstraints()
-    {
-        _distanceConstActivated = false;
-    }
-
-    /**
-     * @brief checks if shake algorithm is active
-     *
-     * @return true if shake algorithm is active
-     */
-    bool Constraints::isShakeActive() const { return _shakeActivated; }
-
-    /**
-     * @brief checks if mShake algorithm is active
-     *
-     * @return true if mShake algorithm is active
-     */
-    bool Constraints::isMShakeActive() const { return _mShakeActivated; }
-
-    /**
-     * @brief checks if shake like algorithm is active
-     *
-     * @details shake like algorithm is active if shake or mShake is active
-     *
-     * @return true
-     * @return false
-     */
-    bool Constraints::isShakeLikeActive() const
-    {
-        return isShakeActive() || isMShakeActive();
-    }
-
-    /**
-     * @brief checks if distance constraints are active
-     *
-     * @return true if distance constraints are active
-     */
-    bool Constraints::isDistanceConstraintsActive() const
-    {
-        return _distanceConstActivated;
-    }
-
-    /**
-     * @brief checks if any constraint is active
-     *
-     */
-    bool Constraints::isActive() const
-    {
-        return _shakeActivated || _mShakeActivated || _distanceConstActivated;
     }
 
     /************************

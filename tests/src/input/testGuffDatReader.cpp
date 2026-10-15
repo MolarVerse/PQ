@@ -34,7 +34,9 @@
 #include "constants.hpp"
 #include "defaults.hpp"
 #include "engine.hpp"
+#include "enums/potential.hpp"
 #include "exceptions.hpp"
+#include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
 #include "gmock/gmock.h"
 #include "guffPair.hpp"
@@ -613,7 +615,8 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
 
 TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
 {
-    engine::MMMDEngine   engine;
+    Settings             settings;
+    engine::MMMDEngine   engine{settings};
     molsys::Molecule     molecule1{MolType{1}};
     molsys::Molecule     molecule2{MolType{2}};
     molsys::MoleculeType moleculeType1(MolType{1});
@@ -777,7 +780,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
     settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
@@ -786,7 +789,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
@@ -794,6 +797,6 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }

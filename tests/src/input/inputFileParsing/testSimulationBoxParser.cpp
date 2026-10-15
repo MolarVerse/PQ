@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBoxInputParser.hpp"
@@ -39,14 +38,14 @@
 TEST_F(TestInputFileReader, parseDensity)
 {
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), false);
-    input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
+    input::SimulationBoxInputParser parser;
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("density"));
     const auto& parseFunc = funcMap.at("density");
 
     const std::vector<std::string> lineElements = {"density", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(_engine->getSimulationBox().getDensity(), 1.0);
+    EXPECT_EQ(settings::SimulationBoxSettings::getDensity(), 1.0);
     EXPECT_EQ(settings::SimulationBoxSettings::getDensitySet(), true);
 
     _clearParser(parser);
@@ -78,7 +77,7 @@ TEST_F(TestInputFileReader, parseDensity)
  */
 TEST_F(TestInputFileReader, parseCoulombRadius)
 {
-    input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
+    input::SimulationBoxInputParser parser;
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rcoulomb"));
     const auto& parseFunc = funcMap.at("rcoulomb");
@@ -100,7 +99,7 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
 
 TEST_F(TestInputFileReader, parseInitVelocities)
 {
-    input::SimulationBoxInputParser parser(_engine->getSharedSimulationBox());
+    input::SimulationBoxInputParser parser;
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("init_velocities"));
     const auto& parseFunc = funcMap.at("init_velocities");

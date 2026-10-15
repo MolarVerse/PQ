@@ -1,0 +1,1 @@
+- Build PQ with BUILD_WITH_PYTHON_BINDINGS=ON in CI (new python-bindings job) and check the reported capability; define WITH_WITH_PYTHON_BINDINGS before the subdirectories so the precompiled header is no longer rejected.

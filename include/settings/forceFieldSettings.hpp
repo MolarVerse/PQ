@@ -24,6 +24,7 @@
 
 #define _FORCE_FIELD_SETTINGS_HPP_
 
+#include "enums/potential.hpp"
 namespace settings
 {
     /**
@@ -35,7 +36,7 @@ namespace settings
     class ForceFieldSettings
     {
        private:
-        static inline bool _active = false;
+        static inline ForceFieldType _type = ForceFieldType::OFF;
 
        public:
         ForceFieldSettings()  = default;
@@ -45,14 +46,15 @@ namespace settings
          * standard getters *
          ********************/
 
-        [[nodiscard]] static bool isActive();
+        [[nodiscard]] static bool           isActive();
+        [[nodiscard]] static bool           isNonCoulombicActive();
+        [[nodiscard]] static ForceFieldType getType();
 
         /********************
          * standard setters *
          ********************/
 
-        static void activate();
-        static void deactivate();
+        static void setType(ForceFieldType value);
     };
 
 }   // namespace settings

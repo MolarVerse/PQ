@@ -31,6 +31,7 @@
 #include <string_view>
 #include <vector>
 
+#include "enums/jobtype.hpp"
 #include "inputFileParser.hpp"
 
 namespace engine
@@ -38,18 +39,18 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+struct Settings;   // forward declaration
+
 /**
  * @brief namespace for reading input files
  *
  */
 namespace input
 {
-    void readInputFile(const std::string_view &fileName, engine::Engine &);
-    void readJobType(
-        const std::string &fileName,
-        std::unique_ptr<engine::Engine> &
-    );
-    void processEqualSign(std::string &command, size_t lineNumber);
+    [[nodiscard]]
+    JobType readJobType(const std::string &fileName);
+    void    readInputFile(const std::string_view &fileName, Settings &settings);
+    void    processEqualSign(std::string &command, size_t lineNumber);
 
     /**
      * @class InputFileReader
@@ -73,12 +74,15 @@ namespace input
 
        public:
         explicit InputFileReader(
-            const std::string_view &,
-            engine::Engine &,
-            bool validateFilePaths,
-            bool resolveBuiltInSlakosPath
+            const std::string_view &fileName,
+            Settings               &settings,
+            bool                    validateFilePaths,
+            bool                    resolveBuiltInSlakosPath
         );
-        explicit InputFileReader(const std::string_view &, engine::Engine &);
+        explicit InputFileReader(
+            const std::string_view &fileName,
+            Settings               &settings
+        );
 
         void read();
         void addKeywords();

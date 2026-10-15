@@ -27,9 +27,7 @@
 #include "engine.hpp"
 #include "generalSettings.hpp"
 #include "mdEngine.hpp"
-#include "resetKinetics.hpp"
 #include "resetKineticsSettings.hpp"
-#include "timingsSettings.hpp"
 
 namespace setup
 {
@@ -73,74 +71,28 @@ namespace setup
      * freset are set to 0 if they are not set.
      *
      */
-    void ResetKineticsSetup::setup()
-    {
-        const auto nScale = settings::ResetKineticsSettings::getNScale();
-        auto       fScale = settings::ResetKineticsSettings::getFScale();
-        const auto nReset = settings::ResetKineticsSettings::getNReset();
-        auto       fReset = settings::ResetKineticsSettings::getFReset();
-        const auto nResetAngular =
-            settings::ResetKineticsSettings::getNResetAngular();
-        auto fResetAngular =
-            settings::ResetKineticsSettings::getFResetAngular();
-        auto fResetForces = settings::ResetKineticsSettings::getFResetForces();
-
-        const auto numberOfSteps =
-            settings::TimingsSettings::getNumberOfSteps();
-
-        fScale = (0 == fScale) ? numberOfSteps + 1 : fScale;
-        fReset = (0 == fReset) ? numberOfSteps + 1 : fReset;
-        fResetAngular =
-            (0 == fResetAngular) ? numberOfSteps + 1 : fResetAngular;
-        fResetForces = (0 == fResetForces) ? numberOfSteps + 1 : fResetForces;
-
-        _engine.getResetKinetics() = ::resetKinetics::ResetKinetics(
-            nScale,
-            fScale,
-            nReset,
-            fReset,
-            nResetAngular,
-            fResetAngular,
-            fResetForces
-        );
-
-        writeSetupInfo();
-    }
+    void ResetKineticsSetup::setup() const { writeSetupInfo(); }
 
     /**
      * @brief writes setup info to log file
      */
     void ResetKineticsSetup::writeSetupInfo() const
     {
-        const auto _fScale = settings::ResetKineticsSettings::getFScale();
-        const auto _fReset = settings::ResetKineticsSettings::getFReset();
-        const auto _fResetAngular =
-            settings::ResetKineticsSettings::getFResetAngular();
-        const auto _fResetForces =
-            settings::ResetKineticsSettings::getFResetForces();
-
-        const int fScale = _fScale == 0 ? -1 : static_cast<int>(_fScale);
-        const int fReset = _fReset == 0 ? -1 : static_cast<int>(_fReset);
-        const int fResetAngular =
-            _fResetAngular == 0 ? -1 : static_cast<int>(_fResetAngular);
-        const int fResetForces =
-            _fResetForces == 0 ? -1 : static_cast<int>(_fResetForces);
-
-        const auto nScale = settings::ResetKineticsSettings::getNScale();
-        const auto nReset = settings::ResetKineticsSettings::getNReset();
-        const auto nResetAngular =
-            settings::ResetKineticsSettings::getNResetAngular();
-
-        const auto nScaleMsg = std::format("first {:5d} steps,", nScale);
-        const auto fScaleMsg = std::format("every {:5d} steps", fScale);
-        const auto nResetMsg = std::format("first {:5d} steps,", nReset);
-        const auto fResetMsg = std::format("every {:5d} steps", fReset);
+        const auto settings = _engine.getSettings().resetKinetics;
+        const auto nScaleMsg =
+            std::format("first {:5d} steps,", settings.getNScale());
+        const auto fScaleMsg =
+            std::format("every {:5d} steps", settings.getFScale());
+        const auto nResetMsg =
+            std::format("first {:5d} steps,", settings.getNReset());
+        const auto fResetMsg =
+            std::format("every {:5d} steps", settings.getFReset());
         const auto nResetAngMsg =
-            std::format("first {:5d} steps,", nResetAngular);
+            std::format("first {:5d} steps,", settings.getNResetAngular());
         const auto fResetAngMsg =
-            std::format("every {:5d} steps", fResetAngular);
+            std::format("every {:5d} steps", settings.getFResetAngular());
         const auto fResetForcesMsg =
-            std::format("every {:5d} steps", fResetForces);
+            std::format("every {:5d} steps", settings.getFResetForces());
 
         const auto scaleMsg =
             std::format("reset temperature:      {} {}", nScaleMsg, fScaleMsg);

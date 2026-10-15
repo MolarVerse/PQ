@@ -35,6 +35,7 @@
 class TestSetup : public ::testing::Test
 {
    protected:
+    Settings                          _settings;
     std::unique_ptr<engine::Engine>   _engine;
     std::unique_ptr<engine::MDEngine> _mdEngine;
 
@@ -44,8 +45,8 @@ class TestSetup : public ::testing::Test
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine   = std::make_unique<engine::OptEngine>();
-        _mdEngine = std::make_unique<engine::MMMDEngine>();
+        _engine   = std::make_unique<engine::OptEngine>(_settings);
+        _mdEngine = std::make_unique<engine::MMMDEngine>(_settings);
     }
 
     void TearDown() override

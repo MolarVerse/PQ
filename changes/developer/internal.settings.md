@@ -1,2 +1,3 @@
 - introduce new base type `Setting<T>` for settings
 - rename `Settings` class to `GeneralSettings` 
+- introduce `ResetKineticsSettings` as non-static class and `Settings` POD

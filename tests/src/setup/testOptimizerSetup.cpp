@@ -284,7 +284,8 @@ TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
     settings::OptimizerSettings::setMinLearningRate(0.5);
     settings::OptimizerSettings::setMaxLearningRate(0.5);
 
-    engine::HessianEngine hessianEngine;
+    Settings              settings;
+    engine::HessianEngine hessianEngine{settings};
     EXPECT_THROW_MSG(
         hessianEngine.run(),
         exc::UserInputException,
