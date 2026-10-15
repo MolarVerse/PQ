@@ -44,7 +44,7 @@ namespace connectivity
         return _molecules;
     }
 
-    std::vector<AtomIndex> ConnectivityElement::getAtomIndices() const
+    const std::vector<AtomIndex> &ConnectivityElement::getAtomIndices() const
     {
         return _atomIndices;
     }
