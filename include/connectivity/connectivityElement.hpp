@@ -55,7 +55,7 @@ namespace connectivity
          ***************************/
 
         [[nodiscard]]
-        std::vector<molsys::Molecule *> getMolecules() const;
+        const std::vector<molsys::Molecule *> &getMolecules() const;
 
         [[nodiscard]]
         const std::vector<AtomIndex> &getAtomIndices() const;

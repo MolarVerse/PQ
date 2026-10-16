@@ -39,7 +39,8 @@ namespace connectivity
      *                         *
      ***************************/
 
-    std::vector<molsys::Molecule *> ConnectivityElement::getMolecules() const
+    const std::vector<molsys::Molecule *> &ConnectivityElement::getMolecules(
+    ) const
     {
         return _molecules;
     }
