@@ -80,7 +80,7 @@ namespace ff
         if (allInactive)
             return;
 
-        const auto atomIndices = getAtomIndices();
+        const auto &atomIndices = getAtomIndices();
 
         // central position of alpha
         const auto position1 = molecule1->getAtomPosition(atomIndices[0]);

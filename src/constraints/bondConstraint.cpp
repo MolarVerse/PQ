@@ -68,9 +68,9 @@ namespace constraints
     {
         simulationBox.applyPBC(_shakeDistanceRef);
 
-        auto      *molecule1   = getMolecule1();
-        auto      *molecule2   = getMolecule2();
-        const auto atomIndices = getAtomIndices();
+        auto       *molecule1   = getMolecule1();
+        auto       *molecule2   = getMolecule2();
+        const auto &atomIndices = getAtomIndices();
 
         const auto dxyz = kernel::distVec(
             molecule1->getAtomPosition(atomIndices[0]),
@@ -91,9 +91,9 @@ namespace constraints
         const molsys::SimulationBox &simulationBox
     ) const
     {
-        auto      *molecule1   = getMolecule1();
-        auto      *molecule2   = getMolecule2();
-        const auto atomIndices = getAtomIndices();
+        auto       *molecule1   = getMolecule1();
+        auto       *molecule2   = getMolecule2();
+        const auto &atomIndices = getAtomIndices();
 
         const auto pos1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto pos2 = molecule2->getAtomPosition(atomIndices[1]);
@@ -139,7 +139,7 @@ namespace constraints
             auto *molecule1 = getMolecule1();
             auto *molecule2 = getMolecule2();
 
-            const auto atomIndices = getAtomIndices();
+            const auto &atomIndices = getAtomIndices();
 
             const auto invMass1 = 1 / molecule1->getAtomMass(atomIndices[0]);
             const auto invMass2 = 1 / molecule2->getAtomMass(atomIndices[1]);
@@ -183,9 +183,9 @@ namespace constraints
      */
     [[nodiscard]] double BondConstraint::calculateVelocityDelta() const
     {
-        auto      *molecule1   = getMolecule1();
-        auto      *molecule2   = getMolecule2();
-        const auto atomIndices = getAtomIndices();
+        auto       *molecule1   = getMolecule1();
+        auto       *molecule2   = getMolecule2();
+        const auto &atomIndices = getAtomIndices();
 
         const auto dVelocity = molecule1->getAtomVelocity(atomIndices[0]) -
                                molecule2->getAtomVelocity(atomIndices[1]);
@@ -219,9 +219,9 @@ namespace constraints
         {
             const auto dVelocity = delta * _shakeDistanceRef;
 
-            auto      *molecule1   = getMolecule1();
-            auto      *molecule2   = getMolecule2();
-            const auto atomIndices = getAtomIndices();
+            auto       *molecule1   = getMolecule1();
+            auto       *molecule2   = getMolecule2();
+            const auto &atomIndices = getAtomIndices();
 
             const auto invMass1 = 1 / molecule1->getAtomMass(atomIndices[0]);
             const auto invMass2 = 1 / molecule2->getAtomMass(atomIndices[1]);

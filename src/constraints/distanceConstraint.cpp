@@ -84,9 +84,9 @@ namespace constraints
         if (timeInterval < 0.0)
             return;
 
-        auto      *molecule1   = getMolecule1();
-        auto      *molecule2   = getMolecule2();
-        const auto atomIndices = getAtomIndices();
+        auto       *molecule1   = getMolecule1();
+        auto       *molecule2   = getMolecule2();
+        const auto &atomIndices = getAtomIndices();
 
         const auto pos1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto pos2 = molecule2->getAtomPosition(atomIndices[1]);

@@ -81,7 +81,7 @@ namespace ff
         if (bothInactive)
             return;
 
-        const auto atomIndices = getAtomIndices();
+        const auto &atomIndices = getAtomIndices();
 
         const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
