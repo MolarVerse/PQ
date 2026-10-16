@@ -153,7 +153,7 @@ namespace linalg
         template <class U>
         explicit operator Vector3D<U>() const;
 
-        std::vector<T> toStdVector();
+        std::vector<T> toStdVector() const;
     };
 
 }   // namespace linalg
