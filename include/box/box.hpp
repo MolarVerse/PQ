@@ -102,9 +102,9 @@ namespace molsys
          * standard getters *
          ********************/
 
-        [[nodiscard]] bool          getBoxSizeHasChanged() const;
-        [[nodiscard]] double        getVolume() const;
-        [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
+        [[nodiscard]] bool                 getBoxSizeHasChanged() const;
+        [[nodiscard]] double               getVolume() const;
+        [[nodiscard]] const linalg::Vec3D &getBoxDimensions() const;
 
         /********************
          * standard setters *

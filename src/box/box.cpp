@@ -185,7 +185,10 @@ namespace molsys
      *
      * @return linalg::Vec3D
      */
-    linalg::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
+    const linalg::Vec3D &Box::getBoxDimensions() const
+    {
+        return _boxDimensions;
+    }
 
     /********************
      * standard setters *

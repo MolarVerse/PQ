@@ -259,8 +259,8 @@ namespace molsys
 
         [[nodiscard]] bool getBoxSizeHasChanged() const;
 
-        [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
-        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
+        [[nodiscard]] const linalg::Vec3D& getBoxDimensions() const;
+        [[nodiscard]] linalg::Vec3D        getBoxAngles() const;
 
         void setVolume(double volume) const;
         void setBoxDimensions(const linalg::Vec3D& boxDimensions) const;

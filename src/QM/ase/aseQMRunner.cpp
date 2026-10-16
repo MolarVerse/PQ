@@ -106,8 +106,8 @@ namespace QM
             const molsys::SimulationBox &simulationBox
         )
         {
-            const auto boxDimension = simulationBox.getBoxDimensions();
-            const auto boxAngles    = simulationBox.getBoxAngles();
+            const auto &boxDimension = simulationBox.getBoxDimensions();
+            const auto  boxAngles    = simulationBox.getBoxAngles();
 
             constexpr auto                   boxArraySize = 6;
             std::array<double, boxArraySize> box_array    = {
