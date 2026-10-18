@@ -514,8 +514,8 @@ namespace molsys
         const molsys::SimulationBox &simulationBox
     ) const
     {
-        const auto boxDimensions = simulationBox.getBoxDimensions();
-        const auto boxAngles     = simulationBox.getBoxAngles();
+        const auto& boxDimensions = simulationBox.getBoxDimensions();
+        const auto& boxAngles     = simulationBox.getBoxAngles();
 
         return !_oldBoxDimensions.has_value() ||
                _oldBoxDimensions.value() != boxDimensions ||

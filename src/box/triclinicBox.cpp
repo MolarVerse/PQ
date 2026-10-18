@@ -278,7 +278,7 @@ namespace molsys
         if (settings::ManostatSettings::getIsotropy() !=
             Isotropy::FULL_ANISOTROPIC)
         {
-            _boxDimensions_(diagonal(scalingTensor) * boxDimensions());
+            _set_boxDimensions(diagonal(scalingTensor) * get_boxDimensions());
         }
         else
         {
@@ -287,8 +287,8 @@ namespace molsys
             const auto &[boxDimensions, boxAngles] =
                 calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);
 
-            _boxDimensions_(boxDimensions);
-            _angles_(boxAngles);
+            _set_boxDimensions(boxDimensions);
+            _set_angles(boxAngles);
         }
     }
 

@@ -74,7 +74,7 @@ namespace waterModel
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
             coulombEnergy += e;
 
-            if (distance < nonCoulPair.radialCutoff())
+            if (distance < nonCoulPair.get_radialCutoff())
             {
                 const auto [nonCoulE, nonCoulF] =
                     nonCoulPair.calculate(distance);
@@ -186,7 +186,7 @@ namespace waterModel
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
             coulombEnergy += e;
 
-            if (distance < nonCoulPair.radialCutoff())
+            if (distance < nonCoulPair.get_radialCutoff())
             {
                 auto [nonCoulE, nonCoulF]  = nonCoulPair.calculate(distance);
                 nonCoulombEnergy          += nonCoulE;

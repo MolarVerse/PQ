@@ -155,8 +155,9 @@ namespace pot
                 -cexp20 * n22 * distance_n22 / (distance - rExp21) * helper;
         }
 
-        energy += -energyCutoff() - forceCutoff() * (radialCutoff() - distance);
-        force  += -forceCutoff();
+        energy += -get_energyCutoff() -
+                  get_forceCutoff() * (get_radialCutoff() - distance);
+        force += -get_forceCutoff();
 
         return {energy, force};
     }

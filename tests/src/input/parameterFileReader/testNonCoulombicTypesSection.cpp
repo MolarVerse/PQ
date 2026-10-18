@@ -56,7 +56,7 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
     EXPECT_EQ(TestLJPairUtils::params(pair).c6, 1.22);
     EXPECT_EQ(TestLJPairUtils::params(pair).c12, 234.3);
-    EXPECT_EQ(pair->radialCutoff(), 324.3);
+    EXPECT_EQ(pair->get_radialCutoff(), 324.3);
 
     lineElements = {"0", "1", "1.22", "234.3"};
     input::parameterFile::NonCoulombicsSection::processLJ(
@@ -73,7 +73,7 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
     EXPECT_EQ(TestLJPairUtils::params(pair2).c6, 1.22);
     EXPECT_EQ(TestLJPairUtils::params(pair2).c12, 234.3);
-    EXPECT_EQ(pair2->radialCutoff(), 12.5);
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3"};
     EXPECT_THROW_MSG(
@@ -110,7 +110,7 @@ TEST_F(TestParameterFileSection, processSectionBuckingham)
     EXPECT_EQ(TestBuckinghamPairUtils::params(pair).scaling, 1.22);
     EXPECT_EQ(TestBuckinghamPairUtils::params(pair).dRho, 234.3);
     EXPECT_EQ(TestBuckinghamPairUtils::params(pair).c6, 324.3);
-    EXPECT_EQ(pair->radialCutoff(), 435.0);
+    EXPECT_EQ(pair->get_radialCutoff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     input::parameterFile::NonCoulombicsSection::processBuckingham(
@@ -127,7 +127,7 @@ TEST_F(TestParameterFileSection, processSectionBuckingham)
     EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).scaling, 1.22);
     EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).dRho, 234.3);
     EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).c6, 324.3);
-    EXPECT_EQ(pair2->radialCutoff(), 12.5);
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
     EXPECT_THROW_MSG(
@@ -166,7 +166,7 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     EXPECT_EQ(morseParams.dissociationEnergy, 1.22);
     EXPECT_EQ(morseParams.wellWidth, 234.3);
     EXPECT_EQ(morseParams.equilibriumDistance, 324.3);
-    EXPECT_EQ(pair->radialCutoff(), 435.0);
+    EXPECT_EQ(pair->get_radialCutoff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     input::parameterFile::NonCoulombicsSection::processMorse(
@@ -185,7 +185,7 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     EXPECT_EQ(morseParams2.dissociationEnergy, 1.22);
     EXPECT_EQ(morseParams2.wellWidth, 234.3);
     EXPECT_EQ(morseParams2.equilibriumDistance, 324.3);
-    EXPECT_EQ(pair2->radialCutoff(), 12.5);
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
     EXPECT_THROW_MSG(

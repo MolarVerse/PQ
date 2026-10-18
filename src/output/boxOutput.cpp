@@ -42,9 +42,9 @@ namespace out
 
         _getFilePointer() << std::format(
             "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-            box.boxDimensions()[0],
-            box.boxDimensions()[1],
-            box.boxDimensions()[2]
+            box.get_boxDimensions()[0],
+            box.get_boxDimensions()[1],
+            box.get_boxDimensions()[2]
         );
 
         _getFilePointer() << std::format(

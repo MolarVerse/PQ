@@ -46,8 +46,8 @@ TEST_F(TestTopologySection, processSectionShake)
     EXPECT_EQ(constraints->getBondConstraints().size(), 1);
 
     const auto& bondConstraint0 = constraints->getBondConstraints()[0];
-    const auto& molecules       = bondConstraint0.molecules();
-    const auto& atomIndices     = bondConstraint0.atomIndices();
+    const auto& molecules       = bondConstraint0.get_molecules();
+    const auto& atomIndices     = bondConstraint0.get_atomIndices();
 
     EXPECT_EQ(molecules[0], _engine->getSimulationBox().getMolecules().data());
     EXPECT_EQ(molecules[1], &(_engine->getSimulationBox().getMolecules()[1]));

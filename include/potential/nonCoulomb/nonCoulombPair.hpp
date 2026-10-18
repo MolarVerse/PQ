@@ -85,9 +85,9 @@ namespace pot
         [[nodiscard]] VdwType    getInternalType1() const;
         [[nodiscard]] VdwType    getInternalType2() const;
 
-        CONST_GETTER(radialCutoff);
-        CONST_GETTER(energyCutoff);
-        CONST_GETTER(forceCutoff);
+        CONST_GETTER(_radialCutoff);
+        CONST_GETTER(_energyCutoff);
+        CONST_GETTER(_forceCutoff);
     };
 
 }   // namespace pot

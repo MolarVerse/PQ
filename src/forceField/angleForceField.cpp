@@ -70,7 +70,7 @@ namespace ff
         pot::NonCoulombPotential    &nonCoulombPot
     )
     {
-        const auto &molecules = this->molecules();
+        const auto &molecules = get_molecules();
         auto       *molecule1 = molecules[0];
         auto       *molecule2 = molecules[1];
         auto       *molecule3 = molecules[2];
@@ -82,7 +82,7 @@ namespace ff
         if (allInactive)
             return;
 
-        const auto &atomIndices = this->atomIndices();
+        const auto &atomIndices = get_atomIndices();
 
         // central position of alpha
         const auto position1 = molecule1->getAtomPosition(atomIndices[0]);

@@ -23,8 +23,6 @@
 #include "box.hpp"
 
 #include "constants/conversionFactors.hpp"
-#include "defaults.hpp"
-#include "staticMatrix.hpp"
 
 namespace molsys
 {

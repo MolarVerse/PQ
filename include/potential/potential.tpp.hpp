@@ -114,7 +114,7 @@ namespace pot
                 combinedIdx,
                 {globalVdwType_i, globalVdwType_j}
             );
-            const auto rncCutOff = nonCoulPair->radialCutoff();
+            const auto rncCutOff = nonCoulPair->get_radialCutoff();
 
             if (distance < rncCutOff)
             {
@@ -280,7 +280,7 @@ namespace pot
                 combinedIdx,
                 {globalVdwType_i, globalVdwType_j}
             );
-            const auto rncCutOff = nonCoulPair->radialCutoff();
+            const auto rncCutOff = nonCoulPair->get_radialCutoff();
 
             if (distance < rncCutOff)
             {

@@ -660,7 +660,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     );
     ExposedInterWaterStrategy strategy;
 
-    EXPECT_DOUBLE_EQ(nonCoulomb.radialCutoff(), kCutOff);
+    EXPECT_DOUBLE_EQ(nonCoulomb.get_radialCutoff(), kCutOff);
 
     double coulombEnergy    = 0.0;
     double nonCoulombEnergy = 0.0;
@@ -781,12 +781,12 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
     interWater.calculate(simBox, physicalData, coulomb, cellList);
     nullPairs.calculate(simBox, physicalData, coulomb, cellList);
 
-    EXPECT_DOUBLE_EQ(oxygenOxygenView->radialCutoff(), kCutOff);
-    EXPECT_DOUBLE_EQ(oxygenHydrogenView->radialCutoff(), kCutOff);
-    EXPECT_DOUBLE_EQ(hydrogenHydrogenView->radialCutoff(), kCutOff);
-    EXPECT_TRUE(std::isfinite(oxygenOxygenView->energyCutoff()));
-    EXPECT_TRUE(std::isfinite(oxygenHydrogenView->energyCutoff()));
-    EXPECT_TRUE(std::isfinite(hydrogenHydrogenView->energyCutoff()));
+    EXPECT_DOUBLE_EQ(oxygenOxygenView->get_radialCutoff(), kCutOff);
+    EXPECT_DOUBLE_EQ(oxygenHydrogenView->get_radialCutoff(), kCutOff);
+    EXPECT_DOUBLE_EQ(hydrogenHydrogenView->get_radialCutoff(), kCutOff);
+    EXPECT_TRUE(std::isfinite(oxygenOxygenView->get_energyCutoff()));
+    EXPECT_TRUE(std::isfinite(oxygenHydrogenView->get_energyCutoff()));
+    EXPECT_TRUE(std::isfinite(hydrogenHydrogenView->get_energyCutoff()));
     EXPECT_DOUBLE_EQ(physicalData.getCoulombEnergy(), 0.0);
     EXPECT_DOUBLE_EQ(physicalData.getNonCoulombEnergy(), 0.0);
 }

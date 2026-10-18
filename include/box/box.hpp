@@ -64,10 +64,6 @@ namespace molsys
         BoxVec _boxDimensions;
         BoxVec _angles;
 
-       protected:
-        static constexpr auto dimsPtr   = &Box::_boxDimensions;
-        static constexpr auto anglesPtr = &Box::_angles;
-
        public:
         virtual ~Box() = default;
 
@@ -108,7 +104,7 @@ namespace molsys
          * standard getters *
          ********************/
 
-        CONST_PROPERTY_GETTER(boxDimensions);
+        CONST_PROPERTY_GETTER(_boxDimensions);
         [[nodiscard]] linalg::Vec3D getBoxAngles() const;
 
        protected:
@@ -117,8 +113,11 @@ namespace molsys
             const linalg::Vec3D &angles
         );
 
-        INTERNAL_PROPERTY_SETTER(boxDimensions);
-        INTERNAL_PROPERTY_SETTER(angles);
+        static constexpr auto _dimsPtr() { return &Box::_boxDimensions; }
+        static constexpr auto _anglesPtr() { return &Box::_angles; }
+
+        INTERNAL_PROPERTY_SETTER(_boxDimensions);
+        INTERNAL_PROPERTY_SETTER(_angles);
     };
 
 }   // namespace molsys
