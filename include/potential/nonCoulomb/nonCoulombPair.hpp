@@ -24,7 +24,7 @@
 
 #define _NON_COULOMB_PAIR_HPP_
 
-#include <mstd/utils/members.hpp>
+#include <mstd/utils.hpp>
 #include <utility>
 
 #include "strongTypes.hpp"

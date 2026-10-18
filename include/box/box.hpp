@@ -26,7 +26,6 @@
 
 #include <mstd/types.hpp>
 #include <mstd/utils.hpp>
-#include <mstd/utils/members.hpp>
 
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
