@@ -14,6 +14,7 @@ from unittest import mock
 TOOL_DIR = Path(__file__).resolve().parents[1] / "pq_code_stats"
 sys.path.insert(0, str(TOOL_DIR))
 
+import cs_branch as branch  # noqa: E402
 import cs_ci as ci  # noqa: E402
 import cs_classify as classify  # noqa: E402
 import cs_history as history  # noqa: E402
@@ -551,6 +552,86 @@ class CliTests(FixtureCase):
         self.assertEqual(Path("/cli"), pqstats.data_dir("/cli", {pqstats.ENV_VAR: "/env"}))
         self.assertEqual(Path("/env"), pqstats.data_dir(None, {pqstats.ENV_VAR: "/env"}))
         self.assertEqual(Path("/xdg/pq-code-stats"), pqstats.data_dir(None, {"XDG_DATA_HOME": "/xdg"}))
+
+
+class BranchTests(unittest.TestCase):
+    """feature3 is one commit ahead of the merge base with dev; dev has moved on by one commit since."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls._tmp = tempfile.TemporaryDirectory()
+        cls.repo = Repo(Path(cls._tmp.name) / "repo").build()
+        cls.repo.git("checkout", "-q", "-b", "feature3")
+        cls.repo.write("src/a.cpp", (cls.repo.path / "src/a.cpp").read_text() + lines("n", 2))
+        cls.repo.write("include/new.hpp", lines("h", 4))
+        cls.repo.write("tests/t3.cpp", lines("t", 6))
+        cls.repo.write("external/lib/y.hpp", lines("e", 5))
+        cls.repo.commit("work on feature3", "2026-02-02T10:00:00+00:00")
+        cls.repo.git("checkout", "-q", "dev")
+        cls.repo.write("docs/later.md", lines("l", 9))
+        cls.repo.commit("Later docs on dev", "2026-02-03T10:00:00+00:00")
+        cls.repo.git("checkout", "-q", "feature3")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._tmp.cleanup()
+
+    def test_the_branch_is_diffed_against_the_merge_base_not_the_tip_of_dev(self):
+        info, files = branch.read_branch(self.repo.path)
+        self.assertEqual(("feature3", "dev", 1, 1, False), (info.name, info.base, info.ahead, info.behind, info.uncommitted))
+        self.assertEqual({"src/a.cpp": ("M", 2, 0), "include/new.hpp": ("A", 4, 0), "tests/t3.cpp": ("A", 6, 0),
+                          "external/lib/y.hpp": ("A", 5, 0)}, files)
+
+    def test_uncommitted_work_is_included_on_request(self):
+        self.repo.write("tests/t3.cpp", lines("t", 7))                  # tracked, modified
+        self.repo.write("src/new.cpp", lines("s", 3))                    # untracked
+        self.repo.write("src/blob2.bin", b"\x00\x01\x02")               # untracked, binary
+        try:
+            self.assertNotIn("src/new.cpp", branch.read_branch(self.repo.path)[1])
+            info, files = branch.read_branch(self.repo.path, uncommitted=True)
+        finally:
+            self.repo.git("checkout", "--", "tests/t3.cpp")
+            (self.repo.path / "src/new.cpp").unlink()
+            (self.repo.path / "src/blob2.bin").unlink()
+        self.assertTrue(info.uncommitted)
+        self.assertEqual(("A", 7, 0), files["tests/t3.cpp"])
+        self.assertEqual(("A", 3, 0), files["src/new.cpp"])
+        self.assertEqual(("A", 0, 0), files["src/blob2.bin"])
+        with self.assertRaises(history.HistoryError):
+            branch.read_branch(self.repo.path, ref="dev", uncommitted=True)
+
+    def test_the_overview_counts_like_a_merged_pr(self):
+        text = "\n".join(branch.render(*branch.read_branch(self.repo.path)))
+        self.assertIn("feature3 against dev", text)
+        self.assertIn("1 commit ahead, 1 behind", text)
+        self.assertRegex(text, r"total\s+3\s+2/0/1\s+\+12\s+-0\s+\+12")
+        self.assertRegex(text, r"src / source\s+1\s+0/0/1\s+\+2\s+-0\s+\+2")
+        for scope in ("prod header-like +4", "prod source +2", "tests source +6"):
+            self.assertIn(scope, text)
+        self.assertNotIn("external", text)   # submodules are not counted
+        self.assertNotIn("docs", text)       # what landed on dev later is not this branch's change
+        self.assertNotIn("a.cpp", text)      # files are only listed on request
+
+    def test_files_are_listed_on_request(self):
+        text = "\n".join(branch.render(*branch.read_branch(self.repo.path), per_file=True))
+        self.assertRegex(text, r"M\s+\+2\s+-0\s+src/a\.cpp")
+        self.assertRegex(text, r"A\s+\+4\s+-0\s+include/new\.hpp")
+        self.assertNotIn("external/lib/y.hpp", text)
+
+    def test_a_branch_without_changes_says_so(self):
+        info, files = branch.read_branch(self.repo.path, ref="dev", base="dev")
+        self.assertEqual(({}, 0), (files, info.ahead))
+        self.assertIn("no counted changes", branch.render(info, files))
+
+    def test_the_command_and_its_errors(self):
+        buffer = io.StringIO()
+        with contextlib.redirect_stdout(buffer):
+            self.assertEqual(0, pqstats.main(["branch", "--repo-root", str(self.repo.path), "--files"]))
+        self.assertIn("tests / source", buffer.getvalue())
+        self.assertIn("tests/t3.cpp", buffer.getvalue())
+        with self.assertRaises(SystemExit) as caught:
+            pqstats.main(["branch", "--repo-root", str(self.repo.path), "--base", "nope"])
+        self.assertIn("no usable base branch", str(caught.exception))
 
 
 if __name__ == "__main__":

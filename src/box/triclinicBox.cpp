@@ -70,7 +70,7 @@ namespace molsys
      */
     void TriclinicBox::_calculateBoxMatrix()
     {
-        const auto &boxDimensions = getBoxDimensions();
+        const auto &boxDimensions = this->boxDimensions();
 
         _boxMatrix[0][0] = boxDimensions[0];
         _boxMatrix[0][1] = boxDimensions[1] * _transformationMatrix[0][1];
@@ -253,7 +253,7 @@ namespace molsys
     {
         if (settings::ManostatSettings::getIsotropy() !=
             Isotropy::FULL_ANISOTROPIC)
-            setBoxDimensions(diagonal(scalingTensor) * getBoxDimensions());
+            setBoxDimensions(diagonal(scalingTensor) * boxDimensions());
 
         else
         {

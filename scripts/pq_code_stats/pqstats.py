@@ -4,6 +4,7 @@
   pqstats.py collect [--ci]     read the history, write the CSV files and the HTML report, verify the totals
   pqstats.py report             rebuild the HTML report from the CSV files
   pqstats.py show [--last N]    the latest changes in the terminal
+  pqstats.py branch             what the checked out branch changed against dev (the numbers its PR will get)
 
 The output directory (default $PQ_CODE_STATS_DIR, else $XDG_DATA_HOME/pq-code-stats, else
 ~/.local/share/pq-code-stats) is never part of the repository; everything in it can be recreated from git.
@@ -18,6 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import cs_branch  # noqa: E402
 import cs_ci  # noqa: E402
 import cs_classify  # noqa: E402
 import cs_history  # noqa: E402
@@ -59,6 +61,13 @@ def parse_args(argv):
 
     show = commands.add_parser("show", help="print the latest changes")
     show.add_argument("--last", type=int, default=15)
+
+    branch = commands.add_parser("branch", help="what a branch changed against dev, like a PR (needs no collected data)")
+    branch.add_argument("--repo-root", default=str(REPO_ROOT))
+    branch.add_argument("--base", help="branch to compare with (default: origin/dev, else dev)")
+    branch.add_argument("--ref", default="HEAD", help="branch or commit to look at (default: the checked out one)")
+    branch.add_argument("-u", "--uncommitted", action="store_true", help="include uncommitted changes (tracked files and new untracked files)")
+    branch.add_argument("--files", action="store_true", help="also list every changed file")
     return parser.parse_args(argv)
 
 
@@ -160,10 +169,19 @@ def command_show(args, out):
     return 0
 
 
+def command_branch(args, out):
+    try:
+        info, files = cs_branch.read_branch(args.repo_root, args.base, args.ref, args.uncommitted)
+    except cs_history.HistoryError as error:
+        raise SystemExit(f"error: {error}")
+    print("\n".join(cs_branch.render(info, files, args.files)))
+    return 0
+
+
 def main(argv=None):
     args = parse_args(sys.argv[1:] if argv is None else argv)
     out = data_dir(args.out)
-    return {"collect": command_collect, "report": command_report, "show": command_show}[args.command](args, out)
+    return {"collect": command_collect, "report": command_report, "show": command_show, "branch": command_branch}[args.command](args, out)
 
 
 if __name__ == "__main__":

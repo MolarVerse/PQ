@@ -56,6 +56,23 @@ def kind_and_title(subject, parents, body):
     return ("merge" if len(parents) > 1 else "commit"), None, subject, None
 
 
+def parse_files(text):
+    """{path: (status, added, deleted)} from the `--raw --numstat --no-renames` lines of a log entry or a diff."""
+    files = {}
+    for line in text.splitlines():
+        if line.startswith(":"):
+            meta, _, path = line.partition("\t")
+            if GITLINK in meta.split()[:2]:   # a submodule is a pointer, not code (the same rule as in count_tree)
+                continue
+            files[path] = [meta.split()[-1][0], 0, 0]
+        else:
+            numbers = NUMSTAT.match(line)
+            if numbers and numbers.group(3) in files:
+                added, deleted, path = numbers.groups()
+                files[path][1:] = [0 if added == "-" else int(added), 0 if deleted == "-" else int(deleted)]
+    return {k: tuple(v) for k, v in files.items()}
+
+
 def parse_log(text):
     """[(Change, {path: (status, added, deleted)})] in the order of the log (newest first)."""
     entries = []
@@ -68,19 +85,7 @@ def parse_log(text):
         parent_list = parents.split()
         kind, pr, title, branch = kind_and_title(subject, parent_list, body)
         moment = datetime.fromisoformat(date).astimezone(timezone.utc)
-        files = {}
-        for line in rest.splitlines():
-            if line.startswith(":"):
-                meta, _, path = line.partition("\t")
-                if GITLINK in meta.split()[:2]:   # a submodule is a pointer, not code (the same rule as in count_tree)
-                    continue
-                files[path] = [meta.split()[-1][0], 0, 0]
-            else:
-                numbers = NUMSTAT.match(line)
-                if numbers and numbers.group(3) in files:
-                    added, deleted, path = numbers.groups()
-                    files[path][1:] = [0 if added == "-" else int(added), 0 if deleted == "-" else int(deleted)]
-        entries.append((Change(sha, parent_list, moment, author, subject, kind, pr, title, branch), {k: tuple(v) for k, v in files.items()}))
+        entries.append((Change(sha, parent_list, moment, author, subject, kind, pr, title, branch), parse_files(rest)))
     return entries
 
 

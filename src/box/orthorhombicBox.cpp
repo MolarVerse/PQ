@@ -34,10 +34,8 @@ namespace molsys
      */
     double OrthorhombicBox::calculateVolume()
     {
-        setVolume(
-            getBoxDimensions()[0] * getBoxDimensions()[1] *
-            getBoxDimensions()[2]
-        );
+        const auto &boxDimensions = this->boxDimensions();
+        setVolume(boxDimensions[0] * boxDimensions[1] * boxDimensions[2]);
 
         return getVolume();
     }
@@ -49,7 +47,7 @@ namespace molsys
      */
     void OrthorhombicBox::applyPBC(linalg::Vec3D &position) const
     {
-        const auto &boxDimensions = getBoxDimensions();
+        const auto &boxDimensions = this->boxDimensions();
         position -= boxDimensions * round(position / boxDimensions);
     }
 
@@ -63,7 +61,7 @@ namespace molsys
         const linalg::Vec3D &shiftVector
     ) const
     {
-        const auto &boxDimensions = getBoxDimensions();
+        const auto &boxDimensions = this->boxDimensions();
         return boxDimensions * round(shiftVector / boxDimensions);
     }
 
@@ -99,7 +97,7 @@ namespace molsys
     void OrthorhombicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
         const auto newBoxDimensions =
-            getBoxDimensions() * diagonal(scalingTensor);
+            this->boxDimensions() * diagonal(scalingTensor);
         setBoxDimensions(newBoxDimensions);
         setVolume(calculateVolume());
     }

@@ -560,7 +560,7 @@ namespace molsys
      */
     const linalg::Vec3D &SimulationBox::getBoxDimensions() const
     {
-        return _box->getBoxDimensions();
+        return _box->boxDimensions();
     }
 
     /**
