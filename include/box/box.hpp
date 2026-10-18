@@ -24,6 +24,8 @@
 
 #define _BOX_HPP_
 
+#include <mstd/utils.hpp>
+
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
@@ -52,7 +54,7 @@ namespace molsys
      */
     class Box
     {
-       protected:
+       private:
         linalg::Vec3D _boxDimensions;
 
         bool   _boxSizeHasChanged = false;
@@ -102,9 +104,9 @@ namespace molsys
          * standard getters *
          ********************/
 
-        [[nodiscard]] bool          getBoxSizeHasChanged() const;
-        [[nodiscard]] double        getVolume() const;
-        [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
+        [[nodiscard]] bool   getBoxSizeHasChanged() const;
+        [[nodiscard]] double getVolume() const;
+        __CONST_GETTER__(boxDimensions);
 
         /********************
          * standard setters *

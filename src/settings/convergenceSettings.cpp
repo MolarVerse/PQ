@@ -22,67 +22,8 @@
 
 #include "convergenceSettings.hpp"
 
-#include <utility>
-
-#include "exceptions.hpp"
-
 namespace settings
 {
-
-    /**
-     * @brief returns the convergence strategy as string
-     *
-     * @param strategy
-     * @return std::string
-     */
-    std::string string(ConvStrategy strategy)
-    {
-        switch (strategy)
-        {
-            using enum ConvStrategy;
-
-            case RIGOROUS: return "RIGOROUS";
-            case LOOSE: return "LOOSE";
-            case ABSOLUTE: return "ABSOLUTE";
-            case RELATIVE: return "RELATIVE";
-        }
-
-        std::unreachable();
-    }
-
-    /**
-     * @brief get ConvStrategy from string
-     *
-     * @param strategy
-     * @return ConvStrategy
-     *
-     * @throw UserInputException if the strategy is unknown
-     */
-    ConvStrategy ConvSettings::getConvStrategy(const std::string_view &strategy)
-    {
-        using enum ConvStrategy;
-
-        auto convStrategy = RIGOROUS;
-
-        if ("rigorous" == strategy)
-            convStrategy = RIGOROUS;
-
-        else if ("loose" == strategy)
-            convStrategy = LOOSE;
-
-        else if ("absolute" == strategy)
-            convStrategy = ABSOLUTE;
-
-        else if ("relative" == strategy)
-            convStrategy = RELATIVE;
-
-        else
-            throw exc::UserInputException(
-                "Unknown convergence strategy: " + std::string(strategy)
-            );
-
-        return convStrategy;
-    }
 
     /***************************
      *                         *
@@ -213,16 +154,6 @@ namespace settings
         _energyConvStrategy = strategy;
     }
 
-    /**
-     * @brief set energy convergence strategy
-     *
-     * @param strategy
-     */
-    void ConvSettings::setEnergyConvStrategy(const std::string_view &strategy)
-    {
-        _energyConvStrategy = getConvStrategy(strategy);
-    }
-
     /***************************
      *                         *
      * standard getter methods *
@@ -328,7 +259,7 @@ namespace settings
      */
     ConvStrategy ConvSettings::getDefaultEnergyConvStrategy()
     {
-        return getConvStrategy(_defaultEnergyConvStrategy);
+        return _defaultEnergyConvStrategy;
     }
 
 }   // namespace settings

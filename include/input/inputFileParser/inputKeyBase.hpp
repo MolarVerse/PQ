@@ -23,6 +23,10 @@
 #ifndef _INPUT_KEY_BASE_HPP_
 #define _INPUT_KEY_BASE_HPP_
 
+#include <cstddef>
+#include <string>
+#include <vector>
+
 namespace input
 {
     /**

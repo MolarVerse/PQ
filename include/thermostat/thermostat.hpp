@@ -52,7 +52,7 @@ namespace thermostat
      */
     class Thermostat
     {
-       protected:
+       private:
         double _temperature       = 0.0;
         double _targetTemperature = 0.0;
 
@@ -91,6 +91,7 @@ namespace thermostat
          ***************************/
 
         virtual void setTargetTemperature(double targetTemperature);
+        void         setTemperature(double temperature);
         void         setTemperatureIncrease(double temperatureIncrease);
         void         setTemperatureRampingSteps(size_t steps);
         void         setTemperatureRampingFrequency(size_t frequency);

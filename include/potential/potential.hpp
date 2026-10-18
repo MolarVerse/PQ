@@ -70,7 +70,7 @@ namespace pot
      */
     class Potential
     {
-       protected:
+       private:
         std::shared_ptr<CoulombPotential>    _coulombPotential;
         std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 

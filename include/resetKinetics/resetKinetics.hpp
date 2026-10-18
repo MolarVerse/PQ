@@ -51,7 +51,7 @@ namespace resetKinetics
      */
     class ResetKinetics
     {
-       protected:
+       private:
         mstd::ConstRef<ResetKineticsSettings> _settings;
 
        public:

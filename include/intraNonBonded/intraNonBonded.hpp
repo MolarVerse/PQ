@@ -52,7 +52,7 @@ namespace intraNonBonded
      */
     class IntraNonBonded
     {
-       protected:
+       private:
         IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
 
         std::shared_ptr<pot::NonCoulombPotential> _nonCoulombPot;

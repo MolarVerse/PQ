@@ -40,7 +40,7 @@ TEST_F(TestParameterFileSection, processSectionDihedral)
 {
     std::vector<std::string> lineElements = {"0", "1.22", "234.3", "324.3"};
     input::parameterFile::DihedralSection dihedralSection;
-    dihedralSection.processSection(lineElements, *_engine);
+    dihedralSection.processSection(lineElements, *_engine, 0);
 
     const auto &dihedralTypes = _engine->getForceField()->getDihedralTypes();
 
@@ -52,7 +52,7 @@ TEST_F(TestParameterFileSection, processSectionDihedral)
 
     lineElements = {"1", "2", "1.0", "0", "2"};
     EXPECT_THROW_MSG(
-        dihedralSection.processSection(lineElements, *_engine),
+        dihedralSection.processSection(lineElements, *_engine, 0),
         exc::ParameterFileException,
         "Wrong number of arguments in parameter file dihedral section at line "
         "0 - number of elements has to be 4!"
@@ -60,7 +60,7 @@ TEST_F(TestParameterFileSection, processSectionDihedral)
 
     lineElements = {"1", "2", "-1.0", "3"};
     EXPECT_THROW_MSG(
-        dihedralSection.processSection(lineElements, *_engine),
+        dihedralSection.processSection(lineElements, *_engine, 0),
         exc::ParameterFileException,
         "Parameter file dihedral section at line 0 - periodicity has to be "
         "positive!"

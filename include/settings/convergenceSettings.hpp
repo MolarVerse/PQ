@@ -25,8 +25,6 @@
 #define _CONVERGENCE_SETTINGS_HPP_
 
 #include <optional>
-#include <string>
-#include <string_view>
 
 #include "defaults.hpp"
 #include "enums/convergence.hpp"
@@ -57,14 +55,10 @@ namespace settings
 
         static inline std::optional<ConvStrategy> _energyConvStrategy;
 
-        static inline std::string _defaultEnergyConvStrategy =
+        static inline ConvStrategy _defaultEnergyConvStrategy =
             defaults::EN_CONV_STRATEGY_DEFAULT;
 
        public:
-        [[nodiscard]] static ConvStrategy getConvStrategy(
-            const std::string_view &strategy
-        );
-
         /***************************
          * standard setter methods *
          ***************************/
@@ -83,7 +77,6 @@ namespace settings
         static void setUseRMSForceConv(bool);
 
         static void setEnergyConvStrategy(ConvStrategy);
-        static void setEnergyConvStrategy(const std::string_view &);
 
         /***************************
          * standard getter methods *

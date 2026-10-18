@@ -71,18 +71,26 @@ namespace ff
         pot::NonCoulombPotential    &nonCoulombPot
     )
     {
+        const auto &molecules = this->molecules();
+        auto       *molecule1 = molecules[0];
+        auto       *molecule2 = molecules[1];
+        auto       *molecule3 = molecules[2];
+        auto       *molecule4 = molecules[3];
+
         const bool allInactive =
-            !_molecules[0]->isActive() && !_molecules[1]->isActive() &&
-            !_molecules[2]->isActive() && !_molecules[3]->isActive();
+            !molecule1->isActive() && !molecule2->isActive() &&
+            !molecule3->isActive() && !molecule4->isActive();
 
         if (allInactive)
             return;
 
-        const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
-        const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
+        const auto &atomIndices = this->atomIndices();
 
-        const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-        const auto position4 = _molecules[3]->getAtomPosition(_atomIndices[3]);
+        const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
+        const auto position3 = molecule3->getAtomPosition(atomIndices[2]);
+
+        const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
+        const auto position4 = molecule4->getAtomPosition(atomIndices[3]);
 
         auto dPosition12 = position1 - position2;
         auto dPosition23 = position2 - position3;
@@ -138,10 +146,10 @@ namespace ff
             +forceMagnitude * (-forceVector43 - diffForce123_432);
         const auto force_3 = forceMagnitude * forceVector43;
 
-        _molecules[0]->addAtomForce(_atomIndices[0], force_0);
-        _molecules[1]->addAtomForce(_atomIndices[1], force_1);
-        _molecules[2]->addAtomForce(_atomIndices[2], force_2);
-        _molecules[3]->addAtomForce(_atomIndices[3], force_3);
+        molecule1->addAtomForce(atomIndices[0], force_0);
+        molecule2->addAtomForce(atomIndices[1], force_1);
+        molecule3->addAtomForce(atomIndices[2], force_2);
+        molecule4->addAtomForce(atomIndices[3], force_3);
 
         if (_isLinker)
         {
@@ -156,10 +164,10 @@ namespace ff
                     coulombPot,
                     nonCoulombPot,
                     physicalData,
-                    _molecules[0],
-                    _molecules[3],
-                    _atomIndices[0],
-                    _atomIndices[3],
+                    molecule1,
+                    molecule4,
+                    atomIndices[0],
+                    atomIndices[3],
                     distance14
                 );
 
@@ -173,17 +181,17 @@ namespace ff
                 const auto smoothing =
                     settings::HybridSettings::getSmoothingMethod();
 
-                if (smoothing == HOTSPOT && _molecules[0]->getHybridZone() ==
-                                                molsys::HybridZone::SMOOTHING)
-                    smF = _molecules[0]->getSmoothingFactor();
+                if (smoothing == HOTSPOT &&
+                    molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)
+                    smF = molecule1->getSmoothingFactor();
 
                 if (!isImproperDihedral)
                     physicalData.addVirial(
                         tensorProduct(dPosition14, forcexyz) * (1 - smF)
                     );
 
-                _molecules[0]->addAtomForce(_atomIndices[0], forcexyz);
-                _molecules[3]->addAtomForce(_atomIndices[3], -forcexyz);
+                molecule1->addAtomForce(atomIndices[0], forcexyz);
+                molecule4->addAtomForce(atomIndices[3], -forcexyz);
             }
         }
     }

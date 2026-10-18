@@ -46,6 +46,7 @@ namespace input::topology
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if number of elements in line is
      * not 4
@@ -56,7 +57,8 @@ namespace input::topology
      */
     void DistanceConstraintsSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -69,7 +71,7 @@ namespace input::topology
                     "to "
                     "be "
                     "6!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -88,7 +90,7 @@ namespace input::topology
                 std::format(
                     "Topology file \"Distance "
                     "Constraints\" at line {} - atoms cannot be the same!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -101,7 +103,7 @@ namespace input::topology
                     "Constraints\" at line {} - lower distance cannot be "
                     "greater "
                     "than upper distance!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -141,10 +143,14 @@ namespace input::topology
      * @brief checks if distance constraints sections ends normally
      *
      * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if endedNormal is false
      */
-    void DistanceConstraintsSection::endedNormally(bool endedNormal) const
+    void DistanceConstraintsSection::endedNormally(
+        bool   endedNormal,
+        size_t lineNumber
+    ) const
     {
         if (!endedNormal)
         {
@@ -154,7 +160,7 @@ namespace input::topology
                     "at "
                     "line "
                     "{} - no end of section found!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

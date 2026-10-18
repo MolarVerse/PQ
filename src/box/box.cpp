@@ -180,13 +180,6 @@ namespace molsys
         return minimum(_boxDimensions);
     }
 
-    /**
-     * @brief get the box dimensions
-     *
-     * @return linalg::Vec3D
-     */
-    linalg::Vec3D Box::getBoxDimensions() const { return _boxDimensions; }
-
     /********************
      * standard setters *
      ********************/

@@ -49,9 +49,9 @@ namespace out
     {
         const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
 
-        _fp << simulationBox.getNumberOfAtoms() * nBeads << "  ";
-        _fp << simulationBox.getBoxDimensions() << "  "
-            << simulationBox.getBoxAngles() << '\n';
+        _getFilePointer() << simulationBox.getNumberOfAtoms() * nBeads << "  ";
+        _getFilePointer() << simulationBox.getBoxDimensions() << "  "
+                          << simulationBox.getBoxAngles() << '\n';
     }
 
     /**
@@ -94,8 +94,8 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
     /**
@@ -139,8 +139,8 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
     /**
@@ -192,8 +192,8 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
     /**
@@ -231,7 +231,7 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 }   // namespace out

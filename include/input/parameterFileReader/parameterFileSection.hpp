@@ -43,16 +43,16 @@ namespace input::parameterFile
      */
     class ParameterFileSection
     {
-       protected:
-        int            _lineNumber = 0;
-        std::ifstream *_fp         = nullptr;
+       private:
+        std::ifstream *_fp = nullptr;
 
        public:
         virtual ~ParameterFileSection() = default;
 
         virtual void process(
             std::vector<std::string> &lineElements,
-            engine::Engine &
+            engine::Engine           &engine,
+            size_t                   &lineNumber
         );
 
         void endedNormally(bool);
@@ -61,18 +61,17 @@ namespace input::parameterFile
 
         virtual void processSection(
             std::vector<std::string> &lineElements,
-            engine::Engine &
+            engine::Engine &,
+            size_t lineNumber
         ) = 0;
 
         virtual void processHeader(
             std::vector<std::string> &lineElements,
-            engine::Engine &
+            engine::Engine &,
+            size_t lineNumber
         ) = 0;
 
-        void setLineNumber(int lineNumber);
         void setFp(std::ifstream *file);
-
-        [[nodiscard]] int getLineNumber() const;
     };
 
 }   // namespace input::parameterFile

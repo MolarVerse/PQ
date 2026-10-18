@@ -38,7 +38,7 @@ namespace out
     {
         const auto timers = timings::GlobalTimer::get().sortTimers();
 
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:<30}\t{:>10}\t{:>10}\n",
             "Section",
             "Time [s]",
@@ -47,20 +47,20 @@ namespace out
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers) write a line consisting only of '-'
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:<30}\t{:>10}\t{:>10}\n",
             std::string(30, '-'),
             std::string(10, '-'),
             std::string(10, '-')
         );
 
-        _fp << "\n";
+        _getFilePointer() << "\n";
 
         const auto elapsedTime =
             timings::GlobalTimer::get().calculateElapsedTime();
 
         // write the simulation timer
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
             "Total",
             elapsedTime * MS_TO_S,
@@ -69,7 +69,7 @@ namespace out
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
 
-        _fp << "\n";
+        _getFilePointer() << "\n";
 
         // write the execution timers
         for (const auto &section : timers)
@@ -78,7 +78,7 @@ namespace out
             const auto time       = section.calculateElapsedTime();
             const auto percentage = (time / elapsedTime) * 100.0;
 
-            _fp << std::format(
+            _getFilePointer() << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
                 name,
                 time * MS_TO_S,
@@ -86,12 +86,12 @@ namespace out
             );
         }
 
-        _fp << "\n";
-        _fp << "\n";
-        _fp << "\n";
-        _fp << "\n";
+        _getFilePointer() << "\n";
+        _getFilePointer() << "\n";
+        _getFilePointer() << "\n";
+        _getFilePointer() << "\n";
 
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
             "Section",
             "Time [s]",
@@ -101,7 +101,7 @@ namespace out
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers) write a line consisting only of '-'
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:<30}\t{:>10}\t{:>10}\t{:>10}\n",
             std::string(30, '-'),
             std::string(10, '-'),
@@ -109,10 +109,10 @@ namespace out
             std::string(10, '-')
         );
 
-        _fp << "\n";
+        _getFilePointer() << "\n";
 
         // write the simulation timer
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
             "Total",
             elapsedTime * MS_TO_S,
@@ -122,7 +122,7 @@ namespace out
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
 
-        _fp << "\n";
+        _getFilePointer() << "\n";
 
         // write the execution timers
         for (const auto &section : timers)
@@ -138,7 +138,7 @@ namespace out
 
             // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
             // readability-magic-numbers)
-            _fp << std::format(
+            _getFilePointer() << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
                 name,
                 time * MS_TO_S,
@@ -155,7 +155,7 @@ namespace out
                 const auto subPercentage    = (subTime / time) * 100.0;
                 const auto subTotPercentage = (subTime / elapsedTime) * 100.0;
 
-                _fp << std::format(
+                _getFilePointer() << std::format(
                     "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
                     subName,
                     subTime * MS_TO_S,
@@ -164,10 +164,10 @@ namespace out
                 );
             }
 
-            _fp << "\n";
+            _getFilePointer() << "\n";
         }
 
-        _fp << std::flush;
+        _getFilePointer() << std::flush;
     }
 
 }   // namespace out

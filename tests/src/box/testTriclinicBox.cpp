@@ -36,7 +36,7 @@ TEST(TestTriclinicBox, setBoxDimensions)
     auto                box           = molsys::TriclinicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     box.setBoxDimensions(boxDimensions);
-    EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
+    EXPECT_EQ(box.boxDimensions(), boxDimensions);
 
     // only first entry should be set to boxDimensions[0] because angles are not
     // set yet
@@ -57,7 +57,7 @@ TEST(TestTriclinicBox, setBoxAngles)
     const linalg::Vec3D boxAngles     = {90.0, 90.0, 90.0};
     box.setBoxDimensions(boxDimensions);
     box.setBoxAngles(boxAngles);
-    EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
+    EXPECT_EQ(box.boxDimensions(), boxDimensions);
     EXPECT_EQ(box.getBoxAngles(), boxAngles);
     EXPECT_MATRIX_NEAR(
         box.getBoxMatrix(),
@@ -103,9 +103,9 @@ TEST(TestTriclinicBox, setBoxAngles)
     );
 
     auto boxMatrix = linalg::StaticMatrix3x3<double>();
-    boxMatrix[0] = {box.getTransformationMatrix()[0] * box.getBoxDimensions()};
-    boxMatrix[1] = {box.getTransformationMatrix()[1] * box.getBoxDimensions()};
-    boxMatrix[2] = {box.getTransformationMatrix()[2] * box.getBoxDimensions()};
+    boxMatrix[0]   = {box.getTransformationMatrix()[0] * box.boxDimensions()};
+    boxMatrix[1]   = {box.getTransformationMatrix()[1] * box.boxDimensions()};
+    boxMatrix[2]   = {box.getTransformationMatrix()[2] * box.boxDimensions()};
     EXPECT_MATRIX_NEAR(box.getBoxMatrix(), boxMatrix, 1.0e-15);
 }
 
@@ -242,7 +242,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
     box.scaleBox(diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0}));
     EXPECT_VECTOR_NEAR(
-        box.getBoxDimensions(),
+        box.boxDimensions(),
         linalg::Vec3D(8.0, 10.0, 12.0),
         1.0e-12
     );
@@ -252,7 +252,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     const auto originalAngles = box.getBoxAngles();
     box.scaleBox(diagonalMatrix(linalg::Vec3D{0.5, 0.5, 0.5}));
     EXPECT_VECTOR_NEAR(
-        box.getBoxDimensions(),
+        box.boxDimensions(),
         linalg::Vec3D(4.0, 5.0, 6.0),
         1.0e-12
     );
@@ -260,6 +260,6 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
 
     const auto [dimensions, angles] =
         molsys::calcBoxDimAndAnglesFromBoxMatrix(box.getBoxMatrix());
-    EXPECT_VECTOR_NEAR(dimensions, box.getBoxDimensions(), 1.0e-12);
+    EXPECT_VECTOR_NEAR(dimensions, box.boxDimensions(), 1.0e-12);
     EXPECT_VECTOR_NEAR(angles, box.getBoxAngles(), 1.0e-12);
 }

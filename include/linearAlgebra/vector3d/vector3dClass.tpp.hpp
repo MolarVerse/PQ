@@ -327,7 +327,7 @@ namespace linalg
      * @return std::vector<T>
      */
     template <class T>
-    std::vector<T> Vector3D<T>::toStdVector()
+    std::vector<T> Vector3D<T>::toStdVector() const
     {
         return std::vector<T>(xyz.begin(), xyz.end());
     }

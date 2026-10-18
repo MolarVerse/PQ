@@ -43,24 +43,4 @@ namespace connectivity
     {
     }
 
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief Get the molecule1 object
-     *
-     * @return Molecule*
-     */
-    molsys::Molecule *Bond::getMolecule1() const { return _molecules[0]; }
-
-    /**
-     * @brief Get the molecule2 object
-     *
-     * @return Molecule*
-     */
-    molsys::Molecule *Bond::getMolecule2() const { return _molecules[1]; }
-
 }   // namespace connectivity

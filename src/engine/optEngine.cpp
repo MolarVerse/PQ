@@ -42,13 +42,13 @@ namespace engine
         _evaluator->evaluate();
         _optimizer->updateHistory();
 
-        _nSteps = _optimizer->getNEpochs();
+        _setNSteps(_optimizer->getNEpochs());
 
         writeOutput();
 
-        progressbar bar(static_cast<int>(_nSteps), true, std::cout);
+        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
 
-        for (size_t i = 0; i < _nSteps; ++i)
+        for (size_t i = 0; i < _getNSteps(); ++i)
         {
             bar.update();
 
@@ -64,7 +64,7 @@ namespace engine
         throwOnFailure(
             _converged,
             _optStopped,
-            _step,
+            getStep(),
             _optimizer->getNEpochs(),
             _learningRateStrategy->getErrorMessages()
         );
@@ -74,12 +74,12 @@ namespace engine
         const auto elapsedTime =
             timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
-        _engineOutput.writeTimingsFile();
+        getEngineOutput().writeTimingsFile();
 
         if (_converged)
         {
             const auto msg =
-                std::format("Optimizer converged after {} epochs.", _step);
+                std::format("Optimizer converged after {} epochs.", getStep());
 
             getLogOutput().writeInfo(msg);
             out::StdoutOutput::writeInfo(msg);
@@ -141,7 +141,7 @@ namespace engine
      */
     void OptEngine::takeStep()
     {
-        _optimizer->update(_learningRateStrategy->getLearningRate(), _step);
+        _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
 
         _evaluator->evaluate();
 
@@ -151,7 +151,7 @@ namespace engine
 
         if (!_converged)
         {
-            _learningRateStrategy->updateLearningRate(_step, _nSteps);
+            _learningRateStrategy->updateLearningRate(getStep(), _getNSteps());
 
             if (!_learningRateStrategy->getErrorMessages().empty())
                 _optStopped = true;
@@ -163,7 +163,7 @@ namespace engine
                 const auto headerMessage = std::format(
                     "Updating learning rate did raise "
                     "the following warnings in epoch {} out of {}:",
-                    _step,
+                    getStep(),
                     _optimizer->getNEpochs()
                 );
                 getLogOutput().writeOptWarning(headerMessage);
@@ -177,7 +177,7 @@ namespace engine
             }
         }
 
-        ++_step;
+        _setStep(getStep() + 1);
     }
 
     /**
@@ -192,26 +192,27 @@ namespace engine
         const auto outputFreq =
             settings::OutputFileSettings::getOutputFrequency();
         const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = _step + step0;
+        const auto effStep = getStep() + step0;
 
-        if (0 == _step % outputFreq)
+        if (0 == getStep() % outputFreq)
         {
-            _engineOutput.writeXyzFile(*_simulationBox, effStep);
-            _engineOutput.writeForceFile(*_simulationBox, effStep);
-            _engineOutput.writeOptRstFile(*_simulationBox, effStep);
-            _engineOutput.writeOptFile(_step, *_optimizer);
+            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
+            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptFile(getStep(), *_optimizer);
 
-            // _engineOutput.writeVirialFile(
+            // getEngineOutput().writeVirialFile(
             //     effStep,
-            //     *_physicalData
+            //     getPhysicalData()
             // );   // use physicalData instead of averagePhysicalData
 
-            // _engineOutput.writeStressFile(
+            // getEngineOutput().writeStressFile(
             //     effStep,
-            //     *_physicalData
+            //     getPhysicalData()
             // );   // use physicalData instead of averagePhysicalData
 
-            // _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+            // getEngineOutput().writeBoxFile(effStep,
+            // _simulationBox->getBox());
         }
 
         // NOTE:
@@ -222,24 +223,32 @@ namespace engine
         // problem - could also be a feature and not a bug
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        _physicalData->setLoopTime(
+        getPhysicalData().setLoopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
-        _averagePhysicalData.updateAverages(*_physicalData);
+        getAveragePhysicalData().updateAverages(getPhysicalData());
 
-        if (0 == _step % outputFreq)
+        if (0 == getStep() % outputFreq)
         {
-            _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
+            getAveragePhysicalData().makeAverages(
+                static_cast<double>(outputFreq)
+            );
 
             const auto effStepDouble = static_cast<double>(effStep);
 
-            _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-            _engineOutput.writeInfoFile(effStepDouble, _averagePhysicalData);
+            getEngineOutput().writeEnergyFile(
+                effStep,
+                getAveragePhysicalData()
+            );
+            getEngineOutput().writeInfoFile(
+                effStepDouble,
+                getAveragePhysicalData()
+            );
 
-            _averagePhysicalData = physicalData::PhysicalData();
+            getAveragePhysicalData() = physicalData::PhysicalData();
         }
 
-        _physicalData->reset();
+        getPhysicalData().reset();
     }
 
     /***************************
@@ -382,7 +391,7 @@ namespace engine
      */
     out::OptOutput &OptEngine::getOptOutput()
     {
-        return _engineOutput.getOptOutput();
+        return getEngineOutput().getOptOutput();
     }
 
 }   // namespace engine

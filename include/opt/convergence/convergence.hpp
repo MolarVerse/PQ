@@ -34,7 +34,7 @@ namespace opt
      */
     class Convergence
     {
-       protected:
+       private:
         bool _isRelEnergyConv   = true;
         bool _isAbsEnergyConv   = true;
         bool _isAbsMaxForceConv = true;

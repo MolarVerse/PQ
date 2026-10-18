@@ -39,10 +39,12 @@ namespace input::topology
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the topology file being processed
      */
     void TopologySection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                   &lineNumber
     )
     {
         std::string line;
@@ -55,33 +57,23 @@ namespace input::topology
 
             if (lineElements.empty())
             {
-                ++_lineNumber;
+                ++lineNumber;
                 continue;
             }
 
             if (utilities::toLowerCopy(lineElements[0]) == "end")
             {
-                ++_lineNumber;
+                ++lineNumber;
                 endedNormal = true;
                 break;
             }
 
-            processSection(lineElements, engine);
+            processSection(lineElements, engine, lineNumber);
 
-            ++_lineNumber;
+            ++lineNumber;
         }
 
-        endedNormally(endedNormal);
-    }
-
-    /**
-     * @brief set line number
-     *
-     * @param lineNumber
-     */
-    void TopologySection::setLineNumber(int lineNumber)
-    {
-        _lineNumber = lineNumber;
+        endedNormally(endedNormal, lineNumber);
     }
 
     /**
@@ -90,12 +82,5 @@ namespace input::topology
      * @param file
      */
     void TopologySection::setFp(std::ifstream *file) { _fp = file; }
-
-    /**
-     * @brief get line number
-     *
-     * @return int
-     */
-    int TopologySection::getLineNumber() const { return _lineNumber; }
 
 }   // namespace input::topology
