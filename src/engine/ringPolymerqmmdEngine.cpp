@@ -341,7 +341,8 @@ namespace engine
 
             auto &box = getRingPolymerBeads()[i].getBox();
 
-            auto boxDimensions = box.boxDimensions().toStdVector();
+            const auto oldBoxDimensions = box.get_boxDimensions();
+            auto       boxDimensions    = oldBoxDimensions.toStdVector();
             auto volume  = getRingPolymerBeadsPhysicalData()[i].getVolume();
             auto density = getRingPolymerBeadsPhysicalData()[i].getDensity();
 
@@ -389,7 +390,11 @@ namespace engine
 
             getRingPolymerBeads()[i].deFlattenVelocities(velocities);
             getRingPolymerBeads()[i].deFlattenPositions(positions);
-            box.setBoxDimensions(boxDimensionsVec);
+
+            const auto scalingTensor =
+                linalg::diagonalMatrix(boxDimensionsVec / oldBoxDimensions);
+            box.scaleBox(scalingTensor);
+
             getRingPolymerBeadsPhysicalData()[i].setVolume(volume);
             getRingPolymerBeadsPhysicalData()[i].setDensity(density);
         }

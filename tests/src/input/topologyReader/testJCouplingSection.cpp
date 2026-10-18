@@ -58,7 +58,7 @@ TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
     const auto &jCouplings = _engine->getForceField()->getJCouplings();
     ASSERT_EQ(jCouplings.size(), 1U);
 
-    const auto molecules = jCouplings.front().molecules();
+    const auto molecules = jCouplings.front().get_molecules();
     ASSERT_EQ(molecules.size(), 4U);
 
     auto &simBox = _engine->getSimulationBox();

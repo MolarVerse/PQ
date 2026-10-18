@@ -192,7 +192,9 @@ class ExternalQMRunnerTest : public testing::Test
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName("H");
         _simulationBox.addAtom(atom);
-        _simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simulationBox.setBox(orthoBox);
     }
 
     void TearDown() override
@@ -546,7 +548,9 @@ class QMWriterTest : public ExternalQMRunnerTest
         // the fixture's atom "H" sits at the origin; add an O and a second H
         _addAtom("O", {1.5, 2.25, -3.0});
         _addAtom("H", {0.5, 0.5, 0.5});
-        _simulationBox.setBoxDimensions({10.0, 12.0, 14.0});
+
+        molsys::OrthorhombicBox orthoBox{{10.0, 12.0, 14.0}};
+        _simulationBox.setBox(orthoBox);
     }
 
     void _addAtom(const std::string &name, const linalg::Vec3D &position)

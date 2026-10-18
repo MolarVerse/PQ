@@ -71,7 +71,7 @@ namespace ff
         pot::NonCoulombPotential    &nonCoulombPot
     )
     {
-        const auto &molecules = this->molecules();
+        const auto &molecules = get_molecules();
         auto       *molecule1 = molecules[0];
         auto       *molecule2 = molecules[1];
         auto       *molecule3 = molecules[2];
@@ -84,7 +84,7 @@ namespace ff
         if (allInactive)
             return;
 
-        const auto &atomIndices = this->atomIndices();
+        const auto &atomIndices = get_atomIndices();
 
         const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
         const auto position3 = molecule3->getAtomPosition(atomIndices[2]);

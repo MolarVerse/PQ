@@ -117,9 +117,7 @@ namespace input::restartFile
                 TRICLINIC_BOX_ANGLE_THRESHOLD
             ))
         {
-            molsys::TriclinicBox box;
-            box.setBoxAngles(boxAngles);
-            box.setBoxDimensions(boxDimensions);
+            molsys::TriclinicBox box{boxDimensions, boxAngles};
             engine.getSimulationBox().setBox(box);
 
             const auto jobType = settings::GeneralSettings::getJobtype();
@@ -133,8 +131,7 @@ namespace input::restartFile
         }
         else
         {
-            molsys::OrthorhombicBox box;
-            box.setBoxDimensions(boxDimensions);
+            molsys::OrthorhombicBox box(boxDimensions);
             engine.getSimulationBox().setBox(box);
         }
 

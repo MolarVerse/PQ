@@ -97,7 +97,7 @@ namespace pot
     {
         auto setEnergyAndForceCutOff = [](auto &nonCoulombPair)
         {
-            const auto radialCutoff = nonCoulombPair->radialCutoff();
+            const auto radialCutoff = nonCoulombPair->get_radialCutoff();
             const auto &[energy, force] =
                 nonCoulombPair->calculate(radialCutoff);
 

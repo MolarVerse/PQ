@@ -51,8 +51,8 @@ namespace connectivity
             const std::vector<AtomIndex> &
         );
 
-        __CONST_GETTER__(molecules);
-        __CONST_GETTER__(atomIndices);
+        CONST_GETTER(_molecules);
+        CONST_GETTER(_atomIndices);
     };
 
 }   // namespace connectivity

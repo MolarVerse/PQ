@@ -24,7 +24,7 @@
 
 #define _NON_COULOMB_PAIR_HPP_
 
-#include <mstd/utils/members.hpp>
+#include <mstd/utils.hpp>
 #include <utility>
 
 #include "strongTypes.hpp"
@@ -85,9 +85,9 @@ namespace pot
         [[nodiscard]] VdwType    getInternalType1() const;
         [[nodiscard]] VdwType    getInternalType2() const;
 
-        __CONST_GETTER__(radialCutoff);
-        __CONST_GETTER__(energyCutoff);
-        __CONST_GETTER__(forceCutoff);
+        CONST_GETTER(_radialCutoff);
+        CONST_GETTER(_energyCutoff);
+        CONST_GETTER(_forceCutoff);
     };
 
 }   // namespace pot

@@ -23,6 +23,7 @@
 #include "potentialBruteForce.hpp"
 
 #include <cstddef>
+#include <mstd/debugging.hpp>
 
 #include "globalTimer.hpp"
 #include "molecule.hpp"
@@ -71,6 +72,8 @@ namespace pot
             size_t idxJ = 0;
             for (auto &mol2 : simulationBox.getMMMolecules())
             {
+                MSTD_HOT_PATH;
+
                 // avoid double counting and self interaction
                 if (idxJ >= idxI)
                     break;
@@ -135,6 +138,8 @@ namespace pot
 
             for (auto &mol2 : simulationBox.getMMMolecules())
             {
+                MSTD_HOT_PATH;
+
                 if (isWaterInterModelSet && isMol1Water &&
                     mol2.getMoltype() == waterTypeValue)
                     continue;
@@ -184,6 +189,8 @@ namespace pot
 
             for (auto &mol2 : simulationBox.getMMMolecules())
             {
+                MSTD_HOT_PATH;
+
                 if (isWaterInterModelSet && isMol1Water &&
                     mol2.getMoltype() == waterTypeValue)
                     continue;
@@ -246,16 +253,15 @@ namespace pot
         double totalCoulombEnergy    = 0.0;
         double totalNonCoulombEnergy = 0.0;
 
-        for (auto &mol1 : simulationBox.getMoleculesInsideZone(
-                 molsys::HybridZone::SMOOTHING
-             ))
+        using enum molsys::HybridZone;
+        for (auto &mol1 : simulationBox.getMoleculesInsideZone(SMOOTHING))
         {
             const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
-            for (auto &mol2 : simulationBox.getMoleculesOutsideZone(
-                     molsys::HybridZone::SMOOTHING
-                 ))
+            for (auto &mol2 : simulationBox.getMoleculesOutsideZone(SMOOTHING))
             {
+                MSTD_HOT_PATH;
+
                 if (isWaterInterModelSet && isMol1Water &&
                     mol2.getMoltype() == waterTypeValue)
                     continue;
@@ -304,17 +310,15 @@ namespace pot
         }
 
         size_t idxI = 0;
-        for (auto &mol1 : simulationBox.getMoleculesInsideZone(
-                 molsys::HybridZone::SMOOTHING
-             ))
+        for (auto &mol1 : simulationBox.getMoleculesInsideZone(SMOOTHING))
         {
             const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
             size_t idxJ = 0;
-            for (auto &mol2 : simulationBox.getMoleculesInsideZone(
-                     molsys::HybridZone::SMOOTHING
-                 ))
+            for (auto &mol2 : simulationBox.getMoleculesInsideZone(SMOOTHING))
             {
+                MSTD_HOT_PATH;
+
                 if (idxI == idxJ)
                 {
                     ++idxJ;

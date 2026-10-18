@@ -107,13 +107,13 @@ namespace pot
 
         auto energy  = _params.c12 / distanceTwelfth;
         energy      += _params.c6 / distanceSixth;
-        energy      -= energyCutoff();
-        energy      -= forceCutoff() * (radialCutoff() - distance);
+        energy      -= get_energyCutoff();
+        energy      -= get_forceCutoff() * (get_radialCutoff() - distance);
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         auto force  = 12.0 * _params.c12 / (distanceTwelfth * distance);
         force      += 6.0 * _params.c6 / (distanceSixth * distance);
-        force      -= forceCutoff();
+        force      -= get_forceCutoff();
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         return {energy, force};

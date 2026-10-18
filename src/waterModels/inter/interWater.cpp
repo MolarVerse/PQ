@@ -225,7 +225,7 @@ namespace waterModel
                 return;
 
             const auto [energyCutOff, forceCutOff] =
-                nonCoulombPair->calculate(nonCoulombPair->radialCutoff());
+                nonCoulombPair->calculate(nonCoulombPair->get_radialCutoff());
             nonCoulombPair->setEnergyCutOff(energyCutOff);
             nonCoulombPair->setForceCutOff(forceCutOff);
         };

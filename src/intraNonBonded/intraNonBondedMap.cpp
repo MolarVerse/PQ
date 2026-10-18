@@ -177,7 +177,7 @@ namespace intraNonBonded
                 {globalVdwType1, globalVdwType2}
             );
 
-            if (distance < nonCoulombicPair->radialCutoff())
+            if (distance < nonCoulombicPair->get_radialCutoff())
             {
                 auto [nonCoulombEnergyLocal, nonCoulombForce] =
                     nonCoulombicPair->calculate(distance);

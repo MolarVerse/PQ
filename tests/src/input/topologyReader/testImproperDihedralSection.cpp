@@ -46,14 +46,14 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
     const auto &molecules = _engine->getSimulationBox().getMolecules();
 
     EXPECT_EQ(improperDihedrals.size(), 1);
-    EXPECT_EQ(improperDihedrals[0].molecules()[0], molecules.data());
-    EXPECT_EQ(improperDihedrals[0].molecules()[1], &(molecules[1]));
-    EXPECT_EQ(improperDihedrals[0].molecules()[2], &(molecules[1]));
-    EXPECT_EQ(improperDihedrals[0].molecules()[3], &(molecules[1]));
-    EXPECT_EQ(improperDihedrals[0].atomIndices()[0], AtomIndex{0});
-    EXPECT_EQ(improperDihedrals[0].atomIndices()[1], AtomIndex{0});
-    EXPECT_EQ(improperDihedrals[0].atomIndices()[2], AtomIndex{1});
-    EXPECT_EQ(improperDihedrals[0].atomIndices()[3], AtomIndex{2});
+    EXPECT_EQ(improperDihedrals[0].get_molecules()[0], molecules.data());
+    EXPECT_EQ(improperDihedrals[0].get_molecules()[1], &(molecules[1]));
+    EXPECT_EQ(improperDihedrals[0].get_molecules()[2], &(molecules[1]));
+    EXPECT_EQ(improperDihedrals[0].get_molecules()[3], &(molecules[1]));
+    EXPECT_EQ(improperDihedrals[0].get_atomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(improperDihedrals[0].get_atomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(improperDihedrals[0].get_atomIndices()[2], AtomIndex{1});
+    EXPECT_EQ(improperDihedrals[0].get_atomIndices()[3], AtomIndex{2});
     EXPECT_EQ(improperDihedrals[0].getType(), DihedralId{7});
 
     lineElements = {"1", "1", "2", "3", "4"};

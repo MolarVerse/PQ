@@ -84,8 +84,8 @@ namespace constraints
         if (timeInterval < 0.0)
             return;
 
-        const auto &molecules   = this->molecules();
-        const auto &atomIndices = this->atomIndices();
+        const auto &molecules   = get_molecules();
+        const auto &atomIndices = get_atomIndices();
 
         auto *molecule1 = molecules[0];
         auto *molecule2 = molecules[1];

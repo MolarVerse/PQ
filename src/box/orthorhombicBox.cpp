@@ -23,21 +23,46 @@
 #include "orthorhombicBox.hpp"
 
 #include "constants.hpp"
+#include "constants/conversionFactors.hpp"
+#include "defaults.hpp"
+#include "vector3d.hpp"
 
 namespace molsys
 {
+    /**
+     * @brief Construct a new Orthorhombic Box object
+     *
+     * @param boxDimensions
+     */
+    OrthorhombicBox::OrthorhombicBox(const linalg::Vec3D &boxDimensions)
+        : Box(boxDimensions, {NINETY_DEG_TO_RAD})
+    {
+    }
 
     /**
-     * @brief Calculate the volume of the box
+     * @brief Create a vacuum box with default dimensions
      *
-     * @return volume
+     * @return OrthorhombicBox
      */
-    double OrthorhombicBox::calculateVolume()
+    OrthorhombicBox OrthorhombicBox::makeVacuumBox()
     {
-        const auto &boxDimensions = this->boxDimensions();
-        setVolume(boxDimensions[0] * boxDimensions[1] * boxDimensions[2]);
+        return OrthorhombicBox(
+            {defaults::VACUUM_BOX_DIMENSION,
+             defaults::VACUUM_BOX_DIMENSION,
+             defaults::VACUUM_BOX_DIMENSION}
+        );
+    }
 
-        return getVolume();
+    /**
+     * @brief get the volume of the box
+     *
+     * @return double
+     */
+    double OrthorhombicBox::getVolume() const
+    {
+        // NOTE: here we do not use cached values as the overhead is negligible
+        // or even negative
+        return prod(get_boxDimensions());
     }
 
     /**
@@ -47,8 +72,8 @@ namespace molsys
      */
     void OrthorhombicBox::applyPBC(linalg::Vec3D &position) const
     {
-        const auto &boxDimensions = this->boxDimensions();
-        position -= boxDimensions * round(position / boxDimensions);
+        const auto &boxDims  = get_boxDimensions();
+        position            -= boxDims * round(position / boxDims);
     }
 
     /**
@@ -61,8 +86,8 @@ namespace molsys
         const linalg::Vec3D &shiftVector
     ) const
     {
-        const auto &boxDimensions = this->boxDimensions();
-        return boxDimensions * round(shiftVector / boxDimensions);
+        const auto &boxDims = get_boxDimensions();
+        return boxDims * round(shiftVector / boxDims);
     }
 
     /**
@@ -75,9 +100,10 @@ namespace molsys
         double density
     )
     {
-        setVolume(totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3));
+        const auto volume =
+            totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 
-        return {::cbrt(getVolume())};
+        return {::cbrt(volume)};
     }
 
     linalg::Vec3D OrthorhombicBox::wrapPositionIntoBox(
@@ -96,10 +122,100 @@ namespace molsys
      */
     void OrthorhombicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
-        const auto newBoxDimensions =
-            this->boxDimensions() * diagonal(scalingTensor);
-        setBoxDimensions(newBoxDimensions);
-        setVolume(calculateVolume());
+        _set_boxDimensions(get_boxDimensions() * diagonal(scalingTensor));
+    }
+
+    /**
+     * @brief get the minimal box dimension
+     *
+     * @return double
+     */
+    double OrthorhombicBox::getMinimalBoxDimension() const
+    {
+        return minimum(get_boxDimensions());
+    }
+
+    /**
+     * @brief get the box matrix
+     *
+     * @return linalg::StaticMatrix3x3<double>
+     */
+    linalg::StaticMatrix3x3<double> OrthorhombicBox::getBoxMatrix(
+        Periodicity periodicity
+    ) const
+    {
+        auto boxMatrix = linalg::diagonalMatrix(get_boxDimensions());
+
+        std::vector<size_t> vacuumIndices{};
+
+        switch (periodicity)
+        {
+            case Periodicity::NON_PERIODIC: vacuumIndices = {0, 1, 2}; break;
+            case Periodicity::X: vacuumIndices = {1, 2}; break;
+            case Periodicity::Y: vacuumIndices = {0, 2}; break;
+            case Periodicity::Z: vacuumIndices = {0, 1}; break;
+            case Periodicity::XY: vacuumIndices = {2}; break;
+            case Periodicity::XZ: vacuumIndices = {1}; break;
+            case Periodicity::YZ: vacuumIndices = {0}; break;
+            case Periodicity::XYZ: break;
+        }
+
+        for (auto index : vacuumIndices)
+            boxMatrix[index][index] = defaults::VACUUM_BOX_DIMENSION;
+
+        return boxMatrix;
+    }
+
+    /**
+     * @brief transform a vector into orthogonal space
+     *
+     * @param position
+     * @return linalg::Vec3D
+     */
+    linalg::Vec3D OrthorhombicBox::toOrthoSpace(
+        const linalg::Vec3D &position
+    ) const
+    {
+        return position;
+    }
+
+    /**
+     * @brief transform a tensor into orthogonal space
+     *
+     * @param position
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D OrthorhombicBox::toOrthoSpace(
+        const linalg::tensor3D &position
+    ) const
+    {
+        return position;
+    }
+
+    /**
+     * @brief transform a vector into simulation space
+     *
+     * @param position
+     * @return linalg::Vec3D
+     */
+    linalg::Vec3D OrthorhombicBox::toSimSpace(
+        const linalg::Vec3D &position
+    ) const
+    {
+        return position;
+    }
+
+    /**
+     * @brief transform a tensor into simulation space
+     *
+     * @param position
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D OrthorhombicBox::toSimSpace(
+        const linalg::tensor3D &position
+    ) const
+    {
+        return position;
     }
 
 }   // namespace molsys

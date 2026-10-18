@@ -94,7 +94,7 @@ namespace ff
         const auto nonCoulombPair =
             nonCoulombPotential.getNonCoulPair(indices, {vdwType1, vdwType2});
 
-        if (distance < nonCoulombPair->radialCutoff())
+        if (distance < nonCoulombPair->get_radialCutoff())
         {
             auto [nonCoulombEnergy, nonCoulombForce] =
                 nonCoulombPair->calculate(distance);

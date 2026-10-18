@@ -24,6 +24,7 @@
 
 #define _BOX_HPP_
 
+#include <mstd/types.hpp>
 #include <mstd/utils.hpp>
 
 #include "staticMatrix.hpp"
@@ -46,6 +47,11 @@ namespace molsys
         XYZ
     };
 
+    struct BoxTag
+    {
+    };
+    using BoxVec = mstd::CacheProperty<linalg::Vec3D, BoxTag>;
+
     /**
      * @class Box
      *
@@ -55,10 +61,8 @@ namespace molsys
     class Box
     {
        private:
-        linalg::Vec3D _boxDimensions;
-
-        bool   _boxSizeHasChanged = false;
-        double _volume;
+        BoxVec _boxDimensions;
+        BoxVec _angles;
 
        public:
         virtual ~Box() = default;
@@ -72,48 +76,48 @@ namespace molsys
 
         virtual void scaleBox(const linalg::tensor3D &scalingFactors) = 0;
 
-        [[nodiscard]] virtual double calculateVolume() = 0;
+        [[nodiscard]]
+        virtual double getVolume() const = 0;
 
         [[nodiscard]]
         virtual linalg::Vec3D calcShiftVector(const linalg::Vec3D &) const = 0;
 
-        /*****************************************************
-         * virtual methods that are overriden in triclinicBox *
-         ******************************************************/
-
-        virtual void setBoxDimensions(const linalg::Vec3D &boxDimensions);
-
-        [[nodiscard]] virtual double getMinimalBoxDimension() const;
-
-        [[nodiscard]] virtual linalg::Vec3D    getBoxAngles() const;
-        [[nodiscard]] virtual linalg::tensor3D getBoxMatrix() const;
         [[nodiscard]]
-        virtual linalg::tensor3D getBoxMatrix(Periodicity per) const;
+        virtual double getMinimalBoxDimension() const = 0;
 
         [[nodiscard]]
-        virtual linalg::Vec3D toOrthoSpace(const linalg::Vec3D &) const;
-        [[nodiscard]]
-        virtual linalg::tensor3D toOrthoSpace(const linalg::tensor3D &) const;
+        virtual linalg::tensor3D getBoxMatrix(Periodicity per) const = 0;
 
         [[nodiscard]]
-        virtual linalg::Vec3D toSimSpace(const linalg::Vec3D &) const;
+        virtual linalg::Vec3D toOrthoSpace(const linalg::Vec3D &) const = 0;
         [[nodiscard]]
-        virtual linalg::tensor3D toSimSpace(const linalg::tensor3D &) const;
+        virtual linalg::tensor3D toOrthoSpace(
+            const linalg::tensor3D &
+        ) const = 0;
+
+        [[nodiscard]]
+        virtual linalg::Vec3D toSimSpace(const linalg::Vec3D &) const = 0;
+        [[nodiscard]]
+        virtual linalg::tensor3D toSimSpace(const linalg::tensor3D &) const = 0;
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] bool   getBoxSizeHasChanged() const;
-        [[nodiscard]] double getVolume() const;
-        __CONST_GETTER__(boxDimensions);
+        CONST_PROPERTY_GETTER(_boxDimensions);
+        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
 
-        /********************
-         * standard setters *
-         ********************/
+       protected:
+        explicit Box(
+            const linalg::Vec3D &boxDimensions,
+            const linalg::Vec3D &angles
+        );
 
-        void setVolume(double volume);
-        void setBoxSizeHasChanged(bool boxSizeHasChanged);
+        static constexpr auto _dimsPtr() { return &Box::_boxDimensions; }
+        static constexpr auto _anglesPtr() { return &Box::_angles; }
+
+        INTERNAL_PROPERTY_SETTER(_boxDimensions);
+        INTERNAL_PROPERTY_SETTER(_angles);
     };
 
 }   // namespace molsys
