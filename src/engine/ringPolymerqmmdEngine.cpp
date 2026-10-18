@@ -341,7 +341,7 @@ namespace engine
 
             auto &box = getRingPolymerBeads()[i].getBox();
 
-            auto boxDimensions = box.boxDimensions().toStdVector();
+            auto boxDimensions = box.get_boxDimensions().toStdVector();
             auto volume  = getRingPolymerBeadsPhysicalData()[i].getVolume();
             auto density = getRingPolymerBeadsPhysicalData()[i].getDensity();
 

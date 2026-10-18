@@ -111,7 +111,7 @@ namespace pot
 
         auto force  = -2.0 * _params.dissociationEnergy * _params.wellWidth;
         force      *= expTerm * oneMinusExpTerm;
-        force      -= get_forceCutoff();
+        force       -= get_forceCutoff();
 
         return {energy, force};
     }

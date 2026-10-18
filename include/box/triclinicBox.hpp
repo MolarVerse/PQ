@@ -58,13 +58,15 @@ namespace molsys
 
         TensorCache<_anglesPtr()> _trafoMatrix{_calculateTransformationMatrix};
 
-        static constexpr auto       trafoMatrixPtr = &Self::_trafoMatrix;
-        TensorCache<trafoMatrixPtr> _invTrafoMatrix{_calculateInverse};
-        TensorCache<_dimsPtr(), trafoMatrixPtr> _boxMatrix{_calculateBoxMatrix};
+        static constexpr auto        _trafoMatrixPtr = &Self::_trafoMatrix;
+        TensorCache<_trafoMatrixPtr> _invTrafoMatrix{_calculateInverse};
+        TensorCache<_dimsPtr(), _trafoMatrixPtr> _boxMatrix{
+            _calculateBoxMatrix
+        };
 
-        static constexpr auto          boxMatrixPtr = &Self::_boxMatrix;
-        TensorCache<boxMatrixPtr>      _inverse{_calculateInverse};
-        BoxCache<double, boxMatrixPtr> _volume{_calculateVolume};
+        static constexpr auto           _boxMatrixPtr = &Self::_boxMatrix;
+        TensorCache<_boxMatrixPtr>      _inverse{_calculateInverse};
+        BoxCache<double, _boxMatrixPtr> _volume{_calculateVolume};
 
        public:
         TriclinicBox(
