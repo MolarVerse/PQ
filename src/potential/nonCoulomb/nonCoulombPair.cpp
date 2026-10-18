@@ -40,7 +40,7 @@ namespace pot
         double     cutOff
     )
         : _vanDerWaalsTypes{vanDerWaalsType1, vanDerWaalsType2},
-          _radialCutOff(cutOff)
+          _radialCutoff(cutOff)
     {
     }
 
@@ -49,7 +49,7 @@ namespace pot
      *
      * @param cutOff
      */
-    NonCoulombPair::NonCoulombPair(double cutOff) : _radialCutOff(cutOff) {}
+    NonCoulombPair::NonCoulombPair(double cutOff) : _radialCutoff(cutOff) {}
 
     /**
      * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
@@ -63,9 +63,9 @@ namespace pot
         double energyCutoff,
         double forceCutoff
     )
-        : _radialCutOff(cutoff),
-          _energyCutOff(energyCutoff),
-          _forceCutOff(forceCutoff)
+        : _radialCutoff(cutoff),
+          _energyCutoff(energyCutoff),
+          _forceCutoff(forceCutoff)
     {
     }
 
@@ -86,7 +86,7 @@ namespace pot
         isEq = isEq && _vanDerWaalsTypes.first == other._vanDerWaalsTypes.first;
         isEq =
             isEq && _vanDerWaalsTypes.second == other._vanDerWaalsTypes.second;
-        isEq = isEq && utilities::compare(_radialCutOff, other._radialCutOff);
+        isEq = isEq && utilities::compare(_radialCutoff, other._radialCutoff);
 
         auto isEqSymm = true;
         isEqSymm      = isEqSymm &&
@@ -94,7 +94,7 @@ namespace pot
         isEqSymm = isEqSymm &&
                    _vanDerWaalsTypes.second == other._vanDerWaalsTypes.first;
         isEqSymm =
-            isEqSymm && utilities::compare(_radialCutOff, other._radialCutOff);
+            isEqSymm && utilities::compare(_radialCutoff, other._radialCutoff);
 
         return isEq || isEqSymm;
     }
@@ -132,7 +132,7 @@ namespace pot
      */
     void NonCoulombPair::setRadialCutOff(double radialCutoff)
     {
-        _radialCutOff = radialCutoff;
+        _radialCutoff = radialCutoff;
     }
 
     /**
@@ -142,7 +142,7 @@ namespace pot
      */
     void NonCoulombPair::setEnergyCutOff(double energyCutoff)
     {
-        _energyCutOff = energyCutoff;
+        _energyCutoff = energyCutoff;
     }
 
     /**
@@ -152,7 +152,7 @@ namespace pot
      */
     void NonCoulombPair::setForceCutOff(double forceCutoff)
     {
-        _forceCutOff = forceCutoff;
+        _forceCutoff = forceCutoff;
     }
 
     /***************************
@@ -200,19 +200,5 @@ namespace pot
     {
         return _internalTypes.second;
     }
-
-    /**
-     * @brief get energy cut off
-     *
-     * @return double
-     */
-    double NonCoulombPair::getEnergyCutOff() const { return _energyCutOff; }
-
-    /**
-     * @brief get force cut off
-     *
-     * @return double
-     */
-    double NonCoulombPair::getForceCutOff() const { return _forceCutOff; }
 
 }   // namespace pot
