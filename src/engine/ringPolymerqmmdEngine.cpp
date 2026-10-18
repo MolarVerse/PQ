@@ -389,7 +389,7 @@ namespace engine
 
             getRingPolymerBeads()[i].deFlattenVelocities(velocities);
             getRingPolymerBeads()[i].deFlattenPositions(positions);
-            box.setBoxDimensions(boxDimensionsVec);
+            box.set_boxDimensions(boxDimensionsVec);
             getRingPolymerBeadsPhysicalData()[i].setVolume(volume);
             getRingPolymerBeadsPhysicalData()[i].setDensity(density);
         }
