@@ -180,4 +180,31 @@ namespace opt
         _maxLearningRate = maxLearningRate;
     }
 
+    /**
+     * @brief Get the initial learning rate
+     *
+     * @return double
+     */
+    double LearningRateStrategy::_getInitialLearningRate() const
+    {
+        return _initialLearningRate;
+    }
+
+    /**
+     * @brief Get the frequency of learning rate updates
+     *
+     * @return size_t
+     */
+    size_t LearningRateStrategy::_getFrequency() const { return _frequency; }
+
+    /**
+     * @brief Set the learning rate
+     *
+     * @param learningRate - double
+     */
+    void LearningRateStrategy::_setLearningRate(double learningRate)
+    {
+        _learningRate = learningRate;
+    }
+
 }   // namespace opt

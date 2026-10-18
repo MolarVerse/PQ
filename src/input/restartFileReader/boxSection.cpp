@@ -49,6 +49,7 @@ namespace input::restartFile
      *
      * @param lineElements all elements of the line
      * @param engine object containing the engine
+     * @param lineNumber the line number in the rst file being processed
      *
      * @throws exc::RstFileException if the number of elements in the
      * line is not 4 or 7
@@ -59,7 +60,8 @@ namespace input::restartFile
      */
     void BoxSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                   &lineNumber
     )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -68,7 +70,7 @@ namespace input::restartFile
             throw exc::RstFileException(
                 std::format(
                     "Error in line {}: Box section must have 4 or 7 elements",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

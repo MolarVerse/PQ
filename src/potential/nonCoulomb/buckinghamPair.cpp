@@ -102,14 +102,14 @@ namespace pot
         const auto distanceSixth = distanceThird * distanceThird;
         const auto expTerm = _params.scaling * ::exp(_params.dRho * distance);
 
-        auto energy  = expTerm + (_params.c6 / distanceSixth) - _energyCutOff;
-        energy      -= _forceCutOff * (_radialCutOff - distance);
+        auto energy  = expTerm + (_params.c6 / distanceSixth) - energyCutoff();
+        energy      -= forceCutoff() * (radialCutoff() - distance);
 
         auto force = -_params.dRho * expTerm;
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
-        force += 6.0 * _params.c6 / (distanceSixth * distance) - _forceCutOff;
+        force += 6.0 * _params.c6 / (distanceSixth * distance) - forceCutoff();
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
 

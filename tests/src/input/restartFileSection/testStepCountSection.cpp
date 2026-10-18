@@ -44,13 +44,14 @@ TEST_F(TestStepCountSection, testIsHeader)
 
 TEST_F(TestStepCountSection, testNumberOfArguments)
 {
+    size_t lineNumber = 0;
     for (size_t i = 0; i < 10; ++i)
     {
         if (i != 2)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
-                _section->process(line, *_engine),
+                _section->process(line, *_engine, lineNumber),
                 exc::RstFileException,
                 "Error in line 0: Step count section must have 2 elements"
             );
@@ -60,10 +61,11 @@ TEST_F(TestStepCountSection, testNumberOfArguments)
 
 TEST_F(TestStepCountSection, testNegativeStepCount)
 {
-    auto line = std::vector<std::string>(2);
-    line[1]   = "-1";
+    auto line         = std::vector<std::string>(2);
+    line[1]           = "-1";
+    size_t lineNumber = 0;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine),
+        _section->process(line, *_engine, lineNumber),
         exc::RstFileException,
         "Error in line 0: Step count must be positive"
     );
@@ -71,8 +73,9 @@ TEST_F(TestStepCountSection, testNegativeStepCount)
 
 TEST_F(TestStepCountSection, testProcess)
 {
-    auto line = std::vector<std::string>(2);
-    line[1]   = "1000";
-    _section->process(line, *_engine);
+    auto line         = std::vector<std::string>(2);
+    line[1]           = "1000";
+    size_t lineNumber = 0;
+    _section->process(line, *_engine, lineNumber);
     EXPECT_EQ(settings::TimingsSettings::getStepCount(), 1000);
 }

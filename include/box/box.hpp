@@ -25,7 +25,8 @@
 #define _BOX_HPP_
 
 #include <mstd/types.hpp>
-#include <mstd/types/property.hpp>
+#include <mstd/utils.hpp>
+#include <mstd/utils/members.hpp>
 
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
@@ -60,9 +61,13 @@ namespace molsys
      */
     class Box
     {
-       protected:
+       private:
         BoxVec _boxDimensions;
         BoxVec _angles;
+
+       protected:
+        static constexpr auto dimsPtr   = &Box::_boxDimensions;
+        static constexpr auto anglesPtr = &Box::_angles;
 
        public:
         virtual ~Box() = default;
@@ -104,14 +109,17 @@ namespace molsys
          * standard getters *
          ********************/
 
-        [[nodiscard]] const linalg::Vec3D &getBoxDimensions() const;
-        [[nodiscard]] linalg::Vec3D        getBoxAngles() const;
+        CONST_PROPERTY_GETTER(boxDimensions);
+        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
 
        protected:
         explicit Box(
             const linalg::Vec3D &boxDimensions,
             const linalg::Vec3D &angles
         );
+
+        INTERNAL_PROPERTY_SETTER(boxDimensions);
+        INTERNAL_PROPERTY_SETTER(angles);
     };
 
 }   // namespace molsys

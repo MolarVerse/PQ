@@ -24,9 +24,6 @@
 
 #define _INTEGRATOR_HPP_
 
-#include <string>
-#include <string_view>
-
 namespace molsys
 {
     class Atom;            // forward declaration
@@ -43,11 +40,7 @@ namespace integrator
      */
     class Integrator
     {
-       protected:
-        std::string _integratorType;   // TODO: make enum
-
        public:
-        explicit Integrator(std::string_view integratorType);
         Integrator()          = default;
         virtual ~Integrator() = default;
 
@@ -59,12 +52,6 @@ namespace integrator
             molsys::Atom *,
             const molsys::SimulationBox &
         );
-
-        /********************************
-         * standard getters and setters *
-         ********************************/
-
-        [[nodiscard]] std::string_view getIntegratorType() const;
     };
 
 }   // namespace integrator

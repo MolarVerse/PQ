@@ -43,11 +43,13 @@ namespace input::parameterFile
 
         void processSection(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                    lineNumber
         ) override;
         void processHeader(
             std::vector<std::string> & /* lineElements */,
-            engine::Engine & /* engine */
+            engine::Engine & /* engine */,
+            size_t /* lineNumber */
         ) override
         {
         }

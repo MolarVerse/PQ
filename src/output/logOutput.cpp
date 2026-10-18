@@ -35,7 +35,10 @@ namespace out
      * @brief write an empty line to the log file
      *
      */
-    void LogOutput::writeEmptyLine() { _fp << '\n' << std::flush; }
+    void LogOutput::writeEmptyLine()
+    {
+        _getFilePointer() << '\n' << std::flush;
+    }
 
     /**
      * @brief write a message to the log file
@@ -44,14 +47,17 @@ namespace out
      */
     void LogOutput::writeInfo(const std::string &message)
     {
-        _fp << message << '\n' << std::flush;
+        _getFilePointer() << message << '\n' << std::flush;
     }
 
     /**
      * @brief write header title
      *
      */
-    void LogOutput::writeHeader() { _fp << header() << '\n' << std::flush; }
+    void LogOutput::writeHeader()
+    {
+        _getFilePointer() << header() << '\n' << std::flush;
+    }
 
     /**
      * @brief write a message to the log file if the simulation ended normally
@@ -59,8 +65,8 @@ namespace out
      */
     void LogOutput::writeEndedNormally(double elapsedTime)
     {
-        _fp << elapsedTimeMessage(elapsedTime) << '\n';
-        _fp << endedNormally() << '\n' << std::flush;
+        _getFilePointer() << elapsedTimeMessage(elapsedTime) << '\n';
+        _getFilePointer() << endedNormally() << '\n' << std::flush;
     }
 
     /**
@@ -70,10 +76,11 @@ namespace out
      */
     void LogOutput::writeDensityWarning()
     {
-        _fp << WARNING
-            << "Density and box dimensions set. Density will be ignored."
-            << "\n\n"
-            << std::flush;
+        _getFilePointer(
+        ) << WARNING
+          << "Density and box dimensions set. Density will be ignored."
+          << "\n\n"
+          << std::flush;
     }
 
     /**
@@ -84,7 +91,7 @@ namespace out
      */
     void LogOutput::writeOptWarning(const std::string &message)
     {
-        _fp << WARNING << message << "\n\n" << std::flush;
+        _getFilePointer() << WARNING << message << "\n\n" << std::flush;
     }
 
     /**
@@ -94,16 +101,16 @@ namespace out
      */
     void LogOutput::writeInitialMomentum(double momentum)
     {
-        _fp << "\n" << std::flush;
+        _getFilePointer() << "\n" << std::flush;
 
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{}Initial momentum = {:.5e} {}*amu/fs\n",
             INFO,
             momentum,
             ANGSTROM
         );
 
-        _fp << std::flush;
+        _getFilePointer() << std::flush;
     }
 
     /**
@@ -112,7 +119,7 @@ namespace out
      */
     void LogOutput::writeSetup(const std::string &setup)
     {
-        _fp << setupMessage(setup) << '\n' << std::flush;
+        _getFilePointer() << setupMessage(setup) << '\n' << std::flush;
     }
 
     /**
@@ -121,7 +128,7 @@ namespace out
      */
     void LogOutput::writeSetupInfo(const std::string &setupInfo)
     {
-        _fp << OUTPUT << setupInfo << '\n' << std::flush;
+        _getFilePointer() << OUTPUT << setupInfo << '\n' << std::flush;
     }
 
     /**
@@ -130,7 +137,7 @@ namespace out
      */
     void LogOutput::writeSetupWarning(const std::string &setupWarning)
     {
-        _fp << WARNING << setupWarning << '\n' << std::flush;
+        _getFilePointer() << WARNING << setupWarning << '\n' << std::flush;
     }
 
     /**
@@ -140,7 +147,7 @@ namespace out
      */
     void LogOutput::writeSetupCompleted()
     {
-        _fp << setupCompletedMessage() << '\n' << std::flush;
+        _getFilePointer() << setupCompletedMessage() << '\n' << std::flush;
     }
 
     /**
@@ -152,7 +159,7 @@ namespace out
         const std::string &file
     )
     {
-        _fp << readMessage(message, file) << '\n' << std::flush;
+        _getFilePointer() << readMessage(message, file) << '\n' << std::flush;
     }
 
     /**

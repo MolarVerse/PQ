@@ -56,10 +56,8 @@ namespace molsys
         template <auto... Members>
         using TensorCache = BoxCache<linalg::tensor3D, Members...>;
 
-        static constexpr auto  anglesPtr = &Self::_angles;
         TensorCache<anglesPtr> _trafoMatrix{_calculateTransformationMatrix};
 
-        static constexpr auto       dimsPtr        = &Self::_boxDimensions;
         static constexpr auto       trafoMatrixPtr = &Self::_trafoMatrix;
         TensorCache<trafoMatrixPtr> _invTrafoMatrix{_calculateInverse};
         TensorCache<dimsPtr, trafoMatrixPtr> _boxMatrix{_calculateBoxMatrix};

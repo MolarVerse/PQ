@@ -43,10 +43,8 @@ namespace input::restartFile
      */
     class RestartFileSection
     {
-        // TODO: remove this public access
-       protected:
-        size_t         _lineNumber = 0;
-        std::ifstream *_fp         = nullptr;
+       private:
+        std::ifstream *_fp = nullptr;
 
        public:
         virtual ~RestartFileSection() = default;
@@ -55,16 +53,14 @@ namespace input::restartFile
         virtual bool        isHeader() = 0;
         virtual void        process(
                    std::vector<std::string> &lineElements,
-                   engine::Engine &
+                   engine::Engine           &engine,
+                   size_t                   &lineNumber
                ) = 0;
 
-        [[nodiscard]]
-        size_t getLineNumber() const
-        {
-            return _lineNumber;
-        }
-        void setLineNumber(size_t lineNumber) { _lineNumber = lineNumber; }
         void setFilePointer(std::ifstream *file) { _fp = file; }
+
+       protected:
+        [[nodiscard]] std::ifstream *_getFilePointer() const { return _fp; }
     };
 
 }   // namespace input::restartFile

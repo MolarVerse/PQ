@@ -67,7 +67,7 @@ namespace
     class PeriodicDftbRunner : public QM::DFTBPlusRunner
     {
        public:
-        PeriodicDftbRunner() { _periodicity = molsys::Periodicity::XYZ; }
+        PeriodicDftbRunner() { _setPeriodicity(molsys::Periodicity::XYZ); }
     };
 
     class ExternalQMRunnerHarness : public QM::ExternalQMRunner

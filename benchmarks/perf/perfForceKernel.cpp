@@ -68,8 +68,8 @@ int main()
 
     auto physicalData = physicalData::PhysicalData();
 
-    const auto box     = simulationBox.getBoxDimensions();
-    const auto atomIdx = intraNonBondedType.getAtomIndices()[0][0];
+    const auto& box     = simulationBox.getBoxDimensions();
+    const auto  atomIdx = intraNonBondedType.getAtomIndices()[0][0];
 
     CALLGRIND_ZERO_STATS;
 

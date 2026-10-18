@@ -41,7 +41,7 @@ namespace engine
      */
     class QMCapableEngine
     {
-       protected:
+       private:
         std::shared_ptr<QM::QMRunner> _qmRunner;
 
        public:

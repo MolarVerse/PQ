@@ -50,9 +50,9 @@ TEST_F(TestParameterFileSection, processParameterSection)
     getline(file, lineElements[0]);
 
     section.setFp(&file);
-    section.setLineNumber(1);
+    size_t lineNumber = 1;
 
-    EXPECT_NO_THROW(section.process(lineElements, *_engine));
+    EXPECT_NO_THROW(section.process(lineElements, *_engine, lineNumber));
 
-    EXPECT_EQ(section.getLineNumber(), 5);
+    EXPECT_EQ(lineNumber, 5);
 }

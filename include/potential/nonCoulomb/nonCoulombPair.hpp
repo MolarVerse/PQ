@@ -24,6 +24,7 @@
 
 #define _NON_COULOMB_PAIR_HPP_
 
+#include <mstd/utils/members.hpp>
 #include <utility>
 
 #include "strongTypes.hpp"
@@ -42,15 +43,16 @@ namespace pot
      */
     class NonCoulombPair
     {
-       protected:
-        ExtVdwType _vanDerWaalsType1{0};
-        ExtVdwType _vanDerWaalsType2{0};
-        VdwType    _internalType1{0};
-        VdwType    _internalType2{0};
+       private:
+        std::pair<ExtVdwType, ExtVdwType> _vanDerWaalsTypes{
+            ExtVdwType{0},
+            ExtVdwType{0}
+        };
+        std::pair<VdwType, VdwType> _internalTypes{VdwType{0}, VdwType{0}};
 
-        double _radialCutOff;
-        double _energyCutOff = 0.0;
-        double _forceCutOff  = 0.0;
+        double _radialCutoff;
+        double _energyCutoff = 0.0;
+        double _forceCutoff  = 0.0;
 
        public:
         explicit NonCoulombPair(ExtVdwType, ExtVdwType, double);
@@ -82,9 +84,10 @@ namespace pot
         [[nodiscard]] ExtVdwType getVanDerWaalsType2() const;
         [[nodiscard]] VdwType    getInternalType1() const;
         [[nodiscard]] VdwType    getInternalType2() const;
-        [[nodiscard]] double getRadialCutOff() const { return _radialCutOff; }
-        [[nodiscard]] double getEnergyCutOff() const;
-        [[nodiscard]] double getForceCutOff() const;
+
+        CONST_GETTER(radialCutoff);
+        CONST_GETTER(energyCutoff);
+        CONST_GETTER(forceCutoff);
     };
 
 }   // namespace pot

@@ -24,6 +24,7 @@
 
 #define _CONNECTIVITY_ELEMENT_HPP_
 
+#include <mstd/utils.hpp>
 #include <vector>
 
 #include "molecule.hpp"
@@ -40,7 +41,7 @@ namespace connectivity
      */
     class ConnectivityElement
     {
-       protected:
+       private:
         std::vector<molsys::Molecule *> _molecules;
         std::vector<AtomIndex>          _atomIndices;
 
@@ -50,15 +51,8 @@ namespace connectivity
             const std::vector<AtomIndex> &
         );
 
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]]
-        std::vector<molsys::Molecule *> getMolecules() const;
-
-        [[nodiscard]]
-        std::vector<AtomIndex> getAtomIndices() const;
+        CONST_GETTER(molecules);
+        CONST_GETTER(atomIndices);
     };
 
 }   // namespace connectivity

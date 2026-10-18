@@ -45,6 +45,8 @@ TEST_F(TestInputFileReader, testParseIntegrator)
     ASSERT_TRUE(funcMap.contains("integrator"));
     const auto &parseFunc = funcMap.at("integrator");
 
+    settings::GeneralSettings::setIntegratorType(IntegratorType::NONE);
+
     std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(

@@ -60,14 +60,14 @@ TEST_F(TestAtomSection, isHeader) { EXPECT_FALSE(_section->isHeader()); }
  */
 TEST_F(TestAtomSection, numberOfArguments)
 {
-    _section->setLineNumber(7);
+    size_t lineNumber = 7;
     for (size_t i = 0; i < 25; ++i)
     {
         if (i % 3 != 0 || i < 6 || i > 21)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
-                _section->process(line, *_engine),
+                _section->process(line, *_engine, lineNumber),
                 exc::RstFileException,
                 "Error in line 7: Atom section must have 6, 9, 12, 15, 18 or "
                 "21 elements"
@@ -82,10 +82,11 @@ TEST_F(TestAtomSection, numberOfArguments)
  */
 TEST_F(TestAtomSection, moltypeNotFound)
 {
-    auto line = std::vector<std::string>(21);
-    line[2]   = "1";
+    auto line         = std::vector<std::string>(21);
+    line[2]           = "1";
+    size_t lineNumber = 7;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine),
+        _section->process(line, *_engine, lineNumber),
         exc::RstFileException,
         "Molecule type MolType(1) not found"
     );
@@ -93,9 +94,9 @@ TEST_F(TestAtomSection, moltypeNotFound)
 
 TEST_F(TestAtomSection, notEnoughElementsInLine)
 {
-    _section->setLineNumber(7);
-    auto line = std::vector<std::string>(21);
-    line[2]   = "1";
+    size_t lineNumber = 7;
+    auto   line       = std::vector<std::string>(21);
+    line[2]           = "1";
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
     std::string filename = "data/atomSection/testNotEnoughAtomsInMolecule.rst";
@@ -108,7 +109,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     _section->setFilePointer(&file);
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine),
+        _section->process(line, *_engine, lineNumber),
         exc::RstFileException,
         "Error in line 10: Molecule must have 1 atoms"
     );
@@ -121,7 +122,7 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     _section->setFilePointer(&fp2);
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine),
+        _section->process(line, *_engine, lineNumber),
         exc::RstFileException,
         "Error in line 14: Molecule must have 2 atoms"
     );
@@ -143,8 +144,9 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
     std::ifstream file(filename);
     _section->setFilePointer(&file);
 
+    size_t lineNumber = 0;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine),
+        _section->process(line, *_engine, lineNumber),
         exc::RstFileException,
         "Error in line 2: Atom section must have 6, 9, 12, 15, 18 or 21 "
         "elements"
@@ -170,19 +172,20 @@ TEST_F(TestAtomSection, testProcess)
     std::ifstream file(filename);
     _section->setFilePointer(&file);
 
-    _section->process(line, *_engine);
+    size_t lineNumber = 0;
+    _section->process(line, *_engine, lineNumber);
 
     line    = std::vector<std::string>(21);
     line[2] = "2";
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
-    _section->process(line, *_engine);
+    _section->process(line, *_engine, lineNumber);
 
     line    = std::vector<std::string>(21);
     line[2] = "1";
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
-    _section->process(line, *_engine);
+    _section->process(line, *_engine, lineNumber);
 
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
 

@@ -46,16 +46,6 @@ namespace molsys
      ***************************/
 
     /**
-     * @brief get the box dimensions
-     *
-     * @return linalg::Vec3D
-     */
-    const linalg::Vec3D &Box::getBoxDimensions() const
-    {
-        return _boxDimensions.get();
-    }
-
-    /**
      * @brief get the box angles
      *
      * @return linalg::Vec3D

@@ -62,7 +62,7 @@ namespace molsys
     {
         // NOTE: here we do not use cached values as the overhead is negligible
         // or even negative
-        return prod(_boxDimensions.get());
+        return prod(boxDimensions());
     }
 
     /**
@@ -72,7 +72,7 @@ namespace molsys
      */
     void OrthorhombicBox::applyPBC(linalg::Vec3D &position) const
     {
-        const auto boxDims  = _boxDimensions.get();
+        const auto boxDims  = boxDimensions();
         position           -= boxDims * round(position / boxDims);
     }
 
@@ -86,7 +86,7 @@ namespace molsys
         const linalg::Vec3D &shiftVector
     ) const
     {
-        const auto boxDims = _boxDimensions.get();
+        const auto boxDims = boxDimensions();
         return boxDims * round(shiftVector / boxDims);
     }
 
@@ -122,7 +122,7 @@ namespace molsys
      */
     void OrthorhombicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
-        _boxDimensions.set(_boxDimensions.get() * diagonal(scalingTensor));
+        _boxDimensions_(boxDimensions() * diagonal(scalingTensor));
     }
 
     /**
@@ -132,7 +132,7 @@ namespace molsys
      */
     double OrthorhombicBox::getMinimalBoxDimension() const
     {
-        return minimum(_boxDimensions.get());
+        return minimum(boxDimensions());
     }
 
     /**
@@ -144,7 +144,7 @@ namespace molsys
         Periodicity periodicity
     ) const
     {
-        auto boxMatrix = linalg::diagonalMatrix(_boxDimensions.get());
+        auto boxMatrix = linalg::diagonalMatrix(boxDimensions());
 
         std::vector<size_t> vacuumIndices{};
 

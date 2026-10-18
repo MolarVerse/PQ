@@ -296,8 +296,8 @@ namespace molsys
      */
     void CellList::addMoleculesToCells(SimulationBox &simulationBox)
     {
-        const auto box        = simulationBox.getBoxDimensions();
-        const auto nMolecules = simulationBox.getNumberOfMolecules();
+        const auto &box        = simulationBox.getBoxDimensions();
+        const auto  nMolecules = simulationBox.getNumberOfMolecules();
 
         for (size_t i = 0; i < nMolecules; ++i)
         {

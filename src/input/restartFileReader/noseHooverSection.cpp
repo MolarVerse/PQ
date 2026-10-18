@@ -35,13 +35,15 @@ namespace input::restartFile
      * @brief checks the number of arguments in the line
      *
      * @param lineElements all elements of the line
+     * @param lineNumber the line number in the rst file being processed
      *
      * @throws exc::RstFileException if the number of arguments is not
      * correct
      */
     void NoseHooverSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine & /*engine*/
+        engine::Engine & /*engine*/,
+        size_t &lineNumber
     )
     {
         if (4 != lineElements.size())
@@ -52,7 +54,7 @@ namespace input::restartFile
                     "the "
                     "nose "
                     "hoover thermostat",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -73,7 +75,7 @@ namespace input::restartFile
                     "Error in line {} in restart file; chi or zeta entry "
                     "already "
                     "exists",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

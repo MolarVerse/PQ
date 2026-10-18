@@ -117,6 +117,16 @@ namespace engine
     }
 
     /**
+     * @brief get the reference to the simulation box (const)
+     *
+     * @return const SimulationBox&
+     */
+    const molsys::SimulationBox &Engine::getSimulationBox() const
+    {
+        return *_simulationBox;
+    }
+
+    /**
      * @brief get the reference to the physical data
      *
      * @return physicalData::PhysicalData&
@@ -341,6 +351,61 @@ namespace engine
     {
         return _constraints;
     }
+
+    /**
+     * @brief get the reference to the inter water model
+     *
+     * @return waterModel::InterWater&
+     */
+    waterModel::InterWater &Engine::_getInterWater() { return *_interWater; }
+
+    /**
+     * @brief get the reference to the inter water model (const)
+     *
+     * @return const waterModel::InterWater&
+     */
+    const waterModel::InterWater &Engine::_getInterWater() const
+    {
+        return *_interWater;
+    }
+
+    /**
+     * @brief get the reference to the intra water model
+     *
+     * @return waterModel::IntraWater&
+     */
+    waterModel::IntraWater &Engine::_getIntraWater() { return *_intraWater; }
+
+    /**
+     * @brief get the reference to the intra water model (const)
+     *
+     * @return const waterModel::IntraWater&
+     */
+    const waterModel::IntraWater &Engine::_getIntraWater() const
+    {
+        return *_intraWater;
+    }
+
+    /**
+     * @brief get the number of steps
+     *
+     * @return size_t
+     */
+    size_t Engine::_getNSteps() const { return _nSteps; }
+
+    /**
+     * @brief set the number of steps
+     *
+     * @param nSteps
+     */
+    void Engine::_setNSteps(size_t nSteps) { _nSteps = nSteps; }
+
+    /**
+     * @brief set the current step
+     *
+     * @param step
+     */
+    void Engine::_setStep(size_t step) { _step = step; }
 
     /**
      * @brief get the reference to the settings

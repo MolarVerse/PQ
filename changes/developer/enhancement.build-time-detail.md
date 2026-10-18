@@ -1,0 +1,1 @@
+- Add "pqbt.py detail" to the local build-time tooling: per snapshot where the CPU goes, the slowest files, the rebuild cost and burden of every header, what small changes rebuild, plus a detail section in compare.

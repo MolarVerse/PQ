@@ -258,8 +258,8 @@ namespace molsys
         [[nodiscard]] double getVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;
 
-        [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
-        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
+        [[nodiscard]] const linalg::Vec3D& getBoxDimensions() const;
+        [[nodiscard]] linalg::Vec3D        getBoxAngles() const;
     };
 
 }   // namespace molsys
