@@ -32,7 +32,6 @@
 #include "exceptions.hpp"
 #include "externalQMRunner.hpp"
 #include "generalSettings.hpp"
-#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
