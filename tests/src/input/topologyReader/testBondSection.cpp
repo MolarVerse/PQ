@@ -40,18 +40,15 @@ TEST_F(TestTopologySection, processSectionBond)
     std::vector<std::string>     lineElements = {"1", "2", "7"};
     input::topology::BondSection bondSection;
     bondSection.processSection(lineElements, *_engine, 0);
-    const auto &bonds = _engine->getForceField()->getBonds();
+
+    const auto& bonds  = _engine->getForceField()->getBonds();
+    const auto& simBox = _engine->getSimulationBox();
+
     EXPECT_EQ(bonds.size(), 1);
-    EXPECT_EQ(
-        bonds[0].getMolecule1(),
-        _engine->getSimulationBox().getMolecules().data()
-    );
-    EXPECT_EQ(
-        bonds[0].getMolecule2(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(bonds[0].getAtomIndices()[0], AtomIndex{0});
-    EXPECT_EQ(bonds[0].getAtomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(bonds[0].molecules()[0], simBox.getMolecules().data());
+    EXPECT_EQ(bonds[0].molecules()[1], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(bonds[0].atomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(bonds[0].atomIndices()[1], AtomIndex{0});
     EXPECT_EQ(bonds[0].getType(), BondId{7});
     EXPECT_EQ(bonds[0].isLinker(), false);
 

@@ -68,13 +68,16 @@ namespace constraints
     {
         simulationBox.applyPBC(_shakeDistanceRef);
 
-        auto       *molecule1   = getMolecule1();
-        auto       *molecule2   = getMolecule2();
-        const auto &atomIndices = getAtomIndices();
+        const auto &molecules   = this->molecules();
+        const auto &atomIndices = this->atomIndices();
+        auto       *molecule1   = molecules[0];
+        auto       *molecule2   = molecules[1];
+        const auto  idx1        = atomIndices[0];
+        const auto  idx2        = atomIndices[1];
 
         const auto dxyz = kernel::distVec(
-            molecule1->getAtomPosition(atomIndices[0]),
-            molecule2->getAtomPosition(atomIndices[1]),
+            molecule1->getAtomPosition(idx1),
+            molecule2->getAtomPosition(idx2),
             simulationBox
         );
 
@@ -91,12 +94,15 @@ namespace constraints
         const molsys::SimulationBox &simulationBox
     ) const
     {
-        auto       *molecule1   = getMolecule1();
-        auto       *molecule2   = getMolecule2();
-        const auto &atomIndices = getAtomIndices();
+        const auto &molecules   = this->molecules();
+        const auto &atomIndices = this->atomIndices();
+        auto       *molecule1   = molecules[0];
+        auto       *molecule2   = molecules[1];
+        const auto  idx1        = atomIndices[0];
+        const auto  idx2        = atomIndices[1];
 
-        const auto pos1 = molecule1->getAtomPosition(atomIndices[0]);
-        const auto pos2 = molecule2->getAtomPosition(atomIndices[1]);
+        const auto pos1 = molecule1->getAtomPosition(idx1);
+        const auto pos2 = molecule2->getAtomPosition(idx2);
 
         auto dPosition = pos1 - pos2;
         simulationBox.applyPBC(dPosition);
@@ -136,13 +142,15 @@ namespace constraints
         if (std::fabs(delta / (_targetBondLength * _targetBondLength)) >
             tolerance)
         {
-            auto *molecule1 = getMolecule1();
-            auto *molecule2 = getMolecule2();
+            const auto &molecules   = this->molecules();
+            const auto &atomIndices = this->atomIndices();
+            auto       *molecule1   = molecules[0];
+            auto       *molecule2   = molecules[1];
+            const auto  idx1        = atomIndices[0];
+            const auto  idx2        = atomIndices[1];
 
-            const auto &atomIndices = getAtomIndices();
-
-            const auto invMass1 = 1 / molecule1->getAtomMass(atomIndices[0]);
-            const auto invMass2 = 1 / molecule2->getAtomMass(atomIndices[1]);
+            const auto invMass1 = 1 / molecule1->getAtomMass(idx1);
+            const auto invMass2 = 1 / molecule2->getAtomMass(idx2);
 
             const auto sumInvMass              = invMass1 + invMass2;
             const auto shakeDistanceRefSquared = normSquared(_shakeDistanceRef);
@@ -161,15 +169,15 @@ namespace constraints
                 delta / (sumInvMass) / shakeDistanceRefSquared;
             const auto dPosition = shakeForce * _shakeDistanceRef;
 
-            molecule1->addAtomPosition(atomIndices[0], +invMass1 * dPosition);
-            molecule2->addAtomPosition(atomIndices[1], -invMass2 * dPosition);
+            molecule1->addAtomPosition(idx1, +invMass1 * dPosition);
+            molecule2->addAtomPosition(idx2, -invMass2 * dPosition);
 
             const auto timeStep =
                 settings::TimingsSettings::getTimeStep() * FS_TO_S;
             const auto dVelocity = dPosition / timeStep;
 
-            molecule1->addAtomVelocity(atomIndices[0], +invMass1 * dVelocity);
-            molecule2->addAtomVelocity(atomIndices[1], -invMass2 * dVelocity);
+            molecule1->addAtomVelocity(idx1, +invMass1 * dVelocity);
+            molecule2->addAtomVelocity(idx2, -invMass2 * dVelocity);
 
             return false;
         }
@@ -183,17 +191,20 @@ namespace constraints
      */
     [[nodiscard]] double BondConstraint::calculateVelocityDelta() const
     {
-        auto       *molecule1   = getMolecule1();
-        auto       *molecule2   = getMolecule2();
-        const auto &atomIndices = getAtomIndices();
+        const auto &molecules   = this->molecules();
+        const auto &atomIndices = this->atomIndices();
+        auto       *molecule1   = molecules[0];
+        auto       *molecule2   = molecules[1];
+        const auto  idx1        = atomIndices[0];
+        const auto  idx2        = atomIndices[1];
 
-        const auto dVelocity = molecule1->getAtomVelocity(atomIndices[0]) -
-                               molecule2->getAtomVelocity(atomIndices[1]);
+        const auto dVelocity =
+            molecule1->getAtomVelocity(idx1) - molecule2->getAtomVelocity(idx2);
 
         const auto scalarProduct = dot(dVelocity, _shakeDistanceRef);
 
-        const auto invMass1 = 1 / molecule1->getAtomMass(atomIndices[0]);
-        const auto invMass2 = 1 / molecule2->getAtomMass(atomIndices[1]);
+        const auto invMass1 = 1 / molecule1->getAtomMass(idx1);
+        const auto invMass2 = 1 / molecule2->getAtomMass(idx2);
 
         const auto sumInvMass              = invMass1 + invMass2;
         const auto shakeDistanceRefSquared = normSquared(_shakeDistanceRef);
@@ -219,15 +230,19 @@ namespace constraints
         {
             const auto dVelocity = delta * _shakeDistanceRef;
 
-            auto       *molecule1   = getMolecule1();
-            auto       *molecule2   = getMolecule2();
-            const auto &atomIndices = getAtomIndices();
+            const auto &molecules   = this->molecules();
+            const auto &atomIndices = this->atomIndices();
 
-            const auto invMass1 = 1 / molecule1->getAtomMass(atomIndices[0]);
-            const auto invMass2 = 1 / molecule2->getAtomMass(atomIndices[1]);
+            auto      *molecule1 = molecules[0];
+            auto      *molecule2 = molecules[1];
+            const auto idx1      = atomIndices[0];
+            const auto idx2      = atomIndices[1];
 
-            molecule1->addAtomVelocity(atomIndices[0], +invMass1 * dVelocity);
-            molecule2->addAtomVelocity(atomIndices[1], -invMass2 * dVelocity);
+            const auto invMass1 = 1 / molecule1->getAtomMass(idx1);
+            const auto invMass2 = 1 / molecule2->getAtomMass(idx2);
+
+            molecule1->addAtomVelocity(idx1, +invMass1 * dVelocity);
+            molecule2->addAtomVelocity(idx2, -invMass2 * dVelocity);
 
             return false;
         }

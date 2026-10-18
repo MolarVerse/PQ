@@ -43,23 +43,15 @@ TEST_F(TestTopologySection, processSectionAngle)
     angleSection.processSection(lineElements, *_engine, 0);
 
     const auto& angles = _engine->getForceField()->getAngles();
+    const auto& simBox = _engine->getSimulationBox();
 
     EXPECT_EQ(angles.size(), 1);
-    EXPECT_EQ(
-        angles[0].getMolecules()[0],
-        _engine->getSimulationBox().getMolecules().data()
-    );
-    EXPECT_EQ(
-        angles[0].getMolecules()[1],
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(
-        angles[0].getMolecules()[2],
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(angles[0].getAtomIndices()[0], AtomIndex{0});
-    EXPECT_EQ(angles[0].getAtomIndices()[1], AtomIndex{0});
-    EXPECT_EQ(angles[0].getAtomIndices()[2], AtomIndex{1});
+    EXPECT_EQ(angles[0].molecules()[0], simBox.getMolecules().data());
+    EXPECT_EQ(angles[0].molecules()[1], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(angles[0].molecules()[2], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(angles[0].atomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(angles[0].atomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(angles[0].atomIndices()[2], AtomIndex{1});
     EXPECT_EQ(angles[0].getType(), AngleId{7});
     EXPECT_EQ(angles[0].isLinker(), false);
 

@@ -44,23 +44,16 @@ TEST_F(TestTopologySection, processSectionShake)
     const auto& constraints = _engine->getConstraints();
 
     EXPECT_EQ(constraints->getBondConstraints().size(), 1);
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getMolecule1(),
-        _engine->getSimulationBox().getMolecules().data()
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getMolecule2(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getAtomIndices()[0],
-        AtomIndex{0}
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getAtomIndices()[1],
-        AtomIndex{0}
-    );
-    EXPECT_EQ(constraints->getBondConstraints()[0].getTargetBondLength(), 1.0);
+
+    const auto& bondConstraint0 = constraints->getBondConstraints()[0];
+    const auto& molecules       = bondConstraint0.molecules();
+    const auto& atomIndices     = bondConstraint0.atomIndices();
+
+    EXPECT_EQ(molecules[0], _engine->getSimulationBox().getMolecules().data());
+    EXPECT_EQ(molecules[1], &(_engine->getSimulationBox().getMolecules()[1]));
+    EXPECT_EQ(atomIndices[0], AtomIndex{0});
+    EXPECT_EQ(atomIndices[1], AtomIndex{0});
+    EXPECT_EQ(bondConstraint0.getTargetBondLength(), 1.0);
 
     lineElements = {"1", "1", "1.0", "0"};
     EXPECT_THROW_MSG(

@@ -59,41 +59,20 @@ TEST_F(TestTopologySection, processShakeSection)
 
     EXPECT_EQ(constraints->getBondConstraints().size(), 2);
 
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getMolecule1(),
-        _engine->getSimulationBox().getMolecules().data()
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getMolecule2(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getAtomIndices()[0],
-        AtomIndex{0}
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getAtomIndices()[1],
-        AtomIndex{0}
-    );
-    EXPECT_EQ(constraints->getBondConstraints()[0].getTargetBondLength(), 1.0);
+    const auto& bondConstraints = constraints->getBondConstraints();
+    const auto& simBox          = _engine->getSimulationBox();
 
-    EXPECT_EQ(
-        constraints->getBondConstraints()[1].getMolecule1(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[1].getMolecule2(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[1].getAtomIndices()[0],
-        AtomIndex{0}
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[1].getAtomIndices()[1],
-        AtomIndex{1}
-    );
-    EXPECT_EQ(constraints->getBondConstraints()[1].getTargetBondLength(), 1.2);
+    EXPECT_EQ(bondConstraints[0].molecules()[0], simBox.getMolecules().data());
+    EXPECT_EQ(bondConstraints[0].molecules()[1], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(bondConstraints[0].atomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(bondConstraints[0].atomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(bondConstraints[0].getTargetBondLength(), 1.0);
+
+    EXPECT_EQ(bondConstraints[1].molecules()[0], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(bondConstraints[1].molecules()[1], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(bondConstraints[1].atomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(bondConstraints[1].atomIndices()[1], AtomIndex{1});
+    EXPECT_EQ(bondConstraints[1].getTargetBondLength(), 1.2);
 
     EXPECT_EQ(lineNumber, 5);
 }

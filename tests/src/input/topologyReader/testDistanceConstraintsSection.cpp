@@ -41,29 +41,19 @@ TEST_F(TestTopologySection, processSectionDistanceConstraints)
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
     distanceConstraintsSection.processSection(lineElements, *_engine, 0);
 
-    const auto& constraints = _engine->getConstraints();
+    const auto& constraints        = _engine->getConstraints();
+    const auto& distanceConstraint = constraints->getDistConstraints()[0];
+    const auto& simBox             = _engine->getSimulationBox();
 
     EXPECT_EQ(constraints->getDistConstraints().size(), 1);
-    EXPECT_EQ(
-        constraints->getDistConstraints()[0].getMolecule1(),
-        _engine->getSimulationBox().getMolecules().data()
-    );
-    EXPECT_EQ(
-        constraints->getDistConstraints()[0].getMolecule2(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(
-        constraints->getDistConstraints()[0].getAtomIndices()[0],
-        AtomIndex{0}
-    );
-    EXPECT_EQ(
-        constraints->getDistConstraints()[0].getAtomIndices()[1],
-        AtomIndex{0}
-    );
-    EXPECT_EQ(constraints->getDistConstraints()[0].getLowerDistance(), 1.0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getUpperDistance(), 2.0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getSpringConstant(), 4.0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getDSpringConstantDt(), 6.0);
+    EXPECT_EQ(distanceConstraint.molecules()[0], simBox.getMolecules().data());
+    EXPECT_EQ(distanceConstraint.molecules()[1], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(distanceConstraint.atomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(distanceConstraint.atomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(distanceConstraint.getLowerDistance(), 1.0);
+    EXPECT_EQ(distanceConstraint.getUpperDistance(), 2.0);
+    EXPECT_EQ(distanceConstraint.getSpringConstant(), 4.0);
+    EXPECT_EQ(distanceConstraint.getDSpringConstantDt(), 6.0);
 
     // not enough elements
     lineElements = {"1", "1", "1.0", "2", "1"};
