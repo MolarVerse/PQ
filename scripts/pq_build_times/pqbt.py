@@ -42,7 +42,11 @@ def parse_args(argv):
     snap.add_argument("--repeat", type=int, default=3, help="repetitions of the no-op and touch scenarios (median is stored)")
     snap.add_argument("--cold-runs", type=int, default=1, help="repetitions of the cold build")
     snap.add_argument("--scenarios", default=",".join(bt_snapshot.SCENARIOS), help="comma separated subset")
-    snap.add_argument("--cmake-arg", action="append", default=[], help="extra CMake argument (repeatable), recorded in the fingerprint")
+    snap.add_argument("--compiler", help="C++ compiler to build with, for example clang++-20 (the C compiler is derived; for clang "
+                                         "-ftime-trace is added, which gives the compiler time section of 'detail'); it is a separate series")
+    snap.add_argument("--cmake-arg", action="append", default=[],
+                      help="extra CMake argument (repeatable, recorded in the fingerprint); write it with an equals sign, --cmake-arg=-DX=Y, "
+                           "because argparse takes a value that starts with a dash for an option")
     snap.add_argument("--ccache", action="store_true", help="allow ccache; off by default because cache hits hide compile time")
     snap.add_argument("--note", default="", help="what changed since the last snapshot; shown as a marker in the graph")
     snap.add_argument("--leaf", help="source file to touch (default: a median source file, then pinned)")
@@ -99,8 +103,14 @@ def command_snapshot(args, root):
               + ("; the build uses it" if used else "; the build does not use it"), file=sys.stderr)
     if any(used for _, _, used in problems) and not args.force:
         raise SystemExit("update it (git submodule update --init <path>) or pass --force")
+    cmake_args = list(args.cmake_arg)
+    if args.compiler:
+        try:
+            cmake_args = bt_snapshot.compiler_arguments(args.compiler, cmake_args) + cmake_args
+        except bt_snapshot.SnapshotError as error:
+            raise SystemExit(f"error: {error}")
     builder = bt_snapshot.Builder(
-        args.source_root, args.build_dir, root / "deps", args.build_type, args.cmake_arg, args.target, args.jobs,
+        args.source_root, args.build_dir, root / "deps", args.build_type, cmake_args, args.target, args.jobs,
     )
     if args.ccache:
         builder.cmake_args = [a for a in builder.cmake_args if "COMPILER_LAUNCHER" not in a]
