@@ -219,6 +219,15 @@ if(Git_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
     endif()
 endif()
 
+# *****************************************************
+# mstd (incl. vendored mp-units), added before the
+# warning policy so PQ's flags don't leak into it
+# *****************************************************
+set(MSTD_USE_MP_UNITS ON CACHE BOOL "Enable mp-units support in mstd")
+set(MSTD_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(MSTD_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+add_subdirectory(${PROJECT_SOURCE_DIR}/external/mstd ${CMAKE_BINARY_DIR}/external/mstd)
+
 include(eigen)
 
 if(BUILD_WITH_MPI)
@@ -255,12 +264,6 @@ set_target_properties(eigen PROPERTIES
     INTERFACE_SYSTEM_INCLUDE_DIRECTORIES
     "$<TARGET_PROPERTY:eigen,INTERFACE_INCLUDE_DIRECTORIES>"
 )
-
-add_library(mstd INTERFACE)
-target_include_directories(mstd SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/external/mstd/include)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(mstd INTERFACE MSTD_DEBUG)
-endif()
 
 add_subdirectory(src)
 

@@ -24,8 +24,6 @@
 
 #define _VECTOR3D_CONCEPTS_HPP_
 
-#include <concepts>
-
 #include "../../../concepts/concepts.hpp"
 #include "vector3dDepth.hpp"
 
@@ -42,9 +40,14 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
-    concept Vector3DConcept =
-        std::same_as<T, linalg::Vector3D<typename T::value_type>>;
+    template <typename T>
+    inline constexpr bool isVector3D_v = false;
+
+    /**
+     * @brief Specialization for Vector3D types
+     */
+    template <typename T>
+    inline constexpr bool isVector3D_v<linalg::Vector3D<T>> = true;
 
     /**
      * @brief Concept for Vector3D types with arithmetic value_type
@@ -53,7 +56,16 @@ namespace pq
      */
     template <class T>
     concept ArithmeticVector3D =
-        Vector3DConcept<T> && pq::is_InnerType_arithmetic_v<T>;
+        isVector3D_v<T> && pq::is_InnerType_arithmetic_v<T>;
+
+    /**
+     * @brief Concept for Vector3D types with quantity-like value_type
+     *
+     * @tparam T
+     */
+    template <class T>
+    concept QuantityLikeVector3D =
+        isVector3D_v<T> && mstd::is_quantity_like_v<typename T::value_type>;
 
     /**
      * @brief Concept for Vector3D types with depth 1

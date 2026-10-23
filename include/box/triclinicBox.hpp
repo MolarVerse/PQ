@@ -33,7 +33,7 @@ struct TestTriclinicBox;
 
 namespace molsys
 {
-    std::pair<linalg::Vec3D, linalg::Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
+    std::pair<linalg::Vec3D, Angles3D> calcBoxDimAndAnglesFromBoxMatrix(
         const linalg::tensor3D &
     );
 
@@ -111,7 +111,7 @@ namespace molsys
 
         [[nodiscard]]
         static linalg::tensor3D _calculateTransformationMatrix(
-            const linalg::Vec3D &boxAngles
+            const Angles3D &boxAngles
         );
 
         [[nodiscard]]
@@ -122,12 +122,18 @@ namespace molsys
         [[nodiscard]]
         static double _calculateVolume(const linalg::tensor3D &boxMatrix);
 
-        [[nodiscard]] static double _cosAlpha(const linalg::Vec3D &boxAngles);
-        [[nodiscard]] static double _cosBeta(const linalg::Vec3D &boxAngles);
-        [[nodiscard]] static double _cosGamma(const linalg::Vec3D &boxAngles);
-        [[nodiscard]] static double _sinAlpha(const linalg::Vec3D &boxAngles);
-        [[nodiscard]] static double _sinBeta(const linalg::Vec3D &boxAngles);
-        [[nodiscard]] static double _sinGamma(const linalg::Vec3D &boxAngles);
+        [[nodiscard]]
+        static double _cosAlpha(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _cosBeta(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _cosGamma(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _sinAlpha(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _sinBeta(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _sinGamma(const Angles3D &boxAngles);
     };
 
 }   // namespace molsys

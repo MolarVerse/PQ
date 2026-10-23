@@ -25,6 +25,8 @@
 #define _VECTOR3D_TPP_
 
 #include <algorithm>
+#include <mstd/math.hpp>
+#include <mstd/type_traits.hpp>
 #include <ostream>
 
 #include "concepts/vector3dConcepts.hpp"
@@ -82,7 +84,7 @@ namespace linalg
      * @return bool
      */
     template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    requires mstd::three_way_comparable<U, V>
     bool operator<(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
         return lhs[0] < rhs[0] && lhs[1] < rhs[1] && lhs[2] < rhs[2];
@@ -96,7 +98,7 @@ namespace linalg
      * @return bool
      */
     template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator<(const Vector3D<U> &lhs, const V &rhs)
     {
         return lhs[0] < rhs && lhs[1] < rhs && lhs[2] < rhs;
@@ -114,7 +116,7 @@ namespace linalg
      * @return bool
      */
     template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    requires mstd::three_way_comparable<U, V>
     bool operator<=(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
         return !(lhs > rhs);
@@ -128,7 +130,7 @@ namespace linalg
      * @return bool
      */
     template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator<=(const Vector3D<U> &lhs, const V &rhs)
     {
         return !(lhs > rhs);
@@ -146,7 +148,7 @@ namespace linalg
      * @return bool
      */
     template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    requires mstd::three_way_comparable<U, V>
     bool operator>(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
         return lhs[0] > rhs[0] && lhs[1] > rhs[1] && lhs[2] > rhs[2];
@@ -160,7 +162,7 @@ namespace linalg
      * @return bool
      */
     template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator>(const Vector3D<U> &lhs, const V &rhs)
     {
         return lhs[0] > rhs && lhs[1] > rhs && lhs[2] > rhs;
@@ -178,7 +180,7 @@ namespace linalg
      * @return bool
      */
     template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    requires mstd::three_way_comparable<U, V>
     bool operator>=(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
         return !(lhs < rhs);
@@ -192,7 +194,7 @@ namespace linalg
      * @return bool
      */
     template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator>=(const Vector3D<U> &lhs, const V &rhs)
     {
         return !(lhs < rhs);
@@ -568,17 +570,33 @@ namespace linalg
      * @param scalar
      * @return `Vector3D<decltype(vec[0] * scalar)>`
      */
-    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
-    auto operator*(const U &vec, const V &scalar)
-        -> Vector3D<decltype(vec[0] * scalar)>
+    template <pq::ArithmeticVector3D U, typename V>
+    requires(!pq::ArithmeticVector3D<V>) &&
+            (pq::Arithmetic<V> ||
+             mstd::NonArithmeticScalar<pq::InnerType_t<U>, V>)
+    constexpr auto operator*(const U &vec, const V &scalar)
+        -> Vector3D<std::remove_cvref_t<decltype(vec[0] * scalar)>>
     {
-        using ResultType = decltype(vec[0] * scalar);
+        using ResultType = std::remove_cvref_t<decltype(vec[0] * scalar)>;
 
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(vec[0]) * static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[1]) * static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[2]) * static_cast<ResultType>(scalar)
-        );
+        if constexpr (pq::Arithmetic<V>)
+        {
+            const auto scalarCasted = static_cast<ResultType>(scalar);
+            return Vector3D<ResultType>(
+                static_cast<ResultType>(vec[0]) * scalarCasted,
+                static_cast<ResultType>(vec[1]) * scalarCasted,
+                static_cast<ResultType>(vec[2]) * scalarCasted
+            );
+        }
+        else
+        {
+            // unit/quantity scalar: multiply directly, no casts
+            return Vector3D<ResultType>(
+                vec[0] * scalar,
+                vec[1] * scalar,
+                vec[2] * scalar
+            );
+        }
     }
 
     /**
@@ -1268,13 +1286,14 @@ namespace linalg
      * @param vec
      * @return `Vector3D<decltype(std::cos(vec[0]))>`
      */
-    template <pq::ArithmeticVector3D U>
-    auto cos(const U &vec) -> Vector3D<decltype(std::cos(vec[0]))>
+    template <typename U>
+    requires pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>
+    auto cos(const U &vec) -> Vector3D<decltype(mstd::cos(vec[0]))>
     {
-        return Vector3D<decltype(std::cos(vec[0]))>(
-            std::cos(vec[0]),
-            std::cos(vec[1]),
-            std::cos(vec[2])
+        return Vector3D<decltype(mstd::cos(vec[0]))>(
+            mstd::cos(vec[0]),
+            mstd::cos(vec[1]),
+            mstd::cos(vec[2])
         );
     }
 

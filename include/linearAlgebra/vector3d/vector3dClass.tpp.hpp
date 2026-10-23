@@ -332,6 +332,42 @@ namespace linalg
         return std::vector<T>(xyz.begin(), xyz.end());
     }
 
+    /**
+     * @brief convert vector to specified unit
+     *
+     * @tparam U
+     * @param unit
+     * @return Vector3D<decltype(x * unit)>
+     */
+    template <class T>
+    template <mstd::UnitLike U>
+    auto Vector3D<T>::in(const U &unit) const
+    {
+        return Vector3D<decltype(x.in(unit))>(
+            x.in(unit),
+            y.in(unit),
+            z.in(unit)
+        );
+    }
+
+    /**
+     * @brief convert vector to numerical value in specified unit
+     *
+     * @tparam U
+     * @param unit
+     * @return Vector3D<decltype(x.numerical_value_in(unit))>
+     */
+    template <class T>
+    template <mstd::UnitLike U>
+    auto Vector3D<T>::numerical_value_in(const U &unit) const
+    {
+        return Vector3D<decltype(x.numerical_value_in(unit))>(
+            x.numerical_value_in(unit),
+            y.numerical_value_in(unit),
+            z.numerical_value_in(unit)
+        );
+    }
+
 }   // namespace linalg
 
 #endif   // _VECTOR3D_CLASS_TPP_
