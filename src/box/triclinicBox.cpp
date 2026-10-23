@@ -28,6 +28,7 @@
 #include "box.hpp"
 #include "manostatSettings.hpp"
 #include "staticMatrix.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
