@@ -115,6 +115,9 @@ jobs:
 
       - name: Configure and build (generate compile_commands.json)
         id: build
+        env:
+          CC: gcc-14
+          CXX: g++-14
         run: |
           # Enable tests and both benchmark suites so their sources are part
           # of the compile database and actually compile with their deps
