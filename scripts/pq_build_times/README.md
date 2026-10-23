@@ -82,6 +82,7 @@ Snapshots with different fingerprints are refused, naming the differing keys.
 | **Slowest compile steps** | the slowest files with their share of the CPU, when they ran, how many repository files they include and in how many PRs they changed lately; how concentrated the work is (how many files make up half of it); the translation units with the biggest parse load |
 | **Headers: what a change rebuilds** | per header the **rebuild cost** (compile CPU of every translation unit that includes it) and the **burden** (rebuild cost x the number of PRs that changed it in the last 180 days, `--churn-days`), which is what you actually pay for. Headers included by exactly the same files are one row. For a header of a submodule (`external/...`) the changes are bumps of the submodule |
 | **What small changes rebuild** | for the touch scenarios the steps that ran, by kind. A source file change that rebuilds one object but links 170 executables is visible here ("mostly relinking") |
+| **Compiler time (clang -ftime-trace)** | only for snapshots built with clang (`--compiler clang++-20`): the split of compiler CPU into frontend (parsing, semantic analysis, template instantiation) and backend (optimisation, code generation), per module; the headers with the highest **own parse time** (summed over all files, with what they include, and per inclusion, with the PRs that changed them); the template instantiations with the highest own time; the files where the backend dominates |
 | **Linking** | link CPU and the slowest links |
 
 How to read it: **burden** is the list to work through (a header with a high rebuild cost that never changes costs
@@ -101,16 +102,40 @@ only the whole-build line shows its change (the largest module, the tests, is 43
 Limits: per-file times come from one parallel build, so they include contention for cores and caches and are a
 relative cost, not the time of the file alone. Ninja stores times per build, so the wall time, the parallelism and the
 "ran" column exist only for a snapshot that includes the `cold` scenario; without it the per-file times come from
-the last build of each file. Parse versus code generation time per header and per template needs clang's
-`-ftime-trace` and is not part of this (yet). `snapshot` refuses to start while a submodule that the build uses
+the last build of each file. `snapshot` refuses to start while a submodule that the build uses
 (for example `external/mstd`) is not at the commit the repository records, because that build would fail or measure
 something else; `--force` skips the check.
+
+## Clang trace data
+
+With `--compiler clang++-20` the build writes a `-ftime-trace` file next to every object, and the snapshot reads them
+right after the cold build (before the touch scenarios rewrite some of them). Own time of a header is the time clang
+spent in it without what it includes; "with includes" contains the nested includes. Own time of a template is the
+time of its instantiation without nested instantiations. Header and template time overlap (an instantiation that
+happens while a header is parsed is in both), and clang does not record events under 0.5 ms, so small things are
+missing and **event counts are not exact**: between identical builds about 5% of the headers have a different
+number of events, so `compare` only compares times.
+
+`compare` shows, when both snapshots have trace data, the compiler CPU split into frontend and backend, the modules
+whose frontend or backend time moved, and the headers and templates whose own time moved. As for the modules, the
+drift of the whole build is removed first (the ratio at which half of the time lies). The thresholds were measured on
+three clang cold builds of identical code (whole build drift up to 6%): a header or template is listed when it moved
+by more than 1 s **and** 15% beyond the drift, a module phase by more than 5 s and 8%; with these, none of 866
+headers, 581 templates and 2 x 105 module phases was listed for identical code. Only the top 300 headers and top 200
+templates of a snapshot are stored, and only those present in both are compared.
 
 ## Habits that keep the numbers honest
 
 - Measure on an idle machine; the tool refuses above a load of 25% of the threads unless you pass `--force`.
+- The check at the start cannot see what starts later, so every build also records **how much CPU other processes used
+  while it ran** (the machine's busy time from `/proc/stat` minus the CPU of the build's own processes; Linux only).
+  On an idle machine that is about 2% of the build's CPU (kernel and I/O work that is not attributed to the build;
+  24-26 s of a 1,220 s clang build). `compare` and `detail` warn when it is above 5% of the build's CPU and 10 s. In a
+  real test, four busy loops for 25 s during a cold build gave 116 s (9%) and a warning, while the timings alone looked
+  unchanged (+6.6%, inside the +-10% band for a single run); without the warning you could not have told.
 - Use `--target` for a part of the project while developing the tool or testing an idea, but know that it is a
   different series (the target is part of the fingerprint).
-- To try clang: `--cmake-arg -DCMAKE_CXX_COMPILER=clang++ --cmake-arg -DCMAKE_C_COMPILER=clang`. It becomes its
-  own series; `-ftime-trace` data is a planned next step.
+- To try clang: `--compiler clang++-20`. It derives the C compiler, adds `-ftime-trace` (see below) and becomes its own
+  series, so you pin a new baseline for it. Write CMake arguments with an equals sign (`--cmake-arg=-DX=Y`): argparse
+  takes a value that starts with a dash for an option.
 - One change per snapshot, with a `--note`; that is what makes the markers in the graph useful.
