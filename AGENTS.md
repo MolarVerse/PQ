@@ -85,6 +85,7 @@ PQ/
 ├── scripts/               # Build/Singularity/conda scripts, changelog tooling + its tests
 │   ├── pq_build_times/    # local build-time tracking (snapshots, baseline, graph); see its README
 │   └── pq_code_stats/     # lines/files per merged PR of dev by area and kind, CSV + report; see its README
+├── changes/               # Unreleased changelog fragments (user/ + developer/); see changes/README.md
 ├── src/                   # Implementation files (.cpp), one CMakeLists.txt per module
 ├── tests/                 # GoogleTest unit tests, mirrors src/ + include/ layout
 ├── CMakeLists.txt         # Root build configuration
@@ -237,7 +238,21 @@ All pipelines are in `.github/workflows/`:
 - **`CHANGELOG.md`** — user-facing, curated by hand, one bullet per notable change.
 - **`DEV-CHANGELOG.md`** — developer/technical record, generated from conventional commits via `git-cliff` (`cliff.toml`) at release time.
 
-**Regular feature/bugfix PRs (targeting `dev`) do not edit either changelog file.** Changelog curation happens only in the release PR from `dev` to `main`, validated by `scripts/update_changelog.py --check` (see `check-pr-for-release-version.yml`). Do not add changelog entries as part of routine PRs.
+**Regular feature/bugfix PRs (targeting `dev`) do not edit either changelog file directly.** Instead, every regular PR adds a **changelog fragment** under `changes/` (or appends a bullet to an existing unreleased one) — see `changes/README.md` for the full spec. Summary:
+
+```
+changes/user/<category>.<title>.md       # user-visible behavior, results, I/O, compat, perf
+changes/developer/<category>.<title>.md  # build tooling, CI, tests, refactors, internal maintenance
+```
+
+- `<category>` is fixed: user = `enhancement`, `change`, `bugfix`, `performance`, `compatibility`, `documentation`; developer = `enhancement`, `bugfix`, `performance`, `build`, `ci`, `test`, `internal`, `documentation`.
+- `<title>` is a free-text lowercase-with-hyphens slug (not rendered).
+- File contents are one or more Markdown bullets (`- ...`), one per line, no blank lines between them, each ≤240 characters.
+- If the PR extends a change that already has an unreleased fragment, append a bullet to that file instead of creating a new one.
+- Fragments are consumed and removed by the release workflow, which routes them into `CHANGELOG.md`/`DEV-CHANGELOG.md`. Never delete `changes/user/.gitkeep` or `changes/developer/.gitkeep` (placeholders keeping the empty dirs tracked).
+- `scripts/changelog_fragments.py` and `scripts/check_changelog_fragment.py` validate/process fragments; `scripts/update_changelog.py --check` validates the release PR (see `check-pr-for-release-version.yml`).
+
+Changelog curation of the rendered files themselves happens only in the release PR from `dev` to `main`. Do not edit `CHANGELOG.md` or `DEV-CHANGELOG.md` as part of routine PRs.
 
 ---
 
@@ -276,6 +291,7 @@ Before submitting any change:
 - [ ] Every new/modified `.cpp`/`.hpp`/`.c`/`.h` file has the exact license header (`scripts/addLicense.sh`)
 - [ ] Header guards follow `_NAME_HPP_`; namespaces match directory names
 - [ ] Tests added/updated in `tests/` mirroring the changed `src/`/`include/` module
+- [ ] A changelog fragment added under `changes/user/` and/or `changes/developer/` (or a bullet appended to an existing unreleased one)
 - [ ] No changes to `CHANGELOG.md` or `DEV-CHANGELOG.md` in routine PRs
 - [ ] Git submodules (`external/googletest`, `external/mstd`) not accidentally modified
 - [ ] No `-march=native`/native-only assumptions introduced into CI-relevant build paths (respect `BUILD_WITH_NATIVE`)
