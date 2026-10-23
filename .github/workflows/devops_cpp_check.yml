@@ -93,8 +93,8 @@ jobs:
             -DBUILD_WITH_BENCHMARKING=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
         shell: bash
 
       - name: Run cpp_checks
