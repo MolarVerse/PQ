@@ -104,8 +104,8 @@ jobs:
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build-pr --target perf_benchmarks -j$(nproc)
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
 
       - name: Build base benchmarks (baseline)
         if: steps.base-ir-cache.outputs.cache-hit != 'true'
@@ -117,8 +117,8 @@ jobs:
           cmake --build build-base --target perf_benchmarks -j$(nproc) \
             || echo "base branch has no perf benchmarks yet - baseline skipped"
         env:
-          CC: gcc-13
-          CXX: g++-13
+          CC: gcc-14
+          CXX: g++-14
 
       - name: Compare instruction counts (gate)
         id: gate
