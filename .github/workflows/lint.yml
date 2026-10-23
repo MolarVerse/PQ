@@ -153,9 +153,6 @@ jobs:
           }
           # read by the build-timings step below: a build with errors is partial
           echo "status=$status" >> "$GITHUB_OUTPUT"
-        env:
-          CC: gcc-13
-          CXX: g++-13
 
       - name: Collect build timings
         if: always()
