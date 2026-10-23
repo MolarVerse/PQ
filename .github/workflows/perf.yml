@@ -69,7 +69,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-13 g++-13 valgrind mold
+          sudo apt-get install -y gcc-14 g++-14 valgrind mold
         shell: bash
 
       - name: Setup ccache
