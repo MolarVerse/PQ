@@ -73,7 +73,7 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt update
-          sudo apt install -y gcc-13 g++-13 mold ninja-build clangd-20
+          sudo apt install -y gcc-14 g++-14 mold ninja-build clangd-20
           sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
         shell: bash
 
