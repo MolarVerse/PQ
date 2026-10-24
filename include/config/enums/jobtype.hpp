@@ -25,7 +25,6 @@
 
 #include <cstdint>
 #include <mstd/enum.hpp>
-#include <mstd/enum/enum_string.hpp>
 
 /**
  * @enum JobType
@@ -35,17 +34,25 @@
  */
 enum class JobType : std::uint8_t;
 
-#define JOB_TYPE_LIST(X)  \
-    X(MM_MD)              \
-    X(QM_MD)              \
-    X(QMMM_MD)            \
-    X(RING_POLYMER_QM_MD) \
-    X(MM_OPT)             \
-    X(MM_HESSIAN)         \
-    X(NONE)
+#define U(X) static_cast<unsigned>(X)
 
-MSTD_ENUM(JobType, std::uint8_t, JOB_TYPE_LIST)
+#define JOB_TYPE_LIST(X)                                   \
+    X(MM, 1U << 0U)                                        \
+    X(QM, 1U << 1U)                                        \
+    X(MD, 1U << 2U)                                        \
+    X(OPT, 1U << 3U)                                       \
+    X(HESSIAN, 1U << 4U)                                   \
+    X(RING_POLYMER, 1U << 5U)                              \
+    X(QM_MD, U(QM) | U(MD))                                \
+    X(MM_MD, U(MM) | U(MD))                                \
+    X(QMMM_MD, U(QM) | U(MM) | U(MD))                      \
+    X(RING_POLYMER_QM_MD, U(RING_POLYMER) | U(QM) | U(MD)) \
+    X(MM_OPT, U(MM) | U(OPT))                              \
+    X(MM_HESSIAN, U(MM) | U(HESSIAN))
+
+MSTD_ENUM_BITFLAG(JobType, std::uint8_t, JOB_TYPE_LIST)
 
 #undef JOB_TYPE_LIST
+#undef U
 
 #endif   // _JOBTYPE_ENUM_HPP_

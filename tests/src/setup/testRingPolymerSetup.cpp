@@ -22,17 +22,10 @@
 
 #include <gtest/gtest.h>
 
-#include "generalSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "ringPolymerSetup.hpp"
 #include "ringPolymerqmmdEngine.hpp"
 #include "testSetup.hpp"
-
-TEST_F(TestSetup, setupRingPolymerIsNoOpWhenNotActivated)
-{
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    EXPECT_NO_THROW(setup::setupRingPolymer(*_engine));
-}
 
 TEST_F(TestSetup, ringPolymerSetupPhysicalDataResizesBeads)
 {

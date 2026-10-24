@@ -50,8 +50,6 @@ namespace settings
         static inline uint_fast32_t _randomSeed;
         static inline bool          _isRandomSeedset = false;
 
-        static inline bool _isRingPolymerMDActivated = false;
-
         // clang-format off
         static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
         // clang-format on
@@ -80,7 +78,6 @@ namespace settings
         static void setRandomSeed(uint_fast32_t randomSeed);
         static void setIsRandomSeedSet(bool isRandomSeedSet);
 
-        static void setIsRingPolymerMDActivated(bool isRingPolymerMD);
         static void setDimensionality(size_t dimensionality);
 
         static void setVirialType(VirialType virialType);
@@ -107,8 +104,6 @@ namespace settings
          * standard is-active methods *
          ******************************/
 
-        static void activateRingPolymerMD();
-        static void deactivateRingPolymerMD();
         static void activateCellList();
         static void deactivateCellList();
 
@@ -117,8 +112,6 @@ namespace settings
         [[nodiscard]] static bool isHybridJobtype();
         [[nodiscard]] static bool isMMActivated();
         [[nodiscard]] static bool isQMActivated();
-        [[nodiscard]] static bool isQMOnlyActivated();
-        [[nodiscard]] static bool isMMOnlyActivated();
         [[nodiscard]] static bool isRingPolymerMDActivated();
         [[nodiscard]] static bool isMDJobType();
         [[nodiscard]] static bool isOptJobType();

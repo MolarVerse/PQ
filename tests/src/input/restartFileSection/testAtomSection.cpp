@@ -216,8 +216,6 @@ TEST_F(TestAtomSection, testProcess)
     );
 
     EXPECT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 10);
-
-    settings::GeneralSettings::setJobtype(JobType::NONE);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)
@@ -281,6 +279,4 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
     );
 
     ASSERT_EQ(first_atom->getAtomTypeName(), line[0]);
-
-    settings::GeneralSettings::setJobtype(JobType::NONE);
 }

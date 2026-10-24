@@ -23,7 +23,6 @@
 #include "generalSettings.hpp"
 
 #include <string>
-#include <utility>
 
 namespace settings
 {
@@ -39,23 +38,7 @@ namespace settings
      *
      * @param jobtype
      */
-    void GeneralSettings::setJobtype(JobType jobtype)
-    {
-        _jobtype = jobtype;
-
-        switch (jobtype)
-        {
-            using enum JobType;
-
-            case MM_OPT:       // fallthrough
-            case MM_HESSIAN:   // fallthrough
-            case MM_MD:        // fallthrough
-            case QM_MD:        // fallthrough
-            case QMMM_MD:      // fallthrough
-            case NONE: deactivateRingPolymerMD(); break;
-            case RING_POLYMER_QM_MD: activateRingPolymerMD(); break;
-        }
-    }
+    void GeneralSettings::setJobtype(JobType jobtype) { _jobtype = jobtype; }
 
     /**
      * @brief sets the floating point type
@@ -85,16 +68,6 @@ namespace settings
     void GeneralSettings::setIsRandomSeedSet(bool isRandomSeedSet)
     {
         _isRandomSeedset = isRandomSeedSet;
-    }
-
-    /**
-     * @brief sets Ring Polymer MD to active
-     *
-     * @param isRingPolymerMD
-     */
-    void GeneralSettings::setIsRingPolymerMDActivated(bool isRingPolymerMD)
-    {
-        _isRingPolymerMDActivated = isRingPolymerMD;
     }
 
     /**
@@ -212,20 +185,8 @@ namespace settings
      */
     bool GeneralSettings::isQMOnlyJobtype()
     {
-        using enum JobType;
-
-        switch (_jobtype)
-        {
-            case MM_MD:
-            case QMMM_MD:
-            case MM_OPT:
-            case MM_HESSIAN:
-            case NONE: return false;
-            case QM_MD:
-            case RING_POLYMER_QM_MD: return true;
-        }
-
-        std::unreachable();
+        return (_jobtype & JobType::QM) == JobType::QM &&
+               (_jobtype & JobType::MM) != JobType::MM;
     }
 
     /**
@@ -236,7 +197,8 @@ namespace settings
      */
     bool GeneralSettings::isMMOnlyJobtype()
     {
-        return _jobtype == JobType::MM_MD;
+        return (_jobtype & JobType::MM) == JobType::MM &&
+               (_jobtype & JobType::QM) != JobType::QM;
     }
 
     /**
@@ -247,7 +209,8 @@ namespace settings
      */
     bool GeneralSettings::isHybridJobtype()
     {
-        return _jobtype == JobType::QMMM_MD;
+        return (_jobtype & JobType::QM) == JobType::QM &&
+               (_jobtype & JobType::MM) == JobType::MM;
     }
 
     /**
@@ -258,15 +221,7 @@ namespace settings
      */
     bool GeneralSettings::isMDJobType()
     {
-        using enum JobType;
-
-        auto isMD = false;
-        isMD      = isMD || _jobtype == MM_MD;
-        isMD      = isMD || _jobtype == QM_MD;
-        isMD      = isMD || _jobtype == QMMM_MD;
-        isMD      = isMD || _jobtype == RING_POLYMER_QM_MD;
-
-        return isMD;
+        return (_jobtype & JobType::MD) == JobType::MD;
     }
 
     /**
@@ -275,7 +230,10 @@ namespace settings
      * @return true/false
      *
      */
-    bool GeneralSettings::isOptJobType() { return _jobtype == JobType::MM_OPT; }
+    bool GeneralSettings::isOptJobType()
+    {
+        return (_jobtype & JobType::OPT) == JobType::OPT;
+    }
 
     /**
      * @brief Returns true if the MM simulations are activated
@@ -285,16 +243,7 @@ namespace settings
      */
     bool GeneralSettings::isMMActivated()
     {
-        using enum JobType;
-
-        auto isMM = false;
-
-        isMM = isMM || _jobtype == MM_MD;
-        isMM = isMM || _jobtype == QMMM_MD;
-        isMM = isMM || _jobtype == MM_OPT;
-        isMM = isMM || _jobtype == MM_HESSIAN;
-
-        return isMM;
+        return (_jobtype & JobType::MM) == JobType::MM;
     }
 
     /**
@@ -305,37 +254,7 @@ namespace settings
      */
     bool GeneralSettings::isQMActivated()
     {
-        using enum JobType;
-
-        auto isQM = false;
-
-        isQM = isQM || _jobtype == QM_MD;
-        isQM = isQM || _jobtype == QMMM_MD;
-        isQM = isQM || _jobtype == RING_POLYMER_QM_MD;
-
-        return isQM;
-    }
-
-    /**
-     * @brief Returns true if only QM simulations are activated
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isQMOnlyActivated()
-    {
-        return isQMActivated() && !isMMActivated();
-    }
-
-    /**
-     * @brief Returns true if only MM simulations are activated
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isMMOnlyActivated()
-    {
-        return isMMActivated() && !isQMActivated();
+        return (_jobtype & JobType::QM) == JobType::QM;
     }
 
     /**
@@ -346,7 +265,7 @@ namespace settings
      */
     bool GeneralSettings::isRingPolymerMDActivated()
     {
-        return _isRingPolymerMDActivated;
+        return (_jobtype & JobType::RING_POLYMER) == JobType::RING_POLYMER;
     }
 
     /**
@@ -362,24 +281,6 @@ namespace settings
      * standard activate methods *
      *                           *
      *****************************/
-
-    /**
-     * @brief activate ring polymer MD simulations
-     *
-     */
-    void GeneralSettings::activateRingPolymerMD()
-    {
-        _isRingPolymerMDActivated = true;
-    }
-
-    /**
-     * @brief deactivate ring polymer MD simulations
-     *
-     */
-    void GeneralSettings::deactivateRingPolymerMD()
-    {
-        _isRingPolymerMDActivated = false;
-    }
 
     /**
      * @brief activate cell list

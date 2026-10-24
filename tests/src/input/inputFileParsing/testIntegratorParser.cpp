@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "integratorInputParser.hpp"
 #include "mdEngine.hpp"
 #include "testInputFileReader.hpp"
@@ -39,6 +40,9 @@
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
+    // NOTE: this is only used because of this nonsense requirement in the input
+    // file parse after all of the reworks this can be removed (HOPEFULLY)
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     input::IntegratorInputParser parser;
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("integrator"));
