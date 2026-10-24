@@ -22,6 +22,8 @@
 
 #include "triclinicBox.hpp"
 
+#include <memory>
+
 #include <mstd/debugging.hpp>
 #include <mstd/math.hpp>
 
@@ -46,6 +48,12 @@ namespace molsys
     )
         : Box(boxDimensions, boxAngles)
     {
+    }
+
+    /** @brief Copy the cell geometry into an independent box. */
+    std::unique_ptr<Box> TriclinicBox::clone() const
+    {
+        return std::make_unique<TriclinicBox>(*this);
     }
 
     /**

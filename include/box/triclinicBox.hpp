@@ -24,6 +24,8 @@
 
 #define _TRICLINIC_BOX_HPP_
 
+#include <memory>
+
 #include <mstd/types.hpp>
 
 #include "box.hpp"
@@ -73,6 +75,9 @@ namespace molsys
             const linalg::Vec3D &boxDimensions,
             const linalg::Vec3D &boxAngles
         );
+
+        [[nodiscard]]
+        std::unique_ptr<Box> clone() const override;
 
         [[nodiscard]]
         linalg::Vec3D calcShiftVector(const linalg::Vec3D &vec) const override;

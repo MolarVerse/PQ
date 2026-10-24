@@ -24,17 +24,16 @@
 
 #include <cmath>
 
+#include "box.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"
-#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
-#include "triclinicBox.hpp"
 
 namespace manostat
 {
@@ -121,18 +120,8 @@ namespace manostat
             throw exc::ManostatException("Invalid manostat scaling matrix");
         }
 
-        const auto &box = simulationBox.getBox();
-        if (const auto *triclinic =
-                dynamic_cast<const molsys::TriclinicBox *>(&box))
-        {
-            auto candidate = *triclinic;
-            _validateCandidate(candidate, mu);
-        }
-        else
-        {
-            auto candidate = dynamic_cast<const molsys::OrthorhombicBox &>(box);
-            _validateCandidate(candidate, mu);
-        }
+        auto candidate = simulationBox.getBox().clone();
+        _validateCandidate(*candidate, mu);
     }
 
     /** @brief Scale and validate a candidate cell. */
