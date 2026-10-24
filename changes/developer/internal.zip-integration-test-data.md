@@ -1,0 +1,1 @@
+- Store large integration-test reference data sets (ase-dftbplus, ase-xtb, cgo, chig, dftbplus, pyscf, qm-mm) as zip archives instead of raw files to shrink the repository; `test_with_data_dir` now lazily extracts them into a gitignored cache.
