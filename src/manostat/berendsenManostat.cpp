@@ -182,9 +182,6 @@ namespace manostat
      */
     linalg::tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
     {
-        if (getFixedAxis() == FixedAxis::ALL)
-            return linalg::diagonalMatrix(1.0);
-
         const auto p_xyz           = diagonal(_getPressureTensor());
         const auto anisotropicAxis = get2DAnisotropicAxis(_isotropy);
         const auto isotropicAxes   = get2DIsotropicAxes(_isotropy);
@@ -226,9 +223,6 @@ namespace manostat
      */
     linalg::tensor3D AnisotropicBerendsenManostat::calculateMu() const
     {
-        if (getFixedAxis() == FixedAxis::ALL)
-            return linalg::diagonalMatrix(1.0);
-
         const auto pxyz = diagonal(_getPressureTensor());
         const auto dimension =
             3.0 - std::popcount(static_cast<unsigned>(getFixedAxis()));
@@ -258,9 +252,6 @@ namespace manostat
      */
     linalg::tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
     {
-        if (getFixedAxis() == FixedAxis::ALL)
-            return linalg::diagonalMatrix(1.0);
-
         const auto pTarget = linalg::diagonalMatrix(_getTargetPressure());
         const auto dimension =
             3.0 - std::popcount(static_cast<unsigned>(getFixedAxis()));
