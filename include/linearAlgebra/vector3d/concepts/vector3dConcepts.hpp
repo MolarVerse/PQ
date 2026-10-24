@@ -31,7 +31,7 @@
 
 namespace linalg
 {
-    template <class T>
+    template <typename T>
     class Vector3D;
 }   // namespace linalg
 
@@ -42,7 +42,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept Vector3DConcept =
         std::same_as<T, linalg::Vector3D<typename T::value_type>>;
 
@@ -51,7 +51,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept ArithmeticVector3D =
         Vector3DConcept<T> && pq::is_InnerType_arithmetic_v<T>;
 
@@ -60,7 +60,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept OneDimArithmeticVector3D =
         ArithmeticVector3D<T> && Vector3DDepth_v<T> == 1;
 

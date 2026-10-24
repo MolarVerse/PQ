@@ -37,47 +37,47 @@ namespace linalg
      ************************/
 
     // operator==
-    template <class U>
+    template <typename U>
     requires std::equality_comparable<U>
     bool operator==(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
 
-    template <class U>
+    template <typename U>
     requires std::equality_comparable<U>
     bool operator!=(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
 
     // operator<
-    template <class U, class V>
+    template <typename U, typename V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator<(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
 
-    template <class U, class V>
+    template <typename U, typename V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator<(const Vector3D<U> &lhs, const V &rhs);
 
     // operator<=
-    template <class U, class V>
+    template <typename U, typename V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator>=(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
 
-    template <class U, class V>
+    template <typename U, typename V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator>=(const Vector3D<U> &lhs, const V &rhs);
 
     // operator>
-    template <class U, class V>
+    template <typename U, typename V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator>(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
 
-    template <class U, class V>
+    template <typename U, typename V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator>(const Vector3D<U> &lhs, const V &rhs);
 
     // operator<=
-    template <class U, class V>
+    template <typename U, typename V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator<=(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
 
-    template <class U, class V>
+    template <typename U, typename V>
     requires std::three_way_comparable<U> && std::three_way_comparable<V>
     bool operator<=(const Vector3D<U> &lhs, const V &rhs);
 
