@@ -1,0 +1,2 @@
+- fix clangd-tidy false positives on `vector3dConcepts.hpp` by adding a same-named translation unit (`src/linearAlgebra/vector3dConcepts.cpp`) so clangd can infer its real, absolute-path compile command instead of an unrelated fallback one
+- skip the shared PCH for that new file so devops_cpp_check's libclang-based parser isn't tripped up by Eigen's SSE intrinsics headers in a configure-only (unbuilt) tree

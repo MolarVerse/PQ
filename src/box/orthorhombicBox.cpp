@@ -35,7 +35,7 @@ namespace molsys
      * @param boxDimensions
      */
     OrthorhombicBox::OrthorhombicBox(const linalg::Vec3D &boxDimensions)
-        : Box(boxDimensions, {NINETY_DEG_TO_RAD})
+        : Box(boxDimensions, {NINETY_DEG})
     {
     }
 

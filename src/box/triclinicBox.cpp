@@ -23,11 +23,12 @@
 #include "triclinicBox.hpp"
 
 #include <mstd/debugging.hpp>
+#include <mstd/math.hpp>
 
 #include "box.hpp"
-#include "constants.hpp"
 #include "manostatSettings.hpp"
 #include "staticMatrix.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -43,7 +44,7 @@ namespace molsys
         const linalg::Vec3D &boxDimensions,
         const linalg::Vec3D &boxAngles
     )
-        : Box(boxDimensions, boxAngles * DEG_TO_RAD)
+        : Box(boxDimensions, boxAngles)
     {
     }
 
@@ -85,9 +86,11 @@ namespace molsys
     /**
      * @brief Calculate the rotation matrix
      *
+     * @param boxAngles
+     * @return linalg::tensor3D
      */
     linalg::tensor3D TriclinicBox::_calculateTransformationMatrix(
-        const linalg::Vec3D &boxAngles
+        const Angles3D &boxAngles
     )
     {
         const auto cosGamma = _cosGamma(boxAngles);
@@ -104,7 +107,7 @@ namespace molsys
         transformationMatrix[1][2]  = _cosAlpha(boxAngles) - cosBeta * cosGamma;
         transformationMatrix[1][2] /= sinGamma;
 
-        const auto cosAngles = cos(boxAngles);
+        const auto cosAngles = linalg::cos(boxAngles);
         const auto sumcos_2  = sum(cosAngles * cosAngles);
         const auto prodcos   = prod(cosAngles);
 
@@ -299,7 +302,7 @@ namespace molsys
      * @param boxMatrix
      * @return std::pair<linalg::Vec3D, linalg::Vec3D>
      */
-    std::pair<linalg::Vec3D, linalg::Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
+    std::pair<linalg::Vec3D, Angles3D> calcBoxDimAndAnglesFromBoxMatrix(
         const linalg::tensor3D &boxMatrix
     )
     {
@@ -321,14 +324,11 @@ namespace molsys
         const auto cos_beta  = boxMatrix[0][2] / box_z;
         const auto cos_gamma = boxMatrix[0][1] / box_y;
 
-        const auto alpha = ::acos(cos_alpha);
-        const auto beta  = ::acos(cos_beta);
-        const auto gamma = ::acos(cos_gamma);
+        const auto alpha = ::acos(cos_alpha) * rad;
+        const auto beta  = ::acos(cos_beta) * rad;
+        const auto gamma = ::acos(cos_gamma) * rad;
 
-        return std::make_pair(
-            linalg::Vec3D{box_x, box_y, box_z},
-            linalg::Vec3D{alpha, beta, gamma}
-        );
+        return {{box_x, box_y, box_z}, {alpha, beta, gamma}};
     }
 
     /**
@@ -346,9 +346,9 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_cosAlpha(const linalg::Vec3D &boxAngles)
+    double TriclinicBox::_cosAlpha(const Angles3D &boxAngles)
     {
-        return ::cos(boxAngles[0]);
+        return mstd::cos(boxAngles[0]);
     }
 
     /**
@@ -356,9 +356,9 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_cosBeta(const linalg::Vec3D &boxAngles)
+    double TriclinicBox::_cosBeta(const Angles3D &boxAngles)
     {
-        return ::cos(boxAngles[1]);
+        return mstd::cos(boxAngles[1]);
     }
 
     /**
@@ -366,9 +366,9 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_cosGamma(const linalg::Vec3D &boxAngles)
+    double TriclinicBox::_cosGamma(const Angles3D &boxAngles)
     {
-        return ::cos(boxAngles[2]);
+        return mstd::cos(boxAngles[2]);
     }
 
     /**
@@ -376,9 +376,9 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_sinAlpha(const linalg::Vec3D &boxAngles)
+    double TriclinicBox::_sinAlpha(const Angles3D &boxAngles)
     {
-        return ::sin(boxAngles[0]);
+        return mstd::sin(boxAngles[0]);
     }
 
     /**
@@ -386,9 +386,9 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_sinBeta(const linalg::Vec3D &boxAngles)
+    double TriclinicBox::_sinBeta(const Angles3D &boxAngles)
     {
-        return ::sin(boxAngles[1]);
+        return mstd::sin(boxAngles[1]);
     }
 
     /**
@@ -396,9 +396,9 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_sinGamma(const linalg::Vec3D &boxAngles)
+    double TriclinicBox::_sinGamma(const Angles3D &boxAngles)
     {
-        return ::sin(boxAngles[2]);
+        return mstd::sin(boxAngles[2]);
     }
 
     /**
