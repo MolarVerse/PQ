@@ -43,17 +43,22 @@ TEST(TestOutput, testSpecialSetFilename)
         "Filename cannot be empty"
     );
 
+    const std::string testDirName = "test_output_dir";
+    std::filesystem::create_directory(testDirName);
+
     EXPECT_THROW_MSG(
-        output.setFilename("src"),
+        output.setFilename(testDirName),
         exc::InputFileException,
-        "File already exists - filename = src"
+        std::format("File already exists - filename = {}", testDirName)
     );
 
     EXPECT_THROW_MSG(
         output._openFile(),
         exc::InputFileException,
-        std::format("Could not open file - filename = src")
+        std::format("Could not open file - filename = {}", testDirName)
     );
+
+    std::filesystem::remove(testDirName);
 
     const std::string testFileName = "test_output.txt";
     std::ofstream     testFile(testFileName);
