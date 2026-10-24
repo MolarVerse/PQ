@@ -32,34 +32,33 @@
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
 {
-    auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
-    EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
 }
 
 TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 {
-    auto                box           = molsys::OrthorhombicBox();
+    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
     const double        density       = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
     const double        totalMass     = 1.0;
-    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    EXPECT_EQ(box.calcBoxDimFromDensity(totalMass, density), boxDimensions);
+    EXPECT_EQ(
+        molsys::OrthorhombicBox::calcBoxDimFromDensity(totalMass, density),
+        boxDimensions
+    );
 }
 
 TEST(TestOrthoRhombicBox, calculateVolume)
 {
-    auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
-    EXPECT_EQ(box.calculateVolume(), 6.0);
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    EXPECT_EQ(box.getVolume(), 6.0);
 }
 
 TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
 {
-    auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
 
     linalg::Vec3D position = {0.5, 1.5, 2.5};
     box.applyPBC(position);
@@ -70,33 +69,29 @@ TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
 
 TEST(TestOrthoRhombicBox, scaleBox)
 {
-    auto box = molsys::OrthorhombicBox();
-
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
 
     const linalg::tensor3D scaleFactors =
         diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0});
     box.scaleBox(scaleFactors);
 
     const linalg::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};
-    EXPECT_EQ(box.getBoxDimensions(), expectedBoxDimensions);
+    EXPECT_EQ(box.get_boxDimensions(), expectedBoxDimensions);
 }
 
 TEST(TestOrthoRhombicBox, getMinimalBoxDimension)
 {
-    auto                box           = molsys::OrthorhombicBox();
     const linalg::Vec3D boxDimensions = {2.0, 1.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
 
     EXPECT_EQ(box.getMinimalBoxDimension(), 1.0);
 }
 
 TEST(TestOrthoRhombicBox, calculateShiftVector)
 {
-    auto box = molsys::OrthorhombicBox();
-
-    box.setBoxDimensions({1.0, 1.0, 1.0});
+    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
     const linalg::Vec3D vector{0.2, 1.2, -0.8};
 
     EXPECT_EQ(box.calcShiftVector(vector)[0], 0.0);
@@ -106,10 +101,9 @@ TEST(TestOrthoRhombicBox, calculateShiftVector)
 
 TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
 {
-    auto             box       = molsys::OrthorhombicBox();
-    constexpr double tolerance = 1e-10;
-
-    box.setBoxDimensions({1.0, 1.0, 1.0});
+    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    constexpr double    tolerance     = 1e-10;
     const linalg::Vec3D vector{1.2, 1.7, -0.6};
 
     EXPECT_VECTOR_NEAR(
@@ -121,8 +115,8 @@ TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
 
 TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
 {
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({1.0, 2.0, 3.0});
+    const linalg::Vec3D     boxDimensions = {1.0, 2.0, 3.0};
+    molsys::OrthorhombicBox box(boxDimensions);
 
     using enum molsys::Periodicity;
     constexpr std::array periodicities{NON_PERIODIC, X, Y, Z, XY, XZ, YZ, XYZ};
@@ -143,7 +137,7 @@ TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
         for (size_t axis = 0; axis < 3; ++axis)
         {
             const auto expected = expectedPeriodicAxes.at(i).at(axis)
-                                      ? box.getBoxDimensions()[axis]
+                                      ? box.get_boxDimensions()[axis]
                                       : defaults::VACUUM_BOX_DIMENSION;
             EXPECT_DOUBLE_EQ(matrix[axis][axis], expected);
         }
@@ -152,8 +146,8 @@ TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
 
 TEST(TestOrthoRhombicBox, baseTransformsAndStateAccessors)
 {
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({2.0, 3.0, 4.0});
+    const linalg::Vec3D     boxDimensions = {2.0, 3.0, 4.0};
+    molsys::OrthorhombicBox box(boxDimensions);
 
     const linalg::Vec3D vector{1.0, 2.0, 3.0};
     const auto          tensor = diagonalMatrix(linalg::Vec3D{1.0, 2.0, 3.0});
@@ -163,9 +157,4 @@ TEST(TestOrthoRhombicBox, baseTransformsAndStateAccessors)
     EXPECT_EQ(box.toSimSpace(vector), vector);
     EXPECT_MATRIX_NEAR(box.toOrthoSpace(tensor), tensor, 0.0);
     EXPECT_MATRIX_NEAR(box.toSimSpace(tensor), tensor, 0.0);
-
-    box.setVolume(24.0);
-    box.setBoxSizeHasChanged(true);
-    EXPECT_DOUBLE_EQ(box.getVolume(), 24.0);
-    EXPECT_TRUE(box.getBoxSizeHasChanged());
 }

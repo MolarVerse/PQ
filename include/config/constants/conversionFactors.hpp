@@ -38,6 +38,7 @@
  */
 static constexpr double DEG_TO_RAD = M_PI / 180.0;
 static constexpr double RAD_TO_DEG = 180.0 / M_PI;
+static constexpr double NINETY_DEG = 90.0;
 
 /**
  * @brief Conversion factors for mass units

@@ -53,16 +53,20 @@ namespace input::restartFile
     class AtomSection : public RestartFileSection
     {
        public:
-        void checkNumberOfLineArguments(std::vector<std::string> &) const;
         void process(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                   &lineNumber
         ) override;
 
         [[nodiscard]] std::string keyword() override;
         [[nodiscard]] bool        isHeader() override;
 
        private:
+        static void _checkNumberOfLineArguments(
+            std::vector<std::string> &lineElements,
+            size_t                    lineNumber
+        );
         static void _processAtomLine(
             std::vector<std::string> &lineElements,
             molsys::SimulationBox    &simulationBox,
@@ -76,7 +80,8 @@ namespace input::restartFile
 
         void _checkAtomLine(
             std::vector<std::string> &lineElements,
-            const molsys::Molecule &
+            const molsys::Molecule   &molecule,
+            size_t                   &lineNumber
         );
 
         friend class ::TestAtomSection;

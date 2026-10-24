@@ -75,6 +75,9 @@ namespace molsys
      */
     void CellList::setup(const SimulationBox &simulationBox)
     {
+        _oldBoxDimensions = simulationBox.getBoxDimensions();
+        _oldBoxAngles     = simulationBox.getBoxAngles();
+
         determineCellSize(simulationBox.getBoxDimensions());
 
         checkCoulombCutoff(
@@ -261,7 +264,7 @@ namespace molsys
 
         auto _ = scopedTimer(TimerId::CellList, "Update");
 
-        if (simulationBox.getBoxSizeHasChanged())
+        if (_hasBoxSizeChanged(simulationBox))
         {
             _cells.clear();
             resizeCells();
@@ -293,8 +296,8 @@ namespace molsys
      */
     void CellList::addMoleculesToCells(SimulationBox &simulationBox)
     {
-        const auto box        = simulationBox.getBoxDimensions();
-        const auto nMolecules = simulationBox.getNumberOfMolecules();
+        const auto &box        = simulationBox.getBoxDimensions();
+        const auto  nMolecules = simulationBox.getNumberOfMolecules();
 
         for (size_t i = 0; i < nMolecules; ++i)
         {
@@ -499,6 +502,24 @@ namespace molsys
     void CellList::setNumberOfNeighbourCells(size_t nCells)
     {
         _nNeighbourCells = linalg::Vec3Dul(nCells);
+    }
+
+    /**
+     * @brief checks if the box size has changed
+     *
+     * @param simulationBox
+     * @return bool
+     */
+    bool CellList::_hasBoxSizeChanged(
+        const molsys::SimulationBox &simulationBox
+    ) const
+    {
+        const auto &boxDimensions = simulationBox.getBoxDimensions();
+        const auto &boxAngles     = simulationBox.getBoxAngles();
+
+        return !_oldBoxDimensions.has_value() ||
+               _oldBoxDimensions.value() != boxDimensions ||
+               !_oldBoxAngles.has_value() || _oldBoxAngles.value() != boxAngles;
     }
 
 }   // namespace molsys

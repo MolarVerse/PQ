@@ -75,8 +75,8 @@ namespace opt
         size_t /* totalSteps */
     )
     {
-        if (step % _frequency == 0)
-            _learningRate -= _decay;
+        if (step % _getFrequency() == 0)
+            _setLearningRate(getLearningRate() - _decay);
 
         checkLearningRate();
     }

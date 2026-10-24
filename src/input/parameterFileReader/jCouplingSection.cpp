@@ -71,13 +71,15 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
      * @throw ParameterFileException if number of elements in line
      * is not 7 or 8
      */
     void JCouplingSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -88,7 +90,7 @@ namespace input::parameterFile
                     "Wrong number of arguments in parameter file j-coupling "
                     "section at "
                     "line {} - number of elements has to be 7 or 8!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

@@ -48,6 +48,7 @@ namespace input::topology
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if number of elements in line is
      * not 5 or 6
@@ -57,7 +58,8 @@ namespace input::topology
      */
     void DihedralSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -69,7 +71,7 @@ namespace input::topology
                     "section "
                     "at "
                     "line {} - number of elements has to be 5 or 6!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -94,7 +96,7 @@ namespace input::topology
                         "to "
                         "be a "
                         "\'*\' or empty at line {}!",
-                        _lineNumber
+                        lineNumber
                     )
                 );
             }
@@ -114,7 +116,7 @@ namespace input::topology
                     "be "
                     "the "
                     "same!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -146,10 +148,14 @@ namespace input::topology
      * @brief checks if dihedral sections ends normally
      *
      * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if endedNormal is false
      */
-    void DihedralSection::endedNormally(bool endedNormal) const
+    void DihedralSection::endedNormally(
+        bool   endedNormal,
+        size_t lineNumber
+    ) const
     {
         if (!endedNormal)
         {
@@ -158,7 +164,7 @@ namespace input::topology
                     "Topology file dihedral section at line {} - no end of "
                     "section "
                     "found!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

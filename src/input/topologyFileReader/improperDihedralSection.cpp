@@ -46,6 +46,7 @@ namespace input::topology
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws TopologyException if number of elements in line is
      * not 5
@@ -54,7 +55,8 @@ namespace input::topology
      */
     void ImproperDihedralSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -66,7 +68,7 @@ namespace input::topology
                     "dihedral "
                     "section at "
                     "line {} - number of elements has to be 5!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -91,7 +93,7 @@ namespace input::topology
                     "atoms "
                     "cannot "
                     "be the same!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -123,10 +125,14 @@ namespace input::topology
      * @brief checks if improper dihedral sections ends normally
      *
      * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws TopologyException if endedNormal is false
      */
-    void ImproperDihedralSection::endedNormally(bool endedNormal) const
+    void ImproperDihedralSection::endedNormally(
+        bool   endedNormal,
+        size_t lineNumber
+    ) const
     {
         if (!endedNormal)
         {
@@ -136,7 +142,7 @@ namespace input::topology
                     "end "
                     "of "
                     "section found!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

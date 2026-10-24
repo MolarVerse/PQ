@@ -89,16 +89,15 @@ namespace out
         const std::vector<physicalData::PhysicalData> &dataVector
     )
     {
-        _fp << std::format("{:10d}\t", step);
+        _getFilePointer() << std::format("{:10d}\t", step);
 
-        _fp << std::format(
-            "{:20.12f}\t",
-            _sumOfRingPolymerEnergies(dataVector)
-        );
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", _sumOfRingPolymerEnergies(dataVector));
 
-        _fp << std::format("{:20.12f}\t", _maxRingPolymerEnergy(dataVector));
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", _maxRingPolymerEnergy(dataVector));
 
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:20.12f}\t",
             _sumOfRingPolymerEnergies(dataVector) /
                 static_cast<double>(dataVector.size())
@@ -107,12 +106,15 @@ namespace out
         std::ranges::for_each(
             dataVector,
             [&](const auto &data)
-            { _fp << std::format("{:20.12f}\t", data.getRingPolymerEnergy()); }
+            {
+                _getFilePointer()
+                    << std::format("{:20.12f}\t", data.getRingPolymerEnergy());
+            }
         );
 
-        _fp << '\n' << std::flush;
+        _getFilePointer() << '\n' << std::flush;
 
-        _fp << std::flush;
+        _getFilePointer() << std::flush;
     }
 
 }   // namespace out

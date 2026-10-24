@@ -56,7 +56,7 @@ namespace opt
 
     class ForceDifferenceHessianBuilder : public HessianBuilder
     {
-       protected:
+       private:
         double _displacement;
 
        public:
@@ -69,6 +69,9 @@ namespace opt
             molsys::SimulationBox            &simulationBox,
             const std::vector<linalg::Vec3D> &positions
         );
+
+        [[nodiscard]]
+        double _getDisplacement() const;
     };
 
     class CentralForceDifferenceHessianBuilder

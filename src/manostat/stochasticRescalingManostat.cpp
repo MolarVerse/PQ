@@ -27,6 +27,7 @@
 
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
+#include "enums/manostat.hpp"
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -47,7 +48,6 @@ namespace manostat
         : Manostat(other),
           _tau(other._tau),
           _compressibility(other._compressibility),
-          _dt(other._dt),
           _fixedAxis(other._fixedAxis)
     {
     }
@@ -67,7 +67,6 @@ namespace manostat
             Manostat::operator=(other);
             _tau             = other._tau;
             _compressibility = other._compressibility;
-            _dt              = other._dt;
             _fixedAxis       = other._fixedAxis;
         }
         return *this;
@@ -119,7 +118,6 @@ namespace manostat
         : Manostat(targetPressure),
           _tau(tau),
           _compressibility(compressibility),
-          _dt(settings::TimingsSettings::getTimeStep()),
           _fixedAxis(fixedAxis)
     {
     }
@@ -188,7 +186,8 @@ namespace manostat
         if (_fixedAxis == FixedAxis::ALL)
             return diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
-        const auto compress          = _compressibility * _dt / _tau;
+        const auto compress =
+            _compressibility * settings::TimingsSettings::getTimeStep() / _tau;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -204,7 +203,7 @@ namespace manostat
 
         if (_fixedAxis == FixedAxis::NONE)
         {
-            const auto     deltaP    = _targetPressure - _pressure;
+            const auto     deltaP    = _getTargetPressure() - _getPressure();
             constexpr auto dimension = 3.0;
 
             return linalg::diagonalMatrix(
@@ -212,14 +211,14 @@ namespace manostat
             );
         }
 
-        const auto p_xyz = diagonal(_pressureTensor);
+        const auto p_xyz = diagonal(_getPressureTensor());
 
         size_t numFree = 0;
         double p_avg   = 0.0;
 
         for (size_t axis = 0; axis < 3; ++axis)
         {
-            if (!isAxisFixed(_fixedAxis, axis))
+            if (!_hasFixedAxis(axis))
             {
                 p_avg += p_xyz[axis];
                 ++numFree;
@@ -228,7 +227,7 @@ namespace manostat
 
         p_avg /= static_cast<double>(numFree);
 
-        const auto deltaP    = _targetPressure - p_avg;
+        const auto deltaP    = _getTargetPressure() - p_avg;
         const auto dimension = static_cast<double>(numFree);
 
         const auto mu_scaled =
@@ -237,11 +236,32 @@ namespace manostat
         linalg::Vec3D mu = {1.0, 1.0, 1.0};
         for (size_t i = 0; i < 3; ++i)
         {
-            if (!isAxisFixed(_fixedAxis, i))
+            if (!_hasFixedAxis(i))
                 mu[i] = mu_scaled;
         }
 
         return diagonalMatrix(mu);
+    }
+
+    /**
+     * @brief Check if a specific axis is fixed
+     *
+     * @param index Axis index (0 for x, 1 for y, 2 for z)
+     * @return true if the axis is fixed, false otherwise
+     */
+    bool StochasticRescalingManostat::_hasFixedAxis(size_t index) const
+    {
+        return isAxisFixed(_fixedAxis, index);
+    }
+
+    /**
+     * @brief Get the random number generator
+     *
+     * @return rng::RandomNumberGenerator&
+     */
+    rng::RandomNumberGenerator &StochasticRescalingManostat::_getRNG()
+    {
+        return _randomNumberGenerator;
     }
 
     /**
@@ -255,7 +275,9 @@ namespace manostat
         double volume
     )
     {
-        const auto compress          = _compressibility * _dt / _tau;
+        const auto compress = getCompressibility() *
+                              settings::TimingsSettings::getTimeStep() /
+                              getTau();
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -269,12 +291,12 @@ namespace manostat
         // Independent area and height noise (Bernetti and Bussi, Eq. 9).
         const auto stochasticFactor_xy =
             ::sqrt(4.0 * stochasticFactor) *
-            _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+            _getRNG().getNormalDistribution(0.0, 1.0);
         const auto stochasticFactor_z =
             ::sqrt(2.0 * stochasticFactor) *
-            _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+            _getRNG().getNormalDistribution(0.0, 1.0);
 
-        const auto p_xyz           = diagonal(_pressureTensor);
+        const auto p_xyz           = diagonal(_getPressureTensor());
         const auto isotropicAxes   = get2DIsotropicAxes(_isotropy);
         const auto anisotropicAxis = get2DAnisotropicAxis(_isotropy);
         const auto p_x             = p_xyz[isotropicAxes[0]];
@@ -282,13 +304,13 @@ namespace manostat
         const auto p_xy            = (p_x + p_y) / 2.0;
         const auto p_z             = p_xyz[anisotropicAxis];
 
-        const auto deltaPxy = _targetPressure - p_xy;
-        const auto deltaPz  = _targetPressure - p_z;
+        const auto deltaPxy = _getTargetPressure() - p_xy;
+        const auto deltaPz  = _getTargetPressure() - p_z;
 
         const auto mu_xy =
             ::exp((-compress * deltaPxy / 3.0) + (stochasticFactor_xy / 2.0));
         const auto mu_z =
-            isAxisFixed(_fixedAxis, anisotropicAxis)
+            _hasFixedAxis(anisotropicAxis)
                 ? 1.0
                 : ::exp((-compress * deltaPz / 3.0) + stochasticFactor_z);
 
@@ -315,7 +337,9 @@ namespace manostat
         double volume
     )
     {
-        const auto compress          = _compressibility * _dt / _tau;
+        const auto compress = getCompressibility() *
+                              settings::TimingsSettings::getTimeStep() /
+                              getTau();
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -327,17 +351,18 @@ namespace manostat
         stochasticFactor *= PRESSURE_FACTOR;
         stochasticFactor  = ::sqrt(stochasticFactor);
 
-        const auto deltaP = _targetPressure - diagonal(_pressureTensor);
+        const auto deltaP =
+            _getTargetPressure() - diagonal(_getPressureTensor());
 
         auto mu = linalg::Vec3D{1.0, 1.0, 1.0};
         for (size_t i = 0; i < 3; ++i)
         {
-            if (!isAxisFixed(_fixedAxis, i))
+            if (!_hasFixedAxis(i))
             {
                 mu[i] = ::exp(
                     (-compress * deltaP[i] / linalg::tensor3D::size) +
                     (stochasticFactor *
-                     _randomNumberGenerator.getNormalDistribution(0.0, 1.0))
+                     _getRNG().getNormalDistribution(0.0, 1.0))
                 );
             }
         }
@@ -359,7 +384,9 @@ namespace manostat
         double volume
     )
     {
-        const auto compress          = _compressibility * _dt / _tau;
+        const auto compress = getCompressibility() *
+                              settings::TimingsSettings::getTimeStep() /
+                              getTau();
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -372,19 +399,19 @@ namespace manostat
         stochasticFactor  = ::sqrt(stochasticFactor);
 
         const auto deltaP =
-            linalg::diagonalMatrix(_targetPressure) - _pressureTensor;
+            linalg::diagonalMatrix(_getTargetPressure()) - _getPressureTensor();
 
         auto strain = -compress * deltaP / linalg::tensor3D::size;
         for (size_t i = 0; i < 3; ++i)
         {
             for (size_t j = 0; j < 3; ++j)
             {
-                if (isAxisFixed(_fixedAxis, i) || isAxisFixed(_fixedAxis, j))
+                if (_hasFixedAxis(i) || _hasFixedAxis(j))
                     strain[i][j] = 0.0;
                 else
                     strain[i][j] +=
                         stochasticFactor *
-                        _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+                        _getRNG().getNormalDistribution(0.0, 1.0);
             }
         }
 

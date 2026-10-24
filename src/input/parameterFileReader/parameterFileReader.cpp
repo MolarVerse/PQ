@@ -130,7 +130,7 @@ namespace input::parameterFile
             );
 
         std::string line;
-        int         lineNumber = 1;
+        size_t      lineNumber = 1;
 
         while (getline(_fp, line))
         {
@@ -145,10 +145,8 @@ namespace input::parameterFile
 
             auto *section = determineSection(lineElements);
             ++lineNumber;
-            section->setLineNumber(lineNumber);
             section->setFp(&_fp);
-            section->process(lineElements, _engine);
-            lineNumber = section->getLineNumber();
+            section->process(lineElements, _engine, lineNumber);
 
             deleteSection(section);
         }

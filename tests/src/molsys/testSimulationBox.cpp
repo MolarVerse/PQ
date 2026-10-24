@@ -194,7 +194,9 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(1.0);
-    _simulationBox->setBoxDimensions({1.99, 10.0, 10.0});
+
+    molsys::OrthorhombicBox orthoBox1{{1.99, 10.0, 10.0}};
+    _simulationBox->setBox(orthoBox1);
 
     EXPECT_THROW_MSG(
         _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
@@ -210,7 +212,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
         "dimension"
     );
 
-    _simulationBox->setBoxDimensions({10.0, 1.99, 10.0});
+    molsys::OrthorhombicBox orthoBox2{{10.0, 1.99, 10.0}};
+    _simulationBox->setBox(orthoBox2);
 
     EXPECT_THROW_MSG(
         _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
@@ -219,7 +222,8 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
         "dimension"
     );
 
-    _simulationBox->setBoxDimensions({10.0, 10.0, 1.99});
+    molsys::OrthorhombicBox orthoBox3{{10.0, 10.0, 1.99}};
+    _simulationBox->setBox(orthoBox3);
 
     EXPECT_THROW_MSG(
         _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),

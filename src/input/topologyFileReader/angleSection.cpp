@@ -46,6 +46,7 @@ namespace input::topology
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if number of elements in line is
      * not 4 or 5
@@ -55,7 +56,8 @@ namespace input::topology
      */
     void AngleSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -67,7 +69,7 @@ namespace input::topology
                     "at "
                     "line "
                     "{} - number of elements has to be 4 or 5!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -90,7 +92,7 @@ namespace input::topology
                         "Fifth entry in topology file in angle section has to "
                         "be a "
                         "\'*\' or empty at line {}!",
-                        _lineNumber
+                        lineNumber
                     )
                 );
             }
@@ -104,7 +106,7 @@ namespace input::topology
                     "Topology file angle section at line {} - atoms cannot be "
                     "the "
                     "same!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -139,10 +141,14 @@ namespace input::topology
      * @brief checks if angle sections ends normally
      *
      * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if endedNormal is false
      */
-    void AngleSection::endedNormally(const bool endedNormal) const
+    void AngleSection::endedNormally(
+        const bool endedNormal,
+        size_t     lineNumber
+    ) const
     {
         if (!endedNormal)
         {
@@ -151,7 +157,7 @@ namespace input::topology
                     "Topology file angle section at line {} - no end of "
                     "section "
                     "found!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

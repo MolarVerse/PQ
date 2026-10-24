@@ -53,7 +53,7 @@ namespace pot
      */
     class NonCoulombPotential
     {
-       protected:
+       private:
         MixingRule _mixingRule = MixingRule::NONE;
 
        public:

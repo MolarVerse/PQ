@@ -51,7 +51,7 @@ namespace opt
      */
     class Optimizer
     {
-       protected:
+       private:
         size_t _nEpochs = 0;
 
         opt::Convergence _convergence;
@@ -62,7 +62,6 @@ namespace opt
         std::deque<std::vector<linalg::Vec3D>> _forceHistory;
         std::deque<std::vector<linalg::Vec3D>> _positionHistory;
 
-       private:
         struct Impl;
         std::unique_ptr<Impl> _impl;
 

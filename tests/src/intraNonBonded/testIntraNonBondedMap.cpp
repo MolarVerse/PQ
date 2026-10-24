@@ -95,7 +95,9 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     _setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
     auto simulationBox = molsys::SimulationBox();
-    simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    simulationBox.setBox(orthoBox);
 
     auto physicalData = physicalData::PhysicalData();
 

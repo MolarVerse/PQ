@@ -39,13 +39,15 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      */
     void ParameterFileSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                   &lineNumber
     )
     {
-        processHeader(lineElements, engine);
+        processHeader(lineElements, engine, lineNumber);
 
         std::string line;
         auto        endedNormal = false;
@@ -57,20 +59,20 @@ namespace input::parameterFile
 
             if (lineElements.empty())
             {
-                ++_lineNumber;
+                ++lineNumber;
                 continue;
             }
 
             if (utilities::toLowerCopy(lineElements[0]) == "end")
             {
-                ++_lineNumber;
+                ++lineNumber;
                 endedNormal = true;
                 break;
             }
 
-            processSection(lineElements, engine);
+            processSection(lineElements, engine, lineNumber);
 
-            ++_lineNumber;
+            ++lineNumber;
         }
 
         endedNormally(endedNormal);
@@ -93,27 +95,10 @@ namespace input::parameterFile
     }
 
     /**
-     * @brief set line number of section
-     *
-     * @param lineNumber
-     */
-    void ParameterFileSection::setLineNumber(int lineNumber)
-    {
-        _lineNumber = lineNumber;
-    }
-
-    /**
      * @brief set file pointer
      *
      * @param file
      */
     void ParameterFileSection::setFp(std::ifstream *file) { _fp = file; }
-
-    /**
-     * @brief get line number of section
-     *
-     * @return int
-     */
-    int ParameterFileSection::getLineNumber() const { return _lineNumber; }
 
 }   // namespace input::parameterFile

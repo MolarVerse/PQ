@@ -77,7 +77,9 @@ namespace
     )
     {
         molsys::SimulationBox simBox;
-        simBox.setBoxDimensions({kBoxEdge, kBoxEdge, kBoxEdge});
+
+        molsys::OrthorhombicBox orthoBox{{kBoxEdge, kBoxEdge, kBoxEdge}};
+        simBox.setBox(orthoBox);
 
         auto buildMoleculeType = [](MolType molType, double charge)
         {

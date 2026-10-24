@@ -64,14 +64,16 @@ namespace
 
         void evaluate() override
         {
+            auto &simulationBox = _getSimulationBox();
+
             for (size_t atomIndex = 0;
-                 atomIndex < _simulationBox->getNumberOfAtoms();
+                 atomIndex < simulationBox.getNumberOfAtoms();
                  ++atomIndex)
             {
-                const auto position =
-                    _simulationBox->getAtom(atomIndex).getPosition();
-                const auto offset = 3 * atomIndex;
-                _simulationBox->getAtom(atomIndex).setForce(
+                auto      &atom     = simulationBox.getAtom(atomIndex);
+                const auto position = atom.getPosition();
+                const auto offset   = 3 * atomIndex;
+                atom.setForce(
                     {-_forceConstants[offset] * position[0],
                      -_forceConstants[offset + 1] * position[1],
                      -_forceConstants[offset + 2] * position[2]}

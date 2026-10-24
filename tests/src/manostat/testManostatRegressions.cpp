@@ -35,6 +35,7 @@
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "resetKinetics.hpp"
@@ -64,8 +65,7 @@ namespace
             settings::TimingsSettings::setTimeStep(1.0);
             settings::ThermostatSettings::setActualTargetTemperature(0.0);
             settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
-            _box.setBoxDimensions({10.0, 10.0, 10.0});
-            _box.setVolume(_box.calculateVolume());
+            _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}));
             _data.setVirial(linalg::tensor3D{0.0});
             _data.setKineticEnergyMolecularVector(linalg::tensor3D{0.0});
             _data.setKineticEnergyAtomicVector(linalg::tensor3D{0.0});
@@ -99,11 +99,7 @@ namespace
 
 TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
 {
-    auto cell = std::make_shared<molsys::TriclinicBox>();
-    cell->setBoxAngles({90.0, 90.0, 60.0});
-    cell->setBoxDimensions({10.0, 10.0, 10.0});
-    cell->setVolume(cell->calculateVolume());
-    _box.setBox(*cell);
+    _box.setBox(molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}));
     _addMolecule({0.0}, 0.0);
     _addMolecule({1.0}, 0.0);
     _data.setVirial(linalg::diagonalMatrix(_box.getVolume() / PRESSURE_FACTOR));
@@ -115,7 +111,7 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
     for (auto* coupling :
          std::vector<manostat::Manostat*>{&berendsen, &stochastic})
     {
-        const auto oldCell = _box.getBox().getBoxMatrix();
+        const auto oldCell = _box.getBox().getBoxMatrix(molsys::Periodicity::XYZ);
         coupling->applyManostat(_box, _data);
         EXPECT_NEAR(_data.getPressure(), 1.0, 1e-12);
         for (size_t i = 0; i < 3; ++i)
@@ -123,7 +119,7 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
             for (size_t j = 0; j < 3; ++j)
             {
                 EXPECT_NEAR(
-                    _box.getBox().getBoxMatrix()[i][j],
+                    _box.getBox().getBoxMatrix(molsys::Periodicity::XYZ)[i][j],
                     oldCell[i][j],
                     1e-12
                 );
@@ -134,11 +130,7 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
 
 TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
 {
-    auto cell = std::make_shared<molsys::TriclinicBox>();
-    cell->setBoxAngles({90.0, 90.0, 60.0});
-    cell->setBoxDimensions({10.0, 10.0, 10.0});
-    cell->setVolume(cell->calculateVolume());
-    _box.setBox(*cell);
+    _box.setBox(molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}));
     settings::ManostatSettings::setFixedAxis(FixedAxis::YZ);
     _data.setVirial(
         linalg::tensor3D{{2.0, -1.0, 0.5}, {4.0, -2.0, 1.0}, {6.0, -3.0, 1.5}}
@@ -244,8 +236,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
     {
         SCOPED_TRACE(i);
         _box = molsys::SimulationBox{};
-        _box.setBoxDimensions({10.0, 10.0, 10.0});
-        _box.setVolume(_box.calculateVolume());
+        _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}));
         _addMolecule({4.95, -4.85}, 1.0);
         const auto oldCenter  = _box.getMolecule(0).getCenterOfMass();
         const auto oldDensity = _box.getDensity();

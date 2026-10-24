@@ -74,7 +74,8 @@ class TestIntegrator : public ::testing::Test
         _molecule1->addAtom(atom2);
 
         _box = std::make_unique<molsys::SimulationBox>();
-        _box->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _box->setBox(orthoBox);
 
         _box->addMolecule(*_molecule1);
         _box->addAtom(atom1);

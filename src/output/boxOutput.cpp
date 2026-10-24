@@ -38,22 +38,22 @@ namespace out
      */
     void BoxFileOutput::write(size_t step, const molsys::Box &box)
     {
-        _fp << std::format("{:<5}\t", step);
+        _getFilePointer() << std::format("{:<5}\t", step);
 
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-            box.getBoxDimensions()[0],
-            box.getBoxDimensions()[1],
-            box.getBoxDimensions()[2]
+            box.get_boxDimensions()[0],
+            box.get_boxDimensions()[1],
+            box.get_boxDimensions()[2]
         );
 
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "{:15.8f}\t{:15.8f}\t{:15.8f}\n",
             box.getBoxAngles()[0],
             box.getBoxAngles()[1],
             box.getBoxAngles()[2]
         );
 
-        _fp << std::flush;
+        _getFilePointer() << std::flush;
     }
 }   // namespace out

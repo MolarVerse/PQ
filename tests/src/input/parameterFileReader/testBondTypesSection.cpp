@@ -39,7 +39,7 @@ TEST_F(TestParameterFileSection, processSectionBonds)
 {
     std::vector<std::string>          lineElements = {"0", "1.22", "234.3"};
     input::parameterFile::BondSection bondSection;
-    bondSection.processSection(lineElements, *_engine);
+    bondSection.processSection(lineElements, *_engine, 0);
     const auto &bondTypes = _engine->getForceField()->getBondTypes();
     EXPECT_EQ(bondTypes.size(), 1);
     EXPECT_EQ(bondTypes[0].getId(), BondId{0});
@@ -48,7 +48,7 @@ TEST_F(TestParameterFileSection, processSectionBonds)
 
     lineElements = {"1", "2", "1.0", "0"};
     EXPECT_THROW_MSG(
-        bondSection.processSection(lineElements, *_engine),
+        bondSection.processSection(lineElements, *_engine, 0),
         exc::ParameterFileException,
         "Wrong number of arguments in parameter file bond section at line 0 - "
         "number of elements has to be 3!"
@@ -56,7 +56,7 @@ TEST_F(TestParameterFileSection, processSectionBonds)
 
     lineElements = {"1", "-2", "1.0"};
     EXPECT_THROW_MSG(
-        bondSection.processSection(lineElements, *_engine),
+        bondSection.processSection(lineElements, *_engine, 0),
         exc::ParameterFileException,
         "Parameter file bond section at line 0 - equilibrium distance has to "
         "be positive!"

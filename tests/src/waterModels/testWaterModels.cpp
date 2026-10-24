@@ -150,7 +150,9 @@ namespace
     molsys::SimulationBox makeIntraWaterBox(const WaterGeometry &geometry)
     {
         molsys::SimulationBox simBox;
-        simBox.setBoxDimensions({20.0, 20.0, 20.0});
+
+        molsys::OrthorhombicBox orthoBox{{20.0, 20.0, 20.0}};
+        simBox.setBox(orthoBox);
         simBox.setWaterType(kWaterType);
         addWater(
             simBox,
@@ -358,8 +360,9 @@ namespace
             .angle = 1.82
         };
 
-        molsys::SimulationBox simBox;
-        simBox.setBoxDimensions({15.0, 15.0, 15.0});
+        molsys::SimulationBox   simBox;
+        molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+        simBox.setBox(orthoBox);
         simBox.setWaterType(kWaterType);
 
         addWater(
@@ -633,8 +636,9 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
-    molsys::SimulationBox simBox;
-    simBox.setBoxDimensions({15.0, 15.0, 15.0});
+    molsys::SimulationBox   simBox;
+    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    simBox.setBox(orthoBox);
 
     molsys::Atom atom1;
     atom1.setPosition({0.0, 0.0, 0.0});
@@ -656,7 +660,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     );
     ExposedInterWaterStrategy strategy;
 
-    EXPECT_DOUBLE_EQ(nonCoulomb.getRadialCutOff(), kCutOff);
+    EXPECT_DOUBLE_EQ(nonCoulomb.get_radialCutoff(), kCutOff);
 
     double coulombEnergy    = 0.0;
     double nonCoulombEnergy = 0.0;
@@ -777,12 +781,12 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
     interWater.calculate(simBox, physicalData, coulomb, cellList);
     nullPairs.calculate(simBox, physicalData, coulomb, cellList);
 
-    EXPECT_DOUBLE_EQ(oxygenOxygenView->getRadialCutOff(), kCutOff);
-    EXPECT_DOUBLE_EQ(oxygenHydrogenView->getRadialCutOff(), kCutOff);
-    EXPECT_DOUBLE_EQ(hydrogenHydrogenView->getRadialCutOff(), kCutOff);
-    EXPECT_TRUE(std::isfinite(oxygenOxygenView->getEnergyCutOff()));
-    EXPECT_TRUE(std::isfinite(oxygenHydrogenView->getEnergyCutOff()));
-    EXPECT_TRUE(std::isfinite(hydrogenHydrogenView->getEnergyCutOff()));
+    EXPECT_DOUBLE_EQ(oxygenOxygenView->get_radialCutoff(), kCutOff);
+    EXPECT_DOUBLE_EQ(oxygenHydrogenView->get_radialCutoff(), kCutOff);
+    EXPECT_DOUBLE_EQ(hydrogenHydrogenView->get_radialCutoff(), kCutOff);
+    EXPECT_TRUE(std::isfinite(oxygenOxygenView->get_energyCutoff()));
+    EXPECT_TRUE(std::isfinite(oxygenHydrogenView->get_energyCutoff()));
+    EXPECT_TRUE(std::isfinite(hydrogenHydrogenView->get_energyCutoff()));
     EXPECT_DOUBLE_EQ(physicalData.getCoulombEnergy(), 0.0);
     EXPECT_DOUBLE_EQ(physicalData.getNonCoulombEnergy(), 0.0);
 }
@@ -861,8 +865,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     potential.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
     potential.setNonCoulombPotential(makeNonCoulombPotential());
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({15.0, 15.0, 15.0});
+    molsys::OrthorhombicBox box({15.0, 15.0, 15.0});
 
     molsys::Molecule mol1;
     mol1.setMoltype(MolType{1});
@@ -981,7 +984,8 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
 {
     constexpr WaterGeometry geometry{.oh1 = 0.96, .oh2 = 0.96, .angle = 1.82};
     molsys::SimulationBox   simBox;
-    simBox.setBoxDimensions({15.0, 15.0, 15.0});
+    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    simBox.setBox(orthoBox);
     simBox.setWaterType(kWaterType);
     addWater(simBox, {-2.0, 0.0, 0.0}, geometry, molsys::HybridZone::OUTER);
     addWater(

@@ -30,6 +30,6 @@ namespace engine
      */
     void QMMDEngine::calculateForces()
     {
-        _qmRunner->run(*_simulationBox, *_physicalData);
+        getQMRunner()->run(getSimulationBox(), getPhysicalData());
     }
 }   // namespace engine

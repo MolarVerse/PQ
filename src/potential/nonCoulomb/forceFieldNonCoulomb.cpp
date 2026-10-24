@@ -97,9 +97,9 @@ namespace pot
     {
         auto setEnergyAndForceCutOff = [](auto &nonCoulombPair)
         {
-            const auto radialCutOff = nonCoulombPair->getRadialCutOff();
+            const auto radialCutoff = nonCoulombPair->get_radialCutoff();
             const auto &[energy, force] =
-                nonCoulombPair->calculate(radialCutOff);
+                nonCoulombPair->calculate(radialCutoff);
 
             nonCoulombPair->setEnergyCutOff(energy);
             nonCoulombPair->setForceCutOff(force);
@@ -236,7 +236,7 @@ namespace pot
 
         if (nonCoulPair1 == std::nullopt && nonCoulPair2 == std::nullopt)
         {
-            if (_mixingRule == MixingRule::NONE)
+            if (getMixingRule() == MixingRule::NONE)
             {
                 throw exc::ParameterFileException(
                     "Not all combinations of global van der Waals types are "

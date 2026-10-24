@@ -139,10 +139,11 @@ namespace manostat
         const auto validateCandidate = [&](auto candidate)
         {
             candidate.scaleBox(mu);
-            const auto volume     = candidate.calculateVolume();
-            const auto dimensions = candidate.getBoxDimensions();
+            const auto volume     = candidate.getVolume();
+            const auto dimensions = candidate.get_boxDimensions();
             const auto angles     = candidate.getBoxAngles();
-            const auto matrix     = candidate.getBoxMatrix();
+            const auto matrix =
+                candidate.getBoxMatrix(molsys::Periodicity::XYZ);
             if (!std::isfinite(volume) || volume <= 0.0 ||
                 !finiteMatrix(matrix) || !finiteMatrix(inverse(matrix)))
             {
@@ -234,5 +235,46 @@ namespace manostat
     {
         return ManostatType::NONE;
     }
+
+    /**
+     * @brief get the pressure tensor
+     *
+     * @return const linalg::tensor3D&
+     */
+    const linalg::tensor3D& Manostat::_getPressureTensor() const
+    {
+        return _pressureTensor;
+    }
+
+    /**
+     * @brief get the pressure
+     *
+     * @return double
+     */
+    double Manostat::_getPressure() const { return _pressure; }
+
+    /**
+     * @brief Get the target pressure
+     *
+     * @return double
+     */
+    double Manostat::_getTargetPressure() const { return _targetPressure; }
+
+    /**
+     * @brief set the pressure tensor
+     *
+     * @param pTensor The new pressure tensor
+     */
+    void Manostat::_setPressureTensor(const linalg::tensor3D& pTensor)
+    {
+        _pressureTensor = pTensor;
+    }
+
+    /**
+     * @brief set the pressure
+     *
+     * @param pressure The new pressure
+     */
+    void Manostat::_setPressure(double pressure) { _pressure = pressure; }
 
 }   // namespace manostat

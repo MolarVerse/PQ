@@ -79,7 +79,9 @@ namespace molsys
         double _totalCharge = 0.0;
         double _density     = 0.0;
 
-        std::shared_ptr<Box> _box = std::make_shared<OrthorhombicBox>();
+        // TODO: add this to the constructor!!!
+        std::shared_ptr<Box> _box =
+            std::make_shared<OrthorhombicBox>(OrthorhombicBox::makeVacuumBox());
 
         linalg::Vec3D                      _centerOfMass = {0.0, 0.0, 0.0};
         std::vector<std::shared_ptr<Atom>> _atoms;
@@ -253,18 +255,11 @@ namespace molsys
         void applyPBC(linalg::Vec3D& position) const;
         void scaleBox(const linalg::tensor3D& scalingTensor);
 
-        [[nodiscard]] double calculateVolume() const;
-        [[nodiscard]] double getMinimalBoxDimension() const;
         [[nodiscard]] double getVolume() const;
+        [[nodiscard]] double getMinimalBoxDimension() const;
 
-        [[nodiscard]] bool getBoxSizeHasChanged() const;
-
-        [[nodiscard]] linalg::Vec3D getBoxDimensions() const;
-        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
-
-        void setVolume(double volume) const;
-        void setBoxDimensions(const linalg::Vec3D& boxDimensions) const;
-        void setBoxSizeHasChanged(bool boxSizeHasChanged) const;
+        [[nodiscard]] const linalg::Vec3D& getBoxDimensions() const;
+        [[nodiscard]] linalg::Vec3D        getBoxAngles() const;
     };
 
 }   // namespace molsys

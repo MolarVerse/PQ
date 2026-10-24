@@ -110,26 +110,30 @@ namespace engine
      */
     void QMMMMDEngine::calculateForces()
     {
-        _configurator.calculateInnerRegionCenter(*_simulationBox);
-        _configurator.shiftAtomsToInnerRegionCenter(*_simulationBox);
-        configurator::HybridConfigurator::assignHybridZones(*_simulationBox);
+        _getHybridConfigurator().calculateInnerRegionCenter(getSimulationBox());
+        _getHybridConfigurator().shiftAtomsToInnerRegionCenter(
+            getSimulationBox()
+        );
+        configurator::HybridConfigurator::assignHybridZones(getSimulationBox());
         _moltypeCheck();
         configurator::HybridConfigurator::calculateSmoothingFactors(
-            *_simulationBox
+            getSimulationBox()
         );
-        getCellList().updateCellList(*_simulationBox);
-        _physicalData->setNumberOfSmoothingMolecules(
-            static_cast<double>(
-                std::ranges::distance(_simulationBox->getMoleculesInsideZone(
+        getCellList().updateCellList(getSimulationBox());
+        getPhysicalDataPtr()->setNumberOfSmoothingMolecules(
+            static_cast<double>(std::ranges::distance(
+                getSimulationBox().getMoleculesInsideZone(
                     molsys::HybridZone::SMOOTHING
-                ))
-            )
+                )
+            ))
         );
 
         _applySmoothing();
 
         _combineInnerOuterForces();
-        _configurator.shiftAtomsBackToInitialPositions(*_simulationBox);
+        _getHybridConfigurator().shiftAtomsBackToInitialPositions(
+            getSimulationBox()
+        );
     }
 
     /**
@@ -177,11 +181,12 @@ namespace engine
 
         linalg::tensor3D virial     = {0.0};
         auto             numQMAtoms = 0.0;
-        auto            &atoms      = _simulationBox->getAtoms();
-        const auto       nSmMol =
-            static_cast<size_t>(distance(_simulationBox->getMoleculesInsideZone(
+        auto            &atoms      = getSimulationBox().getAtoms();
+        const auto       nSmMol     = static_cast<size_t>(distance(
+            getSimulationBox().getMoleculesInsideZone(
                 molsys::HybridZone::SMOOTHING
-            )));
+            )
+        ));
 
         // Loop over all combinations of smoothing molecules
         for (size_t i = 0; i < (1U << nSmMol); ++i)
@@ -196,91 +201,99 @@ namespace engine
             // STEP 2: Setup and run QM calculation, accumulate QM forces
             // and QM virial contribution and the number of QM atoms for
             // this combination
-            configurator::HybridConfigurator::activateMolecules(*_simulationBox
+            configurator::HybridConfigurator::activateMolecules(
+                getSimulationBox()
             );
             configurator::HybridConfigurator::deactivateOuterMolecules(
-                *_simulationBox
+                getSimulationBox()
             );
             configurator::HybridConfigurator::deactivateSmoothingMolecules(
                 inactiveSmMol,
-                *_simulationBox
+                getSimulationBox()
             );
 
             numQMAtoms +=
-                static_cast<double>(_simulationBox->getNumberOfQMAtoms()) *
+                static_cast<double>(getSimulationBox().getNumberOfQMAtoms()) *
                 globalSmF;
 
             // to not carry over qm_charges of atoms which are not qm
             // anymore
-            for (auto &atom : _simulationBox->getAtoms())
+            for (auto &atom : getSimulationBox().getAtoms())
                 atom->getQMCharge().reset();
 
-            _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
+            getQMRunner()
+                ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
 
-            virial += virial::calculateQMVirial(*_simulationBox) * globalSmF;
-            virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
-                      globalSmF;
+            virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
+            virial +=
+                virial::intraMolecularVirialCorrection(getSimulationBox()) *
+                globalSmF;
             _addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces
             // and MM virial contribution
             configurator::HybridConfigurator::toggleMoleculeActivation(
-                *_simulationBox
+                getSimulationBox()
             );
 
             if (settings::GeneralSettings::isCellListActivated())
             {
                 getCellList().assignMoleculeHybridZoneIndices();
-                getCellList().assignWaterMoleculeIndices(*_simulationBox);
+                getCellList().assignWaterMoleculeIndices(getSimulationBox());
             }
 
-            _potential->calculateQMMMForces(
-                *_simulationBox,
-                *_physicalData,
+            getPotential()->calculateQMMMForces(
+                getSimulationBox(),
+                getPhysicalData(),
                 getCellList()
             );
 
-            _interWater->calculateQMMMForces(
-                *_simulationBox,
-                *_physicalData,
-                _potential->getCoulombPotSharedPtr(),
+            _getInterWater().calculateQMMMForces(
+                getSimulationBox(),
+                getPhysicalData(),
+                getPotential()->getCoulombPotSharedPtr(),
                 getCellList()
             );
 
-            _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+            getIntraNonBonded()->calculate(
+                getSimulationBox(),
+                getPhysicalData()
+            );
 
-            virial += virial::calculateVirial(*_simulationBox) * globalSmF;
-            virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
-                      globalSmF;
+            virial += virial::calculateVirial(getSimulationBox()) * globalSmF;
+            virial +=
+                virial::intraMolecularVirialCorrection(getSimulationBox()) *
+                globalSmF;
             _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
-            _physicalData->setVirial({0.0});
+            getPhysicalDataPtr()->setVirial({0.0});
 
-            _forceField->calculateBondedInteractions(
-                *_simulationBox,
-                *_physicalData
+            getForceField()->calculateBondedInteractions(
+                getSimulationBox(),
+                getPhysicalData()
             );
 
-            _intraWater->calculate(*_simulationBox, *_physicalData);
+            _getIntraWater().calculate(getSimulationBox(), getPhysicalData());
 
-            virial += _physicalData->getVirial() * globalSmF;
-            virial += virial::intraMolecularVirialCorrection(*_simulationBox) *
-                      globalSmF;
+            virial += getPhysicalDataPtr()->getVirial() * globalSmF;
+            virial +=
+                virial::intraMolecularVirialCorrection(getSimulationBox()) *
+                globalSmF;
             _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // STEP 4: Scale and accumulate hybrid energies and delete temp
             // files --> following configs cannot continue if the QM calc
             // fails
             _scaleAndAccumulateEnergies(globalSmF);
-            _physicalData->resetEnergies();
+            getPhysicalDataPtr()->resetEnergies();
             deleteTmpFiles();
         }
 
         // STEP 5: Set energies, virial and numQMAtoms to accumulated values
         _moveEnergiesToPhysicalData();
-        _physicalData->setVirial(virial);
-        _physicalData->setNumberOfQMAtoms(numQMAtoms);
+        getPhysicalDataPtr()->setVirial(virial);
+        getPhysicalDataPtr()->setNumberOfQMAtoms(numQMAtoms);
     }
 
     /**
@@ -302,7 +315,7 @@ namespace engine
     {
         using enum molsys::Periodicity;
 
-        auto            &atoms  = _simulationBox->getAtoms();
+        auto            &atoms  = getSimulationBox().getAtoms();
         linalg::tensor3D virial = {0.0};
 
         // Set number of QM atoms in physical data for output purposes
@@ -310,107 +323,107 @@ namespace engine
 
         // STEP 1: Setup and run QM calculation, scale forces of smoothing
         // molecules with smF
-        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateMolecules(getSimulationBox());
         configurator::HybridConfigurator::deactivateOuterMolecules(
-            *_simulationBox
+            getSimulationBox()
         );
 
-        _qmRunner->run(*_simulationBox, *_physicalData, NON_PERIODIC);
+        getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
             _scaleSmoothingMoleculeForcesInner();
         else
             _distributeSmoothingMolQMForces();
 
-        virial += virial::calculateQMVirial(*_simulationBox);
-        virial += virial::intraMolecularVirialCorrection(*_simulationBox);
+        virial += virial::calculateQMVirial(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToInnerAndReset(atoms);
 
         // STEP 2: Setup and run inter-nonbonded calculation between
         // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of
         // smoothing molecules with smF
         configurator::HybridConfigurator::toggleMoleculeActivation(
-            *_simulationBox
+            getSimulationBox()
         );
 
         if (settings::GeneralSettings::isCellListActivated())
         {
             getCellList().assignMoleculeHybridZoneIndices();
-            getCellList().assignWaterMoleculeIndices(*_simulationBox);
+            getCellList().assignWaterMoleculeIndices(getSimulationBox());
         }
 
-        _potential->calculateQMMMForces(
-            *_simulationBox,
-            *_physicalData,
+        getPotential()->calculateQMMMForces(
+            getSimulationBox(),
+            getPhysicalData(),
             getCellList()
         );
 
-        _interWater->calculateQMMMForces(
-            *_simulationBox,
-            *_physicalData,
-            _potential->getCoulombPotSharedPtr(),
+        _getInterWater().calculateQMMMForces(
+            getSimulationBox(),
+            getPhysicalData(),
+            getPotential()->getCoulombPotSharedPtr(),
             getCellList()
         );
 
         _scaleSmoothingMoleculeForcesInner();
-        virial += virial::calculateVirial(*_simulationBox);
-        virial += virial::intraMolecularVirialCorrection(*_simulationBox);
+        virial += virial::calculateVirial(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING
         // molecules and scale forces of smoothing molecules with (1 - smF)
 
-        _potential->calculateHotspotSmoothingMMForces(
-            *_simulationBox,
-            *_physicalData,
+        getPotential()->calculateHotspotSmoothingMMForces(
+            getSimulationBox(),
+            getPhysicalData(),
             getCellList()
         );
 
-        _interWater->calculateHotspotSmoothingMMForces(
-            *_simulationBox,
-            *_physicalData,
-            _potential->getCoulombPotSharedPtr(),
+        _getInterWater().calculateHotspotSmoothingMMForces(
+            getSimulationBox(),
+            getPhysicalData(),
+            getPotential()->getCoulombPotSharedPtr(),
             getCellList()
         );
 
         _scaleSmoothingMoleculeForcesOuter();
-        virial += virial::calculateVirial(*_simulationBox);
-        virial += virial::intraMolecularVirialCorrection(*_simulationBox);
+        virial += virial::calculateVirial(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale
         // forces of smoothing molecules with (1 - smF)
 
         configurator::HybridConfigurator::activateSmoothingMolecules(
-            *_simulationBox
+            getSimulationBox()
         );
 
-        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+        getIntraNonBonded()->calculate(getSimulationBox(), getPhysicalData());
 
         _scaleSmoothingMoleculeForcesOuter();
-        virial += virial::calculateVirial(*_simulationBox);
-        virial += virial::intraMolecularVirialCorrection(*_simulationBox);
+        virial += virial::calculateVirial(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 5: Run intra-bonded calculation and scale forces of
         // smoothing molecules with (1 - smF)
 
         // bonded interactions directly add to physical data virial
-        _physicalData->setVirial({0.0});
+        getPhysicalDataPtr()->setVirial({0.0});
 
-        _forceField->calculateBondedInteractions(
-            *_simulationBox,
-            *_physicalData
+        getForceField()->calculateBondedInteractions(
+            getSimulationBox(),
+            getPhysicalData()
         );
 
-        _intraWater->calculate(*_simulationBox, *_physicalData);
+        _getIntraWater().calculate(getSimulationBox(), getPhysicalData());
 
         _scaleSmoothingMoleculeForcesOuter();
-        virial += _physicalData->getVirial();
-        virial += virial::intraMolecularVirialCorrection(*_simulationBox);
+        virial += getPhysicalDataPtr()->getVirial();
+        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToOuterAndReset(atoms);
 
-        _physicalData->setVirial(virial);
+        getPhysicalDataPtr()->setVirial(virial);
     }
 
     /**
@@ -424,13 +437,13 @@ namespace engine
      */
     void QMMMMDEngine::_setNumberOfQMAtoms()
     {
-        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
+        configurator::HybridConfigurator::activateMolecules(getSimulationBox());
         configurator::HybridConfigurator::deactivateOuterMolecules(
-            *_simulationBox
+            getSimulationBox()
         );
-        const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
-        _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
-        configurator::HybridConfigurator::activateMolecules(*_simulationBox);
+        const auto nQMAtoms = getSimulationBox().getNumberOfQMAtoms();
+        getPhysicalDataPtr()->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
+        configurator::HybridConfigurator::activateMolecules(getSimulationBox());
     }
 
     /**
@@ -446,7 +459,7 @@ namespace engine
     void QMMMMDEngine::_moltypeCheck()
     {
         size_t count = 0;
-        for (const auto &mol : _simulationBox->getMolecules())
+        for (const auto &mol : getSimulationBox().getMolecules())
         {
             if (mol.getMoltype() == MolType{0} &&
                 mol.getHybridZone() != molsys::HybridZone::CORE)
@@ -474,30 +487,32 @@ namespace engine
      */
     void QMMMMDEngine::_scaleAndAccumulateEnergies(double globalSmF)
     {
-        _qmmmPhysicalData.addQMEnergy(_physicalData->getQMEnergy() * globalSmF);
+        _qmmmPhysicalData.addQMEnergy(
+            getPhysicalDataPtr()->getQMEnergy() * globalSmF
+        );
         _qmmmPhysicalData.addCoulombEnergy(
-            _physicalData->getCoulombEnergy() * globalSmF
+            getPhysicalDataPtr()->getCoulombEnergy() * globalSmF
         );
         _qmmmPhysicalData.addNonCoulombEnergy(
-            _physicalData->getNonCoulombEnergy() * globalSmF
+            getPhysicalDataPtr()->getNonCoulombEnergy() * globalSmF
         );
         _qmmmPhysicalData.addBondEnergy(
-            _physicalData->getBondEnergy() * globalSmF
+            getPhysicalDataPtr()->getBondEnergy() * globalSmF
         );
         _qmmmPhysicalData.addAngleEnergy(
-            _physicalData->getAngleEnergy() * globalSmF
+            getPhysicalDataPtr()->getAngleEnergy() * globalSmF
         );
         _qmmmPhysicalData.addDihedralEnergy(
-            _physicalData->getDihedralEnergy() * globalSmF
+            getPhysicalDataPtr()->getDihedralEnergy() * globalSmF
         );
         _qmmmPhysicalData.addImproperEnergy(
-            _physicalData->getImproperEnergy() * globalSmF
+            getPhysicalDataPtr()->getImproperEnergy() * globalSmF
         );
         _qmmmPhysicalData.addIntraCoulombEnergy(
-            _physicalData->getIntraCoulombEnergy() * globalSmF
+            getPhysicalDataPtr()->getIntraCoulombEnergy() * globalSmF
         );
         _qmmmPhysicalData.addIntraNonCoulombEnergy(
-            _physicalData->getIntraNonCoulombEnergy() * globalSmF
+            getPhysicalDataPtr()->getIntraNonCoulombEnergy() * globalSmF
         );
     }
 
@@ -508,19 +523,26 @@ namespace engine
      */
     void QMMMMDEngine::_moveEnergiesToPhysicalData()
     {
-        _physicalData->setQMEnergy(_qmmmPhysicalData.getQMEnergy());
-        _physicalData->setCoulombEnergy(_qmmmPhysicalData.getCoulombEnergy());
-        _physicalData->setNonCoulombEnergy(
+        getPhysicalDataPtr()->setQMEnergy(_qmmmPhysicalData.getQMEnergy());
+        getPhysicalDataPtr()->setCoulombEnergy(
+            _qmmmPhysicalData.getCoulombEnergy()
+        );
+        getPhysicalDataPtr()->setNonCoulombEnergy(
             _qmmmPhysicalData.getNonCoulombEnergy()
         );
-        _physicalData->setBondEnergy(_qmmmPhysicalData.getBondEnergy());
-        _physicalData->setAngleEnergy(_qmmmPhysicalData.getAngleEnergy());
-        _physicalData->setDihedralEnergy(_qmmmPhysicalData.getDihedralEnergy());
-        _physicalData->setImproperEnergy(_qmmmPhysicalData.getImproperEnergy());
-        _physicalData->setIntraCoulombEnergy(
+        getPhysicalDataPtr()->setBondEnergy(_qmmmPhysicalData.getBondEnergy());
+        getPhysicalDataPtr()->setAngleEnergy(_qmmmPhysicalData.getAngleEnergy()
+        );
+        getPhysicalDataPtr()->setDihedralEnergy(
+            _qmmmPhysicalData.getDihedralEnergy()
+        );
+        getPhysicalDataPtr()->setImproperEnergy(
+            _qmmmPhysicalData.getImproperEnergy()
+        );
+        getPhysicalDataPtr()->setIntraCoulombEnergy(
             _qmmmPhysicalData.getIntraCoulombEnergy()
         );
-        _physicalData->setIntraNonCoulombEnergy(
+        getPhysicalDataPtr()->setIntraNonCoulombEnergy(
             _qmmmPhysicalData.getIntraNonCoulombEnergy()
         );
 
@@ -555,12 +577,14 @@ namespace engine
         std::vector<std::reference_wrapper<molsys::Molecule>>
             recipientMolecules;
 
-        for (auto &mol :
-             _simulationBox->getMoleculesInsideZone(molsys::HybridZone::CORE))
+        for (auto &mol : getSimulationBox().getMoleculesInsideZone(
+                 molsys::HybridZone::CORE
+             ))
             recipientMolecules.emplace_back(mol);
 
-        for (auto &mol :
-             _simulationBox->getMoleculesInsideZone(molsys::HybridZone::LAYER))
+        for (auto &mol : getSimulationBox().getMoleculesInsideZone(
+                 molsys::HybridZone::LAYER
+             ))
             recipientMolecules.emplace_back(mol);
 
         if (recipientMolecules.empty())
@@ -571,7 +595,7 @@ namespace engine
             );
         }
 
-        for (auto &smoothingMol : _simulationBox->getMoleculesInsideZone(
+        for (auto &smoothingMol : getSimulationBox().getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING
              ))
         {

@@ -55,9 +55,9 @@ namespace out
         const physicalData::PhysicalData &physicalData
     )
     {
-        _fp.close();
+        _getFilePointer().close();
 
-        _fp.open(_fileName);
+        _openFile();
 
         _writeHeader();
 
@@ -168,9 +168,9 @@ namespace out
         );
         _writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
 
-        _fp << std::format("{:-^89}", "") << "\n\n";
+        _getFilePointer() << std::format("{:-^89}", "") << "\n\n";
 
-        _fp.flush();
+        _getFilePointer().flush();
     }
 
     /**
@@ -179,11 +179,12 @@ namespace out
      */
     void InfoOutput::_writeHeader()
     {
-        _fp << std::format("{:-^89}", "") << '\n';
+        _getFilePointer() << std::format("{:-^89}", "") << '\n';
 
-        _fp << '|' << std::format("{:^87}", "PQ info file") << '|' << '\n';
+        _getFilePointer() << '|' << std::format("{:^87}", "PQ info file") << '|'
+                          << '\n';
 
-        _fp << std::format("{:-^89}", "") << '\n';
+        _getFilePointer() << std::format("{:-^89}", "") << '\n';
     }
 
     /**
@@ -199,7 +200,8 @@ namespace out
         const std::string_view &unit
     )
     {
-        _fp << std::format("|   {:<15} {:15.5f} {:<8} ", name, value, unit);
+        _getFilePointer(
+        ) << std::format("|   {:<15} {:15.5f} {:<8} ", name, value, unit);
     }
 
     /**
@@ -215,7 +217,7 @@ namespace out
         const std::string_view &unit
     )
     {
-        _fp << std::format(
+        _getFilePointer() << std::format(
             "|   {:<15} {:15d} {:<8} ",
             name,
             static_cast<int>(value),
@@ -236,7 +238,8 @@ namespace out
         const std::string_view &unit
     )
     {
-        _fp << std::format("|   {:<15} {:15.1e} {:<8} ", name, value, unit);
+        _getFilePointer(
+        ) << std::format("|   {:<15} {:15.1e} {:<8} ", name, value, unit);
     }
 
     /**
@@ -252,7 +255,8 @@ namespace out
         const std::string_view &unit
     )
     {
-        _fp << std::format("{:<15} {:15.5f} {:<8}   |\n", name, value, unit);
+        _getFilePointer(
+        ) << std::format("{:<15} {:15.5f} {:<8}   |\n", name, value, unit);
     }
 
     /**
@@ -261,7 +265,7 @@ namespace out
      */
     void InfoOutput::_writeRight()
     {
-        _fp << "                                           |\n";
+        _getFilePointer() << "                                           |\n";
     }
 
 }   // namespace out

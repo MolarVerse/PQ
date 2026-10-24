@@ -42,12 +42,10 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto ortho = molsys::OrthorhombicBox();
-    ortho.setBoxDimensions({20.0, 20.0, 20.0});
+    molsys::OrthorhombicBox ortho({20.0, 20.0, 20.0});
 
-    auto triclinic = molsys::TriclinicBox();
-    triclinic.setBoxDimensions({20.0, 20.0, 20.0});
-    triclinic.setBoxAngles({80.0, 90.0, 100.0});
+    auto triclinic =
+        molsys::TriclinicBox({20.0, 20.0, 20.0}, {80.0, 90.0, 100.0});
 
     CALLGRIND_ZERO_STATS;
 

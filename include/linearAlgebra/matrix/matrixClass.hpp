@@ -36,7 +36,7 @@ namespace linalg
     template <typename T>
     class Matrix
     {
-       protected:
+       private:
         size_t _rows = 0;
         size_t _cols = 0;
 

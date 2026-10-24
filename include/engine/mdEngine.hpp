@@ -27,6 +27,7 @@
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
 #include "engine.hpp"
+#include "hybridConfigurator.hpp"
 #include "integrator.hpp"
 #include "manostat.hpp"
 #include "momentumOutput.hpp"
@@ -48,7 +49,7 @@ namespace engine
      */
     class MDEngine : public Engine
     {
-       protected:
+       private:
         resetKinetics::ResetKinetics     _resetKinetics;
         configurator::HybridConfigurator _configurator{};
 
@@ -110,6 +111,12 @@ namespace engine
         out::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
         [[nodiscard]]
         out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
+
+       protected:
+        [[nodiscard]]
+        configurator::HybridConfigurator &_getHybridConfigurator();
+        [[nodiscard]]
+        configurator::HybridConfigurator const &_getHybridConfigurator() const;
     };
 }   // namespace engine
 

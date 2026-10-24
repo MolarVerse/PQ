@@ -24,13 +24,20 @@
 
 #define _TRICLINIC_BOX_HPP_
 
+#include <mstd/types.hpp>
+
 #include "box.hpp"
+#include "vector3d.hpp"
+
+struct TestTriclinicBox;
 
 namespace molsys
 {
-    std::pair<linalg::Vec3D, linalg::Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
+    std::pair<linalg::Vec3D, Angles3D> calcBoxDimAndAnglesFromBoxMatrix(
         const linalg::tensor3D &
     );
+
+    class TriclinicBox;
 
     /**
      * @class TriclinicBox
@@ -41,12 +48,32 @@ namespace molsys
     class TriclinicBox : public Box
     {
        private:
-        linalg::Vec3D    _boxAngles;
-        linalg::tensor3D _boxMatrix{0.0};
-        linalg::tensor3D _transformationMatrix{0.0};
+        friend struct ::TestTriclinicBox;
+        using Self = TriclinicBox;
+
+        template <typename T, auto... Members>
+        using BoxCache = mstd::MemberCache<T, TriclinicBox, Members...>;
+        template <auto... Members>
+        using TensorCache = BoxCache<linalg::tensor3D, Members...>;
+
+        TensorCache<_anglesPtr()> _trafoMatrix{_calculateTransformationMatrix};
+
+        static constexpr auto        _trafoMatrixPtr = &Self::_trafoMatrix;
+        TensorCache<_trafoMatrixPtr> _invTrafoMatrix{_calculateInverse};
+        TensorCache<_dimsPtr(), _trafoMatrixPtr> _boxMatrix{
+            _calculateBoxMatrix
+        };
+
+        static constexpr auto           _boxMatrixPtr = &Self::_boxMatrix;
+        TensorCache<_boxMatrixPtr>      _inverse{_calculateInverse};
+        BoxCache<double, _boxMatrixPtr> _volume{_calculateVolume};
 
        public:
-        [[nodiscard]] double calculateVolume() override;
+        TriclinicBox(
+            const linalg::Vec3D &boxDimensions,
+            const linalg::Vec3D &boxAngles
+        );
+
         [[nodiscard]]
         linalg::Vec3D calcShiftVector(const linalg::Vec3D &vec) const override;
 
@@ -65,31 +92,48 @@ namespace molsys
         void applyPBC(linalg::Vec3D &position) const override;
         void scaleBox(const linalg::tensor3D &scalingTensor) override;
 
-        void setBoxAngles(const linalg::Vec3D &boxAngles);
-        void setBoxDimensions(const linalg::Vec3D &boxDimensions) override;
-
         [[nodiscard]] double getMinimalBoxDimension() const override;
+        [[nodiscard]] double getVolume() const override;
 
-        [[nodiscard]] double cosAlpha() const;
-        [[nodiscard]] double cosBeta() const;
-        [[nodiscard]] double cosGamma() const;
-        [[nodiscard]] double sinAlpha() const;
-        [[nodiscard]] double sinBeta() const;
-        [[nodiscard]] double sinGamma() const;
-
-        [[nodiscard]] linalg::Vec3D    getBoxAngles() const override;
-        [[nodiscard]] linalg::tensor3D getBoxMatrix() const override;
-        [[nodiscard]] linalg::tensor3D getBoxMatrix(
-            Periodicity periodicity
+        [[nodiscard]]
+        linalg::tensor3D getBoxMatrix(Periodicity periodicity) const override;
+        [[nodiscard]]
+        linalg::Vec3D wrapPositionIntoBox(
+            const linalg::Vec3D &pos
         ) const override;
-        [[nodiscard]] linalg::tensor3D getTransformationMatrix() const;
-        [[nodiscard]] linalg::Vec3D    wrapPositionIntoBox(
-               const linalg::Vec3D &pos
-           ) const override;
 
        private:
-        void _calculateBoxMatrix();
-        void _calculateTransformationMatrix();
+        [[nodiscard]]
+        static linalg::tensor3D _calculateBoxMatrix(
+            const linalg::Vec3D    &boxDimensions,
+            const linalg::tensor3D &transformationMatrix
+        );
+
+        [[nodiscard]]
+        static linalg::tensor3D _calculateTransformationMatrix(
+            const Angles3D &boxAngles
+        );
+
+        [[nodiscard]]
+        static linalg::tensor3D _calculateInverse(
+            const linalg::tensor3D &boxMatrix
+        );
+
+        [[nodiscard]]
+        static double _calculateVolume(const linalg::tensor3D &boxMatrix);
+
+        [[nodiscard]]
+        static double _cosAlpha(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _cosBeta(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _cosGamma(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _sinAlpha(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _sinBeta(const Angles3D &boxAngles);
+        [[nodiscard]]
+        static double _sinGamma(const Angles3D &boxAngles);
     };
 
 }   // namespace molsys

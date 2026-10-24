@@ -43,7 +43,9 @@ TEST_F(TestSetup, setupCellList)
 
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
     settings::GeneralSettings::activateCellList();
-    _engine->getSimulationBox().setBoxDimensions({15.0, 15.0, 15.0});
+
+    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    _engine->getSimulationBox().setBox(orthoBox);
     _engine->getCellList().setNumberOfCells(3);
     cellListSetup.setup();
 

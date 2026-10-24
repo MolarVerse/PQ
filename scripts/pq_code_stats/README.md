@@ -10,11 +10,30 @@ python3 scripts/pq_code_stats/pqstats.py collect                 # history -> CS
 python3 scripts/pq_code_stats/pqstats.py collect --ci            # also GitHub Actions runs (needs gh), 60 days by default
 python3 scripts/pq_code_stats/pqstats.py show --last 20          # the latest changes in the terminal
 python3 scripts/pq_code_stats/pqstats.py report                  # rebuild report.html from the CSV files
+python3 scripts/pq_code_stats/pqstats.py branch                  # what the checked out branch changed against dev
 ```
 
 Output directory: `--out`, else `$PQ_CODE_STATS_DIR`, else `~/.local/share/pq-code-stats`.
 Useful options: `--since 2026-01-01` (only write newer changes; totals still count everything before),
 `--exclude-pr N` (leave huge data imports out of the flows, repeatable), `--ref` (default `origin/dev`).
+
+## The current branch
+
+`pqstats.py branch` shows what the checked out branch changed against `dev` with the same areas, kinds and counting
+rules as `collect`, so the numbers are the ones the PR will get once it is merged. It reads git directly and needs no
+collected data.
+
+```text
+pqstats.py branch                  # committed changes: merge base of origin/dev (else dev) and HEAD
+pqstats.py branch -u               # plus uncommitted work (tracked files, and new untracked files)
+pqstats.py branch --files          # also every changed file
+pqstats.py branch --base main --ref feature/x   # any base, any branch or commit (-u only works for HEAD)
+```
+
+It prints commits ahead and behind the base (behind means `dev` moved on: rebase or merge before opening the PR), a
+table per area and kind (files added/deleted/modified, lines added/deleted/net) and the net lines per scope. Only
+what the branch itself changed is counted (the diff starts at the merge base, like a PR on GitHub), and `external/`
+is left out as everywhere else.
 
 ## The splits
 

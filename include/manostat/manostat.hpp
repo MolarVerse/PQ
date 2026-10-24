@@ -47,7 +47,7 @@ namespace manostat
      */
     class Manostat
     {
-       protected:
+       private:
         linalg::tensor3D _pressureTensor = {0.0};
         double           _pressure;
         double           _targetPressure;   // no default value, must be set
@@ -76,6 +76,18 @@ namespace manostat
             const molsys::SimulationBox &,
             const linalg::tensor3D &
         );
+
+        [[nodiscard]]
+        const linalg::tensor3D &_getPressureTensor() const;
+
+        [[nodiscard]]
+        double _getPressure() const;
+
+        [[nodiscard]]
+        double _getTargetPressure() const;
+
+        void _setPressureTensor(const linalg::tensor3D &pTensor);
+        void _setPressure(double pressure);
     };
 
 }   // namespace manostat

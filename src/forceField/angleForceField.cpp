@@ -23,6 +23,7 @@
 #include "angleForceField.hpp"
 
 #include <cmath>
+#include <mstd/debugging.hpp>
 
 #include "constants.hpp"
 #include "coulombPotential.hpp"
@@ -69,17 +70,24 @@ namespace ff
         pot::NonCoulombPotential    &nonCoulombPot
     )
     {
-        const bool allInactive = !_molecules[0]->isActive() &&
-                                 !_molecules[1]->isActive() &&
-                                 !_molecules[2]->isActive();
+        const auto &molecules = get_molecules();
+        auto       *molecule1 = molecules[0];
+        auto       *molecule2 = molecules[1];
+        auto       *molecule3 = molecules[2];
+
+        const bool allInactive = !molecule1->isActive() &&
+                                 !molecule2->isActive() &&
+                                 !molecule3->isActive();
 
         if (allInactive)
             return;
 
+        const auto &atomIndices = get_atomIndices();
+
         // central position of alpha
-        const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-        const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
-        const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
+        const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
+        const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
+        const auto position3 = molecule3->getAtomPosition(atomIndices[2]);
 
         auto dPosition12 = position1 - position2;
         auto dPosition13 = position1 - position3;
@@ -115,14 +123,14 @@ namespace ff
             auto force = forceMagnitude / distance12Squared;
             forcexyz   = force * cross(dPosition12, normalPosition);
 
-            _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-            _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
+            molecule1->addAtomForce(atomIndices[0], -forcexyz);
+            molecule2->addAtomForce(atomIndices[1], forcexyz);
 
             force    = forceMagnitude / distance13Squared;
             forcexyz = force * cross(normalPosition, dPosition13);
 
-            _molecules[0]->addAtomForce(_atomIndices[0], -forcexyz);
-            _molecules[2]->addAtomForce(_atomIndices[2], forcexyz);
+            molecule1->addAtomForce(atomIndices[0], -forcexyz);
+            molecule3->addAtomForce(atomIndices[2], forcexyz);
         }
 
         if (_isLinker)
@@ -138,10 +146,10 @@ namespace ff
                     coulombPot,
                     nonCoulombPot,
                     physicalData,
-                    _molecules[1],
-                    _molecules[2],
-                    _atomIndices[1],
-                    _atomIndices[2],
+                    molecule2,
+                    molecule3,
+                    atomIndices[1],
+                    atomIndices[2],
                     distance23
                 );
 
@@ -155,16 +163,16 @@ namespace ff
                 const auto smoothing =
                     settings::HybridSettings::getSmoothingMethod();
 
-                if (smoothing == HOTSPOT && _molecules[0]->getHybridZone() ==
-                                                molsys::HybridZone::SMOOTHING)
-                    smF = _molecules[0]->getSmoothingFactor();
+                if (smoothing == HOTSPOT &&
+                    molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)
+                    smF = molecule1->getSmoothingFactor();
 
                 physicalData.addVirial(
                     tensorProduct(dPosition23, forcexyz) * (1 - smF)
                 );
 
-                _molecules[1]->addAtomForce(_atomIndices[1], forcexyz);
-                _molecules[2]->addAtomForce(_atomIndices[2], -forcexyz);
+                molecule2->addAtomForce(atomIndices[1], forcexyz);
+                molecule3->addAtomForce(atomIndices[2], -forcexyz);
             }
         }
     }

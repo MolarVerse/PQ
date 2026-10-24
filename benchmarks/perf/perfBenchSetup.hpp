@@ -152,7 +152,9 @@ namespace benchSetup
     inline molsys::SimulationBox makePopulatedBox(const BoxParams& params)
     {
         auto box = molsys::SimulationBox();
-        box.setBoxDimensions({30.0, 30.0, 30.0});
+
+        molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
+        box.setBox(orthoBox);
 
         for (std::size_t mol = 0; mol < params.nMolecules; ++mol)
         {
