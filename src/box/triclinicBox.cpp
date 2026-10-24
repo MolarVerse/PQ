@@ -23,7 +23,6 @@
 #include "triclinicBox.hpp"
 
 #include <memory>
-
 #include <mstd/debugging.hpp>
 #include <mstd/math.hpp>
 

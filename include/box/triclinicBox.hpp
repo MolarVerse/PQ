@@ -25,7 +25,6 @@
 #define _TRICLINIC_BOX_HPP_
 
 #include <memory>
-
 #include <mstd/types.hpp>
 
 #include "box.hpp"

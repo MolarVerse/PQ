@@ -25,7 +25,6 @@
 #define _BOX_HPP_
 
 #include <memory>
-
 #include <mstd/types.hpp>
 #include <mstd/units.hpp>
 #include <mstd/utils.hpp>

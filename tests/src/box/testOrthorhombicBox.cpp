@@ -43,7 +43,7 @@ TEST(TestOrthoRhombicBox, setBoxDimensions)
 
 TEST(TestBox, clonedGeometryIsIndependent)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    const linalg::Vec3D                         boxDimensions = {1.0, 2.0, 3.0};
     std::array<std::unique_ptr<molsys::Box>, 2> boxes{
         std::make_unique<molsys::OrthorhombicBox>(boxDimensions),
         std::make_unique<molsys::TriclinicBox>(
@@ -57,7 +57,7 @@ TEST(TestBox, clonedGeometryIsIndependent)
     for (size_t i = 0; i < boxes.size(); ++i)
     {
         SCOPED_TRACE(i);
-        auto &box = *boxes.at(i);
+        auto      &box            = *boxes.at(i);
         const auto expectedVolume = expectedVolumes.at(i);
         EXPECT_NEAR(box.getVolume(), expectedVolume, tolerance);
 
