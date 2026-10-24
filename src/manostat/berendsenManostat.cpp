@@ -108,6 +108,7 @@ namespace manostat
         );
 
         simulationBox.scaleBox(mu);
+        simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
         physicalData.setVolume(simulationBox.getVolume());
         physicalData.setDensity(simulationBox.getDensity());
