@@ -63,7 +63,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept QuantityLikeVector3D =
         isVector3D_v<T> && mstd::is_quantity_like_v<typename T::value_type>;
 
