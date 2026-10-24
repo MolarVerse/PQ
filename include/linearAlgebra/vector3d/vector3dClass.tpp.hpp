@@ -339,7 +339,7 @@ namespace linalg
      * @param unit
      * @return Vector3D<decltype(x * unit)>
      */
-    template <class T>
+    template <typename T>
     template <mstd::UnitLike U>
     auto Vector3D<T>::in(const U &unit) const
     {
@@ -357,7 +357,7 @@ namespace linalg
      * @param unit
      * @return Vector3D<decltype(x.numerical_value_in(unit))>
      */
-    template <class T>
+    template <typename T>
     template <mstd::UnitLike U>
     auto Vector3D<T>::numerical_value_in(const U &unit) const
     {
