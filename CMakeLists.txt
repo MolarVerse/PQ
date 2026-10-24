@@ -289,5 +289,3 @@ if(BUILD_WITH_BENCHMARKING)
     enable_testing()
     add_subdirectory(benchmarks)
 endif()
-
-target_link_libraries(linearAlgebra PUBLIC mstd)  
