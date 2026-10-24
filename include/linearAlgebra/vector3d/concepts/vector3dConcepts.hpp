@@ -24,7 +24,7 @@
 
 #define _VECTOR3D_CONCEPTS_HPP_
 
-#include "../../../concepts/concepts.hpp"
+#include "concepts.hpp"
 #include "vector3dDepth.hpp"
 
 namespace linalg
