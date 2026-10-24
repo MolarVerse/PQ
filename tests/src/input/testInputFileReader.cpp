@@ -139,6 +139,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(filename, _settings));
 }
 
@@ -155,6 +156,8 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
         inputFile << "rcoulomb = 9.0;\n";
         inputFile << "long_range = reaction-field;\n";
     }
+
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     ASSERT_THROW_MSG(
         input::readInputFile(_fileName, _settings),
@@ -180,6 +183,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
         settings::PotentialSettings::getCoulombLongRangeType(),

@@ -47,6 +47,8 @@ class TestSetup : public ::testing::Test
         //       where optEngine is not supported
         _engine   = std::make_unique<engine::OptEngine>(_settings);
         _mdEngine = std::make_unique<engine::MMMDEngine>(_settings);
+
+        settings::GeneralSettings::setJobtype(JobType::MM_MD);
     }
 
     void TearDown() override
