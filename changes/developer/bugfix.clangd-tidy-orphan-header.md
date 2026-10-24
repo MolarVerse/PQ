@@ -1,0 +1,1 @@
+- fix clangd-tidy false positives on `vector3dConcepts.hpp` by adding a same-named translation unit (`src/linearAlgebra/vector3dConcepts.cpp`) so clangd can infer its real, absolute-path compile command instead of an unrelated fallback one

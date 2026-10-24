@@ -1,8 +1,2 @@
 CompileFlags:
   CompilationDatabase: .build
-  # Fallback include paths for header-only files clangd can't match to a
-  # compile command (e.g. include/.../concepts headers with no sibling
-  # .cpp): without these, clangd parses them with no -I flags at all.
-  Add:
-    - -Iinclude/concepts
-    - -Iexternal/mstd/include

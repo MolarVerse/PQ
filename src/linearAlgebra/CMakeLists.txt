@@ -2,6 +2,7 @@ add_library(linearAlgebra
     stlVector.cpp
 
     vector3d.cpp
+    vector3dConcepts.cpp
     matrix.cpp
     staticMatrix.cpp
 )
