@@ -36,7 +36,7 @@ namespace engine
      */
     void HybridMDEngine::_combineInnerOuterForces()
     {
-        for (auto& atom : _simulationBox->getAtoms())
+        for (auto& atom : getSimulationBox().getAtoms())
         {
             const auto innerForce = atom->getForceInner();
             const auto outerForce = atom->getForceOuter();
@@ -63,7 +63,7 @@ namespace engine
             atom->addForceInner(force);
         }
 
-        _simulationBox->resetForces();
+        getSimulationBox().resetForces();
     }
 
     /**
@@ -91,7 +91,7 @@ namespace engine
             atom->addForceInner(force * globalSmF);
         }
 
-        _simulationBox->resetForces();
+        getSimulationBox().resetForces();
     }
 
     /**
@@ -113,7 +113,7 @@ namespace engine
             atom->addForceOuter(force);
         }
 
-        _simulationBox->resetForces();
+        getSimulationBox().resetForces();
     }
 
     /**
@@ -141,7 +141,7 @@ namespace engine
             atom->addForceOuter(force * globalSmF);
         }
 
-        _simulationBox->resetForces();
+        getSimulationBox().resetForces();
     }
 
     /**
@@ -157,7 +157,7 @@ namespace engine
      */
     void HybridMDEngine::_scaleSmoothingMoleculeForcesInner()
     {
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(
+        for (auto& mol : getSimulationBox().getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING
              ))
         {
@@ -179,7 +179,7 @@ namespace engine
      */
     void HybridMDEngine::_scaleSmoothingMoleculeForcesOuter()
     {
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(
+        for (auto& mol : getSimulationBox().getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING
              ))
         {
@@ -236,7 +236,7 @@ namespace engine
         double globalSmoothingFactor = 1;
 
         size_t index = 0;
-        for (const auto& mol : _simulationBox->getMoleculesInsideZone(
+        for (const auto& mol : getSimulationBox().getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING
              ))
         {

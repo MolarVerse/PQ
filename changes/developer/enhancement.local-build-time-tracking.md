@@ -1,0 +1,1 @@
+- Add scripts/pq_build_times: local-only build-time tracking with snapshots (cold, no-op and touch scenarios plus the include graph), a hardware and toolchain fingerprint, a pinned baseline and an over-time HTML graph.

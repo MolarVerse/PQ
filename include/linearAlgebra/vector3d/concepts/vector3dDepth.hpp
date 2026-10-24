@@ -26,7 +26,7 @@
 
 namespace linalg
 {
-    template <class T>
+    template <typename T>
     class Vector3D;
 }   // namespace linalg
 
@@ -37,7 +37,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     struct Vector3DDepth
     {
         static constexpr int value = 0;
@@ -50,7 +50,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     struct Vector3DDepth<linalg::Vector3D<T>>
     {
         static constexpr int value = 1 + Vector3DDepth<T>::value;
@@ -61,7 +61,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     constexpr int Vector3DDepth_v = Vector3DDepth<T>::value;
 
     /**
@@ -70,7 +70,7 @@ namespace pq
      * @tparam T
      * @tparam U
      */
-    template <class T, class U>
+    template <typename T, class U>
     constexpr int Vector3DDepthDifference_v =
         Vector3DDepth_v<T> - Vector3DDepth_v<U>;
 

@@ -43,7 +43,8 @@ namespace engine
         physicalData::PhysicalData _qmmmPhysicalData{};
 
        public:
-        QMMMMDEngine()           = default;
+        using HybridMDEngine::HybridMDEngine;
+
         ~QMMMMDEngine() override = default;
 
         void calculateForces() override;

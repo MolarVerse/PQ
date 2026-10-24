@@ -26,7 +26,6 @@
 
 namespace references
 {
-    // clang-format off
     // PQ Software
     static constexpr auto* PQ_FILE = "pq.ref";
 
@@ -34,11 +33,12 @@ namespace references
     static constexpr auto* VELOCITY_VERLET_FILE = "velocity_verlet.ref";
 
     // Thermostats and Manostats
-    static constexpr auto* BERENDSEN_FILE            = "berendsen.ref";
-    static constexpr auto* VELOCITY_RESCALING_FILE   = "velocity_rescaling.ref";
-    static constexpr auto* NOSE_HOOVER_CHAIN_FILE    = "nose_hoover_chain.ref";
-    static constexpr auto* LANGEVIN_FILE             = "langevin.ref";
-    static constexpr auto* STOCHASTIC_RESCALING_FILE = "stochastic_rescaling.ref";
+    static constexpr auto* BERENDSEN_FILE          = "berendsen.ref";
+    static constexpr auto* VELOCITY_RESCALING_FILE = "velocity_rescaling.ref";
+    static constexpr auto* NOSE_HOOVER_CHAIN_FILE  = "nose_hoover_chain.ref";
+    static constexpr auto* LANGEVIN_FILE           = "langevin.ref";
+    static constexpr auto* STOCHASTIC_RESCALING_FILE =
+        "stochastic_rescaling.ref";
 
     // QM Programs
     static constexpr auto* DFTBPLUS_FILE  = "dftbplus.ref";
@@ -67,8 +67,6 @@ namespace references
     static constexpr auto* OPC3_FILE      = "water_model_opc3.ref";
     static constexpr auto* SPC_MTR_FILE   = "water_model_spcmtr.ref";
     static constexpr auto* TIP3P_MTR_FILE = "water_model_tip3pmtr.ref";
-
-    // clang-format on
 
 }   // namespace references
 

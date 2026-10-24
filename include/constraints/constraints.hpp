@@ -62,10 +62,6 @@ namespace constraints
        private:
         std::unique_ptr<MShake> _mShake;
 
-        bool _shakeActivated         = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
-        bool _mShakeActivated        = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
-        bool _distanceConstActivated = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
-
         size_t _shakeMaxIter  = defaults::SHAKE_MAX_ITER_DEFAULT;
         size_t _rattleMaxIter = defaults::RATTLE_MAX_ITER_DEFAULT;
 
@@ -93,23 +89,6 @@ namespace constraints
             physicalData::PhysicalData &,
             double
         );
-
-        /*****************************
-         * standard activate methods *
-         *****************************/
-
-        void activateShake() { _shakeActivated = true; }
-        void deactivateShake() { _shakeActivated = false; }
-        void activateMShake() { _mShakeActivated = true; }
-        void deactivateMShake() { _mShakeActivated = false; }
-        void activateDistanceConstraints();
-        void deactivateDistanceConstraints();
-
-        [[nodiscard]] bool isShakeActive() const;
-        [[nodiscard]] bool isMShakeActive() const;
-        [[nodiscard]] bool isShakeLikeActive() const;
-        [[nodiscard]] bool isDistanceConstraintsActive() const;
-        [[nodiscard]] bool isActive() const;
 
         /************************
          * standard add methods *

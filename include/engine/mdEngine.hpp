@@ -27,6 +27,7 @@
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
 #include "engine.hpp"
+#include "hybridConfigurator.hpp"
 #include "integrator.hpp"
 #include "manostat.hpp"
 #include "momentumOutput.hpp"
@@ -48,8 +49,8 @@ namespace engine
      */
     class MDEngine : public Engine
     {
-       protected:
-        resetKinetics::ResetKinetics     _resetKinetics{};
+       private:
+        resetKinetics::ResetKinetics     _resetKinetics;
         configurator::HybridConfigurator _configurator{};
 
         std::unique_ptr<integrator::Integrator> _integrator;
@@ -57,7 +58,7 @@ namespace engine
         std::unique_ptr<manostat::Manostat>     _manostat;
 
        public:
-        MDEngine();
+        explicit MDEngine(Settings settings);
         ~MDEngine() override = default;
 
         void         run() override;
@@ -69,6 +70,17 @@ namespace engine
 
         void         calculateForcesWrapper();
         virtual void calculateForces() = 0;
+
+        /***************************
+         * make unique_ptr methods *
+         ***************************/
+
+        template <typename T>
+        void makeIntegrator(T integrator);
+        template <typename T>
+        void makeThermostat(T thermostat);
+        template <typename T>
+        void makeManostat(T manostat);
 
         /***************************
          * standard getter methods *
@@ -100,16 +112,11 @@ namespace engine
         [[nodiscard]]
         out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
 
-        /***************************
-         * make unique_ptr methods *
-         ***************************/
-
-        template <typename T>
-        void makeIntegrator(T integrator);
-        template <typename T>
-        void makeThermostat(T thermostat);
-        template <typename T>
-        void makeManostat(T manostat);
+       protected:
+        [[nodiscard]]
+        configurator::HybridConfigurator &_getHybridConfigurator();
+        [[nodiscard]]
+        configurator::HybridConfigurator const &_getHybridConfigurator() const;
     };
 }   // namespace engine
 

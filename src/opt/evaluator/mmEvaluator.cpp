@@ -40,26 +40,30 @@ namespace opt
      */
     void MMEvaluator::evaluate()
     {
-        _physicalDataOld->copy(*_physicalData);
+        _getPhysicalDataOld().copy(_getPhysicalData());
 
-        _simulationBox->updateOldForces();
-        _simulationBox->resetForces();
+        _getSimulationBox().updateOldForces();
+        _getSimulationBox().resetForces();
 
         // _constraints->applyShake(_simulationBox);
 
-        _cellList->updateCellList(*_simulationBox);
+        _getCellList().updateCellList(_getSimulationBox());
 
-        _potential
-            ->calculateForces(*_simulationBox, *_physicalData, *_cellList);
+        _getPotential().calculateForces(
+            _getSimulationBox(),
+            _getPhysicalData(),
+            _getCellList()
+        );
 
-        _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+        _getIntraNonBonded().calculate(_getSimulationBox(), _getPhysicalData());
 
-        // const auto virial = virial::Virial::calculateVirial(*_simulationBox);
+        // const auto virial =
+        // virial::Virial::calculateVirial(_getSimulationBox());
         // _physicalData->setVirial(virial);
 
-        _forceField->calculateBondedInteractions(
-            *_simulationBox,
-            *_physicalData
+        _getForceField().calculateBondedInteractions(
+            _getSimulationBox(),
+            _getPhysicalData()
         );
 
         // _constraints->applyDistanceConstraints(
@@ -71,7 +75,7 @@ namespace opt
         // _constraints.calculateConstraintBondRefs(_simulationBox);
 
         // const auto virialCorrection =
-        // virial::Virial::intraMolecularVirialCorrection(*_simulationBox);
+        // virial::Virial::intraMolecularVirialCorrection(_getSimulationBox());
         // _physicalData->addVirial(virialCorrection);
 
         // _constraints.applyRattle(_simulationBox);

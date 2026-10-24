@@ -23,9 +23,9 @@
 #include "filesInputParser.hpp"
 
 #include <mstd/file.hpp>
-#include <utility>
 
 #include "fileSettings.hpp"
+#include "generalSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyRegistry.hpp"
 
@@ -122,14 +122,8 @@ namespace input
      * 9) mshake_file "<string>" 10) dftb_file "<string>" 11) turbomole_file
      * "<string>"
      *
-     * @param intraNonBonded
      */
-    FilesInputParser::FilesInputParser(
-        std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
-    )
-        : FilesInputParser(std::move(intraNonBonded), true)
-    {
-    }
+    FilesInputParser::FilesInputParser() : FilesInputParser(true) {}
 
     /**
      * @brief Construct a new Input File Parser Non Coulomb Type:: Input File
@@ -144,16 +138,10 @@ namespace input
      * 9) mshake_file "<string>" 10) dftb_file "<string>" 11) turbomole_file
      * "<string>"
      *
-     * @param intraNonBonded
      * @param validateFilePaths
      */
-    FilesInputParser::FilesInputParser(
-        std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
-        bool                                            validateFilePaths
-    )
-        : InputFileParser(),
-          _intraNonBonded(std::move(intraNonBonded)),
-          _validateFilePaths(validateFilePaths)
+    FilesInputParser::FilesInputParser(bool validateFilePaths)
+        : InputFileParser(), _validateFilePaths(validateFilePaths)
     {
         addIntraNonBondedFileKey();
         addTopologyFileKey();
@@ -181,11 +169,9 @@ namespace input
             .description = "File containing intra non bonded combinations"
         };
 
-        const auto setValue = [intraNonBonded = _intraNonBonded]<typename T>(
-                                  const T &value
-                              ) -> void
+        const auto setValue = []<typename T>(const T &value) -> void
         {
-            intraNonBonded->activate();
+            settings::GeneralSettings::activateIntraNonBonded();
 
             if constexpr (std::is_same_v<T, std::string>)
                 settings::FileSettings::setIntraNonBondedFileName(value);

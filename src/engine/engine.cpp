@@ -29,6 +29,7 @@
 #include "fileSettings.hpp"
 #include "logOutput.hpp"
 #include "potentialBruteForce.hpp"
+#include "settings.hpp"
 #include "stdoutOutput.hpp"
 #include "timingsSettings.hpp"
 
@@ -51,13 +52,14 @@ namespace engine
      * @details Initializes virial, potential, physical data, simulation box,
      * cell list, intra-non-bonded handler, force field, and constraints.
      */
-    Engine::Engine()
+    Engine::Engine(Settings settings)
         : _potential{std::make_shared<pot::PotentialBruteForce>()},
           _physicalData{std::make_shared<physicalData::PhysicalData>()},
           _simulationBox{std::make_shared<molsys::SimulationBox>()},
           _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
           _forceField{std::make_shared<ff::ForceField>()},
           _constraints{std::make_shared<constraints::Constraints>()},
+          _settings{settings},
           _impl{std::make_unique<Impl>()}
     {
     }
@@ -105,55 +107,21 @@ namespace engine
     }
 
     /**
-     * @brief checks if the force field is activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isForceFieldNonCoulombicsActivated() const
-    {
-        return _forceField->isNonCoulombicActivated();
-    }
-
-    /**
-     * @brief checks if the guff formalism is activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isGuffActivated() const
-    {
-        return !_forceField->isNonCoulombicActivated();
-    }
-
-    /**
-     * @brief checks if any constraints are activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isConstraintsActivated() const
-    {
-        return _constraints->isActive();
-    }
-
-    /**
-     * @brief checks if the intra non bonded interactions are activated
-     *
-     * @return true
-     * @return false
-     */
-    bool Engine::isIntraNonBondedActivated() const
-    {
-        return _intraNonBonded->isActive();
-    }
-
-    /**
      * @brief get the reference to the simulation box
      *
      * @return SimulationBox&
      */
     molsys::SimulationBox &Engine::getSimulationBox()
+    {
+        return *_simulationBox;
+    }
+
+    /**
+     * @brief get the reference to the simulation box (const)
+     *
+     * @return const SimulationBox&
+     */
+    const molsys::SimulationBox &Engine::getSimulationBox() const
     {
         return *_simulationBox;
     }
@@ -383,5 +351,67 @@ namespace engine
     {
         return _constraints;
     }
+
+    /**
+     * @brief get the reference to the inter water model
+     *
+     * @return waterModel::InterWater&
+     */
+    waterModel::InterWater &Engine::_getInterWater() { return *_interWater; }
+
+    /**
+     * @brief get the reference to the inter water model (const)
+     *
+     * @return const waterModel::InterWater&
+     */
+    const waterModel::InterWater &Engine::_getInterWater() const
+    {
+        return *_interWater;
+    }
+
+    /**
+     * @brief get the reference to the intra water model
+     *
+     * @return waterModel::IntraWater&
+     */
+    waterModel::IntraWater &Engine::_getIntraWater() { return *_intraWater; }
+
+    /**
+     * @brief get the reference to the intra water model (const)
+     *
+     * @return const waterModel::IntraWater&
+     */
+    const waterModel::IntraWater &Engine::_getIntraWater() const
+    {
+        return *_intraWater;
+    }
+
+    /**
+     * @brief get the number of steps
+     *
+     * @return size_t
+     */
+    size_t Engine::_getNSteps() const { return _nSteps; }
+
+    /**
+     * @brief set the number of steps
+     *
+     * @param nSteps
+     */
+    void Engine::_setNSteps(size_t nSteps) { _nSteps = nSteps; }
+
+    /**
+     * @brief set the current step
+     *
+     * @param step
+     */
+    void Engine::_setStep(size_t step) { _step = step; }
+
+    /**
+     * @brief get the reference to the settings
+     *
+     * @return const Settings&
+     */
+    const Settings &Engine::getSettings() const { return _settings; }
 
 }   // namespace engine

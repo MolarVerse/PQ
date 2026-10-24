@@ -23,6 +23,7 @@
 #ifndef _SHAKE_ENUM_HPP_
 #define _SHAKE_ENUM_HPP_
 
+#include <cstdint>
 #include <mstd/enum.hpp>
 
 /**

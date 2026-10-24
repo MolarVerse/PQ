@@ -169,17 +169,18 @@ namespace opt
         );
 
         const auto originalPositions = simulationBox.getPositions();
+        const auto displacement      = _getDisplacement();
 
         for (size_t col = 0; col < numberOfCoordinates; ++col)
         {
             const auto fPlus =
-                evaluateForces(evaluator, simulationBox, col, _displacement);
+                evaluateForces(evaluator, simulationBox, col, displacement);
             const auto fMinus =
-                evaluateForces(evaluator, simulationBox, col, -_displacement);
+                evaluateForces(evaluator, simulationBox, col, -displacement);
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
                 hessian[row][col] =
-                    -(fPlus[row] - fMinus[row]) / (2.0 * _displacement);
+                    -(fPlus[row] - fMinus[row]) / (2.0 * displacement);
 
             _restorePositions(simulationBox, originalPositions);
         }
@@ -212,14 +213,15 @@ namespace opt
         evaluator.evaluate();
         const auto forces0 = flattenForces(simulationBox);
 
+        const auto displacement = _getDisplacement();
+
         for (size_t col = 0; col < numberOfCoordinates; ++col)
         {
             const auto fPlus =
-                evaluateForces(evaluator, simulationBox, col, _displacement);
+                evaluateForces(evaluator, simulationBox, col, displacement);
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
-                hessian[row][col] =
-                    -(fPlus[row] - forces0[row]) / _displacement;
+                hessian[row][col] = -(fPlus[row] - forces0[row]) / displacement;
 
             _restorePositions(simulationBox, originalPositions);
         }
@@ -250,30 +252,32 @@ namespace opt
 
         const auto originalPositions = simulationBox.getPositions();
 
+        const auto displacement = _getDisplacement();
+
         for (size_t col = 0; col < numberOfCoordinates; ++col)
         {
             const auto fPlus =
-                evaluateForces(evaluator, simulationBox, col, _displacement);
+                evaluateForces(evaluator, simulationBox, col, displacement);
             const auto fMinus =
-                evaluateForces(evaluator, simulationBox, col, -_displacement);
+                evaluateForces(evaluator, simulationBox, col, -displacement);
             const auto fPlus2 = evaluateForces(
                 evaluator,
                 simulationBox,
                 col,
-                2.0 * _displacement
+                2.0 * displacement
             );
             const auto fMinus2 = evaluateForces(
                 evaluator,
                 simulationBox,
                 col,
-                -2.0 * _displacement
+                -2.0 * displacement
             );
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
             {
                 const auto derivative = (-fPlus2[row] + 8.0 * fPlus[row] -
                                          8.0 * fMinus[row] + fMinus2[row]) /
-                                        (12.0 * _displacement);
+                                        (12.0 * displacement);
 
                 hessian[row][col] = -derivative;
             }
@@ -340,6 +344,16 @@ namespace opt
         }
 
         std::unreachable();
+    }
+
+    /**
+     * @brief Get the displacement used in the ForceDifferenceHessianBuilder
+     *
+     * @return double The displacement value
+     */
+    double ForceDifferenceHessianBuilder::_getDisplacement() const
+    {
+        return _displacement;
     }
 
 }   // namespace opt

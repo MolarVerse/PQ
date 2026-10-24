@@ -40,9 +40,13 @@
 class TestEngine : public ::testing::Test
 {
    protected:
+    Settings                            _settings;
     std::unique_ptr<engine::MMMDEngine> _engine;
 
-    void SetUp() override { _engine = std::make_unique<engine::MMMDEngine>(); }
+    void SetUp() override
+    {
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
+    }
 
     void TearDown() override
     {

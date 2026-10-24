@@ -56,9 +56,11 @@ namespace engine
         bool _optStopped = false;
 
        public:
-        void run() final;
+        using Engine::Engine;
+
+        void run() override;
         void takeStep();
-        void writeOutput() final;
+        void writeOutput() override;
 
         static void throwOnFailure(
             bool                            converged,
@@ -88,14 +90,14 @@ namespace engine
         [[nodiscard]] opt::Evaluator            &getEvaluator();
         [[nodiscard]] opt::Convergence          &getConvergence();
 
-        // clang-format off
         [[nodiscard]] std::shared_ptr<opt::Optimizer> getSharedOptimizer();
-        [[nodiscard]] std::shared_ptr<opt::LearningRateStrategy> getSharedLearningRate();
+        [[nodiscard]] std::shared_ptr<opt::LearningRateStrategy> getSharedLearningRate(
+        );
         [[nodiscard]] std::shared_ptr<opt::Evaluator> getSharedEvaluator();
-        
+
         [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
-        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
-        // clang-format on
+        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld(
+        );
 
         [[nodiscard]] out::OptOutput &getOptOutput();
     };

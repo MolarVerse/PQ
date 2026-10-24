@@ -45,11 +45,11 @@ namespace out
         const auto maxForceStr = std::format("{:.8e}\t", conv.getAbsMaxForce());
         const auto rmsForceStr = std::format("{:.8e}\t", conv.getAbsRMSForce());
 
-        _fp << stepStr;
-        _fp << absEnStr;
-        _fp << relEnStr;
-        _fp << maxForceStr;
-        _fp << rmsForceStr;
+        _getFilePointer() << stepStr;
+        _getFilePointer() << absEnStr;
+        _getFilePointer() << relEnStr;
+        _getFilePointer() << maxForceStr;
+        _getFilePointer() << rmsForceStr;
 
         const auto convStrategy = conv.getEnConvStrategy();
 
@@ -94,17 +94,21 @@ namespace out
         isMaxForceConvInt = isMaxForceConvEnabled ? isMaxForceConvInt : 0;
         isRMSForceConvInt = isRMSForceConvEnabled ? isRMSForceConvInt : 0;
 
-        _fp << std::format("{:3d}\t", isRelEnConvInt);
-        _fp << std::format("{:3d}\t", isAbsEnConvInt);
-        _fp << std::format("{:3d}\t", isMaxForceConvInt);
-        _fp << std::format("{:3d}\t", isRMSForceConvInt);
+        _getFilePointer() << std::format("{:3d}\t", isRelEnConvInt);
+        _getFilePointer() << std::format("{:3d}\t", isAbsEnConvInt);
+        _getFilePointer() << std::format("{:3d}\t", isMaxForceConvInt);
+        _getFilePointer() << std::format("{:3d}\t", isRMSForceConvInt);
 
-        _fp << std::format("{:.8e}\t", conv.getRelEnergyConvThreshold());
-        _fp << std::format("{:.8e}\t", conv.getAbsEnergyConvThreshold());
-        _fp << std::format("{:.8e}\t", conv.getAbsMaxForceConvThreshold());
-        _fp << std::format("{:.8e}\n", conv.getAbsRMSForceConvThreshold());
+        _getFilePointer(
+        ) << std::format("{:.8e}\t", conv.getRelEnergyConvThreshold());
+        _getFilePointer(
+        ) << std::format("{:.8e}\t", conv.getAbsEnergyConvThreshold());
+        _getFilePointer(
+        ) << std::format("{:.8e}\t", conv.getAbsMaxForceConvThreshold());
+        _getFilePointer(
+        ) << std::format("{:.8e}\n", conv.getAbsRMSForceConvThreshold());
 
-        _fp.flush();
+        _getFilePointer().flush();
     }
 
 }   // namespace out

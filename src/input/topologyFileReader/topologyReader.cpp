@@ -27,6 +27,7 @@
 
 #include "angleSection.hpp"
 #include "bondSection.hpp"
+#include "constraintSettings.hpp"
 #include "dihedralSection.hpp"
 #include "distanceConstraintsSection.hpp"
 #include "engine.hpp"
@@ -83,7 +84,7 @@ namespace input::topology
     {
         std::string              line;
         std::vector<std::string> lineElements;
-        int                      lineNumber = 1;
+        size_t                   lineNumber = 1;
 
         if (!settings::FileSettings::isTopologyFileNameSet())
             throw exc::InputFileException(
@@ -103,10 +104,8 @@ namespace input::topology
 
             auto *section = determineSection(lineElements);
             ++lineNumber;
-            section->setLineNumber(lineNumber);
             section->setFp(&_fp);
-            section->process(lineElements, _engine);
-            lineNumber = section->getLineNumber();
+            section->process(lineElements, _engine, lineNumber);
         }
     }
 
@@ -145,7 +144,7 @@ namespace input::topology
      */
     void readTopologyFile(engine::Engine &engine)
     {
-        if (!isNeeded(engine))
+        if (!isNeeded())
             return;
 
         const auto filename = settings::FileSettings::getTopologyFileName();
@@ -160,15 +159,13 @@ namespace input::topology
     /**
      * @brief checks if reading topology file is needed
      *
-     * @param engine
-     *
      * @return true if shake is activated
      * @return true if force field is activated
      * @return false
      */
-    bool isNeeded(engine::Engine &engine)
+    bool isNeeded()
     {
-        if (engine.getConstraints()->isActive())
+        if (settings::ConstraintSettings::isActive())
             return true;
 
         if (settings::ForceFieldSettings::isActive())

@@ -39,14 +39,15 @@ namespace connectivity
      *                         *
      ***************************/
 
-    std::vector<molsys::Molecule *> ConnectivityElement::getMolecules() const
-    {
-        return _molecules;
-    }
+    // const std::vector<molsys::Molecule *> &ConnectivityElement::getMolecules(
+    // ) const
+    // {
+    //     return _molecules;
+    // }
 
-    std::vector<AtomIndex> ConnectivityElement::getAtomIndices() const
-    {
-        return _atomIndices;
-    }
+    // const std::vector<AtomIndex> &ConnectivityElement::getAtomIndices() const
+    // {
+    //     return _atomIndices;
+    // }
 
 }   // namespace connectivity

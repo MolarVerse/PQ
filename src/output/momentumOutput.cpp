@@ -50,20 +50,25 @@ namespace out
         const physicalData::PhysicalData &physicalData
     )
     {
-        _fp << std::format("{:10d}\t", step);
-        _fp << std::format("{:20.5e}\t", norm(physicalData.getMomentum()));
-        _fp << std::format("{:20.5e}\t", physicalData.getMomentum()[0]);
-        _fp << std::format("{:20.5e}\t", physicalData.getMomentum()[1]);
-        _fp << std::format("{:20.5e}\t", physicalData.getMomentum()[2]);
-        _fp << std::format(
-            "{:20.5e}\t",
-            norm(physicalData.getAngularMomentum())
-        );
-        _fp << std::format("{:20.5e}\t", physicalData.getAngularMomentum()[0]);
-        _fp << std::format("{:20.5e}\t", physicalData.getAngularMomentum()[1]);
-        _fp << std::format("{:20.5e}\n", physicalData.getAngularMomentum()[2]);
+        _getFilePointer() << std::format("{:10d}\t", step);
+        _getFilePointer(
+        ) << std::format("{:20.5e}\t", norm(physicalData.getMomentum()));
+        _getFilePointer(
+        ) << std::format("{:20.5e}\t", physicalData.getMomentum()[0]);
+        _getFilePointer(
+        ) << std::format("{:20.5e}\t", physicalData.getMomentum()[1]);
+        _getFilePointer(
+        ) << std::format("{:20.5e}\t", physicalData.getMomentum()[2]);
+        _getFilePointer(
+        ) << std::format("{:20.5e}\t", norm(physicalData.getAngularMomentum()));
+        _getFilePointer(
+        ) << std::format("{:20.5e}\t", physicalData.getAngularMomentum()[0]);
+        _getFilePointer(
+        ) << std::format("{:20.5e}\t", physicalData.getAngularMomentum()[1]);
+        _getFilePointer(
+        ) << std::format("{:20.5e}\n", physicalData.getAngularMomentum()[2]);
 
-        _fp << std::flush;
+        _getFilePointer() << std::flush;
     }
 
 }   // namespace out

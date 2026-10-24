@@ -1,0 +1,1 @@
+- Add unit tests for the file formats the DFTB+, Turbomole and PySCF runners write (coordinates, cell, point charges), and give QMRunner::_periodicity a default value instead of leaving it uninitialised.

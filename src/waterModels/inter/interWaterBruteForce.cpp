@@ -223,13 +223,6 @@ namespace waterModel
                 if (water2.getMoltype() != waterTypeValue)
                     continue;
 
-                auto &oxygen1   = water1.getAtom(AtomIndex{0});
-                auto &oxygen2   = water2.getAtom(AtomIndex{0});
-                auto &hydrogen1 = water1.getAtom(AtomIndex{1});
-                auto &hydrogen2 = water1.getAtom(AtomIndex{2});
-                auto &hydrogen3 = water2.getAtom(AtomIndex{1});
-                auto &hydrogen4 = water2.getAtom(AtomIndex{2});
-
                 const auto singleInteraction =
                     [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)
                 {
@@ -249,6 +242,13 @@ namespace waterModel
                         );
                     }
                 };
+
+                auto &oxygen1   = water1.getAtom(AtomIndex{0});
+                auto &oxygen2   = water2.getAtom(AtomIndex{0});
+                auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+                auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+                auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+                auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
                 // O-O interaction
                 singleInteraction(oxygen1, oxygen2, state.nonCoulombPairOO);
@@ -408,13 +408,6 @@ namespace waterModel
                     continue;
                 }
 
-                auto &oxygen1   = water1.getAtom(AtomIndex{0});
-                auto &oxygen2   = water2.getAtom(AtomIndex{0});
-                auto &hydrogen1 = water1.getAtom(AtomIndex{1});
-                auto &hydrogen2 = water1.getAtom(AtomIndex{2});
-                auto &hydrogen3 = water2.getAtom(AtomIndex{1});
-                auto &hydrogen4 = water2.getAtom(AtomIndex{2});
-
                 const auto singleInteractionOneWay =
                     [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)
                 {
@@ -435,30 +428,71 @@ namespace waterModel
                     }
                 };
 
-                // clang-format off
-            // O-O interaction
-            singleInteractionOneWay(oxygen1, oxygen2, state.nonCoulombPairOO);
+                auto &oxygen1   = water1.getAtom(AtomIndex{0});
+                auto &oxygen2   = water2.getAtom(AtomIndex{0});
+                auto &hydrogen1 = water1.getAtom(AtomIndex{1});
+                auto &hydrogen2 = water1.getAtom(AtomIndex{2});
+                auto &hydrogen3 = water2.getAtom(AtomIndex{1});
+                auto &hydrogen4 = water2.getAtom(AtomIndex{2});
 
-            // O-H interactions
-            singleInteractionOneWay(oxygen1, hydrogen3, state.nonCoulombPairOH);
-            singleInteractionOneWay(oxygen1, hydrogen4, state.nonCoulombPairOH);
-            singleInteractionOneWay(hydrogen1, oxygen2, state.nonCoulombPairOH);
-            singleInteractionOneWay(hydrogen2, oxygen2, state.nonCoulombPairOH);
+                // O-O interaction
+                singleInteractionOneWay(
+                    oxygen1,
+                    oxygen2,
+                    state.nonCoulombPairOO
+                );
 
-            // H-H interactions
-            singleInteractionOneWay(hydrogen1, hydrogen3, state.nonCoulombPairHH);
-            singleInteractionOneWay(hydrogen1, hydrogen4, state.nonCoulombPairHH);
-            singleInteractionOneWay(hydrogen2, hydrogen3, state.nonCoulombPairHH);
-            singleInteractionOneWay(hydrogen2, hydrogen4, state.nonCoulombPairHH);
-            //clang-format on
+                // O-H interactions
+                singleInteractionOneWay(
+                    oxygen1,
+                    hydrogen3,
+                    state.nonCoulombPairOH
+                );
+                singleInteractionOneWay(
+                    oxygen1,
+                    hydrogen4,
+                    state.nonCoulombPairOH
+                );
+                singleInteractionOneWay(
+                    hydrogen1,
+                    oxygen2,
+                    state.nonCoulombPairOH
+                );
+                singleInteractionOneWay(
+                    hydrogen2,
+                    oxygen2,
+                    state.nonCoulombPairOH
+                );
 
-            ++idxJ;
+                // H-H interactions
+                singleInteractionOneWay(
+                    hydrogen1,
+                    hydrogen3,
+                    state.nonCoulombPairHH
+                );
+                singleInteractionOneWay(
+                    hydrogen1,
+                    hydrogen4,
+                    state.nonCoulombPairHH
+                );
+                singleInteractionOneWay(
+                    hydrogen2,
+                    hydrogen3,
+                    state.nonCoulombPairHH
+                );
+                singleInteractionOneWay(
+                    hydrogen2,
+                    hydrogen4,
+                    state.nonCoulombPairHH
+                );
+
+                ++idxJ;
+            }
+            ++idxI;
         }
-        ++idxI;
+
+        physicalData.addCoulombEnergy(totalCoulombEnergy);
+        physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
     }
 
-    physicalData.addCoulombEnergy(totalCoulombEnergy);
-    physicalData.addNonCoulombEnergy(totalNonCoulombEnergy);
-}
-
-} // namespace waterModel
+}   // namespace waterModel

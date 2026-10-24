@@ -40,8 +40,9 @@ namespace benchmarkSetup
     {
         const double boxEdge = cellEdge * static_cast<double>(cellsPerSide);
 
-        molsys::SimulationBox simulationBox;
-        simulationBox.setBoxDimensions({boxEdge, boxEdge, boxEdge});
+        molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
+        molsys::SimulationBox   simulationBox;
+        simulationBox.setBox(box);
 
         std::size_t atomIndex = 0;
         for (std::size_t x = 0; x < cellsPerSide; ++x)

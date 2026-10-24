@@ -42,10 +42,9 @@ namespace out
      */
     class Output
     {
-       protected:
+       private:
         std::string   _fileName;
         std::ofstream _fp;
-        int           _rank;
 
        public:
         explicit Output(std::string filename) : _fileName(std::move(filename))
@@ -57,8 +56,8 @@ namespace out
         Output(Output &&) noexcept            = default;
         Output &operator=(Output &&) noexcept = default;
 
-        void setFilename(const std::string_view &);
         void close();
+        void setFilename(const std::string_view &);
 
 // TODO: remove the TESTS dependency
 #ifdef WITH_TESTS
@@ -76,6 +75,8 @@ namespace out
         void               _writeComment(size_t);
         void               _writeForceComment(size_t, double);
         static std::string _formatForceComment(size_t step, double totalForce);
+
+        std::ofstream &_getFilePointer() { return _fp; }
     };
 
 }   // namespace out

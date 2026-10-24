@@ -40,7 +40,7 @@ namespace setup
      */
     void setupConstraints(engine::Engine &engine)
     {
-        if (!engine.isConstraintsActivated())
+        if (!settings::ConstraintSettings::isActive())
             return;
 
         out::StdoutOutput::writeSetup("Constraints");
@@ -84,7 +84,7 @@ namespace setup
     {
         const auto &constraints = _engine.getConstraints();
 
-        if (!constraints->isMShakeActive())
+        if (!settings::ConstraintSettings::isMShakeActivated())
             return;
 
         input::mShake::readMShake(_engine);
@@ -159,17 +159,15 @@ namespace setup
      */
     void ConstraintsSetup::writeSetupInfo()
     {
-        const auto &constraints = _engine.getConstraints();
-
         writeEnabled();
 
-        if (constraints->isShakeLikeActive())
+        if (settings::ConstraintSettings::isShakeLikeActive())
         {
             writeNConstraintBonds();
             writeTolerance();
         }
 
-        if (constraints->isShakeActive())
+        if (settings::ConstraintSettings::isShakeActivated())
             writeMaxIter();
 
         writeDof();
@@ -181,12 +179,12 @@ namespace setup
      */
     void ConstraintsSetup::writeEnabled()
     {
-        const auto &constraints = _engine.getConstraints();
-
-        // clang-format off
-    std::string shakeMsg  = constraints->isShakeActive() ? "enabled" : "disabled";
-    std::string mShakeMsg = constraints->isMShakeActive() ? "enabled" : "disabled";
-        // clang-format on
+        std::string shakeMsg = settings::ConstraintSettings::isShakeActivated()
+                                   ? "enabled"
+                                   : "disabled";
+        std::string mShakeMsg =
+            settings::ConstraintSettings::isMShakeActivated() ? "enabled"
+                                                              : "disabled";
 
         shakeMsg  = std::format("SHAKE:   {}", shakeMsg);
         mShakeMsg = std::format("M-SHAKE: {}", mShakeMsg);
@@ -208,11 +206,11 @@ namespace setup
 
         const auto totalDof = simBox.getDegreesOfFreedom();
 
-        // clang-format off
-    const auto shakeDofMsg  = std::format("SHAKE DOF:   {}", _shakeConstraints);
-    const auto mShakeDofMsg = std::format("M-SHAKE DOF: {}", _mShakeConstraints);
-    const auto totalDofMsg  = std::format("Total DOF:   {}", totalDof);
-        // clang-format on
+        const auto shakeDofMsg =
+            std::format("SHAKE DOF:   {}", _shakeConstraints);
+        const auto mShakeDofMsg =
+            std::format("M-SHAKE DOF: {}", _mShakeConstraints);
+        const auto totalDofMsg = std::format("Total DOF:   {}", totalDof);
 
         auto &logOutput = _engine.getLogOutput();
 
@@ -228,10 +226,10 @@ namespace setup
      */
     void ConstraintsSetup::writeTolerance()
     {
-        // clang-format off
-    const auto shakeTolMsg  = std::format("SHAKE Tolerance:  {}", _shakeTolerance);
-    const auto rattleTolMsg = std::format("RATTLE Tolerance: {}", _rattleTolerance);
-        // clang-format on
+        const auto shakeTolMsg =
+            std::format("SHAKE Tolerance:  {}", _shakeTolerance);
+        const auto rattleTolMsg =
+            std::format("RATTLE Tolerance: {}", _rattleTolerance);
 
         auto &logOutput = _engine.getLogOutput();
 
@@ -246,10 +244,10 @@ namespace setup
      */
     void ConstraintsSetup::writeMaxIter()
     {
-        // clang-format off
-    const auto shakeMaxIterMsg  = std::format("SHAKE Max Iter:  {}", _shakeMaxIter);
-    const auto rattleMaxIterMsg = std::format("RATTLE Max Iter: {}", _rattleMaxIter);
-        // clang-format on
+        const auto shakeMaxIterMsg =
+            std::format("SHAKE Max Iter:  {}", _shakeMaxIter);
+        const auto rattleMaxIterMsg =
+            std::format("RATTLE Max Iter: {}", _rattleMaxIter);
 
         auto &logOutput = _engine.getLogOutput();
 
@@ -272,11 +270,12 @@ namespace setup
         const auto nMShakeMols =
             constraints->getNumberOfMShakeConstraints(simBox);
 
-        // clang-format off
-    const auto nShakeBondsMsg  = std::format("Number of SHAKE bonds:       {}", nShakeBonds);
-    const auto nMShakeTypesMsg = std::format("Number of M-SHAKE types:     {}", nMShakeTypes);
-    const auto nMShakeMolsMsg  = std::format("Number of M-SHAKE molecules: {}", nMShakeMols);
-        // clang-format on
+        const auto nShakeBondsMsg =
+            std::format("Number of SHAKE bonds:       {}", nShakeBonds);
+        const auto nMShakeTypesMsg =
+            std::format("Number of M-SHAKE types:     {}", nMShakeTypes);
+        const auto nMShakeMolsMsg =
+            std::format("Number of M-SHAKE molecules: {}", nMShakeMols);
 
         auto &logOutput = _engine.getLogOutput();
 

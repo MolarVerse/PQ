@@ -51,8 +51,6 @@ namespace ff
     class ForceField
     {
        private:
-        bool _isNonCoulombicActivated = false;
-
         std::vector<BondForceField>      _bonds;
         std::vector<AngleForceField>     _angles;
         std::vector<DihedralForceField>  _dihedrals;
@@ -111,15 +109,6 @@ namespace ff
         ) const;
         [[nodiscard]]
         const JCouplingType &findJCouplingTypeById(size_t id) const;
-
-        /*****************************
-         * standard activate methods *
-         *****************************/
-
-        void activateNonCoulombic();
-        void deactivateNonCoulombic();
-
-        [[nodiscard]] bool isNonCoulombicActivated() const;
 
         /***********************************
          * standard add ForceField Objects *

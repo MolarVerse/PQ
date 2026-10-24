@@ -49,7 +49,9 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     auto box = molsys::SimulationBox();
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    box.setBox(orthoBox);
 
     auto physicalData        = physicalData::PhysicalData();
     auto coulombPotential    = pot::CoulombShiftedPotential(20.0);

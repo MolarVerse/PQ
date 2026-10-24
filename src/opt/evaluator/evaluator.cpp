@@ -143,4 +143,135 @@ namespace opt
         _intraNonBonded = intraNonBonded;
     }
 
+    /**
+     * @brief Get the physical data as a reference
+     *
+     * @return physicalData::PhysicalData&
+     */
+    physicalData::PhysicalData& Evaluator::_getPhysicalData()
+    {
+        return *_physicalData;
+    }
+
+    /**
+     * @brief Get the physical data as a const reference
+     *
+     * @return const physicalData::PhysicalData&
+     */
+    const physicalData::PhysicalData& Evaluator::_getPhysicalData() const
+    {
+        return *_physicalData;
+    }
+
+    /**
+     * @brief Get the old physical data as a reference
+     *
+     * @return physicalData::PhysicalData&
+     */
+    physicalData::PhysicalData& Evaluator::_getPhysicalDataOld()
+    {
+        return *_physicalDataOld;
+    }
+
+    /**
+     * @brief Get the old physical data as a const reference
+     *
+     * @return const physicalData::PhysicalData&
+     */
+    const physicalData::PhysicalData& Evaluator::_getPhysicalDataOld() const
+    {
+        return *_physicalDataOld;
+    }
+
+    /**
+     * @brief Get the force field as a reference
+     *
+     * @return ff::ForceField&
+     */
+    ff::ForceField& Evaluator::_getForceField() { return *_forceField; }
+
+    /**
+     * @brief Get the force field as a const reference
+     *
+     * @return const ff::ForceField&
+     */
+    const ff::ForceField& Evaluator::_getForceField() const
+    {
+        return *_forceField;
+    }
+
+    /**
+     * @brief Get the intra non bonded as a reference
+     *
+     * @return intraNonBonded::IntraNonBonded&
+     */
+    intraNonBonded::IntraNonBonded& Evaluator::_getIntraNonBonded()
+    {
+        return *_intraNonBonded;
+    }
+
+    /**
+     * @brief Get the intra non bonded as a const reference
+     *
+     * @return const intraNonBonded::IntraNonBonded&
+     */
+    const intraNonBonded::IntraNonBonded& Evaluator::_getIntraNonBonded() const
+    {
+        return *_intraNonBonded;
+    }
+
+    /**
+     * @brief Get the simulation box as a reference
+     *
+     * @return molsys::SimulationBox&
+     */
+    molsys::SimulationBox& Evaluator::_getSimulationBox()
+    {
+        return *_simulationBox;
+    }
+
+    /**
+     * @brief Get the simulation box as a const reference
+     *
+     * @return const molsys::SimulationBox&
+     */
+    const molsys::SimulationBox& Evaluator::_getSimulationBox() const
+    {
+        return *_simulationBox;
+    }
+
+    /**
+     * @brief Get the potential as a reference
+     *
+     * @return pot::Potential&
+     */
+    pot::Potential& Evaluator::_getPotential() { return *_potential; }
+
+    /**
+     * @brief Get the potential as a const reference
+     *
+     * @return const pot::Potential&
+     */
+    const pot::Potential& Evaluator::_getPotential() const
+    {
+        return *_potential;
+    }
+
+    /**
+     * @brief Get the cell list as a reference
+     *
+     * @return molsys::CellList&
+     */
+    molsys::CellList& Evaluator::_getCellList() { return *_cellList; }
+
+    /**
+     * @brief Get the cell list as a const reference
+     *
+     * @return const molsys::CellList&
+     */
+    const molsys::CellList& Evaluator::_getCellList() const
+    {
+        return *_cellList;
+    }
+
 }   // namespace opt

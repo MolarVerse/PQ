@@ -42,6 +42,7 @@
 class TestTopologyReader : public ::testing::Test
 {
    protected:
+    Settings                                         _settings;
     std::unique_ptr<engine::Engine>                  _engine;
     std::unique_ptr<input::topology::TopologyReader> _topologyReader;
 
@@ -61,7 +62,7 @@ class TestTopologyReader : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);

@@ -47,7 +47,7 @@ namespace opt
      */
     class Evaluator
     {
-       protected:
+       private:
         molsys::CellList*                               _cellList;
         std::shared_ptr<pot::Potential>                 _potential;
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
@@ -87,6 +87,47 @@ namespace opt
         void setIntraNonBonded(
             const std::shared_ptr<intraNonBonded::IntraNonBonded>&
         );
+
+       protected:
+        [[nodiscard]]
+        physicalData::PhysicalData& _getPhysicalData();
+        [[nodiscard]]
+        const physicalData::PhysicalData& _getPhysicalData() const;
+
+        [[nodiscard]]
+        physicalData::PhysicalData& _getPhysicalDataOld();
+        [[nodiscard]]
+        const physicalData::PhysicalData& _getPhysicalDataOld() const;
+
+        [[nodiscard]]
+        molsys::SimulationBox& _getSimulationBox();
+        [[nodiscard]]
+        const molsys::SimulationBox& _getSimulationBox() const;
+
+        [[nodiscard]]
+        molsys::CellList& _getCellList();
+        [[nodiscard]]
+        const molsys::CellList& _getCellList() const;
+
+        [[nodiscard]]
+        pot::Potential& _getPotential();
+        [[nodiscard]]
+        const pot::Potential& _getPotential() const;
+
+        [[nodiscard]]
+        ff::ForceField& _getForceField();
+        [[nodiscard]]
+        const ff::ForceField& _getForceField() const;
+
+        [[nodiscard]]
+        constraints::Constraints& _getConstraints();
+        [[nodiscard]]
+        const constraints::Constraints& _getConstraints() const;
+
+        [[nodiscard]]
+        intraNonBonded::IntraNonBonded& _getIntraNonBonded();
+        [[nodiscard]]
+        const intraNonBonded::IntraNonBonded& _getIntraNonBonded() const;
     };
 
 }   // namespace opt

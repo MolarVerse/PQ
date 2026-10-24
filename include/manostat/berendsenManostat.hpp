@@ -36,10 +36,9 @@ namespace manostat
      */
     class BerendsenManostat : public Manostat
     {
-       protected:
+       private:
         double    _tau;
         double    _compressibility;
-        double    _dt;
         FixedAxis _fixedAxis;
 
        public:
@@ -64,7 +63,8 @@ namespace manostat
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
 
-        [[nodiscard]] ManostatType getManostatType() const final;
+        [[nodiscard]] ManostatType getManostatType() const override;
+        [[nodiscard]] FixedAxis    getFixedAxis() const;
     };
 
     /**

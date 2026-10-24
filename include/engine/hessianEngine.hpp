@@ -46,8 +46,10 @@ namespace engine
         bool _optStopped = false;
 
        public:
-        void run() final;
-        void writeOutput() final;
+        using Engine::Engine;
+
+        void run() override;
+        void writeOutput() override;
 
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();

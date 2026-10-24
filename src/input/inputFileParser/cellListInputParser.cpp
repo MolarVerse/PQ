@@ -27,7 +27,6 @@
 #include <optional>
 #include <string>
 
-#include "celllist.hpp"
 #include "generalSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyRegistry.hpp"
@@ -44,10 +43,8 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) cell-list "<on/off>"
      * 2) cell-number "<size_t>"
      *
-     * @param cellList reference to the cell list object
      */
-    CellListInputParser::CellListInputParser(molsys::CellList &cellList)
-        : _cellListPtr(&cellList)
+    CellListInputParser::CellListInputParser()
     {
         addCellListActivated();
         addNumberOfCells();
@@ -109,8 +106,8 @@ namespace input
             )
         };
 
-        const auto setValue = [this](size_t numberOfCells)
-        { _cellListPtr->setNumberOfCells(numberOfCells); };
+        const auto setValue = [](size_t numberOfCells)
+        { settings::GeneralSettings::setNumberOfCells(numberOfCells); };
 
         const auto validator = RangeValidator<size_t>(1, std::nullopt);
 

@@ -1,3 +1,9 @@
+# defined before any target or subdirectory, so that the precompiled header and
+# everything that uses it see the same macros (otherwise the PCH is rejected)
+if(BUILD_WITH_PYTHON_BINDINGS)
+    add_definitions(-DWITH_WITH_PYTHON_BINDINGS)
+endif()
+
 add_library(pq_pch OBJECT dummy.cpp)
 target_precompile_headers(pq_pch PRIVATE
     <format>
@@ -42,7 +48,6 @@ add_subdirectory(hybridConfigurator)
 add_subdirectory(driver)
 
 if(BUILD_WITH_PYTHON_BINDINGS)
-    add_definitions(-DWITH_WITH_PYTHON_BINDINGS)
     add_subdirectory(python)
 endif()
 

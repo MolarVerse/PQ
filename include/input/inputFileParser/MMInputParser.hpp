@@ -24,9 +24,7 @@
 
 #define _MM_INPUT_PARSER_HPP_
 
-#include "forceFieldClass.hpp"
 #include "inputFileParser.hpp"
-#include "potential.hpp"
 
 namespace input
 {
@@ -38,15 +36,8 @@ namespace input
      */
     class MMInputParser : public InputFileParser
     {
-       private:
-        std::shared_ptr<ff::ForceField> _forceField;
-        std::shared_ptr<pot::Potential> _potential;
-
        public:
-        explicit MMInputParser(
-            std::shared_ptr<ff::ForceField> forceField,
-            std::shared_ptr<pot::Potential> potential
-        );
+        explicit MMInputParser();
 
         void addForceFieldTypeKey();
         void addNonCoulombTypeKey();

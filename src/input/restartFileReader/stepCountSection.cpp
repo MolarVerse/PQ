@@ -44,13 +44,15 @@ namespace input::restartFile
      *
      * @param lineElements all elements of the line
      * @param engine object containing the engine
+     * @param lineNumber the line number in the rst file being processed
      *
      * @throws RstFileException if the number of elements in the line is not 2
      * @throws RstFileException if the step count is negative
      */
     void StepCountSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine & /*engine*/
+        engine::Engine & /*engine*/,
+        size_t &lineNumber
     )
     {
         if (lineElements.size() != 2)
@@ -58,7 +60,7 @@ namespace input::restartFile
             throw exc::RstFileException(
                 std::format(
                     "Error in line {}: Step count section must have 2 elements",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -70,7 +72,7 @@ namespace input::restartFile
             throw exc::RstFileException(
                 std::format(
                     "Error in line {}: Step count must be positive",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

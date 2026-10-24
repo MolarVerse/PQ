@@ -258,6 +258,9 @@ set_target_properties(eigen PROPERTIES
 
 add_library(mstd INTERFACE)
 target_include_directories(mstd SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/external/mstd/include)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(mstd INTERFACE MSTD_DEBUG)
+endif()
 
 add_subdirectory(src)
 

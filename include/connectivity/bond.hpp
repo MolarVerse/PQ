@@ -40,13 +40,6 @@ namespace connectivity
         using ConnectivityElement::ConnectivityElement;
 
         Bond(molsys::Molecule *, molsys::Molecule *, AtomIndex, AtomIndex);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] molsys::Molecule *getMolecule1() const;
-        [[nodiscard]] molsys::Molecule *getMolecule2() const;
     };
 
 }   // namespace connectivity

@@ -106,8 +106,8 @@ namespace QM
             const molsys::SimulationBox &simulationBox
         )
         {
-            const auto boxDimension = simulationBox.getBoxDimensions();
-            const auto boxAngles    = simulationBox.getBoxAngles();
+            const auto &boxDimension = simulationBox.getBoxDimensions();
+            const auto  boxAngles    = simulationBox.getBoxAngles();
 
             constexpr auto                   boxArraySize = 6;
             std::array<double, boxArraySize> box_array    = {
@@ -278,7 +278,7 @@ namespace QM
         molsys::Periodicity         per
     )
     {
-        _periodicity = per;
+        _setPeriodicity(per);
 
         std::jthread timeoutThread{[](const std::stop_token &stopToken)
                                    { throwAfterTimeout(stopToken); }};
@@ -445,7 +445,7 @@ namespace QM
         {
             const auto positions     = asePositions(simulationBox);
             const auto cell          = aseCell(simulationBox);
-            const auto pbc           = asePBC(_periodicity);
+            const auto pbc           = asePBC(_getPeriodicity());
             const auto atomicNumbers = aseAtomicNumbers(simulationBox);
 
             _ase->atoms = _ase->atomsModule.attr("Atoms")(

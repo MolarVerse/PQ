@@ -42,7 +42,7 @@ namespace out
      */
     void EnergyOutput::writeHeader(double timeStep)
     {
-        _fp << std::format("# timestep = {} fs\n", timeStep);
+        _getFilePointer() << std::format("# timestep = {} fs\n", timeStep);
     }
 
     /**
@@ -66,43 +66,50 @@ namespace out
         const physicalData::PhysicalData &physicalData
     )
     {
-        _fp << std::format("{:10d}\t", step);
-        _fp << std::format("{:20.12f}\t", physicalData.getTemperature());
-        _fp << std::format("{:20.12f}\t", physicalData.getPressure());
-        _fp << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
+        _getFilePointer() << std::format("{:10d}\t", step);
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", physicalData.getTemperature());
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", physicalData.getPressure());
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
 
         if (settings::GeneralSettings::isQMActivated())
         {
-            _fp << std::format("{:20.12f}\t", physicalData.getQMEnergy());
-            _fp << std::format(
-                "{:20.12f}\t",
-                physicalData.getNumberOfQMAtoms()
-            );
+            _getFilePointer()
+                << std::format("{:20.12f}\t", physicalData.getQMEnergy());
+            _getFilePointer(
+            ) << std::format("{:20.12f}\t", physicalData.getNumberOfQMAtoms());
         }
 
-        _fp << std::format("{:20.12f}\t", physicalData.getKineticEnergy());
-        _fp << std::format("{:20.12f}\t", physicalData.getIntraEnergy());
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", physicalData.getKineticEnergy());
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", physicalData.getIntraEnergy());
 
         if (settings::GeneralSettings::isMMActivated())
         {
-            _fp << std::format("{:20.12f}\t", physicalData.getCoulombEnergy());
-            _fp << std::format(
-                "{:20.12f}\t",
-                physicalData.getNonCoulombEnergy()
-            );
+            _getFilePointer()
+                << std::format("{:20.12f}\t", physicalData.getCoulombEnergy());
+            _getFilePointer(
+            ) << std::format("{:20.12f}\t", physicalData.getNonCoulombEnergy());
         }
 
         if (settings::ForceFieldSettings::isActive())
         {
-            _fp << std::format("{:20.12f}\t", physicalData.getBondEnergy());
-            _fp << std::format("{:20.12f}\t", physicalData.getAngleEnergy());
-            _fp << std::format("{:20.12f}\t", physicalData.getDihedralEnergy());
-            _fp << std::format("{:20.12f}\t", physicalData.getImproperEnergy());
+            _getFilePointer()
+                << std::format("{:20.12f}\t", physicalData.getBondEnergy());
+            _getFilePointer()
+                << std::format("{:20.12f}\t", physicalData.getAngleEnergy());
+            _getFilePointer()
+                << std::format("{:20.12f}\t", physicalData.getDihedralEnergy());
+            _getFilePointer()
+                << std::format("{:20.12f}\t", physicalData.getImproperEnergy());
         }
 
         if (settings::GeneralSettings::isHybridJobtype())
         {
-            _fp << std::format(
+            _getFilePointer() << std::format(
                 "{:20.12f}\t",
                 physicalData.getNumberOfSmoothingMolecules()
             );
@@ -110,12 +117,14 @@ namespace out
 
         if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
         {
-            _fp << std::format("{:20.12f}\t", physicalData.getVolume());
-            _fp << std::format("{:20.12f}\t", physicalData.getDensity());
+            _getFilePointer()
+                << std::format("{:20.12f}\t", physicalData.getVolume());
+            _getFilePointer()
+                << std::format("{:20.12f}\t", physicalData.getDensity());
 
             if (settings::ManostatSettings::getFixedAxis() != FixedAxis::NONE)
             {
-                _fp << std::format(
+                _getFilePointer() << std::format(
                     "{:20.12f}\t",
                     physicalData.getCoupledPressure()
                 );
@@ -125,11 +134,11 @@ namespace out
         if (settings::ThermostatSettings::getThermostatType() ==
             ThermostatType::NOSE_HOOVER)
         {
-            _fp << std::format(
+            _getFilePointer() << std::format(
                 "{:20.12f}\t",
                 physicalData.getNoseHooverMomentumEnergy()
             );
-            _fp << std::format(
+            _getFilePointer() << std::format(
                 "{:20.12f}\t",
                 physicalData.getNoseHooverFrictionEnergy()
             );
@@ -137,20 +146,22 @@ namespace out
 
         if (settings::ConstraintSettings::isDistanceConstraintsActivated())
         {
-            _fp << std::format(
+            _getFilePointer() << std::format(
                 "{:20.12f}\t",
                 physicalData.getLowerDistanceConstraints()
             );
-            _fp << std::format(
+            _getFilePointer() << std::format(
                 "{:20.12f}\t",
                 physicalData.getUpperDistanceConstraints()
             );
         }
 
-        _fp << std::format("{:20.5e}\t", norm(physicalData.getMomentum()));
-        _fp << std::format("{:12.5f}\n", physicalData.getLoopTime());
+        _getFilePointer(
+        ) << std::format("{:20.5e}\t", norm(physicalData.getMomentum()));
+        _getFilePointer(
+        ) << std::format("{:12.5f}\n", physicalData.getLoopTime());
 
-        _fp << std::flush;
+        _getFilePointer() << std::flush;
     }
 
 }   // namespace out

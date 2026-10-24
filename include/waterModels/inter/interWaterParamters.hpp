@@ -35,7 +35,7 @@
 
 namespace waterModel
 {
-    template <class T>
+    template <typename T>
     concept InterWaterParameterClass = requires {
         { T::oxygenCharge } -> std::convertible_to<double>;
         { T::hydrogenCharge } -> std::convertible_to<double>;

@@ -43,7 +43,7 @@ namespace opt
      */
     class LearningRateStrategy
     {
-       protected:
+       private:
         size_t _frequency = 1;
         double _initialLearningRate;
         double _learningRate;
@@ -88,6 +88,15 @@ namespace opt
 
         void setMinLearningRate(double);
         void setMaxLearningRate(std::optional<double>);
+
+       protected:
+        [[nodiscard]]
+        double _getInitialLearningRate() const;
+
+        [[nodiscard]]
+        size_t _getFrequency() const;
+
+        void _setLearningRate(double learningRate);
     };
 
 }   // namespace opt

@@ -1,0 +1,1 @@
+- Document in AGENTS.md why the integration tests run on both x86 and arm Release builds (decision for #706: they cost no wall-clock time, and no failure in about 380 runs was architecture specific).

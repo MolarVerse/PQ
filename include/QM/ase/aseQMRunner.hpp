@@ -39,7 +39,7 @@ namespace QM
      */
     class AseQMRunner : public QMRunner
     {
-       protected:
+       private:
         double _energy;
 
         struct AseInterface;

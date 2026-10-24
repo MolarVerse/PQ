@@ -49,15 +49,36 @@ set_tests_properties(cleanup-gcda PROPERTIES
 )
 
 # Helper function
+#
+# Many tests write to relative output paths (e.g. the default "default.log",
+# "default.rst", "default.xyz", ...) without choosing a unique filename. When
+# all test executables share the same WORKING_DIRECTORY, running them
+# concurrently via `ctest -j` makes unrelated tests race on the same file.
+# Give every test its own run directory instead, and expose the shared,
+# read-only test fixtures (tests/data, tests/examples) through symlinks so
+# relative paths like "data/..." and "examples/..." keep resolving as before.
 function(add_test_with_gcda_cleanup test_name test_executable)
     target_include_directories(${test_name}
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/macros
     )
+
+    set(_test_run_dir ${CMAKE_BINARY_DIR}/tests/run/${test_name})
+    file(MAKE_DIRECTORY ${_test_run_dir})
+    foreach(_fixture_dir data examples)
+        if(NOT EXISTS ${_test_run_dir}/${_fixture_dir})
+            file(CREATE_LINK
+                ${PROJECT_SOURCE_DIR}/tests/${_fixture_dir}
+                ${_test_run_dir}/${_fixture_dir}
+                SYMBOLIC
+            )
+        endif()
+    endforeach()
+
     add_test(
         NAME ${test_name}
         COMMAND ${test_executable}
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
+        WORKING_DIRECTORY ${_test_run_dir}
     )
     target_compile_definitions(${test_name} PRIVATE _WORKING_DIRECTORY_=\"${PROJECT_SOURCE_DIR}/tests\")
     set_tests_properties(${test_name} PROPERTIES

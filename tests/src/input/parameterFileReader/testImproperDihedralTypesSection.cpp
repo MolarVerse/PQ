@@ -40,7 +40,7 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
 {
     std::vector<std::string> lineElements = {"0", "1.22", "234.3", "324.3"};
     input::parameterFile::ImproperDihedralSection improperDihedralSection;
-    improperDihedralSection.processSection(lineElements, *_engine);
+    improperDihedralSection.processSection(lineElements, *_engine, 0);
 
     const auto &improperDihedralTypes =
         _engine->getForceField()->getImproperTypes();
@@ -56,7 +56,7 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
 
     lineElements = {"1", "2", "1.0", "0", "2"};
     EXPECT_THROW_MSG(
-        improperDihedralSection.processSection(lineElements, *_engine),
+        improperDihedralSection.processSection(lineElements, *_engine, 0),
         exc::ParameterFileException,
         "Wrong number of arguments in parameter file improper section at line "
         "0 - number of elements has to be 4!"
@@ -64,7 +64,7 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
 
     lineElements = {"1", "2", "-1.0", "3"};
     EXPECT_THROW_MSG(
-        improperDihedralSection.processSection(lineElements, *_engine),
+        improperDihedralSection.processSection(lineElements, *_engine, 0),
         exc::ParameterFileException,
         "Parameter file improper section at line 0 - periodicity has to be "
         "positive!"

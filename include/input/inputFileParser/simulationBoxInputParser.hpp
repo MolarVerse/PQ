@@ -41,13 +41,8 @@ namespace input
      */
     class SimulationBoxInputParser : public InputFileParser
     {
-       private:
-        std::shared_ptr<molsys::SimulationBox> _simulationBox;
-
        public:
-        explicit SimulationBoxInputParser(
-            std::shared_ptr<molsys::SimulationBox>
-        );
+        explicit SimulationBoxInputParser();
 
         void addCoulombRadiusKey();
         void addNonCoulombRadiusKey();

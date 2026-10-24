@@ -39,6 +39,8 @@ namespace engine
     class RingPolymerQMMDEngine : public QMMDEngine, public RingPolymerEngine
     {
        public:
+        using QMMDEngine::QMMDEngine;
+
         void takeStep() override;
 
         void qmCalculation();

@@ -50,12 +50,11 @@ namespace input
         using ParseFunc =
             std::function<void(const std::vector<std::string> &, const size_t)>;
 
-       protected:
+       private:
         std::map<std::string, ParseFunc> _keywordFuncMap;
         std::map<std::string, bool>      _keywordRequiredMap;
         std::map<std::string, int>       _keywordCountMap;
 
-       private:
         InputRegistry _registry;
 
        public:

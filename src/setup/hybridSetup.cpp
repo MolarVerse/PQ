@@ -98,21 +98,17 @@ namespace setup
 
         );
 
-        // clang-format off
-    switch (qmMethod)
-    {
-        case DFTBPLUS:
-        case TURBOMOLE: 
-            break;
-        case PYSCF:
-        case ASE_DFTBPLUS:
-        case ASE_XTB:
-        case MACE:
-        case FENNOL:
-        case NONE:
-            throw exc::InputFileException(errorMsg);
-    }
-        // clang-format on
+        switch (qmMethod)
+        {
+            case DFTBPLUS:
+            case TURBOMOLE: break;
+            case PYSCF:
+            case ASE_DFTBPLUS:
+            case ASE_XTB:
+            case MACE:
+            case FENNOL:
+            case NONE: throw exc::InputFileException(errorMsg);
+        }
     }
 
     /**
@@ -327,9 +323,7 @@ namespace setup
 
         if (jobtype == JobType::QMMM_MD)
         {
-            // clang-format off
-        const auto *const jobtypeMsg =                 "Hybrid type:                 QM/MM";
-            // clang-format on
+            const auto *const jobtypeMsg = "Hybrid type:                 QM/MM";
 
             logOutput.writeSetupInfo(jobtypeMsg);
         }

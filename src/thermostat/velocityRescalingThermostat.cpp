@@ -97,11 +97,11 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        _temperature = physicalData.getTemperature();
+        setTemperature(physicalData.getTemperature());
 
-        if (utilities::isZero(_temperature))
+        if (utilities::isZero(getTemperature()))
         {
-            if (utilities::isZero(_targetTemperature))
+            if (utilities::isZero(getTargetTemperature()))
                 return;
 
             throw exc::UserInputException(
@@ -112,7 +112,7 @@ namespace thermostat
         }
 
         const auto timeStep  = settings::TimingsSettings::getTimeStep();
-        const auto tempRatio = _targetTemperature / _temperature;
+        const auto tempRatio = getTargetTemperature() / getTemperature();
         const auto dof =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
 
@@ -141,7 +141,7 @@ namespace thermostat
             atom->scaleVelocity(berendsenFactor);
 
         const auto temperature =
-            _temperature * berendsenFactor * berendsenFactor;
+            getTemperature() * berendsenFactor * berendsenFactor;
 
         physicalData.setTemperature(temperature);
     }

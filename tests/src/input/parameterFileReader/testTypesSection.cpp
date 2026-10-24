@@ -40,13 +40,14 @@ TEST_F(TestParameterFileSection, processSectionTypes)
     std::vector<std::string> lineElements =
         {"1", "2", "1.0", "0", "s", "f", "0.23", "0.99"};
     input::parameterFile::TypesSection typesSection;
-    typesSection.process(lineElements, *_engine);
+    size_t                             lineNumber = 0;
+    typesSection.process(lineElements, *_engine, lineNumber);
     EXPECT_EQ(settings::PotentialSettings::getScale14Coulomb(), 0.23);
     EXPECT_EQ(settings::PotentialSettings::getScale14VDW(), 0.99);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23"};
     EXPECT_THROW_MSG(
-        typesSection.process(lineElements, *_engine),
+        typesSection.process(lineElements, *_engine, lineNumber),
         exc::ParameterFileException,
         "Wrong number of arguments in parameter file types section at line 0 - "
         "number of elements has to be 8!"
@@ -54,7 +55,7 @@ TEST_F(TestParameterFileSection, processSectionTypes)
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "1.01"};
     EXPECT_THROW_MSG(
-        typesSection.process(lineElements, *_engine),
+        typesSection.process(lineElements, *_engine, lineNumber),
         exc::ParameterFileException,
         "Wrong scaleVanDerWaals in parameter file types section at line 0 - "
         "has to be between 0 and 1!"
@@ -62,7 +63,7 @@ TEST_F(TestParameterFileSection, processSectionTypes)
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "1.23", "0.01"};
     EXPECT_THROW_MSG(
-        typesSection.process(lineElements, *_engine),
+        typesSection.process(lineElements, *_engine, lineNumber),
         exc::ParameterFileException,
         "Wrong scaleCoulomb in parameter file types section at line 0 - has to "
         "be "
@@ -71,7 +72,7 @@ TEST_F(TestParameterFileSection, processSectionTypes)
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "-0.23", "0.01"};
     EXPECT_THROW_MSG(
-        typesSection.process(lineElements, *_engine),
+        typesSection.process(lineElements, *_engine, lineNumber),
         exc::ParameterFileException,
         "Wrong scaleCoulomb in parameter file types section at line 0 - has to "
         "be "
@@ -80,7 +81,7 @@ TEST_F(TestParameterFileSection, processSectionTypes)
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23", "-0.01"};
     EXPECT_THROW_MSG(
-        typesSection.process(lineElements, *_engine),
+        typesSection.process(lineElements, *_engine, lineNumber),
         exc::ParameterFileException,
         "Wrong scaleVanDerWaals in parameter file types section at line 0 - "
         "has to be between 0 and 1!"
@@ -107,5 +108,5 @@ TEST_F(TestParameterFileSection, dummyHeaderTest)
 {
     auto typesSection = input::parameterFile::TypesSection();
     auto lineElements = std::vector<std::string>({"dummy"});
-    EXPECT_NO_THROW(typesSection.processHeader(lineElements, *_engine));
+    EXPECT_NO_THROW(typesSection.processHeader(lineElements, *_engine, 0));
 }

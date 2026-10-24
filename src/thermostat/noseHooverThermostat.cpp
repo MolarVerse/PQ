@@ -73,7 +73,7 @@ namespace thermostat
         const molsys::SimulationBox &simulationBox
     ) const
     {
-        if (_targetTemperature <= 0.0)
+        if (getTargetTemperature() <= 0.0)
         {
             throw exc::UserInputException(
                 "Cannot apply the Nose-Hoover thermostat with a target "
@@ -101,7 +101,7 @@ namespace thermostat
         _requireCoupling(simulationBox);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-        const auto kT_target         = boltzmannConstant * _targetTemperature;
+        const auto kT_target = boltzmannConstant * getTargetTemperature();
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
@@ -138,7 +138,7 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        _temperature = physicalData.getTemperature();
+        setTemperature(physicalData.getTemperature());
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
@@ -148,9 +148,10 @@ namespace thermostat
         const auto timeStep          = settings::TimingsSettings::getTimeStep();
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-        const auto timestep            = timeStep * FS_TO_S;
-        const auto thermalEnergy       = boltzmannConstant * _temperature;
-        const auto thermalEnergyTarget = boltzmannConstant * _targetTemperature;
+        const auto timestep      = timeStep * FS_TO_S;
+        const auto thermalEnergy = boltzmannConstant * getTemperature();
+        const auto thermalEnergyTarget =
+            boltzmannConstant * getTargetTemperature();
 
         auto chi = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
         chi -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;

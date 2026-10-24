@@ -41,6 +41,7 @@
 class TestBoxSection : public ::testing::Test
 {
    protected:
+    Settings                                                _settings;
     std::unique_ptr<input::restartFile::RestartFileSection> _section;
     std::unique_ptr<engine::Engine>                         _engine;
 
@@ -51,7 +52,7 @@ class TestBoxSection : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
 };
 
@@ -64,6 +65,7 @@ class TestBoxSection : public ::testing::Test
 class TestNoseHooverSection : public ::testing::Test
 {
    protected:
+    Settings                                                _settings;
     std::unique_ptr<input::restartFile::RestartFileSection> _section;
     std::unique_ptr<engine::Engine>                         _engine;
 
@@ -74,7 +76,7 @@ class TestNoseHooverSection : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
 };
 
@@ -87,6 +89,7 @@ class TestNoseHooverSection : public ::testing::Test
 class TestStepCountSection : public ::testing::Test
 {
    protected:
+    Settings                                                _settings;
     std::unique_ptr<input::restartFile::RestartFileSection> _section;
     std::unique_ptr<engine::Engine>                         _engine;
 
@@ -97,7 +100,7 @@ class TestStepCountSection : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
 };
 
@@ -110,6 +113,7 @@ class TestStepCountSection : public ::testing::Test
 class TestAtomSection : public ::testing::Test
 {
    protected:
+    Settings                                                _settings;
     std::unique_ptr<input::restartFile::RestartFileSection> _section;
     std::unique_ptr<engine::Engine>                         _engine;
 
@@ -144,7 +148,7 @@ class TestAtomSection : public ::testing::Test
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
 };
 

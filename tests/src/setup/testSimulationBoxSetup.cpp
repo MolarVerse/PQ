@@ -352,7 +352,9 @@ TEST_F(TestSetup, noDensityNoBox)
 TEST_F(TestSetup, noDensity)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    _engine->getSimulationBox().setBox(orthoBox);
     settings::SimulationBoxSettings::setDensitySet(false);
     settings::SimulationBoxSettings::setBoxSet(true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
@@ -368,7 +370,7 @@ TEST_F(TestSetup, noDensity)
 TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _engine->getSimulationBox().setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
+    settings::SimulationBoxSettings::setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
     settings::SimulationBoxSettings::setBoxSet(false);
     settings::SimulationBoxSettings::setDensitySet(true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
@@ -387,7 +389,9 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     _engine->getSimulationBox().setDensity(
         12341243.1234
     );   // this should be ignored
-    _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    _engine->getSimulationBox().setBox(orthoBox);
     settings::SimulationBoxSettings::setDensitySet(true);
     settings::SimulationBoxSettings::setBoxSet(true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
@@ -402,7 +406,8 @@ TEST_F(TestSetup, testBoxAndDensitySet)
 
 TEST_F(TestSetup, testCheckRcCutoff)
 {
-    _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    _engine->getSimulationBox().setBox(orthoBox);
     settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     EXPECT_THROW_MSG(
@@ -452,7 +457,7 @@ TEST_F(TestSetup, testCheckZeroVelocities)
  */
 TEST_F(TestSetup, testFullSetup)
 {
-    settings::ForceFieldSettings::activate();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
 
     ::molsys::Molecule molecule1{MolType{1}};
     const auto         atom1 = std::make_shared<::molsys::Atom>();
@@ -519,7 +524,8 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().setDensity(
         12341243.1234
     );   // this should be ignored
-    _engine->getSimulationBox().setBoxDimensions({10.0, 20.0, 30.0});
+    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    _engine->getSimulationBox().setBox(orthoBox);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
     EXPECT_NO_THROW(setup::setupSimulationBox(*_engine));
@@ -541,8 +547,8 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setTotalCharge(-7.03);
     simBox.setDegreesOfFreedom(4);
     simBox.setDensity(12341243.1234);
-    simBox.setVolume(758373.194);
-    simBox.setBoxDimensions({5.73, 9.93, 11.14});
+    molsys::OrthorhombicBox orthoBox{{5.73, 9.93, 11.14}};
+    simBox.setBox(orthoBox);
     settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
     settings::FileSettings::setStartFileName("input.rst");
 
@@ -562,15 +568,21 @@ TEST_F(TestSetup, testWriteSetupInfo)
     getline(file, line);
     EXPECT_EQ(line, "         density:         12341243.12340 kg/L");
     getline(file, line);
-    EXPECT_EQ(line, "         volume:            758373.19400 \u212b³");
+    EXPECT_EQ(line, "         volume:               633.85375 \u212b³");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    // clang-format off
-    EXPECT_EQ(line,"         box dimensions:         5.73000 \u212b        9.93000 \u212b       11.14000 \u212b");
+    EXPECT_EQ(
+        line,
+        "         box dimensions:         5.73000 \u212b        9.93000 \u212b "
+        "      11.14000 \u212b"
+    );
     getline(file, line);
-    EXPECT_EQ(line,"         box angles:            90.00000°        90.00000°        90.00000°");
-    // clang-format on
+    EXPECT_EQ(
+        line,
+        "         box angles:            90.00000°        90.00000°        "
+        "90.00000°"
+    );
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);

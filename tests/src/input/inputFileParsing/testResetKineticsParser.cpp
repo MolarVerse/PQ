@@ -38,14 +38,15 @@
  */
 TEST_F(TestInputFileReader, testParseNScale)
 {
-    input::ResetKineticsInputParser parser;
+    ResetKineticsSettings           settings;
+    input::ResetKineticsInputParser parser(settings);
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nscale"));
     const auto &parseFunc = funcMap.at("nscale");
 
     std::vector<std::string> lineElements = {"nscale", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ResetKineticsSettings::getNScale(), 3);
+    EXPECT_EQ(settings.getNScale(), 3);
 
     _clearParser(parser);
 
@@ -65,14 +66,15 @@ TEST_F(TestInputFileReader, testParseNScale)
  */
 TEST_F(TestInputFileReader, testParseFScale)
 {
-    input::ResetKineticsInputParser parser;
+    ResetKineticsSettings           settings;
+    input::ResetKineticsInputParser parser(settings);
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("fscale"));
     const auto &parseFunc = funcMap.at("fscale");
 
     std::vector<std::string> lineElements = {"fscale", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ResetKineticsSettings::getFScale(), 3);
+    EXPECT_EQ(settings.getFScale(), 3);
 
     _clearParser(parser);
 
@@ -92,14 +94,15 @@ TEST_F(TestInputFileReader, testParseFScale)
  */
 TEST_F(TestInputFileReader, testParseNReset)
 {
-    input::ResetKineticsInputParser parser;
+    ResetKineticsSettings           settings;
+    input::ResetKineticsInputParser parser(settings);
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nreset"));
     const auto &parseFunc = funcMap.at("nreset");
 
     std::vector<std::string> lineElements = {"nreset", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ResetKineticsSettings::getNReset(), 3);
+    EXPECT_EQ(settings.getNReset(), 3);
 
     _clearParser(parser);
 
@@ -119,14 +122,15 @@ TEST_F(TestInputFileReader, testParseNReset)
  */
 TEST_F(TestInputFileReader, testParseFReset)
 {
-    input::ResetKineticsInputParser parser;
+    ResetKineticsSettings           settings;
+    input::ResetKineticsInputParser parser(settings);
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("freset"));
     const auto &parseFunc = funcMap.at("freset");
 
     std::vector<std::string> lineElements = {"freset", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ResetKineticsSettings::getFReset(), 3);
+    EXPECT_EQ(settings.getFReset(), 3);
 
     _clearParser(parser);
 
@@ -146,14 +150,15 @@ TEST_F(TestInputFileReader, testParseFReset)
  */
 TEST_F(TestInputFileReader, testParseNResetAngular)
 {
-    input::ResetKineticsInputParser parser;
+    ResetKineticsSettings           settings;
+    input::ResetKineticsInputParser parser(settings);
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nreset_angular"));
     const auto &parseFunc = funcMap.at("nreset_angular");
 
     std::vector<std::string> lineElements = {"nreset_angular", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ResetKineticsSettings::getNResetAngular(), 3);
+    EXPECT_EQ(settings.getNResetAngular(), 3);
 
     _clearParser(parser);
 
@@ -173,14 +178,15 @@ TEST_F(TestInputFileReader, testParseNResetAngular)
  */
 TEST_F(TestInputFileReader, testParseFResetAngular)
 {
-    input::ResetKineticsInputParser parser;
+    ResetKineticsSettings           settings;
+    input::ResetKineticsInputParser parser(settings);
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("freset_angular"));
     const auto &parseFunc = funcMap.at("freset_angular");
 
     std::vector<std::string> lineElements = {"freset_angular", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ResetKineticsSettings::getFResetAngular(), 3);
+    EXPECT_EQ(settings.getFResetAngular(), 3);
 
     _clearParser(parser);
 

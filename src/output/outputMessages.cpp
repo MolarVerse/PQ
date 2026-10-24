@@ -83,8 +83,8 @@ namespace out
      */
     std::string endedNormally()
     {
-        // clang-format off
-    const std::string endedNormally_message = std::format(R"(
+        const std::string endedNormally_message = std::format(
+            R"(
 {}For citation please refer to the ".ref" file.
 
 *************************************************************************
@@ -93,8 +93,8 @@ namespace out
 *                                                                       *
 *************************************************************************
 )",
-INFO);
-        // clang-format on
+            INFO
+        );
 
         return endedNormally_message;
     }

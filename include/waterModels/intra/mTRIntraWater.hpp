@@ -34,7 +34,7 @@ namespace waterModel
         void calculate(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
-        ) final;
+        ) override;
 
         [[nodiscard]] virtual double getEqOHDistance() const = 0;   // Angström
         [[nodiscard]] virtual double getEqHHDistance() const = 0;   // Angström
@@ -66,21 +66,21 @@ namespace waterModel
 
        public:
         [[nodiscard]]
-        double getEqOHDistance() const final
+        double getEqOHDistance() const override
         {
             return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHHDistance() const final
+        double getEqHHDistance() const override
         {
             return _eqHHDistance;
         }
-        [[nodiscard]] double getDOH() const final { return _dOH; }
-        [[nodiscard]] double getAlpha() const final { return _alpha; }
-        [[nodiscard]] double getBeta() const final { return _beta; }
-        [[nodiscard]] double getLtt() const final { return _ltt; }
-        [[nodiscard]] double getLrt() const final { return _lrt; }
-        [[nodiscard]] double getLrr() const final { return _lrr; }
+        [[nodiscard]] double getDOH() const override { return _dOH; }
+        [[nodiscard]] double getAlpha() const override { return _alpha; }
+        [[nodiscard]] double getBeta() const override { return _beta; }
+        [[nodiscard]] double getLtt() const override { return _ltt; }
+        [[nodiscard]] double getLrt() const override { return _lrt; }
+        [[nodiscard]] double getLrr() const override { return _lrr; }
     };
 
     class TIP3PMTRIntraWater : public MTRIntraWater
@@ -100,21 +100,21 @@ namespace waterModel
 
        public:
         [[nodiscard]]
-        double getEqOHDistance() const final
+        double getEqOHDistance() const override
         {
             return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHHDistance() const final
+        double getEqHHDistance() const override
         {
             return _eqHHDistance;
         }
-        [[nodiscard]] double getDOH() const final { return _dOH; }
-        [[nodiscard]] double getAlpha() const final { return _alpha; }
-        [[nodiscard]] double getBeta() const final { return _beta; }
-        [[nodiscard]] double getLtt() const final { return _ltt; }
-        [[nodiscard]] double getLrt() const final { return _lrt; }
-        [[nodiscard]] double getLrr() const final { return _lrr; }
+        [[nodiscard]] double getDOH() const override { return _dOH; }
+        [[nodiscard]] double getAlpha() const override { return _alpha; }
+        [[nodiscard]] double getBeta() const override { return _beta; }
+        [[nodiscard]] double getLtt() const override { return _ltt; }
+        [[nodiscard]] double getLrt() const override { return _lrt; }
+        [[nodiscard]] double getLrr() const override { return _lrr; }
     };
 
 }   // namespace waterModel

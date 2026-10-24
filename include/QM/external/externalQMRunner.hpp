@@ -52,7 +52,7 @@ namespace QM
      */
     class ExternalQMRunner : public QMRunner
     {
-       protected:
+       private:
         std::string            _scriptPath  = SCRIPT_PATH_;
         constexpr static auto *_singularity = SINGULARITY_;
         constexpr static auto *_staticBuild = STATIC_BUILD_;

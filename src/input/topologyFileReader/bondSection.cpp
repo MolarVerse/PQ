@@ -45,6 +45,7 @@ namespace input::topology
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if number of elements in line is
      * not 3 or 4
@@ -54,7 +55,8 @@ namespace input::topology
      */
     void BondSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         if (lineElements.size() != 3 && lineElements.size() != 4)
@@ -65,7 +67,7 @@ namespace input::topology
                     "Wrong number of arguments in topology file bond section "
                     "at "
                     "line {} - number of elements has to be 3 or 4!",
-                    _lineNumber
+                    lineNumber
                 )
 
             );
@@ -88,7 +90,7 @@ namespace input::topology
                         "Forth entry in topology file in bond section has to "
                         "be a "
                         "\'*\' or empty at line {}!",
-                        _lineNumber
+                        lineNumber
                     )
                 );
             }
@@ -100,7 +102,7 @@ namespace input::topology
                 std::format(
                     "Topology file bond section at line {} - atoms cannot be "
                     "the same!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -130,10 +132,11 @@ namespace input::topology
      * @brief checks if bond sections ends normally
      *
      * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if endedNormal is false
      */
-    void BondSection::endedNormally(bool endedNormal) const
+    void BondSection::endedNormally(bool endedNormal, size_t lineNumber) const
     {
         if (!endedNormal)
         {
@@ -141,7 +144,7 @@ namespace input::topology
                 std::format(
                     "Topology file bond section at line {} - no end of section "
                     "found!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

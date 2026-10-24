@@ -274,7 +274,7 @@ namespace QM
             );
         }
 
-        _periodicity = per;
+        _setPeriodicity(per);
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");

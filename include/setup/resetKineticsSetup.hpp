@@ -48,7 +48,7 @@ namespace setup
        public:
         explicit ResetKineticsSetup(engine::MDEngine &engine);
 
-        void setup();
+        void setup() const;
         void writeSetupInfo() const;
     };
 

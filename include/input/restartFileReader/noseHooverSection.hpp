@@ -41,7 +41,8 @@ namespace input::restartFile
        public:
         void process(
             std::vector<std::string> &lineElements,
-            engine::Engine & /*engine*/
+            engine::Engine & /*engine*/,
+            size_t &lineNumber
         ) override;
 
         [[nodiscard]] std::string keyword() override;

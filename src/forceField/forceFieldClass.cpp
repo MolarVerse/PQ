@@ -329,35 +329,6 @@ namespace ff
         // std::ranges::for_each(_jCouplings, calculateJCouplingInteraction);
     }
 
-    /*****************************
-     *                           *
-     * standard activate methods *
-     *                           *
-     *****************************/
-
-    /**
-     * @brief activate non-coulombic interactions
-     */
-    void ForceField::activateNonCoulombic() { _isNonCoulombicActivated = true; }
-
-    /**
-     * @brief deactivate non-coulombic interactions
-     */
-    void ForceField::deactivateNonCoulombic()
-    {
-        _isNonCoulombicActivated = false;
-    }
-
-    /**
-     * @brief check if non-coulombic interactions are activated
-     *
-     * @return bool
-     */
-    bool ForceField::isNonCoulombicActivated() const
-    {
-        return _isNonCoulombicActivated;
-    }
-
     /***********************************
      *                                 *
      * standard add ForceField Objects *

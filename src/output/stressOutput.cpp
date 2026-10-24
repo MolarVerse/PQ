@@ -54,18 +54,18 @@ namespace out
     {
         const auto &stress = physicalData.getStressTensor();
 
-        _fp << std::format("{:10d}\t", step);
-        _fp << std::format("{:20.5e}\t", stress[0][0]);
-        _fp << std::format("{:20.5e}\t", stress[0][1]);
-        _fp << std::format("{:20.5e}\t", stress[0][2]);
-        _fp << std::format("{:20.5e}\t", stress[1][0]);
-        _fp << std::format("{:20.5e}\t", stress[1][1]);
-        _fp << std::format("{:20.5e}\t", stress[1][2]);
-        _fp << std::format("{:20.5e}\t", stress[2][0]);
-        _fp << std::format("{:20.5e}\t", stress[2][1]);
-        _fp << std::format("{:20.5e}\n", stress[2][2]);
+        _getFilePointer() << std::format("{:10d}\t", step);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[0][0]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[0][1]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[0][2]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[1][0]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[1][1]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[1][2]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[2][0]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[2][1]);
+        _getFilePointer() << std::format("{:20.5e}\n", stress[2][2]);
 
-        _fp << std::flush;
+        _getFilePointer() << std::flush;
     }
 
 }   // namespace out

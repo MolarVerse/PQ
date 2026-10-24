@@ -34,7 +34,9 @@
 #include "constants.hpp"
 #include "defaults.hpp"
 #include "engine.hpp"
+#include "enums/potential.hpp"
 #include "exceptions.hpp"
+#include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
 #include "gmock/gmock.h"
 #include "guffPair.hpp"
@@ -213,16 +215,16 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
 
     EXPECT_EQ(TestLJPairUtils::params(&pair).c6, 1.0);
     EXPECT_EQ(TestLJPairUtils::params(&pair).c12, 3.0);
-    EXPECT_EQ(pair.getRadialCutOff(), 10.0);
+    EXPECT_EQ(pair.get_radialCutoff(), 10.0);
 
     // FIXME: Does not work on macos using EXPECT_EQ
     EXPECT_NEAR(
-        pair.getEnergyCutOff(),
+        pair.get_energyCutoff(),
         (1.0 / ::pow(10.0, 6)) + (3.0 / ::pow(10.0, 12)),
         1e-5
     );
     EXPECT_EQ(
-        pair.getForceCutOff(),
+        pair.get_forceCutoff(),
         (6.0 / ::pow(10.0, 7)) + (12.0 * 3.0 / ::pow(10.0, 13))
     );
 
@@ -259,13 +261,13 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
     EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).scaling, 1.0);
     EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).dRho, 2.0);
     EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).c6, 3.0);
-    EXPECT_EQ(pair.getRadialCutOff(), 10.0);
+    EXPECT_EQ(pair.get_radialCutoff(), 10.0);
     EXPECT_EQ(
-        pair.getEnergyCutOff(),
+        pair.get_energyCutoff(),
         (1.0 * ::exp(10.0 * 2.0)) + (3.0 / ::pow(10.0, 6))
     );
     EXPECT_EQ(
-        pair.getForceCutOff(),
+        pair.get_forceCutoff(),
         (-2.0 * ::exp(10.0 * 2.0)) + (6.0 * 3.0 / ::pow(10.0, 7))
     );
 
@@ -304,13 +306,13 @@ TEST_F(TestGuffDatReader, addMorsePair)
     EXPECT_EQ(params.dissociationEnergy, 1.0);
     EXPECT_EQ(params.wellWidth, 2.0);
     EXPECT_EQ(params.equilibriumDistance, 3.0);
-    EXPECT_EQ(pair.getRadialCutOff(), 10.0);
+    EXPECT_EQ(pair.get_radialCutoff(), 10.0);
     EXPECT_EQ(
-        pair.getEnergyCutOff(),
+        pair.get_energyCutoff(),
         1.0 * ::pow((1.0 - ::exp(-2.0 * (10.0 - 3.0))), 2)
     );
     EXPECT_EQ(
-        pair.getForceCutOff(),
+        pair.get_forceCutoff(),
         -2.0 * (1.0 - ::exp(-2.0 * (10.0 - 3.0))) * ::exp(-2.0 * (10.0 - 3.0)) *
             2.0
     );
@@ -372,9 +374,9 @@ TEST_F(TestGuffDatReader, addGuffPair)
             2
         )
     );
-    EXPECT_EQ(pair.getRadialCutOff(), 10.0);
-    EXPECT_EQ(pair.getEnergyCutOff(), 3.0121946291700612e+35);
-    EXPECT_EQ(pair.getForceCutOff(), -5.4219503325061099e+36);
+    EXPECT_EQ(pair.get_radialCutoff(), 10.0);
+    EXPECT_EQ(pair.get_energyCutoff(), 3.0121946291700612e+35);
+    EXPECT_EQ(pair.get_forceCutoff(), -5.4219503325061099e+36);
 
     const auto &pair2 = dynamic_cast<pot::GuffPair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
@@ -410,9 +412,9 @@ TEST_F(TestGuffDatReader, addGuffPair)
             2
         )
     );
-    EXPECT_EQ(pair2.getRadialCutOff(), 10.0);
-    EXPECT_EQ(pair2.getEnergyCutOff(), 3.0121946291700612e+35);
-    EXPECT_EQ(pair2.getForceCutOff(), -5.4219503325061099e+36);
+    EXPECT_EQ(pair2.get_radialCutoff(), 10.0);
+    EXPECT_EQ(pair2.get_energyCutoff(), 3.0121946291700612e+35);
+    EXPECT_EQ(pair2.get_forceCutoff(), -5.4219503325061099e+36);
 }
 
 TEST_F(TestGuffDatReader, addNonCoulombPair)
@@ -613,7 +615,8 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
 
 TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
 {
-    engine::MMMDEngine   engine;
+    Settings             settings;
+    engine::MMMDEngine   engine{settings};
     molsys::Molecule     molecule1{MolType{1}};
     molsys::Molecule     molecule2{MolType{2}};
     molsys::MoleculeType moleculeType1(MolType{1});
@@ -777,7 +780,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
     settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
@@ -786,7 +789,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
@@ -794,6 +797,6 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }

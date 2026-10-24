@@ -293,7 +293,7 @@ namespace engine
 
         auto builder = setupHessianBuilder();
 
-        const auto hessian = builder->build(*evaluator, *_simulationBox);
+        const auto hessian = builder->build(*evaluator, getSimulationBox());
 
         writeHessian(hessian);
         writeHessianInfo(hessian);
@@ -301,12 +301,12 @@ namespace engine
         timings::GlobalTimer::get().stopSimulationTimer();
 
         references::ReferencesOutput::writeReferencesFile();
-        _engineOutput.writeTimingsFile();
+        getEngineOutput().writeTimingsFile();
 
         const auto elapsedTime =
             timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
-        _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
+        getEngineOutput().getLogOutput().writeEndedNormally(elapsedTime);
         out::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 
@@ -361,13 +361,13 @@ namespace engine
         _evaluator->evaluate();
         _optimizer->updateHistory();
 
-        _nSteps = _optimizer->getNEpochs();
+        _setNSteps(_optimizer->getNEpochs());
 
         _writeOptimizationOutput();
 
-        progressbar bar(static_cast<int>(_nSteps), true, std::cout);
+        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
 
-        for (size_t i = 0; i < _nSteps; ++i)
+        for (size_t i = 0; i < _getNSteps(); ++i)
         {
             bar.update();
 
@@ -383,13 +383,13 @@ namespace engine
         OptEngine::throwOnFailure(
             _converged,
             _optStopped,
-            _step,
+            getStep(),
             _optimizer->getNEpochs(),
             _learningRateStrategy->getErrorMessages()
         );
 
         const auto msg =
-            std::format("Optimizer converged after {} epochs.", _step);
+            std::format("Optimizer converged after {} epochs.", getStep());
 
         getLogOutput().writeInfo(msg);
         out::StdoutOutput::writeInfo(msg);
@@ -397,7 +397,7 @@ namespace engine
 
     void HessianEngine::_takeOptimizationStep()
     {
-        _optimizer->update(_learningRateStrategy->getLearningRate(), _step);
+        _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
 
         _evaluator->evaluate();
 
@@ -407,7 +407,7 @@ namespace engine
 
         if (!_converged)
         {
-            _learningRateStrategy->updateLearningRate(_step, _nSteps);
+            _learningRateStrategy->updateLearningRate(getStep(), _getNSteps());
 
             if (!_learningRateStrategy->getErrorMessages().empty())
                 _optStopped = true;
@@ -419,7 +419,7 @@ namespace engine
                 const auto headerMessage = std::format(
                     "Updating learning rate did raise "
                     "the following warnings in epoch {} out of {}:",
-                    _step,
+                    getStep(),
                     _optimizer->getNEpochs()
                 );
                 getLogOutput().writeOptWarning(headerMessage);
@@ -433,7 +433,7 @@ namespace engine
             }
         }
 
-        ++_step;
+        _setStep(getStep() + 1);
     }
 
     void HessianEngine::_writeOptimizationOutput()
@@ -441,36 +441,44 @@ namespace engine
         const auto outputFreq =
             settings::OutputFileSettings::getOutputFrequency();
         const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = _step + step0;
+        const auto effStep = getStep() + step0;
 
-        if (0 == _step % outputFreq)
+        if (0 == getStep() % outputFreq)
         {
-            _engineOutput.writeXyzFile(*_simulationBox, effStep);
-            _engineOutput.writeForceFile(*_simulationBox, effStep);
-            _engineOutput.writeOptRstFile(*_simulationBox, effStep);
-            _engineOutput.writeOptFile(_step, *_optimizer);
+            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
+            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptFile(getStep(), *_optimizer);
         }
 
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        _physicalData->setLoopTime(
+        getPhysicalData().setLoopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
-        _averagePhysicalData.updateAverages(*_physicalData);
+        getAveragePhysicalData().updateAverages(getPhysicalData());
 
-        if (0 == _step % outputFreq)
+        if (0 == getStep() % outputFreq)
         {
-            _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
+            getAveragePhysicalData().makeAverages(
+                static_cast<double>(outputFreq)
+            );
 
             const auto effStepDouble = static_cast<double>(effStep);
 
-            _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-            _engineOutput.writeInfoFile(effStepDouble, _averagePhysicalData);
+            getEngineOutput().writeEnergyFile(
+                effStep,
+                getAveragePhysicalData()
+            );
+            getEngineOutput().writeInfoFile(
+                effStepDouble,
+                getAveragePhysicalData()
+            );
 
-            _averagePhysicalData = physicalData::PhysicalData();
+            getAveragePhysicalData() = physicalData::PhysicalData();
         }
 
-        _physicalData->reset();
+        getPhysicalData().reset();
     }
 
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()
@@ -517,14 +525,14 @@ namespace engine
 
     void HessianEngine::_writeOptimizationSetupInfo()
     {
-        _engineOutput.getLogOutput().writeSetupInfo(
+        getEngineOutput().getLogOutput().writeSetupInfo(
             std::format(
                 "Optimize before Hessian:    {}",
                 settings::HessianSettings::optimizeBeforeHessian() ? "true"
                                                                    : "false"
             )
         );
-        _engineOutput.getLogOutput().writeSetupInfo(
+        getEngineOutput().getLogOutput().writeSetupInfo(
             std::format(
                 "Optimizer:                  {}",
                 OptimizerTypeMeta::toString(
@@ -532,7 +540,7 @@ namespace engine
                 )
             )
         );
-        _engineOutput.getLogOutput().writeSetupInfo(
+        getEngineOutput().getLogOutput().writeSetupInfo(
             std::format(
                 "Learning rate strategy:     {}",
                 LearningRateMeta::toString(
@@ -540,7 +548,7 @@ namespace engine
                 )
             )
         );
-        _engineOutput.getLogOutput().writeEmptyLine();
+        getEngineOutput().getLogOutput().writeEmptyLine();
     }
 
     std::shared_ptr<physicalData::PhysicalData> HessianEngine::
@@ -551,7 +559,7 @@ namespace engine
 
     out::OptOutput &HessianEngine::getOptOutput()
     {
-        return _engineOutput.getOptOutput();
+        return getEngineOutput().getOptOutput();
     }
 
 }   // namespace engine

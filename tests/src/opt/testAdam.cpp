@@ -39,7 +39,9 @@ namespace
     )
     {
         auto box = std::make_shared<molsys::SimulationBox>();
-        box->setBoxDimensions(boxDims);
+
+        molsys::OrthorhombicBox orthoBox{boxDims};
+        box->setBox(orthoBox);
 
         auto atom = std::make_shared<molsys::Atom>();
         atom->setPosition(pos);

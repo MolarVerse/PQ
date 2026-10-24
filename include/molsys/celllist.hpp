@@ -50,6 +50,9 @@ namespace molsys
         linalg::Vec3Dul _nNeighbourCells{0, 0, 0};
         linalg::Vec3Dul _nCells{defaults::NUMBER_OF_CELLS_DEFAULT};
 
+        std::optional<linalg::Vec3D> _oldBoxDimensions = std::nullopt;
+        std::optional<linalg::Vec3D> _oldBoxAngles     = std::nullopt;
+
        public:
         [[nodiscard]] std::shared_ptr<CellList> clone() const;
 
@@ -93,6 +96,12 @@ namespace molsys
 
         void setNumberOfCells(size_t nCells);
         void setNumberOfNeighbourCells(size_t nCells);
+
+       private:
+        [[nodiscard]]
+        bool _hasBoxSizeChanged(
+            const molsys::SimulationBox &simulationBox
+        ) const;
     };
 
 }   // namespace molsys

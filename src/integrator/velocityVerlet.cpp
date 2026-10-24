@@ -28,12 +28,6 @@
 namespace integrator
 {
     /**
-     * @brief Construct a new Velocity Verlet::Velocity Verlet object
-     *
-     */
-    VelocityVerlet::VelocityVerlet() : Integrator("VelocityVerlet") {}
-
-    /**
      * @brief applies first half step of velocity verlet algorithm
      *
      * @param simulationBox

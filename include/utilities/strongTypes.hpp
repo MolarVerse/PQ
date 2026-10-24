@@ -34,20 +34,20 @@ using StrongSizeT = mstd::StrongType<
     mstd::StrongTypeTrait::ORDERED | mstd::StrongTypeTrait::HASHABLE |
         mstd::StrongTypeTrait::INCREMENT>;
 
-// clang-format off
-struct AtomNumberTag{};
+struct AtomNumberTag
+{
+};
 using AtomNumber = StrongSizeT<struct AtomNumberTag>;
-// clang-format on
 
-// clang-format off
-struct AtomIndexTag{};
+struct AtomIndexTag
+{
+};
 using AtomIndex = StrongSizeT<struct AtomIndexTag>;
-// clang-format on
 
-// clang-format off
-struct AtomTypeTag{};
+struct AtomTypeTag
+{
+};
 using AtomType = StrongSizeT<struct AtomTypeTag>;
-// clang-format on
 
 struct ExtAtomTypeTag
 {

@@ -24,10 +24,8 @@
 
 #include <cstddef>
 #include <optional>
-#include <utility>
 
 #include "constraintSettings.hpp"
-#include "constraints.hpp"
 #include "enums/shake.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
@@ -48,12 +46,8 @@ namespace input
      * shake-tolerance "<double>" 3) shake-iter "<size_t>" 4) rattle-iter
      * "<size_t>" 5) rattle-tolerance "<double>"
      *
-     * @param constraints pointer to the constraints object
      */
-    ConstraintsInputParser::ConstraintsInputParser(
-        std::shared_ptr<constraints::Constraints> constraints
-    )
-        : _constraints(std::move(constraints))
+    ConstraintsInputParser::ConstraintsInputParser()
     {
         addShakeActivatedKeyword();
         addShakeToleranceKeyword();
@@ -80,14 +74,13 @@ namespace input
 
         const auto defaultValue = ShakeType::OFF;
 
-        const auto setValue = [constraints = _constraints](auto value)
+        const auto setValue = [](auto value)
         {
             switch (value)
             {
                 case ShakeType::ON:
                 case ShakeType::SHAKE:
                 {
-                    constraints->activateShake();
                     settings::ConstraintSettings::activateShake();
                     references::ReferencesOutput::addReferenceFile(
                         references::RATTLE_FILE
@@ -96,16 +89,12 @@ namespace input
                 }
                 case ShakeType::OFF:
                 {
-                    constraints->deactivateShake();
-                    constraints->deactivateMShake();
                     settings::ConstraintSettings::deactivateShake();
                     settings::ConstraintSettings::deactivateMShake();
                     break;
                 }
                 case ShakeType::MSHAKE:
                 {
-                    constraints->activateMShake();
-                    constraints->activateShake();
                     settings::ConstraintSettings::activateMShake();
                     settings::ConstraintSettings::activateShake();
                     break;
@@ -343,18 +332,12 @@ namespace input
 
         const auto defaultValue = false;
 
-        const auto setValue = [constraints = _constraints](auto value)
+        const auto setValue = [](auto value)
         {
             if (value)
-            {
-                constraints->activateDistanceConstraints();
                 settings::ConstraintSettings::activateDistanceConstraints();
-            }
             else
-            {
-                constraints->deactivateDistanceConstraints();
                 settings::ConstraintSettings::deactivateDistanceConstraints();
-            }
         };
 
         auto &key = _getRegistry().registerKey(

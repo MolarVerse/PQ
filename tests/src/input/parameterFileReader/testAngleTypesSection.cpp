@@ -40,7 +40,7 @@ TEST_F(TestParameterFileSection, processSectionAngle)
 {
     std::vector<std::string>           lineElements = {"0", "1.22", "234.3"};
     input::parameterFile::AngleSection angleSection;
-    angleSection.processSection(lineElements, *_engine);
+    angleSection.processSection(lineElements, *_engine, 0);
 
     const auto &angleTypes = _engine->getForceField()->getAngleTypes();
 
@@ -51,7 +51,7 @@ TEST_F(TestParameterFileSection, processSectionAngle)
 
     lineElements = {"1", "2", "1.0", "0"};
     EXPECT_THROW_MSG(
-        angleSection.processSection(lineElements, *_engine),
+        angleSection.processSection(lineElements, *_engine, 0),
         exc::ParameterFileException,
         "Wrong number of arguments in parameter file angle section at line 0 - "
         "number of elements has to be 3!"

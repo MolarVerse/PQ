@@ -188,7 +188,7 @@ namespace thermostat
      */
     void LangevinThermostat::setTargetTemperature(double targetTemperature)
     {
-        _targetTemperature = targetTemperature;
+        Thermostat::setTargetTemperature(targetTemperature);
         calculateSigma(_friction, targetTemperature);
     }
 
@@ -200,7 +200,7 @@ namespace thermostat
     void LangevinThermostat::setFriction(double friction)
     {
         _friction = friction;
-        calculateSigma(friction, _targetTemperature);
+        calculateSigma(friction, getTargetTemperature());
     }
 
     /**

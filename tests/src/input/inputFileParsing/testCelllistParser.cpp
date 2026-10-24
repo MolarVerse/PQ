@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "cellListInputParser.hpp"
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "testInputFileReader.hpp"
@@ -40,7 +39,7 @@
  */
 TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    input::CellListInputParser parser(_engine->getCellList());
+    input::CellListInputParser parser;
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("cell_list"));
     const auto& parseFunc = funcMap.at("cell_list");
@@ -74,17 +73,14 @@ TEST_F(TestInputFileReader, parseCellListActivated)
  */
 TEST_F(TestInputFileReader, numberOfCells)
 {
-    input::CellListInputParser parser(_engine->getCellList());
+    input::CellListInputParser parser;
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("cell_number"));
     const auto& parseFunc = funcMap.at("cell_number");
 
     std::vector<std::string> lineElements = {"cell-number", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        _engine->getCellList().getNumberOfCells(),
-        linalg::Vec3Dul(3, 3, 3)
-    );
+    EXPECT_EQ(settings::GeneralSettings::getNumberOfCells(), 3);
 
     _clearParser(parser);
 

@@ -23,8 +23,10 @@
 #include <gtest/gtest.h>
 
 #include "engine.hpp"
+#include "enums/potential.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
 #include "moldescriptorReader.hpp"
 #include "testMoldesctripotReader.hpp"
 #include "throwWithMessage.hpp"
@@ -148,7 +150,7 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
  */
 TEST_F(TestMoldescriptorReader, globalVdwTypes)
 {
-    _engine->getForceField()->activateNonCoulombic();
+    settings::ForceFieldSettings::setType(ForceFieldType::ON);
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor_withGlobalVdwTypes.dat"

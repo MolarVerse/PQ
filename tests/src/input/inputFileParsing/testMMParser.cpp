@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "MMInputParser.hpp"
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "forceFieldSettings.hpp"
 #include "potentialSettings.hpp"
@@ -42,33 +41,33 @@
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    input::MMInputParser parser(
-        _engine->getForceField(),
-        _engine->getPotential()
-    );
-    const auto funcMap = parser.getKeywordFuncMap();
+    input::MMInputParser parser;
+    const auto           funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("force_field"));
     const auto& parseFunc = funcMap.at("force_field");
 
     std::vector<std::string> lineElements = {"force-field", "=", "on"};
     parseFunc(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_TRUE(_engine->getForceField()->isNonCoulombicActivated());
+    EXPECT_TRUE(settings::ForceFieldSettings::isNonCoulombicActive());
 
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"force-field", "=", "off"};
     parseFunc(lineElements, 0);
     EXPECT_FALSE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
+    EXPECT_FALSE(settings::ForceFieldSettings::isNonCoulombicActive());
 
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"force-field", "=", "bonded"};
     parseFunc(lineElements, 0);
     EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
+    EXPECT_FALSE(settings::ForceFieldSettings::isNonCoulombicActive());
 
+    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"forceField", "=", "notValid"};
@@ -89,11 +88,8 @@ TEST_F(TestInputFileReader, testParseForceField)
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    input::MMInputParser parser(
-        _engine->getForceField(),
-        _engine->getPotential()
-    );
-    const auto funcMap = parser.getKeywordFuncMap();
+    input::MMInputParser parser;
+    const auto           funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("noncoulomb"));
     const auto& parseNonCoulombFunc = funcMap.at("noncoulomb");
 

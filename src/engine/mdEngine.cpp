@@ -23,8 +23,10 @@
 #include "mdEngine.hpp"
 
 #include "constants/conversionFactors.hpp"
+#include "constraintSettings.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
+#include "hybridConfigurator.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "referencesOutput.hpp"
@@ -39,8 +41,10 @@ namespace engine
      *
      * @details This constructor initializes the MDEngine with default settings.
      */
-    MDEngine::MDEngine()
-        : _integrator(std::make_unique<integrator::VelocityVerlet>()),
+    MDEngine::MDEngine(Settings settings)
+        : Engine(settings),
+          _resetKinetics(getSettings().resetKinetics),
+          _integrator(std::make_unique<integrator::VelocityVerlet>()),
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(std::make_unique<manostat::Manostat>())
     {
@@ -52,16 +56,16 @@ namespace engine
      */
     void MDEngine::run()
     {
-        _physicalData->calculateKinetics(getSimulationBox());
+        getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
 
-        _engineOutput.getLogOutput().writeInitialMomentum(
-            norm(_physicalData->getMomentum())
+        getEngineOutput().getLogOutput().writeInitialMomentum(
+            norm(getPhysicalDataPtr()->getMomentum())
         );
 
-        _nSteps = settings::TimingsSettings::getNumberOfSteps();
-        progressbar bar(static_cast<int>(_nSteps), true, std::cout);
+        _setNSteps(settings::TimingsSettings::getNumberOfSteps());
+        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
 
-        for (; _step <= _nSteps; ++_step)
+        for (; getStep() <= _getNSteps(); _setStep(getStep() + 1))
         {
             bar.update();
             takeStep();
@@ -77,9 +81,9 @@ namespace engine
 
         references::ReferencesOutput::writeReferencesFile();
 
-        _engineOutput.writeTimingsFile();
+        getEngineOutput().writeTimingsFile();
 
-        _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
+        getEngineOutput().getLogOutput().writeEndedNormally(elapsedTime);
         out::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 
@@ -89,14 +93,17 @@ namespace engine
      */
     void MDEngine::takeStepBeforeForces()
     {
-        _thermostat->applyThermostatHalfStep(*_simulationBox, *_physicalData);
+        _thermostat->applyThermostatHalfStep(
+            getSimulationBox(),
+            getPhysicalData()
+        );
 
-        if (_constraints->isMShakeActive())
-            _simulationBox->updateOldPositions();
+        if (settings::ConstraintSettings::isMShakeActivated())
+            getSimulationBox().updateOldPositions();
 
-        _integrator->firstStep(*_simulationBox);
+        getIntegrator().firstStep(getSimulationBox());
 
-        _constraints->applyShake(*_simulationBox);
+        getConstraints()->applyShake(getSimulationBox());
     }
 
     /**
@@ -105,49 +112,51 @@ namespace engine
      */
     void MDEngine::takeStepAfterForces()
     {
-        _resetKinetics.resetForces(_step, *_simulationBox);
+        _resetKinetics.resetForces(getStep(), getSimulationBox());
 
-        _constraints->applyDistanceConstraints(
-            *_simulationBox,
-            *_physicalData,
+        getConstraints()->applyDistanceConstraints(
+            getSimulationBox(),
+            getPhysicalData(),
             calculateTotalSimulationTime()
         );
 
-        _constraints->calculateConstraintBondRefs(*_simulationBox);
+        getConstraints()->calculateConstraintBondRefs(getSimulationBox());
 
         if (!settings::GeneralSettings::isHybridJobtype())
         {
             const auto virial =
-                virial::intraMolecularVirialCorrection(*_simulationBox);
-            _physicalData->addVirial(virial);
+                virial::intraMolecularVirialCorrection(getSimulationBox());
+            getPhysicalDataPtr()->addVirial(virial);
         }
 
-        _thermostat->applyThermostatOnForces(*_simulationBox);
+        _thermostat->applyThermostatOnForces(getSimulationBox());
 
-        _integrator->secondStep(*_simulationBox);
+        _integrator->secondStep(getSimulationBox());
 
-        _constraints->applyRattle(*_simulationBox);
+        getConstraints()->applyRattle(getSimulationBox());
 
-        _thermostat->applyThermostat(*_simulationBox, *_physicalData);
+        _thermostat->applyThermostat(getSimulationBox(), getPhysicalData());
 
-        _physicalData->calculateKinetics(*_simulationBox);
+        getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
 
-        _manostat->applyManostat(*_simulationBox, *_physicalData);
+        _manostat->applyManostat(getSimulationBox(), getPhysicalData());
 
-        _resetKinetics.reset(_step, *_physicalData, *_simulationBox);
+        _resetKinetics.reset(getStep(), getPhysicalData(), getSimulationBox());
 
         _thermostat->applyTemperatureRamping();
 
         if (settings::GeneralSettings::isQMOnlyJobtype())
         {
-            const auto nQMAtoms = _simulationBox->getNumberOfQMAtoms();
-            _physicalData->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
+            const auto nQMAtoms = getSimulationBox().getNumberOfQMAtoms();
+            getPhysicalDataPtr()->setNumberOfQMAtoms(
+                static_cast<double>(nQMAtoms)
+            );
         }
     }
 
     void MDEngine::calculateForcesWrapper()
     {
-        _simulationBox->resetAllForces();
+        getSimulationBox().resetAllForces();
         calculateForces();
     }
 
@@ -176,30 +185,39 @@ namespace engine
         const auto outputFreq =
             settings::OutputFileSettings::getOutputFrequency();
         const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = _step + step0;
+        const auto effStep = getStep() + step0;
 
-        if (0 == _step % outputFreq)
+        if (0 == getStep() % outputFreq)
         {
-            _engineOutput.writeXyzFile(*_simulationBox, effStep);
-            _engineOutput.writeVelFile(*_simulationBox, effStep);
-            _engineOutput.writeForceFile(*_simulationBox, effStep);
-            _engineOutput.writeChargeFile(*_simulationBox, effStep);
-            _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
+            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
+            getEngineOutput().writeVelFile(getSimulationBox(), effStep);
+            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+            getEngineOutput().writeChargeFile(getSimulationBox(), effStep);
+            getEngineOutput()
+                .writeRstFile(getSimulationBox(), *_thermostat, effStep);
 
-            _engineOutput.writeVirialFile(
+            getEngineOutput().writeVirialFile(
                 effStep,
-                *_physicalData
+                getPhysicalData()
             );   // use physicalData instead of averagePhysicalData
 
-            _engineOutput.writeStressFile(
+            getEngineOutput().writeStressFile(
                 effStep,
-                *_physicalData
+                getPhysicalData()
             );   // use physicalData instead of averagePhysicalData
 
-            _engineOutput.writeBoxFile(effStep, _simulationBox->getBox());
+            getEngineOutput().writeBoxFile(
+                effStep,
+                getSimulationBox().getBox()
+            );
 
             if (settings::GeneralSettings::isHybridJobtype())
-                _engineOutput.writeHybridCenterXyzFile(_configurator, effStep);
+            {
+                getEngineOutput().writeHybridCenterXyzFile(
+                    _configurator,
+                    effStep
+                );
+            }
         }
 
         // NOTE:
@@ -210,28 +228,39 @@ namespace engine
         // problem - could also be a feature and not a bug
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        _physicalData->setLoopTime(
+        getPhysicalDataPtr()->setLoopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
-        _averagePhysicalData.updateAverages(*_physicalData);
+        getAveragePhysicalData().updateAverages(getPhysicalData());
 
-        if (0 == _step % outputFreq)
+        if (0 == getStep() % outputFreq)
         {
-            _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
+            getAveragePhysicalData().makeAverages(
+                static_cast<double>(outputFreq)
+            );
 
             const auto timeStep      = settings::TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
             const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
 
-            _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-            _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
-            _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
-            _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
+            getEngineOutput().writeEnergyFile(
+                effStep,
+                getAveragePhysicalData()
+            );
+            getEngineOutput().writeInstantEnergyFile(
+                effStep,
+                getPhysicalData()
+            );
+            getEngineOutput().writeInfoFile(simTime, getAveragePhysicalData());
+            getEngineOutput().writeMomentumFile(
+                effStep,
+                getAveragePhysicalData()
+            );
 
-            _averagePhysicalData = physicalData::PhysicalData();
+            getAveragePhysicalData() = physicalData::PhysicalData();
         }
 
-        _physicalData->reset();
+        getPhysicalDataPtr()->reset();
     }
 
     /**
@@ -272,7 +301,7 @@ namespace engine
      */
     out::EnergyOutput &MDEngine::getInstantEnergyOutput()
     {
-        return _engineOutput.getInstantEnergyOutput();
+        return getEngineOutput().getInstantEnergyOutput();
     }
 
     /**
@@ -282,7 +311,7 @@ namespace engine
      */
     out::MomentumOutput &MDEngine::getMomentumOutput()
     {
-        return _engineOutput.getMomentumOutput();
+        return getEngineOutput().getMomentumOutput();
     }
 
     /**
@@ -292,7 +321,7 @@ namespace engine
      */
     out::TrajectoryOutput &MDEngine::getXyzHybridCenterOutput()
     {
-        return _engineOutput.getXyzHybridCenterOutput();
+        return getEngineOutput().getXyzHybridCenterOutput();
     }
 
     /**
@@ -302,7 +331,7 @@ namespace engine
      */
     out::TrajectoryOutput &MDEngine::getVelOutput()
     {
-        return _engineOutput.getVelOutput();
+        return getEngineOutput().getVelOutput();
     }
 
     /**
@@ -312,7 +341,7 @@ namespace engine
      */
     out::TrajectoryOutput &MDEngine::getChargeOutput()
     {
-        return _engineOutput.getChargeOutput();
+        return getEngineOutput().getChargeOutput();
     }
 
     /**
@@ -322,7 +351,7 @@ namespace engine
      */
     out::VirialOutput &MDEngine::getVirialOutput()
     {
-        return _engineOutput.getVirialOutput();
+        return getEngineOutput().getVirialOutput();
     }
 
     /**
@@ -332,7 +361,7 @@ namespace engine
      */
     out::StressOutput &MDEngine::getStressOutput()
     {
-        return _engineOutput.getStressOutput();
+        return getEngineOutput().getStressOutput();
     }
 
     /**
@@ -342,7 +371,7 @@ namespace engine
      */
     out::BoxFileOutput &MDEngine::getBoxFileOutput()
     {
-        return _engineOutput.getBoxFileOutput();
+        return getEngineOutput().getBoxFileOutput();
     }
 
     /**
@@ -352,7 +381,7 @@ namespace engine
      */
     out::RingPolymerRestartFileOutput &MDEngine::getRingPolymerRstFileOutput()
     {
-        return _engineOutput.getRingPolymerRstFileOutput();
+        return getEngineOutput().getRingPolymerRstFileOutput();
     }
 
     /**
@@ -362,7 +391,7 @@ namespace engine
      */
     out::RingPolymerTrajectoryOutput &MDEngine::getRingPolymerXyzOutput()
     {
-        return _engineOutput.getRingPolymerXyzOutput();
+        return getEngineOutput().getRingPolymerXyzOutput();
     }
 
     /**
@@ -372,7 +401,7 @@ namespace engine
      */
     out::RingPolymerTrajectoryOutput &MDEngine::getRingPolymerVelOutput()
     {
-        return _engineOutput.getRingPolymerVelOutput();
+        return getEngineOutput().getRingPolymerVelOutput();
     }
 
     /**
@@ -382,7 +411,7 @@ namespace engine
      */
     out::RingPolymerTrajectoryOutput &MDEngine::getRingPolymerForceOutput()
     {
-        return _engineOutput.getRingPolymerForceOutput();
+        return getEngineOutput().getRingPolymerForceOutput();
     }
 
     /**
@@ -392,7 +421,7 @@ namespace engine
      */
     out::RingPolymerTrajectoryOutput &MDEngine::getRingPolymerChargeOutput()
     {
-        return _engineOutput.getRingPolymerChargeOutput();
+        return getEngineOutput().getRingPolymerChargeOutput();
     }
 
     /**
@@ -402,7 +431,27 @@ namespace engine
      */
     out::RingPolymerEnergyOutput &MDEngine::getRingPolymerEnergyOutput()
     {
-        return _engineOutput.getRingPolymerEnergyOutput();
+        return getEngineOutput().getRingPolymerEnergyOutput();
     }
 
+    /**
+     * @brief get the reference to the hybrid configurator
+     *
+     * @return configurator::HybridConfigurator&
+     */
+    configurator::HybridConfigurator &MDEngine::_getHybridConfigurator()
+    {
+        return _configurator;
+    }
+
+    /**
+     * @brief get the reference to the hybrid configurator (const)
+     *
+     * @return const configurator::HybridConfigurator&
+     */
+    const configurator::HybridConfigurator &MDEngine::_getHybridConfigurator(
+    ) const
+    {
+        return _configurator;
+    }
 }   // namespace engine

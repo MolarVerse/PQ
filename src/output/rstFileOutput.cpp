@@ -85,9 +85,9 @@ namespace out
     {
         std::ostringstream buffer;
 
-        _fp.close();
+        _getFilePointer().close();
 
-        _fp.open(_fileName);
+        _openFile();
 
         buffer << "Step " << step << '\n';
 
@@ -141,8 +141,8 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
 }   // namespace out

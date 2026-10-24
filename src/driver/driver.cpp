@@ -23,7 +23,9 @@
 #include "driver.hpp"
 
 #include "engine.hpp"
+#include "engineFactory.hpp"
 #include "inputFileReader.hpp"
+#include "settings.hpp"
 #include "setup.hpp"
 
 namespace driver
@@ -36,10 +38,17 @@ namespace driver
      */
     void Driver::run(const std::string &inputFileName)
     {
-        auto engine = std::unique_ptr<engine::Engine>();
-        input::readJobType(inputFileName, engine);
+        Settings   settings;
+        const auto jobType = input::readJobType(inputFileName);
 
-        setup::setupRequestedJob(inputFileName, *engine);
+        input::readInputFile(inputFileName, settings);
+
+        settings.finalize();
+
+        std::unique_ptr<engine::Engine> engine =
+            engine::engineFactory.at(jobType)(settings);
+
+        setup::setupRequestedJob(*engine);
 
         engine->run();
     }

@@ -33,7 +33,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept Integral = std::integral<T>;
 
     /**
@@ -41,7 +41,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept FloatingPoint = std::floating_point<T>;
 
     /**
@@ -49,7 +49,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept Arithmetic = Integral<T> || FloatingPoint<T>;
 
     /**
@@ -57,7 +57,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     constexpr bool is_arithmetic_v = Arithmetic<T>;
 
 }   // namespace pq

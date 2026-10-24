@@ -35,6 +35,7 @@
 #include "intraWater.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
@@ -49,7 +50,7 @@ namespace engine
      */
     class Engine
     {
-       protected:
+       private:
         size_t _step   = 1;
         size_t _nSteps = 0;
 
@@ -69,12 +70,13 @@ namespace engine
         std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
 
-       private:
+        Settings _settings;
+
         struct Impl;
         std::unique_ptr<Impl> _impl;
 
        public:
-        Engine();
+        explicit Engine(Settings settings);
         virtual ~Engine();
 
         virtual void run()         = 0;
@@ -82,15 +84,6 @@ namespace engine
         static void  deleteTmpFiles();
 
         [[nodiscard]] double calculateTotalSimulationTime() const;
-
-        /**********************************
-         * information about active parts *
-         **********************************/
-
-        [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const;
-        [[nodiscard]] bool isGuffActivated() const;
-        [[nodiscard]] bool isConstraintsActivated() const;
-        [[nodiscard]] bool isIntraNonBondedActivated() const;
 
         /***************************
          * standard getter methods *
@@ -110,9 +103,12 @@ namespace engine
         [[nodiscard]]
         const std::shared_ptr<pot::Potential> &getPotential() const;
 
-        [[nodiscard]] molsys::SimulationBox      &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData &getAveragePhysicalData();
+        [[nodiscard]] molsys::SimulationBox       &getSimulationBox();
+        [[nodiscard]] const molsys::SimulationBox &getSimulationBox() const;
+        [[nodiscard]] physicalData::PhysicalData  &getPhysicalData();
+        [[nodiscard]] physicalData::PhysicalData  &getAveragePhysicalData();
+
+        [[nodiscard]] const Settings &getSettings() const;
 
         /*************************
          * output getter methods *
@@ -162,6 +158,21 @@ namespace engine
         [[nodiscard]] size_t getStep() const { return _step; }
 
         void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
+
+       protected:
+        [[nodiscard]]
+        waterModel::InterWater &_getInterWater();
+        [[nodiscard]]
+        const waterModel::InterWater &_getInterWater() const;
+
+        [[nodiscard]]
+        waterModel::IntraWater &_getIntraWater();
+        [[nodiscard]]
+        const waterModel::IntraWater &_getIntraWater() const;
+
+        [[nodiscard]] size_t _getNSteps() const;
+        void                 _setNSteps(size_t nSteps);
+        void                 _setStep(size_t step);
     };
 }   // namespace engine
 

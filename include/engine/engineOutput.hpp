@@ -172,14 +172,18 @@ namespace engine
 
         [[nodiscard]] out::OptOutput &getOptOutput();
 
-        // clang-format off
-        [[nodiscard]] out::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]] out::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
-        [[nodiscard]] out::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
-        [[nodiscard]] out::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
-        [[nodiscard]] out::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
-        [[nodiscard]] out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
-        // clang-format on
+        [[nodiscard]]
+        out::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
+        [[nodiscard]]
+        out::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
+        [[nodiscard]]
+        out::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
+        [[nodiscard]]
+        out::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
+        [[nodiscard]]
+        out::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
+        [[nodiscard]]
+        out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
 
         [[nodiscard]] out::TimingsOutput &getTimingsOutput();
     };

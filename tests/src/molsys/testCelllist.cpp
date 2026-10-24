@@ -142,7 +142,8 @@ TEST_F(TestCellList, getCellIndexOfAtom)
 
 TEST_F(TestCellList, getCellIndexOfAtomWrapsPeriodicBoundaryCoordinates)
 {
-    _simulationBox->setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _simulationBox->setBox(orthoBox);
     _cellList->setNumberOfCells(2);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
 
@@ -239,7 +240,8 @@ TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
  */
 TEST_F(TestCellList, checkCoulombCutoff)
 {
-    _simulationBox->setBoxDimensions(linalg::Vec3D(50.0, 50.0, 50.0));
+    molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
+    _simulationBox->setBox(orthoBox);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
     EXPECT_NO_THROW(_cellList->checkCoulombCutoff(200.0));
 
@@ -376,14 +378,13 @@ TEST_F(TestCellList, updateCellList)
     _cellList->setup(*_simulationBox);
     auto cellSizeOld = _cellList->getCellSize();
 
-    _simulationBox->setBoxDimensions(linalg::Vec3D(50.0, 50.0, 50.0));
-    _simulationBox->setBoxSizeHasChanged(true);
+    molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
+    _simulationBox->setBox(orthoBox);
 
     _cellList->updateCellList(*_simulationBox);
 
     EXPECT_NE(_cellList->getCellSize(), cellSizeOld);
 
-    _simulationBox->setBoxSizeHasChanged(false);
     cellSizeOld = _cellList->getCellSize();
     _cellList->updateCellList(*_simulationBox);
 

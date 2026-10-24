@@ -25,6 +25,27 @@
 namespace settings
 {
 
+    /**
+     * @brief check if any of the constraints algorithms are activated
+     *
+     * @return true if any of the constraints algorithms are activated
+     */
+    bool ConstraintSettings::isActive()
+    {
+        return _shakeActive || _mShakeActive || _distanceConstsActive;
+    }
+
+    /**
+     * @brief check if any of the shake-like algorithms (shake or mShake) are
+     * activated
+     *
+     * @return true if any of the shake-like algorithms are activated
+     */
+    bool ConstraintSettings::isShakeLikeActive()
+    {
+        return _shakeActive || _mShakeActive;
+    }
+
     /*****************************
      *                           *
      * standard activate methods *

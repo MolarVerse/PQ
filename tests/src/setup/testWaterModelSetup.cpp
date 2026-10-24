@@ -30,6 +30,7 @@
 #include "angleForceField.hpp"
 #include "atom.hpp"
 #include "bondForceField.hpp"
+#include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "interWater.hpp"
@@ -177,7 +178,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntramolecularModels)
     }
 
     const auto &constraints = _mdEngine->getConstraints();
-    EXPECT_TRUE(constraints->isShakeActive());
+    EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
     EXPECT_EQ(constraints->getNumberOfBondConstraints(), 18);
 }
 

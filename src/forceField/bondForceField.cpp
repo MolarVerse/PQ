@@ -72,14 +72,21 @@ namespace ff
         pot::NonCoulombPotential    &nonCoulombPot
     )
     {
+        const auto &molecules = get_molecules();
+
+        auto *molecule1 = molecules[0];
+        auto *molecule2 = molecules[1];
+
         const bool bothInactive =
-            !_molecules[0]->isActive() && !_molecules[1]->isActive();
+            !molecule1->isActive() && !molecule2->isActive();
 
         if (bothInactive)
             return;
 
-        const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-        const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
+        const auto &atomIndices = get_atomIndices();
+
+        const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
+        const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
         auto       dPosition = position1 - position2;
 
         simulationBox.applyPBC(dPosition);
@@ -98,10 +105,10 @@ namespace ff
                 coulombPot,
                 nonCoulombPot,
                 physicalData,
-                _molecules[0],
-                _molecules[1],
-                _atomIndices[0],
-                _atomIndices[1],
+                molecule1,
+                molecule2,
+                atomIndices[0],
+                atomIndices[1],
                 distance
             );
         }
@@ -110,8 +117,8 @@ namespace ff
 
         const auto force = forceMagnitude * dPosition;
 
-        _molecules[0]->addAtomForce(_atomIndices[0], force);
-        _molecules[1]->addAtomForce(_atomIndices[1], -force);
+        molecule1->addAtomForce(atomIndices[0], force);
+        molecule2->addAtomForce(atomIndices[1], -force);
 
         using enum SmoothingMethod;
 
@@ -119,8 +126,8 @@ namespace ff
         const auto smoothing = settings::HybridSettings::getSmoothingMethod();
 
         if (smoothing == HOTSPOT &&
-            _molecules[0]->getHybridZone() == molsys::HybridZone::SMOOTHING)
-            smF = _molecules[0]->getSmoothingFactor();
+            molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)
+            smF = molecule1->getSmoothingFactor();
 
         physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
     }

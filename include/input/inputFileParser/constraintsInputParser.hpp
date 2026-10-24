@@ -26,11 +26,6 @@
 
 #include "inputFileParser.hpp"
 
-namespace constraints
-{
-    class Constraints;
-}   // namespace constraints
-
 namespace input
 {
     /**
@@ -41,13 +36,8 @@ namespace input
      */
     class ConstraintsInputParser : public InputFileParser
     {
-       private:
-        std::shared_ptr<constraints::Constraints> _constraints;
-
        public:
-        explicit ConstraintsInputParser(
-            std::shared_ptr<constraints::Constraints> constraints
-        );
+        explicit ConstraintsInputParser();
 
         void addShakeActivatedKeyword();
         void addShakeToleranceKeyword();

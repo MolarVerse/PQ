@@ -74,7 +74,7 @@ namespace waterModel
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
             coulombEnergy += e;
 
-            if (distance < nonCoulPair.getRadialCutOff())
+            if (distance < nonCoulPair.get_radialCutoff())
             {
                 const auto [nonCoulE, nonCoulF] =
                     nonCoulPair.calculate(distance);
@@ -186,7 +186,7 @@ namespace waterModel
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
             coulombEnergy += e;
 
-            if (distance < nonCoulPair.getRadialCutOff())
+            if (distance < nonCoulPair.get_radialCutoff())
             {
                 auto [nonCoulE, nonCoulF]  = nonCoulPair.calculate(distance);
                 nonCoulombEnergy          += nonCoulE;
@@ -210,7 +210,7 @@ namespace waterModel
      * @tparam T Charge tag type.
      */
     template <typename T>
-    double InterWaterStrategy::getPartialCharge(molsys::Atom &) const
+    double InterWaterStrategy::getPartialCharge(molsys::Atom & /*atom*/) const
     {
         std::abort();
     }
@@ -224,8 +224,8 @@ namespace waterModel
 
         if (atom.getQMCharge() && useQMCharges)
             return atom.getQMCharge().value();
-        else
-            return atom.getPartialCharge();
+
+        return atom.getPartialCharge();
     }
 
     template <>

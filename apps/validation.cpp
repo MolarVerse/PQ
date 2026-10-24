@@ -33,6 +33,7 @@
 #include <string>
 #include <string_view>
 
+#include "constraintSettings.hpp"
 #include "engine.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
@@ -268,9 +269,9 @@ namespace
         }
     }
 
-    void validateInputDependencies(engine::Engine &engine)
+    void validateInputDependencies()
     {
-        if (engine.isConstraintsActivated() ||
+        if (settings::ConstraintSettings::isActive() ||
             settings::ForceFieldSettings::isActive())
         {
             if (!settings::FileSettings::isTopologyFileNameSet())
@@ -285,7 +286,7 @@ namespace
                 "Parameter file needed for requested simulation setup"
             );
 
-        if (engine.getConstraints()->isMShakeActive() &&
+        if (settings::ConstraintSettings::isMShakeActivated() &&
             settings::FileSettings::getMShakeFileName().empty())
             throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
@@ -294,7 +295,7 @@ namespace
         validateExternalQMScriptSelection();
     }
 
-    void validateEffectiveFiles(engine::Engine &engine)
+    void validateEffectiveFiles()
     {
         requireFile(settings::FileSettings::getStartFileName(), "Start file");
 
@@ -324,7 +325,7 @@ namespace
         }
 
         if (settings::GeneralSettings::isMMActivated() &&
-            !engine.isForceFieldNonCoulombicsActivated())
+            !settings::ForceFieldSettings::isNonCoulombicActive())
         {
             requireFile(
                 settings::FileSettings::getGuffDatFileName(),
@@ -332,7 +333,7 @@ namespace
             );
         }
 
-        if (engine.isConstraintsActivated() ||
+        if (settings::ConstraintSettings::isActive() ||
             settings::ForceFieldSettings::isActive())
         {
             requireFile(
@@ -498,22 +499,23 @@ cli::ValidationResult cli::validateInputFile(
 
     try
     {
-        input::readJobType(std::string(inputFile), engine);
+        Settings   settings;
+        const auto _ = input::readJobType(std::string(inputFile));
 
         input::InputFileReader reader(
             inputFile,
-            *engine,
+            settings,
             scope == ValidationScope::INSTALLED,
             false
         );
         reader.read();
         reader.postProcess();
         reader.validateInputConfiguration();
-        validateInputDependencies(*engine);
+        validateInputDependencies();
         if (scope == ValidationScope::INSTALLED)
         {
             validateCompiledCapabilities();
-            validateEffectiveFiles(*engine);
+            validateEffectiveFiles();
         }
 
         auto result = ValidationResult{

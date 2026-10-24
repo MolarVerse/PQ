@@ -103,10 +103,8 @@ namespace input::restartFile
             }
 
             auto *section = determineSection(lineElements);
-            section->setLineNumber(lineNumber);
             section->setFilePointer(&_fp);
-            section->process(lineElements, _engine);
-            lineNumber = section->getLineNumber();
+            section->process(lineElements, _engine, lineNumber);
             ++lineNumber;
         }
     }

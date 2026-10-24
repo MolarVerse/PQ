@@ -79,4 +79,23 @@ namespace QM
         run(simulationBox, physicalData, molsys::Periodicity::XYZ);
     }
 
+    /**
+     * @brief get the periodicity of the QM runner
+     *
+     * @return the periodicity
+     */
+    molsys::Periodicity QMRunner::_getPeriodicity() const
+    {
+        return _periodicity;
+    }
+
+    /**
+     * @brief set the periodicity of the QM runner
+     *
+     * @param per the periodicity to set
+     */
+    void QMRunner::_setPeriodicity(molsys::Periodicity per)
+    {
+        _periodicity = per;
+    }
 }   // namespace QM

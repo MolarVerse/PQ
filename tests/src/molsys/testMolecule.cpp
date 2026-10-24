@@ -32,8 +32,7 @@ TEST_F(TestMolecule, calculateCenterOfMass)
 {
     const linalg::Vec3D     boxDimensions = {10.0, 10.0, 10.0};
     const linalg::Vec3D     centerOfMass  = {1.0 / 3.0, 1.0 / 2.0, 0.0};
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions(boxDimensions);
+    molsys::OrthorhombicBox box(boxDimensions);
 
     _molecule->calculateCenterOfMass(box);
     EXPECT_EQ(_molecule->getCenterOfMass(), centerOfMass);
@@ -46,8 +45,7 @@ TEST_F(TestMolecule, scaleAtoms)
     const auto atomPosition2     = _molecule->getAtomPosition(AtomIndex{1});
     const auto atomPosition3     = _molecule->getAtomPosition(AtomIndex{2});
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+    molsys::OrthorhombicBox box({10.0, 10.0, 10.0});
 
     _molecule->calculateCenterOfMass(box);
 
@@ -66,8 +64,7 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
 {
     const linalg::tensor3D scale = diagonalMatrix(linalg::Vec3D{0.5, 0.5, 0.5});
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({2.0, 2.0, 2.0});
+    molsys::OrthorhombicBox box({2.0, 2.0, 2.0});
 
     _molecule->setAtomPosition(0, {0.9, 0.0, 0.0});
     _molecule->setAtomPosition(1, {-0.9, 0.0, 0.0});
@@ -99,8 +96,7 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
     const linalg::tensor3D scale =
         diagonalMatrix(linalg::Vec3D{0.5, 0.25, 2.0});
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+    molsys::OrthorhombicBox box({10.0, 10.0, 10.0});
 
     const auto relativeVelocity10 = _molecule->getAtomVelocity(AtomIndex{1}) -
                                     _molecule->getAtomVelocity(AtomIndex{0});

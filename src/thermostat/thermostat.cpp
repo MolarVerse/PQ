@@ -121,6 +121,16 @@ namespace thermostat
     }
 
     /**
+     * @brief set temperature
+     *
+     * @param temperature
+     */
+    void Thermostat::setTemperature(double temperature)
+    {
+        _temperature = temperature;
+    }
+
+    /**
      * @brief set temperature increase
      *
      * @param temperatureIncrease

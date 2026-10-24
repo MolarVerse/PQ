@@ -95,6 +95,8 @@ namespace pot
 
                 for (size_t mol_j = 0; mol_j < mol_i; ++mol_j)
                 {
+                    MSTD_HOT_PATH;
+
                     auto *molecule_j = cell_i.getMolecule(mol_j);
 
                     if (isWaterPair(molecule_i, molecule_j))
@@ -129,6 +131,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto nMolsInCell_j = cell_j->getNumberOfMolecules();
 
                 for (size_t mol_i = 0; mol_i < nMolsInCell_i; ++mol_i)
@@ -210,6 +214,8 @@ namespace pot
 
             for (const auto mol_i : cell_i.getCoreMoleculeIndices())
             {
+                MSTD_HOT_PATH;
+
                 for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules, mol_i) &&
@@ -236,6 +242,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 
@@ -268,6 +276,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 
@@ -337,6 +347,8 @@ namespace pot
 
             for (const auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
             {
+                MSTD_HOT_PATH;
+
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
                 for (const auto mol_j : cell_i.getActiveMoleculeIndices())
@@ -376,6 +388,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 
@@ -422,6 +436,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 
@@ -499,6 +515,8 @@ namespace pot
 
             for (const auto mol_i : cell_i.getActiveMoleculeIndices())
             {
+                MSTD_HOT_PATH;
+
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
                 for (const auto mol_j : cell_i.getActiveMoleculeIndices())
@@ -541,6 +559,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 
@@ -620,6 +640,8 @@ namespace pot
 
             for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
             {
+                MSTD_HOT_PATH;
+
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
                 for (const auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
@@ -678,6 +700,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 
@@ -748,6 +772,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 
@@ -818,6 +844,8 @@ namespace pot
 
             for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
             {
+                MSTD_HOT_PATH;
+
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
                 for (const auto mol_j : cell_i.getSmoothingMoleculeIndices())
@@ -860,6 +888,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 
@@ -909,6 +939,8 @@ namespace pot
 
             for (const auto *cell_j : cell_i.getNeighbourCells())
             {
+                MSTD_HOT_PATH;
+
                 const auto &waterMolecules_j =
                     cell_j->getWaterMoleculeIndices();
 

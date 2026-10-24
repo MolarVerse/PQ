@@ -51,7 +51,9 @@ class TestDihedralForceField : public TestNonCoulombPotentialFF
 TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 {
     auto box = molsys::SimulationBox();
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    box.setBox(orthoBox);
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(20.0);

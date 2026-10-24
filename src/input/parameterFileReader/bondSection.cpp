@@ -49,15 +49,16 @@ namespace input::parameterFile
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the parameter file being processed
      *
-     * @throw exc::ParameterFileException if number of elements in line
      * is not 3
      * @throw exc::ParameterFileException if equilibrium distance is
      * negative
      */
     void BondSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         if (lineElements.size() != 3)
@@ -68,7 +69,7 @@ namespace input::parameterFile
                     "Wrong number of arguments in parameter file bond section "
                     "at "
                     "line {} - number of elements has to be 3!",
-                    _lineNumber
+                    lineNumber
                 )
 
             );
@@ -85,7 +86,7 @@ namespace input::parameterFile
                     "Parameter file bond section at line {} - equilibrium "
                     "distance "
                     "has to be positive!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

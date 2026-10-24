@@ -32,7 +32,6 @@
 #include "exceptions.hpp"
 #include "externalQMRunner.hpp"
 #include "generalSettings.hpp"
-#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
@@ -45,7 +44,7 @@
 
 namespace
 {
-    class DefaultExternalQMRunner final : public QM::ExternalQMRunner
+    class DefaultExternalQMRunner : public QM::ExternalQMRunner
     {
        public:
         void execute(molsys::SimulationBox & /*simBox*/) override {}
@@ -69,12 +68,12 @@ TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
 {
     DefaultExternalQMRunner    runner;
     molsys::SimulationBox      simBox;
-    molsys::OrthorhombicBox    box;
     physicalData::PhysicalData physicalData;
     QM::ExternalQMRunner *volatile baseRunner = &runner;
 
     EXPECT_NO_THROW(baseRunner->writePointChargeFile(simBox));
-    EXPECT_NO_THROW(baseRunner->readStressTensor(box, physicalData));
+    EXPECT_NO_THROW(baseRunner->readStressTensor(simBox.getBox(), physicalData)
+    );
 }
 
 TEST(TestQMSetup, resolvesBundledQMScript)
@@ -95,7 +94,8 @@ TEST(TestQMSetup, resolvesBundledQMScript)
 
 TEST(TestQMSetup, setupDftbplus)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
@@ -116,7 +116,8 @@ TEST(TestQMSetup, setupDftbplus)
 
 TEST(TestQMSetup, setupPySCF)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(QMMethod::PYSCF);
@@ -137,7 +138,8 @@ TEST(TestQMSetup, setupPySCF)
 
 TEST(TestQMSetup, setupTurbomoleRunner)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
     auto               setupQM = setup::QMSetup(engine);
 
     settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
@@ -161,14 +163,16 @@ TEST(TestQMSetup, setupQMFull)
     settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("test");
 
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
     EXPECT_NO_THROW(setup::setupQM(engine));
 }
 
 #ifdef WITH_ASE
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
 
     settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     settings::QMSettings::setSlakosType(SlakosType::THREEOB);
@@ -180,7 +184,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
 
     settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     settings::QMSettings::setSlakosType(SlakosType::THREEOB);
@@ -193,7 +198,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
 
     settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     settings::QMSettings::setSlakosType(SlakosType::THREEOB);
@@ -206,7 +212,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
 
     settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     settings::QMSettings::setSlakosType(SlakosType::MATSCI);
@@ -220,7 +227,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine(settings);
 
     settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
@@ -233,14 +241,16 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
 {
-    auto *_engine  = new engine::QMMDEngine();
-    auto *_qmSetup = new setup::QMSetup(*_engine);
+    Settings                            settings;
+    std::unique_ptr<engine::QMMDEngine> engine =
+        std::make_unique<engine::QMMDEngine>(settings);
+    setup::QMSetup qmSetup(*engine);
 
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("path/To/myQMScript");
 
-    _qmSetup->setupWriteInfo();
+    qmSetup.setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
@@ -257,21 +267,21 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
 
     const auto errorCode = std::remove("default.log");
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-    delete _engine;
-    delete _qmSetup;
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
 {
-    auto *_engine  = new engine::QMMDEngine();
-    auto *_qmSetup = new setup::QMSetup(*_engine);
+    Settings                            settings;
+    std::unique_ptr<engine::QMMDEngine> engine =
+        std::make_unique<engine::QMMDEngine>(settings);
+    setup::QMSetup qmSetup(*engine);
 
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("path/To/myQMScript");
     settings::QMSettings::setQMLoopTimeLimit(-1.2);
 
-    _qmSetup->setupWriteInfo();
+    qmSetup.setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
@@ -288,21 +298,21 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
 
     const auto errorCode = std::remove("default.log");
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-    delete _engine;
-    delete _qmSetup;
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitZero)
 {
-    auto *_engine  = new engine::QMMDEngine();
-    auto *_qmSetup = new setup::QMSetup(*_engine);
+    Settings                            settings;
+    std::unique_ptr<engine::QMMDEngine> engine =
+        std::make_unique<engine::QMMDEngine>(settings);
+    setup::QMSetup qmSetup(*engine);
 
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("path/To/myQMScript");
     settings::QMSettings::setQMLoopTimeLimit(0);
 
-    _qmSetup->setupWriteInfo();
+    qmSetup.setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
@@ -319,21 +329,21 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
 
     const auto errorCode = std::remove("default.log");
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-    delete _engine;
-    delete _qmSetup;
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
 {
-    auto *_engine  = new engine::QMMDEngine();
-    auto *_qmSetup = new setup::QMSetup(*_engine);
+    Settings                            settings;
+    std::unique_ptr<engine::QMMDEngine> engine =
+        std::make_unique<engine::QMMDEngine>(settings);
+    setup::QMSetup qmSetup(*engine);
 
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::QMSettings::setQMScript("path/To/myQMScript");
     settings::QMSettings::setQMLoopTimeLimit(3.14);
 
-    _qmSetup->setupWriteInfo();
+    qmSetup.setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
@@ -350,14 +360,14 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
 
     const auto errorCode = std::remove("default.log");
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-    delete _engine;
-    delete _qmSetup;
 }
 
 TEST(TestQMSetup, setupQMRunnerFennol)
 {
-    auto *_engine  = new engine::QMMDEngine();
-    auto *_qmSetup = new setup::QMSetup(*_engine);
+    Settings                            settings;
+    std::unique_ptr<engine::QMMDEngine> _engine =
+        std::make_unique<engine::QMMDEngine>(settings);
+    setup::QMSetup _qmSetup(*_engine);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings::QMSettings::setQMMethod(QMMethod::FENNOL);
@@ -365,9 +375,8 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     settings::QMSettings::setUseGPUPreprocessing(false);
     settings::GeneralSettings::setFloatingPointType(FPType::FLOAT);
 
-    _qmSetup->setupWriteInfo();
+    _qmSetup.setupWriteInfo();
 
-    // clang-format off
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
@@ -375,15 +384,15 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    EXPECT_EQ(line, "         Model path:               path/To/fennol_model.fnx");
+    EXPECT_EQ(
+        line,
+        "         Model path:               path/To/fennol_model.fnx"
+    );
     getline(file, line);
     EXPECT_EQ(line, "         Using GPU pre-processing: false");
     getline(file, line);
     EXPECT_EQ(line, "         Using float64:            false");
-    // clang-format on
 
     const auto errorCode = std::remove("default.log");
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-    delete _engine;
-    delete _qmSetup;
 }

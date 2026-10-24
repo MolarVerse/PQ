@@ -23,6 +23,9 @@
 #ifndef _KEY_VALIDATOR_BASE_HPP_
 #define _KEY_VALIDATOR_BASE_HPP_
 
+#include <memory>
+#include <string>
+
 namespace input
 {
     /**

@@ -1,0 +1,1 @@
+- remove color settings when using VS Code IDE

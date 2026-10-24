@@ -25,36 +25,33 @@
 
 #include <optional>
 
-namespace settings
+/**
+ * @brief A template class representing a configurable setting.
+ *
+ * @tparam T The type of the setting value.
+ */
+template <typename T>
+class Setting
 {
-    /**
-     * @brief A template class representing a configurable setting.
-     *
-     * @tparam T The type of the setting value.
-     */
-    template <typename T>
-    class Setting
-    {
-       private:
-        std::optional<T> _default = std::nullopt;
-        std::optional<T> _value   = std::nullopt;
+   private:
+    std::optional<T> _default = std::nullopt;
+    std::optional<T> _value   = std::nullopt;
 
-       public:
-        explicit Setting() = default;
-        explicit Setting(const T& defaultValue);
+   public:
+    explicit Setting() = default;
+    explicit Setting(const T& defaultValue);
 
-        [[nodiscard]]
-        const T& get() const;
+    [[nodiscard]]
+    const T& get() const;
 
-        void set(const T& value);
+    void set(const T& value);
 
-        [[nodiscard]]
-        bool isSet() const;
-    };
-}   // namespace settings
+    [[nodiscard]]
+    bool isSet() const;
+};
 
 #ifndef _SETTING_TPP_
 #include "setting.tpp"
-#endif   // _SETTING_TPP_
+#endif
 
 #endif   // _SETTING_HPP_

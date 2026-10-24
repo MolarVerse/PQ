@@ -26,60 +26,57 @@
 #include "exceptions.hpp"
 #include "setting.hpp"
 
-namespace settings
+/**
+ * Construct a setting with a default value.
+ *
+ * @param defaultValue the default value for the setting.
+ */
+template <typename T>
+Setting<T>::Setting(const T& defaultValue) : _default(defaultValue)
 {
-    /**
-     * Construct a setting with a default value.
-     *
-     * @param defaultValue the default value for the setting.
-     */
-    template <typename T>
-    Setting<T>::Setting(const T& defaultValue) : _default(defaultValue)
-    {
-    }
+}
 
-    /**
-     * Check if the setting has been set.
-     *
-     * @return true if the setting has a value, false otherwise.
-     */
-    template <typename T>
-    bool Setting<T>::isSet() const
-    {
-        return _value.has_value();
-    }
+/**
+ * Check if the setting has been set.
+ *
+ * @return true if the setting has a value, false otherwise.
+ */
+template <typename T>
+bool Setting<T>::isSet() const
+{
+    return _value.has_value();
+}
 
-    /**
-     * Get the value of the setting.
-     *
-     * @return the value of the setting if set, otherwise the default value.
-     * @throws exc::SettingsException if the setting is not set and no default
-     * is available.
-     */
-    template <typename T>
-    const T& Setting<T>::get() const
-    {
-        if (!_value.has_value() && !_default.has_value())
-            throw exc::SettingsException(
-                "Setting value is not set and no default is available."
-            );
+/**
+ * Get the value of the setting.
+ *
+ * @return the value of the setting if set, otherwise the default value.
+ * @throws exc::SettingsException if the setting is not set and no default
+ * is available.
+ */
+template <typename T>
+const T& Setting<T>::get() const
+{
+    if (!_value.has_value() && !_default.has_value())
+        throw exc::SettingsException(
+            "Setting value is not set and no default is available."
+        );
 
-        if (!_value.has_value())
-            return _default.value();
+    if (!_value.has_value())
+        return _default.value();
 
-        return _value.value();
-    }
+    return _value.value();
+}
 
-    /**
-     * Set the value of the setting.
-     *
-     * @param value the value to set for the setting.
-     */
-    template <typename T>
-    void Setting<T>::set(const T& value)
-    {
-        _value = value;
-    }
-}   // namespace settings
+/**
+ * Set the value of the setting.
+ *
+ * @param value the value to set for the setting.
+ */
+template <typename T>
+void Setting<T>::set(const T& value)
+{
+    _value = value;
+}
 
 #endif   // _SETTING_TPP_

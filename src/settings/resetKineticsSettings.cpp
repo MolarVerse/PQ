@@ -22,126 +22,168 @@
 
 #include "resetKineticsSettings.hpp"
 
-namespace settings
+#include "timingsSettings.hpp"
+
+/**
+ * @brief Construct a new Reset Kinetics Settings object
+ *
+ */
+ResetKineticsSettings::ResetKineticsSettings()
+    : _nScale(0),
+      _fScale(0),
+      _nReset(0),
+      _fReset(0),
+      _nResetAngular(0),
+      _fResetAngular(0),
+      _fResetForces(0)
 {
+}
 
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
+/**
+ * @brief Finalize the reset kinetics settings by setting default values for
+ * certain fields if they are zero
+ */
+void ResetKineticsSettings::finalize()
+{
+    const auto numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
 
-    /**
-     * @brief set nScale
-     *
-     * @param nScale
-     */
-    void ResetKineticsSettings::setNScale(size_t nScale) { _nScale = nScale; }
+    if (_fScale.get() == 0)
+        _fScale.set(numberOfSteps + 1);
 
-    /**
-     * @brief set fScale
-     *
-     * @param fScale
-     */
-    void ResetKineticsSettings::setFScale(size_t fScale) { _fScale = fScale; }
+    if (_fReset.get() == 0)
+        _fReset.set(numberOfSteps + 1);
 
-    /**
-     * @brief set nReset
-     *
-     * @param nReset
-     */
-    void ResetKineticsSettings::setNReset(size_t nReset) { _nReset = nReset; }
+    if (_fResetAngular.get() == 0)
+        _fResetAngular.set(numberOfSteps + 1);
 
-    /**
-     * @brief set fReset
-     *
-     * @param fReset
-     */
-    void ResetKineticsSettings::setFReset(size_t fReset) { _fReset = fReset; }
+    if (_fResetForces.get() == 0)
+        _fResetForces.set(numberOfSteps + 1);
+}
 
-    /**
-     * @brief set nResetAngular
-     *
-     * @param nResetAngular
-     */
-    void ResetKineticsSettings::setNResetAngular(size_t nResetAngular)
-    {
-        _nResetAngular = nResetAngular;
-    }
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
 
-    /**
-     * @brief set fResetAngular
-     *
-     * @param fResetAngular
-     */
-    void ResetKineticsSettings::setFResetAngular(size_t fResetAngular)
-    {
-        _fResetAngular = fResetAngular;
-    }
+/**
+ * @brief set nScale
+ *
+ * @param nScale
+ */
+void ResetKineticsSettings::setNScale(size_t nScale) { _nScale.set(nScale); }
 
-    /**
-     * @brief set fResetForces
-     *
-     * @param fResetForces
-     */
-    void ResetKineticsSettings::setFResetForces(size_t fResetForces)
-    {
-        _fResetForces = fResetForces;
-    }
+/**
+ * @brief set fScale
+ *
+ * @param fScale
+ */
+void ResetKineticsSettings::setFScale(size_t fScale) { _fScale.set(fScale); }
 
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
+/**
+ * @brief set nReset
+ *
+ * @param nReset
+ */
+void ResetKineticsSettings::setNReset(size_t nReset) { _nReset.set(nReset); }
 
-    /**
-     * @brief get nScale
-     *
-     * @return size_t
-     */
-    size_t ResetKineticsSettings::getNScale() { return _nScale; }
+/**
+ * @brief set fReset
+ *
+ * @param fReset
+ */
+void ResetKineticsSettings::setFReset(size_t fReset) { _fReset.set(fReset); }
 
-    /**
-     * @brief get fScale
-     *
-     * @return size_t
-     */
-    size_t ResetKineticsSettings::getFScale() { return _fScale; }
+/**
+ * @brief set nResetAngular
+ *
+ * @param nResetAngular
+ */
+void ResetKineticsSettings::setNResetAngular(size_t nResetAngular)
+{
+    _nResetAngular.set(nResetAngular);
+}
 
-    /**
-     * @brief get nReset
-     *
-     * @return size_t
-     */
-    size_t ResetKineticsSettings::getNReset() { return _nReset; }
+/**
+ * @brief set fResetAngular
+ *
+ * @param fResetAngular
+ */
+void ResetKineticsSettings::setFResetAngular(size_t fResetAngular)
+{
+    _fResetAngular.set(fResetAngular);
+}
 
-    /**
-     * @brief get fReset
-     *
-     * @return size_t
-     */
-    size_t ResetKineticsSettings::getFReset() { return _fReset; }
+/**
+ * @brief set fResetForces
+ *
+ * @param fResetForces
+ */
+void ResetKineticsSettings::setFResetForces(size_t fResetForces)
+{
+    _fResetForces.set(fResetForces);
+}
 
-    /**
-     * @brief get nResetAngular
-     *
-     * @return size_t
-     */
-    size_t ResetKineticsSettings::getNResetAngular() { return _nResetAngular; }
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
 
-    /**
-     * @brief get fResetAngular
-     *
-     * @return size_t
-     */
-    size_t ResetKineticsSettings::getFResetAngular() { return _fResetAngular; }
+/**
+ * @brief get nScale
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getNScale() const { return _nScale.get(); }
 
-    /**
-     * @brief get fResetForces
-     *
-     * @return size_t
-     */
-    size_t ResetKineticsSettings::getFResetForces() { return _fResetForces; }
+/**
+ * @brief get fScale
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getFScale() const { return _fScale.get(); }
 
-}   // namespace settings
+/**
+ * @brief get nReset
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getNReset() const { return _nReset.get(); }
+
+/**
+ * @brief get fReset
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getFReset() const { return _fReset.get(); }
+
+/**
+ * @brief get nResetAngular
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getNResetAngular() const
+{
+    return _nResetAngular.get();
+}
+
+/**
+ * @brief get fResetAngular
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getFResetAngular() const
+{
+    return _fResetAngular.get();
+}
+
+/**
+ * @brief get fResetForces
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getFResetForces() const
+{
+    return _fResetForces.get();
+}

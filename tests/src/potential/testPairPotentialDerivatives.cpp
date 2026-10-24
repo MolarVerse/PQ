@@ -32,7 +32,7 @@
 
 namespace
 {
-    template <class EnergyFunction>
+    template <typename EnergyFunction>
     double centralDifference(
         const EnergyFunction &energyAt,
         const double          distance
@@ -43,7 +43,7 @@ namespace
                (2.0 * step);
     }
 
-    template <class Calculate>
+    template <typename Calculate>
     void expectForceIsNegativeEnergyDerivative(
         const Calculate &calculate,
         const double     distance,
