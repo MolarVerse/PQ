@@ -1,0 +1,1 @@
+- fix false-positive clangd-tidy errors on header-only files with no matching compile command by adding fallback include paths in `.clangd`
