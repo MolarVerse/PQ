@@ -130,15 +130,14 @@ namespace manostat
         }
         else
         {
-            auto candidate =
-                dynamic_cast<const molsys::OrthorhombicBox &>(box);
+            auto candidate = dynamic_cast<const molsys::OrthorhombicBox &>(box);
             _validateCandidate(candidate, mu);
         }
     }
 
     /** @brief Scale and validate a candidate cell. */
     void Manostat::_validateCandidate(
-        molsys::Box           &candidate,
+        molsys::Box            &candidate,
         const linalg::tensor3D &mu
     )
     {
@@ -146,8 +145,7 @@ namespace manostat
         const auto volume     = candidate.getVolume();
         const auto dimensions = candidate.get_boxDimensions();
         const auto angles     = candidate.getBoxAngles();
-        const auto matrix =
-            candidate.getBoxMatrix(molsys::Periodicity::XYZ);
+        const auto matrix = candidate.getBoxMatrix(molsys::Periodicity::XYZ);
         if (!std::isfinite(volume) || volume <= 0.0 ||
             !linalg::isFinite(matrix) || !linalg::isFinite(inverse(matrix)))
         {
