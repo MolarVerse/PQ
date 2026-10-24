@@ -84,10 +84,12 @@ namespace setup
                 { return molecule.getNumberOfAtoms() > 1; }
             ))
         {
-            throw exc::UserInputException(
-                "Pressure coupling of multi-atom molecules requires "
-                "virial = molecular"
-            );
+            const std::string warning =
+                "Atomic virial is inconsistent with molecular scaling for "
+                "multi-atom molecules. Recommended: virial = molecular. "
+                "Continuing with virial = atomic.";
+            out::StdoutOutput::writeSetupWarning(warning);
+            _engine.getLogOutput().writeSetupWarning(warning);
         }
 
         if (manostatType == BERENDSEN)

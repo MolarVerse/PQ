@@ -189,25 +189,31 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
     }
 }
 
-TEST_F(ManostatRegression, molecularCouplingRejectsAtomicVirial)
+TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
 {
     _addMolecule({-0.2, 0.2}, 0.0);
     settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
     manostat::BerendsenManostat berendsen(1.0, 1.0, 0.03, FixedAxis::NONE);
     manostat::StochasticRescalingManostat
         stochastic(1.0, 1.0, 0.03, FixedAxis::NONE);
-    for (auto* coupling :
-         std::vector<manostat::Manostat*>{&berendsen, &stochastic})
+    testing::internal::CaptureStdout();
+    for (size_t step = 0; step < 2; ++step)
     {
-        EXPECT_THROW_MSG(
-            coupling->applyManostat(_box, _data),
-            exc::ManostatException,
-            "Pressure coupling of multi-atom molecules requires "
-            "virial = molecular"
-        );
-        EXPECT_DOUBLE_EQ(_box.getVolume(), 1000.0);
-        EXPECT_DOUBLE_EQ(_box.getAtom(0).getPosition()[0], -0.2);
+        for (auto* coupling :
+             std::vector<manostat::Manostat*>{&berendsen, &stochastic})
+        {
+            const auto oldVolume = _box.getVolume();
+            EXPECT_NO_THROW(coupling->applyManostat(_box, _data));
+            EXPECT_LT(_box.getVolume(), oldVolume);
+            EXPECT_NEAR(
+                _box.getAtom(1).getPosition()[0] -
+                    _box.getAtom(0).getPosition()[0],
+                0.4,
+                1e-12
+            );
+        }
     }
+    EXPECT_TRUE(testing::internal::GetCapturedStdout().empty());
     manostat::Manostat reportPressure;
     EXPECT_NO_THROW(reportPressure.applyManostat(_box, _data));
 }
