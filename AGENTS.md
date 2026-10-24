@@ -76,6 +76,7 @@ PQ/
 ├── .cmake/                # CMake helper modules (config, eigen, testing, mpi, ...)
 ├── apps/                  # Main application executable (PQ.cpp)
 ├── benchmarks/            # Google Benchmark suite + benchmarks/perf (CI perf gate)
+├── changes/               # Unreleased changelog fragments (changes/user, changes/developer); see changes/README.md
 ├── config/                # licenseHeader.txt (mandatory GPL header template)
 ├── docs/                  # Sphinx (docs/sphinx) + Doxygen (docs/doxygen) documentation
 ├── examples/              # Example simulation input files
@@ -236,8 +237,22 @@ All pipelines are in `.github/workflows/`:
 
 - **`CHANGELOG.md`** — user-facing, curated by hand, one bullet per notable change.
 - **`DEV-CHANGELOG.md`** — developer/technical record, generated from conventional commits via `git-cliff` (`cliff.toml`) at release time.
+- **`changes/`** — unreleased changelog fragments; see below.
 
-**Regular feature/bugfix PRs (targeting `dev`) do not edit either changelog file.** Changelog curation happens only in the release PR from `dev` to `main`, validated by `scripts/update_changelog.py --check` (see `check-pr-for-release-version.yml`). Do not add changelog entries as part of routine PRs.
+**Regular feature/bugfix PRs never edit `CHANGELOG.md` or `DEV-CHANGELOG.md` directly.** Changelog curation/rendering happens only in the release PR from `dev` to `main`, validated by `scripts/update_changelog.py --check` (see `check-pr-for-release-version.yml`).
+
+**Every regular PR must instead add or update a changelog fragment under `changes/`** (see `changes/README.md`):
+
+```
+changes/user/<category>.<title>.md
+changes/developer/<category>.<title>.md
+```
+
+- Use `user` when an installed-PQ user would notice the change (behavior, results, inputs/outputs, errors, compatibility, runtime performance); use `developer` for build tooling, CI, tests, refactors, and internal maintenance. A PR may add fragments for either or both audiences.
+- `<category>` is one of the fixed categories in `changes/README.md` (user: `enhancement`, `change`, `bugfix`, `performance`, `compatibility`, `documentation`; developer: `enhancement`, `bugfix`, `performance`, `build`, `ci`, `test`, `internal`, `documentation`). `<title>` is a free-text lowercase-with-hyphens slug and does not appear in the rendered changelog.
+- If an existing unreleased fragment already covers the same change, append a bullet to it instead of creating a new file; a fragment can hold multiple bullets, one per line, each at most 240 characters.
+- Do not delete unreleased fragments or the `changes/user/.gitkeep` / `changes/developer/.gitkeep` placeholders.
+- The release workflow consumes every fragment into the matching changelog and removes them; this is the only point at which `CHANGELOG.md`/`DEV-CHANGELOG.md` change.
 
 ---
 
@@ -276,6 +291,7 @@ Before submitting any change:
 - [ ] Every new/modified `.cpp`/`.hpp`/`.c`/`.h` file has the exact license header (`scripts/addLicense.sh`)
 - [ ] Header guards follow `_NAME_HPP_`; namespaces match directory names
 - [ ] Tests added/updated in `tests/` mirroring the changed `src/`/`include/` module
+- [ ] A changelog fragment added under `changes/user/` and/or `changes/developer/` (or a bullet appended to an existing unreleased one)
 - [ ] No changes to `CHANGELOG.md` or `DEV-CHANGELOG.md` in routine PRs
 - [ ] Git submodules (`external/googletest`, `external/mstd`) not accidentally modified
 - [ ] No `-march=native`/native-only assumptions introduced into CI-relevant build paths (respect `BUILD_WITH_NATIVE`)
