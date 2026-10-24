@@ -23,8 +23,8 @@
 #include <gtest/gtest.h>
 
 #include <array>
-#include <cmath>
 #include <memory>
+#include <numbers>
 
 #include "box.hpp"
 #include "constants/conversionFactors.hpp"
@@ -51,7 +51,7 @@ TEST(TestBox, clonedGeometryIsIndependent)
             linalg::Vec3D{90.0, 90.0, 60.0}
         )
     };
-    const std::array expectedVolumes{6.0, 3.0 * std::sqrt(3.0)};
+    const std::array expectedVolumes{6.0, 3.0 * std::numbers::sqrt3};
     constexpr double tolerance = 1e-12;
 
     for (size_t i = 0; i < boxes.size(); ++i)
