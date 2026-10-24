@@ -1,0 +1,1 @@
+- Fix ctest failures under parallel execution (`ctest -j`): tests shared one working directory and raced on the same relative output files (e.g. the default log/restart/trajectory files); each test now runs in its own directory.

@@ -76,6 +76,7 @@ PQ/
 ├── .cmake/                # CMake helper modules (config, eigen, testing, mpi, ...)
 ├── apps/                  # Main application executable (PQ.cpp)
 ├── benchmarks/            # Google Benchmark suite + benchmarks/perf (CI perf gate)
+├── changes/               # Unreleased changelog fragments (changes/user, changes/developer); see changes/README.md
 ├── config/                # licenseHeader.txt (mandatory GPL header template)
 ├── docs/                  # Sphinx (docs/sphinx) + Doxygen (docs/doxygen) documentation
 ├── examples/              # Example simulation input files
@@ -237,22 +238,22 @@ All pipelines are in `.github/workflows/`:
 
 - **`CHANGELOG.md`** — user-facing, curated by hand, one bullet per notable change.
 - **`DEV-CHANGELOG.md`** — developer/technical record, generated from conventional commits via `git-cliff` (`cliff.toml`) at release time.
+- **`changes/`** — unreleased changelog fragments; see below.
 
-**Regular feature/bugfix PRs (targeting `dev`) do not edit either changelog file directly.** Instead, every regular PR adds a **changelog fragment** under `changes/` (or appends a bullet to an existing unreleased one) — see `changes/README.md` for the full spec. Summary:
+**Regular feature/bugfix PRs never edit `CHANGELOG.md` or `DEV-CHANGELOG.md` directly.** Changelog curation/rendering happens only in the release PR from `dev` to `main`, validated by `scripts/update_changelog.py --check` (see `check-pr-for-release-version.yml`).
+
+**Every regular PR must instead add or update a changelog fragment under `changes/`** (see `changes/README.md`):
 
 ```
-changes/user/<category>.<title>.md       # user-visible behavior, results, I/O, compat, perf
-changes/developer/<category>.<title>.md  # build tooling, CI, tests, refactors, internal maintenance
+changes/user/<category>.<title>.md
+changes/developer/<category>.<title>.md
 ```
 
-- `<category>` is fixed: user = `enhancement`, `change`, `bugfix`, `performance`, `compatibility`, `documentation`; developer = `enhancement`, `bugfix`, `performance`, `build`, `ci`, `test`, `internal`, `documentation`.
-- `<title>` is a free-text lowercase-with-hyphens slug (not rendered).
-- File contents are one or more Markdown bullets (`- ...`), one per line, no blank lines between them, each ≤240 characters.
-- If the PR extends a change that already has an unreleased fragment, append a bullet to that file instead of creating a new one.
-- Fragments are consumed and removed by the release workflow, which routes them into `CHANGELOG.md`/`DEV-CHANGELOG.md`. Never delete `changes/user/.gitkeep` or `changes/developer/.gitkeep` (placeholders keeping the empty dirs tracked).
-- `scripts/changelog_fragments.py` and `scripts/check_changelog_fragment.py` validate/process fragments; `scripts/update_changelog.py --check` validates the release PR (see `check-pr-for-release-version.yml`).
-
-Changelog curation of the rendered files themselves happens only in the release PR from `dev` to `main`. Do not edit `CHANGELOG.md` or `DEV-CHANGELOG.md` as part of routine PRs.
+- Use `user` when an installed-PQ user would notice the change (behavior, results, inputs/outputs, errors, compatibility, runtime performance); use `developer` for build tooling, CI, tests, refactors, and internal maintenance. A PR may add fragments for either or both audiences.
+- `<category>` is one of the fixed categories in `changes/README.md` (user: `enhancement`, `change`, `bugfix`, `performance`, `compatibility`, `documentation`; developer: `enhancement`, `bugfix`, `performance`, `build`, `ci`, `test`, `internal`, `documentation`). `<title>` is a free-text lowercase-with-hyphens slug and does not appear in the rendered changelog.
+- If an existing unreleased fragment already covers the same change, append a bullet to it instead of creating a new file; a fragment can hold multiple bullets, one per line, each at most 240 characters.
+- Do not delete unreleased fragments or the `changes/user/.gitkeep` / `changes/developer/.gitkeep` placeholders.
+- The release workflow consumes every fragment into the matching changelog and removes them; this is the only point at which `CHANGELOG.md`/`DEV-CHANGELOG.md` change.
 
 ---
 

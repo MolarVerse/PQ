@@ -24,6 +24,8 @@
 
 #define _EXPECT_THROW_WITH_MESSAGE_HPP_
 
+#include <gtest/gtest.h>
+
 /**
  * @brief expects that a statement throws an exception of a given type with a
  * given message
