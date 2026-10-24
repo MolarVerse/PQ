@@ -29,6 +29,7 @@
 
 namespace molsys
 {
+    class Box;             // forward declaration
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
@@ -51,6 +52,11 @@ namespace manostat
         linalg::tensor3D _pressureTensor = {0.0};
         double           _pressure;
         double           _targetPressure;   // no default value, must be set
+
+        static void _validateCandidate(
+            molsys::Box &,
+            const linalg::tensor3D &
+        );
 
        public:
         explicit Manostat(double targetPressure);

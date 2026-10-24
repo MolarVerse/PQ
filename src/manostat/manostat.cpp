@@ -113,77 +113,64 @@ namespace manostat
         const linalg::tensor3D      &mu
     )
     {
-        const auto finiteMatrix = [](const auto &matrix)
-        {
-            for (size_t i = 0; i < 3; ++i)
-            {
-                for (size_t j = 0; j < 3; ++j)
-                {
-                    if (!std::isfinite(matrix[i][j]))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        };
-
         const auto determinant = det(mu);
-        if (!finiteMatrix(mu) || !std::isfinite(determinant) ||
+        if (!linalg::isFinite(mu) || !std::isfinite(determinant) ||
             determinant <= 0.0 || mu[0][0] <= 0.0 || mu[1][1] <= 0.0 ||
-            mu[2][2] <= 0.0 || !finiteMatrix(inverse(mu)))
+            mu[2][2] <= 0.0 || !linalg::isFinite(inverse(mu)))
         {
             throw exc::ManostatException("Invalid manostat scaling matrix");
         }
-
-        const auto validateCandidate = [&](auto candidate)
-        {
-            candidate.scaleBox(mu);
-            const auto volume     = candidate.getVolume();
-            const auto dimensions = candidate.get_boxDimensions();
-            const auto angles     = candidate.getBoxAngles();
-            const auto matrix =
-                candidate.getBoxMatrix(molsys::Periodicity::XYZ);
-            if (!std::isfinite(volume) || volume <= 0.0 ||
-                !finiteMatrix(matrix) || !finiteMatrix(inverse(matrix)))
-            {
-                throw exc::ManostatException("Invalid manostat cell geometry");
-            }
-
-            constexpr double straightAngle = 180.0;
-            for (size_t i = 0; i < 3; ++i)
-            {
-                if (!std::isfinite(dimensions[i]) || dimensions[i] <= 0.0 ||
-                    !std::isfinite(angles[i]) || angles[i] <= 0.0 ||
-                    angles[i] >= straightAngle)
-                {
-                    throw exc::ManostatException(
-                        "Invalid manostat cell geometry"
-                    );
-                }
-            }
-
-            if (candidate.getMinimalBoxDimension() <
-                2.0 * settings::PotentialSettings::getCoulombRadiusCutOff())
-            {
-                throw exc::ManostatException(
-                    "Coulomb radius cut off is larger than half of the minimal "
-                    "box "
-                    "dimension"
-                );
-            }
-        };
 
         const auto &box = simulationBox.getBox();
         if (const auto *triclinic =
                 dynamic_cast<const molsys::TriclinicBox *>(&box))
         {
-            validateCandidate(*triclinic);
+            auto candidate = *triclinic;
+            _validateCandidate(candidate, mu);
         }
         else
         {
-            validateCandidate(
-                dynamic_cast<const molsys::OrthorhombicBox &>(box)
+            auto candidate =
+                dynamic_cast<const molsys::OrthorhombicBox &>(box);
+            _validateCandidate(candidate, mu);
+        }
+    }
+
+    /** @brief Scale and validate a candidate cell. */
+    void Manostat::_validateCandidate(
+        molsys::Box           &candidate,
+        const linalg::tensor3D &mu
+    )
+    {
+        candidate.scaleBox(mu);
+        const auto volume     = candidate.getVolume();
+        const auto dimensions = candidate.get_boxDimensions();
+        const auto angles     = candidate.getBoxAngles();
+        const auto matrix =
+            candidate.getBoxMatrix(molsys::Periodicity::XYZ);
+        if (!std::isfinite(volume) || volume <= 0.0 ||
+            !linalg::isFinite(matrix) || !linalg::isFinite(inverse(matrix)))
+        {
+            throw exc::ManostatException("Invalid manostat cell geometry");
+        }
+
+        constexpr double straightAngle = 180.0;
+        for (size_t i = 0; i < 3; ++i)
+        {
+            if (!std::isfinite(dimensions[i]) || dimensions[i] <= 0.0 ||
+                !std::isfinite(angles[i]) || angles[i] <= 0.0 ||
+                angles[i] >= straightAngle)
+            {
+                throw exc::ManostatException("Invalid manostat cell geometry");
+            }
+        }
+
+        if (candidate.getMinimalBoxDimension() <
+            2.0 * settings::PotentialSettings::getCoulombRadiusCutOff())
+        {
+            throw exc::ManostatException(
+                "Coulomb radius cut off is larger than half of the minimal "
+                "box dimension"
             );
         }
     }
