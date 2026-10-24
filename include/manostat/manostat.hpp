@@ -53,8 +53,6 @@ namespace manostat
         double           _pressure;
         double           _targetPressure;   // no default value, must be set
 
-        static void _validateCandidate(molsys::Box &, const linalg::tensor3D &);
-
        public:
         explicit Manostat(double targetPressure);
         Manostat()          = default;
@@ -91,6 +89,9 @@ namespace manostat
 
         void _setPressureTensor(const linalg::tensor3D &pTensor);
         void _setPressure(double pressure);
+
+       private:
+        static void _validateCandidate(molsys::Box &, const linalg::tensor3D &);
     };
 
 }   // namespace manostat
