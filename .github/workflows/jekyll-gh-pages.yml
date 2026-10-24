@@ -39,7 +39,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Requirements
         run: sudo apt-get install -y doxygen graphviz
@@ -80,6 +82,11 @@ jobs:
       pages: write
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
       - name: download built site
         uses: actions/download-artifact@v4
         with:
