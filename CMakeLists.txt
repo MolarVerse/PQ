@@ -289,3 +289,7 @@ if(BUILD_WITH_BENCHMARKING)
     enable_testing()
     add_subdirectory(benchmarks)
 endif()
+
+add_library(concepts INTERFACE)
+target_include_directories(concepts INTERFACE ${PROJECT_SOURCE_DIR}/include/concepts)
+target_link_libraries(concepts INTERFACE mstd)

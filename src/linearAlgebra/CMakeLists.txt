@@ -16,6 +16,7 @@ target_link_libraries(linearAlgebra
     PUBLIC
     exceptions
     Eigen3::Eigen
+    concepts
 )
 
 install(TARGETS linearAlgebra
