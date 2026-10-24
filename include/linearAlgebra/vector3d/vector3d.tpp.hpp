@@ -51,7 +51,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U>
+    template <typename U>
     requires std::equality_comparable<U>
     bool operator==(const Vector3D<U> &lhs, const Vector3D<U> &rhs)
     {
@@ -65,7 +65,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U>
+    template <typename U>
     requires std::equality_comparable<U>
     bool operator!=(const Vector3D<U> &lhs, const Vector3D<U> &rhs)
     {
@@ -83,7 +83,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U, class V>
+    template <typename U, typename V>
     requires mstd::three_way_comparable<U, V>
     bool operator<(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
@@ -97,7 +97,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U, class V>
+    template <typename U, typename V>
     requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator<(const Vector3D<U> &lhs, const V &rhs)
     {
@@ -115,7 +115,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U, class V>
+    template <typename U, typename V>
     requires mstd::three_way_comparable<U, V>
     bool operator<=(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
@@ -129,7 +129,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U, class V>
+    template <typename U, typename V>
     requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator<=(const Vector3D<U> &lhs, const V &rhs)
     {
@@ -147,7 +147,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U, class V>
+    template <typename U, typename V>
     requires mstd::three_way_comparable<U, V>
     bool operator>(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
@@ -161,7 +161,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U, class V>
+    template <typename U, typename V>
     requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator>(const Vector3D<U> &lhs, const V &rhs)
     {
@@ -179,7 +179,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U, class V>
+    template <typename U, typename V>
     requires mstd::three_way_comparable<U, V>
     bool operator>=(const Vector3D<U> &lhs, const Vector3D<V> &rhs)
     {
@@ -193,7 +193,7 @@ namespace linalg
      * @param rhs
      * @return bool
      */
-    template <class U, class V>
+    template <typename U, typename V>
     requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator>=(const Vector3D<U> &lhs, const V &rhs)
     {

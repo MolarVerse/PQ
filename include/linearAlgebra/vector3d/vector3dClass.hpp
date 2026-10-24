@@ -39,7 +39,7 @@ namespace linalg
     template <typename T>
     using const_iterator = typename std::array<T, 3>::const_iterator;
 
-    template <class T>
+    template <typename T>
     class Vector3D;   // forward declaration
 
     using Vec3D   = Vector3D<double>;
@@ -151,7 +151,7 @@ namespace linalg
          * casting methods *
          *******************/
 
-        template <class U>
+        template <typename U>
         explicit operator Vector3D<U>() const;
 
         std::vector<T> toStdVector() const;

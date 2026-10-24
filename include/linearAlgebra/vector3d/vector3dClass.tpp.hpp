@@ -46,7 +46,7 @@ namespace linalg
      * @param vec
      * @return Vector3D<T>&
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &&vec) noexcept
     {
         if (this == &vec)
@@ -65,7 +65,7 @@ namespace linalg
      * @param vec
      * @return Vector3D<T>&
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator=(const Vector3D<T> &vec)
     {
         if (this == &vec)
@@ -86,7 +86,7 @@ namespace linalg
      *
      * @param vec
      */
-    template <class T>
+    template <typename T>
     void Vector3D<T>::operator+=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
@@ -101,7 +101,7 @@ namespace linalg
      * @param vec
      * @return `Vector3D<T>&` (inplace addition)
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator+=(const T &vec)
     requires pq::Arithmetic<T>
     {
@@ -121,7 +121,7 @@ namespace linalg
      * @param vec
      * @return `Vector3D<T>&` (inplace subtraction)
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
@@ -137,7 +137,7 @@ namespace linalg
      * @param vec
      * @return `Vector3D<T>&` (inplace subtraction)
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator-=(const T &vec)
     requires pq::Arithmetic<T>
     {
@@ -158,7 +158,7 @@ namespace linalg
      * @param vec
      * @return `Vector3D<T>&` (inplace multiplication)
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
@@ -175,7 +175,7 @@ namespace linalg
      * @param vec
      * @return `Vector3D<T>&` (inplace multiplication)
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator*=(const T &vec)
     requires pq::Arithmetic<T>
     {
@@ -196,7 +196,7 @@ namespace linalg
      * @param vec
      * @return `Vector3D<T>&` (inplace division)
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &vec)
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
@@ -213,7 +213,7 @@ namespace linalg
      * @param vec
      * @return `Vector3D<T>&` (inplace division)
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> &Vector3D<T>::operator/=(const T &vec)
     requires pq::Arithmetic<T>
     {
@@ -235,7 +235,7 @@ namespace linalg
      * @param index
      * @return T&
      */
-    template <class T>
+    template <typename T>
     T &Vector3D<T>::operator[](size_t index)
     {
         return xyz[index];
@@ -247,7 +247,7 @@ namespace linalg
      * @param index
      * @return const T&
      */
-    template <class T>
+    template <typename T>
     const T &Vector3D<T>::operator[](size_t index) const
     {
         return xyz[index];
@@ -264,7 +264,7 @@ namespace linalg
      *
      * @return Vector3D<T>
      */
-    template <class T>
+    template <typename T>
     Vector3D<T> Vector3D<T>::operator-() const
     requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
     {
@@ -282,7 +282,7 @@ namespace linalg
      *
      * @return constexpr std::array<T, 3>::iterator
      */
-    template <class T>
+    template <typename T>
     constexpr std::array<T, 3>::const_iterator Vector3D<T>::begin(
     ) const noexcept
     {
@@ -294,7 +294,7 @@ namespace linalg
      *
      * @return constexpr std::array<T, 3>::iterator
      */
-    template <class T>
+    template <typename T>
     constexpr std::array<T, 3>::const_iterator Vector3D<T>::end() const noexcept
     {
         return xyz.end();
@@ -310,8 +310,8 @@ namespace linalg
      * @tparam U
      * @return `Vector3D<U>`
      */
-    template <class T>
-    template <class U>
+    template <typename T>
+    template <typename U>
     Vector3D<T>::operator Vector3D<U>() const
     {
         return Vector3D<U>(
@@ -326,7 +326,7 @@ namespace linalg
      *
      * @return std::vector<T>
      */
-    template <class T>
+    template <typename T>
     std::vector<T> Vector3D<T>::toStdVector() const
     {
         return std::vector<T>(xyz.begin(), xyz.end());

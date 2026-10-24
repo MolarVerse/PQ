@@ -112,7 +112,7 @@ namespace
         [[nodiscard]] bool sawStaleResults() const { return _sawStaleResults; }
     };
 
-    template <class Runner>
+    template <typename Runner>
     class CommandCaptureRunner : public Runner
     {
        private:
