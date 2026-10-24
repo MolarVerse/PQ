@@ -111,7 +111,8 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
     for (auto* coupling :
          std::vector<manostat::Manostat*>{&berendsen, &stochastic})
     {
-        const auto oldCell = _box.getBox().getBoxMatrix(molsys::Periodicity::XYZ);
+        const auto oldCell =
+            _box.getBox().getBoxMatrix(molsys::Periodicity::XYZ);
         coupling->applyManostat(_box, _data);
         EXPECT_NEAR(_data.getPressure(), 1.0, 1e-12);
         for (size_t i = 0; i < 3; ++i)

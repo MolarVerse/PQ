@@ -356,10 +356,12 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
             {
                 EXPECT_NE(warning, std::string::npos);
                 if (warning != std::string::npos)
+                {
                     EXPECT_EQ(
                         text.find("WARNING:", warning + 1),
                         std::string::npos
                     );
+                }
                 EXPECT_NE(text.find("virial = molecular"), std::string::npos);
                 EXPECT_NE(text.find("Continuing"), std::string::npos);
             }

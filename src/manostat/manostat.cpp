@@ -241,7 +241,7 @@ namespace manostat
      *
      * @return const linalg::tensor3D&
      */
-    const linalg::tensor3D& Manostat::_getPressureTensor() const
+    const linalg::tensor3D &Manostat::_getPressureTensor() const
     {
         return _pressureTensor;
     }
@@ -265,7 +265,7 @@ namespace manostat
      *
      * @param pTensor The new pressure tensor
      */
-    void Manostat::_setPressureTensor(const linalg::tensor3D& pTensor)
+    void Manostat::_setPressureTensor(const linalg::tensor3D &pTensor)
     {
         _pressureTensor = pTensor;
     }

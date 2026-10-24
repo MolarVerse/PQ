@@ -409,9 +409,8 @@ namespace manostat
                 if (_hasFixedAxis(i) || _hasFixedAxis(j))
                     strain[i][j] = 0.0;
                 else
-                    strain[i][j] +=
-                        stochasticFactor *
-                        _getRNG().getNormalDistribution(0.0, 1.0);
+                    strain[i][j] += stochasticFactor *
+                                    _getRNG().getNormalDistribution(0.0, 1.0);
             }
         }
 
