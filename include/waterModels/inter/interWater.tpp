@@ -239,6 +239,86 @@ namespace waterModel
         return atom.getPartialCharge();
     }
 
+    /**
+     * @brief Unweighted calculateSingleInteraction (weight 1)
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    void InterWaterStrategy::calculateSingleInteraction(
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        double                                        rCutSquared,
+        const molsys::SimulationBox                  &simulationBox,
+        const pot::NonCoulombPair                    &nonCoulPair,
+        double                                       &coulombEnergy,
+        double                                       &nonCoulombEnergy
+    )
+    {
+        calculateSingleInteraction<ChargeTag1, ChargeTag2>(
+            atom1,
+            atom2,
+            coulombPotential,
+            rCutSquared,
+            simulationBox,
+            nonCoulPair,
+            coulombEnergy,
+            nonCoulombEnergy,
+            1.0
+        );
+    }
+
+    /**
+     * @brief Unweighted calculateSingleCoulombInteraction (weight 1)
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    void InterWaterStrategy::calculateSingleCoulombInteraction(
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        double                                        rCutSquared,
+        const molsys::SimulationBox                  &simulationBox,
+        double                                       &coulombEnergy
+    )
+    {
+        calculateSingleCoulombInteraction<ChargeTag1, ChargeTag2>(
+            atom1,
+            atom2,
+            coulombPotential,
+            rCutSquared,
+            simulationBox,
+            coulombEnergy,
+            1.0
+        );
+    }
+
+    /**
+     * @brief Unweighted calculateSingleInteractionOneWay (weight 1)
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    void InterWaterStrategy::calculateSingleInteractionOneWay(
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        double                                        rCutSquared,
+        const molsys::SimulationBox                  &simulationBox,
+        const pot::NonCoulombPair                    &nonCoulPair,
+        double                                       &coulombEnergy,
+        double                                       &nonCoulombEnergy
+    )
+    {
+        calculateSingleInteractionOneWay<ChargeTag1, ChargeTag2>(
+            atom1,
+            atom2,
+            coulombPotential,
+            rCutSquared,
+            simulationBox,
+            nonCoulPair,
+            coulombEnergy,
+            nonCoulombEnergy,
+            1.0
+        );
+    }
+
 }   // namespace waterModel
 
 #endif   //  _INTER_WATER_TPP_

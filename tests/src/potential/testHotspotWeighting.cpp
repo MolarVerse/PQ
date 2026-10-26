@@ -91,28 +91,32 @@ namespace
         );
 
         for (size_t m1 = 1; m1 <= 2; ++m1)
+        {
             for (size_t m2 = 1; m2 <= 2; ++m2)
+            {
                 guff->setGuffNonCoulPair(
                     {MolType{m1}, MolType{m2}, AtomType{0}, AtomType{0}},
                     pair
                 );
+            }
+        }
 
         return guff;
     }
 
     molsys::MoleculeType buildMolType(MolType molType, double charge)
     {
-        molsys::MoleculeType mt;
-        mt.setMoltype(molType);
-        mt.setNumberOfAtoms(1);
-        mt.addExternalAtomType(ExtAtomType{molType.get()});
-        mt.addExternalToInternalAtomTypeElement(
+        molsys::MoleculeType moleculeType;
+        moleculeType.setMoltype(molType);
+        moleculeType.setNumberOfAtoms(1);
+        moleculeType.addExternalAtomType(ExtAtomType{molType.get()});
+        moleculeType.addExternalToInternalAtomTypeElement(
             ExtAtomType{molType.get()},
             AtomType{0}
         );
-        mt.addPartialCharge(charge);
-        mt.addAtomType(AtomType{0});
-        return mt;
+        moleculeType.addPartialCharge(charge);
+        moleculeType.addAtomType(AtomType{0});
+        return moleculeType;
     }
 
     std::shared_ptr<molsys::Atom> buildAtom(
@@ -132,13 +136,13 @@ namespace
         return atom;
     }
 
-    void setupBox(molsys::SimulationBox &box)
+    void setupBox(molsys::SimulationBox &simulationBox)
     {
         molsys::OrthorhombicBox orthoBox{{kBoxEdge, kBoxEdge, kBoxEdge}};
-        box.setBox(orthoBox);
+        simulationBox.setBox(orthoBox, false);
 
-        box.addMoleculeType(buildMolType(MolType{1}, kQMM));
-        box.addMoleculeType(buildMolType(MolType{2}, kQOuter));
+        simulationBox.addMoleculeType(buildMolType(MolType{1}, kQMM));
+        simulationBox.addMoleculeType(buildMolType(MolType{2}, kQOuter));
 
         auto atomS = buildAtom(kPosS, MolType{1}, kQMM);
         atomS->setQMCharge(kQQM);
@@ -154,10 +158,10 @@ namespace
         molM.addAtom(atomM);
         molM.setHybridZone(molsys::HybridZone::OUTER);
 
-        box.addMolecule(molS);
-        box.addMolecule(molM);
-        box.addAtom(atomS);
-        box.addAtom(atomM);
+        simulationBox.addMolecule(molS);
+        simulationBox.addMolecule(molM);
+        simulationBox.addAtom(atomS);
+        simulationBox.addAtom(atomM);
     }
 
     struct PairRef
@@ -169,7 +173,7 @@ namespace
 
     // reference: one unweighted kernel evaluation with the given charge tag
     template <typename Tag>
-    PairRef reference(molsys::SimulationBox &box)
+    PairRef reference(molsys::SimulationBox &simulationBox)
     {
         pot::PotentialBruteForce potential;
         potential.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
@@ -180,17 +184,21 @@ namespace
         auto atomM = buildAtom(kPosM, MolType{2}, kQOuter);
         atomS->setShiftForce(0.0);
 
-        const auto [ec, enc] =
+        const auto [coulombE, nonCoulombE] =
             potential.calculateSingleInteraction<Tag, pot::MMChargeTag>(
-                *box.getBoxPtr(),
-                box.getMolecule(0),
-                box.getMolecule(1),
+                *simulationBox.getBoxPtr(),
+                simulationBox.getMolecule(0),
+                simulationBox.getMolecule(1),
                 *atomS,
                 *atomM
             );
 
         EXPECT_NEAR(norm(atomS->getForce() + atomM->getForce()), 0.0, kTol);
-        return {atomS->getForce(), atomS->getShiftForce(), ec + enc};
+        return {
+            atomS->getForce(),
+            atomS->getShiftForce(),
+            coulombE + nonCoulombE
+        };
     }
 
     template <typename PotentialT>
@@ -206,9 +214,13 @@ namespace
         pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
         if (useCellList)
+        {
             settings::GeneralSettings::activateCellList();
+        }
         else
+        {
             settings::GeneralSettings::deactivateCellList();
+        }
 
         Settings             settings;
         engine::QMMMMDEngine engine{settings};
@@ -218,59 +230,64 @@ namespace
         );
         engine.getPotential()->setNonCoulombPotential(buildGuff());
 
-        auto &box = engine.getSimulationBox();
-        setupBox(box);
+        auto &simulationBox = engine.getSimulationBox();
+        setupBox(simulationBox);
 
         if (useCellList)
         {
             auto &cellList = engine.getCellList();
             cellList.setNumberOfCells(kCells);
             cellList.resizeCells();
-            cellList.setup(box);
-            cellList.updateCellList(box);
+            cellList.setup(simulationBox);
+            cellList.updateCellList(simulationBox);
         }
 
-        const auto qm = reference<pot::QMChargeTag>(box);
-        const auto mm = reference<pot::MMChargeTag>(box);
+        const auto qmRef = reference<pot::QMChargeTag>(simulationBox);
+        const auto mmRef = reference<pot::MMChargeTag>(simulationBox);
 
         // engine sequence of _applyHotspotSmoothing up to step 3; the QM
         // run of step 1 is skipped (no QM runner), its forces are zero
-        configurator::HybridConfigurator::activateMolecules(box);
-        configurator::HybridConfigurator::deactivateOuterMolecules(box);
-        box.resetForces();
+        configurator::HybridConfigurator::activateMolecules(simulationBox);
+        configurator::HybridConfigurator::deactivateOuterMolecules(
+            simulationBox
+        );
+        simulationBox.resetForces();
         engine.getPhysicalDataPtr()->resetEnergies();
 
         linalg::tensor3D virial{0.0};
         HotspotWeightingTest::calculateHotspotMMForces(engine, virial);
 
-        auto      &atomS = *box.getMolecule(0).getAtoms()[0];
-        auto      &atomM = *box.getMolecule(1).getAtoms()[0];
-        const auto fS    = atomS.getForceOuter();
-        const auto fM    = atomM.getForceOuter();
+        auto      &atomS  = *simulationBox.getMolecule(0).getAtoms()[0];
+        auto      &atomM  = *simulationBox.getMolecule(1).getAtoms()[0];
+        const auto forceS = atomS.getForceOuter();
+        const auto forceM = atomM.getForceOuter();
 
         // physically expected: pairwise weighted, antisymmetric
-        const auto fExp      = (kSmF * qm.force) + ((1.0 - kSmF) * mm.force);
-        const auto shiftExp  = (kSmF * qm.shift) + ((1.0 - kSmF) * mm.shift);
+        const auto fExp = (kSmF * qmRef.force) + ((1.0 - kSmF) * mmRef.force);
+        const auto shiftExp =
+            (kSmF * qmRef.shift) + ((1.0 - kSmF) * mmRef.shift);
         const auto virialExp = tensorProduct(kPosS, fExp) +
                                tensorProduct(kPosM, -fExp) +
                                diagonalMatrix(shiftExp);
-        const auto eExp = (kSmF * qm.energy) + ((1.0 - kSmF) * mm.energy);
+        const auto eExp = (kSmF * qmRef.energy) + ((1.0 - kSmF) * mmRef.energy);
         const auto eObs = engine.getPhysicalData().getCoulombEnergy() +
                           engine.getPhysicalData().getNonCoulombEnergy();
 
         for (size_t k = 0; k < 3; ++k)
         {
-            EXPECT_NEAR(fS[k], fExp[k], kTol) << "F_S[" << k << "]";
-            EXPECT_NEAR(fM[k], -fExp[k], kTol) << "F_M[" << k << "]";
-            EXPECT_NEAR(fS[k] + fM[k], 0.0, kTol) << "net[" << k << "]";
+            EXPECT_NEAR(forceS[k], fExp[k], kTol) << "F_S[" << k << "]";
+            EXPECT_NEAR(forceM[k], -fExp[k], kTol) << "F_M[" << k << "]";
+            EXPECT_NEAR(forceS[k] + forceM[k], 0.0, kTol) << "net[" << k << "]";
             for (size_t l = 0; l < 3; ++l)
+            {
                 EXPECT_NEAR(virial[k][l], virialExp[k][l], kTol)
                     << "virial[" << k << "][" << l << "]";
+            }
         }
         EXPECT_NEAR(eObs, eExp, kTol) << "energy";
 
         // pair really crosses the boundary
-        EXPECT_GT(norm(qm.shift), 0.0);
+        EXPECT_GT(norm(qmRef.shift), 0.0);
 
         settings::GeneralSettings::deactivateCellList();
     }

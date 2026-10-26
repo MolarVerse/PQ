@@ -409,6 +409,68 @@ namespace pot
         return atom.getPartialCharge();
     }
 
+    /**
+     * @brief Unweighted calculateSingleInteraction (weight 1)
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    std::pair<double, double> Potential::calculateSingleInteraction(
+        const molsys::Box &box,
+        molsys::Molecule  &mol1,
+        molsys::Molecule  &mol2,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2
+    ) const
+    {
+        return calculateSingleInteraction<ChargeTag1, ChargeTag2>(
+            box,
+            mol1,
+            mol2,
+            atom1,
+            atom2,
+            1.0
+        );
+    }
+
+    /**
+     * @brief Unweighted calculateSingleCoulombInteraction (weight 1)
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    double Potential::calculateSingleCoulombInteraction(
+        const molsys::Box &box,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2
+    ) const
+    {
+        return calculateSingleCoulombInteraction<ChargeTag1, ChargeTag2>(
+            box,
+            atom1,
+            atom2,
+            1.0
+        );
+    }
+
+    /**
+     * @brief Unweighted calculateSingleInteractionOneWay (weight 1)
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    std::pair<double, double> Potential::calculateSingleInteractionOneWay(
+        const molsys::Box &box,
+        molsys::Molecule  &mol1,
+        molsys::Molecule  &mol2,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2
+    ) const
+    {
+        return calculateSingleInteractionOneWay<ChargeTag1, ChargeTag2>(
+            box,
+            mol1,
+            mol2,
+            atom1,
+            atom2,
+            1.0
+        );
+    }
+
 }   // namespace pot
 
 #endif   // _POTENTIAL_TPP_

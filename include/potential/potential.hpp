@@ -122,8 +122,24 @@ namespace pot
             molsys::Molecule  &mol1,
             molsys::Molecule  &mol2,
             molsys::Atom      &atom1,
+            molsys::Atom      &atom2
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        std::pair<double, double> calculateSingleInteraction(
+            const molsys::Box &box,
+            molsys::Molecule  &mol1,
+            molsys::Molecule  &mol2,
+            molsys::Atom      &atom1,
             molsys::Atom      &atom2,
-            double             weight = 1.0
+            double             weight
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        double calculateSingleCoulombInteraction(
+            const molsys::Box &box,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -131,7 +147,16 @@ namespace pot
             const molsys::Box &box,
             molsys::Atom      &atom1,
             molsys::Atom      &atom2,
-            double             weight = 1.0
+            double             weight
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        std::pair<double, double> calculateSingleInteractionOneWay(
+            const molsys::Box &box,
+            molsys::Molecule  &mol1,
+            molsys::Molecule  &mol2,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -141,7 +166,7 @@ namespace pot
             molsys::Molecule  &mol2,
             molsys::Atom      &atom1,
             molsys::Atom      &atom2,
-            double             weight = 1.0
+            double             weight
         ) const;
 
         template <typename T>

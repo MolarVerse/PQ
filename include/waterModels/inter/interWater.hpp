@@ -108,8 +108,30 @@ namespace waterModel
             const molsys::SimulationBox                  &simulationBox,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
+            double                                       &nonCoulombEnergy
+        );
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        void calculateSingleInteraction(
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            double                                        rCutSquared,
+            const molsys::SimulationBox                  &simulationBox,
+            const pot::NonCoulombPair                    &nonCoulPair,
+            double                                       &coulombEnergy,
             double                                       &nonCoulombEnergy,
-            double                                        weight = 1.0
+            double                                        weight
+        );
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        void calculateSingleCoulombInteraction(
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            double                                        rCutSquared,
+            const molsys::SimulationBox                  &simulationBox,
+            double                                       &coulombEnergy
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -120,7 +142,19 @@ namespace waterModel
             double                                        rCutSquared,
             const molsys::SimulationBox                  &simulationBox,
             double                                       &coulombEnergy,
-            double                                        weight = 1.0
+            double                                        weight
+        );
+
+        template <typename ChargeTag1, typename ChargeTag2>
+        void calculateSingleInteractionOneWay(
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            double                                        rCutSquared,
+            const molsys::SimulationBox                  &simulationBox,
+            const pot::NonCoulombPair                    &nonCoulPair,
+            double                                       &coulombEnergy,
+            double                                       &nonCoulombEnergy
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -133,7 +167,7 @@ namespace waterModel
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
             double                                       &nonCoulombEnergy,
-            double                                        weight = 1.0
+            double                                        weight
         );
 
         template <typename T>
