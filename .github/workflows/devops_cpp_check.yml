@@ -32,6 +32,7 @@ jobs:
               - '**/*.h'
               - 'devops.toml'
               - '.github/workflows/devops_cpp_check.yml'
+              - '.github/actions/setup-gcc/**'
 
   cpp-check:
     needs: changes
