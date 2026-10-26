@@ -51,7 +51,7 @@ class TestInputValidation : public ::testing::Test
     void SetUp() override
     {
         settings::GeneralSettings::setJobtype(JobType::NONE);
-        settings::HessianSettings::setOptimizeBeforeHessian(false);
+        _settings.hessianSettings.setOptimizeBeforeHessian(false);
 
         settings::OptimizerSettings::setLearningRateStrategy(
             LearningRate::CONSTANT
@@ -153,7 +153,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
-    settings::HessianSettings::setOptimizeBeforeHessian(true);
+    _settings.hessianSettings.setOptimizeBeforeHessian(true);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),

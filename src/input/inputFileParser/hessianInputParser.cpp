@@ -35,7 +35,8 @@ namespace input
      * @brief Construct a new HessianInputParser object
      *
      */
-    HessianInputParser::HessianInputParser()
+    HessianInputParser::HessianInputParser(HessianSettings &hessianSettings)
+        : _hessianSettings(hessianSettings)
     {
         addHessianFileKey();
         addHessianInfoFileKey();
@@ -52,8 +53,9 @@ namespace input
             .description = "The output Hessian file"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::HessianSettings::setHessianFile(value); };
+        const auto setValue =
+            [_hessianSettings = _hessianSettings](const std::string &value)
+        { _hessianSettings->setHessianFile(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{.metadata = metaData, .onSet = setValue}
@@ -70,8 +72,9 @@ namespace input
             .description = "The output Hessian info file"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::HessianSettings::setHessianInfoFile(value); };
+        const auto setValue =
+            [_hessianSettings = _hessianSettings](const std::string &value)
+        { _hessianSettings->setHessianInfoFile(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{.metadata = metaData, .onSet = setValue}
@@ -89,8 +92,9 @@ namespace input
                 "The displacement used for numerical Hessian calculations"
         };
 
-        const auto setValue = [](double value)
-        { settings::HessianSettings::setDisplacement(value); };
+        const auto setValue =
+            [_hessianSettings = _hessianSettings](double value)
+        { _hessianSettings->setDisplacement(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -113,8 +117,8 @@ namespace input
                 "Hessian"
         };
 
-        const auto setValue = [](bool value)
-        { settings::HessianSettings::setOptimizeBeforeHessian(value); };
+        const auto setValue = [_hessianSettings = _hessianSettings](bool value)
+        { _hessianSettings->setOptimizeBeforeHessian(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -131,8 +135,9 @@ namespace input
             .description = "The type of Hessian builder to use"
         };
 
-        const auto setValue = [](HessianBuilderType value)
-        { settings::HessianSettings::setBuilder(value); };
+        const auto setValue =
+            [_hessianSettings = _hessianSettings](HessianBuilderType value)
+        { _hessianSettings->setBuilder(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<HessianBuilderType>{

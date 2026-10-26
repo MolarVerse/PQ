@@ -106,7 +106,9 @@ namespace input
         );
         _parsers.push_back(std::make_unique<MMInputParser>());
         _parsers.push_back(std::make_unique<GeneralInputParser>());
-        _parsers.push_back(std::make_unique<HessianInputParser>());
+        _parsers.push_back(
+            std::make_unique<HessianInputParser>(settings.hessianSettings)
+        );
         _parsers.push_back(std::make_unique<IntegratorInputParser>());
         _parsers.push_back(std::make_unique<ManostatInputParser>());
         _parsers.push_back(std::make_unique<OutputInputParser>());
