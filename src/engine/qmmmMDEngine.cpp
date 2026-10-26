@@ -510,11 +510,11 @@ namespace engine
         );
         _qmmmPhysicalData.setIntraCoulombEnergy(
             _qmmmPhysicalData.getIntraCoulombEnergy() +
-            getPhysicalDataPtr()->getIntraCoulombEnergy() * globalSmF
+            (getPhysicalDataPtr()->getIntraCoulombEnergy() * globalSmF)
         );
         _qmmmPhysicalData.setIntraNonCoulombEnergy(
             _qmmmPhysicalData.getIntraNonCoulombEnergy() +
-            getPhysicalDataPtr()->getIntraNonCoulombEnergy() * globalSmF
+            (getPhysicalDataPtr()->getIntraNonCoulombEnergy() * globalSmF)
         );
     }
 

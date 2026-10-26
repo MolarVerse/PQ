@@ -22,21 +22,17 @@
 
 #include <gtest/gtest.h>
 
-#include <memory>
-#include <string>
-#include <vector>
-
 #include "qmmmMDEngine.hpp"
 
 class QMMMEnergiesTest : public ::testing::Test
 {
    protected:
-    static void scaleAndAccumulate(engine::QMMMMDEngine &engine, double smF)
+    static void _scaleAndAccumulate(engine::QMMMMDEngine &engine, double smF)
     {
         engine._scaleAndAccumulateEnergies(smF);
     }
 
-    static void moveEnergies(engine::QMMMMDEngine &engine)
+    static void _moveEnergies(engine::QMMMMDEngine &engine)
     {
         engine._moveEnergiesToPhysicalData();
     }
@@ -57,8 +53,8 @@ TEST_F(QMMMEnergiesTest, exactSmoothingCountsIntraEnergyOnce)
     ASSERT_DOUBLE_EQ(data.getCoulombEnergy(), 11.0);
     ASSERT_DOUBLE_EQ(data.getNonCoulombEnergy(), 22.0);
 
-    scaleAndAccumulate(engine, 1.0);
-    moveEnergies(engine);
+    _scaleAndAccumulate(engine, 1.0);
+    _moveEnergies(engine);
 
     EXPECT_DOUBLE_EQ(data.getCoulombEnergy(), 11.0);
     EXPECT_DOUBLE_EQ(data.getNonCoulombEnergy(), 22.0);
