@@ -55,13 +55,13 @@ namespace setup
         void writeSetupInfo() const;
 
         static void setupConvergence(std::shared_ptr<opt::Optimizer> &);
-        static void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &);
+        void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &) const;
 
         [[nodiscard]]
         std::shared_ptr<opt::Optimizer> setupEmptyOptimizer();
         [[nodiscard]]
-        static std::shared_ptr<
-            opt::LearningRateStrategy> setupLearningRateStrategy();
+        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy(
+        ) const;
         [[nodiscard]]
         std::shared_ptr<opt::Evaluator> setupEvaluator();
     };

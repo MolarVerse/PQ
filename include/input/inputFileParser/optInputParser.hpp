@@ -24,7 +24,11 @@
 
 #define _OPT_INPUT_PARSER_HPP_
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class OptimizerSettings;   // Forward declaration
 
 namespace input
 {
@@ -36,8 +40,10 @@ namespace input
      */
     class OptInputParser : public InputFileParser
     {
+        mstd::Ref<OptimizerSettings> _optimizerSettings;
+
        public:
-        OptInputParser();
+        explicit OptInputParser(OptimizerSettings &optimizerSettings);
 
         void addOptimizerKey();
         void addLearningRateStrategyKey();

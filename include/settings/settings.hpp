@@ -24,6 +24,7 @@
 #define _SETTINGS_HPP_
 
 #include "hessianSettings.hpp"
+#include "optimizerSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
@@ -37,6 +38,7 @@ struct Settings
     SimulationBoxSettings simulationBoxSettings;
     HessianSettings       hessianSettings;
     RingPolymerSettings   ringPolymerSettings;
+    OptimizerSettings     optimizerSettings;
 
     void finalize();
 };
