@@ -31,7 +31,6 @@
 #include "generalSettings.hpp"
 #include "gmock/gmock.h"
 #include "restartFileReader/restartFileSection.hpp"
-#include "simulationBoxSettings.hpp"
 #include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"
 
