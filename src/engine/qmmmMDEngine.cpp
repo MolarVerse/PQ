@@ -508,10 +508,12 @@ namespace engine
         _qmmmPhysicalData.addImproperEnergy(
             getPhysicalDataPtr()->getImproperEnergy() * globalSmF
         );
-        _qmmmPhysicalData.addIntraCoulombEnergy(
+        _qmmmPhysicalData.setIntraCoulombEnergy(
+            _qmmmPhysicalData.getIntraCoulombEnergy() +
             getPhysicalDataPtr()->getIntraCoulombEnergy() * globalSmF
         );
-        _qmmmPhysicalData.addIntraNonCoulombEnergy(
+        _qmmmPhysicalData.setIntraNonCoulombEnergy(
+            _qmmmPhysicalData.getIntraNonCoulombEnergy() +
             getPhysicalDataPtr()->getIntraNonCoulombEnergy() * globalSmF
         );
     }

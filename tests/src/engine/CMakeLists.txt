@@ -2,6 +2,7 @@ set(source_files
     testEngine.cpp
     testOptEngine.cpp
     testQMRunnerManager.cpp
+    testQMMMEnergies.cpp
 )
 
 foreach(source_file ${source_files})
