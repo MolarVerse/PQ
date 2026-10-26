@@ -151,7 +151,7 @@ namespace
         settings::TimingsSettings::setTimeStep(1.0);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        simulationBox.setBox(orthoBox);
+        simulationBox.setBox(orthoBox, false);
         simulationBox.setTotalMass(2.0);
 
         physicalData.setVirial(diagonalMatrix(linalg::Vec3D(0.0)));
@@ -297,7 +297,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(0.99);
     molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
-    _box->setBox(orthoBox);
+    _box->setBox(orthoBox, false);
     const auto boxOld = _box->getBoxDimensions();
 
     auto       molecule = molsys::Molecule();
@@ -435,7 +435,7 @@ TEST_F(
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(10.0);
     molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
-    _box->setBox(orthoBox);
+    _box->setBox(orthoBox, false);
 
     _manostat->calculatePressure(*_box, *_data);
     settings::TimingsSettings::setTimeStep(0.5);
@@ -490,7 +490,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     settings::TimingsSettings::setTimeStep(0.5);
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    _box->setBox(orthoBox);
+    _box->setBox(orthoBox, false);
 
     _data->setVirial(linalg::tensor3D(0.0));
     _data->setKineticEnergyMolecularVector(linalg::tensor3D(0.0));

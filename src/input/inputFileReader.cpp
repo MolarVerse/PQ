@@ -113,7 +113,11 @@ namespace input
         _parsers.push_back(
             std::make_unique<ResetKineticsInputParser>(settings.resetKinetics)
         );
-        _parsers.push_back(std::make_unique<SimulationBoxInputParser>());
+        _parsers.push_back(
+            std::make_unique<SimulationBoxInputParser>(
+                settings.simulationBoxSettings
+            )
+        );
         _parsers.push_back(std::make_unique<ThermostatInputParser>());
         _parsers.push_back(std::make_unique<TimingsInputParser>());
         _parsers.push_back(std::make_unique<VirialInputParser>());
@@ -378,7 +382,7 @@ namespace input
         InputFileReader inputFileReader(fileName, settings);
         inputFileReader.read();
         inputFileReader.postProcess();
-        inputFileReader.validateInputConfiguration();
+        inputFileReader.validateInputConfiguration(settings);
     }
 
     /**

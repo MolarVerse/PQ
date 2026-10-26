@@ -65,7 +65,7 @@ namespace
             settings::TimingsSettings::setTimeStep(1.0);
             settings::ThermostatSettings::setActualTargetTemperature(0.0);
             settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
-            _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}));
+            _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
             _data.setVirial(linalg::tensor3D{0.0});
             _data.setKineticEnergyMolecularVector(linalg::tensor3D{0.0});
             _data.setKineticEnergyAtomicVector(linalg::tensor3D{0.0});
@@ -99,7 +99,10 @@ namespace
 
 TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
 {
-    _box.setBox(molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}));
+    _box.setBox(
+        molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}),
+        false
+    );
     _addMolecule({0.0}, 0.0);
     _addMolecule({1.0}, 0.0);
     _data.setVirial(linalg::diagonalMatrix(_box.getVolume() / PRESSURE_FACTOR));
@@ -131,7 +134,10 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
 
 TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
 {
-    _box.setBox(molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}));
+    _box.setBox(
+        molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}),
+        false
+    );
     settings::ManostatSettings::setFixedAxis(FixedAxis::YZ);
     _data.setVirial(
         linalg::tensor3D{{2.0, -1.0, 0.5}, {4.0, -2.0, 1.0}, {6.0, -3.0, 1.5}}
@@ -237,7 +243,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
     {
         SCOPED_TRACE(i);
         _box = molsys::SimulationBox{};
-        _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}));
+        _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
         _addMolecule({4.95, -4.85}, 1.0);
         const auto oldCenter  = _box.getMolecule(0).getCenterOfMass();
         const auto oldDensity = _box.getDensity();

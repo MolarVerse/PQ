@@ -97,7 +97,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     auto simulationBox = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    simulationBox.setBox(orthoBox);
+    simulationBox.setBox(orthoBox, false);
 
     auto physicalData = physicalData::PhysicalData();
 

@@ -77,7 +77,7 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
     simBox.addAtom(std::make_shared<molsys::Atom>(atom4));
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
     simBox.addInnerRegionCenterAtoms({0, 1, 2});
 
     hybridConfigurator.calculateInnerRegionCenter(simBox);
@@ -141,7 +141,7 @@ TEST(testHybridConfigurator, assignHybridZones)
     molsys::SimulationBox            simBox;
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     settings::HybridSettings::setCoreRadius(6.0);
     settings::HybridSettings::setLayerRadius(12.0);
@@ -218,7 +218,7 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     molsys::SimulationBox            simBox;
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     settings::HybridSettings::setCoreRadius(0.0);
     settings::HybridSettings::setLayerRadius(7.0);
@@ -251,7 +251,7 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     molsys::SimulationBox            simBox;
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     settings::HybridSettings::setCoreRadius(2.0);
     settings::HybridSettings::setLayerRadius(4.0);
@@ -378,7 +378,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     molsys::SimulationBox            simBox;
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     settings::HybridSettings::setLayerRadius(12.0);
     settings::HybridSettings::setSmoothingRegionThickness(2.0);
@@ -457,7 +457,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
 {
     molsys::SimulationBox box;
-    box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}));
+    box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
     for (const auto &positions :
          {std::vector<double>{4.9}, std::vector<double>{-0.2, 0.2}})
     {

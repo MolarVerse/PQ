@@ -84,7 +84,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     auto simBox = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
@@ -167,7 +167,7 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     auto simBox = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});

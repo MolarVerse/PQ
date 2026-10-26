@@ -24,6 +24,7 @@
 #define _SETTINGS_HPP_
 
 #include "resetKineticsSettings.hpp"
+#include "simulationBoxSettings.hpp"
 
 /**
  * @brief Settings class that holds various simulation settings
@@ -31,6 +32,7 @@
 struct Settings
 {
     ResetKineticsSettings resetKinetics;
+    SimulationBoxSettings simulationBoxSettings;
 
     void finalize();
 };

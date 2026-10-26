@@ -68,7 +68,7 @@ namespace
         settings::HybridSettings::setPointChargeThickness(2.0);
 
         molsys::OrthorhombicBox orthoBox{{40.0, 40.0, 40.0}};
-        engine.getSimulationBox().setBox(orthoBox);
+        engine.getSimulationBox().setBox(orthoBox, false);
     }
 
 }   // namespace
@@ -258,7 +258,7 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
 TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
 {
     molsys::OrthorhombicBox orthoBox{{40.0, 40.0, 40.0}};
-    _engine->getSimulationBox().setBox(orthoBox);
+    _engine->getSimulationBox().setBox(orthoBox, false);
     setup::HybridSetup setup{*_engine};
 
     settings::HybridSettings::setCoreRadius(5.0);

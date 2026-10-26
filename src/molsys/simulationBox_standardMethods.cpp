@@ -426,6 +426,16 @@ namespace molsys
         return positions;
     }
 
+    /**
+     * @brief check if the box was set via a start file
+     *
+     * @return true if the box was set via a start file, false otherwise
+     */
+    bool SimulationBox::wasBoxSetViaStartFile() const
+    {
+        return _boxSetViaStartFile;
+    }
+
     /***************************
      *                         *
      * standard setter methods *

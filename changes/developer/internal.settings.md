@@ -1,3 +1,4 @@
 - introduce new base type `Setting<T>` for settings
 - rename `Settings` class to `GeneralSettings` 
 - introduce `ResetKineticsSettings` as non-static class and `Settings` POD
+- inject `SimulationBoxSettings` into `SimulationBox`/`SimulationBoxSetup` instead of reading static settings, pass `Settings` by const reference into the engine factory and `MDEngine`

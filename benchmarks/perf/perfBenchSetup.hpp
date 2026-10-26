@@ -154,7 +154,7 @@ namespace benchSetup
         auto box = molsys::SimulationBox();
 
         molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
-        box.setBox(orthoBox);
+        box.setBox(orthoBox, false);
 
         for (std::size_t mol = 0; mol < params.nMolecules; ++mol)
         {

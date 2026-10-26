@@ -82,6 +82,7 @@ namespace molsys
         // TODO: add this to the constructor!!!
         std::shared_ptr<Box> _box =
             std::make_shared<OrthorhombicBox>(OrthorhombicBox::makeVacuumBox());
+        bool _boxSetViaStartFile = false;
 
         linalg::Vec3D                      _centerOfMass = {0.0, 0.0, 0.0};
         std::vector<std::shared_ptr<Atom>> _atoms;
@@ -234,6 +235,8 @@ namespace molsys
         [[nodiscard]] std::set<std::string>      getUniqueQMAtomNames() const;
         [[nodiscard]] std::vector<double> getFlattenedQMPositions() const;
 
+        [[nodiscard]] bool wasBoxSetViaStartFile() const;
+
         /***************************
          * standard setter methods *
          ***************************/
@@ -246,7 +249,7 @@ namespace molsys
         void setDegreesOfFreedom(size_t degreesOfFreedom);
 
         template <typename T>
-        void setBox(const T& box);
+        void setBox(const T& box, bool boxSetViaStartFile);
 
         /**********************************************
          * Forwards the box methods to the box object *

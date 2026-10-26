@@ -31,7 +31,6 @@
 #include "generalSettings.hpp"
 #include "gmock/gmock.h"
 #include "restartFileReader/restartFileSection.hpp"
-#include "simulationBoxSettings.hpp"
 #include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"
 
@@ -60,7 +59,7 @@ TEST_F(TestBoxSection, testProcess)
 {
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
-    EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), false);
+    EXPECT_EQ(_wasBoxSetViaStartFile(), false);
 
     size_t lineNumber = 0;
 
@@ -107,5 +106,5 @@ TEST_F(TestBoxSection, testProcess)
         "Box angles must be positive and smaller than 180°"
     );
 
-    EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), true);
+    EXPECT_EQ(_wasBoxSetViaStartFile(), true);
 }

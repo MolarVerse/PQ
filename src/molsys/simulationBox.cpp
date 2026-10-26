@@ -757,7 +757,6 @@ namespace molsys
     /**
      * @brief calculate box dimensions from density
      *
-     * @return linalg::Vec3D
      */
     linalg::Vec3D SimulationBox::calcBoxDimFromDensity() const
     {

@@ -45,25 +45,25 @@ namespace engine
      */
     static const std::unordered_map<
         JobType,
-        std::function<std::unique_ptr<Engine>(Settings settings)>>
+        std::function<std::unique_ptr<Engine>(const Settings &settings)>>
         engineFactory{
             {JobType::MM_OPT,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<OptEngine>(settings); }},
             {JobType::MM_HESSIAN,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<HessianEngine>(settings); }},
             {JobType::MM_MD,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<MMMDEngine>(settings); }},
             {JobType::QM_MD,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<QMMDEngine>(settings); }},
             {JobType::RING_POLYMER_QM_MD,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<RingPolymerQMMDEngine>(settings); }},
             {JobType::QMMM_MD,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<QMMMMDEngine>(settings); }},
         };
 }   // namespace engine

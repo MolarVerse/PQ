@@ -24,7 +24,10 @@
 
 #define _SIMULATION_BOX_INPUT_PARSER_HPP_
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+#include "simulationBoxSettings.hpp"
 
 namespace molsys
 {
@@ -41,8 +44,10 @@ namespace input
      */
     class SimulationBoxInputParser : public InputFileParser
     {
+        mstd::Ref<SimulationBoxSettings> _settings;
+
        public:
-        explicit SimulationBoxInputParser();
+        explicit SimulationBoxInputParser(SimulationBoxSettings& settings);
 
         void addCoulombRadiusKey();
         void addNonCoulombRadiusKey();

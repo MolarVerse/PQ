@@ -207,7 +207,7 @@ TEST_F(TestForceField, calculateBondedInteractions)
     auto box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    box.setBox(orthoBox);
+    box.setBox(orthoBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(20.0);

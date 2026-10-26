@@ -45,7 +45,7 @@ TEST_F(TestSetup, setupCellList)
     settings::GeneralSettings::activateCellList();
 
     molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
-    _engine->getSimulationBox().setBox(orthoBox);
+    _engine->getSimulationBox().setBox(orthoBox, false);
     _engine->getCellList().setNumberOfCells(3);
     cellListSetup.setup();
 

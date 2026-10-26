@@ -42,7 +42,7 @@ namespace benchmarkSetup
 
         molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
         molsys::SimulationBox   simulationBox;
-        simulationBox.setBox(box);
+        simulationBox.setBox(box, false);
 
         std::size_t atomIndex = 0;
         for (std::size_t x = 0; x < cellsPerSide; ++x)

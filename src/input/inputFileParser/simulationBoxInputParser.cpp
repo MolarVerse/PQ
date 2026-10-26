@@ -42,8 +42,13 @@ namespace input
      * density
      * "<double>"
      *
+     * @param settings Reference to the SimulationBoxSettings object
+     *
      */
-    SimulationBoxInputParser::SimulationBoxInputParser()
+    SimulationBoxInputParser::SimulationBoxInputParser(
+        SimulationBoxSettings &settings
+    )
+        : _settings(settings)
     {
         addCoulombRadiusKey();
         addNonCoulombRadiusKey();
@@ -115,11 +120,8 @@ namespace input
             .description = "Specifies the density of the simulation box"
         };
 
-        const auto setValue = [](double value)
-        {
-            settings::SimulationBoxSettings::setDensity(value);
-            settings::SimulationBoxSettings::setDensitySet(true);
-        };
+        const auto setValue = [settings = _settings](double value)
+        { settings->setDensity(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -145,8 +147,8 @@ namespace input
                 "Maxwell-Boltzmann distribution"
         };
 
-        const auto setValue = [](InitVelocities value)
-        { settings::SimulationBoxSettings::setInitializeVelocities(value); };
+        const auto setValue = [settings = _settings](InitVelocities value)
+        { settings->setInitializeVelocities(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<InitVelocities>{

@@ -143,7 +143,7 @@ TEST_F(TestCellList, getCellIndexOfAtom)
 TEST_F(TestCellList, getCellIndexOfAtomWrapsPeriodicBoundaryCoordinates)
 {
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    _simulationBox->setBox(orthoBox);
+    _simulationBox->setBox(orthoBox, false);
     _cellList->setNumberOfCells(2);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
 
@@ -241,7 +241,7 @@ TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
 TEST_F(TestCellList, checkCoulombCutoff)
 {
     molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
-    _simulationBox->setBox(orthoBox);
+    _simulationBox->setBox(orthoBox, false);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
     EXPECT_NO_THROW(_cellList->checkCoulombCutoff(200.0));
 
@@ -379,7 +379,7 @@ TEST_F(TestCellList, updateCellList)
     auto cellSizeOld = _cellList->getCellSize();
 
     molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
-    _simulationBox->setBox(orthoBox);
+    _simulationBox->setBox(orthoBox, false);
 
     _cellList->updateCellList(*_simulationBox);
 

@@ -22,91 +22,70 @@
 
 #include "simulationBoxSettings.hpp"
 
-namespace settings
+/**
+ * @brief Construct a new Simulation Box Settings object
+ *
+ */
+SimulationBoxSettings::SimulationBoxSettings()
+    : _initializeVelocities(InitVelocities::FALSE)
 {
+}
 
-    /********************
-     *                  *
-     * standard setters *
-     *                  *
-     ********************/
-    /**
-     * @brief Set the density
-     *
-     * @param density
-     */
-    void SimulationBoxSettings::setDensity(double density)
-    {
-        _density = density;
-    }
+/********************
+ *                  *
+ * standard setters *
+ *                  *
+ ********************/
+/**
+ * @brief Set the density
+ *
+ * @param density
+ */
+void SimulationBoxSettings::setDensity(double density)
+{
+    _density.set(density);
+}
 
-    /**
-     * @brief Set the density set
-     *
-     * @param densitySet
-     */
-    void SimulationBoxSettings::setDensitySet(bool densitySet)
-    {
-        _isDensitySet = densitySet;
-    }
+/**
+ * @brief Set the initialize velocities
+ *
+ * @param initializeVelocities
+ */
+void SimulationBoxSettings::setInitializeVelocities(
+    InitVelocities initializeVelocities
+)
+{
+    _initializeVelocities.set(initializeVelocities);
+}
 
-    /**
-     * @brief Set the box set
-     *
-     * @param boxSet
-     */
-    void SimulationBoxSettings::setBoxSet(bool boxSet) { _isBoxSet = boxSet; }
+/********************
+ *                  *
+ * standard getters *
+ *                  *
+ ********************/
+/**
+ * @brief Get the density
+ *
+ * @return double
+ */
+double SimulationBoxSettings::getDensity() const { return _density.get(); }
 
-    /**
-     * @brief Set the initialize velocities
-     *
-     * @param initializeVelocities
-     */
-    void SimulationBoxSettings::setInitializeVelocities(
-        InitVelocities initializeVelocities
-    )
-    {
-        _initializeVelocities = initializeVelocities;
-    }
+/**
+ * @brief get if the density is set
+ *
+ * @return true
+ * @return false
+ */
+bool SimulationBoxSettings::isDensitySet() const { return _density.isSet(); }
 
-    /********************
-     *                  *
-     * standard getters *
-     *                  *
-     ********************/
-    /**
-     * @brief Get the density
-     *
-     * @return double
-     */
-    double SimulationBoxSettings::getDensity() { return _density; }
-
-    /**
-     * @brief get if the density is set
-     *
-     * @return true
-     * @return false
-     */
-    bool SimulationBoxSettings::getDensitySet() { return _isDensitySet; }
-
-    /**
-     * @brief get if the box is set
-     *
-     * @return true
-     * @return false
-     */
-    bool SimulationBoxSettings::getBoxSet() { return _isBoxSet; }
-
-    /**
-     * @brief get if the velocities are initialized
-     *
-     * @return TRUE
-     * @return FALSE
-     * @return FORCE
-     */
-    InitVelocities SimulationBoxSettings::getInitializeVelocities()
-    {
-        return _initializeVelocities;
-    }
-
-}   // namespace settings
+/**
+ * @brief get if the velocities are initialized
+ *
+ * @return TRUE
+ * @return FALSE
+ * @return FORCE
+ */
+InitVelocities SimulationBoxSettings::getInitializeVelocities() const
+{
+    return _initializeVelocities.get();
+}

@@ -194,7 +194,7 @@ class ExternalQMRunnerTest : public testing::Test
         _simulationBox.addAtom(atom);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simulationBox.setBox(orthoBox);
+        _simulationBox.setBox(orthoBox, false);
     }
 
     void TearDown() override
@@ -550,7 +550,7 @@ class QMWriterTest : public ExternalQMRunnerTest
         _addAtom("H", {0.5, 0.5, 0.5});
 
         molsys::OrthorhombicBox orthoBox{{10.0, 12.0, 14.0}};
-        _simulationBox.setBox(orthoBox);
+        _simulationBox.setBox(orthoBox, false);
     }
 
     void _addAtom(const std::string &name, const linalg::Vec3D &position)

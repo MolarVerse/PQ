@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <mstd/types.hpp>
 
 #include "constraints.hpp"
 #include "engineOutput.hpp"
@@ -70,13 +71,13 @@ namespace engine
         std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
 
-        Settings _settings;
+        mstd::ConstRef<Settings> _settings;
 
         struct Impl;
         std::unique_ptr<Impl> _impl;
 
        public:
-        explicit Engine(Settings settings);
+        explicit Engine(const Settings &settings);
         virtual ~Engine();
 
         virtual void run()         = 0;

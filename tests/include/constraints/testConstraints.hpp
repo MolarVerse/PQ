@@ -89,7 +89,7 @@ class TestConstraints : public ::testing::Test
         _box->addMolecule(molecule2);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _box->setBox(orthoBox);
+        _box->setBox(orthoBox, false);
 
         _constraints = std::make_unique<constraints::Constraints>();
 

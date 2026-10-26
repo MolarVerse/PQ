@@ -82,7 +82,7 @@ class TestVirial : public ::testing::Test
         _simBox->addAtom(atom3);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simBox->setBox(orthoBox);
+        _simBox->setBox(orthoBox, false);
     }
 
     void TearDown() override

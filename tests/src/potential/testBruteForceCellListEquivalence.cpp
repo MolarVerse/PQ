@@ -79,7 +79,7 @@ namespace
         molsys::SimulationBox simBox;
 
         molsys::OrthorhombicBox orthoBox{{kBoxEdge, kBoxEdge, kBoxEdge}};
-        simBox.setBox(orthoBox);
+        simBox.setBox(orthoBox, false);
 
         auto buildMoleculeType = [](MolType molType, double charge)
         {

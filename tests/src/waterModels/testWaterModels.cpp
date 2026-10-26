@@ -152,7 +152,7 @@ namespace
         molsys::SimulationBox simBox;
 
         molsys::OrthorhombicBox orthoBox{{20.0, 20.0, 20.0}};
-        simBox.setBox(orthoBox);
+        simBox.setBox(orthoBox, false);
         simBox.setWaterType(kWaterType);
         addWater(
             simBox,
@@ -362,7 +362,7 @@ namespace
 
         molsys::SimulationBox   simBox;
         molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
-        simBox.setBox(orthoBox);
+        simBox.setBox(orthoBox, false);
         simBox.setWaterType(kWaterType);
 
         addWater(
@@ -638,7 +638,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 
     molsys::SimulationBox   simBox;
     molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     molsys::Atom atom1;
     atom1.setPosition({0.0, 0.0, 0.0});
@@ -985,7 +985,7 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
     constexpr WaterGeometry geometry{.oh1 = 0.96, .oh2 = 0.96, .angle = 1.82};
     molsys::SimulationBox   simBox;
     molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
     simBox.setWaterType(kWaterType);
     addWater(simBox, {-2.0, 0.0, 0.0}, geometry, molsys::HybridZone::OUTER);
     addWater(

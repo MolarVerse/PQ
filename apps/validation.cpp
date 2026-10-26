@@ -510,7 +510,7 @@ cli::ValidationResult cli::validateInputFile(
         );
         reader.read();
         reader.postProcess();
-        reader.validateInputConfiguration();
+        reader.validateInputConfiguration(settings);
         validateInputDependencies();
         if (scope == ValidationScope::INSTALLED)
         {

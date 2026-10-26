@@ -33,7 +33,6 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "mathUtilities.hpp"
-#include "simulationBoxSettings.hpp"
 #include "triclinicBox.hpp"
 
 namespace input::restartFile
@@ -118,7 +117,7 @@ namespace input::restartFile
             ))
         {
             molsys::TriclinicBox box{boxDimensions, boxAngles};
-            engine.getSimulationBox().setBox(box);
+            engine.getSimulationBox().setBox(box, true);
 
             const auto jobType = settings::GeneralSettings::getJobtype();
 
@@ -132,10 +131,8 @@ namespace input::restartFile
         else
         {
             molsys::OrthorhombicBox box(boxDimensions);
-            engine.getSimulationBox().setBox(box);
+            engine.getSimulationBox().setBox(box, true);
         }
-
-        settings::SimulationBoxSettings::setBoxSet(true);
     }
 
     /**

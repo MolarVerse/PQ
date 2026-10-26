@@ -79,7 +79,7 @@ class TestInputValidation : public ::testing::Test
         settings::ThermostatSettings::setFriction(
             defaults::LANGEVIN_THERMOSTAT_FRICTION
         );
-        settings::SimulationBoxSettings::setInitializeVelocities(
+        _settings.simulationBoxSettings.setInitializeVelocities(
             InitVelocities::FALSE
         );
 
@@ -133,7 +133,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
     _setKeyword("timestep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::UserInputException,
         "Job type MM_MD selected. Please set nstep in the input file."
     );
@@ -144,7 +144,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::UserInputException,
         "Job type MM_OPT selected. Please set nstep in the input file."
     );
@@ -156,7 +156,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
     settings::HessianSettings::setOptimizeBeforeHessian(true);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::UserInputException,
         "Job type MM_HESSIAN selected. Please set nstep in the input file."
     );
@@ -166,7 +166,7 @@ TEST_F(TestInputValidation, hessianWithoutOptimizationNeedsNoTimings)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresTimeStepForMD)
@@ -175,7 +175,7 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::UserInputException,
         "Molecular Dynamics job type MM_MD selected. Please set the time step "
         "in the input file."
@@ -187,7 +187,7 @@ TEST_F(TestInputValidation, requiresPressureForManostat)
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Pressure not set for BERENDSEN manostat"
     );
@@ -201,7 +201,7 @@ TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
     _setKeyword("pressure");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "The timestep must not exceed the manostat relaxation time"
     );
@@ -214,7 +214,7 @@ TEST_F(TestInputValidation, requiresQMProgramForQMJob)
     _setKeyword("timestep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "QM job selected but the \"qm_prog\" keyword has not been set"
     );
@@ -225,7 +225,7 @@ TEST_F(TestInputValidation, requiresTemperatureForThermostat)
     settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Target or end temperature not set for BERENDSEN thermostat"
     );
@@ -238,7 +238,7 @@ TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
     _setKeyword("end_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Both target and end temperature set for BERENDSEN thermostat. They "
         "are mutually exclusive as they are treated as synonyms"
@@ -252,7 +252,7 @@ TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
     settings::ThermostatSettings::setEndTemperature(300.0);
     _setKeyword("end_temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
     EXPECT_DOUBLE_EQ(settings::ThermostatSettings::getTargetTemperature(), 0.0);
     EXPECT_DOUBLE_EQ(
         settings::ThermostatSettings::getActualTargetTemperature(),
@@ -263,12 +263,12 @@ TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
 TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::SimulationBoxSettings::setInitializeVelocities(
+    _settings.simulationBoxSettings.setInitializeVelocities(
         InitVelocities::FORCE
     );
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Initializing velocities requires temp, start_temp, or end_temp"
     );
@@ -285,7 +285,7 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "The timestep must not exceed the thermostat relaxation time"
     );
@@ -302,7 +302,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Langevin thermostat parameters produce a non-finite random-force "
         "scale"
@@ -321,7 +321,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
     _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Langevin thermostat parameters produce a non-finite random-force "
         "scale"
@@ -335,7 +335,7 @@ TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
     settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "An active cell list requires rcoulomb to be greater than zero"
     );
@@ -348,7 +348,7 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
     settings::GeneralSettings::activateCellList();
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Cell lists are not available for pure QM simulations"
     );
@@ -363,7 +363,7 @@ TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Nose-Hoover target temperature must be greater than zero"
     );
@@ -375,7 +375,7 @@ TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
     settings::ThermostatSettings::setTargetTemperature(0.0);
     _setKeyword("temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
@@ -387,7 +387,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
     _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Number of total simulation steps 100 is smaller than the number of "
         "temperature ramping steps 200"
@@ -404,7 +404,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
     _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Temperature ramp frequency 4 is larger than the number of ramping "
         "steps 2"
@@ -419,7 +419,7 @@ TEST_F(TestInputValidation, acceptsDefaultTemperatureRampLength)
     _setKeyword("temp");
     _setKeyword("start_temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresReplicaCountForRingPolymer)
@@ -427,7 +427,7 @@ TEST_F(TestInputValidation, requiresReplicaCountForRingPolymer)
     _configureMDJob(JobType::RING_POLYMER_QM_MD);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Number of beads not set for ring polymer simulation"
     );
@@ -438,7 +438,7 @@ TEST_F(TestInputValidation, acceptsReplicaCountForRingPolymer)
     _configureMDJob(JobType::RING_POLYMER_QM_MD);
     _setKeyword("rpmd_n_replica");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
@@ -448,7 +448,7 @@ TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
     settings::QMSettings::setSlakosType(SlakosType::NONE);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
     );
@@ -461,7 +461,7 @@ TEST_F(TestInputValidation, requiresPathForCustomSlaterKosterParameters)
     settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "Custom Slater-Koster parameters require the \"slakos_path\" keyword"
     );
@@ -478,7 +478,7 @@ TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
     _setKeyword("hubbard_derivs");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
         "This setup is invalid."
@@ -495,7 +495,7 @@ TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 #ifdef WITH_ASE
@@ -509,7 +509,7 @@ TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
     _setKeyword("hubbard_derivs");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
         "This setup is invalid."
@@ -524,7 +524,7 @@ TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
     settings::QMSettings::setUseThirdOrderDftb(false);
     _setKeyword("hubbard_derivs");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 #endif
 
@@ -534,7 +534,7 @@ TEST_F(TestInputValidation, requiresFennolModelPath)
     settings::QMSettings::setQMMethod(QMMethod::FENNOL);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "The FeNNol QM runner has been selected but the "
         "\"fennol_model_path\" keyword has not been set. This setup is invalid."
@@ -547,7 +547,7 @@ TEST_F(TestInputValidation, acceptsFennolModelPath)
     settings::QMSettings::setQMMethod(QMMethod::FENNOL);
     _setKeyword("fennol_model_path");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
@@ -558,7 +558,7 @@ TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
     settings::QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "The 'MEDIUM_OMAT_0' model size is only compatible with the 'MACE_MP' "
         "model type."
@@ -572,7 +572,7 @@ TEST_F(TestInputValidation, acceptsStandardMaceModelForNonMpType)
     settings::QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
     settings::QMSettings::setMaceModel(MaceModel::SMALL);
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
@@ -582,7 +582,7 @@ TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
     settings::QMSettings::setMaceModel(MaceModel::CUSTOM);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "You have requested a custom MACE model but haven't provided a MACE "
         "model path.This setup is invalid."
@@ -597,7 +597,7 @@ TEST_F(TestInputValidation, rejectsPathForBundledMaceModel)
     _setKeyword("mace_model_path");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::InputFileException,
         "You have set a custom MACE model path without requesting a custom "
         "mace model size.This setup is invalid."
@@ -615,7 +615,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _setKeyword("pressure");
     _setKeyword("temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
@@ -628,7 +628,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::UserInputException,
         "The constant-decay learning rate strategy requires "
         "learning-rate-decay."
@@ -645,7 +645,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::UserInputException,
         "The exponential-decay learning rate strategy requires "
         "learning-rate-decay."
@@ -661,7 +661,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
     );
     _setKeyword("nstep");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
@@ -674,7 +674,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::UserInputException,
         "The Wolfe line search learning rate strategy is not yet implemented"
     );
@@ -692,7 +692,7 @@ TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
+        _reader->validateInputConfiguration(_settings),
         exc::UserInputException,
         "The minimum learning rate 0.5 is greater or equal to the maximum "
         "learning rate 0.5, which is not allowed."

@@ -46,7 +46,7 @@ namespace
         auto box = std::make_shared<molsys::SimulationBox>();
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        box->setBox(orthoBox);
+        box->setBox(orthoBox, false);
 
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
@@ -120,7 +120,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     auto box = std::make_shared<molsys::SimulationBox>();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    box->setBox(orthoBox);
+    box->setBox(orthoBox, false);
 
     auto mol = molsys::Molecule();
 
