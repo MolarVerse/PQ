@@ -1,0 +1,1 @@
+- Add a `testAllKeywordsAcceptValidValue` test that processes every registered keyword with a representative value from `keywordList.txt`, catching renamed/typo'd keywords (like #864) by exercising each key's parse function instead of only comparing keyword-map sizes.

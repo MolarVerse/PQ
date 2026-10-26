@@ -339,7 +339,7 @@ namespace input
     void FilesInputParser::addMoldescriptorFileKey()
     {
         const auto metaData = KeyMetadata{
-            .name  = "moldescriptorFile_name",
+            .name  = "moldescriptor_file",
             .title = "Mol Descriptor File",
             .description =
                 "File containing the molecular descriptor of the system"
@@ -373,7 +373,7 @@ namespace input
     void FilesInputParser::addGuffDatFileKey()
     {
         const auto metaData = KeyMetadata{
-            .name  = "guffdat_file",
+            .name  = "guff_file",
             .title = "Guff Dat File",
             .description =
                 "File containing the guff dat configuration of the system"
