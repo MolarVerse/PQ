@@ -50,13 +50,13 @@ namespace input
          * @throws exc::UserInputException if the learning-rate strategy or
          * bounds are invalid
          */
-        void validateOptimizer()
+        void validateOptimizer(const Settings& settings)
         {
             const auto optimizerActive =
                 settings::GeneralSettings::isOptJobType() ||
                 (settings::GeneralSettings::getJobtype() ==
                      JobType::MM_HESSIAN &&
-                 settings::HessianSettings::optimizeBeforeHessian());
+                 settings.hessianSettings.optimizeBeforeHessian());
 
             if (!optimizerActive)
                 return;
@@ -76,8 +76,8 @@ namespace input
         const Settings& settings
     ) const
     {
-        _validateTimings();
-        validateOptimizer();
+        _validateTimings(settings);
+        validateOptimizer(settings);
         _validateQM();
         _validateThermostat(settings.simulationBoxSettings);
         _validateManostat();
@@ -92,7 +92,7 @@ namespace input
      * @throws exc::UserInputException if `nstep` or `timestep` is missing for a
      * job type that requires it
      */
-    void InputFileReader::_validateTimings() const
+    void InputFileReader::_validateTimings(const Settings& settings) const
     {
         using enum JobType;
 
@@ -101,7 +101,7 @@ namespace input
             settings::GeneralSettings::isMDJobType() ||
             settings::GeneralSettings::isOptJobType() ||
             (jobType == MM_HESSIAN &&
-             settings::HessianSettings::optimizeBeforeHessian());
+             settings.hessianSettings.optimizeBeforeHessian());
 
         if (requiresNumberOfSteps && !getKeywordSet("nstep"))
         {

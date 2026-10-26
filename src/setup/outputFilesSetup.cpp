@@ -179,7 +179,7 @@ namespace setup
         }
 
         if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN &&
-            settings::HessianSettings::optimizeBeforeHessian())
+            _engine.getSettings().hessianSettings.optimizeBeforeHessian())
         {
             auto &hessianEngine =
                 dynamic_cast<engine::HessianEngine &>(_engine);

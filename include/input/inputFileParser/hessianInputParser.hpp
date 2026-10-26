@@ -23,14 +23,27 @@
 #ifndef _HESSIAN_INPUT_PARSER_HPP_
 #define _HESSIAN_INPUT_PARSER_HPP_
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class HessianSettings;
 
 namespace input
 {
+    /**
+     * @brief Parser for Hessian-related input file keys.
+     *
+     * This class is responsible for parsing Hessian-specific settings
+     * from the input file and populating the corresponding HessianSettings
+     * object.
+     */
     class HessianInputParser : public InputFileParser
     {
+        mstd::Ref<HessianSettings> _hessianSettings;
+
        public:
-        HessianInputParser();
+        explicit HessianInputParser(HessianSettings &hessianSettings);
 
         void addHessianFileKey();
         void addHessianInfoFileKey();

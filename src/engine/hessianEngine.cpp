@@ -67,11 +67,13 @@ namespace engine
          * @param hessian
          */
         [[nodiscard]]
-        std::shared_ptr<opt::HessianBuilder> setupHessianBuilder()
+        std::shared_ptr<opt::HessianBuilder> setupHessianBuilder(
+            const HessianSettings &hessianSettings
+        )
         {
             return opt::makeHessianBuilder(
-                settings::HessianSettings::getBuilder(),
-                settings::HessianSettings::getDisplacement()
+                hessianSettings.getBuilder(),
+                hessianSettings.getDisplacement()
             );
         }
 
@@ -218,9 +220,12 @@ namespace engine
         /**
          * @brief write the hessian matrix to the file
          */
-        void writeHessian(const opt::HessianMatrix &hessian)
+        void writeHessian(
+            const opt::HessianMatrix &hessian,
+            const HessianSettings    &hessianSettings
+        )
         {
-            std::ofstream file(settings::HessianSettings::getHessianFile());
+            std::ofstream file(hessianSettings.getHessianFile());
 
             if (file.fail())
                 throw exc::UserInputException(
@@ -249,9 +254,12 @@ namespace engine
          *
          * @param hessian
          */
-        void writeHessianInfo(const opt::HessianMatrix &hessian)
+        void writeHessianInfo(
+            const opt::HessianMatrix &hessian,
+            const HessianSettings    &hessianSettings
+        )
         {
-            std::ofstream file(settings::HessianSettings::getHessianInfoFile());
+            std::ofstream file(hessianSettings.getHessianInfoFile());
 
             if (file.fail())
                 throw exc::UserInputException(
@@ -259,20 +267,17 @@ namespace engine
                 );
 
             file << "format = pq-hessian-info-v1\n";
-            file << "hessian_file = "
-                 << settings::HessianSettings::getHessianFile() << '\n';
+            file << "hessian_file = " << hessianSettings.getHessianFile()
+                 << '\n';
             file << "hessian_builder = "
-                 << HessianBuilderTypeMeta::toString(
-                        settings::HessianSettings::getBuilder()
-                    )
+                 << HessianBuilderTypeMeta::toString(hessianSettings.getBuilder(
+                    ))
                  << '\n';
             file << "optimize_before_hessian = "
-                 << (settings::HessianSettings::optimizeBeforeHessian()
-                         ? "true"
-                         : "false")
+                 << (hessianSettings.optimizeBeforeHessian() ? "true" : "false")
                  << '\n';
             file << "hessian_displacement = "
-                 << settings::HessianSettings::getDisplacement() << '\n';
+                 << hessianSettings.getDisplacement() << '\n';
             file << "hessian_definition = -dF_i/dx_j\n";
             file << "hessian_unit = kcal_mol-1_angstrom-2\n";
             file << "rows = " << hessian.size() << '\n';
@@ -283,20 +288,21 @@ namespace engine
 
     void HessianEngine::run()
     {
-        auto evaluator = _setupEvaluator();
+        auto        evaluator       = _setupEvaluator();
+        const auto &hessianSettings = getSettings().hessianSettings;
 
-        if (settings::HessianSettings::optimizeBeforeHessian())
+        if (hessianSettings.optimizeBeforeHessian())
         {
             _setupOptimization(evaluator);
             _runOptimization();
         }
 
-        auto builder = setupHessianBuilder();
+        auto builder = setupHessianBuilder(hessianSettings);
 
         const auto hessian = builder->build(*evaluator, getSimulationBox());
 
-        writeHessian(hessian);
-        writeHessianInfo(hessian);
+        writeHessian(hessian, hessianSettings);
+        writeHessianInfo(hessian, hessianSettings);
 
         timings::GlobalTimer::get().stopSimulationTimer();
 
@@ -528,8 +534,8 @@ namespace engine
         getEngineOutput().getLogOutput().writeSetupInfo(
             std::format(
                 "Optimize before Hessian:    {}",
-                settings::HessianSettings::optimizeBeforeHessian() ? "true"
-                                                                   : "false"
+                getSettings().hessianSettings.optimizeBeforeHessian() ? "true"
+                                                                      : "false"
             )
         );
         getEngineOutput().getLogOutput().writeSetupInfo(

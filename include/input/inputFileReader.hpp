@@ -117,7 +117,7 @@ namespace input
          * input validation functions *
          ******************************/
 
-        void _validateTimings() const;
+        void _validateTimings(const Settings &settings) const;
         void _validateQM() const;
         void _validateThermostat(
             const SimulationBoxSettings &simBoxSettings

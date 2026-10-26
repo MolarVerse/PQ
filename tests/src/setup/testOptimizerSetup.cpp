@@ -280,11 +280,11 @@ TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
 {
     resetOptimizerSettings();
     settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
-    settings::HessianSettings::setOptimizeBeforeHessian(true);
     settings::OptimizerSettings::setMinLearningRate(0.5);
     settings::OptimizerSettings::setMaxLearningRate(0.5);
 
-    Settings              settings;
+    Settings settings;
+    settings.hessianSettings.setOptimizeBeforeHessian(true);
     engine::HessianEngine hessianEngine{settings};
     EXPECT_THROW_MSG(
         hessianEngine.run(),
@@ -292,6 +292,4 @@ TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
         "The minimum learning rate 0.5 is greater or equal to the maximum "
         "learning rate 0.5, which is not allowed."
     );
-
-    settings::HessianSettings::setOptimizeBeforeHessian(false);
 }
