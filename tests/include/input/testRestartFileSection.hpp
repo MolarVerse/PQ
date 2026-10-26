@@ -56,7 +56,7 @@ class TestBoxSection : public ::testing::Test
     }
 
     [[nodiscard]]
-    bool wasBoxSetViaStartFile() const
+    bool _wasBoxSetViaStartFile() const
     {
         return _engine->getSimulationBox().wasBoxSetViaStartFile();
     }
