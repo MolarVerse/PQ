@@ -59,10 +59,10 @@ jobs:
       # auto-detects the newest one on PATH for C++23 <format>/<ranges>), as
       # in clang_build.yml.
       - name: Install clang
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-20 libclang-rt-20-dev g++-14
-        shell: bash
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: clang-20 libclang-rt-20-dev g++-14
+          version: 1.0
 
       - name: Set up Python
         uses: actions/setup-python@v5
