@@ -28,7 +28,6 @@
 #include <vector>
 
 #include "molecule.hpp"
-#include "ringPolymerSettings.hpp"
 #include "simulationBox.hpp"
 
 namespace out
@@ -47,7 +46,7 @@ namespace out
         _getFilePointer().close();
         _openFile();
 
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+        const auto nBeads = beads.size();
 
         for (size_t i = 0; i < nBeads; ++i)
         {

@@ -51,8 +51,6 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
 
     void SetUp() override
     {
-        settings::RingPolymerSettings::setNumberOfBeads(2);
-
         _trajectoryOutput = std::make_unique<out::RingPolymerTrajectoryOutput>(
             "default.rpmd.xyz"
         );

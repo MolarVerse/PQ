@@ -22,24 +22,22 @@
 
 #include "ringPolymerSettings.hpp"
 
-namespace settings
+/**
+ * @brief set number of beads for ring polymer md
+ *
+ * @param numberOfBeads
+ */
+void RingPolymerSettings::setNumberOfBeads(size_t numberOfBeads)
 {
+    _numberOfBeads.set(numberOfBeads);
+}
 
-    /**
-     * @brief set number of beads for ring polymer md
-     *
-     * @param numberOfBeads
-     */
-    void RingPolymerSettings::setNumberOfBeads(size_t numberOfBeads)
-    {
-        _numberOfBeads = numberOfBeads;
-    }
-
-    /**
-     * @brief get number of beads for ring polymer md
-     *
-     * @return size_t
-     */
-    size_t RingPolymerSettings::getNumberOfBeads() { return _numberOfBeads; }
-
-}   // namespace settings
+/**
+ * @brief get number of beads for ring polymer md
+ *
+ * @return size_t
+ */
+size_t RingPolymerSettings::getNumberOfBeads() const
+{
+    return _numberOfBeads.get();
+}

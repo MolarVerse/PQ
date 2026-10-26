@@ -98,7 +98,8 @@ namespace setup
      */
     void RingPolymerSetup::setupPhysicalData()
     {
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+        const auto nBeads =
+            _engine.getSettings().ringPolymerSettings.getNumberOfBeads();
         _engine.resizeRingPolymerBeadPhysicalData(nBeads);
     }
 
@@ -108,9 +109,10 @@ namespace setup
      */
     void RingPolymerSetup::setupSimulationBox()
     {
-        for (size_t i = 0;
-             i < settings::RingPolymerSettings::getNumberOfBeads();
-             ++i)
+        const auto nBeads =
+            _engine.getSettings().ringPolymerSettings.getNumberOfBeads();
+
+        for (size_t i = 0; i < nBeads; ++i)
         {
             molsys::SimulationBox bead;
             bead.copy(_engine.getSimulationBox());
