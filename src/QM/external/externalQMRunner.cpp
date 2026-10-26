@@ -353,7 +353,12 @@ namespace QM
             )
         );
 #else
-        const auto commandString = std::string(command);
+        constexpr auto execFailedStatus = 127;
+        constexpr auto pollInterval     = std::chrono::milliseconds(10);
+
+        auto       shell         = std::string("sh");
+        auto       shellFlag     = std::string("-c");
+        auto       commandString = std::string(command);
         const auto timeLimit     = settings::QMSettings::getQMLoopTimeLimit();
 
         const pid_t pid = ::fork();
@@ -365,8 +370,14 @@ namespace QM
         if (pid == 0)
         {
             ::setpgid(0, 0);
-            ::execl("/bin/sh", "sh", "-c", commandString.c_str(), nullptr);
-            ::_exit(127);
+            auto argv = std::array<char *, 4>{
+                shell.data(),
+                shellFlag.data(),
+                commandString.data(),
+                nullptr
+            };
+            ::execv("/bin/sh", argv.data());
+            ::_exit(execFailedStatus);
         }
 
         ::setpgid(pid, pid);
@@ -397,7 +408,7 @@ namespace QM
                 throw exc::QMRunnerException("QM calculation timeout");
             }
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(pollInterval);
         }
 
         if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
