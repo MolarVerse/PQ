@@ -22,6 +22,13 @@
 
 #include <gtest/gtest.h>
 
+#include <array>
+#include <cstdio>
+#include <fstream>
+#include <sstream>
+#include <string>
+
+#include "atom.hpp"
 #include "berendsenManostat.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
@@ -30,6 +37,8 @@
 #include "manostatSettings.hpp"
 #include "manostatSetup.hpp"
 #include "mdEngine.hpp"
+#include "molecule.hpp"
+#include "simulationBox.hpp"
 #include "stochasticRescalingManostat.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
@@ -301,4 +310,63 @@ TEST_F(TestSetup, setupManostatWithFixedAxis)
     EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
 
     settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
+}
+
+TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
+{
+    molsys::Molecule molecule;
+    for (size_t i = 0; i < 2; ++i)
+    {
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setMass(1.0);
+        molecule.addAtom(atom);
+    }
+    _mdEngine->getSimulationBox().addMolecule(molecule);
+    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
+    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
+    settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
+    const auto types = std::array{
+        ManostatType::BERENDSEN,
+        ManostatType::STOCHASTIC_RESCALING,
+        ManostatType::NONE
+    };
+    for (const auto type : types)
+    {
+        settings::ManostatSettings::setManostatType(type);
+        auto &log = _mdEngine->getLogOutput();
+        log.setFilename("atomic-virial-warning.log");
+        setup::ManostatSetup setup(*_mdEngine);
+        testing::internal::CaptureStdout();
+        EXPECT_NO_THROW(setup.setup());
+        const auto output = testing::internal::GetCapturedStdout();
+        log.close();
+
+        std::ifstream     file("atomic-virial-warning.log");
+        std::stringstream logContents;
+        logContents << file.rdbuf();
+        file.close();
+        for (const auto &text : {output, logContents.str()})
+        {
+            const auto warning = text.find("WARNING:");
+            if (type == ManostatType::NONE)
+            {
+                EXPECT_EQ(warning, std::string::npos);
+            }
+            else
+            {
+                EXPECT_NE(warning, std::string::npos);
+                if (warning != std::string::npos)
+                {
+                    EXPECT_EQ(
+                        text.find("WARNING:", warning + 1),
+                        std::string::npos
+                    );
+                }
+                EXPECT_NE(text.find("virial = molecular"), std::string::npos);
+                EXPECT_NE(text.find("Continuing"), std::string::npos);
+            }
+        }
+        EXPECT_EQ(std::remove("atomic-virial-warning.log"), 0);
+    }
+    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
 }

@@ -48,7 +48,8 @@ namespace out
         const auto &boxDims   = simulationBox.getBoxDimensions();
         const auto &boxAngles = simulationBox.getBoxAngles();
 
-        _fp << nAtoms << "  " << boxDims << "  " << boxAngles << '\n';
+        _getFilePointer() << nAtoms << "  " << boxDims << "  " << boxAngles
+                          << '\n';
     }
 
     /**
@@ -80,8 +81,8 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
     /**
@@ -101,7 +102,7 @@ namespace out
         constexpr char centerAtomName = defaults::INNER_REGION_CENTER_ATOM_NAME;
 
         // header line
-        _fp << numberOfCenterAtoms << '\n';
+        _getFilePointer() << numberOfCenterAtoms << '\n';
         _writeComment(step);
 
         std::ostringstream buffer;
@@ -114,8 +115,8 @@ namespace out
         buffer << std::format("{:15.8f}\n", pos[2]);
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
     /**
@@ -151,8 +152,8 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
     /**
@@ -188,8 +189,8 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
     /**
@@ -219,8 +220,8 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
 }   // namespace out

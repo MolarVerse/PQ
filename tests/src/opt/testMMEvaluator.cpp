@@ -45,9 +45,8 @@ namespace
     {
         auto box = std::make_shared<molsys::SimulationBox>();
 
-        molsys::OrthorhombicBox oBox;
-        oBox.setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
-        box->setBox(oBox, false);
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        box->setBox(orthoBox, false);
 
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
@@ -118,10 +117,10 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
 
     // We can't reach the box pointer through opt::MMEvaluator's public API, so
     // re-wire a fresh evaluator with a known shared box and check the box.
-    auto                    box = std::make_shared<molsys::SimulationBox>();
-    molsys::OrthorhombicBox oBox;
-    oBox.setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
-    box->setBox(oBox, false);
+    auto box = std::make_shared<molsys::SimulationBox>();
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    box->setBox(orthoBox, false);
 
     auto mol = molsys::Molecule();
 

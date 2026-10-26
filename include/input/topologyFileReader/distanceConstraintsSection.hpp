@@ -41,11 +41,12 @@ namespace input::topology
        public:
         void processSection(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                    lineNumber
         ) override;
 
         [[nodiscard]] std::string keyword() override;
-        void endedNormally(bool endedNormal) const override;
+        void endedNormally(bool endedNormal, size_t lineNumber) const override;
     };
 }   // namespace input::topology
 

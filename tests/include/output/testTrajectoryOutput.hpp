@@ -51,9 +51,8 @@ class TestTrajectoryOutput : public ::testing::Test
             std::make_unique<out::TrajectoryOutput>("default.xyz");
         _simulationBox = std::make_unique<molsys::SimulationBox>();
 
-        molsys::OrthorhombicBox oBox;
-        oBox.setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox->setBox(oBox, false);
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simulationBox->setBox(orthoBox, false);
 
         auto molecule1 = molsys::Molecule();
 

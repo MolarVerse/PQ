@@ -41,7 +41,7 @@ namespace engine
      */
     class RingPolymerEngine : virtual public MDEngine
     {
-       protected:
+       private:
         std::vector<molsys::SimulationBox>      _ringPolymerBeads;
         std::vector<physicalData::PhysicalData> _ringPolymerBeadsPhysicalData;
         std::vector<physicalData::PhysicalData>
@@ -71,6 +71,12 @@ namespace engine
         [[nodiscard]] std::vector<molsys::SimulationBox> &getRingPolymerBeads()
         {
             return _ringPolymerBeads;
+        }
+
+        [[nodiscard]] std::vector<physicalData::PhysicalData> &getRingPolymerBeadsPhysicalData(
+        )
+        {
+            return _ringPolymerBeadsPhysicalData;
         }
     };
 }   // namespace engine

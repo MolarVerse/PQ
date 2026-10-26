@@ -24,6 +24,7 @@
 
 #define _STOCHASTIC_RESCALING_MANOSTAT_HPP_
 
+#include "enums/manostat.hpp"
 #include "manostat.hpp"
 #include "randomNumberGenerator.hpp"
 
@@ -37,12 +38,11 @@ namespace manostat
      */
     class StochasticRescalingManostat : public Manostat
     {
-       protected:
+       private:
         rng::RandomNumberGenerator _randomNumberGenerator;
 
         double    _tau;
         double    _compressibility;
-        double    _dt;
         FixedAxis _fixedAxis;
 
        public:
@@ -77,6 +77,13 @@ namespace manostat
 
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
+
+       protected:
+        [[nodiscard]]
+        bool _hasFixedAxis(size_t index) const;
+
+        [[nodiscard]]
+        rng::RandomNumberGenerator &_getRNG();
     };
 
     /**

@@ -184,8 +184,8 @@ namespace setup
 
         for (const auto &bond : _engine.getForceField()->getBonds())
         {
-            const auto *mol1 = bond.getMolecule1();
-            const auto *mol2 = bond.getMolecule2();
+            const auto *mol1 = bond.get_molecules()[0];
+            const auto *mol2 = bond.get_molecules()[1];
 
             const bool involvesWater =
                 (mol1 != nullptr && waterMolecules.contains(mol1)) ||
@@ -219,7 +219,7 @@ namespace setup
 
         for (const auto &angle : _engine.getForceField()->getAngles())
         {
-            const auto  molecules = angle.getMolecules();
+            const auto  molecules = angle.get_molecules();
             const auto *mol1      = molecules[0];
             const auto *mol2      = molecules[1];
             const auto *mol3      = molecules[2];

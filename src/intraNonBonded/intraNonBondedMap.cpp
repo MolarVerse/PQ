@@ -63,9 +63,9 @@ namespace intraNonBonded
         physicalData::PhysicalData  &physicalData
     ) const
     {
-        auto       coulombEnergy    = 0.0;
-        auto       nonCoulombEnergy = 0.0;
-        const auto box              = simulationBox.getBoxDimensions();
+        auto        coulombEnergy    = 0.0;
+        auto        nonCoulombEnergy = 0.0;
+        const auto &box              = simulationBox.getBoxDimensions();
 
         const auto nAtomIndices =
             _intraNonBondedContainer->getAtomIndices().size();
@@ -177,7 +177,7 @@ namespace intraNonBonded
                 {globalVdwType1, globalVdwType2}
             );
 
-            if (distance < nonCoulombicPair->getRadialCutOff())
+            if (distance < nonCoulombicPair->get_radialCutoff())
             {
                 auto [nonCoulombEnergyLocal, nonCoulombForce] =
                     nonCoulombicPair->calculate(distance);

@@ -52,9 +52,8 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
 {
     auto box = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox oBox;
-    oBox.setBoxDimensions({10.0, 10.0, 10.0});
-    box.setBox(oBox, false);
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    box.setBox(orthoBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
@@ -254,10 +253,10 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
  */
 TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 {
-    auto                    box = molsys::SimulationBox();
-    molsys::OrthorhombicBox oBox;
-    oBox.setBoxDimensions({100.0, 100.0, 100.0});
-    box.setBox(oBox, false);
+    auto box = molsys::SimulationBox();
+
+    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    box.setBox(orthoBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);

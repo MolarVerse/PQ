@@ -26,6 +26,8 @@
 
 #include <cstddef>
 
+#include "enums/convergence.hpp"
+
 /**
  * @brief struct containing all default file names
  *
@@ -128,12 +130,14 @@ namespace defaults
     static constexpr double INITIAL_LEARNING_RATE_DEFAULT = 1.0e-4;
     static constexpr double MIN_LEARNING_RATE_DEFAULT     = 1e-15;
 
-    static constexpr auto*  EN_CONV_STRATEGY_DEFAULT    = "rigorous";
-    static constexpr auto*  FORCE_CONV_STRATEGY_DEFAULT = "rigorous";
-    static constexpr double REL_ENERGY_CONV_DEFAULT     = 1.0e-6;
-    static constexpr double ABS_ENERGY_CONV_DEFAULT     = 1.0e-6;
-    static constexpr double MAX_FORCE_CONV_DEFAULT      = 1.0e-6;
-    static constexpr double RMS_FORCE_CONV_DEFAULT      = 1.0e-6;
+    static constexpr ConvStrategy EN_CONV_STRATEGY_DEFAULT =
+        ConvStrategy::RIGOROUS;
+    static constexpr ConvStrategy FORCE_CONV_STRATEGY_DEFAULT =
+        ConvStrategy::RIGOROUS;
+    static constexpr double REL_ENERGY_CONV_DEFAULT = 1.0e-6;
+    static constexpr double ABS_ENERGY_CONV_DEFAULT = 1.0e-6;
+    static constexpr double MAX_FORCE_CONV_DEFAULT  = 1.0e-6;
+    static constexpr double RMS_FORCE_CONV_DEFAULT  = 1.0e-6;
 
     static constexpr auto NUM_GUFF_COEFFICIENTS = 22;
 

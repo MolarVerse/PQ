@@ -25,9 +25,12 @@
 #define _VECTOR3d_HPP_
 
 #include <cmath>
+#include <mstd/math.hpp>
+#include <mstd/type_traits/quantity_traits.hpp>
 #include <ostream>
 
 #include "concepts/vector3dConcepts.hpp"
+#include "innerType.hpp"
 #include "vector3dClass.hpp"
 
 namespace linalg
@@ -37,48 +40,48 @@ namespace linalg
      ************************/
 
     // operator==
-    template <class U>
+    template <typename U>
     requires std::equality_comparable<U>
     bool operator==(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
 
-    template <class U>
+    template <typename U>
     requires std::equality_comparable<U>
     bool operator!=(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
 
     // operator<
-    template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    template <typename U, typename V>
+    requires mstd::three_way_comparable<U, V>
     bool operator<(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
 
-    template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    template <typename U, typename V>
+    requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator<(const Vector3D<U> &lhs, const V &rhs);
 
     // operator<=
-    template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    template <typename U, typename V>
+    requires mstd::three_way_comparable<U, V>
     bool operator>=(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
 
-    template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    template <typename U, typename V>
+    requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator>=(const Vector3D<U> &lhs, const V &rhs);
 
     // operator>
-    template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    template <typename U, typename V>
+    requires mstd::three_way_comparable<U, V>
     bool operator>(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
 
-    template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    template <typename U, typename V>
+    requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator>(const Vector3D<U> &lhs, const V &rhs);
 
     // operator<=
-    template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    template <typename U, typename V>
+    requires mstd::three_way_comparable<U, V>
     bool operator<=(const Vector3D<U> &lhs, const Vector3D<V> &rhs);
 
-    template <class U, class V>
-    requires std::three_way_comparable<U> && std::three_way_comparable<V>
+    template <typename U, typename V>
+    requires(!pq::isVector3D_v<V> && mstd::three_way_comparable<U, V>)
     bool operator<=(const Vector3D<U> &lhs, const V &rhs);
 
     /************************
@@ -164,9 +167,12 @@ namespace linalg
     auto operator*(const U &lhs, const V &rhs)
         -> Vector3D<decltype(lhs * rhs[0])>;
 
-    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
-    auto operator*(const U &vec, const V &scalar)
-        -> Vector3D<decltype(vec[0] * scalar)>;
+    template <pq::ArithmeticVector3D U, typename V>
+    requires(!pq::ArithmeticVector3D<V>) &&
+            (pq::Arithmetic<V> ||
+             mstd::NonArithmeticScalar<pq::InnerType_t<U>, V>)
+    constexpr auto operator*(const U &vec, const V &scalar)
+        -> Vector3D<std::remove_cvref_t<decltype(vec[0] * scalar)>>;
 
     template <pq::Arithmetic U, pq::ArithmeticVector3D V>
     auto operator*(const U &scalar, const V &vec)
@@ -321,8 +327,9 @@ namespace linalg
      * angle related functions *
      ***************************/
 
-    template <pq::ArithmeticVector3D U>
-    auto cos(const U &vec) -> Vector3D<decltype(std::cos(vec[0]))>;
+    template <typename U>
+    requires pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>
+    auto cos(const U &vec) -> Vector3D<decltype(mstd::cos(vec[0]))>;
 
     template <pq::ArithmeticVector3D U>
     auto cos(const U &lhs, const U &rhs) -> decltype(dot(lhs, rhs));

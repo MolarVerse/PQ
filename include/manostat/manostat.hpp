@@ -29,6 +29,7 @@
 
 namespace molsys
 {
+    class Box;             // forward declaration
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
@@ -47,7 +48,7 @@ namespace manostat
      */
     class Manostat
     {
-       protected:
+       private:
         linalg::tensor3D _pressureTensor = {0.0};
         double           _pressure;
         double           _targetPressure;   // no default value, must be set
@@ -70,6 +71,27 @@ namespace manostat
         static void rotateMu(linalg::tensor3D &mu);
 
         [[nodiscard]] virtual ManostatType getManostatType() const;
+
+       protected:
+        static void _validateScaling(
+            const molsys::SimulationBox &,
+            const linalg::tensor3D &
+        );
+
+        [[nodiscard]]
+        const linalg::tensor3D &_getPressureTensor() const;
+
+        [[nodiscard]]
+        double _getPressure() const;
+
+        [[nodiscard]]
+        double _getTargetPressure() const;
+
+        void _setPressureTensor(const linalg::tensor3D &pTensor);
+        void _setPressure(double pressure);
+
+       private:
+        static void _validateCandidate(molsys::Box &, const linalg::tensor3D &);
     };
 
 }   // namespace manostat

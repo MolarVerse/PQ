@@ -1,0 +1,1 @@
+- Store large integration-test reference data sets as zip archives instead of raw files to shrink the repository; `test_with_data_dir` lazily extracts them into a gitignored cache.

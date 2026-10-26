@@ -67,7 +67,7 @@ namespace
     class PeriodicDftbRunner : public QM::DFTBPlusRunner
     {
        public:
-        PeriodicDftbRunner() { _periodicity = molsys::Periodicity::XYZ; }
+        PeriodicDftbRunner() { _setPeriodicity(molsys::Periodicity::XYZ); }
     };
 
     class ExternalQMRunnerHarness : public QM::ExternalQMRunner
@@ -112,7 +112,7 @@ namespace
         [[nodiscard]] bool sawStaleResults() const { return _sawStaleResults; }
     };
 
-    template <class Runner>
+    template <typename Runner>
     class CommandCaptureRunner : public Runner
     {
        private:
@@ -192,9 +192,9 @@ class ExternalQMRunnerTest : public testing::Test
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName("H");
         _simulationBox.addAtom(atom);
-        molsys::OrthorhombicBox oBox;
-        oBox.setBoxDimensions({10.0, 10.0, 10.0});
-        _simulationBox.setBox(oBox, false);
+
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simulationBox.setBox(orthoBox, false);
     }
 
     void TearDown() override
@@ -548,9 +548,9 @@ class QMWriterTest : public ExternalQMRunnerTest
         // the fixture's atom "H" sits at the origin; add an O and a second H
         _addAtom("O", {1.5, 2.25, -3.0});
         _addAtom("H", {0.5, 0.5, 0.5});
-        molsys::OrthorhombicBox oBox;
-        oBox.setBoxDimensions({10.0, 12.0, 14.0});
-        _simulationBox.setBox(oBox, false);
+
+        molsys::OrthorhombicBox orthoBox{{10.0, 12.0, 14.0}};
+        _simulationBox.setBox(orthoBox, false);
     }
 
     void _addAtom(const std::string &name, const linalg::Vec3D &position)

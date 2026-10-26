@@ -41,13 +41,14 @@ TEST_F(TestBoxSection, testIsHeader) { EXPECT_TRUE(_section->isHeader()); }
 
 TEST_F(TestBoxSection, testNumberOfArguments)
 {
+    size_t lineNumber = 0;
     for (size_t i = 0; i < 10; ++i)
     {
         if (i != 4 && i != 7)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
-                _section->process(line, *_engine),
+                _section->process(line, *_engine, lineNumber),
                 exc::RstFileException,
                 "Error in line 0: Box section must have 4 or 7 elements"
             );
@@ -61,8 +62,10 @@ TEST_F(TestBoxSection, testProcess)
 
     EXPECT_EQ(wasBoxSetViaStartFile(), false);
 
+    size_t lineNumber = 0;
+
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
-    _section->process(line, *_engine);
+    _section->process(line, *_engine, lineNumber);
     ASSERT_THAT(
         _engine->getSimulationBox().getBoxDimensions(),
         testing::ElementsAre(1.0, 2.0, 3.0)
@@ -73,7 +76,7 @@ TEST_F(TestBoxSection, testProcess)
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
-    _section->process(line, *_engine);
+    _section->process(line, *_engine, lineNumber);
     ASSERT_THAT(
         _engine->getSimulationBox().getBoxDimensions(),
         testing::ElementsAre(1.0, 2.0, 3.0)
@@ -85,21 +88,21 @@ TEST_F(TestBoxSection, testProcess)
 
     line = {"box", "1.0", "2.0", "-3.0", "90.0", "90.0", "90.0"};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine),
+        _section->process(line, *_engine, lineNumber),
         exc::RstFileException,
         "All box dimensions must be positive"
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "190.0"};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine),
+        _section->process(line, *_engine, lineNumber),
         exc::RstFileException,
         "Box angles must be positive and smaller than 180°"
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "-90.0"};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine),
+        _section->process(line, *_engine, lineNumber),
         exc::RstFileException,
         "Box angles must be positive and smaller than 180°"
     );

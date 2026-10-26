@@ -1,0 +1,1 @@
+- Fix stale box dimensions, angles, and volume by caching them instead of tracking ad-hoc "has changed" flags, so scaling and manostat updates are reflected consistently everywhere the box is read.

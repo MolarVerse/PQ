@@ -521,10 +521,7 @@ namespace molsys
      *
      * @return double
      */
-    double SimulationBox::calculateVolume() const
-    {
-        return _box->calculateVolume();
-    }
+    double SimulationBox::getVolume() const { return _box->getVolume(); }
 
     /**
      * @brief gets the minimal box dimension
@@ -537,30 +534,13 @@ namespace molsys
     }
 
     /**
-     * @brief gets the volume
-     *
-     * @return double
-     */
-    double SimulationBox::getVolume() const { return _box->calculateVolume(); }
-
-    /**
-     * @brief gets if the box size has changed
-     *
-     * @return bool
-     */
-    bool SimulationBox::getBoxSizeHasChanged() const
-    {
-        return _box->getBoxSizeHasChanged();
-    }
-
-    /**
      * @brief gets the box dimensions
      *
-     * @return linalg::Vec3D
+     * @return const linalg::Vec3D &
      */
-    linalg::Vec3D SimulationBox::getBoxDimensions() const
+    const linalg::Vec3D &SimulationBox::getBoxDimensions() const
     {
-        return _box->getBoxDimensions();
+        return _box->get_boxDimensions();
     }
 
     /**
@@ -571,26 +551,6 @@ namespace molsys
     linalg::Vec3D SimulationBox::getBoxAngles() const
     {
         return _box->getBoxAngles();
-    }
-
-    /**
-     * @brief sets if the box size has changed
-     *
-     * @param boxSizeHasChanged
-     */
-    void SimulationBox::setBoxSizeHasChanged(const bool boxSizeHasChanged) const
-    {
-        _box->setBoxSizeHasChanged(boxSizeHasChanged);
-    }
-
-    /**
-     * @brief checks if the box was set via the start file
-     *
-     * @return bool
-     */
-    bool SimulationBox::wasBoxSetViaStartFile() const
-    {
-        return _boxSetViaStartFile;
     }
 
 }   // namespace molsys

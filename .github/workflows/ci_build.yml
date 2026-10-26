@@ -71,10 +71,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install gcc13
+      - name: install gcc14
         run: |
           sudo apt update
-          sudo apt install gcc-14 g++-14 mold ninja-build
+          sudo apt install gcc-14 g++-14 mold ninja-build cmake
         shell: bash
 
       # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects).

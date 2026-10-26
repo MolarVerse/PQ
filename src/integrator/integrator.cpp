@@ -31,16 +31,6 @@
 namespace integrator
 {
     /**
-     * @brief Construct a new Integrator:: Integrator object
-     *
-     * @param integratorType
-     */
-    Integrator::Integrator(std::string_view integratorType)
-        : _integratorType(integratorType)
-    {
-    }
-
-    /**
      * @brief integrates the velocities of a single atom
      *
      * @param atom
@@ -79,20 +69,6 @@ namespace integrator
         simulationBox.applyPBC(position);
 
         atom->setPosition(position);
-    }
-
-    /********************************
-     * standard getters and setters *
-     ********************************/
-
-    /**
-     * @brief get the integrator type
-     *
-     * @return std::string_view
-     */
-    std::string_view Integrator::getIntegratorType() const
-    {
-        return _integratorType;
     }
 
 }   // namespace integrator

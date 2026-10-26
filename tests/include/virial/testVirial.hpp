@@ -81,9 +81,8 @@ class TestVirial : public ::testing::Test
         _simBox->addAtom(atom2);
         _simBox->addAtom(atom3);
 
-        molsys::OrthorhombicBox oBox;
-        oBox.setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
-        _simBox->setBox(oBox, false);
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simBox->setBox(orthoBox, false);
     }
 
     void TearDown() override

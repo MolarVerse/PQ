@@ -62,8 +62,9 @@ namespace QM
 
         coordsFile << simulationBox.getNumberOfQMAtoms();
         coordsFile << "  "
-                   << (_periodicity == molsys::Periodicity::NON_PERIODIC ? 'C'
-                                                                         : 'S')
+                   << (_getPeriodicity() == molsys::Periodicity::NON_PERIODIC
+                           ? 'C'
+                           : 'S')
                    << '\n';
 
         const auto uniqueAtomNames = simulationBox.getUniqueQMAtomNames();
@@ -89,10 +90,10 @@ namespace QM
             ++atomIndex;
         }
 
-        if (_periodicity != molsys::Periodicity::NON_PERIODIC)
+        if (_getPeriodicity() != molsys::Periodicity::NON_PERIODIC)
         {
             const auto boxMatrix =
-                simulationBox.getBox().getBoxMatrix(_periodicity);
+                simulationBox.getBox().getBoxMatrix(_getPeriodicity());
 
             // coordinate origin
             coordsFile << std::format(

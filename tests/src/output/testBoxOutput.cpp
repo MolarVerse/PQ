@@ -37,8 +37,7 @@ TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
     out::BoxFileOutput out(path);
     out.setFilename(path);
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions(linalg::Vec3D(10.0, 20.0, 30.0));
+    molsys::OrthorhombicBox box({10.0, 20.0, 30.0});
 
     out.write(7, box);
     out.close();
@@ -62,8 +61,7 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
     out::BoxFileOutput out(path);
     out.setFilename(path);
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions(linalg::Vec3D(1.0, 2.0, 3.0));
+    molsys::OrthorhombicBox box(linalg::Vec3D(1.0, 2.0, 3.0));
 
     out.write(1, box);
     out.write(2, box);

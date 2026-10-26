@@ -92,8 +92,7 @@ class TestSimulationBox : public ::testing::Test
         _simulationBox->addAtom(atom4);
         _simulationBox->addAtom(atom5);
 
-        molsys::OrthorhombicBox orthoBox;
-        orthoBox.setBoxDimensions({10.0, 10.0, 10.0});
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         _simulationBox->setBox(orthoBox, false);
     }
 };

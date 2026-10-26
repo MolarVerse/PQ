@@ -44,8 +44,8 @@ namespace out
     {
         std::ostringstream buffer;
 
-        _fp.close();
-        _fp.open(_fileName);
+        _getFilePointer().close();
+        _openFile();
 
         const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
 
@@ -97,7 +97,7 @@ namespace out
         }
 
         // Write the buffer to the file
-        _fp << buffer.str();
-        _fp << std::flush;
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 }   // namespace out

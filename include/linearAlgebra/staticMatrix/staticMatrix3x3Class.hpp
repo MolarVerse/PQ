@@ -77,6 +77,9 @@ namespace linalg
 
         StaticMatrix3x3 operator-();
         std::vector<T>  toStdVector() const;
+
+        void setDiagonal(const T &value);
+        void setDiagonal(const Vector3D<T> &values);
     };
 }   // namespace linalg
 

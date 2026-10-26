@@ -29,6 +29,7 @@
 #include "constants.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
@@ -749,7 +750,7 @@ namespace molsys
      */
     void SimulationBox::calculateDensity()
     {
-        const auto volume = _box->calculateVolume();
+        const auto volume = _box->getVolume();
         _density          = _totalMass / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
     }
 
@@ -759,12 +760,7 @@ namespace molsys
      */
     void SimulationBox::calcBoxDimFromDensity() const
     {
-        auto& orthoBox = dynamic_cast<OrthorhombicBox&>(*_box);
-
-        const auto dimensions =
-            orthoBox.calcBoxDimFromDensity(_totalMass, _density);
-
-        orthoBox.setBoxDimensions(dimensions);
+        return OrthorhombicBox::calcBoxDimFromDensity(_totalMass, _density);
     }
 
     int SimulationBox::calcActiveMolCharge() const

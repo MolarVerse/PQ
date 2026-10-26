@@ -71,9 +71,9 @@ class TestDistanceConstraint : public ::testing::Test
 
         _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
-        molsys::OrthorhombicBox oBox;
-        oBox.setBoxDimensions(linalg::Vec3D(10.0, 10.0, 10.0));
-        _box->setBox(oBox, false);
+
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _box->setBox(orthoBox, false);
 
         _distanceConstraint = std::make_unique<constraints::DistanceConstraint>(
             _box->getMolecules().data(),

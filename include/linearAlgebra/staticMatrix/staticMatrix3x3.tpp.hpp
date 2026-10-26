@@ -304,6 +304,13 @@ namespace linalg
      *                          *
      ****************************/
 
+    /** @brief Check whether all matrix elements are finite. */
+    template <typename T>
+    auto isFinite(const StaticMatrix3x3<T> &mat) -> bool
+    {
+        return isFinite(mat[0]) && isFinite(mat[1]) && isFinite(mat[2]);
+    }
+
     /**
      * @brief transpose a StaticMatrix3x3
      *

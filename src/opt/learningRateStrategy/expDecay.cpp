@@ -61,7 +61,7 @@ namespace opt
             -_decay * static_cast<double>(step) / static_cast<double>(nEpochs)
         );
 
-        _learningRate = _initialLearningRate * factor;
+        _setLearningRate(_getInitialLearningRate() * factor);
     }
 
 }   // namespace opt

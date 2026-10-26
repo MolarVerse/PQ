@@ -11,15 +11,22 @@ from collections import Counter, namedtuple
 
 LogEntry = namedtuple("LogEntry", "start end mtime output hash")
 COMPILE_SUFFIXES = (".o", ".obj", ".gch", ".pch")
+SHARED_LIBRARY = re.compile(r"\.(so(\.\d+)*|dylib|dll)$")
+OBJECT_PATH = re.compile(r"^(?:(.*?)/)?CMakeFiles/[^/]+\.dir/(.*?)\.o(?:bj)?$")
 OBJECT_SUFFIXES = (".o", ".obj")
 SOURCE_SUFFIXES = (".cpp", ".cc", ".cxx", ".c")
 HEADER_SUFFIXES = (".hpp", ".h", ".hxx", ".tpp")
 DEPS_HEADER = re.compile(r"^(?P<target>\S.*?): #deps \d+, deps mtime")
 
 
+def ordered_lines(text):
+    """The data lines of a .ninja_log in file order (older entries of an output come first)."""
+    return [line for line in text.splitlines() if line and not line.startswith("#")]
+
+
 def log_lines(text):
     """The data lines of a .ninja_log, as a set (to tell which ones a build added)."""
-    return {line for line in text.splitlines() if line and not line.startswith("#")}
+    return set(ordered_lines(text))
 
 
 def parse_log(lines):
@@ -35,10 +42,44 @@ def parse_log(lines):
     return entries
 
 
+def unique_steps(entries):
+    """One entry per executed command: outputs of one command share start, end and hash."""
+    return list({(entry.start, entry.end, entry.hash): entry for entry in entries}.values())
+
+
+def latest_per_output(entries):
+    """The newest entry of every output, ordered by each output's first entry (a .ninja_log keeps older ones until recompacted)."""
+    return list({entry.output: entry for entry in entries}.values())
+
+
+def kind_of_output(output):
+    """compile (.o), pch (.gch/.pch), library (.a/.so), executable (no suffix) or other."""
+    name = os.path.basename(output)
+    if name.endswith(OBJECT_SUFFIXES):
+        return "compile"
+    if name.endswith((".gch", ".pch")):
+        return "pch"
+    if name.endswith(".a") or SHARED_LIBRARY.search(name):
+        return "library"
+    if "." not in name and "CMakeFiles" not in output:
+        return "executable"
+    return "other"
+
+
+def source_of_object(output):
+    """The source file an object was built from: the build tree mirrors the source tree.
+
+    src/molsys/CMakeFiles/molsys.dir/simulationBox.cpp.o -> src/molsys/simulationBox.cpp
+    """
+    match = OBJECT_PATH.match(output)
+    if not match:
+        return None
+    return f"{match.group(1)}/{match.group(2)}" if match.group(1) else match.group(2)
+
+
 def summarise_steps(entries):
     """Steps, CPU seconds, link seconds and the tail after the last compile of one build."""
-    unique = {(entry.start, entry.end, entry.hash): entry for entry in entries}.values()
-    steps = list(unique)
+    steps = unique_steps(entries)
     compiles = [step for step in steps if step.output.endswith(COMPILE_SUFFIXES)]
     cpu = sum(step.end - step.start for step in steps) / 1000
     link = sum(step.end - step.start for step in steps if step not in compiles) / 1000
@@ -63,6 +104,19 @@ def parse_deps(text):
         elif current is not None and line.startswith("    "):
             result[current].append(line.strip())
     return result
+
+
+def repo_relative(path, source_root, build_dir):
+    """(path relative to the source root, is_external) of a file in the repository, or None.
+
+    None for system headers and for generated files in the build directory. `external/` (submodules) is
+    inside the repository, so it is returned with is_external True.
+    """
+    absolute = os.path.normpath(path if os.path.isabs(path) else os.path.join(build_dir, path))
+    if not _under(absolute, source_root) or _under(absolute, build_dir):
+        return None
+    relative = os.path.relpath(absolute, source_root)
+    return relative, relative.startswith("external" + os.sep)
 
 
 def _under(path, root):

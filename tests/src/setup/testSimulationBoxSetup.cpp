@@ -351,9 +351,9 @@ TEST_F(TestSetup, noDensityNoBox)
 TEST_F(TestSetup, noDensity)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({10.0, 20.0, 30.0});
-    _engine->getSimulationBox().setBox(box, true);
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    _engine->getSimulationBox().setBox(orthoBox, true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -384,9 +384,9 @@ TEST_F(TestSetup, testBoxAndDensitySet)
     _engine->getSimulationBox().setDensity(
         12341243.1234
     );   // this should be ignored
-    molsys::OrthorhombicBox box2;
-    box2.setBoxDimensions({10.0, 20.0, 30.0});
-    _engine->getSimulationBox().setBox(box2, true);
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    _engine->getSimulationBox().setBox(orthoBox, true);
     _settings->simulationBoxSettings.setDensity(0.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
@@ -400,8 +400,7 @@ TEST_F(TestSetup, testBoxAndDensitySet)
 
 TEST_F(TestSetup, testCheckRcCutoff)
 {
-    molsys::OrthorhombicBox orthoBox;
-    orthoBox.setBoxDimensions({10.0, 20.0, 30.0});
+    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
     _engine->getSimulationBox().setBox(orthoBox, false);
     settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
@@ -520,8 +519,7 @@ TEST_F(TestSetup, testFullSetup)
         12341243.1234
     );   // this should be ignored
 
-    molsys::OrthorhombicBox orthoBox;
-    orthoBox.setBoxDimensions({10.0, 20.0, 30.0});
+    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
     _engine->getSimulationBox().setBox(orthoBox, true);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
@@ -544,11 +542,8 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setTotalCharge(-7.03);
     simBox.setDegreesOfFreedom(4);
     simBox.setDensity(12341243.1234);
-    simBox.setVolume(758373.194);
-
-    molsys::OrthorhombicBox orthoBox2;
-    orthoBox2.setBoxDimensions({5.73, 9.93, 11.14});
-    simBox.setBox(orthoBox2, false);
+    molsys::OrthorhombicBox orthoBox{{5.73, 9.93, 11.14}};
+    simBox.setBox(orthoBox, false);
     settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
     settings::FileSettings::setStartFileName("input.rst");
 
@@ -568,7 +563,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     getline(file, line);
     EXPECT_EQ(line, "         density:         12341243.12340 kg/L");
     getline(file, line);
-    EXPECT_EQ(line, "         volume:            758373.19400 \u212b³");
+    EXPECT_EQ(line, "         volume:               633.85375 \u212b³");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);

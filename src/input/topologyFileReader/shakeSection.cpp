@@ -43,6 +43,7 @@ namespace input::topology
      *
      * @param lineElements
      * @param engine
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if number of elements in line is
      * not 4
@@ -51,7 +52,8 @@ namespace input::topology
      */
     void ShakeSection::processSection(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine
+        engine::Engine           &engine,
+        size_t                    lineNumber
     )
     {
         if (lineElements.size() != 4 && lineElements.size() != 3)
@@ -62,7 +64,7 @@ namespace input::topology
                     "at "
                     "line "
                     "{} - number of elements has to be 3 or 4!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -79,7 +81,7 @@ namespace input::topology
                     "Topology file shake section at line {} - atoms cannot be "
                     "the "
                     "same!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }
@@ -113,10 +115,11 @@ namespace input::topology
      * @brief checks if shake sections ends normally
      *
      * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
      *
      * @throws exc::TopologyException if endedNormal is false
      */
-    void ShakeSection::endedNormally(bool endedNormal) const
+    void ShakeSection::endedNormally(bool endedNormal, size_t lineNumber) const
     {
         if (!endedNormal)
         {
@@ -125,7 +128,7 @@ namespace input::topology
                     "Topology file shake section at line {} - no end of "
                     "section "
                     "found!",
-                    _lineNumber
+                    lineNumber
                 )
             );
         }

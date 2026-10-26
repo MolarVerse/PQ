@@ -39,6 +39,25 @@ def save_snapshot(root, snapshot):
     return path
 
 
+def save_detail(root, detail):
+    path = Path(root) / "details" / f"{detail['id']}.json"
+    temporary = path.with_name(path.name + ".tmp")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary.write_text(json.dumps(detail, separators=(",", ":")) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+    return path
+
+
+def load_detail(root, snapshot_ident):
+    """The detail stored with a snapshot, or None (older snapshots have none; damaged files are skipped)."""
+    path = Path(root) / "details" / f"{snapshot_ident}.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return data if isinstance(data, dict) and data.get("kind") == "local-build-detail" and data.get("schema_version") == 1 else None
+
+
 def load_snapshots(root, fingerprint=None):
     """All snapshots (oldest first), optionally of one fingerprint. Unreadable or foreign files are skipped."""
     snapshots = []

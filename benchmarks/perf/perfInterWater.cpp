@@ -71,9 +71,8 @@ int main()
 
     molsys::SimulationBox simBox;
 
-    molsys::OrthorhombicBox oBox;
-    oBox.setBoxDimensions({30.0, 30.0, 30.0});
-    simBox.setBox(oBox, false);
+    molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
+    simBox.setBox(orthoBox);
     simBox.setWaterType(WATER_TYPE);
 
     molsys::MoleculeType waterType;
