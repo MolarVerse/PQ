@@ -155,7 +155,7 @@ namespace input
     void ThermostatInputParser::addEndTemperatureKey()
     {
         const auto metaData = KeyMetadata{
-            .name        = "end_temperature",
+            .name        = "end_temp",
             .title       = "End Temperature",
             .description = "Specifies the end temperature for the simulation"
         };

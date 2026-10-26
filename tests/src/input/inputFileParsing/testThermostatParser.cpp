@@ -419,7 +419,7 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
 }
 
 /**
- * @brief tests parsing the "end_temperature" command
+ * @brief tests parsing the "end_temp" command
  *
  * @details if the end temperature is negative it throws inputFileException
  *
@@ -428,20 +428,20 @@ TEST_F(TestInputFileReader, testParseEndTemperature)
 {
     input::ThermostatInputParser parser;
     const auto                   funcMap = parser.getKeywordFuncMap();
-    ASSERT_TRUE(funcMap.contains("end_temperature"));
-    const auto& parseFunc = funcMap.at("end_temperature");
+    ASSERT_TRUE(funcMap.contains("end_temp"));
+    const auto& parseFunc = funcMap.at("end_temp");
 
-    std::vector<std::string> lineElements = {"end_temperature", "=", "10"};
+    std::vector<std::string> lineElements = {"end_temp", "=", "10"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings::ThermostatSettings::getEndTemperature(), 10);
 
     _clearParser(parser);
 
-    lineElements = {"end_temperature", "=", "-10"};
+    lineElements = {"end_temp", "=", "-10"};
     EXPECT_THROW_MSG(
         parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid value \"-10\" for key \"end_temperature\" at line 0 in input "
+        "Invalid value \"-10\" for key \"end_temp\" at line 0 in input "
         "file: failed validation with message Value must be greater than or "
         "equal to 0"
     );

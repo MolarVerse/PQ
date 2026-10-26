@@ -181,11 +181,11 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
     input::FilesInputParser parser;
     const auto              funcMap = parser.getKeywordFuncMap();
-    ASSERT_TRUE(funcMap.contains("moldescriptorfile_name"));
-    const auto &parseFunc = funcMap.at("moldescriptorfile_name");
+    ASSERT_TRUE(funcMap.contains("moldescriptor_file"));
+    const auto &parseFunc = funcMap.at("moldescriptor_file");
 
     std::vector<std::string> lineElements = {
-        "moldescriptorFile_name",
+        "moldescriptor_file",
         "=",
         "moldescriptor.txt"
     };
@@ -193,14 +193,14 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"moldescriptor.txt\" for key "
-        "\"moldescriptorFile_name\" at line 0 in "
+        "\"moldescriptor_file\" at line 0 in "
         "input file. Value must be an existing file path."
     );
 
     _clearParser(parser);
 
     lineElements = {
-        "moldescriptorFile_name",
+        "moldescriptor_file",
         "=",
         "data/moldescriptorReader/moldescriptor.dat"
     };
@@ -238,20 +238,20 @@ TEST_F(TestInputFileReader, guffDatFilename)
 {
     input::FilesInputParser parser;
     const auto              funcMap = parser.getKeywordFuncMap();
-    ASSERT_TRUE(funcMap.contains("guffdat_file"));
-    const auto &parseFunc = funcMap.at("guffdat_file");
+    ASSERT_TRUE(funcMap.contains("guff_file"));
+    const auto &parseFunc = funcMap.at("guff_file");
 
-    std::vector<std::string> lineElements = {"guffdat_file", "=", "guff.dat"};
+    std::vector<std::string> lineElements = {"guff_file", "=", "guff.dat"};
     EXPECT_THROW_MSG(
         parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid value \"guff.dat\" for key \"guffdat_file\" at line 0 in "
+        "Invalid value \"guff.dat\" for key \"guff_file\" at line 0 in "
         "input file. Value must be an existing file path."
     );
 
     _clearParser(parser);
 
-    lineElements = {"guffdat_file", "=", "data/guffDatReader/guff.dat"};
+    lineElements = {"guff_file", "=", "data/guffDatReader/guff.dat"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(
         settings::FileSettings::getGuffDatFileName(),

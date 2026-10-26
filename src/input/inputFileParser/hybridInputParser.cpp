@@ -185,7 +185,7 @@ namespace input
     void HybridInputParser::addUseQMChargesKey()
     {
         const auto metaData = input::KeyMetadata{
-            .name  = "use_qm_charges",
+            .name  = "qm_charges",
             .title = "Use QM Charges",
             .description =
                 "Specifies whether QM charges should be used in the hybrid "

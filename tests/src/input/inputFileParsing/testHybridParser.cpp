@@ -86,8 +86,8 @@ TEST_F(TestInputFileReader, parseUseQMCharges)
 {
     auto       parser  = input::HybridInputParser{};
     const auto funcMap = parser.getKeywordFuncMap();
-    ASSERT_TRUE(funcMap.contains("use_qm_charges"));
-    const auto& parseUseQMChargesFunc = funcMap.at("use_qm_charges");
+    ASSERT_TRUE(funcMap.contains("qm_charges"));
+    const auto& parseUseQMChargesFunc = funcMap.at("qm_charges");
 
     parseUseQMChargesFunc({"qm_charges", "=", "qm"}, 0);
     EXPECT_TRUE(settings::HybridSettings::getUseQMCharges());
@@ -102,7 +102,7 @@ TEST_F(TestInputFileReader, parseUseQMCharges)
     ASSERT_THROW_MSG(
         parseUseQMChargesFunc({"qm_charges", "=", "invalid"}, 0),
         exc::InputFileException,
-        "Invalid value \"invalid\" for key \"use_qm_charges\" at line 0 in "
+        "Invalid value \"invalid\" for key \"qm_charges\" at line 0 in "
         "input file. Allowed values: qm, mm"
     )
 }
