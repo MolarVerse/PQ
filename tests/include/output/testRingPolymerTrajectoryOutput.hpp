@@ -31,7 +31,6 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
-#include "ringPolymerSettings.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "simulationBox.hpp"
 
