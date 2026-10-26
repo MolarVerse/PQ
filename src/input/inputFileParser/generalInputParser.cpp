@@ -33,7 +33,9 @@
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
+#include "keyValidatorBase.hpp"
 #include "parserUtils.hpp"
+#include "rangeValidator.hpp"
 #include "stringUtilities.hpp"
 
 namespace input
@@ -58,12 +60,7 @@ namespace input
 
         addDimensionalityKey();
         addFloatingPointTypeKey();
-
-        addKeyword(
-            std::string("random_seed"),
-            bindMember(&GeneralInputParser::parseRandomSeed, this),
-            false
-        );
+        addRandomSeedKey();
     }
 
     /**
@@ -197,63 +194,34 @@ namespace input
         addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse random seed value for PRNG
-     *
-     * @details value not set as default
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if random seed value is invalid,
-     * negative, or exceeds uint_fast32_t range
-     */
-    void GeneralInputParser::parseRandomSeed(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void GeneralInputParser::addRandomSeedKey()
     {
-        checkCommand(lineElements, lineNumber);
-
-        constexpr auto maxRandomSeed = static_cast<std::int64_t>(UINT32_MAX);
-
-        auto throwRangeError = [&maxRandomSeed](const auto &value)
-        {
-            throw exc::InputFileException(format(
-                "Random seed value \"{}\" is out of range.\n"
-                "Must be an integer between \"0\" and \"{}\" (inclusive)",
-                value,
-                maxRandomSeed
-            ));
+        const auto metaData = KeyMetadata{
+            .name        = "random_seed",
+            .title       = "Random Seed",
+            .description = "Specifies the random seed for the simulation"
         };
 
-        auto throwValidityError = [&maxRandomSeed](const auto &value)
+        const auto setValue = [](std::uint_fast32_t value)
         {
-            throw exc::InputFileException(format(
-                "Random seed value \"{}\" is invalid.\n"
-                "Must be an integer between \"0\" and \"{}\" (inclusive)",
-                value,
-                maxRandomSeed
-            ));
+            settings::GeneralSettings::setRandomSeed(value);
+            settings::GeneralSettings::setIsRandomSeedSet(true);
         };
 
-        std::uint_fast32_t randomSeed = 0;
+        const auto validator = RangeValidator<std::uint_fast32_t>{
+            0,
+            std::numeric_limits<std::uint32_t>::max()
+        };
 
-        try
-        {
-            randomSeed = utilities::stringToUintFast32t(lineElements[2]);
-        }
-        catch (const std::invalid_argument &)
-        {
-            throwValidityError(lineElements[2]);
-        }
-        catch (const std::out_of_range &)
-        {
-            throwRangeError(lineElements[2]);
-        }
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::uint_fast32_t>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(validator)},
+            }
+        );
 
-        settings::GeneralSettings::setIsRandomSeedSet(true);
-        settings::GeneralSettings::setRandomSeed(randomSeed);
+        addKeyword(metaData.name, adapt(key), false);
     }
 
 }   // namespace input

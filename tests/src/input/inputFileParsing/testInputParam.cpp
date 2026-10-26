@@ -220,7 +220,8 @@ TEST(TestInputKey, customErrorMessageOverridesGenerated)
     EXPECT_THROW_MSG(
         key.parse({"jobtype", "=", "bogus"}, 4),
         exc::InputFileException,
-        "Unrecognized job type at line 4 in input file"
+        "Invalid value \"bogus\" for key \"jobtype\" at line 4 in input file: "
+        "Unrecognized job type"
     );
 }
 

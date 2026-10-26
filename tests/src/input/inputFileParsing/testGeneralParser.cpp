@@ -184,24 +184,33 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
 TEST_F(TestInputFileReader, parseRandomSeed)
 {
     input::GeneralInputParser parser;
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("random_seed"));
+    const auto& parseFunc = funcMap.at("random_seed");
 
     std::vector<std::string> lineElements = {"random_seed", "=", "0"};
-    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), true);
     EXPECT_EQ(settings::GeneralSettings::getRandomSeed(), 0);
     settings::GeneralSettings::setIsRandomSeedSet(false);
 
+    _clearParser(parser);
+
     lineElements = {"random_seed", "=", "+73"};
-    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), true);
     EXPECT_EQ(settings::GeneralSettings::getRandomSeed(), 73);
     settings::GeneralSettings::setIsRandomSeedSet(false);
 
+    _clearParser(parser);
+
     lineElements = {"random_seed", "=", std::to_string(UINT32_MAX)};
-    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), true);
     EXPECT_EQ(settings::GeneralSettings::getRandomSeed(), UINT32_MAX);
     settings::GeneralSettings::setIsRandomSeedSet(false);
+
+    _clearParser(parser);
 
     lineElements = {
         "random_seed",
@@ -209,79 +218,69 @@ TEST_F(TestInputFileReader, parseRandomSeed)
         std::to_string(static_cast<std::int64_t>(UINT32_MAX) + 1)
     };
     EXPECT_THROW_MSG(
-        parser.parseRandomSeed(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        std::format(
-            "Random seed value \"{}\" is out of range.\n"
-            "Must be an integer between \"0\" and \"{}\" (inclusive)",
-            static_cast<std::int64_t>(UINT32_MAX) + 1,
-            UINT32_MAX
-        )
+        "Invalid value \"4294967296\" for key \"random_seed\" at line 0 in "
+        "input file: failed validation with message Value must be between 0 "
+        "and 4294967295"
     );
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
+
+    _clearParser(parser);
 
     lineElements = {"random_seed", "=", "-1"};
     EXPECT_THROW_MSG(
-        parser.parseRandomSeed(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        std::format(
-            "Random seed value \"{}\" is out of range.\n"
-            "Must be an integer between \"0\" and \"{}\" (inclusive)",
-            -1,
-            UINT32_MAX
-        )
+        "Invalid value \"-1\" for key \"random_seed\" at line 0 in input file. "
+        "Value must be a positive integer"
     );
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
+
+    _clearParser(parser);
 
     lineElements = {"random_seed", "=", "seed"};
     EXPECT_THROW_MSG(
-        parser.parseRandomSeed(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        std::format(
-            "Random seed value \"{}\" is invalid.\n"
-            "Must be an integer between \"0\" and \"{}\" (inclusive)",
-            "seed",
-            UINT32_MAX
-        )
+        "Invalid value \"seed\" for key \"random_seed\" at line 0 in input "
+        "file. "
+        "Value must be a positive integer"
     );
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
+
+    _clearParser(parser);
 
     lineElements = {"random_seed", "=", "3.14159"};
     EXPECT_THROW_MSG(
-        parser.parseRandomSeed(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        std::format(
-            "Random seed value \"{}\" is invalid.\n"
-            "Must be an integer between \"0\" and \"{}\" (inclusive)",
-            3.14159,
-            UINT32_MAX
-        )
+        "Invalid value \"3.14159\" for key \"random_seed\" at line 0 in input "
+        "file. "
+        "Value must be a positive integer"
     );
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
+
+    _clearParser(parser);
 
     lineElements = {"random_seed", "=", "1e3"};
     EXPECT_THROW_MSG(
-        parser.parseRandomSeed(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        std::format(
-            "Random seed value \"{}\" is invalid.\n"
-            "Must be an integer between \"0\" and \"{}\" (inclusive)",
-            "1e3",
-            UINT32_MAX
-        )
+        "Invalid value \"1e3\" for key \"random_seed\" at line 0 in input "
+        "file. "
+        "Value must be a positive integer"
     );
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
 
+    _clearParser(parser);
+
     lineElements = {"random_seed", "=", "+"};
     EXPECT_THROW_MSG(
-        parser.parseRandomSeed(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        std::format(
-            "Random seed value \"{}\" is invalid.\n"
-            "Must be an integer between \"0\" and \"{}\" (inclusive)",
-            "+",
-            UINT32_MAX
-        )
+        "Invalid value \"+\" for key \"random_seed\" at line 0 in input file. "
+        "Value must be a positive integer"
     );
     EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
 }
