@@ -31,6 +31,7 @@
 #include <sstream>
 #include <string>
 #include <string_view>
+#include <thread>
 
 #include "atom.hpp"
 #include "constants.hpp"
@@ -734,3 +735,43 @@ TEST_F(QMWriterTest, pyscfCoordsAreAnXyzFile)
         readFile("coords.xyz")
     );
 }
+
+#if !defined(_WIN32)
+namespace
+{
+    class SlowExternalQMRunner : public QM::ExternalQMRunner
+    {
+       public:
+        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+
+        void execute(molsys::SimulationBox & /*simBox*/) override
+        {
+            _executeCommand("sleep 3 && touch qm-finished", "External QM");
+        }
+    };
+}   // namespace
+
+TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)
+{
+    settings::QMSettings::setQMLoopTimeLimit(1.0);
+
+    auto runner = SlowExternalQMRunner{};
+
+    try
+    {
+        runner.run(
+            _simulationBox,
+            _physicalData,
+            molsys::Periodicity::NON_PERIODIC
+        );
+        FAIL() << "Expected the QM timeout to throw";
+    }
+    catch (const exc::QMRunnerException &error)
+    {
+        EXPECT_THAT(error.what(), testing::HasSubstr("timeout"));
+    }
+
+    std::this_thread::sleep_for(std::chrono::seconds(4));
+    EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-finished"));
+}
+#endif

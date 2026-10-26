@@ -32,6 +32,15 @@
 #include <string>
 #include <thread>
 
+#if !defined(_WIN32)
+#include <sys/wait.h>
+#include <unistd.h>
+
+#include <cerrno>
+#include <chrono>
+#include <csignal>
+#endif
+
 #include "box.hpp"
 #include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
@@ -294,16 +303,11 @@ namespace QM
         };
         for (const auto &file : resultFiles) std::filesystem::remove(file);
 
-        std::jthread timeoutThread{[](const std::stop_token &stopToken)
-                                   { throwAfterTimeout(stopToken); }};
-
         {
             auto _ =
                 scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
             execute(simulationBox);
         }
-
-        timeoutThread.request_stop();
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
@@ -349,8 +353,54 @@ namespace QM
             )
         );
 #else
-        const auto status = std::system(std::string(command).c_str());
-        if (status != EXIT_SUCCESS)
+        const auto commandString = std::string(command);
+        const auto timeLimit     = settings::QMSettings::getQMLoopTimeLimit();
+
+        const pid_t pid = ::fork();
+        if (pid < 0)
+            throw exc::QMRunnerException(
+                std::format("{} command could not be started", program)
+            );
+
+        if (pid == 0)
+        {
+            ::setpgid(0, 0);
+            ::execl("/bin/sh", "sh", "-c", commandString.c_str(), nullptr);
+            ::_exit(127);
+        }
+
+        ::setpgid(pid, pid);
+
+        const auto deadline = std::chrono::steady_clock::now() +
+                              std::chrono::duration<double>(timeLimit);
+
+        int status = 0;
+        while (true)
+        {
+            const auto result =
+                ::waitpid(pid, &status, timeLimit > 0.0 ? WNOHANG : 0);
+
+            if (result == pid)
+                break;
+
+            if (result < 0 && errno != EINTR)
+                throw exc::QMRunnerException(
+                    std::format("{} command could not be awaited", program)
+                );
+
+            if (timeLimit > 0.0 && std::chrono::steady_clock::now() >= deadline)
+            {
+                ::killpg(pid, SIGTERM);
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                ::killpg(pid, SIGKILL);
+                ::waitpid(pid, &status, 0);
+                throw exc::QMRunnerException("QM calculation timeout");
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+
+        if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
             throw exc::QMRunnerException(
                 std::format("{} command failed with status {}", program, status)
             );
