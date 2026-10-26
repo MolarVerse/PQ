@@ -36,8 +36,8 @@ TEST_F(TestSetup, setupRingPolymerIsNoOpWhenNotActivated)
 
 TEST_F(TestSetup, ringPolymerSetupPhysicalDataResizesBeads)
 {
-    settings::RingPolymerSettings::setNumberOfBeads(4);
-    Settings                      settings;
+    Settings settings;
+    settings.ringPolymerSettings.setNumberOfBeads(4);
     engine::RingPolymerQMMDEngine rpEngine{settings};
 
     setup::RingPolymerSetup setup(rpEngine);
@@ -46,8 +46,8 @@ TEST_F(TestSetup, ringPolymerSetupPhysicalDataResizesBeads)
 
 TEST_F(TestSetup, ringPolymerSetupSimulationBoxAddsBeadsToEngine)
 {
-    settings::RingPolymerSettings::setNumberOfBeads(3);
-    Settings                      settings;
+    Settings settings;
+    settings.ringPolymerSettings.setNumberOfBeads(3);
     engine::RingPolymerQMMDEngine rpEngine{settings};
 
     setup::RingPolymerSetup setup(rpEngine);

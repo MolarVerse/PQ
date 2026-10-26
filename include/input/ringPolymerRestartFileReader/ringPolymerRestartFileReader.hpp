@@ -55,7 +55,7 @@ namespace input::ringPolymer
             engine::RingPolymerEngine &
         );
 
-        void read();
+        void read(size_t numberOfBeads);
     };
 }   // namespace input::ringPolymer
 
