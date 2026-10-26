@@ -457,7 +457,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
 {
     molsys::SimulationBox box;
-    box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}));
+    box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
     for (const auto &positions :
          {std::vector<double>{4.9}, std::vector<double>{-0.2, 0.2}})
     {

@@ -58,7 +58,7 @@ namespace engine
         std::unique_ptr<manostat::Manostat>     _manostat;
 
        public:
-        explicit MDEngine(Settings settings);
+        explicit MDEngine(const Settings &settings);
         ~MDEngine() override = default;
 
         void         run() override;

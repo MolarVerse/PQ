@@ -132,7 +132,7 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D calculateAngularMomentum(
             const linalg::Vec3D&
         );
-        void                        calcBoxDimFromDensity() const;
+        [[nodiscard]] linalg::Vec3D calcBoxDimFromDensity() const;
         [[nodiscard]] linalg::Vec3D calcShiftVector(
             const linalg::Vec3D& position
         ) const

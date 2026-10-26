@@ -41,7 +41,7 @@ namespace engine
      *
      * @details This constructor initializes the MDEngine with default settings.
      */
-    MDEngine::MDEngine(Settings settings)
+    MDEngine::MDEngine(const Settings &settings)
         : Engine(settings),
           _resetKinetics(getSettings().resetKinetics),
           _integrator(std::make_unique<integrator::VelocityVerlet>()),
