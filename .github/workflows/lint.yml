@@ -73,7 +73,7 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt update
-          sudo apt install -y gcc-13 g++-13 mold ninja-build clangd-20
+          sudo apt install -y gcc-14 g++-14 mold ninja-build clangd-20
           sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
         shell: bash
 
@@ -115,6 +115,9 @@ jobs:
 
       - name: Configure and build (generate compile_commands.json)
         id: build
+        env:
+          CC: gcc-14
+          CXX: g++-14
         run: |
           # Enable tests and both benchmark suites so their sources are part
           # of the compile database and actually compile with their deps
@@ -150,9 +153,6 @@ jobs:
           }
           # read by the build-timings step below: a build with errors is partial
           echo "status=$status" >> "$GITHUB_OUTPUT"
-        env:
-          CC: gcc-13
-          CXX: g++-13
 
       - name: Collect build timings
         if: always()

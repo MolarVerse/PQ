@@ -139,6 +139,8 @@ namespace manostat
 
         const auto mu = calculateMu(simulationBox.getVolume());
 
+        _validateScaling(simulationBox, mu);
+
         // Reconstruction temporarily unwraps atoms. Molecule::scale() below
         // wraps every position into the resized box.
         auto reconstructMolecule = [&simulationBox](auto &molecule)
@@ -152,11 +154,10 @@ namespace manostat
         );
 
         simulationBox.scaleBox(mu);
+        simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
         physicalData.setVolume(simulationBox.getVolume());
         physicalData.setDensity(simulationBox.getDensity());
-
-        simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
         auto scalePositions = [&mu, &simulationBox](auto &molecule)
         { molecule.scale(mu, simulationBox.getBox()); };
@@ -166,6 +167,9 @@ namespace manostat
 
         std::ranges::for_each(simulationBox.getMolecules(), scalePositions);
         std::ranges::for_each(simulationBox.getMolecules(), scaleVelocities);
+
+        physicalData.calculateKinetics(simulationBox);
+        physicalData.calculateTemperature(simulationBox);
     }
 
     /**
@@ -280,15 +284,18 @@ namespace manostat
         const auto thermalEnergy =
             boltzmannConstant *
             settings::ThermostatSettings::getActualTargetTemperature();
-        const auto random = _getRNG().getNormalDistribution(0.0, 1.0);
 
         auto stochasticFactor =
             1.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
         stochasticFactor *= PRESSURE_FACTOR;
 
+        // Independent area and height noise (Bernetti and Bussi, Eq. 9).
         const auto stochasticFactor_xy =
-            ::sqrt(4.0 * stochasticFactor) * random;
-        const auto stochasticFactor_z = ::sqrt(2.0 * stochasticFactor) * random;
+            ::sqrt(4.0 * stochasticFactor) *
+            _getRNG().getNormalDistribution(0.0, 1.0);
+        const auto stochasticFactor_z =
+            ::sqrt(2.0 * stochasticFactor) *
+            _getRNG().getNormalDistribution(0.0, 1.0);
 
         const auto p_xyz           = diagonal(_getPressureTensor());
         const auto isotropicAxes   = get2DIsotropicAxes(_isotropy);
@@ -339,24 +346,26 @@ namespace manostat
         const auto thermalEnergy =
             boltzmannConstant *
             settings::ThermostatSettings::getActualTargetTemperature();
-        const auto random = _getRNG().getNormalDistribution(0.0, 1.0);
 
         auto stochasticFactor =
             2.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
         stochasticFactor *= PRESSURE_FACTOR;
-        stochasticFactor  = ::sqrt(stochasticFactor) * random;
+        stochasticFactor  = ::sqrt(stochasticFactor);
 
         const auto deltaP =
             _getTargetPressure() - diagonal(_getPressureTensor());
 
-        auto mu =
-            exp(-compress * (deltaP) / linalg::tensor3D::size + stochasticFactor
-            );
-
+        auto mu = linalg::Vec3D{1.0, 1.0, 1.0};
         for (size_t i = 0; i < 3; ++i)
         {
-            if (_hasFixedAxis(i))
-                mu[i] = 1.0;
+            if (!_hasFixedAxis(i))
+            {
+                mu[i] = ::exp(
+                    (-compress * deltaP[i] / linalg::tensor3D::size) +
+                    (stochasticFactor *
+                     _getRNG().getNormalDistribution(0.0, 1.0))
+                );
+            }
         }
 
         return diagonalMatrix(mu);
@@ -384,32 +393,29 @@ namespace manostat
         const auto thermalEnergy =
             boltzmannConstant *
             settings::ThermostatSettings::getActualTargetTemperature();
-        const auto random = _getRNG().getNormalDistribution(0.0, 1.0);
 
         auto stochasticFactor =
             2.0 / linalg::tensor3D::size * thermalEnergy * compress / volume;
         stochasticFactor *= PRESSURE_FACTOR;
-        stochasticFactor  = ::sqrt(stochasticFactor) * random;
+        stochasticFactor  = ::sqrt(stochasticFactor);
 
         const auto deltaP =
             linalg::diagonalMatrix(_getTargetPressure()) - _getPressureTensor();
 
-        auto mu = expPade(
-            -compress * deltaP / linalg::tensor3D::size + stochasticFactor
-        );
-
-        for (size_t k = 0; k < 3; ++k)
+        auto strain = -compress * deltaP / linalg::tensor3D::size;
+        for (size_t i = 0; i < 3; ++i)
         {
-            if (_hasFixedAxis(k))
+            for (size_t j = 0; j < 3; ++j)
             {
-                for (size_t i = 0; i < 3; ++i)
-                {
-                    mu[k][i] = 0.0;
-                    mu[i][k] = 0.0;
-                }
-                mu[k][k] = 1.0;
+                if (_hasFixedAxis(i) || _hasFixedAxis(j))
+                    strain[i][j] = 0.0;
+                else
+                    strain[i][j] += stochasticFactor *
+                                    _getRNG().getNormalDistribution(0.0, 1.0);
             }
         }
+
+        auto mu = expPade(strain);
 
         rotateMu(mu);
 

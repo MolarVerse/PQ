@@ -22,6 +22,8 @@
 
 #include "orthorhombicBox.hpp"
 
+#include <memory>
+
 #include "constants.hpp"
 #include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
@@ -35,8 +37,14 @@ namespace molsys
      * @param boxDimensions
      */
     OrthorhombicBox::OrthorhombicBox(const linalg::Vec3D &boxDimensions)
-        : Box(boxDimensions, {NINETY_DEG_TO_RAD})
+        : Box(boxDimensions, {NINETY_DEG})
     {
+    }
+
+    /** @brief Copy the cell geometry into an independent box. */
+    std::unique_ptr<Box> OrthorhombicBox::clone() const
+    {
+        return std::make_unique<OrthorhombicBox>(*this);
     }
 
     /**

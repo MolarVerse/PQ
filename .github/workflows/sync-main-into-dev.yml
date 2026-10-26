@@ -1,0 +1,137 @@
+name: Sync main → dev
+
+# Every push to main (release, hotfix or exceptional merge) is merged back into
+# dev. The bot push to dev then triggers the dev → NEXT sync, so NEXT follows.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-main-into-dev
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Mint bot token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v2
+        with:
+          app-id: ${{ secrets.PQ_RELEASE_BOT_APP_ID }}
+          private-key: ${{ secrets.PQ_RELEASE_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Get bot user info
+        id: app-user
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          app_user="${{ steps.app-token.outputs.app-slug }}[bot]"
+          user_id="$(gh api "/users/$app_user" --jq .id)"
+          echo "id=$user_id" >> "$GITHUB_OUTPUT"
+          echo "name=$app_user" >> "$GITHUB_OUTPUT"
+
+      - name: Close stale sync PRs
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          stale_prs="$(gh pr list \
+            --base dev \
+            --state open \
+            --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("merge/main-into-dev")) | .number')"
+
+          for pr_number in $stale_prs; do
+            branch="$(gh pr view "$pr_number" --json headRefName --jq .headRefName)"
+            echo "Closing stale sync PR #$pr_number (branch: $branch)"
+            gh pr close "$pr_number" \
+              --comment "Superseded by a new main → dev sync run."
+            git push origin --delete "$branch" || true
+          done
+
+      - name: Attempt auto-merge main into dev
+        id: merge
+        env:
+          APP_USER_ID: ${{ steps.app-user.outputs.id }}
+          APP_USER_NAME: ${{ steps.app-user.outputs.name }}
+        run: |
+          git fetch origin main dev
+          git config user.name "$APP_USER_NAME"
+          git config user.email \
+            "$APP_USER_ID+$APP_USER_NAME@users.noreply.github.com"
+
+          git checkout dev
+          git reset --hard origin/dev
+
+          if git merge-base --is-ancestor origin/main origin/dev; then
+            echo "result=up-to-date" >> "$GITHUB_OUTPUT"
+            echo "dev already contains main."
+          elif ! git merge --no-edit origin/main; then
+            git merge --abort
+            echo "result=conflict" >> "$GITHUB_OUTPUT"
+            echo "Merge conflicts detected — a PR will be opened."
+          elif git push origin dev; then
+            echo "result=merged" >> "$GITHUB_OUTPUT"
+            echo "Auto-merged main into dev successfully."
+          else
+            # e.g. a branch ruleset that requires pull requests on dev
+            echo "result=rejected" >> "$GITHUB_OUTPUT"
+            echo "Push to dev rejected — a PR will be opened."
+          fi
+
+      - name: Create sync PR
+        if: >-
+          steps.merge.outputs.result == 'conflict' ||
+          steps.merge.outputs.result == 'rejected'
+        env:
+          APP_USER_ID: ${{ steps.app-user.outputs.id }}
+          APP_USER_NAME: ${{ steps.app-user.outputs.name }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          RESULT: ${{ steps.merge.outputs.result }}
+        run: |
+          BRANCH="merge/main-into-dev-$(date +%Y%m%d-%H%M%S)"
+
+          git config user.name "$APP_USER_NAME"
+          git config user.email \
+            "$APP_USER_ID+$APP_USER_NAME@users.noreply.github.com"
+
+          git checkout -B "$BRANCH" origin/dev
+
+          if [[ "$RESULT" == "conflict" ]]; then
+            # Merge leaves conflict markers in the working tree
+            git merge origin/main || true
+
+            # Stage everything (including conflict markers) so reviewers
+            # can see exactly what needs to be resolved
+            git add -A
+            git commit -m \
+              "merge: main into dev (resolve conflicts before merging)"
+            title="merge: sync main into dev (conflicts)"
+            body="Automated sync of \`main\` into \`dev\` failed due to merge conflicts. Please resolve the conflict markers in the affected files and merge this PR. Merging it pushes \`dev\`, which then syncs \`NEXT\`."
+          else
+            git merge --no-edit origin/main
+            title="merge: sync main into dev"
+            body="Automated sync of \`main\` into \`dev\`. A direct push to \`dev\` was rejected. Merging this PR pushes \`dev\`, which then syncs \`NEXT\`."
+          fi
+
+          git push origin "$BRANCH"
+
+          gh pr create \
+            --base dev \
+            --head "$BRANCH" \
+            --title "$title" \
+            --body "$body"

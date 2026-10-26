@@ -123,6 +123,9 @@ namespace linalg
      ****************************/
 
     template <typename T>
+    auto isFinite(const StaticMatrix3x3<T> &mat) -> bool;
+
+    template <typename T>
     StaticMatrix3x3<T> transpose(const StaticMatrix3x3<T> &mat);
 
     template <typename T>

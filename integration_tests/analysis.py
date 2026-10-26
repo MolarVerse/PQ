@@ -35,7 +35,7 @@ def check_pq_output(
     ref_folder="ref_data",
 ):
 
-    ref_path = Path("..") / folder_name / ref_folder
+    ref_path = Path(ref_folder)
 
     traj = read_trajectory(base_name + ".xyz")
     ref_traj = read_trajectory(str(ref_path / (base_name + ".xyz")))

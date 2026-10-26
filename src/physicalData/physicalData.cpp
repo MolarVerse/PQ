@@ -70,8 +70,8 @@ namespace physicalData
                                      &kineticEnergyMolecularTensor,
                                      this](auto& molecule)
         {
-            const auto numberOfAtoms   = molecule.getNumberOfAtoms();
-            auto       momentumSquared = linalg::tensor3D();
+            const auto numberOfAtoms     = molecule.getNumberOfAtoms();
+            auto       molecularMomentum = linalg::Vec3D();
 
             for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
             {
@@ -82,11 +82,12 @@ namespace physicalData
                 _momentum += momentum;
                 kineticEnergyAtomicTensor +=
                     tensorProduct(momentum, velocities);
-                momentumSquared += tensorProduct(momentum, momentum);
+                molecularMomentum += momentum;
             }
 
             kineticEnergyMolecularTensor +=
-                momentumSquared / molecule.getMolMass();
+                tensorProduct(molecularMomentum, molecularMomentum) /
+                molecule.getMolMass();
         };
 
         std::ranges::for_each(

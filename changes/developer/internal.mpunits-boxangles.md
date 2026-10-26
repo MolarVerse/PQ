@@ -1,0 +1,1 @@
+- use mp-units strong types for box angles instead of raw doubles

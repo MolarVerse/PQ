@@ -7,6 +7,7 @@ import os
 import sys
 import tempfile
 import unittest
+import urllib.error
 from pathlib import Path
 from unittest import mock
 
@@ -838,12 +839,54 @@ class PublicationTests(unittest.TestCase):
                 "Related to #123",
                 pr_request.args[4]["body"],
             )
-            self.assertEqual("pulls/77/requested_reviewers", api.call_args_list[2].args[2])
-            self.assertEqual("maintainer", api.call_args_list[2].args[4]["reviewers"][0])
+            self.assertEqual("issues/42/comments", api.call_args_list[2].args[2])
+            self.assertEqual("pulls/77/requested_reviewers", api.call_args_list[3].args[2])
+            self.assertEqual("maintainer", api.call_args_list[3].args[4]["reviewers"][0])
             push = [call for call in git.call_args_list if call.args and call.args[0] == "push"]
             self.assertEqual(1, len(push))
             self.assertEqual("HEAD:refs/heads/pq-bot/42-987", push[0].args[2])
             self.assertNotIn("write-token", str(push[0].args))
+
+    def test_reviewer_failure_does_not_hide_published_pr(self):
+        with tempfile.TemporaryDirectory() as directory:
+            context = {
+                "repo": "MolarVerse/PQ", "base_sha": "abc", "thread": 42,
+                "issue": 123, "run_id": "987", "command": "test",
+                "actor": "maintainer", "summary": "Cover a focused behavior.",
+                "validation": "Repository script tests passed",
+            }
+            Path(directory, "pq-coworker-context.json").write_text(
+                json.dumps(context), encoding="utf-8"
+            )
+
+            def response(_method, _repo, path, _token, _payload=None):
+                if path == "git/ref/heads/dev":
+                    return {"object": {"sha": "abc"}}
+                if path == "pulls":
+                    return {
+                        "number": 77,
+                        "html_url": "https://github.com/MolarVerse/PQ/pull/77",
+                    }
+                if path == "pulls/77/requested_reviewers":
+                    raise urllib.error.URLError(
+                        "HTTP Error 500: Internal Server Error"
+                    )
+                return {}
+
+            with mock.patch.dict(
+                os.environ, {"GH_TOKEN": "write-token"}
+            ), mock.patch.object(
+                bot, "api", side_effect=response
+            ) as api, mock.patch.object(
+                bot, "git", side_effect=[b"", b"docs/note.rst\n", b"", b"", b""]
+            ):
+                bot.publish(directory)
+
+            paths = [call.args[2] for call in api.call_args_list]
+            self.assertLess(
+                paths.index("issues/42/comments"),
+                paths.index("pulls/77/requested_reviewers"),
+            )
 
 
 if __name__ == "__main__":

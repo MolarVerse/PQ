@@ -1,0 +1,2 @@
+- Merge every push to main back into dev automatically, opening a PR on conflicts or a rejected push; the dev push then syncs NEXT, so hotfix and exceptional main commits reach both branches.
+- The release workflow no longer opens its own main-to-dev PR, and sync PRs from `merge/` branches skip the changelog fragment check.

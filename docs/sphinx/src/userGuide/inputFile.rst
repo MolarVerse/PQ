@@ -983,6 +983,13 @@ Possible options are:
 
    3. **stochastic_rescaling** - stochastic cell rescaling manostat
 
+Berendsen and stochastic cell rescaling move molecular centers while preserving
+internal molecular coordinates. Use ``virial = molecular`` for consistent
+pressure coupling of multi-atom molecules. Selecting ``virial = atomic`` for
+these systems prints a warning during setup and remains allowed for backward
+compatibility. For monatomic systems, both pressure estimators coincide.
+Atomic virial is also available when pressure coupling is disabled.
+
 .. _pressureRelaxationKey:
 
 Pressure Relaxation
@@ -1076,6 +1083,11 @@ Possible options are:
 
     * When **no manostat** is selected (``manostat = none``), the default is ``all`` (*i.e.* all three axes remain fixed and no volume scaling occurs).
     * When a **manostat is selected**, the default is ``none`` (*i.e.* all axes are free to scale unless explicitly specified otherwise).
+
+For Berendsen coupling, the scalar compressibility controls volume relaxation
+over the free axes. Length increments are normalized by the number of free
+axes, so fixing an axis does not reduce the first-order hydrostatic volume
+response of the remaining axes.
 
 .. Note::
     **Target Pressure and Energy Output:**

@@ -24,11 +24,15 @@
 
 #define _BOX_HPP_
 
+#include <memory>
 #include <mstd/types.hpp>
+#include <mstd/units.hpp>
 #include <mstd/utils.hpp>
 
 #include "staticMatrix.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
+#include "vector3d/vector3dClass.hpp"
 
 namespace molsys
 {
@@ -52,6 +56,8 @@ namespace molsys
     };
     using BoxVec = mstd::CacheProperty<linalg::Vec3D, BoxTag>;
 
+    using AngleVec = mstd::CacheProperty<Angles3D, BoxTag>;
+
     /**
      * @class Box
      *
@@ -61,11 +67,14 @@ namespace molsys
     class Box
     {
        private:
-        BoxVec _boxDimensions;
-        BoxVec _angles;
+        BoxVec   _boxDimensions;
+        AngleVec _angles;
 
        public:
         virtual ~Box() = default;
+
+        [[nodiscard]]
+        virtual std::unique_ptr<Box> clone() const = 0;
 
         virtual void applyPBC(linalg::Vec3D &position) const = 0;
 

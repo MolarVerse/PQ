@@ -105,6 +105,8 @@ namespace configurator
             simulationBox.applyPBC(position);
             atom->setPosition(position);
         }
+
+        simulationBox.calculateCenterOfMassMolecules();
     }
 
     /**
@@ -132,6 +134,8 @@ namespace configurator
             simulationBox.applyPBC(position);
             atom->setPosition(position);
         }
+
+        simulationBox.calculateCenterOfMassMolecules();
     }
 
     /**

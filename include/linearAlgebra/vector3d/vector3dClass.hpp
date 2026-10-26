@@ -26,6 +26,7 @@
 
 #include <array>
 #include <cstddef>
+#include <mstd/type_traits/quantity_traits.hpp>
 #include <vector>
 
 #include "concepts/vector3dConcepts.hpp"
@@ -154,6 +155,16 @@ namespace linalg
         explicit operator Vector3D<U>() const;
 
         std::vector<T> toStdVector() const;
+
+        /****************
+         * unit methods *
+         ****************/
+
+        template <mstd::UnitLike U>
+        auto in(const U &unit) const;
+
+        template <mstd::UnitLike U>
+        auto numerical_value_in(const U &unit) const;
     };
 
 }   // namespace linalg
