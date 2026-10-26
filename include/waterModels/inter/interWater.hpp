@@ -172,6 +172,44 @@ namespace waterModel
 
         template <typename T>
         double getPartialCharge(molsys::Atom &atom) const;
+
+       private:
+        template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+        void _calculateSingleInteraction(
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            double                                        rCutSquared,
+            const molsys::SimulationBox                  &simulationBox,
+            const pot::NonCoulombPair                    &nonCoulPair,
+            double                                       &coulombEnergy,
+            double                                       &nonCoulombEnergy,
+            double                                        weight
+        );
+
+        template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+        void _calculateSingleCoulombInteraction(
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            double                                        rCutSquared,
+            const molsys::SimulationBox                  &simulationBox,
+            double                                       &coulombEnergy,
+            double                                        weight
+        );
+
+        template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+        void _calculateSingleInteractionOneWay(
+            molsys::Atom                                 &atom1,
+            molsys::Atom                                 &atom2,
+            const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+            double                                        rCutSquared,
+            const molsys::SimulationBox                  &simulationBox,
+            const pot::NonCoulombPair                    &nonCoulPair,
+            double                                       &coulombEnergy,
+            double                                       &nonCoulombEnergy,
+            double                                        weight
+        );
     };
 
     class InterWater

@@ -39,8 +39,8 @@ namespace waterModel
      * @tparam ChargeTag1 Charge tag for atom1.
      * @tparam ChargeTag2 Charge tag for atom2.
      */
-    template <typename ChargeTag1, typename ChargeTag2>
-    void InterWaterStrategy::calculateSingleInteraction(
+    template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+    void InterWaterStrategy::_calculateSingleInteraction(
         molsys::Atom                                 &atom1,
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
@@ -73,17 +73,20 @@ namespace waterModel
             const auto chargeProduct = charge_i * charge_j;
 
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += weight * e;
+            coulombEnergy += pot::applyWeight<Weighted>(e, weight);
 
             if (distance < nonCoulPair.get_radialCutoff())
             {
                 const auto [nonCoulE, nonCoulF] =
                     nonCoulPair.calculate(distance);
-                nonCoulombEnergy += weight * nonCoulE;
-                f                += nonCoulF;
+                nonCoulombEnergy +=
+                    pot::applyWeight<Weighted>(nonCoulE, weight);
+                f += nonCoulF;
             }
 
-            f                   *= weight / distance;
+            f = pot::applyWeight<Weighted>(f, weight);
+
+            f                   /= distance;
             const auto forcexyz  = f * dxyz;
 
             const auto shiftForcexyz = forcexyz * txyz;
@@ -101,8 +104,8 @@ namespace waterModel
      * @tparam ChargeTag1 Charge tag for atom1.
      * @tparam ChargeTag2 Charge tag for atom2.
      */
-    template <typename ChargeTag1, typename ChargeTag2>
-    void InterWaterStrategy::calculateSingleCoulombInteraction(
+    template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+    void InterWaterStrategy::_calculateSingleCoulombInteraction(
         molsys::Atom                                 &atom1,
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
@@ -133,9 +136,11 @@ namespace waterModel
             const auto chargeProduct = charge_i * charge_j;
 
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += weight * e;
+            coulombEnergy += pot::applyWeight<Weighted>(e, weight);
 
-            f                   *= weight / distance;
+            f = pot::applyWeight<Weighted>(f, weight);
+
+            f                   /= distance;
             const auto forcexyz  = f * dxyz;
 
             const auto shiftForcexyz = forcexyz * txyz;
@@ -153,8 +158,8 @@ namespace waterModel
      * @tparam ChargeTag1 Charge tag for atom1.
      * @tparam ChargeTag2 Charge tag for atom2.
      */
-    template <typename ChargeTag1, typename ChargeTag2>
-    void InterWaterStrategy::calculateSingleInteractionOneWay(
+    template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+    void InterWaterStrategy::_calculateSingleInteractionOneWay(
         molsys::Atom                                 &atom1,
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
@@ -187,16 +192,19 @@ namespace waterModel
             const auto chargeProduct = charge_i * charge_j;
 
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += weight * e;
+            coulombEnergy += pot::applyWeight<Weighted>(e, weight);
 
             if (distance < nonCoulPair.get_radialCutoff())
             {
-                auto [nonCoulE, nonCoulF]  = nonCoulPair.calculate(distance);
-                nonCoulombEnergy          += weight * nonCoulE;
-                f                         += nonCoulF;
+                auto [nonCoulE, nonCoulF] = nonCoulPair.calculate(distance);
+                nonCoulombEnergy +=
+                    pot::applyWeight<Weighted>(nonCoulE, weight);
+                f += nonCoulF;
             }
 
-            f                   *= weight / distance;
+            f = pot::applyWeight<Weighted>(f, weight);
+
+            f                   /= distance;
             const auto forcexyz  = f * dxyz;
 
             const auto shiftForcexyz = forcexyz * txyz;
@@ -254,7 +262,7 @@ namespace waterModel
         double                                       &nonCoulombEnergy
     )
     {
-        calculateSingleInteraction<ChargeTag1, ChargeTag2>(
+        _calculateSingleInteraction<ChargeTag1, ChargeTag2, false>(
             atom1,
             atom2,
             coulombPotential,
@@ -280,7 +288,7 @@ namespace waterModel
         double                                       &coulombEnergy
     )
     {
-        calculateSingleCoulombInteraction<ChargeTag1, ChargeTag2>(
+        _calculateSingleCoulombInteraction<ChargeTag1, ChargeTag2, false>(
             atom1,
             atom2,
             coulombPotential,
@@ -306,7 +314,7 @@ namespace waterModel
         double                                       &nonCoulombEnergy
     )
     {
-        calculateSingleInteractionOneWay<ChargeTag1, ChargeTag2>(
+        _calculateSingleInteractionOneWay<ChargeTag1, ChargeTag2, false>(
             atom1,
             atom2,
             coulombPotential,
@@ -316,6 +324,89 @@ namespace waterModel
             coulombEnergy,
             nonCoulombEnergy,
             1.0
+        );
+    }
+
+    /**
+     * @brief calculateSingleInteraction with pair weight
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    void InterWaterStrategy::calculateSingleInteraction(
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        double                                        rCutSquared,
+        const molsys::SimulationBox                  &simulationBox,
+        const pot::NonCoulombPair                    &nonCoulPair,
+        double                                       &coulombEnergy,
+        double                                       &nonCoulombEnergy,
+        const double                                  weight
+    )
+    {
+        _calculateSingleInteraction<ChargeTag1, ChargeTag2, true>(
+            atom1,
+            atom2,
+            coulombPotential,
+            rCutSquared,
+            simulationBox,
+            nonCoulPair,
+            coulombEnergy,
+            nonCoulombEnergy,
+            weight
+        );
+    }
+
+    /**
+     * @brief calculateSingleCoulombInteraction with pair weight
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    void InterWaterStrategy::calculateSingleCoulombInteraction(
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        double                                        rCutSquared,
+        const molsys::SimulationBox                  &simulationBox,
+        double                                       &coulombEnergy,
+        const double                                  weight
+    )
+    {
+        _calculateSingleCoulombInteraction<ChargeTag1, ChargeTag2, true>(
+            atom1,
+            atom2,
+            coulombPotential,
+            rCutSquared,
+            simulationBox,
+            coulombEnergy,
+            weight
+        );
+    }
+
+    /**
+     * @brief calculateSingleInteractionOneWay with pair weight
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    void InterWaterStrategy::calculateSingleInteractionOneWay(
+        molsys::Atom                                 &atom1,
+        molsys::Atom                                 &atom2,
+        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
+        double                                        rCutSquared,
+        const molsys::SimulationBox                  &simulationBox,
+        const pot::NonCoulombPair                    &nonCoulPair,
+        double                                       &coulombEnergy,
+        double                                       &nonCoulombEnergy,
+        const double                                  weight
+    )
+    {
+        _calculateSingleInteractionOneWay<ChargeTag1, ChargeTag2, true>(
+            atom1,
+            atom2,
+            coulombPotential,
+            rCutSquared,
+            simulationBox,
+            nonCoulPair,
+            coulombEnergy,
+            nonCoulombEnergy,
+            weight
         );
     }
 

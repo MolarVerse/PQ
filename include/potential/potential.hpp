@@ -55,6 +55,22 @@ namespace pot
     };
 
     /**
+     * @brief scale a pair contribution by weight; compiled away if unweighted
+     */
+    template <bool Weighted>
+    constexpr double applyWeight(const double value, const double weight)
+    {
+        if constexpr (Weighted)
+        {
+            return weight * value;
+        }
+        else
+        {
+            return value;
+        }
+    }
+
+    /**
      * @class Potential
      *
      * @brief base class for all potential routines
@@ -73,6 +89,34 @@ namespace pot
        private:
         std::shared_ptr<CoulombPotential>    _coulombPotential;
         std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
+
+        template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+        std::pair<double, double> _calculateSingleInteraction(
+            const molsys::Box &box,
+            molsys::Molecule  &mol1,
+            molsys::Molecule  &mol2,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2,
+            double             weight
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+        double _calculateSingleCoulombInteraction(
+            const molsys::Box &box,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2,
+            double             weight
+        ) const;
+
+        template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+        std::pair<double, double> _calculateSingleInteractionOneWay(
+            const molsys::Box &box,
+            molsys::Molecule  &mol1,
+            molsys::Molecule  &mol2,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2,
+            double             weight
+        ) const;
 
        public:
         virtual ~Potential();

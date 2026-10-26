@@ -44,10 +44,14 @@ namespace pot
     {
         if (settings::HybridSettings::getSmoothingMethod() !=
             SmoothingMethod::HOTSPOT)
+        {
             return 1.0;
+        }
 
         if (mol.getHybridZone() != molsys::HybridZone::SMOOTHING)
+        {
             return 1.0;
+        }
 
         return mol.getSmoothingFactor();
     }
@@ -73,8 +77,8 @@ namespace pot
      * @param atom2 Second atom in the interaction pair
      * @return std::pair<double, double> Coulomb energy and non-Coulomb energy
      */
-    template <typename ChargeTag1, typename ChargeTag2>
-    std::pair<double, double> Potential::calculateSingleInteraction(
+    template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+    std::pair<double, double> Potential::_calculateSingleInteraction(
         const molsys::Box &box,
         molsys::Molecule  &mol1,
         molsys::Molecule  &mol2,
@@ -124,7 +128,7 @@ namespace pot
 
             auto [e, f] =
                 _coulombPotential->calculate(distance, coulombPreFactor);
-            coulombEnergy = weight * e;
+            coulombEnergy = applyWeight<Weighted>(e, weight);
 
             const auto nonCoulPair = _nonCoulombPot->getNonCoulPair(
                 combinedIdx,
@@ -136,12 +140,14 @@ namespace pot
             {
                 const auto &[nonCoulE, nonCoulF] =
                     nonCoulPair->calculate(distance);
-                nonCoulombEnergy = weight * nonCoulE;
+                nonCoulombEnergy = applyWeight<Weighted>(nonCoulE, weight);
 
                 f += nonCoulF;
             }
 
-            f *= weight / distance;
+            f = applyWeight<Weighted>(f, weight);
+
+            f /= distance;
 
             const auto forcexyz = f * dxyz;
 
@@ -172,8 +178,8 @@ namespace pot
      * @param atom2 Second atom in the interaction pair
      * @return double Coulomb energy of the interaction
      */
-    template <typename ChargeTag1, typename ChargeTag2>
-    double Potential::calculateSingleCoulombInteraction(
+    template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+    double Potential::_calculateSingleCoulombInteraction(
         const molsys::Box &box,
         molsys::Atom      &atom1,
         molsys::Atom      &atom2,
@@ -205,9 +211,11 @@ namespace pot
 
             auto [e, f] =
                 _coulombPotential->calculate(distance, coulombPreFactor);
-            coulombEnergy = weight * e;
+            coulombEnergy = applyWeight<Weighted>(e, weight);
 
-            f *= weight / distance;
+            f = applyWeight<Weighted>(f, weight);
+
+            f /= distance;
 
             const auto forcexyz = f * dxyz;
 
@@ -241,8 +249,8 @@ namespace pot
      * @param atom2 Second atom in the interaction pair (no forces applied)
      * @return std::pair<double, double> Coulomb energy and non-Coulomb energy
      */
-    template <typename ChargeTag1, typename ChargeTag2>
-    std::pair<double, double> Potential::calculateSingleInteractionOneWay(
+    template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
+    std::pair<double, double> Potential::_calculateSingleInteractionOneWay(
         const molsys::Box &box,
         molsys::Molecule  &mol1,
         molsys::Molecule  &mol2,
@@ -292,7 +300,7 @@ namespace pot
 
             auto [e, f] =
                 _coulombPotential->calculate(distance, coulombPreFactor);
-            coulombEnergy = weight * e;
+            coulombEnergy = applyWeight<Weighted>(e, weight);
 
             const auto nonCoulPair = _nonCoulombPot->getNonCoulPair(
                 combinedIdx,
@@ -304,12 +312,14 @@ namespace pot
             {
                 const auto &[nonCoulE, nonCoulF] =
                     nonCoulPair->calculate(distance);
-                nonCoulombEnergy = weight * nonCoulE;
+                nonCoulombEnergy = applyWeight<Weighted>(nonCoulE, weight);
 
                 f += nonCoulF;
             }
 
-            f *= weight / distance;
+            f = applyWeight<Weighted>(f, weight);
+
+            f /= distance;
 
             const auto forcexyz = f * dxyz;
 
@@ -421,7 +431,7 @@ namespace pot
         molsys::Atom      &atom2
     ) const
     {
-        return calculateSingleInteraction<ChargeTag1, ChargeTag2>(
+        return _calculateSingleInteraction<ChargeTag1, ChargeTag2, false>(
             box,
             mol1,
             mol2,
@@ -441,12 +451,10 @@ namespace pot
         molsys::Atom      &atom2
     ) const
     {
-        return calculateSingleCoulombInteraction<ChargeTag1, ChargeTag2>(
-            box,
-            atom1,
-            atom2,
-            1.0
-        );
+        return _calculateSingleCoulombInteraction<
+            ChargeTag1,
+            ChargeTag2,
+            false>(box, atom1, atom2, 1.0);
     }
 
     /**
@@ -461,13 +469,78 @@ namespace pot
         molsys::Atom      &atom2
     ) const
     {
-        return calculateSingleInteractionOneWay<ChargeTag1, ChargeTag2>(
+        return _calculateSingleInteractionOneWay<ChargeTag1, ChargeTag2, false>(
             box,
             mol1,
             mol2,
             atom1,
             atom2,
             1.0
+        );
+    }
+
+    /**
+     * @brief calculateSingleInteraction with pair weight
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    std::pair<double, double> Potential::calculateSingleInteraction(
+        const molsys::Box &box,
+        molsys::Molecule  &mol1,
+        molsys::Molecule  &mol2,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2,
+        const double       weight
+    ) const
+    {
+        return _calculateSingleInteraction<ChargeTag1, ChargeTag2, true>(
+            box,
+            mol1,
+            mol2,
+            atom1,
+            atom2,
+            weight
+        );
+    }
+
+    /**
+     * @brief calculateSingleCoulombInteraction with pair weight
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    double Potential::calculateSingleCoulombInteraction(
+        const molsys::Box &box,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2,
+        const double       weight
+    ) const
+    {
+        return _calculateSingleCoulombInteraction<ChargeTag1, ChargeTag2, true>(
+            box,
+            atom1,
+            atom2,
+            weight
+        );
+    }
+
+    /**
+     * @brief calculateSingleInteractionOneWay with pair weight
+     */
+    template <typename ChargeTag1, typename ChargeTag2>
+    std::pair<double, double> Potential::calculateSingleInteractionOneWay(
+        const molsys::Box &box,
+        molsys::Molecule  &mol1,
+        molsys::Molecule  &mol2,
+        molsys::Atom      &atom1,
+        molsys::Atom      &atom2,
+        const double       weight
+    ) const
+    {
+        return _calculateSingleInteractionOneWay<ChargeTag1, ChargeTag2, true>(
+            box,
+            mol1,
+            mol2,
+            atom1,
+            atom2,
+            weight
         );
     }
 
