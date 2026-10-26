@@ -24,6 +24,8 @@
 
 #define _ORTHORHOMBIC_BOX_HPP_
 
+#include <memory>
+
 #include "box.hpp"
 
 namespace molsys
@@ -38,6 +40,9 @@ namespace molsys
     {
        public:
         explicit OrthorhombicBox(const linalg::Vec3D &boxDimensions);
+
+        [[nodiscard]]
+        std::unique_ptr<Box> clone() const override;
 
         [[nodiscard]]
         static OrthorhombicBox makeVacuumBox();

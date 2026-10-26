@@ -23,11 +23,15 @@
 #include <gtest/gtest.h>
 
 #include <array>
+#include <memory>
+#include <numbers>
 
+#include "box.hpp"
 #include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
 #include "matrixNear.hpp"
 #include "orthorhombicBox.hpp"
+#include "triclinicBox.hpp"
 #include "vectorNear.hpp"
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
@@ -35,6 +39,44 @@ TEST(TestOrthoRhombicBox, setBoxDimensions)
     const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
     auto                box           = molsys::OrthorhombicBox(boxDimensions);
     EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
+}
+
+TEST(TestBox, clonedGeometryIsIndependent)
+{
+    const linalg::Vec3D                         boxDimensions = {1.0, 2.0, 3.0};
+    std::array<std::unique_ptr<molsys::Box>, 2> boxes{
+        std::make_unique<molsys::OrthorhombicBox>(boxDimensions),
+        std::make_unique<molsys::TriclinicBox>(
+            boxDimensions,
+            linalg::Vec3D{90.0, 90.0, 60.0}
+        )
+    };
+    const std::array expectedVolumes{6.0, 3.0 * std::numbers::sqrt3};
+    constexpr double tolerance = 1e-12;
+
+    for (size_t i = 0; i < boxes.size(); ++i)
+    {
+        SCOPED_TRACE(i);
+        auto      &box            = *boxes.at(i);
+        const auto expectedVolume = expectedVolumes.at(i);
+        EXPECT_NEAR(box.getVolume(), expectedVolume, tolerance);
+
+        auto candidate = box.clone();
+        candidate->scaleBox(linalg::diagonalMatrix(2.0));
+
+        EXPECT_VECTOR_NEAR(
+            candidate->get_boxDimensions(),
+            linalg::Vec3D(2.0, 4.0, 6.0),
+            tolerance
+        );
+        EXPECT_NEAR(candidate->getVolume(), 8.0 * expectedVolume, tolerance);
+        EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
+        EXPECT_NEAR(box.getVolume(), expectedVolume, tolerance);
+
+        box.scaleBox(linalg::diagonalMatrix(3.0));
+        EXPECT_NEAR(box.getVolume(), 27.0 * expectedVolume, tolerance);
+        EXPECT_NEAR(candidate->getVolume(), 8.0 * expectedVolume, tolerance);
+    }
 }
 
 TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)

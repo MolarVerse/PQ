@@ -24,6 +24,7 @@
 
 #define _BOX_HPP_
 
+#include <memory>
 #include <mstd/types.hpp>
 #include <mstd/units.hpp>
 #include <mstd/utils.hpp>
@@ -71,6 +72,9 @@ namespace molsys
 
        public:
         virtual ~Box() = default;
+
+        [[nodiscard]]
+        virtual std::unique_ptr<Box> clone() const = 0;
 
         virtual void applyPBC(linalg::Vec3D &position) const = 0;
 

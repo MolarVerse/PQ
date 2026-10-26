@@ -437,9 +437,10 @@ TEST_F(
     molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
     _box->setBox(orthoBox);
 
+    _manostat->calculatePressure(*_box, *_data);
     settings::TimingsSettings::setTimeStep(0.5);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
-        3.0 * PRESSURE_FACTOR,
+        _data->getPressure(),
         0.1,
         4.5,
         FixedAxis::NONE
