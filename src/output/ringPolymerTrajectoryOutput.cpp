@@ -29,7 +29,6 @@
 #include <sstream>
 
 #include "molecule.hpp"
-#include "ringPolymerSettings.hpp"
 #include "simulationBox.hpp"
 
 namespace out
@@ -42,13 +41,13 @@ namespace out
      * dimensions and angles are the same for all beads
      *
      * @param simulationBox the simulation box to write the header for
+     * @param nBeads number of ring polymer beads
      */
     void RingPolymerTrajectoryOutput::writeHeader(
-        const molsys::SimulationBox &simulationBox
+        const molsys::SimulationBox &simulationBox,
+        size_t                       nBeads
     )
     {
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
-
         _getFilePointer() << simulationBox.getNumberOfAtoms() * nBeads << "  ";
         _getFilePointer() << simulationBox.getBoxDimensions() << "  "
                           << simulationBox.getBoxAngles() << '\n';
@@ -67,10 +66,10 @@ namespace out
     {
         std::ostringstream buffer;
 
-        writeHeader(beads[0]);
-        _writeComment(step);
+        const auto nBeads = beads.size();
 
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+        writeHeader(beads[0], nBeads);
+        _writeComment(step);
 
         for (size_t i = 0; i < nBeads; ++i)
         {
@@ -111,10 +110,10 @@ namespace out
     {
         std::ostringstream buffer;
 
-        writeHeader(beads[0]);
-        _writeComment(step);
+        const auto nBeads = beads.size();
 
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+        writeHeader(beads[0], nBeads);
+        _writeComment(step);
 
         for (size_t i = 0; i < nBeads; ++i)
         {
@@ -156,7 +155,7 @@ namespace out
     {
         std::ostringstream buffer;
 
-        writeHeader(beads[0]);
+        writeHeader(beads[0], beads.size());
 
         auto totalForce = 0.0;
         std::ranges::for_each(
@@ -167,9 +166,7 @@ namespace out
 
         _writeForceComment(step, totalForce);
 
-        for (size_t i = 0;
-             i < settings::RingPolymerSettings::getNumberOfBeads();
-             ++i)
+        for (size_t i = 0; i < beads.size(); ++i)
         {
             for (const auto &molecule : beads[i].getMolecules())
             {
@@ -209,12 +206,10 @@ namespace out
     {
         std::ostringstream buffer;
 
-        writeHeader(beads[0]);
+        writeHeader(beads[0], beads.size());
         _writeComment(step);
 
-        for (size_t i = 0;
-             i < settings::RingPolymerSettings::getNumberOfBeads();
-             ++i)
+        for (size_t i = 0; i < beads.size(); ++i)
         {
             for (const auto &molecule : beads[i].getMolecules())
             {

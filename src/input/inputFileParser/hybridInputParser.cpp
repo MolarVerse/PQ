@@ -86,13 +86,12 @@ namespace input
 
             for (const auto &index : selection.indices)
             {
-                // check if indices are positive
-                if (index <= 0)
+                if (index < 0)
                 {
                     throw exc::InputFileException(
                         std::format(
                             "Invalid atom index \"{}\" in input file\n"
-                            "Atom indices must be positive",
+                            "Atom indices must be non-negative",
                             index
                         )
                     );

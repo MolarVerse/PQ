@@ -1,0 +1,1 @@
+- Fix inner_region_center rejecting atom index 0, the documented default.

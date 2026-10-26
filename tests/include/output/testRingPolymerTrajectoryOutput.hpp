@@ -31,7 +31,6 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
-#include "ringPolymerSettings.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "simulationBox.hpp"
 
@@ -51,8 +50,6 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
 
     void SetUp() override
     {
-        settings::RingPolymerSettings::setNumberOfBeads(2);
-
         _trajectoryOutput = std::make_unique<out::RingPolymerTrajectoryOutput>(
             "default.rpmd.xyz"
         );

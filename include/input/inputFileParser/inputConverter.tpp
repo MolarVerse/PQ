@@ -23,6 +23,7 @@
 #ifndef _INPUT_CONVERTER_TPP_
 #define _INPUT_CONVERTER_TPP_
 
+#include <charconv>
 #include <mstd/string/join.hpp>
 #include <set>
 

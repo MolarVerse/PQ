@@ -31,7 +31,6 @@
 #include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
-#include "ringPolymerSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
 
@@ -158,7 +157,7 @@ namespace engine
      */
     void RingPolymerEngine::coupleRingPolymerBeads()
     {
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+        const auto nBeads = _ringPolymerBeads.size();
         const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
         const auto temp =
             settings::ThermostatSettings::getActualTargetTemperature();
@@ -202,8 +201,7 @@ namespace engine
      */
     void RingPolymerEngine::combineBeads()
     {
-        const auto numberOfBeads =
-            settings::RingPolymerSettings::getNumberOfBeads();
+        const auto numberOfBeads = _ringPolymerBeads.size();
 
         std::ranges::for_each(
             getSimulationBox().getAtoms(),
