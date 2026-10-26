@@ -41,6 +41,7 @@ namespace out
      * dimensions and angles are the same for all beads
      *
      * @param simulationBox the simulation box to write the header for
+     * @param nBeads number of ring polymer beads
      */
     void RingPolymerTrajectoryOutput::writeHeader(
         const molsys::SimulationBox &simulationBox,
