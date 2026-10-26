@@ -25,6 +25,7 @@
 
 #include "hessianSettings.hpp"
 #include "resetKineticsSettings.hpp"
+#include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
 
 /**
@@ -35,6 +36,7 @@ struct Settings
     ResetKineticsSettings resetKinetics;
     SimulationBoxSettings simulationBoxSettings;
     HessianSettings       hessianSettings;
+    RingPolymerSettings   ringPolymerSettings;
 
     void finalize();
 };

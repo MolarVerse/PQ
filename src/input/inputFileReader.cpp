@@ -124,7 +124,11 @@ namespace input
         _parsers.push_back(std::make_unique<TimingsInputParser>());
         _parsers.push_back(std::make_unique<VirialInputParser>());
         _parsers.push_back(std::make_unique<HybridInputParser>());
-        _parsers.push_back(std::make_unique<RingPolymerInputParser>());
+        _parsers.push_back(
+            std::make_unique<RingPolymerInputParser>(
+                settings.ringPolymerSettings
+            )
+        );
         _parsers.push_back(std::make_unique<ConvInputParser>());
         _parsers.push_back(std::make_unique<OptInputParser>());
         _parsers.push_back(

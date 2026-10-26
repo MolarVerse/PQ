@@ -48,7 +48,7 @@ namespace out
        public:
         using Output::Output;
 
-        void writeHeader(const molsys::SimulationBox &);
+        void writeHeader(const molsys::SimulationBox &, size_t);
         void writeXyz(const std::vector<molsys::SimulationBox> &, size_t);
         void writeVelocities(
             const std::vector<molsys::SimulationBox> &,

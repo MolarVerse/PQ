@@ -38,7 +38,10 @@ namespace input
      * must be at least 2
      *
      */
-    RingPolymerInputParser::RingPolymerInputParser()
+    RingPolymerInputParser::RingPolymerInputParser(
+        RingPolymerSettings &ringPolymerSettings
+    )
+        : _ringPolymerSettings(ringPolymerSettings)
     {
         addNumberOfBeadsKeyword();
     }
@@ -55,8 +58,8 @@ namespace input
 
         const RangeValidator<size_t> rangeValidator{2, std::nullopt};
 
-        const auto setValue = [](const size_t &nBeads)
-        { settings::RingPolymerSettings::setNumberOfBeads(nBeads); };
+        const auto setValue = [this](const size_t &nBeads)
+        { _ringPolymerSettings->setNumberOfBeads(nBeads); };
 
         auto &numberOfBeadsKey =
             _getRegistry().registerKey<size_t>(KeyRegistry<size_t>{
