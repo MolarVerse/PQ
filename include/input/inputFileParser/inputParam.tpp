@@ -82,9 +82,12 @@ namespace input
             throw exc::InputFileException(
                 _metadata.errorMessage
                     ? std::format(
-                          "{} at line {} in input file",
-                          *_metadata.errorMessage,
-                          lineNumber
+                          "Invalid value \"{}\" for key \"{}\" at line {} in "
+                          "input file: {}",
+                          raw,
+                          _metadata.name,
+                          lineNumber,
+                          *_metadata.errorMessage
                       )
                     : std::format(
                           "Invalid value \"{}\" for key \"{}\" at line "

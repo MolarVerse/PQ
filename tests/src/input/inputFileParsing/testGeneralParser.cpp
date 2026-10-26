@@ -95,36 +95,46 @@ TEST_F(TestInputFileReader, JobType)
 TEST_F(TestInputFileReader, parseDimensionality)
 {
     input::GeneralInputParser parser;
-    std::vector<std::string>  lineElements = {"dim", "=", "3"};
-    input::GeneralInputParser::parseDimensionality(lineElements, 0);
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("dim"));
+
+    const auto&              parseFunc    = funcMap.at("dim");
+    std::vector<std::string> lineElements = {"dim", "=", "3"};
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::getDimensionality(), 3);
 
+    _clearParser(parser);
+
     lineElements = {"dim", "=", "3D"};
-    input::GeneralInputParser::parseDimensionality(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(settings::GeneralSettings::getDimensionality(), 3);
 
     lineElements = {"dim", "=", "2"};
     EXPECT_THROW_MSG(
-        parser.parseDimensionality(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid dimensionality \"2\" in input file\n"
-        "Possible values are: 3, 3d"
+        "Invalid value \"2\" for key \"dim\" at line 0 in input file: "
+        "Dimensionality must be 3 or 3d"
     );
+
+    _clearParser(parser);
 
     lineElements = {"dim", "=", "1"};
     EXPECT_THROW_MSG(
-        parser.parseDimensionality(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid dimensionality \"1\" in input file\n"
-        "Possible values are: 3, 3d"
+        "Invalid value \"1\" for key \"dim\" at line 0 in input file: "
+        "Dimensionality must be 3 or 3d"
     );
+
+    _clearParser(parser);
 
     lineElements = {"dim", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseDimensionality(lineElements, 0),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid dimensionality \"0\" in input file\n"
-        "Possible values are: 3, 3d"
+        "Invalid value \"0\" for key \"dim\" at line 0 in input file: "
+        "Dimensionality must be 3 or 3d"
     );
 }
 

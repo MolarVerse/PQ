@@ -24,6 +24,7 @@
 
 #include <cstdint>
 #include <format>
+#include <optional>
 #include <stdexcept>
 
 #include "enums/general.hpp"
@@ -55,12 +56,7 @@ namespace input
             true
         );
 
-        addKeyword(
-            std::string("dim"),
-            bindMember(&GeneralInputParser::parseDimensionality, this),
-            false
-        );
-
+        addDimensionalityKey();
         addFloatingPointTypeKey();
 
         addKeyword(
@@ -144,46 +140,41 @@ namespace input
         }
     }
 
-    /**
-     * @brief parse dimensionality of simulation
-     *
-     * @details Possible options are:
-     * 1) 3
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throw exc::InputFileException if dimensionality is not
-     * recognised
-     */
-    void GeneralInputParser::parseDimensionality(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void GeneralInputParser::addDimensionalityKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name  = "dim",
+            .title = "Dimensionality",
+            .description =
+                "Specifies the dimensionality of the simulation (3 or 3d)",
+            .errorMessage = "Dimensionality must be 3 or 3d"
+        };
 
-        auto dimensionalityString = utilities::toLowerCopy(lineElements[2]);
-
-        std::erase(dimensionalityString, 'd');
-
-        const auto dimensionality =
-            utilities::stringToInt(dimensionalityString);
-
-        if (dimensionality == 3)
+        auto customParser = [](std::string_view value) -> std::optional<size_t>
         {
-            settings::GeneralSettings::setDimensionality(
-                static_cast<size_t>(dimensionality)
-            );
-        }
-        else
-        {
-            throw exc::InputFileException(format(
-                "Invalid dimensionality \"{}\" in input file\n"
-                "Possible values are: 3, 3d",
-                lineElements[2]
-            ));
-        }
+            auto lowerValue = utilities::toLowerCopy(value);
+            std::erase(lowerValue, 'd');
+            const auto dimensionality = utilities::stringToInt(lowerValue);
+
+            // at the moment only 3-dimensional simulations are supported
+            if (dimensionality == 3)
+                return static_cast<size_t>(dimensionality);
+
+            return std::nullopt;
+        };
+
+        const auto setValue = [](size_t value)
+        { settings::GeneralSettings::setDimensionality(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .customParser = customParser,
+                .onSet        = setValue
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     void GeneralInputParser::addFloatingPointTypeKey()
