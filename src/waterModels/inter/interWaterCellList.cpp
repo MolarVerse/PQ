@@ -355,6 +355,7 @@ namespace waterModel
 
         auto totalCoulombEnergy    = 0.0;
         auto totalNonCoulombEnergy = 0.0;
+        auto weight                = 1.0;
 
         const auto singleInteraction =
             [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)
@@ -369,7 +370,8 @@ namespace waterModel
                     simulationBox,
                     *nonCoulPairPtr,
                     totalCoulombEnergy,
-                    totalNonCoulombEnergy
+                    totalNonCoulombEnergy,
+                    weight
                 );
             }
         };
@@ -388,6 +390,7 @@ namespace waterModel
 
             for (const auto mol_i : cell_i.getInactiveNonCoreMoleculeIndices())
             {
+                weight = pot::hotspotQMWeight(*cell_i.getMolecule(mol_i));
                 if (isNonWaterMolecule(waterMolecules, mol_i))
                     continue;
 
@@ -450,6 +453,7 @@ namespace waterModel
                 for (const auto mol_i :
                      cell_i.getInactiveNonCoreMoleculeIndices())
                 {
+                    weight = pot::hotspotQMWeight(*cell_i.getMolecule(mol_i));
                     if (isNonWaterMolecule(waterMolecules_i, mol_i))
                         continue;
 
@@ -514,6 +518,7 @@ namespace waterModel
                 for (const auto mol_i :
                      cell_j->getInactiveNonCoreMoleculeIndices())
                 {
+                    weight = pot::hotspotQMWeight(*cell_j->getMolecule(mol_i));
                     if (isNonWaterMolecule(waterMolecules_j, mol_i))
                         continue;
 
@@ -772,6 +777,7 @@ namespace waterModel
 
         auto totalCoulombEnergy    = 0.0;
         auto totalNonCoulombEnergy = 0.0;
+        auto weight                = 1.0;
 
         const auto singleInteraction =
             [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)
@@ -786,7 +792,8 @@ namespace waterModel
                     simulationBox,
                     *nonCoulPairPtr,
                     totalCoulombEnergy,
-                    totalNonCoulombEnergy
+                    totalNonCoulombEnergy,
+                    weight
                 );
             }
         };
@@ -806,7 +813,8 @@ namespace waterModel
                     simulationBox,
                     *nonCoulPairPtr,
                     totalCoulombEnergy,
-                    totalNonCoulombEnergy
+                    totalNonCoulombEnergy,
+                    weight
                 );
             }
         };
@@ -825,6 +833,7 @@ namespace waterModel
 
             for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
             {
+                weight = 1.0 - cell_i.getMolecule(mol_i)->getSmoothingFactor();
                 if (isNonWaterMolecule(waterMolecules, mol_i))
                     continue;
 
@@ -886,6 +895,8 @@ namespace waterModel
 
                 for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
                 {
+                    weight =
+                        1.0 - cell_i.getMolecule(mol_i)->getSmoothingFactor();
                     if (isNonWaterMolecule(waterMolecules_i, mol_i))
                         continue;
 
@@ -949,6 +960,8 @@ namespace waterModel
 
                 for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
                 {
+                    weight =
+                        1.0 - cell_j->getMolecule(mol_i)->getSmoothingFactor();
                     if (isNonWaterMolecule(waterMolecules_j, mol_i))
                         continue;
 
@@ -1007,6 +1020,7 @@ namespace waterModel
 
             for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
             {
+                weight = 1.0 - cell_i.getMolecule(mol_i)->getSmoothingFactor();
                 if (isNonWaterMolecule(waterMolecules, mol_i))
                     continue;
 
@@ -1071,6 +1085,8 @@ namespace waterModel
 
                 for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
                 {
+                    weight =
+                        1.0 - cell_i.getMolecule(mol_i)->getSmoothingFactor();
                     if (isNonWaterMolecule(waterMolecules_i, mol_i))
                         continue;
 
@@ -1141,6 +1157,8 @@ namespace waterModel
 
                 for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
                 {
+                    weight =
+                        1.0 - cell_j->getMolecule(mol_i)->getSmoothingFactor();
                     if (isNonWaterMolecule(waterMolecules_j, mol_i))
                         continue;
 

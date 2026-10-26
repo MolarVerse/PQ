@@ -1,6 +1,7 @@
 set(source_files
     testBruteForceCellListEquivalence.cpp
     testPairPotentialDerivatives.cpp
+    testHotspotWeighting.cpp
 )
 
 foreach(source_file ${source_files})

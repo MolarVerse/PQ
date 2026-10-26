@@ -36,6 +36,21 @@
 
 namespace pot
 {
+    /**
+     * @brief pair weight of the QM-charge interaction of a molecule in the
+     * hotspot QM/MM step: smF for SMOOTHING molecules, 1 otherwise
+     */
+    inline double hotspotQMWeight(const molsys::Molecule &mol)
+    {
+        if (settings::HybridSettings::getSmoothingMethod() !=
+            SmoothingMethod::HOTSPOT)
+            return 1.0;
+
+        if (mol.getHybridZone() != molsys::HybridZone::SMOOTHING)
+            return 1.0;
+
+        return mol.getSmoothingFactor();
+    }
 
     /**
      * @brief Calculate non-bonded inter-molecular interactions between two
@@ -64,7 +79,8 @@ namespace pot
         molsys::Molecule  &mol1,
         molsys::Molecule  &mol2,
         molsys::Atom      &atom1,
-        molsys::Atom      &atom2
+        molsys::Atom      &atom2,
+        const double       weight
     ) const
     {
         auto coulombEnergy    = 0.0;
@@ -108,7 +124,7 @@ namespace pot
 
             auto [e, f] =
                 _coulombPotential->calculate(distance, coulombPreFactor);
-            coulombEnergy = e;
+            coulombEnergy = weight * e;
 
             const auto nonCoulPair = _nonCoulombPot->getNonCoulPair(
                 combinedIdx,
@@ -120,12 +136,12 @@ namespace pot
             {
                 const auto &[nonCoulE, nonCoulF] =
                     nonCoulPair->calculate(distance);
-                nonCoulombEnergy = nonCoulE;
+                nonCoulombEnergy = weight * nonCoulE;
 
                 f += nonCoulF;
             }
 
-            f /= distance;
+            f *= weight / distance;
 
             const auto forcexyz = f * dxyz;
 
@@ -160,7 +176,8 @@ namespace pot
     double Potential::calculateSingleCoulombInteraction(
         const molsys::Box &box,
         molsys::Atom      &atom1,
-        molsys::Atom      &atom2
+        molsys::Atom      &atom2,
+        const double       weight
     ) const
     {
         auto coulombEnergy = 0.0;
@@ -188,9 +205,9 @@ namespace pot
 
             auto [e, f] =
                 _coulombPotential->calculate(distance, coulombPreFactor);
-            coulombEnergy = e;
+            coulombEnergy = weight * e;
 
-            f /= distance;
+            f *= weight / distance;
 
             const auto forcexyz = f * dxyz;
 
@@ -230,7 +247,8 @@ namespace pot
         molsys::Molecule  &mol1,
         molsys::Molecule  &mol2,
         molsys::Atom      &atom1,
-        molsys::Atom      &atom2
+        molsys::Atom      &atom2,
+        const double       weight
     ) const
     {
         auto coulombEnergy    = 0.0;
@@ -274,7 +292,7 @@ namespace pot
 
             auto [e, f] =
                 _coulombPotential->calculate(distance, coulombPreFactor);
-            coulombEnergy = e;
+            coulombEnergy = weight * e;
 
             const auto nonCoulPair = _nonCoulombPot->getNonCoulPair(
                 combinedIdx,
@@ -286,12 +304,12 @@ namespace pot
             {
                 const auto &[nonCoulE, nonCoulF] =
                     nonCoulPair->calculate(distance);
-                nonCoulombEnergy = nonCoulE;
+                nonCoulombEnergy = weight * nonCoulE;
 
                 f += nonCoulF;
             }
 
-            f /= distance;
+            f *= weight / distance;
 
             const auto forcexyz = f * dxyz;
 

@@ -108,7 +108,8 @@ namespace waterModel
             const molsys::SimulationBox                  &simulationBox,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
-            double                                       &nonCoulombEnergy
+            double                                       &nonCoulombEnergy,
+            double                                        weight = 1.0
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -118,7 +119,8 @@ namespace waterModel
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             double                                        rCutSquared,
             const molsys::SimulationBox                  &simulationBox,
-            double                                       &coulombEnergy
+            double                                       &coulombEnergy,
+            double                                        weight = 1.0
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -130,7 +132,8 @@ namespace waterModel
             const molsys::SimulationBox                  &simulationBox,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
-            double                                       &nonCoulombEnergy
+            double                                       &nonCoulombEnergy,
+            double                                        weight = 1.0
         );
 
         template <typename T>

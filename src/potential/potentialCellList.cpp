@@ -351,6 +351,8 @@ namespace pot
 
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
+                const auto weight = hotspotQMWeight(*molecule_i);
+
                 for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules, mol_i) &&
@@ -371,7 +373,8 @@ namespace pot
                                     *molecule_i,
                                     *molecule_j,
                                     *atom_i,
-                                    *atom_j
+                                    *atom_j,
+                                    weight
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -396,7 +399,8 @@ namespace pot
                 for (const auto mol_i :
                      cell_i.getInactiveNonCoreMoleculeIndices())
                 {
-                    auto *molecule_i = cell_i.getMolecule(mol_i);
+                    auto      *molecule_i = cell_i.getMolecule(mol_i);
+                    const auto weight     = hotspotQMWeight(*molecule_i);
 
                     for (const auto mol_j : cell_j->getActiveMoleculeIndices())
                     {
@@ -418,7 +422,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        weight
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -444,7 +449,8 @@ namespace pot
                 for (const auto mol_i :
                      cell_j->getInactiveNonCoreMoleculeIndices())
                 {
-                    auto *molecule_i = cell_j->getMolecule(mol_i);
+                    auto      *molecule_i = cell_j->getMolecule(mol_i);
+                    const auto weight     = hotspotQMWeight(*molecule_i);
 
                     for (const auto mol_j : cell_i.getActiveMoleculeIndices())
                     {
@@ -466,7 +472,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        weight
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -644,6 +651,8 @@ namespace pot
 
                 auto *molecule_i = cell_i.getMolecule(mol_i);
 
+                const auto weight = 1.0 - molecule_i->getSmoothingFactor();
+
                 for (const auto mol_j : cell_i.getNonSmoothingMoleculeIndices())
                 {
                     if (isWaterMolecule(waterMolecules, mol_i) &&
@@ -664,7 +673,12 @@ namespace pot
                                 totalCoulombEnergy +=
                                     calculateSingleCoulombInteraction<
                                         MMChargeTag,
-                                        QMChargeTag>(*box, *atom_i, *atom_j);
+                                        QMChargeTag>(
+                                        *box,
+                                        *atom_i,
+                                        *atom_j,
+                                        weight
+                                    );
                             }
                         }
                     }
@@ -682,7 +696,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        weight
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -707,7 +722,8 @@ namespace pot
 
                 for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
                 {
-                    auto *molecule_i = cell_i.getMolecule(mol_i);
+                    auto      *molecule_i = cell_i.getMolecule(mol_i);
+                    const auto weight = 1.0 - molecule_i->getSmoothingFactor();
 
                     for (const auto mol_j :
                          cell_j->getNonSmoothingMoleculeIndices())
@@ -733,7 +749,8 @@ namespace pot
                                             QMChargeTag>(
                                             *box,
                                             *atom_i,
-                                            *atom_j
+                                            *atom_j,
+                                            weight
                                         );
                                 }
                             }
@@ -753,7 +770,8 @@ namespace pot
                                                 *molecule_i,
                                                 *molecule_j,
                                                 *atom_i,
-                                                *atom_j
+                                                *atom_j,
+                                                weight
                                             );
 
                                     totalCoulombEnergy    += coulombEnergy;
@@ -779,7 +797,8 @@ namespace pot
 
                 for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
                 {
-                    auto *molecule_i = cell_j->getMolecule(mol_i);
+                    auto      *molecule_i = cell_j->getMolecule(mol_i);
+                    const auto weight = 1.0 - molecule_i->getSmoothingFactor();
 
                     for (const auto mol_j :
                          cell_i.getNonSmoothingMoleculeIndices())
@@ -805,7 +824,8 @@ namespace pot
                                             QMChargeTag>(
                                             *box,
                                             *atom_i,
-                                            *atom_j
+                                            *atom_j,
+                                            weight
                                         );
                                 }
                             }
@@ -825,7 +845,8 @@ namespace pot
                                                 *molecule_i,
                                                 *molecule_j,
                                                 *atom_i,
-                                                *atom_j
+                                                *atom_j,
+                                                weight
                                             );
 
                                     totalCoulombEnergy    += coulombEnergy;
@@ -847,6 +868,8 @@ namespace pot
                 MSTD_HOT_PATH;
 
                 auto *molecule_i = cell_i.getMolecule(mol_i);
+
+                const auto weight = 1.0 - molecule_i->getSmoothingFactor();
 
                 for (const auto mol_j : cell_i.getSmoothingMoleculeIndices())
                 {
@@ -871,7 +894,8 @@ namespace pot
                                     *molecule_i,
                                     *molecule_j,
                                     *atom_i,
-                                    *atom_j
+                                    *atom_j,
+                                    weight
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -895,7 +919,8 @@ namespace pot
 
                 for (const auto mol_i : cell_i.getSmoothingMoleculeIndices())
                 {
-                    auto *molecule_i = cell_i.getMolecule(mol_i);
+                    auto      *molecule_i = cell_i.getMolecule(mol_i);
+                    const auto weight = 1.0 - molecule_i->getSmoothingFactor();
 
                     for (const auto mol_j :
                          cell_j->getSmoothingMoleculeIndices())
@@ -921,7 +946,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        weight
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -946,7 +972,8 @@ namespace pot
 
                 for (const auto mol_i : cell_j->getSmoothingMoleculeIndices())
                 {
-                    auto *molecule_i = cell_j->getMolecule(mol_i);
+                    auto      *molecule_i = cell_j->getMolecule(mol_i);
+                    const auto weight = 1.0 - molecule_i->getSmoothingFactor();
 
                     for (const auto mol_j :
                          cell_i.getSmoothingMoleculeIndices())
@@ -972,7 +999,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        weight
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;

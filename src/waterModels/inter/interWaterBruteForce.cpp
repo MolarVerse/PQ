@@ -218,6 +218,8 @@ namespace waterModel
             if (water1.getMoltype() != waterTypeValue)
                 continue;
 
+            const auto weight = pot::hotspotQMWeight(water1);
+
             for (auto &water2 : simulationBox.getMMMolecules())
             {
                 if (water2.getMoltype() != waterTypeValue)
@@ -238,7 +240,8 @@ namespace waterModel
                             simulationBox,
                             *nonCoulPairPtr,
                             totalCoulombEnergy,
-                            totalNonCoulombEnergy
+                            totalNonCoulombEnergy,
+                            weight
                         );
                     }
                 };
@@ -329,6 +332,8 @@ namespace waterModel
             if (water1.getMoltype() != waterTypeValue)
                 continue;
 
+            const auto weight = 1.0 - water1.getSmoothingFactor();
+
             for (auto &water2 : simulationBox.getMoleculesOutsideZone(
                      molsys::HybridZone::SMOOTHING
                  ))
@@ -358,7 +363,8 @@ namespace waterModel
                             simulationBox,
                             *nonCoulPairPtr,
                             totalCoulombEnergy,
-                            totalNonCoulombEnergy
+                            totalNonCoulombEnergy,
+                            weight
                         );
                     }
                 };
@@ -390,6 +396,8 @@ namespace waterModel
                 ++idxI;
                 continue;
             }
+
+            const auto weight = 1.0 - water1.getSmoothingFactor();
 
             size_t idxJ = 0;
             for (auto &water2 : simulationBox.getMoleculesInsideZone(
@@ -423,7 +431,8 @@ namespace waterModel
                             simulationBox,
                             *nonCoulPairPtr,
                             totalCoulombEnergy,
-                            totalNonCoulombEnergy
+                            totalNonCoulombEnergy,
+                            weight
                         );
                     }
                 };

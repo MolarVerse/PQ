@@ -186,6 +186,7 @@ namespace pot
                 continue;
 
             const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
+            const auto weight      = hotspotQMWeight(mol1);
 
             for (auto &mol2 : simulationBox.getMMMolecules())
             {
@@ -202,7 +203,14 @@ namespace pot
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
                                 QMChargeTag,
-                                MMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
+                                MMChargeTag>(
+                                *box,
+                                mol1,
+                                mol2,
+                                *atom1,
+                                *atom2,
+                                weight
+                            );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
@@ -257,6 +265,7 @@ namespace pot
         for (auto &mol1 : simulationBox.getMoleculesInsideZone(SMOOTHING))
         {
             const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
+            const auto weight      = 1.0 - mol1.getSmoothingFactor();
 
             for (auto &mol2 : simulationBox.getMoleculesOutsideZone(SMOOTHING))
             {
@@ -279,7 +288,7 @@ namespace pot
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     MMChargeTag,
-                                    QMChargeTag>(*box, *atom1, *atom2);
+                                    QMChargeTag>(*box, *atom1, *atom2, weight);
                         }
                     }
                     // SMOOTHING-nonCORE: evaluate full interaction
@@ -298,7 +307,8 @@ namespace pot
                                     mol1,
                                     mol2,
                                     *atom1,
-                                    *atom2
+                                    *atom2,
+                                    weight
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -309,10 +319,13 @@ namespace pot
             }
         }
 
+        // SMOOTHING-SMOOTHING: one-way, per-atom weight 1 - smF_i to match
+        // the per-atom smF_i of the QM step (not pair-symmetric)
         size_t idxI = 0;
         for (auto &mol1 : simulationBox.getMoleculesInsideZone(SMOOTHING))
         {
             const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
+            const auto weight      = 1.0 - mol1.getSmoothingFactor();
 
             size_t idxJ = 0;
             for (auto &mol2 : simulationBox.getMoleculesInsideZone(SMOOTHING))
@@ -339,7 +352,14 @@ namespace pot
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteractionOneWay<
                                 MMChargeTag,
-                                QMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
+                                QMChargeTag>(
+                                *box,
+                                mol1,
+                                mol2,
+                                *atom1,
+                                *atom2,
+                                weight
+                            );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;

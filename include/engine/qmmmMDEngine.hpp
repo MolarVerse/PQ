@@ -27,6 +27,8 @@
 #include "hybridMDEngine.hpp"
 #include "randomNumberGenerator.hpp"
 
+class HotspotWeightingTest;   // forward declaration
+
 namespace engine
 {
     /**
@@ -53,6 +55,9 @@ namespace engine
         void _applySmoothing();
         void _applyExactSmoothing();
         void _applyHotspotSmoothing();
+        void _calculateHotspotMMForces(linalg::tensor3D &virial);
+
+        friend class ::HotspotWeightingTest;   // for unit testing
 
         void _moltypeCheck();
         void _setNumberOfQMAtoms();

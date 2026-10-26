@@ -1,0 +1,1 @@
+- Fix hotspot QM/MM smoothing applying unweighted forces and shift forces to partners of smoothing molecules.

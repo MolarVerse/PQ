@@ -48,7 +48,8 @@ namespace waterModel
         const molsys::SimulationBox                  &simulationBox,
         const pot::NonCoulombPair                    &nonCoulPair,
         double                                       &coulombEnergy,
-        double                                       &nonCoulombEnergy
+        double                                       &nonCoulombEnergy,
+        const double                                  weight
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -72,17 +73,17 @@ namespace waterModel
             const auto chargeProduct = charge_i * charge_j;
 
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += e;
+            coulombEnergy += weight * e;
 
             if (distance < nonCoulPair.get_radialCutoff())
             {
                 const auto [nonCoulE, nonCoulF] =
                     nonCoulPair.calculate(distance);
-                nonCoulombEnergy += nonCoulE;
+                nonCoulombEnergy += weight * nonCoulE;
                 f                += nonCoulF;
             }
 
-            f                   /= distance;
+            f                   *= weight / distance;
             const auto forcexyz  = f * dxyz;
 
             const auto shiftForcexyz = forcexyz * txyz;
@@ -107,7 +108,8 @@ namespace waterModel
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
         double                                        rCutSquared,
         const molsys::SimulationBox                  &simulationBox,
-        double                                       &coulombEnergy
+        double                                       &coulombEnergy,
+        const double                                  weight
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -131,9 +133,9 @@ namespace waterModel
             const auto chargeProduct = charge_i * charge_j;
 
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += e;
+            coulombEnergy += weight * e;
 
-            f                   /= distance;
+            f                   *= weight / distance;
             const auto forcexyz  = f * dxyz;
 
             const auto shiftForcexyz = forcexyz * txyz;
@@ -160,7 +162,8 @@ namespace waterModel
         const molsys::SimulationBox                  &simulationBox,
         const pot::NonCoulombPair                    &nonCoulPair,
         double                                       &coulombEnergy,
-        double                                       &nonCoulombEnergy
+        double                                       &nonCoulombEnergy,
+        const double                                  weight
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -184,16 +187,16 @@ namespace waterModel
             const auto chargeProduct = charge_i * charge_j;
 
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += e;
+            coulombEnergy += weight * e;
 
             if (distance < nonCoulPair.get_radialCutoff())
             {
                 auto [nonCoulE, nonCoulF]  = nonCoulPair.calculate(distance);
-                nonCoulombEnergy          += nonCoulE;
+                nonCoulombEnergy          += weight * nonCoulE;
                 f                         += nonCoulF;
             }
 
-            f                   /= distance;
+            f                   *= weight / distance;
             const auto forcexyz  = f * dxyz;
 
             const auto shiftForcexyz = forcexyz * txyz;

@@ -339,57 +339,8 @@ namespace engine
         virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToInnerAndReset(atoms);
 
-        // STEP 2: Setup and run inter-nonbonded calculation between
-        // MM-MM , CORE-MM , LAYER+SMOOTHING-MM and scale forces of
-        // smoothing molecules with smF
-        configurator::HybridConfigurator::toggleMoleculeActivation(
-            getSimulationBox()
-        );
-
-        if (settings::GeneralSettings::isCellListActivated())
-        {
-            getCellList().assignMoleculeHybridZoneIndices();
-            getCellList().assignWaterMoleculeIndices(getSimulationBox());
-        }
-
-        getPotential()->calculateQMMMForces(
-            getSimulationBox(),
-            getPhysicalData(),
-            getCellList()
-        );
-
-        _getInterWater().calculateQMMMForces(
-            getSimulationBox(),
-            getPhysicalData(),
-            getPotential()->getCoulombPotSharedPtr(),
-            getCellList()
-        );
-
-        _scaleSmoothingMoleculeForcesInner();
-        virial += virial::calculateVirial(getSimulationBox());
-        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
-        _addCurrentForcesToOuterAndReset(atoms);
-
-        // STEP 3: Calculate inter-nonbonded forces between SMOOTHING
-        // molecules and scale forces of smoothing molecules with (1 - smF)
-
-        getPotential()->calculateHotspotSmoothingMMForces(
-            getSimulationBox(),
-            getPhysicalData(),
-            getCellList()
-        );
-
-        _getInterWater().calculateHotspotSmoothingMMForces(
-            getSimulationBox(),
-            getPhysicalData(),
-            getPotential()->getCoulombPotSharedPtr(),
-            getCellList()
-        );
-
-        _scaleSmoothingMoleculeForcesOuter();
-        virial += virial::calculateVirial(getSimulationBox());
-        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
-        _addCurrentForcesToOuterAndReset(atoms);
+        // STEPS 2-3: inter-nonbonded MM contributions
+        _calculateHotspotMMForces(virial);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale
         // forces of smoothing molecules with (1 - smF)
@@ -424,6 +375,67 @@ namespace engine
         _addCurrentForcesToOuterAndReset(atoms);
 
         getPhysicalDataPtr()->setVirial(virial);
+    }
+
+    /**
+     * @brief Hotspot steps 2-3: inter-nonbonded QM/MM and smoothing MM forces
+     *
+     * @param virial accumulated virial
+     */
+    void QMMMMDEngine::_calculateHotspotMMForces(linalg::tensor3D &virial)
+    {
+        auto &atoms = getSimulationBox().getAtoms();
+
+        // STEP 2: Setup and run inter-nonbonded calculation between
+        // MM-MM , CORE-MM , LAYER+SMOOTHING-MM; SMOOTHING-MM pairs are
+        // weighted with smF inside the kernel (both atoms + shift force)
+        configurator::HybridConfigurator::toggleMoleculeActivation(
+            getSimulationBox()
+        );
+
+        if (settings::GeneralSettings::isCellListActivated())
+        {
+            getCellList().assignMoleculeHybridZoneIndices();
+            getCellList().assignWaterMoleculeIndices(getSimulationBox());
+        }
+
+        getPotential()->calculateQMMMForces(
+            getSimulationBox(),
+            getPhysicalData(),
+            getCellList()
+        );
+
+        _getInterWater().calculateQMMMForces(
+            getSimulationBox(),
+            getPhysicalData(),
+            getPotential()->getCoulombPotSharedPtr(),
+            getCellList()
+        );
+
+        virial += virial::calculateVirial(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
+        _addCurrentForcesToOuterAndReset(atoms);
+
+        // STEP 3: Calculate inter-nonbonded forces between SMOOTHING
+        // and all other molecules with MM charges, weighted with (1 - smF)
+        // inside the kernel
+
+        getPotential()->calculateHotspotSmoothingMMForces(
+            getSimulationBox(),
+            getPhysicalData(),
+            getCellList()
+        );
+
+        _getInterWater().calculateHotspotSmoothingMMForces(
+            getSimulationBox(),
+            getPhysicalData(),
+            getPotential()->getCoulombPotSharedPtr(),
+            getCellList()
+        );
+
+        virial += virial::calculateVirial(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
+        _addCurrentForcesToOuterAndReset(atoms);
     }
 
     /**
