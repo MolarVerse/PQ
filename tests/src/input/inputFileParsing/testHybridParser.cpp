@@ -307,3 +307,17 @@ TEST_F(TestInputFileReader, parseSelectionNoPython)
         "The end index of the selection is invalid. Must be a valid integer."
     );
 }
+
+TEST_F(TestInputFileReader, innerRegionCenterAcceptsFirstAtom)
+{
+    auto       parser  = input::HybridInputParser{};
+    const auto funcMap = parser.getKeywordFuncMap();
+
+    EXPECT_NO_THROW(
+        funcMap.at("inner_region_center")({"inner_region_center", "=", "0"}, 0)
+    );
+    EXPECT_EQ(
+        settings::HybridSettings::getInnerRegionCenter(),
+        std::optional<std::vector<size_t>>({0})
+    );
+}
