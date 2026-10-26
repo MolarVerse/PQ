@@ -1,162 +1,162 @@
-jobtype                     true       
-dim                         false
-floating_point_type         false
-random_seed                 false
+jobtype                      true       mm-md
+dim                          false      3
+floating_point_type          false      double
+random_seed                  false      42
 
-optimizer                   false
-learning-rate-strategy      false
-initial-learning-rate       false
-learning-rate-decay         false
-learning-rate-update-freq   false
-min-learning-rate           false
-max-learning-rate           false
+optimizer                    false      adam
+learning-rate-strategy       false      constant
+initial-learning-rate        false      0.01
+learning-rate-decay          false      0.9
+learning-rate-update-freq    false      10
+min-learning-rate            false      0.0001
+max-learning-rate            false      0.1
 
-energy-conv-strategy        false
-use-energy-conv             false
-use-force-conv              false
-use-max-force-conv          false
-use-rms-force-conv          false
-energy-conv                 false
-rel-energy-conv             false
-abs-energy-conv             false
-force-conv                  false
-max-force-conv              false
-rms-force-conv              false
+energy-conv-strategy         false      rigorous
+use-energy-conv              false      true
+use-force-conv               false      true
+use-max-force-conv           false      true
+use-rms-force-conv           false      true
+energy-conv                  false      0.0001
+rel-energy-conv              false      0.0001
+abs-energy-conv              false      0.0001
+force-conv                   false      0.0001
+max-force-conv               false      0.0001
+rms-force-conv               false      0.0001
 
-cell-list                   false
-cell-number                 false
+cell-list                    false      true
+cell-number                  false      10
 
-shake                       false
-shake-tolerance             false
-shake-iter                  false
-rattle-iter                 false
-rattle-tolerance            false
-mshake-tolerance            false
-mshake-iter                 false
-distance-constraints        false
+shake                        false      on
+shake-tolerance              false      1e-6
+shake-iter                   false      20
+rattle-iter                  false      20
+rattle-tolerance             false      1e-6
+mshake-tolerance             false      1e-6
+mshake-iter                  false      20
+distance-constraints         false      true
 
-long_range                  false
-rf_epsilon                  false
-wolf_param                  false
+long_range                   false      shifted
+rf_epsilon                   false      80.0
+wolf_param                   false      0.1
 
-hessian_file                false
-hessian_info_file           false
-hessian_displacement        false
-optimize_before_hessian     false
-hessian_builder             false
+hessian_file                 false      hessian.out
+hessian_info_file            false      hessian_info.out
+hessian_displacement         false      0.01
+optimize_before_hessian      false      true
+hessian_builder              false      central
 
-start_file                  true
-rpmd_start_file             false
-moldescriptor_file          false
-guff_path                   false
-guff_file                   false
-topology_file               false
-parameter_file              false
-intra-nonBonded_file        false
-mshake_file                 false
-dftb_file                   false
-turbomole_file              false
+start_file                   true       data/atomSection/testProcess.rst
+rpmd_start_file              false      data/atomSection/testProcess.rst
+moldescriptor_file           false      data/atomSection/testProcess.rst
+guff_path                    false      guff.dat
+guff_file                    false      data/atomSection/testProcess.rst
+topology_file                false      data/atomSection/testProcess.rst
+parameter_file               false      data/atomSection/testProcess.rst
+intra-nonBonded_file         false      data/atomSection/testProcess.rst
+mshake_file                  false      data/atomSection/testProcess.rst
+dftb_file                    false      data/atomSection/testProcess.rst
+turbomole_file               false      data/atomSection/testProcess.rst
 
-integrator                  false
+integrator                   false      v-verlet
 
-manostat                    false
-pressure                    false
-p_relaxation                false
-compressibility             false
-isotropy                    false
-fixed_axis                  false
+manostat                     false      berendsen
+pressure                     false      1.0
+p_relaxation                 false      1.0
+compressibility              false      4.5e-5
+isotropy                     false      isotropic
+fixed_axis                   false      x
 
-thermostat                  false
-temp                        false
-stat_temp                   false
-end_temp                    false
-temp_ramp_steps             false
-temp_ramp_frequency         false
-t_relaxation                false
-friction                    false
-nh-chain_length             false
-coupling_frequency          false
+thermostat                   false      berendsen
+temp                         false      300.0
+start_temp                   false      300.0
+end_temp                     false      300.0
+temp_ramp_steps              false      100
+temp_ramp_frequency          false      10
+t_relaxation                 false      0.1
+friction                     false      1.0
+nh-chain_length              false      3
+coupling_frequency           false      1000.0
 
-force-field                 false
-noncoulomb                  false
-water_intra                 false
-water_inter                 false
+force-field                  false      on
+noncoulomb                   false      guff
+water_intra                  false      spc
+water_inter                  false      spc
 
-overwrite_output            false
-include_output_metadata     false
-output_freq                 false
-file_prefix                 false
-output_file                 false
-ref_file                    false
-info_file                   false
-energy_file                 false
-instant_energy_file         false
-traj_file                   false
-hybrid_center_file          false
-vel_file                    false
-restart_file                false
-charge_file                 false
-force_file                  false
-virial_file                 false
-stress_file                 false
-momentum_file               false
-box_file                    false
-timings_file                false
-opt_file                    false
+overwrite_output             false      true
+include_output_metadata      false      true
+output_freq                  false      10
+file_prefix                  false      out
+output_file                  false      output.log
+reference_file               false      default.ref
+info_file                    false      info.out
+energy_file                  false      energy.dat
+instant_energy_file          false      instant_energy.dat
+traj_file                    false      traj.xyz
+hybrid_center_file           false      hybrid_center.xyz
+vel_file                     false      vel.dat
+restart_file                 false      restart.rst
+charge_file                  false      charge.dat
+force_file                   false      force.dat
+virial_file                  false      virial.dat
+stress_file                  false      stress.dat
+momentum_file                false      momentum.dat
+box_file                     false      box.dat
+timings_file                 false      timings.dat
+opt_file                     false      opt.dat
 
-rpmd_restart_file           false
-rpmd_traj_file              false
-rpmd_vel_file               false
-rpmd_force_file             false
-rpmd_charge_file            false
-rpmd_energy_file            false
+rpmd_restart_file            false      rpmd_restart.rst
+rpmd_traj_file               false      rpmd_traj.xyz
+rpmd_vel_file                false      rpmd_vel.dat
+rpmd_force_file              false      rpmd_force.dat
+rpmd_charge_file             false      rpmd_charge.dat
+rpmd_energy_file             false      rpmd_energy.dat
 
-nscale                      false
-fscale                      false
-nreset                      false
-freset                      false
-nreset_angular              false
-freset_angular              false
-freset_forces               false
+nscale                       false      10
+fscale                       false      10
+nreset                       false      10
+freset                       false      10
+nreset_angular               false      10
+freset_angular               false      10
+freset_forces                false      10
 
-rcoulomb                    false
-rnoncoulomb                 false
-density                     false
-init_velocities             false
+rcoulomb                     false      12.0
+rnoncoulomb                  false      12.0
+density                      false      1.0
+init_velocities              false      true
 
-timestep                    false
-nstep                       false
+timestep                     false      0.2
+nstep                        false      1000
 
-virial                      false
+virial                       false      molecular
 
-qm_prog                     false
-qm_script                   false
-qm_script_full_path         false
-qm_loop_time_limit          false
-dispersion                  false
-remove_net_force            false
-mace_model                  false
-mace_model_path             false
-mace_mode                   false
-slakos                      false
-slakos_path                 false
-third_order                 false
-hubbard_derivs              false
-fennol_model_path           false
-gpu_preprocessing           false
+qm_prog                      false      dftbplus
+qm_script                    false      qm_script.py
+qm_script_full_path          false      /path/to/qm_script.py
+qm_loop_time_limit           false      60.0
+dispersion                   false      true
+remove_net_force             false      true
+mace_model                   false      small
+mace_model_path              false      mace_model.pt
+mace_mode                    false      accurate
+slakos                       false      custom
+slakos_path                  false      slakos_path_dir
+third_order                  false      true
+hubbard_derivs               false      H:-0.1857,O:-0.1575
+fennol_model_path            false      fennol_model.fnl
+gpu_preprocessing            false      true
 
-xtb_method                  false
+xtb_method                   false      gfn2
 
-rpmd_n_replica              false
+rpmd_n_replica               false      4
 
-inner_region_center         false
-forced_core_list            false
-forced_layer_list           false
-forced_outer_list           false
-qm_charges                  false
-core_radius                 false
-layer_radius                false
-smoothing_region_thickness  false
-point_charge_thickness      false
-smoothing_method            false
-qm_force_distribution       false
+inner_region_center          false      1,2
+forced_core_list             false      1,2
+forced_layer_list            false      3,4
+forced_outer_list            false      5,6
+qm_charges                   false      qm
+core_radius                  false      1.0
+layer_radius                 false      2.0
+smoothing_region_thickness   false      0.5
+point_charge_thickness       false      0.5
+smoothing_method             false      hotspot
+qm_force_distribution        false      equal
