@@ -6,11 +6,18 @@
 [git]
 #main_branch = "main"
 
+[logging]
+cpp_level = "INFO"
+
+[file]
+#encoding = "utf-8"
+
 [cpp]
 check_dirs = ["src", "include", "tests", "benchmarks", "apps"]
 ast_check_compile_commands_db = ".build"
 incremental_state_file = ".build/.cpp_check_state.json"
 fail_fast = true
+
 #style_checks = true
 #license_header_check = true
 #license_header = <some file path>
@@ -34,6 +41,7 @@ ast_check_enabled_ids = [
     "noClangFormatToggle",
     "noFinalKeyword",
     "enforceTypenameOverClass",
+    "enforceSystemHeaderLibs",
 ]
 
 # Per-check configuration — one sub-table per check id.
@@ -54,8 +62,5 @@ excluded_macros = ["MSTD_ENUM", "MSTD_ENUM_BITFLAG", "TEST", "TEST_F"]
 [cpp.ast_check_config.includeIwyuPragmaOnly]
 allowed_pragmas = ["export"]
 
-[logging]
-cpp_level = "INFO"
-
-[file]
-#encoding = "utf-8"
+[cpp.ast_check_config.enforceSystemHeaderLibs]
+libs = ["mstd"]
