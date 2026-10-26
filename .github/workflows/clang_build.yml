@@ -27,6 +27,7 @@ on:
       - '.cmake/**'
       - '.github/workflows/clang_build.yml'
       - '.github/actions/upload-build-timings/**'
+      - '.github/actions/setup-gcc/**'
       - '.github/ci-metrics/summarise_build.py'
       - '.github/ci-metrics/summarise_traces.py'
       - '.github/ci-metrics/clang_report.py'
@@ -43,6 +44,7 @@ on:
       - '.cmake/**'
       - '.github/workflows/clang_build.yml'
       - '.github/actions/upload-build-timings/**'
+      - '.github/actions/setup-gcc/**'
       - '.github/ci-metrics/summarise_build.py'
       - '.github/ci-metrics/summarise_traces.py'
       - '.github/ci-metrics/clang_report.py'
@@ -65,13 +67,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # clang uses the newest libstdc++ it finds, so install GCC 14's for
-      # C++23 <format>. libclang-rt provides the profile runtime that the
-      # Debug flags (-coverage) link against.
+      # clang uses the newest libstdc++ it finds, so install GCC's for C++23
+      # <format> (CC/CXX stay clang, set below). libclang-rt provides the
+      # profile runtime that the Debug flags (-coverage) link against.
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          set-env: 'false'
+
       - name: Install clang
         run: |
           sudo apt update
-          sudo apt install -y clang-20 libclang-rt-20-dev g++-14 ninja-build mold
+          sudo apt install -y clang-20 libclang-rt-20-dev ninja-build mold
           clang++-20 --version
         shell: bash
 

@@ -6,6 +6,7 @@ on:
     branches: ["main", "dev"]
     paths:
       - ".github/workflows/jekyll-gh-pages.yml"
+      - ".github/actions/setup-gcc/**"
       - "docs/**"
       - "include/**"
       - "src/**"
@@ -15,6 +16,7 @@ on:
     branches: ["main"]
     paths:
       - ".github/workflows/jekyll-gh-pages.yml"
+      - ".github/actions/setup-gcc/**"
       - "docs/**"
       - "include/**"
       - "src/**"
@@ -46,27 +48,23 @@ jobs:
       - name: Requirements
         run: sudo apt-get install -y doxygen graphviz
           && sudo apt-get install -y python3-sphinx
-          && sudo apt-get install -y gcc-14 g++-14
           && pip3 install sphinx-rtd-theme
           && pip3 install breathe
           && pip3 install sphinx-sitemap
           && pip3 install sphinx==7.2.6
           && pip3 install m2r
 
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+
       # The dot graphs take most of the doxygen time and only matter for the
       # site deployed from main; pull requests just check that the docs build.
       - name: configure
         env:
           DOXYGEN_GRAPHS: ${{ github.event_name == 'push' && 'ON' || 'OFF' }}
-          CC: gcc-14
-          CXX: g++-14
         run: cmake -S . -B build -DBUILD_WITH_DOCS=ON -DBUILD_WITH_ASE=OFF -DBUILD_WITH_TESTS=OFF -DPQ_DOXYGEN_GRAPHS="$DOXYGEN_GRAPHS"
 
-
       - name: build docs
-        env:
-          CC: gcc-14
-          CXX: g++-14
         run: |
           cmake --build build --target sphinx-docs
           cd docs/sphinx/_build/html

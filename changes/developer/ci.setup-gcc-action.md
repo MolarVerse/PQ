@@ -1,0 +1,1 @@
+- Add a `setup-gcc` composite action that installs the pinned GCC/G++ version and exports `CC`/`CXX`, replacing the per-job `apt install gcc-14 g++-14` step and per-step `CC`/`CXX` env blocks repeated across `ci_build.yml`, `devops_cpp_check.yml`, `lint.yml`, `perf.yml`, `jekyll-gh-pages.yml`, and `clang_build.yml`.

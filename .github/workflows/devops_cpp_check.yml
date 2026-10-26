@@ -32,6 +32,7 @@ jobs:
               - '**/*.h'
               - 'devops.toml'
               - '.github/workflows/devops_cpp_check.yml'
+              - '.github/actions/setup-gcc/**'
 
   cpp-check:
     needs: changes
@@ -47,11 +48,8 @@ jobs:
           # full history so the merge-base with the PR base commit resolves
           fetch-depth: 0
 
-      - name: Install GCC 14
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-14 g++-14
-        shell: bash
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -92,9 +90,6 @@ jobs:
             -DBUILD_WITH_PERF_BENCH=ON \
             -DBUILD_WITH_BENCHMARKING=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
-        env:
-          CC: gcc-14
-          CXX: g++-14
         shell: bash
 
       - name: Run cpp_checks
