@@ -24,6 +24,7 @@
 
 #include <format>
 #include <memory>
+#include <utility>
 
 #include "adam.hpp"
 #include "constant.hpp"
@@ -103,7 +104,8 @@ namespace setup
     {
         const auto nEpochs = settings::TimingsSettings::getNumberOfSteps();
         const auto simBox  = _optEngine.getSimulationBox();
-        const auto optimizerType = settings::OptimizerSettings::getOptimizer();
+        const auto optimizerType =
+            _optEngine.getSettings().optimizerSettings.getOptimizer();
 
         std::shared_ptr<opt::Optimizer> optimizer;
 
@@ -147,14 +149,14 @@ namespace setup
      *
      */
     std::shared_ptr<opt::LearningRateStrategy> OptimizerSetup::
-        setupLearningRateStrategy()
+        setupLearningRateStrategy() const
     {
-        const auto alpha_0 =
-            settings::OptimizerSettings::getInitialLearningRate();
-        const auto lrStrategy =
-            settings::OptimizerSettings::getLearningRateStrategy();
+        const auto optimizerSettings =
+            _optEngine.getSettings().optimizerSettings;
+        const auto alpha_0    = optimizerSettings.getInitialLearningRate();
+        const auto lrStrategy = optimizerSettings.getLearningRateStrategy();
 
-        settings::OptimizerSettings::validateLearningRateStrategy();
+        optimizerSettings.validateLearningRateStrategy();
 
         switch (lrStrategy)
         {
@@ -166,9 +168,8 @@ namespace setup
             case CONSTANT_DECAY:
             {
                 const auto alphaDecayValue =
-                    settings::OptimizerSettings::getLearningRateDecay().value();
-                const auto alphaFreq =
-                    settings::OptimizerSettings::getLRUpdateFrequency();
+                    optimizerSettings.getLearningRateDecay();
+                const auto alphaFreq = optimizerSettings.getLRUpdateFrequency();
 
                 return std::make_shared<opt::ConstantDecayLRStrategy>(
                     alpha_0,
@@ -180,9 +181,8 @@ namespace setup
             case EXPONENTIAL_DECAY:
             {
                 const auto alphaDecayValue =
-                    settings::OptimizerSettings::getLearningRateDecay().value();
-                const auto alphaFreq =
-                    settings::OptimizerSettings::getLRUpdateFrequency();
+                    optimizerSettings.getLearningRateDecay();
+                const auto alphaFreq = optimizerSettings.getLRUpdateFrequency();
 
                 return std::make_shared<opt::ExpDecayLR>(
                     alpha_0,
@@ -194,11 +194,7 @@ namespace setup
             case LINESEARCH_WOLFE: break;
         }
 
-        throw exc::UserInputException(
-            "In order to run the optimizer, you need to specify a learning "
-            "rate "
-            "strategy."
-        );
+        std::unreachable();
     }
 
     /**
@@ -208,12 +204,14 @@ namespace setup
      */
     void OptimizerSetup::setupMinMaxLR(
         std::shared_ptr<opt::LearningRateStrategy> &lrStrategy
-    )
+    ) const
     {
-        const auto minLR = settings::OptimizerSettings::getMinLearningRate();
-        const auto maxLR = settings::OptimizerSettings::getMaxLearningRate();
+        const auto optimizerSettings =
+            _optEngine.getSettings().optimizerSettings;
+        const auto minLR = optimizerSettings.getMinLearningRate();
+        const auto maxLR = optimizerSettings.getMaxLearningRate();
 
-        settings::OptimizerSettings::validateLearningRateBounds();
+        optimizerSettings.validateLearningRateBounds();
 
         lrStrategy->setMinLearningRate(minLR);
         lrStrategy->setMaxLearningRate(maxLR);
@@ -318,9 +316,10 @@ namespace setup
      */
     void OptimizerSetup::writeSetupInfo() const
     {
-        const auto optimizer = settings::OptimizerSettings::getOptimizer();
-        const auto lrStrategy =
-            settings::OptimizerSettings::getLearningRateStrategy();
+        const auto optimizerSettings =
+            _optEngine.getSettings().optimizerSettings;
+        const auto optimizer  = optimizerSettings.getOptimizer();
+        const auto lrStrategy = optimizerSettings.getLearningRateStrategy();
 
         const auto &convergence  = _optEngine.getOptimizer().getConvergence();
         const auto  convStrategy = convergence.getEnConvStrategy();
@@ -359,9 +358,8 @@ namespace setup
         if (!isRMSForceConvEnabled)
             rmsForceConvStr = "disabled";
 
-        const auto initialLR =
-            settings::OptimizerSettings::getInitialLearningRate();
-        const auto lrFreq = settings::OptimizerSettings::getLRUpdateFrequency();
+        const auto initialLR = optimizerSettings.getInitialLearningRate();
+        const auto lrFreq    = optimizerSettings.getLRUpdateFrequency();
 
         using enum LearningRate;
 
@@ -369,9 +367,8 @@ namespace setup
 
         if (lrStrategy == CONSTANT_DECAY || lrStrategy == EXPONENTIAL_DECAY)
         {
-            const auto decay =
-                settings::OptimizerSettings::getLearningRateDecay();
-            decayLRStr = std::format("{:.2e}", decay.value());
+            const auto decay = optimizerSettings.getLearningRateDecay();
+            decayLRStr       = std::format("{:.2e}", decay);
         }
 
         const auto optMsg = std::format(

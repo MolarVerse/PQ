@@ -42,7 +42,8 @@ namespace input
      * - learning-rate-strategy "<string>"
      * - initial-learning-rate "<double>"
      */
-    OptInputParser::OptInputParser()
+    OptInputParser::OptInputParser(OptimizerSettings &optimizerSettings)
+        : _optimizerSettings(optimizerSettings)
     {
         addOptimizerKey();
         addLearningRateStrategyKey();
@@ -67,8 +68,8 @@ namespace input
                 "process.",
         };
 
-        const auto setValue = [](OptimizerType value)
-        { settings::OptimizerSettings::setOptimizer(value); };
+        const auto setValue = [this](OptimizerType value)
+        { _optimizerSettings->setOptimizer(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<OptimizerType>{.metadata = metaData, .onSet = setValue}
@@ -91,8 +92,8 @@ namespace input
                 "the optimization process."
         };
 
-        const auto setValue = [](LearningRate value)
-        { settings::OptimizerSettings::setLearningRateStrategy(value); };
+        const auto setValue = [this](LearningRate value)
+        { _optimizerSettings->setLearningRateStrategy(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<LearningRate>{.metadata = metaData, .onSet = setValue}
@@ -115,8 +116,8 @@ namespace input
                 "process."
         };
 
-        const auto setValue = [](double value)
-        { settings::OptimizerSettings::setInitialLearningRate(value); };
+        const auto setValue = [this](double value)
+        { _optimizerSettings->setInitialLearningRate(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -143,8 +144,8 @@ namespace input
                 "updated during the optimization process."
         };
 
-        const auto setValue = [](size_t value)
-        { settings::OptimizerSettings::setLRUpdateFrequency(value); };
+        const auto setValue = [this](size_t value)
+        { _optimizerSettings->setLRUpdateFrequency(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -171,8 +172,8 @@ namespace input
                 "process."
         };
 
-        const auto setValue = [](double value)
-        { settings::OptimizerSettings::setMinLearningRate(value); };
+        const auto setValue = [this](double value)
+        { _optimizerSettings->setMinLearningRate(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -199,8 +200,8 @@ namespace input
                 "process."
         };
 
-        const auto setValue = [](double value)
-        { settings::OptimizerSettings::setMaxLearningRate(value); };
+        const auto setValue = [this](double value)
+        { _optimizerSettings->setMaxLearningRate(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -227,8 +228,8 @@ namespace input
                 "process."
         };
 
-        const auto setValue = [](double value)
-        { settings::OptimizerSettings::setLearningRateDecay(value); };
+        const auto setValue = [this](double value)
+        { _optimizerSettings->setLearningRateDecay(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

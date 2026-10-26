@@ -61,8 +61,8 @@ namespace input
             if (!optimizerActive)
                 return;
 
-            settings::OptimizerSettings::validateLearningRateStrategy();
-            settings::OptimizerSettings::validateLearningRateBounds();
+            settings.optimizerSettings.validateLearningRateStrategy();
+            settings.optimizerSettings.validateLearningRateBounds();
         }
     }   // namespace
 

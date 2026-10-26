@@ -53,11 +53,11 @@ class TestInputValidation : public ::testing::Test
         settings::GeneralSettings::setJobtype(JobType::NONE);
         _settings.hessianSettings.setOptimizeBeforeHessian(false);
 
-        settings::OptimizerSettings::setLearningRateStrategy(
+        _settings.optimizerSettings.setLearningRateStrategy(
             LearningRate::CONSTANT
         );
-        settings::OptimizerSettings::setMinLearningRate(1.0e-15);
-        settings::OptimizerSettings::setMaxLearningRate(1.0);
+        _settings.optimizerSettings.setMinLearningRate(1.0e-15);
+        _settings.optimizerSettings.setMaxLearningRate(1.0);
 
         settings::ManostatSettings::setManostatType(ManostatType::NONE);
         settings::ManostatSettings::setTauManostat(
@@ -622,7 +622,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(
+    _settings.optimizerSettings.setLearningRateStrategy(
         LearningRate::CONSTANT_DECAY
     );
     _setKeyword("nstep");
@@ -639,7 +639,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(
+    _settings.optimizerSettings.setLearningRateStrategy(
         LearningRate::EXPONENTIAL_DECAY
     );
     _setKeyword("nstep");
@@ -656,9 +656,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(
-        LearningRate::CONSTANT
-    );
+    _settings.optimizerSettings.setLearningRateStrategy(LearningRate::CONSTANT);
     _setKeyword("nstep");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -668,7 +666,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(
+    _settings.optimizerSettings.setLearningRateStrategy(
         LearningRate::LINESEARCH_WOLFE
     );
     _setKeyword("nstep");
@@ -684,11 +682,9 @@ TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    settings::OptimizerSettings::setLearningRateStrategy(
-        LearningRate::CONSTANT
-    );
-    settings::OptimizerSettings::setMinLearningRate(0.5);
-    settings::OptimizerSettings::setMaxLearningRate(0.5);
+    _settings.optimizerSettings.setLearningRateStrategy(LearningRate::CONSTANT);
+    _settings.optimizerSettings.setMinLearningRate(0.5);
+    _settings.optimizerSettings.setMaxLearningRate(0.5);
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
