@@ -33,7 +33,7 @@ namespace setup
      * @param log The log output object
      * @param message The warning message
      */
-    void SetupBase::writeSetupWarning(
+    void SetupBase::_writeSetupWarning(
         out::LogOutput    &log,
         const std::string &message
     )

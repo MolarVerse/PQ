@@ -531,7 +531,7 @@ namespace setup
 
         if (initVelocities == InitVelocities::TRUE && !getZeroVelocities())
         {
-            writeSetupWarning(
+            _writeSetupWarning(
                 log,
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "

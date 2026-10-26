@@ -37,7 +37,7 @@ namespace setup
         virtual ~SetupBase() = default;
 
        protected:
-        static void writeSetupWarning(
+        static void _writeSetupWarning(
             out::LogOutput    &log,
             const std::string &message
         );
