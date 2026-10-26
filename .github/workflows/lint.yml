@@ -55,6 +55,7 @@ jobs:
               - 'scripts/clang_tidy.sh'
               - '.github/workflows/lint.yml'
               - '.github/actions/upload-build-timings/**'
+              - '.github/actions/setup-gcc/**'
               - '.github/ci-metrics/summarise_build.py'
 
   lint:
@@ -70,11 +71,13 @@ jobs:
           # diff below.
           fetch-depth: 0
 
-      - name: Install build tools
-        run: |
-          sudo apt update
-          sudo apt install -y gcc-14 g++-14 mold ninja-build clangd-20
-          sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build clangd-20
+
+      - name: Set clangd-20 as the default clangd
+        run: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
         shell: bash
 
       # The Debug build with tests and benchmarks needs more than the default
@@ -115,9 +118,6 @@ jobs:
 
       - name: Configure and build (generate compile_commands.json)
         id: build
-        env:
-          CC: gcc-14
-          CXX: g++-14
         run: |
           # Enable tests and both benchmark suites so their sources are part
           # of the compile database and actually compile with their deps

@@ -48,6 +48,7 @@ jobs:
             relevant:
               - '.github/workflows/ci_build.yml'
               - '.github/actions/upload-build-timings/**'
+              - '.github/actions/setup-gcc/**'
               - '.github/ci-metrics/summarise_build.py'
               - '.cmake/**'
               - 'apps/**'
@@ -71,11 +72,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install gcc14
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14 mold ninja-build cmake
-        shell: bash
+      - name: Setup GCC
+        id: setup-gcc
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build cmake
 
       # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects).
       # A Debug build (with coverage on x86) does not fit into the default
@@ -140,8 +141,6 @@ jobs:
           cmake --build build --parallel "$(nproc)"
           ctest --test-dir build --output-on-failure -LE benchmark
         env:
-          CC: gcc-14
-          CXX: g++-14
           BENCH_SOURCES: ${{ matrix.build == 'Debug' && 'On' || 'Off' }}
 
       - name: Build and Test Project with coverage
@@ -152,9 +151,6 @@ jobs:
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
           cmake --build build --target coverage_xml
-        env:
-          CC: gcc-14
-          CXX: g++-14
 
       - name: Collect build timings
         if: always()
@@ -170,7 +166,7 @@ jobs:
         with:
           fail_ci_if_error: true # optional (default = false)
           gcov: true
-          gcov_executable: gcov-14
+          gcov_executable: ${{ steps.setup-gcc.outputs.gcov }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -211,11 +207,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install gcc14
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14
-        shell: bash
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
 
       - name: Cache Eigen source
         id: cache-eigen
@@ -242,9 +235,6 @@ jobs:
             -DBUILD_WITH_NATIVE=Off \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build-benchmark --target google_benchmarks -j$(nproc)
-        env:
-          CC: gcc-14
-          CXX: g++-14
 
       - name: Run benchmark smoke tests
         run: |
@@ -268,10 +258,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install GCC 14
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14 mold ninja-build
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build
 
       # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects);
       # LTO's whole-program link pass itself isn't cached by ccache, but the
@@ -312,8 +302,6 @@ jobs:
             ctest --test-dir build --output-on-failure -j1
           fi
         env:
-          CC: gcc-14
-          CXX: g++-14
           WITH_TESTS: ${{ github.event_name == 'schedule' && 'ON' || 'OFF' }}
 
       - name: Collect build timings
@@ -333,10 +321,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14 mold
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -368,9 +356,6 @@ jobs:
             -DBUILD_WITH_NATIVE=OFF \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
-        env:
-          CC: gcc-14
-          CXX: g++-14
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
@@ -383,16 +368,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt update
-          sudo apt install \
-            gcc-14 \
-            g++-14 \
-            mold \
-            openmpi-bin \
-            libopenmpi-dev \
-            python-is-python3
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold openmpi-bin libopenmpi-dev python-is-python3
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -423,9 +402,6 @@ jobs:
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
-        env:
-          CC: gcc-14
-          CXX: g++-14
 
       - name: Collect build timings
         if: always()
@@ -449,10 +425,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14 mold ninja-build
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -488,9 +464,6 @@ jobs:
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)" --target PQ
-        env:
-          CC: gcc-14
-          CXX: g++-14
 
       - name: Collect build timings
         if: always()
