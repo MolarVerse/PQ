@@ -41,7 +41,8 @@
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    input::MMInputParser parser;
+    WaterModelSettings   waterModelSettings;
+    input::MMInputParser parser{waterModelSettings};
     const auto           funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("force_field"));
     const auto& parseFunc = funcMap.at("force_field");
@@ -88,7 +89,8 @@ TEST_F(TestInputFileReader, testParseForceField)
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    input::MMInputParser parser;
+    WaterModelSettings   waterModelSettings;
+    input::MMInputParser parser{waterModelSettings};
     const auto           funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("noncoulomb"));
     const auto& parseNonCoulombFunc = funcMap.at("noncoulomb");

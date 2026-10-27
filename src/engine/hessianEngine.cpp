@@ -155,32 +155,23 @@ namespace engine
          *
          * @param optimizer
          */
-        void setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer)
+        void setupConvergence(
+            std::shared_ptr<opt::Optimizer> &optimizer,
+            const ConvSettings              &settings
+        )
         {
-            const auto strategyOptional =
-                settings::ConvSettings::getEnConvStrategy();
-            const auto defaultStrategy =
-                settings::ConvSettings::getDefaultEnergyConvStrategy();
-            const auto energyStrategy =
-                strategyOptional.value_or(defaultStrategy);
+            const auto energyStrategy = settings.getEnConvStrategy();
 
-            const auto useEnergyOptional =
-                settings::ConvSettings::getUseEnergyConv();
-            const auto useMaxForceOptional =
-                settings::ConvSettings::getUseMaxForceConv();
-            const auto useRMSForceOptional =
-                settings::ConvSettings::getUseRMSForceConv();
+            const auto useEnergyOptional   = settings.getUseEnergyConv();
+            const auto useMaxForceOptional = settings.getUseMaxForceConv();
+            const auto useRMSForceOptional = settings.getUseRMSForceConv();
 
-            const auto energyOptional = settings::ConvSettings::getEnergyConv();
-            const auto absEnergyOptional =
-                settings::ConvSettings::getAbsEnergyConv();
-            const auto relEnergyOptional =
-                settings::ConvSettings::getRelEnergyConv();
-            const auto forceOptional = settings::ConvSettings::getForceConv();
-            const auto maxForceOptional =
-                settings::ConvSettings::getMaxForceConv();
-            const auto rmsForceOptional =
-                settings::ConvSettings::getRMSForceConv();
+            const auto energyOptional    = settings.getEnergyConv();
+            const auto absEnergyOptional = settings.getAbsEnergyConv();
+            const auto relEnergyOptional = settings.getRelEnergyConv();
+            const auto forceOptional     = settings.getForceConv();
+            const auto maxForceOptional  = settings.getMaxForceConv();
+            const auto rmsForceOptional  = settings.getRMSForceConv();
 
             auto relEnergy =
                 energyOptional.value_or(defaults::REL_ENERGY_CONV_DEFAULT);
@@ -318,7 +309,7 @@ namespace engine
         std::shared_ptr<opt::Evaluator> evaluator;
 
         if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN)
-            evaluator = std::make_shared<opt::MMEvaluator>();
+            evaluator = std::make_shared<opt::MMEvaluator>(getSettings());
 
         else
             throw exc::UserInputException(
@@ -346,7 +337,7 @@ namespace engine
         _learningRateStrategy = setupLearningRateStrategy(optimizerSettings);
         _optimizer            = _setupEmptyOptimizer();
 
-        setupConvergence(_optimizer);
+        setupConvergence(_optimizer, getSettings().convSettings);
         setupMinMaxLearningRate(_learningRateStrategy, optimizerSettings);
 
         _learningRateStrategy->setEvaluator(evaluator);

@@ -353,11 +353,16 @@ namespace molsys
      * @brief Assign water molecule indices for all cells.
      *
      * @param simulationBox simulation box containing molecules
+     * @param waterModelSettings water model settings used to identify water
+     * molecules in the cells
      */
-    void CellList::assignWaterMoleculeIndices(SimulationBox &simulationBox)
+    void CellList::assignWaterMoleculeIndices(
+        const SimulationBox      &simulationBox,
+        const WaterModelSettings &waterModelSettings
+    )
     {
         for (auto &cell : _cells)
-            cell.assignWaterMoleculeIndices(simulationBox);
+            cell.assignWaterMoleculeIndices(simulationBox, waterModelSettings);
     }
 
     /**

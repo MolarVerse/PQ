@@ -24,7 +24,11 @@
 
 #define _MM_INPUT_PARSER_HPP_
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class WaterModelSettings;
 
 namespace input
 {
@@ -36,8 +40,10 @@ namespace input
      */
     class MMInputParser : public InputFileParser
     {
+        mstd::Ref<WaterModelSettings> _waterModelSettings;
+
        public:
-        explicit MMInputParser();
+        explicit MMInputParser(WaterModelSettings &waterModelSettings);
 
         void addForceFieldTypeKey();
         void addNonCoulombTypeKey();

@@ -120,13 +120,14 @@ namespace molsys
      * @brief assigns the indices of water molecules in the cell
      *
      * @param simulationBox
+     * @param waterModelSettings
      */
-    void Cell::assignWaterMoleculeIndices(const SimulationBox &simulationBox)
+    void Cell::assignWaterMoleculeIndices(
+        const SimulationBox      &simulationBox,
+        const WaterModelSettings &waterModelSettings
+    )
     {
-        const auto isWaterInterModelSet =
-            settings::WaterModelSettings::isInterWaterModelSet();
-
-        if (!isWaterInterModelSet)
+        if (!waterModelSettings.isInterWaterModelSet())
             return;
 
         _waterMoleculeIndices.clear();

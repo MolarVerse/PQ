@@ -173,7 +173,7 @@ namespace setup
         if (settings::ForceFieldSettings::isActive())
             setupForceField(engine);
 
-        if (settings::WaterModelSettings::isWaterModelSet())
+        if (engine.getSettings().waterModelSettings.isWaterModelSet())
             setupWaterModel(engine);
 
         setupConstraints(engine);

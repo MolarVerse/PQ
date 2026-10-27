@@ -6,6 +6,19 @@ Developer Guide
 
 This section includes information for developers who want to contribute to the project. It includes information about the project structure, how to run the tests, and how to build the documentation. It also includes information about the project's coding style and how to contribute to the project.
 
+The pages below go into detail on the tooling around the code:
+
+.. toctree::
+    :maxdepth: 1
+
+    cmakeOptions
+    staticChecks
+    continuousIntegration
+    ciMetrics
+    localBuildTimes
+    codeStatistics
+    branchesAndReleases
+
 *****************
 Project Structure
 *****************
@@ -170,19 +183,20 @@ GitHub Actions
 ==============
 
 The software workflow --- from building the project to running unit and integration tests --- is validated by continuous integration (CI) using GitHub Actions.
-The corresponding workflow configuration files are located in the ``PQ/.github/workflows/`` directory.
+The corresponding workflow configuration files are located in the ``PQ/.github/workflows/`` directory. :doc:`continuousIntegration` describes what runs when and how to reproduce it locally.
 
 ************
 Coding Style
 ************
 
 The C++ source code is formatted with `clang-format <https://clang.llvm.org/docs/ClangFormat.html>`__ using the project configuration in ``PQ/.clang-format``.
-Use clang-format version 16 or newer. Older versions do not support all options used in the current configuration, and different clang-format versions can produce different formatting.
-When changing C++ files, format the touched files before committing them.
+CI pins **clang-format 20.1.3** and checks every C++ file that a pull request touches as a whole, and a different version can format differently. Format the touched files before committing them; :doc:`staticChecks` explains how to install the pinned version and lists the other checks.
 
 *************
 Documentation
 *************
+
+.. _sphinxBuild:
 
 ======
 Sphinx
@@ -287,6 +301,8 @@ In order to contribute to the project, please follow these steps:
 
     #. Create a pull request on GitHub.
 
+.. _changelogFragments:
+
 ===================
 Changelog Fragments
 ===================
@@ -332,6 +348,8 @@ blank lines in between. Each bullet becomes its own line in the changelog:
 
         - First point about this change.
         - Second, related point about the same change.
+
+The check rejects a bullet longer than 360 characters. Put the details into the pull request, not the changelog.
 
 If your pull request extends a change that already has an unreleased
 fragment, append another bullet to that existing file instead of creating a

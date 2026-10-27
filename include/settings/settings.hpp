@@ -24,11 +24,13 @@
 #define _SETTINGS_HPP_
 
 #include "constraintSettings.hpp"
+#include "convergenceSettings.hpp"
 #include "hessianSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
+#include "waterModelSettings.hpp"
 
 /**
  * @brief Settings class that holds various simulation settings
@@ -41,6 +43,8 @@ struct Settings
     RingPolymerSettings   ringPolymerSettings;
     OptimizerSettings     optimizerSettings;
     ConstraintSettings    constraintSettings;
+    ConvSettings          convSettings;
+    WaterModelSettings    waterModelSettings;
 
     void finalize();
 };

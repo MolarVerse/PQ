@@ -93,7 +93,8 @@ namespace
 
 TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 {
-    const opt::MMEvaluator src{};
+    Settings               settings;
+    const opt::MMEvaluator src{settings};
     const auto             cloned = src.clone();
     ASSERT_NE(cloned, nullptr);
     EXPECT_NE(std::dynamic_pointer_cast<opt::MMEvaluator>(cloned), nullptr);
@@ -101,7 +102,8 @@ TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 
 TEST(TestMMEvaluator, evaluateRunsWithMinimalDependencies)
 {
-    opt::MMEvaluator eval;
+    Settings         settings;
+    opt::MMEvaluator eval{settings};
     molsys::CellList cellList;
     wireUp(eval, cellList);
     EXPECT_NO_THROW(eval.evaluate());
@@ -112,7 +114,8 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     // After evaluate(), the brute-force loop on a single molecule produces no
     // inter-molecular force contribution, and the cleared force buffer should
     // be (0, 0, 0) per atom.
-    opt::MMEvaluator eval;
+    Settings         settings;
+    opt::MMEvaluator eval{settings};
     molsys::CellList cellList;
     wireUp(eval, cellList);
 
@@ -139,7 +142,8 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     box->addMolecule(mol);
     box->addAtom(atom);
 
-    opt::MMEvaluator eval2;
+    Settings         settings2;
+    opt::MMEvaluator eval2{settings2};
     molsys::CellList cellList2;
     eval2.setSimulationBox(box);
     eval2.setCellList(cellList2);

@@ -27,6 +27,8 @@
 #include "hybridMDEngine.hpp"
 #include "randomNumberGenerator.hpp"
 
+class QMMMEnergiesTest;   // forward declaration for friend
+
 namespace engine
 {
     /**
@@ -59,6 +61,8 @@ namespace engine
 
         void _scaleAndAccumulateEnergies(double globalSmF);
         void _moveEnergiesToPhysicalData();
+
+        friend class ::QMMMEnergiesTest;   // for testing private methods
 
         void _distributeSmoothingMolQMForces();
 

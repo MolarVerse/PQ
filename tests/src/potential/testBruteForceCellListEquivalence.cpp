@@ -41,6 +41,7 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "waterModelSettings.hpp"
 
 namespace
 {
@@ -197,8 +198,14 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 
     // Brute force ignores its molsys::CellList argument; pass a
     // default-constructed one purely to satisfy the signature.
-    molsys::CellList dummyCellList;
-    bruteForce.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
+    WaterModelSettings waterModelSettings;
+    molsys::CellList   dummyCellList;
+    bruteForce.calculateForces(
+        simBoxBF,
+        physicalDataBF,
+        dummyCellList,
+        waterModelSettings
+    );
 
     settings::GeneralSettings::activateCellList();
 
@@ -207,7 +214,12 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     cellList.resizeCells();
     cellList.setup(simBoxCL);
     cellList.updateCellList(simBoxCL);
-    cellListPotential.calculateForces(simBoxCL, physicalDataCL, cellList);
+    cellListPotential.calculateForces(
+        simBoxCL,
+        physicalDataCL,
+        cellList,
+        waterModelSettings
+    );
 
     EXPECT_NEAR(
         physicalDataBF.getCoulombEnergy(),

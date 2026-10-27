@@ -107,7 +107,9 @@ namespace input
         _parsers.push_back(
             std::make_unique<FilesInputParser>(validateFilePaths)
         );
-        _parsers.push_back(std::make_unique<MMInputParser>());
+        _parsers.push_back(
+            std::make_unique<MMInputParser>(settings.waterModelSettings)
+        );
         _parsers.push_back(std::make_unique<GeneralInputParser>());
         _parsers.push_back(
             std::make_unique<HessianInputParser>(settings.hessianSettings)
@@ -132,7 +134,9 @@ namespace input
                 settings.ringPolymerSettings
             )
         );
-        _parsers.push_back(std::make_unique<ConvInputParser>());
+        _parsers.push_back(
+            std::make_unique<ConvInputParser>(settings.convSettings)
+        );
         _parsers.push_back(
             std::make_unique<OptInputParser>(settings.optimizerSettings)
         );

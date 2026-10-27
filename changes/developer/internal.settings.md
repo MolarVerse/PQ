@@ -5,3 +5,5 @@
 - Replace static `HessianSettings` with an instance-based `Setting<T>` member injected via `Settings`, removing global/static state.
 - Replace static `RingPolymerSettings`
 - Replace static `OptimizerSettings`
+- Replace static `ConvSettings`
+- Replace static `WaterModelSettings`

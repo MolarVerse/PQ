@@ -25,6 +25,7 @@
 #define _EVALUATOR_HPP_
 
 #include <memory>
+#include <mstd/types.hpp>
 
 #include "celllist.hpp"
 #include "constraints.hpp"
@@ -35,6 +36,8 @@
 #include "potential.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
+
+struct Settings;
 
 namespace opt
 {
@@ -48,6 +51,7 @@ namespace opt
     class Evaluator
     {
        private:
+        mstd::ConstRef<Settings>                        _settings;
         molsys::CellList*                               _cellList;
         std::shared_ptr<pot::Potential>                 _potential;
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
@@ -58,8 +62,8 @@ namespace opt
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
 
        public:
-        Evaluator()          = default;
-        virtual ~Evaluator() = default;
+        explicit Evaluator(const Settings& settings);
+        virtual ~Evaluator();
 
         [[nodiscard]] virtual std::shared_ptr<Evaluator> clone() const = 0;
         virtual void                                     evaluate()    = 0;
@@ -128,6 +132,9 @@ namespace opt
         intraNonBonded::IntraNonBonded& _getIntraNonBonded();
         [[nodiscard]]
         const intraNonBonded::IntraNonBonded& _getIntraNonBonded() const;
+
+        [[nodiscard]]
+        const Settings& _getSettings() const;
     };
 
 }   // namespace opt

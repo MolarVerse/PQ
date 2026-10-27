@@ -30,6 +30,8 @@
 #include "molecule.hpp"
 #include "simulationBox.hpp"
 
+class WaterModelSettings;   // Forward declaration
+
 namespace molsys
 {
     /**
@@ -64,7 +66,10 @@ namespace molsys
         void addNeighbourCell(Cell *cell);
         void addAtoms(const std::vector<Atom *> &atomPointers);
         void assignMoleculeHybridZoneIndices();
-        void assignWaterMoleculeIndices(const SimulationBox &);
+        void assignWaterMoleculeIndices(
+            const SimulationBox &,
+            const WaterModelSettings &
+        );
 
         /***************************
          * standard getter methods *

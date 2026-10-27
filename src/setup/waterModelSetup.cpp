@@ -124,25 +124,24 @@ namespace setup
 
         _makeIntraWater();
 
-        if (settings::WaterModelSettings::getWaterIntraModel() !=
-            WaterIntraModel::NONE)
+        const auto waterModelSettings =
+            _engine.getSettings().waterModelSettings;
+        if (waterModelSettings.getWaterIntraModel() != WaterIntraModel::NONE)
             _checkTopologyFile();
 
-        if (const auto geometry = _getRigidWaterGeometry(
-                settings::WaterModelSettings::getWaterIntraModel()
-            );
+        if (const auto geometry =
+                _getRigidWaterGeometry(waterModelSettings.getWaterIntraModel());
             geometry.has_value())
             _shakeSetupForRigidWater(geometry.value());
 
-        if (settings::WaterModelSettings::getWaterInterModel() !=
-            WaterInterModel::NONE)
+        if (waterModelSettings.getWaterInterModel() != WaterInterModel::NONE)
             _makeInterWater();
 
         _engine.getLogOutput().writeSetupInfo(
             std::format(
                 "Intramolecular water model: {}",
                 WaterIntraModelMeta::toString(
-                    settings::WaterModelSettings::getWaterIntraModel()
+                    waterModelSettings.getWaterIntraModel()
                 )
             )
         );
@@ -151,7 +150,7 @@ namespace setup
             std::format(
                 "Intermolecular water model: {}",
                 WaterInterModelMeta::toString(
-                    settings::WaterModelSettings::getWaterInterModel()
+                    waterModelSettings.getWaterInterModel()
                 )
             )
         );
@@ -182,6 +181,9 @@ namespace setup
 
         size_t bondIndex = 1;
 
+        const auto &waterModelSettings =
+            _engine.getSettings().waterModelSettings;
+
         for (const auto &bond : _engine.getForceField()->getBonds())
         {
             const auto *mol1 = bond.get_molecules()[0];
@@ -206,7 +208,7 @@ namespace setup
                         settings::FileSettings::getTopologyFileName(),
                         bondIndex,
                         WaterIntraModelMeta::toString(
-                            settings::WaterModelSettings::getWaterIntraModel()
+                            waterModelSettings.getWaterIntraModel()
                         )
                     )
                 );
@@ -244,7 +246,7 @@ namespace setup
                         settings::FileSettings::getTopologyFileName(),
                         angleIndex,
                         WaterIntraModelMeta::toString(
-                            settings::WaterModelSettings::getWaterIntraModel()
+                            waterModelSettings.getWaterIntraModel()
                         )
                     )
                 );
@@ -268,8 +270,10 @@ namespace setup
         const waterModel::InterWaterState &state
     )
     {
+        const auto &waterModelSettings =
+            _engine.getSettings().waterModelSettings;
         const auto modelName = WaterInterModelMeta::toString(
-            settings::WaterModelSettings::getWaterInterModel()
+            waterModelSettings.getWaterInterModel()
         );
         const auto checkCharge = [&modelName](
                                      const molsys::Molecule &water,
@@ -430,8 +434,9 @@ namespace setup
     {
         using enum WaterIntraModel;
 
-        const auto intraModel =
-            settings::WaterModelSettings::getWaterIntraModel();
+        const auto &waterModelSettings =
+            _engine.getSettings().waterModelSettings;
+        const auto intraModel = waterModelSettings.getWaterIntraModel();
 
         switch (intraModel)
         {
@@ -473,7 +478,8 @@ namespace setup
         using enum WaterInterModel;
         auto state = waterModel::InterWaterState();
 
-        const auto model = settings::WaterModelSettings::getWaterInterModel();
+        const auto model =
+            _engine.getSettings().waterModelSettings.getWaterInterModel();
 
         switch (model)
         {
@@ -550,10 +556,10 @@ namespace setup
      */
     void WaterModelSetup::_addReferences()
     {
-        const auto intraModel =
-            settings::WaterModelSettings::getWaterIntraModel();
-        const auto interModel =
-            settings::WaterModelSettings::getWaterInterModel();
+        const auto &waterModelSettings =
+            _engine.getSettings().waterModelSettings;
+        const auto intraModel = waterModelSettings.getWaterIntraModel();
+        const auto interModel = waterModelSettings.getWaterInterModel();
 
         switch (intraModel)
         {
