@@ -1,0 +1,1 @@
+- Correct AGENTS.md (CI workflow table, clang-format scope, duplicate entry) and state the enforced 360-character changelog bullet limit in the docs.

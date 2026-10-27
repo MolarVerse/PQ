@@ -349,8 +349,7 @@ blank lines in between. Each bullet becomes its own line in the changelog:
         - First point about this change.
         - Second, related point about the same change.
 
-The check enforces a limit of 360 characters per bullet (``changes/README.md`` asks for 240; keep to the shorter
-value, the script only rejects what is clearly too long). Put the details into the pull request, not the changelog.
+The check rejects a bullet longer than 360 characters. Put the details into the pull request, not the changelog.
 
 If your pull request extends a change that already has an unreleased
 fragment, append another bullet to that existing file instead of creating a
