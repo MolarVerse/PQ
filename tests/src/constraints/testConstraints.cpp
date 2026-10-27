@@ -52,13 +52,15 @@ TEST_F(TestConstraints, calcRefBondLengths)
  */
 TEST_F(TestConstraints, applyShakeConverged)
 {
-    _constraints->setShakeMaxIter(1000);
-    _constraints->setShakeTolerance(1.0e-4);
-    _constraints->calculateConstraintBondRefs(*_box);
+    ConstraintSettings settings;
+    settings.setShakeMaxIter(1000);
+    settings.setShakeTolerance(1.0e-4);
+    constraints::Constraints constraints(settings);
+    constraints.calculateConstraintBondRefs(*_box);
 
     settings::TimingsSettings::setTimeStep(2.0);
 
-    EXPECT_NO_THROW(_constraints->applyShake(*_box));
+    EXPECT_NO_THROW(constraints.applyShake(*_box));
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_THAT(
@@ -103,14 +105,16 @@ TEST_F(TestConstraints, applyShakeConverged)
  */
 TEST_F(TestConstraints, applyShakeNotConverged)
 {
-    _constraints->setShakeMaxIter(10);
-    _constraints->setShakeTolerance(0.0);
-    _constraints->calculateConstraintBondRefs(*_box);
+    ConstraintSettings settings;
+    settings.setShakeMaxIter(10);
+    settings.setShakeTolerance(0.0);
+    constraints::Constraints constraints(settings);
+    constraints.calculateConstraintBondRefs(*_box);
 
     settings::TimingsSettings::setTimeStep(2.0);
 
     EXPECT_THROW_MSG(
-        _constraints->applyShake(*_box),
+        constraints.applyShake(*_box),
         exc::ShakeException,
         "Shake algorithm did not converge for 2 bonds."
     );
@@ -123,13 +127,13 @@ TEST_F(TestConstraints, applyShakeNotConverged)
  */
 TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
 {
-    _constraints->setShakeMaxIter(10);
-    _constraints->setShakeTolerance(0.0);
+    ConstraintSettings settings;
+    settings.setShakeMaxIter(10);
+    settings.setShakeTolerance(0.0);
+    _constraints = std::make_unique<constraints::Constraints>(settings);
     _constraints->calculateConstraintBondRefs(*_box);
 
     settings::TimingsSettings::setTimeStep(2.0);
-
-    settings::ConstraintSettings::deactivateShake();
 
     EXPECT_NO_THROW(_constraints->applyShake(*_box));
 }
@@ -140,8 +144,10 @@ TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
  */
 TEST_F(TestConstraints, applyRattleConverged)
 {
-    _constraints->setRattleMaxIter(1000);
-    _constraints->setRattleTolerance(1.0e-4);
+    ConstraintSettings settings;
+    settings.setRattleMaxIter(1000);
+    settings.setRattleTolerance(1.0e-4);
+    _constraints = std::make_unique<constraints::Constraints>(settings);
     _constraints->calculateConstraintBondRefs(*_box);
 
     EXPECT_NO_THROW(_constraints->applyRattle(*_box));
@@ -172,8 +178,10 @@ TEST_F(TestConstraints, applyRattleConverged)
  */
 TEST_F(TestConstraints, applyRattleNotConverged)
 {
-    _constraints->setRattleMaxIter(10);
-    _constraints->setRattleTolerance(0.0);
+    ConstraintSettings settings;
+    settings.setRattleMaxIter(10);
+    settings.setRattleTolerance(0.0);
+    _constraints = std::make_unique<constraints::Constraints>(settings);
     _constraints->calculateConstraintBondRefs(*_box);
 
     EXPECT_THROW_MSG(
@@ -190,11 +198,11 @@ TEST_F(TestConstraints, applyRattleNotConverged)
  */
 TEST_F(TestConstraints, applyRattleNotConvergedDeactivated)
 {
-    _constraints->setRattleMaxIter(10);
-    _constraints->setRattleTolerance(0.0);
+    ConstraintSettings settings;
+    settings.setRattleMaxIter(10);
+    settings.setRattleTolerance(0.0);
+    _constraints = std::make_unique<constraints::Constraints>(settings);
     _constraints->calculateConstraintBondRefs(*_box);
-
-    settings::ConstraintSettings::deactivateShake();
 
     EXPECT_NO_THROW(_constraints->applyRattle(*_box));
 }

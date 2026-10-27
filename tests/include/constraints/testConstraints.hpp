@@ -33,6 +33,7 @@
 #include "constraintSettings.hpp"
 #include "constraints.hpp"
 #include "molecule.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 
 /**
@@ -91,7 +92,11 @@ class TestConstraints : public ::testing::Test
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         _box->setBox(orthoBox, false);
 
-        _constraints = std::make_unique<constraints::Constraints>();
+        Settings settings;
+        settings.constraintSettings.activateShake();
+        _constraints = std::make_unique<constraints::Constraints>(
+            settings.constraintSettings
+        );
 
         auto bondConstraint1 = constraints::BondConstraint(
             _box->getMolecules().data(),
@@ -110,8 +115,6 @@ class TestConstraints : public ::testing::Test
 
         _constraints->addBondConstraint(bondConstraint1);
         _constraints->addBondConstraint(bondConstraint2);
-
-        settings::ConstraintSettings::activateShake();
     }
 };
 

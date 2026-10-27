@@ -152,11 +152,12 @@ namespace engine
      */
     void EngineOutput::writeEnergyFile(
         size_t                            step,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         auto _ = scopedTimer(TimerId::Output, "EnergyOutput");
-        _energyOutput->write(step, physicalData);
+        _energyOutput->write(step, physicalData, settings);
     }
 
     /**
@@ -167,11 +168,12 @@ namespace engine
      */
     void EngineOutput::writeInstantEnergyFile(
         size_t                            step,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         auto _ = scopedTimer(TimerId::Output, "InstantEnergyOutput");
-        _instantEnergyOutput->write(step, physicalData);
+        _instantEnergyOutput->write(step, physicalData, settings);
     }
 
     /**
@@ -269,14 +271,16 @@ namespace engine
      *
      * @param time
      * @param physicalData
+     * @param settings
      */
     void EngineOutput::writeInfoFile(
         double                            time,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         auto _ = scopedTimer(TimerId::Output, "InfoOutput");
-        _infoOutput->write(time, physicalData);
+        _infoOutput->write(time, physicalData, settings);
     }
 
     /**

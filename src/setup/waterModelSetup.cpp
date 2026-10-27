@@ -415,7 +415,7 @@ namespace setup
             constraints->addBondConstraint(bondConstraintHH);
         }
 
-        settings::ConstraintSettings::activateShake();
+        _engine.getSettings().constraintSettings.activateShake();
     }
 
     /**

@@ -62,8 +62,6 @@ namespace setup
 
         void setupMShake();
 
-        void setupTolerances();
-        void setupMaxIterations();
         void setupRefBondLengths();
         void setupDegreesOfFreedom();
 

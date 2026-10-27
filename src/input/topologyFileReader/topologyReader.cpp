@@ -144,7 +144,7 @@ namespace input::topology
      */
     void readTopologyFile(engine::Engine &engine)
     {
-        if (!isNeeded())
+        if (!isNeeded(engine.getSettings()))
             return;
 
         const auto filename = settings::FileSettings::getTopologyFileName();
@@ -163,9 +163,9 @@ namespace input::topology
      * @return true if force field is activated
      * @return false
      */
-    bool isNeeded()
+    bool isNeeded(const Settings &settings)
     {
-        if (settings::ConstraintSettings::isActive())
+        if (settings.constraintSettings.isActive())
             return true;
 
         if (settings::ForceFieldSettings::isActive())

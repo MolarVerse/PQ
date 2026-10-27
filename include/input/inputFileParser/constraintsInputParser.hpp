@@ -24,7 +24,11 @@
 
 #define _CONSTRAINTS_INPUT_PARSER_HPP_
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class ConstraintSettings;
 
 namespace input
 {
@@ -36,8 +40,10 @@ namespace input
      */
     class ConstraintsInputParser : public InputFileParser
     {
+        mstd::Ref<ConstraintSettings> _constraintSettings;
+
        public:
-        explicit ConstraintsInputParser();
+        explicit ConstraintsInputParser(ConstraintSettings &constraintSettings);
 
         void addShakeActivatedKeyword();
         void addShakeToleranceKeyword();

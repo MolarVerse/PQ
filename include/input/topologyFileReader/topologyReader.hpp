@@ -32,10 +32,12 @@
 
 #include "topologySection.hpp"
 
+struct Settings;
+
 namespace input::topology
 {
     void               readTopologyFile(engine::Engine &);
-    [[nodiscard]] bool isNeeded();
+    [[nodiscard]] bool isNeeded(const Settings &);
 
     /**
      * @class TopologyReader
