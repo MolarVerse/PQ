@@ -222,10 +222,10 @@ TEST_F(TestSetup, setupConvergenceWritesIntoOptimizer)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
     _settings->optimizerSettings.setOptimizer(OptimizerType::STEEPEST_DESCENT);
-    settings::ConvSettings::setEnergyConvStrategy(ConvStrategy::RIGOROUS);
-    settings::ConvSettings::setUseEnergyConv(true);
-    settings::ConvSettings::setUseMaxForceConv(true);
-    settings::ConvSettings::setUseRMSForceConv(true);
+    _settings->convSettings.setEnergyConvStrategy(ConvStrategy::RIGOROUS);
+    _settings->convSettings.setUseEnergyConv(true);
+    _settings->convSettings.setUseMaxForceConv(true);
+    _settings->convSettings.setUseRMSForceConv(true);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);

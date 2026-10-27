@@ -255,29 +255,21 @@ namespace setup
      */
     void OptimizerSetup::setupConvergence(
         std::shared_ptr<opt::Optimizer> &optimizer
-    )
+    ) const
     {
-        const auto strategyOptional =
-            settings::ConvSettings::getEnConvStrategy();
-        const auto defaultStrategy =
-            settings::ConvSettings::getDefaultEnergyConvStrategy();
-        const auto energyStrategy = strategyOptional.value_or(defaultStrategy);
+        const auto &convSettings   = _optEngine.getSettings().convSettings;
+        const auto  energyStrategy = convSettings.getEnConvStrategy();
 
-        const auto useEnergyOptional =
-            settings::ConvSettings::getUseEnergyConv();
-        const auto useMaxForceOptional =
-            settings::ConvSettings::getUseMaxForceConv();
-        const auto useRMSForceOptional =
-            settings::ConvSettings::getUseRMSForceConv();
+        const auto useEnergyOptional   = convSettings.getUseEnergyConv();
+        const auto useMaxForceOptional = convSettings.getUseMaxForceConv();
+        const auto useRMSForceOptional = convSettings.getUseRMSForceConv();
 
-        const auto energyOptional = settings::ConvSettings::getEnergyConv();
-        const auto absEnergyOptional =
-            settings::ConvSettings::getAbsEnergyConv();
-        const auto relEnergyOptional =
-            settings::ConvSettings::getRelEnergyConv();
-        const auto forceOptional    = settings::ConvSettings::getForceConv();
-        const auto maxForceOptional = settings::ConvSettings::getMaxForceConv();
-        const auto rmsForceOptional = settings::ConvSettings::getRMSForceConv();
+        const auto energyOptional    = convSettings.getEnergyConv();
+        const auto absEnergyOptional = convSettings.getAbsEnergyConv();
+        const auto relEnergyOptional = convSettings.getRelEnergyConv();
+        const auto forceOptional     = convSettings.getForceConv();
+        const auto maxForceOptional  = convSettings.getMaxForceConv();
+        const auto rmsForceOptional  = convSettings.getRMSForceConv();
 
         const auto defaultRelEnergy = defaults::REL_ENERGY_CONV_DEFAULT;
         const auto defaultAbsEnergy = defaults::ABS_ENERGY_CONV_DEFAULT;

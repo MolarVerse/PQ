@@ -54,7 +54,7 @@ namespace setup
         void setup();
         void writeSetupInfo() const;
 
-        static void setupConvergence(std::shared_ptr<opt::Optimizer> &);
+        void setupConvergence(std::shared_ptr<opt::Optimizer> &) const;
         void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &) const;
 
         [[nodiscard]]

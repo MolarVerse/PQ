@@ -129,7 +129,9 @@ namespace input
                 settings.ringPolymerSettings
             )
         );
-        _parsers.push_back(std::make_unique<ConvInputParser>());
+        _parsers.push_back(
+            std::make_unique<ConvInputParser>(settings.convSettings)
+        );
         _parsers.push_back(
             std::make_unique<OptInputParser>(settings.optimizerSettings)
         );
