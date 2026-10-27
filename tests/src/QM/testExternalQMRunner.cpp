@@ -33,6 +33,15 @@
 #include <string_view>
 #include <thread>
 
+#if !defined(_WIN32)
+#include <sys/types.h>
+#include <unistd.h>
+
+#include <cerrno>
+#include <csignal>
+#include <cstdlib>
+#endif
+
 #include "atom.hpp"
 #include "constants.hpp"
 #include "dftbplusRunner.hpp"
@@ -749,6 +758,18 @@ namespace
             _executeCommand("sleep 3 && touch qm-finished", "External QM");
         }
     };
+
+    class InterruptibleQMRunner : public QM::ExternalQMRunner
+    {
+       public:
+        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        void execute(molsys::SimulationBox & /*simBox*/) override {}
+
+        void runCommand(const std::string_view command) const
+        {
+            _executeCommand(command, "External QM");
+        }
+    };
 }   // namespace
 
 TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)
@@ -770,6 +791,43 @@ TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)
     {
         EXPECT_THAT(error.what(), testing::HasSubstr("timeout"));
     }
+
+    std::this_thread::sleep_for(std::chrono::seconds(4));
+    EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-finished"));
+}
+
+TEST_F(ExternalQMRunnerTest, interruptStopsTheQMProcessAndPQ)
+{
+    const auto runAndInterrupt = []
+    {
+        auto interrupt = std::jthread{
+            []
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                ::kill(::getpid(), SIGINT);
+            }
+        };
+
+        try
+        {
+            InterruptibleQMRunner{}.runCommand(
+                "echo $$ > qm-pid && sleep 3 && touch qm-finished"
+            );
+        }
+        catch (...)
+        {
+        }
+        interrupt.join();
+        std::_Exit(0);
+    };
+
+    EXPECT_EXIT(runAndInterrupt(), testing::KilledBySignal(SIGINT), "");
+
+    auto pidFile = std::ifstream(_workPath / "qm-pid");
+    auto pid     = pid_t{0};
+    ASSERT_TRUE(pidFile >> pid);
+    EXPECT_EQ(::killpg(pid, 0), -1);
+    EXPECT_EQ(errno, ESRCH);
 
     std::this_thread::sleep_for(std::chrono::seconds(4));
     EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-finished"));
