@@ -69,7 +69,7 @@ namespace setup
         static std::optional<RigidWaterGeometry> _getRigidWaterGeometry(
             WaterIntraModel intraModel
         );
-        static void _addReferences();
+        void _addReferences();
     };
 
 }   // namespace setup

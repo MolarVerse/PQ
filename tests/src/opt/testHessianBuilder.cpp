@@ -31,6 +31,7 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "hessianBuilder.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 
@@ -44,15 +45,20 @@ namespace
 
        public:
         explicit HarmonicEvaluator(
+            const Settings     &settings,
             std::vector<double> forceConstants,
             const bool          analyticSupported
         )
-            : _forceConstants(std::move(forceConstants)),
+            : opt::Evaluator(settings),
+              _forceConstants(std::move(forceConstants)),
               _analyticSupported(analyticSupported)
         {
         }
-        explicit HarmonicEvaluator(std::vector<double> forceConstants)
-            : HarmonicEvaluator(std::move(forceConstants), false)
+        explicit HarmonicEvaluator(
+            const Settings     &settings,
+            std::vector<double> forceConstants
+        )
+            : HarmonicEvaluator(settings, std::move(forceConstants), false)
         {
         }
 
@@ -163,7 +169,8 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
          })
     {
         auto              box = makeSimulationBox();
-        HarmonicEvaluator evaluator(diagonal);
+        Settings          settings;
+        HarmonicEvaluator evaluator(settings, diagonal);
         evaluator.setSimulationBox(box);
 
         const auto hessian = builder->build(evaluator, *box);
@@ -178,7 +185,8 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
 TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 {
     auto              box = makeSimulationBox();
-    HarmonicEvaluator evaluator({1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    Settings          settings;
+    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
@@ -192,7 +200,8 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 {
     auto              box = makeSimulationBox();
-    HarmonicEvaluator evaluator({1.0, 2.0, 3.0, 4.0, 5.0, 6.0}, true);
+    Settings          settings;
+    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0}, true);
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 

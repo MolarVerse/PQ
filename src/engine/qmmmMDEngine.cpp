@@ -239,13 +239,17 @@ namespace engine
             if (settings::GeneralSettings::isCellListActivated())
             {
                 getCellList().assignMoleculeHybridZoneIndices();
-                getCellList().assignWaterMoleculeIndices(getSimulationBox());
+                getCellList().assignWaterMoleculeIndices(
+                    getSimulationBox(),
+                    getSettings().waterModelSettings
+                );
             }
 
             getPotential()->calculateQMMMForces(
                 getSimulationBox(),
                 getPhysicalData(),
-                getCellList()
+                getCellList(),
+                getSettings().waterModelSettings
             );
 
             _getInterWater().calculateQMMMForces(
@@ -349,13 +353,17 @@ namespace engine
         if (settings::GeneralSettings::isCellListActivated())
         {
             getCellList().assignMoleculeHybridZoneIndices();
-            getCellList().assignWaterMoleculeIndices(getSimulationBox());
+            getCellList().assignWaterMoleculeIndices(
+                getSimulationBox(),
+                getSettings().waterModelSettings
+            );
         }
 
         getPotential()->calculateQMMMForces(
             getSimulationBox(),
             getPhysicalData(),
-            getCellList()
+            getCellList(),
+            getSettings().waterModelSettings
         );
 
         _getInterWater().calculateQMMMForces(
@@ -376,7 +384,8 @@ namespace engine
         getPotential()->calculateHotspotSmoothingMMForces(
             getSimulationBox(),
             getPhysicalData(),
-            getCellList()
+            getCellList(),
+            getSettings().waterModelSettings
         );
 
         _getInterWater().calculateHotspotSmoothingMMForces(

@@ -6,3 +6,4 @@
 - Replace static `RingPolymerSettings`
 - Replace static `OptimizerSettings`
 - Replace static `ConvSettings`
+- Replace static `WaterModelSettings`

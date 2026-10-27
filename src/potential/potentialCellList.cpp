@@ -57,11 +57,13 @@ namespace pot
      * @param simulationBox
      * @param physicalData
      * @param cellList
+     * @param waterModelSettings
      */
     void PotentialCellList::calculateForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList     &cellList
+        const molsys::CellList     &cellList,
+        const WaterModelSettings   &waterModelSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
@@ -70,7 +72,7 @@ namespace pot
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
         const auto isWaterInterModelSet =
-            settings::WaterModelSettings::isInterWaterModelSet();
+            waterModelSettings.isInterWaterModelSet();
 
         double totalCoulombEnergy    = 0.0;
         double totalNonCoulombEnergy = 0.0;
@@ -192,7 +194,8 @@ namespace pot
     void PotentialCellList::calculateCoreToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList     &cellList
+        const molsys::CellList     &cellList,
+        const WaterModelSettings & /*waterModelSettings*/
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
@@ -324,7 +327,8 @@ namespace pot
     void PotentialCellList::calculateLayerToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList     &cellList
+        const molsys::CellList     &cellList,
+        const WaterModelSettings & /*waterModelSettings*/
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
@@ -492,7 +496,8 @@ namespace pot
     void PotentialCellList::calculateOuterToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList     &cellList
+        const molsys::CellList     &cellList,
+        const WaterModelSettings & /*waterModelSettings*/
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedOuterToOuter");
@@ -617,7 +622,8 @@ namespace pot
     void PotentialCellList::calculateHotspotSmoothingMMForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList     &cellList
+        const molsys::CellList     &cellList,
+        const WaterModelSettings & /*waterModelSettings*/
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");

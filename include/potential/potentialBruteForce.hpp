@@ -26,6 +26,8 @@
 
 #include "potential.hpp"
 
+class WaterModelSettings;   // forward declaration
+
 namespace pot
 {
     /**
@@ -42,31 +44,36 @@ namespace pot
         void calculateForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const WaterModelSettings &waterModelSettings
         ) override;
 
         void calculateCoreToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const WaterModelSettings &waterModelSettings
         ) override;
 
         void calculateLayerToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const WaterModelSettings &waterModelSettings
         ) override;
 
         void calculateOuterToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList     &cellList
+            const molsys::CellList     &cellList,
+            const WaterModelSettings   &waterModelSettings
         ) override;
 
         void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const WaterModelSettings &waterModelSettings
         ) override;
 
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;

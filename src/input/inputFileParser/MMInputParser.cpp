@@ -40,8 +40,12 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) force-field
      * "<on/off/bonded>"
      *
+     * @param waterModelSettings Reference to the WaterModelSettings object that
+     * will be used to store and manage water model configurations.
+     *
      */
-    MMInputParser::MMInputParser()
+    MMInputParser::MMInputParser(WaterModelSettings &waterModelSettings)
+        : _waterModelSettings(waterModelSettings)
     {
         addForceFieldTypeKey();
         addNonCoulombTypeKey();
@@ -121,11 +125,8 @@ namespace input
                 "spc_mtr, tip3p_mtr)",
         };
 
-        const auto setValue = [](WaterIntraModel value)
-        {
-            settings::WaterModelSettings::setWaterIntraModel(value);
-            settings::WaterModelSettings::setIsWaterModelSet(true);
-        };
+        const auto setValue = [this](WaterIntraModel value)
+        { _waterModelSettings->setWaterIntraModel(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<WaterIntraModel>{
@@ -151,12 +152,8 @@ namespace input
                 "spc_mtr, tip3p_mtr)",
         };
 
-        const auto setValue = [](WaterInterModel value)
-        {
-            settings::WaterModelSettings::setWaterInterModel(value);
-            settings::WaterModelSettings::setIsWaterModelSet(true);
-            settings::WaterModelSettings::setIsInterWaterModelSet(true);
-        };
+        const auto setValue = [this](WaterInterModel value)
+        { _waterModelSettings->setWaterInterModel(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<WaterInterModel>{

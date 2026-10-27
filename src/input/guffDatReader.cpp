@@ -869,9 +869,11 @@ namespace input::guffdat
         auto      &simBox    = _engine.getSimulationBox();
         const auto waterType = simBox.getWaterType();
 
-        return settings::WaterModelSettings::isInterWaterModelSet() &&
-               waterType.has_value() && molType1 == waterType.value() &&
-               molType2 == waterType.value();
+        const auto isInterWaterModelSet =
+            _engine.getSettings().waterModelSettings.isInterWaterModelSet();
+
+        return isInterWaterModelSet && waterType.has_value() &&
+               molType1 == waterType.value() && molType2 == waterType.value();
     }
 
     /********************

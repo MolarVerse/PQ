@@ -104,7 +104,9 @@ namespace input
         _parsers.push_back(
             std::make_unique<FilesInputParser>(validateFilePaths)
         );
-        _parsers.push_back(std::make_unique<MMInputParser>());
+        _parsers.push_back(
+            std::make_unique<MMInputParser>(settings.waterModelSettings)
+        );
         _parsers.push_back(std::make_unique<GeneralInputParser>());
         _parsers.push_back(
             std::make_unique<HessianInputParser>(settings.hessianSettings)

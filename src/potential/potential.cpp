@@ -36,16 +36,33 @@ namespace pot
      * @param simulationBox
      * @param physicalData
      * @param cellList
+     * @param waterModelSettings
      */
     void Potential::calculateQMMMForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList     &cellList
+        const molsys::CellList     &cellList,
+        const WaterModelSettings   &waterModelSettings
     )
     {
-        calculateCoreToOuterForces(simulationBox, physicalData, cellList);
-        calculateLayerToOuterForces(simulationBox, physicalData, cellList);
-        calculateOuterToOuterForces(simulationBox, physicalData, cellList);
+        calculateCoreToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
+        calculateLayerToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
+        calculateOuterToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
     }
 
     /***************************
