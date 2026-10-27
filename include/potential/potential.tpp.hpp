@@ -70,11 +70,13 @@ namespace pot
      *
      * @tparam ChargeTag1 Charge type for atom1 (QMChargeTag or MMChargeTag)
      * @tparam ChargeTag2 Charge type for atom2 (QMChargeTag or MMChargeTag)
+     * @tparam Weighted true if the pair is scaled by weight
      * @param box Simulation box for periodic boundary conditions
      * @param mol1 First molecule containing atom1
      * @param mol2 Second molecule containing atom2
      * @param atom1 First atom in the interaction pair
      * @param atom2 Second atom in the interaction pair
+     * @param weight scale factor for energy, force and shift force
      * @return std::pair<double, double> Coulomb energy and non-Coulomb energy
      */
     template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
@@ -173,9 +175,11 @@ namespace pot
      *
      * @tparam ChargeTag1 Charge type for atom1 (QMChargeTag or MMChargeTag)
      * @tparam ChargeTag2 Charge type for atom2 (QMChargeTag or MMChargeTag)
+     * @tparam Weighted true if the pair is scaled by weight
      * @param box Simulation box for periodic boundary conditions
      * @param atom1 First atom in the interaction pair
      * @param atom2 Second atom in the interaction pair
+     * @param weight scale factor for energy, force and shift force
      * @return double Coulomb energy of the interaction
      */
     template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
@@ -242,11 +246,13 @@ namespace pot
      *
      * @tparam ChargeTag1 Charge type for atom1 (QMChargeTag or MMChargeTag)
      * @tparam ChargeTag2 Charge type for atom2 (QMChargeTag or MMChargeTag)
+     * @tparam Weighted true if the pair is scaled by weight
      * @param box Simulation box for periodic boundary conditions
      * @param mol1 First molecule containing atom1
      * @param mol2 Second molecule containing atom2
      * @param atom1 First atom in the interaction pair (receives forces)
      * @param atom2 Second atom in the interaction pair (no forces applied)
+     * @param weight scale factor for energy, force and shift force
      * @return std::pair<double, double> Coulomb energy and non-Coulomb energy
      */
     template <typename ChargeTag1, typename ChargeTag2, bool Weighted>

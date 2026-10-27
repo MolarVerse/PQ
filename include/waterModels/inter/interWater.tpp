@@ -38,6 +38,7 @@ namespace waterModel
      *
      * @tparam ChargeTag1 Charge tag for atom1.
      * @tparam ChargeTag2 Charge tag for atom2.
+     * @tparam Weighted true if the pair is scaled by weight.
      */
     template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
     void InterWaterStrategy::_calculateSingleInteraction(
@@ -103,6 +104,7 @@ namespace waterModel
      *
      * @tparam ChargeTag1 Charge tag for atom1.
      * @tparam ChargeTag2 Charge tag for atom2.
+     * @tparam Weighted true if the pair is scaled by weight.
      */
     template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
     void InterWaterStrategy::_calculateSingleCoulombInteraction(
@@ -157,6 +159,7 @@ namespace waterModel
      *
      * @tparam ChargeTag1 Charge tag for atom1.
      * @tparam ChargeTag2 Charge tag for atom2.
+     * @tparam Weighted true if the pair is scaled by weight.
      */
     template <typename ChargeTag1, typename ChargeTag2, bool Weighted>
     void InterWaterStrategy::_calculateSingleInteractionOneWay(
