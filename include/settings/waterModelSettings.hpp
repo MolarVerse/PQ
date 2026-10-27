@@ -25,59 +25,38 @@
 #define _WATER_MODEL_SETTINGS_HPP_
 
 #include <mstd/enum.hpp>
-#include <string_view>
 
 #include "enums/waterModels.hpp"
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @class WaterModelSettings
+ *
+ * @brief static class to store settings of the water model
+ *
+ */
+class WaterModelSettings
 {
+   private:
+    Setting<WaterIntraModel> _waterIntraModel;
+    Setting<WaterInterModel> _waterInterModel;
 
-    /**
-     * @class WaterModelSettings
-     *
-     * @brief static class to store settings of the water model
-     *
-     */
-    class WaterModelSettings
-    {
-       private:
-        static inline bool            _isWaterModelSet      = false;
-        static inline bool            _isInterWaterModelSet = false;
-        static inline WaterIntraModel _waterIntraModel = WaterIntraModel::NONE;
-        static inline WaterInterModel _waterInterModel = WaterInterModel::NONE;
+   public:
+    /********************
+     * standard getters *
+     ********************/
 
-       public:
-        WaterModelSettings()  = delete;
-        ~WaterModelSettings() = delete;
+    [[nodiscard]] bool            isWaterModelSet() const;
+    [[nodiscard]] bool            isInterWaterModelSet() const;
+    [[nodiscard]] WaterIntraModel getWaterIntraModel() const;
+    [[nodiscard]] WaterInterModel getWaterInterModel() const;
 
-        WaterModelSettings(const WaterModelSettings &)            = delete;
-        WaterModelSettings(WaterModelSettings &&)                 = delete;
-        WaterModelSettings &operator=(const WaterModelSettings &) = delete;
-        WaterModelSettings &operator=(WaterModelSettings &&)      = delete;
+    /********************
+     * standard setters *
+     ********************/
 
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] static bool            isWaterModelSet();
-        [[nodiscard]] static bool            isInterWaterModelSet();
-        [[nodiscard]] static WaterIntraModel getWaterIntraModel();
-        [[nodiscard]] static WaterInterModel getWaterInterModel();
-
-        /********************
-         * standard setters *
-         ********************/
-
-        static void setIsWaterModelSet(bool isSet);
-        static void setIsInterWaterModelSet(bool isSet);
-
-        static void setWaterIntraModel(const std::string_view &model);
-        static void setWaterIntraModel(WaterIntraModel model);
-
-        static void setWaterInterModel(const std::string_view &model);
-        static void setWaterInterModel(WaterInterModel model);
-    };
-
-}   // namespace settings
+    void setWaterIntraModel(WaterIntraModel model);
+    void setWaterInterModel(WaterInterModel model);
+};
 
 #endif   // _WATER_MODEL_SETTINGS_HPP_

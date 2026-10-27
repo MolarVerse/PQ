@@ -25,32 +25,21 @@
 #include <array>
 #include <string_view>
 
-#include "exceptions.hpp"
-#include "throwWithMessage.hpp"
 #include "waterModelSettings.hpp"
 
 TEST(TestWaterModelSettings, FlagsAndEnumSettersRoundTrip)
 {
-    settings::WaterModelSettings::setIsWaterModelSet(true);
-    settings::WaterModelSettings::setIsInterWaterModelSet(true);
-    EXPECT_TRUE(settings::WaterModelSettings::isWaterModelSet());
-    EXPECT_TRUE(settings::WaterModelSettings::isInterWaterModelSet());
+    WaterModelSettings settings;
+    EXPECT_FALSE(settings.isWaterModelSet());
+    EXPECT_FALSE(settings.isInterWaterModelSet());
 
-    settings::WaterModelSettings::setWaterIntraModel(WaterIntraModel::SPC);
-    settings::WaterModelSettings::setWaterInterModel(WaterInterModel::NONE);
-    EXPECT_EQ(
-        settings::WaterModelSettings::getWaterIntraModel(),
-        WaterIntraModel::SPC
-    );
-    EXPECT_EQ(
-        settings::WaterModelSettings::getWaterInterModel(),
-        WaterInterModel::NONE
-    );
+    settings.setWaterIntraModel(WaterIntraModel::SPC);
+    settings.setWaterInterModel(WaterInterModel::NONE);
+    EXPECT_EQ(settings.getWaterIntraModel(), WaterIntraModel::SPC);
+    EXPECT_EQ(settings.getWaterInterModel(), WaterInterModel::NONE);
 
-    settings::WaterModelSettings::setIsWaterModelSet(false);
-    settings::WaterModelSettings::setIsInterWaterModelSet(false);
-    EXPECT_FALSE(settings::WaterModelSettings::isWaterModelSet());
-    EXPECT_FALSE(settings::WaterModelSettings::isInterWaterModelSet());
+    EXPECT_TRUE(settings.isWaterModelSet());
+    EXPECT_TRUE(settings.isInterWaterModelSet());
 }
 
 TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
@@ -112,11 +101,9 @@ TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
 
     for (const auto &testCase : cases)
     {
-        settings::WaterModelSettings::setWaterIntraModel(testCase.input);
-        EXPECT_EQ(
-            settings::WaterModelSettings::getWaterIntraModel(),
-            testCase.model
-        );
+        WaterModelSettings settings;
+        settings.setWaterIntraModel(testCase.model);
+        EXPECT_EQ(settings.getWaterIntraModel(), testCase.model);
         EXPECT_EQ(
             WaterIntraModelMeta::toString(testCase.model),
             testCase.display
@@ -125,11 +112,6 @@ TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
 
     EXPECT_EQ(WaterIntraModelMeta::toString(WaterIntraModel::SPC), "SPC");
     EXPECT_EQ(WaterIntraModelMeta::toString(WaterIntraModel::NONE), "NONE");
-    EXPECT_THROW_MSG(
-        settings::WaterModelSettings::setWaterIntraModel("unknown"),
-        exc::UserInputException,
-        "Water intra model \"unknown\" not recognized"
-    );
 }
 
 TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
@@ -196,11 +178,9 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
 
     for (const auto &testCase : cases)
     {
-        settings::WaterModelSettings::setWaterInterModel(testCase.input);
-        EXPECT_EQ(
-            settings::WaterModelSettings::getWaterInterModel(),
-            testCase.model
-        );
+        WaterModelSettings settings;
+        settings.setWaterInterModel(testCase.model);
+        EXPECT_EQ(settings.getWaterInterModel(), testCase.model);
         EXPECT_EQ(
             WaterInterModelMeta::toString(testCase.model),
             testCase.display
@@ -208,9 +188,4 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
     }
 
     EXPECT_EQ(WaterInterModelMeta::toString(WaterInterModel::NONE), "NONE");
-    EXPECT_THROW_MSG(
-        settings::WaterModelSettings::setWaterInterModel("unknown"),
-        exc::UserInputException,
-        "Water inter model \"unknown\" not recognized"
-    );
 }

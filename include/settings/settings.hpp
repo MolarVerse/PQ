@@ -29,6 +29,7 @@
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
+#include "waterModelSettings.hpp"
 
 /**
  * @brief Settings class that holds various simulation settings
@@ -41,6 +42,7 @@ struct Settings
     RingPolymerSettings   ringPolymerSettings;
     OptimizerSettings     optimizerSettings;
     ConvSettings          convSettings;
+    WaterModelSettings    waterModelSettings;
 
     void finalize();
 };

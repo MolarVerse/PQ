@@ -226,7 +226,10 @@ namespace setup
         std::shared_ptr<opt::Evaluator> evaluator;
 
         if (settings::GeneralSettings::getJobtype() == JobType::MM_OPT)
-            evaluator = std::make_shared<opt::MMEvaluator>();
+        {
+            evaluator =
+                std::make_shared<opt::MMEvaluator>(_optEngine.getSettings());
+        }
         else
         {
             throw exc::UserInputException(

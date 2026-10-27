@@ -67,7 +67,10 @@ namespace molsys
         void addNeighbouringCellPointers(Cell &);
         void addMoleculesToCells(SimulationBox &simulationBox);
         void assignMoleculeHybridZoneIndices();
-        void assignWaterMoleculeIndices(SimulationBox &);
+        void assignWaterMoleculeIndices(
+            const SimulationBox &,
+            const WaterModelSettings &
+        );
 
         [[nodiscard]] size_t getCellIndex(
             const linalg::Vec3Dul &cellIndices

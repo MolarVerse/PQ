@@ -44,13 +44,16 @@ namespace pot
      * @brief calculates forces, coulombic and non-coulombic energy for brute
      * force routine
      *
-     * @param simulationBox
-     * @param physicalData
+     * @param simulationBox simulation box containing molecules
+     * @param physicalData physical data to store energy results
+     * @param waterModelSettings water model settings used to identify water
+     * molecules in the interactions
      */
     void PotentialBruteForce::calculateForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/,
+        const WaterModelSettings &waterModelSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
@@ -59,7 +62,7 @@ namespace pot
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
         const auto isWaterInterModelSet =
-            settings::WaterModelSettings::isInterWaterModelSet();
+            waterModelSettings.isInterWaterModelSet();
 
         double totalCoulombEnergy    = 0.0;
         double totalNonCoulombEnergy = 0.0;
@@ -113,11 +116,14 @@ namespace pot
      *
      * @param simulationBox simulation box containing molecules
      * @param physicalData physical data to store energy results
+     * @param waterModelSettings water model settings used to identify water
+     * molecules in the interactions
      */
     void PotentialBruteForce::calculateCoreToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/,
+        const WaterModelSettings &waterModelSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
@@ -129,7 +135,7 @@ namespace pot
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
         const auto isWaterInterModelSet =
-            settings::WaterModelSettings::isInterWaterModelSet();
+            waterModelSettings.isInterWaterModelSet();
 
         for (auto &mol1 :
              simulationBox.getMoleculesInsideZone(molsys::HybridZone::CORE))
@@ -162,11 +168,14 @@ namespace pot
      *
      * @param simulationBox simulation box containing molecules
      * @param physicalData physical data to store energy results
+     * @param waterModelSettings water model settings used to identify water
+     * molecules in the interactions
      */
     void PotentialBruteForce::calculateLayerToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/,
+        const WaterModelSettings &waterModelSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
@@ -175,7 +184,7 @@ namespace pot
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
         const auto isWaterInterModelSet =
-            settings::WaterModelSettings::isInterWaterModelSet();
+            waterModelSettings.isInterWaterModelSet();
 
         double totalCoulombEnergy    = 0.0;
         double totalNonCoulombEnergy = 0.0;
@@ -219,15 +228,24 @@ namespace pot
      *
      * @param simulationBox simulation box containing molecules
      * @param physicalData physical data to store energy results
-     * @param cellList cell list (unused in brute force approach)
+     * @param cellList cell list containing spatial decomposition of the system
+     * (unused in brute force approach)
+     * @param waterModelSettings water model settings used to identify water
+     * molecules in the interactions
      */
     void PotentialBruteForce::calculateOuterToOuterForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList     &cellList
+        const molsys::CellList     &cellList,
+        const WaterModelSettings   &waterModelSettings
     )
     {
-        calculateForces(simulationBox, physicalData, cellList);
+        calculateForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
     }
 
     /**
@@ -235,11 +253,14 @@ namespace pot
      *
      * @param simulationBox simulation box containing molecules
      * @param physicalData physical data to store energy results
+     * @param waterModelSettings water model settings used to identify water
+     * molecules in the interactions
      */
     void PotentialBruteForce::calculateHotspotSmoothingMMForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/,
+        const WaterModelSettings &waterModelSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
@@ -248,7 +269,7 @@ namespace pot
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
         const auto isWaterInterModelSet =
-            settings::WaterModelSettings::isInterWaterModelSet();
+            waterModelSettings.isInterWaterModelSet();
 
         double totalCoulombEnergy    = 0.0;
         double totalNonCoulombEnergy = 0.0;

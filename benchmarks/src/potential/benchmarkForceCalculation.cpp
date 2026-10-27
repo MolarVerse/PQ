@@ -38,6 +38,7 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "waterModelSettings.hpp"
 
 namespace
 {
@@ -91,6 +92,7 @@ namespace
         }
 
         physicalData::PhysicalData physicalData;
+        WaterModelSettings         waterModelSettings;
 
         for (auto _ : state)
         {
@@ -98,7 +100,12 @@ namespace
             benchmarkSetup::resetForces(simBox);
             state.ResumeTiming();
 
-            forceCalculation.calculateForces(simBox, physicalData, cellList);
+            forceCalculation.calculateForces(
+                simBox,
+                physicalData,
+                cellList,
+                waterModelSettings
+            );
             benchmark::DoNotOptimize(physicalData.getCoulombEnergy());
             benchmark::DoNotOptimize(physicalData.getNonCoulombEnergy());
         }
