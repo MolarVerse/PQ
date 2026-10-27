@@ -86,7 +86,6 @@ PQ/
 ├── scripts/               # Build/Singularity/conda scripts, changelog tooling + its tests
 │   ├── pq_build_times/    # local build-time tracking (snapshots, baseline, graph); see its README
 │   └── pq_code_stats/     # lines/files per merged PR of dev by area and kind, CSV + report; see its README
-├── changes/               # Unreleased changelog fragments (user/ + developer/); see changes/README.md
 ├── src/                   # Implementation files (.cpp), one CMakeLists.txt per module
 ├── tests/                 # GoogleTest unit tests, mirrors src/ + include/ layout
 ├── CMakeLists.txt         # Root build configuration
@@ -175,7 +174,7 @@ Formatting is enforced by **clang-format 20.1.3** (Google style base, customized
 - `BinPackArguments`/`BinPackParameters`: false
 - Line endings: LF
 
-CI (`clang_format.yml`) only checks **lines changed in the PR** via `git-clang-format` against the PR base, for `apps`, `benchmarks`, `include`, `src`, `tests` (excludes `external/`). Run locally before committing:
+CI (`clang_format.yml`) checks every C/C++ file the PR touches **as a whole** (not only the changed lines) with the pinned clang-format, for `apps`, `benchmarks`, `include`, `src`, `tests` (excludes `external/`). Run locally before committing:
 
 ```bash
 clang-format -i <file>
@@ -220,8 +219,27 @@ Run with `make test` or `ctest --output-on-failure` from the build directory. Wh
 
 All pipelines are in `.github/workflows/`:
 
-| Workflow                           | Trigger                     | Purpose                                              |
-| ----------------------------------- | ---------------------------- | ----------------------------------------------------- |
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| `ci_build.yml` | PRs (any branch), push to `dev`/`main`/`NEXT`, nightly, manual | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build + Python bindings |
+| `lint.yml` | PRs, push to `dev`/`main`/`NEXT`, manual | `clangd-tidy` on changed C++ files |
+| `devops_cpp_check.yml` | PRs to `main`/`dev`/`NEXT` | `cpp_checks` from `external/devops` (style and AST rules, `devops.toml`) |
+| `clang_format.yml` | PRs to `main`/`dev`/`NEXT` | clang-format 20.1.3 on every touched C/C++ file, as a whole file |
+| `license_check.yml` | PRs (any branch), push to `main` | Exact GPL header check on all C/C++ files |
+| `changelog.yml` | PRs to `dev`/`NEXT` | Script tests + valid changelog fragment required |
+| `gh_checks.yml` | PR events | PR must link an issue (`Closes/Fixes/Resolves/Related to #N`) |
+| `perf.yml` | PRs to `main`/`dev`/`NEXT` | Callgrind instruction-count regression gate |
+| `clang_build.yml` | PRs touching C++/build files | Non-gating clang `-ftime-trace` comment |
+| `jekyll-gh-pages.yml` | PRs to `main`/`dev` touching docs/include/src; push to `main` | Sphinx + Doxygen build; deploys the site from `main` |
+| `ci_metrics.yml` | Daily, manual | Collects CI timing data (see `.github/ci-metrics/README.md`) |
+| `sync-dev-into-next.yml, sync-main-into-dev.yml` | Push to `dev` / `main`, manual | Automatic branch syncs |
+| `create-release-pr.yml, release.yml` | Manual; PRs to `main` from `release/*` , `hotfix/*` | Release process: changelogs, tag, GitHub release |
+| `dismiss_stale_approvals.yml` | New commits on PRs | Dismisses approvals unless the new commits only merge `dev` |
+| `pq-bot.yml, pq-bot-review.yml` | Comments | PQ Bot |
+
+See the developer guide page *Continuous Integration* for details.
+
+----------------------------------- | ---------------------------- | ----------------------------------------------------- |
 | `ci_build.yml`                      | PRs (any branch), push to `dev`/`main` | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build |
 | `clang_format.yml`                   | PRs to `main`/`dev`          | `git-clang-format` on changed C/C++ lines             |
 | `license_check.yml`                 | PRs (any branch), push to `main`/`master` | Exact GPL header check on all C/C++ files       |
@@ -251,7 +269,7 @@ changes/developer/<category>.<title>.md
 
 - Use `user` when an installed-PQ user would notice the change (behavior, results, inputs/outputs, errors, compatibility, runtime performance); use `developer` for build tooling, CI, tests, refactors, and internal maintenance. A PR may add fragments for either or both audiences.
 - `<category>` is one of the fixed categories in `changes/README.md` (user: `enhancement`, `change`, `bugfix`, `performance`, `compatibility`, `documentation`; developer: `enhancement`, `bugfix`, `performance`, `build`, `ci`, `test`, `internal`, `documentation`). `<title>` is a free-text lowercase-with-hyphens slug and does not appear in the rendered changelog.
-- If an existing unreleased fragment already covers the same change, append a bullet to it instead of creating a new file; a fragment can hold multiple bullets, one per line, each at most 240 characters.
+- If an existing unreleased fragment already covers the same change, append a bullet to it instead of creating a new file; a fragment can hold multiple bullets, one per line, each at most 360 characters.
 - Do not delete unreleased fragments or the `changes/user/.gitkeep` / `changes/developer/.gitkeep` placeholders.
 - The release workflow consumes every fragment into the matching changelog and removes them; this is the only point at which `CHANGELOG.md`/`DEV-CHANGELOG.md` change.
 

@@ -37,7 +37,7 @@ changelog, under the fragment's category:
 - Second, related point about the same change.
 ```
 
-Every bullet is at most 240 characters.
+Every bullet is at most 360 characters.
 
 ## Adding to an existing fragment
 
