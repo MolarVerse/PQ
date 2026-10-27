@@ -23,6 +23,7 @@
 #ifndef _SETTINGS_HPP_
 #define _SETTINGS_HPP_
 
+#include "convergenceSettings.hpp"
 #include "hessianSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "resetKineticsSettings.hpp"
@@ -39,6 +40,7 @@ struct Settings
     HessianSettings       hessianSettings;
     RingPolymerSettings   ringPolymerSettings;
     OptimizerSettings     optimizerSettings;
+    ConvSettings          convSettings;
 
     void finalize();
 };

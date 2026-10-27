@@ -23,7 +23,11 @@
 #ifndef _CONVERGENCE_INPUT_PARSER_HPP_
 #define _CONVERGENCE_INPUT_PARSER_HPP_
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class ConvSettings;   // Forward declaration
 
 namespace input
 {
@@ -35,8 +39,10 @@ namespace input
      */
     class ConvInputParser : public InputFileParser
     {
+        mstd::Ref<ConvSettings> _convSettings;
+
        public:
-        ConvInputParser();
+        explicit ConvInputParser(ConvSettings &convSettings);
 
         void addEnergyConvergenceStrategyKey();
         void addUseEnergyConvergenceKey();

@@ -24,18 +24,17 @@
 
 #include "convergenceInputParser.hpp"
 #include "convergenceSettings.hpp"
+#include "defaults.hpp"
 #include "exceptions.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
 TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 {
-    EXPECT_EQ(
-        settings::ConvSettings::getEnConvStrategy(),
-        std::optional<ConvStrategy>()
-    );
+    ConvSettings settings;
+    EXPECT_EQ(settings.getEnConvStrategy(), defaults::EN_CONV_STRATEGY_DEFAULT);
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("energy_conv_strategy"));
     const auto& parseFunc = funcMap.at("energy_conv_strategy");
@@ -45,28 +44,28 @@ TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
     auto lineElements =
         std::vector<std::string>{"energy-conv-strategy", "=", "loose"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConvSettings::getEnConvStrategy(), LOOSE);
+    EXPECT_EQ(settings.getEnConvStrategy(), LOOSE);
 
     _clearParser(parser);
 
     lineElements =
         std::vector<std::string>{"energy-conv-strategy", "=", "absolute"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConvSettings::getEnConvStrategy(), ABSOLUTE);
+    EXPECT_EQ(settings.getEnConvStrategy(), ABSOLUTE);
 
     _clearParser(parser);
 
     lineElements =
         std::vector<std::string>{"energy-conv-strategy", "=", "relative"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConvSettings::getEnConvStrategy(), RELATIVE);
+    EXPECT_EQ(settings.getEnConvStrategy(), RELATIVE);
 
     _clearParser(parser);
 
     lineElements =
         std::vector<std::string>{"energy-conv-strategy", "=", "rigorous"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConvSettings::getEnConvStrategy(), RIGOROUS);
+    EXPECT_EQ(settings.getEnConvStrategy(), RIGOROUS);
 
     _clearParser(parser);
 
@@ -80,9 +79,10 @@ TEST_F(TestInputFileReader, parserEnergyConvergenceStrategy)
 
 TEST_F(TestInputFileReader, parserUseEnergyConvergence)
 {
-    EXPECT_TRUE(settings::ConvSettings::getUseEnergyConv());
+    ConvSettings settings;
+    EXPECT_TRUE(settings.getUseEnergyConv());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("use_energy_conv"));
     const auto& parseFunc = funcMap.at("use_energy_conv");
@@ -90,13 +90,13 @@ TEST_F(TestInputFileReader, parserUseEnergyConvergence)
     auto lineElements =
         std::vector<std::string>{"use-energy-conv", "=", "false"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::ConvSettings::getUseEnergyConv());
+    EXPECT_FALSE(settings.getUseEnergyConv());
 
     _clearParser(parser);
 
     lineElements = std::vector<std::string>{"use-energy-conv", "=", "true"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getUseEnergyConv());
+    EXPECT_TRUE(settings.getUseEnergyConv());
 
     _clearParser(parser);
 
@@ -110,9 +110,10 @@ TEST_F(TestInputFileReader, parserUseEnergyConvergence)
 
 TEST_F(TestInputFileReader, parserUseForceConvergence)
 {
-    EXPECT_TRUE(settings::ConvSettings::getUseForceConv());
+    ConvSettings settings;
+    EXPECT_TRUE(settings.getUseForceConv());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("use_force_conv"));
     const auto& parseFunc = funcMap.at("use_force_conv");
@@ -120,13 +121,13 @@ TEST_F(TestInputFileReader, parserUseForceConvergence)
     auto lineElements =
         std::vector<std::string>{"use-force-conv", "=", "false"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::ConvSettings::getUseForceConv());
+    EXPECT_FALSE(settings.getUseForceConv());
 
     _clearParser(parser);
 
     lineElements = std::vector<std::string>{"use-force-conv", "=", "true"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getUseForceConv());
+    EXPECT_TRUE(settings.getUseForceConv());
 
     _clearParser(parser);
 
@@ -140,9 +141,10 @@ TEST_F(TestInputFileReader, parserUseForceConvergence)
 
 TEST_F(TestInputFileReader, parserUseMaxForceConvergence)
 {
-    EXPECT_TRUE(settings::ConvSettings::getUseMaxForceConv());
+    ConvSettings settings;
+    EXPECT_TRUE(settings.getUseMaxForceConv());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("use_max_force_conv"));
     const auto& parseFunc = funcMap.at("use_max_force_conv");
@@ -150,13 +152,13 @@ TEST_F(TestInputFileReader, parserUseMaxForceConvergence)
     auto lineElements =
         std::vector<std::string>{"use-max-force-conv", "=", "false"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::ConvSettings::getUseMaxForceConv());
+    EXPECT_FALSE(settings.getUseMaxForceConv());
 
     _clearParser(parser);
 
     lineElements = std::vector<std::string>{"use-max-force-conv", "=", "true"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getUseMaxForceConv());
+    EXPECT_TRUE(settings.getUseMaxForceConv());
 
     _clearParser(parser);
 
@@ -170,9 +172,10 @@ TEST_F(TestInputFileReader, parserUseMaxForceConvergence)
 
 TEST_F(TestInputFileReader, parserUseRMSForceConvergence)
 {
-    EXPECT_TRUE(settings::ConvSettings::getUseRMSForceConv());
+    ConvSettings settings;
+    EXPECT_TRUE(settings.getUseRMSForceConv());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("use_rms_force_conv"));
     const auto& parseFunc = funcMap.at("use_rms_force_conv");
@@ -180,13 +183,13 @@ TEST_F(TestInputFileReader, parserUseRMSForceConvergence)
     auto lineElements =
         std::vector<std::string>{"use-rms-force-conv", "=", "false"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::ConvSettings::getUseRMSForceConv());
+    EXPECT_FALSE(settings.getUseRMSForceConv());
 
     _clearParser(parser);
 
     lineElements = std::vector<std::string>{"use-rms-force-conv", "=", "true"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getUseRMSForceConv());
+    EXPECT_TRUE(settings.getUseRMSForceConv());
 
     _clearParser(parser);
 
@@ -200,9 +203,10 @@ TEST_F(TestInputFileReader, parserUseRMSForceConvergence)
 
 TEST_F(TestInputFileReader, parserEnergyConvergence)
 {
-    EXPECT_FALSE(settings::ConvSettings::getEnergyConv().has_value());
+    ConvSettings settings;
+    EXPECT_FALSE(settings.getEnergyConv().has_value());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("energy_conv"));
     const auto& parseFunc = funcMap.at("energy_conv");
@@ -210,8 +214,8 @@ TEST_F(TestInputFileReader, parserEnergyConvergence)
     const auto lineElements =
         std::vector<std::string>{"energy-conv", "=", "1e-3"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getEnergyConv().has_value());
-    EXPECT_EQ(settings::ConvSettings::getEnergyConv().value(), 1e-3);
+    EXPECT_TRUE(settings.getEnergyConv().has_value());
+    EXPECT_EQ(settings.getEnergyConv().value(), 1e-3);
 
     _clearParser(parser);
 
@@ -225,9 +229,10 @@ TEST_F(TestInputFileReader, parserEnergyConvergence)
 
 TEST_F(TestInputFileReader, parserRelativeEnergyConvergence)
 {
-    EXPECT_FALSE(settings::ConvSettings::getRelEnergyConv().has_value());
+    ConvSettings settings;
+    EXPECT_FALSE(settings.getRelEnergyConv().has_value());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rel_energy_conv"));
     const auto& parseFunc = funcMap.at("rel_energy_conv");
@@ -235,8 +240,8 @@ TEST_F(TestInputFileReader, parserRelativeEnergyConvergence)
     const auto lineElements =
         std::vector<std::string>{"rel-energy-conv", "=", "1e-3"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getRelEnergyConv().has_value());
-    EXPECT_EQ(settings::ConvSettings::getRelEnergyConv().value(), 1e-3);
+    EXPECT_TRUE(settings.getRelEnergyConv().has_value());
+    EXPECT_EQ(settings.getRelEnergyConv().value(), 1e-3);
 
     _clearParser(parser);
 
@@ -250,9 +255,10 @@ TEST_F(TestInputFileReader, parserRelativeEnergyConvergence)
 
 TEST_F(TestInputFileReader, parserAbsoluteEnergyConvergence)
 {
-    EXPECT_FALSE(settings::ConvSettings::getAbsEnergyConv().has_value());
+    ConvSettings settings;
+    EXPECT_FALSE(settings.getAbsEnergyConv().has_value());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("abs_energy_conv"));
     const auto& parseFunc = funcMap.at("abs_energy_conv");
@@ -260,8 +266,8 @@ TEST_F(TestInputFileReader, parserAbsoluteEnergyConvergence)
     const auto lineElements =
         std::vector<std::string>{"abs-energy-conv", "=", "1e-3"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getAbsEnergyConv().has_value());
-    EXPECT_EQ(settings::ConvSettings::getAbsEnergyConv().value(), 1e-3);
+    EXPECT_TRUE(settings.getAbsEnergyConv().has_value());
+    EXPECT_EQ(settings.getAbsEnergyConv().value(), 1e-3);
 
     _clearParser(parser);
 
@@ -275,9 +281,10 @@ TEST_F(TestInputFileReader, parserAbsoluteEnergyConvergence)
 
 TEST_F(TestInputFileReader, parserForceConvergence)
 {
-    EXPECT_FALSE(settings::ConvSettings::getForceConv().has_value());
+    ConvSettings settings;
+    EXPECT_FALSE(settings.getForceConv().has_value());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("force_conv"));
     const auto& parseFunc = funcMap.at("force_conv");
@@ -285,8 +292,8 @@ TEST_F(TestInputFileReader, parserForceConvergence)
     const auto lineElements =
         std::vector<std::string>{"force-conv", "=", "1e-3"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getForceConv().has_value());
-    EXPECT_EQ(settings::ConvSettings::getForceConv().value(), 1e-3);
+    EXPECT_TRUE(settings.getForceConv().has_value());
+    EXPECT_EQ(settings.getForceConv().value(), 1e-3);
 
     _clearParser(parser);
 
@@ -300,9 +307,10 @@ TEST_F(TestInputFileReader, parserForceConvergence)
 
 TEST_F(TestInputFileReader, parserMaxForceConvergence)
 {
-    EXPECT_FALSE(settings::ConvSettings::getMaxForceConv().has_value());
+    ConvSettings settings;
+    EXPECT_FALSE(settings.getMaxForceConv().has_value());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("max_force_conv"));
     const auto& parseFunc = funcMap.at("max_force_conv");
@@ -310,8 +318,8 @@ TEST_F(TestInputFileReader, parserMaxForceConvergence)
     const auto lineElements =
         std::vector<std::string>{"max-force-conv", "=", "1e-3"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getMaxForceConv().has_value());
-    EXPECT_EQ(settings::ConvSettings::getMaxForceConv().value(), 1e-3);
+    EXPECT_TRUE(settings.getMaxForceConv().has_value());
+    EXPECT_EQ(settings.getMaxForceConv().value(), 1e-3);
 
     _clearParser(parser);
 
@@ -325,9 +333,10 @@ TEST_F(TestInputFileReader, parserMaxForceConvergence)
 
 TEST_F(TestInputFileReader, parserRMSForceConvergence)
 {
-    EXPECT_FALSE(settings::ConvSettings::getRMSForceConv().has_value());
+    ConvSettings settings;
+    EXPECT_FALSE(settings.getRMSForceConv().has_value());
 
-    auto       parser  = input::ConvInputParser{};
+    auto       parser  = input::ConvInputParser{settings};
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rms_force_conv"));
     const auto& parseFunc = funcMap.at("rms_force_conv");
@@ -335,8 +344,8 @@ TEST_F(TestInputFileReader, parserRMSForceConvergence)
     const auto lineElements =
         std::vector<std::string>{"rms-force-conv", "=", "1e-3"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConvSettings::getRMSForceConv().has_value());
-    EXPECT_EQ(settings::ConvSettings::getRMSForceConv().value(), 1e-3);
+    EXPECT_TRUE(settings.getRMSForceConv().has_value());
+    EXPECT_EQ(settings.getRMSForceConv().value(), 1e-3);
 
     _clearParser(parser);
 
