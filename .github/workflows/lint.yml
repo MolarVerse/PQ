@@ -109,7 +109,7 @@ jobs:
 
       - name: install python dependencies
         run: |
-          python -m pip install numpy
+          python -m pip install numpy tqdm
         shell: bash
 
       - name: Install clangd-tidy
