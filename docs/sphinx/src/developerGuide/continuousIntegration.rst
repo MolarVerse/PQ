@@ -193,7 +193,7 @@ A job that takes twice as long as usual is rarely a problem in your change. Thes
       500 MB; a cache that is at its limit evicts what the next build needs.
     - **A header change is a cold cache.** Touching a header that most files include recompiles most files. The x86_64
       Release job went from about 2.5 to 9 minutes for a pull request that changed ``exceptionTypes.hpp``. The same is
-      true for your local build, see :doc:`buildTimes`.
+      true for your local build, see :doc:`localBuildTimes`.
     - **The runner CPU.** GitHub gives the same job runners of different CPU generations. The same fixed compile took
       4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763. The CI metrics record the CPU model of the
       runner, and the clang comment of a pull request names the CPU of the run and of its baseline.

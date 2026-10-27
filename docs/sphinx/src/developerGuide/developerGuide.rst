@@ -11,11 +11,11 @@ The pages below go into detail on the tooling around the code:
 .. toctree::
     :maxdepth: 1
 
-    buildOptions
+    cmakeOptions
     staticChecks
     continuousIntegration
     ciMetrics
-    buildTimes
+    localBuildTimes
     codeStatistics
     branchesAndReleases
 

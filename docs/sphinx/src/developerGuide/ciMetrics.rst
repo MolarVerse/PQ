@@ -10,7 +10,7 @@ records, and a comment on every pull request with the clang build times. This pa
 to be careful about. The complete reference (record fields, derivations, decisions) is in the repository:
 ``.github/ci-metrics/README.md`` and ``.github/ci-metrics/SCHEMA.md``.
 
-For build times on *your* machine, which are independent of all of this, see :doc:`buildTimes`.
+For build times on *your* machine, which are independent of all of this, see :doc:`localBuildTimes`.
 
 ****************
 What is recorded
