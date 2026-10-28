@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>
 
+#include "defaults.hpp"
 #include "enums/optimizer.hpp"
 #include "exceptions.hpp"
 #include "optInputParser.hpp"

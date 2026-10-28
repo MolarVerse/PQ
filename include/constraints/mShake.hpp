@@ -59,7 +59,11 @@ namespace constraints
 
         void initMShake();
         void initMShakeReferences();
-        void applyMShake(molsys::SimulationBox &simulationBox);
+        void applyMShake(
+            molsys::SimulationBox &simulationBox,
+            size_t                 maxIter,
+            double                 tolerance
+        );
         void applyMRattle(molsys::SimulationBox &);
 
         [[nodiscard]]

@@ -69,7 +69,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
-    _energyOutput->write(100.0, *_physicalData);
+    _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
     std::ifstream file("default.en");
@@ -111,7 +111,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
-    _energyOutput->write(100.0, *_physicalData);
+    _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
     std::ifstream file("default.en");
@@ -154,7 +154,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
-    _energyOutput->write(100.0, *_physicalData);
+    _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
     std::ifstream file("default.en");
@@ -198,7 +198,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");
-    _energyOutput->write(100.0, *_physicalData);
+    _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
     std::ifstream file("default.en");
@@ -244,7 +244,7 @@ TEST_F(TestEnergyOutput, qmActive)
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
 
     _energyOutput->setFilename("default.en");
-    _energyOutput->write(100.0, *_physicalData);
+    _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
     std::ifstream file("default.en");
@@ -288,7 +288,7 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     );
 
     _energyOutput->setFilename("default.en");
-    _energyOutput->write(100.0, *_physicalData);
+    _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
     std::ifstream file("default.en");

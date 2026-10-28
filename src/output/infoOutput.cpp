@@ -50,6 +50,7 @@ namespace out
      *
      * @param simulationTime
      * @param physicalData the physical data of the system
+     * @param settings the simulation settings
      */
     void InfoOutput::write(
         double                            simulationTime,
@@ -149,7 +150,7 @@ namespace out
             );
         }
 
-        if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+        if (settings.constraintSettings.isDistanceConstraintsActivated())
         {
             _writeLeft(
                 physicalData.getLowerDistanceConstraints(),

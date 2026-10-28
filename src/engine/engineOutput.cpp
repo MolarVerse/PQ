@@ -149,29 +149,35 @@ namespace engine
      *
      * @param step
      * @param physicalData
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
      */
     void EngineOutput::writeEnergyFile(
         size_t                            step,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         auto _ = scopedTimer(TimerId::Output, "EnergyOutput");
-        _energyOutput->write(step, physicalData);
+        _energyOutput->write(step, physicalData, settings);
     }
 
     /**
      * @brief wrapper for instant energy file output function
      *
-     * @param step
-     * @param physicalData
+     * @param step The current simulation step.
+     * @param physicalData The physical data of the system at the current step.
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
      */
     void EngineOutput::writeInstantEnergyFile(
         size_t                            step,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         auto _ = scopedTimer(TimerId::Output, "InstantEnergyOutput");
-        _instantEnergyOutput->write(step, physicalData);
+        _instantEnergyOutput->write(step, physicalData, settings);
     }
 
     /**
@@ -269,14 +275,16 @@ namespace engine
      *
      * @param time
      * @param physicalData
+     * @param settings
      */
     void EngineOutput::writeInfoFile(
         double                            time,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         auto _ = scopedTimer(TimerId::Output, "InfoOutput");
-        _infoOutput->write(time, physicalData);
+        _infoOutput->write(time, physicalData, settings);
     }
 
     /**

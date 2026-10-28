@@ -99,7 +99,10 @@ namespace input
     {
         // TODO: remove engine after rework
         _parsers.push_back(std::make_unique<CellListInputParser>());
-        _parsers.push_back(std::make_unique<ConstraintsInputParser>());
+        _parsers.push_back(
+            std::make_unique<ConstraintsInputParser>(settings.constraintSettings
+            )
+        );
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
             std::make_unique<FilesInputParser>(validateFilePaths)

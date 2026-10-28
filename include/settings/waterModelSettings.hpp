@@ -30,6 +30,18 @@
 #include "setting.hpp"
 
 /**
+ * @struct RigidWaterGeometry
+ *
+ * @brief stores the geometry of a rigid water molecule
+ *
+ */
+struct RigidWaterGeometry
+{
+    double dOH{0.0};
+    double dHH{0.0};
+};
+
+/**
  * @class WaterModelSettings
  *
  * @brief static class to store settings of the water model
@@ -42,6 +54,9 @@ class WaterModelSettings
     Setting<WaterInterModel> _waterInterModel;
 
    public:
+    [[nodiscard]]
+    std::optional<RigidWaterGeometry> getRigidWaterGeometry() const;
+
     /********************
      * standard getters *
      ********************/

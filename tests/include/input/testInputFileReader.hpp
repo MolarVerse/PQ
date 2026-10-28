@@ -29,7 +29,6 @@
 #include <cstdio>
 #include <string>
 
-#include "constraintSettings.hpp"
 #include "inputConverter.hpp"
 #include "inputFileParser.hpp"
 #include "inputFileReader.hpp"
@@ -64,9 +63,6 @@ class TestInputFileReader : public ::testing::Test
     static void _clearParser(input::InputFileParser &parser)
     {
         parser._clear();
-        settings::ConstraintSettings::deactivateShake();
-        settings::ConstraintSettings::deactivateMShake();
-        settings::ConstraintSettings::deactivateDistanceConstraints();
     }
 
     void _removeFile() const

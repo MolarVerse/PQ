@@ -40,41 +40,42 @@
  */
 TEST_F(TestInputFileReader, testParseShakeActivated)
 {
-    input::ConstraintsInputParser parser;
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("shake"));
     const auto &parseFunc = funcMap.at("shake");
 
     std::vector<std::string> lineElements = {"shake", "=", "off"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::ConstraintSettings::isActive());
-    EXPECT_FALSE(settings::ConstraintSettings::isShakeActivated());
+    EXPECT_FALSE(constraintSettings.isActive());
+    EXPECT_FALSE(constraintSettings.isShakeActivated());
 
     _clearParser(parser);
 
     lineElements = {"shake", "=", "on"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConstraintSettings::isActive());
-    EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
+    EXPECT_TRUE(constraintSettings.isActive());
+    EXPECT_TRUE(constraintSettings.isShakeActivated());
 
     _clearParser(parser);
 
-    settings::ConstraintSettings::deactivateShake();
+    constraintSettings.deactivateShake();
 
     lineElements = {"shake", "=", "shake"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConstraintSettings::isActive());
-    EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
+    EXPECT_TRUE(constraintSettings.isActive());
+    EXPECT_TRUE(constraintSettings.isShakeActivated());
 
     _clearParser(parser);
 
-    settings::ConstraintSettings::deactivateShake();
+    constraintSettings.deactivateShake();
 
     lineElements = {"shake", "=", "mshake"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConstraintSettings::isActive());
-    EXPECT_TRUE(settings::ConstraintSettings::isShakeActivated());
-    EXPECT_TRUE(settings::ConstraintSettings::isMShakeActivated());
+    EXPECT_TRUE(constraintSettings.isActive());
+    EXPECT_TRUE(constraintSettings.isShakeActivated());
+    EXPECT_TRUE(constraintSettings.isMShakeActivated());
 
     _clearParser(parser);
 
@@ -95,14 +96,15 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
  */
 TEST_F(TestInputFileReader, testParseShakeTolerance)
 {
-    input::ConstraintsInputParser parser;
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("shake_tolerance"));
     const auto &parseFunc = funcMap.at("shake_tolerance");
 
     std::vector<std::string> lineElements = {"shake-tolerance", "=", "0.0001"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConstraintSettings::getShakeTolerance(), 0.0001);
+    EXPECT_EQ(constraintSettings.getShakeTolerance(), 0.0001);
 
     _clearParser(parser);
 
@@ -134,14 +136,15 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseShakeIteration)
 {
-    input::ConstraintsInputParser parser;
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("shake_iter"));
     const auto &parseFunc = funcMap.at("shake_iter");
 
     std::vector<std::string> lineElements = {"shake-iter", "=", "100"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConstraintSettings::getShakeMaxIter(), 100);
+    EXPECT_EQ(constraintSettings.getShakeMaxIter(), 100);
 
     _clearParser(parser);
 
@@ -173,14 +176,15 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseRattleTolerance)
 {
-    input::ConstraintsInputParser parser;
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rattle_tolerance"));
     const auto &parseFunc = funcMap.at("rattle_tolerance");
 
     std::vector<std::string> lineElements = {"rattle-tolerance", "=", "0.0001"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConstraintSettings::getRattleTolerance(), 0.0001);
+    EXPECT_EQ(constraintSettings.getRattleTolerance(), 0.0001);
 
     _clearParser(parser);
 
@@ -212,14 +216,15 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
  */
 TEST_F(TestInputFileReader, testParseRattleIteration)
 {
-    input::ConstraintsInputParser parser;
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rattle_iter"));
     const auto &parseFunc = funcMap.at("rattle_iter");
 
     std::vector<std::string> lineElements = {"rattle-iter", "=", "100"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConstraintSettings::getRattleMaxIter(), 100);
+    EXPECT_EQ(constraintSettings.getRattleMaxIter(), 100);
 
     _clearParser(parser);
 
@@ -251,14 +256,15 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
  */
 TEST_F(TestInputFileReader, testParseMShakeTolerance)
 {
-    input::ConstraintsInputParser parser;
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mshake_tolerance"));
     const auto &parseFunc = funcMap.at("mshake_tolerance");
 
     std::vector<std::string> lineElements = {"mshake-tolerance", "=", "0.01"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConstraintSettings::getMShakeTolerance(), 0.01);
+    EXPECT_EQ(constraintSettings.getMShakeTolerance(), 0.01);
 
     _clearParser(parser);
 
@@ -290,14 +296,15 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseMShakeIteration)
 {
-    input::ConstraintsInputParser parser;
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mshake_iter"));
     const auto &parseFunc = funcMap.at("mshake_iter");
 
     std::vector<std::string> lineElements = {"mshake-iter", "=", "73"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ConstraintSettings::getMShakeMaxIter(), 73);
+    EXPECT_EQ(constraintSettings.getMShakeMaxIter(), 73);
 
     _clearParser(parser);
 
@@ -327,26 +334,25 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
 {
-    input::ConstraintsInputParser parser;
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("distance_constraints"));
     const auto &parseFunc = funcMap.at("distance_constraints");
 
     std::vector<std::string> lineElements = {"distance-constraints", "=", "on"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ConstraintSettings::isActive());
-    EXPECT_TRUE(settings::ConstraintSettings::isDistanceConstraintsActivated());
+    EXPECT_TRUE(constraintSettings.isActive());
+    EXPECT_TRUE(constraintSettings.isDistanceConstraintsActivated());
 
-    settings::ConstraintSettings::deactivateDistanceConstraints();
+    constraintSettings.deactivateDistanceConstraints();
 
     _clearParser(parser);
 
     lineElements = {"distance-constraints", "=", "off"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::ConstraintSettings::isActive());
-    EXPECT_FALSE(
-        settings::ConstraintSettings::isDistanceConstraintsActivated()
-    );
+    EXPECT_FALSE(constraintSettings.isActive());
+    EXPECT_FALSE(constraintSettings.isDistanceConstraintsActivated());
 
     _clearParser(parser);
 
