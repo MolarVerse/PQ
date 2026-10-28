@@ -780,16 +780,30 @@ TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    _settings.forceFieldSettings.setType(ForceFieldType::OFF);
     settings::FileSettings::setGuffDatFileName("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
+
+    auto &potential = dynamic_cast<pot::GuffNonCoulomb &>(
+        _engine->getPotential()->getNonCoulombPotential()
+    );
+
+    const auto &pair = dynamic_cast<pot::GuffPair &>(*potential.getNonCoulPair(
+        {MolType{1}, MolType{1}, AtomType{0}, AtomType{0}},
+        {VdwType{0}, VdwType{0}}
+    ));
+
+    EXPECT_EQ(
+        pair.get_radialCutoff(),
+        settings::PotentialSettings::getCoulombRadiusCutOff()
+    );
 }
 
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    _settings.forceFieldSettings.setType(ForceFieldType::OFF);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
@@ -797,6 +811,27 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    _settings.forceFieldSettings.setType(ForceFieldType::ON);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
+}
+
+/**
+ * @brief tests the isNeeded function
+ *
+ * @details not needed if MM is not activated, or if the force field
+ * non-coulombics are active (guff.dat is only needed as a fallback)
+ */
+TEST_F(TestGuffDatReader, isNeeded)
+{
+    Settings settings;
+
+    settings::GeneralSettings::setJobtype(JobType::NONE);
+    EXPECT_FALSE(input::guffdat::isNeeded(settings));
+
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    settings.forceFieldSettings.setType(ForceFieldType::OFF);
+    EXPECT_TRUE(input::guffdat::isNeeded(settings));
+
+    settings.forceFieldSettings.setType(ForceFieldType::ON);
+    EXPECT_FALSE(input::guffdat::isNeeded(settings));
 }

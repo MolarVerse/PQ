@@ -84,7 +84,7 @@ namespace setup
     {
         setAtomNames();
         setAtomTypes();
-        if (settings::ForceFieldSettings::isNonCoulombicActive())
+        if (_engine.getSettings().forceFieldSettings.isNonCoulombicActive())
             setExternalVDWTypes();
         setPartialCharges();
 
