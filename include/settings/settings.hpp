@@ -24,6 +24,7 @@
 #define _SETTINGS_HPP_
 
 #include "convergenceSettings.hpp"
+#include "forceFieldSettings.hpp"
 #include "hessianSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "resetKineticsSettings.hpp"
@@ -43,6 +44,7 @@ struct Settings
     OptimizerSettings     optimizerSettings;
     ConvSettings          convSettings;
     WaterModelSettings    waterModelSettings;
+    ForceFieldSettings    forceFieldSettings;
 
     void finalize();
 };

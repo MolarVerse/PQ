@@ -29,6 +29,7 @@
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 #include "thermostatSettings.hpp"
 
 namespace out
@@ -52,7 +53,8 @@ namespace out
      */
     void InfoOutput::write(
         double                            simulationTime,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         _getFilePointer().close();
@@ -90,7 +92,7 @@ namespace out
             );
         }
 
-        if (settings::ForceFieldSettings::isActive())
+        if (settings.forceFieldSettings.isActive())
         {
             _writeLeft(physicalData.getBondEnergy(), "E(BOND)", "kcal/mol");
             _writeRight(physicalData.getAngleEnergy(), "E(ANGLE)", "kcal/mol");

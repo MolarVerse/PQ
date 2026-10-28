@@ -24,55 +24,56 @@
 
 #include <utility>
 
-namespace settings
+/**
+ * @brief Construct a new Force Field Settings object
+ *
+ */
+ForceFieldSettings::ForceFieldSettings() : _type(ForceFieldType::OFF) {}
+
+/**
+ * @brief Get the type of the force field
+ *
+ * @return ForceFieldType
+ */
+ForceFieldType ForceFieldSettings::getType() const { return _type.get(); }
+
+/**
+ * @brief Set the type of the force field
+ *
+ * @param value
+ */
+void ForceFieldSettings::setType(ForceFieldType value) { _type.set(value); }
+
+/**
+ * @brief Get if the force field is active
+ *
+ * @return ForceFieldType
+ */
+bool ForceFieldSettings::isActive() const
 {
-
-    /**
-     * @brief Get the type of the force field
-     *
-     * @return ForceFieldType
-     */
-    ForceFieldType ForceFieldSettings::getType() { return _type; }
-
-    /**
-     * @brief Set the type of the force field
-     *
-     * @param value
-     */
-    void ForceFieldSettings::setType(ForceFieldType value) { _type = value; }
-
-    /**
-     * @brief Get if the force field is active
-     *
-     * @return ForceFieldType
-     */
-    bool ForceFieldSettings::isActive()
+    switch (_type.get())
     {
-        switch (_type)
-        {
-            case ForceFieldType::OFF: return false;
-            case ForceFieldType::ON:
-            case ForceFieldType::BONDED: return true;
-        }
-
-        std::unreachable();
+        case ForceFieldType::OFF: return false;
+        case ForceFieldType::ON:
+        case ForceFieldType::BONDED: return true;
     }
 
-    /**
-     * @brief Get if the non-Coulombic part of the force field is active
-     *
-     * @return bool
-     */
-    bool ForceFieldSettings::isNonCoulombicActive()
-    {
-        switch (_type)
-        {
-            case ForceFieldType::OFF:
-            case ForceFieldType::BONDED: return false;
-            case ForceFieldType::ON: return true;
-        }
+    std::unreachable();
+}
 
-        std::unreachable();
+/**
+ * @brief Get if the non-Coulombic part of the force field is active
+ *
+ * @return bool
+ */
+bool ForceFieldSettings::isNonCoulombicActive() const
+{
+    switch (_type.get())
+    {
+        case ForceFieldType::OFF:
+        case ForceFieldType::BONDED: return false;
+        case ForceFieldType::ON: return true;
     }
 
-}   // namespace settings
+    std::unreachable();
+}
