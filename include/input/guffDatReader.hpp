@@ -37,10 +37,12 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+struct Settings;
+
 namespace input::guffdat
 {
     void               readGuffDat(engine::Engine &);
-    [[nodiscard]] bool isNeeded();
+    [[nodiscard]] bool isNeeded(const Settings &settings);
 
     /**
      * @class GuffDatReader

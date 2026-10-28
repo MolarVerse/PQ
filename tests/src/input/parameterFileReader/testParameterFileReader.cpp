@@ -37,20 +37,6 @@
 #include "typesSection.hpp"
 
 /**
- * @brief tests isNeeded function
- *
- * @return true if forceField is enabled
- * @return false
- */
-TEST_F(TestParameterFileReader, isNeeded)
-{
-    EXPECT_FALSE(input::parameterFile::isNeeded());
-
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
-    EXPECT_TRUE(input::parameterFile::isNeeded());
-}
-
-/**
  * @brief tests determine section function
  *
  */

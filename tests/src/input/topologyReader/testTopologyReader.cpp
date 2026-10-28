@@ -47,7 +47,7 @@ TEST_F(TestTopologyReader, isNeeded)
     EXPECT_TRUE(input::topology::isNeeded(settings));
 
     settings.constraintSettings.deactivateShake();
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    settings.forceFieldSettings.setType(ForceFieldType::ON);
     EXPECT_TRUE(input::topology::isNeeded(settings));
 }
 

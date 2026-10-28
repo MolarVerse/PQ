@@ -28,7 +28,6 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
-#include "forceFieldSettings.hpp"
 #include "improperDihedralSection.hpp"
 #include "jCouplingSection.hpp"
 #include "nonCoulombicsSection.hpp"
@@ -159,7 +158,7 @@ namespace input::parameterFile
      */
     void readParameterFile(engine::Engine &engine)
     {
-        if (!isNeeded())
+        if (!engine.getSettings().forceFieldSettings.isActive())
             return;
 
         const auto filename = settings::FileSettings::getParameterFilename();
@@ -170,14 +169,6 @@ namespace input::parameterFile
         ParameterFileReader parameterFileReader(filename, engine);
         parameterFileReader.read();
     }
-
-    /**
-     * @brief checks if reading topology file is needed
-     *
-     * @return true if force field is activated
-     * @return false
-     */
-    bool isNeeded() { return settings::ForceFieldSettings::isActive(); }
 
     /**************************************
      *                                    *
