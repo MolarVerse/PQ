@@ -808,15 +808,9 @@ TEST_F(ExternalQMRunnerTest, interruptStopsTheQMProcessAndPQ)
             }
         };
 
-        try
-        {
-            InterruptibleQMRunner{}.runCommand(
-                "echo $$ > qm-pid && sleep 3 && touch qm-finished"
-            );
-        }
-        catch (...)
-        {
-        }
+        InterruptibleQMRunner{}.runCommand(
+            "echo $$ > qm-pid && sleep 3 && touch qm-finished"
+        );
         interrupt.join();
         std::_Exit(0);
     };
