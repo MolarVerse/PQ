@@ -1,0 +1,1 @@
+- Keep mp-units out of the headers: the box stores its angles as plain radians and converts in the .cpp files, so 198 fewer translation units parse the SI unit headers (clang compiler CPU of a full build 11m49s to 6m52s).

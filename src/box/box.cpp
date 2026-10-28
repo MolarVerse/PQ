@@ -33,7 +33,8 @@ namespace molsys
      * @param angles
      */
     Box::Box(const linalg::Vec3D &boxDimensions, const linalg::Vec3D &angles)
-        : _boxDimensions(boxDimensions), _angles((angles * deg).in(rad))
+        : _boxDimensions(boxDimensions),
+          _angles((angles * deg).numerical_value_in(rad))
     {
     }
 
@@ -50,7 +51,7 @@ namespace molsys
      */
     linalg::Vec3D Box::getBoxAngles() const
     {
-        return _angles.get().numerical_value_in(deg);
+        return (_angles.get() * rad).numerical_value_in(deg);
     }
 
 }   // namespace molsys
