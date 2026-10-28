@@ -98,7 +98,7 @@ class TestConstraints : public ::testing::Test
             settings.constraintSettings
         );
 
-        addDefaultBondConstraints(*_constraints);
+        _addDefaultBondConstraints(*_constraints);
     }
 
     /**
@@ -112,7 +112,7 @@ class TestConstraints : public ::testing::Test
      *
      * @param constraints
      */
-    void addDefaultBondConstraints(constraints::Constraints &constraints) const
+    void _addDefaultBondConstraints(constraints::Constraints &constraints) const
     {
         auto bondConstraint1 = constraints::BondConstraint(
             _box->getMolecules().data(),
