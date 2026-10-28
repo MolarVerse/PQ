@@ -31,6 +31,7 @@
 #include "globalTimer.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialKernels.tpp.hpp"
 #include "simulationBox.hpp"
 #include "waterModelSettings.hpp"
 
