@@ -35,6 +35,7 @@
 #include "inputFileParser/hybridInputParser.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "qmSettings.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
