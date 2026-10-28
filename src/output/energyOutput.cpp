@@ -30,6 +30,7 @@
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 #include "thermostatSettings.hpp"
 
 namespace out
@@ -60,10 +61,13 @@ namespace out
      *
      * @param step
      * @param physicalData the physical data of the system
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
      */
     void EnergyOutput::write(
         size_t                            step,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         _getFilePointer() << std::format("{:10d}\t", step);
@@ -144,7 +148,7 @@ namespace out
             );
         }
 
-        if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+        if (settings.constraintSettings.isDistanceConstraintsActivated())
         {
             _getFilePointer() << std::format(
                 "{:20.12f}\t",

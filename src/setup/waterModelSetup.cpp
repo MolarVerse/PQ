@@ -32,7 +32,6 @@
 
 #include "SPCIntraWater.hpp"
 #include "bondConstraint.hpp"
-#include "constraintSettings.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
@@ -43,7 +42,6 @@
 #include "mdEngine.hpp"
 #include "references.hpp"
 #include "referencesOutput.hpp"
-#include "rigidWaterGeometry.hpp"
 #include "waterModelSettings.hpp"
 
 namespace setup
@@ -129,9 +127,8 @@ namespace setup
         if (waterModelSettings.getWaterIntraModel() != WaterIntraModel::NONE)
             _checkTopologyFile();
 
-        if (const auto geometry =
-                _getRigidWaterGeometry(waterModelSettings.getWaterIntraModel());
-            geometry.has_value())
+        const auto geometry = waterModelSettings.getRigidWaterGeometry();
+        if (geometry.has_value())
             _shakeSetupForRigidWater(geometry.value());
 
         if (waterModelSettings.getWaterInterModel() != WaterInterModel::NONE)
@@ -311,64 +308,6 @@ namespace setup
     }
 
     /**
-     * @brief Get the rigid geometry parameters for a water model.
-     *
-     * @details Only rigid water variants return geometry data. Flexible water
-     * models return @c std::nullopt and are handled without constraints.
-     *
-     * @param intraModel The configured intramolecular water model.
-     * @return The O-H and H-H distances for rigid models, or @c std::nullopt if
-     * the model is not rigid.
-     */
-    std::optional<RigidWaterGeometry> WaterModelSetup::_getRigidWaterGeometry(
-        WaterIntraModel intraModel
-    )
-    {
-        using enum WaterIntraModel;
-
-        switch (intraModel)
-        {
-            case SPC:
-                return RigidWaterGeometry{
-                    .dOH = SPC_OH_DIST,
-                    .dHH = SPC_HH_DIST
-                };
-            case SPC_E:
-                return RigidWaterGeometry{
-                    .dOH = SPC_E_OH_DIST,
-                    .dHH = SPC_E_HH_DIST
-                };
-            case SPC_DC:
-                return RigidWaterGeometry{
-                    .dOH = SPC_DC_OH_DIST,
-                    .dHH = SPC_DC_HH_DIST
-                };
-            case H2O_DC:
-                return RigidWaterGeometry{
-                    .dOH = H2O_DC_OH_DIST,
-                    .dHH = H2O_DC_HH_DIST
-                };
-            case TIP3P:
-                return RigidWaterGeometry{
-                    .dOH = TIP3P_OH_DIST,
-                    .dHH = TIP3P_HH_DIST
-                };
-            case OPC3:
-                return RigidWaterGeometry{
-                    .dOH = OPC3_OH_DIST,
-                    .dHH = OPC3_HH_DIST
-                };
-            case SPC_FW:
-            case QSPC_FW:
-            case SPC_MTR:
-            case TIP3P_MTR:
-            case NONE: return std::nullopt;
-        }
-
-        std::unreachable();
-    }
-
-    /**
      * @brief Construct and add SHAKE-style bond constraints for rigid water
      * molecules.
      *
@@ -418,8 +357,6 @@ namespace setup
             constraints->addBondConstraint(bondConstraintOH2);
             constraints->addBondConstraint(bondConstraintHH);
         }
-
-        settings::ConstraintSettings::activateShake();
     }
 
     /**

@@ -23,6 +23,7 @@
 #ifndef _SETTINGS_HPP_
 #define _SETTINGS_HPP_
 
+#include "constraintSettings.hpp"
 #include "convergenceSettings.hpp"
 #include "hessianSettings.hpp"
 #include "optimizerSettings.hpp"
@@ -41,6 +42,7 @@ struct Settings
     HessianSettings       hessianSettings;
     RingPolymerSettings   ringPolymerSettings;
     OptimizerSettings     optimizerSettings;
+    ConstraintSettings    constraintSettings;
     ConvSettings          convSettings;
     WaterModelSettings    waterModelSettings;
 

@@ -57,7 +57,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
-    _infoOutput->write(100.0, *_physicalData);
+    _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -68,49 +68,49 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|                                     PQ info file                    "
         "                  |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
         "1.00000 K          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   PRESSURE                2.00000 bar      E(TOT)                 "
         "12.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               "
         "19.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             "
         "5.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                "
         "0.10000 s          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
@@ -145,7 +145,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
-    _infoOutput->write(100.0, *_physicalData);
+    _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -156,61 +156,61 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|                                     PQ info file                    "
         "                  |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
         "1.00000 K          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   PRESSURE                2.00000 bar      E(TOT)                 "
         "94.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               "
         "19.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             "
         "5.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(BOND)                19.00000 kcal/mol E(ANGLE)               "
         "20.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(DIHEDRAL)            21.00000 kcal/mol E(IMPROPER)            "
         "22.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                "
         "0.10000 s          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
@@ -244,7 +244,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
-    _infoOutput->write(100.0, *_physicalData);
+    _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -255,55 +255,55 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|                                     PQ info file                    "
         "                  |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
         "1.00000 K          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   PRESSURE                2.00000 bar      E(TOT)                 "
         "12.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               "
         "19.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             "
         "5.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   VOLUME                 11.00000 A^3      DENSITY                "
         "12.00000 g/cm^3     |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                "
         "0.10000 s          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
@@ -339,7 +339,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
-    _infoOutput->write(100.0, *_physicalData);
+    _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -350,61 +350,61 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|                                     PQ info file                    "
         "                  |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
         "1.00000 K          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   PRESSURE                2.00000 bar      E(TOT)                 "
         "12.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               "
         "19.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             "
         "5.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   VOLUME                 11.00000 A^3      DENSITY                "
         "12.00000 g/cm^3     |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   P(COUPLED)              2.50000 bar                               "
         "                  |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                "
         "0.10000 s          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
@@ -442,7 +442,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     settings::ManostatSettings::setManostatType(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info");
-    _infoOutput->write(100.0, *_physicalData);
+    _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -453,49 +453,49 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|                                     PQ info file                    "
         "                  |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
         "1.00000 K          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   PRESSURE                2.00000 bar      E(TOT)                  "
         "8.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(QM)                   5.00000 kcal/mol N(QM-ATOMS)             "
         "0.00000 -          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(KIN)                  3.00000 kcal/mol E(INTRA)                "
         "0.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                "
         "0.10000 s          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
@@ -531,7 +531,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     );
 
     _infoOutput->setFilename("default.info");
-    _infoOutput->write(100.0, *_physicalData);
+    _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -542,55 +542,55 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|                                     PQ info file                    "
         "                  |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"
         "-------------------"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
         "1.00000 K          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   PRESSURE                2.00000 bar      E(TOT)                 "
         "12.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(KIN)                  3.00000 kcal/mol E(INTRA)               "
         "19.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(COUL)                 4.00000 kcal/mol E(NON-COUL)             "
         "5.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   E(NH-MOMENTUM)         11.00000 kcal/mol E(NH-FRICTION)         "
         "12.00000 kcal/mol   |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "|   MOMENTUM                1.0e+01 amuA/fs  LOOPTIME                "
         "0.10000 s          |"
     );
-    getline(file, line);
+    std::getline(file, line);
     EXPECT_EQ(
         line,
         "----------------------------------------------------------------------"

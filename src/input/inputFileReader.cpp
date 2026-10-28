@@ -99,7 +99,10 @@ namespace input
     {
         // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/909
         _parsers.push_back(std::make_unique<CellListInputParser>());
-        _parsers.push_back(std::make_unique<ConstraintsInputParser>());
+        _parsers.push_back(
+            std::make_unique<ConstraintsInputParser>(settings.constraintSettings
+            )
+        );
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
             std::make_unique<FilesInputParser>(validateFilePaths)

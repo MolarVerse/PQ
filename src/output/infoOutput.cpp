@@ -29,6 +29,7 @@
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 #include "thermostatSettings.hpp"
 
 namespace out
@@ -49,10 +50,12 @@ namespace out
      *
      * @param simulationTime
      * @param physicalData the physical data of the system
+     * @param settings the simulation settings
      */
     void InfoOutput::write(
         double                            simulationTime,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         _getFilePointer().close();
@@ -147,7 +150,7 @@ namespace out
             );
         }
 
-        if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+        if (settings.constraintSettings.isDistanceConstraintsActivated())
         {
             _writeLeft(
                 physicalData.getLowerDistanceConstraints(),

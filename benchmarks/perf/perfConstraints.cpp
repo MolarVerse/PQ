@@ -29,6 +29,7 @@
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
 #include "strongTypes.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -54,12 +55,13 @@ int main()
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto &molecules = box.getMolecules();
 
-    auto constr = constraints::Constraints();
-    constr.setShakeMaxIter(100);
-    constr.setRattleMaxIter(100);
-    constr.setShakeTolerance(1.0e-8);
-    constr.setRattleTolerance(1.0e-8);
-    settings::ConstraintSettings::activateShake();
+    Settings settings;
+    settings.constraintSettings.setShakeMaxIter(100);
+    settings.constraintSettings.setRattleMaxIter(100);
+    settings.constraintSettings.setShakeTolerance(1.0e-8);
+    settings.constraintSettings.setRattleTolerance(1.0e-8);
+    settings.constraintSettings.activateShake();
+    auto constr = constraints::Constraints(settings.constraintSettings);
 
     for (auto &molecule : molecules)
     {

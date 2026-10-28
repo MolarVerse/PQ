@@ -25,10 +25,10 @@
 #define _CONSTRAINTS_HPP_
 
 #include <cstddef>
+#include <mstd/types.hpp>
 #include <vector>
 
 #include "bondConstraint.hpp"
-#include "defaults.hpp"
 #include "distanceConstraint.hpp"
 #include "mShakeReference.hpp"
 
@@ -36,6 +36,8 @@ namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
+
+class ConstraintSettings;   // forward declaration
 
 namespace molsys
 {
@@ -60,20 +62,17 @@ namespace constraints
     class Constraints
     {
        private:
+        mstd::ConstRef<ConstraintSettings> _constraintSettings;
+
         std::unique_ptr<MShake> _mShake;
 
-        size_t _shakeMaxIter  = defaults::SHAKE_MAX_ITER_DEFAULT;
-        size_t _rattleMaxIter = defaults::RATTLE_MAX_ITER_DEFAULT;
-
-        double _shakeTolerance  = defaults::SHAKE_TOLERANCE_DEFAULT;
-        double _rattleTolerance = defaults::RATTLE_TOLERANCE_DEFAULT;
-        double _startTime       = 0.0;
+        double _startTime = 0.0;
 
         std::vector<BondConstraint>     _bondConstraints;
         std::vector<DistanceConstraint> _distanceConstraints;
 
        public:
-        Constraints();
+        explicit Constraints(const ConstraintSettings &constraintSettings);
         ~Constraints();
 
         void calculateConstraintBondRefs(
@@ -115,19 +114,9 @@ namespace constraints
         ) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 
-        [[nodiscard]] size_t getShakeMaxIter() const;
-        [[nodiscard]] size_t getRattleMaxIter() const;
-        [[nodiscard]] double getShakeTolerance() const;
-        [[nodiscard]] double getRattleTolerance() const;
-
         /***************************
          * standard setter methods *
          ***************************/
-
-        void setShakeMaxIter(size_t shakeMaxIter);
-        void setRattleMaxIter(size_t rattleMaxIter);
-        void setShakeTolerance(double shakeTolerance);
-        void setRattleTolerance(double rattleTolerance);
 
         void setStartTime(const double startTime) { _startTime = startTime; }
 
