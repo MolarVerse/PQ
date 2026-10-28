@@ -126,6 +126,7 @@ namespace setup
      */
     void setupEngine(engine::Engine& engine)
     {
+        const auto& settings = engine.getSettings();
         if (settings::GeneralSettings::isQMActivated())
             setupQM(engine);
 
@@ -170,10 +171,10 @@ namespace setup
             setupIntraNonBonded(engine);
         }
 
-        if (settings::ForceFieldSettings::isActive())
+        if (settings.forceFieldSettings.isActive())
             setupForceField(engine);
 
-        if (engine.getSettings().waterModelSettings.isWaterModelSet())
+        if (settings.waterModelSettings.isWaterModelSet())
             setupWaterModel(engine);
 
         setupConstraints(engine);

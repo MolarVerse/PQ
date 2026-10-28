@@ -40,7 +40,10 @@ TEST_F(TestMoldescriptorReader, constructor)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor.dat"
     );
-    ASSERT_NO_THROW(input::molDescriptor::MoldescriptorReader reader(*_engine));
+    ASSERT_NO_THROW(
+        input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings
+        ))
+    );
 }
 
 /**
@@ -52,7 +55,7 @@ TEST_F(TestMoldescriptorReader, argumentsInMoldescriptor)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithOneWordLine.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader(*_engine);
+    input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings));
     ASSERT_THROW_MSG(
         reader.read(),
         exc::MolDescriptorException,
@@ -69,7 +72,7 @@ TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithErrorInAtomArguments.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader(*_engine);
+    input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings));
     ASSERT_THROW_MSG(
         reader.read(),
         exc::MolDescriptorException,
@@ -79,7 +82,7 @@ TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithErrorInAtomArguments2.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader2(*_engine);
+    input::molDescriptor::MoldescriptorReader reader2(*_makeEngine(*_settings));
     ASSERT_THROW_MSG(
         reader2.read(),
         exc::MolDescriptorException,
@@ -89,7 +92,7 @@ TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithErrorInMolArguments.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader3(*_engine);
+    input::molDescriptor::MoldescriptorReader reader3(*_makeEngine(*_settings));
     ASSERT_THROW_MSG(
         reader3.read(),
         exc::MolDescriptorException,
@@ -106,7 +109,7 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
     settings::FileSettings::setMolDescriptorFileName(
         "examples/setup/moldescriptor.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader(*_engine);
+    input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings));
     ASSERT_NO_THROW(reader.read());
 }
 
@@ -116,13 +119,14 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
  */
 TEST_F(TestMoldescriptorReader, specialTypes)
 {
-    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), std::nullopt);
+    auto engine = _makeEngine(*_settings);
+    ASSERT_EQ(engine->getSimulationBox().getWaterType(), std::nullopt);
     settings::FileSettings::setMolDescriptorFileName(
         "examples/setup/moldescriptor.dat"
     );
-    input::molDescriptor::readMolDescriptor(*_engine);
-    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), MolType{1});
-    ASSERT_EQ(_engine->getSimulationBox().getAmmoniaType(), MolType{2});
+    input::molDescriptor::readMolDescriptor(*engine);
+    ASSERT_EQ(engine->getSimulationBox().getWaterType(), MolType{1});
+    ASSERT_EQ(engine->getSimulationBox().getAmmoniaType(), MolType{2});
 }
 
 /**
@@ -134,7 +138,7 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorTooManyAtomsPerMoltype.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader2(*_engine);
+    input::molDescriptor::MoldescriptorReader reader2(*_makeEngine(*_settings));
     ASSERT_THROW_MSG(
         reader2.read(),
         exc::MolDescriptorException,
@@ -150,18 +154,20 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
  */
 TEST_F(TestMoldescriptorReader, globalVdwTypes)
 {
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor_withGlobalVdwTypes.dat"
     );
-    EXPECT_NO_THROW(input::molDescriptor::readMolDescriptor(*_engine));
+    EXPECT_NO_THROW(
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings))
+    );
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor_withMissingGlobalVdwTypes.dat"
     );
     EXPECT_THROW_MSG(
-        input::molDescriptor::readMolDescriptor(*_engine),
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings)),
         exc::MolDescriptorException,
         "Error in moldescriptor file at line 6 - force field noncoulombics is "
         "activated but no global van der Waals "

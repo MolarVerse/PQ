@@ -39,8 +39,7 @@ namespace engine
 
 namespace input::parameterFile
 {
-    void               readParameterFile(engine::Engine &);
-    [[nodiscard]] bool isNeeded();
+    void readParameterFile(engine::Engine &);
 
     /**
      * @class ParameterReader

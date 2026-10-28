@@ -37,20 +37,6 @@
 #include "typesSection.hpp"
 
 /**
- * @brief tests isNeeded function
- *
- * @return true if forceField is enabled
- * @return false
- */
-TEST_F(TestParameterFileReader, isNeeded)
-{
-    EXPECT_FALSE(input::parameterFile::isNeeded());
-
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
-    EXPECT_TRUE(input::parameterFile::isNeeded());
-}
-
-/**
  * @brief tests determine section function
  *
  */
@@ -151,7 +137,7 @@ TEST_F(TestParameterFileReader, deleteSection)
  */
 TEST_F(TestParameterFileReader, readFileNameEmpty)
 {
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    _settings.forceFieldSettings.setType(ForceFieldType::ON);
     settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_THROW_MSG(
         _parameterFileReader->read(),
@@ -160,9 +146,102 @@ TEST_F(TestParameterFileReader, readFileNameEmpty)
     );
 }
 
+/**
+ * @brief tests that reading a non-existent file does not throw and simply
+ * leaves all sections unconsumed, since the underlying std::ifstream never
+ * reports failure to the caller
+ */
+TEST_F(TestParameterFileReader, readFileDoesNotExist)
+{
+    settings::FileSettings::setIsParameterFileNameSet();
+    auto reader = input::parameterFile::ParameterFileReader(
+        "data/parameterFileReader/doesNotExist.param",
+        *_engine
+    );
+    EXPECT_NO_THROW(reader.read());
+    EXPECT_EQ(reader.getParameterFileSections().size(), 7);
+}
+
+/**
+ * @brief tests read function successfully parses all sections and that
+ * every section is consumed exactly once (no section left over)
+ */
 TEST_F(TestParameterFileReader, readParameterFile)
 {
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    settings::FileSettings::setIsParameterFileNameSet();
+    _engine->getPotential()->makeNonCoulombPotential(
+        pot::ForceFieldNonCoulomb()
+    );
+    EXPECT_NO_THROW(_parameterFileReader->read());
+
+    EXPECT_EQ(_parameterFileReader->getParameterFileSections().size(), 2);
+
+    const auto &remaining = _parameterFileReader->getParameterFileSections();
+    for (const auto &section : remaining)
+        EXPECT_NE(section->keyword(), "bonds");
+}
+
+/**
+ * @brief tests that reading a parameter file with a duplicated section
+ * keyword throws, since the section is deleted after being processed once
+ */
+TEST_F(TestParameterFileReader, readParameterFileDuplicateSection)
+{
+    settings::FileSettings::setIsParameterFileNameSet();
+    auto reader = input::parameterFile::ParameterFileReader(
+        "data/parameterFileReader/paramDuplicateSection.param",
+        *_engine
+    );
+    EXPECT_THROW_MSG(
+        reader.read(),
+        exc::ParameterFileException,
+        "Unknown or already parsed keyword \"BONDS\" in parameter file"
+    );
+}
+
+/**
+ * @brief tests that reading a parameter file with an unknown section
+ * keyword throws
+ */
+TEST_F(TestParameterFileReader, readParameterFileUnknownSection)
+{
+    settings::FileSettings::setIsParameterFileNameSet();
+    auto reader = input::parameterFile::ParameterFileReader(
+        "data/parameterFileReader/paramUnknownSection.param",
+        *_engine
+    );
+    EXPECT_THROW_MSG(
+        reader.read(),
+        exc::ParameterFileException,
+        "Unknown or already parsed keyword \"N.A.\" in parameter file"
+    );
+}
+
+/**
+ * @brief tests that lines starting with a comment character are ignored
+ * and the rest of the line is still parsed correctly
+ */
+TEST_F(TestParameterFileReader, readParameterFileWithComments)
+{
+    settings::FileSettings::setIsParameterFileNameSet();
+    _engine->getPotential()->makeNonCoulombPotential(
+        pot::ForceFieldNonCoulomb()
+    );
+    auto reader = input::parameterFile::ParameterFileReader(
+        "data/parameterFileReader/paramWithComments.param",
+        *_engine
+    );
+    EXPECT_NO_THROW(reader.read());
+    EXPECT_EQ(reader.getParameterFileSections().size(), 2);
+}
+
+/**
+ * @brief tests the free readParameterFile function end to end, including
+ * that it is a no-op when the force field is not active
+ */
+TEST_F(TestParameterFileReader, readParameterFileFreeFunction)
+{
+    _settings.forceFieldSettings.setType(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );
@@ -174,7 +253,21 @@ TEST_F(TestParameterFileReader, readParameterFile)
 
 TEST_F(TestParameterFileReader, nameNotSetButNotNeeded)
 {
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    _settings.forceFieldSettings.setType(ForceFieldType::OFF);
     settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_NO_THROW(input::parameterFile::readParameterFile(*_engine));
+}
+
+/**
+ * @brief tests setFilename and getFilename getter/setter
+ */
+TEST_F(TestParameterFileReader, setAndGetFilename)
+{
+    EXPECT_EQ(
+        _parameterFileReader->getFilename(),
+        "data/parameterFileReader/param.param"
+    );
+
+    _parameterFileReader->setFilename("newFileName.param");
+    EXPECT_EQ(_parameterFileReader->getFilename(), "newFileName.param");
 }
