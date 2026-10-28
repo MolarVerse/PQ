@@ -497,7 +497,7 @@ namespace constraints
                     const auto mass_j = atoms[j]->getMass();
 
                     auto velConstraint =
-                        stl::dot(mShakeMatrix(index_ij), rattleVector);
+                        -stl::dot(mShakeMatrix(index_ij), rattleVector);
 
                     const auto velAdjustment = velConstraint * bonds[index_ij];
 
