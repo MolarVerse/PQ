@@ -26,7 +26,6 @@
 
 #include <memory>
 #include <mstd/types.hpp>
-#include <mstd/units.hpp>
 #include <mstd/utils.hpp>
 
 #include "staticMatrix.hpp"

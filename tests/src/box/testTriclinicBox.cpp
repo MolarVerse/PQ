@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include <array>
+#include <mstd/units.hpp>
 
 #include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
@@ -32,49 +33,42 @@
 #include "triclinicBox.hpp"
 #include "vectorNear.hpp"
 
+static linalg::Vec3D toRadians(const linalg::Vec3D &degrees)
+{
+    return (degrees * mstd::units::deg).numerical_value_in(mstd::units::rad);
+}
+
 struct TestTriclinicBox
 {
     [[nodiscard]]
     static double cosAlpha(const linalg::Vec3D &boxAngles)
     {
-        return molsys::TriclinicBox::_cosAlpha(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
+        return molsys::TriclinicBox::_cosAlpha(toRadians(boxAngles));
     }
     [[nodiscard]]
     static double cosBeta(const linalg::Vec3D &boxAngles)
     {
-        return molsys::TriclinicBox::_cosBeta(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
+        return molsys::TriclinicBox::_cosBeta(toRadians(boxAngles));
     }
     [[nodiscard]]
     static double cosGamma(const linalg::Vec3D &boxAngles)
     {
-        return molsys::TriclinicBox::_cosGamma(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
+        return molsys::TriclinicBox::_cosGamma(toRadians(boxAngles));
     }
     [[nodiscard]]
     static double sinAlpha(const linalg::Vec3D &boxAngles)
     {
-        return molsys::TriclinicBox::_sinAlpha(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
+        return molsys::TriclinicBox::_sinAlpha(toRadians(boxAngles));
     }
     [[nodiscard]]
     static double sinBeta(const linalg::Vec3D &boxAngles)
     {
-        return molsys::TriclinicBox::_sinBeta(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
+        return molsys::TriclinicBox::_sinBeta(toRadians(boxAngles));
     }
     [[nodiscard]]
     static double sinGamma(const linalg::Vec3D &boxAngles)
     {
-        return molsys::TriclinicBox::_sinGamma(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
+        return molsys::TriclinicBox::_sinGamma(toRadians(boxAngles));
     }
 
     [[nodiscard]]
@@ -88,7 +82,7 @@ struct TestTriclinicBox
         const linalg::Vec3D  &boxAngles
     )
     {
-        box._set_angles((boxAngles * mstd::units::deg).in(mstd::units::rad));
+        box._set_angles(toRadians(boxAngles));
     }
 
     static linalg::tensor3D getTransformationMatrix(molsys::TriclinicBox &box)
@@ -336,7 +330,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     );
     EXPECT_VECTOR_NEAR(dimensions, box.get_boxDimensions(), 1.0e-12);
     EXPECT_VECTOR_NEAR(
-        angles.numerical_value_in(mstd::units::deg),
+        (angles * mstd::units::rad).numerical_value_in(mstd::units::deg),
         box.getBoxAngles(),
         1.0e-12
     );

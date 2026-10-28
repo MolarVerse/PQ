@@ -24,17 +24,14 @@
 #define __UNIT_TYPES_HPP__
 
 /// NOTE FOR DEVELOPERS
-/// This header defines type aliases for commonly used unit types in the
-/// codebase. Specifically, it provides a convenient alias for 3D angular
-/// quantities. Here we really only define Internal representations for 3D
-/// angular quantities. External interfaces should convert to and from these
-/// internal representations as needed to ensure consistency and clarity in unit
-/// usage throughout the codebase.
-
-#include <mstd/units.hpp>
+/// This header defines the internal representation of 3D angular quantities:
+/// a plain vector of angles in RADIANS. It deliberately does not include
+/// mp-units: the unit library is expensive to parse and this header is
+/// included by almost every translation unit through box.hpp. Convert from and
+/// to degrees with the units from "units.hpp" in implementation files only.
 
 #include "vector3d.hpp"
 
-using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
+using Angles3D = linalg::Vec3D;
 
 #endif   // __UNIT_TYPES_HPP__

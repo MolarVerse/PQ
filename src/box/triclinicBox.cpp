@@ -29,7 +29,6 @@
 #include "box.hpp"
 #include "manostatSettings.hpp"
 #include "staticMatrix.hpp"
-#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -331,9 +330,9 @@ namespace molsys
         const auto cos_beta  = boxMatrix[0][2] / box_z;
         const auto cos_gamma = boxMatrix[0][1] / box_y;
 
-        const auto alpha = ::acos(cos_alpha) * rad;
-        const auto beta  = ::acos(cos_beta) * rad;
-        const auto gamma = ::acos(cos_gamma) * rad;
+        const auto alpha = ::acos(cos_alpha);
+        const auto beta  = ::acos(cos_beta);
+        const auto gamma = ::acos(cos_gamma);
 
         return {{box_x, box_y, box_z}, {alpha, beta, gamma}};
     }
@@ -355,7 +354,7 @@ namespace molsys
      */
     double TriclinicBox::_cosAlpha(const Angles3D &boxAngles)
     {
-        return mstd::cos(boxAngles[0]);
+        return ::cos(boxAngles[0]);
     }
 
     /**
@@ -365,7 +364,7 @@ namespace molsys
      */
     double TriclinicBox::_cosBeta(const Angles3D &boxAngles)
     {
-        return mstd::cos(boxAngles[1]);
+        return ::cos(boxAngles[1]);
     }
 
     /**
@@ -375,7 +374,7 @@ namespace molsys
      */
     double TriclinicBox::_cosGamma(const Angles3D &boxAngles)
     {
-        return mstd::cos(boxAngles[2]);
+        return ::cos(boxAngles[2]);
     }
 
     /**
@@ -385,7 +384,7 @@ namespace molsys
      */
     double TriclinicBox::_sinAlpha(const Angles3D &boxAngles)
     {
-        return mstd::sin(boxAngles[0]);
+        return ::sin(boxAngles[0]);
     }
 
     /**
@@ -395,7 +394,7 @@ namespace molsys
      */
     double TriclinicBox::_sinBeta(const Angles3D &boxAngles)
     {
-        return mstd::sin(boxAngles[1]);
+        return ::sin(boxAngles[1]);
     }
 
     /**
@@ -405,7 +404,7 @@ namespace molsys
      */
     double TriclinicBox::_sinGamma(const Angles3D &boxAngles)
     {
-        return mstd::sin(boxAngles[2]);
+        return ::sin(boxAngles[2]);
     }
 
     /**
