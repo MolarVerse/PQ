@@ -82,6 +82,7 @@ class AseQMRunnerTest : public ::testing::Test
     physicalData::PhysicalData _physicalData;
     double                     _timeLimit = 0.0;
 
+   public:
     static void SetUpTestSuite()
     {
         Python::guard = std::make_unique<pybind11::scoped_interpreter>();
@@ -89,6 +90,7 @@ class AseQMRunnerTest : public ::testing::Test
 
     static void TearDownTestSuite() { Python::guard.reset(); }
 
+   protected:
     void SetUp() override
     {
         const auto types = pybind11::module_::import("types");
@@ -122,7 +124,7 @@ class AseQMRunnerTest : public ::testing::Test
         settings::QMSettings::setQMLoopTimeLimit(_timeLimit);
     }
 
-    static QM::AseFennolRunner runner(const double delay)
+    static QM::AseFennolRunner _runner(const double delay)
     {
         pybind11::module_::import("sys")
             .attr("modules")["ase.atoms"]
@@ -136,7 +138,7 @@ class AseQMRunnerTest : public ::testing::Test
 TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 {
     settings::QMSettings::setQMLoopTimeLimit(0.5);
-    auto runner = AseQMRunnerTest::runner(10.0);
+    auto runner = AseQMRunnerTest::_runner(10.0);
 
     const auto start = std::chrono::steady_clock::now();
 
@@ -158,7 +160,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
     // the interpreter is usable again
     settings::QMSettings::setQMLoopTimeLimit(0.0);
     EXPECT_NO_THROW(
-        AseQMRunnerTest::runner(0.0)
+        AseQMRunnerTest::_runner(0.0)
             .run(_simulationBox, _physicalData, molsys::Periodicity::XYZ)
     );
 }
@@ -166,7 +168,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
 {
     settings::QMSettings::setQMLoopTimeLimit(10.0);
-    auto runner = AseQMRunnerTest::runner(0.0);
+    auto runner = AseQMRunnerTest::_runner(0.0);
 
     EXPECT_NO_THROW(
         runner.run(_simulationBox, _physicalData, molsys::Periodicity::XYZ)
