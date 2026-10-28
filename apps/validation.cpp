@@ -281,7 +281,7 @@ namespace
     void validateInputDependencies(const Settings &settings)
     {
         if (settings.constraintSettings.isActive() ||
-            settings::ForceFieldSettings::isActive())
+            settings.forceFieldSettings.isActive())
         {
             if (!settings::FileSettings::isTopologyFileNameSet())
                 throw exc::InputFileException(
@@ -289,7 +289,7 @@ namespace
                 );
         }
 
-        if (settings::ForceFieldSettings::isActive() &&
+        if (settings.forceFieldSettings.isActive() &&
             !settings::FileSettings::isParameterFileNameSet())
             throw exc::InputFileException(
                 "Parameter file needed for requested simulation setup"
@@ -334,7 +334,7 @@ namespace
         }
 
         if (settings::GeneralSettings::isMMActivated() &&
-            !settings::ForceFieldSettings::isNonCoulombicActive())
+            !settings.forceFieldSettings.isNonCoulombicActive())
         {
             requireFile(
                 settings::FileSettings::getGuffDatFileName(),
@@ -343,7 +343,7 @@ namespace
         }
 
         if (settings.constraintSettings.isActive() ||
-            settings::ForceFieldSettings::isActive())
+            settings.forceFieldSettings.isActive())
         {
             requireFile(
                 settings::FileSettings::getTopologyFileName(),
@@ -351,7 +351,7 @@ namespace
             );
         }
 
-        if (settings::ForceFieldSettings::isActive())
+        if (settings.forceFieldSettings.isActive())
         {
             requireFile(
                 settings::FileSettings::getParameterFilename(),
