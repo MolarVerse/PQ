@@ -32,6 +32,7 @@
 #include "mShakeReference.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"

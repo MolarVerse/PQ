@@ -1,0 +1,1 @@
+- Record the outcome of the clang build-time noise study (#751) in the CI metrics README: the thresholds are final, timings stay informational, no include-graph gate and no nightly Release clang build.

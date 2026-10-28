@@ -79,7 +79,7 @@ namespace configurator
 
         center             /= total_mass;
         _innerRegionCenter  = center - simulationBox.calcShiftVector(center);
-    }   // TODO: https://github.com/MolarVerse/PQ/issues/196
+    }   // TODO(ape): https://github.com/MolarVerse/PQ/issues/196
 
     /**
      * @brief Shift all atoms so that the inner region center is at the origin

@@ -31,6 +31,7 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "simulationBox.hpp"
 

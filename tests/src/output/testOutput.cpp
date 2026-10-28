@@ -29,6 +29,11 @@
 #include "outputFileSettings.hpp"
 #include "throwWithMessage.hpp"
 
+struct TestOutputUtils
+{
+    static void openFile(out::Output &output) { output._openFile(); }
+};
+
 /**
  * @brief tests setting output filename
  *
@@ -53,7 +58,7 @@ TEST(TestOutput, testSpecialSetFilename)
     );
 
     EXPECT_THROW_MSG(
-        output._openFile(),
+        TestOutputUtils::openFile(output),
         exc::InputFileException,
         std::format("Could not open file - filename = {}", testDirName)
     );

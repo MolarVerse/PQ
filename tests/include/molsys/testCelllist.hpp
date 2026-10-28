@@ -29,6 +29,7 @@
 #include <memory>
 
 #include "celllist.hpp"
+#include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 

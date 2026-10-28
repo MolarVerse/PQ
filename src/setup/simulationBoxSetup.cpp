@@ -40,6 +40,7 @@
 #include "logOutput.hpp"
 #include "maxwellBoltzmann.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "outputMessages.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"

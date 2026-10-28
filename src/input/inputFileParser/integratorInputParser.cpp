@@ -61,7 +61,7 @@ namespace input
 
         const auto setValue = [](IntegratorType integratorType)
         {
-            // TODO: remove this via general setup
+            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/908
             if (!settings::GeneralSettings::isMDJobType())
             {
                 throw exc::InputFileException(

@@ -35,6 +35,7 @@
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"

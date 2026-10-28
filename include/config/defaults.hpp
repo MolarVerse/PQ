@@ -93,7 +93,8 @@ namespace defaults
     static constexpr double COULOMB_CUT_OFF_DEFAULT  = 12.5;   // in Angstrom
     static constexpr double SCALE_14_COULOMB_DEFAULT = 1.0;
     static constexpr double SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;
-    static constexpr double WOLF_PARAM_DEFAULT = 0.25;   // TODO: add unit
+    // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/903 add unit
+    static constexpr double WOLF_PARAM_DEFAULT = 0.25;
     static constexpr double RF_EPSILON_DEFAULT = 1.0;
 
     static constexpr bool   CONSTRAINTS_ACTIVE_DEFAULT = false;
