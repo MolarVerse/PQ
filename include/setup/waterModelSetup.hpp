@@ -24,19 +24,11 @@
 
 #define _WATER_MODEL_SETUP_HPP_
 
-#include <optional>
-
-#include "enums/waterModels.hpp"
 #include "interWater.hpp"
 #include "mdEngine.hpp"
 
 namespace setup
 {
-    struct RigidWaterGeometry
-    {
-        double dOH{0.0};
-        double dHH{0.0};
-    };
 
     void setupWaterModel(engine::Engine &);
 
@@ -65,10 +57,6 @@ namespace setup
         );
         void _shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
 
-        [[nodiscard]]
-        static std::optional<RigidWaterGeometry> _getRigidWaterGeometry(
-            WaterIntraModel intraModel
-        );
         void _addReferences();
     };
 

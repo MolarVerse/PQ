@@ -40,7 +40,9 @@ namespace setup
      */
     void setupConstraints(engine::Engine &engine)
     {
-        if (!settings::ConstraintSettings::isActive())
+        const auto &settings = engine.getSettings().constraintSettings;
+
+        if (!settings.isActive())
             return;
 
         out::StdoutOutput::writeSetup("Constraints");
@@ -67,8 +69,6 @@ namespace setup
      */
     void ConstraintsSetup::setup()
     {
-        setupTolerances();
-        setupMaxIterations();
         setupRefBondLengths();
         setupMShake();
         setupDegreesOfFreedom();
@@ -84,42 +84,12 @@ namespace setup
     {
         const auto &constraints = _engine.getConstraints();
 
-        if (!settings::ConstraintSettings::isMShakeActivated())
+        if (!_engine.getSettings().constraintSettings.isMShakeActivated())
             return;
 
         input::mShake::readMShake(_engine);
 
         constraints->initMShake();
-    }
-
-    /**
-     * @brief sets constraints tolerances
-     *
-     */
-    void ConstraintsSetup::setupTolerances()
-    {
-        _shakeTolerance  = settings::ConstraintSettings::getShakeTolerance();
-        _rattleTolerance = settings::ConstraintSettings::getRattleTolerance();
-
-        const auto &constraints = _engine.getConstraints();
-
-        constraints->setShakeTolerance(_shakeTolerance);
-        constraints->setRattleTolerance(_rattleTolerance);
-    }
-
-    /**
-     * @brief sets constraints max iterations
-     *
-     */
-    void ConstraintsSetup::setupMaxIterations()
-    {
-        _shakeMaxIter  = settings::ConstraintSettings::getShakeMaxIter();
-        _rattleMaxIter = settings::ConstraintSettings::getRattleMaxIter();
-
-        const auto &constraints = _engine.getConstraints();
-
-        constraints->setShakeMaxIter(_shakeMaxIter);
-        constraints->setRattleMaxIter(_rattleMaxIter);
     }
 
     /**
@@ -161,13 +131,15 @@ namespace setup
     {
         writeEnabled();
 
-        if (settings::ConstraintSettings::isShakeLikeActive())
+        const auto settings = _engine.getSettings().constraintSettings;
+
+        if (settings.isShakeLikeActive())
         {
             writeNConstraintBonds();
             writeTolerance();
         }
 
-        if (settings::ConstraintSettings::isShakeActivated())
+        if (settings.isShakeActivated())
             writeMaxIter();
 
         writeDof();
@@ -179,12 +151,12 @@ namespace setup
      */
     void ConstraintsSetup::writeEnabled()
     {
-        std::string shakeMsg = settings::ConstraintSettings::isShakeActivated()
-                                   ? "enabled"
-                                   : "disabled";
+        const auto &settings = _engine.getSettings().constraintSettings;
+
+        std::string shakeMsg =
+            settings.isShakeActivated() ? "enabled" : "disabled";
         std::string mShakeMsg =
-            settings::ConstraintSettings::isMShakeActivated() ? "enabled"
-                                                              : "disabled";
+            settings.isMShakeActivated() ? "enabled" : "disabled";
 
         shakeMsg  = std::format("SHAKE:   {}", shakeMsg);
         mShakeMsg = std::format("M-SHAKE: {}", mShakeMsg);

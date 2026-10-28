@@ -27,4 +27,12 @@
 /**
  * @brief Finalize the settings by finalizing each individual setting component
  */
-void Settings::finalize() { resetKinetics.finalize(); }
+void Settings::finalize()
+{
+    resetKinetics.finalize();
+
+    const auto rigidWaterGeometry = waterModelSettings.getRigidWaterGeometry();
+
+    if (rigidWaterGeometry.has_value())
+        constraintSettings.activateShakeForWaterModel();
+}

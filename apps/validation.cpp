@@ -269,9 +269,18 @@ namespace
         }
     }
 
-    void validateInputDependencies()
+    /**
+     * @brief Validates the input dependencies for the given settings.
+     *
+     * This function checks if the necessary input files are provided based on
+     * the active simulation settings, such as constraints, force fields, and
+     * QM settings.
+     *
+     * @param settings The simulation settings to validate.
+     */
+    void validateInputDependencies(const Settings &settings)
     {
-        if (settings::ConstraintSettings::isActive() ||
+        if (settings.constraintSettings.isActive() ||
             settings::ForceFieldSettings::isActive())
         {
             if (!settings::FileSettings::isTopologyFileNameSet())
@@ -286,7 +295,7 @@ namespace
                 "Parameter file needed for requested simulation setup"
             );
 
-        if (settings::ConstraintSettings::isMShakeActivated() &&
+        if (settings.constraintSettings.isMShakeActivated() &&
             settings::FileSettings::getMShakeFileName().empty())
             throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
@@ -295,7 +304,7 @@ namespace
         validateExternalQMScriptSelection();
     }
 
-    void validateEffectiveFiles()
+    void validateEffectiveFiles(const Settings &settings)
     {
         requireFile(settings::FileSettings::getStartFileName(), "Start file");
 
@@ -333,7 +342,7 @@ namespace
             );
         }
 
-        if (settings::ConstraintSettings::isActive() ||
+        if (settings.constraintSettings.isActive() ||
             settings::ForceFieldSettings::isActive())
         {
             requireFile(
@@ -511,11 +520,11 @@ cli::ValidationResult cli::validateInputFile(
         reader.read();
         reader.postProcess();
         reader.validateInputConfiguration(settings);
-        validateInputDependencies();
+        validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)
         {
             validateCompiledCapabilities();
-            validateEffectiveFiles();
+            validateEffectiveFiles(settings);
         }
 
         auto result = ValidationResult{

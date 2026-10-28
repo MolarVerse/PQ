@@ -33,6 +33,7 @@
 #include "infoOutput.hpp"
 #include "momentumOutput.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 
 /**
  * @class TestEnergyOutput
@@ -47,6 +48,7 @@ class TestEnergyOutput : public ::testing::Test
     std::unique_ptr<out::EnergyOutput>          _energyOutput;
     std::unique_ptr<out::MomentumOutput>        _momentumOutput;
     std::unique_ptr<physicalData::PhysicalData> _physicalData;
+    std::unique_ptr<Settings>                   _settings;
 
     void SetUp() override
     {
@@ -54,6 +56,7 @@ class TestEnergyOutput : public ::testing::Test
         _energyOutput   = std::make_unique<out::EnergyOutput>("default.en");
         _momentumOutput = std::make_unique<out::MomentumOutput>("default.mom");
         _physicalData   = std::make_unique<physicalData::PhysicalData>();
+        _settings       = std::make_unique<Settings>();
     }
 
     void TearDown() override

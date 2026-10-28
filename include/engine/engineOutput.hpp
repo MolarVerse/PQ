@@ -93,10 +93,15 @@ namespace engine
        public:
         EngineOutput();
 
-        void writeEnergyFile(size_t step, const physicalData::PhysicalData &);
+        void writeEnergyFile(
+            size_t step,
+            const physicalData::PhysicalData &,
+            const Settings &
+        );
         void writeInstantEnergyFile(
             size_t step,
-            const physicalData::PhysicalData &
+            const physicalData::PhysicalData &,
+            const Settings &
         );
 
         void writeXyzFile(molsys::SimulationBox &, size_t);
@@ -109,7 +114,8 @@ namespace engine
         void writeChargeFile(molsys::SimulationBox &, size_t);
         void writeInfoFile(
             double simulationTime,
-            const physicalData::PhysicalData &
+            const physicalData::PhysicalData &,
+            const Settings &
         );
         void writeRstFile(
             molsys::SimulationBox &,

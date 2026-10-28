@@ -124,17 +124,23 @@ namespace engine
 
             getEngineOutput().writeEnergyFile(
                 effStep,
-                getAveragePhysicalData()
+                getAveragePhysicalData(),
+                getSettings()
             );
             getEngineOutput().writeInstantEnergyFile(
                 effStep,
-                getPhysicalData()
+                getPhysicalData(),
+                getSettings()
             );
             getEngineOutput().writeMomentumFile(
                 effStep,
                 getAveragePhysicalData()
             );
-            getEngineOutput().writeInfoFile(simTime, getAveragePhysicalData());
+            getEngineOutput().writeInfoFile(
+                simTime,
+                getAveragePhysicalData(),
+                getSettings()
+            );
 
             getEngineOutput().writeRingPolymerEnergyFile(
                 step0 + getStep(),
