@@ -10,7 +10,7 @@ instead of guessed. Tracked in #720.
 | Collector workflow, see [The workflow](#the-workflow) | implemented, #716 (inert until it reaches `main`) |
 | Overview report for `dev`, see [`data/CI_TIMINGS.md`](data/CI_TIMINGS.md) and [Overview report](#overview-report) | implemented, #717 (build analysis section: #718) |
 | Build timings: jobs upload a `.ninja_log` / ccache summary artifact, see [Build timings](#build-timings-718) | implemented (#718): job side, collector ingest and the overview section |
-| clang `-ftime-trace` analysis | #719: clang job (#747), trace summariser (#748), PR comment (#750), exact include graph and its ingest (#749) done; noise study and thresholds (#751) open |
+| clang `-ftime-trace` analysis | #719: clang job (#747), trace summariser (#748), PR comment (#750), exact include graph and its ingest (#749) done; noise study, thresholds and decisions (#751) done |
 
 ## Layout
 
@@ -204,7 +204,7 @@ What it shows, per recorded workflow:
   are in the job tables): medians of compiler, frontend and backend time against the
   previous window, a weekly chart, and the heaviest headers and slowest files ranked by
   their **share of the build's total compile time**, which cancels a uniform runner speed.
-  Times and the two event counts stay noisy (see #751).
+  Times and the two event counts stay noisy and informational (decision in #751).
 - **Include graph (exact):** per Ninja job the latest include pairs and project header
   pairs of pushes to `dev`, the exact change against the previous window, how many
   distinct graphs the window had, and the project headers with the highest fan-in of the
@@ -294,8 +294,10 @@ informational and never a failing check.
   events shorter than 0.5 ms out of the trace, so a faster run also records fewer events.
   The counts (shown without a percentage), the files-including-it column and the self time
   of headers made of many small events therefore depend on runner speed, and the
-  "lighter" lists can show false changes (seen on identical code). The thresholds are
-  provisional until the noise study (#751).
+  "lighter" lists can show false changes (seen on identical code). These thresholds are
+  the result of the noise study (#751). There is no gate on the include graph and no
+  nightly Release-type clang build; timings stay informational. For a clean measurement
+  of one change use a local snapshot pinned to one core (`scripts/pq_build_times`).
 - **Limits.** Only the longest lists (100 files, 300 headers, 150 templates) are
   compared; a header that is not in the baseline's list is compared with the cut-off of
   that list and marked "new in the list".
