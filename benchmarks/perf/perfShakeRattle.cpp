@@ -87,9 +87,9 @@ int main()
         // SHAKE only checks convergence; a real step needs correction passes.
         for (auto &molecule : molecules)
         {
-            auto &atom = molecule.getAtom(AtomIndex{1});
-            auto  pos  = atom.getPosition();
-            pos[0] += (i % 2 == 0) ? 0.02 : -0.02;
+            auto &atom  = molecule.getAtom(AtomIndex{1});
+            auto  pos   = atom.getPosition();
+            pos[0]     += (i % 2 == 0) ? 0.02 : -0.02;
             atom.setPosition(pos);
         }
         constr.applyShake(box);
