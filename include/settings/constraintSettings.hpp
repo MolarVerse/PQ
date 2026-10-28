@@ -50,14 +50,21 @@ class ConstraintSettings
     Setting<double> _rattleTolerance;
     Setting<double> _mshakeTolerance;
 
+    bool _shakeOnlyWaterModel = false;
+
    public:
     ConstraintSettings();
+
+    void activateShakeForWaterModel();
 
     [[nodiscard]]
     bool isActive() const;
 
     [[nodiscard]]
     bool isShakeLikeActive() const;
+
+    [[nodiscard]]
+    bool isShakeOnlyWaterModel() const;
 
     /*****************************
      * standard activate methods *

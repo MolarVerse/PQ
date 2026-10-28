@@ -43,6 +43,28 @@ ConstraintSettings::ConstraintSettings()
 }
 
 /**
+ * @brief check if the shake algorithm is only active for the water model
+ *
+ * @return true if shake is only active for the water model
+ */
+bool ConstraintSettings::isShakeOnlyWaterModel() const
+{
+    return _shakeOnlyWaterModel;
+}
+
+/**
+ * @brief activate the shake algorithm only for the water model
+ *
+ */
+void ConstraintSettings::activateShakeForWaterModel()
+{
+    if (!_shakeActive.get())
+        _shakeOnlyWaterModel = true;
+
+    _shakeActive.set(true);
+}
+
+/**
  * @brief check if any of the constraints algorithms are activated
  *
  * @return true if any of the constraints algorithms are activated

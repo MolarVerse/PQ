@@ -98,6 +98,22 @@ class TestConstraints : public ::testing::Test
             settings.constraintSettings
         );
 
+        addDefaultBondConstraints(*_constraints);
+    }
+
+    /**
+     * @brief adds the two bond constraints used by the fixture's molecules
+     * to the given Constraints object
+     *
+     * @details Constraints owns its own bond constraint list, so a
+     * freshly-constructed Constraints (e.g. with a different
+     * ConstraintSettings instance) does not share the fixture's bond
+     * constraints and needs them added explicitly via this helper.
+     *
+     * @param constraints
+     */
+    void addDefaultBondConstraints(constraints::Constraints &constraints) const
+    {
         auto bondConstraint1 = constraints::BondConstraint(
             _box->getMolecules().data(),
             _box->getMolecules().data(),
@@ -113,8 +129,8 @@ class TestConstraints : public ::testing::Test
             1.3
         );
 
-        _constraints->addBondConstraint(bondConstraint1);
-        _constraints->addBondConstraint(bondConstraint2);
+        constraints.addBondConstraint(bondConstraint1);
+        constraints.addBondConstraint(bondConstraint2);
     }
 };
 

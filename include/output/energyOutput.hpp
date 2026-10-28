@@ -33,7 +33,7 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-class Settings;   // forward declaration
+struct Settings;   // forward declaration
 
 namespace out
 {

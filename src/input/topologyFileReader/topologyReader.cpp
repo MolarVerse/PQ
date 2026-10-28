@@ -165,7 +165,8 @@ namespace input::topology
      */
     bool isNeeded(const Settings &settings)
     {
-        if (settings.constraintSettings.isActive())
+        if (settings.constraintSettings.isActive() &&
+            !settings.constraintSettings.isShakeOnlyWaterModel())
             return true;
 
         if (settings::ForceFieldSettings::isActive())

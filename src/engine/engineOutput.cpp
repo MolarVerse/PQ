@@ -149,6 +149,8 @@ namespace engine
      *
      * @param step
      * @param physicalData
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
      */
     void EngineOutput::writeEnergyFile(
         size_t                            step,
@@ -163,8 +165,10 @@ namespace engine
     /**
      * @brief wrapper for instant energy file output function
      *
-     * @param step
-     * @param physicalData
+     * @param step The current simulation step.
+     * @param physicalData The physical data of the system at the current step.
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
      */
     void EngineOutput::writeInstantEnergyFile(
         size_t                            step,
