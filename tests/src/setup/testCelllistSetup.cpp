@@ -24,6 +24,7 @@
 
 #include "celllistSetup.hpp"
 #include "engine.hpp"
+#include "orthorhombicBox.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"

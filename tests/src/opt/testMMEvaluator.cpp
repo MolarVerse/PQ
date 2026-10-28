@@ -33,6 +33,7 @@
 #include "intraNonBonded.hpp"
 #include "mmEvaluator.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "settings.hpp"

@@ -32,6 +32,7 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
 #include "simulationBox.hpp"
 

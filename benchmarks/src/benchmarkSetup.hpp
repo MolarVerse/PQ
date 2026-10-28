@@ -27,6 +27,7 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "vector3d.hpp"

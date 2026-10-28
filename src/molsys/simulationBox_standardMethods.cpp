@@ -23,10 +23,24 @@
 #include <algorithm>
 #include <optional>
 
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 namespace molsys
 {
+
+    /**
+     * @brief Construct a new Simulation Box object
+     *
+     * Initializes the simulation box with a default orthorhombic vacuum box.
+     */
+    SimulationBox::SimulationBox()
+        : _box(
+              std::make_shared<OrthorhombicBox>(OrthorhombicBox::makeVacuumBox()
+              )
+          )
+    {
+    }
 
     /************************
      *                      *

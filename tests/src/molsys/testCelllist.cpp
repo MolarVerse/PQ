@@ -31,6 +31,7 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"

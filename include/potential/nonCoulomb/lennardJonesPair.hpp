@@ -63,8 +63,9 @@ namespace pot
             const LJParams &params
         );
 
-        // TODO: we need to explicitly delete it to not implicitly create it
-        // with the wrong types!!! Needs cleanup
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/906
+        // explicitly deleted to not implicitly create it with the wrong
+        // types!!! Needs cleanup
         explicit LennardJonesPair(size_t, size_t, double, const LJParams &) =
             delete;
 

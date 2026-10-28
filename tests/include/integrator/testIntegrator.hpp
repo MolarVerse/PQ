@@ -31,6 +31,7 @@
 #include "atom.hpp"
 #include "integrator.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"

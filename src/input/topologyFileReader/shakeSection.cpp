@@ -72,7 +72,8 @@ namespace input::topology
         auto atom1      = stoul(lineElements[0]);
         auto atom2      = stoul(lineElements[1]);
         auto bondLength = stod(lineElements[2]);
-        // TODO: auto linker = lineElements[3];
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/912
+        // auto linker = lineElements[3];
 
         if (atom1 == atom2)
         {
