@@ -27,6 +27,7 @@
 
 #include "adam.hpp"
 #include "atom.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "vector3d.hpp"
 

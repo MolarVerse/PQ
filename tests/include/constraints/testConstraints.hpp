@@ -33,6 +33,7 @@
 #include "constraintSettings.hpp"
 #include "constraints.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 /**

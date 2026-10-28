@@ -33,6 +33,7 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "mathUtilities.hpp"
+#include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
 
 namespace input::restartFile

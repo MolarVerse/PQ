@@ -30,6 +30,7 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "trajectoryOutput.hpp"
 

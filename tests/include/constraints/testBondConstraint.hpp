@@ -31,6 +31,7 @@
 #include "atom.hpp"
 #include "bondConstraint.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 /**
