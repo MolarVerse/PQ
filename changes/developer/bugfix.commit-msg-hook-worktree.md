@@ -1,0 +1,1 @@
+- Make the commit-msg hook read the message file git passes to it, so it also works in git worktrees.
