@@ -44,12 +44,17 @@ fi
 declare -A base_ir_fresh
 
 # run a binary under callgrind and echo its instruction count (Ir)
+# Prints nothing if the benchmark exits non-zero or no count was reported, so
+# a crashing benchmark can never look like a speed-up.
 measure() {
-    local log
+    local log rc
     log="$(mktemp)"
     valgrind --tool=callgrind --callgrind-out-file="$(mktemp)" "$1" \
         >/dev/null 2>"$log"
-    grep -oE 'I +refs: +[0-9,]+' "$log" | grep -oE '[0-9,]+' | tr -d ,
+    rc=$?
+    if [ "$rc" -eq 0 ]; then
+        grep -oE 'I +refs: +[0-9,]+' "$log" | grep -oE '[0-9,]+' | tr -d ,
+    fi
     rm -f "$log"
 }
 
@@ -61,6 +66,8 @@ status=0
 rows=""
 regressed=""
 improved=""
+unmeasured=""
+declare -A pr_names
 shopt -s nullglob
 
 for pr_bin in "$PR_DIR"/perf_*; do
@@ -68,12 +75,25 @@ for pr_bin in "$PR_DIR"/perf_*; do
     name="$(basename "$pr_bin" | sed 's/^perf_//')"
     base_bin="$BASE_DIR/$(basename "$pr_bin")"
 
+    pr_names["$name"]=1
     pr_ir="$(measure "$pr_bin")"
+    if ! [[ "$pr_ir" =~ ^[0-9]+$ ]]; then
+        echo "::error::$name: no instruction count (the benchmark failed or valgrind reported none)"
+        rows+="| \`$name\` | – | – | no count | ⚠️ |"$'\n'
+        unmeasured+="\`$name\` "
+        status=1
+        continue
+    fi
 
     if [ -n "${base_ir_cache[$name]:-}" ]; then
         base_ir="${base_ir_cache[$name]}"
     elif [ -x "$base_bin" ]; then
         base_ir="$(measure "$base_bin")"
+        if ! [[ "$base_ir" =~ ^[0-9]+$ ]]; then
+            echo "::warning::$name: the base binary gave no instruction count - not compared"
+            rows+="| \`$name\` | – | $(fmt "$pr_ir") | base: no count | ⚠️ |"$'\n'
+            continue
+        fi
     else
         echo "$name: new benchmark (no baseline) - pr Ir=$pr_ir"
         rows+="| \`$name\` | – | $(fmt "$pr_ir") | new | ➕ |"$'\n'
@@ -97,8 +117,26 @@ for pr_bin in "$PR_DIR"/perf_*; do
     rows+="| \`$name\` | $(fmt "$base_ir") | $(fmt "$pr_ir") | ${pct}% | $emoji |"$'\n'
 done
 
+# Benchmarks that exist on the base but not in the PR (deleted or renamed):
+# not a failure, but never silent.
+declare -A base_names
+for base_bin in "$BASE_DIR"/perf_*; do
+    [ -x "$base_bin" ] && base_names["$(basename "$base_bin" | sed 's/^perf_//')"]=1
+done
+for name in "${!base_ir_cache[@]}"; do base_names["$name"]=1; done
+for name in "${!base_names[@]}"; do
+    [ -n "${pr_names[$name]:-}" ] && continue
+    echo "$name: present on the base branch but not in the PR (removed or renamed)"
+    base_col="–"
+    [ -n "${base_ir_cache[$name]:-}" ] && base_col="$(fmt "${base_ir_cache[$name]}")"
+    rows+="| \`$name\` | $base_col | – | removed | ➖ |"$'\n'
+done
+
 # ---- markdown report (headline + collapsible table + footer) ----
-if [ -n "$regressed" ]; then
+if [ -n "$unmeasured" ]; then
+    headline="❌ no instruction count: $unmeasured"
+    details_open=" open"
+elif [ -n "$regressed" ]; then
     headline="❌ regression: $regressed"
     details_open=" open"
 elif [ -n "$improved" ]; then
