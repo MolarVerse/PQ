@@ -205,6 +205,9 @@ namespace input::molDescriptor
         std::string line;
         size_t      atomCount = 0;
 
+        const auto isNonCoulombicActive =
+            _engine.getSettings().forceFieldSettings.isNonCoulombicActive();
+
         while (atomCount < molecule.getNumberOfAtoms())
         {
             if (_fp.eof())
@@ -249,7 +252,7 @@ namespace input::molDescriptor
                 );
             }
 
-            if (settings::ForceFieldSettings::isNonCoulombicActive())
+            if (isNonCoulombicActive)
             {
                 if (lineElements.size() != 4)
                 {

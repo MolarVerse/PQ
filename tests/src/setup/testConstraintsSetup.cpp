@@ -33,6 +33,7 @@
 #include "fileSettings.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "testSetup.hpp"
 

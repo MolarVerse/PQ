@@ -100,7 +100,7 @@ TEST_F(TestSetup, setupCoulombPotential)
  */
 TEST_F(TestSetup, setupNonCoulombPotential)
 {
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );
@@ -112,7 +112,7 @@ TEST_F(TestSetup, setupNonCoulombPotential)
         typeid(pot::ForceFieldNonCoulomb)
     );
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     setup::PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setupNonCoulomb();
 
@@ -127,7 +127,7 @@ TEST_F(TestSetup, setupNonCoulombPotential)
  */
 TEST_F(TestSetup, setupNonCoulombicPairs)
 {
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );
@@ -194,7 +194,7 @@ TEST_F(TestSetup, setupPotential)
 {
     EXPECT_NO_THROW(setup::setupPotential(*_engine));
 
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );

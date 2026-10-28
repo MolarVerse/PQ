@@ -28,7 +28,8 @@
 
 #include "inputFileParser.hpp"
 
-class WaterModelSettings;
+class WaterModelSettings;   // Forward declaration
+class ForceFieldSettings;   // Forward declaration
 
 namespace input
 {
@@ -41,9 +42,13 @@ namespace input
     class MMInputParser : public InputFileParser
     {
         mstd::Ref<WaterModelSettings> _waterModelSettings;
+        mstd::Ref<ForceFieldSettings> _forceFieldSettings;
 
        public:
-        explicit MMInputParser(WaterModelSettings &waterModelSettings);
+        explicit MMInputParser(
+            WaterModelSettings &waterModelSettings,
+            ForceFieldSettings &forceFieldSettings
+        );
 
         void addForceFieldTypeKey();
         void addNonCoulombTypeKey();

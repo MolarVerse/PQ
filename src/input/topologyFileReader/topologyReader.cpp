@@ -169,7 +169,7 @@ namespace input::topology
             !settings.constraintSettings.isShakeOnlyWaterModel())
             return true;
 
-        if (settings::ForceFieldSettings::isActive())
+        if (settings.forceFieldSettings.isActive())
             return true;
 
         return false;
