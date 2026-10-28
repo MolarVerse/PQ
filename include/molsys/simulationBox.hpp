@@ -32,7 +32,6 @@
 #include <vector>
 
 #include "atom.hpp"
-#include "box.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "simulationBoxView.hpp"
@@ -134,10 +133,7 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D calcBoxDimFromDensity() const;
         [[nodiscard]] linalg::Vec3D calcShiftVector(
             const linalg::Vec3D& position
-        ) const
-        {
-            return _box->calcShiftVector(position);
-        }
+        ) const;
         [[nodiscard]] int calcActiveMolCharge() const;
 
         [[nodiscard]]

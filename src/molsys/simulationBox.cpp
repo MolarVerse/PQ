@@ -763,6 +763,17 @@ namespace molsys
         return OrthorhombicBox::calcBoxDimFromDensity(_totalMass, _density);
     }
 
+    /**
+     * @brief calculate shift vector for a given position
+     *
+     */
+    [[nodiscard]] linalg::Vec3D SimulationBox::calcShiftVector(
+        const linalg::Vec3D& position
+    ) const
+    {
+        return _box->calcShiftVector(position);
+    }
+
     int SimulationBox::calcActiveMolCharge() const
     {
         int charge = 0;
