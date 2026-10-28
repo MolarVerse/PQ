@@ -21,8 +21,9 @@
 ******************************************************************************/
 
 // Fixed-work micro-benchmark of the SHAKE/RATTLE constraint solver. One bond
-// constraint per molecule, started at rest (positionOld == position) so the
-// solver is stable across iterations.
+// constraint per molecule, started at rest (positionOld == position). One
+// atom per molecule is displaced every iteration so each call has to correct a
+// violated bond, as in a real step.
 
 #include <cstdint>
 #include <cstdio>
@@ -82,6 +83,15 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
+        // Without this the bonds are satisfied after the first call and
+        // SHAKE only checks convergence; a real step needs correction passes.
+        for (auto &molecule : molecules)
+        {
+            auto &atom = molecule.getAtom(AtomIndex{1});
+            auto  pos  = atom.getPosition();
+            pos[0] += (i % 2 == 0) ? 0.02 : -0.02;
+            atom.setPosition(pos);
+        }
         constr.applyShake(box);
         constr.applyRattle(box);
     }
