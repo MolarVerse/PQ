@@ -545,7 +545,7 @@ namespace QM
         // previous handlers are restored; deliver the signal to PQ itself
         if (CancelState::flag != 0)
         {
-            ::raise(CancelState::flag);
+            static_cast<void>(::raise(CancelState::flag));
         }
 
         if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
