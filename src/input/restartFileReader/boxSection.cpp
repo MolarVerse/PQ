@@ -121,7 +121,7 @@ namespace input::restartFile
 
             const auto jobType = settings::GeneralSettings::getJobtype();
 
-            // TODO: implement triclinic box for MM-MD
+            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/910
             if (jobType != JobType::QM_MD &&
                 jobType != JobType::RING_POLYMER_QM_MD)
                 throw exc::InputFileException(

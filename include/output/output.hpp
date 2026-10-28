@@ -30,7 +30,7 @@
 #include <string_view>
 #include <utility>
 
-class TestOutput_testSpecialSetFilename_Test;   // Friend test class
+struct TestOutputUtils;   // Friend test class
 
 namespace out
 {
@@ -59,10 +59,7 @@ namespace out
         void close();
         void setFilename(const std::string_view &);
 
-// TODO: remove the TESTS dependency
-#ifdef WITH_TESTS
-        friend class ::TestOutput_testSpecialSetFilename_Test;
-#endif
+        friend struct ::TestOutputUtils;
 
         /***************************
          * standard getter methods *

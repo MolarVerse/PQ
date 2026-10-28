@@ -97,7 +97,7 @@ namespace input
     )
         : _fileName(fileName)
     {
-        // TODO: remove engine after rework
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/909
         _parsers.push_back(std::make_unique<CellListInputParser>());
         _parsers.push_back(std::make_unique<ConstraintsInputParser>());
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());

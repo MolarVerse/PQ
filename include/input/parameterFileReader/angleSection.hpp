@@ -58,8 +58,9 @@ namespace input::parameterFile
             size_t /* lineNumber */
         ) override
         {
+            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/905
+            // implement processHeader
         }
-        // TODO: implement processHeader
     };
 
 }   // namespace input::parameterFile
