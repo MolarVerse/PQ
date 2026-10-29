@@ -207,24 +207,32 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
 
     auto momentumBefore = linalg::Vec3D(0.0, 0.0, 0.0);
     for (const auto &atom : atoms)
+    {
         momentumBefore += atom->getMass() * atom->getVelocity();
+    }
 
     mShake.applyMRattle(simBox);
 
     for (size_t i = 0; i < 2; ++i)
+    {
         for (size_t j = i + 1; j < 3; ++j)
         {
             const auto bond = atoms[i]->getPosition() - atoms[j]->getPosition();
             const auto dVel = atoms[i]->getVelocity() - atoms[j]->getVelocity();
             EXPECT_NEAR(dot(bond, dVel), 0.0, 1.0e-10);
         }
+    }
 
     auto momentumAfter = linalg::Vec3D(0.0, 0.0, 0.0);
     for (const auto &atom : atoms)
+    {
         momentumAfter += atom->getMass() * atom->getVelocity();
+    }
 
     for (size_t k = 0; k < 3; ++k)
+    {
         EXPECT_NEAR(momentumAfter[k], momentumBefore[k], 1.0e-10);
+    }
 }
 
 /**
