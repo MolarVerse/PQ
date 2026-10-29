@@ -28,6 +28,7 @@ set(perf_benchmarks
     perfReactionField.cpp
     perfMaxwellBoltzmann.cpp
     perfResetKinetics.cpp
+    perfEndToEnd.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -68,6 +69,13 @@ foreach(perf_source ${perf_benchmarks})
         box
         linearAlgebra
     )
+
+    # the end-to-end benchmark runs the real driver on a small input set
+    if(perf_name STREQUAL "endToEnd")
+        target_link_libraries(perf_${perf_name} PRIVATE driver)
+        target_compile_definitions(perf_${perf_name} PRIVATE
+            PQ_PERF_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data/endToEnd")
+    endif()
 
     # enable the callgrind counter hook if valgrind's header is available
     if(HAVE_CALLGRIND_H)
