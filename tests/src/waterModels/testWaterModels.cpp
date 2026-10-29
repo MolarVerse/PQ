@@ -41,6 +41,7 @@
 #include "guffNonCoulomb.hpp"
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
+#include "interWaterKernels.tpp"   // IWYU pragma: keep -- required for template instantiations
 #include "interWaterParamters.hpp"
 #include "lennardJonesPair.hpp"
 #include "mTRIntraWater.hpp"
@@ -50,7 +51,6 @@
 #include "potential.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
-#include "potentialKernels.tpp.hpp"   // IWYU pragma: keep -- required for template instantiations
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
