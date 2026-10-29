@@ -35,8 +35,8 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
+#include <algorithm>
 #include <array>
-#include <numeric>
 
 #include "defaults.hpp"
 #include "guffPair.hpp"
@@ -47,7 +47,7 @@ int main()
 {
     std::array<double, defaults::NUM_GUFF_COEFFICIENTS> dense{};
     std::array<double, defaults::NUM_GUFF_COEFFICIENTS> sparse{};
-    std::ranges::iota(dense, 2.0);
+    std::ranges::generate(dense, [value = 2.0]() mutable { return value++; });
     sparse[0] = 2.0;
     sparse[1] = 6.0;
     sparse[2] = 3.0;
