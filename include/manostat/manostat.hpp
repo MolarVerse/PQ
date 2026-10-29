@@ -84,11 +84,11 @@ namespace manostat
         [[nodiscard]]
         double _getPressure() const;
 
-        [[nodiscard]]
-        double _getTargetPressure() const;
-
         void _setPressureTensor(const linalg::tensor3D &pTensor);
         void _setPressure(double pressure);
+
+        [[nodiscard]]
+        const ManostatSettings &_getSettings() const;
 
        private:
         static void _validateCandidate(molsys::Box &, const linalg::tensor3D &);

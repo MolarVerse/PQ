@@ -24,7 +24,6 @@
 
 #define _STOCHASTIC_RESCALING_MANOSTAT_HPP_
 
-#include "enums/manostat.hpp"
 #include "manostat.hpp"
 #include "randomNumberGenerator.hpp"
 
@@ -41,10 +40,6 @@ namespace manostat
        private:
         rng::RandomNumberGenerator _randomNumberGenerator;
 
-        double    _tau;
-        double    _compressibility;
-        FixedAxis _fixedAxis;
-
        public:
         using Manostat::Manostat;
 
@@ -54,9 +49,6 @@ namespace manostat
         ) override;
 
         [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
-
-        [[nodiscard]] double getTau() const;
-        [[nodiscard]] double getCompressibility() const;
 
        protected:
         [[nodiscard]]
@@ -75,9 +67,6 @@ namespace manostat
     class SemiIsotropicStochasticRescalingManostat
         : public StochasticRescalingManostat
     {
-       private:
-        Isotropy _isotropy;
-
        public:
         using StochasticRescalingManostat::StochasticRescalingManostat;
 

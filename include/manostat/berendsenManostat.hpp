@@ -24,7 +24,6 @@
 
 #define _BERENDSEN_MANOSTAT_HPP_
 
-#include "enums/manostat.hpp"
 #include "manostat.hpp"
 
 namespace manostat
@@ -37,11 +36,6 @@ namespace manostat
      */
     class BerendsenManostat : public Manostat
     {
-       private:
-        double    _tau;
-        double    _compressibility;
-        FixedAxis _fixedAxis;
-
        public:
         using Manostat::Manostat;
 
@@ -51,15 +45,6 @@ namespace manostat
         ) override;
 
         [[nodiscard]] virtual linalg::tensor3D calculateMu() const;
-
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] double getTau() const;
-        [[nodiscard]] double getCompressibility() const;
-
-        [[nodiscard]] FixedAxis getFixedAxis() const;
     };
 
     /**
@@ -70,9 +55,6 @@ namespace manostat
      */
     class SemiIsotropicBerendsenManostat : public BerendsenManostat
     {
-       private:
-        Isotropy _isotropy;
-
        public:
         using BerendsenManostat::BerendsenManostat;
 
