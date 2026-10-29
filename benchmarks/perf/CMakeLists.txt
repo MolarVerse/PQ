@@ -18,6 +18,12 @@ set(perf_benchmarks
     perfKinetics.cpp
     perfVirial.cpp
     perfShakeRattle.cpp
+    perfBerendsenThermostat.cpp
+    perfLangevinThermostat.cpp
+    perfNoseHooverThermostat.cpp
+    perfVelocityRescalingThermostat.cpp
+    perfBerendsenManostat.cpp
+    perfStochasticRescalingManostat.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -44,6 +50,8 @@ foreach(perf_source ${perf_benchmarks})
         intraNonBonded
         forceField
         integrator
+        thermostat
+        manostat
         virial
         constraints
         molsys
