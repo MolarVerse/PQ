@@ -229,7 +229,7 @@ All pipelines are in `.github/workflows/`:
 | `changelog.yml` | PRs to `dev`/`NEXT` | Script tests + valid changelog fragment required |
 | `gh_checks.yml` | PR events | PR must link an issue (`Closes/Fixes/Resolves/Related to #N`) |
 | `perf.yml` | PRs to `main`/`dev`/`NEXT` | Callgrind instruction-count regression gate |
-| `clang_build.yml` | PRs touching C++/build files | Non-gating clang `-ftime-trace` comment |
+| `clang_build.yml` | PRs touching C++/build files | Non-gating clang 20 build and tests (build analysis for the CI metrics) |
 | `jekyll-gh-pages.yml` | PRs to `main`/`dev` touching docs/include/src; push to `main` | Sphinx + Doxygen build; deploys the site from `main` |
 | `ci_metrics.yml` | Daily, manual | Collects CI timing data (see `.github/ci-metrics/README.md`) |
 | `sync-dev-into-next.yml, sync-main-into-dev.yml` | Push to `dev` / `main`, manual | Automatic branch syncs |

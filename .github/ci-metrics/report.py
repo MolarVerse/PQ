@@ -32,7 +32,7 @@ EVENT_LABEL = {"push": "push (dev)", "pull_request": "pull_request"}
 
 CHART_WORKFLOW = "BUILD"
 NON_GATING_WORKFLOWS = ("Clang Build",)
-CLANG_SECTION_SHOWN = 10
+FAN_IN_SHOWN = 10
 CHART_MIN_RUNS = 3
 
 
@@ -66,7 +66,6 @@ class Analysis:
     ninja: dict | None
     ccache: dict | None
     includes: dict | None = None
-    clang: dict | None = None
     runner: dict | None = None
 
 
@@ -122,7 +121,6 @@ def parse_analysis(record):
         ninja=record["ninja"],
         ccache=record["ccache"],
         includes=record.get("includes"),
-        clang=record.get("clang"),
         runner=record.get("runner"),
     )
 
@@ -629,100 +627,6 @@ def latest_value(entries):
     return max(entries, key=lambda entry: entry[0])[1]
 
 
-def clang_builds(analyses):
-    return [a for a in analyses if a.clang is not None and a.event == "push"]
-
-
-def clang_lines(analyses, windows, options):
-    """The clang build time section: dev pushes only, see the notes in the text."""
-    builds = clang_builds(analyses)
-    lines = ["### Clang build times", ""]
-    if not builds:
-        return lines + ["No clang trace summaries yet (they are collected for pushes to `dev` only).", ""]
-    current = [b for b in builds if windows.current(b.created)]
-    previous = [b for b in builds if windows.previous(b.created)]
-    lines += [
-        f"From the non-gating `Clang Build` workflow, pushes to `{PUSH_BRANCH}` only. Compiler time is CPU "
-        "time summed over all files on a shared runner; the same code took between 15 and 28 minutes in "
-        "different runs, so absolute values are noisy. The header and file rankings therefore use each "
-        "header's **share of the build's total compile time**, which cancels a uniform runner speed. "
-        "The two event counts also depend on runner speed (clang drops events under 0.5 ms).",
-        "",
-    ]
-    if not current:
-        return lines + ["No clang build in the current window.", ""]
-
-    def med(builds_, key):
-        return median_of([b.clang[key] for b in builds_])
-
-    rows = []
-    for label, key, kind in (
-        ("Compiler time", "total_s", "time"),
-        ("Frontend", "frontend_s", "time"),
-        ("Backend", "backend_s", "time"),
-        ("Header inclusions (events of at least 0.5 ms)", "source_events", "count"),
-        ("Template instantiation events (at least 0.5 ms)", "instantiation_events", "count"),
-    ):
-        now, before = med(current, key), med(previous, key) if previous else None
-        shown = format_duration(now) if kind == "time" else f"{now:,.0f}"
-        old = "-" if before is None else (format_duration(before) if kind == "time" else f"{before:,.0f}")
-        change = format_percent_change(before, now) if kind == "time" and before and len(previous) >= options.min_samples and len(current) >= options.min_samples else "n/a"
-        rows.append([label, shown, old, change])
-    lines += [f"{len(current)} builds in the current window, {len(previous)} in the previous one (medians).", ""]
-    lines += table(["", "Now", "Previous window", "Change"], rows)
-    lines.append("")
-
-    totals = weekly([(b.created, b.clang["total_s"]) for b in builds], median_value)
-    if totals:
-        minutes = [round(value / 60, 1) for value in totals.values()]
-        lines += chart("Clang compiler time, dev pushes, weekly median (minutes)", "minutes", list(totals), minutes, chart_maximum(minutes, 5))
-        lines.append("")
-
-    def shares(builds_, list_key, name_key, value_key):
-        """name -> [(share of total compile time, seconds)] over the builds that list it."""
-        result = defaultdict(list)
-        for build in builds_:
-            total = build.clang["total_s"]
-            if not total:
-                continue
-            for entry in build.clang[list_key]:
-                result[entry[name_key]].append((entry[value_key] / total, entry[value_key]))
-        return result
-
-    now_headers = shares(current, "headers", "header", "self_s")
-    before_headers = shares(previous, "headers", "header", "self_s")
-    ranked = sorted(now_headers.items(), key=lambda item: (-median_of([x[0] for x in item[1]]), item[0]))[:CLANG_SECTION_SHOWN]
-    lines += ["#### Heaviest headers (self time, share of compile time)", ""]
-    header_rows = []
-    for name, values in ranked:
-        share = median_of([x[0] for x in values])
-        old = before_headers.get(name)
-        old_share = median_of([x[0] for x in old]) if old else None
-        enough = old is not None and len(old) >= options.min_samples and len(values) >= options.min_samples
-        header_rows.append(
-            [
-                code_text(name),
-                f"{len(values)}/{len(current)}",
-                fmt_seconds(median_of([x[1] for x in values])),
-                f"{share * 100:.2f}%",
-                "-" if old_share is None else f"{old_share * 100:.2f}%",
-                f"{(share - old_share) * 100:+.2f} pp" if enough else "n/a",
-            ]
-        )
-    lines += table(["Header", "In builds", "Median self time", "Share now", "Share before", "Change"], header_rows)
-    lines += ["", "\"In builds\": the header was in the build's list of the 30 heaviest headers.", ""]
-
-    now_files = shares(current, "slowest_files", "file", "total_s")
-    ranked_files = sorted(now_files.items(), key=lambda item: (-median_of([x[1] for x in item[1]]), item[0]))[:CLANG_SECTION_SHOWN]
-    lines += ["#### Slowest files", ""]
-    lines += table(
-        ["File", "In builds", "Median time", "Share of compile time"],
-        [[code_text(name), f"{len(v)}/{len(current)}", fmt_seconds(median_of([x[1] for x in v])), f"{median_of([x[0] for x in v]) * 100:.2f}%"] for name, v in ranked_files],
-    )
-    lines.append("")
-    return lines
-
-
 def code_text(text, limit=120):
     """Inline code for a name from the data: no backticks, pipes or line breaks, clipped."""
     text = "".join(ch if ch.isprintable() else " " for ch in str(text)).replace("`", "'").replace("|", "/")
@@ -780,7 +684,7 @@ def include_lines(analyses, windows, options):
         lines += ["#### Project headers with the highest fan-in (latest clang build)", ""]
         lines += table(
             ["Header", "Included by (object files)"],
-            [[code_text(e["file"]), str(e["fan_in"])] for e in latest.includes["top_project_files"][:CLANG_SECTION_SHOWN]],
+            [[code_text(e["file"]), str(e["fan_in"])] for e in latest.includes["top_project_files"][:FAN_IN_SHOWN]],
         )
         lines.append("")
     return lines
@@ -877,7 +781,6 @@ def build_analysis_lines(analyses, windows, options):
         lines += [f"#### {workflow} / {job} ({complete} of {count} builds complete)", ""]
         lines += table(["Step", "Kind", "In", "Median", "Max"], rows)
         lines.append("")
-    lines += clang_lines(kept, windows, options)
     lines += include_lines(kept, windows, options)
     return lines
 

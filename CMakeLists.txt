@@ -159,8 +159,6 @@ elseif(CMAKE_BUILD_TYPE MATCHES "^[Dd]ebug")
         )
     endif()
     if(PQ_COMPILER_IS_CLANG)
-        message(STATUS ">>> PQ: adding -ftime-trace")
-        add_compile_options(-ftime-trace)
         #TODO: these should be removed as soon as linearalgebra is migrated to mstd
         list(APPEND PQ_WARNING_FLAGS -Wno-gnu-anonymous-struct -Wno-nested-anon-types)
     endif()
