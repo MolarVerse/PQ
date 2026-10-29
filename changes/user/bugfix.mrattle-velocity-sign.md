@@ -1,0 +1,1 @@
+- Fix the sign of the M-RATTLE velocity correction. M-SHAKE runs added velocity along constrained bonds instead of removing it, so the thermostat cooled the real motion and rigid water became over-structured with far too slow diffusion.

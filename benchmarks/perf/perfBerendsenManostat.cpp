@@ -20,17 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-// Fixed-work micro-benchmark of the SHAKE/RATTLE constraint solver. One bond
-// constraint per molecule, started at rest (positionOld == position) so the
-// solver is stable across iterations.
+// Fixed-work micro-benchmark of the Berendsen manostat, applied to 20 molecules
+// of 3 atoms (pressure estimate, scaling matrix and scaling of box and
+// molecules).
 
 #include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>
-
-#include "settings.hpp"
-#include "strongTypes.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -38,11 +35,10 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "bondConstraint.hpp"
-#include "constraintSettings.hpp"
-#include "constraints.hpp"
+#include "berendsenManostat.hpp"
 #include "perfBenchSetup.hpp"
-#include "simulationBox.hpp"
+#include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "timingsSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
@@ -50,43 +46,22 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 int main()
 {
     settings::TimingsSettings::setTimeStep(0.001);
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto &molecules = box.getMolecules();
-
-    Settings settings;
-    settings.constraintSettings.setShakeMaxIter(100);
-    settings.constraintSettings.setRattleMaxIter(100);
-    settings.constraintSettings.setShakeTolerance(1.0e-8);
-    settings.constraintSettings.setRattleTolerance(1.0e-8);
-    settings.constraintSettings.activateShake();
-    auto constr = constraints::Constraints(settings.constraintSettings);
-
-    for (auto &molecule : molecules)
-    {
-        constr.addBondConstraint(
-            constraints::BondConstraint(
-                &molecule,
-                &molecule,
-                AtomIndex{0},
-                AtomIndex{1},
-                0.85
-            )
-        );
-    }
-
-    constr.calculateConstraintBondRefs(box);
+    auto physicalData = physicalData::PhysicalData();
+    auto manostat =
+        manostat::BerendsenManostat(1.0, 100.0, 4.6e-5, FixedAxis::NONE);
 
     CALLGRIND_ZERO_STATS;
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        constr.applyShake(box);
-        constr.applyRattle(box);
+        manostat.applyManostat(box, physicalData);
     }
 
     // read state so the loop cannot be optimized away
-    std::cout << std::format("{:.6f}\n", box.calculateMomentum()[0]);
+    std::cout << std::format("{:.6f}\n", box.getVolume());
     return 0;
 }

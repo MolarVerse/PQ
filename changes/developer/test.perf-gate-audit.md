@@ -1,0 +1,1 @@
+- Perf gate: a benchmark that crashes or reports no instruction count now fails the check instead of counting as an improvement, and benchmarks removed in a PR are listed. The SHAKE/RATTLE benchmark (now perf_shakeRattle) corrects a violated bond in every iteration instead of only checking convergence.

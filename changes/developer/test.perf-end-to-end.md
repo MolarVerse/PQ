@@ -1,0 +1,1 @@
+- Perf gate: add an end-to-end benchmark that runs a short MM-MD simulation (219 rigid TIP3P waters, M-Shake, cell list, 100 steps) through the real driver, including setup and output.

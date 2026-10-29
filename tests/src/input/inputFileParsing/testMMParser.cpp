@@ -41,34 +41,37 @@
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    WaterModelSettings   waterModelSettings;
-    input::MMInputParser parser{waterModelSettings};
-    const auto           funcMap = parser.getKeywordFuncMap();
+    Settings             settings;
+    input::MMInputParser parser{
+        settings.waterModelSettings,
+        settings.forceFieldSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("force_field"));
     const auto& parseFunc = funcMap.at("force_field");
 
     std::vector<std::string> lineElements = {"force-field", "=", "on"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_TRUE(settings::ForceFieldSettings::isNonCoulombicActive());
+    EXPECT_TRUE(settings.forceFieldSettings.isActive());
+    EXPECT_TRUE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    settings.forceFieldSettings.setType(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"force-field", "=", "off"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(settings::ForceFieldSettings::isNonCoulombicActive());
+    EXPECT_FALSE(settings.forceFieldSettings.isActive());
+    EXPECT_FALSE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    settings.forceFieldSettings.setType(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"force-field", "=", "bonded"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(settings::ForceFieldSettings::isNonCoulombicActive());
+    EXPECT_TRUE(settings.forceFieldSettings.isActive());
+    EXPECT_FALSE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    settings.forceFieldSettings.setType(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"forceField", "=", "notValid"};
@@ -89,9 +92,13 @@ TEST_F(TestInputFileReader, testParseForceField)
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    WaterModelSettings   waterModelSettings;
-    input::MMInputParser parser{waterModelSettings};
-    const auto           funcMap = parser.getKeywordFuncMap();
+    Settings settings;
+
+    input::MMInputParser parser{
+        settings.waterModelSettings,
+        settings.forceFieldSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("noncoulomb"));
     const auto& parseNonCoulombFunc = funcMap.at("noncoulomb");
 

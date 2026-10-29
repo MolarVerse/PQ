@@ -28,6 +28,7 @@
 #ifndef PQ_BENCH_SETUP_HPP
 #define PQ_BENCH_SETUP_HPP
 
+#include <cmath>
 #include <cstddef>
 #include <memory>
 
@@ -176,6 +177,21 @@ namespace benchSetup
         box.calculateCenterOfMass();
 
         return box;
+    }
+
+    // Scale all velocities so the box has the given temperature. The velocities
+    // of makeMolecule() are tiny (about 1e-6 K); a thermostat with a realistic
+    // target would heat such a system explosively instead of doing a steady
+    // amount of work.
+    inline void scaleVelocitiesToTemperature(
+        molsys::SimulationBox& simulationBox,
+        double                 temperature
+    )
+    {
+        const auto factor =
+            std::sqrt(temperature / simulationBox.calculateTemperature());
+        for (auto& atom : simulationBox.getAtoms())
+            atom->setVelocity(atom->getVelocity() * factor);
     }
 }   // namespace benchSetup
 

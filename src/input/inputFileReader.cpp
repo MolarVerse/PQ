@@ -108,7 +108,10 @@ namespace input
             std::make_unique<FilesInputParser>(validateFilePaths)
         );
         _parsers.push_back(
-            std::make_unique<MMInputParser>(settings.waterModelSettings)
+            std::make_unique<MMInputParser>(
+                settings.waterModelSettings,
+                settings.forceFieldSettings
+            )
         );
         _parsers.push_back(std::make_unique<GeneralInputParser>());
         _parsers.push_back(

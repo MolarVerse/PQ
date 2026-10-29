@@ -31,6 +31,7 @@
 #include "infoOutput.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 #include "testEnergyOutput.hpp"
 #include "thermostatSettings.hpp"
 #include "vector3d.hpp"
@@ -53,7 +54,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     _physicalData->setIntraNonCoulombEnergy(10.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
@@ -141,7 +142,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     _physicalData->setImproperEnergy(22.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
@@ -239,7 +240,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     _physicalData->setDensity(12.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
@@ -334,7 +335,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _physicalData->setDensity(12.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
     _settings->manostatSettings.setFixedAxis(FixedAxis::Z);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
@@ -436,7 +437,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
     _settings->manostatSettings.setManostatType(ManostatType::NONE);
 
@@ -522,7 +523,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     _physicalData->setNoseHooverFrictionEnergy(12.0);
     _physicalData->setLoopTime(0.1);
 
-    settings::ForceFieldSettings::setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     _settings->manostatSettings.setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(

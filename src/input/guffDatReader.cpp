@@ -65,7 +65,7 @@ namespace input::guffdat
      */
     void readGuffDat(engine::Engine &engine)
     {
-        if (!isNeeded())
+        if (!isNeeded(engine.getSettings()))
             return;
 
         out::StdoutOutput::writeRead(
@@ -93,12 +93,12 @@ namespace input::guffdat
      * @return true
      * @return false
      */
-    bool isNeeded()
+    bool isNeeded(const Settings &settings)
     {
         if (!settings::GeneralSettings::isMMActivated())
             return false;
 
-        if (settings::ForceFieldSettings::isNonCoulombicActive())
+        if (settings.forceFieldSettings.isNonCoulombicActive())
             return false;
 
         return true;

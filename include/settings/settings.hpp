@@ -25,6 +25,7 @@
 
 #include "constraintSettings.hpp"
 #include "convergenceSettings.hpp"
+#include "forceFieldSettings.hpp"
 #include "hessianSettings.hpp"
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
@@ -46,6 +47,7 @@ struct Settings
     ConstraintSettings    constraintSettings;
     ConvSettings          convSettings;
     WaterModelSettings    waterModelSettings;
+    ForceFieldSettings    forceFieldSettings;
     ManostatSettings      manostatSettings;
 
     void finalize();

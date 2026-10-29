@@ -99,7 +99,7 @@ namespace out
             ) << std::format("{:20.12f}\t", physicalData.getNonCoulombEnergy());
         }
 
-        if (settings::ForceFieldSettings::isActive())
+        if (settings.forceFieldSettings.isActive())
         {
             _getFilePointer()
                 << std::format("{:20.12f}\t", physicalData.getBondEnergy());

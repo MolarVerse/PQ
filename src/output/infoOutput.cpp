@@ -93,7 +93,7 @@ namespace out
             );
         }
 
-        if (settings::ForceFieldSettings::isActive())
+        if (settings.forceFieldSettings.isActive())
         {
             _writeLeft(physicalData.getBondEnergy(), "E(BOND)", "kcal/mol");
             _writeRight(physicalData.getAngleEnergy(), "E(ANGLE)", "kcal/mol");

@@ -27,6 +27,9 @@ set -uo pipefail
 PR_DIR="${1:?usage: perf_gate.sh <pr_bench_dir> <base_bench_dir> [threshold%]}"
 BASE_DIR="${2:?usage: perf_gate.sh <pr_bench_dir> <base_bench_dir> [threshold%]}"
 THRESHOLD="${3:-2}"
+# An improvement at least this large is flagged: a benchmark that silently
+# stopped doing its work also looks like a big speed-up. Never fails the check.
+LARGE_DROP="${PERF_LARGE_DROP_PERCENT:-30}"
 REPORT="${PERF_REPORT_FILE:-perf_report.md}"
 BASE_IR_FILE="${PERF_BASE_IR_FILE:-}"
 
@@ -44,12 +47,17 @@ fi
 declare -A base_ir_fresh
 
 # run a binary under callgrind and echo its instruction count (Ir)
+# Prints nothing if the benchmark exits non-zero or no count was reported, so
+# a crashing benchmark can never look like a speed-up.
 measure() {
-    local log
+    local log rc
     log="$(mktemp)"
     valgrind --tool=callgrind --callgrind-out-file="$(mktemp)" "$1" \
         >/dev/null 2>"$log"
-    grep -oE 'I +refs: +[0-9,]+' "$log" | grep -oE '[0-9,]+' | tr -d ,
+    rc=$?
+    if [ "$rc" -eq 0 ]; then
+        grep -oE 'I +refs: +[0-9,]+' "$log" | grep -oE '[0-9,]+' | tr -d ,
+    fi
     rm -f "$log"
 }
 
@@ -61,6 +69,10 @@ status=0
 rows=""
 regressed=""
 improved=""
+unmeasured=""
+large_drops=""
+declare -A pr_names
+declare -A pr_ir_all
 shopt -s nullglob
 
 for pr_bin in "$PR_DIR"/perf_*; do
@@ -68,12 +80,26 @@ for pr_bin in "$PR_DIR"/perf_*; do
     name="$(basename "$pr_bin" | sed 's/^perf_//')"
     base_bin="$BASE_DIR/$(basename "$pr_bin")"
 
+    pr_names["$name"]=1
     pr_ir="$(measure "$pr_bin")"
+    if ! [[ "$pr_ir" =~ ^[0-9]+$ ]]; then
+        echo "::error::$name: no instruction count (the benchmark failed or valgrind reported none)"
+        rows+="| \`$name\` | – | – | no count | ⚠️ |"$'\n'
+        unmeasured+="\`$name\` "
+        status=1
+        continue
+    fi
+    pr_ir_all["$name"]="$pr_ir"
 
     if [ -n "${base_ir_cache[$name]:-}" ]; then
         base_ir="${base_ir_cache[$name]}"
     elif [ -x "$base_bin" ]; then
         base_ir="$(measure "$base_bin")"
+        if ! [[ "$base_ir" =~ ^[0-9]+$ ]]; then
+            echo "::warning::$name: the base binary gave no instruction count - not compared"
+            rows+="| \`$name\` | – | $(fmt "$pr_ir") | base: no count | ⚠️ |"$'\n'
+            continue
+        fi
     else
         echo "$name: new benchmark (no baseline) - pr Ir=$pr_ir"
         rows+="| \`$name\` | – | $(fmt "$pr_ir") | new | ➕ |"$'\n'
@@ -91,15 +117,70 @@ for pr_bin in "$PR_DIR"/perf_*; do
         regress) emoji="❌"; status=1; regressed+="\`$name\` ${pct}% "
                  echo "::error::$name regressed ${pct}% (Ir base=$base_ir pr=$pr_ir, threshold ${THRESHOLD}%)" ;;
         improve) emoji="🎉"; improved+="\`$name\` ${pct}% "
-                 echo "$name: ${pct}% (improved)" ;;
+                 echo "$name: ${pct}% (improved)"
+                 if awk -v p="$pct" -v t="$LARGE_DROP" 'BEGIN{ exit !(-p >= t) }'; then
+                     emoji="⚠️"
+                     large_drops+="\`$name\` ${pct}% "
+                     echo "::warning::$name dropped ${pct}% - check that the benchmark still does its work"
+                 fi ;;
         *)       emoji="✅"; echo "$name: ${pct}%" ;;
     esac
     rows+="| \`$name\` | $(fmt "$base_ir") | $(fmt "$pr_ir") | ${pct}% | $emoji |"$'\n'
 done
 
+# ---- scaling: benchmarks named <group>N<molecules> form a size series ----
+# Exponent = ln(Ir_large / Ir_small) / ln(n_large / n_small); 1.00 is linear.
+# Informational: a worse exponent also shows up as a regression of the largest
+# benchmark, which the per-benchmark gate above already catches.
+declare -A scaling_groups
+for name in "${!pr_ir_all[@]}"; do
+    if [[ "$name" =~ ^(.+)N([0-9]+)$ ]]; then
+        scaling_groups["${BASH_REMATCH[1]}"]+="${BASH_REMATCH[2]} "
+    fi
+done
+scaling_rows=""
+for group in "${!scaling_groups[@]}"; do
+    # shellcheck disable=SC2086
+    read -r -a sizes <<< "$(printf '%s\n' ${scaling_groups[$group]} | sort -n | tr '\n' ' ')"
+    [ "${#sizes[@]}" -ge 2 ] || continue
+    small="${sizes[0]}"
+    large="${sizes[${#sizes[@]} - 1]}"
+    exponent() {   # <ir small> <ir large>
+        awk -v a="$1" -v b="$2" -v s="$small" -v l="$large" \
+            'BEGIN{ if (a>0 && b>0) printf "%.2f", log(b/a)/log(l/s); else print "-" }'
+    }
+    pr_exp="$(exponent "${pr_ir_all[${group}N$small]}" "${pr_ir_all[${group}N$large]}")"
+    base_exp="–"
+    if [ -n "${base_ir_fresh[${group}N$small]:-}" ] && [ -n "${base_ir_fresh[${group}N$large]:-}" ]; then
+        base_exp="$(exponent "${base_ir_fresh[${group}N$small]}" "${base_ir_fresh[${group}N$large]}")"
+    fi
+    scaling_rows+="| \`$group\` | $small to $large | $base_exp | $pr_exp |"$'\n'
+done
+
+# Benchmarks that exist on the base but not in the PR (deleted or renamed):
+# not a failure, but never silent.
+declare -A base_names
+for base_bin in "$BASE_DIR"/perf_*; do
+    [ -x "$base_bin" ] && base_names["$(basename "$base_bin" | sed 's/^perf_//')"]=1
+done
+for name in "${!base_ir_cache[@]}"; do base_names["$name"]=1; done
+for name in "${!base_names[@]}"; do
+    [ -n "${pr_names[$name]:-}" ] && continue
+    echo "$name: present on the base branch but not in the PR (removed or renamed)"
+    base_col="–"
+    [ -n "${base_ir_cache[$name]:-}" ] && base_col="$(fmt "${base_ir_cache[$name]}")"
+    rows+="| \`$name\` | $base_col | – | removed | ➖ |"$'\n'
+done
+
 # ---- markdown report (headline + collapsible table + footer) ----
-if [ -n "$regressed" ]; then
+if [ -n "$unmeasured" ]; then
+    headline="❌ no instruction count: $unmeasured"
+    details_open=" open"
+elif [ -n "$regressed" ]; then
     headline="❌ regression: $regressed"
+    details_open=" open"
+elif [ -n "$large_drops" ]; then
+    headline="⚠️ large drop, check that the benchmark still does its work: $large_drops"
     details_open=" open"
 elif [ -n "$improved" ]; then
     headline="🎉 improvement: $improved"
@@ -118,6 +199,14 @@ fi
     echo "| benchmark | base Ir | PR Ir | Δ | |"
     echo "|---|---|---|---|---|"
     printf '%s' "$rows"
+    if [ -n "$scaling_rows" ]; then
+        echo ""
+        echo "Scaling of the size series (exponent of Ir over the number of molecules, 1.00 = linear):"
+        echo ""
+        echo "| series | sizes | base | PR |"
+        echo "|---|---|---|---|"
+        printf '%s' "$scaling_rows"
+    fi
     echo "</details>"
     echo ""
     echo "<sub><em>Deterministic callgrind instruction counts vs the base branch; gated at ±${THRESHOLD}%. Not wall-clock.</em></sub>"

@@ -9,3 +9,4 @@
 - Replace static `WaterModelSettings`
 - Replace static `ConstraintSettings`
 - Replace static `ManostatSettings`
+- Replace static `ForceFieldSettings`
