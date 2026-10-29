@@ -184,12 +184,13 @@ namespace benchSetup
     // target would heat such a system explosively instead of doing a steady
     // amount of work.
     inline void scaleVelocitiesToTemperature(
-        molsys::SimulationBox& box,
+        molsys::SimulationBox& simulationBox,
         double                 temperature
     )
     {
-        const auto factor = std::sqrt(temperature / box.calculateTemperature());
-        for (auto& atom : box.getAtoms())
+        const auto factor =
+            std::sqrt(temperature / simulationBox.calculateTemperature());
+        for (auto& atom : simulationBox.getAtoms())
             atom->setVelocity(atom->getVelocity() * factor);
     }
 }   // namespace benchSetup

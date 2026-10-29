@@ -36,7 +36,6 @@
 #endif
 
 #include "generalSettings.hpp"
-#include "manostatSettings.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
