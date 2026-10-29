@@ -151,6 +151,7 @@ TEST_F(TestEnergyOutput, manostatActive)
 
     settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en");

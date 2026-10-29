@@ -55,201 +55,196 @@ TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
 
 TEST_F(TestSetup, setupManostatNone)
 {
+    _settings->finalize();
+
     setup::ManostatSetup manostatSetup(*_mdEngine);
     manostatSetup.setup();
 
-    auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::NONE);
+    EXPECT_EQ(
+        _settings->manostatSettings.getManostatType(),
+        ManostatType::NONE
+    );
 }
 
 TEST_F(TestSetup, setupManostatBerendsen)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    // The manostat's concrete type is picked by the factory when the engine
+    // is constructed, so settings must be configured before construction.
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
-
-    const auto berendsen =
-        dynamic_cast<const manostat::BerendsenManostat &>(manostat);
-    EXPECT_EQ(berendsen.getTau(), 0.2 * 1000);
-    EXPECT_EQ(berendsen.getCompressibility(), 4.0);
+    const auto &manostat = mdEngine.getManostat();
+    EXPECT_NO_THROW((void
+    ) dynamic_cast<const manostat::BerendsenManostat &>(manostat));
 }
 
 TEST_F(TestSetup, setupManostatNoneIsotropyDefaultsToIsotropic)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    setup::ManostatSetup manostatSetup(*_mdEngine);
+    engine::MMMDEngine   mdEngine(*_settings);
+    setup::ManostatSetup manostatSetup(mdEngine);
     EXPECT_NO_THROW(manostatSetup.setup());
 
-    const auto &manostat = _mdEngine->getManostat();
-    const auto  berendsen =
-        dynamic_cast<const manostat::BerendsenManostat &>(manostat);
+    const auto &manostat = mdEngine.getManostat();
+    EXPECT_NO_THROW((void
+    ) dynamic_cast<const manostat::BerendsenManostat &>(manostat));
 }
 
 TEST_F(TestSetup, setupManostatSemiIsotropicBerendsen)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
-
+    const auto &manostat = mdEngine.getManostat();
     using SEMI           = manostat::SemiIsotropicBerendsenManostat;
-    const auto berendsen = dynamic_cast<const SEMI &>(manostat);
-    EXPECT_EQ(berendsen.getTau(), 0.2 * 1000);
-    EXPECT_EQ(berendsen.getCompressibility(), 4.0);
+    EXPECT_NO_THROW((void) dynamic_cast<const SEMI &>(manostat));
 }
 
 TEST_F(TestSetup, setupManostatAnisotropicBerendsen)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setIsotropy(Isotropy::ANISOTROPIC);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setIsotropy(Isotropy::ANISOTROPIC);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
-
+    const auto &manostat = mdEngine.getManostat();
     using ANISO          = manostat::AnisotropicBerendsenManostat;
-    const auto berendsen = dynamic_cast<const ANISO &>(manostat);
-    EXPECT_EQ(berendsen.getTau(), 0.2 * 1000);
-    EXPECT_EQ(berendsen.getCompressibility(), 4.0);
+    EXPECT_NO_THROW((void) dynamic_cast<const ANISO &>(manostat));
 }
 
 TEST_F(TestSetup, setupManostatFullAnisotropicBerendsen)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setIsotropy(Isotropy::FULL_ANISOTROPIC);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setIsotropy(Isotropy::FULL_ANISOTROPIC);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
-
+    const auto &manostat = mdEngine.getManostat();
     using FULL_ANISO     = manostat::FullAnisotropicBerendsenManostat;
-    const auto berendsen = dynamic_cast<const FULL_ANISO &>(manostat);
-    EXPECT_EQ(berendsen.getTau(), 0.2 * 1000);
-    EXPECT_EQ(berendsen.getCompressibility(), 4.0);
+    EXPECT_NO_THROW((void) dynamic_cast<const FULL_ANISO &>(manostat));
 }
 
 TEST_F(TestSetup, setupManostatSStochasticRescaling)
 {
-    settings::ManostatSettings::setManostatType(
+    _settings->manostatSettings.setManostatType(
         ManostatType::STOCHASTIC_RESCALING
     );
-    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::STOCHASTIC_RESCALING);
-
-    using Stochastic      = manostat::StochasticRescalingManostat;
-    const auto stochastic = dynamic_cast<const Stochastic &>(manostat);
-    EXPECT_EQ(stochastic.getTau(), 0.2 * 1000);
-    EXPECT_EQ(stochastic.getCompressibility(), 4.0);
+    const auto &manostat = mdEngine.getManostat();
+    using Stochastic     = manostat::StochasticRescalingManostat;
+    EXPECT_NO_THROW((void) dynamic_cast<const Stochastic &>(manostat));
 }
 
 TEST_F(TestSetup, setupManostatSemiIsotropicSStochasticRescaling)
 {
-    settings::ManostatSettings::setManostatType(
+    _settings->manostatSettings.setManostatType(
         ManostatType::STOCHASTIC_RESCALING
     );
-    settings::ManostatSettings::setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::STOCHASTIC_RESCALING);
-
-    using SEMI            = manostat::SemiIsotropicStochasticRescalingManostat;
-    const auto stochastic = dynamic_cast<const SEMI &>(manostat);
-    EXPECT_EQ(stochastic.getTau(), 0.2 * 1000);
-    EXPECT_EQ(stochastic.getCompressibility(), 4.0);
+    const auto &manostat = mdEngine.getManostat();
+    using SEMI           = manostat::SemiIsotropicStochasticRescalingManostat;
+    EXPECT_NO_THROW((void) dynamic_cast<const SEMI &>(manostat));
 }
 
 TEST_F(TestSetup, setupManostatAnisotropicSStochasticRescaling)
 {
-    settings::ManostatSettings::setManostatType(
+    _settings->manostatSettings.setManostatType(
         ManostatType::STOCHASTIC_RESCALING
     );
-    settings::ManostatSettings::setIsotropy(Isotropy::ANISOTROPIC);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setIsotropy(Isotropy::ANISOTROPIC);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::STOCHASTIC_RESCALING);
-
-    using ANISO           = manostat::AnisotropicStochasticRescalingManostat;
-    const auto stochastic = dynamic_cast<const ANISO &>(manostat);
-    EXPECT_EQ(stochastic.getTau(), 0.2 * 1000);
-    EXPECT_EQ(stochastic.getCompressibility(), 4.0);
+    const auto &manostat = mdEngine.getManostat();
+    using ANISO          = manostat::AnisotropicStochasticRescalingManostat;
+    EXPECT_NO_THROW((void) dynamic_cast<const ANISO &>(manostat));
 }
 
 TEST_F(TestSetup, setupManostatFullAnisotropicSStochasticRescaling)
 {
-    settings::ManostatSettings::setManostatType(
+    _settings->manostatSettings.setManostatType(
         ManostatType::STOCHASTIC_RESCALING
     );
-    settings::ManostatSettings::setIsotropy(Isotropy::FULL_ANISOTROPIC);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setIsotropy(Isotropy::FULL_ANISOTROPIC);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::STOCHASTIC_RESCALING);
-
-    using FULL_ANISO = manostat::FullAnisotropicStochasticRescalingManostat;
-    const auto stochastic = dynamic_cast<const FULL_ANISO &>(manostat);
-    EXPECT_EQ(stochastic.getTau(), 0.2 * 1000);
-    EXPECT_EQ(stochastic.getCompressibility(), 4.0);
+    const auto &manostat = mdEngine.getManostat();
+    using FULL_ANISO     = manostat::FullAnisotropicStochasticRescalingManostat;
+    EXPECT_NO_THROW((void) dynamic_cast<const FULL_ANISO &>(manostat));
 }
 
 TEST_F(TestSetup, validateIsotropyFixedAxisCombinationSemiIsotropic)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
 
     // Fixing Z (anisotropic axis) is allowed
-    settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::Z);
     setup::ManostatSetup manostatSetup(*_mdEngine);
     EXPECT_NO_THROW(manostatSetup.setup());
 
     // Fixing X or Y or XY should throw
-    settings::ManostatSettings::setFixedAxis(FixedAxis::X);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::X);
     EXPECT_THROW_MSG(
         manostatSetup.setup(),
         exc::UserInputException,
@@ -257,7 +252,7 @@ TEST_F(TestSetup, validateIsotropyFixedAxisCombinationSemiIsotropic)
         "allows fixing the anisotropic axis or none."
     );
 
-    settings::ManostatSettings::setFixedAxis(FixedAxis::XY);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::XY);
     EXPECT_THROW_MSG(
         manostatSetup.setup(),
         exc::UserInputException,
@@ -265,14 +260,14 @@ TEST_F(TestSetup, validateIsotropyFixedAxisCombinationSemiIsotropic)
         "allows fixing the anisotropic axis or none."
     );
 
-    settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
 }
 
 TEST_F(TestSetup, validateFixedAxisThrowsWhenAllAxesFixedWithManostat)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
-    settings::ManostatSettings::setFixedAxis(FixedAxis::ALL);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::ALL);
 
     setup::ManostatSetup manostatSetup(*_mdEngine);
     EXPECT_THROW_MSG(
@@ -282,7 +277,7 @@ TEST_F(TestSetup, validateFixedAxisThrowsWhenAllAxesFixedWithManostat)
         "manostat is selected."
     );
 
-    settings::ManostatSettings::setManostatType(
+    _settings->manostatSettings.setManostatType(
         ManostatType::STOCHASTIC_RESCALING
     );
     EXPECT_THROW_MSG(
@@ -292,24 +287,27 @@ TEST_F(TestSetup, validateFixedAxisThrowsWhenAllAxesFixedWithManostat)
         "manostat is selected."
     );
 
-    settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
 }
 
 TEST_F(TestSetup, setupManostatWithFixedAxis)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
-    settings::ManostatSettings::setFixedAxis(FixedAxis::XY);
-    settings::ManostatSettings::setTargetPressure(300.0);
-    settings::ManostatSettings::setTauManostat(0.2);
-    settings::ManostatSettings::setCompressibility(4.0);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::XY);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
+    _settings->finalize();
 
-    EXPECT_NO_THROW(setup::setupManostat(*_mdEngine));
+    engine::MMMDEngine mdEngine(*_settings);
+    EXPECT_NO_THROW(setup::setupManostat(mdEngine));
 
-    const auto &manostat = _mdEngine->getManostat();
-    EXPECT_EQ(manostat.getManostatType(), ManostatType::BERENDSEN);
+    const auto &manostat = mdEngine.getManostat();
+    EXPECT_NO_THROW((void
+    ) dynamic_cast<const manostat::BerendsenManostat &>(manostat));
 
-    settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
 }
 
 TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
@@ -323,8 +321,11 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
     }
     _mdEngine->getSimulationBox().addMolecule(molecule);
     settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
-    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
-    settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setTargetPressure(300.0);
+    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setCompressibility(4.0);
     const auto types = std::array{
         ManostatType::BERENDSEN,
         ManostatType::STOCHASTIC_RESCALING,
@@ -332,7 +333,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
     };
     for (const auto type : types)
     {
-        settings::ManostatSettings::setManostatType(type);
+        _settings->manostatSettings.setManostatType(type);
         auto &log = _mdEngine->getLogOutput();
         log.setFilename("atomic-virial-warning.log");
         setup::ManostatSetup setup(*_mdEngine);

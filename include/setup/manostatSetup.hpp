@@ -50,10 +50,7 @@ namespace setup
 
         void setup();
 
-        void setupBerendsenManostat();
-        void setupStochasticRescalingManostat();
-
-        static void validateIsotropyFixedAxisCombination();
+        void validateIsotropyFixedAxisCombination() const;
 
         void writeSetupInfo() const;
         void writeManostatSelection() const;

@@ -184,7 +184,7 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
 
 TEST_F(TestInputValidation, requiresPressureForManostat)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -196,8 +196,8 @@ TEST_F(TestInputValidation, requiresPressureForManostat)
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setTauManostat(0.0001);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setTauManostat(0.0001);
     _setKeyword("pressure");
 
     ASSERT_THROW_MSG(
@@ -609,7 +609,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _configureMDJob(JobType::QM_MD);
     settings::QMSettings::setQMMethod(QMMethod::MACE);
     settings::QMSettings::setMaceModel(MaceModel::CUSTOM);
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
     settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     _setKeyword("mace_model_path");
     _setKeyword("pressure");

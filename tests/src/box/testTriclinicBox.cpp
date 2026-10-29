@@ -322,10 +322,10 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
 
     molsys::TriclinicBox box2({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, true);
     const auto           originalAngles = box2.getBoxAngles();
-    box2.scaleBox(diagonalMatrix(linalg::Vec3D{0.5, 0.5, 0.5}));
+    box2.scaleBox(diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0}));
     EXPECT_VECTOR_NEAR(
         box2.get_boxDimensions(),
-        linalg::Vec3D(4.0, 5.0, 6.0),
+        linalg::Vec3D(8.0, 10.0, 12.0),
         1.0e-12
     );
     EXPECT_VECTOR_NEAR(box2.getBoxAngles(), originalAngles, 1.0e-12);

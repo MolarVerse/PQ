@@ -325,7 +325,7 @@ namespace
         }
 
         if (settings::GeneralSettings::isMMActivated() ||
-            settings::ManostatSettings::getManostatType() != ManostatType::NONE)
+            settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             requireFile(
                 settings::FileSettings::getMolDescriptorFileName(),

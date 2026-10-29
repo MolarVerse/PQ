@@ -241,6 +241,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 
     settings::ForceFieldSettings::setType(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");

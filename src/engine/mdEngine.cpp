@@ -27,6 +27,7 @@
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
+#include "manostatFactory.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "referencesOutput.hpp"
@@ -47,7 +48,9 @@ namespace engine
           _integrator(std::make_unique<integrator::VelocityVerlet>()),
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(
-              std::make_unique<manostat::Manostat>(settings.manostatSettings)
+              manostat::ManostatFactory::createManostat(
+                  settings.manostatSettings
+              )
           )
     {
     }
