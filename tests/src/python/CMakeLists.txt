@@ -2,6 +2,11 @@ add_executable(testSelection
     testSelection.cpp
 )
 
+target_compile_definitions(testSelection
+    PRIVATE
+    WITH_WITH_PYTHON_BINDINGS
+)
+
 target_link_libraries(testSelection
     PRIVATE
     pq_python
