@@ -27,6 +27,7 @@
 
 #include "exceptions.hpp"
 #include "qmmmMDEngine.hpp"
+#include "throwWithMessage.hpp"
 
 class QMMMEnergiesTest : public ::testing::Test
 {
@@ -41,17 +42,22 @@ class QMMMEnergiesTest : public ::testing::Test
         engine._moveEnergiesToPhysicalData();
     }
 
-    static std::unordered_set<size_t> _inactiveSet(size_t bits, size_t n)
+    static std::unordered_set<size_t> _inactiveSet(
+        size_t bits,
+        size_t nMolecules
+    )
     {
         return engine::QMMMMDEngine::_generateInactiveSmoothingMoleculeSet(
             bits,
-            n
+            nMolecules
         );
     }
 
-    static size_t _numberOfConfigurations(size_t n)
+    static size_t _numberOfConfigurations(size_t nMolecules)
     {
-        return engine::QMMMMDEngine::_numberOfSmoothingConfigurations(n);
+        return engine::QMMMMDEngine::_numberOfSmoothingConfigurations(
+            nMolecules
+        );
     }
 };
 
@@ -89,8 +95,9 @@ TEST_F(QMMMEnergiesTest, exactSmoothingHandlesMoleculeIndicesAbove31)
 
     EXPECT_EQ(_numberOfConfigurations(0), size_t{1});
     EXPECT_EQ(_numberOfConfigurations(40), size_t{1} << 40U);
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         static_cast<void>(_numberOfConfigurations(64)),
-        exc::HybridMDEngineException
+        exc::HybridMDEngineException,
+        "Exact smoothing supports at most 63 smoothing molecules, found 64"
     );
 }

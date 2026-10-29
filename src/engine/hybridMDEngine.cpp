@@ -238,6 +238,7 @@ namespace engine
             static_cast<size_t>(std::numeric_limits<size_t>::digits) - 1;
 
         if (nSmoothingMolecules > maxMolecules)
+        {
             throw exc::HybridMDEngineException(
                 std::format(
                     "Exact smoothing supports at most {} smoothing molecules, "
@@ -246,6 +247,7 @@ namespace engine
                     nSmoothingMolecules
                 )
             );
+        }
 
         return size_t{1} << nSmoothingMolecules;
     }
