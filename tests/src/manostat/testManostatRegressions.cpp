@@ -174,19 +174,26 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
     {
         _settings->manostatSettings.setFixedAxis(fixed);
         _settings->manostatSettings.setCompressibility(increment);
-        _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
-        manostat::BerendsenManostat iso(_settings->manostatSettings);
-        _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
-        manostat::SemiIsotropicBerendsenManostat semi(
-            _settings->manostatSettings
-        );
-        _settings->manostatSettings.setIsotropy(Isotropy::ANISOTROPIC);
-        manostat::AnisotropicBerendsenManostat aniso(_settings->manostatSettings
-        );
-        _settings->manostatSettings.setIsotropy(Isotropy::FULL_ANISOTROPIC);
-        manostat::FullAnisotropicBerendsenManostat full(
-            _settings->manostatSettings
-        );
+
+        // Each mode needs its own settings object: the manostats below hold
+        // a reference, not a copy, so sharing one object would make every
+        // mode see only the isotropy set last.
+        auto isoSettings = _settings->manostatSettings;
+        isoSettings.setIsotropy(Isotropy::ISOTROPIC);
+        manostat::BerendsenManostat iso(isoSettings);
+
+        auto semiSettings = _settings->manostatSettings;
+        semiSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+        manostat::SemiIsotropicBerendsenManostat semi(semiSettings);
+
+        auto anisoSettings = _settings->manostatSettings;
+        anisoSettings.setIsotropy(Isotropy::ANISOTROPIC);
+        manostat::AnisotropicBerendsenManostat aniso(anisoSettings);
+
+        auto fullSettings = _settings->manostatSettings;
+        fullSettings.setIsotropy(Isotropy::FULL_ANISOTROPIC);
+        manostat::FullAnisotropicBerendsenManostat full(fullSettings);
+
         for (auto* coupling : std::vector<manostat::BerendsenManostat*>{
                  &iso,
                  &semi,
@@ -236,30 +243,51 @@ TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
 
 TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
 {
-    _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+    // Each proposal needs its own settings object: the manostats below hold
+    // a reference, not a copy, so sharing one object would make every
+    // proposal see only the values set last (e.g. overflow/underflow would
+    // both end up with cutoff's target pressure and compressibility).
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     _settings->manostatSettings.setTargetPressure(1.0);
     _settings->manostatSettings.setTauManostat(1.0);
-    _settings->manostatSettings.setCompressibility(0.03);
-    manostat::SemiIsotropicBerendsenManostat negativeRoot(
-        _settings->manostatSettings
-    );
-    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
-    manostat::BerendsenManostat negativeVolume(_settings->manostatSettings);
-    _settings->manostatSettings.setTargetPressure(-3000.0);
-    manostat::StochasticRescalingManostat overflow(_settings->manostatSettings);
-    _settings->manostatSettings.setTargetPressure(3000.0);
-    manostat::StochasticRescalingManostat underflow(_settings->manostatSettings
-    );
-    _settings->manostatSettings.setTargetPressure(1.0);
-    _settings->manostatSettings.setCompressibility(0.875);
-    manostat::BerendsenManostat cutoff(_settings->manostatSettings);
-    const auto                  proposals = std::array<manostat::Manostat*, 5>{
+
+    auto negativeRootSettings = _settings->manostatSettings;
+    negativeRootSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+    negativeRootSettings.setCompressibility(2.0);
+    manostat::SemiIsotropicBerendsenManostat negativeRoot(negativeRootSettings);
+
+    auto negativeVolumeSettings = _settings->manostatSettings;
+    negativeVolumeSettings.setIsotropy(Isotropy::ISOTROPIC);
+    negativeVolumeSettings.setCompressibility(2.0);
+    manostat::BerendsenManostat negativeVolume(negativeVolumeSettings);
+
+    auto overflowSettings = negativeVolumeSettings;
+    overflowSettings.setTargetPressure(-3000.0);
+    overflowSettings.setCompressibility(1.0);
+    manostat::StochasticRescalingManostat overflow(overflowSettings);
+
+    auto underflowSettings = negativeVolumeSettings;
+    underflowSettings.setTargetPressure(3000.0);
+    underflowSettings.setCompressibility(1.0);
+    manostat::StochasticRescalingManostat underflow(underflowSettings);
+
+    auto cutoffSettings = negativeVolumeSettings;
+    cutoffSettings.setCompressibility(0.875);
+    manostat::BerendsenManostat cutoff(cutoffSettings);
+
+    const auto proposals = std::array<manostat::Manostat*, 5>{
         &negativeRoot,
         &negativeVolume,
         &overflow,
         &underflow,
         &cutoff
+    };
+    const auto proposalSettings = std::array<ManostatSettings*, 5>{
+        &negativeRootSettings,
+        &negativeVolumeSettings,
+        &overflowSettings,
+        &underflowSettings,
+        &cutoffSettings
     };
     for (size_t i = 0; i < proposals.size(); ++i)
     {
@@ -269,7 +297,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
         _addMolecule({4.95, -4.85}, 1.0);
         const auto oldCenter  = _box.getMolecule(0).getCenterOfMass();
         const auto oldDensity = _box.getDensity();
-        _settings->manostatSettings.setIsotropy(
+        proposalSettings.at(i)->setIsotropy(
             i == 0 ? Isotropy::SEMI_ISOTROPIC_XY : Isotropy::ISOTROPIC
         );
         settings::PotentialSettings::setCoulombRadiusCutOff(i == 4 ? 3.0 : 0.1);

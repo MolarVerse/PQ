@@ -37,14 +37,15 @@
  */
 TEST_F(TestInputFileReader, ParsePressure)
 {
-    input::ManostatInputParser parser;
+    ManostatSettings           settings;
+    input::ManostatInputParser parser(settings);
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("pressure"));
     const auto& parseFunc = funcMap.at("pressure");
 
     std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getTargetPressure(), 300.0);
+    EXPECT_EQ(settings.getTargetPressure(), 300.0);
 
     _clearParser(parser);
 
@@ -66,14 +67,15 @@ TEST_F(TestInputFileReader, ParsePressure)
  */
 TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 {
-    input::ManostatInputParser parser;
+    ManostatSettings           settings;
+    input::ManostatInputParser parser(settings);
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("p_relaxation"));
     const auto& parseFunc = funcMap.at("p_relaxation");
 
     std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getTauManostat(), 0.1);
+    EXPECT_EQ(settings.getTauManostat(), 0.1);
 
     _clearParser(parser);
 
@@ -119,35 +121,27 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
  */
 TEST_F(TestInputFileReader, ParseManostat)
 {
-    input::ManostatInputParser parser;
+    ManostatSettings           settings;
+    input::ManostatInputParser parser(settings);
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("manostat"));
     const auto& parseFunc = funcMap.at("manostat");
 
     std::vector<std::string> lineElements = {"manostat", "=", "none"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getManostatType(),
-        ManostatType::NONE
-    );
+    EXPECT_EQ(settings.getManostatType(), ManostatType::NONE);
 
     _clearParser(parser);
 
     lineElements = {"manostat", "=", "berendsen"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getManostatType(),
-        ManostatType::BERENDSEN
-    );
+    EXPECT_EQ(settings.getManostatType(), ManostatType::BERENDSEN);
 
     _clearParser(parser);
 
     lineElements = {"manostat", "=", "stochastic_rescaling"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getManostatType(),
-        ManostatType::STOCHASTIC_RESCALING
-    );
+    EXPECT_EQ(settings.getManostatType(), ManostatType::STOCHASTIC_RESCALING);
 
     _clearParser(parser);
 
@@ -168,14 +162,15 @@ TEST_F(TestInputFileReader, ParseManostat)
  */
 TEST_F(TestInputFileReader, ParseCompressibility)
 {
-    input::ManostatInputParser parser;
+    ManostatSettings           settings;
+    input::ManostatInputParser parser(settings);
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("compressibility"));
     const auto& parseFunc = funcMap.at("compressibility");
 
     std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getCompressibility(), 0.1);
+    EXPECT_EQ(settings.getCompressibility(), 0.1);
 
     _clearParser(parser);
 
@@ -204,83 +199,63 @@ TEST_F(TestInputFileReader, ParseCompressibility)
  */
 TEST_F(TestInputFileReader, ParseIsotropy)
 {
-    input::ManostatInputParser parser;
+    ManostatSettings           settings;
+    input::ManostatInputParser parser(settings);
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("isotropy"));
     const auto& parseFunc = funcMap.at("isotropy");
 
     std::vector<std::string> lineElements = {"isotropy", "=", "isotropic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ISOTROPIC);
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::ISOTROPIC);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "anisotropic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getIsotropy(), Isotropy::ANISOTROPIC);
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::ANISOTROPIC);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "full_anisotropic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::FULL_ANISOTROPIC
-    );
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::FULL_ANISOTROPIC);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "xz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC_XZ
-    );
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_XZ);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "zx"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC_XZ
-    );
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_XZ);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "yz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC_YZ
-    );
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_YZ);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "zy"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC_YZ
-    );
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_YZ);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "xy"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC_XY
-    );
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_XY);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "yx"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::ManostatSettings::getIsotropy(),
-        Isotropy::SEMI_ISOTROPIC_XY
-    );
+    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_XY);
 
     _clearParser(parser);
 
@@ -301,81 +276,82 @@ TEST_F(TestInputFileReader, ParseIsotropy)
  */
 TEST_F(TestInputFileReader, ParseFixedAxis)
 {
-    input::ManostatInputParser parser;
+    ManostatSettings           settings;
+    input::ManostatInputParser parser(settings);
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("fixed_axis"));
     const auto& parseFunc = funcMap.at("fixed_axis");
 
     std::vector<std::string> lineElements = {"fixed_axis", "=", "none"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::NONE);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::NONE);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "x"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::X);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::X);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "y"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Y);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::Y);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "z"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Z);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::Z);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xy"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "yx"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XZ);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XZ);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "zx"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XZ);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XZ);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "yz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::YZ);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::YZ);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "zy"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::YZ);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::YZ);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "all"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xyz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
 
     _clearParser(parser);
 

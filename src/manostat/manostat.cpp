@@ -233,4 +233,14 @@ namespace manostat
      */
     void Manostat::_setPressure(double pressure) { _pressure = pressure; }
 
+    /**
+     * @brief get the manostat settings
+     *
+     * @return const ManostatSettings&
+     */
+    const ManostatSettings &Manostat::_getSettings() const
+    {
+        return _settings.get();
+    }
+
 }   // namespace manostat

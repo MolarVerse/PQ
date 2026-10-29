@@ -59,8 +59,8 @@ class TestInputValidation : public ::testing::Test
         _settings.optimizerSettings.setMinLearningRate(1.0e-15);
         _settings.optimizerSettings.setMaxLearningRate(1.0);
 
-        settings::ManostatSettings::setManostatType(ManostatType::NONE);
-        settings::ManostatSettings::setTauManostat(
+        _settings.manostatSettings.setManostatType(ManostatType::NONE);
+        _settings.manostatSettings.setTauManostat(
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 

@@ -22,7 +22,6 @@
 
 #include "testMolecule.hpp"
 
-#include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "moleculeType.hpp"
 #include "orthorhombicBox.hpp"
@@ -91,8 +90,6 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
 
 TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
 {
-    settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
-
     const linalg::tensor3D scale =
         diagonalMatrix(linalg::Vec3D{0.5, 0.25, 2.0});
 

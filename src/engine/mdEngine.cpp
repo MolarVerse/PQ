@@ -43,10 +43,12 @@ namespace engine
      */
     MDEngine::MDEngine(const Settings &settings)
         : Engine(settings),
-          _resetKinetics(getSettings().resetKinetics),
+          _resetKinetics(settings.resetKinetics),
           _integrator(std::make_unique<integrator::VelocityVerlet>()),
           _thermostat(std::make_unique<thermostat::Thermostat>()),
-          _manostat(std::make_unique<manostat::Manostat>())
+          _manostat(
+              std::make_unique<manostat::Manostat>(settings.manostatSettings)
+          )
     {
     }
 
