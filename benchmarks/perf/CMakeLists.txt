@@ -24,6 +24,10 @@ set(perf_benchmarks
     perfVelocityRescalingThermostat.cpp
     perfBerendsenManostat.cpp
     perfStochasticRescalingManostat.cpp
+    perfGuffPair.cpp
+    perfReactionField.cpp
+    perfMaxwellBoltzmann.cpp
+    perfResetKinetics.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -52,6 +56,8 @@ foreach(perf_source ${perf_benchmarks})
         integrator
         thermostat
         manostat
+        maxwellBoltzmann
+        resetKinetics
         virial
         constraints
         molsys
