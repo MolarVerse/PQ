@@ -1,0 +1,1 @@
+- Perf gate: an improvement of 30% or more (PERF_LARGE_DROP_PERCENT) is flagged with a warning to check that the benchmark still does its work; it never fails the check.

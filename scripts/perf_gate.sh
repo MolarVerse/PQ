@@ -27,6 +27,9 @@ set -uo pipefail
 PR_DIR="${1:?usage: perf_gate.sh <pr_bench_dir> <base_bench_dir> [threshold%]}"
 BASE_DIR="${2:?usage: perf_gate.sh <pr_bench_dir> <base_bench_dir> [threshold%]}"
 THRESHOLD="${3:-2}"
+# An improvement at least this large is flagged: a benchmark that silently
+# stopped doing its work also looks like a big speed-up. Never fails the check.
+LARGE_DROP="${PERF_LARGE_DROP_PERCENT:-30}"
 REPORT="${PERF_REPORT_FILE:-perf_report.md}"
 BASE_IR_FILE="${PERF_BASE_IR_FILE:-}"
 
@@ -67,6 +70,7 @@ rows=""
 regressed=""
 improved=""
 unmeasured=""
+large_drops=""
 declare -A pr_names
 declare -A pr_ir_all
 shopt -s nullglob
@@ -113,7 +117,12 @@ for pr_bin in "$PR_DIR"/perf_*; do
         regress) emoji="❌"; status=1; regressed+="\`$name\` ${pct}% "
                  echo "::error::$name regressed ${pct}% (Ir base=$base_ir pr=$pr_ir, threshold ${THRESHOLD}%)" ;;
         improve) emoji="🎉"; improved+="\`$name\` ${pct}% "
-                 echo "$name: ${pct}% (improved)" ;;
+                 echo "$name: ${pct}% (improved)"
+                 if awk -v p="$pct" -v t="$LARGE_DROP" 'BEGIN{ exit !(-p >= t) }'; then
+                     emoji="⚠️"
+                     large_drops+="\`$name\` ${pct}% "
+                     echo "::warning::$name dropped ${pct}% - check that the benchmark still does its work"
+                 fi ;;
         *)       emoji="✅"; echo "$name: ${pct}%" ;;
     esac
     rows+="| \`$name\` | $(fmt "$base_ir") | $(fmt "$pr_ir") | ${pct}% | $emoji |"$'\n'
@@ -169,6 +178,9 @@ if [ -n "$unmeasured" ]; then
     details_open=" open"
 elif [ -n "$regressed" ]; then
     headline="❌ regression: $regressed"
+    details_open=" open"
+elif [ -n "$large_drops" ]; then
+    headline="⚠️ large drop, check that the benchmark still does its work: $large_drops"
     details_open=" open"
 elif [ -n "$improved" ]; then
     headline="🎉 improvement: $improved"

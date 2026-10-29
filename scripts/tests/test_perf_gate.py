@@ -66,7 +66,7 @@ class PerfGateTest(unittest.TestCase):
         self.assertIn("regression", report)
 
     def test_improvement_passes_and_is_reported(self):
-        self.bench(self.pr, "a", 500_000)
+        self.bench(self.pr, "a", 900_000)
         self.bench(self.base, "a", 1_000_000)
         result, report = self.run_gate()
         self.assertEqual(0, result.returncode)
@@ -148,6 +148,37 @@ class PerfGateTest(unittest.TestCase):
         result, report = self.run_gate()
         self.assertEqual(0, result.returncode)
         self.assertIn("| `series` | 100 to 200 | – | 1.00 |", report)
+
+
+    def test_a_large_drop_is_flagged_but_does_not_fail(self):
+        self.bench(self.pr, "a", 600_000)
+        self.bench(self.base, "a", 1_000_000)
+        result, report = self.run_gate()
+        self.assertEqual(0, result.returncode)
+        self.assertIn("large drop", report)
+        self.assertIn("still does its work", report)
+
+    def test_a_moderate_improvement_is_not_flagged(self):
+        self.bench(self.pr, "a", 800_000)
+        self.bench(self.base, "a", 1_000_000)
+        _, report = self.run_gate()
+        self.assertIn("improvement", report)
+        self.assertNotIn("large drop", report)
+
+    def test_the_large_drop_limit_can_be_changed(self):
+        self.bench(self.pr, "a", 800_000)
+        self.bench(self.base, "a", 1_000_000)
+        _, report = self.run_gate(env_extra={"PERF_LARGE_DROP_PERCENT": "10"})
+        self.assertIn("large drop", report)
+
+    def test_a_regression_next_to_a_large_drop_still_fails(self):
+        self.bench(self.pr, "a", 500_000)
+        self.bench(self.base, "a", 1_000_000)
+        self.bench(self.pr, "b", 1_100_000)
+        self.bench(self.base, "b", 1_000_000)
+        result, report = self.run_gate()
+        self.assertEqual(1, result.returncode)
+        self.assertIn("regression", report)
 
 
 if __name__ == "__main__":
