@@ -366,17 +366,15 @@ class EndToEndTests(unittest.TestCase):
             summary_module.main(["--out", str(self.out), "--name", "n", "--build-dir", str(self.build)], env=self.env)
         self.assertEqual([["ninja", "-C", str(self.build), "-t", "deps"]], [call.args[0] for call in run.call_args_list])
 
-    def test_the_include_graph_goes_into_the_summary_and_a_detail_file(self):
+    def test_the_include_graph_goes_into_the_summary(self):
         self.build.mkdir()
         (self.build / ".ninja_log").write_text(SAMPLE)
         deps = DEPS.replace("/repo/", f"{self.root.resolve()}/")
         _, data, printed = self.run_main("--source-root", str(self.root), tools={"ninja": deps})
         self.assertEqual(2, data["includes"]["objects"])
         self.assertEqual(3, data["includes"]["project_pairs"])
-        detail = json.loads((self.out / "ninja-includes.json").read_text())
-        self.assertEqual(("ninja-includes-detail", 1), (detail["kind"], detail["schema_version"]))
-        self.assertEqual({"include/x.hpp": 2, "include/y.hpp": 1}, detail["fan_in"])
-        self.assertEqual(data["includes"]["digest"], detail["digest"])
+        self.assertEqual([{"file": "include/x.hpp", "fan_in": 2}, {"file": "include/y.hpp", "fan_in": 1}], data["includes"]["top_project_files"])
+        self.assertFalse((self.out / "ninja-includes.json").exists())
         self.assertIn("include pairs=5", printed)
 
     def test_no_ninja_log_means_no_include_graph(self):

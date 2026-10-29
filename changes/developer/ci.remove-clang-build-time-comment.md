@@ -1,0 +1,1 @@
+- Remove the clang build time comment on pull requests and the -ftime-trace analysis behind it (compile times on shared runners were too noisy): the report and baseline steps, the comment job, summarise_traces.py, clang_report.py, the clang part of the CI metrics and the automatic -ftime-trace of clang builds. The clang build and test job stays.

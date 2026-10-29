@@ -6,7 +6,7 @@ CI Metrics
 
 The CI metrics are a durable record of how long the CI jobs take and why, so that speed-ups are measured and not
 guessed. They consist of a collector that stores one record per CI job, an overview page that is generated from the
-records, and a comment on every pull request with the clang build times. This page tells you how to use them and what
+records. This page tells you how to use them and what
 to be careful about. The complete reference (record fields, derivations, decisions) is in the repository:
 ``.github/ci-metrics/README.md`` and ``.github/ci-metrics/SCHEMA.md``.
 
@@ -24,8 +24,7 @@ What is recorded
       ``.github/actions/upload-build-timings`` as their last step. It summarises the Ninja log (wall and CPU time,
       parallelism, the slowest steps, the time spent linking at the end), the ccache statistics (hit rate and the reasons
       why calls were not cacheable), the exact include graph of the build (from ``ninja -t deps``, deterministic), and
-      the CPU model of the runner. The Clang Build workflow adds a summary of the ``-ftime-trace`` files on pushes to
-      ``dev``.
+      the CPU model of the runner.
 
 The data is stored in weekly files ``.github/ci-metrics/data/<year>-W<week>.jsonl`` that are **committed to** ``dev``.
 That is the one documented exception to the rule that nobody pushes to ``dev``: only the collector writes there, only
@@ -70,7 +69,6 @@ rendered by GitHub. It shows, per workflow:
     - the weekly trend of the BUILD duration;
     - the **build analysis**: the ccache hit rate and what blocks it, the Ninja figures of complete builds, the slowest
       steps on ``dev``, and a table of the build time per runner CPU model;
-    - the heaviest headers and slowest files of the clang build, as a share of the total compile time;
     - the **include graph**: how many include pairs and project header pairs the latest builds have, and the headers
       with the highest fan-in.
 
@@ -83,32 +81,18 @@ Read it with these cautions in mind:
       something a regression.
     - The include graph numbers are exact. Everything measured in seconds is noisy.
 
-.. _ciMetricsClangComment:
+.. _ciMetricsClangJob:
 
-***********************
-The clang build comment
-***********************
+*****************
+The clang job
+*****************
 
-Every pull request that changes C++ or build files gets one comment (updated in place) from the ``Clang Build``
-workflow. The workflow builds the pull request with clang 20 and ``-ftime-trace``, compares the result with the
-newest ``dev`` build that is stored in the Actions cache, and posts:
-
-    - the totals (compiler, frontend and backend CPU time, header inclusions, template instantiation events) against
-      ``dev``;
-    - the **exact include graph change**: include pairs and the project headers whose fan-in changed. This part is
-      deterministic, so every change in it is real;
-    - the headers that got heavier, and under a collapsed section the lighter ones, the files and the templates that
-      changed most;
-    - the CPU model of this run and of the baseline.
-
-The comment is informational and never a failing check. **Do not read the timings as exact.** The baseline is the
-newest ``dev`` build, so commits that were merged to ``dev`` since then also show up. Changes of single headers, files and
-templates are computed after scaling the baseline by the ratio of the two total compile times, which removes a
-uniformly slower runner, but clang leaves events shorter than 0.5 ms out of the trace, so a faster run records fewer
-events and counts and small times depend on the speed of the runner. Use the include graph section for conclusions
-about what the code does and the timing sections as hints.
-
-If there is no baseline yet, the comment says so and shows only the numbers of the pull request.
+The ``Clang Build`` workflow builds the project with clang 20 (Debug) and runs the tests. It is **not a gate** and not
+a required check; it exists to keep the project building with clang and to record the Ninja build analysis and the
+include graph of a clang build for the metrics above. There used to be a comment on every pull request with the clang
+build times (from ``-ftime-trace``); it was removed (#935), because compile times on shared runners are too noisy to
+read a pull request's effect from them. For compile-time questions use the exact include graph numbers, or measure on
+your own machine with :doc:`localBuildTimes`, where the build can be pinned to one core.
 
 ***************************
 Adding a job to the metrics

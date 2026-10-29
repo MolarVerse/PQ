@@ -6,8 +6,6 @@ Runs inside the CI job (Python standard library only) and writes, into --out:
   build-analysis.json  the summary (what the collector later turns into a
                        `kind: "build-analysis"` record, see SCHEMA.md)
   ninja_log.txt        the raw `.ninja_log`, if there was one
-  ninja-includes.json  the fan-in of every project header (kind "ninja-includes-detail"),
-                       from `ninja -t deps`; used to compare two builds (the clang comment)
   ccache-stats.txt     the raw `ccache --print-stats` output, if available
 
 Every part is optional and this script never fails a job because of missing
@@ -31,9 +29,7 @@ SLOWEST = 20
 SUPPORTED_LOG_VERSIONS = (5, 6, 7)
 SUMMARY_NAME = "build-analysis.json"
 BUILD_STATUSES = ("success", "failure", "cancelled", "skipped")
-INCLUDES_NAME = "ninja-includes.json"
 TOP_HEADERS = 30
-MAX_FAN_IN_ENTRIES = 5000
 OBJECT_SUFFIXES = (".o", ".obj")
 SOURCE_SUFFIXES = (".c", ".cc", ".cpp", ".cxx")
 
@@ -329,18 +325,9 @@ def build_summary(args, env):
         text = ninja_log.read_text(encoding="utf-8", errors="replace")
         shutil.copyfile(ninja_log, out / "ninja_log.txt")
         summary["ninja"] = summarise_ninja(text, build_succeeded(args.build_status))
-        includes, fan_in = read_includes(args.build_dir, args.source_root)
+        includes, _ = read_includes(args.build_dir, args.source_root)
         if includes is not None:
             summary["includes"] = includes
-            detail = {
-                "schema_version": SCHEMA_VERSION,
-                "kind": "ninja-includes-detail",
-                "include_pairs": includes["include_pairs"],
-                "project_pairs": includes["project_pairs"],
-                "digest": includes["digest"],
-                "fan_in": dict(sorted(fan_in.items(), key=lambda item: (-item[1], item[0]))[:MAX_FAN_IN_ENTRIES]),
-            }
-            (out / INCLUDES_NAME).write_text(json.dumps(detail, separators=(",", ":")) + "\n", encoding="utf-8")
 
     if args.ccache:
         result = run(["ccache", "--print-stats"])
