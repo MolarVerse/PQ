@@ -50,10 +50,10 @@ int main()
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto physicalData = physicalData::PhysicalData();
+    auto             physicalData      = physicalData::PhysicalData();
     constexpr double targetTemperature = 300.0;
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat   = thermostat::LangevinThermostat(targetTemperature, 1.0);
+    auto thermostat = thermostat::LangevinThermostat(targetTemperature, 1.0);
 
     CALLGRIND_ZERO_STATS;
 

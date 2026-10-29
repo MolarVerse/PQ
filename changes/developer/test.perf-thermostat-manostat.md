@@ -1,0 +1,1 @@
+- Perf gate: add fixed-work benchmarks for the Berendsen, Langevin, Nose-Hoover and velocity rescaling thermostats and the Berendsen and stochastic rescaling manostats (the Monte Carlo manostat is an empty stub).
