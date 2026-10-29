@@ -1,0 +1,98 @@
+name: Performance Wall-Clock Study
+
+# Measures how much the wall-clock and CPU time of the perf benchmarks vary
+# for IDENTICAL code on a shared GitHub runner (the same build is used as A and
+# B, interleaved A B B A ...). That spread is the smallest change a paired
+# wall-clock comparison of a PR with its base could ever detect, so it decides
+# whether such a check is worth adding (see the perf tests tracker, #932).
+# Informational only: nothing here gates a pull request.
+
+on:
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - '.github/workflows/perf_wallclock.yml'
+      - 'scripts/perf_wallclock.py'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  study:
+    if: github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'pq-bot/')
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: perf-wallclock
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      - name: Build benchmarks
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_ASE=Off \
+            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --target perf_benchmarks -j$(nproc)
+
+      - name: Machine
+        run: |
+          {
+            echo "### Runner"
+            echo ""
+            echo "- CPU: $(lscpu | sed -n 's/^Model name: *//p')"
+            echo "- logical CPUs: $(nproc)"
+            echo "- load before the study: $(cut -d' ' -f1-3 /proc/loadavg)"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # Three rounds, each with the same build as A and B, pinned to the last
+      # CPU: the spread between rounds shows whether a single round is enough.
+      - name: Same build against itself (A against A)
+        run: |
+          pin=$(( $(nproc) - 1 ))
+          for round in 1 2 3; do
+            {
+              echo "### Round $round (pinned to CPU $pin)"
+              echo ""
+              python3 scripts/perf_wallclock.py build/benchmarks/perf build/benchmarks/perf \
+                --reps 21 --pin "$pin" --json "round$round.json"
+            } | tee -a "$GITHUB_STEP_SUMMARY"
+          done
+
+      - name: Upload raw results
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-wallclock-aa
+          path: round*.json
+          retention-days: 30

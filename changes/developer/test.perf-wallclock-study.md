@@ -1,0 +1,1 @@
+- Add scripts/perf_wallclock.py (paired, interleaved wall-clock and CPU timing of the perf benchmarks) and a study workflow that measures its spread on a GitHub runner for identical code, to decide whether a per-PR wall-clock check is worthwhile.
