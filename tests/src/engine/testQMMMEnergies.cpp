@@ -22,6 +22,10 @@
 
 #include <gtest/gtest.h>
 
+#include <cstddef>
+#include <unordered_set>
+
+#include "exceptions.hpp"
 #include "qmmmMDEngine.hpp"
 
 class QMMMEnergiesTest : public ::testing::Test
@@ -35,6 +39,19 @@ class QMMMEnergiesTest : public ::testing::Test
     static void _moveEnergies(engine::QMMMMDEngine &engine)
     {
         engine._moveEnergiesToPhysicalData();
+    }
+
+    static std::unordered_set<size_t> _inactiveSet(size_t bits, size_t n)
+    {
+        return engine::QMMMMDEngine::_generateInactiveSmoothingMoleculeSet(
+            bits,
+            n
+        );
+    }
+
+    static size_t _numberOfConfigurations(size_t n)
+    {
+        return engine::QMMMMDEngine::_numberOfSmoothingConfigurations(n);
     }
 };
 
@@ -60,4 +77,20 @@ TEST_F(QMMMEnergiesTest, exactSmoothingCountsIntraEnergyOnce)
     EXPECT_DOUBLE_EQ(data.getNonCoulombEnergy(), 22.0);
     EXPECT_DOUBLE_EQ(data.getIntraCoulombEnergy(), 1.0);
     EXPECT_DOUBLE_EQ(data.getIntraNonCoulombEnergy(), 2.0);
+}
+
+TEST_F(QMMMEnergiesTest, exactSmoothingHandlesMoleculeIndicesAbove31)
+{
+    EXPECT_EQ(
+        _inactiveSet(size_t{1} << 40U, 41),
+        std::unordered_set<size_t>{40}
+    );
+    EXPECT_EQ(_inactiveSet(0b101, 3), (std::unordered_set<size_t>{0, 2}));
+
+    EXPECT_EQ(_numberOfConfigurations(0), size_t{1});
+    EXPECT_EQ(_numberOfConfigurations(40), size_t{1} << 40U);
+    EXPECT_THROW(
+        static_cast<void>(_numberOfConfigurations(64)),
+        exc::HybridMDEngineException
+    );
 }

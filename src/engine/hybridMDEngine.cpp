@@ -22,6 +22,11 @@
 
 #include "hybridMDEngine.hpp"
 
+#include <format>
+#include <limits>
+
+#include "exceptions.hpp"
+
 namespace engine
 {
     /**
@@ -210,10 +215,39 @@ namespace engine
         std::unordered_set<size_t> inactiveMolecules;
 
         for (size_t j = 0; j < totalMolecules; ++j)
-            if (static_cast<bool>(bitPattern & (1U << j)))
+            if (static_cast<bool>(bitPattern & (size_t{1} << j)))
                 inactiveMolecules.insert(j);
 
         return inactiveMolecules;
+    }
+
+    /**
+     * @brief Number of configurations for "exact" smoothing
+     *
+     * @param nSmoothingMolecules Number of smoothing molecules
+     * @return size_t 2^nSmoothingMolecules
+     *
+     * @throws HybridMDEngineException if 2^nSmoothingMolecules does not fit
+     * into size_t
+     */
+    size_t HybridMDEngine::_numberOfSmoothingConfigurations(
+        const size_t nSmoothingMolecules
+    )
+    {
+        constexpr auto maxMolecules =
+            static_cast<size_t>(std::numeric_limits<size_t>::digits) - 1;
+
+        if (nSmoothingMolecules > maxMolecules)
+            throw exc::HybridMDEngineException(
+                std::format(
+                    "Exact smoothing supports at most {} smoothing molecules, "
+                    "found {}",
+                    maxMolecules,
+                    nSmoothingMolecules
+                )
+            );
+
+        return size_t{1} << nSmoothingMolecules;
     }
 
     /**
