@@ -35,7 +35,6 @@
 #include "box.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
-#include "orthorhombicBox.hpp"
 #include "simulationBoxView.hpp"
 #include "strongTypes.hpp"
 
@@ -79,10 +78,8 @@ namespace molsys
         double _totalCharge = 0.0;
         double _density     = 0.0;
 
-        // TODO: add this to the constructor!!!
-        std::shared_ptr<Box> _box =
-            std::make_shared<OrthorhombicBox>(OrthorhombicBox::makeVacuumBox());
-        bool _boxSetViaStartFile = false;
+        std::shared_ptr<Box> _box;
+        bool                 _boxSetViaStartFile = false;
 
         linalg::Vec3D                      _centerOfMass = {0.0, 0.0, 0.0};
         std::vector<std::shared_ptr<Atom>> _atoms;
@@ -95,6 +92,8 @@ namespace molsys
             _externalToInternalGlobalVDWTypes;
 
        public:
+        SimulationBox();
+
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 

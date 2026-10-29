@@ -1,6 +1,6 @@
 #!/bin/bash
 
-message=$(cat .git/COMMIT_EDITMSG)
+message=$(cat "${1:-.git/COMMIT_EDITMSG}")
 lowercase_message=${message,,}
 
 # Check for patterns and handle errors

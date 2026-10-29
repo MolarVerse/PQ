@@ -61,8 +61,9 @@ namespace pot
             const BuckinghamParams& params
         );
 
-        // TODO: we need to explicitly delete it to not implicitly create it
-        // with the wrong types!!! Needs cleanup
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/906
+        // explicitly deleted to not implicitly create it with the wrong
+        // types!!! Needs cleanup
         explicit BuckinghamPair(
             size_t,
             size_t,

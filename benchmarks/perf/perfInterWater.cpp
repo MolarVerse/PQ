@@ -29,6 +29,7 @@
 #include <iostream>
 #include <memory>
 
+#include "orthorhombicBox.hpp"
 #include "strongTypes.hpp"
 
 #ifdef PQ_WITH_CALLGRIND

@@ -25,7 +25,6 @@
 #include <format>
 
 #include "constants.hpp"
-#include "constraintSettings.hpp"
 #include "distanceKernels.hpp"
 #include "mShakeReference.hpp"
 #include "mathUtilities.hpp"
@@ -189,15 +188,17 @@ namespace constraints
     /**
      * @brief applies the mShake algorithm to all bond constraints
      *
-     * @param simulationBox
+     * @param simulationBox the simulation box containing the molecules
+     * @param maxIter the maximum number of iterations for the mShake algorithm
+     * @param tolerance the convergence tolerance for the mShake algorithm
      *
      */
-    void MShake::applyMShake(molsys::SimulationBox &simulationBox)
+    void MShake::applyMShake(
+        molsys::SimulationBox &simulationBox,
+        size_t                 maxIter,
+        double                 tolerance
+    )
     {
-        const auto mShakeMaxIter =
-            settings::ConstraintSettings::getMShakeMaxIter();
-        const auto mShakeTolerance =
-            settings::ConstraintSettings::getMShakeTolerance();
         auto &molecules = simulationBox.getMolecules();
 
         const auto timeStep =
@@ -406,8 +407,7 @@ namespace constraints
                          * reference value is larger than the tolerance value *
                          ******************************************************/
 
-                        if (::fabs(r2Deviation) / (2.0 * r2Ref) >
-                            mShakeTolerance)
+                        if (::fabs(r2Deviation) / (2.0 * r2Ref) > tolerance)
                             converged = false;
 
                         ++index_ij;
@@ -417,13 +417,13 @@ namespace constraints
                 if (converged)
                     break;
 
-                if (iteration >= mShakeMaxIter)
+                if (iteration >= maxIter)
                 {
                     throw exc::MShakeException(
                         std::format(
                             "M-Shake did not converge within {} iterations for "
                             "molecule type {}",
-                            mShakeMaxIter,
+                            maxIter,
                             moltype.toString()
                         )
                     );

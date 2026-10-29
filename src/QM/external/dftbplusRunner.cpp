@@ -203,7 +203,7 @@ namespace QM
         auto molChangedZone =
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
-        // TODO: https://github.com/MolarVerse/PQ/issues/200
+        // TODO(ape): https://github.com/MolarVerse/PQ/issues/200
         if (settings::HybridSettings::getSmoothingMethod() ==
             SmoothingMethod::EXACT)
             molChangedZone = true;

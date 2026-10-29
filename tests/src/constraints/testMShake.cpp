@@ -28,12 +28,12 @@
 #include <vector>
 
 #include "atom.hpp"
-#include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "mShake.hpp"
 #include "mShakeReference.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
@@ -125,9 +125,10 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     simBox.addMolecule(molecule);
 
     settings::TimingsSettings::setTimeStep(0.5);
-    settings::ConstraintSettings::setMShakeMaxIter(100);
+    const auto maxIter   = 100;
+    const auto tolerance = 1.0e-5;
 
-    EXPECT_NO_THROW(mShake.applyMShake(simBox));
+    EXPECT_NO_THROW(mShake.applyMShake(simBox, maxIter, tolerance));
 
     // After convergence the perturbed bond 0-1 must be back to the
     // reference length 1.0 within the requested tolerance.
@@ -297,11 +298,11 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     simBox.addMolecule(molecule);
 
     settings::TimingsSettings::setTimeStep(0.5);
-    settings::ConstraintSettings::setMShakeMaxIter(1);
-    settings::ConstraintSettings::setMShakeTolerance(-1.0);
+    const auto maxIter   = 1;
+    const auto tolerance = -1.0;
 
     EXPECT_THROW_MSG(
-        mShake.applyMShake(simBox),
+        mShake.applyMShake(simBox, maxIter, tolerance),
         exc::MShakeException,
         "M-Shake did not converge within 1 iterations for molecule type "
         "MolType(1)"

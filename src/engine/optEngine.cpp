@@ -238,11 +238,13 @@ namespace engine
 
             getEngineOutput().writeEnergyFile(
                 effStep,
-                getAveragePhysicalData()
+                getAveragePhysicalData(),
+                getSettings()
             );
             getEngineOutput().writeInfoFile(
                 effStepDouble,
-                getAveragePhysicalData()
+                getAveragePhysicalData(),
+                getSettings()
             );
 
             getAveragePhysicalData() = physicalData::PhysicalData();

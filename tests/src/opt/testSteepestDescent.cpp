@@ -25,6 +25,7 @@
 #include <memory>
 
 #include "atom.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "steepestDescent.hpp"
 #include "vector3d.hpp"

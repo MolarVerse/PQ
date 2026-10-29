@@ -46,8 +46,15 @@ namespace input
      * shake-tolerance "<double>" 3) shake-iter "<size_t>" 4) rattle-iter
      * "<size_t>" 5) rattle-tolerance "<double>"
      *
+     * @param constraintSettings Reference to the ConstraintSettings object
+     * which will be used to configure the constraints based on the parsed
+     * input keywords.
+     *
      */
-    ConstraintsInputParser::ConstraintsInputParser()
+    ConstraintsInputParser::ConstraintsInputParser(
+        ConstraintSettings &constraintSettings
+    )
+        : _constraintSettings{constraintSettings}
     {
         addShakeActivatedKeyword();
         addShakeToleranceKeyword();
@@ -74,14 +81,14 @@ namespace input
 
         const auto defaultValue = ShakeType::OFF;
 
-        const auto setValue = [](auto value)
+        const auto setValue = [this](auto value)
         {
             switch (value)
             {
                 case ShakeType::ON:
                 case ShakeType::SHAKE:
                 {
-                    settings::ConstraintSettings::activateShake();
+                    _constraintSettings->activateShake();
                     references::ReferencesOutput::addReferenceFile(
                         references::RATTLE_FILE
                     );
@@ -89,14 +96,14 @@ namespace input
                 }
                 case ShakeType::OFF:
                 {
-                    settings::ConstraintSettings::deactivateShake();
-                    settings::ConstraintSettings::deactivateMShake();
+                    _constraintSettings->deactivateShake();
+                    _constraintSettings->deactivateMShake();
                     break;
                 }
                 case ShakeType::MSHAKE:
                 {
-                    settings::ConstraintSettings::activateMShake();
-                    settings::ConstraintSettings::activateShake();
+                    _constraintSettings->activateMShake();
+                    _constraintSettings->activateShake();
                     break;
                 }
             }
@@ -133,8 +140,8 @@ namespace input
             std::nullopt
         };
 
-        const auto setValue = [](auto value)
-        { settings::ConstraintSettings::setShakeTolerance(value); };
+        const auto setValue = [this](auto value)
+        { _constraintSettings->setShakeTolerance(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -166,8 +173,8 @@ namespace input
 
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
-        const auto setValue = [](auto value)
-        { settings::ConstraintSettings::setShakeMaxIter(value); };
+        const auto setValue = [this](auto value)
+        { _constraintSettings->setShakeMaxIter(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -201,8 +208,8 @@ namespace input
             std::nullopt
         };
 
-        const auto setValue = [](auto value)
-        { settings::ConstraintSettings::setRattleTolerance(value); };
+        const auto setValue = [this](auto value)
+        { _constraintSettings->setRattleTolerance(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -234,8 +241,8 @@ namespace input
 
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
-        const auto setValue = [](auto value)
-        { settings::ConstraintSettings::setRattleMaxIter(value); };
+        const auto setValue = [this](auto value)
+        { _constraintSettings->setRattleMaxIter(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -269,8 +276,8 @@ namespace input
             std::nullopt
         };
 
-        const auto setValue = [](auto value)
-        { settings::ConstraintSettings::setMShakeTolerance(value); };
+        const auto setValue = [this](auto value)
+        { _constraintSettings->setMShakeTolerance(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -302,8 +309,8 @@ namespace input
 
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
-        const auto setValue = [](auto value)
-        { settings::ConstraintSettings::setMShakeMaxIter(value); };
+        const auto setValue = [this](auto value)
+        { _constraintSettings->setMShakeMaxIter(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -332,12 +339,12 @@ namespace input
 
         const auto defaultValue = false;
 
-        const auto setValue = [](auto value)
+        const auto setValue = [this](auto value)
         {
             if (value)
-                settings::ConstraintSettings::activateDistanceConstraints();
+                _constraintSettings->activateDistanceConstraints();
             else
-                settings::ConstraintSettings::deactivateDistanceConstraints();
+                _constraintSettings->deactivateDistanceConstraints();
         };
 
         auto &key = _getRegistry().registerKey(

@@ -45,6 +45,7 @@
 #include "lennardJonesPair.hpp"
 #include "mTRIntraWater.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "potentialBruteForce.hpp"

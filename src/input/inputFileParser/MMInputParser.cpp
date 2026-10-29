@@ -42,10 +42,16 @@ namespace input
      *
      * @param waterModelSettings Reference to the WaterModelSettings object that
      * will be used to store and manage water model configurations.
+     * @param forceFieldSettings Reference to the ForceFieldSettings object that
+     * will be used to store and manage force field configurations.
      *
      */
-    MMInputParser::MMInputParser(WaterModelSettings &waterModelSettings)
-        : _waterModelSettings(waterModelSettings)
+    MMInputParser::MMInputParser(
+        WaterModelSettings &waterModelSettings,
+        ForceFieldSettings &forceFieldSettings
+    )
+        : _waterModelSettings(waterModelSettings),
+          _forceFieldSettings(forceFieldSettings)
     {
         addForceFieldTypeKey();
         addNonCoulombTypeKey();
@@ -70,8 +76,8 @@ namespace input
                 "bonded)",
         };
 
-        const auto setValue = [](ForceFieldType value)
-        { settings::ForceFieldSettings::setType(value); };
+        const auto setValue = [this](ForceFieldType value)
+        { _forceFieldSettings->setType(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ForceFieldType>{

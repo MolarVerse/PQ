@@ -7,3 +7,5 @@
 - Replace static `OptimizerSettings`
 - Replace static `ConvSettings`
 - Replace static `WaterModelSettings`
+- Replace static `ConstraintSettings`
+- Replace static `ForceFieldSettings`

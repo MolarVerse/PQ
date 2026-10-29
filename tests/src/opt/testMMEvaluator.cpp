@@ -33,6 +33,7 @@
 #include "intraNonBonded.hpp"
 #include "mmEvaluator.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "settings.hpp"
@@ -80,7 +81,12 @@ namespace
             std::make_shared<intraNonBonded::IntraNonBonded>()
 
         );
-        eval.setConstraints(std::make_shared<constraints::Constraints>());
+        Settings settings;
+        eval.setConstraints(
+            std::make_shared<constraints::Constraints>(
+                settings.constraintSettings
+            )
+        );
 
         settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
     }
@@ -147,7 +153,10 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     eval2.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
     eval2.setForceField(std::make_shared<ff::ForceField>());
     eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
-    eval2.setConstraints(std::make_shared<constraints::Constraints>());
+    ConstraintSettings constraintSettings;
+    eval2.setConstraints(
+        std::make_shared<constraints::Constraints>(constraintSettings)
+    );
 
     settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
 

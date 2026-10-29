@@ -40,6 +40,7 @@
 #include "logOutput.hpp"
 #include "maxwellBoltzmann.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "outputMessages.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -84,7 +85,7 @@ namespace setup
     {
         setAtomNames();
         setAtomTypes();
-        if (settings::ForceFieldSettings::isNonCoulombicActive())
+        if (_engine.getSettings().forceFieldSettings.isNonCoulombicActive())
             setExternalVDWTypes();
         setPartialCharges();
 

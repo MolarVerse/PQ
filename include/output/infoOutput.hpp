@@ -33,6 +33,8 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+struct Settings;   // forward declaration
+
 namespace out
 {
 
@@ -47,7 +49,11 @@ namespace out
        public:
         using Output::Output;
 
-        void write(double, const physicalData::PhysicalData &);
+        void write(
+            double                            simulationTime,
+            const physicalData::PhysicalData &physicalData,
+            const Settings                   &settings
+        );
 
        private:
         void _writeHeader();

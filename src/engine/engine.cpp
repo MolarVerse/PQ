@@ -58,7 +58,9 @@ namespace engine
           _simulationBox{std::make_shared<molsys::SimulationBox>()},
           _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
           _forceField{std::make_shared<ff::ForceField>()},
-          _constraints{std::make_shared<constraints::Constraints>()},
+          _constraints{std::make_shared<constraints::Constraints>(
+              settings.constraintSettings
+          )},
           _settings{settings},
           _impl{std::make_unique<Impl>()}
     {

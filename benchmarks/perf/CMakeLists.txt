@@ -1,6 +1,10 @@
 # Each performance-regression benchmark is a standalone fixed-work executable.
 # To add one: drop a perf<Name>.cpp here and add it to the list below. The CI
 # gate (.github/workflows/perf.yml) auto-discovers every perf_* target.
+# The gate compares each benchmark with the build of the base branch under the
+# same name. If a PR changes WHAT a benchmark measures, give it a new name (it
+# is then listed as new, the old one as removed); otherwise the change shows up
+# as a regression or an improvement.
 set(perf_benchmarks
     perfInterWater.cpp
     perfForceKernel.cpp
@@ -13,7 +17,7 @@ set(perf_benchmarks
     perfIntegrator.cpp
     perfKinetics.cpp
     perfVirial.cpp
-    perfConstraints.cpp
+    perfShakeRattle.cpp
 )
 
 include(CheckIncludeFileCXX)

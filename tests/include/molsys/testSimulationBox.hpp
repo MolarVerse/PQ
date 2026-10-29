@@ -31,6 +31,7 @@
 #include "atom.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 class TestSimulationBox : public ::testing::Test

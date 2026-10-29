@@ -32,6 +32,15 @@
 #include <string>
 #include <thread>
 
+#if !defined(_WIN32)
+#include <sys/wait.h>
+#include <unistd.h>
+
+#include <cerrno>
+#include <chrono>
+#include <csignal>
+#endif
+
 #include "box.hpp"
 #include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
@@ -42,6 +51,129 @@
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
+
+#if !defined(_WIN32)
+namespace
+{
+    struct CancelState
+    {
+        static inline volatile std::sig_atomic_t flag = 0;
+    };
+}   // namespace
+
+/**
+ * @brief signal handler that records SIGINT, SIGTERM or SIGHUP while an
+ * external QM program runs
+ *
+ * @details signal handlers need C language linkage, which is ignored for names
+ * with internal linkage, so this cannot live in the unnamed namespace
+ *
+ * @param signalNumber received signal
+ */
+// NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
+// linkage
+extern "C" void pqRecordQMCancelSignal(const int signalNumber)
+{
+    CancelState::flag = signalNumber;
+}
+
+namespace
+{
+    /**
+     * @brief records SIGINT, SIGTERM and SIGHUP while the QM process runs, so
+     * its process group can be stopped before PQ exits; restores the previous
+     * handlers on destruction
+     */
+    class ScopedCancelSignals
+    {
+       private:
+        static constexpr auto _nSignals = 3;
+
+        std::array<int, _nSignals> _signals{SIGINT, SIGTERM, SIGHUP};
+        std::array<struct sigaction, _nSignals> _previous{};
+
+       public:
+        ScopedCancelSignals()
+        {
+            CancelState::flag = 0;
+
+            struct sigaction action{};
+            action.sa_handler = pqRecordQMCancelSignal;
+            ::sigemptyset(&action.sa_mask);
+
+            for (std::size_t i = 0; i < _signals.size(); ++i)
+            {
+                ::sigaction(_signals.at(i), &action, &_previous.at(i));
+
+                // keep signals ignored by the caller (e.g. nohup) ignored
+                if (_previous.at(i).sa_handler == SIG_IGN)
+                {
+                    ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
+                }
+            }
+        }
+
+        ~ScopedCancelSignals()
+        {
+            for (std::size_t i = 0; i < _signals.size(); ++i)
+            {
+                ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
+            }
+        }
+
+        ScopedCancelSignals(const ScopedCancelSignals &)            = delete;
+        ScopedCancelSignals &operator=(const ScopedCancelSignals &) = delete;
+        ScopedCancelSignals(ScopedCancelSignals &&)                 = delete;
+        ScopedCancelSignals &operator=(ScopedCancelSignals &&)      = delete;
+    };
+
+    /**
+     * @brief terminates the process group of pid and reaps pid
+     *
+     * @details sends SIGTERM and waits until pid exits, at most
+     * terminateGracePeriod; SIGKILL then stops any remaining group members.
+     * pid is reaped last so its process group id cannot be reused before.
+     *
+     * @param pid process (group leader) to stop
+     * @param status wait status of pid
+     * @param pollInterval interval between checks whether pid exited
+     */
+    void stopProcessGroup(
+        const pid_t                     pid,
+        int                            &status,
+        const std::chrono::milliseconds pollInterval
+    )
+    {
+        constexpr auto terminateGracePeriod = std::chrono::seconds(1);
+
+        const auto deadline =
+            std::chrono::steady_clock::now() + terminateGracePeriod;
+
+        ::killpg(pid, SIGTERM);
+
+        siginfo_t info{};
+        while (std::chrono::steady_clock::now() < deadline)
+        {
+            info.si_pid = 0;
+            ::waitid(
+                P_PID,
+                static_cast<id_t>(pid),
+                &info,
+                WEXITED | WNOHANG | WNOWAIT
+            );
+            if (info.si_pid == pid)
+            {
+                break;
+            }
+
+            std::this_thread::sleep_for(pollInterval);
+        }
+
+        ::killpg(pid, SIGKILL);
+        ::waitpid(pid, &status, 0);
+    }
+}   // namespace
+#endif
 
 namespace QM
 {
@@ -294,16 +426,11 @@ namespace QM
         };
         for (const auto &file : resultFiles) std::filesystem::remove(file);
 
-        std::jthread timeoutThread{[](const std::stop_token &stopToken)
-                                   { throwAfterTimeout(stopToken); }};
-
         {
             auto _ =
                 scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
             execute(simulationBox);
         }
-
-        timeoutThread.request_stop();
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
@@ -349,8 +476,79 @@ namespace QM
             )
         );
 #else
-        const auto status = std::system(std::string(command).c_str());
-        if (status != EXIT_SUCCESS)
+        constexpr auto execFailedStatus = 127;
+        constexpr auto pollInterval     = std::chrono::milliseconds(10);
+
+        auto       shell         = std::string("sh");
+        auto       shellFlag     = std::string("-c");
+        auto       commandString = std::string(command);
+        const auto timeLimit     = settings::QMSettings::getQMLoopTimeLimit();
+
+        const pid_t pid = ::fork();
+        if (pid < 0)
+            throw exc::QMRunnerException(
+                std::format("{} command could not be started", program)
+            );
+
+        if (pid == 0)
+        {
+            ::setpgid(0, 0);
+            auto argv = std::array<char *, 4>{
+                shell.data(),
+                shellFlag.data(),
+                commandString.data(),
+                nullptr
+            };
+            ::execv("/bin/sh", argv.data());
+            ::_exit(execFailedStatus);
+        }
+
+        ::setpgid(pid, pid);
+
+        // qm_loop_time_limit is given in s
+        const auto deadline = std::chrono::steady_clock::now() +
+                              std::chrono::duration<double>(timeLimit);
+
+        int status = 0;
+        {
+            const auto cancelSignals = ScopedCancelSignals{};
+
+            while (true)
+            {
+                const auto result = ::waitpid(pid, &status, WNOHANG);
+
+                if (result == pid)
+                    break;
+
+                if (result < 0 && errno != EINTR)
+                    throw exc::QMRunnerException(
+                        std::format("{} command could not be awaited", program)
+                    );
+
+                if (CancelState::flag != 0)
+                {
+                    stopProcessGroup(pid, status, pollInterval);
+                    break;
+                }
+
+                if (timeLimit > 0.0 &&
+                    std::chrono::steady_clock::now() >= deadline)
+                {
+                    stopProcessGroup(pid, status, pollInterval);
+                    throw exc::QMRunnerException("QM calculation timeout");
+                }
+
+                std::this_thread::sleep_for(pollInterval);
+            }
+        }
+
+        // previous handlers are restored; deliver the signal to PQ itself
+        if (CancelState::flag != 0)
+        {
+            static_cast<void>(::raise(CancelState::flag));
+        }
+
+        if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
             throw exc::QMRunnerException(
                 std::format("{} command failed with status {}", program, status)
             );

@@ -22,6 +22,8 @@
 
 #include "testTopologyReader.hpp"
 
+#include <memory>
+
 #include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
@@ -38,14 +40,15 @@
  */
 TEST_F(TestTopologyReader, isNeeded)
 {
-    EXPECT_FALSE(input::topology::isNeeded());
+    Settings settings;
+    EXPECT_FALSE(input::topology::isNeeded(settings));
 
-    settings::ConstraintSettings::activateShake();
-    EXPECT_TRUE(input::topology::isNeeded());
+    settings.constraintSettings.activateShake();
+    EXPECT_TRUE(input::topology::isNeeded(settings));
 
-    settings::ConstraintSettings::deactivateShake();
-    settings::ForceFieldSettings::setType(ForceFieldType::ON);
-    EXPECT_TRUE(input::topology::isNeeded());
+    settings.constraintSettings.deactivateShake();
+    settings.forceFieldSettings.setType(ForceFieldType::ON);
+    EXPECT_TRUE(input::topology::isNeeded(settings));
 }
 
 /**
@@ -72,7 +75,12 @@ TEST_F(TestTopologyReader, read)
 {
     EXPECT_NO_THROW(_topologyReader->read());
 
-    settings::ConstraintSettings::activateShake();
+    _settings.constraintSettings.activateShake();
+    engine::MMMDEngine engine{_settings};
+    _topologyReader = std::make_unique<input::topology::TopologyReader>(
+        settings::FileSettings::getTopologyFileName(),
+        engine
+    );
     EXPECT_NO_THROW(_topologyReader->read());
 
     settings::FileSettings::unsetIsTopologyFileNameSet();

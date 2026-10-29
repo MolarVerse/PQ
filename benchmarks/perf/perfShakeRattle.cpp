@@ -21,14 +21,16 @@
 ******************************************************************************/
 
 // Fixed-work micro-benchmark of the SHAKE/RATTLE constraint solver. One bond
-// constraint per molecule, started at rest (positionOld == position) so the
-// solver is stable across iterations.
+// constraint per molecule, started at rest (positionOld == position). One
+// atom per molecule is displaced every iteration so each call has to correct a
+// violated bond, as in a real step.
 
 #include <cstdint>
 #include <cstdio>
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
 #include "strongTypes.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -54,12 +56,13 @@ int main()
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto &molecules = box.getMolecules();
 
-    auto constr = constraints::Constraints();
-    constr.setShakeMaxIter(100);
-    constr.setRattleMaxIter(100);
-    constr.setShakeTolerance(1.0e-8);
-    constr.setRattleTolerance(1.0e-8);
-    settings::ConstraintSettings::activateShake();
+    Settings settings;
+    settings.constraintSettings.setShakeMaxIter(100);
+    settings.constraintSettings.setRattleMaxIter(100);
+    settings.constraintSettings.setShakeTolerance(1.0e-8);
+    settings.constraintSettings.setRattleTolerance(1.0e-8);
+    settings.constraintSettings.activateShake();
+    auto constr = constraints::Constraints(settings.constraintSettings);
 
     for (auto &molecule : molecules)
     {
@@ -80,6 +83,15 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
+        // Without this the bonds are satisfied after the first call and
+        // SHAKE only checks convergence; a real step needs correction passes.
+        for (auto &molecule : molecules)
+        {
+            auto &atom  = molecule.getAtom(AtomIndex{1});
+            auto  pos   = atom.getPosition();
+            pos[0]     += (i % 2 == 0) ? 0.02 : -0.02;
+            atom.setPosition(pos);
+        }
         constr.applyShake(box);
         constr.applyRattle(box);
     }

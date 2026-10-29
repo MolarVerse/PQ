@@ -98,7 +98,7 @@ namespace engine
             getPhysicalData()
         );
 
-        if (settings::ConstraintSettings::isMShakeActivated())
+        if (getSettings().constraintSettings.isMShakeActivated())
             getSimulationBox().updateOldPositions();
 
         getIntegrator().firstStep(getSimulationBox());
@@ -245,13 +245,19 @@ namespace engine
 
             getEngineOutput().writeEnergyFile(
                 effStep,
-                getAveragePhysicalData()
+                getAveragePhysicalData(),
+                getSettings()
             );
             getEngineOutput().writeInstantEnergyFile(
                 effStep,
-                getPhysicalData()
+                getPhysicalData(),
+                getSettings()
             );
-            getEngineOutput().writeInfoFile(simTime, getAveragePhysicalData());
+            getEngineOutput().writeInfoFile(
+                simTime,
+                getAveragePhysicalData(),
+                getSettings()
+            );
             getEngineOutput().writeMomentumFile(
                 effStep,
                 getAveragePhysicalData()

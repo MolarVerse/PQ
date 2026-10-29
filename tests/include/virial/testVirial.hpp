@@ -32,6 +32,7 @@
 #include "enums/jobtype.hpp"
 #include "generalSettings.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
