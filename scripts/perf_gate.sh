@@ -68,6 +68,7 @@ regressed=""
 improved=""
 unmeasured=""
 declare -A pr_names
+declare -A pr_ir_all
 shopt -s nullglob
 
 for pr_bin in "$PR_DIR"/perf_*; do
@@ -84,6 +85,7 @@ for pr_bin in "$PR_DIR"/perf_*; do
         status=1
         continue
     fi
+    pr_ir_all["$name"]="$pr_ir"
 
     if [ -n "${base_ir_cache[$name]:-}" ]; then
         base_ir="${base_ir_cache[$name]}"
@@ -115,6 +117,35 @@ for pr_bin in "$PR_DIR"/perf_*; do
         *)       emoji="✅"; echo "$name: ${pct}%" ;;
     esac
     rows+="| \`$name\` | $(fmt "$base_ir") | $(fmt "$pr_ir") | ${pct}% | $emoji |"$'\n'
+done
+
+# ---- scaling: benchmarks named <group>N<molecules> form a size series ----
+# Exponent = ln(Ir_large / Ir_small) / ln(n_large / n_small); 1.00 is linear.
+# Informational: a worse exponent also shows up as a regression of the largest
+# benchmark, which the per-benchmark gate above already catches.
+declare -A scaling_groups
+for name in "${!pr_ir_all[@]}"; do
+    if [[ "$name" =~ ^(.+)N([0-9]+)$ ]]; then
+        scaling_groups["${BASH_REMATCH[1]}"]+="${BASH_REMATCH[2]} "
+    fi
+done
+scaling_rows=""
+for group in "${!scaling_groups[@]}"; do
+    # shellcheck disable=SC2086
+    read -r -a sizes <<< "$(printf '%s\n' ${scaling_groups[$group]} | sort -n | tr '\n' ' ')"
+    [ "${#sizes[@]}" -ge 2 ] || continue
+    small="${sizes[0]}"
+    large="${sizes[${#sizes[@]} - 1]}"
+    exponent() {   # <ir small> <ir large>
+        awk -v a="$1" -v b="$2" -v s="$small" -v l="$large" \
+            'BEGIN{ if (a>0 && b>0) printf "%.2f", log(b/a)/log(l/s); else print "-" }'
+    }
+    pr_exp="$(exponent "${pr_ir_all[${group}N$small]}" "${pr_ir_all[${group}N$large]}")"
+    base_exp="–"
+    if [ -n "${base_ir_fresh[${group}N$small]:-}" ] && [ -n "${base_ir_fresh[${group}N$large]:-}" ]; then
+        base_exp="$(exponent "${base_ir_fresh[${group}N$small]}" "${base_ir_fresh[${group}N$large]}")"
+    fi
+    scaling_rows+="| \`$group\` | $small to $large | $base_exp | $pr_exp |"$'\n'
 done
 
 # Benchmarks that exist on the base but not in the PR (deleted or renamed):
@@ -156,6 +187,14 @@ fi
     echo "| benchmark | base Ir | PR Ir | Δ | |"
     echo "|---|---|---|---|---|"
     printf '%s' "$rows"
+    if [ -n "$scaling_rows" ]; then
+        echo ""
+        echo "Scaling of the size series (exponent of Ir over the number of molecules, 1.00 = linear):"
+        echo ""
+        echo "| series | sizes | base | PR |"
+        echo "|---|---|---|---|"
+        printf '%s' "$scaling_rows"
+    fi
     echo "</details>"
     echo ""
     echo "<sub><em>Deterministic callgrind instruction counts vs the base branch; gated at ±${THRESHOLD}%. Not wall-clock.</em></sub>"

@@ -29,6 +29,9 @@ set(perf_benchmarks
     perfMaxwellBoltzmann.cpp
     perfResetKinetics.cpp
     perfEndToEnd.cpp
+    perfInterWaterN216.cpp
+    perfInterWaterN512.cpp
+    perfInterWaterN1728.cpp
 )
 
 include(CheckIncludeFileCXX)

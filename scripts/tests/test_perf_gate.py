@@ -119,5 +119,36 @@ class PerfGateTest(unittest.TestCase):
         self.assertIn("removed", report)
 
 
+    def test_size_series_reports_the_scaling_exponent(self):
+        for directory, large in ((self.pr, 4_000_000), (self.base, 2_000_000)):
+            self.bench(directory, "seriesN100", 1_000_000)
+            self.bench(directory, "seriesN200", large)
+        result, report = self.run_gate()
+        self.assertIn("Scaling", report)
+        self.assertIn("| `series` | 100 to 200 | 1.00 | 2.00 |", report)
+        self.assertEqual(1, result.returncode)   # the 200-molecule benchmark doubled
+
+    def test_scaling_uses_the_smallest_and_the_largest_size(self):
+        for directory in (self.pr, self.base):
+            for size, ir in ((100, 1_000_000), (200, 2_000_000), (400, 4_000_000)):
+                self.bench(directory, f"seriesN{size}", ir)
+        result, report = self.run_gate()
+        self.assertEqual(0, result.returncode)
+        self.assertIn("| `series` | 100 to 400 | 1.00 | 1.00 |", report)
+
+    def test_no_scaling_table_without_a_series(self):
+        self.bench(self.pr, "a", 1_000_000)
+        self.bench(self.base, "a", 1_000_000)
+        _, report = self.run_gate()
+        self.assertNotIn("Scaling", report)
+
+    def test_series_without_base_shows_a_dash(self):
+        self.bench(self.pr, "seriesN100", 1_000_000)
+        self.bench(self.pr, "seriesN200", 2_000_000)
+        result, report = self.run_gate()
+        self.assertEqual(0, result.returncode)
+        self.assertIn("| `series` | 100 to 200 | – | 1.00 |", report)
+
+
 if __name__ == "__main__":
     unittest.main()
