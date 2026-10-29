@@ -43,7 +43,7 @@
 #include "stochasticRescalingManostat.hpp"
 #include "timingsSettings.hpp"
 
-static constexpr std::uint64_t ITERATIONS = 1000*100*10;
+static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {

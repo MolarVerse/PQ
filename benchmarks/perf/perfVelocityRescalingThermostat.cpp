@@ -40,7 +40,7 @@
 #include "timingsSettings.hpp"
 #include "velocityRescalingThermostat.hpp"
 
-static constexpr std::uint64_t ITERATIONS = 1000*100*10;
+static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
