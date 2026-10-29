@@ -60,7 +60,8 @@ type_to_name = { "molsys::SimulationBox" = [
 excluded_macros = ["MSTD_ENUM", "MSTD_ENUM_BITFLAG", "TEST", "TEST_F"]
 
 [cpp.ast_check_config.includeIwyuPragmaOnly]
-allowed_pragmas = ["export"]
+allowed_pragmas = ["export", "keep"]
+pragma_required_reasons = { keep = "-- for template specialization" }
 
 [cpp.ast_check_config.enforceSystemHeaderLibs]
 libs = ["mstd"]

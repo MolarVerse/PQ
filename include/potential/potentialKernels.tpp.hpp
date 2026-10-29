@@ -49,7 +49,6 @@
 #include "box.hpp"
 #include "coulombPotential.hpp"
 #include "molecule.hpp"
-#include "nonCoulombPotential.hpp"
 #include "potential.hpp"
 
 namespace pot
