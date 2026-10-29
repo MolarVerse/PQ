@@ -46,25 +46,7 @@ namespace manostat
         FixedAxis _fixedAxis;
 
        public:
-        StochasticRescalingManostat() = default;
-        explicit StochasticRescalingManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            FixedAxis fixedAxis
-        );
-        ~StochasticRescalingManostat() override = default;
-
-        // copy constructor and copy assignment needed for random number
-        // generator
-        StochasticRescalingManostat(const StochasticRescalingManostat &other);
-        StochasticRescalingManostat &operator=(
-            const StochasticRescalingManostat &other
-        );
-        StochasticRescalingManostat(StochasticRescalingManostat &&) noexcept =
-            delete;
-        StochasticRescalingManostat &operator=(StochasticRescalingManostat &&
-        ) noexcept = delete;
+        using Manostat::Manostat;
 
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
@@ -72,8 +54,6 @@ namespace manostat
         ) override;
 
         [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
-
-        [[nodiscard]] ManostatType getManostatType() const override;
 
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
@@ -99,20 +79,15 @@ namespace manostat
         Isotropy _isotropy;
 
        public:
-        explicit SemiIsotropicStochasticRescalingManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            Isotropy  isotropy,
-            FixedAxis fixedAxis
-        );
+        using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
         linalg::tensor3D calculateMu(double volume) override;
     };
 
     /**
-     * @brief AnisotropicStochasticRescalingManostat inherits from Manostat
+     * @brief AnisotropicStochasticRescalingManostat inherits from
+     * StochasticRescalingManostat
      *
      * _(https://doi.org/10.1063/5.0020514)
      *
@@ -128,7 +103,8 @@ namespace manostat
     };
 
     /**
-     * @brief FullAnisotropicStochasticRescalingManostat inherits from Manostat
+     * @brief FullAnisotropicStochasticRescalingManostat inherits from
+     * StochasticRescalingManostat
      *
      * _(https://doi.org/10.1063/5.0020514)
      *

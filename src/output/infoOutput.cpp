@@ -119,12 +119,12 @@ namespace out
             _writeRight();
         }
 
-        if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
+        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             _writeLeft(physicalData.getVolume(), "VOLUME", "A^3");
             _writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
 
-            if (settings::ManostatSettings::getFixedAxis() != FixedAxis::NONE)
+            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
             {
                 _writeLeft(
                     physicalData.getCoupledPressure(),

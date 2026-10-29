@@ -32,6 +32,7 @@
 #include "manostat.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 
 /**
@@ -45,12 +46,17 @@ class TestManostat : public ::testing::Test
    protected:
     std::unique_ptr<physicalData::PhysicalData> _data;
     std::unique_ptr<molsys::SimulationBox>      _box;
-    std::unique_ptr<manostat::Manostat>         _manostat;
+    std::unique_ptr<Settings>                   _settings;
 
     void SetUp() override
     {
-        _manostat = std::make_unique<manostat::Manostat>();
-        _data     = std::make_unique<physicalData::PhysicalData>();
+        _settings = std::make_unique<Settings>();
+        _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+        _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+        _settings->manostatSettings.setTargetPressure(1.0);
+        _settings->manostatSettings.setTauManostat(1.0);
+        _settings->manostatSettings.setCompressibility(0.03);
+        _data = std::make_unique<physicalData::PhysicalData>();
 
         _data->setVolume(2.0);
         _data->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)));

@@ -41,9 +41,9 @@ namespace manostat
     /**
      * @brief Construct a new Manostat:: Manostat object
      *
-     * @param targetPressure
+     * @param settings The settings object containing the manostat configuration
      */
-    Manostat::Manostat(double targetPressure) : _targetPressure(targetPressure)
+    Manostat::Manostat(const ManostatSettings &settings) : _settings(settings)
     {
     }
 
@@ -70,8 +70,7 @@ namespace manostat
 
         physicalData.setPressure(_pressure);
 
-        if (settings::ManostatSettings::getIsotropy() !=
-            Isotropy::FULL_ANISOTROPIC)
+        if (_settings->getIsotropy() != Isotropy::FULL_ANISOTROPIC)
         {
             // Length coupling uses cell-axis coordinates: T^-1 P T.
             // Full anisotropic deformation acts directly in Cartesian space.
@@ -80,7 +79,7 @@ namespace manostat
                               box.toSimSpace(linalg::diagonalMatrix(1.0));
         }
 
-        const auto fixedAxis = settings::ManostatSettings::getFixedAxis();
+        const auto fixedAxis = _settings->getFixedAxis();
         const auto p_xyz     = diagonal(_pressureTensor);
 
         size_t numFree = 0;
@@ -201,16 +200,6 @@ namespace manostat
     }
 
     /**
-     * @brief get the manostat type
-     *
-     * @return ManostatType
-     */
-    ManostatType Manostat::getManostatType() const
-    {
-        return ManostatType::NONE;
-    }
-
-    /**
      * @brief get the pressure tensor
      *
      * @return const linalg::tensor3D&
@@ -226,13 +215,6 @@ namespace manostat
      * @return double
      */
     double Manostat::_getPressure() const { return _pressure; }
-
-    /**
-     * @brief Get the target pressure
-     *
-     * @return double
-     */
-    double Manostat::_getTargetPressure() const { return _targetPressure; }
 
     /**
      * @brief set the pressure tensor

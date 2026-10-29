@@ -226,4 +226,11 @@ namespace molsys
         return position;
     }
 
+    /**
+     * @brief indicate whether the box allows change of angles
+     *
+     * @return true if change of angles is allowed, false otherwise
+     */
+    bool OrthorhombicBox::allowChangeOfAngles() const { return false; }
+
 }   // namespace molsys

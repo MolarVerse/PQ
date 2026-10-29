@@ -31,6 +31,7 @@
 #include "berendsenManostat.hpp"
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
+#include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
@@ -40,6 +41,7 @@
 #include "potentialSettings.hpp"
 #include "resetKinetics.hpp"
 #include "resetKineticsSettings.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "stochasticRescalingManostat.hpp"
 #include "thermostatSettings.hpp"
@@ -54,14 +56,19 @@ namespace
        protected:
         molsys::SimulationBox      _box;
         physicalData::PhysicalData _data;
+        std::unique_ptr<Settings>  _settings;
 
         void SetUp() override
         {
+            _settings = std::make_unique<Settings>();
             settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
             settings::GeneralSettings::setRandomSeed(42);
             settings::GeneralSettings::setIsRandomSeedSet(true);
-            settings::ManostatSettings::setIsotropy(Isotropy::ISOTROPIC);
-            settings::ManostatSettings::setFixedAxis(FixedAxis::NONE);
+            _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+            _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+            _settings->manostatSettings.setTargetPressure(1.0);
+            _settings->manostatSettings.setTauManostat(1.0);
+            _settings->manostatSettings.setCompressibility(0.03);
             settings::TimingsSettings::setTimeStep(1.0);
             settings::ThermostatSettings::setActualTargetTemperature(0.0);
             settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
@@ -100,17 +107,19 @@ namespace
 TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
 {
     _box.setBox(
-        molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}),
+        molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}, true),
         false
     );
     _addMolecule({0.0}, 0.0);
     _addMolecule({1.0}, 0.0);
     _data.setVirial(linalg::diagonalMatrix(_box.getVolume() / PRESSURE_FACTOR));
-    settings::ManostatSettings::setIsotropy(Isotropy::FULL_ANISOTROPIC);
-    manostat::FullAnisotropicBerendsenManostat
-        berendsen(1.0, 1.0, 0.03, FixedAxis::NONE);
-    manostat::FullAnisotropicStochasticRescalingManostat
-        stochastic(1.0, 1.0, 0.03, FixedAxis::NONE);
+    _settings->manostatSettings.setIsotropy(Isotropy::FULL_ANISOTROPIC);
+    manostat::FullAnisotropicBerendsenManostat berendsen(
+        _settings->manostatSettings
+    );
+    manostat::FullAnisotropicStochasticRescalingManostat stochastic(
+        _settings->manostatSettings
+    );
     for (auto* coupling :
          std::vector<manostat::Manostat*>{&berendsen, &stochastic})
     {
@@ -135,14 +144,14 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
 TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
 {
     _box.setBox(
-        molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}),
+        molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}, false),
         false
     );
-    settings::ManostatSettings::setFixedAxis(FixedAxis::YZ);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::YZ);
     _data.setVirial(
         linalg::tensor3D{{2.0, -1.0, 0.5}, {4.0, -2.0, 1.0}, {6.0, -3.0, 1.5}}
     );
-    manostat::Manostat pressure;
+    manostat::Manostat pressure(_settings->manostatSettings);
     pressure.calculatePressure(_box, _data);
     EXPECT_NEAR(
         _data.getPressure(),
@@ -163,13 +172,21 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
     constexpr double increment = 1e-6;
     for (const auto fixed : {FixedAxis::NONE, FixedAxis::Z})
     {
-        manostat::BerendsenManostat iso(1.0, 1.0, increment, fixed);
-        manostat::SemiIsotropicBerendsenManostat
-            semi(1.0, 1.0, increment, Isotropy::SEMI_ISOTROPIC_XY, fixed);
-        manostat::AnisotropicBerendsenManostat
-            aniso(1.0, 1.0, increment, fixed);
-        manostat::FullAnisotropicBerendsenManostat
-            full(1.0, 1.0, increment, fixed);
+        _settings->manostatSettings.setFixedAxis(fixed);
+        _settings->manostatSettings.setCompressibility(increment);
+        _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+        manostat::BerendsenManostat iso(_settings->manostatSettings);
+        _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+        manostat::SemiIsotropicBerendsenManostat semi(
+            _settings->manostatSettings
+        );
+        _settings->manostatSettings.setIsotropy(Isotropy::ANISOTROPIC);
+        manostat::AnisotropicBerendsenManostat aniso(_settings->manostatSettings
+        );
+        _settings->manostatSettings.setIsotropy(Isotropy::FULL_ANISOTROPIC);
+        manostat::FullAnisotropicBerendsenManostat full(
+            _settings->manostatSettings
+        );
         for (auto* coupling : std::vector<manostat::BerendsenManostat*>{
                  &iso,
                  &semi,
@@ -192,9 +209,9 @@ TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
 {
     _addMolecule({-0.2, 0.2}, 0.0);
     settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
-    manostat::BerendsenManostat berendsen(1.0, 1.0, 0.03, FixedAxis::NONE);
-    manostat::StochasticRescalingManostat
-        stochastic(1.0, 1.0, 0.03, FixedAxis::NONE);
+    manostat::BerendsenManostat berendsen(_settings->manostatSettings);
+    manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
+    );
     testing::internal::CaptureStdout();
     for (size_t step = 0; step < 2; ++step)
     {
@@ -213,25 +230,30 @@ TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
         }
     }
     EXPECT_TRUE(testing::internal::GetCapturedStdout().empty());
-    manostat::Manostat reportPressure;
+    manostat::Manostat reportPressure(_settings->manostatSettings);
     EXPECT_NO_THROW(reportPressure.applyManostat(_box, _data));
 }
 
 TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
 {
+    _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setTargetPressure(1.0);
+    _settings->manostatSettings.setTauManostat(1.0);
+    _settings->manostatSettings.setCompressibility(0.03);
     manostat::SemiIsotropicBerendsenManostat negativeRoot(
-        1.0,
-        1.0,
-        2.0,
-        Isotropy::SEMI_ISOTROPIC_XY,
-        FixedAxis::NONE
+        _settings->manostatSettings
     );
-    manostat::BerendsenManostat negativeVolume(1.0, 1.0, 2.0, FixedAxis::NONE);
-    manostat::StochasticRescalingManostat
-        overflow(-3000.0, 1.0, 1.0, FixedAxis::NONE);
-    manostat::StochasticRescalingManostat
-                                underflow(3000.0, 1.0, 1.0, FixedAxis::NONE);
-    manostat::BerendsenManostat cutoff(1.0, 1.0, 0.875, FixedAxis::NONE);
+    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+    manostat::BerendsenManostat negativeVolume(_settings->manostatSettings);
+    _settings->manostatSettings.setTargetPressure(-3000.0);
+    manostat::StochasticRescalingManostat overflow(_settings->manostatSettings);
+    _settings->manostatSettings.setTargetPressure(3000.0);
+    manostat::StochasticRescalingManostat underflow(_settings->manostatSettings
+    );
+    _settings->manostatSettings.setTargetPressure(1.0);
+    _settings->manostatSettings.setCompressibility(0.875);
+    manostat::BerendsenManostat cutoff(_settings->manostatSettings);
     const auto                  proposals = std::array<manostat::Manostat*, 5>{
         &negativeRoot,
         &negativeVolume,
@@ -247,7 +269,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
         _addMolecule({4.95, -4.85}, 1.0);
         const auto oldCenter  = _box.getMolecule(0).getCenterOfMass();
         const auto oldDensity = _box.getDensity();
-        settings::ManostatSettings::setIsotropy(
+        _settings->manostatSettings.setIsotropy(
             i == 0 ? Isotropy::SEMI_ISOTROPIC_XY : Isotropy::ISOTROPIC
         );
         settings::PotentialSettings::setCoulombRadiusCutOff(i == 4 ? 3.0 : 0.1);

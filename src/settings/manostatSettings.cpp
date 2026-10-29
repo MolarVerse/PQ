@@ -22,148 +22,170 @@
 
 #include "manostatSettings.hpp"
 
-namespace settings
+#include "defaults.hpp"
+
+/**
+ * @brief Construct a new Manostat Settings object with default values
+ *
+ */
+ManostatSettings::ManostatSettings()
+    : _manostatType(ManostatType::NONE),
+      _isotropy(Isotropy::ISOTROPIC),
+      _tauManostat(defaults::BERENDSEN_MANOSTAT_RELAX_TIME),
+      _compressibility(defaults::COMPRESSIBILITY_WATER_DEFAULT)
 {
+}
 
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief sets the manostatType to enum in settings
-     *
-     * @param manostatType
-     */
-    void ManostatSettings::setManostatType(ManostatType manostatType)
+/**
+ * @brief finalizes the settings by setting the fixed axis if it was not
+ * explicitly set
+ *
+ */
+void ManostatSettings::finalize()
+{
+    if (!_fixedAxis.isSet())
     {
-        _manostatType = manostatType;
-        if (!_isFixedAxisSet)
-        {
-            using enum ManostatType;
-            _fixedAxis =
-                (_manostatType == NONE) ? FixedAxis::ALL : FixedAxis::NONE;
-        }
+        if (_manostatType.get() == ManostatType::NONE)
+            _fixedAxis.set(FixedAxis::ALL);
+        else
+            _fixedAxis.set(FixedAxis::NONE);
     }
+}
 
-    /**
-     * @brief sets the isotropy to enum in settings
-     *
-     * @param isotropy
-     */
-    void ManostatSettings::setIsotropy(Isotropy isotropy)
-    {
-        _isotropy = isotropy;
-    }
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
 
-    void ManostatSettings::setFixedAxis(FixedAxis fixedAxis)
-    {
-        _fixedAxis      = fixedAxis;
-        _isFixedAxisSet = true;
-    }
+/**
+ * @brief sets the manostatType to enum in settings
+ *
+ * @param manostatType
+ */
+void ManostatSettings::setManostatType(ManostatType manostatType)
+{
+    _manostatType.set(manostatType);
+}
 
-    void ManostatSettings::setIsFixedAxisSet(bool isSet)
-    {
-        _isFixedAxisSet = isSet;
-    }
+/**
+ * @brief sets the isotropy to enum in settings
+ *
+ * @param isotropy
+ */
+void ManostatSettings::setIsotropy(Isotropy isotropy)
+{
+    _isotropy.set(isotropy);
+}
 
-    /**
-     * @brief sets the targetPressure to double in settings
-     *
-     * @param targetPressure
-     */
-    void ManostatSettings::setTargetPressure(double targetPressure)
-    {
-        _targetPressure = targetPressure;
-    }
+void ManostatSettings::setFixedAxis(FixedAxis fixedAxis)
+{
+    _fixedAxis.set(fixedAxis);
+}
 
-    /**
-     * @brief sets the tauManostat to double in settings
-     *
-     * @param tauManostat
-     */
-    void ManostatSettings::setTauManostat(double tauManostat)
-    {
-        _tauManostat = tauManostat;
-    }
+/**
+ * @brief sets the targetPressure to double in settings
+ *
+ * @param targetPressure
+ */
+void ManostatSettings::setTargetPressure(double targetPressure)
+{
+    _targetPressure.set(targetPressure);
+}
 
-    /**
-     * @brief sets the compressibility to double in settings
-     *
-     * @param compressibility
-     */
-    void ManostatSettings::setCompressibility(double compressibility)
-    {
-        _compressibility = compressibility;
-    }
+/**
+ * @brief sets the tauManostat to double in settings
+ *
+ * @param tauManostat
+ */
+void ManostatSettings::setTauManostat(double tauManostat)
+{
+    _tauManostat.set(tauManostat);
+}
 
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
+/**
+ * @brief sets the compressibility to double in settings
+ *
+ * @param compressibility
+ */
+void ManostatSettings::setCompressibility(double compressibility)
+{
+    _compressibility.set(compressibility);
+}
 
-    /**
-     * @brief get if manostat is Berendsen based
-     *
-     * @return bool
-     */
-    bool ManostatSettings::isBerendsenBased()
-    {
-        using enum ManostatType;
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
 
-        return _manostatType == BERENDSEN ||
-               _manostatType == STOCHASTIC_RESCALING;
-    }
+/**
+ * @brief get if manostat is Berendsen based
+ *
+ * @return bool
+ */
+bool ManostatSettings::isBerendsenBased() const
+{
+    using enum ManostatType;
 
-    /**
-     * @brief get the manostatType
-     *
-     * @return ManostatType
-     */
-    ManostatType ManostatSettings::getManostatType() { return _manostatType; }
+    return _manostatType.get() == BERENDSEN ||
+           _manostatType.get() == STOCHASTIC_RESCALING;
+}
 
-    /**
-     * @brief get the isotropy
-     *
-     * @return Isotropy
-     */
-    Isotropy ManostatSettings::getIsotropy() { return _isotropy; }
+/**
+ * @brief get the manostatType
+ *
+ * @return ManostatType
+ */
+ManostatType ManostatSettings::getManostatType() const
+{
+    return _manostatType.get();
+}
 
-    /**
-     * @brief get the FixedAxis
-     *
-     * @return FixedAxis
-     */
-    FixedAxis ManostatSettings::getFixedAxis() { return _fixedAxis; }
+/**
+ * @brief get the isotropy
+ *
+ * @return Isotropy
+ */
+Isotropy ManostatSettings::getIsotropy() const { return _isotropy.get(); }
 
-    /**
-     * @brief get whether FixedAxis was explicitly set
-     *
-     * @return bool
-     */
-    bool ManostatSettings::isFixedAxisSet() { return _isFixedAxisSet; }
+/**
+ * @brief get the FixedAxis
+ *
+ * @return FixedAxis
+ */
+FixedAxis ManostatSettings::getFixedAxis() const { return _fixedAxis.get(); }
 
-    /**
-     * @brief get the target pressure
-     *
-     * @return double
-     */
-    double ManostatSettings::getTargetPressure() { return _targetPressure; }
+/**
+ * @brief get whether FixedAxis was explicitly set
+ *
+ * @return bool
+ */
+bool ManostatSettings::isFixedAxisSet() const { return _fixedAxis.isSet(); }
 
-    /**
-     * @brief get the tauManostat
-     *
-     * @return double
-     */
-    double ManostatSettings::getTauManostat() { return _tauManostat; }
+/**
+ * @brief get the target pressure
+ *
+ * @return double
+ */
+double ManostatSettings::getTargetPressure() const
+{
+    return _targetPressure.get();
+}
 
-    /**
-     * @brief get the compressibility
-     *
-     * @return double
-     */
-    double ManostatSettings::getCompressibility() { return _compressibility; }
+/**
+ * @brief get the tauManostat
+ *
+ * @return double
+ */
+double ManostatSettings::getTauManostat() const { return _tauManostat.get(); }
 
-}   // namespace settings
+/**
+ * @brief get the compressibility
+ *
+ * @return double
+ */
+double ManostatSettings::getCompressibility() const
+{
+    return _compressibility.get();
+}

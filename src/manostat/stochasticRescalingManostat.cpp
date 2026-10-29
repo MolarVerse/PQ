@@ -38,91 +38,6 @@ namespace manostat
 {
 
     /**
-     * @brief copy constructor for Stochastic Rescaling Manostat
-     *
-     * @param other
-     */
-    StochasticRescalingManostat::StochasticRescalingManostat(
-        const StochasticRescalingManostat &other
-    )
-        : Manostat(other),
-          _tau(other._tau),
-          _compressibility(other._compressibility),
-          _fixedAxis(other._fixedAxis)
-    {
-    }
-
-    /**
-     * @brief copy assignment operator for Stochastic Rescaling Manostat
-     *
-     * @param other
-     * @return StochasticRescalingManostat&
-     */
-    StochasticRescalingManostat &StochasticRescalingManostat::operator=(
-        const StochasticRescalingManostat &other
-    )
-    {
-        if (this != &other)
-        {
-            Manostat::operator=(other);
-            _tau             = other._tau;
-            _compressibility = other._compressibility;
-            _fixedAxis       = other._fixedAxis;
-        }
-        return *this;
-    }
-
-    /**
-     * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic
-     * Rescaling
-     *
-     * @param targetPressure
-     * @param tau
-     * @param compressibility
-     * @param isotropy
-     * @param fixedAxis
-     */
-    SemiIsotropicStochasticRescalingManostat::
-        SemiIsotropicStochasticRescalingManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            Isotropy  isotropy,
-            FixedAxis fixedAxis
-        )
-        : StochasticRescalingManostat(
-              targetPressure,
-              tau,
-              compressibility,
-              fixedAxis
-          ),
-          _isotropy(isotropy)
-    {
-    }
-
-    /**
-     * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic
-     * Rescaling Manostat object
-     *
-     * @param targetPressure
-     * @param tau
-     * @param compressibility
-     * @param fixedAxis
-     */
-    StochasticRescalingManostat::StochasticRescalingManostat(
-        double    targetPressure,
-        double    tau,
-        double    compressibility,
-        FixedAxis fixedAxis
-    )
-        : Manostat(targetPressure),
-          _tau(tau),
-          _compressibility(compressibility),
-          _fixedAxis(fixedAxis)
-    {
-    }
-
-    /**
      * @brief apply Stochastic Rescaling manostat for NPT ensemble
      *
      * @param simulationBox
@@ -443,16 +358,6 @@ namespace manostat
     double StochasticRescalingManostat::getCompressibility() const
     {
         return _compressibility;
-    }
-
-    /**
-     * @brief get the manostat type
-     *
-     * @return ManostatType
-     */
-    ManostatType StochasticRescalingManostat::getManostatType() const
-    {
-        return ManostatType::STOCHASTIC_RESCALING;
     }
 
 }   // namespace manostat

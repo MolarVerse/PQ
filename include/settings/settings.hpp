@@ -26,6 +26,7 @@
 #include "constraintSettings.hpp"
 #include "convergenceSettings.hpp"
 #include "hessianSettings.hpp"
+#include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
@@ -45,6 +46,7 @@ struct Settings
     ConstraintSettings    constraintSettings;
     ConvSettings          convSettings;
     WaterModelSettings    waterModelSettings;
+    ManostatSettings      manostatSettings;
 
     void finalize();
 };

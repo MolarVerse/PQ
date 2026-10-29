@@ -35,48 +35,6 @@ namespace manostat
 {
 
     /**
-     * @brief Construct a new Berendsen Manostat:: Berendsen Manostat object
-     *
-     * @param targetPressure
-     * @param tau
-     * @param compressibility
-     * @param fixedAxis
-     */
-    BerendsenManostat::BerendsenManostat(
-        double    targetPressure,
-        double    tau,
-        double    compressibility,
-        FixedAxis fixedAxis
-    )
-        : Manostat(targetPressure),
-          _tau(tau),
-          _compressibility(compressibility),
-          _fixedAxis(fixedAxis)
-    {
-    }
-
-    /**
-     * @brief Construct a new Berendsen Manostat:: Berendsen Manostat object
-     *
-     * @param targetPressure
-     * @param tau
-     * @param compressibility
-     * @param isotropy
-     * @param fixedAxis
-     */
-    SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
-        double    targetPressure,
-        double    tau,
-        double    compressibility,
-        Isotropy  isotropy,
-        FixedAxis fixedAxis
-    )
-        : BerendsenManostat(targetPressure, tau, compressibility, fixedAxis),
-          _isotropy(isotropy)
-    {
-    }
-
-    /**
      * @brief apply Berendsen manostat for NPT ensemble
      *
      * @param simulationBox
@@ -301,16 +259,6 @@ namespace manostat
     double BerendsenManostat::getCompressibility() const
     {
         return _compressibility;
-    }
-
-    /**
-     * @brief get the manostat type
-     *
-     * @return ManostatType
-     */
-    ManostatType BerendsenManostat::getManostatType() const
-    {
-        return ManostatType::BERENDSEN;
     }
 
     /**

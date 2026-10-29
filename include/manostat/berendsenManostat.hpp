@@ -24,6 +24,7 @@
 
 #define _BERENDSEN_MANOSTAT_HPP_
 
+#include "enums/manostat.hpp"
 #include "manostat.hpp"
 
 namespace manostat
@@ -42,12 +43,7 @@ namespace manostat
         FixedAxis _fixedAxis;
 
        public:
-        explicit BerendsenManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            FixedAxis fixedAxis
-        );
+        using Manostat::Manostat;
 
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
@@ -63,8 +59,7 @@ namespace manostat
         [[nodiscard]] double getTau() const;
         [[nodiscard]] double getCompressibility() const;
 
-        [[nodiscard]] ManostatType getManostatType() const override;
-        [[nodiscard]] FixedAxis    getFixedAxis() const;
+        [[nodiscard]] FixedAxis getFixedAxis() const;
     };
 
     /**
@@ -79,13 +74,7 @@ namespace manostat
         Isotropy _isotropy;
 
        public:
-        SemiIsotropicBerendsenManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            Isotropy  isotropy,
-            FixedAxis fixedAxis
-        );
+        using BerendsenManostat::BerendsenManostat;
 
         [[nodiscard]] linalg::tensor3D calculateMu() const override;
     };

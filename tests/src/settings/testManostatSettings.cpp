@@ -27,20 +27,23 @@
 
 TEST(ManostatSettingsTest, DoubleSettersAndGetters)
 {
-    settings::ManostatSettings::setTargetPressure(2.5);
-    EXPECT_DOUBLE_EQ(settings::ManostatSettings::getTargetPressure(), 2.5);
+    ManostatSettings settings;
+    settings.setTargetPressure(2.5);
+    EXPECT_DOUBLE_EQ(settings.getTargetPressure(), 2.5);
 
-    settings::ManostatSettings::setTauManostat(1.5);
-    EXPECT_DOUBLE_EQ(settings::ManostatSettings::getTauManostat(), 1.5);
+    settings.setTauManostat(1.5);
+    EXPECT_DOUBLE_EQ(settings.getTauManostat(), 1.5);
 
-    settings::ManostatSettings::setCompressibility(4.5e-5);
-    EXPECT_DOUBLE_EQ(settings::ManostatSettings::getCompressibility(), 4.5e-5);
+    settings.setCompressibility(4.5e-5);
+    EXPECT_DOUBLE_EQ(settings.getCompressibility(), 4.5e-5);
 }
 
 TEST(ManostatSettingsTest, SetFixedAxisViaEnum)
 {
-    settings::ManostatSettings::setFixedAxis(FixedAxis::XY);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::XY);
+    ManostatSettings settings;
+
+    settings.setFixedAxis(FixedAxis::XY);
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
 }
 
 TEST(ManostatSettingsTest, FixedAxisBitwiseOperators)
@@ -94,30 +97,33 @@ TEST(ManostatSettingsTest, FixedAxisHelperFunctions)
 TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)
 {
     // When no manostat is selected and fixed axis was not set, default is ALL
-    settings::ManostatSettings::setIsFixedAxisSet(false);
-    settings::ManostatSettings::setManostatType(ManostatType::NONE);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::ALL);
-    EXPECT_FALSE(settings::ManostatSettings::isFixedAxisSet());
+    ManostatSettings settings;
+    settings.setManostatType(ManostatType::NONE);
+    EXPECT_FALSE(settings.isFixedAxisSet());
+    settings.finalize();
+    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
 
     // When manostat is selected, default becomes NONE
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::NONE);
+    ManostatSettings settings2;
+    settings2.setManostatType(ManostatType::BERENDSEN);
+    settings2.finalize();
+    EXPECT_EQ(settings2.getFixedAxis(), FixedAxis::NONE);
 
-    settings::ManostatSettings::setManostatType(
-        ManostatType::STOCHASTIC_RESCALING
-    );
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::NONE);
+    ManostatSettings settings3;
+    settings3.setManostatType(ManostatType::STOCHASTIC_RESCALING);
+    settings3.finalize();
+    EXPECT_EQ(settings3.getFixedAxis(), FixedAxis::NONE);
 
     // When explicitly set, it overrides the default and remains set
-    settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
-    EXPECT_TRUE(settings::ManostatSettings::isFixedAxisSet());
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Z);
+    ManostatSettings settings4;
+    settings4.setManostatType(ManostatType::BERENDSEN);
+    settings4.setFixedAxis(FixedAxis::Z);
+    settings4.finalize();
+    EXPECT_TRUE(settings4.isFixedAxisSet());
+    EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
 
     // Changing manostat type does not override explicitly set fixed axis
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    EXPECT_EQ(settings::ManostatSettings::getFixedAxis(), FixedAxis::Z);
-
-    // Reset back to unset for other tests
-    settings::ManostatSettings::setIsFixedAxisSet(false);
-    settings::ManostatSettings::setManostatType(ManostatType::NONE);
+    settings4.setManostatType(ManostatType::BERENDSEN);
+    settings4.finalize();
+    EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
 }

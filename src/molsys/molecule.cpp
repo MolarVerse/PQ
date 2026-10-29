@@ -29,7 +29,6 @@
 #include "box.hpp"
 #include "collectionUtilities.hpp"
 #include "generalSettings.hpp"
-#include "manostatSettings.hpp"
 #include "strongTypes.hpp"
 
 namespace molsys
@@ -131,8 +130,7 @@ namespace molsys
     {
         auto centerOfMass = _centerOfMass;
 
-        if (settings::ManostatSettings::getIsotropy() !=
-            Isotropy::FULL_ANISOTROPIC)
+        if (!box.allowChangeOfAngles())
             centerOfMass = box.toOrthoSpace(_centerOfMass);
 
         const auto shift = shiftTensor * centerOfMass - centerOfMass;
@@ -141,14 +139,12 @@ namespace molsys
         {
             auto position = atom->getPosition();
 
-            if (settings::ManostatSettings::getIsotropy() !=
-                Isotropy::FULL_ANISOTROPIC)
+            if (!box.allowChangeOfAngles())
                 position = box.toOrthoSpace(position);
 
             position += shift;
 
-            if (settings::ManostatSettings::getIsotropy() !=
-                Isotropy::FULL_ANISOTROPIC)
+            if (!box.allowChangeOfAngles())
                 position = box.toSimSpace(position);
 
             box.applyPBC(position);
@@ -183,15 +179,13 @@ namespace molsys
 
         auto scaledCenterOfMassVelocity = centerOfMassVelocity;
 
-        if (settings::ManostatSettings::getIsotropy() !=
-            Isotropy::FULL_ANISOTROPIC)
+        if (!box.allowChangeOfAngles())
             scaledCenterOfMassVelocity =
                 box.toOrthoSpace(scaledCenterOfMassVelocity);
 
         scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
 
-        if (settings::ManostatSettings::getIsotropy() !=
-            Isotropy::FULL_ANISOTROPIC)
+        if (!box.allowChangeOfAngles())
             scaledCenterOfMassVelocity =
                 box.toSimSpace(scaledCenterOfMassVelocity);
 

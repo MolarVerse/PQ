@@ -27,7 +27,7 @@
 #include <mstd/math.hpp>
 
 #include "box.hpp"
-#include "manostatSettings.hpp"
+#include "defaults.hpp"
 #include "staticMatrix.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
@@ -43,9 +43,11 @@ namespace molsys
      */
     TriclinicBox::TriclinicBox(
         const linalg::Vec3D &boxDimensions,
-        const linalg::Vec3D &boxAngles
+        const linalg::Vec3D &boxAngles,
+        bool                 allowChangeOfAngles
     )
-        : Box(boxDimensions, boxAngles)
+        : Box(boxDimensions, boxAngles),
+          _allowChangeOfAngles(allowChangeOfAngles)
     {
     }
 
@@ -285,8 +287,7 @@ namespace molsys
      */
     void TriclinicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
-        if (settings::ManostatSettings::getIsotropy() !=
-            Isotropy::FULL_ANISOTROPIC)
+        if (!_allowChangeOfAngles)
         {
             _set_boxDimensions(diagonal(scalingTensor) * get_boxDimensions());
         }
@@ -499,4 +500,13 @@ namespace molsys
         return boxMatrix;
     }
 
+    /**
+     * @brief indicate whether the box allows change of angles
+     *
+     * @return true if change of angles is allowed, false otherwise
+     */
+    bool TriclinicBox::allowChangeOfAngles() const
+    {
+        return _allowChangeOfAngles;
+    }
 }   // namespace molsys
