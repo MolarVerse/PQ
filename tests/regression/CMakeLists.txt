@@ -46,6 +46,68 @@ add_test(
 set_property(TEST regression_mm_md_smoke_zip PROPERTY LABELS regression)
 set_property(TEST regression_mm_md_smoke_zip PROPERTY TIMEOUT 30)
 
+set(MSHAKE_REGRESSION_CASE mm-md-shake-mshake)
+set(
+    MSHAKE_REGRESSION_CASE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/${MSHAKE_REGRESSION_CASE}
+)
+set(
+    MSHAKE_REGRESSION_CASE_ZIP
+    ${CMAKE_CURRENT_BINARY_DIR}/${MSHAKE_REGRESSION_CASE}.zip
+)
+
+set(MSHAKE_REGRESSION_CASE_FILES
+    shake.in
+    mshake.in
+    start.rst
+    shake.top
+    mshake.top
+    empty.top
+    moldescriptor.dat
+    guff.dat
+    manifest.json
+)
+
+set(MSHAKE_REGRESSION_CASE_FILE_PATHS)
+foreach(MSHAKE_REGRESSION_CASE_FILE ${MSHAKE_REGRESSION_CASE_FILES})
+    list(APPEND
+        MSHAKE_REGRESSION_CASE_FILE_PATHS
+        ${MSHAKE_REGRESSION_CASE_DIR}/${MSHAKE_REGRESSION_CASE_FILE}
+    )
+endforeach()
+
+add_custom_command(
+    OUTPUT ${MSHAKE_REGRESSION_CASE_ZIP}
+    COMMAND ${CMAKE_COMMAND} -E rm -f ${MSHAKE_REGRESSION_CASE_ZIP}
+    COMMAND
+        ${CMAKE_COMMAND} -E tar cf ${MSHAKE_REGRESSION_CASE_ZIP}
+        --format=zip -- ${MSHAKE_REGRESSION_CASE_FILES}
+    WORKING_DIRECTORY ${MSHAKE_REGRESSION_CASE_DIR}
+    DEPENDS ${MSHAKE_REGRESSION_CASE_FILE_PATHS}
+    VERBATIM
+)
+
+add_custom_target(
+    regression_mshake_example_zip ALL
+    DEPENDS ${MSHAKE_REGRESSION_CASE_ZIP}
+)
+
+add_test(
+    NAME regression_shake_mshake_equivalence_zip
+    COMMAND
+        ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/run_regression_case.py
+        --pq $<TARGET_FILE:PQ>
+        --case-zip ${MSHAKE_REGRESSION_CASE_ZIP}
+        --manifest manifest.json
+)
+
+set_property(
+    TEST regression_shake_mshake_equivalence_zip
+    PROPERTY LABELS regression
+)
+set_property(TEST regression_shake_mshake_equivalence_zip PROPERTY TIMEOUT 60)
+
 if(BUILD_WITH_MPI)
     set(MPI_REGRESSION_CASE qm-rpmd-mpi-smoke)
     set(
