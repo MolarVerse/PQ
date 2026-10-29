@@ -47,7 +47,7 @@ int main()
 {
     std::array<double, defaults::NUM_GUFF_COEFFICIENTS> dense{};
     std::array<double, defaults::NUM_GUFF_COEFFICIENTS> sparse{};
-    std::iota(dense.begin(), dense.end(), 2.0);
+    std::ranges::iota(dense, 2.0);
     sparse[0] = 2.0;
     sparse[1] = 6.0;
     sparse[2] = 3.0;
