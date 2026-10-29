@@ -36,7 +36,7 @@
 #endif
 
 #include <array>
-#include <cstddef>
+#include <numeric>
 
 #include "defaults.hpp"
 #include "guffPair.hpp"
@@ -47,8 +47,7 @@ int main()
 {
     std::array<double, defaults::NUM_GUFF_COEFFICIENTS> dense{};
     std::array<double, defaults::NUM_GUFF_COEFFICIENTS> sparse{};
-    for (std::size_t i = 0; i < dense.size(); ++i)
-        dense[i] = 2.0 + static_cast<double>(i);
+    std::iota(dense.begin(), dense.end(), 2.0);
     sparse[0] = 2.0;
     sparse[1] = 6.0;
     sparse[2] = 3.0;
