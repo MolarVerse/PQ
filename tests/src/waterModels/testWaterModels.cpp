@@ -41,7 +41,7 @@
 #include "guffNonCoulomb.hpp"
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
-#include "interWaterKernels.tpp"   // IWYU pragma: keep -- required for template instantiations
+#include "interWaterKernels.tpp"   // IWYU pragma: keep -- for template specialization
 #include "interWaterParamters.hpp"
 #include "lennardJonesPair.hpp"
 #include "mTRIntraWater.hpp"
