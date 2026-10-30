@@ -119,7 +119,7 @@ std::vector<int> pq_python::select(
 
         while ((pItem = ::PyIter_Next(pIter)))
         {
-            result.push_back(::PyLong_AsLong(pItem));
+            result.push_back(static_cast<int>(::PyLong_AsLong(pItem)));
             ::Py_DECREF(pItem);
         }
 
