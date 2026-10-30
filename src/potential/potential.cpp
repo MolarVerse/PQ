@@ -24,10 +24,70 @@
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
+#include "potentialKernels.tpp.hpp"   // IWYU pragma: keep -- for template specialization
 
 namespace pot
 {
     Potential::~Potential() = default;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::MMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template double pot::Potential::
+        calculateSingleCoulombInteraction<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template double pot::Potential::
+        calculateSingleCoulombInteraction<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteractionOneWay<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteractionOneWay<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
 
     /**
      * @brief calculates QMMM forces by invoking core-to-outer, layer-to-outer,

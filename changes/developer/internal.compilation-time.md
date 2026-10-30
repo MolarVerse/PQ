@@ -1,0 +1,2 @@
+- remove a lot of transitive includes of `box.hpp`
+- keep the per-pair `Potential::calculateSingle*` and `InterWaterStrategy::calculateSingle*` kernels inlinable in the pair loops (private kernel headers, `Box` passed directly) so dropping `box.hpp` from public headers does not add a call per atom pair

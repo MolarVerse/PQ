@@ -31,6 +31,7 @@
 
 namespace molsys
 {
+    class Box;             // forward declaration
     class SimulationBox;   // forward declaration
     class CellList;        // forward declaration
     class Atom;            // forward declaration
@@ -105,7 +106,7 @@ namespace waterModel
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             double                                        rCutSquared,
-            const molsys::SimulationBox                  &simulationBox,
+            const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
             double                                       &nonCoulombEnergy
@@ -117,7 +118,7 @@ namespace waterModel
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             double                                        rCutSquared,
-            const molsys::SimulationBox                  &simulationBox,
+            const molsys::Box                            &box,
             double                                       &coulombEnergy
         );
 
@@ -127,7 +128,7 @@ namespace waterModel
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             double                                        rCutSquared,
-            const molsys::SimulationBox                  &simulationBox,
+            const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
             double                                       &nonCoulombEnergy

@@ -27,6 +27,7 @@
 #include <ostream>
 #include <sstream>
 
+#include "box.hpp"
 #include "defaults.hpp"
 #include "hybridConfigurator.hpp"
 #include "molecule.hpp"

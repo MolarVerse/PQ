@@ -27,8 +27,12 @@
 #include <mstd/utils.hpp>
 #include <vector>
 
-#include "molecule.hpp"
 #include "strongTypes.hpp"
+
+namespace molsys
+{
+    class Molecule;
+}   // namespace molsys
 
 namespace connectivity
 {
