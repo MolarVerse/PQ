@@ -14,6 +14,7 @@ set(source_files
     testWaterModelSettings.cpp
     testSetting.cpp
     testSettingsBuilder.cpp
+    testOptimizerSettings.cpp
 )
 
 foreach(source_file ${source_files})

@@ -1,0 +1,1 @@
+- Fix optimization and Hessian runs without max-learning-rate: the maximum learning rate is optional, but PQ stopped with 'Setting value is not set and no default is available' when it was not given (for example examples/oh_mm_hessian/run-01.in).

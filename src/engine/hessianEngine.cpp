@@ -142,7 +142,7 @@ namespace engine
         )
         {
             const auto minLR = settings.getMinLearningRate();
-            const auto maxLR = settings.getMaxLearningRate();
+            const auto maxLR = settings.getMaxLearningRateIfSet();
 
             settings.validateLearningRateBounds();
 

@@ -270,6 +270,22 @@ double OptimizerSettings::getMaxLearningRate() const
 }
 
 /**
+ * @brief returns the max learning rate if it has been set
+ *
+ * @details the maximum is optional and has no default, so getMaxLearningRate()
+ * throws when it was not set
+ *
+ * @return std::optional<double> the max learning rate, std::nullopt if not set
+ */
+std::optional<double> OptimizerSettings::getMaxLearningRateIfSet() const
+{
+    if (!isMaxLearningRateSet())
+        return std::nullopt;
+
+    return getMaxLearningRate();
+}
+
+/**
  * @brief returns whether the learning rate decay has been set
  *
  * @return true if learning rate decay is set, false otherwise

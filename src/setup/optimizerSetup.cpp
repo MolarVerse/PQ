@@ -209,7 +209,7 @@ namespace setup
         const auto optimizerSettings =
             _optEngine.getSettings().optimizerSettings;
         const auto minLR = optimizerSettings.getMinLearningRate();
-        const auto maxLR = optimizerSettings.getMaxLearningRate();
+        const auto maxLR = optimizerSettings.getMaxLearningRateIfSet();
 
         optimizerSettings.validateLearningRateBounds();
 
