@@ -1914,10 +1914,10 @@ Forced Core List
 .. admonition:: Key
     :class: tip
 
-    forced_core_list = {selection}
+    forced_core_list = {molecule indices}
 
 With the ``forced_core_list`` keyword the user can specify a list of molecules which will always be part of the ``CORE`` region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _forcedLayerListKey:
@@ -1928,10 +1928,10 @@ Forced Layer List
 .. admonition:: Key
     :class: tip
 
-    forced_layer_list = {selection}
+    forced_layer_list = {molecule indices}
 
 With the ``forced_layer_list`` keyword the user can specify a list of molecules which will always be part of the ``LAYER`` region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _forcedOuterListKey:
@@ -1942,10 +1942,10 @@ Forced Outer List
 .. admonition:: Key
     :class: tip
 
-    forced_outer_list = {selection}
+    forced_outer_list = {molecule indices}
 
 With the ``forced_outer_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the outer region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _qmChargesKey:
