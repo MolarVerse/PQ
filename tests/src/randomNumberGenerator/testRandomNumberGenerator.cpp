@@ -26,10 +26,29 @@
 #include "randomNumberGenerator.hpp"
 
 /**
+ * @brief seed every test, so the statistical checks do not fail at random
+ *
+ */
+class TestRandomNumberGenerator : public ::testing::Test
+{
+   protected:
+    void SetUp() override
+    {
+        settings::GeneralSettings::setIsRandomSeedSet(true);
+        settings::GeneralSettings::setRandomSeed(42);
+    }
+
+    void TearDown() override
+    {
+        settings::GeneralSettings::setIsRandomSeedSet(false);
+    }
+};
+
+/**
  * @brief test randomNumberGenerator uniform real distribution range
  *
  */
-TEST(TestRandomNumberGenerator, uniformRealDistributionRange)
+TEST_F(TestRandomNumberGenerator, uniformRealDistributionRange)
 {
     rng::RandomNumberGenerator rng{};
     constexpr double           min{5.0};
@@ -48,7 +67,7 @@ TEST(TestRandomNumberGenerator, uniformRealDistributionRange)
  * @brief test randomNumberGenerator uniform real distribution mean
  *
  */
-TEST(TestRandomNumberGenerator, uniformRealDistributionMean)
+TEST_F(TestRandomNumberGenerator, uniformRealDistributionMean)
 {
     rng::RandomNumberGenerator rng{};
     constexpr double           min{0.0};
@@ -70,7 +89,7 @@ TEST(TestRandomNumberGenerator, uniformRealDistributionMean)
  * @brief test randomNumberGenerator normal distribution mean
  *
  */
-TEST(TestRandomNumberGenerator, normalDistributionMean)
+TEST_F(TestRandomNumberGenerator, normalDistributionMean)
 {
     rng::RandomNumberGenerator rng{};
     constexpr double           mean{5.0};
@@ -91,7 +110,7 @@ TEST(TestRandomNumberGenerator, normalDistributionMean)
  * @brief test randomNumberGenerator determinism with seed
  *
  */
-TEST(TestRandomNumberGenerator, determinismWithSeed)
+TEST_F(TestRandomNumberGenerator, determinismWithSeed)
 {
     settings::GeneralSettings::setIsRandomSeedSet(true);
     settings::GeneralSettings::setRandomSeed(73);
@@ -111,7 +130,7 @@ TEST(TestRandomNumberGenerator, determinismWithSeed)
  * @brief test randomNumberGenerator edge cases
  *
  */
-TEST(TestRandomNumberGenerator, edgeCases)
+TEST_F(TestRandomNumberGenerator, edgeCases)
 {
     rng::RandomNumberGenerator rng{};
 
@@ -125,7 +144,7 @@ TEST(TestRandomNumberGenerator, edgeCases)
  * @brief test randomNumberGenerator normal distribution shape
  *
  */
-TEST(TestRandomNumberGenerator, normalDistributionShape)
+TEST_F(TestRandomNumberGenerator, normalDistributionShape)
 {
     rng::RandomNumberGenerator rng{};
 
