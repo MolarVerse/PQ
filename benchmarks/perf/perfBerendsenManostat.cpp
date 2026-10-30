@@ -36,6 +36,7 @@
 #endif
 
 #include "berendsenManostat.hpp"
+#include "manostatSettings.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
@@ -50,9 +51,12 @@ int main()
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto physicalData = physicalData::PhysicalData();
-    auto manostat =
-        manostat::BerendsenManostat(1.0, 100.0, 4.6e-5, FixedAxis::NONE);
+    auto             physicalData = physicalData::PhysicalData();
+    ManostatSettings manostatSettings;
+    manostatSettings.setTargetPressure(1.0);
+    manostatSettings.setTauManostat(100.0);
+    manostatSettings.setCompressibility(4.6e-5);
+    auto manostat = manostat::BerendsenManostat(manostatSettings);
 
     CALLGRIND_ZERO_STATS;
 

@@ -40,6 +40,8 @@ namespace molsys
      *
      * @param boxDimensions
      * @param boxAngles
+     * @param allowChangeOfAngles Whether the box is allowed to change its
+     * angles during simulation.
      */
     TriclinicBox::TriclinicBox(
         const linalg::Vec3D &boxDimensions,

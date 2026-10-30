@@ -29,6 +29,8 @@
 #include <format>
 #include <iostream>
 
+#include "manostatSettings.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -53,13 +55,12 @@ int main()
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto physicalData = physicalData::PhysicalData();
-    auto manostat     = manostat::StochasticRescalingManostat(
-        1.0,
-        100.0,
-        4.6e-5,
-        FixedAxis::NONE
-    );
+    auto             physicalData = physicalData::PhysicalData();
+    ManostatSettings manostatSettings;
+    manostatSettings.setTargetPressure(1.0);
+    manostatSettings.setTauManostat(100.0);
+    manostatSettings.setCompressibility(4.6e-5);
+    auto manostat = manostat::StochasticRescalingManostat(manostatSettings);
 
     CALLGRIND_ZERO_STATS;
 
