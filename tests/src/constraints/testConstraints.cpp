@@ -26,6 +26,7 @@
 
 #include "exceptions.hpp"
 #include "gmock/gmock.h"
+#include "testSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 
@@ -52,10 +53,12 @@ TEST_F(TestConstraints, calcRefBondLengths)
  */
 TEST_F(TestConstraints, applyShakeConverged)
 {
-    ConstraintSettings settings;
-    settings.setShakeMaxIter(1000);
-    settings.setShakeTolerance(1.0e-8);
-    settings.activateShake();
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setShakeMaxIter, 1000)
+            .with(&ConstraintSettings::setShakeTolerance, 1.0e-8)
+            .apply([](auto &config) { config.activateShake(); })
+            .build();
     constraints::Constraints constraints(settings);
     _addDefaultBondConstraints(constraints);
     constraints.calculateConstraintBondRefs(*_box);
@@ -107,10 +110,12 @@ TEST_F(TestConstraints, applyShakeConverged)
  */
 TEST_F(TestConstraints, applyShakeNotConverged)
 {
-    ConstraintSettings settings;
-    settings.setShakeMaxIter(10);
-    settings.setShakeTolerance(0.0);
-    settings.activateShake();
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setShakeMaxIter, 10)
+            .with(&ConstraintSettings::setShakeTolerance, 0.0)
+            .apply([](auto &config) { config.activateShake(); })
+            .build();
     constraints::Constraints constraints(settings);
     _addDefaultBondConstraints(constraints);
     constraints.calculateConstraintBondRefs(*_box);
@@ -131,9 +136,10 @@ TEST_F(TestConstraints, applyShakeNotConverged)
  */
 TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
 {
-    ConstraintSettings settings;
-    settings.setShakeMaxIter(10);
-    settings.setShakeTolerance(0.0);
+    const auto settings = testSettings::make<ConstraintSettings>()
+                              .with(&ConstraintSettings::setShakeMaxIter, 10)
+                              .with(&ConstraintSettings::setShakeTolerance, 0.0)
+                              .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
@@ -149,10 +155,12 @@ TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
  */
 TEST_F(TestConstraints, applyRattleConverged)
 {
-    ConstraintSettings settings;
-    settings.setRattleMaxIter(1000);
-    settings.setRattleTolerance(1.0e-4);
-    settings.activateShake();
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setRattleMaxIter, 1000)
+            .with(&ConstraintSettings::setRattleTolerance, 1.0e-4)
+            .apply([](auto &config) { config.activateShake(); })
+            .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
@@ -185,10 +193,12 @@ TEST_F(TestConstraints, applyRattleConverged)
  */
 TEST_F(TestConstraints, applyRattleNotConverged)
 {
-    ConstraintSettings settings;
-    settings.setRattleMaxIter(10);
-    settings.setRattleTolerance(0.0);
-    settings.activateShake();
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setRattleMaxIter, 10)
+            .with(&ConstraintSettings::setRattleTolerance, 0.0)
+            .apply([](auto &config) { config.activateShake(); })
+            .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
@@ -207,9 +217,11 @@ TEST_F(TestConstraints, applyRattleNotConverged)
  */
 TEST_F(TestConstraints, applyRattleNotConvergedDeactivated)
 {
-    ConstraintSettings settings;
-    settings.setRattleMaxIter(10);
-    settings.setRattleTolerance(0.0);
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setRattleMaxIter, 10)
+            .with(&ConstraintSettings::setRattleTolerance, 0.0)
+            .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);

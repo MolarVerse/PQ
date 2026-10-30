@@ -1,0 +1,1 @@
+- Add a settings builder for tests (tests/include/testUtils/testSettings.hpp) that sets individual settings without the input parser or the static settings, with tests; the resetKinetics and constraints tests use it; documented in the developer guide.
