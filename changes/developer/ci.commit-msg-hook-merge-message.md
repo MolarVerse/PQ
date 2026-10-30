@@ -1,0 +1,1 @@
+- The commit-msg hook accepts the merge messages Git proposes itself (Merge branch ..., Merge remote-tracking branch ..., Merge pull request ...) without the merge: prefix; added tests for the hook.

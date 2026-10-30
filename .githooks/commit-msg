@@ -103,6 +103,10 @@ fi
 if [[ "$lowercase_message" =~ ^merge(\(.+\))?: ]]; then
   matched=true
   group="Merge"
+# The message Git proposes itself for a merge ("Merge branch 'x' into dev", ...)
+elif [[ "$lowercase_message" =~ ^merge\ (branch|branches|remote-tracking\ branch|remote-tracking\ branches|tag|commit|pull\ request)\  ]]; then
+  matched=true
+  group="Merge"
 fi
 
 # Reverts
@@ -191,7 +195,7 @@ if ! $matched; then
   echo "  - Test:           test:, tests:, testing:"
   echo "  - Internal:       internal:"
   echo "  - Chore:          chore:"
-  echo "  - Merge:          merge:"
+  echo "  - Merge:          merge:, or the message Git proposes ('Merge branch ...')"
   echo "  - Revert:         revert:"
   echo "  - Build:          build:"
   echo "  - Breaking:       breaking:"

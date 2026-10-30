@@ -178,8 +178,9 @@ Commit messages and merges
 
 ``.githooks/commit-msg`` rejects a commit whose subject does not start with one of the conventional prefixes
 (``feat:``, ``fix:``, ``docs:``, ``test:``, ``ci:``, ``refactor:``, ``merge:``, ... the full table is in ``AGENTS.md``).
-Install it once per clone with ``cp .githooks/commit-msg .git/hooks/``. The hook also checks the message Git proposes
-for a merge, which starts with ``Merge branch ...`` and is rejected. Give the merge a message of its own:
+Install it once per clone with ``cp .githooks/commit-msg .git/hooks/``. The messages that Git proposes for a merge
+(``Merge branch ...``, ``Merge remote-tracking branch ...``, ``Merge tag ...``, ``Merge commit ...``,
+``Merge pull request ...``) are accepted as they are. A merge message of your own needs the prefix:
 
 .. code:: bash
 
