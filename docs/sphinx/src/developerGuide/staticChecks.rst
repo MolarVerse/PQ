@@ -215,7 +215,7 @@ Conventions for tests
           const auto settings = testSettings::make<ConstraintSettings>()
                                     .with(&ConstraintSettings::setShakeMaxIter, 100)
                                     .with(&ConstraintSettings::setShakeTolerance, 1.0e-8)
-                                    .apply([](auto &s) { s.activateShake(); })
+                                    .apply([](auto &config) { config.activateShake(); })
                                     .build();
           constraints::Constraints constraints(settings);
 

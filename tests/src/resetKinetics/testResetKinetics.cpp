@@ -234,7 +234,7 @@ namespace
             .with(&ResetKineticsSettings::setNResetAngular, nResetAngular)
             .with(&ResetKineticsSettings::setFResetAngular, fResetAngular)
             .with(&ResetKineticsSettings::setFResetForces, fResetForces)
-            .apply([](auto &s) { s.finalize(); })
+            .apply([](auto &config) { config.finalize(); })
             .build();
     }
 }   // namespace

@@ -37,9 +37,8 @@
  * const auto settings = testSettings::make<ConstraintSettings>()
  *                           .with(&ConstraintSettings::setShakeMaxIter, 100)
  *                           .with(&ConstraintSettings::setShakeTolerance, 1e-8)
- *                           .apply([](auto &s) { s.activateShake(); })
- *                           .build();
- * constraints::Constraints constraints(settings);
+ *                           .apply([](auto &config) { config.activateShake();
+ * }) .build(); constraints::Constraints constraints(settings);
  * @endcode
  *
  * Consumers keep a reference to the settings they are given, so keep the
