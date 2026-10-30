@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <format>
+#include <optional>
 #include <ranges>
 #include <string>
 #include <string_view>
@@ -46,6 +47,37 @@
 
 namespace input
 {
+    namespace
+    {
+        /**
+         * @brief parses a forced-list value: molecule indices and ranges only
+         *
+         * @details the selection grammar is rejected, because it returns atom
+         * indices
+         */
+        std::optional<SelectionTag> parseMoleculeIndices(std::string_view raw)
+        {
+            if (raw.find_first_not_of("0123456789,-") != std::string_view::npos)
+            {
+                return std::nullopt;
+            }
+
+            auto converter = Converter<SelectionTag>("", std::string(raw));
+            return converter.tryParse(raw);
+        }
+
+        /**
+         * @brief error message for an invalid forced-list value
+         */
+        std::string moleculeIndexError(const std::string_view key)
+        {
+            return std::format(
+                "{} takes molecule indices, e.g. 0,2-4 (the selection grammar "
+                "is not supported)",
+                key
+            );
+        }
+    }   // namespace
 
     /**
      * @brief Construct a new HybridInputParser:: HybridInputParser object
@@ -118,8 +150,9 @@ namespace input
             .name  = "forced_core_list",
             .title = "Forced Core List",
             .description =
-                "Specifies the list of molecules which are forced to the CORE "
-                "region in hybrid calculations",
+                "Specifies the list of molecule indices which are forced to "
+                "the CORE region in hybrid calculations",
+            .errorMessage = moleculeIndexError("forced_core_list"),
         };
 
         const auto setValue = [](const SelectionTag &selection)
@@ -127,8 +160,9 @@ namespace input
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
-                .metadata = metaData,
-                .onSet    = setValue,
+                .metadata     = metaData,
+                .customParser = parseMoleculeIndices,
+                .onSet        = setValue,
             }
         );
 
@@ -141,8 +175,9 @@ namespace input
             .name  = "forced_layer_list",
             .title = "Forced Layer List",
             .description =
-                "Specifies the list of molecules which are forced to the LAYER "
-                "region in hybrid calculations",
+                "Specifies the list of molecule indices which are forced to "
+                "the LAYER region in hybrid calculations",
+            .errorMessage = moleculeIndexError("forced_layer_list"),
         };
 
         const auto setValue = [](const SelectionTag &selection)
@@ -150,8 +185,9 @@ namespace input
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
-                .metadata = metaData,
-                .onSet    = setValue,
+                .metadata     = metaData,
+                .customParser = parseMoleculeIndices,
+                .onSet        = setValue,
             }
         );
 
@@ -164,8 +200,9 @@ namespace input
             .name  = "forced_outer_list",
             .title = "Forced Outer List",
             .description =
-                "Specifies the list of molecules which are forced to the OUTER "
-                "region in hybrid calculations",
+                "Specifies the list of molecule indices which are forced to "
+                "the OUTER region in hybrid calculations",
+            .errorMessage = moleculeIndexError("forced_outer_list"),
         };
 
         const auto setValue = [](const SelectionTag &selection)
@@ -173,8 +210,9 @@ namespace input
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
-                .metadata = metaData,
-                .onSet    = setValue,
+                .metadata     = metaData,
+                .customParser = parseMoleculeIndices,
+                .onSet        = setValue,
             }
         );
 
