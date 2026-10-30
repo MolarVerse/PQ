@@ -218,8 +218,7 @@ namespace engine
 
             // to not carry over qm_charges of atoms which are not qm
             // anymore
-            for (auto &atom : getSimulationBox().getAtoms())
-                atom->getQMCharge().reset();
+            getSimulationBox().resetQMCharges();
 
             getQMRunner()
                 ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
