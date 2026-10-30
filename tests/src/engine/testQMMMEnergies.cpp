@@ -45,9 +45,9 @@ class QMMMEnergiesTest : public ::testing::Test
         engine._moveEnergiesToPhysicalData();
     }
 
-    static void _subtractReferences(engine::QMMMMDEngine &engine)
+    static void _calculateReference(engine::QMMMMDEngine &engine)
     {
-        engine._subtractQMReferenceEnergies();
+        engine._calculateQMReferenceEnergy();
     }
 
     static std::unordered_set<size_t> _inactiveSet(
@@ -80,17 +80,20 @@ TEST_F(QMMMEnergiesTest, exactSmoothingCountsIntraEnergyOnce)
     data.addIntraCoulombEnergy(1.0);
     data.addNonCoulombEnergy(20.0);
     data.addIntraNonCoulombEnergy(2.0);
+    data.setQMReferenceEnergy(-4.0);
 
     ASSERT_DOUBLE_EQ(data.getCoulombEnergy(), 11.0);
     ASSERT_DOUBLE_EQ(data.getNonCoulombEnergy(), 22.0);
 
-    _scaleAndAccumulate(engine, 1.0);
+    _scaleAndAccumulate(engine, 0.5);
+    _scaleAndAccumulate(engine, 0.5);
     _moveEnergies(engine);
 
     EXPECT_DOUBLE_EQ(data.getCoulombEnergy(), 11.0);
     EXPECT_DOUBLE_EQ(data.getNonCoulombEnergy(), 22.0);
     EXPECT_DOUBLE_EQ(data.getIntraCoulombEnergy(), 1.0);
     EXPECT_DOUBLE_EQ(data.getIntraNonCoulombEnergy(), 2.0);
+    EXPECT_DOUBLE_EQ(data.getQMReferenceEnergy(), -4.0);
 }
 
 TEST_F(QMMMEnergiesTest, exactSmoothingHandlesMoleculeIndicesAbove31)
@@ -110,7 +113,7 @@ TEST_F(QMMMEnergiesTest, exactSmoothingHandlesMoleculeIndicesAbove31)
     );
 }
 
-TEST_F(QMMMEnergiesTest, subtractsReferenceEnergiesOfActiveMolecules)
+TEST_F(QMMMEnergiesTest, sumsReferenceEnergiesOfActiveMolecules)
 {
     Settings             settings;
     engine::QMMMMDEngine engine{settings};
@@ -135,8 +138,10 @@ TEST_F(QMMMEnergiesTest, subtractsReferenceEnergiesOfActiveMolecules)
     auto &data = *engine.getPhysicalDataPtr();
     data.setQMEnergy(100.0);
 
-    _subtractReferences(engine);
+    _calculateReference(engine);
 
-    // 100 - (2 * -10 + 3); inactive and moltype-0 molecules add nothing
-    EXPECT_DOUBLE_EQ(data.getQMEnergy(), 117.0);
+    // 2 * -10 + 3; inactive and moltype-0 molecules add nothing
+    EXPECT_DOUBLE_EQ(data.getQMEnergy(), 100.0);
+    EXPECT_DOUBLE_EQ(data.getQMReferenceEnergy(), -17.0);
+    EXPECT_DOUBLE_EQ(data.getTotalEnergy(), 117.0);
 }

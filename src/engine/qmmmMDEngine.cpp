@@ -225,7 +225,7 @@ namespace engine
 
             getQMRunner()
                 ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
-            _subtractQMReferenceEnergies();
+            _calculateQMReferenceEnergy();
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
             virial +=
@@ -336,7 +336,7 @@ namespace engine
         );
 
         getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
-        _subtractQMReferenceEnergies();
+        _calculateQMReferenceEnergy();
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
             _scaleSmoothingMoleculeForcesInner();
@@ -460,15 +460,15 @@ namespace engine
     }
 
     /**
-     * @brief Subtract the QM reference energies of all QM molecules from the
-     * QM energy
+     * @brief Store the summed QM reference energies of all QM molecules in
+     * PhysicalData; they are subtracted from the total energy
      *
      * @details Must be called directly after the QM calculation, while
      * exactly the QM molecules are active. Without it, E_tot jumps by a
      * molecule's QM energy whenever it enters or leaves the QM region.
      * Molecules without a moltype entry have no reference energy.
      */
-    void QMMMMDEngine::_subtractQMReferenceEnergies()
+    void QMMMMDEngine::_calculateQMReferenceEnergy()
     {
         auto &simBox          = getSimulationBox();
         auto &moleculeTypes   = simBox.getMoleculeTypes();
@@ -493,8 +493,7 @@ namespace engine
             }
         }
 
-        const auto qmEnergy = getPhysicalDataPtr()->getQMEnergy();
-        getPhysicalDataPtr()->setQMEnergy(qmEnergy - referenceEnergy);
+        getPhysicalDataPtr()->setQMReferenceEnergy(referenceEnergy);
     }
 
     /**
@@ -541,6 +540,9 @@ namespace engine
         _qmmmPhysicalData.addQMEnergy(
             getPhysicalDataPtr()->getQMEnergy() * globalSmF
         );
+        _qmmmPhysicalData.addQMReferenceEnergy(
+            getPhysicalDataPtr()->getQMReferenceEnergy() * globalSmF
+        );
         _qmmmPhysicalData.addCoulombEnergy(
             getPhysicalDataPtr()->getCoulombEnergy() * globalSmF
         );
@@ -577,6 +579,9 @@ namespace engine
     void QMMMMDEngine::_moveEnergiesToPhysicalData()
     {
         getPhysicalDataPtr()->setQMEnergy(_qmmmPhysicalData.getQMEnergy());
+        getPhysicalDataPtr()->setQMReferenceEnergy(
+            _qmmmPhysicalData.getQMReferenceEnergy()
+        );
         getPhysicalDataPtr()->setCoulombEnergy(
             _qmmmPhysicalData.getCoulombEnergy()
         );
