@@ -15,7 +15,7 @@ This page explains what each field means and how the collector derives it.
   records whose version they do not know.
 - `kind` is `"job"` (one per finished job, `schema.json`) or `"build-analysis"`
   (one per build job that uploaded a summary, see below,
-  `schema-build-analysis.json`). Clang `-ftime-trace` data will get its own kind.
+  `schema-build-analysis.json`).
   Readers that only want job timings must skip records whose `kind` is not `"job"`.
 
 ## Fields
@@ -58,9 +58,8 @@ for the workflows listed in `config.json` under `build_analysis_workflows`
 
 **The record.** `workflow`, `run_id`, `run_attempt`, `event`, `branch`,
 `head_sha`, `job_id`, `job`, `created_at` and `conclusion` are copied from the
-job record and so are never taken from the artifact; `ninja`, `ccache`, `includes`
-and `clang` are the parts below (`clang` only on records of pushes, see "Clang trace
-summary"). Records written before `includes` and `clang` existed lack those keys. Join to the job record on `job_id`. The collector accepts an
+job record and so are never taken from the artifact; `ninja`, `ccache` and `includes`
+are the parts below. Records written before `includes` existed lack that key. Join to the job record on `job_id`. The collector accepts an
 artifact only if its `run_id`, `run_attempt` and `job_id` match a job of that run.
 
 **Trust.** An artifact of a pull request run is produced by code from that pull
@@ -101,10 +100,9 @@ the start.
 
 **Include graph (`includes`).** From `ninja -t deps` after the build: for every
 object file the headers it depends on (its own source file is not counted).
-Unlike times and clang trace events this is **deterministic**: two builds of the same
-code give the same numbers, so any change is a real change (the SHA-256 of all pairs
-was identical in two clang runs, and the fan-in of expensive repository headers
-equals the number of files clang's trace reports for them).
+Unlike times this is **deterministic**: two builds of the same code give the same
+numbers, so any change is a real change (the SHA-256 of all pairs was identical in two
+clang runs).
 
 | Field | Meaning |
 | --- | --- |
@@ -114,44 +112,6 @@ equals the number of files clang's trace reports for them).
 | `includes.project_files`, `project_pairs` | The same restricted to project files: inside the repository and not in the build directory (generated headers are not project files). |
 | `includes.digest` | SHA-256 over all sorted (object, file) pairs with repository-relative project paths; equal digests mean identical include graphs, also across checkouts. |
 | `includes.top_project_files` | The 30 project files with the highest **fan-in** (number of objects that depend on them): `file`, `fan_in`. |
-
-A longer file, `ninja-includes.json` (kind `"ninja-includes-detail"`, the fan-in of every
-project file, at most 5,000), is in the artifact for the pull request comment; it is
-not part of the collected data.
-
-## Clang trace summary (job side, version 1)
-
-Written by `summarise_traces.py` from the `-ftime-trace` JSON files clang writes
-next to every object file (`foo.cpp.o` gives `foo.cpp.json`), as `clang-traces.json`
-in the `build-timings-<job>-a<attempt>` artifact of the clang job. The collector
-reads it from there and stores it as the `clang` part of the `build-analysis` record
-**of pushes to `dev`** (about 15 KB per record, which is why pull requests do not get
-it; the include graph and ninja parts are kept for every event). A copy of the raw
-traces of the 20 slowest files is in a **separate artifact**, `clang-traces-<job>-a<attempt>`
-(7 days), that the collector never downloads; all traces together are far too large.
-Times are seconds. The same script also writes `clang-traces-detail.json` (kind
-`"clang-trace-detail"`, same fields, lists of 100 files, 300 headers and 150
-templates) which the pull request comment compares against the `dev` baseline; it is
-not part of the collected data.
-
-| Field | Meaning |
-| --- | --- |
-| `schema_version`, `kind` | `1`, `"clang-trace-summary"` (or `"clang-trace-detail"`). |
-| `limits` | The list lengths used: `files`, `headers`, `templates` (20, 30, 30 in the summary). A reader of the longer detail file uses them to tell a header that is missing from a full list from one that is just not listed. |
-| `files` | Translation units analysed. |
-| `unreadable` | Trace files that were truncated, not traces, or without a compiler total; they are counted and left out. |
-| `total_s`, `frontend_s`, `backend_s` | Sums over the translation units of the `ExecuteCompiler`, `Frontend` and `Backend` events. `backend_s` is 0 or small when nothing is optimised or generated in the trace. |
-| `source_events`, `instantiation_events` | Number of header inclusions (`Source` events) and of template instantiations (`InstantiateClass` / `InstantiateFunction`) over all translation units. **These depend on runner speed**: only events at least as long as clang's trace granularity (0.5 ms by default) are in a trace, so a faster run records fewer of them. Measured on identical code: compiler time 882 s to 1,707 s and, with it, 243,391 to 496,033 instantiation events and 49,789 to 58,839 inclusions in five runs. Do not read small changes in them as changes of the code. |
-| `slowest_files` | Top 20 translation units: `file` (the source file, derived from the trace path: `<dir>/CMakeFiles/<target>.dir/<file>.json` is `<dir>/<file>`; clang does not write the main source file into the trace), `total_s`, `frontend_s`, `backend_s`. |
-| `headers` | Top 30 headers by **self** time summed over all translation units: `header` (repository-relative if inside the repository), `inclusive_s` (time including what the header includes), `self_s` (without), `events` (inclusions) and `files` (translation units that include it). Paths are normalised (`..` removed) and made relative to the repository where possible. |
-| `templates` | Top 30 template instantiations by self time: `name` (clipped to 200 characters), `count`, `inclusive_s`, `self_s`. |
-
-Self time is the inclusive time minus the time of the directly nested events of the
-same kind, so an umbrella header is not blamed for what it includes; it is computed
-from the timestamps of each trace. Include events (`Source`) are async begin/end
-pairs in clang 20 traces and complete events in older ones; both are read. This was
-checked on traces of clang 20.1.2 (the test fixture `scripts/tests/data/clang_trace_sample.json`
-is a trimmed real one).
 
 ## What is and is not recorded
 

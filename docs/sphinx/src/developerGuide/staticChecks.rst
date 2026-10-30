@@ -178,8 +178,9 @@ Commit messages and merges
 
 ``.githooks/commit-msg`` rejects a commit whose subject does not start with one of the conventional prefixes
 (``feat:``, ``fix:``, ``docs:``, ``test:``, ``ci:``, ``refactor:``, ``merge:``, ... the full table is in ``AGENTS.md``).
-Install it once per clone with ``cp .githooks/commit-msg .git/hooks/``. The hook also checks the message Git proposes
-for a merge, which starts with ``Merge branch ...`` and is rejected. Give the merge a message of its own:
+Install it once per clone with ``cp .githooks/commit-msg .git/hooks/``. The messages that Git proposes for a merge
+(``Merge branch ...``, ``Merge remote-tracking branch ...``, ``Merge tag ...``, ``Merge commit ...``,
+``Merge pull request ...``) are accepted as they are. A merge message of your own needs the prefix:
 
 .. code:: bash
 
@@ -206,6 +207,23 @@ Conventions for tests
     - The settings classes hold global state (``settings::TimingsSettings::setTimeStep`` and similar). A test that
       changes a setting must restore it, otherwise it changes the result of a test that runs later in the same
       executable. Do it in ``TearDown`` or at the end of the test.
+    - **Settings are built directly in tests**, with no input file and no static reset. Every settings struct is
+      default-constructible, and ``tests/include/testUtils/testSettings.hpp`` collects overrides:
+
+      .. code:: c++
+
+          const auto settings = testSettings::make<ConstraintSettings>()
+                                    .with(&ConstraintSettings::setShakeMaxIter, 100)
+                                    .with(&ConstraintSettings::setShakeTolerance, 1.0e-8)
+                                    .apply([](auto &config) { config.activateShake(); })
+                                    .build();
+          constraints::Constraints constraints(settings);
+
+      ``with`` takes a one-argument setter and a value, ``apply`` takes any callable (activate/deactivate calls, nested
+      structs of the root ``Settings``). Values that are not overridden keep the defaults of the default constructor; a
+      setting without a sensible default (for example the water model) throws on access until it is set. A consumer keeps
+      a *reference* to the settings it is given, so store the result of ``build()`` in a named variable that outlives the
+      consumer and never pass a temporary.
     - Write the test that fails first when you fix a bug, and check that it fails without the fix. Weigh a new guard
       against what the input validation already ensures: many "division by zero" candidates are impossible because the
       input parser rejects the value.

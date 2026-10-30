@@ -172,15 +172,16 @@ void OptimizerSettings::validateLearningRateStrategy() const
 void OptimizerSettings::validateLearningRateBounds() const
 {
     const auto minLR = getMinLearningRate();
+    const auto maxLR = getMaxLearningRate();
 
-    if (isMaxLearningRateSet() && minLR >= getMaxLearningRate())
+    if (maxLR.has_value() && minLR >= maxLR.value())
     {
         throw exc::UserInputException(
             std::format(
                 "The minimum learning rate {} is greater or equal to the "
                 "maximum learning rate {}, which is not allowed.",
                 minLR,
-                getMaxLearningRate()
+                maxLR.value()
             )
         );
     }
@@ -262,10 +263,16 @@ double OptimizerSettings::getLearningRateDecay() const
 /**
  * @brief returns the max learning rate
  *
- * @return double
+ * @details the maximum is optional and has no default: no maximum is applied
+ * when it was not set
+ *
+ * @return std::optional<double> the max learning rate, std::nullopt if not set
  */
-double OptimizerSettings::getMaxLearningRate() const
+std::optional<double> OptimizerSettings::getMaxLearningRate() const
 {
+    if (!isMaxLearningRateSet())
+        return std::nullopt;
+
     return _maxLearningRate.get();
 }
 

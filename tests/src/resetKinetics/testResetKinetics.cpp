@@ -35,6 +35,7 @@
 #include "resetKinetics.hpp"
 #include "resetKineticsSettings.hpp"
 #include "simulationBox.hpp"
+#include "testSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "vector3d.hpp"
@@ -225,16 +226,16 @@ namespace
         size_t fResetForces
     )
     {
-        ResetKineticsSettings settings;
-        settings.setNScale(nScale);
-        settings.setFScale(fScale);
-        settings.setNReset(nReset);
-        settings.setFReset(fReset);
-        settings.setNResetAngular(nResetAngular);
-        settings.setFResetAngular(fResetAngular);
-        settings.setFResetForces(fResetForces);
-        settings.finalize();
-        return settings;
+        return testSettings::make<ResetKineticsSettings>()
+            .with(&ResetKineticsSettings::setNScale, nScale)
+            .with(&ResetKineticsSettings::setFScale, fScale)
+            .with(&ResetKineticsSettings::setNReset, nReset)
+            .with(&ResetKineticsSettings::setFReset, fReset)
+            .with(&ResetKineticsSettings::setNResetAngular, nResetAngular)
+            .with(&ResetKineticsSettings::setFResetAngular, fResetAngular)
+            .with(&ResetKineticsSettings::setFResetForces, fResetForces)
+            .apply([](auto &config) { config.finalize(); })
+            .build();
     }
 }   // namespace
 

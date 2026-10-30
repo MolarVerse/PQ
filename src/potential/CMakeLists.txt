@@ -3,6 +3,7 @@ set(potential_source_files
     potential.tpp.cpp
     potentialBruteForce.cpp
     potentialCellList.cpp
+    potentialKernels.tpp.cpp
 )
 
 add_library(potential

@@ -77,8 +77,8 @@ Workflows
     * - Clang Build
       - ``clang_build.yml``
       - pull requests that touch C++ or build files
-      - Not a gate. Builds with clang and ``-ftime-trace`` and posts a comment with the build times, see
-        :doc:`ciMetrics`.
+      - Not a gate. Builds and tests the project with clang 20 and records the build analysis for the
+        :ref:`CI metrics <ciMetricsClangJob>`.
     * - Docs
       - ``jekyll-gh-pages.yml``
       - pull requests to ``main`` and ``dev`` that touch ``docs``, ``include`` or ``src``; pushes to ``main``
@@ -196,7 +196,7 @@ A job that takes twice as long as usual is rarely a problem in your change. Thes
       true for your local build, see :doc:`localBuildTimes`.
     - **The runner CPU.** GitHub gives the same job runners of different CPU generations. The same fixed compile took
       4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763. The CI metrics record the CPU model of the
-      runner, and the clang comment of a pull request names the CPU of the run and of its baseline.
+      runner.
     - **The Eigen source** is cached under a key that hashes ``.cmake/eigen.cmake`` and passed to CMake with
       ``-DFETCHCONTENT_SOURCE_DIR_EIGEN``, so that no job clones it again.
     - **The conda environment** of the integration tests is cached under a key that hashes ``ci_build.yml``. **Every

@@ -1,0 +1,1 @@
+- Fix the Debug build with Python bindings (`-Werror=conversion` in `selection.cpp`).

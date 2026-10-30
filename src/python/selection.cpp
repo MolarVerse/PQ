@@ -52,7 +52,10 @@ std::vector<int> pq_python::select(
     PyObject *pArgs;
     PyObject *pValue;
 
-    ::Py_Initialize();
+    // keep the interpreter alive: numpy cannot be imported again after
+    // Py_Finalize, and PQ may already own it (pybind11 in apps/PQ.cpp)
+    if (::Py_IsInitialized() == 0)
+        ::Py_Initialize();
 
     const std::string moduleString = "PQAnalysis.topology.api";
 
@@ -66,12 +69,8 @@ std::vector<int> pq_python::select(
     }
     pDict = ::PyModule_GetDict(pModule);
 
-    pFunc = ::PyDict_GetItemString(pDict, "select_from_restart_file_as_list");
-
-    if (PyCallable_Check(pFunc))
-        PyObject_CallObject(pFunc, NULL);
-    else
-        PyErr_Print();
+    pFunc =
+        ::PyDict_GetItemString(pDict, "selection_from_restart_file_as_list");
 
     if (moldescriptorFileName.empty() ||
         ::fopen(moldescriptorFileName.c_str(), "r") == nullptr)
@@ -120,7 +119,7 @@ std::vector<int> pq_python::select(
 
         while ((pItem = ::PyIter_Next(pIter)))
         {
-            result.push_back(::PyLong_AsLong(pItem));
+            result.push_back(static_cast<int>(::PyLong_AsLong(pItem)));
             ::Py_DECREF(pItem);
         }
 
@@ -133,8 +132,6 @@ std::vector<int> pq_python::select(
     Py_DECREF(pArgs);
     Py_DECREF(pModule);
     Py_DECREF(pName);
-
-    ::Py_Finalize();
 
     return result;
 }

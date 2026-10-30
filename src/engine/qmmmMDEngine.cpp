@@ -188,8 +188,10 @@ namespace engine
             )
         ));
 
+        const auto nConfigurations = _numberOfSmoothingConfigurations(nSmMol);
+
         // Loop over all combinations of smoothing molecules
-        for (size_t i = 0; i < (1U << nSmMol); ++i)
+        for (size_t i = 0; i < nConfigurations; ++i)
         {
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
@@ -218,8 +220,7 @@ namespace engine
 
             // to not carry over qm_charges of atoms which are not qm
             // anymore
-            for (auto &atom : getSimulationBox().getAtoms())
-                atom->getQMCharge().reset();
+            getSimulationBox().resetQMCharges();
 
             getQMRunner()
                 ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);

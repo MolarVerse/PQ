@@ -1,0 +1,1 @@
+- Add a regression test that runs the same water box with SHAKE and M-SHAKE and compares the final positions and velocities. The regression runner can now run several inputs per case and compare the last frames of two output files.

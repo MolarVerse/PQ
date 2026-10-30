@@ -1,0 +1,1 @@
+- `forced_core_list`, `forced_layer_list` and `forced_outer_list` take molecule indices only; a selection-grammar value now gives an input error instead of being read as atom indices.

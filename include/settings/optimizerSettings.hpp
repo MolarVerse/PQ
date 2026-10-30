@@ -25,6 +25,7 @@
 #define _OPTIMIZER_SETTINGS_HPP_
 
 #include <cstddef>
+#include <optional>
 
 #include "enums/optimizer.hpp"
 #include "setting.hpp"
@@ -89,8 +90,8 @@ class OptimizerSettings
     [[nodiscard]] double getInitialLearningRate() const;
     [[nodiscard]] double getMinLearningRate() const;
 
-    [[nodiscard]] double getLearningRateDecay() const;
-    [[nodiscard]] double getMaxLearningRate() const;
+    [[nodiscard]] double                getLearningRateDecay() const;
+    [[nodiscard]] std::optional<double> getMaxLearningRate() const;
 
     [[nodiscard]] bool isLearningRateDecaySet() const;
     [[nodiscard]] bool isMaxLearningRateSet() const;

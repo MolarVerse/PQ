@@ -41,6 +41,7 @@
 #include "guffNonCoulomb.hpp"
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
+#include "interWaterKernels.tpp"   // IWYU pragma: keep -- for template specialization
 #include "interWaterParamters.hpp"
 #include "lennardJonesPair.hpp"
 #include "mTRIntraWater.hpp"
@@ -674,7 +675,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
         atom2,
         coulomb,
         kCutOff * kCutOff,
-        simBox,
+        simBox.getBox(),
         nonCoulomb,
         coulombEnergy,
         nonCoulombEnergy
@@ -694,7 +695,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
             atom2,
             coulomb,
             kCutOff * kCutOff,
-            simBox,
+            simBox.getBox(),
             coulombEnergy
         );
     EXPECT_NE(coulombEnergy, 0.0);
@@ -711,7 +712,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
             atom2,
             coulomb,
             kCutOff * kCutOff,
-            simBox,
+            simBox.getBox(),
             nonCoulomb,
             coulombEnergy,
             nonCoulombEnergy

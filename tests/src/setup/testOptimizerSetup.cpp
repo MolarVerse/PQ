@@ -170,6 +170,23 @@ TEST_F(TestSetup, setupMinMaxLRAcceptsValidRange)
     EXPECT_NO_THROW(setup.setupMinMaxLR(learningRate));
 }
 
+TEST_F(TestSetup, setupMinMaxLRWorksWithoutAMaxLearningRate)
+{
+    // max-learning-rate is optional: an input that does not set it must not
+    // fail (it has no default, so reading it unconditionally throws)
+    auto &optimizerSettings = _settings->optimizerSettings;
+    optimizerSettings.setOptimizer(OptimizerType::STEEPEST_DESCENT);
+    optimizerSettings.setLearningRateStrategy(LearningRate::CONSTANT);
+    optimizerSettings.setInitialLearningRate(0.01);
+    optimizerSettings.setMinLearningRate(0.001);
+    ASSERT_FALSE(optimizerSettings.isMaxLearningRateSet());
+
+    engine::OptEngine     optEngine{*_settings};
+    setup::OptimizerSetup setup(optEngine);
+    auto                  learningRate = setup.setupLearningRateStrategy();
+    EXPECT_NO_THROW(setup.setupMinMaxLR(learningRate));
+}
+
 TEST_F(TestSetup, setupMinMaxLRThrowsWhenMinGreaterThanMax)
 {
     resetOptimizerSettings(_settings->optimizerSettings);

@@ -1,0 +1,9 @@
+target_selection = O
+window = 200
+gap = 10
+time_step = 0.1
+
+out_file = O_msd.out
+traj_files
+./h2o-md-01.xyz
+END

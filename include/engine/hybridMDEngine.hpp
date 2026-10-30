@@ -75,6 +75,11 @@ namespace engine
         );
 
         [[nodiscard]]
+        static size_t _numberOfSmoothingConfigurations(
+            size_t nSmoothingMolecules
+        );
+
+        [[nodiscard]]
         double _calculateGlobalSmoothingFactor(
             const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
         ) const;

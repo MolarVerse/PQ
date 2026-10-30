@@ -215,8 +215,8 @@ instantiation) and backend (optimisation, code generation), per module, and the 
       the whole build, and lists a header or template only if it moved by more than 1 s and 15% beyond that drift. These
       thresholds come from three builds of identical code, where nothing was listed.
 
-This is the same view that the Clang Build comment on every pull request shows, see :ref:`the clang build comment
-<ciMetricsClangComment>`, but on your own machine and for the state of your working tree.
+This is the view that used to be posted as a comment on every pull request. It is now only available locally, where the
+build can be pinned to one core and compared on an otherwise idle machine.
 
 ****************
 Habits that work
