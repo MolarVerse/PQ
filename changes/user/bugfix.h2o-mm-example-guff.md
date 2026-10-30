@@ -1,0 +1,1 @@
+- Fix examples/h2o_mm: the Coulomb coefficients in guff.dat did not match the charges of moldescriptor.dat any more (the GUFF reader checks them), so the example stopped with an error during setup.
