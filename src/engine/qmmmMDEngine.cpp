@@ -224,6 +224,7 @@ namespace engine
 
             getQMRunner()
                 ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+            _subtractQMReferenceEnergies();
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
             virial +=
@@ -334,6 +335,7 @@ namespace engine
         );
 
         getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+        _subtractQMReferenceEnergies();
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
             _scaleSmoothingMoleculeForcesInner();
@@ -454,6 +456,33 @@ namespace engine
         const auto nQMAtoms = getSimulationBox().getNumberOfQMAtoms();
         getPhysicalDataPtr()->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
         configurator::HybridConfigurator::activateMolecules(getSimulationBox());
+    }
+
+    /**
+     * @brief Subtract the QM reference energies of all QM molecules from the
+     * QM energy
+     *
+     * @details Must be called directly after the QM calculation, while
+     * exactly the QM molecules are active. Without it, E_tot jumps by a
+     * molecule's QM energy whenever it enters or leaves the QM region.
+     * Molecules with moltype 0 have no reference energy.
+     */
+    void QMMMMDEngine::_subtractQMReferenceEnergies()
+    {
+        auto &simBox          = getSimulationBox();
+        auto  referenceEnergy = 0.0;
+
+        for (const auto &mol : simBox.getMolecules())
+        {
+            if (mol.isActive() && mol.getMoltype() != MolType{0})
+            {
+                referenceEnergy += simBox.findMoleculeType(mol.getMoltype())
+                                       .getQMReferenceEnergy();
+            }
+        }
+
+        const auto qmEnergy = getPhysicalDataPtr()->getQMEnergy();
+        getPhysicalDataPtr()->setQMEnergy(qmEnergy - referenceEnergy);
     }
 
     /**

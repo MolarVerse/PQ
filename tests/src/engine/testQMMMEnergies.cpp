@@ -26,7 +26,10 @@
 #include <unordered_set>
 
 #include "exceptions.hpp"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
 #include "qmmmMDEngine.hpp"
+#include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 
 class QMMMEnergiesTest : public ::testing::Test
@@ -40,6 +43,11 @@ class QMMMEnergiesTest : public ::testing::Test
     static void _moveEnergies(engine::QMMMMDEngine &engine)
     {
         engine._moveEnergiesToPhysicalData();
+    }
+
+    static void _subtractReferences(engine::QMMMMDEngine &engine)
+    {
+        engine._subtractQMReferenceEnergies();
     }
 
     static std::unordered_set<size_t> _inactiveSet(
@@ -100,4 +108,35 @@ TEST_F(QMMMEnergiesTest, exactSmoothingHandlesMoleculeIndicesAbove31)
         exc::HybridMDEngineException,
         "Exact smoothing supports at most 63 smoothing molecules, found 64"
     );
+}
+
+TEST_F(QMMMEnergiesTest, subtractsReferenceEnergiesOfActiveMolecules)
+{
+    Settings             settings;
+    engine::QMMMMDEngine engine{settings};
+    auto                &simBox = engine.getSimulationBox();
+
+    auto water = molsys::MoleculeType{MolType{1}};
+    water.setQMReferenceEnergy(-10.0);
+    auto ion = molsys::MoleculeType{MolType{2}};
+    ion.setQMReferenceEnergy(3.0);
+    simBox.addMoleculeType(water);
+    simBox.addMoleculeType(ion);
+
+    auto inactiveWater = molsys::Molecule{MolType{1}};
+    inactiveWater.deactivateMolecule();
+
+    simBox.addMolecule(molsys::Molecule{MolType{1}});
+    simBox.addMolecule(molsys::Molecule{MolType{1}});
+    simBox.addMolecule(inactiveWater);
+    simBox.addMolecule(molsys::Molecule{MolType{2}});
+    simBox.addMolecule(molsys::Molecule{MolType{0}});
+
+    auto &data = *engine.getPhysicalDataPtr();
+    data.setQMEnergy(100.0);
+
+    _subtractReferences(engine);
+
+    // 100 - (2 * -10 + 3); inactive and moltype-0 molecules add nothing
+    EXPECT_DOUBLE_EQ(data.getQMEnergy(), 117.0);
 }

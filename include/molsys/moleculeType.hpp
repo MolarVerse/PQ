@@ -46,7 +46,8 @@ namespace molsys
         MolType               _moltype;
         std::optional<size_t> _numberOfAtoms;
 
-        int _charge = 0;
+        int    _charge            = 0;
+        double _qmReferenceEnergy = 0.0;
 
         std::vector<std::string> _atomNames;
         std::vector<AtomType>    _atomTypes;
@@ -85,6 +86,7 @@ namespace molsys
         void setMoltype(MolType moltype);
 
         void setCharge(int charge);
+        void setQMReferenceEnergy(double qmReferenceEnergy);
         void setPartialCharge(AtomIndex index, double partialCharge);
         void setPartialCharges(const std::vector<double> &partialCharges);
 
@@ -99,6 +101,7 @@ namespace molsys
         [[nodiscard]] AtomType    getInternalAtomType(ExtAtomType type) const;
 
         [[nodiscard]] int    getCharge() const;
+        [[nodiscard]] double getQMReferenceEnergy() const;
         [[nodiscard]] double getPartialCharge(AtomIndex index) const;
 
         [[nodiscard]] std::string getName() const;

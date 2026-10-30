@@ -24,8 +24,10 @@
 
 #include <cstddef>
 #include <format>
+#include <stdexcept>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include "engine.hpp"
 #include "exceptions.hpp"
@@ -228,6 +230,13 @@ namespace input::molDescriptor
             if (lineElements.empty())
                 continue;
 
+            if ("qm_reference_energy" ==
+                utilities::toLowerAndReplaceDashesCopy(lineElements[0]))
+            {
+                _processQMReferenceEnergy(lineElements, molecule);
+                continue;
+            }
+
             if ((3 == lineElements.size()) || (4 == lineElements.size()))
             {
                 molecule.addAtomName(lineElements[0]);
@@ -276,6 +285,49 @@ namespace input::molDescriptor
         _convertExternalToInternalAtomTypes(molecule);
 
         simBox.addMoleculeType(molecule);
+    }
+
+    /**
+     * @brief process the optional QM reference energy line of a molecule
+     *
+     * @details format: `qm_reference_energy <energy>` in kcal/mol
+     *
+     * @param lineElements
+     * @param molecule
+     *
+     * @throws MolDescriptorException if the line has not exactly 2 elements
+     * or the energy is not a number
+     */
+    void MoldescriptorReader::_processQMReferenceEnergy(
+        const std::vector<std::string> &lineElements,
+        molsys::MoleculeType           &molecule
+    ) const
+    {
+        const auto error = exc::MolDescriptorException(
+            std::format(
+                "Invalid QM reference energy line in moldescriptor file at "
+                "line {} - expected \"qm_reference_energy <energy>\"",
+                _lineNumber
+            )
+        );
+
+        if (lineElements.size() != 2)
+        {
+            throw error;
+        }
+
+        try
+        {
+            molecule.setQMReferenceEnergy(std::stod(lineElements[1]));
+        }
+        catch (const std::invalid_argument &)
+        {
+            throw error;
+        }
+        catch (const std::out_of_range &)
+        {
+            throw error;
+        }
     }
 
     /**
