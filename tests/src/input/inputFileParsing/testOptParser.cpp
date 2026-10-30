@@ -22,6 +22,8 @@
 
 #include <gtest/gtest.h>
 
+#include <optional>
+
 #include "defaults.hpp"
 #include "enums/optimizer.hpp"
 #include "exceptions.hpp"
@@ -208,7 +210,10 @@ TEST_F(TestInputFileReader, parserMaxLearningRate)
     const auto& parseFunc = funcMap.at("max_learning_rate");
 
     parseFunc({"max-learning-rate", "=", "0.99"}, 0);
-    EXPECT_EQ(optimizerSettings.getMaxLearningRate(), 0.99);
+    EXPECT_EQ(
+        optimizerSettings.getMaxLearningRate(),
+        std::optional<double>{0.99}
+    );
 
     _clearParser(parser);
 
