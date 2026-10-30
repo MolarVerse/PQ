@@ -415,8 +415,8 @@ jobs:
 
   # BUILD_WITH_PYTHON_BINDINGS is off in every other job (#543). It installs
   # PQAnalysis through pip while CMake configures and then has to report the
-  # capability, which testPQCli checks. Only the PQ executable is built, which
-  # is all that check needs.
+  # capability, which testPQCli checks. Only PQ and the PQAnalysis selection
+  # test are built.
   python-bindings:
     if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
     needs: changes
@@ -463,7 +463,7 @@ jobs:
             -DBUILD_WITH_NATIVE=OFF \
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
-          cmake --build build --parallel "$(nproc)" --target PQ
+          cmake --build build --parallel "$(nproc)" --target PQ testSelection
 
       - name: Collect build timings
         if: always()
@@ -472,8 +472,8 @@ jobs:
           name: python-bindings
           job-id: ${{ job.check_run_id }}
 
-      - name: Check the reported capabilities
-        run: ctest --test-dir build --output-on-failure -R testPQCli
+      - name: Run the Python-binding tests
+        run: ctest --test-dir build --output-on-failure -R 'testPQCli|testSelection'
 
   ci-build-gate:
     if: always()
