@@ -25,6 +25,7 @@
 #include <charconv>
 #include <cstddef>
 #include <format>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -311,7 +312,7 @@ namespace input::molDescriptor
         if (isValid)
         {
             const auto &value  = lineElements[1];
-            const auto *end    = value.data() + value.size();
+            const auto *end    = std::to_address(value.end());
             const auto  result = std::from_chars(value.data(), end, energy);
             isValid            = result.ec == std::errc{} && result.ptr == end;
         }
