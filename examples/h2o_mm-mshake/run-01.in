@@ -6,6 +6,7 @@
     # Number of steps to be performed and timestep in fs
       nstep = 25000;
       timestep = 2.0;
+      output_freq = 50;
 
     # Temperature coupling keys
       thermostat = velocity_rescaling;
