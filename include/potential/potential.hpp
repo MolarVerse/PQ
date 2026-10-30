@@ -25,6 +25,7 @@
 #define _POTENTIAL_HPP_
 
 #include <memory>
+#include <mstd/types.hpp>
 #include <utility>
 
 #include "coulombPotential.hpp"
@@ -45,6 +46,7 @@ namespace molsys
 }   // namespace molsys
 
 class WaterModelSettings;   // forward declaration
+class HybridSettings;       // forward declaration
 
 namespace pot
 {
@@ -73,10 +75,12 @@ namespace pot
     class Potential
     {
        private:
+        mstd::ConstRef<HybridSettings>       _hybridSettings;
         std::shared_ptr<CoulombPotential>    _coulombPotential;
         std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
+        explicit Potential(const HybridSettings &hybridSettings);
         virtual ~Potential();
 
         virtual void calculateForces(

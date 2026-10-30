@@ -33,128 +33,140 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 
-/**
- * @brief Calculate intramolecular SPC water interactions for all water
- * molecules.
- *
- * @details For each water molecule, computes:
- * - Two O-H bond energies and forces using a harmonic potential.
- * - One H-O-H angle energy and force using a harmonic potential.
- * - Applies periodic boundary conditions to bond vectors.
- * - Accumulates bond energy, angle energy, and virial contributions.
- * - Handles hybrid-zone smoothing factors if applicable.
- *
- * @param simulationBox The simulation box containing water molecules and PBC
- * settings.
- * @param physicalData The physical data container to accumulate energies and
- * virial.
- *
- * @tparam Derived The derived SPC water model class providing equilibrium
- * distances, angles, and force constants.
- *
- * @note Inactive molecules are skipped.
- */
-void waterModel::SPCIntraWater::calculate(
-    molsys::SimulationBox&      simulationBox,
-    physicalData::PhysicalData& physicalData
-)
+namespace waterModel
 {
-    auto _ = scopedTimer(TimerId::WaterIntraPotential, "Calculate Potential");
 
-    const auto eqOHDistance = getEqOHDistance();
-    const auto eqHOHAngle   = getEqHOHAngle();
-    const auto kOHBond      = getForceConstantOHBond();
-    const auto kHOHAngle    = getForceConstantHOHAngle();
-
-    for (auto& water : simulationBox.getWaterTypeMolecules())
+    /**
+     * @brief Calculate intramolecular SPC water interactions for all water
+     * molecules.
+     *
+     * @details For each water molecule, computes:
+     * - Two O-H bond energies and forces using a harmonic potential.
+     * - One H-O-H angle energy and force using a harmonic potential.
+     * - Applies periodic boundary conditions to bond vectors.
+     * - Accumulates bond energy, angle energy, and virial contributions.
+     * - Handles hybrid-zone smoothing factors if applicable.
+     *
+     * @param simulationBox The simulation box containing water molecules and
+     * PBC settings.
+     * @param physicalData The physical data container to accumulate energies
+     * and virial.
+     *
+     * @tparam Derived The derived SPC water model class providing equilibrium
+     * distances, angles, and force constants.
+     *
+     * @note Inactive molecules are skipped.
+     */
+    inline void SPCIntraWater::calculate(
+        molsys::SimulationBox&      simulationBox,
+        physicalData::PhysicalData& physicalData
+    )
     {
-        auto& oxygen    = water.getAtom(AtomIndex{0});
-        auto& hydrogen1 = water.getAtom(AtomIndex{1});
-        auto& hydrogen2 = water.getAtom(AtomIndex{2});
+        auto _ =
+            scopedTimer(TimerId::WaterIntraPotential, "Calculate Potential");
 
-        const auto posO  = oxygen.getPosition();
-        const auto posH1 = hydrogen1.getPosition();
-        const auto posH2 = hydrogen2.getPosition();
+        const auto eqOHDistance = getEqOHDistance();
+        const auto eqHOHAngle   = getEqHOHAngle();
+        const auto kOHBond      = getForceConstantOHBond();
+        const auto kHOHAngle    = getForceConstantHOHAngle();
 
-        auto dOH1 = posO - posH1;
+        for (auto& water : simulationBox.getWaterTypeMolecules())
+        {
+            auto& oxygen    = water.getAtom(AtomIndex{0});
+            auto& hydrogen1 = water.getAtom(AtomIndex{1});
+            auto& hydrogen2 = water.getAtom(AtomIndex{2});
 
-        simulationBox.applyPBC(dOH1);
+            const auto posO  = oxygen.getPosition();
+            const auto posH1 = hydrogen1.getPosition();
+            const auto posH2 = hydrogen2.getPosition();
 
-        const auto distOH1 = norm(dOH1);
-        waterModel::checkNonDegenerate(distOH1, "O-H1 distance");
+            auto dOH1 = posO - posH1;
 
-        const auto deltaDistanceOH1 = distOH1 - eqOHDistance;
+            simulationBox.applyPBC(dOH1);
 
-        auto forceMagnitudeOH1 = -kOHBond * deltaDistanceOH1;
+            const auto distOH1 = norm(dOH1);
+            checkNonDegenerate(distOH1, "O-H1 distance");
 
-        physicalData.addBondEnergy(-forceMagnitudeOH1 * deltaDistanceOH1 / 2.0);
+            const auto deltaDistanceOH1 = distOH1 - eqOHDistance;
 
-        forceMagnitudeOH1 /= distOH1;
+            auto forceMagnitudeOH1 = -kOHBond * deltaDistanceOH1;
 
-        const auto forceOH1 = forceMagnitudeOH1 * dOH1;
-        oxygen.addForce(forceOH1);
-        hydrogen1.addForce(-forceOH1);
+            physicalData.addBondEnergy(
+                -forceMagnitudeOH1 * deltaDistanceOH1 / 2.0
+            );
 
-        auto dOH2 = posO - posH2;
+            forceMagnitudeOH1 /= distOH1;
 
-        simulationBox.applyPBC(dOH2);
+            const auto forceOH1 = forceMagnitudeOH1 * dOH1;
+            oxygen.addForce(forceOH1);
+            hydrogen1.addForce(-forceOH1);
 
-        const auto distOH2 = norm(dOH2);
-        waterModel::checkNonDegenerate(distOH2, "O-H2 distance");
+            auto dOH2 = posO - posH2;
 
-        const auto deltaDistanceOH2 = distOH2 - eqOHDistance;
+            simulationBox.applyPBC(dOH2);
 
-        auto forceMagnitudeOH2 = -kOHBond * deltaDistanceOH2;
+            const auto distOH2 = norm(dOH2);
+            checkNonDegenerate(distOH2, "O-H2 distance");
 
-        physicalData.addBondEnergy(-forceMagnitudeOH2 * deltaDistanceOH2 / 2.0);
+            const auto deltaDistanceOH2 = distOH2 - eqOHDistance;
 
-        forceMagnitudeOH2 /= distOH2;
+            auto forceMagnitudeOH2 = -kOHBond * deltaDistanceOH2;
 
-        const auto forceOH2 = forceMagnitudeOH2 * dOH2;
-        oxygen.addForce(forceOH2);
-        hydrogen2.addForce(-forceOH2);
+            physicalData.addBondEnergy(
+                -forceMagnitudeOH2 * deltaDistanceOH2 / 2.0
+            );
 
-        using enum molsys::HybridZone;
-        using enum SmoothingMethod;
+            forceMagnitudeOH2 /= distOH2;
 
-        auto       smF       = 0.0;
-        const auto smoothing = settings::HybridSettings::getSmoothingMethod();
+            const auto forceOH2 = forceMagnitudeOH2 * dOH2;
+            oxygen.addForce(forceOH2);
+            hydrogen2.addForce(-forceOH2);
 
-        if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
-            smF = water.getSmoothingFactor();
+            using enum molsys::HybridZone;
+            using enum SmoothingMethod;
 
-        physicalData.addVirial(tensorProduct(dOH1, forceOH1) * (1 - smF));
-        physicalData.addVirial(tensorProduct(dOH2, forceOH2) * (1 - smF));
+            auto       smF       = 0.0;
+            const auto smoothing = _getHybridSettings().getSmoothingMethod();
 
-        const auto alpha      = angle(dOH1, dOH2);
-        const auto deltaAngle = alpha - eqHOHAngle;
+            if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
+                smF = water.getSmoothingFactor();
 
-        auto forceMagnitudeAngle = -kHOHAngle * deltaAngle;
+            physicalData.addVirial(tensorProduct(dOH1, forceOH1) * (1 - smF));
+            physicalData.addVirial(tensorProduct(dOH2, forceOH2) * (1 - smF));
 
-        physicalData.addAngleEnergy(-forceMagnitudeAngle * deltaAngle / 2.0);
+            const auto alpha      = angle(dOH1, dOH2);
+            const auto deltaAngle = alpha - eqHOHAngle;
 
-        const auto normalDistance = distOH1 * distOH2 * ::sin(alpha);
-        waterModel::checkNonDegenerate(
-            normalDistance,
-            "sine of the H-O-H angle times both O-H distances (an angle of "
-            "0, both hydrogens on the same ray from the oxygen)"
-        );
+            auto forceMagnitudeAngle = -kHOHAngle * deltaAngle;
 
-        auto normalPosition  = cross(dOH2, dOH1);
-        normalPosition      /= normalDistance;
+            physicalData.addAngleEnergy(
+                -forceMagnitudeAngle * deltaAngle / 2.0
+            );
 
-        auto forceAngle = forceMagnitudeAngle / (distOH1 * distOH1);
-        auto forcexyz   = forceAngle * cross(dOH1, normalPosition);
+            const auto normalDistance = distOH1 * distOH2 * ::sin(alpha);
+            checkNonDegenerate(
+                normalDistance,
+                "sine of the H-O-H angle times both O-H distances (an angle of "
+                "0, both hydrogens on the same ray from the oxygen)"
+            );
 
-        oxygen.addForce(-forcexyz);
-        hydrogen1.addForce(forcexyz);
+            auto normalPosition  = cross(dOH2, dOH1);
+            normalPosition      /= normalDistance;
 
-        forceAngle = forceMagnitudeAngle / (distOH2 * distOH2);
-        forcexyz   = forceAngle * cross(normalPosition, dOH2);
+            auto forceAngle = forceMagnitudeAngle / (distOH1 * distOH1);
+            auto forcexyz   = forceAngle * cross(dOH1, normalPosition);
 
-        oxygen.addForce(-forcexyz);
-        hydrogen2.addForce(forcexyz);
+            oxygen.addForce(-forcexyz);
+            hydrogen1.addForce(forcexyz);
+
+            forceAngle = forceMagnitudeAngle / (distOH2 * distOH2);
+            forcexyz   = forceAngle * cross(normalPosition, dOH2);
+
+            oxygen.addForce(-forcexyz);
+            hydrogen2.addForce(forcexyz);
+        }
     }
-}
+
+}   // namespace waterModel
 
 #endif   //  _SPC_INTRA_WATER_TPP_

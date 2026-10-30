@@ -32,6 +32,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "gmock/gmock.h"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -114,11 +115,13 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     );
     angleFF.setIsLinker(false);
 
+    const HybridSettings hybridSettings;
     angleFF.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -185,7 +188,8 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -293,11 +297,13 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     );
     angleForceField.setIsLinker(false);
 
+    const HybridSettings hybridSettings;
     angleForceField.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings
     );
 
     // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).

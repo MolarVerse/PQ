@@ -28,74 +28,73 @@
 #include <vector>
 
 #include "enums/hybrid.hpp"
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @class HybridSettings
+ *
+ * @brief stores all information about the external qmmm runner
+ *
+ */
+class HybridSettings
 {
+   private:
+    Setting<std::vector<size_t>> _innerRegionCenter;
+    Setting<std::vector<int>>    _forcedCoreList;
+    Setting<std::vector<int>>    _forcedLayerList;
+    Setting<std::vector<int>>    _forcedOuterList;
 
-    /**
-     * @class HybridSettings
-     *
-     * @brief stores all information about the external qmmm runner
-     *
-     */
-    class HybridSettings
-    {
-       private:
-        static inline std::optional<std::vector<size_t>> _innerRegionCenter;
-        static inline std::vector<int>                   _forcedCoreList;
-        static inline std::vector<int>                   _forcedLayerList;
-        static inline std::vector<int>                   _forcedOuterList;
+    Setting<bool> _useQMCharges;
 
-        static inline bool _useQMCharges = true;
+    Setting<double> _coreRadius;
+    Setting<double> _layerRadius;
+    Setting<double> _smoothingRegionThickness;
+    Setting<double> _pointChargeThickness;
 
-        static inline double _coreRadius               = 0.0;
-        static inline double _layerRadius              = 0.0;
-        static inline double _smoothingRegionThickness = 0.0;
-        static inline double _pointChargeThickness     = 0.0;
+    Setting<SmoothingMethod> _smoothing;
+    Setting<QMForceDist>     _qmForceDist;
 
-        static inline SmoothingMethod _smoothing   = SmoothingMethod::HOTSPOT;
-        static inline QMForceDist     _qmForceDist = QMForceDist::NONE;
+   public:
+    HybridSettings();
 
-       public:
-        /********************
-         * standard setters *
-         ********************/
+    /********************
+     * standard setters *
+     ********************/
 
-        static void setInnerRegionCenter(const std::vector<size_t> &);
-        static void setForcedCoreList(const std::vector<int> &);
-        static void setForcedLayerList(const std::vector<int> &);
-        static void setForcedOuterList(const std::vector<int> &);
+    void setInnerRegionCenter(const std::vector<size_t> &);
+    void setForcedCoreList(const std::vector<int> &);
+    void setForcedLayerList(const std::vector<int> &);
+    void setForcedOuterList(const std::vector<int> &);
 
-        static void setUseQMCharges(bool useQMCharges);
+    void setUseQMCharges(bool useQMCharges);
 
-        static void setCoreRadius(double radius);
-        static void setLayerRadius(double radius);
-        static void setSmoothingRegionThickness(double thickness);
-        static void setPointChargeThickness(double radius);
+    void setCoreRadius(double radius);
+    void setLayerRadius(double radius);
+    void setSmoothingRegionThickness(double thickness);
+    void setPointChargeThickness(double radius);
 
-        static void setSmoothingMethod(SmoothingMethod method);
-        static void setQMForceDist(QMForceDist method);
+    void setSmoothingMethod(SmoothingMethod method);
+    void setQMForceDist(QMForceDist method);
 
-        /********************
-         * standard getters *
-         ********************/
+    /********************
+     * standard getters *
+     ********************/
 
-        [[nodiscard]] static std::optional<std::vector<size_t>> getInnerRegionCenter(
-        );
-        [[nodiscard]] static std::vector<int> getForcedCoreList();
-        [[nodiscard]] static std::vector<int> getForcedLayerList();
-        [[nodiscard]] static std::vector<int> getForcedOuterList();
+    [[nodiscard]] std::optional<std::vector<size_t>> getInnerRegionCenter(
+    ) const;
+    [[nodiscard]] const std::vector<int> &getForcedCoreList() const;
+    [[nodiscard]] const std::vector<int> &getForcedLayerList() const;
+    [[nodiscard]] const std::vector<int> &getForcedOuterList() const;
 
-        [[nodiscard]] static bool getUseQMCharges();
+    [[nodiscard]] bool getUseQMCharges() const;
 
-        [[nodiscard]] static double getCoreRadius();
-        [[nodiscard]] static double getLayerRadius();
-        [[nodiscard]] static double getSmoothingRegionThickness();
-        [[nodiscard]] static double getPointChargeThickness();
+    [[nodiscard]] double getCoreRadius() const;
+    [[nodiscard]] double getLayerRadius() const;
+    [[nodiscard]] double getSmoothingRegionThickness() const;
+    [[nodiscard]] double getPointChargeThickness() const;
 
-        [[nodiscard]] static SmoothingMethod getSmoothingMethod();
-        [[nodiscard]] static QMForceDist     getQMForceDist();
-    };
-}   // namespace settings
+    [[nodiscard]] SmoothingMethod getSmoothingMethod() const;
+    [[nodiscard]] QMForceDist     getQMForceDist() const;
+};
 
 #endif   // _HYBRID_SETTINGS_HPP_

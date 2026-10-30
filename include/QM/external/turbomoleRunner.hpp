@@ -47,7 +47,10 @@ namespace QM
             molsys::SimulationBox &simulationBox
         ) override;
 
-        void execute(molsys::SimulationBox &simulationBox) override;
+        void execute(
+            molsys::SimulationBox &simulationBox,
+            const HybridSettings  &hybridSettings
+        ) override;
     };
 }   // namespace QM
 

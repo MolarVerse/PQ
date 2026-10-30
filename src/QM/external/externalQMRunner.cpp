@@ -394,7 +394,8 @@ namespace QM
     void ExternalQMRunner::run(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::Periodicity         per
+        molsys::Periodicity         per,
+        const HybridSettings       &hybridSettings
     )
     {
         if (per != molsys::Periodicity::XYZ &&
@@ -429,7 +430,7 @@ namespace QM
         {
             auto _ =
                 scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
-            execute(simulationBox);
+            execute(simulationBox, hybridSettings);
         }
 
         {

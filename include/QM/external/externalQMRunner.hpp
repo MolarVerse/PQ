@@ -64,10 +64,14 @@ namespace QM
         void run(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            molsys::Periodicity         per
+            molsys::Periodicity         per,
+            const HybridSettings       &hybridSettings
         ) override;
 
-        virtual void execute(molsys::SimulationBox &) = 0;
+        virtual void execute(
+            molsys::SimulationBox &,
+            const HybridSettings &
+        ) = 0;
 
         virtual void writeCoordsFile(molsys::SimulationBox &) = 0;
 

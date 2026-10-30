@@ -72,16 +72,20 @@ namespace
 
         eval.setSimulationBox(box);
         eval.setCellList(cellList);
-        eval.setPotential(std::make_shared<pot::PotentialBruteForce>());
+        Settings settings;
+        eval.setPotential(
+            std::make_shared<pot::PotentialBruteForce>(settings.hybridSettings)
+        );
         eval.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
         eval.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
-        eval.setForceField(std::make_shared<ff::ForceField>());
+        eval.setForceField(
+            std::make_shared<ff::ForceField>(settings.hybridSettings)
+        );
         eval.setIntraNonBonded(
 
             std::make_shared<intraNonBonded::IntraNonBonded>()
 
         );
-        Settings settings;
         eval.setConstraints(
             std::make_shared<constraints::Constraints>(
                 settings.constraintSettings
@@ -148,10 +152,14 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     molsys::CellList cellList2;
     eval2.setSimulationBox(box);
     eval2.setCellList(cellList2);
-    eval2.setPotential(std::make_shared<pot::PotentialBruteForce>());
+    eval2.setPotential(
+        std::make_shared<pot::PotentialBruteForce>(settings.hybridSettings)
+    );
     eval2.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
     eval2.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
-    eval2.setForceField(std::make_shared<ff::ForceField>());
+    eval2.setForceField(
+        std::make_shared<ff::ForceField>(settings.hybridSettings)
+    );
     eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
     ConstraintSettings constraintSettings;
     eval2.setConstraints(

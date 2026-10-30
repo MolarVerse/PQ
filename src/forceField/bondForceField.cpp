@@ -69,7 +69,8 @@ namespace ff
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
-        pot::NonCoulombPotential    &nonCoulombPot
+        pot::NonCoulombPotential    &nonCoulombPot,
+        const HybridSettings        &hybridSettings
     )
     {
         const auto &molecules = get_molecules();
@@ -123,7 +124,7 @@ namespace ff
         using enum SmoothingMethod;
 
         auto       smF       = 0.0;
-        const auto smoothing = settings::HybridSettings::getSmoothingMethod();
+        const auto smoothing = hybridSettings.getSmoothingMethod();
 
         if (smoothing == HOTSPOT &&
             molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)

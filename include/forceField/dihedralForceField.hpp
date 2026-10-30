@@ -46,6 +46,8 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
+class HybridSettings;   // forward declaration
+
 namespace ff
 {
     /**
@@ -74,7 +76,8 @@ namespace ff
             physicalData::PhysicalData  &physicalData,
             bool                         isImproperDihedral,
             const pot::CoulombPotential &coulombPot,
-            pot::NonCoulombPotential    &nonCoulombPot
+            pot::NonCoulombPotential    &nonCoulombPot,
+            const HybridSettings        &hybridSettings
         );
 
         /***************************

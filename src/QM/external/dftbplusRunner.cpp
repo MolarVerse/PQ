@@ -183,7 +183,10 @@ namespace QM
      * @param simulationBox Simulation box containing molecules and atoms.
      *
      */
-    void DFTBPlusRunner::execute(molsys::SimulationBox &simulationBox)
+    void DFTBPlusRunner::execute(
+        molsys::SimulationBox &simulationBox,
+        const HybridSettings  &hybridSettings
+    )
     {
         const auto scriptFile =
             _resolveScriptPath(settings::QMSettings::getQMScript());
@@ -204,8 +207,7 @@ namespace QM
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
         // TODO(ape): https://github.com/MolarVerse/PQ/issues/200
-        if (settings::HybridSettings::getSmoothingMethod() ==
-            SmoothingMethod::EXACT)
+        if (hybridSettings.getSmoothingMethod() == SmoothingMethod::EXACT)
             molChangedZone = true;
 
         const auto readChargesBin =

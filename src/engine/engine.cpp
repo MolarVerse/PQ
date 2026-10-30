@@ -61,6 +61,12 @@ namespace engine
           _constraints{std::make_shared<constraints::Constraints>(
               settings.constraintSettings
           )},
+          _intraWater{
+              std::make_unique<waterModel::IntraWater>(settings.hybridSettings)
+          },
+          _interWater{
+              std::make_unique<waterModel::InterWater>(settings.hybridSettings)
+          },
           _settings{settings},
           _impl{std::make_unique<Impl>()}
     {

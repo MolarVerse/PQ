@@ -65,7 +65,10 @@ namespace QM
      * @brief executes the qm script of the external program
      *
      */
-    void PySCFRunner::execute(molsys::SimulationBox & /*simBox*/)
+    void PySCFRunner::execute(
+        molsys::SimulationBox & /*simBox*/,
+        const HybridSettings & /*hybridSettings*/
+    )
     {
         const auto scriptFileName =
             _resolveScriptPath(settings::QMSettings::getQMScript());

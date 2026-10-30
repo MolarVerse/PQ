@@ -118,7 +118,10 @@ namespace QM
      * conditions
      *
      */
-    void TurbomoleRunner::execute(molsys::SimulationBox &simulationBox)
+    void TurbomoleRunner::execute(
+        molsys::SimulationBox &simulationBox,
+        const HybridSettings  &hybridSettings
+    )
     {
         using enum SmoothingMethod;
 
@@ -140,7 +143,7 @@ namespace QM
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
         // TODO(ape): https://github.com/MolarVerse/PQ/issues/200
-        if (settings::HybridSettings::getSmoothingMethod() == EXACT)
+        if (hybridSettings.getSmoothingMethod() == EXACT)
             molChangedZone = true;
 
         const auto runTMDefine = molChangedZone || _isFirstExecution ? 1 : 0;

@@ -42,6 +42,8 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
+class HybridSettings;   // forward declaration
+
 namespace QM
 {
     /**
@@ -60,11 +62,16 @@ namespace QM
 
         static void throwAfterTimeout(const std::stop_token &stopToken);
 
-        void         run(molsys::SimulationBox &, physicalData::PhysicalData &);
+        void run(
+            molsys::SimulationBox &,
+            physicalData::PhysicalData &,
+            const HybridSettings &
+        );
         virtual void run(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::Periodicity per
+            molsys::Periodicity   per,
+            const HybridSettings &hybridSettings
         ) = 0;
 
        protected:

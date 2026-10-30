@@ -31,13 +31,13 @@ namespace waterModel
 {
 
     /**
-     * @brief Construct an inert inter-water handler.
+     * @brief Construct a new Inter Water Strategy object with the given hybrid
+     * settings.
      *
-     * @details Creates a default state and installs the null strategy so an
-     * InterWater object can exist before a real water model is configured.
+     * @param hybridSettings Hybrid settings to be used by the strategy.
      */
-    InterWater::InterWater()
-        : _state{}, _strategy{std::make_unique<InterWaterStrategyNull>()}
+    InterWaterStrategy::InterWaterStrategy(const HybridSettings &hybridSettings)
+        : _hybridSettings(hybridSettings)
     {
     }
 

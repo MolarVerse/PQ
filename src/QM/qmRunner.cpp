@@ -73,10 +73,14 @@ namespace QM
      */
     void QMRunner::run(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const HybridSettings       &hybridSettings
     )
     {
-        run(simulationBox, physicalData, molsys::Periodicity::XYZ);
+        run(simulationBox,
+            physicalData,
+            molsys::Periodicity::XYZ,
+            hybridSettings);
     }
 
     /**

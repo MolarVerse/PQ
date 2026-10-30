@@ -66,10 +66,8 @@ namespace engine
         std::shared_ptr<ff::ForceField>                 _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
 
-        std::unique_ptr<waterModel::IntraWater> _intraWater =
-            std::make_unique<waterModel::IntraWater>();
-        std::unique_ptr<waterModel::InterWater> _interWater =
-            std::make_unique<waterModel::InterWater>();
+        std::unique_ptr<waterModel::IntraWater> _intraWater;
+        std::unique_ptr<waterModel::InterWater> _interWater;
 
         mstd::ConstRef<Settings> _settings;
 

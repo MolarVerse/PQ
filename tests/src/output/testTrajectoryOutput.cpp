@@ -26,6 +26,7 @@
 #include <string>
 
 #include "hybridConfigurator.hpp"
+#include "hybridSettings.hpp"
 #include "outputFileSettings.hpp"
 
 /**
@@ -77,7 +78,8 @@ TEST_F(TestTrajectoryOutput, writeXyzMetadata)
  */
 TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
 
     _simulationBox->getAtom(1).setMass(1.0);
     _simulationBox->addInnerRegionCenterAtoms({1});
@@ -105,7 +107,8 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
 {
     settings::OutputFileSettings::setIncludeOutputMetadata(true);
 
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
 
     _simulationBox->getAtom(1).setMass(1.0);
     _simulationBox->addInnerRegionCenterAtoms({1});

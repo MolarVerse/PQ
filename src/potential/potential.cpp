@@ -27,6 +27,20 @@
 
 namespace pot
 {
+    /**
+     * @brief Construct a new Potential object with the given hybrid settings.
+     *
+     * @param hybridSettings Hybrid settings to be used by the potential.
+     */
+    Potential::Potential(const HybridSettings &hybridSettings)
+        : _hybridSettings(hybridSettings)
+    {
+    }
+
+    /**
+     * @brief Destroy the Potential object
+     *
+     */
     Potential::~Potential() = default;
 
     /**

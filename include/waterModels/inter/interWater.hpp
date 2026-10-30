@@ -41,6 +41,8 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+class HybridSettings;   // forward declaration
+
 namespace waterModel
 {
     struct InterWaterState
@@ -56,7 +58,11 @@ namespace waterModel
 
     class InterWaterStrategy
     {
+       private:
+        mstd::ConstRef<HybridSettings> _hybridSettings;
+
        public:
+        explicit InterWaterStrategy(const HybridSettings &hybridSettings);
         virtual ~InterWaterStrategy() = default;
 
         virtual void calculate(
@@ -144,8 +150,6 @@ namespace waterModel
         std::unique_ptr<InterWaterStrategy> _strategy;
 
        public:
-        InterWater();
-
         InterWater(
             InterWaterState                     state,
             std::unique_ptr<InterWaterStrategy> strategy
@@ -182,63 +186,10 @@ namespace waterModel
         }
     };
 
-    class InterWaterStrategyNull : public InterWaterStrategy
-    {
-       public:
-        void calculate(
-            const InterWaterState & /*state*/,
-            molsys::SimulationBox & /*simulationBox*/,
-            physicalData::PhysicalData & /*physicalData*/,
-            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
-            const molsys::CellList & /*cellList*/
-        ) override
-        {
-        }
-
-        void calculateCoreToOuterForces(
-            const InterWaterState & /*state*/,
-            molsys::SimulationBox & /*simulationBox*/,
-            physicalData::PhysicalData & /*physicalData*/,
-            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
-            const molsys::CellList & /*cellList*/
-        ) override
-        {
-        }
-
-        void calculateLayerToOuterForces(
-            const InterWaterState & /*state*/,
-            molsys::SimulationBox & /*simulationBox*/,
-            physicalData::PhysicalData & /*physicalData*/,
-            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
-            const molsys::CellList & /*cellList*/
-        ) override
-        {
-        }
-
-        void calculateOuterToOuterForces(
-            const InterWaterState & /*state*/,
-            molsys::SimulationBox & /*simulationBox*/,
-            physicalData::PhysicalData & /*physicalData*/,
-            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
-            const molsys::CellList & /*cellList*/
-        ) override
-        {
-        }
-
-        void calculateHotspotSmoothingMMForces(
-            const InterWaterState & /*state*/,
-            molsys::SimulationBox & /*simulationBox*/,
-            physicalData::PhysicalData & /*physicalData*/,
-            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
-            const molsys::CellList & /*cellList*/
-        ) override
-        {
-        }
-    };
-
     class InterWaterStrategyBruteForce : public InterWaterStrategy
     {
        public:
+        using InterWaterStrategy::InterWaterStrategy;
         void calculate(
             const InterWaterState                        &state,
             molsys::SimulationBox                        &simulationBox,
@@ -283,6 +234,7 @@ namespace waterModel
     class InterWaterStrategyCellList : public InterWaterStrategy
     {
        public:
+        using InterWaterStrategy::InterWaterStrategy;
         void calculate(
             const InterWaterState                        &state,
             molsys::SimulationBox                        &simulationBox,

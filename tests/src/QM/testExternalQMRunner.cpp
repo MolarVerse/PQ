@@ -33,6 +33,7 @@
 #include <string_view>
 #include <thread>
 
+#include "hybridSettings.hpp"
 #include "orthorhombicBox.hpp"
 
 #if !defined(_WIN32)
@@ -90,7 +91,10 @@ namespace
        public:
         void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
 
-        void execute(molsys::SimulationBox & /*simBox*/) override
+        void execute(
+            molsys::SimulationBox & /*simBox*/,
+            const HybridSettings & /*hybridSettings*/
+        ) override
         {
             _sawStaleResults =
                 std::filesystem::exists(
@@ -281,7 +285,8 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
     const auto inputFile = std::string("input file; touch qm-injected");
     settings::FileSettings::setDFTBFileName(inputFile);
 
-    runner.execute(_simulationBox);
+    const HybridSettings hybridSettings;
+    runner.execute(_simulationBox, hybridSettings);
 
     EXPECT_EQ(
         std::format(
@@ -302,7 +307,8 @@ TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
     auto       runner = CommandCaptureRunner<QM::PySCFRunner>();
     const auto path   = _configureQuotedScript(runner);
 
-    runner.execute(_simulationBox);
+    const HybridSettings hybridSettings;
+    runner.execute(_simulationBox, hybridSettings);
 
     EXPECT_EQ(
         std::format(
@@ -320,7 +326,8 @@ TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
     auto       runner = CommandCaptureRunner<QM::TurbomoleRunner>();
     const auto path   = _configureQuotedScript(runner);
 
-    runner.execute(_simulationBox);
+    const HybridSettings hybridSettings;
+    runner.execute(_simulationBox, hybridSettings);
 
     EXPECT_EQ(
         std::format(
@@ -342,10 +349,12 @@ TEST_F(ExternalQMRunnerTest, removesStaleResultsBeforeExecution)
     writeFile(settings::FileSettings::getQMChargesTempFileName(), "stale");
     writeFile(settings::FileSettings::getStressTensorTempFileName(), "stale");
 
+    const HybridSettings hybridSettings;
     EXPECT_NO_THROW(_runner.run(
         _simulationBox,
         _physicalData,
-        molsys::Periodicity::NON_PERIODIC
+        molsys::Periodicity::NON_PERIODIC,
+        hybridSettings
     ));
     EXPECT_FALSE(_runner.sawStaleResults());
     EXPECT_FALSE(
@@ -436,8 +445,14 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
 
 TEST_F(ExternalQMRunnerTest, rejectsUniaxialPeriodicity)
 {
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
-        _runner.run(_simulationBox, _physicalData, molsys::Periodicity::X),
+        _runner.run(
+            _simulationBox,
+            _physicalData,
+            molsys::Periodicity::X,
+            hybridSettings
+        ),
         exc::QMRunnerException,
         "External QM runners only available for non- and 3D-periodic "
         "calculations."
@@ -446,8 +461,14 @@ TEST_F(ExternalQMRunnerTest, rejectsUniaxialPeriodicity)
 
 TEST_F(ExternalQMRunnerTest, rejectsBiaxialPeriodicity)
 {
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
-        _runner.run(_simulationBox, _physicalData, molsys::Periodicity::XY),
+        _runner.run(
+            _simulationBox,
+            _physicalData,
+            molsys::Periodicity::XY,
+            hybridSettings
+        ),
         exc::QMRunnerException,
         "External QM runners only available for non- and 3D-periodic "
         "calculations."
@@ -460,8 +481,9 @@ TEST_F(ExternalQMRunnerTest, dftbExecuteRejectsMissingScript)
     _dftbRunner.setScriptPath(scriptDirectory + '/');
     settings::QMSettings::setQMScript("this-script-does-not-exist.sh");
 
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
-        _dftbRunner.execute(_simulationBox),
+        _dftbRunner.execute(_simulationBox, hybridSettings),
         exc::InputFileException,
         std::format(
             "DFTB+ script file \"{}/this-script-does-not-exist.sh\" does "
@@ -479,8 +501,9 @@ TEST_F(ExternalQMRunnerTest, pyscfExecuteRejectsMissingScript)
     runner.setScriptPath(scriptDirectory + '/');
     settings::QMSettings::setQMScript("this-script-does-not-exist.py");
 
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
-        runner.execute(_simulationBox),
+        runner.execute(_simulationBox, hybridSettings),
         exc::InputFileException,
         std::format(
             "PySCF script file \"{}/this-script-does-not-exist.py\" does "
@@ -498,8 +521,9 @@ TEST_F(ExternalQMRunnerTest, turbomoleExecuteRejectsMissingScript)
     runner.setScriptPath(scriptDirectory + '/');
     settings::QMSettings::setQMScript("this-script-does-not-exist.sh");
 
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
-        runner.execute(_simulationBox),
+        runner.execute(_simulationBox, hybridSettings),
         exc::InputFileException,
         std::format(
             "Turbomole script file \"{}/this-script-does-not-exist.sh\" "
@@ -666,12 +690,14 @@ TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
     };
 
     _addPointChargeMolecules();
+
+    const HybridSettings hybridSettings;
     runner.writePointChargeFile(_simulationBox);
-    runner.execute(_simulationBox);
+    runner.execute(_simulationBox, hybridSettings);
     EXPECT_TRUE(runner.getCommand().ends_with(suffix(1)))
         << runner.getCommand();
 
-    runner.execute(_simulationBox);
+    runner.execute(_simulationBox, hybridSettings);
     EXPECT_TRUE(runner.getCommand().ends_with(suffix(0)))
         << runner.getCommand();
     EXPECT_TRUE(
@@ -755,7 +781,10 @@ namespace
        public:
         void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
 
-        void execute(molsys::SimulationBox & /*simBox*/) override
+        void execute(
+            molsys::SimulationBox & /*simBox*/,
+            const HybridSettings & /*hybridSettings*/
+        ) override
         {
             _executeCommand("sleep 3 && touch qm-finished", "External QM");
         }
@@ -765,7 +794,12 @@ namespace
     {
        public:
         void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
-        void execute(molsys::SimulationBox & /*simBox*/) override {}
+        void execute(
+            molsys::SimulationBox & /*simBox*/,
+            const HybridSettings & /*hybridSettings*/
+        ) override
+        {
+        }
 
         void runCommand(const std::string_view command) const
         {
@@ -782,10 +816,12 @@ TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)
 
     try
     {
+        const HybridSettings hybridSettings;
         runner.run(
             _simulationBox,
             _physicalData,
-            molsys::Periodicity::NON_PERIODIC
+            molsys::Periodicity::NON_PERIODIC,
+            hybridSettings
         );
         FAIL() << "Expected the QM timeout to throw";
     }

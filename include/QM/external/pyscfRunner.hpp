@@ -38,7 +38,10 @@ namespace QM
     {
        public:
         void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
-        void execute(molsys::SimulationBox &simulationBox) override;
+        void execute(
+            molsys::SimulationBox &simulationBox,
+            const HybridSettings  &hybridSettings
+        ) override;
     };
 
 }   // namespace QM
