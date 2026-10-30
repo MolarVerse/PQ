@@ -1,0 +1,1 @@
+- Add the optional `qm_reference_energy` line to moltype blocks in the moldescriptor file. QM/MM subtracts it for each QM molecule, so the total energy no longer jumps when molecules enter or leave the QM region.

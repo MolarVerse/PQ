@@ -50,6 +50,16 @@ namespace physicalData
     void PhysicalData::addQMEnergy(double qmEnergy) { _qmEnergy += qmEnergy; }
 
     /**
+     * @brief add QM reference energy to the current QM reference energy
+     *
+     * @param qmReferenceEnergy
+     */
+    void PhysicalData::addQMReferenceEnergy(double qmReferenceEnergy)
+    {
+        _qmReferenceEnergy += qmReferenceEnergy;
+    }
+
+    /**
      * @brief add coulomb energy to the current coulomb energy stored in
      * physical data
      *
@@ -349,6 +359,16 @@ namespace physicalData
     void PhysicalData::setQMEnergy(double qmEnergy) { _qmEnergy = qmEnergy; }
 
     /**
+     * @brief set the qm reference energy
+     *
+     * @param qmReferenceEnergy
+     */
+    void PhysicalData::setQMReferenceEnergy(double qmReferenceEnergy)
+    {
+        _qmReferenceEnergy = qmReferenceEnergy;
+    }
+
+    /**
      * @brief set the number of smoothing molecules
      *
      * @param numberSmMol
@@ -555,6 +575,16 @@ namespace physicalData
      * @return double
      */
     double PhysicalData::getQMEnergy() const { return _qmEnergy; }
+
+    /**
+     * @brief get the qm reference energy
+     *
+     * @return double
+     */
+    double PhysicalData::getQMReferenceEnergy() const
+    {
+        return _qmReferenceEnergy;
+    }
 
     /**
      * @brief get the number of smoothing molecules
