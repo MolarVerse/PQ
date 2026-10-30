@@ -22,6 +22,7 @@
 
 #include "qmmmMDEngine.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdlib>
 #include <format>
@@ -465,19 +466,30 @@ namespace engine
      * @details Must be called directly after the QM calculation, while
      * exactly the QM molecules are active. Without it, E_tot jumps by a
      * molecule's QM energy whenever it enters or leaves the QM region.
-     * Molecules with moltype 0 have no reference energy.
+     * Molecules without a moltype entry have no reference energy.
      */
     void QMMMMDEngine::_subtractQMReferenceEnergies()
     {
         auto &simBox          = getSimulationBox();
+        auto &moleculeTypes   = simBox.getMoleculeTypes();
         auto  referenceEnergy = 0.0;
 
         for (const auto &mol : simBox.getMolecules())
         {
-            if (mol.isActive() && mol.getMoltype() != MolType{0})
+            if (!mol.isActive())
             {
-                referenceEnergy += simBox.findMoleculeType(mol.getMoltype())
-                                       .getQMReferenceEnergy();
+                continue;
+            }
+
+            const auto isMoltype = [&mol](const auto &moleculeType)
+            { return moleculeType.getMoltype() == mol.getMoltype(); };
+
+            const auto moleculeType =
+                std::ranges::find_if(moleculeTypes, isMoltype);
+
+            if (moleculeType != moleculeTypes.end())
+            {
+                referenceEnergy += moleculeType->getQMReferenceEnergy();
             }
         }
 
