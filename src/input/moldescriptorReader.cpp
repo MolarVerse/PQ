@@ -22,11 +22,13 @@
 
 #include "moldescriptorReader.hpp"
 
+#include <charconv>
 #include <cstddef>
 #include <format>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <system_error>
 #include <vector>
 
 #include "engine.hpp"
@@ -303,31 +305,29 @@ namespace input::molDescriptor
         molsys::MoleculeType           &molecule
     ) const
     {
-        const auto error = exc::MolDescriptorException(
-            std::format(
-                "Invalid QM reference energy line in moldescriptor file at "
-                "line {} - expected \"qm_reference_energy <energy>\"",
-                _lineNumber
-            )
-        );
+        auto isValid = lineElements.size() == 2;
+        auto energy  = 0.0;
 
-        if (lineElements.size() != 2)
+        if (isValid)
         {
-            throw error;
+            const auto &value  = lineElements[1];
+            const auto *end    = value.data() + value.size();
+            const auto  result = std::from_chars(value.data(), end, energy);
+            isValid            = result.ec == std::errc{} && result.ptr == end;
         }
 
-        try
+        if (!isValid)
         {
-            molecule.setQMReferenceEnergy(std::stod(lineElements[1]));
+            throw exc::MolDescriptorException(
+                std::format(
+                    "Invalid QM reference energy line in moldescriptor file at "
+                    "line {} - expected \"qm_reference_energy <energy>\"",
+                    _lineNumber
+                )
+            );
         }
-        catch (const std::invalid_argument &)
-        {
-            throw error;
-        }
-        catch (const std::out_of_range &)
-        {
-            throw error;
-        }
+
+        molecule.setQMReferenceEnergy(energy);
     }
 
     /**
