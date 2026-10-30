@@ -150,8 +150,8 @@ namespace input
             .name  = "forced_core_list",
             .title = "Forced Core List",
             .description =
-                "Specifies the list of molecule indices which are forced to "
-                "the CORE region in hybrid calculations",
+                "Specifies the list of molecules which are forced to the CORE "
+                "region in hybrid calculations",
             .errorMessage = moleculeIndexError("forced_core_list"),
         };
 
@@ -175,8 +175,8 @@ namespace input
             .name  = "forced_layer_list",
             .title = "Forced Layer List",
             .description =
-                "Specifies the list of molecule indices which are forced to "
-                "the LAYER region in hybrid calculations",
+                "Specifies the list of molecules which are forced to the LAYER "
+                "region in hybrid calculations",
             .errorMessage = moleculeIndexError("forced_layer_list"),
         };
 
@@ -200,8 +200,8 @@ namespace input
             .name  = "forced_outer_list",
             .title = "Forced Outer List",
             .description =
-                "Specifies the list of molecule indices which are forced to "
-                "the OUTER region in hybrid calculations",
+                "Specifies the list of molecules which are forced to the OUTER "
+                "region in hybrid calculations",
             .errorMessage = moleculeIndexError("forced_outer_list"),
         };
 
