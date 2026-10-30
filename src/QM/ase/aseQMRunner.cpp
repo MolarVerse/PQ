@@ -249,7 +249,7 @@ namespace QM
         void interruptAfterTimeout(
             const std::stop_token &stopToken,
             std::atomic_bool      &timedOut,
-            const PythonThread     pythonThread
+            PythonThread           pythonThread
         )
         {
             constexpr auto pollInterval = std::chrono::milliseconds(10);
