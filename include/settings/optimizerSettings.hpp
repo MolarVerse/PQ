@@ -91,8 +91,7 @@ class OptimizerSettings
     [[nodiscard]] double getMinLearningRate() const;
 
     [[nodiscard]] double                getLearningRateDecay() const;
-    [[nodiscard]] double                getMaxLearningRate() const;
-    [[nodiscard]] std::optional<double> getMaxLearningRateIfSet() const;
+    [[nodiscard]] std::optional<double> getMaxLearningRate() const;
 
     [[nodiscard]] bool isLearningRateDecaySet() const;
     [[nodiscard]] bool isMaxLearningRateSet() const;
