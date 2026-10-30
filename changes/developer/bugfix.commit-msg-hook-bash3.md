@@ -1,0 +1,1 @@
+- Make the commit-msg hook work with bash 3.2, the default `/bin/bash` on macOS.
