@@ -84,12 +84,18 @@ namespace
     template <typename Writer>
     std::vector<std::string> writtenLines(Writer &&writer)
     {
-        const std::string fileName = "manostat-setup-write.log";
-        std::remove(fileName.c_str());
+        const std::string fileName     = "manostat-setup-write.log";
+        const auto        removeResult = std::remove(fileName.c_str());
+        if (removeResult != 0 && errno != ENOENT)
+        {
+            throw std::runtime_error(
+                "Failed to remove existing log file: " + fileName
+            );
+        }
 
         out::LogOutput logOutput(fileName);
         logOutput.setFilename(fileName);
-        writer(logOutput);
+        std::forward<Writer>(writer)(logOutput);
         logOutput.close();
 
         std::ifstream            file(fileName);
@@ -598,8 +604,11 @@ TEST_F(TestSetup, setupWritesSelectionParametersAndIsotropyInOrder)
         _settings->manostatSettings.setManostatType(type);
 
         const std::string fileName = "manostat-setup-order.log";
-        std::remove(fileName.c_str());
-        auto &log = _mdEngine->getLogOutput();
+        // Remove any existing log file before starting the test to ensure a
+        // clean slate. If not present it will simply return a non-zero value,
+        // which we ignore here.
+        const auto _   = std::remove(fileName.c_str());
+        auto      &log = _mdEngine->getLogOutput();
         log.setFilename(fileName);
 
         setup::ManostatSetup setup(*_mdEngine);
