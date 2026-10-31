@@ -69,10 +69,13 @@ namespace molsys
         TensorCache<_boxMatrixPtr>      _inverse{_calculateInverse};
         BoxCache<double, _boxMatrixPtr> _volume{_calculateVolume};
 
+        bool _allowChangeOfAngles;
+
        public:
         TriclinicBox(
             const linalg::Vec3D &boxDimensions,
-            const linalg::Vec3D &boxAngles
+            const linalg::Vec3D &boxAngles,
+            bool                 allowChangeOfAngles
         );
 
         [[nodiscard]]
@@ -105,6 +108,9 @@ namespace molsys
         linalg::Vec3D wrapPositionIntoBox(
             const linalg::Vec3D &pos
         ) const override;
+
+        [[nodiscard]]
+        bool allowChangeOfAngles() const override;
 
        private:
         [[nodiscard]]

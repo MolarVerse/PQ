@@ -26,7 +26,6 @@
 #include "box.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
-#include "manostatSettings.hpp"
 #include "stringUtilities.hpp"
 
 namespace molsys
@@ -97,14 +96,12 @@ namespace molsys
         const Box              &box
     )
     {
-        if (settings::ManostatSettings::getIsotropy() !=
-            Isotropy::FULL_ANISOTROPIC)
+        if (!box.allowChangeOfAngles())
             _velocity = box.toOrthoSpace(_velocity);
 
         _velocity = scalingTensor * _velocity;
 
-        if (settings::ManostatSettings::getIsotropy() !=
-            Isotropy::FULL_ANISOTROPIC)
+        if (!box.allowChangeOfAngles())
             _velocity = box.toSimSpace(_velocity);
     }
 

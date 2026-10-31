@@ -30,6 +30,13 @@ namespace engine
     class MDEngine;   // forward declaration
 }   // namespace engine
 
+class ManostatSettings;   // forward declaration
+
+namespace out
+{
+    class LogOutput;   // forward declaration
+}   // namespace out
+
 namespace setup
 {
     void setupManostat(engine::Engine &);
@@ -50,17 +57,26 @@ namespace setup
 
         void setup();
 
-        void setupBerendsenManostat();
-        void setupStochasticRescalingManostat();
-
-        static void validateIsotropyFixedAxisCombination();
-
-        void writeSetupInfo() const;
-        void writeManostatSelection() const;
-        void writeBerendsenSetup() const;
-        void writeIsotropy() const;
+        void validateIsotropyFixedAxisCombination() const;
 
         [[nodiscard]] engine::MDEngine &getEngine() const;
+
+       protected:
+        static void _writeManostatSelection(
+            out::LogOutput         &logOutput,
+            const ManostatSettings &manostatSettings
+        );
+        static void _writeBerendsenSetup(
+            out::LogOutput         &logOutput,
+            const ManostatSettings &settings
+        );
+        static void _writeIsotropy(
+            out::LogOutput         &logOutput,
+            const ManostatSettings &settings
+        );
+
+       private:
+        void _writeSetupInfo() const;
     };
 
 }   // namespace setup

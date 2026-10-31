@@ -24,7 +24,8 @@
 
 #define _MANOSTAT_HPP_
 
-#include "enums/manostat.hpp"
+#include <mstd/types.hpp>
+
 #include "staticMatrix.hpp"
 
 namespace molsys
@@ -38,6 +39,8 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+class ManostatSettings;   // forward declaration
+
 namespace manostat
 {
     /**
@@ -49,13 +52,12 @@ namespace manostat
     class Manostat
     {
        private:
-        linalg::tensor3D _pressureTensor = {0.0};
-        double           _pressure;
-        double           _targetPressure;   // no default value, must be set
+        mstd::ConstRef<ManostatSettings> _settings;
+        linalg::tensor3D                 _pressureTensor = {0.0};
+        double                           _pressure;
 
        public:
-        explicit Manostat(double targetPressure);
-        Manostat()          = default;
+        explicit Manostat(const ManostatSettings &settings);
         virtual ~Manostat() = default;
 
         void calculatePressure(
@@ -70,8 +72,6 @@ namespace manostat
 
         static void rotateMu(linalg::tensor3D &mu);
 
-        [[nodiscard]] virtual ManostatType getManostatType() const;
-
        protected:
         static void _validateScaling(
             const molsys::SimulationBox &,
@@ -84,11 +84,11 @@ namespace manostat
         [[nodiscard]]
         double _getPressure() const;
 
-        [[nodiscard]]
-        double _getTargetPressure() const;
-
         void _setPressureTensor(const linalg::tensor3D &pTensor);
         void _setPressure(double pressure);
+
+        [[nodiscard]]
+        const ManostatSettings &_getSettings() const;
 
        private:
         static void _validateCandidate(molsys::Box &, const linalg::tensor3D &);

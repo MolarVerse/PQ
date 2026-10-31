@@ -29,13 +29,19 @@
 
 namespace manostat
 {
+    /**
+     * @brief MonteCarloManostat inherits from Manostat
+     *
+     * @details Implements a Monte Carlo based manostat for pressure control
+     *
+     */
     class MonteCarloManostat : public Manostat
     {
        private:
         rng::RandomNumberGenerator _randomNumberGenerator;
 
        public:
-        explicit MonteCarloManostat() = default;
+        using Manostat::Manostat;
 
         void applyManostat(
             molsys::SimulationBox& /*simBox*/,

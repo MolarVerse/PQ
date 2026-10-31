@@ -30,6 +30,7 @@
 void Settings::finalize()
 {
     resetKinetics.finalize();
+    manostatSettings.finalize();
 
     const auto rigidWaterGeometry = waterModelSettings.getRigidWaterGeometry();
 
