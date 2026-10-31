@@ -267,11 +267,21 @@ namespace molsys
     /**
      * @brief get the QM reference energy of the molecule type
      *
-     * @return double in kcal/mol
+     * @return double in kcal/mol, 0 if not set
      */
     double MoleculeType::getQMReferenceEnergy() const
     {
-        return _qmReferenceEnergy;
+        return _qmReferenceEnergy.value_or(0.0);
+    }
+
+    /**
+     * @brief check if the QM reference energy of the molecule type is set
+     *
+     * @return bool
+     */
+    bool MoleculeType::hasQMReferenceEnergy() const
+    {
+        return _qmReferenceEnergy.has_value();
     }
 
     /**

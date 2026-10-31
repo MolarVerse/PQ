@@ -22,6 +22,7 @@
 
 #include "moldescriptorReader.hpp"
 
+#include <algorithm>
 #include <charconv>
 #include <cstddef>
 #include <format>
@@ -139,6 +140,43 @@ namespace input::molDescriptor
                     )
                 );
             }
+        }
+
+        _checkQMReferenceEnergies();
+    }
+
+    /**
+     * @brief checks that either no moltype or every moltype has a QM
+     * reference energy
+     *
+     * @throws MolDescriptorException if only some moltypes have one
+     */
+    void MoldescriptorReader::_checkQMReferenceEnergies() const
+    {
+        const auto &moleculeTypes =
+            _engine.getSimulationBox().getMoleculeTypes();
+
+        const auto hasReference = [](const auto &moleculeType)
+        { return moleculeType.hasQMReferenceEnergy(); };
+
+        if (std::ranges::none_of(moleculeTypes, hasReference))
+        {
+            return;
+        }
+
+        const auto missing =
+            std::ranges::find_if_not(moleculeTypes, hasReference);
+
+        if (missing != moleculeTypes.end())
+        {
+            throw exc::MolDescriptorException(
+                std::format(
+                    "Moltype {} has no qm_reference_energy line - once one "
+                    "moltype has a QM reference energy, every moltype needs "
+                    "one",
+                    missing->getName()
+                )
+            );
         }
     }
 

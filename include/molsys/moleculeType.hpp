@@ -25,6 +25,7 @@
 #define _MOLECULE_TYPE_HPP_
 
 #include <map>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -46,8 +47,8 @@ namespace molsys
         MolType               _moltype;
         std::optional<size_t> _numberOfAtoms;
 
-        int    _charge            = 0;
-        double _qmReferenceEnergy = 0.0;
+        int                   _charge = 0;
+        std::optional<double> _qmReferenceEnergy;
 
         std::vector<std::string> _atomNames;
         std::vector<AtomType>    _atomTypes;
@@ -102,6 +103,7 @@ namespace molsys
 
         [[nodiscard]] int    getCharge() const;
         [[nodiscard]] double getQMReferenceEnergy() const;
+        [[nodiscard]] bool   hasQMReferenceEnergy() const;
         [[nodiscard]] double getPartialCharge(AtomIndex index) const;
 
         [[nodiscard]] std::string getName() const;

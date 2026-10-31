@@ -204,6 +204,7 @@ TEST_F(TestMoldescriptorReader, qmReferenceEnergy)
         simBox.findMoleculeType(MolType{2}).getQMReferenceEnergy(),
         0.0
     );
+    EXPECT_TRUE(simBox.findMoleculeType(MolType{2}).hasQMReferenceEnergy());
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithInvalidQMReferenceEnergy.dat"
@@ -213,5 +214,15 @@ TEST_F(TestMoldescriptorReader, qmReferenceEnergy)
         exc::MolDescriptorException,
         "Invalid QM reference energy line in moldescriptor file at line 3 - "
         "expected \"qm_reference_energy <energy>\""
+    );
+
+    settings::FileSettings::setMolDescriptorFileName(
+        "data/moldescriptorReader/moldescriptorWithMissingQMReferenceEnergy.dat"
+    );
+    EXPECT_THROW_MSG(
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings)),
+        exc::MolDescriptorException,
+        "Moltype K has no qm_reference_energy line - once one moltype has a "
+        "QM reference energy, every moltype needs one"
     );
 }

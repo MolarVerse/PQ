@@ -50,6 +50,11 @@ class QMMMEnergiesTest : public ::testing::Test
         engine._calculateQMReferenceEnergy();
     }
 
+    static void _checkMoltypes(engine::QMMMMDEngine &engine)
+    {
+        engine._moltypeCheck();
+    }
+
     static std::unordered_set<size_t> _inactiveSet(
         size_t bits,
         size_t nMolecules
@@ -144,4 +149,29 @@ TEST_F(QMMMEnergiesTest, sumsReferenceEnergiesOfActiveMolecules)
     EXPECT_DOUBLE_EQ(data.getQMEnergy(), 100.0);
     EXPECT_DOUBLE_EQ(data.getQMReferenceEnergy(), -17.0);
     EXPECT_DOUBLE_EQ(data.getTotalEnergy(), 117.0);
+}
+
+TEST_F(QMMMEnergiesTest, referenceEnergiesForbidMoltypeZero)
+{
+    Settings             settings;
+    engine::QMMMMDEngine engine{settings};
+    auto                &simBox = engine.getSimulationBox();
+
+    auto coreMolecule = molsys::Molecule{MolType{0}};
+    coreMolecule.setHybridZone(molsys::HybridZone::CORE);
+    simBox.addMolecule(coreMolecule);
+    simBox.addMoleculeType(molsys::MoleculeType{MolType{1}});
+
+    EXPECT_NO_THROW(_checkMoltypes(engine));
+
+    auto water = molsys::MoleculeType{MolType{2}};
+    water.setQMReferenceEnergy(-10.0);
+    simBox.addMoleculeType(water);
+
+    EXPECT_THROW_MSG(
+        _checkMoltypes(engine),
+        exc::HybridMDEngineException,
+        "Molecule number 0 has moltype 0. With QM reference energies, all "
+        "molecules must have a non-zero moltype."
+    );
 }

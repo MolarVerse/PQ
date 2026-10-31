@@ -60,7 +60,8 @@ identical elements exposed to a similar chemical environment from different molt
     where *energy* is the QM energy of the isolated, geometry-optimized moltype in kcal/mol, computed with the same QM method. After every
     QM calculation, this energy is summed once for each moltype molecule in the QM region and subtracted from the total energy; the
     reported QM energy is unchanged. Without it, the total energy jumps by the QM energy of a molecule whenever the molecule enters or
-    leaves the QM region. With exact smoothing, the sum is formed for every configuration and weighted with its global smoothing factor. Moltypes without this line have a reference energy of 0.
+    leaves the QM region. With exact smoothing, the sum is formed for every configuration and weighted with its global smoothing factor.
+    Once one moltype has this line, every moltype needs it, and QM-only molecules with moltype 0 are not allowed.
 
 .. _guffdatFile:
 
