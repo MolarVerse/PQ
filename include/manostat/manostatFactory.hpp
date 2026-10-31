@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_FACTORY_HPP_
-#define _MANOSTAT_FACTORY_HPP_
+#ifndef MANOSTAT__MANOSTAT_FACTORY_HPP
+#define MANOSTAT__MANOSTAT_FACTORY_HPP
 
 #include <memory>
 
@@ -57,4 +57,4 @@ namespace manostat
     };
 }   // namespace manostat
 
-#endif   // _MANOSTAT_FACTORY_HPP_
+#endif   // MANOSTAT__MANOSTAT_FACTORY_HPP
