@@ -118,7 +118,9 @@ namespace input
             std::make_unique<HessianInputParser>(settings.hessianSettings)
         );
         _parsers.push_back(std::make_unique<IntegratorInputParser>());
-        _parsers.push_back(std::make_unique<ManostatInputParser>());
+        _parsers.push_back(
+            std::make_unique<ManostatInputParser>(settings.manostatSettings)
+        );
         _parsers.push_back(std::make_unique<OutputInputParser>());
         _parsers.push_back(
             std::make_unique<ResetKineticsInputParser>(settings.resetKinetics)

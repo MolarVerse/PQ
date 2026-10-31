@@ -27,6 +27,7 @@
 #include "convergenceSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "hessianSettings.hpp"
+#include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
@@ -47,6 +48,7 @@ struct Settings
     ConvSettings          convSettings;
     WaterModelSettings    waterModelSettings;
     ForceFieldSettings    forceFieldSettings;
+    ManostatSettings      manostatSettings;
 
     void finalize();
 };

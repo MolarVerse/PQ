@@ -26,16 +26,15 @@
 #include <format>
 #include <string>
 
-#include "berendsenManostat.hpp"
-#include "constants/conversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "logOutput.hpp"
 #include "manostat.hpp"
 #include "manostatSettings.hpp"
 #include "mdEngine.hpp"
 #include "simulationBox.hpp"
-#include "stochasticRescalingManostat.hpp"
+#include "units.hpp"
 
 namespace setup
 {
@@ -74,9 +73,9 @@ namespace setup
     {
         using enum ManostatType;
 
-        const auto manostatType = settings::ManostatSettings::getManostatType();
+        const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
-        if (settings::ManostatSettings::isBerendsenBased() &&
+        if (manostatSettings.isBerendsenBased() &&
             settings::GeneralSettings::getVirialType() == VirialType::ATOMIC &&
             std::ranges::any_of(
                 _engine.getSimulationBox().getMolecules(),
@@ -92,152 +91,8 @@ namespace setup
             _engine.getLogOutput().writeSetupWarning(warning);
         }
 
-        if (manostatType == BERENDSEN)
-            setupBerendsenManostat();
-
-        else if (manostatType == STOCHASTIC_RESCALING)
-            setupStochasticRescalingManostat();
-
-        else
-            _engine.makeManostat(manostat::Manostat());
-
         validateIsotropyFixedAxisCombination();
-        writeSetupInfo();
-    }
-
-    /**
-     * @brief setup berendsen manostat
-     *
-     * @details constructs a berendsen manostat and adds it to the engine
-     *
-     */
-    void ManostatSetup::setupBerendsenManostat()
-    {
-        const auto isotropy = settings::ManostatSettings::getIsotropy();
-        const auto pTarget  = settings::ManostatSettings::getTargetPressure();
-        const auto tau =
-            settings::ManostatSettings::getTauManostat() * PS_TO_FS;
-        const auto compress  = settings::ManostatSettings::getCompressibility();
-        const auto fixedAxis = settings::ManostatSettings::getFixedAxis();
-
-        switch (isotropy)
-        {
-            using enum Isotropy;
-
-            case SEMI_ISOTROPIC_XY:
-            case SEMI_ISOTROPIC_XZ:
-            case SEMI_ISOTROPIC_YZ:
-                _engine.makeManostat(
-                    manostat::SemiIsotropicBerendsenManostat(
-                        pTarget,
-                        tau,
-                        compress,
-                        isotropy,
-                        fixedAxis
-                    )
-                );
-                break;
-
-            case ANISOTROPIC:
-                _engine.makeManostat(
-                    manostat::AnisotropicBerendsenManostat(
-                        pTarget,
-                        tau,
-                        compress,
-                        fixedAxis
-                    )
-                );
-                break;
-
-            case FULL_ANISOTROPIC:
-                _engine.makeManostat(
-                    manostat::FullAnisotropicBerendsenManostat(
-                        pTarget,
-                        tau,
-                        compress,
-                        fixedAxis
-                    )
-                );
-                break;
-
-            case ISOTROPIC:
-                _engine.makeManostat(
-                    manostat::BerendsenManostat(
-                        pTarget,
-                        tau,
-                        compress,
-                        fixedAxis
-                    )
-                );
-        }
-    }
-
-    /**
-     * @brief setup stochastic rescaling manostat
-     *
-     * @details constructs a stochastic rescaling manostat and adds it to the
-     * engine
-     *
-     */
-    void ManostatSetup::setupStochasticRescalingManostat()
-    {
-        const auto isotropy = settings::ManostatSettings::getIsotropy();
-        const auto pTarget  = settings::ManostatSettings::getTargetPressure();
-        const auto tau =
-            settings::ManostatSettings::getTauManostat() * PS_TO_FS;
-        const auto compress  = settings::ManostatSettings::getCompressibility();
-        const auto fixedAxis = settings::ManostatSettings::getFixedAxis();
-
-        switch (isotropy)
-        {
-            using enum Isotropy;
-
-            case Isotropy::SEMI_ISOTROPIC_XY:
-            case Isotropy::SEMI_ISOTROPIC_XZ:
-            case Isotropy::SEMI_ISOTROPIC_YZ:
-                _engine.makeManostat(
-                    manostat::SemiIsotropicStochasticRescalingManostat(
-                        pTarget,
-                        tau,
-                        compress,
-                        isotropy,
-                        fixedAxis
-                    )
-                );
-                break;
-
-            case ANISOTROPIC:
-                _engine.makeManostat(
-                    manostat::AnisotropicStochasticRescalingManostat(
-                        pTarget,
-                        tau,
-                        compress,
-                        fixedAxis
-                    )
-                );
-                break;
-
-            case FULL_ANISOTROPIC:
-                _engine.makeManostat(
-                    manostat::FullAnisotropicStochasticRescalingManostat(
-                        pTarget,
-                        tau,
-                        compress,
-                        fixedAxis
-                    )
-                );
-                break;
-
-            case ISOTROPIC:
-                _engine.makeManostat(
-                    manostat::StochasticRescalingManostat(
-                        pTarget,
-                        tau,
-                        compress,
-                        fixedAxis
-                    )
-                );
-        }
+        _writeSetupInfo();
     }
 
     /**
@@ -245,13 +100,13 @@ namespace setup
      *
      * @throws SetupException if semi-isotropic mode conflicts with fixed_axis
      */
-    void ManostatSetup::validateIsotropyFixedAxisCombination()
+    void ManostatSetup::validateIsotropyFixedAxisCombination() const
     {
-        using enum Isotropy;
+        const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
-        const auto isotropy     = settings::ManostatSettings::getIsotropy();
-        const auto fixedAxis    = settings::ManostatSettings::getFixedAxis();
-        const auto manostatType = settings::ManostatSettings::getManostatType();
+        const auto isotropy     = manostatSettings.getIsotropy();
+        const auto fixedAxis    = manostatSettings.getFixedAxis();
+        const auto manostatType = manostatSettings.getManostatType();
 
         if (manostatType != ManostatType::NONE && fixedAxis == FixedAxis::ALL)
         {
@@ -281,26 +136,30 @@ namespace setup
      * @brief write setup info
      *
      */
-    void ManostatSetup::writeSetupInfo() const
+    void ManostatSetup::_writeSetupInfo() const
     {
-        writeManostatSelection();
+        const auto &manostatSettings = _engine.getSettings().manostatSettings;
+        auto       &logOutput        = _engine.getLogOutput();
 
-        if (settings::ManostatSettings::isBerendsenBased())
-            writeBerendsenSetup();
+        _writeManostatSelection(logOutput, manostatSettings);
 
-        if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
-            writeIsotropy();
+        if (manostatSettings.isBerendsenBased())
+            _writeBerendsenSetup(logOutput, manostatSettings);
+
+        if (manostatSettings.getManostatType() != ManostatType::NONE)
+            _writeIsotropy(logOutput, manostatSettings);
     }
 
     /**
      * @brief write manostat selection
      *
      */
-    void ManostatSetup::writeManostatSelection() const
+    void ManostatSetup::_writeManostatSelection(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &manostatSettings
+    )
     {
-        auto &logOutput = _engine.getLogOutput();
-
-        switch (settings::ManostatSettings::getManostatType())
+        switch (manostatSettings.getManostatType())
         {
             using enum ManostatType;
 
@@ -324,16 +183,19 @@ namespace setup
      * @brief write berendsen setup
      *
      */
-    void ManostatSetup::writeBerendsenSetup() const
+    void ManostatSetup::_writeBerendsenSetup(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
     {
-        auto &logOutput = _engine.getLogOutput();
-
-        const auto pressure = settings::ManostatSettings::getTargetPressure();
-        const auto tau      = settings::ManostatSettings::getTauManostat();
-        const auto compr    = settings::ManostatSettings::getCompressibility();
+        const auto pressure = settings.getTargetPressure();
+        const auto tau      = settings.getTau();
+        const auto compr    = settings.getCompressibility();
 
         logOutput.writeSetupInfo(std::format("Target pressure: {}", pressure));
-        logOutput.writeSetupInfo(std::format("Relaxation time: {} ps", tau));
+        logOutput.writeSetupInfo(
+            std::format("Relaxation time: {}", tau.in(ps))
+        );
         logOutput.writeSetupInfo(
             std::format("Compressibility: {} bar⁻¹", compr)
         );
@@ -344,11 +206,14 @@ namespace setup
      * @brief write isotropy setup
      *
      */
-    void ManostatSetup::writeIsotropy() const
+    void ManostatSetup::_writeIsotropy(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
     {
-        auto &logOutput = _engine.getLogOutput();
+        const auto &isotropy = settings.getIsotropy();
 
-        switch (settings::ManostatSettings::getIsotropy())
+        switch (isotropy)
         {
             using enum Isotropy;
 
@@ -363,20 +228,17 @@ namespace setup
                 std::string isoAxesStr;
                 std::string anisoAxisStr;
 
-                if (settings::ManostatSettings::getIsotropy() ==
-                    SEMI_ISOTROPIC_XY)
+                if (isotropy == SEMI_ISOTROPIC_XY)
                 {
                     isoAxesStr   = "x, y";
                     anisoAxisStr = "z";
                 }
-                else if (settings::ManostatSettings::getIsotropy() ==
-                         SEMI_ISOTROPIC_XZ)
+                else if (isotropy == SEMI_ISOTROPIC_XZ)
                 {
                     isoAxesStr   = "x, z";
                     anisoAxisStr = "y";
                 }
-                else if (settings::ManostatSettings::getIsotropy() ==
-                         SEMI_ISOTROPIC_YZ)
+                else if (isotropy == SEMI_ISOTROPIC_YZ)
                 {
                     isoAxesStr   = "y, z";
                     anisoAxisStr = "x";
