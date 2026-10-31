@@ -29,10 +29,12 @@
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "logOutput.hpp"
 #include "manostat.hpp"
 #include "manostatSettings.hpp"
 #include "mdEngine.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace setup
 {
@@ -90,7 +92,7 @@ namespace setup
         }
 
         validateIsotropyFixedAxisCombination();
-        writeSetupInfo();
+        _writeSetupInfo();
     }
 
     /**
@@ -100,14 +102,11 @@ namespace setup
      */
     void ManostatSetup::validateIsotropyFixedAxisCombination() const
     {
-        using enum Isotropy;
+        const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
-        const auto isotropy =
-            _engine.getSettings().manostatSettings.getIsotropy();
-        const auto fixedAxis =
-            _engine.getSettings().manostatSettings.getFixedAxis();
-        const auto manostatType =
-            _engine.getSettings().manostatSettings.getManostatType();
+        const auto isotropy     = manostatSettings.getIsotropy();
+        const auto fixedAxis    = manostatSettings.getFixedAxis();
+        const auto manostatType = manostatSettings.getManostatType();
 
         if (manostatType != ManostatType::NONE && fixedAxis == FixedAxis::ALL)
         {
@@ -137,27 +136,30 @@ namespace setup
      * @brief write setup info
      *
      */
-    void ManostatSetup::writeSetupInfo() const
+    void ManostatSetup::_writeSetupInfo() const
     {
-        writeManostatSelection();
+        const auto &manostatSettings = _engine.getSettings().manostatSettings;
+        auto       &logOutput        = _engine.getLogOutput();
 
-        if (_engine.getSettings().manostatSettings.isBerendsenBased())
-            writeBerendsenSetup();
+        _writeManostatSelection(logOutput, manostatSettings);
 
-        if (_engine.getSettings().manostatSettings.getManostatType() !=
-            ManostatType::NONE)
-            writeIsotropy();
+        if (manostatSettings.isBerendsenBased())
+            _writeBerendsenSetup(logOutput, manostatSettings);
+
+        if (manostatSettings.getManostatType() != ManostatType::NONE)
+            _writeIsotropy(logOutput, manostatSettings);
     }
 
     /**
      * @brief write manostat selection
      *
      */
-    void ManostatSetup::writeManostatSelection() const
+    void ManostatSetup::_writeManostatSelection(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &manostatSettings
+    )
     {
-        auto &logOutput = _engine.getLogOutput();
-
-        switch (_engine.getSettings().manostatSettings.getManostatType())
+        switch (manostatSettings.getManostatType())
         {
             using enum ManostatType;
 
@@ -181,18 +183,19 @@ namespace setup
      * @brief write berendsen setup
      *
      */
-    void ManostatSetup::writeBerendsenSetup() const
+    void ManostatSetup::_writeBerendsenSetup(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
     {
-        auto &logOutput = _engine.getLogOutput();
-
-        const auto pressure =
-            _engine.getSettings().manostatSettings.getTargetPressure();
-        const auto tau = _engine.getSettings().manostatSettings.getTau();
-        const auto compr =
-            _engine.getSettings().manostatSettings.getCompressibility();
+        const auto pressure = settings.getTargetPressure();
+        const auto tau      = settings.getTau();
+        const auto compr    = settings.getCompressibility();
 
         logOutput.writeSetupInfo(std::format("Target pressure: {}", pressure));
-        logOutput.writeSetupInfo(std::format("Relaxation time: {}", tau));
+        logOutput.writeSetupInfo(
+            std::format("Relaxation time: {}", tau.in(ps))
+        );
         logOutput.writeSetupInfo(
             std::format("Compressibility: {} bar⁻¹", compr)
         );
@@ -203,11 +206,14 @@ namespace setup
      * @brief write isotropy setup
      *
      */
-    void ManostatSetup::writeIsotropy() const
+    void ManostatSetup::_writeIsotropy(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
     {
-        auto &logOutput = _engine.getLogOutput();
+        const auto &isotropy = settings.getIsotropy();
 
-        switch (_engine.getSettings().manostatSettings.getIsotropy())
+        switch (isotropy)
         {
             using enum Isotropy;
 
@@ -222,20 +228,17 @@ namespace setup
                 std::string isoAxesStr;
                 std::string anisoAxisStr;
 
-                if (_engine.getSettings().manostatSettings.getIsotropy() ==
-                    SEMI_ISOTROPIC_XY)
+                if (isotropy == SEMI_ISOTROPIC_XY)
                 {
                     isoAxesStr   = "x, y";
                     anisoAxisStr = "z";
                 }
-                else if (_engine.getSettings().manostatSettings.getIsotropy() ==
-                         SEMI_ISOTROPIC_XZ)
+                else if (isotropy == SEMI_ISOTROPIC_XZ)
                 {
                     isoAxesStr   = "x, z";
                     anisoAxisStr = "y";
                 }
-                else if (_engine.getSettings().manostatSettings.getIsotropy() ==
-                         SEMI_ISOTROPIC_YZ)
+                else if (isotropy == SEMI_ISOTROPIC_YZ)
                 {
                     isoAxesStr   = "y, z";
                     anisoAxisStr = "x";
