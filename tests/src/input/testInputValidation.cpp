@@ -94,7 +94,7 @@ class TestInputValidation : public ::testing::Test
         _settings.qmSettings.setMaceModel(MaceModel::MEDIUM);
         _settings.qmSettings.setMaceModelType(MaceModelType::MACE_MP);
         QMSettings::setMaceModelPath("");
-        QMSettings::setSlakosType(SlakosType::NONE);
+        _settings.qmSettings.setSlakosType(SlakosType::NONE);
         QMSettings::setUseThirdOrderDftb(false);
         QMSettings::setIsThirdOrderDftbSet(false);
         QMSettings::setIsHubbardDerivsSet(false);
@@ -446,7 +446,7 @@ TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::NONE);
+    _settings.qmSettings.setSlakosType(SlakosType::NONE);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -459,7 +459,7 @@ TEST_F(TestInputValidation, requiresPathForCustomSlaterKosterParameters)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    _settings.qmSettings.setSlakosType(SlakosType::CUSTOM);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -472,7 +472,7 @@ TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    _settings.qmSettings.setSlakosType(SlakosType::CUSTOM);
     QMSettings::setUseThirdOrderDftb(false);
     _setKeyword("slakos_path");
     _setKeyword("third_order");
@@ -490,7 +490,7 @@ TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    _settings.qmSettings.setSlakosType(SlakosType::CUSTOM);
     QMSettings::setUseThirdOrderDftb(true);
     _setKeyword("slakos_path");
     _setKeyword("third_order");
@@ -504,7 +504,7 @@ TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    _settings.qmSettings.setSlakosType(SlakosType::THREEOB);
     QMSettings::setUseThirdOrderDftb(false);
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
@@ -521,7 +521,7 @@ TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    _settings.qmSettings.setSlakosType(SlakosType::THREEOB);
     QMSettings::setUseThirdOrderDftb(false);
     _setKeyword("hubbard_derivs");
 

@@ -317,7 +317,7 @@ namespace input
             switch (value)
             {
                 case SlakosType::THREEOB:
-                    QMSettings::setSlakosType(
+                    _qmSettings->setSlakosType(
                         SlakosType::THREEOB,
                         _resolveBuiltInSlakosPath
                     );
@@ -327,7 +327,7 @@ namespace input
                     );
                     break;
                 case SlakosType::MATSCI:
-                    QMSettings::setSlakosType(
+                    _qmSettings->setSlakosType(
                         SlakosType::MATSCI,
                         _resolveBuiltInSlakosPath
                     );
@@ -336,7 +336,7 @@ namespace input
                     );
                     break;
                 case SlakosType::CUSTOM:
-                    QMSettings::setSlakosType(SlakosType::CUSTOM);
+                    _qmSettings->setSlakosType(SlakosType::CUSTOM);
                     break;
                 case SlakosType::NONE: break;
             }
@@ -361,8 +361,8 @@ namespace input
             .description = "Specifies the path to the SLAKOS executable.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setSlakosPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _qmSettings->setSlakosPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -433,8 +433,8 @@ namespace input
             .description = "Specifies the xTB method to be used.",
         };
 
-        const auto setValue = [](XtbMethod value)
-        { QMSettings::setXtbMethod(value); };
+        const auto setValue = [this](XtbMethod value)
+        { _qmSettings->setXtbMethod(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<XtbMethod>{

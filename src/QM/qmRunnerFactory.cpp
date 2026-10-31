@@ -173,8 +173,7 @@ namespace QM
     )
     {
 #ifdef WITH_ASE
-        const auto xtbMethod =
-            XtbMethodMeta::toString(QMSettings::getXtbMethod());
+        const auto xtbMethod = XtbMethodMeta::toString(settings.getXtbMethod());
 
         return std::make_unique<AseXtbRunner>(settings, xtbMethod);
 #else

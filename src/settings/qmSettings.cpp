@@ -71,7 +71,9 @@ namespace
 QMSettings::QMSettings()
     : _maceModel(MaceModel::MEDIUM),
       _maceModelType(MaceModelType::MACE_MP),
-      _maceMode(MaceMode::ACCURATE)
+      _maceMode(MaceMode::ACCURATE),
+      _slakosType(SlakosType::NONE),
+      _xtbMethod(XtbMethod::GFN2)
 {
 }
 
@@ -168,7 +170,7 @@ void QMSettings::setMaceModelPath(const std::string_view &path)
  *
  * @param method
  */
-void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod = method; }
+void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod.set(method); }
 
 /**
  * @brief sets the qmScript in settings
@@ -211,7 +213,7 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
     if (!resolveBuiltInPath &&
         (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
     {
-        _slakosType = slakos;
+        _slakosType.set(slakos);
         _slakosPath.clear();
         return;
     }
@@ -229,7 +231,7 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
         case NONE: _slakosPath.clear(); break;
     }
 
-    _slakosType = slakos;
+    _slakosType.set(slakos);
 }
 
 /**
@@ -239,9 +241,9 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
  */
 void QMSettings::setSlakosPath(const std::string_view &path)
 {
-    if (_slakosType == SlakosType::CUSTOM)
+    if (_slakosType.get() == SlakosType::CUSTOM)
         _slakosPath = path;
-    else if (_slakosType == SlakosType::NONE)
+    else if (_slakosType.get() == SlakosType::NONE)
     {
         throw exc::UserInputException(
             "Slakos path cannot be set without a slakos type"
@@ -252,7 +254,7 @@ void QMSettings::setSlakosPath(const std::string_view &path)
         throw exc::UserInputException(
             std::format(
                 "Slakos path cannot be set for slakos type: {}",
-                SlakosTypeMeta::toString(_slakosType)
+                SlakosTypeMeta::toString(_slakosType.get())
             )
         );
     }
@@ -411,7 +413,7 @@ std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
  *
  * @return SlakosType
  */
-SlakosType QMSettings::getSlakosType() { return _slakosType; }
+SlakosType QMSettings::getSlakosType() const { return _slakosType.get(); }
 
 /**
  * @brief returns the slakosPath
@@ -471,7 +473,7 @@ bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
  *
  * @return XtbMethod
  */
-XtbMethod QMSettings::getXtbMethod() { return _xtbMethod; }
+XtbMethod QMSettings::getXtbMethod() const { return _xtbMethod.get(); }
 
 /**
  * @brief returns the qmLoopTimeLimit

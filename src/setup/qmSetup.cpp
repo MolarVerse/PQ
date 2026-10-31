@@ -118,7 +118,7 @@ namespace setup
         if (!(qmSettings.getQMMethod() == QMMethod::ASE_DFTBPLUS))
             return;
 
-        if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
+        if (qmSettings.getSlakosType() == SlakosType::THREEOB &&
             !QMSettings::isThirdOrderDftbSet())
             QMSettings::setUseThirdOrderDftb(true);
     }
@@ -132,19 +132,20 @@ namespace setup
         if (!(qmSettings.getQMMethod() == QMMethod::ASE_XTB))
             return;
 
-        if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
+        const auto xtbMethod = qmSettings.getXtbMethod();
+        if (xtbMethod == XtbMethod::GFN1)
         {
             references::ReferencesOutput::addReferenceFile(
                 references::GFN1_FILE
             );
         }
-        else if (QMSettings::getXtbMethod() == XtbMethod::GFN2)
+        else if (xtbMethod == XtbMethod::GFN2)
         {
             references::ReferencesOutput::addReferenceFile(
                 references::GFN2_FILE
             );
         }
-        else if (QMSettings::getXtbMethod() == XtbMethod::IPEA1)
+        else if (xtbMethod == XtbMethod::IPEA1)
         {
             references::ReferencesOutput::addReferenceFile(
                 references::IPEA1_FILE
@@ -378,7 +379,7 @@ namespace setup
 
         if (qmMethod == ASE_DFTBPLUS)
         {
-            const auto slakosType         = QMSettings::getSlakosType();
+            const auto slakosType         = qmSettings.getSlakosType();
             const auto slakosPath         = QMSettings::getSlakosPath();
             const auto thirdOrder         = QMSettings::useThirdOrderDftb();
             const auto hubbardDerivs      = QMSettings::getHubbardDerivs();
@@ -435,7 +436,7 @@ namespace setup
 
         if (qmMethod == ASE_XTB)
         {
-            const auto xtbMethod = QMSettings::getXtbMethod();
+            const auto xtbMethod = qmSettings.getXtbMethod();
 
             const auto xtbMethodMsg = std::format(
                 "xTB Parametrization:   {}",

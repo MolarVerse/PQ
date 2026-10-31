@@ -45,12 +45,12 @@ std::string string(
 class QMSettings
 {
    private:
-    Setting<QMMethod>        _qmMethod;
-    Setting<MaceModel>       _maceModel;
-    Setting<MaceModelType>   _maceModelType;
-    Setting<MaceMode>        _maceMode;
-    static inline SlakosType _slakosType = SlakosType::NONE;
-    static inline XtbMethod  _xtbMethod  = XtbMethod::GFN2;
+    Setting<QMMethod>      _qmMethod;
+    Setting<MaceModel>     _maceModel;
+    Setting<MaceModelType> _maceModelType;
+    Setting<MaceMode>      _maceMode;
+    Setting<SlakosType>    _slakosType;
+    Setting<XtbMethod>     _xtbMethod;
 
     static inline std::string _qmScript;
     static inline std::string _qmScriptFullPath;
@@ -89,9 +89,9 @@ class QMSettings
     static void setQMScript(const std::string_view &script);
     static void setQMScriptFullPath(const std::string_view &script);
 
-    static void setSlakosType(SlakosType slakos, bool resolveBuiltInPath);
-    static void setSlakosType(SlakosType slakos);
-    static void setSlakosPath(const std::string_view &path);
+    void setSlakosType(SlakosType slakos, bool resolveBuiltInPath);
+    void setSlakosType(SlakosType slakos);
+    void setSlakosPath(const std::string_view &path);
 
     static void setUseDispersionCorrection(bool use);
     static void setRemoveNetForce(bool removeNetForce);
@@ -102,7 +102,7 @@ class QMSettings
     );
     static void setIsHubbardDerivsSet(bool isHubbardDerivsSet);
 
-    static void setXtbMethod(XtbMethod method);
+    void setXtbMethod(XtbMethod method);
 
     static void setFennolModelPath(const std::string_view &path);
     static void setUseGPUPreprocessing(bool use);
@@ -123,7 +123,7 @@ class QMSettings
     [[nodiscard]] static std::string getQMScript();
     [[nodiscard]] static std::string getQMScriptFullPath();
 
-    [[nodiscard]] static SlakosType  getSlakosType();
+    [[nodiscard]] SlakosType         getSlakosType() const;
     [[nodiscard]] static std::string getSlakosPath();
 
     [[nodiscard]] static bool useDispersionCorr();
@@ -134,7 +134,7 @@ class QMSettings
     );
     [[nodiscard]] static bool isHubbardDerivsSet();
 
-    [[nodiscard]] static XtbMethod getXtbMethod();
+    [[nodiscard]] XtbMethod getXtbMethod() const;
 
     [[nodiscard]] static std::string getFennolModelPath();
     [[nodiscard]] static bool        useGPUPreprocessing();

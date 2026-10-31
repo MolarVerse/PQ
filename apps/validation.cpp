@@ -375,10 +375,10 @@ namespace
             );
         }
 
-        if (method == QMMethod::ASE_DFTBPLUS &&
-            QMSettings::getSlakosType() != SlakosType::NONE)
+        const auto slakosType = settings.qmSettings.getSlakosType();
+
+        if (method == QMMethod::ASE_DFTBPLUS && slakosType != SlakosType::NONE)
         {
-            const auto slakosType = QMSettings::getSlakosType();
             if (slakosType == SlakosType::CUSTOM)
             {
                 requireDirectory(

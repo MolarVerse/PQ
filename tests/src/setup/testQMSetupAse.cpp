@@ -35,7 +35,7 @@
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    _settings->qmSettings.setSlakosType(SlakosType::THREEOB);
     QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo(_settings->qmSettings);
@@ -50,7 +50,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     std::string skPath{
-        __SLAKOS_DIR__ + SlakosTypeMeta::toString(QMSettings::getSlakosType()) +
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(_settings->qmSettings.getSlakosType()) +
         "/skfiles/"
     };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
@@ -64,7 +65,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 {
     QMSettings::setUseThirdOrderDftb(false);
     QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    _settings->qmSettings.setSlakosType(SlakosType::THREEOB);
     _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
@@ -77,7 +78,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     std::string skPath{
-        __SLAKOS_DIR__ + SlakosTypeMeta::toString(QMSettings::getSlakosType()) +
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(_settings->qmSettings.getSlakosType()) +
         "/skfiles/"
     };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
@@ -97,7 +99,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 {
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    _settings->qmSettings.setSlakosType(SlakosType::THREEOB);
     QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setHubbardDerivs({{"H", -0.3}});
     QMSettings::setIsHubbardDerivsSet(true);
@@ -113,7 +115,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     std::string skPath{
-        __SLAKOS_DIR__ + SlakosTypeMeta::toString(QMSettings::getSlakosType()) +
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(_settings->qmSettings.getSlakosType()) +
         "/skfiles/"
     };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
@@ -135,7 +138,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 {
-    QMSettings::setSlakosType(SlakosType::MATSCI);
+    _settings->qmSettings.setSlakosType(SlakosType::MATSCI);
     QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo(_settings->qmSettings);
 
@@ -149,7 +152,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
     EXPECT_EQ(line, "         DFTB approach:        matsci");
     getline(file, line);
     std::string skPath{
-        __SLAKOS_DIR__ + SlakosTypeMeta::toString(QMSettings::getSlakosType()) +
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(_settings->qmSettings.getSlakosType()) +
         "/skfiles/"
     };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
@@ -162,8 +166,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 {
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setSlakosPath("custom/path/");
+    _settings->qmSettings.setSlakosType(SlakosType::CUSTOM);
+    _settings->qmSettings.setSlakosPath("custom/path/");
     _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
@@ -184,8 +188,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
 {
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setSlakosPath("custom/path/");
+    _settings->qmSettings.setSlakosType(SlakosType::CUSTOM);
+    _settings->qmSettings.setSlakosPath("custom/path/");
     QMSettings::setUseDispersionCorrection(true);
     QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setUseThirdOrderDftb(true);

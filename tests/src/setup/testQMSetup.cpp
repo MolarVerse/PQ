@@ -171,7 +171,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    settings.qmSettings.setSlakosType(SlakosType::THREEOB);
     QMSettings::setIsThirdOrderDftbSet(false);
 
     setup::QMSetup::setupQMMethodAseDftbPlus(settings.qmSettings);
@@ -184,7 +184,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    settings.qmSettings.setSlakosType(SlakosType::THREEOB);
     QMSettings::setIsThirdOrderDftbSet(true);
     QMSettings::setUseThirdOrderDftb(true);
 
@@ -198,7 +198,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    settings.qmSettings.setSlakosType(SlakosType::THREEOB);
     QMSettings::setIsThirdOrderDftbSet(true);
     QMSettings::setUseThirdOrderDftb(false);
 
@@ -212,7 +212,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::MATSCI);
+    settings.qmSettings.setSlakosType(SlakosType::MATSCI);
     QMSettings::setIsThirdOrderDftbSet(false);
     QMSettings::setUseThirdOrderDftb(false);
 
@@ -227,7 +227,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    settings.qmSettings.setSlakosType(SlakosType::CUSTOM);
     QMSettings::setIsThirdOrderDftbSet(false);
     QMSettings::setUseThirdOrderDftb(false);
 

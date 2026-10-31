@@ -146,12 +146,12 @@ namespace input
 
         if (qmMethod == QMMethod::ASE_DFTBPLUS)
         {
-            if (QMSettings::getSlakosType() == SlakosType::NONE)
+            if (qmSettings.getSlakosType() == SlakosType::NONE)
                 throw exc::InputFileException(
                     "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
                 );
 
-            if (QMSettings::getSlakosType() == SlakosType::CUSTOM &&
+            if (qmSettings.getSlakosType() == SlakosType::CUSTOM &&
                 !getKeywordSet("slakos_path"))
             {
                 throw exc::InputFileException(
@@ -162,7 +162,7 @@ namespace input
 
             auto useThirdOrder = QMSettings::useThirdOrderDftb();
 
-            if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
+            if (qmSettings.getSlakosType() == SlakosType::THREEOB &&
                 !getKeywordSet("third_order"))
                 useThirdOrder = true;
 

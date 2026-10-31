@@ -420,12 +420,12 @@ TEST_F(TestInputFileReader, parseSlakosType)
 
 #ifdef WITH_ASE
     parseFunc({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_EQ(settings.getSlakosType(), SlakosType::THREEOB);
 
     _clearParser(parser);
 
     parseFunc({"slakos", "=", "matsci"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+    EXPECT_EQ(settings.getSlakosType(), SlakosType::MATSCI);
 
     _clearParser(parser);
 #else
@@ -449,7 +449,7 @@ TEST_F(TestInputFileReader, parseSlakosType)
 #endif
 
     parseFunc({"slakos", "=", "custom"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+    EXPECT_EQ(settings.getSlakosType(), SlakosType::CUSTOM);
 
     _clearParser(parser);
 
@@ -476,7 +476,7 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
     slakosParseFunc({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_EQ(settings.getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 
     _clearParser(parser);
@@ -485,7 +485,7 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
     auto       parser2 = input::QMInputParser{true, settings2};
     slakosParseFunc({"slakos", "=", "3ob"}, 0);
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_EQ(settings.getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 }
 #endif
@@ -613,17 +613,17 @@ TEST_F(TestInputFileReader, parseXtbMethod)
     const auto& xtbMethodParseFunc = funcMap.at("xtb_method");
 
     xtbMethodParseFunc({"xtb_method", "=", "Gfn1-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+    EXPECT_EQ(settings.getXtbMethod(), XtbMethod::GFN1);
 
     _clearParser(parser);
 
     xtbMethodParseFunc({"xtb_method", "=", "gfN2-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+    EXPECT_EQ(settings.getXtbMethod(), XtbMethod::GFN2);
 
     _clearParser(parser);
 
     xtbMethodParseFunc({"xtb_method", "=", "iPEa1-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+    EXPECT_EQ(settings.getXtbMethod(), XtbMethod::IPEA1);
 
     _clearParser(parser);
 
