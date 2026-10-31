@@ -68,7 +68,7 @@ namespace
             _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
             _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
             _settings->manostatSettings.setTargetPressure(1.0);
-            _settings->manostatSettings.setTau(1.0 * ps);
+            _settings->manostatSettings.setTau(1.0 * fs);
             _settings->manostatSettings.setCompressibility(0.03);
             settings::TimingsSettings::setTimeStep(1.0);
             settings::ThermostatSettings::setActualTargetTemperature(0.0);
@@ -250,7 +250,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
     // both end up with cutoff's target pressure and compressibility).
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     _settings->manostatSettings.setTargetPressure(1.0);
-    _settings->manostatSettings.setTau(1.0 * ps);
+    _settings->manostatSettings.setTau(1.0 * fs);
 
     auto negativeRootSettings = _settings->manostatSettings;
     negativeRootSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
@@ -372,7 +372,7 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
 
     ManostatSettings semiSettings;
     semiSettings.setTargetPressure(0.0);
-    semiSettings.setTau(tau * ps);
+    semiSettings.setTau(tau * fs);
     semiSettings.setCompressibility(compressibility);
     semiSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
     semiSettings.setFixedAxis(FixedAxis::NONE);
@@ -380,7 +380,7 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
 
     ManostatSettings freeSettings;
     freeSettings.setTargetPressure(0.0);
-    freeSettings.setTau(tau * ps);
+    freeSettings.setTau(tau * fs);
     freeSettings.setCompressibility(compressibility);
     freeSettings.setFixedAxis(FixedAxis::NONE);
     manostat::AnisotropicStochasticRescalingManostat     aniso(freeSettings);
@@ -388,7 +388,7 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
 
     ManostatSettings fixedSettings;
     fixedSettings.setTargetPressure(0.0);
-    fixedSettings.setTau(tau * ps);
+    fixedSettings.setTau(tau * fs);
     fixedSettings.setCompressibility(compressibility);
     fixedSettings.setFixedAxis(FixedAxis::Y);
     manostat::FullAnisotropicStochasticRescalingManostat fixed(fixedSettings);
@@ -464,7 +464,7 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     _settings->manostatSettings.setTargetPressure(
         _data.getPressure() - (3.0 * std::log(scale))
     );
-    _settings->manostatSettings.setTau(1.0 * ps);
+    _settings->manostatSettings.setTau(1.0 * fs);
     _settings->manostatSettings.setCompressibility(1.0);
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings

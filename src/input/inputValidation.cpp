@@ -416,10 +416,10 @@ namespace input
             );
         }
 
-        const auto relaxationTime = manostatSettings.getTau() * PS_TO_FS;
+        const auto relaxationTime =
+            manostatSettings.getTau().numerical_value_in(fs);
 
-        if (settings::TimingsSettings::getTimeStep() >
-            relaxationTime.numerical_value_in(fs))
+        if (settings::TimingsSettings::getTimeStep() > relaxationTime)
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
             );

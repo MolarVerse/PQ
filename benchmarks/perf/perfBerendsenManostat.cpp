@@ -56,8 +56,9 @@ int main()
     auto             physicalData = physicalData::PhysicalData();
     ManostatSettings manostatSettings;
     manostatSettings.setTargetPressure(1.0);
-    manostatSettings.setTau(100.0 * ps);
+    manostatSettings.setTau(100.0 * fs);
     manostatSettings.setCompressibility(4.6e-5);
+    manostatSettings.finalize();
     auto manostat = manostat::BerendsenManostat(manostatSettings);
 
     CALLGRIND_ZERO_STATS;
