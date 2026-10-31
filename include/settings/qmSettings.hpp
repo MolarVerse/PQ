@@ -30,116 +30,116 @@
 
 #include "defaults.hpp"
 #include "enums/qm.hpp"
+#include "setting.hpp"
 
-namespace settings
+std::string string(
+    const std::unordered_map<std::string, double> &unordered_map
+);
+
+/**
+ * @brief QMSettings
+ *
+ * @details stores all information about the external qm runner
+ *
+ */
+class QMSettings
 {
+   private:
+    Setting<QMMethod>           _qmMethod;
+    static inline MaceModel     _maceModel     = MaceModel::MEDIUM;
+    static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
+    static inline MaceMode      _maceMode      = MaceMode::ACCURATE;
+    static inline SlakosType    _slakosType    = SlakosType::NONE;
+    static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
 
-    std::string string(
-        const std::unordered_map<std::string, double> &unordered_map
+    static inline std::string _qmScript;
+    static inline std::string _qmScriptFullPath;
+    static inline std::string _maceModelPath;
+    static inline std::string _slakosPath;
+    static inline std::string _fennolModelPath;
+
+    static inline bool _useDispersionCorrection = false;
+    static inline bool _removeNetForce          = false;
+    static inline bool _useThirdOrderDftb       = false;
+    static inline bool _isThirdOrderDftbSet     = false;
+    static inline bool _isHubbardDerivsSet      = false;
+    static inline bool _useGPUPreprocessing     = true;
+
+    static inline std::unordered_map<std::string, double> _hubbardDerivs;
+
+    static inline double _qmLoopTimeLimit =
+        defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
+
+   public:
+    QMSettings();
+
+    [[nodiscard]] bool isExternalQMRunner() const;
+
+    /***************************
+     * standard setter methods *
+     ***************************/
+
+    void setQMMethod(QMMethod method);
+
+    static void setMaceModel(MaceModel model);
+    static void setMaceModelType(MaceModelType model);
+    static void setMaceMode(MaceMode mode);
+    static void setMaceModelPath(const std::string_view &path);
+
+    static void setQMScript(const std::string_view &script);
+    static void setQMScriptFullPath(const std::string_view &script);
+
+    static void setSlakosType(SlakosType slakos, bool resolveBuiltInPath);
+    static void setSlakosType(SlakosType slakos);
+    static void setSlakosPath(const std::string_view &path);
+
+    static void setUseDispersionCorrection(bool use);
+    static void setRemoveNetForce(bool removeNetForce);
+    static void setUseThirdOrderDftb(bool use);
+    static void setIsThirdOrderDftbSet(bool isThirdOrderDftbSet);
+    static void setHubbardDerivs(
+        const std::unordered_map<std::string, double> &hubbardDerivs
     );
+    static void setIsHubbardDerivsSet(bool isHubbardDerivsSet);
 
-    /**
-     * @brief QMSettings
-     *
-     * @details stores all information about the external qm runner
-     *
-     */
-    class QMSettings
-    {
-       private:
-        static inline QMMethod      _qmMethod      = QMMethod::NONE;
-        static inline MaceModel     _maceModel     = MaceModel::MEDIUM;
-        static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
-        static inline MaceMode      _maceMode      = MaceMode::ACCURATE;
-        static inline SlakosType    _slakosType    = SlakosType::NONE;
-        static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
+    static void setXtbMethod(XtbMethod method);
 
-        static inline std::string _qmScript;
-        static inline std::string _qmScriptFullPath;
-        static inline std::string _maceModelPath;
-        static inline std::string _slakosPath;
-        static inline std::string _fennolModelPath;
+    static void setFennolModelPath(const std::string_view &path);
+    static void setUseGPUPreprocessing(bool use);
 
-        static inline bool _useDispersionCorrection = false;
-        static inline bool _removeNetForce          = false;
-        static inline bool _useThirdOrderDftb       = false;
-        static inline bool _isThirdOrderDftbSet     = false;
-        static inline bool _isHubbardDerivsSet      = false;
-        static inline bool _useGPUPreprocessing     = true;
+    static void setQMLoopTimeLimit(double time);
 
-        static inline std::unordered_map<std::string, double> _hubbardDerivs;
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-        static inline double _qmLoopTimeLimit =
-            defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
+    [[nodiscard]] QMMethod             getQMMethod() const;
+    [[nodiscard]] bool                 isQMMethodSet() const;
+    [[nodiscard]] static MaceModel     getMaceModel();
+    [[nodiscard]] static MaceModelType getMaceModelType();
+    [[nodiscard]] static MaceMode      getMaceMode();
+    [[nodiscard]] static std::string   getMaceModelPath();
 
-       public:
-        [[nodiscard]] static bool isExternalQMRunner();
+    [[nodiscard]] static std::string getQMScript();
+    [[nodiscard]] static std::string getQMScriptFullPath();
 
-        /***************************
-         * standard setter methods *
-         ***************************/
+    [[nodiscard]] static SlakosType  getSlakosType();
+    [[nodiscard]] static std::string getSlakosPath();
 
-        static void setQMMethod(QMMethod method);
+    [[nodiscard]] static bool useDispersionCorr();
+    [[nodiscard]] static bool getRemoveNetForce();
+    [[nodiscard]] static bool useThirdOrderDftb();
+    [[nodiscard]] static bool isThirdOrderDftbSet();
+    [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(
+    );
+    [[nodiscard]] static bool isHubbardDerivsSet();
 
-        static void setMaceModel(MaceModel model);
-        static void setMaceModelType(MaceModelType model);
-        static void setMaceMode(MaceMode mode);
-        static void setMaceModelPath(const std::string_view &path);
+    [[nodiscard]] static XtbMethod getXtbMethod();
 
-        static void setQMScript(const std::string_view &script);
-        static void setQMScriptFullPath(const std::string_view &script);
+    [[nodiscard]] static std::string getFennolModelPath();
+    [[nodiscard]] static bool        useGPUPreprocessing();
 
-        static void setSlakosType(SlakosType slakos, bool resolveBuiltInPath);
-        static void setSlakosType(SlakosType slakos);
-        static void setSlakosPath(const std::string_view &path);
-
-        static void setUseDispersionCorrection(bool use);
-        static void setRemoveNetForce(bool removeNetForce);
-        static void setUseThirdOrderDftb(bool use);
-        static void setIsThirdOrderDftbSet(bool isThirdOrderDftbSet);
-        static void setHubbardDerivs(
-            const std::unordered_map<std::string, double> &hubbardDerivs
-        );
-        static void setIsHubbardDerivsSet(bool isHubbardDerivsSet);
-
-        static void setXtbMethod(XtbMethod method);
-
-        static void setFennolModelPath(const std::string_view &path);
-        static void setUseGPUPreprocessing(bool use);
-
-        static void setQMLoopTimeLimit(double time);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] static QMMethod      getQMMethod();
-        [[nodiscard]] static MaceModel     getMaceModel();
-        [[nodiscard]] static MaceModelType getMaceModelType();
-        [[nodiscard]] static MaceMode      getMaceMode();
-        [[nodiscard]] static std::string   getMaceModelPath();
-
-        [[nodiscard]] static std::string getQMScript();
-        [[nodiscard]] static std::string getQMScriptFullPath();
-
-        [[nodiscard]] static SlakosType  getSlakosType();
-        [[nodiscard]] static std::string getSlakosPath();
-
-        [[nodiscard]] static bool useDispersionCorr();
-        [[nodiscard]] static bool getRemoveNetForce();
-        [[nodiscard]] static bool useThirdOrderDftb();
-        [[nodiscard]] static bool isThirdOrderDftbSet();
-        [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(
-        );
-        [[nodiscard]] static bool isHubbardDerivsSet();
-
-        [[nodiscard]] static XtbMethod getXtbMethod();
-
-        [[nodiscard]] static std::string getFennolModelPath();
-        [[nodiscard]] static bool        useGPUPreprocessing();
-
-        [[nodiscard]] static double getQMLoopTimeLimit();
-    };
-}   // namespace settings
+    [[nodiscard]] static double getQMLoopTimeLimit();
+};
 
 #endif   // _QM_SETTINGS_HPP_

@@ -142,16 +142,16 @@ namespace input
                 "QM job selected but the \"qm_prog\" keyword has not been set"
             );
 
-        const auto qmMethod = settings::QMSettings::getQMMethod();
+        const auto qmMethod = QMSettings::getQMMethod();
 
         if (qmMethod == QMMethod::ASE_DFTBPLUS)
         {
-            if (settings::QMSettings::getSlakosType() == SlakosType::NONE)
+            if (QMSettings::getSlakosType() == SlakosType::NONE)
                 throw exc::InputFileException(
                     "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
                 );
 
-            if (settings::QMSettings::getSlakosType() == SlakosType::CUSTOM &&
+            if (QMSettings::getSlakosType() == SlakosType::CUSTOM &&
                 !getKeywordSet("slakos_path"))
             {
                 throw exc::InputFileException(
@@ -160,9 +160,9 @@ namespace input
                 );
             }
 
-            auto useThirdOrder = settings::QMSettings::useThirdOrderDftb();
+            auto useThirdOrder = QMSettings::useThirdOrderDftb();
 
-            if (settings::QMSettings::getSlakosType() == SlakosType::THREEOB &&
+            if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
                 !getKeywordSet("third_order"))
                 useThirdOrder = true;
 
@@ -187,8 +187,8 @@ namespace input
         if (qmMethod != QMMethod::MACE)
             return;
 
-        const auto modelType    = settings::QMSettings::getMaceModelType();
-        const auto model        = settings::QMSettings::getMaceModel();
+        const auto modelType    = QMSettings::getMaceModelType();
+        const auto model        = QMSettings::getMaceModel();
         const auto modelPathSet = getKeywordSet("mace_model_path");
 
         if (modelType != MaceModelType::MACE_MP && model != MaceModel::SMALL &&

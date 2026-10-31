@@ -236,7 +236,8 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the ase.atoms module
      * fails
      */
-    AseQMRunner::AseQMRunner() : _ase(std::make_unique<AseInterface>())
+    AseQMRunner::AseQMRunner(const QMSettings &qmSettings)
+        : QMRunner(qmSettings), _ase(std::make_unique<AseInterface>())
     {
         try
         {
@@ -377,7 +378,7 @@ namespace QM
             throw;
         }
 
-        if (settings::QMSettings::getRemoveNetForce())
+        if (QMSettings::getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 

@@ -92,18 +92,15 @@ namespace engine
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner()
     {
 #ifdef WITH_ASE
-        const auto modelType = MaceModelTypeMeta::toString(
-            settings::QMSettings::getMaceModelType()
-        );
-        const auto modelPath = settings::QMSettings::getMaceModelPath();
-        const auto useDFTD   = settings::QMSettings::useDispersionCorr();
+        const auto modelType =
+            MaceModelTypeMeta::toString(QMSettings::getMaceModelType());
+        const auto modelPath = QMSettings::getMaceModelPath();
+        const auto useDFTD   = QMSettings::useDispersionCorr();
         const auto fpType =
             settings::GeneralSettings::getFloatingPointPybindString();
-        const auto useCueq =
-            settings::QMSettings::getMaceMode() == MaceMode::FAST;
+        const auto useCueq = QMSettings::getMaceMode() == MaceMode::FAST;
 
-        auto maceModel =
-            MaceModelMeta::toString(settings::QMSettings::getMaceModel());
+        auto maceModel = MaceModelMeta::toString(QMSettings::getMaceModel());
 
         if (!modelPath.empty())
             maceModel = modelPath;
@@ -134,10 +131,10 @@ namespace engine
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseDftbRunner()
     {
 #ifdef WITH_ASE
-        const auto slakosPath    = settings::QMSettings::getSlakosPath();
-        const auto useThirdOrder = settings::QMSettings::useThirdOrderDftb();
-        const auto hubbardDerivs = settings::QMSettings::getHubbardDerivs();
-        const auto dispersion    = settings::QMSettings::useDispersionCorr();
+        const auto slakosPath    = QMSettings::getSlakosPath();
+        const auto useThirdOrder = QMSettings::useThirdOrderDftb();
+        const auto hubbardDerivs = QMSettings::getHubbardDerivs();
+        const auto dispersion    = QMSettings::useDispersionCorr();
 
         return std::make_shared<QM::AseDftbRunner>(
             slakosPath,
@@ -166,7 +163,7 @@ namespace engine
     {
 #ifdef WITH_ASE
         const auto xtbMethod =
-            XtbMethodMeta::toString(settings::QMSettings::getXtbMethod());
+            XtbMethodMeta::toString(QMSettings::getXtbMethod());
 
         return std::make_shared<QM::AseXtbRunner>(xtbMethod);
 #else
@@ -191,9 +188,8 @@ namespace engine
 #ifdef WITH_ASE
         using enum FPType;
 
-        const auto modelPath = settings::QMSettings::getFennolModelPath();
-        const auto gpuPreprocessing =
-            settings::QMSettings::useGPUPreprocessing();
+        const auto modelPath        = QMSettings::getFennolModelPath();
+        const auto gpuPreprocessing = QMSettings::useGPUPreprocessing();
         const bool useFloat64 =
             settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 

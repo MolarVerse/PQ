@@ -34,7 +34,6 @@
 enum class QMMethod : std::uint8_t;
 
 #define QM_METHOD_LIST(X) \
-    X(NONE)               \
     X(DFTBPLUS)           \
     X(ASE_DFTBPLUS)       \
     X(ASE_XTB)            \

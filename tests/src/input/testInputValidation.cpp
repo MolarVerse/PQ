@@ -91,15 +91,15 @@ class TestInputValidation : public ::testing::Test
         );
         settings::TimingsSettings::setTimeStep(0.5);
 
-        settings::QMSettings::setQMMethod(QMMethod::NONE);
-        settings::QMSettings::setMaceModel(MaceModel::MEDIUM);
-        settings::QMSettings::setMaceModelType(MaceModelType::MACE_MP);
-        settings::QMSettings::setMaceModelPath("");
-        settings::QMSettings::setSlakosType(SlakosType::NONE);
-        settings::QMSettings::setUseThirdOrderDftb(false);
-        settings::QMSettings::setIsThirdOrderDftbSet(false);
-        settings::QMSettings::setIsHubbardDerivsSet(false);
-        settings::QMSettings::setFennolModelPath("");
+        QMSettings::setQMMethod(QMMethod::NONE);
+        QMSettings::setMaceModel(MaceModel::MEDIUM);
+        QMSettings::setMaceModelType(MaceModelType::MACE_MP);
+        QMSettings::setMaceModelPath("");
+        QMSettings::setSlakosType(SlakosType::NONE);
+        QMSettings::setUseThirdOrderDftb(false);
+        QMSettings::setIsThirdOrderDftbSet(false);
+        QMSettings::setIsHubbardDerivsSet(false);
+        QMSettings::setFennolModelPath("");
 
         _engine = std::make_unique<engine::OptEngine>(_settings);
         _reader =
@@ -344,7 +344,7 @@ TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     settings::GeneralSettings::activateCellList();
 
     ASSERT_THROW_MSG(
@@ -444,8 +444,8 @@ TEST_F(TestInputValidation, acceptsReplicaCountForRingPolymer)
 TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::NONE);
+    QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    QMSettings::setSlakosType(SlakosType::NONE);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -457,8 +457,8 @@ TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
 TEST_F(TestInputValidation, requiresPathForCustomSlaterKosterParameters)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
+    QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    QMSettings::setSlakosType(SlakosType::CUSTOM);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -470,9 +470,9 @@ TEST_F(TestInputValidation, requiresPathForCustomSlaterKosterParameters)
 TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
-    settings::QMSettings::setUseThirdOrderDftb(false);
+    QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    QMSettings::setUseThirdOrderDftb(false);
     _setKeyword("slakos_path");
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
@@ -488,9 +488,9 @@ TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
 TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
-    settings::QMSettings::setUseThirdOrderDftb(true);
+    QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    QMSettings::setUseThirdOrderDftb(true);
     _setKeyword("slakos_path");
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
@@ -502,9 +502,9 @@ TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
 TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
-    settings::QMSettings::setUseThirdOrderDftb(false);
+    QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    QMSettings::setSlakosType(SlakosType::THREEOB);
+    QMSettings::setUseThirdOrderDftb(false);
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
 
@@ -519,9 +519,9 @@ TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
 TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
-    settings::QMSettings::setUseThirdOrderDftb(false);
+    QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    QMSettings::setSlakosType(SlakosType::THREEOB);
+    QMSettings::setUseThirdOrderDftb(false);
     _setKeyword("hubbard_derivs");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -531,7 +531,7 @@ TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
 TEST_F(TestInputValidation, requiresFennolModelPath)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::FENNOL);
+    QMSettings::setQMMethod(QMMethod::FENNOL);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -544,7 +544,7 @@ TEST_F(TestInputValidation, requiresFennolModelPath)
 TEST_F(TestInputValidation, acceptsFennolModelPath)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::FENNOL);
+    QMSettings::setQMMethod(QMMethod::FENNOL);
     _setKeyword("fennol_model_path");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -553,9 +553,9 @@ TEST_F(TestInputValidation, acceptsFennolModelPath)
 TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::MACE);
-    settings::QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    settings::QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
+    QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -568,9 +568,9 @@ TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
 TEST_F(TestInputValidation, acceptsStandardMaceModelForNonMpType)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::MACE);
-    settings::QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    settings::QMSettings::setMaceModel(MaceModel::SMALL);
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
+    QMSettings::setMaceModel(MaceModel::SMALL);
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
@@ -578,8 +578,8 @@ TEST_F(TestInputValidation, acceptsStandardMaceModelForNonMpType)
 TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::MACE);
-    settings::QMSettings::setMaceModel(MaceModel::CUSTOM);
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModel(MaceModel::CUSTOM);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -592,8 +592,8 @@ TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
 TEST_F(TestInputValidation, rejectsPathForBundledMaceModel)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::MACE);
-    settings::QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
     _setKeyword("mace_model_path");
 
     ASSERT_THROW_MSG(
@@ -607,8 +607,8 @@ TEST_F(TestInputValidation, rejectsPathForBundledMaceModel)
 TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
 {
     _configureMDJob(JobType::QM_MD);
-    settings::QMSettings::setQMMethod(QMMethod::MACE);
-    settings::QMSettings::setMaceModel(MaceModel::CUSTOM);
+    QMSettings::setQMMethod(QMMethod::MACE);
+    QMSettings::setMaceModel(MaceModel::CUSTOM);
     settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
     settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     _setKeyword("mace_model_path");

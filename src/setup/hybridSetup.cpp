@@ -89,7 +89,7 @@ namespace setup
     {
         using enum QMMethod;
 
-        const auto qmMethod = settings::QMSettings::getQMMethod();
+        const auto qmMethod = QMSettings::getQMMethod();
         const auto errorMsg = std::format(
             "QM method \"{}\" is not supported for hybrid type "
             "calculations. Supported QM methods are \"dftbplus\" and "

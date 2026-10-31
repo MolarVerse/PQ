@@ -181,11 +181,11 @@ class ExternalQMRunnerTest : public testing::Test
 
     void SetUp() override
     {
-        _qmMethod       = settings::QMSettings::getQMMethod();
+        _qmMethod       = QMSettings::getQMMethod();
         _jobType        = settings::GeneralSettings::getJobtype();
-        _removeNetForce = settings::QMSettings::getRemoveNetForce();
-        _timeLimit      = settings::QMSettings::getQMLoopTimeLimit();
-        _qmScript       = settings::QMSettings::getQMScript();
+        _removeNetForce = QMSettings::getRemoveNetForce();
+        _timeLimit      = QMSettings::getQMLoopTimeLimit();
+        _qmScript       = QMSettings::getQMScript();
         _dftbFile       = settings::FileSettings::getDFTBFileName();
         _originalPath   = std::filesystem::current_path();
 
@@ -196,9 +196,9 @@ class ExternalQMRunnerTest : public testing::Test
         ASSERT_TRUE(std::filesystem::create_directory(_workPath));
         std::filesystem::current_path(_workPath);
 
-        settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-        settings::QMSettings::setRemoveNetForce(false);
-        settings::QMSettings::setQMLoopTimeLimit(0.0);
+        QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+        QMSettings::setRemoveNetForce(false);
+        QMSettings::setQMLoopTimeLimit(0.0);
         settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
         auto atom = std::make_shared<molsys::Atom>();
@@ -211,10 +211,10 @@ class ExternalQMRunnerTest : public testing::Test
 
     void TearDown() override
     {
-        settings::QMSettings::setQMMethod(_qmMethod);
-        settings::QMSettings::setRemoveNetForce(_removeNetForce);
-        settings::QMSettings::setQMLoopTimeLimit(_timeLimit);
-        settings::QMSettings::setQMScript(_qmScript);
+        QMSettings::setQMMethod(_qmMethod);
+        QMSettings::setRemoveNetForce(_removeNetForce);
+        QMSettings::setQMLoopTimeLimit(_timeLimit);
+        QMSettings::setQMScript(_qmScript);
         settings::FileSettings::setDFTBFileName(_dftbFile);
         settings::GeneralSettings::setJobtype(_jobType);
 
@@ -238,7 +238,7 @@ class ExternalQMRunnerTest : public testing::Test
         writeFile(scriptFile.string(), "");
 
         runner.setScriptPath(scriptDirectory.string() + '/');
-        settings::QMSettings::setQMScript(scriptName);
+        QMSettings::setQMScript(scriptName);
 
         return scriptFile;
     }
@@ -458,7 +458,7 @@ TEST_F(ExternalQMRunnerTest, dftbExecuteRejectsMissingScript)
 {
     const auto scriptDirectory = (_workPath / "no-such-directory").string();
     _dftbRunner.setScriptPath(scriptDirectory + '/');
-    settings::QMSettings::setQMScript("this-script-does-not-exist.sh");
+    QMSettings::setQMScript("this-script-does-not-exist.sh");
 
     EXPECT_THROW_MSG(
         _dftbRunner.execute(_simulationBox),
@@ -477,7 +477,7 @@ TEST_F(ExternalQMRunnerTest, pyscfExecuteRejectsMissingScript)
 
     auto runner = QM::PySCFRunner();
     runner.setScriptPath(scriptDirectory + '/');
-    settings::QMSettings::setQMScript("this-script-does-not-exist.py");
+    QMSettings::setQMScript("this-script-does-not-exist.py");
 
     EXPECT_THROW_MSG(
         runner.execute(_simulationBox),
@@ -496,7 +496,7 @@ TEST_F(ExternalQMRunnerTest, turbomoleExecuteRejectsMissingScript)
 
     auto runner = QM::TurbomoleRunner();
     runner.setScriptPath(scriptDirectory + '/');
-    settings::QMSettings::setQMScript("this-script-does-not-exist.sh");
+    QMSettings::setQMScript("this-script-does-not-exist.sh");
 
     EXPECT_THROW_MSG(
         runner.execute(_simulationBox),
@@ -776,7 +776,7 @@ namespace
 
 TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)
 {
-    settings::QMSettings::setQMLoopTimeLimit(1.0);
+    QMSettings::setQMLoopTimeLimit(1.0);
 
     auto runner = SlowExternalQMRunner{};
 

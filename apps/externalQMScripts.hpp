@@ -85,7 +85,6 @@ namespace cli
             case PYSCF: return pyScfScripts;
             case TURBOMOLE: return turbomoleScripts;
 
-            case NONE:
             case ASE_DFTBPLUS:
             case ASE_XTB:
             case MACE:
@@ -105,7 +104,6 @@ namespace cli
             case PYSCF: return "pyscf";
             case TURBOMOLE: return "turbomole";
 
-            case NONE:
             case ASE_DFTBPLUS:
             case ASE_XTB:
             case MACE:
@@ -124,7 +122,6 @@ namespace cli
             case DFTBPLUS: return dftbPlusScripts.front().name;
             case TURBOMOLE: return turbomoleScripts.front().name;
 
-            case NONE:
             case ASE_DFTBPLUS:
             case ASE_XTB:
             case PYSCF:

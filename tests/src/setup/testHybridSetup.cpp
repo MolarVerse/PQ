@@ -58,7 +58,7 @@ namespace
     void configureValidHybridSettings(engine::Engine &engine)
     {
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+        QMSettings::setQMMethod(QMMethod::DFTBPLUS);
         settings::HybridSettings::setForcedCoreList({});
         settings::HybridSettings::setForcedLayerList({});
         settings::HybridSettings::setForcedOuterList({});
@@ -209,7 +209,7 @@ TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
 {
     configureValidHybridSettings(*_engine);
-    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
+    QMSettings::setQMMethod(QMMethod::TURBOMOLE);
     settings::HybridSettings::setInnerRegionCenter({0, 1});
     settings::HybridSettings::setForcedCoreList({0});
     settings::HybridSettings::setForcedLayerList({1});
@@ -239,7 +239,7 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
 
     for (const auto method : unsupported)
     {
-        settings::QMSettings::setQMMethod(method);
+        QMSettings::setQMMethod(method);
         EXPECT_THROW_MSG(
             setup.validateQMMethod(),
             exc::InputFileException,
@@ -250,9 +250,9 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
         );
     }
 
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     EXPECT_NO_THROW(setup.validateQMMethod());
-    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
+    QMSettings::setQMMethod(QMMethod::TURBOMOLE);
     EXPECT_NO_THROW(setup.validateQMMethod());
 }
 

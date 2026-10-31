@@ -33,7 +33,7 @@
 TEST_F(TestInputFileReader, parseQMMethod)
 {
     using enum QMMethod;
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), NONE);
+    EXPECT_EQ(QMSettings::getQMMethod(), NONE);
 
     auto       parser  = input::QMInputParser();
     const auto funcMap = parser.getKeywordFuncMap();
@@ -41,52 +41,52 @@ TEST_F(TestInputFileReader, parseQMMethod)
     const auto& parseFunc = funcMap.at("qm_prog");
 
     parseFunc({"qm_prog", "=", "dftbplus"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), DFTBPLUS);
+    EXPECT_EQ(QMSettings::getQMMethod(), DFTBPLUS);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "pyscf"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), PYSCF);
+    EXPECT_EQ(QMSettings::getQMMethod(), PYSCF);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "turbomole"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), TURBOMOLE);
+    EXPECT_EQ(QMSettings::getQMMethod(), TURBOMOLE);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "mace"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "ase_dftbplus"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), ASE_DFTBPLUS);
+    EXPECT_EQ(QMSettings::getQMMethod(), ASE_DFTBPLUS);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "ase_xtb"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), ASE_XTB);
+    EXPECT_EQ(QMSettings::getQMMethod(), ASE_XTB);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "fennol"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), FENNOL);
+    EXPECT_EQ(QMSettings::getQMMethod(), FENNOL);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "mace"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "mace_mp"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "mace_off"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMMethod(), MACE);
+    EXPECT_EQ(QMSettings::getQMMethod(), MACE);
 
     _clearParser(parser);
 
@@ -122,7 +122,7 @@ TEST_F(TestInputFileReader, parseQMScript)
     ASSERT_TRUE(funcMap.contains("qm_script"));
     const auto& parseFunc = funcMap.at("qm_script");
     parseFunc({"qm_script", "=", "script.sh"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMScript(), "script.sh");
+    EXPECT_EQ(QMSettings::getQMScript(), "script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMScriptFullPath)
@@ -132,10 +132,7 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
     ASSERT_TRUE(funcMap.contains("qm_script_full_path"));
     const auto& parseFunc = funcMap.at("qm_script_full_path");
     parseFunc({"qm_script_full_path", "=", "/path/to/QM/Script.sh"}, 0);
-    EXPECT_EQ(
-        settings::QMSettings::getQMScriptFullPath(),
-        "/path/to/QM/Script.sh"
-    );
+    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/QM/Script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
@@ -145,17 +142,17 @@ TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
     ASSERT_TRUE(funcMap.contains("qm_loop_time_limit"));
     const auto& parseFunc = funcMap.at("qm_loop_time_limit");
     parseFunc({"qm_loop_time_limit", "=", "10"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMLoopTimeLimit(), 10);
+    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), 10);
 
     _clearParser(parser);
 
     parseFunc({"qm_loop_time_limit", "=", "-1"}, 0);
-    EXPECT_EQ(settings::QMSettings::getQMLoopTimeLimit(), -1);
+    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), -1);
 }
 
 TEST_F(TestInputFileReader, parseDispersion)
 {
-    EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     auto       parser  = input::QMInputParser();
     const auto funcMap = parser.getKeywordFuncMap();
@@ -163,32 +160,32 @@ TEST_F(TestInputFileReader, parseDispersion)
     const auto& parseFunc = funcMap.at("dispersion");
 
     parseFunc({"dispersion", "=", "true"}, 0);
-    EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "yes"}, 0);
-    EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "on"}, 0);
-    EXPECT_TRUE(settings::QMSettings::useDispersionCorr());
+    EXPECT_TRUE(QMSettings::useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "false"}, 0);
-    EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "no"}, 0);
-    EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "off"}, 0);
-    EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
+    EXPECT_FALSE(QMSettings::useDispersionCorr());
 
     _clearParser(parser);
 
@@ -202,7 +199,7 @@ TEST_F(TestInputFileReader, parseDispersion)
 
 TEST_F(TestInputFileReader, parseRemoveNetForce)
 {
-    EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
 
     auto       parser  = input::QMInputParser();
     const auto funcMap = parser.getKeywordFuncMap();
@@ -210,32 +207,32 @@ TEST_F(TestInputFileReader, parseRemoveNetForce)
     const auto& parseFunc = funcMap.at("remove_net_force");
 
     parseFunc({"remove_net_force", "=", "true"}, 0);
-    EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "yes"}, 0);
-    EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "on"}, 0);
-    EXPECT_TRUE(settings::QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(QMSettings::getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "false"}, 0);
-    EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "no"}, 0);
-    EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "off"}, 0);
-    EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(QMSettings::getRemoveNetForce());
 
     _clearParser(parser);
 
@@ -255,13 +252,13 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
     auto parser = input::QMInputParser();
 
     input::QMInputParser::parseMaceQMMethod("mace");
-    EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
 
     input::QMInputParser::parseMaceQMMethod("mace_mp");
-    EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_MP);
 
     input::QMInputParser::parseMaceQMMethod("mace_off");
-    EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_OFF);
+    EXPECT_EQ(QMSettings::getMaceModelType(), MACE_OFF);
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("mace_ani"),
@@ -293,62 +290,62 @@ TEST_F(TestInputFileReader, parseMaceModel)
     const auto& parseFunc = funcMap.at("mace_model");
 
     parseFunc({"mace_model", "=", "small"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL);
+    EXPECT_EQ(QMSettings::getMaceModel(), SMALL);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "medium"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "large"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE);
+    EXPECT_EQ(QMSettings::getMaceModel(), LARGE);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "small_0b"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL_0B);
+    EXPECT_EQ(QMSettings::getMaceModel(), SMALL_0B);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "medium_0b"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM_0B);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "small_0b2"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), SMALL_0B2);
+    EXPECT_EQ(QMSettings::getMaceModel(), SMALL_0B2);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "medium_0b2"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B2);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM_0B2);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "large_0b2"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), LARGE_0B2);
+    EXPECT_EQ(QMSettings::getMaceModel(), LARGE_0B2);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "medium_0b3"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_0B3);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM_0B3);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "medium_mpa_0"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_MPA_0);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM_MPA_0);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "medium_omat_0"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), MEDIUM_OMAT_0);
+    EXPECT_EQ(QMSettings::getMaceModel(), MEDIUM_OMAT_0);
 
     _clearParser(parser);
 
     parseFunc({"mace_model", "=", "custom"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModel(), CUSTOM);
+    EXPECT_EQ(QMSettings::getMaceModel(), CUSTOM);
 
     _clearParser(parser);
 
@@ -372,12 +369,12 @@ TEST_F(TestInputFileReader, parseMaceMode)
     const auto& parseFunc = funcMap.at("mace_mode");
 
     parseFunc({"mace_mode", "=", "accurate"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceMode(), ACCURATE);
+    EXPECT_EQ(QMSettings::getMaceMode(), ACCURATE);
 
     _clearParser(parser);
 
     parseFunc({"mace_mode", "=", "fast"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceMode(), FAST);
+    EXPECT_EQ(QMSettings::getMaceMode(), FAST);
 
     _clearParser(parser);
 
@@ -396,10 +393,10 @@ TEST_F(TestInputFileReader, parseMaceModelPath)
     ASSERT_TRUE(funcMap.contains("mace_model_path"));
     const auto& parseFunc = funcMap.at("mace_model_path");
 
-    settings::QMSettings::setMaceModelPath("");
-    EXPECT_EQ(settings::QMSettings::getMaceModelPath(), "");
+    QMSettings::setMaceModelPath("");
+    EXPECT_EQ(QMSettings::getMaceModelPath(), "");
     parseFunc({"mace_model_path", "=", "/pAth/to/mace.model"}, 0);
-    EXPECT_EQ(settings::QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
+    EXPECT_EQ(QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
 }
 
 TEST_F(TestInputFileReader, parseSlakosType)
@@ -413,12 +410,12 @@ TEST_F(TestInputFileReader, parseSlakosType)
 
 #ifdef WITH_ASE
     parseFunc({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
 
     _clearParser(parser);
 
     parseFunc({"slakos", "=", "matsci"}, 0);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::MATSCI);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
 
     _clearParser(parser);
 #else
@@ -442,7 +439,7 @@ TEST_F(TestInputFileReader, parseSlakosType)
 #endif
 
     parseFunc({"slakos", "=", "custom"}, 0);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::CUSTOM);
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
 
     _clearParser(parser);
 
@@ -468,16 +465,16 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
     slakosParseFunc({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 
     _clearParser(parser);
 
     auto parser2 = input::QMInputParser();
     slakosParseFunc({"slakos", "=", "3ob"}, 0);
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 }
 #endif
 
@@ -494,12 +491,12 @@ TEST_F(TestInputFileReader, parseSlakosPath)
 
     slakosParseFunc({"slakos", "=", "custom"}, 0);
     slakosPathParseFunc({"slakos_path", "=", "/path/to/slakos"}, 0);
-    EXPECT_EQ(settings::QMSettings::getSlakosPath(), "/path/to/slakos");
+    EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
 }
 
 TEST_F(TestInputFileReader, parseThirdOrder)
 {
-    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 
     auto       parser  = input::QMInputParser();
     const auto funcMap = parser.getKeywordFuncMap();
@@ -507,33 +504,33 @@ TEST_F(TestInputFileReader, parseThirdOrder)
     const auto& thirdOrderParseFunc = funcMap.at("third_order");
 
     thirdOrderParseFunc({"third_order", "=", "on"}, 0);
-    EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
-    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "true"}, 0);
-    EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "false"}, 0);
-    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "yes"}, 0);
-    EXPECT_TRUE(settings::QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "no"}, 0);
-    EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
-    EXPECT_TRUE(settings::QMSettings::isThirdOrderDftbSet());
+    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(QMSettings::isThirdOrderDftbSet());
 
     _clearParser(parser);
 
@@ -554,7 +551,7 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
 
     hubbardDerivsParseFunc({"hubbard_derivs", "=", "H:1.0,He:2.0"}, 0);
 
-    const auto hubbardDerivs = settings::QMSettings::getHubbardDerivs();
+    const auto hubbardDerivs = QMSettings::getHubbardDerivs();
     EXPECT_EQ(hubbardDerivs.size(), 2);
     EXPECT_EQ(hubbardDerivs.at("H"), 1.0);
     EXPECT_EQ(hubbardDerivs.at("He"), 2.0);
@@ -600,17 +597,17 @@ TEST_F(TestInputFileReader, parseXtbMethod)
     const auto& xtbMethodParseFunc = funcMap.at("xtb_method");
 
     xtbMethodParseFunc({"xtb_method", "=", "Gfn1-XTb"}, 0);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::GFN1);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
 
     _clearParser(parser);
 
     xtbMethodParseFunc({"xtb_method", "=", "gfN2-XTb"}, 0);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::GFN2);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
 
     _clearParser(parser);
 
     xtbMethodParseFunc({"xtb_method", "=", "iPEa1-XTb"}, 0);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
 
     _clearParser(parser);
 
@@ -632,15 +629,12 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
     ASSERT_TRUE(funcMap.contains("fennol_model_path"));
     const auto& fennolModelPathParseFunc = funcMap.at("fennol_model_path");
 
-    EXPECT_EQ(settings::QMSettings::getFennolModelPath(), "");
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "");
     fennolModelPathParseFunc(
         {"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"},
         0
     );
-    EXPECT_EQ(
-        settings::QMSettings::getFennolModelPath(),
-        "/pAth/to/fennol_model.fnx"
-    );
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
 }
 
 TEST_F(TestInputFileReader, parseGPUPreprocessing)
@@ -652,14 +646,14 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
     ASSERT_TRUE(funcMap.contains("gpu_preprocessing"));
     const auto& gpuPreprocessingParseFunc = funcMap.at("gpu_preprocessing");
 
-    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
     gpuPreprocessingParseFunc({"GPU-Preprocessing", "=", "false"}, 0);
-    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
 
     _clearParser(parser);
 
     gpuPreprocessingParseFunc({"gpu_preprocessing", "=", "on"}, 0);
-    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
 
     _clearParser(parser);
 
@@ -674,10 +668,10 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
 TEST_F(TestInputFileReader, processFennolKeywords)
 {
     _inputFileReader->process({"fennol-model-path", "=", "model.fnx"});
-    EXPECT_EQ(settings::QMSettings::getFennolModelPath(), "model.fnx");
+    EXPECT_EQ(QMSettings::getFennolModelPath(), "model.fnx");
     EXPECT_EQ(_inputFileReader->getKeywordCount("fennol_model_path"), 1);
 
     _inputFileReader->process({"GPU-Preprocessing", "=", "off"});
-    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
     EXPECT_EQ(_inputFileReader->getKeywordCount("gpu_preprocessing"), 1);
 }

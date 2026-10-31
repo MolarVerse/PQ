@@ -39,6 +39,7 @@ namespace QM
         ~AseFennolRunner() override = default;
 
         explicit AseFennolRunner(
+            const QMSettings&  qmSettings,
             const std::string& modelPath,
             bool               gpuPreprocessing,
             bool               useFloat64
