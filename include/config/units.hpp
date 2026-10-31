@@ -33,10 +33,13 @@
 
 #include <mstd/units.hpp>
 
+// NOLINTBEGIN(readability-identifier-length)
+
 inline constexpr auto rad = mstd::units::rad;
 inline constexpr auto deg = mstd::units::deg;
 
 inline constexpr auto ps = mstd::units::ps;
 inline constexpr auto fs = mstd::units::fs;
 
+// NOLINTEND(readability-identifier-length)
 #endif   // __UNITS_HPP__
