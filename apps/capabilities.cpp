@@ -36,6 +36,7 @@
 #include "externalQMScripts.hpp"
 #include "jsonOutput.hpp"
 #include "systemInfo.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -296,7 +297,10 @@ namespace
         json.value("parameter", "timestep");
         json.value("factor", FS_TO_PS);
         json.endObject();
-        json.value("default", defaults::BERENDSEN_MANOSTAT_RELAX_TIME);
+        json.value(
+            "default",
+            defaults::BERENDSEN_MANOSTAT_RELAX_TIME.numerical_value_in(ps)
+        );
         json.endObject();
 
         beginParameter(

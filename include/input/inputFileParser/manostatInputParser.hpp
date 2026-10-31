@@ -23,7 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__MANOSTAT_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__MANOSTAT_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class ManostatSettings;
 
 namespace input
 {
@@ -35,8 +39,10 @@ namespace input
      */
     class ManostatInputParser : public InputFileParser
     {
+        mstd::Ref<ManostatSettings> _manostatSettings;
+
        public:
-        explicit ManostatInputParser();
+        explicit ManostatInputParser(ManostatSettings& manostatSettings);
 
         void addManostatKey();
         void addPressureKey();

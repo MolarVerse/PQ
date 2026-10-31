@@ -119,14 +119,14 @@ namespace out
             );
         }
 
-        if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
+        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             _getFilePointer()
                 << std::format("{:20.12f}\t", physicalData.getVolume());
             _getFilePointer()
                 << std::format("{:20.12f}\t", physicalData.getDensity());
 
-            if (settings::ManostatSettings::getFixedAxis() != FixedAxis::NONE)
+            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
             {
                 _getFilePointer() << std::format(
                     "{:20.12f}\t",

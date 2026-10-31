@@ -40,6 +40,7 @@ namespace engine
 
 struct Settings;               // forward declaration
 class SimulationBoxSettings;   // forward declaration
+class ManostatSettings;        // forward declaration
 
 /**
  * @brief namespace for reading input files
@@ -121,9 +122,9 @@ namespace input
         void _validateThermostat(
             const SimulationBoxSettings &simBoxSettings
         ) const;
-        void        _validateManostat() const;
-        void        _validateReactionFieldCoulomb() const;
-        void        _validateRingPolymer() const;
+        void _validateManostat(const ManostatSettings &manostatSettings) const;
+        void _validateReactionFieldCoulomb() const;
+        void _validateRingPolymer() const;
         static void _validateCellList();
     };
 

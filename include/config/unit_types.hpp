@@ -36,5 +36,6 @@
 #include "vector3d.hpp"
 
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
+using Time     = mstd::quantity<mstd::units::fs>;
 
 #endif   // CONFIG__UNIT_TYPES_HPP

@@ -108,6 +108,9 @@ namespace molsys
         [[nodiscard]]
         virtual linalg::tensor3D toSimSpace(const linalg::tensor3D &) const = 0;
 
+        [[nodiscard]]
+        virtual bool allowChangeOfAngles() const = 0;
+
         /********************
          * standard getters *
          ********************/

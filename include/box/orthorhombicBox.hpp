@@ -88,6 +88,9 @@ namespace molsys
         linalg::tensor3D toSimSpace(
             const linalg::tensor3D &position
         ) const override;
+
+        [[nodiscard]]
+        bool allowChangeOfAngles() const override;
     };
 
 }   // namespace molsys

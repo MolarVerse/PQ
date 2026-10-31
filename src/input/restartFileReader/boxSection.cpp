@@ -117,7 +117,10 @@ namespace input::restartFile
                 TRICLINIC_BOX_ANGLE_THRESHOLD
             ))
         {
-            molsys::TriclinicBox box{boxDimensions, boxAngles};
+            bool isFullIsotropic =
+                engine.getSettings().manostatSettings.getIsotropy() ==
+                Isotropy::FULL_ANISOTROPIC;
+            molsys::TriclinicBox box{boxDimensions, boxAngles, isFullIsotropic};
             engine.getSimulationBox().setBox(box, true);
 
             const auto jobType = settings::GeneralSettings::getJobtype();

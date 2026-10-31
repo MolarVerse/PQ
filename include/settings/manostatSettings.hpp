@@ -23,65 +23,59 @@
 #ifndef SETTINGS__MANOSTAT_SETTINGS_HPP
 #define SETTINGS__MANOSTAT_SETTINGS_HPP
 
-#include "defaults.hpp"
 #include "enums/manostat.hpp"
+#include "setting.hpp"
+#include "unit_types.hpp"
 
-namespace settings
+/**
+ * @class ManostatSettings
+ *
+ * @brief  class to store settings of the manosta constt
+ *
+ */
+class ManostatSettings
 {
-    /**
-     * @class ManostatSettings
-     *
-     * @brief static class to store settings of the manostat
-     *
-     */
-    class ManostatSettings
-    {
-       private:
-        static inline ManostatType _manostatType   = ManostatType::NONE;
-        static inline Isotropy     _isotropy       = Isotropy::ISOTROPIC;
-        static inline FixedAxis    _fixedAxis      = FixedAxis::ALL;
-        static inline bool         _isFixedAxisSet = false;
+   private:
+    Setting<ManostatType> _manostatType;
+    Setting<Isotropy>     _isotropy;
+    Setting<FixedAxis>    _fixedAxis;
 
-        static inline double _targetPressure;
+    Setting<double> _targetPressure;
 
-        static inline double _tauManostat =
-            defaults::BERENDSEN_MANOSTAT_RELAX_TIME;
-        static inline double _compressibility =
-            defaults::COMPRESSIBILITY_WATER_DEFAULT;
+    Setting<Time>   _tau;
+    Setting<double> _compressibility;
 
-       public:
-        ManostatSettings()  = default;
-        ~ManostatSettings() = default;
+   public:
+    ManostatSettings();
 
-        /***************************
-         * standard setter methods *
-         ***************************/
+    void finalize();
 
-        static void setManostatType(ManostatType manostatType);
-        static void setIsotropy(Isotropy isotropy);
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-        static void setFixedAxis(FixedAxis fixedAxis);
-        static void setIsFixedAxisSet(bool isSet);
+    void setManostatType(ManostatType manostatType);
+    void setIsotropy(Isotropy isotropy);
 
-        static void setTargetPressure(double targetPressure);
-        static void setTauManostat(double tauManostat);
-        static void setCompressibility(double compressibility);
+    void setFixedAxis(FixedAxis fixedAxis);
 
-        /***************************
-         * standard getter methods *
-         ***************************/
+    void setTargetPressure(double targetPressure);
+    void setTau(const Time& tau);
+    void setCompressibility(double compressibility);
 
-        [[nodiscard]] static bool isBerendsenBased();
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-        [[nodiscard]] static ManostatType getManostatType();
-        [[nodiscard]] static Isotropy     getIsotropy();
-        [[nodiscard]] static FixedAxis    getFixedAxis();
-        [[nodiscard]] static bool         isFixedAxisSet();
-        [[nodiscard]] static double       getTargetPressure();
-        [[nodiscard]] static double       getTauManostat();
-        [[nodiscard]] static double       getCompressibility();
-    };
+    [[nodiscard]] bool isBerendsenBased() const;
 
-}   // namespace settings
+    [[nodiscard]] ManostatType getManostatType() const;
+    [[nodiscard]] Isotropy     getIsotropy() const;
+    [[nodiscard]] FixedAxis    getFixedAxis() const;
+    [[nodiscard]] bool         isFixedAxisSet() const;
+    [[nodiscard]] double       getTargetPressure() const;
+    [[nodiscard]] const Time&  getTau() const;
+    [[nodiscard]] double       getCompressibility() const;
+};
 
 #endif   // SETTINGS__MANOSTAT_SETTINGS_HPP
