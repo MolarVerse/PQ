@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_ENUM_HPP_
-#define _MANOSTAT_ENUM_HPP_
+#ifndef CONFIG__ENUMS__MANOSTAT_HPP
+#define CONFIG__ENUMS__MANOSTAT_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -142,4 +142,4 @@ struct mstd::EnumAliases<FixedAxis>
 #undef FIXED_AXIS_LIST
 #undef U
 
-#endif   // _MANOSTAT_ENUM_HPP_
+#endif   // CONFIG__ENUMS__MANOSTAT_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COMMAND_LINE_ARGS_HPP_
-
-#define _COMMAND_LINE_ARGS_HPP_
+#ifndef APPS__COMMAND_LINE__COMMAND_LINE_ARGS_HPP
+#define APPS__COMMAND_LINE__COMMAND_LINE_ARGS_HPP
 
 #include <cstdint>
 #include <string>
@@ -76,4 +75,4 @@ class CommandLineArgs
     [[nodiscard]] ValidationScope   getValidationScope() const;
 };
 
-#endif   // _COMMAND_LINE_ARGS_HPP_
+#endif   // APPS__COMMAND_LINE__COMMAND_LINE_ARGS_HPP

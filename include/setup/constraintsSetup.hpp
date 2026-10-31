@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTRAINTS_SETUP_HPP_
-
-#define _CONSTRAINTS_SETUP_HPP_
+#ifndef SETUP__CONSTRAINTS_SETUP_HPP
+#define SETUP__CONSTRAINTS_SETUP_HPP
 
 #include <cstddef>
 
@@ -75,4 +74,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _CONSTRAINTS_SETUP_HPP_
+#endif   // SETUP__CONSTRAINTS_SETUP_HPP

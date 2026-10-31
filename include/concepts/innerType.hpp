@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INNER_TYPE_HPP_
-
-#define _INNER_TYPE_HPP_
+#ifndef CONCEPTS__INNER_TYPE_HPP
+#define CONCEPTS__INNER_TYPE_HPP
 
 #include <mstd/type_traits.hpp>
 
@@ -73,4 +72,4 @@ namespace pq
 
 }   // namespace pq
 
-#endif   // _INNER_TYPE_HPP_
+#endif   // CONCEPTS__INNER_TYPE_HPP

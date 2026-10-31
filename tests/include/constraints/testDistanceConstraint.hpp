@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_DISTANCE_CONSTRAINT_HPP_
-
-#define _TEST_DISTANCE_CONSTRAINT_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_DISTANCE_CONSTRAINT_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_DISTANCE_CONSTRAINT_HPP
 
 #include <gtest/gtest.h>
 
@@ -89,4 +88,4 @@ class TestDistanceConstraint : public ::testing::Test
     }
 };
 
-#endif   // _TEST_DISTANCE_CONSTRAINT_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_DISTANCE_CONSTRAINT_HPP

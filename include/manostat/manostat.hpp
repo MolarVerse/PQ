@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_HPP_
-
-#define _MANOSTAT_HPP_
+#ifndef MANOSTAT__MANOSTAT_HPP
+#define MANOSTAT__MANOSTAT_HPP
 
 #include "enums/manostat.hpp"
 #include "staticMatrix.hpp"
@@ -96,4 +95,4 @@ namespace manostat
 
 }   // namespace manostat
 
-#endif   // _MANOSTAT_HPP_
+#endif   // MANOSTAT__MANOSTAT_HPP

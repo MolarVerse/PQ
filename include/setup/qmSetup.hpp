@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_SETUP_HPP_
-
-#define _QM_SETUP_HPP_
+#ifndef SETUP__QM_SETUP_HPP
+#define SETUP__QM_SETUP_HPP
 
 #include "qmCapableEngine.hpp"
 namespace engine
@@ -60,4 +59,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _QM_SETUP_HPP_
+#endif   // SETUP__QM_SETUP_HPP

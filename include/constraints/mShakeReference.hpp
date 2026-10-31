@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _M_SHAKE_REFERENCE_HPP_
-
-#define _M_SHAKE_REFERENCE_HPP_
+#ifndef CONSTRAINTS__M_SHAKE_REFERENCE_HPP
+#define CONSTRAINTS__M_SHAKE_REFERENCE_HPP
 
 #include <atom.hpp>
 #include <cstddef>
@@ -69,4 +68,4 @@ namespace constraints
     };
 }   // namespace constraints
 
-#endif   // _M_SHAKE_REFERENCE_HPP_
+#endif   // CONSTRAINTS__M_SHAKE_REFERENCE_HPP

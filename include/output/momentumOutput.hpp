@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOMENTUM_OUTPUT_HPP_
-
-#define _MOMENTUM_OUTPUT_HPP_
+#ifndef OUTPUT__MOMENTUM_OUTPUT_HPP
+#define OUTPUT__MOMENTUM_OUTPUT_HPP
 
 #include <cstddef>
 
@@ -51,4 +50,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _MOMENTUM_OUTPUT_HPP_
+#endif   // OUTPUT__MOMENTUM_OUTPUT_HPP

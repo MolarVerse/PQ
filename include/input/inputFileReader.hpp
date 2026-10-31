@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_READER_HPP_
-
-#define _INPUT_FILE_READER_HPP_
+#ifndef INPUT__INPUT_FILE_READER_HPP
+#define INPUT__INPUT_FILE_READER_HPP
 
 #include <cstddef>
 #include <map>
@@ -130,4 +129,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_READER_HPP_
+#endif   // INPUT__INPUT_FILE_READER_HPP

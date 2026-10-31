@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_ENGINE_HPP_
-
-#define _HESSIAN_ENGINE_HPP_
+#ifndef ENGINE__HESSIAN_ENGINE_HPP
+#define ENGINE__HESSIAN_ENGINE_HPP
 
 #include <memory>
 
@@ -74,4 +73,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _HESSIAN_ENGINE_HPP_
+#endif   // ENGINE__HESSIAN_ENGINE_HPP

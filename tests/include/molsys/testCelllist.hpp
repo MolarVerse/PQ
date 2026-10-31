@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_CELL_LIST_HPP_
-
-#define _TEST_CELL_LIST_HPP_
+#ifndef TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP
+#define TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP
 
 #include <gtest/gtest.h>
 
@@ -54,4 +53,4 @@ class TestCellList : public ::testing::Test
     }
 };
 
-#endif   // _TEST_CELL_LIST_HPP_
+#endif   // TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP

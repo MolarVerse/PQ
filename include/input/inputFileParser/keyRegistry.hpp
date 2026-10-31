@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _KEY_REGISTRY_HPP_
-#define _KEY_REGISTRY_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__KEY_REGISTRY_HPP
+#define INPUT__INPUT_FILE_PARSER__KEY_REGISTRY_HPP
 
 #include <functional>
 #include <memory>
@@ -49,4 +49,4 @@ namespace input
     };
 }   // namespace input
 
-#endif   // _KEY_REGISTRY_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__KEY_REGISTRY_HPP

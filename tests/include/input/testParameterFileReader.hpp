@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_PARAMETER_FILE_READER_HPP_
-
-#define _TEST_PARAMETER_FILE_READER_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP
 
 #include <gtest/gtest.h>
 
@@ -67,4 +66,4 @@ class TestParameterFileReader : public ::testing::Test
     }
 };
 
-#endif   // _TEST_PARAMETER_FILE_READER_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP

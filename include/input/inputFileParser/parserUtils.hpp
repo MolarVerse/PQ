@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARSER_UTILS_HPP_
-
-#define _PARSER_UTILS_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__PARSER_UTILS_HPP
+#define INPUT__INPUT_FILE_PARSER__PARSER_UTILS_HPP
 
 namespace input
 {
@@ -40,8 +39,8 @@ namespace input
 
 }   // namespace input
 
-#ifndef _PARSER_UTILS_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__PARSER_UTILS_TPP
 #include "parserUtils.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _PARSER_UTILS_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__PARSER_UTILS_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CAPABILITIES_HPP_
-
-#define _CAPABILITIES_HPP_
+#ifndef APPS__CAPABILITIES_HPP
+#define APPS__CAPABILITIES_HPP
 
 #include <iosfwd>
 
@@ -31,4 +30,4 @@ namespace cli
     void writeCapabilities(std::ostream &output);
 }   // namespace cli
 
-#endif   // _CAPABILITIES_HPP_
+#endif   // APPS__CAPABILITIES_HPP

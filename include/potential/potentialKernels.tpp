@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_KERNELS_TPP_
-
-#define _POTENTIAL_KERNELS_TPP_
+#ifndef POTENTIAL__POTENTIAL_KERNELS_TPP
+#define POTENTIAL__POTENTIAL_KERNELS_TPP
 
 /**
- * @file potentialKernels.tpp.hpp
+ * @file potentialKernels.tpp
  *
  * @brief Definitions of the per-pair non-bonded kernels of pot::Potential.
  *
@@ -326,4 +325,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _POTENTIAL_KERNELS_TPP_
+#endif   // POTENTIAL__POTENTIAL_KERNELS_TPP

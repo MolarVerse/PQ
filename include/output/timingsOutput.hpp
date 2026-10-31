@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __TIMINGS_OUTPUT_HPP__
-
-#define __TIMINGS_OUTPUT_HPP__
+#ifndef OUTPUT__TIMINGS_OUTPUT_HPP
+#define OUTPUT__TIMINGS_OUTPUT_HPP
 
 #include "output.hpp"
 
@@ -50,4 +49,4 @@ namespace out
 
 }   // namespace out
 
-#endif /* __TIMINGS_OUTPUT_HPP__ */
+#endif /* OUTPUT__TIMINGS_OUTPUT_HPP */

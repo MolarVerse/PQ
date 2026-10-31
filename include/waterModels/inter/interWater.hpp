@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_HPP_
-
-#define _INTER_WATER_HPP_
+#ifndef WATER_MODELS__INTER__INTER_WATER_HPP
+#define WATER_MODELS__INTER__INTER_WATER_HPP
 
 #include <memory>
 
@@ -327,8 +326,8 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#ifndef _INTER_WATER_TPP_
+#ifndef WATER_MODELS__INTER__INTER_WATER_TPP
 #include "interWater.tpp"
 #endif
 
-#endif   //  _INTER_WATER_HPP_
+#endif   //  WATER_MODELS__INTER__INTER_WATER_HPP

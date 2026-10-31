@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BERENDSEN_MANOSTAT_HPP_
-
-#define _BERENDSEN_MANOSTAT_HPP_
+#ifndef MANOSTAT__BERENDSEN_MANOSTAT_HPP
+#define MANOSTAT__BERENDSEN_MANOSTAT_HPP
 
 #include "manostat.hpp"
 
@@ -123,4 +122,4 @@ namespace manostat
 
 }   // namespace manostat
 
-#endif   // _BERENDSEN_MANOSTAT_HPP_
+#endif   // MANOSTAT__BERENDSEN_MANOSTAT_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MATRIX_CLASS_HPP_
-
-#define _MATRIX_CLASS_HPP_
+#ifndef LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_HPP
+#define LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_HPP
 
 #include <Eigen/Dense>
 #include <cstddef>
@@ -63,8 +62,8 @@ namespace linalg
 
 }   // namespace linalg
 
-#ifndef _MATRIX_CLASS_TPP_
-#include "matrixClass.tpp.hpp"   // IWYU pragma: export
+#ifndef LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_TPP
+#include "matrixClass.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _MATRIX_CLASS_HPP_
+#endif   // LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_HPP

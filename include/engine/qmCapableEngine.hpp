@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_CAPABLE_ENGINE_HPP_
-
-#define _QM_CAPABLE_ENGINE_HPP_
+#ifndef ENGINE__QM_CAPABLE_ENGINE_HPP
+#define ENGINE__QM_CAPABLE_ENGINE_HPP
 
 #include <memory>
 
@@ -54,4 +53,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _QM_CAPABLE_ENGINE_HPP_
+#endif   // ENGINE__QM_CAPABLE_ENGINE_HPP

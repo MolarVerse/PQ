@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __TRANSFORM_VIEW_HPP__
-#define __TRANSFORM_VIEW_HPP__
+#ifndef VIEWS__TRANSFORM_VIEW_HPP
+#define VIEWS__TRANSFORM_VIEW_HPP
 
 #include <utility>
 
@@ -126,4 +126,4 @@ namespace pqviews
 
 }   // namespace pqviews
 
-#endif   // __TRANSFORM_VIEW_HPP__
+#endif   // VIEWS__TRANSFORM_VIEW_HPP

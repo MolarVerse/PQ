@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_THERMOSTAT_HPP_
-
-#define _TEST_THERMOSTAT_HPP_
+#ifndef TESTS__INCLUDE__THERMOSTAT__TEST_THERMOSTAT_HPP
+#define TESTS__INCLUDE__THERMOSTAT__TEST_THERMOSTAT_HPP
 
 #include <gtest/gtest.h>
 

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_SETTINGS_HPP_
-
-#define _QM_SETTINGS_HPP_
+#ifndef SETTINGS__QM_SETTINGS_HPP
+#define SETTINGS__QM_SETTINGS_HPP
 
 #include <string>
 #include <string_view>
@@ -142,4 +141,4 @@ namespace settings
     };
 }   // namespace settings
 
-#endif   // _QM_SETTINGS_HPP_
+#endif   // SETTINGS__QM_SETTINGS_HPP

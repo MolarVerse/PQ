@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_SETTINGS_HPP_
-
-#define _MANOSTAT_SETTINGS_HPP_
+#ifndef SETTINGS__MANOSTAT_SETTINGS_HPP
+#define SETTINGS__MANOSTAT_SETTINGS_HPP
 
 #include "defaults.hpp"
 #include "enums/manostat.hpp"
@@ -85,4 +84,4 @@ namespace settings
 
 }   // namespace settings
 
-#endif   // _MANOSTAT_SETTINGS_HPP_
+#endif   // SETTINGS__MANOSTAT_SETTINGS_HPP

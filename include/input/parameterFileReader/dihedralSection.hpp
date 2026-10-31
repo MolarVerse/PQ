@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DIHEDRAL_SECTION_HPP_
-
-#define _DIHEDRAL_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__DIHEDRAL_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__DIHEDRAL_SECTION_HPP
 
 #include <string>
 #include <vector>
@@ -60,4 +59,4 @@ namespace input::parameterFile
 
 }   // namespace input::parameterFile
 
-#endif   // _DIHEDRAL_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__DIHEDRAL_SECTION_HPP

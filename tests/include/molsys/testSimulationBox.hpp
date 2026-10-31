@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_SIMULATION_BOX_HPP_
-
-#define _TEST_SIMULATION_BOX_HPP_
+#ifndef TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP
+#define TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP
 
 #include <gtest/gtest.h>
 
@@ -98,4 +97,4 @@ class TestSimulationBox : public ::testing::Test
     }
 };
 
-#endif   // _TEST_SIMULATION_BOX_HPP_
+#endif   // TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GUFF_DAT_READER_HPP_
-
-#define _GUFF_DAT_READER_HPP_
+#ifndef INPUT__GUFF_DAT_READER_HPP
+#define INPUT__GUFF_DAT_READER_HPP
 
 #include <cstddef>
 #include <string>
@@ -149,4 +148,4 @@ namespace input::guffdat
 
 }   // namespace input::guffdat
 
-#endif   // _GUFF_DAT_READER_HPP_
+#endif   // INPUT__GUFF_DAT_READER_HPP

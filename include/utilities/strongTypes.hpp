@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STRONG_TYPES_HPP_
-#define _STRONG_TYPES_HPP_
+#ifndef UTILITIES__STRONG_TYPES_HPP
+#define UTILITIES__STRONG_TYPES_HPP
 
 #include <cstddef>
 #include <format>
@@ -201,4 +201,4 @@ struct JCouplingParams
     bool operator==(const JCouplingParams &other) const;
 };
 
-#endif   // _STRONG_TYPES_HPP_
+#endif   // UTILITIES__STRONG_TYPES_HPP

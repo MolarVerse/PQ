@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_CONFIGURATOR_HPP_
-
-#define _HYBRID_CONFIGURATOR_HPP_
+#ifndef HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP
+#define HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP
 
 #include <unordered_set>
 
@@ -69,4 +68,4 @@ namespace configurator
 
 }   // namespace configurator
 
-#endif   // _HYBRID_CONFIGURATOR_HPP_
+#endif   // HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP

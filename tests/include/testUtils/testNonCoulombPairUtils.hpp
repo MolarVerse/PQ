@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_NON_COULOMB_PAIR_UTILS_
-#define _TEST_NON_COULOMB_PAIR_UTILS_
+#ifndef TESTS__INCLUDE__TEST_UTILS__TEST_NON_COULOMB_PAIR_UTILS_HPP
+#define TESTS__INCLUDE__TEST_UTILS__TEST_NON_COULOMB_PAIR_UTILS_HPP
 
 #include "buckinghamPair.hpp"
 #include "guffPair.hpp"
@@ -66,4 +66,4 @@ struct TestGuffPairUtils
     );
 };
 
-#endif   // _TEST_NON_COULOMB_PAIR_UTILS_
+#endif   // TESTS__INCLUDE__TEST_UTILS__TEST_NON_COULOMB_PAIR_UTILS_HPP

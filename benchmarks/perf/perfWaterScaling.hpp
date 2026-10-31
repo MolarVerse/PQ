@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef PQ_BENCH_WATER_SCALING_HPP
-#define PQ_BENCH_WATER_SCALING_HPP
+#ifndef BENCHMARKS__PERF__PERF_WATER_SCALING_HPP
+#define BENCHMARKS__PERF__PERF_WATER_SCALING_HPP
 
 // Shared body of the cell list / inter-water scaling benchmarks: a cubic grid
 // of perSide^3 water molecules (4.5 A spacing, so the density is the same for
@@ -186,4 +186,4 @@ namespace benchWaterScaling
     }
 }   // namespace benchWaterScaling
 
-#endif   // PQ_BENCH_WATER_SCALING_HPP
+#endif   // BENCHMARKS__PERF__PERF_WATER_SCALING_HPP

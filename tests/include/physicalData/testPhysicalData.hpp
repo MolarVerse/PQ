@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_PHYSICAL_DATA_HPP_
-
-#define _TEST_PHYSICAL_DATA_HPP_
+#ifndef TESTS__INCLUDE__PHYSICAL_DATA__TEST_PHYSICAL_DATA_HPP
+#define TESTS__INCLUDE__PHYSICAL_DATA__TEST_PHYSICAL_DATA_HPP
 
 #include <gtest/gtest.h>
 

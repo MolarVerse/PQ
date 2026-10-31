@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLDESCRIPTOR_READER_HPP_
-
-#define _MOLDESCRIPTOR_READER_HPP_
+#ifndef INPUT__MOLDESCRIPTOR_READER_HPP
+#define INPUT__MOLDESCRIPTOR_READER_HPP
 
 #include <fstream>
 #include <string>
@@ -73,4 +72,4 @@ namespace input::molDescriptor
 
 }   // namespace input::molDescriptor
 
-#endif   // _MOLDESCRIPTOR_READER_HPP_
+#endif   // INPUT__MOLDESCRIPTOR_READER_HPP

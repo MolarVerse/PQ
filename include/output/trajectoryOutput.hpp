@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TRAJECTORY_OUTPUT_HPP_
-
-#define _TRAJECTORY_OUTPUT_HPP_
+#ifndef OUTPUT__TRAJECTORY_OUTPUT_HPP
+#define OUTPUT__TRAJECTORY_OUTPUT_HPP
 
 #include <cstddef>
 
@@ -74,4 +73,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _TRAJECTORY_OUTPUT_HPP_
+#endif   // OUTPUT__TRAJECTORY_OUTPUT_HPP

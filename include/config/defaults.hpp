@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DEFAULTS_HPP_
-
-#define _DEFAULTS_HPP_
+#ifndef CONFIG__DEFAULTS_HPP
+#define CONFIG__DEFAULTS_HPP
 
 #include <cstddef>
 
@@ -144,4 +143,4 @@ namespace defaults
 
 }   // namespace defaults
 
-#endif   // _DEFAULTS_HPP_
+#endif   // CONFIG__DEFAULTS_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARAMETER_FILE_READER_HPP_
-
-#define _PARAMETER_FILE_READER_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_READER_HPP
+#define INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_READER_HPP
 
 #include <fstream>
 #include <memory>
@@ -84,4 +83,4 @@ namespace input::parameterFile
 
 }   // namespace input::parameterFile
 
-#endif   // _PARAMETER_FILE_READER_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_READER_HPP

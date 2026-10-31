@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COULOMB_WOLF_HPP_
-
-#define _COULOMB_WOLF_HPP_
+#ifndef POTENTIAL__COULOMB__COULOMB_WOLF_HPP
+#define POTENTIAL__COULOMB__COULOMB_WOLF_HPP
 
 #include <utility>
 
@@ -77,4 +76,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _COULOMB_WOLF_HPP_
+#endif   // POTENTIAL__COULOMB__COULOMB_WOLF_HPP

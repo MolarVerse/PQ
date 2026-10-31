@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SHAKE_ENUM_HPP_
-#define _SHAKE_ENUM_HPP_
+#ifndef CONFIG__ENUMS__SHAKE_HPP
+#define CONFIG__ENUMS__SHAKE_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -41,4 +41,4 @@ enum class ShakeType : std::uint8_t;
 
 MSTD_ENUM(ShakeType, std::uint8_t, SHAKE_TYPE_LIST)
 
-#endif   // _SHAKE_ENUM_HPP_
+#endif   // CONFIG__ENUMS__SHAKE_HPP

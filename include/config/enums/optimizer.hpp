@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_ENUM_HPP_
-#define _OPTIMIZER_ENUM_HPP_
+#ifndef CONFIG__ENUMS__OPTIMIZER_HPP
+#define CONFIG__ENUMS__OPTIMIZER_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -73,4 +73,4 @@ namespace mstd
 
 #undef LEARNING_RATE_LIST
 
-#endif   // _OPTIMIZER_ENUM_HPP_
+#endif   // CONFIG__ENUMS__OPTIMIZER_HPP

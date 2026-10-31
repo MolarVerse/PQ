@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _WATER_MODEL_SETTINGS_HPP_
-
-#define _WATER_MODEL_SETTINGS_HPP_
+#ifndef SETTINGS__WATER_MODEL_SETTINGS_HPP
+#define SETTINGS__WATER_MODEL_SETTINGS_HPP
 
 #include <mstd/enum.hpp>
 
@@ -74,4 +73,4 @@ class WaterModelSettings
     void setWaterInterModel(WaterInterModel model);
 };
 
-#endif   // _WATER_MODEL_SETTINGS_HPP_
+#endif   // SETTINGS__WATER_MODEL_SETTINGS_HPP

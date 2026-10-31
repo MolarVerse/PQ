@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_TYPE_HPP_
-
-#define _BOND_TYPE_HPP_
+#ifndef FORCE_FIELD__BOND_TYPE_HPP
+#define FORCE_FIELD__BOND_TYPE_HPP
 
 #include "strongTypes.hpp"
 
@@ -61,4 +60,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _BOND_TYPE_HPP_
+#endif   // FORCE_FIELD__BOND_TYPE_HPP

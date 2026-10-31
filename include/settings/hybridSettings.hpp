@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_SETTINGS_HPP_
-
-#define _HYBRID_SETTINGS_HPP_
+#ifndef SETTINGS__HYBRID_SETTINGS_HPP
+#define SETTINGS__HYBRID_SETTINGS_HPP
 
 #include <optional>
 #include <vector>
@@ -98,4 +97,4 @@ namespace settings
     };
 }   // namespace settings
 
-#endif   // _HYBRID_SETTINGS_HPP_
+#endif   // SETTINGS__HYBRID_SETTINGS_HPP

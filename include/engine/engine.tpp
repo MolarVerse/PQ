@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_TPP_
-
-#define _ENGINE_TPP_
+#ifndef ENGINE__ENGINE_TPP
+#define ENGINE__ENGINE_TPP
 
 #include <memory>
 #include <type_traits>
@@ -62,4 +61,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _ENGINE_TPP_
+#endif   // ENGINE__ENGINE_TPP

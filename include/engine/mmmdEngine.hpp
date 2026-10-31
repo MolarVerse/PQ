@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_MD_ENGINE_HPP_
-
-#define _MM_MD_ENGINE_HPP_
+#ifndef ENGINE__MMMD_ENGINE_HPP
+#define ENGINE__MMMD_ENGINE_HPP
 
 #include "mdEngine.hpp"
 
@@ -47,4 +46,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _MM_MD_ENGINE_HPP_
+#endif   // ENGINE__MMMD_ENGINE_HPP

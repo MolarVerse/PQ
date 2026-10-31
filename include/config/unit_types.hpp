@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __UNIT_TYPES_HPP__
-#define __UNIT_TYPES_HPP__
+#ifndef CONFIG__UNIT_TYPES_HPP
+#define CONFIG__UNIT_TYPES_HPP
 
 /// NOTE FOR DEVELOPERS
 /// This header defines type aliases for commonly used unit types in the
@@ -37,4 +37,4 @@
 
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
 
-#endif   // __UNIT_TYPES_HPP__
+#endif   // CONFIG__UNIT_TYPES_HPP

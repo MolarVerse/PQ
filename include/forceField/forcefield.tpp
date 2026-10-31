@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_TPP_
-
-#define _FORCE_FIELD_TPP_
+#ifndef FORCE_FIELD__FORCEFIELD_TPP
+#define FORCE_FIELD__FORCEFIELD_TPP
 
 #include "forceField.hpp"
 #include "potentialSettings.hpp"
@@ -117,4 +116,4 @@ namespace ff
     }
 }   // namespace ff
 
-#endif   // _FORCE_FIELD_TPP_
+#endif   // FORCE_FIELD__FORCEFIELD_TPP

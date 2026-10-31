@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_FORCE_FIELD_HPP_
-
-#define _BOND_FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__BOND_FORCE_FIELD_HPP
+#define FORCE_FIELD__BOND_FORCE_FIELD_HPP
 
 #include "bond.hpp"
 
@@ -93,4 +92,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _BOND_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__BOND_FORCE_FIELD_HPP

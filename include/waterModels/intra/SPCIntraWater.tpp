@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SPC_INTRA_WATER_TPP_
-
-#define _SPC_INTRA_WATER_TPP_
+#ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP
+#define WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP
 
 #include <cmath>
 
@@ -54,7 +53,7 @@
  *
  * @note Inactive molecules are skipped.
  */
-void waterModel::SPCIntraWater::calculate(
+inline void waterModel::SPCIntraWater::calculate(
     molsys::SimulationBox&      simulationBox,
     physicalData::PhysicalData& physicalData
 )
@@ -157,4 +156,4 @@ void waterModel::SPCIntraWater::calculate(
     }
 }
 
-#endif   //  _SPC_INTRA_WATER_TPP_
+#endif   //  WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP

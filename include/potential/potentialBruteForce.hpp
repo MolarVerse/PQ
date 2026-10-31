@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_BRUTE_FORCE_HPP_
-
-#define _POTENTIAL_BRUTE_FORCE_HPP_
+#ifndef POTENTIAL__POTENTIAL_BRUTE_FORCE_HPP
+#define POTENTIAL__POTENTIAL_BRUTE_FORCE_HPP
 
 #include "potential.hpp"
 
@@ -80,4 +79,4 @@ namespace pot
     };
 }   // namespace pot
 
-#endif   // _POTENTIAL_BRUTE_FORCE_HPP_
+#endif   // POTENTIAL__POTENTIAL_BRUTE_FORCE_HPP

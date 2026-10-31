@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENERGY_OUTPUT_HPP_
-
-#define _ENERGY_OUTPUT_HPP_
+#ifndef OUTPUT__ENERGY_OUTPUT_HPP
+#define OUTPUT__ENERGY_OUTPUT_HPP
 
 #include <cstddef>
 
@@ -58,4 +57,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _ENERGY_OUTPUT_HPP_
+#endif   // OUTPUT__ENERGY_OUTPUT_HPP

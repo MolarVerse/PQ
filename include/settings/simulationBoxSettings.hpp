@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_SETTINGS_HPP_
-
-#define _SIMULATION_BOX_SETTINGS_HPP_
+#ifndef SETTINGS__SIMULATION_BOX_SETTINGS_HPP
+#define SETTINGS__SIMULATION_BOX_SETTINGS_HPP
 
 #include "enums/simulationBox.hpp"
 #include "setting.hpp"
@@ -59,4 +58,4 @@ class SimulationBoxSettings
     [[nodiscard]] InitVelocities getInitializeVelocities() const;
 };
 
-#endif   // _SIMULATION_BOX_SETTINGS_HPP_
+#endif   // SETTINGS__SIMULATION_BOX_SETTINGS_HPP

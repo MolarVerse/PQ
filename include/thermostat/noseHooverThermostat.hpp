@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NOSE_HOOVER_THERMOSTAT_HPP_
-
-#define _NOSE_HOOVER_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__NOSE_HOOVER_THERMOSTAT_HPP
+#define THERMOSTAT__NOSE_HOOVER_THERMOSTAT_HPP
 
 #include <vector>
 
@@ -88,4 +87,4 @@ namespace thermostat
     };
 }   // namespace thermostat
 
-#endif   // _NOSE_HOOVER_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__NOSE_HOOVER_THERMOSTAT_HPP

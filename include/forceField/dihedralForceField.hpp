@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DIHEDRAL_FORCE_FIELD_HPP_
-
-#define _DIHEDRAL_FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP
+#define FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP
 
 #include <vector>
 
@@ -96,4 +95,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _DIHEDRAL_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP

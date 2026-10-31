@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STOCHASTIC_RESCALING_MANOSTAT_HPP_
-
-#define _STOCHASTIC_RESCALING_MANOSTAT_HPP_
+#ifndef MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP
+#define MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP
 
 #include "enums/manostat.hpp"
 #include "manostat.hpp"
@@ -145,4 +144,4 @@ namespace manostat
 
 }   // namespace manostat
 
-#endif   // _STOCHASTIC_RESCALING_MANOSTAT_HPP_
+#endif   // MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP

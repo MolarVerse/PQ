@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTANTS_HPP_
-
-#define _CONSTANTS_HPP_
+#ifndef CONFIG__CONSTANTS_HPP
+#define CONFIG__CONSTANTS_HPP
 
 #include "constants/conversionFactors.hpp"           // IWYU pragma: export
 #include "constants/internalConversionFactors.hpp"   // IWYU pragma: export
@@ -32,4 +31,4 @@ constexpr auto COLINEAR_SINALPHA_THRESHOLD          = 1.0e-10;
 constexpr auto GUFF_DAT_COULOMB_PREFACTOR_THRESHOLD = 1.0e-6;
 constexpr auto TRICLINIC_BOX_ANGLE_THRESHOLD        = 1.0e-5;
 
-#endif   // _CONSTANTS_HPP_
+#endif   // CONFIG__CONSTANTS_HPP

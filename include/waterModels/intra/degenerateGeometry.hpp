@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DEGENERATE_GEOMETRY_HPP_
-
-#define _DEGENERATE_GEOMETRY_HPP_
+#ifndef WATER_MODELS__INTRA__DEGENERATE_GEOMETRY_HPP
+#define WATER_MODELS__INTRA__DEGENERATE_GEOMETRY_HPP
 
 #include <cmath>
 #include <format>
@@ -70,4 +69,4 @@ namespace waterModel
     }
 }   // namespace waterModel
 
-#endif   // _DEGENERATE_GEOMETRY_HPP_
+#endif   // WATER_MODELS__INTRA__DEGENERATE_GEOMETRY_HPP

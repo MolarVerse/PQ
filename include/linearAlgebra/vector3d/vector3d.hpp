@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VECTOR3d_HPP_
-
-#define _VECTOR3d_HPP_
+#ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_HPP
+#define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_HPP
 
 #include <cmath>
 #include <mstd/math.hpp>
@@ -347,8 +346,8 @@ namespace linalg
 
 }   // namespace linalg
 
-#ifndef _VECTOR3D_TPP_
-#include "vector3d.tpp.hpp"   // IWYU pragma: export
+#ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_TPP
+#include "vector3d.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _VECTOR3d_HPP_
+#endif   // LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_HPP

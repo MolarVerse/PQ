@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTINGS_HPP_
-#define _SETTINGS_HPP_
+#ifndef SETTINGS__SETTINGS_HPP
+#define SETTINGS__SETTINGS_HPP
 
 #include "constraintSettings.hpp"
 #include "convergenceSettings.hpp"
@@ -51,4 +51,4 @@ struct Settings
     void finalize();
 };
 
-#endif   // _SETTINGS_HPP_
+#endif   // SETTINGS__SETTINGS_HPP

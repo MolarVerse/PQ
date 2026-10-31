@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RANGE_VALIDATOR_HPP_
-#define _RANGE_VALIDATOR_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__RANGE_VALIDATOR_HPP
+#define INPUT__INPUT_FILE_PARSER__RANGE_VALIDATOR_HPP
 
 #include <string>
 
@@ -126,8 +126,8 @@ namespace input
 
 }   // namespace input
 
-#ifndef _RANGE_VALIDATOR_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__RANGE_VALIDATOR_TPP
 #include "rangeValidator.tpp"
 #endif
 
-#endif   // _RANGE_VALIDATOR_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__RANGE_VALIDATOR_HPP

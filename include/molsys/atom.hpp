@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ATOM_HPP_
-
-#define _ATOM_HPP_
+#ifndef MOLSYS__ATOM_HPP
+#define MOLSYS__ATOM_HPP
 
 #include <optional>
 #include <string>
@@ -187,4 +186,4 @@ namespace molsys
     };
 }   // namespace molsys
 
-#endif   // _ATOM_HPP_
+#endif   // MOLSYS__ATOM_HPP

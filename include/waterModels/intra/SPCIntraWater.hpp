@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SPC_INTRA_WATER_HPP_
-
-#define _SPC_INTRA_WATER_HPP_
+#ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
+#define WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
 
 #include "constants/conversionFactors.hpp"
 #include "intraWater.hpp"
@@ -127,8 +126,8 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#ifndef _SPC_INTRA_WATER_TPP_
-#include "SPCIntraWater.tpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
+#ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP
+#include "SPCIntraWater.tpp"   // IWYU pragma: export
 #endif
 
-#endif   //  _SPC_INTRA_WATER_HPP_
+#endif   //  WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP

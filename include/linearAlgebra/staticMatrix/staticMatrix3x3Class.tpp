@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STATIC_MATRIX_CLASS_3x3_TPP_
-
-#define _STATIC_MATRIX_CLASS_3x3_TPP_
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP
+#define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP
 
 #include "exceptions.hpp"
 #include "staticMatrix3x3Class.hpp"
@@ -194,4 +193,4 @@ namespace linalg
     }
 }   // namespace linalg
 
-#endif   // _STATIC_MATRIX_CLASS_3x3_TPP_
+#endif   // LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP

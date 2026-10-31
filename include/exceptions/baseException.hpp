@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BASE_EXCEPTION_HPP_
-#define _BASE_EXCEPTION_HPP_
+#ifndef EXCEPTIONS__BASE_EXCEPTION_HPP
+#define EXCEPTIONS__BASE_EXCEPTION_HPP
 
 #include "color.hpp"
 #include "exceptionTypes.hpp"
@@ -97,8 +97,8 @@ namespace exc
     };
 }   // namespace exc
 
-#ifndef _BASE_EXCEPTION_TPP_
+#ifndef EXCEPTIONS__BASE_EXCEPTION_TPP
 #include "baseException.tpp"
-#endif   // _BASE_EXCEPTION_TPP_
+#endif   // EXCEPTIONS__BASE_EXCEPTION_TPP
 
-#endif   // _BASE_EXCEPTION_HPP_
+#endif   // EXCEPTIONS__BASE_EXCEPTION_HPP

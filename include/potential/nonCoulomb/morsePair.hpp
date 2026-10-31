@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MORSE_PAIR_HPP_
-
-#define _MORSE_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP
 
 #include <utility>
 
@@ -77,4 +76,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _MORSE_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP
