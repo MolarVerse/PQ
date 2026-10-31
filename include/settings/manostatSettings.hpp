@@ -26,6 +26,7 @@
 
 #include "enums/manostat.hpp"
 #include "setting.hpp"
+#include "unit_types.hpp"
 
 /**
  * @class ManostatSettings
@@ -42,7 +43,7 @@ class ManostatSettings
 
     Setting<double> _targetPressure;
 
-    Setting<double> _tauManostat;
+    Setting<Time>   _tau;
     Setting<double> _compressibility;
 
    public:
@@ -60,7 +61,7 @@ class ManostatSettings
     void setFixedAxis(FixedAxis fixedAxis);
 
     void setTargetPressure(double targetPressure);
-    void setTauManostat(double tauManostat);
+    void setTau(const Time& tau);
     void setCompressibility(double compressibility);
 
     /***************************
@@ -74,7 +75,7 @@ class ManostatSettings
     [[nodiscard]] FixedAxis    getFixedAxis() const;
     [[nodiscard]] bool         isFixedAxisSet() const;
     [[nodiscard]] double       getTargetPressure() const;
-    [[nodiscard]] double       getTauManostat() const;
+    [[nodiscard]] const Time&  getTau() const;
     [[nodiscard]] double       getCompressibility() const;
 };
 

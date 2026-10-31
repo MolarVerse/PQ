@@ -34,6 +34,7 @@
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace manostat
 {
@@ -102,7 +103,7 @@ namespace manostat
     {
         const auto fixedAxis       = _getSettings().getFixedAxis();
         const auto compressibility = _getSettings().getCompressibility();
-        const auto tau             = _getSettings().getTauManostat();
+        const auto tau = _getSettings().getTau().numerical_value_in(fs);
 
         if (fixedAxis == FixedAxis::ALL)
             return diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
@@ -197,9 +198,9 @@ namespace manostat
         double volume
     )
     {
+        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
         const auto compress = _getSettings().getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() /
-                              _getSettings().getTauManostat();
+                              settings::TimingsSettings::getTimeStep() / tau;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -261,9 +262,9 @@ namespace manostat
         double volume
     )
     {
+        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
         const auto compress = _getSettings().getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() /
-                              _getSettings().getTauManostat();
+                              settings::TimingsSettings::getTimeStep() / tau;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -308,9 +309,9 @@ namespace manostat
         double volume
     )
     {
+        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
         const auto compress = _getSettings().getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() /
-                              _getSettings().getTauManostat();
+                              settings::TimingsSettings::getTimeStep() / tau;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =

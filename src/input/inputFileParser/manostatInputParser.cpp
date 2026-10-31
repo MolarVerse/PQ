@@ -33,6 +33,7 @@
 #include "rangeValidator.hpp"
 #include "references.hpp"
 #include "referencesOutput.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -146,20 +147,23 @@ namespace input
             .name        = "p_relaxation",
             .title       = "Manostat Relaxation Time",
             .description = "Specifies the relaxation time of the manostat",
+            .unit        = "ps",
         };
 
         const auto setValue = [this](double relaxationTime)
-        { _manostatSettings->setTauManostat(relaxationTime); };
+        { _manostatSettings->setTau(relaxationTime * ps); };
 
         const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
             0.0,
             std::numeric_limits<double>::max() / PS_TO_FS
         };
 
+        const auto defaultValue = 1.0;
+
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
                 .metadata     = metaData,
-                .defaultValue = 1.0,
+                .defaultValue = defaultValue,
                 .onSet        = setValue,
                 .validators   = {makeShared(validator)}
             }

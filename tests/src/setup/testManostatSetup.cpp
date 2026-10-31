@@ -42,6 +42,7 @@
 #include "stochasticRescalingManostat.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
 {
@@ -71,7 +72,7 @@ TEST_F(TestSetup, setupManostatBerendsen)
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
     _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -90,7 +91,7 @@ TEST_F(TestSetup, setupManostatNoneIsotropyDefaultsToIsotropic)
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
     _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -108,7 +109,7 @@ TEST_F(TestSetup, setupManostatSemiIsotropicBerendsen)
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
     _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -125,7 +126,7 @@ TEST_F(TestSetup, setupManostatAnisotropicBerendsen)
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
     _settings->manostatSettings.setIsotropy(Isotropy::ANISOTROPIC);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -142,7 +143,7 @@ TEST_F(TestSetup, setupManostatFullAnisotropicBerendsen)
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
     _settings->manostatSettings.setIsotropy(Isotropy::FULL_ANISOTROPIC);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -161,7 +162,7 @@ TEST_F(TestSetup, setupManostatSStochasticRescaling)
     );
     _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -180,7 +181,7 @@ TEST_F(TestSetup, setupManostatSemiIsotropicSStochasticRescaling)
     );
     _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -199,7 +200,7 @@ TEST_F(TestSetup, setupManostatAnisotropicSStochasticRescaling)
     );
     _settings->manostatSettings.setIsotropy(Isotropy::ANISOTROPIC);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -218,7 +219,7 @@ TEST_F(TestSetup, setupManostatFullAnisotropicSStochasticRescaling)
     );
     _settings->manostatSettings.setIsotropy(Isotropy::FULL_ANISOTROPIC);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -235,7 +236,7 @@ TEST_F(TestSetup, validateIsotropyFixedAxisCombinationSemiIsotropic)
     _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
     _settings->manostatSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
 
     // Fixing Z (anisotropic axis) is allowed
@@ -296,7 +297,7 @@ TEST_F(TestSetup, setupManostatWithFixedAxis)
     _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
     _settings->manostatSettings.setFixedAxis(FixedAxis::XY);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
     _settings->finalize();
 
@@ -324,8 +325,9 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
     _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     _settings->manostatSettings.setTargetPressure(300.0);
-    _settings->manostatSettings.setTauManostat(0.2);
+    _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
+    _settings->manostatSettings.finalize();
     const auto types = std::array{
         ManostatType::BERENDSEN,
         ManostatType::STOCHASTIC_RESCALING,

@@ -30,6 +30,7 @@
 #include "manostatSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "pressure" command
@@ -75,7 +76,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 
     std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getTauManostat(), 0.1);
+    EXPECT_EQ(settings.getTau(), 0.1 * ps);
 
     _clearParser(parser);
 

@@ -34,6 +34,7 @@
 #include "physicalData.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @class TestManostat
@@ -55,7 +56,7 @@ class TestManostat : public ::testing::Test
         _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
         _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
         _settings->manostatSettings.setTargetPressure(1.0);
-        _settings->manostatSettings.setTauManostat(1.0);
+        _settings->manostatSettings.setTau(1.0 * ps);
         _settings->manostatSettings.setCompressibility(0.03);
         _manostat =
             std::make_unique<manostat::Manostat>(_settings->manostatSettings);

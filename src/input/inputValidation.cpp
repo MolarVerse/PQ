@@ -38,6 +38,7 @@
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -415,10 +416,10 @@ namespace input
             );
         }
 
-        const auto relaxationTime =
-            manostatSettings.getTauManostat() * PS_TO_FS;
+        const auto relaxationTime = manostatSettings.getTau() * PS_TO_FS;
 
-        if (settings::TimingsSettings::getTimeStep() > relaxationTime)
+        if (settings::TimingsSettings::getTimeStep() >
+            relaxationTime.numerical_value_in(fs))
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
             );

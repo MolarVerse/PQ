@@ -30,6 +30,7 @@
 #include <iostream>
 
 #include "manostatSettings.hpp"
+#include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -58,8 +59,9 @@ int main()
     auto             physicalData = physicalData::PhysicalData();
     ManostatSettings manostatSettings;
     manostatSettings.setTargetPressure(1.0);
-    manostatSettings.setTauManostat(100.0);
+    manostatSettings.setTau(100.0 * ps);
     manostatSettings.setCompressibility(4.6e-5);
+    manostatSettings.finalize();
     auto manostat = manostat::StochasticRescalingManostat(manostatSettings);
 
     CALLGRIND_ZERO_STATS;

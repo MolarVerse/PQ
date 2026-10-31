@@ -39,6 +39,7 @@
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 class TestableStochasticRescalingManostat
     : public manostat::StochasticRescalingManostat
@@ -309,7 +310,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _box->addMolecule(molecule);
 
     settings::TimingsSettings::setTimeStep(0.5);
-    _settings->manostatSettings.setTauManostat(0.1);
+    _settings->manostatSettings.setTau(0.1 * ps);
     _settings->manostatSettings.setCompressibility(4.5);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
@@ -433,7 +434,7 @@ TEST_F(
     _manostat->calculatePressure(*_box, *_data);
     settings::TimingsSettings::setTimeStep(0.5);
     _settings->manostatSettings.setTargetPressure(_data->getPressure());
-    _settings->manostatSettings.setTauManostat(0.1);
+    _settings->manostatSettings.setTau(0.1 * ps);
     _settings->manostatSettings.setCompressibility(4.5);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
@@ -464,7 +465,7 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
     settings::TimingsSettings::setTimeStep(0.5);
 
     _settings->manostatSettings.setTargetPressure(7.0);
-    _settings->manostatSettings.setTauManostat(0.25);
+    _settings->manostatSettings.setTau(0.25 * ps);
     _settings->manostatSettings.setCompressibility(0.12);
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     auto manostat =
@@ -514,7 +515,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     _box->addMolecule(molecule);
 
     _settings->manostatSettings.setTargetPressure(7.0);
-    _settings->manostatSettings.setTauManostat(0.25);
+    _settings->manostatSettings.setTau(0.25 * ps);
     _settings->manostatSettings.setCompressibility(0.12);
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     _manostat = std::make_unique<manostat::StochasticRescalingManostat>(
@@ -581,7 +582,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
     {
         ManostatSettings localSettings;
         localSettings.setTargetPressure(1.0);
-        localSettings.setTauManostat(0.5);
+        localSettings.setTau(0.5 * ps);
         localSettings.setCompressibility(0.2);
         localSettings.setFixedAxis(FixedAxis::X);
         auto manostat = TestableBerendsenManostat(localSettings);
@@ -598,7 +599,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
     {
         ManostatSettings localSettings;
         localSettings.setTargetPressure(1.0);
-        localSettings.setTauManostat(0.5);
+        localSettings.setTau(0.5 * ps);
         localSettings.setCompressibility(0.2);
         localSettings.setFixedAxis(FixedAxis::XY);
         auto manostat = TestableBerendsenManostat(localSettings);
@@ -615,7 +616,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
     {
         ManostatSettings localSettings;
         localSettings.setTargetPressure(1.0);
-        localSettings.setTauManostat(0.5);
+        localSettings.setTau(0.5 * ps);
         localSettings.setCompressibility(0.2);
         localSettings.setFixedAxis(FixedAxis::ALL);
         auto manostat = TestableBerendsenManostat(localSettings);
@@ -635,7 +636,7 @@ TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
 
     ManostatSettings localSettings;
     localSettings.setTargetPressure(1.0);
-    localSettings.setTauManostat(0.5);
+    localSettings.setTau(0.5 * ps);
     localSettings.setCompressibility(0.2);
     localSettings.setFixedAxis(FixedAxis::XZ);
     auto manostat = TestableAnisotropicBerendsenManostat(localSettings);
@@ -653,7 +654,7 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
 
     ManostatSettings localSettings;
     localSettings.setTargetPressure(1.0);
-    localSettings.setTauManostat(0.5);
+    localSettings.setTau(0.5 * ps);
     localSettings.setCompressibility(0.2);
     localSettings.setFixedAxis(FixedAxis::Y);
     auto manostat = TestableFullAnisotropicBerendsenManostat(localSettings);
@@ -679,7 +680,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
     {
         ManostatSettings localSettings;
         localSettings.setTargetPressure(7.0);
-        localSettings.setTauManostat(0.25);
+        localSettings.setTau(0.25 * ps);
         localSettings.setCompressibility(0.12);
         localSettings.setFixedAxis(FixedAxis::Z);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
@@ -698,7 +699,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
     {
         ManostatSettings localSettings;
         localSettings.setTargetPressure(7.0);
-        localSettings.setTauManostat(0.25);
+        localSettings.setTau(0.25 * ps);
         localSettings.setCompressibility(0.12);
         localSettings.setFixedAxis(FixedAxis::XY);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
@@ -717,7 +718,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
     {
         ManostatSettings localSettings;
         localSettings.setTargetPressure(7.0);
-        localSettings.setTauManostat(0.25);
+        localSettings.setTau(0.25 * ps);
         localSettings.setCompressibility(0.12);
         localSettings.setFixedAxis(FixedAxis::ALL);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
@@ -739,7 +740,7 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 
     ManostatSettings localSettings;
     localSettings.setTargetPressure(7.0);
-    localSettings.setTauManostat(0.25);
+    localSettings.setTau(0.25 * ps);
     localSettings.setCompressibility(0.12);
     localSettings.setFixedAxis(FixedAxis::YZ);
     auto manostat =
@@ -761,7 +762,7 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
 
     ManostatSettings localSettings;
     localSettings.setTargetPressure(7.0);
-    localSettings.setTauManostat(0.25);
+    localSettings.setTau(0.25 * ps);
     localSettings.setCompressibility(0.12);
     localSettings.setFixedAxis(FixedAxis::X);
     auto manostat =
@@ -785,7 +786,7 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
     // xy isotropic (axes 0, 1), z anisotropic (axis 2) with Z fixed
     ManostatSettings localSettings;
     localSettings.setTargetPressure(1.0);
-    localSettings.setTauManostat(0.5);
+    localSettings.setTau(0.5 * ps);
     localSettings.setCompressibility(0.2);
     localSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
     localSettings.setFixedAxis(FixedAxis::Z);
@@ -807,7 +808,7 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
     // xz isotropic (axes 0, 2), y anisotropic (axis 1) with Y fixed
     ManostatSettings localSettings;
     localSettings.setTargetPressure(7.0);
-    localSettings.setTauManostat(0.25);
+    localSettings.setTau(0.25 * ps);
     localSettings.setCompressibility(0.12);
     localSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XZ);
     localSettings.setFixedAxis(FixedAxis::Y);

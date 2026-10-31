@@ -31,7 +31,7 @@
 ManostatSettings::ManostatSettings()
     : _manostatType(ManostatType::NONE),
       _isotropy(Isotropy::ISOTROPIC),
-      _tauManostat(defaults::BERENDSEN_MANOSTAT_RELAX_TIME),
+      _tau(defaults::BERENDSEN_MANOSTAT_RELAX_TIME),
       _compressibility(defaults::COMPRESSIBILITY_WATER_DEFAULT)
 {
 }
@@ -94,14 +94,11 @@ void ManostatSettings::setTargetPressure(double targetPressure)
 }
 
 /**
- * @brief sets the tauManostat to double in settings
+ * @brief sets the tau of the manostat to Time in settings
  *
- * @param tauManostat
+ * @param tau
  */
-void ManostatSettings::setTauManostat(double tauManostat)
-{
-    _tauManostat.set(tauManostat);
-}
+void ManostatSettings::setTau(const Time& tau) { _tau.set(tau); }
 
 /**
  * @brief sets the compressibility to double in settings
@@ -174,11 +171,11 @@ double ManostatSettings::getTargetPressure() const
 }
 
 /**
- * @brief get the tauManostat
+ * @brief get the tau of the manostat
  *
- * @return double
+ * @return Time
  */
-double ManostatSettings::getTauManostat() const { return _tauManostat.get(); }
+const Time& ManostatSettings::getTau() const { return _tau.get(); }
 
 /**
  * @brief get the compressibility

@@ -24,6 +24,7 @@
 
 #include "enums/manostat.hpp"
 #include "manostatSettings.hpp"
+#include "units.hpp"
 
 TEST(ManostatSettingsTest, DoubleSettersAndGetters)
 {
@@ -31,8 +32,8 @@ TEST(ManostatSettingsTest, DoubleSettersAndGetters)
     settings.setTargetPressure(2.5);
     EXPECT_DOUBLE_EQ(settings.getTargetPressure(), 2.5);
 
-    settings.setTauManostat(1.5);
-    EXPECT_DOUBLE_EQ(settings.getTauManostat(), 1.5);
+    settings.setTau(1.5 * ps);
+    EXPECT_EQ(settings.getTau(), 1.5 * ps);
 
     settings.setCompressibility(4.5e-5);
     EXPECT_DOUBLE_EQ(settings.getCompressibility(), 4.5e-5);

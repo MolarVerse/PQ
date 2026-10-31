@@ -187,13 +187,12 @@ namespace setup
 
         const auto pressure =
             _engine.getSettings().manostatSettings.getTargetPressure();
-        const auto tau =
-            _engine.getSettings().manostatSettings.getTauManostat();
+        const auto tau = _engine.getSettings().manostatSettings.getTau();
         const auto compr =
             _engine.getSettings().manostatSettings.getCompressibility();
 
         logOutput.writeSetupInfo(std::format("Target pressure: {}", pressure));
-        logOutput.writeSetupInfo(std::format("Relaxation time: {} ps", tau));
+        logOutput.writeSetupInfo(std::format("Relaxation time: {}", tau));
         logOutput.writeSetupInfo(
             std::format("Compressibility: {} bar⁻¹", compr)
         );

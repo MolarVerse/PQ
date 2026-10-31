@@ -40,6 +40,7 @@
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 class TestInputValidation : public ::testing::Test
 {
@@ -60,7 +61,7 @@ class TestInputValidation : public ::testing::Test
         _settings.optimizerSettings.setMaxLearningRate(1.0);
 
         _settings.manostatSettings.setManostatType(ManostatType::NONE);
-        _settings.manostatSettings.setTauManostat(
+        _settings.manostatSettings.setTau(
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
@@ -197,7 +198,7 @@ TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
     _configureMDJob(JobType::MM_MD);
     _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
-    _settings.manostatSettings.setTauManostat(0.0001);
+    _settings.manostatSettings.setTau(0.0001 * ps);
     _setKeyword("pressure");
 
     ASSERT_THROW_MSG(

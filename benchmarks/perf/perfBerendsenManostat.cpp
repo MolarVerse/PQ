@@ -29,6 +29,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -54,7 +56,7 @@ int main()
     auto             physicalData = physicalData::PhysicalData();
     ManostatSettings manostatSettings;
     manostatSettings.setTargetPressure(1.0);
-    manostatSettings.setTauManostat(100.0);
+    manostatSettings.setTau(100.0 * ps);
     manostatSettings.setCompressibility(4.6e-5);
     auto manostat = manostat::BerendsenManostat(manostatSettings);
 
