@@ -61,8 +61,7 @@ namespace setup
 
         [[nodiscard]] engine::MDEngine &getEngine() const;
 
-       private:
-        void        _writeSetupInfo() const;
+       protected:
         static void _writeManostatSelection(
             out::LogOutput         &logOutput,
             const ManostatSettings &manostatSettings
@@ -75,6 +74,9 @@ namespace setup
             out::LogOutput         &logOutput,
             const ManostatSettings &settings
         );
+
+       private:
+        void _writeSetupInfo() const;
     };
 
 }   // namespace setup
