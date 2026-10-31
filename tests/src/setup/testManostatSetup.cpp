@@ -538,9 +538,15 @@ TEST(TestManostatSetupOutput, semiIsotropicNamesTheAnisotropicAndIsotropicAxes)
     };
 
     const auto cases = std::vector<Case>{
-        {Isotropy::SEMI_ISOTROPIC_XY, "z", "x, y"},
-        {Isotropy::SEMI_ISOTROPIC_XZ, "y", "x, z"},
-        {Isotropy::SEMI_ISOTROPIC_YZ, "x", "y, z"}
+        {.isotropy        = Isotropy::SEMI_ISOTROPIC_XY,
+         .anisotropicAxis = "z",
+         .isotropicAxes   = "x, y"},
+        {.isotropy        = Isotropy::SEMI_ISOTROPIC_XZ,
+         .anisotropicAxis = "y",
+         .isotropicAxes   = "x, z"},
+        {.isotropy        = Isotropy::SEMI_ISOTROPIC_YZ,
+         .anisotropicAxis = "x",
+         .isotropicAxes   = "y, z"}
     };
 
     for (const auto &[isotropy, anisotropicAxis, isotropicAxes] : cases)
