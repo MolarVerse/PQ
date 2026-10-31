@@ -8,7 +8,6 @@ set(engine_source_files
     mmmdEngine.cpp
     qmmdEngine.cpp
     qmCapableEngine.cpp
-    qmRunnerManager.cpp
     ringPolymerEngine.cpp
     ringPolymerqmmdEngine.cpp
 
@@ -61,15 +60,7 @@ target_link_libraries(engine
 
     optimization
     QM
-    externalQM
 )
-
-if(BUILD_WITH_ASE)
-    target_link_libraries(engine
-        PUBLIC
-        aseQM
-    )
-endif()
 
 if(BUILD_WITH_PYBIND11)
     target_include_directories(engine

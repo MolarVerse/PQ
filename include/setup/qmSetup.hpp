@@ -25,6 +25,7 @@
 #define _QM_SETUP_HPP_
 
 #include "qmCapableEngine.hpp"
+#include "qmSettings.hpp"
 namespace engine
 {
     class Engine;       // forward declaration
@@ -49,13 +50,13 @@ namespace setup
        public:
         explicit QMSetup(engine::QMCapableEngine &qmCapableEngine);
 
-        void        setup();
-        void        setupQMMethod();
-        static void setupQMMethodAseDftbPlus();
-        static void setupQMMethodAseXtb();
+        void        setup(const QMSettings &qmSettings);
+        void        setupQMMethod(const QMSettings &qmSettings);
+        static void setupQMMethodAseDftbPlus(const QMSettings &qmSettings);
+        static void setupQMMethodAseXtb(const QMSettings &qmSettings);
         void        setupQMScript() const;
         static void setupCoulombRadiusCutOff();
-        void        setupWriteInfo() const;
+        void        setupWriteInfo(const QMSettings &qmSettings) const;
     };
 
 }   // namespace setup

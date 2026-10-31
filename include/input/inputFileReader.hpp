@@ -41,6 +41,7 @@ namespace engine
 
 struct Settings;               // forward declaration
 class SimulationBoxSettings;   // forward declaration
+class QMSettings;              // forward declaration
 
 /**
  * @brief namespace for reading input files
@@ -118,7 +119,7 @@ namespace input
          ******************************/
 
         void _validateTimings(const Settings &settings) const;
-        void _validateQM() const;
+        void _validateQM(const QMSettings &qmSettings) const;
         void _validateThermostat(
             const SimulationBoxSettings &simBoxSettings
         ) const;

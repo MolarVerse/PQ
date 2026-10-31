@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "externalQMRunner.hpp"
+#include "external/externalQMRunner.hpp"
 
 #include <algorithm>
 #include <array>
@@ -204,13 +204,13 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} force file \"{}\"",
-                    QMMethodMeta::toString(_getQMSettings()->getQMMethod()),
+                    QMMethodMeta::toString(_getQMSettings().getQMMethod()),
                     forceFileName
                 )
             );
         }
 
-        const auto qmMethod = _getQMSettings()->getQMMethod();
+        const auto qmMethod = _getQMSettings().getQMMethod();
 
         if (forceFile.peek() == std::ifstream::traits_type::eof())
         {
@@ -312,7 +312,7 @@ namespace QM
 
         std::ifstream chargeFile(chargeFileName);
 
-        const auto qmMethod = _getQMSettings()->getQMMethod();
+        const auto qmMethod = _getQMSettings().getQMMethod();
 
         if (!chargeFile.is_open())
         {

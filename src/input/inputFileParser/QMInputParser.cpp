@@ -48,21 +48,17 @@ namespace input
      * qm_script
      * "<string>"
      *
+     * @param resolveBuiltInSlakosPath Whether to resolve the built-in Slakos
+     * path.
+     * @param qmSettings Reference to the QMSettings object that will be
+     * configured by this parser.
      */
-    QMInputParser::QMInputParser() : QMInputParser(true) {}
-
-    /**
-     * @brief Construct a new QMInputParser:: QMInputParser object
-     *
-     * @details following keywords are added to the _keywordFuncMap,
-     * _keywordRequiredMap and _keywordCountMap: 1) qm_prog "<string>" 2)
-     * qm_script
-     * "<string>"
-     *
-     * @param resolveBuiltInSlakosPath
-     */
-    QMInputParser::QMInputParser(const bool resolveBuiltInSlakosPath)
-        : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
+    QMInputParser::QMInputParser(
+        bool        resolveBuiltInSlakosPath,
+        QMSettings &qmSettings
+    )
+        : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath),
+          _qmSettings(qmSettings)
     {
         addQMMethodKey();
         addQMScriptKey();
@@ -91,9 +87,9 @@ namespace input
                 "Specifies the quantum mechanical method to be used.",
         };
 
-        const auto setValue = [](QMMethod value)
+        const auto setValue = [this](QMMethod value)
         {
-            QMSettings::setQMMethod(value);
+            _qmSettings->setQMMethod(value);
 
             switch (value)
             {
@@ -119,12 +115,11 @@ namespace input
                     );
                     break;
                 case QMMethod::MACE:
-                case QMMethod::ASE_XTB:
-                case QMMethod::NONE: break;
+                case QMMethod::ASE_XTB: break;
             }
         };
 
-        const auto finalize = [](const std::string &value, QMMethod method)
+        const auto finalize = [this](const std::string &value, QMMethod method)
         {
             if (method == QMMethod::MACE)
                 parseMaceQMMethod(value);
@@ -132,10 +127,9 @@ namespace input
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<QMMethod>{
-                .metadata   = metaData,
-                .notAllowed = {QMMethod::NONE},
-                .onSet      = setValue,
-                .finalizer  = finalize,
+                .metadata  = metaData,
+                .onSet     = setValue,
+                .finalizer = finalize,
             }
         );
 
@@ -255,8 +249,8 @@ namespace input
             .description = "Specifies the MACE model to use.",
         };
 
-        const auto setValue = [](MaceModel value)
-        { QMSettings::setMaceModel(value); };
+        const auto setValue = [this](MaceModel value)
+        { _qmSettings->setMaceModel(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<MaceModel>{
@@ -276,8 +270,8 @@ namespace input
             .description = "Specifies the MACE evaluation mode.",
         };
 
-        const auto setValue = [](MaceMode value)
-        { QMSettings::setMaceMode(value); };
+        const auto setValue = [this](MaceMode value)
+        { _qmSettings->setMaceMode(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<MaceMode>{
@@ -548,6 +542,6 @@ namespace input
                 break;
         }
 
-        QMSettings::setMaceModelType(modelTypeOpt.value());
+        _qmSettings->setMaceModelType(modelTypeOpt.value());
     }
 }   // namespace input

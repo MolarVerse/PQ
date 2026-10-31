@@ -1,7 +1,6 @@
 set(source_files
     testEngine.cpp
     testOptEngine.cpp
-    testQMRunnerManager.cpp
     testQMMMEnergies.cpp
 )
 

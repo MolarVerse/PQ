@@ -38,7 +38,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     QMSettings::setSlakosType(SlakosType::THREEOB);
     QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setUseDispersionCorrection(true);
-    _qmSetup->setupWriteInfo();
+    _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
     std::string   line;
@@ -65,7 +65,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
     QMSettings::setUseThirdOrderDftb(false);
     QMSettings::setIsThirdOrderDftbSet(true);
     QMSettings::setSlakosType(SlakosType::THREEOB);
-    _qmSetup->setupWriteInfo();
+    _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
     std::string   line;
@@ -101,7 +101,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     QMSettings::setUseThirdOrderDftb(true);
     QMSettings::setHubbardDerivs({{"H", -0.3}});
     QMSettings::setIsHubbardDerivsSet(true);
-    _qmSetup->setupWriteInfo();
+    _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
     std::string   line;
@@ -137,7 +137,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 {
     QMSettings::setSlakosType(SlakosType::MATSCI);
     QMSettings::setUseDispersionCorrection(true);
-    _qmSetup->setupWriteInfo();
+    _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
     std::string   line;
@@ -164,7 +164,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 {
     QMSettings::setSlakosType(SlakosType::CUSTOM);
     QMSettings::setSlakosPath("custom/path/");
-    _qmSetup->setupWriteInfo();
+    _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
     std::string   line;
@@ -192,7 +192,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
     QMSettings::setIsThirdOrderDftbSet(true);
     QMSettings::setHubbardDerivs({{"H", -0.3}});
     QMSettings::setIsHubbardDerivsSet(true);
-    _qmSetup->setupWriteInfo();
+    _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
     std::string   line;
@@ -247,7 +247,10 @@ class FENNIXCalculator:
     modules["fennol"]     = fennolModule;
     modules["fennol.ase"] = fennolAseModule;
 
-    ASSERT_NO_THROW({ QM::AseFennolRunner runner("model.fnx", false, true); });
+    ASSERT_NO_THROW({
+        QM::AseFennolRunner
+            runner(_settings->qmSettings, "model.fnx", false, true);
+    });
 
     auto lastKwargs = fennolAseModule.attr("FENNIXCalculator")
                           .attr("last_kwargs")
@@ -300,8 +303,14 @@ class MACECalculator:
     modules["mace.calculators"] = calculatorsModule;
 
     ASSERT_NO_THROW({
-        QM::AseMaceRunner
-            runner("MACECalculator", "model.model", "float64", true, false);
+        QM::AseMaceRunner runner(
+            _settings->qmSettings,
+            "MACECalculator",
+            "model.model",
+            "float64",
+            true,
+            false
+        );
     });
 
     auto lastKwargs = calculatorsModule.attr("MACECalculator")
@@ -322,9 +331,9 @@ class MACECalculator:
 
 TEST_F(TestQMSetupAse, setupAseMaceWriteInfoFast)
 {
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceMode(MaceMode::FAST);
-    _qmSetup->setupWriteInfo();
+    _settings->qmSettings.setQMMethod(QMMethod::MACE);
+    _settings->qmSettings.setMaceMode(MaceMode::FAST);
+    _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
     std::string   line;

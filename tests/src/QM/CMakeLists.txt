@@ -1,5 +1,6 @@
 add_executable(testExternalQMRunner
     testExternalQMRunner.cpp
+    testQMRunnerFactory.cpp
 )
 
 target_include_directories(testExternalQMRunner
@@ -9,9 +10,9 @@ target_include_directories(testExternalQMRunner
 
 target_link_libraries(testExternalQMRunner
     PRIVATE
-    externalQM
     gtest
     gmock
+    QM
     pq_test_main
 )
 

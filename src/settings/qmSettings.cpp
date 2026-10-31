@@ -63,6 +63,19 @@ namespace
 }   // namespace
 
 /**
+ * @brief constructs a QMSettings object with default values for its members
+ *
+ * @details The QM method is initialized to ASE_XTB, the MACE model to MEDIUM,
+ * the MACE model type to MACE_MP, and the MACE mode to ACCURATE.
+ */
+QMSettings::QMSettings()
+    : _maceModel(MaceModel::MEDIUM),
+      _maceModelType(MaceModelType::MACE_MP),
+      _maceMode(MaceMode::ACCURATE)
+{
+}
+
+/**
  * @brief returns an unordered map as string
  *
  * @param unordered_map
@@ -122,7 +135,7 @@ void QMSettings::setQMMethod(QMMethod method) { _qmMethod.set(method); }
  *
  * @param model
  */
-void QMSettings::setMaceModel(MaceModel model) { _maceModel = model; }
+void QMSettings::setMaceModel(MaceModel model) { _maceModel.set(model); }
 
 /**
  * @brief sets the maceModelType to enum in settings
@@ -131,7 +144,7 @@ void QMSettings::setMaceModel(MaceModel model) { _maceModel = model; }
  */
 void QMSettings::setMaceModelType(MaceModelType model)
 {
-    _maceModelType = model;
+    _maceModelType.set(model);
 }
 
 /**
@@ -139,7 +152,7 @@ void QMSettings::setMaceModelType(MaceModelType model)
  *
  * @param mode
  */
-void QMSettings::setMaceMode(MaceMode mode) { _maceMode = mode; }
+void QMSettings::setMaceMode(MaceMode mode) { _maceMode.set(mode); }
 
 /**
  * @brief set the mace model path
@@ -342,20 +355,35 @@ void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
 QMMethod QMSettings::getQMMethod() const { return _qmMethod.get(); }
 
 /**
+ * @brief returns if the QM method is set
+ *
+ * @return bool
+ */
+bool QMSettings::isQMMethodSet() const { return _qmMethod.isSet(); }
+
+/**
  * @brief returns the maceModel
  *
  * @return MaceModel
  */
-MaceModel QMSettings::getMaceModel() { return _maceModel; }
+MaceModel QMSettings::getMaceModel() const { return _maceModel.get(); }
 
-MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
+/**
+ * @brief returns the maceModelType
+ *
+ * @return MaceModelType
+ */
+MaceModelType QMSettings::getMaceModelType() const
+{
+    return _maceModelType.get();
+}
 
 /**
  * @brief returns the maceMode
  *
  * @return MaceMode
  */
-MaceMode QMSettings::getMaceMode() { return _maceMode; }
+MaceMode QMSettings::getMaceMode() const { return _maceMode.get(); }
 
 /**
  * @brief returns the maceModelPath

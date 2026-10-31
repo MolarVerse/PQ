@@ -223,7 +223,7 @@ namespace engine
             getSimulationBox().resetQMCharges();
 
             getQMRunner()
-                ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+                .run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
             virial +=
@@ -333,7 +333,7 @@ namespace engine
             getSimulationBox()
         );
 
-        getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+        getQMRunner().run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
             _scaleSmoothingMoleculeForcesInner();

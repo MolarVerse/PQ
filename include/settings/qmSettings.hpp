@@ -45,12 +45,12 @@ std::string string(
 class QMSettings
 {
    private:
-    Setting<QMMethod>           _qmMethod;
-    static inline MaceModel     _maceModel     = MaceModel::MEDIUM;
-    static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
-    static inline MaceMode      _maceMode      = MaceMode::ACCURATE;
-    static inline SlakosType    _slakosType    = SlakosType::NONE;
-    static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
+    Setting<QMMethod>        _qmMethod;
+    Setting<MaceModel>       _maceModel;
+    Setting<MaceModelType>   _maceModelType;
+    Setting<MaceMode>        _maceMode;
+    static inline SlakosType _slakosType = SlakosType::NONE;
+    static inline XtbMethod  _xtbMethod  = XtbMethod::GFN2;
 
     static inline std::string _qmScript;
     static inline std::string _qmScriptFullPath;
@@ -81,9 +81,9 @@ class QMSettings
 
     void setQMMethod(QMMethod method);
 
-    static void setMaceModel(MaceModel model);
-    static void setMaceModelType(MaceModelType model);
-    static void setMaceMode(MaceMode mode);
+    void        setMaceModel(MaceModel model);
+    void        setMaceModelType(MaceModelType model);
+    void        setMaceMode(MaceMode mode);
     static void setMaceModelPath(const std::string_view &path);
 
     static void setQMScript(const std::string_view &script);
@@ -113,12 +113,12 @@ class QMSettings
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] QMMethod             getQMMethod() const;
-    [[nodiscard]] bool                 isQMMethodSet() const;
-    [[nodiscard]] static MaceModel     getMaceModel();
-    [[nodiscard]] static MaceModelType getMaceModelType();
-    [[nodiscard]] static MaceMode      getMaceMode();
-    [[nodiscard]] static std::string   getMaceModelPath();
+    [[nodiscard]] QMMethod           getQMMethod() const;
+    [[nodiscard]] bool               isQMMethodSet() const;
+    [[nodiscard]] MaceModel          getMaceModel() const;
+    [[nodiscard]] MaceModelType      getMaceModelType() const;
+    [[nodiscard]] MaceMode           getMaceMode() const;
+    [[nodiscard]] static std::string getMaceModelPath();
 
     [[nodiscard]] static std::string getQMScript();
     [[nodiscard]] static std::string getQMScriptFullPath();

@@ -32,14 +32,15 @@
 
 TEST(QMSettingsTest, SetMaceModelTypeTest)
 {
-    QMSettings::setMaceModelType(MaceModelType::MACE_MP);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_MP);
+    QMSettings settings;
+    settings.setMaceModelType(MaceModelType::MACE_MP);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_MP);
 
-    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_OFF);
+    settings.setMaceModelType(MaceModelType::MACE_OFF);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_OFF);
 
-    QMSettings::setMaceModelType(MaceModelType::MACE_ANICC);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_ANICC);
+    settings.setMaceModelType(MaceModelType::MACE_ANICC);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_ANICC);
 }
 
 TEST(QMSettingsTest, SetSlakosTypeTest)

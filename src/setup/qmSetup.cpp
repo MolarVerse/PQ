@@ -70,7 +70,7 @@ namespace setup
                 dynamic_cast<engine::QMCapableEngine *>(&engine))
         {
             QMSetup qmSetup(*qmCapableEngine);
-            qmSetup.setup();
+            qmSetup.setup(engine.getSettings().qmSettings);
         }
         else
         {
@@ -84,38 +84,38 @@ namespace setup
      * @brief setup QM-MD for all subtypes
      *
      */
-    void QMSetup::setup()
+    void QMSetup::setup(const QMSettings &qmSettings)
     {
-        setupQMMethod();
+        setupQMMethod(qmSettings);
 
-        setupQMMethodAseDftbPlus();
+        setupQMMethodAseDftbPlus(qmSettings);
 
-        setupQMMethodAseXtb();
+        setupQMMethodAseXtb(qmSettings);
 
-        if (QMSettings::isExternalQMRunner())
+        if (qmSettings.isExternalQMRunner())
             setupQMScript();
 
         setupCoulombRadiusCutOff();
 
-        setupWriteInfo();
+        setupWriteInfo(qmSettings);
     }
 
     /**
      * @brief setup the "QM" method of the system
      *
      */
-    void QMSetup::setupQMMethod()
+    void QMSetup::setupQMMethod(const QMSettings &qmSettings)
     {
-        _qmCapableEngine.setQMRunner(QMSettings::getQMMethod());
+        _qmCapableEngine.setQMRunner(qmSettings);
     }
 
     /**
      * @brief setup the ASE DFTB+ method of the system
      *
      */
-    void QMSetup::setupQMMethodAseDftbPlus()
+    void QMSetup::setupQMMethodAseDftbPlus(const QMSettings &qmSettings)
     {
-        if (!(QMSettings::getQMMethod() == QMMethod::ASE_DFTBPLUS))
+        if (!(qmSettings.getQMMethod() == QMMethod::ASE_DFTBPLUS))
             return;
 
         if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
@@ -127,9 +127,9 @@ namespace setup
      * @brief setup the ASE DFTB+ method of the system
      *
      */
-    void QMSetup::setupQMMethodAseXtb()
+    void QMSetup::setupQMMethodAseXtb(const QMSettings &qmSettings)
     {
-        if (!(QMSettings::getQMMethod() == QMMethod::ASE_XTB))
+        if (!(qmSettings.getQMMethod() == QMMethod::ASE_XTB))
             return;
 
         if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
@@ -166,7 +166,7 @@ namespace setup
      */
     void QMSetup::setupQMScript() const
     {
-        auto &qmRunner         = *_qmCapableEngine.getQMRunner();
+        auto &qmRunner         = _qmCapableEngine.getQMRunner();
         auto &externalQMRunner = dynamic_cast<QM::ExternalQMRunner &>(qmRunner);
 
         const auto singularityString = QM::ExternalQMRunner::getSingularity();
@@ -277,7 +277,7 @@ namespace setup
      * @brief write info about the QM setup
      *
      */
-    void QMSetup::setupWriteInfo() const
+    void QMSetup::setupWriteInfo(const QMSettings &qmSettings) const
     {
         using enum QMMethod;
 
@@ -285,14 +285,14 @@ namespace setup
         auto &engine    = dynamic_cast<engine::Engine &>(_qmCapableEngine);
         auto &logOutput = engine.getLogOutput();
 
-        const auto qmMethod = QMSettings::getQMMethod();
+        const auto qmMethod = qmSettings.getQMMethod();
         const auto qmRunnerMessage =
             std::format("QM runner: {}", QMMethodMeta::toString(qmMethod));
 
         logOutput.writeSetupInfo(qmRunnerMessage);
         logOutput.writeEmptyLine();
 
-        if (QMSettings::isExternalQMRunner())
+        if (qmSettings.isExternalQMRunner())
         {
             const auto qmScript        = QMSettings::getQMScript();
             const auto qmScriptMessage = std::format("QM script: {}", qmScript);
@@ -302,12 +302,12 @@ namespace setup
 
         if (qmMethod == MACE)
         {
-            const auto modelType = QMSettings::getMaceModelType();
-            const auto modelSize = QMSettings::getMaceModel();
+            const auto modelType = qmSettings.getMaceModelType();
+            const auto modelSize = qmSettings.getMaceModel();
             const auto modelPath = QMSettings::getMaceModelPath();
             const auto floatingPointStr =
                 settings::GeneralSettings::getFloatingPointPybindString();
-            const auto        maceMode = QMSettings::getMaceMode();
+            const auto        maceMode = qmSettings.getMaceMode();
             const auto *const useDisp =
                 QMSettings::useDispersionCorr() ? "on" : "off";
 
@@ -403,10 +403,8 @@ namespace setup
                 "3ob approach has been chosen while disabling 3rd order DFTB. "
                 "This setup is not recommended."
             );
-            const auto hubbardDerivsMsg = std::format(
-                "Hubbard derivatives:  {}",
-                settings::string(hubbardDerivs)
-            );
+            const auto hubbardDerivsMsg =
+                std::format("Hubbard derivatives:  {}", string(hubbardDerivs));
             const auto threeOBHubbardDerivsMsg = std::format(
                 "3ob approach has been chosen while setting custom Hubbard "
                 "derivatives. This setup is not recommended."

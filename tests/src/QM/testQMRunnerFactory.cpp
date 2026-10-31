@@ -24,21 +24,22 @@
 
 #include <memory>
 
-#include "dftbplusRunner.hpp"
-#include "enums/qm.hpp"
-#include "exceptions.hpp"
-#include "pyscfRunner.hpp"
-#include "qmRunnerManager.hpp"
+#include "external/dftbplusRunner.hpp"
+#include "external/pyscfRunner.hpp"
+#include "external/turbomoleRunner.hpp"
+#include "qmRunnerFactory.hpp"
+#include "qmSettings.hpp"
 #include "throwWithMessage.hpp"
-#include "turbomoleRunner.hpp"
 
 TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
 {
-    using engine::QMRunnerManager;
-
-    const auto dftb      = QMRunnerManager::createQMRunner(QMMethod::DFTBPLUS);
-    const auto pyscf     = QMRunnerManager::createQMRunner(QMMethod::PYSCF);
-    const auto turbomole = QMRunnerManager::createQMRunner(QMMethod::TURBOMOLE);
+    QMSettings settings;
+    settings.setQMMethod(QMMethod::DFTBPLUS);
+    const auto dftb = QM::QMRunnerFactory::createQMRunner(settings);
+    settings.setQMMethod(QMMethod::PYSCF);
+    const auto pyscf = QM::QMRunnerFactory::createQMRunner(settings);
+    settings.setQMMethod(QMMethod::TURBOMOLE);
+    const auto turbomole = QM::QMRunnerFactory::createQMRunner(settings);
 
     EXPECT_NE(dynamic_cast<QM::DFTBPlusRunner *>(dftb.get()), nullptr);
     EXPECT_NE(dynamic_cast<QM::PySCFRunner *>(pyscf.get()), nullptr);
@@ -47,18 +48,19 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
 
 TEST(TestQMRunnerManager, eachCallCreatesANewRunner)
 {
-    const auto first =
-        engine::QMRunnerManager::createQMRunner(QMMethod::DFTBPLUS);
-    const auto second =
-        engine::QMRunnerManager::createQMRunner(QMMethod::DFTBPLUS);
+    QMSettings settings;
+    settings.setQMMethod(QMMethod::DFTBPLUS);
+    const auto first  = QM::QMRunnerFactory::createQMRunner(settings);
+    const auto second = QM::QMRunnerFactory::createQMRunner(settings);
 
     EXPECT_NE(first.get(), second.get());
 }
 
 TEST(TestQMRunnerManager, rejectsMissingQMProgram)
 {
+    QMSettings settings;
     EXPECT_THROW_MSG(
-        engine::QMRunnerManager::createQMRunner(QMMethod::NONE),
+        const auto _ = QM::QMRunnerFactory::createQMRunner(settings),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -69,31 +71,34 @@ TEST(TestQMRunnerManager, rejectsMissingQMProgram)
 
 TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
 {
-    using engine::QMRunnerManager;
-
+    QMSettings settings;
+    settings.setQMMethod(QMMethod::ASE_DFTBPLUS);
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::ASE_DFTBPLUS),
+        QM::QMRunnerFactory::createQMRunner(settings),
         exc::CompileTimeException,
         "The ASE DFTB+ QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
         "type QM methods using: -DBUILD_WITH_ASE=ON"
     );
+    settings.setQMMethod(QMMethod::ASE_XTB);
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::ASE_XTB),
+        QM::QMRunnerFactory::createQMRunner(settings),
         exc::CompileTimeException,
         "The ASE xTB QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use the ASE xTB "
         "type QM method using: -DBUILD_WITH_ASE=ON"
     );
+    settings.setQMMethod(QMMethod::MACE);
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::MACE),
+        QM::QMRunnerFactory::createQMRunner(settings),
         exc::CompileTimeException,
         "A MACE type QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use MACE type QM "
         "methods using: -DBUILD_WITH_ASE=ON"
     );
+    settings.setQMMethod(QMMethod::FENNOL);
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::FENNOL),
+        QM::QMRunnerFactory::createQMRunner(settings),
         exc::CompileTimeException,
         "The ASE FeNNol QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use the ASE "

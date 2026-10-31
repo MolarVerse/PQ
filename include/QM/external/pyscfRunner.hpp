@@ -37,6 +37,7 @@ namespace QM
     class PySCFRunner : public ExternalQMRunner
     {
        public:
+        using ExternalQMRunner::ExternalQMRunner;
         void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
         void execute(molsys::SimulationBox &simulationBox) override;
     };

@@ -1,10 +1,32 @@
-add_library(QM
+set(SRC_FILES
     qmRunner.cpp
+    qmRunnerFactory.cpp
+
+    external/externalQMRunner.cpp
+    external/pyscfRunner.cpp
+    external/turbomoleRunner.cpp
+    external/dftbplusRunner.cpp
+)
+
+if(BUILD_WITH_ASE)
+    list(APPEND SRC_FILES
+        ase/aseQMRunner.cpp
+        ase/aseFennolRunner.cpp
+        ase/aseXtbRunner.cpp
+        ase/aseMaceRunner.cpp
+        ase/aseDftbRunner.cpp
+    )
+endif()
+
+add_library(QM
+    ${SRC_FILES}
 )
 
 target_include_directories(QM
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/QM
+    ${PROJECT_SOURCE_DIR}/include/QM/external
+    ${PROJECT_SOURCE_DIR}/include/QM/ase
 )
 
 target_link_libraries(QM
@@ -15,7 +37,28 @@ target_link_libraries(QM
     utilities
     physicalData
     exceptions
+    hybridConfigurator
 )
+
+if(BUILD_WITH_ASE)
+    target_link_libraries(QM
+        PUBLIC
+        pybind11::embed
+        pybind11::module
+    )
+
+    target_include_directories(QM
+        PUBLIC
+        ${pybind11_INCLUDE_DIRS}
+    )
+
+    target_precompile_headers(QM PRIVATE
+        <pybind11/embed.h>
+        <pybind11/numpy.h>
+        <pybind11/pybind11.h>
+        <pybind11/stl.h>
+    )
+endif()
 
 if(BUILD_SHARED_LIBS)
     set(BUILD_STATIC "OFF")
@@ -23,12 +66,25 @@ else()
     set(BUILD_STATIC "ON")
 endif()
 
+target_compile_definitions(QM
+    PUBLIC
+    _SCRIPT_PATH_=\"${CMAKE_CURRENT_BINARY_DIR}/scripts/\"
+    _SINGULARITY_=\"${BUILD_WITH_SINGULARITY}\"
+    _STATIC_BUILD_=\"${BUILD_STATIC}\"
+)
+
+add_custom_command(TARGET QM POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/src/QM/scripts $<TARGET_FILE_DIR:QM>/scripts
+)
+
 install(TARGETS QM
     DESTINATION lib
 )
 
-add_subdirectory(external)
-
-if(BUILD_WITH_ASE)
-    add_subdirectory(ase)
-endif()
+install(
+    DIRECTORY ${CMAKE_SOURCE_DIR}/src/QM/scripts/
+    DESTINATION share/PQ/scripts
+    USE_SOURCE_PERMISSIONS
+    COMPONENT qm-scripts
+)

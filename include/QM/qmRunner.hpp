@@ -78,7 +78,7 @@ namespace QM
         void _setPeriodicity(molsys::Periodicity per);
 
         [[nodiscard]]
-        mstd::ConstRef<QMSettings> _getQMSettings() const;
+        const QMSettings &_getQMSettings() const;
     };
 }   // namespace QM
 

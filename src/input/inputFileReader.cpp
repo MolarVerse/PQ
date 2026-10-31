@@ -144,7 +144,10 @@ namespace input
             std::make_unique<OptInputParser>(settings.optimizerSettings)
         );
         _parsers.push_back(
-            std::make_unique<QMInputParser>(resolveBuiltInSlakosPath)
+            std::make_unique<QMInputParser>(
+                resolveBuiltInSlakosPath,
+                settings.qmSettings
+            )
         );
 
         addKeywords();

@@ -28,6 +28,7 @@
 #include "forceFieldSettings.hpp"
 #include "hessianSettings.hpp"
 #include "optimizerSettings.hpp"
+#include "qmSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
@@ -47,6 +48,7 @@ struct Settings
     ConvSettings          convSettings;
     WaterModelSettings    waterModelSettings;
     ForceFieldSettings    forceFieldSettings;
+    QMSettings            qmSettings;
 
     void finalize();
 };

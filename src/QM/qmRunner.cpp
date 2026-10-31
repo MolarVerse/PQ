@@ -43,6 +43,13 @@ namespace QM
     }
 
     /**
+     * @brief get the QM settings associated with the runner
+     *
+     * @return the QM settings
+     */
+    const QMSettings &QMRunner::_getQMSettings() const { return _qmSettings; }
+
+    /**
      * @brief function to throw an exception after a timeout
      *
      * @details This function is used to throw an exception after a timeout. The
