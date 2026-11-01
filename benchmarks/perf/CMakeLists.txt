@@ -18,6 +18,7 @@ set(perf_benchmarks
     perfKinetics.cpp
     perfVirial.cpp
     perfShakeRattle.cpp
+    perfMShake.cpp
     perfBerendsenThermostat.cpp
     perfLangevinThermostat.cpp
     perfNoseHooverThermostat.cpp
