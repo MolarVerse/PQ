@@ -43,8 +43,8 @@ class OutputFileSettings
     Setting<size_t> _outputFrequency{1};
 
     Setting<bool>             _overwriteOutputFiles{false};
-    static inline bool        _includeOutputMetadata = false;
-    static inline bool        _filePrefixSet         = false;
+    Setting<bool>             _includeOutputMetadata{false};
+    static inline bool        _filePrefixSet = false;
     static inline std::string _filePrefix;
 
     static inline std::string _energyFile = DefaultFiles::energyFile;
@@ -118,8 +118,8 @@ class OutputFileSettings
 
     static void setTimingsFileName(std::string_view);
 
-    void        setOverwriteOutputFiles(bool);
-    static void setIncludeOutputMetadata(bool);
+    void setOverwriteOutputFiles(bool);
+    void setIncludeOutputMetadata(bool);
 
     /***************************
      * standard getter methods *
@@ -158,8 +158,8 @@ class OutputFileSettings
 
     [[nodiscard]] static std::string getTimingsFileName();
 
-    [[nodiscard]] bool        getOverwriteOutputFiles() const;
-    [[nodiscard]] static bool getIncludeOutputMetadata();
+    [[nodiscard]] bool getOverwriteOutputFiles() const;
+    [[nodiscard]] bool getIncludeOutputMetadata() const;
 };
 
 #endif   // _OUTPUT_FILE_SETTINGS_HPP_

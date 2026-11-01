@@ -564,21 +564,20 @@ TEST_F(TestInputFileReader, parseOverwriteOutput)
  */
 TEST_F(TestInputFileReader, parseIncludeOutputMetadata)
 {
-    EXPECT_FALSE(OutputFileSettings::getIncludeOutputMetadata());
-
-    OutputFileSettings       outputFileSettings;
+    OutputFileSettings outputFileSettings;
+    EXPECT_FALSE(outputFileSettings.getIncludeOutputMetadata());
     input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("include_output_metadata"));
     const auto &parseFunc = funcMap.at("include_output_metadata");
 
     parseFunc({"include_output_metadata", "=", "true"}, 0);
-    EXPECT_TRUE(OutputFileSettings::getIncludeOutputMetadata());
+    EXPECT_TRUE(outputFileSettings.getIncludeOutputMetadata());
 
     _clearParser(parser);
 
     parseFunc({"include_output_metadata", "=", "false"}, 0);
-    EXPECT_FALSE(OutputFileSettings::getIncludeOutputMetadata());
+    EXPECT_FALSE(outputFileSettings.getIncludeOutputMetadata());
 
     _clearParser(parser);
 

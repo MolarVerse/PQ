@@ -61,13 +61,14 @@ namespace out
      */
     void TrajectoryOutput::writeXyz(
         const molsys::SimulationBox &simulationBox,
-        size_t                       step
+        size_t                       step,
+        bool                         includeMetadata
     )
     {
         std::ostringstream buffer;
 
         writeHeader(simulationBox);
-        _writeComment(step);
+        _writeComment(step, includeMetadata);
 
         for (const auto &atom : simulationBox.getAtoms())
         {
@@ -95,7 +96,8 @@ namespace out
      */
     void TrajectoryOutput::writeHybridCenterXyz(
         const configurator::HybridConfigurator &configurator,
-        const size_t                            step
+        const size_t                            step,
+        bool                                    includeMetadata
     )
     {
         // one dummy atom is needed to mark the inner region center
@@ -104,7 +106,7 @@ namespace out
 
         // header line
         _getFilePointer() << numberOfCenterAtoms << '\n';
-        _writeComment(step);
+        _writeComment(step, includeMetadata);
 
         std::ostringstream buffer;
         buffer << std::format("{:<5}\t", centerAtomName);
@@ -128,13 +130,14 @@ namespace out
      */
     void TrajectoryOutput::writeVelocities(
         const molsys::SimulationBox &simulationBox,
-        size_t                       step
+        size_t                       step,
+        bool                         includeMetadata
     )
     {
         std::ostringstream buffer;
 
         writeHeader(simulationBox);
-        _writeComment(step);
+        _writeComment(step, includeMetadata);
 
         for (const auto &molecule : simulationBox.getMolecules())
         {
@@ -165,13 +168,18 @@ namespace out
      */
     void TrajectoryOutput::writeForces(
         const molsys::SimulationBox &simulationBox,
-        size_t                       step
+        size_t                       step,
+        bool                         includeMetadata
     )
     {
         std::ostringstream buffer;
 
         writeHeader(simulationBox);
-        _writeForceComment(step, simulationBox.calculateTotalForce());
+        _writeForceComment(
+            step,
+            simulationBox.calculateTotalForce(),
+            includeMetadata
+        );
 
         for (const auto &molecule : simulationBox.getMolecules())
         {
@@ -202,13 +210,14 @@ namespace out
      */
     void TrajectoryOutput::writeCharges(
         const molsys::SimulationBox &simulationBox,
-        size_t                       step
+        size_t                       step,
+        bool                         includeMetadata
     )
     {
         std::ostringstream buffer;
 
         writeHeader(simulationBox);
-        _writeComment(step);
+        _writeComment(step, includeMetadata);
 
         for (const auto &atom : simulationBox.getAtoms())
         {

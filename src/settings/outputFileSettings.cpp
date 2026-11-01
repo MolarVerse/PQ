@@ -455,7 +455,7 @@ void OutputFileSettings::setOverwriteOutputFiles(bool overwrite)
  */
 void OutputFileSettings::setIncludeOutputMetadata(bool includeMetadata)
 {
-    _includeOutputMetadata = includeMetadata;
+    _includeOutputMetadata.set(includeMetadata);
 }
 
 /***************************
@@ -685,7 +685,7 @@ bool OutputFileSettings::getOverwriteOutputFiles() const
  *
  * @return bool
  */
-bool OutputFileSettings::getIncludeOutputMetadata()
+bool OutputFileSettings::getIncludeOutputMetadata() const
 {
-    return _includeOutputMetadata;
+    return _includeOutputMetadata.get();
 }

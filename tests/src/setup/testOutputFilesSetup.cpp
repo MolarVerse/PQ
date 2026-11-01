@@ -108,7 +108,6 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     OutputFileSettings::setFilePrefix(PREFIX);
-    OutputFileSettings::setIncludeOutputMetadata(false);
     settings::TimingsSettings::setTimeStep(0.5);
 
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -133,7 +132,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     OutputFileSettings::setFilePrefix(PREFIX);
-    OutputFileSettings::setIncludeOutputMetadata(true);
+    _settings->outputFiles.setIncludeOutputMetadata(true);
     settings::TimingsSettings::setTimeStep(0.5);
 
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -151,7 +150,6 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     std::getline(instantEnergyFile, line);
     EXPECT_EQ(line, "# timestep = 0.5 fs");
 
-    OutputFileSettings::setIncludeOutputMetadata(false);
     cleanupPrefix();
 }
 

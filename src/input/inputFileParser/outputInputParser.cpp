@@ -142,8 +142,8 @@ namespace input
             .description = "Whether to include metadata in output files"
         };
 
-        const auto setValue = [](bool value)
-        { OutputFileSettings::setIncludeOutputMetadata(value); };
+        const auto setValue = [this](bool value)
+        { _outputFileSettings->setIncludeOutputMetadata(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{

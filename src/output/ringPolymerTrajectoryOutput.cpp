@@ -61,7 +61,8 @@ namespace out
      */
     void RingPolymerTrajectoryOutput::writeXyz(
         const std::vector<molsys::SimulationBox> &beads,
-        size_t                                    step
+        size_t                                    step,
+        bool                                      includeMetadata
     )
     {
         std::ostringstream buffer;
@@ -69,7 +70,7 @@ namespace out
         const auto nBeads = beads.size();
 
         writeHeader(beads[0], nBeads);
-        _writeComment(step);
+        _writeComment(step, includeMetadata);
 
         for (size_t i = 0; i < nBeads; ++i)
         {
@@ -105,7 +106,8 @@ namespace out
      */
     void RingPolymerTrajectoryOutput::writeVelocities(
         const std::vector<molsys::SimulationBox> &beads,
-        size_t                                    step
+        size_t                                    step,
+        bool                                      includeMetadata
     )
     {
         std::ostringstream buffer;
@@ -113,7 +115,7 @@ namespace out
         const auto nBeads = beads.size();
 
         writeHeader(beads[0], nBeads);
-        _writeComment(step);
+        _writeComment(step, includeMetadata);
 
         for (size_t i = 0; i < nBeads; ++i)
         {
@@ -150,7 +152,8 @@ namespace out
      */
     void RingPolymerTrajectoryOutput::writeForces(
         const std::vector<molsys::SimulationBox> &beads,
-        size_t                                    step
+        size_t                                    step,
+        bool                                      includeMetadata
     )
     {
         std::ostringstream buffer;
@@ -164,7 +167,7 @@ namespace out
             { totalForce += bead.calculateTotalForce(); }
         );
 
-        _writeForceComment(step, totalForce);
+        _writeForceComment(step, totalForce, includeMetadata);
 
         for (size_t i = 0; i < beads.size(); ++i)
         {
@@ -201,13 +204,14 @@ namespace out
      */
     void RingPolymerTrajectoryOutput::writeCharges(
         const std::vector<molsys::SimulationBox> &beads,
-        size_t                                    step
+        size_t                                    step,
+        bool                                      includeMetadata
     )
     {
         std::ostringstream buffer;
 
         writeHeader(beads[0], beads.size());
-        _writeComment(step);
+        _writeComment(step, includeMetadata);
 
         for (size_t i = 0; i < beads.size(); ++i)
         {

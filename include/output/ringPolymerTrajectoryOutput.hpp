@@ -49,13 +49,26 @@ namespace out
         using Output::Output;
 
         void writeHeader(const molsys::SimulationBox &, size_t);
-        void writeXyz(const std::vector<molsys::SimulationBox> &, size_t);
+        void writeXyz(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
         void writeVelocities(
             const std::vector<molsys::SimulationBox> &,
-            size_t
+            size_t,
+            bool includeMetadata
         );
-        void writeForces(const std::vector<molsys::SimulationBox> &, size_t);
-        void writeCharges(const std::vector<molsys::SimulationBox> &, size_t);
+        void writeForces(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
+        void writeCharges(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
     };
 }   // namespace out
 

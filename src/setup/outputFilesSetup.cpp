@@ -161,7 +161,7 @@ namespace setup
                 );
             }
 
-            if (OutputFileSettings::getIncludeOutputMetadata())
+            if (outputFileSettings.getIncludeOutputMetadata())
             {
                 const auto timeStep = settings::TimingsSettings::getTimeStep();
                 _engine.getEnergyOutput().writeHeader(timeStep);

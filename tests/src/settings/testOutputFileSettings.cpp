@@ -43,12 +43,13 @@ TEST(TestOutputSettings, setSpecialOutputFrequency)
  */
 TEST(TestOutputSettings, includeOutputMetadataDefaultsToFalse)
 {
-    EXPECT_FALSE(OutputFileSettings::getIncludeOutputMetadata());
+    OutputFileSettings settings;
+    EXPECT_FALSE(settings.getIncludeOutputMetadata());
 
-    OutputFileSettings::setIncludeOutputMetadata(true);
-    EXPECT_TRUE(OutputFileSettings::getIncludeOutputMetadata());
+    settings.setIncludeOutputMetadata(true);
+    EXPECT_TRUE(settings.getIncludeOutputMetadata());
 
-    OutputFileSettings::setIncludeOutputMetadata(false);
+    settings.setIncludeOutputMetadata(false);
 }
 
 TEST(TestOutputSettings, determinesMostCommonConfiguredPrefix)

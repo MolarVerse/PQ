@@ -26,6 +26,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <mstd/types.hpp>
 #include <vector>
 
 #include "boxOutput.hpp"
@@ -49,6 +50,8 @@ namespace configurator
     class HybridConfigurator;   // forward declaration
 }   // namespace configurator
 
+class OutputFileSettings;   // forward declaration
+
 namespace engine
 {
     /**
@@ -60,6 +63,8 @@ namespace engine
     class EngineOutput
     {
        private:
+        mstd::ConstRef<OutputFileSettings> _outputFileSettings;
+
         std::unique_ptr<out::EnergyOutput> _energyOutput;
         std::unique_ptr<out::EnergyOutput> _instantEnergyOutput;
         std::unique_ptr<out::InfoOutput>   _infoOutput;
@@ -91,7 +96,7 @@ namespace engine
         std::unique_ptr<out::TimingsOutput> _timingsOutput;
 
        public:
-        EngineOutput();
+        explicit EngineOutput(const OutputFileSettings &outputFileSettings);
 
         void writeEnergyFile(
             size_t step,
