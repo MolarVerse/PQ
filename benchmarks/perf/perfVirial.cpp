@@ -36,6 +36,7 @@
 #endif
 
 #include "generalSettings.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 
@@ -48,6 +49,8 @@ int main()
 
     auto physicalData = physicalData::PhysicalData();
     settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

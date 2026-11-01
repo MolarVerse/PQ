@@ -37,6 +37,7 @@
 #include "buckinghamPair.hpp"
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
+#include "perfAlloc.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
 
@@ -55,6 +56,8 @@ int main()
             .equilibriumDistance = 1.5
         }
     );
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

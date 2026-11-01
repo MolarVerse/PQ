@@ -33,6 +33,7 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
@@ -46,6 +47,8 @@ int main()
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto integrator = integrator::VelocityVerlet();
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

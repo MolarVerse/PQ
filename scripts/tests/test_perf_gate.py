@@ -33,14 +33,19 @@ class PerfGateTest(unittest.TestCase):
         valgrind.write_text(FAKE_VALGRIND)
         valgrind.chmod(valgrind.stat().st_mode | stat.S_IEXEC)
 
-    def bench(self, directory, name, ir=None, fail=False):
+    def bench(self, directory, name, ir=None, fail=False, allocs=None):
         path = directory / f"perf_{name}"
-        path.write_text("#!/bin/bash\n")
+        path.write_text('#!/bin/bash\n[ -e "$0.allocs" ] && echo "PQ_PERF_ALLOCS $(cat "$0.allocs") 0" >&2\nexit 0\n')
         path.chmod(path.stat().st_mode | stat.S_IEXEC)
         if ir is not None:
             Path(f"{path}.ir").write_text(str(ir))
         if fail:
             Path(f"{path}.fail").write_text("")
+        if allocs is not None:
+            Path(f"{path}.allocs").write_text(str(allocs))
+
+    def with_alloc_library(self):
+        (self.pr / "libperf_alloc_counter.so").write_text("")
 
     def run_gate(self, base_dir=None, env_extra=None):
         report = self.root / "report.md"
@@ -179,6 +184,88 @@ class PerfGateTest(unittest.TestCase):
         result, report = self.run_gate()
         self.assertEqual(1, result.returncode)
         self.assertIn("regression", report)
+
+
+    def alloc_case(self, base_allocs, pr_allocs, ir=1_000_000):
+        self.with_alloc_library()
+        self.bench(self.pr, "a", ir, allocs=pr_allocs)
+        self.bench(self.base, "a", ir, allocs=base_allocs)
+        return self.run_gate()
+
+    def test_unchanged_allocations_are_shown_and_pass(self):
+        result, report = self.alloc_case(10, 10)
+        self.assertEqual(0, result.returncode)
+        self.assertIn("Heap allocations in the measured loop", report)
+        self.assertIn("| `a` | 10 | 10 | +0.00% | ✅ |", report)
+
+    def test_more_allocations_fail(self):
+        result, report = self.alloc_case(10, 20)
+        self.assertEqual(1, result.returncode)
+        self.assertIn("more heap allocations", report)
+        self.assertIn("| `a` | 10 | 20 | +100.00% | ❌ |", report)
+
+    def test_the_first_allocation_of_an_allocation_free_loop_fails(self):
+        result, report = self.alloc_case(0, 1)
+        self.assertEqual(1, result.returncode)
+        self.assertIn("| `a` | 0 | 1 | +1 | ❌ |", report)
+
+    def test_fewer_allocations_pass(self):
+        result, report = self.alloc_case(20, 10)
+        self.assertEqual(0, result.returncode)
+        self.assertIn("| `a` | 20 | 10 | -50.00% | 🎉 |", report)
+
+    def test_a_small_rise_within_the_threshold_passes(self):
+        result, _ = self.alloc_case(1000, 1010)
+        self.assertEqual(0, result.returncode)
+
+    def test_no_allocation_library_means_no_allocation_table(self):
+        self.bench(self.pr, "a", 1_000_000, allocs=10)
+        self.bench(self.base, "a", 1_000_000, allocs=10)
+        result, report = self.run_gate()
+        self.assertEqual(0, result.returncode)
+        self.assertNotIn("Heap allocations", report)
+
+    def test_a_base_binary_without_the_marker_is_not_compared(self):
+        result, report = self.alloc_case(None, 12)
+        self.assertEqual(0, result.returncode)
+        self.assertIn("| `a` | – | 12 | – | |", report)
+
+    def test_a_new_benchmark_shows_its_allocations(self):
+        self.with_alloc_library()
+        self.bench(self.pr, "a", 1_000_000, allocs=7)
+        result, report = self.run_gate()
+        self.assertEqual(0, result.returncode)
+        self.assertIn("| `a` | – | 7 | – | |", report)
+
+    def test_cached_base_allocations_are_used_and_written_back(self):
+        self.with_alloc_library()
+        self.bench(self.pr, "a", 1_000_000, allocs=30)
+        cache = self.root / "base_ir.tsv"
+        cache.write_text("a\t1000000\t10\n")
+        result, report = self.run_gate(
+            base_dir=self.root / "no-such-dir", env_extra={"PERF_BASE_IR_FILE": str(cache)}
+        )
+        self.assertEqual(1, result.returncode)
+        self.assertIn("| `a` | 10 | 30 | +200.00% | ❌ |", report)
+        self.assertEqual("a\t1000000\t10\n", cache.read_text())
+
+    def test_a_cache_from_before_the_allocation_column_still_works(self):
+        self.with_alloc_library()
+        self.bench(self.pr, "a", 1_000_000, allocs=30)
+        cache = self.root / "base_ir.tsv"
+        cache.write_text("a\t1000000\n")
+        result, report = self.run_gate(
+            base_dir=self.root / "no-such-dir", env_extra={"PERF_BASE_IR_FILE": str(cache)}
+        )
+        self.assertEqual(0, result.returncode)
+        self.assertIn("| `a` | – | 30 | – | |", report)
+
+    def test_the_threshold_of_the_allocation_check_can_be_changed(self):
+        self.with_alloc_library()
+        self.bench(self.pr, "a", 1_000_000, allocs=1010)
+        self.bench(self.base, "a", 1_000_000, allocs=1000)
+        result, _ = self.run_gate(env_extra={"PERF_ALLOC_THRESHOLD_PERCENT": "0.5"})
+        self.assertEqual(1, result.returncode)
 
 
 if __name__ == "__main__":

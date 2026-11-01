@@ -34,6 +34,7 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
@@ -42,6 +43,8 @@ int main()
 {
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

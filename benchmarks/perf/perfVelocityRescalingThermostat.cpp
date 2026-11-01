@@ -35,6 +35,7 @@
 #endif
 
 #include "generalSettings.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "timingsSettings.hpp"
@@ -55,6 +56,8 @@ int main()
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     auto thermostat =
         thermostat::VelocityRescalingThermostat(targetTemperature, 100.0);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

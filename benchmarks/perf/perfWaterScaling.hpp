@@ -52,6 +52,7 @@
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "orthorhombicBox.hpp"
+#include "perfAlloc.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -169,6 +170,8 @@ namespace benchWaterScaling
         cellList.setup(simBox);
 
         auto physicalData = physicalData::PhysicalData();
+
+        perfAllocBegin();
 
         CALLGRIND_ZERO_STATS;
 
