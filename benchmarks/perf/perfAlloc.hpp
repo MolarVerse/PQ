@@ -35,9 +35,9 @@ inline void perfAllocBegin()
 {
     using Begin = void (*)();
 
+    void *const symbol = dlsym(RTLD_DEFAULT, "pq_perf_alloc_begin");
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    const auto begin =
-        reinterpret_cast<Begin>(dlsym(RTLD_DEFAULT, "pq_perf_alloc_begin"));
+    const auto begin = reinterpret_cast<Begin>(symbol);
 
     if (begin != nullptr)
         begin();
