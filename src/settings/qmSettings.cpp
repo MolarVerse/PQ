@@ -304,6 +304,13 @@ namespace settings
     }
 
     /**
+     * @brief sets the total charge of the QM atoms without a moltype
+     *
+     * @param charge
+     */
+    void QMSettings::setQMCharge(int charge) { _qmCharge = charge; }
+
+    /**
      * @brief sets the qmLoopTimeLimit in settings
      *
      * @param time
@@ -441,6 +448,13 @@ namespace settings
      * @return bool
      */
     bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
+
+    /**
+     * @brief returns the total charge of the QM atoms without a moltype
+     *
+     * @return int
+     */
+    int QMSettings::getQMCharge() { return _qmCharge; }
 
     /**
      * @brief returns the xTBMethod

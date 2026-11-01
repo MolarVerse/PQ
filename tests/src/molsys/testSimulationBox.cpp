@@ -30,8 +30,10 @@
 #include <vector>
 
 #include "exceptions.hpp"
+#include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
+#include "qmSettings.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
 #include "vectorNear.hpp"
@@ -661,4 +663,22 @@ TEST_F(TestSimulationBox, activeChargeAndEmptyForceRemoval)
 
     molsys::SimulationBox empty;
     EXPECT_NO_THROW(empty.removeNetForce());
+}
+
+TEST_F(TestSimulationBox, activeChargeAddsQMChargeForMoltypeZero)
+{
+    molsys::SimulationBox simBox;
+    auto                  ion   = molsys::Molecule{MolType{0}};
+    auto                  water = molsys::Molecule{MolType{1}};
+    water.setCharge(2);
+    simBox.addMolecule(ion);
+    simBox.addMolecule(water);
+
+    settings::QMSettings::setQMCharge(-1);
+    EXPECT_EQ(simBox.calcActiveMolCharge(), 1);
+
+    simBox.getMolecule(0).deactivateMolecule();
+    EXPECT_EQ(simBox.calcActiveMolCharge(), 2);
+
+    settings::QMSettings::setQMCharge(0);
 }

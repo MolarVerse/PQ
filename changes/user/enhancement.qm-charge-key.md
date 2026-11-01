@@ -1,0 +1,1 @@
+- Add the `qm_charge` input key: the total charge of QM atoms without a moltype (moltype 0). It is added to the moltype charges passed to DFTB+ and Turbomole. Before, such atoms always counted as neutral.

@@ -200,6 +200,26 @@ TEST_F(TestInputFileReader, parseDispersion)
     )
 }
 
+TEST_F(TestInputFileReader, parseQMCharge)
+{
+    EXPECT_EQ(settings::QMSettings::getQMCharge(), 0);
+
+    auto       parser  = input::QMInputParser();
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("qm_charge"));
+    const auto& parseFunc = funcMap.at("qm_charge");
+
+    parseFunc({"qm_charge", "=", "-1"}, 0);
+    EXPECT_EQ(settings::QMSettings::getQMCharge(), -1);
+
+    _clearParser(parser);
+
+    parseFunc({"qm_charge", "=", "2"}, 0);
+    EXPECT_EQ(settings::QMSettings::getQMCharge(), 2);
+
+    settings::QMSettings::setQMCharge(0);
+}
+
 TEST_F(TestInputFileReader, parseRemoveNetForce)
 {
     EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());

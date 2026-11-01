@@ -31,6 +31,7 @@
 #include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
+#include "qmSettings.hpp"
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
 
@@ -778,7 +779,16 @@ namespace molsys
     {
         int charge = 0;
 
-        for (const auto& mol : getActiveMolecules()) charge += mol.getCharge();
+        auto hasQMOnlyMolecule = false;
+
+        for (const auto& mol : getActiveMolecules())
+        {
+            charge            += mol.getCharge();
+            hasQMOnlyMolecule |= mol.getMoltype() == MolType{0};
+        }
+
+        if (hasQMOnlyMolecule)
+            charge += settings::QMSettings::getQMCharge();
 
         return charge;
     }

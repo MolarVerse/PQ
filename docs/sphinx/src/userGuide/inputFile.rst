@@ -1667,6 +1667,22 @@ This can increase momentum conservation when using a QM program with limited num
 
 .. centered:: *default value* = false
 
+.. _qmChargeKey:
+
+QM Charge
+=========
+
+.. admonition:: Key
+    :class: tip
+
+    qm_charge = {int} -> 0
+
+With the ``qm_charge`` keyword the user can specify the total charge of the QM atoms that have no moltype (moltype 0 in the
+:ref:`restartFile`). It is added to the charges of the active moltypes from the :ref:`moldescriptorFile` when the total charge is
+passed to DFTB+ or Turbomole. Without it, atoms with moltype 0 count as neutral.
+
+.. centered:: *default value* = 0
+
 .. _maceModelKey:
 
 MACE Model
