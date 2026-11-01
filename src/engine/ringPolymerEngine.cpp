@@ -54,15 +54,16 @@ namespace engine
      * @brief writes the ring polymer output files.
      *
      */
-    void RingPolymerEngine::writeOutput()
+    void RingPolymerEngine::writeOutput(
+        const OutputFileSettings &outputSettings
+    )
     {
         auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
         auto &rpmdData        = _ringPolymerBeadsPhysicalData;
 
-        const auto outputFreq =
-            settings::OutputFileSettings::getOutputFrequency();
-        const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = getStep() + step0;
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto effStep    = getStep() + step0;
 
         if (0 == getStep() % outputFreq)
         {

@@ -80,12 +80,12 @@ TEST_F(TestRingPolymerTrajectoryOutput, writeXyz)
  */
 TEST_F(TestRingPolymerTrajectoryOutput, writeXyzMetadata)
 {
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+    OutputFileSettings::setIncludeOutputMetadata(true);
 
     _trajectoryOutput->setFilename("default.rpmd.xyz");
     _trajectoryOutput->writeXyz(_beads, 42);
     _trajectoryOutput->close();
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    OutputFileSettings::setIncludeOutputMetadata(false);
 
     std::ifstream file("default.rpmd.xyz");
     std::string   line;
@@ -200,12 +200,12 @@ TEST_F(TestRingPolymerTrajectoryOutput, writeForces)
  */
 TEST_F(TestRingPolymerTrajectoryOutput, writeForcesMetadata)
 {
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+    OutputFileSettings::setIncludeOutputMetadata(true);
 
     _trajectoryOutput->setFilename("default.rpmd.xyz");
     _trajectoryOutput->writeForces(_beads, 42);
     _trajectoryOutput->close();
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    OutputFileSettings::setIncludeOutputMetadata(false);
 
     std::ifstream file("default.rpmd.xyz");
     std::string   line;

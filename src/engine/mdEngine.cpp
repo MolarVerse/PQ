@@ -75,7 +75,7 @@ namespace engine
             bar.update();
             takeStep();
 
-            writeOutput();
+            writeOutput(getSettings().outputFiles);
             deleteTmpFiles();
         }
 
@@ -185,12 +185,11 @@ namespace engine
      * frequency.
      *
      */
-    void MDEngine::writeOutput()
+    void MDEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
-        const auto outputFreq =
-            settings::OutputFileSettings::getOutputFrequency();
-        const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = getStep() + step0;
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto effStep    = getStep() + step0;
 
         if (0 == getStep() % outputFreq)
         {

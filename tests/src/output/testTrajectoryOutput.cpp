@@ -57,12 +57,12 @@ TEST_F(TestTrajectoryOutput, writeXyz)
  */
 TEST_F(TestTrajectoryOutput, writeXyzMetadata)
 {
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+    OutputFileSettings::setIncludeOutputMetadata(true);
 
     _trajectoryOutput->setFilename("default.xyz");
     _trajectoryOutput->writeXyz(*_simulationBox, 42);
     _trajectoryOutput->close();
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    OutputFileSettings::setIncludeOutputMetadata(false);
 
     std::ifstream file("default.xyz");
     std::string   line;
@@ -103,7 +103,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
  */
 TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
 {
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+    OutputFileSettings::setIncludeOutputMetadata(true);
 
     configurator::HybridConfigurator hybridConfigurator;
 
@@ -114,7 +114,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
     _trajectoryOutput->setFilename("default.xyz");
     _trajectoryOutput->writeHybridCenterXyz(hybridConfigurator, 42);
     _trajectoryOutput->close();
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    OutputFileSettings::setIncludeOutputMetadata(false);
 
     std::ifstream file("default.xyz");
     std::string   line;
@@ -187,12 +187,12 @@ TEST_F(TestTrajectoryOutput, writeForces)
  */
 TEST_F(TestTrajectoryOutput, writeForcesMetadata)
 {
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+    OutputFileSettings::setIncludeOutputMetadata(true);
 
     _trajectoryOutput->setFilename("default.xyz");
     _trajectoryOutput->writeForces(*_simulationBox, 42);
     _trajectoryOutput->close();
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    OutputFileSettings::setIncludeOutputMetadata(false);
 
     std::ifstream file("default.xyz");
     std::string   line;

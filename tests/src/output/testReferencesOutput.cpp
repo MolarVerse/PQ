@@ -47,7 +47,7 @@ class ReferencesOutputTest : public ::testing::Test
 TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
 {
     const std::string path = "default.refs.test";
-    settings::OutputFileSettings::setRefFileName(path);
+    OutputFileSettings::setRefFileName(path);
 
     references::ReferencesOutput::writeReferencesFile();
 
@@ -73,7 +73,7 @@ TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
 
 TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 {
-    settings::OutputFileSettings::setRefFileName(".");
+    OutputFileSettings::setRefFileName(".");
 
     EXPECT_THROW_MSG(
 
@@ -88,7 +88,7 @@ TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 #if defined(__linux__)
 TEST_F(ReferencesOutputTest, rejectsFailedOutputWrites)
 {
-    settings::OutputFileSettings::setRefFileName("/dev/full");
+    OutputFileSettings::setRefFileName("/dev/full");
 
     EXPECT_THROW_MSG(
 
@@ -112,7 +112,7 @@ TEST_F(ReferencesOutputTest, rendersAdditionalReferenceFiles)
     std::ofstream(referencePath) << "ADDITIONAL REFERENCE\n";
     std::ofstream(bibtexPath) << "ADDITIONAL BIBTEX\n";
     references::ReferencesOutput::addReferenceFile(referencePath.string());
-    settings::OutputFileSettings::setRefFileName(outputPath);
+    OutputFileSettings::setRefFileName(outputPath);
 
     EXPECT_NO_THROW(references::ReferencesOutput::writeReferencesFile());
     const auto content = slurp(outputPath);
@@ -145,7 +145,7 @@ TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
     }
 
     references::ReferencesOutput::addReferenceFile(unreadablePath.string());
-    settings::OutputFileSettings::setRefFileName(outputPath);
+    OutputFileSettings::setRefFileName(outputPath);
 
     EXPECT_THROW_MSG(
         references::ReferencesOutput::writeReferencesFile(),
@@ -175,7 +175,7 @@ TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
     EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
     EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
 
-    settings::OutputFileSettings::setRefFileName(outputPath);
+    OutputFileSettings::setRefFileName(outputPath);
 
     EXPECT_THROW_MSG(
         references::ReferencesOutput::writeReferencesFile(),

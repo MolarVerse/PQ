@@ -49,7 +49,7 @@ namespace engine
         using Engine::Engine;
 
         void run() override;
-        void writeOutput() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
 
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
@@ -64,7 +64,6 @@ namespace engine
         );
         void _runOptimization();
         void _takeOptimizationStep();
-        void _writeOptimizationOutput();
 
         [[nodiscard]]
         std::shared_ptr<opt::Optimizer> _setupEmptyOptimizer();

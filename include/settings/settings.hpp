@@ -29,6 +29,7 @@
 #include "hessianSettings.hpp"
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
+#include "outputFileSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
@@ -49,6 +50,7 @@ struct Settings
     WaterModelSettings    waterModelSettings;
     ForceFieldSettings    forceFieldSettings;
     ManostatSettings      manostatSettings;
+    OutputFileSettings    outputFiles;
 
     void finalize();
 };

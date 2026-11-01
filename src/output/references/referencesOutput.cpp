@@ -101,7 +101,7 @@ namespace references
     void ReferencesOutput::writeReferencesFile()
     {
         const auto sourceDirectory = referenceFilesPath();
-        const auto filename = settings::OutputFileSettings::getRefFileName();
+        const auto filename        = OutputFileSettings::getRefFileName();
 
         std::ostringstream rendered;
 

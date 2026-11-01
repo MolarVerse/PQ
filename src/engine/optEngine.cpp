@@ -44,7 +44,8 @@ namespace engine
 
         _setNSteps(_optimizer->getNEpochs());
 
-        writeOutput();
+        const auto &outputFileSettings = getSettings().outputFiles;
+        writeOutput(outputFileSettings);
 
         progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
 
@@ -57,7 +58,7 @@ namespace engine
             if (_converged || _optStopped)
                 break;
 
-            writeOutput();
+            writeOutput(outputFileSettings);
             deleteTmpFiles();
         }
 
@@ -187,12 +188,11 @@ namespace engine
      * frequency.
      *
      */
-    void OptEngine::writeOutput()
+    void OptEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
-        const auto outputFreq =
-            settings::OutputFileSettings::getOutputFrequency();
-        const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = getStep() + step0;
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto effStep    = getStep() + step0;
 
         if (0 == getStep() % outputFreq)
         {

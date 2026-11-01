@@ -80,8 +80,8 @@ namespace engine
         explicit Engine(const Settings &settings);
         virtual ~Engine();
 
-        virtual void run()         = 0;
-        virtual void writeOutput() = 0;
+        virtual void run()                                                 = 0;
+        virtual void writeOutput(const OutputFileSettings &outputSettings) = 0;
         static void  deleteTmpFiles();
 
         [[nodiscard]] double calculateTotalSimulationTime() const;

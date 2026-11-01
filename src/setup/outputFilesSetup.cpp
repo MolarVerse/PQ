@@ -69,30 +69,23 @@ namespace setup
      */
     void OutputFilesSetup::setup()
     {
-        const auto isPrefixSet =
-            settings::OutputFileSettings::isFilePrefixSet();
-        auto prefix = std::string();
+        const auto isPrefixSet = OutputFileSettings::isFilePrefixSet();
+        auto       prefix      = std::string();
 
         if (isPrefixSet)
-            prefix = settings::OutputFileSettings::getFilePrefix();
+            prefix = OutputFileSettings::getFilePrefix();
         else
-            prefix = settings::OutputFileSettings::determineMostCommonPrefix();
+            prefix = OutputFileSettings::determineMostCommonPrefix();
 
-        settings::OutputFileSettings::replaceDefaultValues(prefix);
+        OutputFileSettings::replaceDefaultValues(prefix);
 
-        const auto logFileName = settings::OutputFileSettings::getLogFileName();
-        const auto timingsFileName =
-            settings::OutputFileSettings::getTimingsFileName();
-        const auto restartFileName =
-            settings::OutputFileSettings::getRestartFileName();
-        const auto energyFileName =
-            settings::OutputFileSettings::getEnergyFileName();
-        const auto xyzFileName =
-            settings::OutputFileSettings::getTrajectoryFileName();
-        const auto infoFileName =
-            settings::OutputFileSettings::getInfoFileName();
-        const auto forceFileName =
-            settings::OutputFileSettings::getForceFileName();
+        const auto logFileName     = OutputFileSettings::getLogFileName();
+        const auto timingsFileName = OutputFileSettings::getTimingsFileName();
+        const auto restartFileName = OutputFileSettings::getRestartFileName();
+        const auto energyFileName  = OutputFileSettings::getEnergyFileName();
+        const auto xyzFileName   = OutputFileSettings::getTrajectoryFileName();
+        const auto infoFileName  = OutputFileSettings::getInfoFileName();
+        const auto forceFileName = OutputFileSettings::getForceFileName();
 
         _engine.getLogOutput().setFilename(logFileName);
         _engine.getTimingsOutput().setFilename(timingsFileName);
@@ -107,18 +100,13 @@ namespace setup
             auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
 
             const auto instEnFile =
-                settings::OutputFileSettings::getInstantEnergyFileName();
-            const auto velFile =
-                settings::OutputFileSettings::getVelocityFileName();
-            const auto chargeFile =
-                settings::OutputFileSettings::getChargeFileName();
-            const auto momFile =
-                settings::OutputFileSettings::getMomentumFileName();
-            const auto virialFile =
-                settings::OutputFileSettings::getVirialFileName();
-            const auto stressFile =
-                settings::OutputFileSettings::getStressFileName();
-            const auto boxFile = settings::OutputFileSettings::getBoxFileName();
+                OutputFileSettings::getInstantEnergyFileName();
+            const auto velFile    = OutputFileSettings::getVelocityFileName();
+            const auto chargeFile = OutputFileSettings::getChargeFileName();
+            const auto momFile    = OutputFileSettings::getMomentumFileName();
+            const auto virialFile = OutputFileSettings::getVirialFileName();
+            const auto stressFile = OutputFileSettings::getStressFileName();
+            const auto boxFile    = OutputFileSettings::getBoxFileName();
 
             mdEngine.getInstantEnergyOutput().setFilename(instEnFile);
             mdEngine.getVelOutput().setFilename(velFile);
@@ -131,13 +119,13 @@ namespace setup
             if (settings::GeneralSettings::isHybridJobtype())
             {
                 const auto hybridCenterFile =
-                    settings::OutputFileSettings::getHybridCenterFileName();
+                    OutputFileSettings::getHybridCenterFileName();
                 mdEngine.getXyzHybridCenterOutput().setFilename(
                     hybridCenterFile
                 );
             }
 
-            if (settings::OutputFileSettings::getIncludeOutputMetadata())
+            if (OutputFileSettings::getIncludeOutputMetadata())
             {
                 const auto timeStep = settings::TimingsSettings::getTimeStep();
                 _engine.getEnergyOutput().writeHeader(timeStep);
@@ -147,17 +135,16 @@ namespace setup
             if (settings::GeneralSettings::isRingPolymerMDActivated())
             {
                 const auto rstFile_ =
-                    settings::OutputFileSettings::getRPMDRestartFileName();
-                const auto xyzFile_ =
-                    settings::OutputFileSettings::getRPMDTrajFileName();
+                    OutputFileSettings::getRPMDRestartFileName();
+                const auto xyzFile_ = OutputFileSettings::getRPMDTrajFileName();
                 const auto velFile_ =
-                    settings::OutputFileSettings::getRPMDVelocityFileName();
+                    OutputFileSettings::getRPMDVelocityFileName();
                 const auto forceFile_ =
-                    settings::OutputFileSettings::getRPMDForceFileName();
+                    OutputFileSettings::getRPMDForceFileName();
                 const auto chargeFile_ =
-                    settings::OutputFileSettings::getRPMDChargeFileName();
+                    OutputFileSettings::getRPMDChargeFileName();
                 const auto energyFile_ =
-                    settings::OutputFileSettings::getRPMDEnergyFileName();
+                    OutputFileSettings::getRPMDEnergyFileName();
 
                 mdEngine.getRingPolymerRstFileOutput().setFilename(rstFile_);
                 mdEngine.getRingPolymerXyzOutput().setFilename(xyzFile_);
@@ -172,8 +159,7 @@ namespace setup
         {
             auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
 
-            const auto optFileName =
-                settings::OutputFileSettings::getOptFileName();
+            const auto optFileName = OutputFileSettings::getOptFileName();
 
             optEngine.getOptOutput().setFilename(optFileName);
         }
@@ -184,8 +170,7 @@ namespace setup
             auto &hessianEngine =
                 dynamic_cast<engine::HessianEngine &>(_engine);
 
-            const auto optFileName =
-                settings::OutputFileSettings::getOptFileName();
+            const auto optFileName = OutputFileSettings::getOptFileName();
 
             hessianEngine.getOptOutput().setFilename(optFileName);
         }

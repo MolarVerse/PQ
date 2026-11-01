@@ -32,8 +32,9 @@
  */
 TEST(TestOutputSettings, setSpecialOutputFrequency)
 {
-    settings::OutputFileSettings::setOutputFrequency(0);
-    EXPECT_EQ(settings::OutputFileSettings::getOutputFrequency(), UINT64_MAX);
+    OutputFileSettings settings;
+    settings.setOutputFrequency(0);
+    EXPECT_EQ(settings.getOutputFrequency(), UINT64_MAX);
 }
 
 /**
@@ -42,47 +43,41 @@ TEST(TestOutputSettings, setSpecialOutputFrequency)
  */
 TEST(TestOutputSettings, includeOutputMetadataDefaultsToFalse)
 {
-    EXPECT_FALSE(settings::OutputFileSettings::getIncludeOutputMetadata());
+    EXPECT_FALSE(OutputFileSettings::getIncludeOutputMetadata());
 
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
-    EXPECT_TRUE(settings::OutputFileSettings::getIncludeOutputMetadata());
+    OutputFileSettings::setIncludeOutputMetadata(true);
+    EXPECT_TRUE(OutputFileSettings::getIncludeOutputMetadata());
 
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    OutputFileSettings::setIncludeOutputMetadata(false);
 }
 
 TEST(TestOutputSettings, determinesMostCommonConfiguredPrefix)
 {
-    using settings::OutputFileSettings;
-
+    OutputFileSettings settings;
     OutputFileSettings::setRestartFileName("production.rst");
     OutputFileSettings::setEnergyFileName("production.en");
     OutputFileSettings::setTrajectoryFileName("production.xyz");
     OutputFileSettings::setOptFileName("optimization.opt");
     OutputFileSettings::setFilePrefix("production");
     OutputFileSettings::setOverwriteOutputFiles(true);
-    OutputFileSettings::setOutputFrequency(5);
+    settings.setOutputFrequency(5);
 
     EXPECT_EQ(OutputFileSettings::determineMostCommonPrefix(), "production");
     EXPECT_EQ(OutputFileSettings::getOptFileName(), "optimization.opt");
     EXPECT_EQ(OutputFileSettings::getFilePrefix(), "production");
     EXPECT_TRUE(OutputFileSettings::isFilePrefixSet());
     EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
-    EXPECT_EQ(OutputFileSettings::getOutputFrequency(), 5);
+    EXPECT_EQ(settings.getOutputFrequency(), 5);
 }
 
 TEST(TestOutputSettings, setsHybridCenterFilename)
 {
-    settings::OutputFileSettings::setHybridCenterFileName("center.xyz");
-    EXPECT_EQ(
-        settings::OutputFileSettings::getHybridCenterFileName(),
-        "center.xyz"
-    );
+    OutputFileSettings::setHybridCenterFileName("center.xyz");
+    EXPECT_EQ(OutputFileSettings::getHybridCenterFileName(), "center.xyz");
 }
 
 TEST(TestOutputSettings, replacesDefaultHybridCenterFilenameWithPrefix)
 {
-    using settings::OutputFileSettings;
-
     OutputFileSettings::setHybridCenterFileName(DefaultFiles::hybridCenterFile);
     OutputFileSettings::replaceDefaultValues("centerPrefix");
 

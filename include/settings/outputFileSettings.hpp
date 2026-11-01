@@ -29,142 +29,137 @@
 #include <string_view>
 
 #include "defaults.hpp"
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @class OutputFileSettings
+ *
+ * @brief static class to store settings of the output files
+ *
+ */
+class OutputFileSettings
 {
-    /**
-     * @class OutputFileSettings
-     *
-     * @brief static class to store settings of the output files
-     *
-     */
-    class OutputFileSettings
-    {
-       private:
-        static inline size_t _outputFrequency = 1;
+   private:
+    Setting<size_t> _outputFrequency{1};
 
-        static inline bool        _overwriteOutputFiles  = false;
-        static inline bool        _includeOutputMetadata = false;
-        static inline bool        _filePrefixSet         = false;
-        static inline std::string _filePrefix;
+    static inline bool        _overwriteOutputFiles  = false;
+    static inline bool        _includeOutputMetadata = false;
+    static inline bool        _filePrefixSet         = false;
+    static inline std::string _filePrefix;
 
-        static inline std::string _energyFile = DefaultFiles::energyFile;
-        static inline std::string _instEnFile = DefaultFiles::instEnFile;
-        static inline std::string _rstFile    = DefaultFiles::restartFile;
-        static inline std::string _momFile    = DefaultFiles::momentumFile;
-        static inline std::string _trajFile   = DefaultFiles::trajFile;
-        static inline std::string _hybridCenterFile =
-            DefaultFiles::hybridCenterFile;
-        static inline std::string _velFile    = DefaultFiles::velFile;
-        static inline std::string _forceFile  = DefaultFiles::forceFile;
-        static inline std::string _chargeFile = DefaultFiles::chargeFile;
-        static inline std::string _logFile    = DefaultFiles::logFile;
-        static inline std::string _refFile    = DefaultFiles::refFile;
-        static inline std::string _infoFile   = DefaultFiles::infoFile;
+    static inline std::string _energyFile = DefaultFiles::energyFile;
+    static inline std::string _instEnFile = DefaultFiles::instEnFile;
+    static inline std::string _rstFile    = DefaultFiles::restartFile;
+    static inline std::string _momFile    = DefaultFiles::momentumFile;
+    static inline std::string _trajFile   = DefaultFiles::trajFile;
+    static inline std::string _hybridCenterFile =
+        DefaultFiles::hybridCenterFile;
+    static inline std::string _velFile    = DefaultFiles::velFile;
+    static inline std::string _forceFile  = DefaultFiles::forceFile;
+    static inline std::string _chargeFile = DefaultFiles::chargeFile;
+    static inline std::string _logFile    = DefaultFiles::logFile;
+    static inline std::string _refFile    = DefaultFiles::refFile;
+    static inline std::string _infoFile   = DefaultFiles::infoFile;
 
-        static inline std::string _virialFile = DefaultFiles::virialFile;
-        static inline std::string _stressFile = DefaultFiles::stressFile;
-        static inline std::string _boxFile    = DefaultFiles::boxFile;
+    static inline std::string _virialFile = DefaultFiles::virialFile;
+    static inline std::string _stressFile = DefaultFiles::stressFile;
+    static inline std::string _boxFile    = DefaultFiles::boxFile;
 
-        static inline std::string _optFile = DefaultFiles::optFile;
+    static inline std::string _optFile = DefaultFiles::optFile;
 
-        static inline std::string _rpmdRstFile   = DefaultFiles::rpmdRstFile;
-        static inline std::string _rpmdTrajFile  = DefaultFiles::rpmdTrajFile;
-        static inline std::string _rpmdVelFile   = DefaultFiles::rpmdVelFile;
-        static inline std::string _rpmdForceFile = DefaultFiles::rpmdForceFile;
-        static inline std::string _rpmdChargeFile =
-            DefaultFiles::rpmdChargeFile;
-        static inline std::string _rpmdEnergyFile =
-            DefaultFiles::rpmdEnergyFile;
+    static inline std::string _rpmdRstFile    = DefaultFiles::rpmdRstFile;
+    static inline std::string _rpmdTrajFile   = DefaultFiles::rpmdTrajFile;
+    static inline std::string _rpmdVelFile    = DefaultFiles::rpmdVelFile;
+    static inline std::string _rpmdForceFile  = DefaultFiles::rpmdForceFile;
+    static inline std::string _rpmdChargeFile = DefaultFiles::rpmdChargeFile;
+    static inline std::string _rpmdEnergyFile = DefaultFiles::rpmdEnergyFile;
 
-        static inline std::string _timeFile = DefaultFiles::timingsFile;
+    static inline std::string _timeFile = DefaultFiles::timingsFile;
 
-       public:
-        OutputFileSettings()  = default;
-        ~OutputFileSettings() = default;
+   public:
+    OutputFileSettings()  = default;
+    ~OutputFileSettings() = default;
 
-        static void setOutputFrequency(size_t outputFreq);
-        static void setFilePrefix(std::string_view prefix);
-        static void replaceDefaultValues(const std::string &prefix);
+    void        setOutputFrequency(size_t outputFreq);
+    static void setFilePrefix(std::string_view prefix);
+    static void replaceDefaultValues(const std::string &prefix);
 
-        [[nodiscard]] static std::string determineMostCommonPrefix();
+    [[nodiscard]] static std::string determineMostCommonPrefix();
 
-        /***************************
-         * standard setter methods *
-         ***************************/
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-        static void setRestartFileName(std::string_view);
-        static void setEnergyFileName(std::string_view);
-        static void setInstantEnergyFileName(std::string_view);
-        static void setMomentumFileName(std::string_view);
-        static void setTrajectoryFileName(std::string_view);
-        static void setHybridCenterFileName(std::string_view);
-        static void setVelocityFileName(std::string_view);
-        static void setForceFileName(std::string_view);
-        static void setChargeFileName(std::string_view);
-        static void setLogFileName(std::string_view);
-        static void setRefFileName(std::string_view);
-        static void setInfoFileName(std::string_view);
+    static void setRestartFileName(std::string_view);
+    static void setEnergyFileName(std::string_view);
+    static void setInstantEnergyFileName(std::string_view);
+    static void setMomentumFileName(std::string_view);
+    static void setTrajectoryFileName(std::string_view);
+    static void setHybridCenterFileName(std::string_view);
+    static void setVelocityFileName(std::string_view);
+    static void setForceFileName(std::string_view);
+    static void setChargeFileName(std::string_view);
+    static void setLogFileName(std::string_view);
+    static void setRefFileName(std::string_view);
+    static void setInfoFileName(std::string_view);
 
-        static void setVirialFileName(std::string_view);
-        static void setStressFileName(std::string_view);
-        static void setBoxFileName(std::string_view);
+    static void setVirialFileName(std::string_view);
+    static void setStressFileName(std::string_view);
+    static void setBoxFileName(std::string_view);
 
-        static void setOptFileName(std::string_view);
+    static void setOptFileName(std::string_view);
 
-        static void setRingPolymerRestartFileName(std::string_view);
-        static void setRingPolymerTrajectoryFileName(std::string_view);
-        static void setRingPolymerVelocityFileName(std::string_view);
-        static void setRingPolymerForceFileName(std::string_view);
-        static void setRingPolymerChargeFileName(std::string_view);
-        static void setRingPolymerEnergyFileName(std::string_view);
+    static void setRingPolymerRestartFileName(std::string_view);
+    static void setRingPolymerTrajectoryFileName(std::string_view);
+    static void setRingPolymerVelocityFileName(std::string_view);
+    static void setRingPolymerForceFileName(std::string_view);
+    static void setRingPolymerChargeFileName(std::string_view);
+    static void setRingPolymerEnergyFileName(std::string_view);
 
-        static void setTimingsFileName(std::string_view);
+    static void setTimingsFileName(std::string_view);
 
-        static void setOverwriteOutputFiles(bool);
-        static void setIncludeOutputMetadata(bool);
+    static void setOverwriteOutputFiles(bool);
+    static void setIncludeOutputMetadata(bool);
 
-        /***************************
-         * standard getter methods *
-         ***************************/
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-        [[nodiscard]] static size_t getOutputFrequency();
+    [[nodiscard]] size_t getOutputFrequency() const;
 
-        [[nodiscard]] static bool        isFilePrefixSet();
-        [[nodiscard]] static std::string getFilePrefix();
+    [[nodiscard]] static bool        isFilePrefixSet();
+    [[nodiscard]] static std::string getFilePrefix();
 
-        [[nodiscard]] static std::string getRestartFileName();
-        [[nodiscard]] static std::string getEnergyFileName();
-        [[nodiscard]] static std::string getInstantEnergyFileName();
-        [[nodiscard]] static std::string getMomentumFileName();
-        [[nodiscard]] static std::string getTrajectoryFileName();
-        [[nodiscard]] static std::string getHybridCenterFileName();
-        [[nodiscard]] static std::string getVelocityFileName();
-        [[nodiscard]] static std::string getForceFileName();
-        [[nodiscard]] static std::string getChargeFileName();
-        [[nodiscard]] static std::string getLogFileName();
-        [[nodiscard]] static std::string getRefFileName();
-        [[nodiscard]] static std::string getInfoFileName();
+    [[nodiscard]] static std::string getRestartFileName();
+    [[nodiscard]] static std::string getEnergyFileName();
+    [[nodiscard]] static std::string getInstantEnergyFileName();
+    [[nodiscard]] static std::string getMomentumFileName();
+    [[nodiscard]] static std::string getTrajectoryFileName();
+    [[nodiscard]] static std::string getHybridCenterFileName();
+    [[nodiscard]] static std::string getVelocityFileName();
+    [[nodiscard]] static std::string getForceFileName();
+    [[nodiscard]] static std::string getChargeFileName();
+    [[nodiscard]] static std::string getLogFileName();
+    [[nodiscard]] static std::string getRefFileName();
+    [[nodiscard]] static std::string getInfoFileName();
 
-        [[nodiscard]] static std::string getVirialFileName();
-        [[nodiscard]] static std::string getStressFileName();
-        [[nodiscard]] static std::string getBoxFileName();
+    [[nodiscard]] static std::string getVirialFileName();
+    [[nodiscard]] static std::string getStressFileName();
+    [[nodiscard]] static std::string getBoxFileName();
 
-        [[nodiscard]] static std::string getOptFileName();
+    [[nodiscard]] static std::string getOptFileName();
 
-        [[nodiscard]] static std::string getRPMDRestartFileName();
-        [[nodiscard]] static std::string getRPMDTrajFileName();
-        [[nodiscard]] static std::string getRPMDVelocityFileName();
-        [[nodiscard]] static std::string getRPMDForceFileName();
-        [[nodiscard]] static std::string getRPMDChargeFileName();
-        [[nodiscard]] static std::string getRPMDEnergyFileName();
+    [[nodiscard]] static std::string getRPMDRestartFileName();
+    [[nodiscard]] static std::string getRPMDTrajFileName();
+    [[nodiscard]] static std::string getRPMDVelocityFileName();
+    [[nodiscard]] static std::string getRPMDForceFileName();
+    [[nodiscard]] static std::string getRPMDChargeFileName();
+    [[nodiscard]] static std::string getRPMDEnergyFileName();
 
-        [[nodiscard]] static std::string getTimingsFileName();
+    [[nodiscard]] static std::string getTimingsFileName();
 
-        [[nodiscard]] static bool getOverwriteOutputFiles();
-        [[nodiscard]] static bool getIncludeOutputMetadata();
-    };
-
-}   // namespace settings
+    [[nodiscard]] static bool getOverwriteOutputFiles();
+    [[nodiscard]] static bool getIncludeOutputMetadata();
+};
 
 #endif   // _OUTPUT_FILE_SETTINGS_HPP_

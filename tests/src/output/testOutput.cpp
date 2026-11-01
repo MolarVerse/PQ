@@ -75,12 +75,12 @@ TEST(TestOutput, testSpecialSetFilename)
         std::format("File already exists - filename = {}", testFileName)
     );
 
-    settings::OutputFileSettings::setOverwriteOutputFiles(true);
+    OutputFileSettings::setOverwriteOutputFiles(true);
 
     EXPECT_NO_THROW(output.setFilename(testFileName));
     EXPECT_NO_THROW(output.close());
     EXPECT_EQ(output.getFilename(), testFileName);
 
-    settings::OutputFileSettings::setOverwriteOutputFiles(false);
+    OutputFileSettings::setOverwriteOutputFiles(false);
     std::filesystem::remove(testFileName);
 }

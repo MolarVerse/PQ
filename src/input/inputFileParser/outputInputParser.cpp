@@ -65,7 +65,8 @@ namespace input
      * 24) rpmd_energy_file "<string>"
      * 25) include_output_metadata "<bool>"
      */
-    OutputInputParser::OutputInputParser()
+    OutputInputParser::OutputInputParser(OutputFileSettings &outputFileSettings)
+        : _outputFileSettings(outputFileSettings)
     {
         addOutputFrequencyKeyword();
         addFilePrefixKeyword();
@@ -114,7 +115,7 @@ namespace input
         };
 
         const auto setValue = [](bool value)
-        { settings::OutputFileSettings::setOverwriteOutputFiles(value); };
+        { OutputFileSettings::setOverwriteOutputFiles(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -142,7 +143,7 @@ namespace input
         };
 
         const auto setValue = [](bool value)
-        { settings::OutputFileSettings::setIncludeOutputMetadata(value); };
+        { OutputFileSettings::setIncludeOutputMetadata(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -169,8 +170,8 @@ namespace input
             .description = "Frequency at which output files are generated"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::OutputFileSettings::setOutputFrequency(value); };
+        const auto setValue = [this](size_t value)
+        { _outputFileSettings->setOutputFrequency(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -197,7 +198,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setFilePrefix(value); };
+        { OutputFileSettings::setFilePrefix(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -224,7 +225,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setLogFileName(value); };
+        { OutputFileSettings::setLogFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -251,7 +252,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRefFileName(value); };
+        { OutputFileSettings::setRefFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -278,7 +279,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setInfoFileName(value); };
+        { OutputFileSettings::setInfoFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -305,7 +306,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setEnergyFileName(value); };
+        { OutputFileSettings::setEnergyFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -332,7 +333,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setInstantEnergyFileName(value); };
+        { OutputFileSettings::setInstantEnergyFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -359,7 +360,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setTrajectoryFileName(value); };
+        { OutputFileSettings::setTrajectoryFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -386,7 +387,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setHybridCenterFileName(value); };
+        { OutputFileSettings::setHybridCenterFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -413,7 +414,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setVelocityFileName(value); };
+        { OutputFileSettings::setVelocityFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -440,7 +441,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setForceFileName(value); };
+        { OutputFileSettings::setForceFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -467,7 +468,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRestartFileName(value); };
+        { OutputFileSettings::setRestartFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -494,7 +495,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setChargeFileName(value); };
+        { OutputFileSettings::setChargeFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -521,7 +522,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setMomentumFileName(value); };
+        { OutputFileSettings::setMomentumFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -548,7 +549,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setStressFileName(value); };
+        { OutputFileSettings::setStressFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -575,7 +576,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setVirialFileName(value); };
+        { OutputFileSettings::setVirialFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -602,7 +603,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setBoxFileName(value); };
+        { OutputFileSettings::setBoxFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -629,7 +630,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setTimingsFileName(value); };
+        { OutputFileSettings::setTimingsFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -656,7 +657,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setOptFileName(value); };
+        { OutputFileSettings::setOptFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -683,7 +684,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRingPolymerRestartFileName(value); };
+        { OutputFileSettings::setRingPolymerRestartFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -711,11 +712,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        {
-            settings::OutputFileSettings::setRingPolymerTrajectoryFileName(
-                value
-            );
-        };
+        { OutputFileSettings::setRingPolymerTrajectoryFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -742,9 +739,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        {
-            settings::OutputFileSettings::setRingPolymerVelocityFileName(value);
-        };
+        { OutputFileSettings::setRingPolymerVelocityFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -771,7 +766,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRingPolymerForceFileName(value); };
+        { OutputFileSettings::setRingPolymerForceFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -798,7 +793,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRingPolymerChargeFileName(value); };
+        { OutputFileSettings::setRingPolymerChargeFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -825,7 +820,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRingPolymerEnergyFileName(value); };
+        { OutputFileSettings::setRingPolymerEnergyFileName(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{

@@ -44,7 +44,7 @@ namespace out
     {
         _fileName = filename;
         const auto overwriteOutputFiles =
-            settings::OutputFileSettings::getOverwriteOutputFiles();
+            OutputFileSettings::getOverwriteOutputFiles();
 
         if (_fileName.empty())
             throw exc::InputFileException("Filename cannot be empty");
@@ -81,7 +81,7 @@ namespace out
      */
     void Output::_writeComment(size_t step)
     {
-        if (settings::OutputFileSettings::getIncludeOutputMetadata())
+        if (OutputFileSettings::getIncludeOutputMetadata())
             _fp << std::format("# step = {}\n", step);
         else
             _fp << '\n';
@@ -110,10 +110,9 @@ namespace out
         const double totalForce
     )
     {
-        const auto stepMetadata =
-            settings::OutputFileSettings::getIncludeOutputMetadata()
-                ? std::format("step = {}; ", step)
-                : "";
+        const auto stepMetadata = OutputFileSettings::getIncludeOutputMetadata()
+                                      ? std::format("step = {}; ", step)
+                                      : "";
 
         return format(
             "# {}Total force = {:.5e} kcal/mol/Angstrom\n",
