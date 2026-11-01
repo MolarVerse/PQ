@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+#include "enums/qm.hpp"
 #include "generalSettings.hpp"
 #include "outputFileSettings.hpp"
 #include "outputFilesSetup.hpp"
@@ -89,6 +90,7 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
+    _settings->qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
     _settings->outputFiles.setFilePrefix(PREFIX);
 
     _settings->finalize();
