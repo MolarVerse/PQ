@@ -10,3 +10,4 @@
 - Replace static `ConstraintSettings`
 - Replace static `ManostatSettings`
 - Replace static `ForceFieldSettings`
+- Replace static `OutputFileSettings`
