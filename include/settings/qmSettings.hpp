@@ -31,6 +31,8 @@
 #include "enums/qm.hpp"
 #include "setting.hpp"
 
+struct TestQMSettings;   // forward declaration
+
 #define SINGULARITY_  _SINGULARITY_
 #define STATIC_BUILD_ _STATIC_BUILD_
 #define SCRIPT_PATH_  _SCRIPT_PATH_
@@ -150,6 +152,8 @@ class QMSettings
    private:
     void _setupQMScript();
     void _setupQMMethodAseDftbPlus();
+
+    friend struct ::TestQMSettings;
 };
 
 #endif   // _QM_SETTINGS_HPP_

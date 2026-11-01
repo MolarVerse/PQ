@@ -36,8 +36,8 @@
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
     _settings->qmSettings.setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setUseDispersionCorrection(true);
+    _settings->qmSettings.setUseThirdOrderDftb(true);
+    _settings->qmSettings.setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
@@ -63,8 +63,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 {
-    QMSettings::setUseThirdOrderDftb(false);
-    QMSettings::setIsThirdOrderDftbSet(true);
+    _settings->qmSettings.setUseThirdOrderDftb(false);
     _settings->qmSettings.setSlakosType(SlakosType::THREEOB);
     _qmSetup->setupWriteInfo(_settings->qmSettings);
 
@@ -100,9 +99,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 {
     _settings->qmSettings.setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setHubbardDerivs({{"H", -0.3}});
-    QMSettings::setIsHubbardDerivsSet(true);
+    _settings->qmSettings.setUseThirdOrderDftb(true);
+    _settings->qmSettings.setHubbardDerivs({{"H", -0.3}});
     _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
@@ -139,7 +137,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 {
     _settings->qmSettings.setSlakosType(SlakosType::MATSCI);
-    QMSettings::setUseDispersionCorrection(true);
+    _settings->qmSettings.setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");
@@ -190,12 +188,10 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
 {
     _settings->qmSettings.setSlakosType(SlakosType::CUSTOM);
     _settings->qmSettings.setSlakosPath("custom/path/");
-    QMSettings::setUseDispersionCorrection(true);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setHubbardDerivs({{"H", -0.3}});
-    QMSettings::setIsHubbardDerivsSet(true);
+    _settings->qmSettings.setUseDispersionCorrection(true);
+    _settings->qmSettings.setUseThirdOrderDftb(true);
+    _settings->qmSettings.setUseThirdOrderDftb(true);
+    _settings->qmSettings.setHubbardDerivs({{"H", -0.3}});
     _qmSetup->setupWriteInfo(_settings->qmSettings);
 
     std::ifstream file("default.log");

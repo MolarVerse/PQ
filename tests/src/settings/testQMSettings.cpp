@@ -30,6 +30,15 @@
 #include "qmSettings.hpp"
 #include "throwWithMessage.hpp"
 
+struct TestQMSettings
+{
+   public:
+    static void setupQMMethodAseDftbPlus(QMSettings &qmSettings)
+    {
+        qmSettings._setupQMMethodAseDftbPlus();
+    }
+};
+
 TEST(QMSettingsTest, SetMaceModelTypeTest)
 {
     QMSettings settings;
@@ -233,4 +242,60 @@ TEST(QMSettingsTest, SetGPUPreprocessing)
     EXPECT_EQ(settings.useGPUPreprocessing(), false);
     settings.setUseGPUPreprocessing(true);
     EXPECT_EQ(settings.useGPUPreprocessing(), true);
+}
+
+#ifdef WITH_ASE
+TEST(QMSettingsTest, SetupQMMethodAseDftbPlus3obThirdOrderNotSet)
+{
+    QMSettings settings;
+    settings.setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings.setSlakosType(SlakosType::THREEOB);
+
+    TestQMSettings::setupQMMethodAseDftbPlus(settings);
+    EXPECT_EQ(settings.useThirdOrderDftb(), true);
+}
+
+TEST(QMSettingsTest, SetupQMMethodAseDftbPlus3obThirdOrderSetTrue)
+{
+    QMSettings settings;
+    settings.setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings.setSlakosType(SlakosType::THREEOB);
+    settings.setUseThirdOrderDftb(true);
+
+    TestQMSettings::setupQMMethodAseDftbPlus(settings);
+    EXPECT_EQ(settings.useThirdOrderDftb(), true);
+}
+
+TEST(QMSettingsTest, SetupQMMethodAseDftbPlus3obThirdOrderSetFalse)
+{
+    QMSettings settings;
+    settings.setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings.setSlakosType(SlakosType::THREEOB);
+    settings.setUseThirdOrderDftb(false);
+
+    TestQMSettings::setupQMMethodAseDftbPlus(settings);
+    EXPECT_EQ(settings.useThirdOrderDftb(), false);
+}
+
+TEST(QMSettingsTest, SetupQMMethodAseDftbPlusMatsciDoesNotForceThirdOrder)
+{
+    QMSettings settings;
+    settings.setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings.setSlakosType(SlakosType::MATSCI);
+    settings.setUseThirdOrderDftb(false);
+
+    TestQMSettings::setupQMMethodAseDftbPlus(settings);
+    EXPECT_EQ(settings.useThirdOrderDftb(), false);
+}
+#endif
+
+TEST(QMSettingsTest, SetupQMMethodAseDftbPlusCustomDoesNotForceThirdOrder)
+{
+    QMSettings settings;
+    settings.setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings.setSlakosType(SlakosType::CUSTOM);
+    settings.setUseThirdOrderDftb(false);
+
+    TestQMSettings::setupQMMethodAseDftbPlus(settings);
+    EXPECT_EQ(settings.useThirdOrderDftb(), false);
 }

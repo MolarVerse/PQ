@@ -58,11 +58,6 @@ class TestQMSetupAse : public ::testing::Test
     {
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        QMSettings::setUseDispersionCorrection(false);
-        QMSettings::setUseThirdOrderDftb(false);
-        QMSettings::setIsThirdOrderDftbSet(false);
-        QMSettings::setHubbardDerivs({});
-        QMSettings::setIsHubbardDerivsSet(false);
     }
 };
 
