@@ -34,9 +34,15 @@
 #include <unistd.h>
 
 #include <array>
+#include <atomic>
+#include <charconv>
 #include <cstddef>
-#include <cstdio>
+#include <cstdint>
+#include <string_view>
 
+// glibc exports its own allocators under these (reserved) names; they are the
+// way to call the real allocator from a replaced malloc.
+// NOLINTBEGIN(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 extern "C"
 {
     void *__libc_malloc(std::size_t size);
@@ -44,44 +50,77 @@ extern "C"
     void *__libc_realloc(void *pointer, std::size_t size);
     void *__libc_memalign(std::size_t alignment, std::size_t size);
 }
+// NOLINTEND(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
 namespace
 {
-    unsigned long g_calls  = 0;
-    unsigned long g_bytes  = 0;
-    bool          g_active = false;
+    struct Counters
+    {
+        std::atomic<std::uint64_t> calls{0};
+        std::atomic<std::uint64_t> bytes{0};
+        std::atomic<bool>          active{false};
+    };
+
+    // constant-initialised, so it is usable from the first malloc of the
+    // process on (before any static initialiser ran)
+    Counters &counters()
+    {
+        static Counters value;
+        return value;
+    }
 
     void count(std::size_t size)
     {
-        if (!__atomic_load_n(&g_active, __ATOMIC_RELAXED))
+        auto &state = counters();
+
+        if (!state.active.load(std::memory_order_relaxed))
             return;
 
-        __atomic_fetch_add(&g_calls, 1UL, __ATOMIC_RELAXED);
-        __atomic_fetch_add(&g_bytes, size, __ATOMIC_RELAXED);
+        state.calls.fetch_add(1, std::memory_order_relaxed);
+        state.bytes.fetch_add(size, std::memory_order_relaxed);
+    }
+
+    void append(
+        std::array<char, 96> &line,
+        std::size_t          &length,
+        std::string_view      text
+    )
+    {
+        for (const auto character : text) line.at(length++) = character;
+    }
+
+    void append(
+        std::array<char, 96> &line,
+        std::size_t          &length,
+        std::uint64_t         number
+    )
+    {
+        const auto result = std::to_chars(
+            line.data() + length,
+            line.data() + line.size(),
+            number
+        );
+        length = static_cast<std::size_t>(result.ptr - line.data());
     }
 
     __attribute__((destructor)) void report()
     {
-        if (!__atomic_exchange_n(&g_active, false, __ATOMIC_RELAXED))
+        auto &state = counters();
+
+        if (!state.active.exchange(false, std::memory_order_relaxed))
             return;
 
         std::array<char, 96> line{};
-        const auto           length = std::snprintf(
-            line.data(),
-            line.size(),
-            "PQ_PERF_ALLOCS %lu %lu\n",
-            __atomic_load_n(&g_calls, __ATOMIC_RELAXED),
-            __atomic_load_n(&g_bytes, __ATOMIC_RELAXED)
-        );
+        std::size_t          length = 0;
 
-        if (length <= 0)
-            return;
+        append(line, length, "PQ_PERF_ALLOCS ");
+        append(line, length, state.calls.load(std::memory_order_relaxed));
+        append(line, length, " ");
+        append(line, length, state.bytes.load(std::memory_order_relaxed));
+        append(line, length, "\n");
 
-        [[maybe_unused]] const auto written = ::write(
-            STDERR_FILENO,
-            line.data(),
-            static_cast<std::size_t>(length)
-        );
+        [[maybe_unused]] const auto written =
+            ::write(STDERR_FILENO, line.data(), length);
     }
 }   // namespace
 
@@ -89,9 +128,11 @@ extern "C"
 {
     void pq_perf_alloc_begin()
     {
-        __atomic_store_n(&g_calls, 0UL, __ATOMIC_RELAXED);
-        __atomic_store_n(&g_bytes, 0UL, __ATOMIC_RELAXED);
-        __atomic_store_n(&g_active, true, __ATOMIC_RELAXED);
+        auto &state = counters();
+
+        state.calls.store(0, std::memory_order_relaxed);
+        state.bytes.store(0, std::memory_order_relaxed);
+        state.active.store(true, std::memory_order_relaxed);
     }
 
     void *malloc(std::size_t size)
