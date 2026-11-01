@@ -55,6 +55,7 @@ namespace setup
         void        checkZoneRadii();
         void        validateQMChargeSettings();
         void        validateQMReferenceEnergies();
+        static void validateQMForceDistribution();
         void        setupWriteInfo() const;
     };
 
