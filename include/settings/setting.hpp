@@ -35,7 +35,7 @@
  * generate meaningful error messages when the setting is not set and no default
  * is available.
  */
-template <typename T, mstd::Tag Name = mstd::Tag("Setting")>
+template <typename T, mstd::Tag Name = mstd::Tag("Settings")>
 class Setting
 {
    private:
