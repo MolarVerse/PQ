@@ -466,8 +466,7 @@ namespace engine
      * @details Must be called directly after the QM calculation, while
      * exactly the QM molecules are active. Without it, E_tot jumps by a
      * molecule's QM energy whenever it enters or leaves the QM region.
-     * Molecules without a moltype entry have no reference energy; with
-     * reference energies, _moltypeCheck forbids them.
+     * Molecules without a moltype entry have no reference energy.
      */
     void QMMMMDEngine::_calculateQMReferenceEnergy()
     {
@@ -502,35 +501,16 @@ namespace engine
      *
      * @details This function iterates through all molecules and verifies
      * that each molecule outside the QM core has a moltype that is not
-     * zero. With QM reference energies, core molecules need one too.
+     * zero.
      *
-     * @throws HybridMDEngineException if any non-core molecule, or any
-     * molecule when QM reference energies are used, has moltype == 0
+     * @throws HybridMDEngineException if any non-core molecule has moltype
+     * == 0
      */
     void QMMMMDEngine::_moltypeCheck()
     {
-        const auto hasReference = [](const auto &moleculeType)
-        { return moleculeType.hasQMReferenceEnergy(); };
-
-        const auto usesReferences = std::ranges::any_of(
-            getSimulationBox().getMoleculeTypes(),
-            hasReference
-        );
-
         size_t count = 0;
         for (const auto &mol : getSimulationBox().getMolecules())
         {
-            if (usesReferences && mol.getMoltype() == MolType{0})
-            {
-                throw exc::HybridMDEngineException(
-                    std::format(
-                        "Molecule number {} has moltype 0. With QM reference "
-                        "energies, all molecules must have a non-zero moltype.",
-                        count
-                    )
-                );
-            }
-
             if (mol.getMoltype() == MolType{0} &&
                 mol.getHybridZone() != molsys::HybridZone::CORE)
             {

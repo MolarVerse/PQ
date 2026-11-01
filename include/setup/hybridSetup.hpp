@@ -55,6 +55,7 @@ namespace setup
         void        setupForcedOuterList();
         void        checkZoneRadii();
         void        validateQMChargeSettings();
+        void        validateQMReferenceEnergies();
         void        setupWriteInfo() const;
     };
 
