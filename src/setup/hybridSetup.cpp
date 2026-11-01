@@ -68,7 +68,7 @@ namespace setup
      */
     void HybridSetup::setup()
     {
-        validateQMMethod();
+        _validateQMMethod(_engine.getSettings().qmSettings);
         setupInnerRegionCenter();
         setupForcedCoreList();
         setupForcedLayerList();
@@ -87,29 +87,34 @@ namespace setup
      * @throws exc::InputFileException if the QM method is not supported
      * for hybrid type calculations
      */
-    void HybridSetup::validateQMMethod()
+    void HybridSetup::_validateQMMethod(const QMSettings &qmSettings)
     {
-        using enum QMMethod;
+        if (!qmSettings.isQMMethodSet())
+            throw exc::InputFileException(
+                "QM method is not specified for hybrid type calculations."
+            );
 
-        const auto qmMethod = settings::QMSettings::getQMMethod();
-        const auto errorMsg = std::format(
-            "QM method \"{}\" is not supported for hybrid type "
-            "calculations. Supported QM methods are \"dftbplus\" and "
-            "\"turbomole\".",
-            QMMethodMeta::toString(qmMethod)
-
-        );
+        const auto qmMethod = qmSettings.getQMMethod();
 
         switch (qmMethod)
         {
-            case DFTBPLUS:
-            case TURBOMOLE: break;
-            case PYSCF:
-            case ASE_DFTBPLUS:
-            case ASE_XTB:
-            case MACE:
-            case FENNOL:
-            case NONE: throw exc::InputFileException(errorMsg);
+            case QMMethod::DFTBPLUS:
+            case QMMethod::TURBOMOLE: break;
+            case QMMethod::PYSCF:
+            case QMMethod::ASE_DFTBPLUS:
+            case QMMethod::ASE_XTB:
+            case QMMethod::MACE:
+            case QMMethod::FENNOL:
+            {
+                const auto errorMsg = std::format(
+                    "QM method \"{}\" is not supported for hybrid type "
+                    "calculations. Supported QM methods are \"dftbplus\" and "
+                    "\"turbomole\".",
+                    QMMethodMeta::toString(qmMethod)
+
+                );
+                throw exc::InputFileException(errorMsg);
+            }
         }
     }
 

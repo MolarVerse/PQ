@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "externalQMRunner.hpp"
+#include "external/externalQMRunner.hpp"
 
 #include <algorithm>
 #include <array>
@@ -192,7 +192,7 @@ namespace QM
     void ExternalQMRunner::_readForceFile(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData
-    )
+    ) const
     {
         const auto forceFileName =
             settings::FileSettings::getQMForcesTempFileName();
@@ -204,18 +204,20 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} force file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(_getQMSettings().getQMMethod()),
                     forceFileName
                 )
             );
         }
+
+        const auto qmMethod = _getQMSettings().getQMMethod();
 
         if (forceFile.peek() == std::ifstream::traits_type::eof())
         {
             throw exc::QMRunnerException(
                 std::format(
                     "Empty {} force file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(qmMethod),
                     forceFileName
                 )
             );
@@ -228,7 +230,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot read QM energy from {} force file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(qmMethod),
                     forceFileName
                 )
             );
@@ -239,7 +241,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(qmMethod),
                     forceFileName
                 )
             );
@@ -247,7 +249,7 @@ namespace QM
 
         physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
 
-        auto readForces = [&forceFile, &forceFileName](auto &atom)
+        auto readForces = [&forceFile, &forceFileName, &qmMethod](auto &atom)
         {
             auto grad = linalg::Vec3D();
 
@@ -256,9 +258,7 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Incomplete {} force file \"{}\"",
-                        QMMethodMeta::toString(
-                            settings::QMSettings::getQMMethod()
-                        ),
+                        QMMethodMeta::toString(qmMethod),
                         forceFileName
                     )
                 );
@@ -273,9 +273,7 @@ namespace QM
                             "Invalid QM force component (NaN/Inf) in {} force "
                             "file "
                             "\"{}\"",
-                            QMMethodMeta::toString(
-                                settings::QMSettings::getQMMethod()
-                            ),
+                            QMMethodMeta::toString(qmMethod),
                             forceFileName
                         )
                     );
@@ -291,7 +289,7 @@ namespace QM
 
         forceFile.close();
 
-        if (settings::QMSettings::getRemoveNetForce())
+        if (_getQMSettings().getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 
@@ -305,19 +303,23 @@ namespace QM
      *  - if the charge file cannot be opened
      *  - if the charge file is empty
      */
-    void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &simulationBox)
+    void ExternalQMRunner::_readChargeFile(
+        molsys::SimulationBox &simulationBox
+    ) const
     {
         const auto chargeFileName =
             settings::FileSettings::getQMChargesTempFileName();
 
         std::ifstream chargeFile(chargeFileName);
 
+        const auto qmMethod = _getQMSettings().getQMMethod();
+
         if (!chargeFile.is_open())
         {
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} charge file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(qmMethod),
                     chargeFileName
                 )
             );
@@ -328,7 +330,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Empty {} charge file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(qmMethod),
                     chargeFileName
                 )
             );
@@ -336,7 +338,7 @@ namespace QM
 
         simulationBox.resetQMCharges();
 
-        auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
+        auto readCharges = [&chargeFile, &chargeFileName, &qmMethod](auto &atom)
         {
             auto charge = 0.0;
 
@@ -345,9 +347,7 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Incomplete {} charge file \"{}\"",
-                        QMMethodMeta::toString(
-                            settings::QMSettings::getQMMethod()
-                        ),
+                        QMMethodMeta::toString(qmMethod),
                         chargeFileName
                     )
                 );
@@ -357,9 +357,7 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Invalid value in {} charge file \"{}\"",
-                        QMMethodMeta::toString(
-                            settings::QMSettings::getQMMethod()
-                        ),
+                        QMMethodMeta::toString(qmMethod),
                         chargeFileName
                     )
                 );
@@ -453,13 +451,13 @@ namespace QM
         const std::string_view script
     ) const
     {
-        if (_scriptPath.empty())
+        if (_getQMSettings().getScriptPath().empty())
             return std::string(script);
 
-        if (_scriptPath == SCRIPT_PATH_)
+        if (_getQMSettings().getScriptPath() == SCRIPT_PATH_)
             return bundledQMScriptPath(script);
 
-        return _scriptPath + std::string(script);
+        return _getQMSettings().getScriptPath() + std::string(script);
     }
 
     void ExternalQMRunner::_executeCommand(
@@ -482,7 +480,7 @@ namespace QM
         auto       shell         = std::string("sh");
         auto       shellFlag     = std::string("-c");
         auto       commandString = std::string(command);
-        const auto timeLimit     = settings::QMSettings::getQMLoopTimeLimit();
+        const auto timeLimit     = _getQMSettings().getQMLoopTimeLimit();
 
         const pid_t pid = ::fork();
         if (pid < 0)
@@ -553,46 +551,6 @@ namespace QM
                 std::format("{} command failed with status {}", program, status)
             );
 #endif
-    }
-
-    /********************************
-     *                              *
-     * standard getters and setters *
-     *                              *
-     ********************************/
-
-    /**
-     * @brief getter for the script path
-     *
-     * @return const std::string&
-     */
-    const std::string &ExternalQMRunner::getScriptPath() const
-    {
-        return _scriptPath;
-    }
-
-    /**
-     * @brief getter for the singularity path
-     *
-     * @return  std::string
-     */
-    std::string ExternalQMRunner::getSingularity() { return _singularity; }
-
-    /**
-     * @brief getter for the static build path
-     *
-     * @return  std::string
-     */
-    std::string ExternalQMRunner::getStaticBuild() { return _staticBuild; }
-
-    /**
-     * @brief setter for the script path
-     *
-     * @param scriptPath
-     */
-    void ExternalQMRunner::setScriptPath(const std::string_view &scriptPath)
-    {
-        _scriptPath = scriptPath;
     }
 
 }   // namespace QM

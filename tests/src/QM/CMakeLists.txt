@@ -1,5 +1,6 @@
 add_executable(testExternalQMRunner
     testExternalQMRunner.cpp
+    testQMRunnerFactory.cpp
 )
 
 target_include_directories(testExternalQMRunner
@@ -9,9 +10,9 @@ target_include_directories(testExternalQMRunner
 
 target_link_libraries(testExternalQMRunner
     PRIVATE
-    externalQM
     gtest
     gmock
+    QM
     pq_test_main
 )
 
@@ -26,10 +27,11 @@ if(BUILD_WITH_ASE)
 
     target_link_libraries(testAseQMRunner
         PRIVATE
-        aseQM
+        QM
         gtest
         gmock
         pq_test_main
+        pybind11::module
     )
 
     add_test_with_gcda_cleanup(testAseQMRunner testAseQMRunner)

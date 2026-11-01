@@ -55,10 +55,13 @@ namespace
         engine.getSimulationBox().addMolecule(molecule);
     }
 
-    void configureValidHybridSettings(engine::Engine &engine)
+    void configureValidHybridSettings(
+        engine::Engine &engine,
+        Settings       &settings
+    )
     {
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+        settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
         settings::HybridSettings::setForcedCoreList({});
         settings::HybridSettings::setForcedLayerList({});
         settings::HybridSettings::setForcedOuterList({});
@@ -73,6 +76,15 @@ namespace
     }
 
 }   // namespace
+
+struct TestHybridSetup
+{
+   public:
+    static void validateQMMethod(engine::Engine & /*engine*/, Settings &settings)
+    {
+        setup::HybridSetup::_validateQMMethod(settings.qmSettings);
+    }
+};
 
 /* ---------- free function ---------- */
 
@@ -189,14 +201,13 @@ TEST_F(TestSetup, setupThrowsNotImplemented)
     EXPECT_THROW_MSG(
         hybridSetup.setup(),
         exc::InputFileException,
-        "QM method \"NONE\" is not supported for hybrid type calculations. "
-        "Supported QM methods are \"dftbplus\" and \"turbomole\"."
+        "QM method is not specified for hybrid type calculations."
     );
 }
 
 TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 {
-    configureValidHybridSettings(*_engine);
+    configureValidHybridSettings(*_engine, *_settings);
     addSingleAtomMolecule(*_engine, MolType{1});
 
     EXPECT_NO_THROW(setup::setupHybrid(*_engine));
@@ -208,8 +219,8 @@ TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 
 TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
 {
-    configureValidHybridSettings(*_engine);
-    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
+    configureValidHybridSettings(*_engine, *_settings);
+    _settings->qmSettings.setQMMethod(QMMethod::TURBOMOLE);
     settings::HybridSettings::setInnerRegionCenter({0, 1});
     settings::HybridSettings::setForcedCoreList({0});
     settings::HybridSettings::setForcedLayerList({1});
@@ -233,15 +244,14 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
         QMMethod::ASE_DFTBPLUS,
         QMMethod::ASE_XTB,
         QMMethod::MACE,
-        QMMethod::FENNOL,
-        QMMethod::NONE,
+        QMMethod::FENNOL
     };
 
     for (const auto method : unsupported)
     {
-        settings::QMSettings::setQMMethod(method);
+        _settings->qmSettings.setQMMethod(method);
         EXPECT_THROW_MSG(
-            setup.validateQMMethod(),
+            TestHybridSetup::validateQMMethod(*_engine, *_settings),
             exc::InputFileException,
             "QM method \"" + QMMethodMeta::toString(method) +
                 "\" is not supported for hybrid type "
@@ -250,10 +260,10 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
         );
     }
 
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    EXPECT_NO_THROW(setup.validateQMMethod());
-    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
-    EXPECT_NO_THROW(setup.validateQMMethod());
+    _settings->qmSettings.setQMMethod(QMMethod::DFTBPLUS);
+    EXPECT_NO_THROW(TestHybridSetup::validateQMMethod(*_engine, *_settings));
+    _settings->qmSettings.setQMMethod(QMMethod::TURBOMOLE);
+    EXPECT_NO_THROW(TestHybridSetup::validateQMMethod(*_engine, *_settings));
 }
 
 TEST_F(TestSetup, hybridSetupValidatesZoneRadii)

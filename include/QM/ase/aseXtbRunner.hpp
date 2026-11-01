@@ -37,7 +37,10 @@ namespace QM
        public:
         ~AseXtbRunner() override = default;
 
-        explicit AseXtbRunner(const std::string &method);
+        explicit AseXtbRunner(
+            const QMSettings  &qmSettings,
+            const std::string &method
+        );
     };
 }   // namespace QM
 

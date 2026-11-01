@@ -38,6 +38,7 @@ namespace QM
         ~AseMaceRunner() override = default;
 
         explicit AseMaceRunner(
+            const QMSettings&  qmSettings,
             const std::string& modelType,
             const std::string& model,
             const std::string& fpType,

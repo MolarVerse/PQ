@@ -28,18 +28,21 @@ namespace QM
     /**
      * @brief Construct a new AseFennolRunner::AseFennolRunner object
      *
-     * @param modelPath
-     * @param gpuPreprocessing
-     * @param useFloat64
+     * @param qmSettings the QM settings to configure the runner with
+     * @param modelPath the path to the Fennol model file
+     * @param gpuPreprocessing whether to enable GPU preprocessing
+     * @param useFloat64 whether to use 64-bit floating point precision
      *
      * @throw pybind11::error_already_set if the import of the fennol module
      * fails
      */
     AseFennolRunner::AseFennolRunner(
+        const QMSettings  &qmSettings,
         const std::string &modelPath,
         bool               gpuPreprocessing,
         bool               useFloat64
     )
+        : AseQMRunner(qmSettings)
     {
         try
         {

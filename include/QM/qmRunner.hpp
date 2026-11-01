@@ -23,10 +23,7 @@
 #ifndef QM__QM_RUNNER_HPP
 #define QM__QM_RUNNER_HPP
 
-#define SCRIPT_PATH_  _SCRIPT_PATH_
-#define SINGULARITY_  _SINGULARITY_
-#define STATIC_BUILD_ _STATIC_BUILD_
-
+#include <mstd/types.hpp>
 #include <stop_token>
 
 #include "box.hpp"
@@ -40,6 +37,7 @@ namespace molsys
 {
     class SimulationBox;   // forward declaration
 }   // namespace molsys
+class QMSettings;   // forward declaration
 
 namespace QM
 {
@@ -53,11 +51,16 @@ namespace QM
     {
        private:
         molsys::Periodicity _periodicity = molsys::Periodicity::NON_PERIODIC;
+        mstd::ConstRef<QMSettings> _qmSettings;
 
        public:
+        explicit QMRunner(const QMSettings &qmSettings);
         virtual ~QMRunner() = default;
 
-        static void throwAfterTimeout(const std::stop_token &stopToken);
+        static void throwAfterTimeout(
+            const std::stop_token &stopToken,
+            double                 qmLoopTimeLimit
+        );
 
         void         run(molsys::SimulationBox &, physicalData::PhysicalData &);
         virtual void run(
@@ -71,6 +74,9 @@ namespace QM
         molsys::Periodicity _getPeriodicity() const;
 
         void _setPeriodicity(molsys::Periodicity per);
+
+        [[nodiscard]]
+        const QMSettings &_getQMSettings() const;
     };
 }   // namespace QM
 

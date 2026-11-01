@@ -79,7 +79,7 @@ namespace input
     {
         _validateTimings(settings);
         validateOptimizer(settings);
-        _validateQM();
+        _validateQM(settings.qmSettings);
         _validateThermostat(settings.simulationBoxSettings);
         _validateManostat(settings.manostatSettings);
         _validateCellList();
@@ -133,26 +133,26 @@ namespace input
      * @throws exc::InputFileException if selected QM settings require missing
      * or incompatible keywords
      */
-    void InputFileReader::_validateQM() const
+    void InputFileReader::_validateQM(const QMSettings& qmSettings) const
     {
         if (!settings::GeneralSettings::isQMActivated())
             return;
 
-        if (!getKeywordSet("qm_prog"))
+        if (!qmSettings.isQMMethodSet())
             throw exc::InputFileException(
-                "QM job selected but the \"qm_prog\" keyword has not been set"
+                "QM job selected but no QM method keyword has been set"
             );
 
-        const auto qmMethod = settings::QMSettings::getQMMethod();
+        const auto qmMethod = qmSettings.getQMMethod();
 
         if (qmMethod == QMMethod::ASE_DFTBPLUS)
         {
-            if (settings::QMSettings::getSlakosType() == SlakosType::NONE)
+            if (qmSettings.getSlakosType() == SlakosType::NONE)
                 throw exc::InputFileException(
                     "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
                 );
 
-            if (settings::QMSettings::getSlakosType() == SlakosType::CUSTOM &&
+            if (qmSettings.getSlakosType() == SlakosType::CUSTOM &&
                 !getKeywordSet("slakos_path"))
             {
                 throw exc::InputFileException(
@@ -161,9 +161,11 @@ namespace input
                 );
             }
 
-            auto useThirdOrder = settings::QMSettings::useThirdOrderDftb();
+            auto useThirdOrder = qmSettings.isThirdOrderDftbSet()
+                                      ? qmSettings.useThirdOrderDftb()
+                                      : false;
 
-            if (settings::QMSettings::getSlakosType() == SlakosType::THREEOB &&
+            if (qmSettings.getSlakosType() == SlakosType::THREEOB &&
                 !getKeywordSet("third_order"))
                 useThirdOrder = true;
 
@@ -188,8 +190,8 @@ namespace input
         if (qmMethod != QMMethod::MACE)
             return;
 
-        const auto modelType    = settings::QMSettings::getMaceModelType();
-        const auto model        = settings::QMSettings::getMaceModel();
+        const auto modelType    = qmSettings.getMaceModelType();
+        const auto model        = qmSettings.getMaceModel();
         const auto modelPathSet = getKeywordSet("mace_model_path");
 
         if (modelType != MaceModelType::MACE_MP && model != MaceModel::SMALL &&

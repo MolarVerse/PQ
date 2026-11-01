@@ -224,7 +224,7 @@ namespace engine
             getSimulationBox().resetQMCharges();
 
             getQMRunner()
-                ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+                .run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
             _calculateQMReferenceEnergy();
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
@@ -335,7 +335,7 @@ namespace engine
             getSimulationBox()
         );
 
-        getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+        getQMRunner().run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
         _calculateQMReferenceEnergy();
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)

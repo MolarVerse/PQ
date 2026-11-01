@@ -30,6 +30,7 @@
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
+#include "qmSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
@@ -49,6 +50,7 @@ struct Settings
     ConvSettings          convSettings;
     WaterModelSettings    waterModelSettings;
     ForceFieldSettings    forceFieldSettings;
+    QMSettings            qmSettings;
     ManostatSettings      manostatSettings;
     OutputFileSettings    outputFiles;
 

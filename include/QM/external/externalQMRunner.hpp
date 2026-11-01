@@ -51,13 +51,8 @@ namespace QM
      */
     class ExternalQMRunner : public QMRunner
     {
-       private:
-        std::string            _scriptPath  = SCRIPT_PATH_;
-        constexpr static auto *_singularity = SINGULARITY_;
-        constexpr static auto *_staticBuild = STATIC_BUILD_;
-
        public:
-        ExternalQMRunner()           = default;
+        using QMRunner::QMRunner;
         ~ExternalQMRunner() override = default;
 
         void run(
@@ -87,12 +82,6 @@ namespace QM
          * standard getter and setters *
          *******************************/
 
-        [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] static std::string getSingularity();
-        [[nodiscard]] static std::string getStaticBuild();
-
-        void setScriptPath(const std::string_view &scriptPath);
-
        protected:
         [[nodiscard]]
         std::string _resolveScriptPath(std::string_view script) const;
@@ -103,11 +92,11 @@ namespace QM
         ) const;
 
        private:
-        static void _readForceFile(
+        void _readForceFile(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
-        );
-        static void _readChargeFile(molsys::SimulationBox &simulationBox);
+        ) const;
+        void _readChargeFile(molsys::SimulationBox &simulationBox) const;
 
         friend class ::ExternalQMRunnerTest;   // for testing private methods
     };

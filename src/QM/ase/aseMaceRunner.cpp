@@ -32,6 +32,7 @@ namespace QM
     /**
      * @brief Construct a new AseMaceRunner::AseMaceRunner object
      *
+     * @param qmSettings the QM settings to configure the runner with
      * @param modelType
      * @param model
      * @param fpType
@@ -41,12 +42,14 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseMaceRunner::AseMaceRunner(
+        const QMSettings  &qmSettings,
         const std::string &modelType,
         const std::string &model,
         const std::string &fpType,
         bool               dispersion,
         bool               enableCueq
     )
+        : AseQMRunner(qmSettings)
     {
         try
         {

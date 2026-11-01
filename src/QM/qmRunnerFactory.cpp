@@ -20,64 +20,68 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "qmRunnerManager.hpp"
+#include "qmRunnerFactory.hpp"
 
 #include <memory>
 #include <utility>
 
-#include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
-#include "exceptions.hpp"
+#include "external/dftbplusRunner.hpp"
+#include "external/pyscfRunner.hpp"
+#include "external/turbomoleRunner.hpp"
 #include "generalSettings.hpp"
-#include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
-#include "turbomoleRunner.hpp"
 
 #ifdef WITH_ASE
-#include "aseDftbRunner.hpp"
-#include "aseFennolRunner.hpp"
-#include "aseMaceRunner.hpp"
-#include "aseXtbRunner.hpp"
+#include "ase/aseDftbRunner.hpp"
+#include "ase/aseFennolRunner.hpp"
+#include "ase/aseMaceRunner.hpp"
+#include "ase/aseXtbRunner.hpp"
+#else
+#include "exceptions.hpp"
 #endif
 
-namespace engine
+namespace QM
 {
 
     /**
      * @brief Create a QM runner based on the specified method
      *
-     * @param method The QM method to use
-     * @return std::shared_ptr<QM::QMRunner> Shared pointer to the created QM
+     * @param settings The QMSettings object containing the relevant settings
+     * for configuring the QM runner
+     * @return std::unique_ptr<QMRunner> Shared pointer to the created QM
      * runner
      * @throws InputFileException if the method is not supported
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(
-        QMMethod method
+    std::unique_ptr<QMRunner> QMRunnerFactory::createQMRunner(
+        const QMSettings& settings
     )
     {
         using enum QMMethod;
 
-        switch (method)
+        if (!settings.isQMMethodSet())
         {
-            case DFTBPLUS: return std::make_shared<QM::DFTBPlusRunner>();
+            throw exc::InputFileException(
+                "A QM based jobtype was requested but no valid external "
+                "program via \"qm_prog\" provided"
+            );
+        }
 
-            case ASE_DFTBPLUS: return createAseDftbRunner();
+        switch (settings.getQMMethod())
+        {
+            case DFTBPLUS: return std::make_unique<DFTBPlusRunner>(settings);
 
-            case ASE_XTB: return createAseXtbRunner();
+            case ASE_DFTBPLUS: return _createAseDftbRunner(settings);
 
-            case PYSCF: return std::make_shared<QM::PySCFRunner>();
+            case ASE_XTB: return _createAseXtbRunner(settings);
 
-            case TURBOMOLE: return std::make_shared<QM::TurbomoleRunner>();
+            case PYSCF: return std::make_unique<PySCFRunner>(settings);
 
-            case MACE: return createAseMaceRunner();
+            case TURBOMOLE: return std::make_unique<TurbomoleRunner>(settings);
 
-            case FENNOL: return createAseFennolRunner();
+            case MACE: return _createAseMaceRunner(settings);
 
-            case NONE:
-                throw exc::InputFileException(
-                    "A QM based jobtype was requested but no valid external "
-                    "program via \"qm_prog\" provided"
-                );
+            case FENNOL: return _createAseFennolRunner(settings);
         }
 
         std::unreachable();
@@ -86,29 +90,29 @@ namespace engine
     /**
      * @brief Create a MACE QM runner
      *
-     * @return std::shared_ptr<QM::QMRunner> Shared pointer to the MACE runner
+     * @return std::unique_ptr<QMRunner> Shared pointer to the MACE runner
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner()
+    std::unique_ptr<QMRunner> QMRunnerFactory::_createAseMaceRunner(
+        const QMSettings& settings
+    )
     {
 #ifdef WITH_ASE
-        const auto modelType = MaceModelTypeMeta::toString(
-            settings::QMSettings::getMaceModelType()
-        );
-        const auto modelPath = settings::QMSettings::getMaceModelPath();
-        const auto useDFTD   = settings::QMSettings::useDispersionCorr();
+        const auto modelType =
+            MaceModelTypeMeta::toString(settings.getMaceModelType());
+        const auto modelPath = settings.getMaceModelPath();
+        const auto useDFTD   = settings.useDispersionCorr();
         const auto fpType =
             settings::GeneralSettings::getFloatingPointPybindString();
-        const auto useCueq =
-            settings::QMSettings::getMaceMode() == MaceMode::FAST;
+        const auto useCueq = settings.getMaceMode() == MaceMode::FAST;
 
-        auto maceModel =
-            MaceModelMeta::toString(settings::QMSettings::getMaceModel());
+        auto maceModel = MaceModelMeta::toString(settings.getMaceModel());
 
         if (!modelPath.empty())
             maceModel = modelPath;
 
-        return std::make_shared<QM::AseMaceRunner>(
+        return std::make_unique<AseMaceRunner>(
+            settings,
             modelType,
             maceModel,
             fpType,
@@ -127,19 +131,22 @@ namespace engine
     /**
      * @brief Create an ASE DFTB+ QM runner
      *
-     * @return std::shared_ptr<QM::QMRunner> Shared pointer to the ASE DFTB+
+     * @return std::unique_ptr<QMRunner> Shared pointer to the ASE DFTB+
      * runner
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseDftbRunner()
+    std::unique_ptr<QMRunner> QMRunnerFactory::_createAseDftbRunner(
+        const QMSettings& settings
+    )
     {
 #ifdef WITH_ASE
-        const auto slakosPath    = settings::QMSettings::getSlakosPath();
-        const auto useThirdOrder = settings::QMSettings::useThirdOrderDftb();
-        const auto hubbardDerivs = settings::QMSettings::getHubbardDerivs();
-        const auto dispersion    = settings::QMSettings::useDispersionCorr();
+        const auto slakosPath    = settings.getSlakosPath();
+        const auto useThirdOrder = settings.useThirdOrderDftb();
+        const auto hubbardDerivs = settings.getHubbardDerivs();
+        const auto dispersion    = settings.useDispersionCorr();
 
-        return std::make_shared<QM::AseDftbRunner>(
+        return std::make_unique<AseDftbRunner>(
+            settings,
             slakosPath,
             useThirdOrder,
             hubbardDerivs,
@@ -158,17 +165,18 @@ namespace engine
     /**
      * @brief Create an ASE xTB QM runner
      *
-     * @return std::shared_ptr<QM::QMRunner> Shared pointer to the ASE xTB
+     * @return std::unique_ptr<QMRunner> Shared pointer to the ASE xTB
      * runner
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseXtbRunner()
+    std::unique_ptr<QMRunner> QMRunnerFactory::_createAseXtbRunner(
+        const QMSettings& settings
+    )
     {
 #ifdef WITH_ASE
-        const auto xtbMethod =
-            XtbMethodMeta::toString(settings::QMSettings::getXtbMethod());
+        const auto xtbMethod = XtbMethodMeta::toString(settings.getXtbMethod());
 
-        return std::make_shared<QM::AseXtbRunner>(xtbMethod);
+        return std::make_unique<AseXtbRunner>(settings, xtbMethod);
 #else
         throw exc::CompileTimeException(
             "The ASE xTB QM method was requested but ASE was not enabled at "
@@ -182,22 +190,24 @@ namespace engine
     /**
      * @brief Create an ASE FeNNol QM runner
      *
-     * @return std::shared_ptr<QM::QMRunner> Shared pointer to the ASE FeNNol
+     * @return std::unique_ptr<QMRunner> Shared pointer to the ASE FeNNol
      * runner
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseFennolRunner()
+    std::unique_ptr<QMRunner> QMRunnerFactory::_createAseFennolRunner(
+        const QMSettings& settings
+    )
     {
 #ifdef WITH_ASE
         using enum FPType;
 
-        const auto modelPath = settings::QMSettings::getFennolModelPath();
-        const auto gpuPreprocessing =
-            settings::QMSettings::useGPUPreprocessing();
+        const auto modelPath        = settings.getFennolModelPath();
+        const auto gpuPreprocessing = settings.useGPUPreprocessing();
         const bool useFloat64 =
             settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 
-        return std::make_shared<QM::AseFennolRunner>(
+        return std::make_unique<AseFennolRunner>(
+            settings,
             modelPath,
             gpuPreprocessing,
             useFloat64
@@ -212,4 +222,4 @@ namespace engine
 #endif
     }
 
-}   // namespace engine
+}   // namespace QM

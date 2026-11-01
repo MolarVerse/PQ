@@ -122,7 +122,7 @@ namespace engine
                 auto &bead = getRingPolymerBeads()[i];
                 auto &data = getRingPolymerBeadsPhysicalData()[i];
 
-                getQMRunner()->run(bead, data);
+                getQMRunner().run(bead, data);
             }
         }
 
@@ -171,7 +171,7 @@ namespace engine
     {
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
-            getQMRunner()->run(
+            getQMRunner().run(
                 getRingPolymerBeads()[i],
                 getRingPolymerBeadsPhysicalData()[i]
             );

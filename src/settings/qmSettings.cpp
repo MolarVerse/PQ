@@ -29,445 +29,611 @@
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "executablePath.hpp"
+#include "stringUtilities.hpp"
 
-namespace settings
+namespace
 {
-
-    namespace
+    /**
+     * @brief builds the file path for a built-in SLAKOS set (3ob/matsci)
+     *
+     * @details installed data next to the executable is preferred. The
+     * fetched build-tree data is used while running an uninstalled ASE
+     * build.
+     */
+    std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
     {
-        /**
-         * @brief builds the file path for a built-in SLAKOS set (3ob/matsci)
-         *
-         * @details installed data next to the executable is preferred. The
-         * fetched build-tree data is used while running an uninstalled ASE
-         * build.
-         */
-        std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
-        {
 #ifdef __SLAKOS_DIR__
-            const auto installedPath = utilities::installedDataPath(
-                std::filesystem::path("slakos") /
-                SlakosTypeMeta::toString(type) / "skfiles"
-            );
-            if (std::filesystem::is_directory(installedPath))
-                return installedPath.string() +
-                       std::filesystem::path::preferred_separator;
-
-            const auto buildPath = std::filesystem::path(__SLAKOS_DIR__) /
-                                   SlakosTypeMeta::toString(type) / "skfiles";
-            return buildPath.string() +
+        const auto installedPath = utilities::installedDataPath(
+            std::filesystem::path("slakos") / SlakosTypeMeta::toString(type) /
+            "skfiles"
+        );
+        if (std::filesystem::is_directory(installedPath))
+            return installedPath.string() +
                    std::filesystem::path::preferred_separator;
+
+        const auto buildPath = std::filesystem::path(__SLAKOS_DIR__) /
+                               SlakosTypeMeta::toString(type) / "skfiles";
+        return buildPath.string() + std::filesystem::path::preferred_separator;
 #else
-            throw exc::InputFileException(
-                "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
-                "-DBUILD_WITH_ASE=On"
-            );
+        throw exc::InputFileException(
+            "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
+            "-DBUILD_WITH_ASE=On"
+        );
 #endif
-        }
-    }   // namespace
+    }
+}   // namespace
 
-    /**
-     * @brief returns an unordered map as string
-     *
-     * @param unordered_map
-     * @return std::string
-     */
-    std::string string(
-        const std::unordered_map<std::string, double> &unordered_map
-    )
+/**
+ * @brief finalizes the QMSettings object
+ *
+ * @details This function sets up the QM script based on the current settings.
+ */
+void QMSettings::finalize()
+{
+    if (isExternalQMRunner())
+        _setupQMScript();
+
+    if (getQMMethod() == QMMethod::ASE_DFTBPLUS)
+        _setupQMMethodAseDftbPlus();
+}
+
+/**
+ * @brief returns an unordered map as string
+ *
+ * @param unordered_map
+ * @return std::string
+ */
+std::string string(const std::unordered_map<std::string, double> &unordered_map)
+{
+    std::string unorderedMapStr;
+    for (const auto &pair : unordered_map)
     {
-        std::string unorderedMapStr;
-        for (const auto &pair : unordered_map)
+        if (!unorderedMapStr.empty())
+            unorderedMapStr += ", ";
+        unorderedMapStr += std::format("{}: {}", pair.first, pair.second);
+    }
+
+    return unorderedMapStr;
+}
+
+/**
+ * @brief returns if the external qm runner is activated
+ *
+ * @return bool
+ */
+bool QMSettings::isExternalQMRunner() const
+{
+    using enum QMMethod;
+
+    switch (_qmMethod.get())
+    {
+        case DFTBPLUS:
+        case PYSCF:
+        case TURBOMOLE: return true;
+        case ASE_DFTBPLUS:
+        case ASE_XTB:
+        case MACE:
+        case FENNOL: return false;
+    }
+
+    std::unreachable();
+}
+
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief sets the qmMethod to enum in settings
+ *
+ * @param method
+ */
+void QMSettings::setQMMethod(QMMethod method) { _qmMethod.set(method); }
+
+/**
+ * @brief sets the maceModel to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModel(MaceModel model) { _maceModel.set(model); }
+
+/**
+ * @brief sets the maceModelType to enum in settings
+ *
+ * @param model
+ */
+void QMSettings::setMaceModelType(MaceModelType model)
+{
+    _maceModelType.set(model);
+}
+
+/**
+ * @brief sets the maceMode to enum in settings
+ *
+ * @param mode
+ */
+void QMSettings::setMaceMode(MaceMode mode) { _maceMode.set(mode); }
+
+/**
+ * @brief set the mace model path
+ *
+ */
+void QMSettings::setMaceModelPath(const std::string &path)
+{
+    _maceModelPath.set(path);
+}
+
+/**
+ * @brief sets the xTB method to enum in settings
+ *
+ * @param method
+ */
+void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod.set(method); }
+
+/**
+ * @brief sets the qmScript in settings
+ *
+ * @param script
+ */
+void QMSettings::setQMScript(const std::string &script)
+{
+    _qmScript.set(script);
+}
+
+/**
+ * @brief sets the qmScriptFullPath in settings
+ *
+ * @param script
+ */
+void QMSettings::setQMScriptFullPath(const std::string &script)
+{
+    _qmScriptFullPath.set(script);
+}
+
+/**
+ * @brief sets the slakosType to enum in settings
+ *
+ * @param slakos
+ */
+void QMSettings::setSlakosType(SlakosType slakos)
+{
+    setSlakosType(slakos, true);
+}
+
+/**
+ * @brief sets the slakosType to enum in settings
+ *
+ * @param slakos
+ * @param resolveBuiltInPath
+ */
+void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
+{
+    if (!resolveBuiltInPath &&
+        (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
+    {
+        _slakosType.set(slakos);
+        auto path = _slakosPath.get();
+        path.clear();
+        _slakosPath.set(path);
+        return;
+    }
+
+    switch (slakos)
+    {
+        using enum SlakosType;
+
+        case THREEOB:
+        case MATSCI:
+            if (resolveBuiltInPath)
+                _slakosPath.set(builtinSlakosPath(slakos));
+            break;
+        case CUSTOM:
+        case NONE:
         {
-            if (!unorderedMapStr.empty())
-                unorderedMapStr += ", ";
-            unorderedMapStr += std::format("{}: {}", pair.first, pair.second);
+            auto path = _slakosPath.get();
+            path.clear();
+            _slakosPath.set(path);
+            break;
         }
-
-        return unorderedMapStr;
     }
 
-    /**
-     * @brief returns if the external qm runner is activated
-     *
-     * @return bool
-     */
-    bool QMSettings::isExternalQMRunner()
+    _slakosType.set(slakos);
+}
+
+/**
+ * @brief sets the slakosPath in settings
+ *
+ * @param path
+ */
+void QMSettings::setSlakosPath(const std::string &path)
+{
+    if (_slakosType.get() == SlakosType::CUSTOM)
+        _slakosPath.set(path);
+    else if (_slakosType.get() == SlakosType::NONE)
     {
-        using enum QMMethod;
-
-        auto isExternal = false;
-
-        isExternal = isExternal || _qmMethod == DFTBPLUS;
-        isExternal = isExternal || _qmMethod == PYSCF;
-        isExternal = isExternal || _qmMethod == TURBOMOLE;
-
-        return isExternal;
+        throw exc::UserInputException(
+            "Slakos path cannot be set without a slakos type"
+        );
     }
-
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief sets the qmMethod to enum in settings
-     *
-     * @param method
-     */
-    void QMSettings::setQMMethod(QMMethod method) { _qmMethod = method; }
-
-    /**
-     * @brief sets the maceModel to enum in settings
-     *
-     * @param model
-     */
-    void QMSettings::setMaceModel(MaceModel model) { _maceModel = model; }
-
-    /**
-     * @brief sets the maceModelType to enum in settings
-     *
-     * @param model
-     */
-    void QMSettings::setMaceModelType(MaceModelType model)
+    else
     {
-        _maceModelType = model;
+        throw exc::UserInputException(
+            std::format(
+                "Slakos path cannot be set for slakos type: {}",
+                SlakosTypeMeta::toString(_slakosType.get())
+            )
+        );
     }
+}
 
-    /**
-     * @brief sets the maceMode to enum in settings
-     *
-     * @param mode
-     */
-    void QMSettings::setMaceMode(MaceMode mode) { _maceMode = mode; }
+/**
+ * @brief sets if third order DFTB should be used
+ *
+ */
+void QMSettings::setUseThirdOrderDftb(bool useThirdOrderDftb)
+{
+    _useThirdOrderDftb.set(useThirdOrderDftb);
+}
 
-    /**
-     * @brief set the mace model path
-     *
-     */
-    void QMSettings::setMaceModelPath(const std::string_view &path)
+/**
+ * @brief sets the custom Hubbard Derivative dictionary
+ *
+ */
+void QMSettings::setHubbardDerivs(
+    const std::unordered_map<std::string, double> &hubbardDerivs
+)
+{
+    _hubbardDerivs.set(hubbardDerivs);
+}
+
+/**
+ * @brief sets if the dispersion correction should be used
+ *
+ */
+void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
+{
+    _useDispersionCorrection.set(useDispersionCorr);
+}
+
+/**
+ * @brief sets if the net force should be removed after reading in the QM
+ * forces
+ *
+ */
+void QMSettings::setRemoveNetForce(bool removeNetForce)
+{
+    _removeNetForce.set(removeNetForce);
+}
+
+/**
+ * @brief sets the qmLoopTimeLimit in settings
+ *
+ * @param time
+ */
+void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit.set(time); }
+
+/**
+ * @brief sets the FeNNol model path
+ *
+ * @param path
+ */
+void QMSettings::setFennolModelPath(const std::string &path)
+{
+    _fennolModelPath.set(path);
+}
+
+/**
+ * @brief sets if the GPU pre-processing should be enabled for FeNNol
+ *
+ */
+void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
+{
+    _useGPUPreprocessing.set(useGPUPreprocessing);
+}
+
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief returns the qmMethod
+ *
+ * @return QMMethod
+ */
+QMMethod QMSettings::getQMMethod() const { return _qmMethod.get(); }
+
+/**
+ * @brief returns if the QM method is set
+ *
+ * @return bool
+ */
+bool QMSettings::isQMMethodSet() const { return _qmMethod.isSet(); }
+
+/**
+ * @brief returns the maceModel
+ *
+ * @return MaceModel
+ */
+MaceModel QMSettings::getMaceModel() const { return _maceModel.get(); }
+
+/**
+ * @brief returns the maceModelType
+ *
+ * @return MaceModelType
+ */
+MaceModelType QMSettings::getMaceModelType() const
+{
+    return _maceModelType.get();
+}
+
+/**
+ * @brief returns the maceMode
+ *
+ * @return MaceMode
+ */
+MaceMode QMSettings::getMaceMode() const { return _maceMode.get(); }
+
+/**
+ * @brief returns the maceModelPath
+ *
+ * @return std::string
+ */
+std::string QMSettings::getMaceModelPath() const
+{
+    return _maceModelPath.get();
+}
+
+/**
+ * @brief returns the qmScript
+ *
+ * @return std::string
+ */
+std::string QMSettings::getQMScript() const { return _qmScript.get(); }
+
+/**
+ * @brief returns the qmScriptFullPath
+ *
+ * @return std::string
+ */
+std::string QMSettings::getQMScriptFullPath() const
+{
+    return _qmScriptFullPath.get();
+}
+
+/**
+ * @brief returns the slakosType
+ *
+ * @return SlakosType
+ */
+SlakosType QMSettings::getSlakosType() const { return _slakosType.get(); }
+
+/**
+ * @brief returns the slakosPath
+ *
+ * @return std::string
+ */
+std::string QMSettings::getSlakosPath() const { return _slakosPath.get(); }
+
+/**
+ * @brief returns if third order DFTB should be used
+ *
+ * @return bool
+ */
+bool QMSettings::useThirdOrderDftb() const { return _useThirdOrderDftb.get(); }
+
+/**
+ * @brief returns if the third order is set
+ *
+ * @return bool
+ */
+bool QMSettings::isThirdOrderDftbSet() const
+{
+    return _useThirdOrderDftb.isSet();
+}
+
+/**
+ * @brief returns if the Hubbard derivatives are set by the user
+ *
+ * @return bool
+ */
+bool QMSettings::isHubbardDerivsSet() const { return _hubbardDerivs.isSet(); }
+
+/**
+ * @brief returns the Hubbard Derivative dictionary
+ *
+ * @return std::unordered_map<std::string, double>
+ */
+std::unordered_map<std::string, double> QMSettings::getHubbardDerivs() const
+{
+    return _hubbardDerivs.get();
+}
+
+/**
+ * @brief returns if the dispersion correction should be used
+ *
+ * @return bool
+ */
+bool QMSettings::useDispersionCorr() const
+{
+    return _useDispersionCorrection.get();
+}
+
+/**
+ * @brief returns if the net force should be removed after reading in the QM
+ * forces
+ *
+ * @return bool
+ */
+bool QMSettings::getRemoveNetForce() const { return _removeNetForce.get(); }
+
+/**
+ * @brief returns the xTBMethod
+ *
+ * @return XtbMethod
+ */
+XtbMethod QMSettings::getXtbMethod() const { return _xtbMethod.get(); }
+
+/**
+ * @brief returns the qmLoopTimeLimit
+ *
+ * @return double
+ */
+double QMSettings::getQMLoopTimeLimit() const { return _qmLoopTimeLimit.get(); }
+
+/**
+ * @brief returns the FeNNol model path
+ *
+ * @return std::string
+ */
+std::string QMSettings::getFennolModelPath() const
+{
+    return _fennolModelPath.get();
+}
+
+/**
+ * @brief returns if GPU pre-processing should be used for FeNNol
+ *
+ * @return bool
+ */
+bool QMSettings::useGPUPreprocessing() const
+{
+    return _useGPUPreprocessing.get();
+}
+
+/**
+ * @brief sets up the QM script for the external QM runner based on the
+ * provided QMSettings. It checks for singularity and static build settings
+ * and ensures that the appropriate script path is provided.
+ *
+ */
+void QMSettings::_setupQMScript()
+{
+    const auto singularity =
+        utilities::toLowerCopy(std::string(_singularity)) == "on";
+    const auto staticBuild =
+        utilities::toLowerCopy(std::string(_staticBuild)) == "on";
+
+    const auto qmScript        = getQMScript();
+    const auto isQMScriptEmpty = qmScript.empty();
+
+    const auto qmScriptFullPath        = getQMScriptFullPath();
+    const auto isQMScriptFullPathEmpty = qmScriptFullPath.empty();
+
+    if (singularity || staticBuild)
     {
-        _maceModelPath = path;
-    }
-
-    /**
-     * @brief sets the xTB method to enum in settings
-     *
-     * @param method
-     */
-    void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod = method; }
-
-    /**
-     * @brief sets the qmScript in settings
-     *
-     * @param script
-     */
-    void QMSettings::setQMScript(const std::string_view &script)
-    {
-        _qmScript = script;
-    }
-
-    /**
-     * @brief sets the qmScriptFullPath in settings
-     *
-     * @param script
-     */
-    void QMSettings::setQMScriptFullPath(const std::string_view &script)
-    {
-        _qmScriptFullPath = script;
-    }
-
-    /**
-     * @brief sets the slakosType to enum in settings
-     *
-     * @param slakos
-     */
-    void QMSettings::setSlakosType(SlakosType slakos)
-    {
-        setSlakosType(slakos, true);
-    }
-
-    /**
-     * @brief sets the slakosType to enum in settings
-     *
-     * @param slakos
-     * @param resolveBuiltInPath
-     */
-    void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
-    {
-        if (!resolveBuiltInPath &&
-            (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
+        if (isQMScriptFullPathEmpty)
         {
-            _slakosType = slakos;
-            _slakosPath.clear();
-            return;
-        }
-
-        switch (slakos)
-        {
-            using enum SlakosType;
-
-            case THREEOB:
-            case MATSCI:
-                if (resolveBuiltInPath)
-                    _slakosPath = builtinSlakosPath(slakos);
-                break;
-            case CUSTOM:
-            case NONE: _slakosPath.clear(); break;
-        }
-
-        _slakosType = slakos;
-    }
-
-    /**
-     * @brief sets the slakosPath in settings
-     *
-     * @param path
-     */
-    void QMSettings::setSlakosPath(const std::string_view &path)
-    {
-        if (_slakosType == SlakosType::CUSTOM)
-            _slakosPath = path;
-        else if (_slakosType == SlakosType::NONE)
-        {
-            throw exc::UserInputException(
-                "Slakos path cannot be set without a slakos type"
+            throw exc::QMRunnerException(
+                "You are using at least one of these settings: i) "
+                "singularity "
+                "build or/and ii) static build of PQ. Therefore the "
+                "general "
+                "setting with 'qm_script' to set only the name of the "
+                "executable is not applicable. Please use "
+                "'qm_script_full_path' instead and provide the full path "
+                "to "
+                "the executable. For singularity builds the script can not "
+                "be "
+                "accessed from inside the container. In case of a static "
+                "build "
+                "the binary may be shipped without the source code and "
+                "again "
+                "PQ might therefore not be able to locate the executable "
+                "qm "
+                "script. Therefore you have to provide the script "
+                "somewhere "
+                "else and give the full/relative path to it. For more "
+                "information please refer to the documentation."
             );
         }
-        else
+
+        if (!isQMScriptEmpty)
         {
-            throw exc::UserInputException(
-                std::format(
-                    "Slakos path cannot be set for slakos type: {}",
-                    SlakosTypeMeta::toString(_slakosType)
-                )
+            throw exc::QMRunnerException(
+                "You have set both 'qm_script' and 'qm_script_full_path' "
+                "in "
+                "the input file. Please use only one the full path option "
+                "as "
+                "you are working either with a singularity build or a "
+                "static "
+                "build. For more information please refer to the "
+                "documentation."
             );
         }
-    }
 
-    /**
-     * @brief sets if third order DFTB should be used
-     *
-     */
-    void QMSettings::setUseThirdOrderDftb(bool useThirdOrderDftb)
+        // setting script path to empty string to avoid errors
+        _scriptPath = "";
+
+        // overwriting qm_script with full path
+        setQMScript(qmScriptFullPath);
+    }
+    else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
     {
-        _useThirdOrderDftb = useThirdOrderDftb;
+        throw exc::InputFileException(
+            "No qm_script provided. Please provide a qm_script in the "
+            "input "
+            "file."
+        );
     }
-
-    /**
-     * @brief sets if the third order is set
-     *
-     */
-    void QMSettings::setIsThirdOrderDftbSet(bool isThirdOrderDftbSet)
+    else if (!isQMScriptFullPathEmpty && isQMScriptEmpty)
     {
-        _isThirdOrderDftbSet = isThirdOrderDftbSet;
-    }
+        // setting script path to empty string to avoid errors
+        _scriptPath = "";
 
-    /**
-     * @brief sets the custom Hubbard Derivative dictionary
-     *
-     */
-    void QMSettings::setHubbardDerivs(
-        const std::unordered_map<std::string, double> &hubbardDerivs
-    )
+        // overwriting qm_script with full path
+        setQMScript(qmScriptFullPath);
+    }
+    else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
     {
-        _hubbardDerivs = hubbardDerivs;
+        throw exc::InputFileException(
+            "You have set both 'qm_script' and 'qm_script_full_path' in "
+            "the "
+            "input file. They are mutually exclusive. Please use only one "
+            "of "
+            "them. For more information please refer to the documentation."
+        );
     }
+}
 
-    /**
-     * @brief sets if the Hubbard Derivative dictionary is set by the user
-     *
-     */
-    void QMSettings::setIsHubbardDerivsSet(bool isHubbardDerivsSet)
-    {
-        _isHubbardDerivsSet = isHubbardDerivsSet;
-    }
+/**
+ * @brief Sets the path to the QM script.
+ *
+ * This function allows specifying the directory or full path where the QM
+ * script is located. It updates the internal `_scriptPath` member variable
+ * accordingly. This is particularly useful when working with singularity
+ * or static builds where the script may not be accessible from the default
+ * location.
+ *
+ * @param scriptPath The path to the QM script.
+ */
+void QMSettings::setScriptPath(const std::string &scriptPath)
+{
+    _scriptPath = scriptPath;
+}
 
-    /**
-     * @brief sets if the dispersion correction should be used
-     *
-     */
-    void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
-    {
-        _useDispersionCorrection = useDispersionCorr;
-    }
+/**
+ * @brief Retrieves the path to the QM script.
+ *
+ * This function returns the directory or full path where the QM script is
+ * located, as previously set by `setScriptPath`. It is useful for determining
+ * the location of the script, especially when working with singularity or
+ * static builds where the script may not be accessible from the default
+ * location.
+ *
+ * @return The path to the QM script.
+ */
+std::string QMSettings::getScriptPath() const { return _scriptPath; }
 
-    /**
-     * @brief sets if the net force should be removed after reading in the QM
-     * forces
-     *
-     */
-    void QMSettings::setRemoveNetForce(bool removeNetForce)
-    {
-        _removeNetForce = removeNetForce;
-    }
-
-    /**
-     * @brief sets the qmLoopTimeLimit in settings
-     *
-     * @param time
-     */
-    void QMSettings::setQMLoopTimeLimit(double time)
-    {
-        _qmLoopTimeLimit = time;
-    }
-
-    /**
-     * @brief sets the FeNNol model path
-     *
-     * @param path
-     */
-    void QMSettings::setFennolModelPath(const std::string_view &path)
-    {
-        _fennolModelPath = path;
-    }
-
-    /**
-     * @brief sets if the GPU pre-processing should be enabled for FeNNol
-     *
-     */
-    void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
-    {
-        _useGPUPreprocessing = useGPUPreprocessing;
-    }
-
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief returns the qmMethod
-     *
-     * @return QMMethod
-     */
-    QMMethod QMSettings::getQMMethod() { return _qmMethod; }
-
-    /**
-     * @brief returns the maceModel
-     *
-     * @return MaceModel
-     */
-    MaceModel QMSettings::getMaceModel() { return _maceModel; }
-
-    MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
-
-    /**
-     * @brief returns the maceMode
-     *
-     * @return MaceMode
-     */
-    MaceMode QMSettings::getMaceMode() { return _maceMode; }
-
-    /**
-     * @brief returns the maceModelPath
-     *
-     * @return std::string
-     */
-    std::string QMSettings::getMaceModelPath() { return _maceModelPath; }
-
-    /**
-     * @brief returns the qmScript
-     *
-     * @return std::string
-     */
-    std::string QMSettings::getQMScript() { return _qmScript; }
-
-    /**
-     * @brief returns the qmScriptFullPath
-     *
-     * @return std::string
-     */
-    std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
-
-    /**
-     * @brief returns the slakosType
-     *
-     * @return SlakosType
-     */
-    SlakosType QMSettings::getSlakosType() { return _slakosType; }
-
-    /**
-     * @brief returns the slakosPath
-     *
-     * @return std::string
-     */
-    std::string QMSettings::getSlakosPath() { return _slakosPath; }
-
-    /**
-     * @brief returns if third order DFTB should be used
-     *
-     * @return bool
-     */
-    bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
-
-    /**
-     * @brief returns if the third order is set
-     *
-     * @return bool
-     */
-    bool QMSettings::isThirdOrderDftbSet() { return _isThirdOrderDftbSet; }
-
-    /**
-     * @brief returns if the Hubbard derivatives are set by the user
-     *
-     * @return bool
-     */
-    bool QMSettings::isHubbardDerivsSet() { return _isHubbardDerivsSet; }
-
-    /**
-     * @brief returns the Hubbard Derivative dictionary
-     *
-     * @return std::unordered_map<std::string, double>
-     */
-    std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
-    {
-        return _hubbardDerivs;
-    }
-
-    /**
-     * @brief returns if the dispersion correction should be used
-     *
-     * @return bool
-     */
-    bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
-
-    /**
-     * @brief returns if the net force should be removed after reading in the QM
-     * forces
-     *
-     * @return bool
-     */
-    bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
-
-    /**
-     * @brief returns the xTBMethod
-     *
-     * @return XtbMethod
-     */
-    XtbMethod QMSettings::getXtbMethod() { return _xtbMethod; }
-
-    /**
-     * @brief returns the qmLoopTimeLimit
-     *
-     * @return double
-     */
-    double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
-
-    /**
-     * @brief returns the FeNNol model path
-     *
-     * @return std::string
-     */
-    std::string QMSettings::getFennolModelPath() { return _fennolModelPath; }
-
-    /**
-     * @brief returns if GPU pre-processing should be used for FeNNol
-     *
-     * @return bool
-     */
-    bool QMSettings::useGPUPreprocessing() { return _useGPUPreprocessing; }
-
-}   // namespace settings
+/**
+ * @brief setup the ASE DFTB+ method of the system
+ *
+ */
+void QMSettings::_setupQMMethodAseDftbPlus()
+{
+    if (getSlakosType() == SlakosType::THREEOB && !isThirdOrderDftbSet())
+        setUseThirdOrderDftb(true);
+}

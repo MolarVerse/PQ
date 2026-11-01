@@ -34,6 +34,22 @@ namespace QM
 {
 
     /**
+     * @brief constructor for the QMRunner class
+     *
+     * @param qmSettings the QM settings to be used by the runner
+     */
+    QMRunner::QMRunner(const QMSettings &qmSettings) : _qmSettings(qmSettings)
+    {
+    }
+
+    /**
+     * @brief get the QM settings associated with the runner
+     *
+     * @return the QM settings
+     */
+    const QMSettings &QMRunner::_getQMSettings() const { return _qmSettings; }
+
+    /**
      * @brief function to throw an exception after a timeout
      *
      * @details This function is used to throw an exception after a timeout. The
@@ -41,13 +57,16 @@ namespace QM
      * function will return without throwing an exception.
      *
      * @param stopToken
+     * @param qmLoopTimeLimit The time limit for the QM loop in seconds. If set
+     * to 0, no timeout will be enforced.
      *
      * @throw QMRunnerException if the timeout is exceeded
      */
-    void QMRunner::throwAfterTimeout(const std::stop_token &stopToken)
+    void QMRunner::throwAfterTimeout(
+        const std::stop_token &stopToken,
+        double                 qmLoopTimeLimit
+    )
     {
-        const auto qmLoopTimeLimit = settings::QMSettings::getQMLoopTimeLimit();
-
         if (qmLoopTimeLimit <= 0)
             return;
 

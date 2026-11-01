@@ -45,7 +45,7 @@ namespace QM
         std::unique_ptr<AseInterface> _ase;
 
        public:
-        AseQMRunner();
+        explicit AseQMRunner(const QMSettings &qmSettings);
         ~AseQMRunner() override;
 
         void run(

@@ -20,39 +20,56 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef ENGINE__QM_RUNNER_MANAGER_HPP
-#define ENGINE__QM_RUNNER_MANAGER_HPP
+#ifndef QM__QM_RUNNER_FACTORY_HPP
+#define QM__QM_RUNNER_FACTORY_HPP
 
 #include <memory>
 
-#include "enums/qm.hpp"
 #include "qmRunner.hpp"
 
-namespace engine
+class QMSettings;
+
+namespace QM
 {
     /**
-     * @class QMRunnerManager
+     * @class QMRunnerFactory
      *
-     * @brief Factory class for creating and managing QM runners
+     * @brief Factory class for creating QM runners
      *
      * @details This utility class provides static methods to create QM runners
      * based on the specified QM method. It encapsulates all the logic for
      * QM runner creation and configuration, making it reusable across different
      * engine types without requiring inheritance dependencies.
      */
-    class QMRunnerManager
+    class QMRunnerFactory
     {
        public:
-        static std::shared_ptr<QM::QMRunner> createQMRunner(QMMethod method);
-        static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
-        static std::shared_ptr<QM::QMRunner> createAseFennolRunner();
-        static std::shared_ptr<QM::QMRunner> createAseMaceRunner();
-        static std::shared_ptr<QM::QMRunner> createAseXtbRunner();
+        [[nodiscard]]
+        static std::unique_ptr<QMRunner> createQMRunner(
+            const QMSettings& settings
+        );
 
        private:
-        QMRunnerManager() = default;
+        QMRunnerFactory() = default;
+
+        [[nodiscard]]
+        static std::unique_ptr<QMRunner> _createAseDftbRunner(
+            const QMSettings& settings
+        );
+        [[nodiscard]]
+        static std::unique_ptr<QMRunner> _createAseFennolRunner(
+            const QMSettings& settings
+        );
+        [[nodiscard]]
+        static std::unique_ptr<QMRunner> _createAseMaceRunner(
+            const QMSettings& settings
+        );
+        [[nodiscard]]
+        static std::unique_ptr<QMRunner> _createAseXtbRunner(
+            const QMSettings& settings
+        );
     };
 
-}   // namespace engine
+}   // namespace QM
 
-#endif   // ENGINE__QM_RUNNER_MANAGER_HPP
+#endif   // QM__QM_RUNNER_FACTORY_HPP

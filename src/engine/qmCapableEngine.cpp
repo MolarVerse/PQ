@@ -22,7 +22,7 @@
 
 #include "qmCapableEngine.hpp"
 
-#include "qmRunnerManager.hpp"
+#include "qmRunnerFactory.hpp"
 
 namespace engine
 {
@@ -30,22 +30,20 @@ namespace engine
     /**
      * @brief Set the QM runner based on the specified method
      *
-     * @param method The QM method to use
+     * @param qmSettings The QMSettings object containing the relevant settings
+     * for configuring the QM runner
      */
-    void QMCapableEngine::setQMRunner(QMMethod method)
+    void QMCapableEngine::setQMRunner(const QMSettings& qmSettings)
     {
-        _qmRunner = QMRunnerManager::createQMRunner(method);
+        _qmRunner = QM::QMRunnerFactory::createQMRunner(qmSettings);
     }
 
     /**
      * @brief Get the QM runner
      *
-     * @return shared_ptr<QMRunner> Shared pointer to the QM runner
+     * @return const QMRunner& Reference to the QM runner
      */
-    std::shared_ptr<QM::QMRunner> QMCapableEngine::getQMRunner() const
-    {
-        return _qmRunner;
-    }
+    QM::QMRunner& QMCapableEngine::getQMRunner() { return *_qmRunner; }
 
     /**
      * @brief Check if QM runner is set

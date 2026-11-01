@@ -28,6 +28,9 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+class QMSettings;         // forward declaration
+struct TestHybridSetup;   // forward declaration
+
 namespace setup
 {
     void setupHybrid(engine::Engine &);
@@ -46,16 +49,20 @@ namespace setup
        public:
         explicit HybridSetup(engine::Engine &engine);
 
-        void        setup();
-        static void validateQMMethod();
-        void        setupInnerRegionCenter();
-        void        setupForcedCoreList();
-        void        setupForcedLayerList();
-        void        setupForcedOuterList();
-        void        checkZoneRadii();
-        void        validateQMChargeSettings();
-        void        validateQMReferenceEnergies();
-        void        setupWriteInfo() const;
+        void setup();
+        void setupInnerRegionCenter();
+        void setupForcedCoreList();
+        void setupForcedLayerList();
+        void setupForcedOuterList();
+        void checkZoneRadii();
+        void validateQMChargeSettings();
+        void validateQMReferenceEnergies();
+        void setupWriteInfo() const;
+
+       private:
+        static void _validateQMMethod(const QMSettings &qmSettings);
+
+        friend struct ::TestHybridSetup;
     };
 
 }   // namespace setup
