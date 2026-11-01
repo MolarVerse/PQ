@@ -15,6 +15,15 @@
 # (default 2, and any rise from 0) fails like an instruction count regression.
 # Without the library, or for a binary that has no marker, nothing is compared.
 #
+# The callgrind run also simulates the caches and the branch predictor (L1 and
+# last level geometry fixed below, so the numbers do not depend on the machine).
+# The binary is run through a symlink of the same path length and with an empty
+# environment: the program path and environment change the stack addresses and
+# with them the simulated cache misses by several percent, which would show up
+# as a difference between the base and the PR binary. The simulated counts are
+# reported next to the instruction counts but never fail the check; the
+# instruction count of the same run is the one that is gated.
+#
 # Writes a markdown report (headline + collapsible per-benchmark table) to
 # $PERF_REPORT_FILE (default perf_report.md) and, if set, appends it to
 # $GITHUB_STEP_SUMMARY. Exits non-zero if any benchmark regressed past the
@@ -39,6 +48,11 @@ THRESHOLD="${3:-2}"
 LARGE_DROP="${PERF_LARGE_DROP_PERCENT:-30}"
 ALLOC_LIB="${PERF_ALLOC_LIB:-$PR_DIR/libperf_alloc_counter.so}"
 ALLOC_THRESHOLD="${PERF_ALLOC_THRESHOLD_PERCENT:-2}"
+VALGRIND_BIN="$(command -v valgrind || echo valgrind)"
+SIM_OPTIONS=(--cache-sim=yes --branch-sim=yes
+    --I1=32768,8,64 --D1=32768,8,64 --LL=8388608,16,64)
+SIM_WARN_PERCENT="${PERF_SIM_WARN_PERCENT:-10}"
+SIM_WARN_MIN_EVENTS="${PERF_SIM_WARN_MIN_EVENTS:-5000}"
 REPORT="${PERF_REPORT_FILE:-perf_report.md}"
 BASE_IR_FILE="${PERF_BASE_IR_FILE:-}"
 
@@ -47,29 +61,50 @@ BASE_IR_FILE="${PERF_BASE_IR_FILE:-}"
 # that doesn't match is ignored.
 declare -A base_ir_cache
 declare -A base_alloc_cache
+declare -A base_sim_cache
 if [ -n "$BASE_IR_FILE" ] && [ -s "$BASE_IR_FILE" ]; then
-    while IFS=$'\t' read -r cached_name cached_ir cached_alloc; do
+    # columns: name, Ir, allocations, D1 misses, LL misses, mispredicts
+    # ("-" for an unknown value)
+    while IFS=$'\t' read -r cached_name cached_ir cached_alloc cached_d1 cached_ll cached_br; do
         [[ "$cached_ir" =~ ^[0-9]+$ ]] || continue
         base_ir_cache["$cached_name"]="$cached_ir"
         [[ "${cached_alloc:-}" =~ ^[0-9]+$ ]] &&
             base_alloc_cache["$cached_name"]="$cached_alloc"
+        if [[ "${cached_d1:-}" =~ ^[0-9]+$ && "${cached_ll:-}" =~ ^[0-9]+$ &&
+            "${cached_br:-}" =~ ^[0-9]+$ ]]; then
+            base_sim_cache["$cached_name"]="$cached_d1 $cached_ll $cached_br"
+        fi
     done < "$BASE_IR_FILE"
 fi
 # Collect freshly-known base counts (cached + measured) for write-back.
 declare -A base_ir_fresh
 declare -A base_alloc_fresh
+declare -A base_sim_fresh
 
-# run a binary under callgrind and echo its instruction count (Ir)
-# Prints nothing if the benchmark exits non-zero or no count was reported, so
-# a crashing benchmark can never look like a speed-up.
+# Runs a binary under callgrind with cache and branch simulation and echoes
+# "<Ir> <D1 misses> <LL misses> <branch mispredicts>" (the last three are
+# missing if valgrind did not print them). Prints nothing if the benchmark
+# exits non-zero or no count was reported, so a crashing benchmark can never
+# look like a speed-up. See the header for why a symlink and an empty
+# environment are used.
 measure() {
-    local log rc
+    local log rc dir
     log="$(mktemp)"
-    valgrind --tool=callgrind --callgrind-out-file="$(mktemp)" "$1" \
-        >/dev/null 2>"$log"
+    dir="$(mktemp -d)"
+    ln -s "$(readlink -f "$1")" "$dir/b"
+    env -i "$VALGRIND_BIN" --tool=callgrind --callgrind-out-file=/dev/null \
+        "${SIM_OPTIONS[@]}" "$dir/b" >/dev/null 2>"$log"
     rc=$?
+    rm -rf "$dir"
     if [ "$rc" -eq 0 ]; then
-        grep -oE 'I +refs: +[0-9,]+' "$log" | grep -oE '[0-9,]+' | tr -d ,
+        awk '
+            function number(line) { sub(/^[^:]*:[ ]*/, "", line); sub(/[ (].*$/, "", line); gsub(/,/, "", line); return line }
+            /I +refs:/                { ir = number($0) }
+            /D1 +misses:/             { d1 = number($0) }
+            /^(==[0-9]+== )?LL misses:/ { ll = number($0) }
+            /Mispredicts:/            { br = number($0) }
+            END { if (ir != "") { out = ir; if (d1 != "" && ll != "" && br != "") out = out " " d1 " " ll " " br; print out } }
+        ' "$log"
     fi
     rm -f "$log"
 }
@@ -118,6 +153,31 @@ add_alloc_row() {
     alloc_rows+="| \`$name\` | $base | $pr | $delta | $emoji |"$'\n'
 }
 
+sim_rows=""
+
+# <name> <base "d1 ll br" or empty> <PR "d1 ll br" or empty>; report only
+add_sim_row() {
+    local name="$1" base="${2:-}" pr="${3:-}" i delta cells="" warn=""
+    local -a b=() p=()
+    read -r -a p <<< "$pr"
+    read -r -a b <<< "$base"
+    [ "${#p[@]}" -eq 3 ] || return 0
+    for i in 0 1 2; do
+        if [ "${#b[@]}" -eq 3 ]; then
+            delta="$(awk -v p="${p[$i]}" -v b="${b[$i]}" \
+                'BEGIN{ if (b==0) printf "%+d", p-b; else printf "%+.1f%%", (p-b)/b*100 }')"
+            if awk -v p="${p[$i]}" -v b="${b[$i]}" -v w="$SIM_WARN_PERCENT" -v m="$SIM_WARN_MIN_EVENTS" \
+                'BEGIN{ exit !((p-b) >= m && (b==0 || (p-b)/b*100 >= w)) }'; then
+                warn="⚠️"
+            fi
+            cells+=" ${p[$i]} ($delta) |"
+        else
+            cells+=" ${p[$i]} (–) |"
+        fi
+    done
+    sim_rows+="| \`$name\` |$cells $warn |"$'\n'
+}
+
 rows=""
 regressed=""
 improved=""
@@ -133,7 +193,10 @@ for pr_bin in "$PR_DIR"/perf_*; do
     base_bin="$BASE_DIR/$(basename "$pr_bin")"
 
     pr_names["$name"]=1
-    pr_ir="$(measure "$pr_bin")"
+    pr_ir="" pr_d1="" pr_ll="" pr_br=""
+    read -r pr_ir pr_d1 pr_ll pr_br <<< "$(measure "$pr_bin")"
+    pr_sim=""
+    [ -n "$pr_br" ] && pr_sim="$pr_d1 $pr_ll $pr_br"
     if ! [[ "$pr_ir" =~ ^[0-9]+$ ]]; then
         echo "::error::$name: no instruction count (the benchmark failed or valgrind reported none)"
         rows+="| \`$name\` | – | – | no count | ⚠️ |"$'\n'
@@ -144,28 +207,36 @@ for pr_bin in "$PR_DIR"/perf_*; do
     pr_ir_all["$name"]="$pr_ir"
     pr_alloc="$(measure_allocs "$pr_bin")"
     base_alloc=""
+    base_sim=""
 
     if [ -n "${base_ir_cache[$name]:-}" ]; then
         base_ir="${base_ir_cache[$name]}"
         base_alloc="${base_alloc_cache[$name]:-}"
+        base_sim="${base_sim_cache[$name]:-}"
     elif [ -x "$base_bin" ]; then
-        base_ir="$(measure "$base_bin")"
+        base_ir="" b_d1="" b_ll="" b_br=""
+        read -r base_ir b_d1 b_ll b_br <<< "$(measure "$base_bin")"
         if ! [[ "$base_ir" =~ ^[0-9]+$ ]]; then
             echo "::warning::$name: the base binary gave no instruction count - not compared"
             rows+="| \`$name\` | – | $(fmt "$pr_ir") | base: no count | ⚠️ |"$'\n'
             add_alloc_row "$name" "" "$pr_alloc"
+            add_sim_row "$name" "" "$pr_sim"
             continue
         fi
+        [ -n "$b_br" ] && base_sim="$b_d1 $b_ll $b_br"
         base_alloc="$(measure_allocs "$base_bin")"
     else
         echo "$name: new benchmark (no baseline) - pr Ir=$pr_ir"
         rows+="| \`$name\` | – | $(fmt "$pr_ir") | new | ➕ |"$'\n'
         add_alloc_row "$name" "" "$pr_alloc"
+        add_sim_row "$name" "" "$pr_sim"
         continue
     fi
     base_ir_fresh["$name"]="$base_ir"
     base_alloc_fresh["$name"]="$base_alloc"
+    base_sim_fresh["$name"]="$base_sim"
     add_alloc_row "$name" "$base_alloc" "$pr_alloc"
+    add_sim_row "$name" "$base_sim" "$pr_sim"
     pct="$(awk -v p="$pr_ir" -v b="$base_ir" \
         'BEGIN{ if (b==0) print "0.00"; else printf "%+.2f", (p-b)/b*100 }')"
     verdict="$(awk -v p="$pr_ir" -v b="$base_ir" -v t="$THRESHOLD" \
@@ -278,6 +349,14 @@ fi
         echo "|---|---|---|---|---|"
         printf '%s' "$alloc_rows"
     fi
+    if [ -n "$sim_rows" ]; then
+        echo ""
+        echo "Simulated cache and branch behaviour (callgrind with a 32 KiB 8-way L1 data cache, an 8 MiB 16-way last level cache and its branch predictor; value of the PR and change against the base; report only, ⚠️ = at least +${SIM_WARN_PERCENT}% and +${SIM_WARN_MIN_EVENTS} events):"
+        echo ""
+        echo "| benchmark | D1 misses | LL misses | branch mispredicts | |"
+        echo "|---|---|---|---|---|"
+        printf '%s' "$sim_rows"
+    fi
     echo "</details>"
     echo ""
     echo "<sub><em>Deterministic callgrind instruction counts vs the base branch; gated at ±${THRESHOLD}%. Not wall-clock.</em></sub>"
@@ -293,8 +372,11 @@ fi
 if [ -n "$BASE_IR_FILE" ] && [ "${#base_ir_fresh[@]}" -gt 0 ]; then
     : > "$BASE_IR_FILE"
     for name in "${!base_ir_fresh[@]}"; do
-        printf '%s\t%s\t%s\n' "$name" "${base_ir_fresh[$name]}" \
-            "${base_alloc_fresh[$name]:-}" >> "$BASE_IR_FILE"
+        sim_cols="- - -"
+        [ -n "${base_sim_fresh[$name]:-}" ] && sim_cols="${base_sim_fresh[$name]}"
+        read -r d1 ll br <<< "$sim_cols"
+        printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$name" "${base_ir_fresh[$name]}" \
+            "${base_alloc_fresh[$name]:--}" "$d1" "$ll" "$br" >> "$BASE_IR_FILE"
     done
 fi
 

@@ -73,7 +73,11 @@ Workflows
       - pull requests to ``main``, ``dev`` and ``NEXT`` that touch C++ or build files
       - Builds ``benchmarks/perf`` for the pull request and its base, runs both under ``callgrind`` and fails if an
         instruction count grew beyond the threshold. Instruction counts are deterministic, so this check is not
-        flaky.
+        flaky. The comment also lists the heap allocations of the measured loop (exact; a rise fails the check as
+        well) and the cache misses and branch mispredictions of a simulated 32 KiB L1 cache, 8 MiB last level cache
+        and branch predictor (report only). The simulated numbers depend only on the binary, not on the machine, but
+        on the program path and the environment, so the gate runs every binary through a path of the same length
+        with an empty environment.
     * - Clang Build
       - ``clang_build.yml``
       - pull requests that touch C++ or build files

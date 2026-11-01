@@ -1,0 +1,1 @@
+- Perf gate: report simulated cache misses (L1 data, last level) and branch mispredictions of every benchmark next to the instruction counts (callgrind cache and branch simulation, report only), measured through a path of fixed length and an empty environment so that base and PR are comparable.
