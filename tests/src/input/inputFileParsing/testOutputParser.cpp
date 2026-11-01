@@ -513,41 +513,40 @@ TEST_F(TestInputFileReader, testRPMDVelocityFilename)
  */
 TEST_F(TestInputFileReader, parseOverwriteOutput)
 {
-    EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
-
-    OutputFileSettings       outputFileSettings;
+    OutputFileSettings outputFileSettings;
+    EXPECT_FALSE(outputFileSettings.getOverwriteOutputFiles());
     input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("overwrite_output"));
     const auto &parseFunc = funcMap.at("overwrite_output");
 
     parseFunc({"overwrite_output", "=", "true"}, 0);
-    EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_TRUE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "yes"}, 0);
-    EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_TRUE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "on"}, 0);
-    EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_TRUE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "false"}, 0);
-    EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_FALSE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "no"}, 0);
-    EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_FALSE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "off"}, 0);
-    EXPECT_FALSE(OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_FALSE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 

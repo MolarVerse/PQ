@@ -34,7 +34,7 @@
  */
 TEST_F(TestTrajectoryOutput, writeXyz)
 {
-    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->setFilename("default.xyz", false);
     _trajectoryOutput->writeXyz(*_simulationBox, 1);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
@@ -59,7 +59,7 @@ TEST_F(TestTrajectoryOutput, writeXyzMetadata)
 {
     OutputFileSettings::setIncludeOutputMetadata(true);
 
-    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->setFilename("default.xyz", false);
     _trajectoryOutput->writeXyz(*_simulationBox, 42);
     _trajectoryOutput->close();
     OutputFileSettings::setIncludeOutputMetadata(false);
@@ -83,7 +83,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
     _simulationBox->addInnerRegionCenterAtoms({1});
     hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
 
-    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->setFilename("default.xyz", false);
     _trajectoryOutput->writeHybridCenterXyz(hybridConfigurator, 7);
     _trajectoryOutput->close();
 
@@ -111,7 +111,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
     _simulationBox->addInnerRegionCenterAtoms({1});
     hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
 
-    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->setFilename("default.xyz", false);
     _trajectoryOutput->writeHybridCenterXyz(hybridConfigurator, 42);
     _trajectoryOutput->close();
     OutputFileSettings::setIncludeOutputMetadata(false);
@@ -129,7 +129,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
  */
 TEST_F(TestTrajectoryOutput, writeVelocities)
 {
-    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->setFilename("default.xyz", false);
     _trajectoryOutput->writeVelocities(*_simulationBox, 1);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
@@ -164,7 +164,7 @@ TEST_F(TestTrajectoryOutput, writeVelocities)
  */
 TEST_F(TestTrajectoryOutput, writeForces)
 {
-    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->setFilename("default.xyz", false);
     _trajectoryOutput->writeForces(*_simulationBox, 1);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
@@ -189,7 +189,7 @@ TEST_F(TestTrajectoryOutput, writeForcesMetadata)
 {
     OutputFileSettings::setIncludeOutputMetadata(true);
 
-    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->setFilename("default.xyz", false);
     _trajectoryOutput->writeForces(*_simulationBox, 42);
     _trajectoryOutput->close();
     OutputFileSettings::setIncludeOutputMetadata(false);
@@ -207,7 +207,7 @@ TEST_F(TestTrajectoryOutput, writeForcesMetadata)
  */
 TEST_F(TestTrajectoryOutput, writeCharges)
 {
-    _trajectoryOutput->setFilename("default.xyz");
+    _trajectoryOutput->setFilename("default.xyz", false);
     _trajectoryOutput->writeCharges(*_simulationBox, 1);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");

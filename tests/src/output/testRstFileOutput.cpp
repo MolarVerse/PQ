@@ -35,7 +35,7 @@
  */
 TEST_F(TestRstFileOutput, write)
 {
-    _rstFileOutput->setFilename("default.rst");
+    _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(*_simulationBox, thermostat::Thermostat(), 10);
     _rstFileOutput->close();
     std::ifstream file("default.rst");
@@ -86,7 +86,7 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
         ThermostatType::NOSE_HOOVER
     );
 
-    _rstFileOutput->setFilename("default.rst");
+    _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(*_simulationBox, thermostat, 10);
     _rstFileOutput->close();
     std::ifstream file("default.rst");

@@ -445,7 +445,7 @@ void OutputFileSettings::setTimingsFileName(std::string_view name)
  */
 void OutputFileSettings::setOverwriteOutputFiles(bool overwrite)
 {
-    _overwriteOutputFiles = overwrite;
+    _overwriteOutputFiles.set(overwrite);
 }
 
 /**
@@ -675,9 +675,9 @@ std::string OutputFileSettings::getTimingsFileName() { return _timeFile; }
  *
  * @return bool
  */
-bool OutputFileSettings::getOverwriteOutputFiles()
+bool OutputFileSettings::getOverwriteOutputFiles() const
 {
-    return _overwriteOutputFiles;
+    return _overwriteOutputFiles.get();
 }
 
 /**

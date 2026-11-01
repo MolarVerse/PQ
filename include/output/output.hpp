@@ -57,7 +57,7 @@ namespace out
         Output &operator=(Output &&) noexcept = default;
 
         void close();
-        void setFilename(const std::string_view &);
+        void setFilename(const std::string_view &, bool overwriteOutputFiles);
 
         friend struct ::TestOutputUtils;
 

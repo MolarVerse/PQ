@@ -37,7 +37,7 @@
  */
 TEST_F(TestEnergyOutput, writeHeader)
 {
-    _energyOutput->setFilename("default.en");
+    _energyOutput->setFilename("default.en", false);
     _energyOutput->writeHeader(0.5);
     _energyOutput->close();
 
@@ -68,7 +68,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    _energyOutput->setFilename("default.en");
+    _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
@@ -110,7 +110,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _settings->forceFieldSettings.setType(ForceFieldType::ON);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    _energyOutput->setFilename("default.en");
+    _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
@@ -154,7 +154,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    _energyOutput->setFilename("default.en");
+    _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
@@ -198,7 +198,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     _settings->manostatSettings.setFixedAxis(FixedAxis::Z);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    _energyOutput->setFilename("default.en");
+    _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
@@ -242,7 +242,7 @@ TEST_F(TestEnergyOutput, qmActive)
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
     _settings->manostatSettings.setManostatType(ManostatType::NONE);
 
-    _energyOutput->setFilename("default.en");
+    _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 
@@ -286,7 +286,7 @@ TEST_F(TestEnergyOutput, noseHooverActive)
         ThermostatType::NOSE_HOOVER
     );
 
-    _energyOutput->setFilename("default.en");
+    _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);
     _energyOutput->close();
 

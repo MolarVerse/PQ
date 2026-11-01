@@ -40,11 +40,12 @@ namespace out
      * @throw InputFileException if file already exists
      * and output should not be overwritten
      */
-    void Output::setFilename(const std::string_view &filename)
+    void Output::setFilename(
+        const std::string_view &filename,
+        bool                    overwriteOutputFiles
+    )
     {
         _fileName = filename;
-        const auto overwriteOutputFiles =
-            OutputFileSettings::getOverwriteOutputFiles();
 
         if (_fileName.empty())
             throw exc::InputFileException("Filename cannot be empty");

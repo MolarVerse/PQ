@@ -42,7 +42,7 @@ class OutputFileSettings
    private:
     Setting<size_t> _outputFrequency{1};
 
-    static inline bool        _overwriteOutputFiles  = false;
+    Setting<bool>             _overwriteOutputFiles{false};
     static inline bool        _includeOutputMetadata = false;
     static inline bool        _filePrefixSet         = false;
     static inline std::string _filePrefix;
@@ -118,7 +118,7 @@ class OutputFileSettings
 
     static void setTimingsFileName(std::string_view);
 
-    static void setOverwriteOutputFiles(bool);
+    void        setOverwriteOutputFiles(bool);
     static void setIncludeOutputMetadata(bool);
 
     /***************************
@@ -158,7 +158,7 @@ class OutputFileSettings
 
     [[nodiscard]] static std::string getTimingsFileName();
 
-    [[nodiscard]] static bool getOverwriteOutputFiles();
+    [[nodiscard]] bool        getOverwriteOutputFiles() const;
     [[nodiscard]] static bool getIncludeOutputMetadata();
 };
 

@@ -69,6 +69,11 @@ namespace setup
      */
     void OutputFilesSetup::setup()
     {
+        const auto &outputFileSettings = _engine.getSettings().outputFiles;
+
+        const auto overwriteOutputFiles =
+            outputFileSettings.getOverwriteOutputFiles();
+
         const auto isPrefixSet = OutputFileSettings::isFilePrefixSet();
         auto       prefix      = std::string();
 
@@ -87,13 +92,25 @@ namespace setup
         const auto infoFileName  = OutputFileSettings::getInfoFileName();
         const auto forceFileName = OutputFileSettings::getForceFileName();
 
-        _engine.getLogOutput().setFilename(logFileName);
-        _engine.getTimingsOutput().setFilename(timingsFileName);
-        _engine.getRstFileOutput().setFilename(restartFileName);
-        _engine.getEnergyOutput().setFilename(energyFileName);
-        _engine.getXyzOutput().setFilename(xyzFileName);
-        _engine.getInfoOutput().setFilename(infoFileName);
-        _engine.getForceOutput().setFilename(forceFileName);
+        _engine.getLogOutput().setFilename(logFileName, overwriteOutputFiles);
+        _engine.getTimingsOutput().setFilename(
+            timingsFileName,
+            overwriteOutputFiles
+        );
+        _engine.getRstFileOutput().setFilename(
+            restartFileName,
+            overwriteOutputFiles
+        );
+        _engine.getEnergyOutput().setFilename(
+            energyFileName,
+            overwriteOutputFiles
+        );
+        _engine.getXyzOutput().setFilename(xyzFileName, overwriteOutputFiles);
+        _engine.getInfoOutput().setFilename(infoFileName, overwriteOutputFiles);
+        _engine.getForceOutput().setFilename(
+            forceFileName,
+            overwriteOutputFiles
+        );
 
         if (settings::GeneralSettings::isMDJobType())
         {
@@ -108,20 +125,39 @@ namespace setup
             const auto stressFile = OutputFileSettings::getStressFileName();
             const auto boxFile    = OutputFileSettings::getBoxFileName();
 
-            mdEngine.getInstantEnergyOutput().setFilename(instEnFile);
-            mdEngine.getVelOutput().setFilename(velFile);
-            mdEngine.getChargeOutput().setFilename(chargeFile);
-            mdEngine.getMomentumOutput().setFilename(momFile);
-            mdEngine.getVirialOutput().setFilename(virialFile);
-            mdEngine.getStressOutput().setFilename(stressFile);
-            mdEngine.getBoxFileOutput().setFilename(boxFile);
+            mdEngine.getInstantEnergyOutput().setFilename(
+                instEnFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getVelOutput().setFilename(velFile, overwriteOutputFiles);
+            mdEngine.getChargeOutput().setFilename(
+                chargeFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getMomentumOutput().setFilename(
+                momFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getVirialOutput().setFilename(
+                virialFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getStressOutput().setFilename(
+                stressFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getBoxFileOutput().setFilename(
+                boxFile,
+                overwriteOutputFiles
+            );
 
             if (settings::GeneralSettings::isHybridJobtype())
             {
                 const auto hybridCenterFile =
                     OutputFileSettings::getHybridCenterFileName();
                 mdEngine.getXyzHybridCenterOutput().setFilename(
-                    hybridCenterFile
+                    hybridCenterFile,
+                    overwriteOutputFiles
                 );
             }
 
@@ -146,12 +182,30 @@ namespace setup
                 const auto energyFile_ =
                     OutputFileSettings::getRPMDEnergyFileName();
 
-                mdEngine.getRingPolymerRstFileOutput().setFilename(rstFile_);
-                mdEngine.getRingPolymerXyzOutput().setFilename(xyzFile_);
-                mdEngine.getRingPolymerVelOutput().setFilename(velFile_);
-                mdEngine.getRingPolymerForceOutput().setFilename(forceFile_);
-                mdEngine.getRingPolymerChargeOutput().setFilename(chargeFile_);
-                mdEngine.getRingPolymerEnergyOutput().setFilename(energyFile_);
+                mdEngine.getRingPolymerRstFileOutput().setFilename(
+                    rstFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerXyzOutput().setFilename(
+                    xyzFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerVelOutput().setFilename(
+                    velFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerForceOutput().setFilename(
+                    forceFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerChargeOutput().setFilename(
+                    chargeFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerEnergyOutput().setFilename(
+                    energyFile_,
+                    overwriteOutputFiles
+                );
             }
         }
 
@@ -161,7 +215,10 @@ namespace setup
 
             const auto optFileName = OutputFileSettings::getOptFileName();
 
-            optEngine.getOptOutput().setFilename(optFileName);
+            optEngine.getOptOutput().setFilename(
+                optFileName,
+                overwriteOutputFiles
+            );
         }
 
         if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN &&
@@ -172,7 +229,10 @@ namespace setup
 
             const auto optFileName = OutputFileSettings::getOptFileName();
 
-            hessianEngine.getOptOutput().setFilename(optFileName);
+            hessianEngine.getOptOutput().setFilename(
+                optFileName,
+                overwriteOutputFiles
+            );
         }
     }
 

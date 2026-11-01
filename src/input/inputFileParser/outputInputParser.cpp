@@ -114,8 +114,8 @@ namespace input
             .description = "Whether to overwrite existing output files"
         };
 
-        const auto setValue = [](bool value)
-        { OutputFileSettings::setOverwriteOutputFiles(value); };
+        const auto setValue = [this](bool value)
+        { _outputFileSettings->setOverwriteOutputFiles(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{

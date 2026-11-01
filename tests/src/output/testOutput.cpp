@@ -26,7 +26,6 @@
 
 #include "exceptions.hpp"
 #include "output.hpp"
-#include "outputFileSettings.hpp"
 #include "throwWithMessage.hpp"
 
 struct TestOutputUtils
@@ -43,7 +42,7 @@ TEST(TestOutput, testSpecialSetFilename)
     auto output = out::Output("default.log");
 
     EXPECT_THROW_MSG(
-        output.setFilename(""),
+        output.setFilename("", false),
         exc::InputFileException,
         "Filename cannot be empty"
     );
@@ -52,7 +51,7 @@ TEST(TestOutput, testSpecialSetFilename)
     std::filesystem::create_directory(testDirName);
 
     EXPECT_THROW_MSG(
-        output.setFilename(testDirName),
+        output.setFilename(testDirName, false),
         exc::InputFileException,
         std::format("File already exists - filename = {}", testDirName)
     );
@@ -70,17 +69,14 @@ TEST(TestOutput, testSpecialSetFilename)
     testFile.close();
 
     EXPECT_THROW_MSG(
-        output.setFilename(testFileName),
+        output.setFilename(testFileName, false),
         exc::InputFileException,
         std::format("File already exists - filename = {}", testFileName)
     );
 
-    OutputFileSettings::setOverwriteOutputFiles(true);
-
-    EXPECT_NO_THROW(output.setFilename(testFileName));
+    EXPECT_NO_THROW(output.setFilename(testFileName, true));
     EXPECT_NO_THROW(output.close());
     EXPECT_EQ(output.getFilename(), testFileName);
 
-    OutputFileSettings::setOverwriteOutputFiles(false);
     std::filesystem::remove(testFileName);
 }
