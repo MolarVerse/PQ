@@ -74,11 +74,11 @@ namespace setup
         const auto overwriteOutputFiles =
             outputFileSettings.getOverwriteOutputFiles();
 
-        const auto isPrefixSet = OutputFileSettings::isFilePrefixSet();
+        const auto isPrefixSet = outputFileSettings.isFilePrefixSet();
         auto       prefix      = std::string();
 
         if (isPrefixSet)
-            prefix = OutputFileSettings::getFilePrefix();
+            prefix = outputFileSettings.getFilePrefix();
         else
             prefix = OutputFileSettings::determineMostCommonPrefix();
 

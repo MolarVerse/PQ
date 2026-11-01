@@ -59,14 +59,14 @@ TEST(TestOutputSettings, determinesMostCommonConfiguredPrefix)
     OutputFileSettings::setEnergyFileName("production.en");
     OutputFileSettings::setTrajectoryFileName("production.xyz");
     OutputFileSettings::setOptFileName("optimization.opt");
-    OutputFileSettings::setFilePrefix("production");
+    settings.setFilePrefix("production");
     settings.setOverwriteOutputFiles(true);
     settings.setOutputFrequency(5);
 
     EXPECT_EQ(OutputFileSettings::determineMostCommonPrefix(), "production");
     EXPECT_EQ(OutputFileSettings::getOptFileName(), "optimization.opt");
-    EXPECT_EQ(OutputFileSettings::getFilePrefix(), "production");
-    EXPECT_TRUE(OutputFileSettings::isFilePrefixSet());
+    EXPECT_EQ(settings.getFilePrefix(), "production");
+    EXPECT_TRUE(settings.isFilePrefixSet());
     EXPECT_TRUE(settings.getOverwriteOutputFiles());
     EXPECT_EQ(settings.getOutputFrequency(), 5);
 }

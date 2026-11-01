@@ -42,10 +42,9 @@ class OutputFileSettings
    private:
     Setting<size_t> _outputFrequency{1};
 
-    Setting<bool>             _overwriteOutputFiles{false};
-    Setting<bool>             _includeOutputMetadata{false};
-    static inline bool        _filePrefixSet = false;
-    static inline std::string _filePrefix;
+    Setting<bool>        _overwriteOutputFiles{false};
+    Setting<bool>        _includeOutputMetadata{false};
+    Setting<std::string> _filePrefix;
 
     static inline std::string _energyFile = DefaultFiles::energyFile;
     static inline std::string _instEnFile = DefaultFiles::instEnFile;
@@ -81,7 +80,7 @@ class OutputFileSettings
     ~OutputFileSettings() = default;
 
     void        setOutputFrequency(size_t outputFreq);
-    static void setFilePrefix(std::string_view prefix);
+    void        setFilePrefix(const std::string &prefix);
     static void replaceDefaultValues(const std::string &prefix);
 
     [[nodiscard]] static std::string determineMostCommonPrefix();
@@ -125,10 +124,9 @@ class OutputFileSettings
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] size_t getOutputFrequency() const;
-
-    [[nodiscard]] static bool        isFilePrefixSet();
-    [[nodiscard]] static std::string getFilePrefix();
+    [[nodiscard]] size_t      getOutputFrequency() const;
+    [[nodiscard]] std::string getFilePrefix() const;
+    [[nodiscard]] bool        isFilePrefixSet() const;
 
     [[nodiscard]] static std::string getRestartFileName();
     [[nodiscard]] static std::string getEnergyFileName();

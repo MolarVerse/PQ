@@ -78,7 +78,7 @@ TEST_F(TestInputFileReader, testParseFilePrefix)
         "prefix"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(OutputFileSettings::getFilePrefix(), "prefix");
+    EXPECT_EQ(outputFileSettings.getFilePrefix(), "prefix");
 }
 
 /**

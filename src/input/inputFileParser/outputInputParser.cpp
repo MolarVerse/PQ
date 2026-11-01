@@ -197,8 +197,8 @@ namespace input
             .description = "Prefix for output files"
         };
 
-        const auto setValue = [](const std::string &value)
-        { OutputFileSettings::setFilePrefix(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setFilePrefix(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{

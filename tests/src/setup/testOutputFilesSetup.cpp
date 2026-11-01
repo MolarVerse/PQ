@@ -66,7 +66,7 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefix(PREFIX);
 
     EXPECT_NO_THROW(setup::setupOutputFiles(*_engine));
 
@@ -88,7 +88,7 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefix(PREFIX);
 
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
@@ -107,7 +107,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefix(PREFIX);
     settings::TimingsSettings::setTimeStep(0.5);
 
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -131,7 +131,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefix(PREFIX);
     _settings->outputFiles.setIncludeOutputMetadata(true);
     settings::TimingsSettings::setTimeStep(0.5);
 
@@ -158,7 +158,7 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(true);
-    OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefix(PREFIX);
 
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());

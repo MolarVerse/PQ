@@ -54,10 +54,9 @@ void OutputFileSettings::setOutputFrequency(size_t outputFreq)
  *
  * @param prefix
  */
-void OutputFileSettings::setFilePrefix(std::string_view prefix)
+void OutputFileSettings::setFilePrefix(const std::string &prefix)
 {
-    _filePrefixSet = true;
-    _filePrefix    = prefix;
+    _filePrefix.set(prefix);
 }
 
 /**
@@ -479,14 +478,17 @@ size_t OutputFileSettings::getOutputFrequency() const
  *
  * @return std::string
  */
-bool OutputFileSettings::isFilePrefixSet() { return _filePrefixSet; }
+bool OutputFileSettings::isFilePrefixSet() const { return _filePrefix.isSet(); }
 
 /**
  * @brief get the file prefix
  *
  * @return std::string
  */
-std::string OutputFileSettings::getFilePrefix() { return _filePrefix; }
+std::string OutputFileSettings::getFilePrefix() const
+{
+    return _filePrefix.get();
+}
 
 /**
  * @brief get the restart file name
