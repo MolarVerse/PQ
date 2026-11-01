@@ -34,6 +34,7 @@ namespace out
      * @brief Sets the filename of the output file
      *
      * @param filename
+     * @param overwriteOutputFiles
      *
      * @throw InputFileException if filename is empty
      * @throw InputFileException if file already exists

@@ -58,6 +58,7 @@ namespace out
      *
      * @param beads
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void RingPolymerTrajectoryOutput::writeXyz(
         const std::vector<molsys::SimulationBox> &beads,
@@ -103,6 +104,7 @@ namespace out
      *
      * @param beads
      * @param step
+     * @param includeMetadata
      */
     void RingPolymerTrajectoryOutput::writeVelocities(
         const std::vector<molsys::SimulationBox> &beads,
@@ -149,6 +151,7 @@ namespace out
      *
      * @param beads
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void RingPolymerTrajectoryOutput::writeForces(
         const std::vector<molsys::SimulationBox> &beads,
@@ -201,6 +204,7 @@ namespace out
      *
      * @param beads
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void RingPolymerTrajectoryOutput::writeCharges(
         const std::vector<molsys::SimulationBox> &beads,

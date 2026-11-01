@@ -58,6 +58,7 @@ namespace out
      *
      * @param simulationBox Simulation box containing molecules and atoms.
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeXyz(
         const molsys::SimulationBox &simulationBox,
@@ -93,6 +94,8 @@ namespace out
      * @param configurator Hybrid configurator containing the inner region
      * center.
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
+     *
      */
     void TrajectoryOutput::writeHybridCenterXyz(
         const configurator::HybridConfigurator &configurator,
@@ -127,6 +130,7 @@ namespace out
      *
      * @param simulationBox Simulation box containing molecules and atoms.
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeVelocities(
         const molsys::SimulationBox &simulationBox,
@@ -165,6 +169,7 @@ namespace out
      *
      * @param simulationBox Simulation box containing molecules and atoms.
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeForces(
         const molsys::SimulationBox &simulationBox,
@@ -207,6 +212,7 @@ namespace out
      *
      * @param simulationBox Simulation box containing molecules and atoms.
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeCharges(
         const molsys::SimulationBox &simulationBox,
