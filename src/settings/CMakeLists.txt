@@ -44,7 +44,7 @@ endif()
 
 target_compile_definitions(settings
     PUBLIC
-    _SCRIPT_PATH_=\"${CMAKE_CURRENT_BINARY_DIR}/scripts/\"
+    _SCRIPT_PATH_=\"${PROJECT_BINARY_DIR}/src/QM/scripts/\"
     _SINGULARITY_=\"${BUILD_WITH_SINGULARITY}\"
     _STATIC_BUILD_=\"${BUILD_STATIC}\"
 )

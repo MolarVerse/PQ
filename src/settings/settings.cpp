@@ -22,6 +22,7 @@
 
 #include "settings.hpp"
 
+#include "generalSettings.hpp"
 #include "resetKineticsSettings.hpp"
 
 /**
@@ -36,5 +37,6 @@ void Settings::finalize()
     if (rigidWaterGeometry.has_value())
         constraintSettings.activateShakeForWaterModel();
 
-    qmSettings.finalize();
+    if (settings::GeneralSettings::isQMActivated())
+        qmSettings.finalize();
 }
