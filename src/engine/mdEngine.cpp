@@ -69,13 +69,14 @@ namespace engine
 
         _setNSteps(settings::TimingsSettings::getNumberOfSteps());
         progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
+        const auto &outputFileSettings = getSettings().outputFiles;
 
         for (; getStep() <= _getNSteps(); _setStep(getStep() + 1))
         {
             bar.update();
             takeStep();
 
-            writeOutput(getSettings().outputFiles);
+            writeOutput(outputFileSettings);
             deleteTmpFiles();
         }
 
@@ -84,7 +85,9 @@ namespace engine
         const auto elapsedTime =
             timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
-        references::ReferencesOutput::writeReferencesFile();
+        references::ReferencesOutput::writeReferencesFile(
+            outputFileSettings.getRefFileName()
+        );
 
         getEngineOutput().writeTimingsFile();
 

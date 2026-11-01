@@ -30,6 +30,22 @@
 #include "defaults.hpp"
 
 /**
+ * @brief finalizes the output file settings by determining the file prefix
+ *        and replacing default file names with the appropriate prefixed names
+ */
+void OutputFileSettings::finalize()
+{
+    std::string prefix;
+
+    if (!isFilePrefixSet())
+        prefix = _determineMostCommonPrefix();
+    else
+        prefix = _filePrefix.get();
+
+    _replaceDefaultValues(prefix);
+}
+
+/**
  * @brief Sets the output frequency of the simulation
  *
  * @param outputFreq
@@ -54,7 +70,7 @@ void OutputFileSettings::setOutputFrequency(size_t outputFreq)
  *
  * @param prefix
  */
-void OutputFileSettings::setFilePrefix(const std::string &prefix)
+void OutputFileSettings::setFilePrefix(const std::string& prefix)
 {
     _filePrefix.set(prefix);
 }
@@ -64,84 +80,84 @@ void OutputFileSettings::setFilePrefix(const std::string &prefix)
  *
  * @param prefix
  */
-void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
+void OutputFileSettings::_replaceDefaultValues(const std::string& prefix)
 {
-    if (DefaultFiles::restartFile == _rstFile)
-        _rstFile = prefix + ".rst";
+    if (DefaultFiles::restartFile == _rstFile.get())
+        _rstFile.set(prefix + ".rst");
 
-    if (DefaultFiles::logFile == _logFile)
-        _logFile = prefix + ".log";
+    if (DefaultFiles::logFile == _logFile.get())
+        _logFile.set(prefix + ".log");
 
-    if (DefaultFiles::refFile == _refFile)
-        _refFile = prefix + ".ref";
+    if (DefaultFiles::refFile == _refFile.get())
+        _refFile.set(prefix + ".ref");
 
-    if (DefaultFiles::trajFile == _trajFile)
-        _trajFile = prefix + ".xyz";
+    if (DefaultFiles::trajFile == _trajFile.get())
+        _trajFile.set(prefix + ".xyz");
 
-    if (DefaultFiles::hybridCenterFile == _hybridCenterFile)
-        _hybridCenterFile = prefix + ".center.xyz";
+    if (DefaultFiles::hybridCenterFile == _hybridCenterFile.get())
+        _hybridCenterFile.set(prefix + ".center.xyz");
 
-    if (DefaultFiles::energyFile == _energyFile)
-        _energyFile = prefix + ".en";
+    if (DefaultFiles::energyFile == _energyFile.get())
+        _energyFile.set(prefix + ".en");
 
-    if (DefaultFiles::instEnFile == _instEnFile)
-        _instEnFile = prefix + ".instant_en";
+    if (DefaultFiles::instEnFile == _instEnFile.get())
+        _instEnFile.set(prefix + ".instant_en");
 
-    if (DefaultFiles::forceFile == _forceFile)
-        _forceFile = prefix + ".force";
+    if (DefaultFiles::forceFile == _forceFile.get())
+        _forceFile.set(prefix + ".force");
 
-    if (DefaultFiles::velFile == _velFile)
-        _velFile = prefix + ".vel";
+    if (DefaultFiles::velFile == _velFile.get())
+        _velFile.set(prefix + ".vel");
 
-    if (DefaultFiles::chargeFile == _chargeFile)
-        _chargeFile = prefix + ".chrg";
+    if (DefaultFiles::chargeFile == _chargeFile.get())
+        _chargeFile.set(prefix + ".chrg");
 
-    if (DefaultFiles::infoFile == _infoFile)
-        _infoFile = prefix + ".info";
+    if (DefaultFiles::infoFile == _infoFile.get())
+        _infoFile.set(prefix + ".info");
 
-    if (DefaultFiles::momentumFile == _momFile)
-        _momFile = prefix + ".mom";
+    if (DefaultFiles::momentumFile == _momFile.get())
+        _momFile.set(prefix + ".mom");
 
-    if (DefaultFiles::virialFile == _virialFile)
-        _virialFile = prefix + ".vir";
+    if (DefaultFiles::virialFile == _virialFile.get())
+        _virialFile.set(prefix + ".vir");
 
-    if (DefaultFiles::stressFile == _stressFile)
-        _stressFile = prefix + ".stress";
+    if (DefaultFiles::stressFile == _stressFile.get())
+        _stressFile.set(prefix + ".stress");
 
-    if (DefaultFiles::boxFile == _boxFile)
-        _boxFile = prefix + ".box";
+    if (DefaultFiles::boxFile == _boxFile.get())
+        _boxFile.set(prefix + ".box");
 
-    if (DefaultFiles::optFile == _optFile)
-        _optFile = prefix + ".opt";
+    if (DefaultFiles::optFile == _optFile.get())
+        _optFile.set(prefix + ".opt");
 
     /*****************************
      * ring polymer output files *
      *****************************/
 
-    if (DefaultFiles::rpmdRstFile == _rpmdRstFile)
-        _rpmdRstFile = prefix + ".rpmd.rst";
+    if (DefaultFiles::rpmdRstFile == _rpmdRstFile.get())
+        _rpmdRstFile.set(prefix + ".rpmd.rst");
 
-    if (DefaultFiles::rpmdTrajFile == _rpmdTrajFile)
-        _rpmdTrajFile = prefix + ".rpmd.xyz";
+    if (DefaultFiles::rpmdTrajFile == _rpmdTrajFile.get())
+        _rpmdTrajFile.set(prefix + ".rpmd.xyz");
 
-    if (DefaultFiles::rpmdVelFile == _rpmdVelFile)
-        _rpmdVelFile = prefix + ".rpmd.vel";
+    if (DefaultFiles::rpmdVelFile == _rpmdVelFile.get())
+        _rpmdVelFile.set(prefix + ".rpmd.vel");
 
-    if (DefaultFiles::rpmdForceFile == _rpmdForceFile)
-        _rpmdForceFile = prefix + ".rpmd.force";
+    if (DefaultFiles::rpmdForceFile == _rpmdForceFile.get())
+        _rpmdForceFile.set(prefix + ".rpmd.force");
 
-    if (DefaultFiles::rpmdChargeFile == _rpmdChargeFile)
-        _rpmdChargeFile = prefix + ".rpmd.chrg";
+    if (DefaultFiles::rpmdChargeFile == _rpmdChargeFile.get())
+        _rpmdChargeFile.set(prefix + ".rpmd.chrg");
 
-    if (DefaultFiles::rpmdEnergyFile == _rpmdEnergyFile)
-        _rpmdEnergyFile = prefix + ".rpmd.en";
+    if (DefaultFiles::rpmdEnergyFile == _rpmdEnergyFile.get())
+        _rpmdEnergyFile.set(prefix + ".rpmd.en");
 
     /********************
      * the timings file *
      ********************/
 
-    if (DefaultFiles::timingsFile == _timeFile)
-        _timeFile = prefix + ".timings";
+    if (DefaultFiles::timingsFile == _timeFile.get())
+        _timeFile.set(prefix + ".timings");
 }
 
 /**
@@ -149,22 +165,24 @@ void OutputFileSettings::replaceDefaultValues(const std::string &prefix)
  *
  * @return most common prefix
  */
-std::string OutputFileSettings::determineMostCommonPrefix()
+std::string OutputFileSettings::_determineMostCommonPrefix() const
 {
     std::vector<std::string> fileNames = {
-        _rstFile,        _logFile,      _trajFile,    _energyFile,
-        _instEnFile,     _forceFile,    _velFile,     _chargeFile,
-        _infoFile,       _momFile,
+        _rstFile.get(),       _logFile.get(),        _trajFile.get(),
+        _energyFile.get(),    _instEnFile.get(),     _forceFile.get(),
+        _velFile.get(),       _chargeFile.get(),     _infoFile.get(),
+        _momFile.get(),
 
-        _virialFile,     _stressFile,   _boxFile,     _optFile,
+        _virialFile.get(),    _stressFile.get(),     _boxFile.get(),
+        _optFile.get(),
 
-        _rpmdRstFile,    _rpmdTrajFile, _rpmdVelFile, _rpmdForceFile,
-        _rpmdChargeFile,
+        _rpmdRstFile.get(),   _rpmdTrajFile.get(),   _rpmdVelFile.get(),
+        _rpmdForceFile.get(), _rpmdChargeFile.get(),
 
-        _timeFile
+        _timeFile.get()
     };
 
-    auto removeEnding = [](std::string &fileName)
+    auto removeEnding = [](std::string& fileName)
     {
         const auto pos = fileName.find_first_of('.');
         if (pos != std::string::npos)
@@ -183,7 +201,7 @@ std::string OutputFileSettings::determineMostCommonPrefix()
     auto        count            = 0;
 
     auto getHighestOccurrence =
-        [&fileNames, &mostCommonPrefix, &count](const std::string &fileName)
+        [&fileNames, &mostCommonPrefix, &count](const std::string& fileName)
     {
         if (fileName == DefaultFiles::prefix)
             return;
@@ -213,9 +231,9 @@ std::string OutputFileSettings::determineMostCommonPrefix()
  *
  * @param name
  */
-void OutputFileSettings::setRestartFileName(std::string_view name)
+void OutputFileSettings::setRestartFileName(const std::string& name)
 {
-    _rstFile = name;
+    _rstFile.set(name);
 }
 
 /**
@@ -223,9 +241,9 @@ void OutputFileSettings::setRestartFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setEnergyFileName(std::string_view name)
+void OutputFileSettings::setEnergyFileName(const std::string& name)
 {
-    _energyFile = name;
+    _energyFile.set(name);
 }
 
 /**
@@ -233,18 +251,18 @@ void OutputFileSettings::setEnergyFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setInstantEnergyFileName(std::string_view name)
+void OutputFileSettings::setInstantEnergyFileName(const std::string& name)
 {
-    _instEnFile = name;
+    _instEnFile.set(name);
 }
 /**
  * @brief sets the momentum file name
  *
  * @param name
  */
-void OutputFileSettings::setMomentumFileName(std::string_view name)
+void OutputFileSettings::setMomentumFileName(const std::string& name)
 {
-    _momFile = name;
+    _momFile.set(name);
 }
 
 /**
@@ -252,9 +270,9 @@ void OutputFileSettings::setMomentumFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setTrajectoryFileName(std::string_view name)
+void OutputFileSettings::setTrajectoryFileName(const std::string& name)
 {
-    _trajFile = name;
+    _trajFile.set(name);
 }
 
 /**
@@ -262,9 +280,9 @@ void OutputFileSettings::setTrajectoryFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setHybridCenterFileName(std::string_view name)
+void OutputFileSettings::setHybridCenterFileName(const std::string& name)
 {
-    _hybridCenterFile = name;
+    _hybridCenterFile.set(name);
 }
 
 /**
@@ -272,9 +290,9 @@ void OutputFileSettings::setHybridCenterFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setVelocityFileName(std::string_view name)
+void OutputFileSettings::setVelocityFileName(const std::string& name)
 {
-    _velFile = name;
+    _velFile.set(name);
 }
 
 /**
@@ -282,9 +300,9 @@ void OutputFileSettings::setVelocityFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setForceFileName(std::string_view name)
+void OutputFileSettings::setForceFileName(const std::string& name)
 {
-    _forceFile = name;
+    _forceFile.set(name);
 }
 
 /**
@@ -292,9 +310,9 @@ void OutputFileSettings::setForceFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setChargeFileName(std::string_view name)
+void OutputFileSettings::setChargeFileName(const std::string& name)
 {
-    _chargeFile = name;
+    _chargeFile.set(name);
 }
 
 /**
@@ -302,9 +320,9 @@ void OutputFileSettings::setChargeFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setLogFileName(std::string_view name)
+void OutputFileSettings::setLogFileName(const std::string& name)
 {
-    _logFile = name;
+    _logFile.set(name);
 }
 
 /**
@@ -312,9 +330,9 @@ void OutputFileSettings::setLogFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRefFileName(std::string_view name)
+void OutputFileSettings::setRefFileName(const std::string& name)
 {
-    _refFile = name;
+    _refFile.set(name);
 }
 
 /**
@@ -322,9 +340,9 @@ void OutputFileSettings::setRefFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setInfoFileName(std::string_view name)
+void OutputFileSettings::setInfoFileName(const std::string& name)
 {
-    _infoFile = name;
+    _infoFile.set(name);
 }
 
 /**
@@ -332,9 +350,9 @@ void OutputFileSettings::setInfoFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setVirialFileName(std::string_view name)
+void OutputFileSettings::setVirialFileName(const std::string& name)
 {
-    _virialFile = name;
+    _virialFile.set(name);
 }
 
 /**
@@ -342,9 +360,9 @@ void OutputFileSettings::setVirialFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setStressFileName(std::string_view name)
+void OutputFileSettings::setStressFileName(const std::string& name)
 {
-    _stressFile = name;
+    _stressFile.set(name);
 }
 
 /**
@@ -352,9 +370,9 @@ void OutputFileSettings::setStressFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setBoxFileName(std::string_view name)
+void OutputFileSettings::setBoxFileName(const std::string& name)
 {
-    _boxFile = name;
+    _boxFile.set(name);
 }
 
 /**
@@ -362,9 +380,9 @@ void OutputFileSettings::setBoxFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setOptFileName(std::string_view name)
+void OutputFileSettings::setOptFileName(const std::string& name)
 {
-    _optFile = name;
+    _optFile.set(name);
 }
 
 /**
@@ -372,9 +390,9 @@ void OutputFileSettings::setOptFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerRestartFileName(std::string_view name)
+void OutputFileSettings::setRingPolymerRestartFileName(const std::string& name)
 {
-    _rpmdRstFile = name;
+    _rpmdRstFile.set(name);
 }
 
 /**
@@ -382,9 +400,11 @@ void OutputFileSettings::setRingPolymerRestartFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerTrajectoryFileName(std::string_view name)
+void OutputFileSettings::setRingPolymerTrajectoryFileName(
+    const std::string& name
+)
 {
-    _rpmdTrajFile = name;
+    _rpmdTrajFile.set(name);
 }
 
 /**
@@ -392,9 +412,9 @@ void OutputFileSettings::setRingPolymerTrajectoryFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerVelocityFileName(std::string_view name)
+void OutputFileSettings::setRingPolymerVelocityFileName(const std::string& name)
 {
-    _rpmdVelFile = name;
+    _rpmdVelFile.set(name);
 }
 
 /**
@@ -402,9 +422,9 @@ void OutputFileSettings::setRingPolymerVelocityFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerForceFileName(std::string_view name)
+void OutputFileSettings::setRingPolymerForceFileName(const std::string& name)
 {
-    _rpmdForceFile = name;
+    _rpmdForceFile.set(name);
 }
 
 /**
@@ -412,9 +432,9 @@ void OutputFileSettings::setRingPolymerForceFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerChargeFileName(std::string_view name)
+void OutputFileSettings::setRingPolymerChargeFileName(const std::string& name)
 {
-    _rpmdChargeFile = name;
+    _rpmdChargeFile.set(name);
 }
 
 /**
@@ -422,9 +442,9 @@ void OutputFileSettings::setRingPolymerChargeFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setRingPolymerEnergyFileName(std::string_view name)
+void OutputFileSettings::setRingPolymerEnergyFileName(const std::string& name)
 {
-    _rpmdEnergyFile = name;
+    _rpmdEnergyFile.set(name);
 }
 
 /**
@@ -432,9 +452,9 @@ void OutputFileSettings::setRingPolymerEnergyFileName(std::string_view name)
  *
  * @param name
  */
-void OutputFileSettings::setTimingsFileName(std::string_view name)
+void OutputFileSettings::setTimingsFileName(const std::string& name)
 {
-    _timeFile = name;
+    _timeFile.set(name);
 }
 
 /**
@@ -485,7 +505,7 @@ bool OutputFileSettings::isFilePrefixSet() const { return _filePrefix.isSet(); }
  *
  * @return std::string
  */
-std::string OutputFileSettings::getFilePrefix() const
+const std::string& OutputFileSettings::getFilePrefix() const
 {
     return _filePrefix.get();
 }
@@ -495,23 +515,29 @@ std::string OutputFileSettings::getFilePrefix() const
  *
  * @return std::string
  */
-std::string OutputFileSettings::getRestartFileName() { return _rstFile; }
+const std::string& OutputFileSettings::getRestartFileName() const
+{
+    return _rstFile.get();
+}
 
 /**
  * @brief get the energy file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getEnergyFileName() { return _energyFile; }
+const std::string& OutputFileSettings::getEnergyFileName() const
+{
+    return _energyFile.get();
+}
 
 /**
  * @brief get the instant energy file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getInstantEnergyFileName()
+const std::string& OutputFileSettings::getInstantEnergyFileName() const
 {
-    return _instEnFile;
+    return _instEnFile.get();
 }
 
 /**
@@ -519,23 +545,29 @@ std::string OutputFileSettings::getInstantEnergyFileName()
  *
  * @return std::string
  */
-std::string OutputFileSettings::getMomentumFileName() { return _momFile; }
+const std::string& OutputFileSettings::getMomentumFileName() const
+{
+    return _momFile.get();
+}
 
 /**
  * @brief get the trajectory file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getTrajectoryFileName() { return _trajFile; }
+const std::string& OutputFileSettings::getTrajectoryFileName() const
+{
+    return _trajFile.get();
+}
 
 /**
  * @brief get the hybrid center file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getHybridCenterFileName()
+const std::string& OutputFileSettings::getHybridCenterFileName() const
 {
-    return _hybridCenterFile;
+    return _hybridCenterFile.get();
 }
 
 /**
@@ -543,79 +575,109 @@ std::string OutputFileSettings::getHybridCenterFileName()
  *
  * @return std::string
  */
-std::string OutputFileSettings::getVelocityFileName() { return _velFile; }
+const std::string& OutputFileSettings::getVelocityFileName() const
+{
+    return _velFile.get();
+}
 
 /**
  * @brief get the force file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getForceFileName() { return _forceFile; }
+const std::string& OutputFileSettings::getForceFileName() const
+{
+    return _forceFile.get();
+}
 
 /**
  * @brief get the charge file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getChargeFileName() { return _chargeFile; }
+const std::string& OutputFileSettings::getChargeFileName() const
+{
+    return _chargeFile.get();
+}
 
 /**
  * @brief get the log file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getLogFileName() { return _logFile; }
+const std::string& OutputFileSettings::getLogFileName() const
+{
+    return _logFile.get();
+}
 
 /**
  * @brief get the ref file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getRefFileName() { return _refFile; }
+const std::string& OutputFileSettings::getRefFileName() const
+{
+    return _refFile.get();
+}
 
 /**
  * @brief get the info file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getInfoFileName() { return _infoFile; }
+const std::string& OutputFileSettings::getInfoFileName() const
+{
+    return _infoFile.get();
+}
 
 /**
  * @brief get the virial file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getVirialFileName() { return _virialFile; }
+const std::string& OutputFileSettings::getVirialFileName() const
+{
+    return _virialFile.get();
+}
 
 /**
  * @brief get the stress file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getStressFileName() { return _stressFile; }
+const std::string& OutputFileSettings::getStressFileName() const
+{
+    return _stressFile.get();
+}
 
 /**
  * @brief get the box file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getBoxFileName() { return _boxFile; }
+const std::string& OutputFileSettings::getBoxFileName() const
+{
+    return _boxFile.get();
+}
 
 /**
  * @brief get the optimization file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getOptFileName() { return _optFile; }
+const std::string& OutputFileSettings::getOptFileName() const
+{
+    return _optFile.get();
+}
 
 /**
  * @brief get the ring polymer restart file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getRPMDRestartFileName()
+const std::string& OutputFileSettings::getRPMDRestartFileName() const
 {
-    return _rpmdRstFile;
+    return _rpmdRstFile.get();
 }
 
 /**
@@ -623,16 +685,19 @@ std::string OutputFileSettings::getRPMDRestartFileName()
  *
  * @return std::string
  */
-std::string OutputFileSettings::getRPMDTrajFileName() { return _rpmdTrajFile; }
+const std::string& OutputFileSettings::getRPMDTrajFileName() const
+{
+    return _rpmdTrajFile.get();
+}
 
 /**
  * @brief get the ring polymer velocity file name
  *
  * @return std::string
  */
-std::string OutputFileSettings::getRPMDVelocityFileName()
+const std::string& OutputFileSettings::getRPMDVelocityFileName() const
 {
-    return _rpmdVelFile;
+    return _rpmdVelFile.get();
 }
 
 /**
@@ -640,9 +705,9 @@ std::string OutputFileSettings::getRPMDVelocityFileName()
  *
  * @return std::string
  */
-std::string OutputFileSettings::getRPMDForceFileName()
+const std::string& OutputFileSettings::getRPMDForceFileName() const
 {
-    return _rpmdForceFile;
+    return _rpmdForceFile.get();
 }
 
 /**
@@ -650,9 +715,9 @@ std::string OutputFileSettings::getRPMDForceFileName()
  *
  * @return std::string
  */
-std::string OutputFileSettings::getRPMDChargeFileName()
+const std::string& OutputFileSettings::getRPMDChargeFileName() const
 {
-    return _rpmdChargeFile;
+    return _rpmdChargeFile.get();
 }
 
 /**
@@ -660,9 +725,9 @@ std::string OutputFileSettings::getRPMDChargeFileName()
  *
  * @return std::string
  */
-std::string OutputFileSettings::getRPMDEnergyFileName()
+const std::string& OutputFileSettings::getRPMDEnergyFileName() const
 {
-    return _rpmdEnergyFile;
+    return _rpmdEnergyFile.get();
 }
 
 /**
@@ -670,7 +735,10 @@ std::string OutputFileSettings::getRPMDEnergyFileName()
  *
  * @return std::string
  */
-std::string OutputFileSettings::getTimingsFileName() { return _timeFile; }
+const std::string& OutputFileSettings::getTimingsFileName() const
+{
+    return _timeFile.get();
+}
 
 /**
  * @brief returns if existing output files will be overwritten

@@ -30,7 +30,6 @@
 #include <string>
 
 #include "executablePath.hpp"
-#include "outputFileSettings.hpp"
 #include "references.hpp"
 
 namespace references
@@ -98,10 +97,11 @@ namespace references
      * @brief writes the references file
      *
      */
-    void ReferencesOutput::writeReferencesFile()
+    void ReferencesOutput::writeReferencesFile(
+        const std::string &referenceFileName
+    )
     {
         const auto sourceDirectory = referenceFilesPath();
-        const auto filename        = OutputFileSettings::getRefFileName();
 
         std::ostringstream rendered;
 
@@ -115,8 +115,8 @@ namespace references
         rendered << text << '\n';
 
         renderReferenceFile(sourceDirectory / PQ_FILE, rendered);
-        for (const auto &referenceFileName : _referenceFileNames)
-            renderReferenceFile(sourceDirectory / referenceFileName, rendered);
+        for (const auto &refFileName : _referenceFileNames)
+            renderReferenceFile(sourceDirectory / refFileName, rendered);
 
         text = R"(
 ########################################################################
@@ -131,16 +131,16 @@ namespace references
             sourceDirectory / (static_cast<std::string>(PQ_FILE) + ".bib"),
             rendered
         );
-        for (const auto &referenceFileName : _bibtexFileNames)
-            renderReferenceFile(sourceDirectory / referenceFileName, rendered);
+        for (const auto &bibFileName : _bibtexFileNames)
+            renderReferenceFile(sourceDirectory / bibFileName, rendered);
 
-        std::ofstream output(filename);
+        std::ofstream output(referenceFileName);
         if (!output.is_open())
         {
             throw std::runtime_error(
                 std::format(
                     "Could not open reference output file \"{}\"",
-                    filename
+                    referenceFileName
                 )
             );
         }
@@ -152,7 +152,7 @@ namespace references
             throw std::runtime_error(
                 std::format(
                     "Could not write reference output file \"{}\"",
-                    filename
+                    referenceFileName
                 )
             );
         }

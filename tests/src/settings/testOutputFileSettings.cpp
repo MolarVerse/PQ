@@ -26,6 +26,24 @@
 
 #include "outputFileSettings.hpp"
 
+struct TestOutputFileSettings
+{
+    static std::string determineMostCommonPrefix(
+        const OutputFileSettings& settings
+    )
+    {
+        return settings._determineMostCommonPrefix();
+    }
+
+    static void replaceDefaultValues(
+        OutputFileSettings& settings,
+        const std::string&  prefix
+    )
+    {
+        settings._replaceDefaultValues(prefix);
+    }
+};
+
 /**
  * @brief tests setting output frequency
  *
@@ -55,16 +73,19 @@ TEST(TestOutputSettings, includeOutputMetadataDefaultsToFalse)
 TEST(TestOutputSettings, determinesMostCommonConfiguredPrefix)
 {
     OutputFileSettings settings;
-    OutputFileSettings::setRestartFileName("production.rst");
-    OutputFileSettings::setEnergyFileName("production.en");
-    OutputFileSettings::setTrajectoryFileName("production.xyz");
-    OutputFileSettings::setOptFileName("optimization.opt");
+    settings.setRestartFileName("production.rst");
+    settings.setEnergyFileName("production.en");
+    settings.setTrajectoryFileName("production.xyz");
+    settings.setOptFileName("optimization.opt");
     settings.setFilePrefix("production");
     settings.setOverwriteOutputFiles(true);
     settings.setOutputFrequency(5);
 
-    EXPECT_EQ(OutputFileSettings::determineMostCommonPrefix(), "production");
-    EXPECT_EQ(OutputFileSettings::getOptFileName(), "optimization.opt");
+    EXPECT_EQ(
+        TestOutputFileSettings::determineMostCommonPrefix(settings),
+        "production"
+    );
+    EXPECT_EQ(settings.getOptFileName(), "optimization.opt");
     EXPECT_EQ(settings.getFilePrefix(), "production");
     EXPECT_TRUE(settings.isFilePrefixSet());
     EXPECT_TRUE(settings.getOverwriteOutputFiles());
@@ -73,17 +94,16 @@ TEST(TestOutputSettings, determinesMostCommonConfiguredPrefix)
 
 TEST(TestOutputSettings, setsHybridCenterFilename)
 {
-    OutputFileSettings::setHybridCenterFileName("center.xyz");
-    EXPECT_EQ(OutputFileSettings::getHybridCenterFileName(), "center.xyz");
+    OutputFileSettings settings;
+    settings.setHybridCenterFileName("center.xyz");
+    EXPECT_EQ(settings.getHybridCenterFileName(), "center.xyz");
 }
 
 TEST(TestOutputSettings, replacesDefaultHybridCenterFilenameWithPrefix)
 {
-    OutputFileSettings::setHybridCenterFileName(DefaultFiles::hybridCenterFile);
-    OutputFileSettings::replaceDefaultValues("centerPrefix");
+    OutputFileSettings settings;
+    settings.setHybridCenterFileName(DefaultFiles::hybridCenterFile);
+    TestOutputFileSettings::replaceDefaultValues(settings, "centerPrefix");
 
-    EXPECT_EQ(
-        OutputFileSettings::getHybridCenterFileName(),
-        "centerPrefix.center.xyz"
-    );
+    EXPECT_EQ(settings.getHybridCenterFileName(), "centerPrefix.center.xyz");
 }

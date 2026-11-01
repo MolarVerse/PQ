@@ -67,16 +67,17 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefix(PREFIX);
+    _settings->finalize();
 
     EXPECT_NO_THROW(setup::setupOutputFiles(*_engine));
 
     // After setup, the log/timings/info filenames are now prefix-substituted.
     EXPECT_EQ(
-        OutputFileSettings::getLogFileName(),
+        _settings->outputFiles.getLogFileName(),
         std::string(PREFIX) + ".log"
     );
     EXPECT_EQ(
-        OutputFileSettings::getOptFileName(),
+        _settings->outputFiles.getOptFileName(),
         std::string(PREFIX) + ".opt"
     );
 
@@ -90,6 +91,7 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefix(PREFIX);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -110,6 +112,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     _settings->outputFiles.setFilePrefix(PREFIX);
     settings::TimingsSettings::setTimeStep(0.5);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -135,6 +138,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     _settings->outputFiles.setIncludeOutputMetadata(true);
     settings::TimingsSettings::setTimeStep(0.5);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -160,6 +164,7 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     settings::GeneralSettings::setIsRingPolymerMDActivated(true);
     _settings->outputFiles.setFilePrefix(PREFIX);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
