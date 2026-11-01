@@ -160,7 +160,7 @@ namespace input
                 );
             }
 
-            auto useThirdOrder = QMSettings::useThirdOrderDftb();
+            auto useThirdOrder = qmSettings.useThirdOrderDftb();
 
             if (qmSettings.getSlakosType() == SlakosType::THREEOB &&
                 !getKeywordSet("third_order"))

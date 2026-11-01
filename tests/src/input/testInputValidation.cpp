@@ -95,9 +95,7 @@ class TestInputValidation : public ::testing::Test
         _settings.qmSettings.setMaceModelType(MaceModelType::MACE_MP);
         _settings.qmSettings.setMaceModelPath("");
         _settings.qmSettings.setSlakosType(SlakosType::NONE);
-        QMSettings::setUseThirdOrderDftb(false);
-        QMSettings::setIsThirdOrderDftbSet(false);
-        QMSettings::setIsHubbardDerivsSet(false);
+        _settings.qmSettings.setUseThirdOrderDftb(false);
         _settings.qmSettings.setFennolModelPath("");
 
         _engine = std::make_unique<engine::OptEngine>(_settings);
@@ -473,7 +471,7 @@ TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
     _settings.qmSettings.setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setUseThirdOrderDftb(false);
+    _settings.qmSettings.setUseThirdOrderDftb(false);
     _setKeyword("slakos_path");
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
@@ -491,7 +489,7 @@ TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
     _settings.qmSettings.setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setUseThirdOrderDftb(true);
+    _settings.qmSettings.setUseThirdOrderDftb(true);
     _setKeyword("slakos_path");
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
@@ -505,7 +503,7 @@ TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
     _settings.qmSettings.setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(false);
+    _settings.qmSettings.setUseThirdOrderDftb(false);
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
 
@@ -522,7 +520,7 @@ TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
     _settings.qmSettings.setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(false);
+    _settings.qmSettings.setUseThirdOrderDftb(false);
     _setKeyword("hubbard_derivs");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));

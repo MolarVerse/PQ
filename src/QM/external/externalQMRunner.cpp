@@ -289,7 +289,7 @@ namespace QM
 
         forceFile.close();
 
-        if (QMSettings::getRemoveNetForce())
+        if (_getQMSettings().getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 
@@ -480,7 +480,7 @@ namespace QM
         auto       shell         = std::string("sh");
         auto       shellFlag     = std::string("-c");
         auto       commandString = std::string(command);
-        const auto timeLimit     = QMSettings::getQMLoopTimeLimit();
+        const auto timeLimit     = _getQMSettings().getQMLoopTimeLimit();
 
         const pid_t pid = ::fork();
         if (pid < 0)

@@ -64,26 +64,6 @@ namespace
 }   // namespace
 
 /**
- * @brief constructs a QMSettings object with default values for its members
- *
- * @details The QM method is initialized to ASE_XTB, the MACE model to MEDIUM,
- * the MACE model type to MACE_MP, and the MACE mode to ACCURATE.
- */
-QMSettings::QMSettings()
-    : _maceModel(MaceModel::MEDIUM),
-      _maceModelType(MaceModelType::MACE_MP),
-      _maceMode(MaceMode::ACCURATE),
-      _slakosType(SlakosType::NONE),
-      _xtbMethod(XtbMethod::GFN2),
-      _qmScript(""),
-      _qmScriptFullPath(""),
-      _maceModelPath(""),
-      _slakosPath(""),
-      _fennolModelPath("")
-{
-}
-
-/**
  * @brief finalizes the QMSettings object
  *
  * @details This function sets up the QM script based on the current settings.
@@ -92,6 +72,9 @@ void QMSettings::finalize()
 {
     if (isExternalQMRunner())
         _setupQMScript();
+
+    if (getQMMethod() == QMMethod::ASE_DFTBPLUS)
+        _setupQMMethodAseDftbPlus();
 }
 
 /**
@@ -291,16 +274,7 @@ void QMSettings::setSlakosPath(const std::string &path)
  */
 void QMSettings::setUseThirdOrderDftb(bool useThirdOrderDftb)
 {
-    _useThirdOrderDftb = useThirdOrderDftb;
-}
-
-/**
- * @brief sets if the third order is set
- *
- */
-void QMSettings::setIsThirdOrderDftbSet(bool isThirdOrderDftbSet)
-{
-    _isThirdOrderDftbSet = isThirdOrderDftbSet;
+    _useThirdOrderDftb.set(useThirdOrderDftb);
 }
 
 /**
@@ -311,16 +285,7 @@ void QMSettings::setHubbardDerivs(
     const std::unordered_map<std::string, double> &hubbardDerivs
 )
 {
-    _hubbardDerivs = hubbardDerivs;
-}
-
-/**
- * @brief sets if the Hubbard Derivative dictionary is set by the user
- *
- */
-void QMSettings::setIsHubbardDerivsSet(bool isHubbardDerivsSet)
-{
-    _isHubbardDerivsSet = isHubbardDerivsSet;
+    _hubbardDerivs.set(hubbardDerivs);
 }
 
 /**
@@ -329,7 +294,7 @@ void QMSettings::setIsHubbardDerivsSet(bool isHubbardDerivsSet)
  */
 void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
 {
-    _useDispersionCorrection = useDispersionCorr;
+    _useDispersionCorrection.set(useDispersionCorr);
 }
 
 /**
@@ -339,7 +304,7 @@ void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
  */
 void QMSettings::setRemoveNetForce(bool removeNetForce)
 {
-    _removeNetForce = removeNetForce;
+    _removeNetForce.set(removeNetForce);
 }
 
 /**
@@ -347,7 +312,7 @@ void QMSettings::setRemoveNetForce(bool removeNetForce)
  *
  * @param time
  */
-void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit = time; }
+void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit.set(time); }
 
 /**
  * @brief sets the FeNNol model path
@@ -365,7 +330,7 @@ void QMSettings::setFennolModelPath(const std::string &path)
  */
 void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
 {
-    _useGPUPreprocessing = useGPUPreprocessing;
+    _useGPUPreprocessing.set(useGPUPreprocessing);
 }
 
 /***************************
@@ -458,30 +423,33 @@ std::string QMSettings::getSlakosPath() const { return _slakosPath.get(); }
  *
  * @return bool
  */
-bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
+bool QMSettings::useThirdOrderDftb() const { return _useThirdOrderDftb.get(); }
 
 /**
  * @brief returns if the third order is set
  *
  * @return bool
  */
-bool QMSettings::isThirdOrderDftbSet() { return _isThirdOrderDftbSet; }
+bool QMSettings::isThirdOrderDftbSet() const
+{
+    return _useThirdOrderDftb.isSet();
+}
 
 /**
  * @brief returns if the Hubbard derivatives are set by the user
  *
  * @return bool
  */
-bool QMSettings::isHubbardDerivsSet() { return _isHubbardDerivsSet; }
+bool QMSettings::isHubbardDerivsSet() const { return _hubbardDerivs.isSet(); }
 
 /**
  * @brief returns the Hubbard Derivative dictionary
  *
  * @return std::unordered_map<std::string, double>
  */
-std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
+std::unordered_map<std::string, double> QMSettings::getHubbardDerivs() const
 {
-    return _hubbardDerivs;
+    return _hubbardDerivs.get();
 }
 
 /**
@@ -489,7 +457,10 @@ std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
  *
  * @return bool
  */
-bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
+bool QMSettings::useDispersionCorr() const
+{
+    return _useDispersionCorrection.get();
+}
 
 /**
  * @brief returns if the net force should be removed after reading in the QM
@@ -497,7 +468,7 @@ bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
  *
  * @return bool
  */
-bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
+bool QMSettings::getRemoveNetForce() const { return _removeNetForce.get(); }
 
 /**
  * @brief returns the xTBMethod
@@ -511,7 +482,7 @@ XtbMethod QMSettings::getXtbMethod() const { return _xtbMethod.get(); }
  *
  * @return double
  */
-double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
+double QMSettings::getQMLoopTimeLimit() const { return _qmLoopTimeLimit.get(); }
 
 /**
  * @brief returns the FeNNol model path
@@ -528,7 +499,10 @@ std::string QMSettings::getFennolModelPath() const
  *
  * @return bool
  */
-bool QMSettings::useGPUPreprocessing() { return _useGPUPreprocessing; }
+bool QMSettings::useGPUPreprocessing() const
+{
+    return _useGPUPreprocessing.get();
+}
 
 /**
  * @brief sets up the QM script for the external QM runner based on the
@@ -654,3 +628,13 @@ void QMSettings::setScriptPath(const std::string &scriptPath)
  * @return The path to the QM script.
  */
 std::string QMSettings::getScriptPath() const { return _scriptPath; }
+
+/**
+ * @brief setup the ASE DFTB+ method of the system
+ *
+ */
+void QMSettings::_setupQMMethodAseDftbPlus()
+{
+    if (getSlakosType() == SlakosType::THREEOB && !isThirdOrderDftbSet())
+        setUseThirdOrderDftb(true);
+}

@@ -227,11 +227,11 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 
     settings.qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
     settings.qmSettings.setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setIsThirdOrderDftbSet(false);
-    QMSettings::setUseThirdOrderDftb(false);
+    settings.qmSettings.setIsThirdOrderDftbSet(false);
+    settings.qmSettings.setUseThirdOrderDftb(false);
 
     setup::QMSetup::setupQMMethodAseDftbPlus(settings.qmSettings);
-    EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
+    EXPECT_EQ(settings.qmSettings.useThirdOrderDftb(), false);
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)

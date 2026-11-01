@@ -281,8 +281,11 @@ namespace QM
     {
         _setPeriodicity(per);
 
-        std::jthread timeoutThread{[](const std::stop_token &stopToken)
-                                   { throwAfterTimeout(stopToken); }};
+        std::jthread timeoutThread{
+            [](const std::stop_token &stopToken, double qmLoopTimeLimit)
+            { throwAfterTimeout(stopToken, qmLoopTimeLimit); },
+            _getQMSettings().getQMLoopTimeLimit()
+        };
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Build ASE Atoms");
@@ -378,7 +381,7 @@ namespace QM
             throw;
         }
 
-        if (QMSettings::getRemoveNetForce())
+        if (_getQMSettings().getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 

@@ -86,8 +86,6 @@ namespace setup
     {
         setupQMMethod(qmSettings);
 
-        setupQMMethodAseDftbPlus(qmSettings);
-
         setupQMMethodAseXtb(qmSettings);
 
         setupCoulombRadiusCutOff();
@@ -102,20 +100,6 @@ namespace setup
     void QMSetup::setupQMMethod(const QMSettings &qmSettings)
     {
         _qmCapableEngine.setQMRunner(qmSettings);
-    }
-
-    /**
-     * @brief setup the ASE DFTB+ method of the system
-     *
-     */
-    void QMSetup::setupQMMethodAseDftbPlus(const QMSettings &qmSettings)
-    {
-        if (!(qmSettings.getQMMethod() == QMMethod::ASE_DFTBPLUS))
-            return;
-
-        if (qmSettings.getSlakosType() == SlakosType::THREEOB &&
-            !QMSettings::isThirdOrderDftbSet())
-            QMSettings::setUseThirdOrderDftb(true);
     }
 
     /**
@@ -198,7 +182,7 @@ namespace setup
                 settings::GeneralSettings::getFloatingPointPybindString();
             const auto        maceMode = qmSettings.getMaceMode();
             const auto *const useDisp =
-                QMSettings::useDispersionCorr() ? "on" : "off";
+                qmSettings.useDispersionCorr() ? "on" : "off";
 
             const auto modelTypeMsg = std::format(
                 "Model type:            {}",
@@ -247,7 +231,7 @@ namespace setup
             using enum FPType;
 
             const auto modelPath           = qmSettings.getFennolModelPath();
-            const auto useGPUPreprocessing = QMSettings::useGPUPreprocessing();
+            const auto useGPUPreprocessing = qmSettings.useGPUPreprocessing();
             const bool useFloat64 =
                 settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 
@@ -269,10 +253,10 @@ namespace setup
         {
             const auto slakosType         = qmSettings.getSlakosType();
             const auto slakosPath         = qmSettings.getSlakosPath();
-            const auto thirdOrder         = QMSettings::useThirdOrderDftb();
-            const auto hubbardDerivs      = QMSettings::getHubbardDerivs();
-            const auto ishubbardDerivsSet = QMSettings::isHubbardDerivsSet();
-            const auto dispersion         = QMSettings::useDispersionCorr();
+            const auto thirdOrder         = qmSettings.useThirdOrderDftb();
+            const auto hubbardDerivs      = qmSettings.getHubbardDerivs();
+            const auto ishubbardDerivsSet = qmSettings.isHubbardDerivsSet();
+            const auto dispersion         = qmSettings.useDispersionCorr();
 
             const auto slakosTypeMsg = std::format(
                 "DFTB approach:        {}",
@@ -334,7 +318,7 @@ namespace setup
             logOutput.writeSetupInfo(xtbMethodMsg);
         }
 
-        const auto qm_loop_time_limit = QMSettings::getQMLoopTimeLimit();
+        const auto qm_loop_time_limit = qmSettings.getQMLoopTimeLimit();
 
         const auto qmLoopTimeLimitMsg = std::format(
             "QM looptime limit: {}",

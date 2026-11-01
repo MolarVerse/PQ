@@ -186,8 +186,8 @@ namespace input
             .description = "Specifies the time limit for the QM loop.",
         };
 
-        const auto setValue = [](double value)
-        { QMSettings::setQMLoopTimeLimit(value); };
+        const auto setValue = [this](double value)
+        { _qmSettings->setQMLoopTimeLimit(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -207,8 +207,8 @@ namespace input
             .description = "Specifies whether to use dispersion correction.",
         };
 
-        const auto setValue = [](bool value)
-        { QMSettings::setUseDispersionCorrection(value); };
+        const auto setValue = [this](bool value)
+        { _qmSettings->setUseDispersionCorrection(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -228,8 +228,8 @@ namespace input
             .description = "Specifies whether to remove the net force.",
         };
 
-        const auto setValue = [](bool value)
-        { QMSettings::setRemoveNetForce(value); };
+        const auto setValue = [this](bool value)
+        { _qmSettings->setRemoveNetForce(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -321,7 +321,7 @@ namespace input
                         SlakosType::THREEOB,
                         _resolveBuiltInSlakosPath
                     );
-                    QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
+                    _qmSettings->setHubbardDerivs(hubbardDerivMap3ob);
                     references::ReferencesOutput::addReferenceFile(
                         references::THREEOB_FILE
                     );
@@ -382,11 +382,8 @@ namespace input
             .description = "Specifies whether third order DFTB is used.",
         };
 
-        const auto setValue = [](bool value)
-        {
-            QMSettings::setUseThirdOrderDftb(value);
-            QMSettings::setIsThirdOrderDftbSet(true);
-        };
+        const auto setValue = [this](bool value)
+        { _qmSettings->setUseThirdOrderDftb(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -408,11 +405,8 @@ namespace input
         };
 
         const auto setValue =
-            [](const std::unordered_map<std::string, double> &value)
-        {
-            QMSettings::setHubbardDerivs(value);
-            QMSettings::setIsHubbardDerivsSet(true);
-        };
+            [this](const std::unordered_map<std::string, double> &value)
+        { _qmSettings->setHubbardDerivs(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::unordered_map<std::string, double>>{
@@ -476,8 +470,8 @@ namespace input
                 "Specifies whether GPU pre-processing is enabled for FeNNol.",
         };
 
-        const auto setValue = [](bool value)
-        { QMSettings::setUseGPUPreprocessing(value); };
+        const auto setValue = [this](bool value)
+        { _qmSettings->setUseGPUPreprocessing(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{

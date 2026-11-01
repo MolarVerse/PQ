@@ -100,7 +100,7 @@ namespace QM
         const auto modelType =
             MaceModelTypeMeta::toString(settings.getMaceModelType());
         const auto modelPath = settings.getMaceModelPath();
-        const auto useDFTD   = QMSettings::useDispersionCorr();
+        const auto useDFTD   = settings.useDispersionCorr();
         const auto fpType =
             settings::GeneralSettings::getFloatingPointPybindString();
         const auto useCueq = settings.getMaceMode() == MaceMode::FAST;
@@ -140,9 +140,9 @@ namespace QM
     {
 #ifdef WITH_ASE
         const auto slakosPath    = settings.getSlakosPath();
-        const auto useThirdOrder = QMSettings::useThirdOrderDftb();
-        const auto hubbardDerivs = QMSettings::getHubbardDerivs();
-        const auto dispersion    = QMSettings::useDispersionCorr();
+        const auto useThirdOrder = settings.useThirdOrderDftb();
+        const auto hubbardDerivs = settings.getHubbardDerivs();
+        const auto dispersion    = settings.useDispersionCorr();
 
         return std::make_unique<AseDftbRunner>(
             settings,
@@ -201,7 +201,7 @@ namespace QM
         using enum FPType;
 
         const auto modelPath        = settings.getFennolModelPath();
-        const auto gpuPreprocessing = QMSettings::useGPUPreprocessing();
+        const auto gpuPreprocessing = settings.useGPUPreprocessing();
         const bool useFloat64 =
             settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 

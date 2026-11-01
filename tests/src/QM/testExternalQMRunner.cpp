@@ -172,8 +172,6 @@ class ExternalQMRunnerTest : public testing::Test
 
     QMMethod    _qmMethod;
     JobType     _jobType;
-    bool        _removeNetForce;
-    double      _timeLimit;
     std::string _qmScript;
     std::string _dftbFile;
 
@@ -199,14 +197,12 @@ class ExternalQMRunnerTest : public testing::Test
         _qmSettings = std::make_unique<QMSettings>();
         _qmSettings->setQMMethod(QMMethod::DFTBPLUS);
 
-        _runner     = std::make_unique<ExternalQMRunnerHarness>(*_qmSettings);
-        _dftbRunner = std::make_unique<QM::DFTBPlusRunner>(*_qmSettings);
-        _jobType    = settings::GeneralSettings::getJobtype();
-        _removeNetForce = QMSettings::getRemoveNetForce();
-        _timeLimit      = QMSettings::getQMLoopTimeLimit();
-        _qmScript       = _qmSettings->getQMScript();
-        _dftbFile       = settings::FileSettings::getDFTBFileName();
-        _originalPath   = std::filesystem::current_path();
+        _runner       = std::make_unique<ExternalQMRunnerHarness>(*_qmSettings);
+        _dftbRunner   = std::make_unique<QM::DFTBPlusRunner>(*_qmSettings);
+        _jobType      = settings::GeneralSettings::getJobtype();
+        _qmScript     = _qmSettings->getQMScript();
+        _dftbFile     = settings::FileSettings::getDFTBFileName();
+        _originalPath = std::filesystem::current_path();
 
         const auto stamp =
             std::chrono::steady_clock::now().time_since_epoch().count();
@@ -216,8 +212,8 @@ class ExternalQMRunnerTest : public testing::Test
         std::filesystem::current_path(_workPath);
 
         _qmSettings->setQMMethod(QMMethod::DFTBPLUS);
-        QMSettings::setRemoveNetForce(false);
-        QMSettings::setQMLoopTimeLimit(0.0);
+        _qmSettings->setRemoveNetForce(false);
+        _qmSettings->setQMLoopTimeLimit(0.0);
         settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
         auto atom = std::make_shared<molsys::Atom>();
@@ -230,8 +226,6 @@ class ExternalQMRunnerTest : public testing::Test
 
     void TearDown() override
     {
-        QMSettings::setRemoveNetForce(_removeNetForce);
-        QMSettings::setQMLoopTimeLimit(_timeLimit);
         settings::FileSettings::setDFTBFileName(_dftbFile);
         settings::GeneralSettings::setJobtype(_jobType);
 
@@ -793,7 +787,7 @@ namespace
 
 TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)
 {
-    QMSettings::setQMLoopTimeLimit(1.0);
+    _qmSettings->setQMLoopTimeLimit(1.0);
 
     auto runner = SlowExternalQMRunner(*_qmSettings);
 

@@ -58,7 +58,10 @@ namespace QM
         explicit QMRunner(const QMSettings &qmSettings);
         virtual ~QMRunner() = default;
 
-        static void throwAfterTimeout(const std::stop_token &stopToken);
+        static void throwAfterTimeout(
+            const std::stop_token &stopToken,
+            double                 qmLoopTimeLimit
+        );
 
         void         run(molsys::SimulationBox &, physicalData::PhysicalData &);
         virtual void run(

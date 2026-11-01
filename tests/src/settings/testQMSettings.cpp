@@ -228,8 +228,9 @@ TEST(QMSettingsTest, SetFennolModelPath)
 
 TEST(QMSettingsTest, SetGPUPreprocessing)
 {
-    QMSettings::setUseGPUPreprocessing(false);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
-    QMSettings::setUseGPUPreprocessing(true);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    QMSettings settings;
+    settings.setUseGPUPreprocessing(false);
+    EXPECT_EQ(settings.useGPUPreprocessing(), false);
+    settings.setUseGPUPreprocessing(true);
+    EXPECT_EQ(settings.useGPUPreprocessing(), true);
 }

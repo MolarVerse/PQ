@@ -145,51 +145,50 @@ TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
     ASSERT_TRUE(funcMap.contains("qm_loop_time_limit"));
     const auto& parseFunc = funcMap.at("qm_loop_time_limit");
     parseFunc({"qm_loop_time_limit", "=", "10"}, 0);
-    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), 10);
+    EXPECT_EQ(settings.getQMLoopTimeLimit(), 10);
 
     _clearParser(parser);
 
     parseFunc({"qm_loop_time_limit", "=", "-1"}, 0);
-    EXPECT_EQ(QMSettings::getQMLoopTimeLimit(), -1);
+    EXPECT_EQ(settings.getQMLoopTimeLimit(), -1);
 }
 
 TEST_F(TestInputFileReader, parseDispersion)
 {
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
-
-    QMSettings           settings;
+    QMSettings settings;
+    EXPECT_FALSE(settings.useDispersionCorr());
     input::QMInputParser parser{true, settings};
     const auto           funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("dispersion"));
     const auto& parseFunc = funcMap.at("dispersion");
 
     parseFunc({"dispersion", "=", "true"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
+    EXPECT_TRUE(settings.useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "yes"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
+    EXPECT_TRUE(settings.useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::useDispersionCorr());
+    EXPECT_TRUE(settings.useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "false"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
+    EXPECT_FALSE(settings.useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "no"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
+    EXPECT_FALSE(settings.useDispersionCorr());
 
     _clearParser(parser);
 
     parseFunc({"dispersion", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::useDispersionCorr());
+    EXPECT_FALSE(settings.useDispersionCorr());
 
     _clearParser(parser);
 
@@ -203,41 +202,40 @@ TEST_F(TestInputFileReader, parseDispersion)
 
 TEST_F(TestInputFileReader, parseRemoveNetForce)
 {
-    EXPECT_FALSE(QMSettings::getRemoveNetForce());
-
-    QMSettings           settings;
+    QMSettings settings;
+    EXPECT_FALSE(settings.getRemoveNetForce());
     input::QMInputParser parser{true, settings};
     const auto           funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("remove_net_force"));
     const auto& parseFunc = funcMap.at("remove_net_force");
 
     parseFunc({"remove_net_force", "=", "true"}, 0);
-    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(settings.getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "yes"}, 0);
-    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(settings.getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::getRemoveNetForce());
+    EXPECT_TRUE(settings.getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "false"}, 0);
-    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(settings.getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "no"}, 0);
-    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(settings.getRemoveNetForce());
 
     _clearParser(parser);
 
     parseFunc({"remove_net_force", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::getRemoveNetForce());
+    EXPECT_FALSE(settings.getRemoveNetForce());
 
     _clearParser(parser);
 
@@ -477,7 +475,7 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
     slakosParseFunc({"slakos", "=", "3ob"}, 0);
     EXPECT_EQ(settings.getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(settings.useThirdOrderDftb());
 
     _clearParser(parser);
 
@@ -485,8 +483,8 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
     auto       parser2 = input::QMInputParser{true, settings2};
     slakosParseFunc({"slakos", "=", "3ob"}, 0);
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
-    EXPECT_EQ(settings.getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_EQ(settings2.getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(settings2.useThirdOrderDftb());
 }
 #endif
 
@@ -509,42 +507,41 @@ TEST_F(TestInputFileReader, parseSlakosPath)
 
 TEST_F(TestInputFileReader, parseThirdOrder)
 {
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
-
-    QMSettings           settings;
+    QMSettings settings;
+    EXPECT_FALSE(settings.useThirdOrderDftb());
     input::QMInputParser parser{true, settings};
     const auto           funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("third_order"));
     const auto& thirdOrderParseFunc = funcMap.at("third_order");
 
     thirdOrderParseFunc({"third_order", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(settings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "true"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "false"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(settings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "yes"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "no"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
-    EXPECT_TRUE(QMSettings::isThirdOrderDftbSet());
+    EXPECT_FALSE(settings.useThirdOrderDftb());
+    EXPECT_TRUE(settings.isThirdOrderDftbSet());
 
     _clearParser(parser);
 
@@ -566,7 +563,7 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
 
     hubbardDerivsParseFunc({"hubbard_derivs", "=", "H:1.0,He:2.0"}, 0);
 
-    const auto hubbardDerivs = QMSettings::getHubbardDerivs();
+    const auto hubbardDerivs = settings.getHubbardDerivs();
     EXPECT_EQ(hubbardDerivs.size(), 2);
     EXPECT_EQ(hubbardDerivs.at("H"), 1.0);
     EXPECT_EQ(hubbardDerivs.at("He"), 2.0);
@@ -664,14 +661,14 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
     ASSERT_TRUE(funcMap.contains("gpu_preprocessing"));
     const auto& gpuPreprocessingParseFunc = funcMap.at("gpu_preprocessing");
 
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(settings.useGPUPreprocessing(), true);
     gpuPreprocessingParseFunc({"GPU-Preprocessing", "=", "false"}, 0);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(settings.useGPUPreprocessing(), false);
 
     _clearParser(parser);
 
     gpuPreprocessingParseFunc({"gpu_preprocessing", "=", "on"}, 0);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(settings.useGPUPreprocessing(), true);
 
     _clearParser(parser);
 
@@ -690,6 +687,6 @@ TEST_F(TestInputFileReader, processFennolKeywords)
     EXPECT_EQ(_inputFileReader->getKeywordCount("fennol_model_path"), 1);
 
     _inputFileReader->process({"GPU-Preprocessing", "=", "off"});
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(_settings.qmSettings.useGPUPreprocessing(), false);
     EXPECT_EQ(_inputFileReader->getKeywordCount("gpu_preprocessing"), 1);
 }
