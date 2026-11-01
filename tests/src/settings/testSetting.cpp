@@ -263,6 +263,13 @@ namespace
             exc::SettingsException,
             "Setting value is not set and no default is available."
         );
+
+        const Setting<TypeParam, "LocalTag"> localSetting;
+        EXPECT_THROW_MSG(
+            static_cast<void>(localSetting.get()),
+            exc::SettingsException,
+            "LocalTag: Setting value is not set and no default is available."
+        );
     }
 
     TYPED_TEST(SettingTypedTest, getDoesNotThrowOnceValueIsSet)
