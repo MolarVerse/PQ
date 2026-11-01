@@ -30,7 +30,6 @@
 #include <format>
 #include <iostream>
 #include <memory>
-#include <numbers>
 #include <string>
 #include <vector>
 
@@ -97,10 +96,14 @@ int main()
 
     for (std::size_t molecule = 0; molecule < N_MOLECULES; ++molecule)
     {
+        const auto column = molecule % PER_SIDE;
+        const auto row    = (molecule / PER_SIDE) % PER_SIDE;
+        const auto layer  = molecule / (PER_SIDE * PER_SIDE);
+
         const linalg::Vec3D origin{
-            SPACING * static_cast<double>(molecule % PER_SIDE),
-            SPACING * static_cast<double>((molecule / PER_SIDE) % PER_SIDE),
-            SPACING * static_cast<double>(molecule / (PER_SIDE * PER_SIDE))
+            SPACING * static_cast<double>(column),
+            SPACING * static_cast<double>(row),
+            SPACING * static_cast<double>(layer)
         };
 
         auto water = molsys::Molecule();
