@@ -28,9 +28,11 @@
 #include <vector>
 
 #include "atom.hpp"
+#include "enums/hybrid.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "hybridSettings.hpp"
 #include "hybridSetup.hpp"
 #include "inputFileParser/hybridInputParser.hpp"
 #include "molecule.hpp"
@@ -349,4 +351,29 @@ TEST_F(TestSetup, hybridSetupRejectsMoltypeZeroWithReferenceEnergies)
         "Atoms with moltype \"0\" are not allowed when QM reference "
         "energies are set in the moldescriptor file."
     );
+}
+
+TEST_F(TestSetup, hybridSetupRejectsForceDistributionWithoutHotspot)
+{
+    const auto smoothing = settings::HybridSettings::getSmoothingMethod();
+    const auto forceDist = settings::HybridSettings::getQMForceDist();
+
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
+    settings::HybridSettings::setQMForceDist(QMForceDist::EQUAL);
+
+    EXPECT_THROW_MSG(
+        setup::HybridSetup::validateQMForceDistribution(),
+        exc::InputFileException,
+        "qm_force_distribution is only used with smoothing_method = hotspot"
+    );
+
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    EXPECT_NO_THROW(setup::HybridSetup::validateQMForceDistribution());
+
+    settings::HybridSettings::setQMForceDist(QMForceDist::NONE);
+    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
+    EXPECT_NO_THROW(setup::HybridSetup::validateQMForceDistribution());
+
+    settings::HybridSettings::setSmoothingMethod(smoothing);
+    settings::HybridSettings::setQMForceDist(forceDist);
 }

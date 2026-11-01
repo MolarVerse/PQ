@@ -75,6 +75,7 @@ namespace setup
         setupForcedOuterList();
         validateQMChargeSettings();
         validateQMReferenceEnergies();
+        validateQMForceDistribution();
         checkZoneRadii();
 
         setupWriteInfo();
@@ -304,6 +305,28 @@ namespace setup
             throw exc::InputFileException(
                 "Atoms with moltype \"0\" are not allowed when QM reference "
                 "energies are set in the moldescriptor file."
+            );
+        }
+    }
+
+    /**
+     * @brief Validate that a QM force distribution is only requested with
+     * hotspot smoothing
+     *
+     * @throws exc::InputFileException if qm_force_distribution is set and
+     * the smoothing method is not hotspot
+     */
+    void HybridSetup::validateQMForceDistribution()
+    {
+        const auto forceDist = settings::HybridSettings::getQMForceDist();
+        const auto smoothing = settings::HybridSettings::getSmoothingMethod();
+
+        if (forceDist != QMForceDist::NONE &&
+            smoothing != SmoothingMethod::HOTSPOT)
+        {
+            throw exc::InputFileException(
+                "qm_force_distribution is only used with smoothing_method = "
+                "hotspot"
             );
         }
     }

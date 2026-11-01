@@ -1,0 +1,1 @@
+- `qm_force_distribution` other than `none` is now rejected at setup unless `smoothing_method = hotspot`. Before, it was silently ignored.

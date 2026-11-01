@@ -2057,7 +2057,8 @@ With the ``qm_force_distribution`` keyword the user can specify how the missing 
 Each recipient QM molecule then distributes its received share to its atoms proportional to atom masses.
 
 .. Note::
-    This keyword is only relevant if the :ref:`smoothing_method <smoothingMethodKey>` keyword is set to ``hotspot``.
+    This keyword is only used if the :ref:`smoothing_method <smoothingMethodKey>` keyword is set to ``hotspot``. Any other value
+    together with a different smoothing method is rejected at setup.
 
 Possible options are:
 
