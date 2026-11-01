@@ -33,7 +33,7 @@
  * must see the definitions to be able to inline them (there is no LTO in a
  * default build). The definitions need the complete types of molsys::Box,
  * molsys::Molecule, ... which is why they are NOT part of potential.hpp or
- * potential.tpp.hpp: including this header from a public header would pull
+ * potential.tpp: including this header from a public header would pull
  * box.hpp into all of its dependents again.
  *
  * Only include this header from .cpp files. The instantiations that are needed

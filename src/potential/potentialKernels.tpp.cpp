@@ -20,4 +20,4 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "potentialKernels.tpp.hpp"
+#include "potentialKernels.tpp"

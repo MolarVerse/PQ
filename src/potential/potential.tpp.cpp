@@ -20,4 +20,4 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "potential.tpp.hpp"
+#include "potential.tpp"
