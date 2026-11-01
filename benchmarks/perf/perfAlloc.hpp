@@ -23,15 +23,24 @@
 #ifndef BENCHMARKS__PERF__PERF_ALLOC_HPP
 #define BENCHMARKS__PERF__PERF_ALLOC_HPP
 
-// Marks the start of the measured work for the allocation counter
-// (perfAllocCounter.cpp), which scripts/perf_gate.sh preloads. Without the
-// library the weak symbol is null and nothing happens.
-extern "C" void pq_perf_alloc_begin() __attribute__((weak));
+#include <dlfcn.h>
 
+// Marks the start of the measured work for the allocation counter
+// (allocCounter/perfAllocCounter.cpp), which scripts/perf_gate.sh preloads.
+// The function is looked up at run time: an undefined weak symbol would be
+// resolved to null at link time by some linkers (mold, which CI uses), so the
+// preloaded library would never be called. Without the library nothing
+// happens.
 inline void perfAllocBegin()
 {
-    if (pq_perf_alloc_begin != nullptr)
-        pq_perf_alloc_begin();
+    using Begin = void (*)();
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    const auto begin =
+        reinterpret_cast<Begin>(dlsym(RTLD_DEFAULT, "pq_perf_alloc_begin"));
+
+    if (begin != nullptr)
+        begin();
 }
 
 #endif   // BENCHMARKS__PERF__PERF_ALLOC_HPP

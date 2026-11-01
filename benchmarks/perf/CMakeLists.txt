@@ -55,6 +55,7 @@ foreach(perf_source ${perf_benchmarks})
 
     target_link_libraries(perf_${perf_name}
         PRIVATE
+        ${CMAKE_DL_LIBS}
         intraNonBonded
         forceField
         integrator
