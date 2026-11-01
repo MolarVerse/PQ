@@ -17,15 +17,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
-# ccache does not cache compiles that use a precompiled header unless it may
-# ignore the header's defines and __DATE__/__TIME__ (measured: about 65% of the
-# compiler calls of every build job were uncacheable, counter
-# could_not_use_precompiled_header, #732). The cost is that an object restored
-# from the cache keeps the compile date of the run that built it (printed in the
-# output header; nothing built by CI is shipped).
-env:
-  CCACHE_SLOPPINESS: pch_defines,time_macros
-
 jobs:
   changes:
     runs-on: ubuntu-24.04
@@ -54,9 +45,7 @@ jobs:
               - 'benchmarks/.clang-tidy'
               - 'scripts/clang_tidy.sh'
               - '.github/workflows/lint.yml'
-              - '.github/actions/upload-build-timings/**'
               - '.github/actions/setup-gcc/**'
-              - '.github/ci-metrics/summarise_build.py'
 
   lint:
     needs: changes
@@ -74,19 +63,11 @@ jobs:
       - name: Setup GCC
         uses: ./.github/actions/setup-gcc
         with:
-          packages: mold ninja-build clangd-20
+          packages: ninja-build clangd-20
 
       - name: Set clangd-20 as the default clangd
         run: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
         shell: bash
-
-      # The Debug build with tests and benchmarks needs more than the default
-      # 500 MB (it was at 662 MB, evicting entries, #745).
-      - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: lint
-          max-size: 1500MB
 
       - name: Cache Eigen source
         id: cache-eigen
@@ -116,51 +97,34 @@ jobs:
         run: python -m pip install clangd-tidy
         shell: bash
 
-      - name: Configure and build (generate compile_commands.json)
-        id: build
+      - name: Configure (generate compile_commands.json)
         run: |
           # Enable tests and both benchmark suites so their sources are part
-          # of the compile database and actually compile with their deps
-          # (googletest, google benchmark, the perf harness) — otherwise
-          # clangd-tidy has no compile command for a changed tests/ or
-          # benchmarks/ file and silently can't check it (issue #620).
+          # of the compile database (googletest, google benchmark, the perf
+          # harness deps) — otherwise clangd-tidy has no compile command for
+          # a changed tests/ or benchmarks/ file and silently can't check it
+          # (issue #620).
+          #
+          # No actual build is needed: FetchContent (Eigen) and the
+          # googletest/mstd submodules are already fetched/checked out, so
+          # their headers exist right after configure. The only reason this
+          # job used to run a full build was to materialize the
+          # precompiled-header (.gch) binaries that compile_commands.json
+          # would otherwise reference; CMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+          # keeps PCH out of the generated compile commands entirely, so
+          # clangd-tidy can re-parse every file from real headers without
+          # anything being built first (and without ci_build.yml's
+          # authoritative build/warnings gate being duplicated here).
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON \
             -DBUILD_WITH_NATIVE=Off \
             -DBUILD_WITH_TESTS=On \
             -DBUILD_WITH_BENCHMARKING=On \
             -DBUILD_WITH_PERF_BENCH=On \
             -DBUILD_WITH_DOCS=Off \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
-
-          # Best-effort build: this step only needs compile_commands.json to
-          # resolve real headers for clangd-tidy to re-parse (fetched deps
-          # like Eigen/googletest/google-benchmark, and any generated
-          # headers), not a fully successful build — ci_build.yml is the
-          # authoritative "the whole project builds warning-free" gate. Debug
-          # + -Werror is known to occasionally hit a GCC/Eigen
-          # -Wmaybe-uninitialized false positive inside inlined SSE
-          # intrinsics (e.g. src/constraints/mShake.cpp via Eigen's
-          # InnerProduct.h) unrelated to whatever this PR touches, so don't
-          # let that fail this job. `-k 0` keeps Ninja building past
-          # failures instead of stopping at the first one, to maximize how
-          # much of the compile database has real build output behind it.
-          status=0
-          cmake --build build --parallel "$(nproc)" -- -k 0 || {
-            status=$?
-            echo "::warning::Full project build had errors (see log) — continuing, since this job only needs a usable compile_commands.json and ci_build.yml is the build/warnings gate."
-          }
-          # read by the build-timings step below: a build with errors is partial
-          echo "status=$status" >> "$GITHUB_OUTPUT"
-
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: lint
-          job-id: ${{ job.check_run_id }}
-          build-status: ${{ steps.build.outputs.status == '0' && 'success' || 'failure' }}
 
       - name: Run clangd-tidy on changed files
         run: |
