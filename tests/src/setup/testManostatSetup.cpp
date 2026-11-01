@@ -94,7 +94,7 @@ namespace
         }
 
         out::LogOutput logOutput(fileName);
-        logOutput.setFilename(fileName);
+        logOutput.setFilename(fileName, false);
         std::forward<Writer>(writer)(logOutput);
         logOutput.close();
 
@@ -404,7 +404,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
     {
         _settings->manostatSettings.setManostatType(type);
         auto &log = _mdEngine->getLogOutput();
-        log.setFilename("atomic-virial-warning.log");
+        log.setFilename("atomic-virial-warning.log", false);
         setup::ManostatSetup setup(*_mdEngine);
         testing::internal::CaptureStdout();
         EXPECT_NO_THROW(setup.setup());
@@ -615,7 +615,7 @@ TEST_F(TestSetup, setupWritesSelectionParametersAndIsotropyInOrder)
         // which we ignore here.
         const auto _   = std::remove(fileName.c_str());
         auto      &log = _mdEngine->getLogOutput();
-        log.setFilename(fileName);
+        log.setFilename(fileName, false);
 
         setup::ManostatSetup setup(*_mdEngine);
         testing::internal::CaptureStdout();

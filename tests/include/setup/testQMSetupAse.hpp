@@ -46,7 +46,10 @@ class TestQMSetupAse : public ::testing::Test
     {
         _engine  = std::make_unique<engine::QMMDEngine>(_settings);
         _qmSetup = std::make_unique<setup::QMSetup>(*_engine);
-        _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+        _engine->getEngineOutput().getLogOutput().setFilename(
+            "default.log",
+            false
+        );
         settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     }
 

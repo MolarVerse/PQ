@@ -47,7 +47,7 @@ namespace engine
             _averageRingPolymerBeadsPhysicalData;
 
        public:
-        void writeOutput() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
 
         void resizeRingPolymerBeadPhysicalData(size_t numberOfBeads);
 

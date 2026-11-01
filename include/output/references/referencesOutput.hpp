@@ -49,7 +49,7 @@ namespace references
 #endif
 
        public:
-        static void writeReferencesFile();
+        static void writeReferencesFile(const std::string &referenceFileName);
 
         static void addReferenceFile(const std::string &referenceFileName);
     };

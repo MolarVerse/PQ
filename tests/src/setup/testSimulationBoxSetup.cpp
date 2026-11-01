@@ -528,7 +528,7 @@ TEST_F(TestSetup, testFullSetup)
 
 TEST_F(TestSetup, testWriteSetupInfo)
 {
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     auto &simBox = _engine->getSimulationBox();
 
     const auto atom1 = std::make_shared<::molsys::Atom>();
@@ -593,7 +593,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
 {
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     _settings->simulationBoxSettings.setInitializeVelocities(
         InitVelocities::TRUE
     );
@@ -622,7 +622,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
 {
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
 
     _settings->simulationBoxSettings.setInitializeVelocities(
         InitVelocities::TRUE
@@ -648,7 +648,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
 {
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
 
     _settings->simulationBoxSettings.setInitializeVelocities(
         InitVelocities::FORCE
