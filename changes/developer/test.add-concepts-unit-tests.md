@@ -1,0 +1,1 @@
+- Add unit tests for the `concepts` module (`base.hpp`, `innerType.hpp`), which previously had no `tests/src/concepts` target; this also gives clangd-tidy a real compile command for these headers so it stops inferring flags from an unrelated external source file.
