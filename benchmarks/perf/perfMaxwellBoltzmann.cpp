@@ -36,6 +36,7 @@
 
 #include "generalSettings.hpp"
 #include "maxwellBoltzmann.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "thermostatSettings.hpp"
 
@@ -50,6 +51,8 @@ int main()
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto maxwellBoltzmann = maxwellBoltzmann::MaxwellBoltzmann();
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

@@ -46,6 +46,7 @@
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "perfAlloc.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -164,6 +165,8 @@ int main()
     cellList.updateCellList(simBox);
 
     auto physicalData = physicalData::PhysicalData();
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

@@ -39,6 +39,7 @@
 #endif
 
 #include "generalSettings.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
@@ -63,6 +64,8 @@ int main()
     manostatSettings.setCompressibility(4.6e-5);
     manostatSettings.finalize();
     auto manostat = manostat::StochasticRescalingManostat(manostatSettings);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

@@ -34,12 +34,15 @@
 #endif
 
 #include "coulombReactionField.hpp"
+#include "perfAlloc.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
     const auto reactionField = pot::CoulombReactionField(9.0, 78.0);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

@@ -39,6 +39,7 @@
 #include "bondForceField.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "dihedralForceField.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
@@ -89,6 +90,8 @@ int main()
         DihedralParams{.forceConstant = 3.0, .frequency = 3, .phaseShift = M_PI}
     );
     dihedral.setIsLinker(false);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

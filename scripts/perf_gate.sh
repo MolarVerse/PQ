@@ -8,6 +8,13 @@
 # is not flaky like wall-clock timing. Each benchmark zeroes the counter after
 # setup (CALLGRIND_ZERO_STATS), so the count is pure loop work.
 #
+# Besides the instruction count, every benchmark is run once more, outside
+# valgrind, with libperf_alloc_counter.so preloaded (benchmarks/perf): it
+# reports the heap allocations between the benchmark's perfAllocBegin() and its
+# end. Allocation counts are exact; a rise beyond PERF_ALLOC_THRESHOLD_PERCENT
+# (default 2, and any rise from 0) fails like an instruction count regression.
+# Without the library, or for a binary that has no marker, nothing is compared.
+#
 # Writes a markdown report (headline + collapsible per-benchmark table) to
 # $PERF_REPORT_FILE (default perf_report.md) and, if set, appends it to
 # $GITHUB_STEP_SUMMARY. Exits non-zero if any benchmark regressed past the
@@ -30,6 +37,8 @@ THRESHOLD="${3:-2}"
 # An improvement at least this large is flagged: a benchmark that silently
 # stopped doing its work also looks like a big speed-up. Never fails the check.
 LARGE_DROP="${PERF_LARGE_DROP_PERCENT:-30}"
+ALLOC_LIB="${PERF_ALLOC_LIB:-$PR_DIR/libperf_alloc_counter.so}"
+ALLOC_THRESHOLD="${PERF_ALLOC_THRESHOLD_PERCENT:-2}"
 REPORT="${PERF_REPORT_FILE:-perf_report.md}"
 BASE_IR_FILE="${PERF_BASE_IR_FILE:-}"
 
@@ -37,14 +46,18 @@ BASE_IR_FILE="${PERF_BASE_IR_FILE:-}"
 # "<benchmark name>\t<integer>" line per benchmark. Strict parse: any line
 # that doesn't match is ignored.
 declare -A base_ir_cache
+declare -A base_alloc_cache
 if [ -n "$BASE_IR_FILE" ] && [ -s "$BASE_IR_FILE" ]; then
-    while IFS=$'\t' read -r cached_name cached_ir; do
+    while IFS=$'\t' read -r cached_name cached_ir cached_alloc; do
         [[ "$cached_ir" =~ ^[0-9]+$ ]] || continue
         base_ir_cache["$cached_name"]="$cached_ir"
+        [[ "${cached_alloc:-}" =~ ^[0-9]+$ ]] &&
+            base_alloc_cache["$cached_name"]="$cached_alloc"
     done < "$BASE_IR_FILE"
 fi
 # Collect freshly-known base counts (cached + measured) for write-back.
 declare -A base_ir_fresh
+declare -A base_alloc_fresh
 
 # run a binary under callgrind and echo its instruction count (Ir)
 # Prints nothing if the benchmark exits non-zero or no count was reported, so
@@ -65,7 +78,46 @@ fmt() {   # raw instruction count -> "x.xxM"
     awk -v n="$1" 'BEGIN{ printf "%.2fM", n/1e6 }'
 }
 
+# Heap allocations of the measured loop of a benchmark (empty if the library is
+# missing, the benchmark has no marker or exits non-zero).
+measure_allocs() {
+    local log rc
+    [ -f "$ALLOC_LIB" ] || return 0
+    log="$(mktemp)"
+    LD_PRELOAD="$ALLOC_LIB" "$1" >/dev/null 2>"$log"
+    rc=$?
+    if [ "$rc" -eq 0 ]; then
+        awk '$1 == "PQ_PERF_ALLOCS" && $2 ~ /^[0-9]+$/ { n = $2 } END { if (n != "") print n }' "$log"
+    fi
+    rm -f "$log"
+}
+
 status=0
+alloc_rows=""
+alloc_regressed=""
+
+# <name> <base allocations or empty> <PR allocations or empty>
+add_alloc_row() {
+    local name="$1" base="${2:-}" pr="${3:-}" verdict emoji delta
+    [[ "$pr" =~ ^[0-9]+$ ]] || return 0
+    if ! [[ "$base" =~ ^[0-9]+$ ]]; then
+        alloc_rows+="| \`$name\` | – | $pr | – | |"$'\n'
+        return 0
+    fi
+    verdict="$(awk -v p="$pr" -v b="$base" -v t="$ALLOC_THRESHOLD" \
+        'BEGIN{ if ((b==0 && p>0) || (b>0 && p>b*(1+t/100))) print "regress";
+                else if (p<b) print "improve"; else print "ok" }')"
+    delta="$(awk -v p="$pr" -v b="$base" \
+        'BEGIN{ if (b==0) printf "%+d", p-b; else printf "%+.2f%%", (p-b)/b*100 }')"
+    case "$verdict" in
+        regress) emoji="❌"; status=1; alloc_regressed+="\`$name\` $base to $pr "
+                 echo "::error::$name allocates more: $base to $pr (threshold ${ALLOC_THRESHOLD}%)" ;;
+        improve) emoji="🎉" ;;
+        *)       emoji="✅" ;;
+    esac
+    alloc_rows+="| \`$name\` | $base | $pr | $delta | $emoji |"$'\n'
+}
+
 rows=""
 regressed=""
 improved=""
@@ -90,22 +142,30 @@ for pr_bin in "$PR_DIR"/perf_*; do
         continue
     fi
     pr_ir_all["$name"]="$pr_ir"
+    pr_alloc="$(measure_allocs "$pr_bin")"
+    base_alloc=""
 
     if [ -n "${base_ir_cache[$name]:-}" ]; then
         base_ir="${base_ir_cache[$name]}"
+        base_alloc="${base_alloc_cache[$name]:-}"
     elif [ -x "$base_bin" ]; then
         base_ir="$(measure "$base_bin")"
         if ! [[ "$base_ir" =~ ^[0-9]+$ ]]; then
             echo "::warning::$name: the base binary gave no instruction count - not compared"
             rows+="| \`$name\` | – | $(fmt "$pr_ir") | base: no count | ⚠️ |"$'\n'
+            add_alloc_row "$name" "" "$pr_alloc"
             continue
         fi
+        base_alloc="$(measure_allocs "$base_bin")"
     else
         echo "$name: new benchmark (no baseline) - pr Ir=$pr_ir"
         rows+="| \`$name\` | – | $(fmt "$pr_ir") | new | ➕ |"$'\n'
+        add_alloc_row "$name" "" "$pr_alloc"
         continue
     fi
     base_ir_fresh["$name"]="$base_ir"
+    base_alloc_fresh["$name"]="$base_alloc"
+    add_alloc_row "$name" "$base_alloc" "$pr_alloc"
     pct="$(awk -v p="$pr_ir" -v b="$base_ir" \
         'BEGIN{ if (b==0) print "0.00"; else printf "%+.2f", (p-b)/b*100 }')"
     verdict="$(awk -v p="$pr_ir" -v b="$base_ir" -v t="$THRESHOLD" \
@@ -179,6 +239,9 @@ if [ -n "$unmeasured" ]; then
 elif [ -n "$regressed" ]; then
     headline="❌ regression: $regressed"
     details_open=" open"
+elif [ -n "$alloc_regressed" ]; then
+    headline="❌ more heap allocations: $alloc_regressed"
+    details_open=" open"
 elif [ -n "$large_drops" ]; then
     headline="⚠️ large drop, check that the benchmark still does its work: $large_drops"
     details_open=" open"
@@ -207,6 +270,14 @@ fi
         echo "|---|---|---|---|"
         printf '%s' "$scaling_rows"
     fi
+    if [ -n "$alloc_rows" ]; then
+        echo ""
+        echo "Heap allocations in the measured loop (exact, independent of the CPU):"
+        echo ""
+        echo "| benchmark | base | PR | Δ | |"
+        echo "|---|---|---|---|---|"
+        printf '%s' "$alloc_rows"
+    fi
     echo "</details>"
     echo ""
     echo "<sub><em>Deterministic callgrind instruction counts vs the base branch; gated at ±${THRESHOLD}%. Not wall-clock.</em></sub>"
@@ -222,7 +293,8 @@ fi
 if [ -n "$BASE_IR_FILE" ] && [ "${#base_ir_fresh[@]}" -gt 0 ]; then
     : > "$BASE_IR_FILE"
     for name in "${!base_ir_fresh[@]}"; do
-        printf '%s\t%s\n' "$name" "${base_ir_fresh[$name]}" >> "$BASE_IR_FILE"
+        printf '%s\t%s\t%s\n' "$name" "${base_ir_fresh[$name]}" \
+            "${base_alloc_fresh[$name]:-}" >> "$BASE_IR_FILE"
     done
 fi
 

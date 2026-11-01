@@ -34,6 +34,7 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
+#include "perfAlloc.hpp"
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
@@ -50,6 +51,8 @@ int main()
         linalg::Vec3D{0.3, 3.0, 0.1},
         linalg::Vec3D{0.2, 0.1, 4.0}
     };
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

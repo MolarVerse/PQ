@@ -35,6 +35,7 @@
 #endif
 
 #include "orthorhombicBox.hpp"
+#include "perfAlloc.hpp"
 #include "triclinicBox.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
@@ -47,6 +48,8 @@ int main()
 
     auto triclinic =
         molsys::TriclinicBox({20.0, 20.0, 20.0}, {80.0, 90.0, 100.0}, false);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

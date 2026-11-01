@@ -34,6 +34,7 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "resetKinetics.hpp"
@@ -64,6 +65,8 @@ int main()
     settings.setFResetAngular(1);
     settings.setFResetForces(1);
     const auto resetKinetics = resetKinetics::ResetKinetics(settings);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

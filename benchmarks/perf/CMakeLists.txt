@@ -88,6 +88,13 @@ foreach(perf_source ${perf_benchmarks})
     list(APPEND perf_targets perf_${perf_name})
 endforeach()
 
+# allocation counter: preloaded by scripts/perf_gate.sh in a plain run of every
+# benchmark (not linked into them). Linux/glibc only.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    add_library(perf_alloc_counter SHARED perfAllocCounter.cpp)
+    list(APPEND perf_targets perf_alloc_counter)
+endif()
+
 # aggregate target so CI can build every benchmark with one command
 add_custom_target(perf_benchmarks)
 add_dependencies(perf_benchmarks ${perf_targets})

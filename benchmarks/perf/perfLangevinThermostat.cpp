@@ -36,6 +36,7 @@
 
 #include "generalSettings.hpp"
 #include "langevinThermostat.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "timingsSettings.hpp"
@@ -54,6 +55,8 @@ int main()
     constexpr double targetTemperature = 300.0;
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     auto thermostat = thermostat::LangevinThermostat(targetTemperature, 1.0);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

@@ -37,6 +37,7 @@
 #include <vector>
 
 #include "noseHooverThermostat.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "timingsSettings.hpp"
@@ -58,6 +59,8 @@ int main()
         std::vector<double>{0.0, 0.0, 0.0},
         1.0
     );
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
