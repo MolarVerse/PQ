@@ -14,9 +14,17 @@ from pathlib import Path
 SCRIPT = Path(__file__).resolve().parents[1] / "perf_gate.sh"
 
 FAKE_VALGRIND = """#!/bin/bash
-bin="${@: -1}"
+bin="$(readlink -f "${@: -1}")"
+echo "$@ HOME=${HOME-unset}" > "$bin.call"
 if [ -e "$bin.fail" ]; then exit 3; fi
 if [ -e "$bin.ir" ]; then echo "==1== I   refs:      $(cat "$bin.ir")" >&2; fi
+if [ -e "$bin.sim" ]; then
+    read -r d1 ll br < "$bin.sim"
+    echo "==1== D1  misses:        $d1  (    1 rd +     1 wr)" >&2
+    echo "==1== LLd misses:        7  (    1 rd +     1 wr)" >&2
+    echo "==1== LL misses:         $ll  (    1 rd +     1 wr)" >&2
+    echo "==1== Mispredicts:       $br  (    1 cond +     1 ind)" >&2
+fi
 exit 0
 """
 
@@ -33,7 +41,7 @@ class PerfGateTest(unittest.TestCase):
         valgrind.write_text(FAKE_VALGRIND)
         valgrind.chmod(valgrind.stat().st_mode | stat.S_IEXEC)
 
-    def bench(self, directory, name, ir=None, fail=False, allocs=None):
+    def bench(self, directory, name, ir=None, fail=False, allocs=None, sim=None):
         path = directory / f"perf_{name}"
         path.write_text('#!/bin/bash\n[ -e "$0.allocs" ] && echo "PQ_PERF_ALLOCS $(cat "$0.allocs") 0" >&2\nexit 0\n')
         path.chmod(path.stat().st_mode | stat.S_IEXEC)
@@ -43,6 +51,8 @@ class PerfGateTest(unittest.TestCase):
             Path(f"{path}.fail").write_text("")
         if allocs is not None:
             Path(f"{path}.allocs").write_text(str(allocs))
+        if sim is not None:
+            Path(f"{path}.sim").write_text(sim)
 
     def with_alloc_library(self):
         (self.pr / "libperf_alloc_counter.so").write_text("")
@@ -247,7 +257,7 @@ class PerfGateTest(unittest.TestCase):
         )
         self.assertEqual(1, result.returncode)
         self.assertIn("| `a` | 10 | 30 | +200.00% | ❌ |", report)
-        self.assertEqual("a\t1000000\t10\n", cache.read_text())
+        self.assertEqual("a\t1000000\t10\t-\t-\t-\n", cache.read_text())
 
     def test_a_cache_from_before_the_allocation_column_still_works(self):
         self.with_alloc_library()
@@ -266,6 +276,68 @@ class PerfGateTest(unittest.TestCase):
         self.bench(self.base, "a", 1_000_000, allocs=1000)
         result, _ = self.run_gate(env_extra={"PERF_ALLOC_THRESHOLD_PERCENT": "0.5"})
         self.assertEqual(1, result.returncode)
+
+
+    def sim_case(self, base_sim, pr_sim):
+        self.bench(self.pr, "a", 1_000_000, sim=pr_sim)
+        self.bench(self.base, "a", 1_000_000, sim=base_sim)
+        return self.run_gate()
+
+    def test_simulated_counts_are_reported_with_the_change(self):
+        result, report = self.sim_case("100000 20000 5000", "110000 20000 5500")
+        self.assertEqual(0, result.returncode)
+        self.assertIn("Simulated cache and branch behaviour", report)
+        self.assertIn("| `a` | 110000 (+10.0%) | 20000 (+0.0%) | 5500 (+10.0%) | ⚠️ |", report)
+
+    def test_a_small_simulated_change_is_not_flagged(self):
+        _, report = self.sim_case("100000 20000 5000", "101000 20000 5000")
+        self.assertIn("| `a` | 101000 (+1.0%) | 20000 (+0.0%) | 5000 (+0.0%) |  |", report)
+
+    def test_a_big_change_of_few_events_is_not_flagged(self):
+        _, report = self.sim_case("100 20 50", "300 20 50")
+        self.assertIn("| `a` | 300 (+200.0%) | 20 (+0.0%) | 50 (+0.0%) |  |", report)
+
+    def test_simulated_changes_never_fail_the_check(self):
+        result, _ = self.sim_case("100000 20000 5000", "900000 90000 50000")
+        self.assertEqual(0, result.returncode)
+
+    def test_no_simulation_table_without_simulated_counts(self):
+        self.bench(self.pr, "a", 1_000_000)
+        self.bench(self.base, "a", 1_000_000)
+        _, report = self.run_gate()
+        self.assertNotIn("Simulated cache", report)
+
+    def test_a_new_benchmark_shows_its_simulated_counts_without_a_change(self):
+        self.bench(self.pr, "a", 1_000_000, sim="100000 20000 5000")
+        _, report = self.run_gate()
+        self.assertIn("| `a` | 100000 (–) | 20000 (–) | 5000 (–) |  |", report)
+
+    def test_valgrind_gets_the_simulation_options_a_fixed_path_and_an_empty_environment(self):
+        self.bench(self.pr, "a", 1_000_000, sim="1 1 1")
+        self.bench(self.base, "a", 1_000_000, sim="1 1 1")
+        self.run_gate()
+        for directory in (self.pr, self.base):
+            call = Path(f"{directory / 'perf_a'}.call").read_text()
+            for option in ("--tool=callgrind", "--cache-sim=yes", "--branch-sim=yes", "--D1=32768,8,64", "--LL=8388608,16,64"):
+                self.assertIn(option, call)
+            self.assertRegex(call, r"/b HOME=unset\n$")
+
+    def test_the_binary_is_run_through_a_path_of_the_same_length_for_base_and_pr(self):
+        self.bench(self.pr, "a", 1_000_000)
+        self.bench(self.base, "a", 1_000_000)
+        self.run_gate()
+        paths = [Path(f"{d / 'perf_a'}.call").read_text().split()[-2] for d in (self.pr, self.base)]
+        self.assertEqual(len(paths[0]), len(paths[1]))
+
+    def test_cached_simulated_counts_are_used_and_written_back(self):
+        self.bench(self.pr, "a", 1_000_000, sim="110000 20000 5000")
+        cache = self.root / "base_ir.tsv"
+        cache.write_text("a\t1000000\t-\t100000\t20000\t5000\n")
+        _, report = self.run_gate(
+            base_dir=self.root / "no-such-dir", env_extra={"PERF_BASE_IR_FILE": str(cache)}
+        )
+        self.assertIn("| `a` | 110000 (+10.0%) |", report)
+        self.assertEqual("a\t1000000\t-\t100000\t20000\t5000\n", cache.read_text())
 
 
 if __name__ == "__main__":
