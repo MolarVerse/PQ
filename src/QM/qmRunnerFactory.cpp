@@ -99,7 +99,7 @@ namespace QM
 #ifdef WITH_ASE
         const auto modelType =
             MaceModelTypeMeta::toString(settings.getMaceModelType());
-        const auto modelPath = QMSettings::getMaceModelPath();
+        const auto modelPath = settings.getMaceModelPath();
         const auto useDFTD   = QMSettings::useDispersionCorr();
         const auto fpType =
             settings::GeneralSettings::getFloatingPointPybindString();
@@ -139,7 +139,7 @@ namespace QM
     )
     {
 #ifdef WITH_ASE
-        const auto slakosPath    = QMSettings::getSlakosPath();
+        const auto slakosPath    = settings.getSlakosPath();
         const auto useThirdOrder = QMSettings::useThirdOrderDftb();
         const auto hubbardDerivs = QMSettings::getHubbardDerivs();
         const auto dispersion    = QMSettings::useDispersionCorr();
@@ -200,7 +200,7 @@ namespace QM
 #ifdef WITH_ASE
         using enum FPType;
 
-        const auto modelPath        = QMSettings::getFennolModelPath();
+        const auto modelPath        = settings.getFennolModelPath();
         const auto gpuPreprocessing = QMSettings::useGPUPreprocessing();
         const bool useFloat64 =
             settings::GeneralSettings::getFloatingPointType() == DOUBLE;

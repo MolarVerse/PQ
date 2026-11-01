@@ -54,7 +54,6 @@ namespace setup
         void        setupQMMethod(const QMSettings &qmSettings);
         static void setupQMMethodAseDftbPlus(const QMSettings &qmSettings);
         static void setupQMMethodAseXtb(const QMSettings &qmSettings);
-        void        setupQMScript() const;
         static void setupCoulombRadiusCutOff();
         void        setupWriteInfo(const QMSettings &qmSettings) const;
     };

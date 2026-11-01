@@ -144,8 +144,8 @@ namespace input
             .description = "Specifies the external QM script to be used.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setQMScript(value); };
+        const auto setValue = [this](const std::string &value)
+        { _qmSettings->setQMScript(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -165,8 +165,8 @@ namespace input
             .description = "Specifies the full path to the external QM script.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setQMScriptFullPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _qmSettings->setQMScriptFullPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -291,8 +291,8 @@ namespace input
             .description = "Specifies the path to the external MACE model.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setMaceModelPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _qmSettings->setMaceModelPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -454,8 +454,8 @@ namespace input
             .description = "Specifies the path to the FeNNol model file.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setFennolModelPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _qmSettings->setFennolModelPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{

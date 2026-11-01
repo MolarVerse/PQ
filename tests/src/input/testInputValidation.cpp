@@ -93,12 +93,12 @@ class TestInputValidation : public ::testing::Test
 
         _settings.qmSettings.setMaceModel(MaceModel::MEDIUM);
         _settings.qmSettings.setMaceModelType(MaceModelType::MACE_MP);
-        QMSettings::setMaceModelPath("");
+        _settings.qmSettings.setMaceModelPath("");
         _settings.qmSettings.setSlakosType(SlakosType::NONE);
         QMSettings::setUseThirdOrderDftb(false);
         QMSettings::setIsThirdOrderDftbSet(false);
         QMSettings::setIsHubbardDerivsSet(false);
-        QMSettings::setFennolModelPath("");
+        _settings.qmSettings.setFennolModelPath("");
 
         _engine = std::make_unique<engine::OptEngine>(_settings);
         _reader =

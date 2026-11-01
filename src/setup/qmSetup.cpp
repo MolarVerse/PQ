@@ -28,7 +28,6 @@
 #include "engine.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
-#include "externalQMRunner.hpp"
 #include "generalSettings.hpp"
 #include "potentialSettings.hpp"
 #include "qmCapableEngine.hpp"
@@ -36,7 +35,6 @@
 #include "references.hpp"
 #include "referencesOutput.hpp"
 #include "stdoutOutput.hpp"
-#include "stringUtilities.hpp"
 
 namespace setup
 {
@@ -91,9 +89,6 @@ namespace setup
         setupQMMethodAseDftbPlus(qmSettings);
 
         setupQMMethodAseXtb(qmSettings);
-
-        if (qmSettings.isExternalQMRunner())
-            setupQMScript();
 
         setupCoulombRadiusCutOff();
 
@@ -154,113 +149,6 @@ namespace setup
     }
 
     /**
-     * @brief checks if a singularity or static build is used and sets the
-     * qm_script accordingly
-     *
-     * @details if a singularity or static build is used the qm_script is set to
-     * the qm_script_full_path and the script path is set to the empty string to
-     * avoid errors. This is necessary because the script can not be accessed
-     * from inside the container. Therefore the user has to provide the script
-     * somewhere else and give the full or relative path to it. For more
-     * information please refer to the documentation.
-     *
-     */
-    void QMSetup::setupQMScript() const
-    {
-        auto &qmRunner         = _qmCapableEngine.getQMRunner();
-        auto &externalQMRunner = dynamic_cast<QM::ExternalQMRunner &>(qmRunner);
-
-        const auto singularityString = QM::ExternalQMRunner::getSingularity();
-        const auto staticBuildString = QM::ExternalQMRunner::getStaticBuild();
-
-        const auto singularity =
-            utilities::toLowerCopy(singularityString) == "on";
-        const auto staticBuild =
-            utilities::toLowerCopy(staticBuildString) == "on";
-
-        const auto qmScript        = QMSettings::getQMScript();
-        const auto isQMScriptEmpty = qmScript.empty();
-
-        const auto qmScriptFullPath        = QMSettings::getQMScriptFullPath();
-        const auto isQMScriptFullPathEmpty = qmScriptFullPath.empty();
-
-        if (singularity || staticBuild)
-        {
-            if (isQMScriptFullPathEmpty)
-            {
-                throw exc::QMRunnerException(
-                    "You are using at least one of these settings: i) "
-                    "singularity "
-                    "build or/and ii) static build of PQ. Therefore the "
-                    "general "
-                    "setting with 'qm_script' to set only the name of the "
-                    "executable is not applicable. Please use "
-                    "'qm_script_full_path' instead and provide the full path "
-                    "to "
-                    "the executable. For singularity builds the script can not "
-                    "be "
-                    "accessed from inside the container. In case of a static "
-                    "build "
-                    "the binary may be shipped without the source code and "
-                    "again "
-                    "PQ might therefore not be able to locate the executable "
-                    "qm "
-                    "script. Therefore you have to provide the script "
-                    "somewhere "
-                    "else and give the full/relative path to it. For more "
-                    "information please refer to the documentation."
-                );
-            }
-
-            if (!isQMScriptEmpty)
-            {
-                throw exc::QMRunnerException(
-                    "You have set both 'qm_script' and 'qm_script_full_path' "
-                    "in "
-                    "the input file. Please use only one the full path option "
-                    "as "
-                    "you are working either with a singularity build or a "
-                    "static "
-                    "build. For more information please refer to the "
-                    "documentation."
-                );
-            }
-
-            // setting script path to empty string to avoid errors
-            externalQMRunner.setScriptPath("");
-
-            // overwriting qm_script with full path
-            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
-        }
-        else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
-        {
-            throw exc::InputFileException(
-                "No qm_script provided. Please provide a qm_script in the "
-                "input "
-                "file."
-            );
-        }
-        else if (!isQMScriptFullPathEmpty && isQMScriptEmpty)
-        {
-            // setting script path to empty string to avoid errors
-            externalQMRunner.setScriptPath("");
-
-            // overwriting qm_script with full path
-            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
-        }
-        else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
-        {
-            throw exc::InputFileException(
-                "You have set both 'qm_script' and 'qm_script_full_path' in "
-                "the "
-                "input file. They are mutually exclusive. Please use only one "
-                "of "
-                "them. For more information please refer to the documentation."
-            );
-        }
-    }
-
-    /**
      * @brief set coulomb radius cutoff to 0.0 for QM-MD, QM-RPMD
      *
      */
@@ -295,8 +183,8 @@ namespace setup
 
         if (qmSettings.isExternalQMRunner())
         {
-            const auto qmScript        = QMSettings::getQMScript();
-            const auto qmScriptMessage = std::format("QM script: {}", qmScript);
+            const auto qmScriptMessage =
+                std::format("QM script: {}", qmSettings.getQMScript());
 
             logOutput.writeSetupInfo(qmScriptMessage);
         }
@@ -305,7 +193,7 @@ namespace setup
         {
             const auto modelType = qmSettings.getMaceModelType();
             const auto modelSize = qmSettings.getMaceModel();
-            const auto modelPath = QMSettings::getMaceModelPath();
+            const auto modelPath = qmSettings.getMaceModelPath();
             const auto floatingPointStr =
                 settings::GeneralSettings::getFloatingPointPybindString();
             const auto        maceMode = qmSettings.getMaceMode();
@@ -358,7 +246,7 @@ namespace setup
         {
             using enum FPType;
 
-            const auto modelPath           = QMSettings::getFennolModelPath();
+            const auto modelPath           = qmSettings.getFennolModelPath();
             const auto useGPUPreprocessing = QMSettings::useGPUPreprocessing();
             const bool useFloat64 =
                 settings::GeneralSettings::getFloatingPointType() == DOUBLE;
@@ -380,7 +268,7 @@ namespace setup
         if (qmMethod == ASE_DFTBPLUS)
         {
             const auto slakosType         = qmSettings.getSlakosType();
-            const auto slakosPath         = QMSettings::getSlakosPath();
+            const auto slakosPath         = qmSettings.getSlakosPath();
             const auto thirdOrder         = QMSettings::useThirdOrderDftb();
             const auto hubbardDerivs      = QMSettings::getHubbardDerivs();
             const auto ishubbardDerivsSet = QMSettings::isHubbardDerivsSet();

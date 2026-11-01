@@ -52,11 +52,6 @@ namespace QM
      */
     class ExternalQMRunner : public QMRunner
     {
-       private:
-        std::string            _scriptPath  = SCRIPT_PATH_;
-        constexpr static auto *_singularity = SINGULARITY_;
-        constexpr static auto *_staticBuild = STATIC_BUILD_;
-
        public:
         using QMRunner::QMRunner;
         ~ExternalQMRunner() override = default;
@@ -87,12 +82,6 @@ namespace QM
         /*******************************
          * standard getter and setters *
          *******************************/
-
-        [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] static std::string getSingularity();
-        [[nodiscard]] static std::string getStaticBuild();
-
-        void setScriptPath(const std::string_view &scriptPath);
 
        protected:
         [[nodiscard]]

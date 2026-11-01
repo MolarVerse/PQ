@@ -25,10 +25,6 @@
 #define _QM_RUNNER_HPP_
 
 #include <mstd/types.hpp>
-#define SCRIPT_PATH_  _SCRIPT_PATH_
-#define SINGULARITY_  _SINGULARITY_
-#define STATIC_BUILD_ _STATIC_BUILD_
-
 #include <stop_token>
 
 #include "box.hpp"

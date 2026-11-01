@@ -75,7 +75,7 @@ TEST(QMSettingsTest, ResolvesBundledSlakos)
     {
         settings.setSlakosType(slakos);
         const auto path =
-            std::filesystem::weakly_canonical(QMSettings::getSlakosPath());
+            std::filesystem::weakly_canonical(settings.getSlakosPath());
 
         EXPECT_TRUE(std::filesystem::is_directory(path));
         if (expectedRoot != nullptr)
@@ -221,8 +221,9 @@ TEST(QMSettingsTest, ReturnXtbMethodTest)
 
 TEST(QMSettingsTest, SetFennolModelPath)
 {
-    QMSettings::setFennolModelPath("/paTh/to/fennol_model.fnx");
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/paTh/to/fennol_model.fnx");
+    QMSettings settings;
+    settings.setFennolModelPath("/paTh/to/fennol_model.fnx");
+    EXPECT_EQ(settings.getFennolModelPath(), "/paTh/to/fennol_model.fnx");
 }
 
 TEST(QMSettingsTest, SetGPUPreprocessing)

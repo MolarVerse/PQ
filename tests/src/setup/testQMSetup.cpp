@@ -52,16 +52,16 @@ namespace
         void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
     };
 
-    void setBuildCompatibleQMScript()
+    void setBuildCompatibleQMScript(QMSettings &qmSettings)
     {
-        QMSettings::setQMScript("");
-        QMSettings::setQMScriptFullPath("");
+        qmSettings.setQMScript("");
+        qmSettings.setQMScriptFullPath("");
 
         if (std::string_view(SINGULARITY_) == "ON" ||
             std::string_view(STATIC_BUILD_) == "ON")
-            QMSettings::setQMScriptFullPath("test");
+            qmSettings.setQMScriptFullPath("test");
         else
-            QMSettings::setQMScript("test");
+            qmSettings.setQMScript("test");
     }
 }   // namespace
 
@@ -108,7 +108,7 @@ TEST(TestQMSetup, setupDftbplus)
     );
 
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
-    setBuildCompatibleQMScript();
+    setBuildCompatibleQMScript(settings.qmSettings);
     setupQM.setup(settings.qmSettings);
 
     test::checkType(engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
@@ -128,7 +128,7 @@ TEST(TestQMSetup, setupPySCF)
     );
 
     settings.qmSettings.setQMMethod(QMMethod::PYSCF);
-    setBuildCompatibleQMScript();
+    setBuildCompatibleQMScript(settings.qmSettings);
     setupQM.setup(settings.qmSettings);
 
     test::checkType(engine.getQMRunner(), typeid(QM::PySCFRunner));
@@ -148,7 +148,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     );
 
     settings.qmSettings.setQMMethod(QMMethod::TURBOMOLE);
-    setBuildCompatibleQMScript();
+    setBuildCompatibleQMScript(settings.qmSettings);
     setupQM.setup(settings.qmSettings);
 
     test::checkType(engine.getQMRunner(), typeid(QM::TurbomoleRunner));
@@ -156,9 +156,8 @@ TEST(TestQMSetup, setupTurbomoleRunner)
 
 TEST(TestQMSetup, setupQMFull)
 {
-    QMSettings::setQMScript("test");
-
-    Settings           settings;
+    Settings settings;
+    settings.qmSettings.setQMScript("test");
     engine::QMMDEngine engine(settings);
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
     EXPECT_NO_THROW(setup::setupQM(engine));
@@ -244,7 +243,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("path/To/myQMScript");
+    settings.qmSettings.setQMScript("path/To/myQMScript");
 
     qmSetup.setupWriteInfo(settings.qmSettings);
 
@@ -274,7 +273,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("path/To/myQMScript");
+    settings.qmSettings.setQMScript("path/To/myQMScript");
     QMSettings::setQMLoopTimeLimit(-1.2);
 
     qmSetup.setupWriteInfo(settings.qmSettings);
@@ -305,7 +304,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("path/To/myQMScript");
+    settings.qmSettings.setQMScript("path/To/myQMScript");
     QMSettings::setQMLoopTimeLimit(0);
 
     qmSetup.setupWriteInfo(settings.qmSettings);
@@ -336,7 +335,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("path/To/myQMScript");
+    settings.qmSettings.setQMScript("path/To/myQMScript");
     QMSettings::setQMLoopTimeLimit(3.14);
 
     qmSetup.setupWriteInfo(settings.qmSettings);
@@ -367,7 +366,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log");
     settings.qmSettings.setQMMethod(QMMethod::FENNOL);
-    QMSettings::setFennolModelPath("path/To/fennol_model.fnx");
+    settings.qmSettings.setFennolModelPath("path/To/fennol_model.fnx");
     QMSettings::setUseGPUPreprocessing(false);
     settings::GeneralSettings::setFloatingPointType(FPType::FLOAT);
 

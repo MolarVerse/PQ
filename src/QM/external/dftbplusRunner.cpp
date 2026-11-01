@@ -185,7 +185,8 @@ namespace QM
      */
     void DFTBPlusRunner::execute(molsys::SimulationBox &simulationBox)
     {
-        const auto scriptFile = _resolveScriptPath(QMSettings::getQMScript());
+        const auto scriptFile =
+            _resolveScriptPath(_getQMSettings().getQMScript());
 
         if (!mstd::File(scriptFile).exists())
         {

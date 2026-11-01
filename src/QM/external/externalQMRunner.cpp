@@ -451,13 +451,13 @@ namespace QM
         const std::string_view script
     ) const
     {
-        if (_scriptPath.empty())
+        if (_getQMSettings().getScriptPath().empty())
             return std::string(script);
 
-        if (_scriptPath == SCRIPT_PATH_)
+        if (_getQMSettings().getScriptPath() == SCRIPT_PATH_)
             return bundledQMScriptPath(script);
 
-        return _scriptPath + std::string(script);
+        return _getQMSettings().getScriptPath() + std::string(script);
     }
 
     void ExternalQMRunner::_executeCommand(
@@ -551,46 +551,6 @@ namespace QM
                 std::format("{} command failed with status {}", program, status)
             );
 #endif
-    }
-
-    /********************************
-     *                              *
-     * standard getters and setters *
-     *                              *
-     ********************************/
-
-    /**
-     * @brief getter for the script path
-     *
-     * @return const std::string&
-     */
-    const std::string &ExternalQMRunner::getScriptPath() const
-    {
-        return _scriptPath;
-    }
-
-    /**
-     * @brief getter for the singularity path
-     *
-     * @return  std::string
-     */
-    std::string ExternalQMRunner::getSingularity() { return _singularity; }
-
-    /**
-     * @brief getter for the static build path
-     *
-     * @return  std::string
-     */
-    std::string ExternalQMRunner::getStaticBuild() { return _staticBuild; }
-
-    /**
-     * @brief setter for the script path
-     *
-     * @param scriptPath
-     */
-    void ExternalQMRunner::setScriptPath(const std::string_view &scriptPath)
-    {
-        _scriptPath = scriptPath;
     }
 
 }   // namespace QM

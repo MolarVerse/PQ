@@ -204,7 +204,7 @@ class ExternalQMRunnerTest : public testing::Test
         _jobType    = settings::GeneralSettings::getJobtype();
         _removeNetForce = QMSettings::getRemoveNetForce();
         _timeLimit      = QMSettings::getQMLoopTimeLimit();
-        _qmScript       = QMSettings::getQMScript();
+        _qmScript       = _qmSettings->getQMScript();
         _dftbFile       = settings::FileSettings::getDFTBFileName();
         _originalPath   = std::filesystem::current_path();
 
@@ -232,7 +232,6 @@ class ExternalQMRunnerTest : public testing::Test
     {
         QMSettings::setRemoveNetForce(_removeNetForce);
         QMSettings::setQMLoopTimeLimit(_timeLimit);
-        QMSettings::setQMScript(_qmScript);
         settings::FileSettings::setDFTBFileName(_dftbFile);
         settings::GeneralSettings::setJobtype(_jobType);
 
@@ -242,9 +241,7 @@ class ExternalQMRunnerTest : public testing::Test
         EXPECT_FALSE(error);
     }
 
-    std::filesystem::path _configureQuotedScript(
-        QM::ExternalQMRunner &runner
-    ) const
+    std::filesystem::path _configureQuotedScript(QMSettings &qmSettings) const
     {
         const auto scriptDirectory =
             _workPath / "working path; $(touch qm-injected)";
@@ -255,8 +252,8 @@ class ExternalQMRunnerTest : public testing::Test
         const auto scriptFile = scriptDirectory / scriptName;
         writeFile(scriptFile.string(), "");
 
-        runner.setScriptPath(scriptDirectory.string() + '/');
-        QMSettings::setQMScript(scriptName);
+        qmSettings.setScriptPath(scriptDirectory.string() + '/');
+        qmSettings.setQMScript(scriptName);
 
         return scriptFile;
     }
@@ -295,7 +292,7 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
 TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
 {
     auto       runner = CommandCaptureRunner<QM::DFTBPlusRunner>(*_qmSettings);
-    const auto path   = _configureQuotedScript(runner);
+    const auto path   = _configureQuotedScript(*_qmSettings);
     const auto inputFile = std::string("input file; touch qm-injected");
     settings::FileSettings::setDFTBFileName(inputFile);
 
@@ -318,7 +315,7 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
 TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
 {
     auto       runner = CommandCaptureRunner<QM::PySCFRunner>(*_qmSettings);
-    const auto path   = _configureQuotedScript(runner);
+    const auto path   = _configureQuotedScript(*_qmSettings);
 
     runner.execute(_simulationBox);
 
@@ -336,7 +333,7 @@ TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
 TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
 {
     auto       runner = CommandCaptureRunner<QM::TurbomoleRunner>(*_qmSettings);
-    const auto path   = _configureQuotedScript(runner);
+    const auto path   = _configureQuotedScript(*_qmSettings);
 
     runner.execute(_simulationBox);
 
@@ -475,8 +472,8 @@ TEST_F(ExternalQMRunnerTest, rejectsBiaxialPeriodicity)
 TEST_F(ExternalQMRunnerTest, dftbExecuteRejectsMissingScript)
 {
     const auto scriptDirectory = (_workPath / "no-such-directory").string();
-    _dftbRunner->setScriptPath(scriptDirectory + '/');
-    QMSettings::setQMScript("this-script-does-not-exist.sh");
+    _qmSettings->setScriptPath(scriptDirectory + '/');
+    _qmSettings->setQMScript("this-script-does-not-exist.sh");
 
     EXPECT_THROW_MSG(
         _dftbRunner->execute(_simulationBox),
@@ -494,8 +491,8 @@ TEST_F(ExternalQMRunnerTest, pyscfExecuteRejectsMissingScript)
     const auto scriptDirectory = (_workPath / "no-such-directory").string();
 
     auto runner = QM::PySCFRunner(*_qmSettings);
-    runner.setScriptPath(scriptDirectory + '/');
-    QMSettings::setQMScript("this-script-does-not-exist.py");
+    _qmSettings->setScriptPath(scriptDirectory + '/');
+    _qmSettings->setQMScript("this-script-does-not-exist.py");
 
     EXPECT_THROW_MSG(
         runner.execute(_simulationBox),
@@ -513,8 +510,8 @@ TEST_F(ExternalQMRunnerTest, turbomoleExecuteRejectsMissingScript)
     const auto scriptDirectory = (_workPath / "no-such-directory").string();
 
     auto runner = QM::TurbomoleRunner(*_qmSettings);
-    runner.setScriptPath(scriptDirectory + '/');
-    QMSettings::setQMScript("this-script-does-not-exist.sh");
+    _qmSettings->setScriptPath(scriptDirectory + '/');
+    _qmSettings->setQMScript("this-script-does-not-exist.sh");
 
     EXPECT_THROW_MSG(
         runner.execute(_simulationBox),
@@ -670,7 +667,7 @@ TEST_F(QMWriterTest, dftbWithoutPointChargesLeavesNoFile)
 TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
 {
     auto       runner = CommandCaptureRunner<QM::DFTBPlusRunner>(*_qmSettings);
-    const auto path   = _configureQuotedScript(runner);
+    const auto path   = _configureQuotedScript(*_qmSettings);
     const auto suffix = [](const int usePointCharges)
     {
         return std::format(

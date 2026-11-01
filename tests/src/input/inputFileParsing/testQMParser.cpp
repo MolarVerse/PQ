@@ -123,7 +123,7 @@ TEST_F(TestInputFileReader, parseQMScript)
     ASSERT_TRUE(funcMap.contains("qm_script"));
     const auto& parseFunc = funcMap.at("qm_script");
     parseFunc({"qm_script", "=", "script.sh"}, 0);
-    EXPECT_EQ(QMSettings::getQMScript(), "script.sh");
+    EXPECT_EQ(settings.getQMScript(), "script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMScriptFullPath)
@@ -134,7 +134,7 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
     ASSERT_TRUE(funcMap.contains("qm_script_full_path"));
     const auto& parseFunc = funcMap.at("qm_script_full_path");
     parseFunc({"qm_script_full_path", "=", "/path/to/QM/Script.sh"}, 0);
-    EXPECT_EQ(QMSettings::getQMScriptFullPath(), "/path/to/QM/Script.sh");
+    EXPECT_EQ(settings.getQMScriptFullPath(), "/path/to/QM/Script.sh");
 }
 
 TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
@@ -402,10 +402,10 @@ TEST_F(TestInputFileReader, parseMaceModelPath)
     ASSERT_TRUE(funcMap.contains("mace_model_path"));
     const auto& parseFunc = funcMap.at("mace_model_path");
 
-    QMSettings::setMaceModelPath("");
-    EXPECT_EQ(QMSettings::getMaceModelPath(), "");
+    settings.setMaceModelPath("");
+    EXPECT_EQ(settings.getMaceModelPath(), "");
     parseFunc({"mace_model_path", "=", "/pAth/to/mace.model"}, 0);
-    EXPECT_EQ(QMSettings::getMaceModelPath(), "/pAth/to/mace.model");
+    EXPECT_EQ(settings.getMaceModelPath(), "/pAth/to/mace.model");
 }
 
 TEST_F(TestInputFileReader, parseSlakosType)
@@ -504,7 +504,7 @@ TEST_F(TestInputFileReader, parseSlakosPath)
 
     slakosParseFunc({"slakos", "=", "custom"}, 0);
     slakosPathParseFunc({"slakos_path", "=", "/path/to/slakos"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
+    EXPECT_EQ(settings.getSlakosPath(), "/path/to/slakos");
 }
 
 TEST_F(TestInputFileReader, parseThirdOrder)
@@ -646,12 +646,12 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
     ASSERT_TRUE(funcMap.contains("fennol_model_path"));
     const auto& fennolModelPathParseFunc = funcMap.at("fennol_model_path");
 
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "");
+    EXPECT_EQ(settings.getFennolModelPath(), "");
     fennolModelPathParseFunc(
         {"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"},
         0
     );
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
+    EXPECT_EQ(settings.getFennolModelPath(), "/pAth/to/fennol_model.fnx");
 }
 
 TEST_F(TestInputFileReader, parseGPUPreprocessing)
@@ -686,7 +686,7 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
 TEST_F(TestInputFileReader, processFennolKeywords)
 {
     _inputFileReader->process({"fennol-model-path", "=", "model.fnx"});
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "model.fnx");
+    EXPECT_EQ(_settings.qmSettings.getFennolModelPath(), "model.fnx");
     EXPECT_EQ(_inputFileReader->getKeywordCount("fennol_model_path"), 1);
 
     _inputFileReader->process({"GPU-Preprocessing", "=", "off"});

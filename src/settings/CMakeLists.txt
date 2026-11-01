@@ -35,3 +35,16 @@ target_link_libraries(settings
 install(TARGETS settings
     DESTINATION lib
 )
+
+if(BUILD_SHARED_LIBS)
+    set(BUILD_STATIC "OFF")
+else()
+    set(BUILD_STATIC "ON")
+endif()
+
+target_compile_definitions(settings
+    PUBLIC
+    _SCRIPT_PATH_=\"${CMAKE_CURRENT_BINARY_DIR}/scripts/\"
+    _SINGULARITY_=\"${BUILD_WITH_SINGULARITY}\"
+    _STATIC_BUILD_=\"${BUILD_STATIC}\"
+)

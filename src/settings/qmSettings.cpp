@@ -29,6 +29,7 @@
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "executablePath.hpp"
+#include "stringUtilities.hpp"
 
 namespace
 {
@@ -73,8 +74,24 @@ QMSettings::QMSettings()
       _maceModelType(MaceModelType::MACE_MP),
       _maceMode(MaceMode::ACCURATE),
       _slakosType(SlakosType::NONE),
-      _xtbMethod(XtbMethod::GFN2)
+      _xtbMethod(XtbMethod::GFN2),
+      _qmScript(""),
+      _qmScriptFullPath(""),
+      _maceModelPath(""),
+      _slakosPath(""),
+      _fennolModelPath("")
 {
+}
+
+/**
+ * @brief finalizes the QMSettings object
+ *
+ * @details This function sets up the QM script based on the current settings.
+ */
+void QMSettings::finalize()
+{
+    if (isExternalQMRunner())
+        _setupQMScript();
 }
 
 /**
@@ -160,9 +177,9 @@ void QMSettings::setMaceMode(MaceMode mode) { _maceMode.set(mode); }
  * @brief set the mace model path
  *
  */
-void QMSettings::setMaceModelPath(const std::string_view &path)
+void QMSettings::setMaceModelPath(const std::string &path)
 {
-    _maceModelPath = path;
+    _maceModelPath.set(path);
 }
 
 /**
@@ -177,9 +194,9 @@ void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod.set(method); }
  *
  * @param script
  */
-void QMSettings::setQMScript(const std::string_view &script)
+void QMSettings::setQMScript(const std::string &script)
 {
-    _qmScript = script;
+    _qmScript.set(script);
 }
 
 /**
@@ -187,9 +204,9 @@ void QMSettings::setQMScript(const std::string_view &script)
  *
  * @param script
  */
-void QMSettings::setQMScriptFullPath(const std::string_view &script)
+void QMSettings::setQMScriptFullPath(const std::string &script)
 {
-    _qmScriptFullPath = script;
+    _qmScriptFullPath.set(script);
 }
 
 /**
@@ -214,7 +231,9 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
         (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
     {
         _slakosType.set(slakos);
-        _slakosPath.clear();
+        auto path = _slakosPath.get();
+        path.clear();
+        _slakosPath.set(path);
         return;
     }
 
@@ -225,10 +244,16 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
         case THREEOB:
         case MATSCI:
             if (resolveBuiltInPath)
-                _slakosPath = builtinSlakosPath(slakos);
+                _slakosPath.set(builtinSlakosPath(slakos));
             break;
         case CUSTOM:
-        case NONE: _slakosPath.clear(); break;
+        case NONE:
+        {
+            auto path = _slakosPath.get();
+            path.clear();
+            _slakosPath.set(path);
+            break;
+        }
     }
 
     _slakosType.set(slakos);
@@ -239,10 +264,10 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
  *
  * @param path
  */
-void QMSettings::setSlakosPath(const std::string_view &path)
+void QMSettings::setSlakosPath(const std::string &path)
 {
     if (_slakosType.get() == SlakosType::CUSTOM)
-        _slakosPath = path;
+        _slakosPath.set(path);
     else if (_slakosType.get() == SlakosType::NONE)
     {
         throw exc::UserInputException(
@@ -329,9 +354,9 @@ void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit = time; }
  *
  * @param path
  */
-void QMSettings::setFennolModelPath(const std::string_view &path)
+void QMSettings::setFennolModelPath(const std::string &path)
 {
-    _fennolModelPath = path;
+    _fennolModelPath.set(path);
 }
 
 /**
@@ -392,21 +417,27 @@ MaceMode QMSettings::getMaceMode() const { return _maceMode.get(); }
  *
  * @return std::string
  */
-std::string QMSettings::getMaceModelPath() { return _maceModelPath; }
+std::string QMSettings::getMaceModelPath() const
+{
+    return _maceModelPath.get();
+}
 
 /**
  * @brief returns the qmScript
  *
  * @return std::string
  */
-std::string QMSettings::getQMScript() { return _qmScript; }
+std::string QMSettings::getQMScript() const { return _qmScript.get(); }
 
 /**
  * @brief returns the qmScriptFullPath
  *
  * @return std::string
  */
-std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
+std::string QMSettings::getQMScriptFullPath() const
+{
+    return _qmScriptFullPath.get();
+}
 
 /**
  * @brief returns the slakosType
@@ -420,7 +451,7 @@ SlakosType QMSettings::getSlakosType() const { return _slakosType.get(); }
  *
  * @return std::string
  */
-std::string QMSettings::getSlakosPath() { return _slakosPath; }
+std::string QMSettings::getSlakosPath() const { return _slakosPath.get(); }
 
 /**
  * @brief returns if third order DFTB should be used
@@ -487,7 +518,10 @@ double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
  *
  * @return std::string
  */
-std::string QMSettings::getFennolModelPath() { return _fennolModelPath; }
+std::string QMSettings::getFennolModelPath() const
+{
+    return _fennolModelPath.get();
+}
 
 /**
  * @brief returns if GPU pre-processing should be used for FeNNol
@@ -495,3 +529,128 @@ std::string QMSettings::getFennolModelPath() { return _fennolModelPath; }
  * @return bool
  */
 bool QMSettings::useGPUPreprocessing() { return _useGPUPreprocessing; }
+
+/**
+ * @brief sets up the QM script for the external QM runner based on the
+ * provided QMSettings. It checks for singularity and static build settings
+ * and ensures that the appropriate script path is provided.
+ *
+ * @param qmSettings The QMSettings object containing the relevant settings.
+ */
+void QMSettings::_setupQMScript()
+{
+    const auto singularity =
+        utilities::toLowerCopy(std::string(_singularity)) == "on";
+    const auto staticBuild =
+        utilities::toLowerCopy(std::string(_staticBuild)) == "on";
+
+    const auto qmScript        = getQMScript();
+    const auto isQMScriptEmpty = qmScript.empty();
+
+    const auto qmScriptFullPath        = getQMScriptFullPath();
+    const auto isQMScriptFullPathEmpty = qmScriptFullPath.empty();
+
+    if (singularity || staticBuild)
+    {
+        if (isQMScriptFullPathEmpty)
+        {
+            throw exc::QMRunnerException(
+                "You are using at least one of these settings: i) "
+                "singularity "
+                "build or/and ii) static build of PQ. Therefore the "
+                "general "
+                "setting with 'qm_script' to set only the name of the "
+                "executable is not applicable. Please use "
+                "'qm_script_full_path' instead and provide the full path "
+                "to "
+                "the executable. For singularity builds the script can not "
+                "be "
+                "accessed from inside the container. In case of a static "
+                "build "
+                "the binary may be shipped without the source code and "
+                "again "
+                "PQ might therefore not be able to locate the executable "
+                "qm "
+                "script. Therefore you have to provide the script "
+                "somewhere "
+                "else and give the full/relative path to it. For more "
+                "information please refer to the documentation."
+            );
+        }
+
+        if (!isQMScriptEmpty)
+        {
+            throw exc::QMRunnerException(
+                "You have set both 'qm_script' and 'qm_script_full_path' "
+                "in "
+                "the input file. Please use only one the full path option "
+                "as "
+                "you are working either with a singularity build or a "
+                "static "
+                "build. For more information please refer to the "
+                "documentation."
+            );
+        }
+
+        // setting script path to empty string to avoid errors
+        _scriptPath = "";
+
+        // overwriting qm_script with full path
+        setQMScript(qmScriptFullPath);
+    }
+    else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
+    {
+        throw exc::InputFileException(
+            "No qm_script provided. Please provide a qm_script in the "
+            "input "
+            "file."
+        );
+    }
+    else if (!isQMScriptFullPathEmpty && isQMScriptEmpty)
+    {
+        // setting script path to empty string to avoid errors
+        _scriptPath = "";
+
+        // overwriting qm_script with full path
+        setQMScript(qmScriptFullPath);
+    }
+    else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
+    {
+        throw exc::InputFileException(
+            "You have set both 'qm_script' and 'qm_script_full_path' in "
+            "the "
+            "input file. They are mutually exclusive. Please use only one "
+            "of "
+            "them. For more information please refer to the documentation."
+        );
+    }
+}
+
+/**
+ * @brief Sets the path to the QM script.
+ *
+ * This function allows specifying the directory or full path where the QM
+ * script is located. It updates the internal `_scriptPath` member variable
+ * accordingly. This is particularly useful when working with singularity
+ * or static builds where the script may not be accessible from the default
+ * location.
+ *
+ * @param scriptPath The path to the QM script.
+ */
+void QMSettings::setScriptPath(const std::string &scriptPath)
+{
+    _scriptPath = scriptPath;
+}
+
+/**
+ * @brief Retrieves the path to the QM script.
+ *
+ * This function returns the directory or full path where the QM script is
+ * located, as previously set by `setScriptPath`. It is useful for determining
+ * the location of the script, especially when working with singularity or
+ * static builds where the script may not be accessible from the default
+ * location.
+ *
+ * @return The path to the QM script.
+ */
+std::string QMSettings::getScriptPath() const { return _scriptPath; }

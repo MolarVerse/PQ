@@ -183,8 +183,8 @@ namespace
             !settings.isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto script         = settings.getQMScript();
+        const auto fullPathScript = settings.getQMScriptFullPath();
 
         if (script.empty() && fullPathScript.empty())
         {
@@ -221,8 +221,8 @@ namespace
             !settings.isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto script         = settings.getQMScript();
+        const auto fullPathScript = settings.getQMScriptFullPath();
 
         // NOTE: these compile flags seem redundant with certain cmake
         // configurations, but are necessary for some build configurations (e.g.
@@ -382,7 +382,7 @@ namespace
             if (slakosType == SlakosType::CUSTOM)
             {
                 requireDirectory(
-                    QMSettings::getSlakosPath(),
+                    settings.qmSettings.getSlakosPath(),
                     "Slater-Koster directory"
                 );
             }
@@ -397,13 +397,16 @@ namespace
 
         if (method == QMMethod::FENNOL)
         {
-            requireFile(QMSettings::getFennolModelPath(), "FeNNol model file");
+            requireFile(
+                settings.qmSettings.getFennolModelPath(),
+                "FeNNol model file"
+            );
         }
 
         if (method == QMMethod::MACE &&
             settings.qmSettings.getMaceModel() == MaceModel::CUSTOM)
         {
-            const auto modelPath = QMSettings::getMaceModelPath();
+            const auto modelPath = settings.qmSettings.getMaceModelPath();
             if (!isRemoteResource(modelPath))
                 requireFile(modelPath, "MACE model file");
         }

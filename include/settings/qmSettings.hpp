@@ -25,12 +25,15 @@
 #define _QM_SETTINGS_HPP_
 
 #include <string>
-#include <string_view>
 #include <unordered_map>
 
 #include "defaults.hpp"
 #include "enums/qm.hpp"
 #include "setting.hpp"
+
+#define SINGULARITY_  _SINGULARITY_
+#define STATIC_BUILD_ _STATIC_BUILD_
+#define SCRIPT_PATH_  _SCRIPT_PATH_
 
 std::string string(
     const std::unordered_map<std::string, double> &unordered_map
@@ -45,6 +48,10 @@ std::string string(
 class QMSettings
 {
    private:
+    constexpr static auto *_singularity = SINGULARITY_;
+    constexpr static auto *_staticBuild = STATIC_BUILD_;
+    std::string            _scriptPath  = SCRIPT_PATH_;
+
     Setting<QMMethod>      _qmMethod;
     Setting<MaceModel>     _maceModel;
     Setting<MaceModelType> _maceModelType;
@@ -52,11 +59,11 @@ class QMSettings
     Setting<SlakosType>    _slakosType;
     Setting<XtbMethod>     _xtbMethod;
 
-    static inline std::string _qmScript;
-    static inline std::string _qmScriptFullPath;
-    static inline std::string _maceModelPath;
-    static inline std::string _slakosPath;
-    static inline std::string _fennolModelPath;
+    Setting<std::string> _qmScript;
+    Setting<std::string> _qmScriptFullPath;
+    Setting<std::string> _maceModelPath;
+    Setting<std::string> _slakosPath;
+    Setting<std::string> _fennolModelPath;
 
     static inline bool _useDispersionCorrection = false;
     static inline bool _removeNetForce          = false;
@@ -73,6 +80,8 @@ class QMSettings
    public:
     QMSettings();
 
+    void finalize();
+
     [[nodiscard]] bool isExternalQMRunner() const;
 
     /***************************
@@ -81,17 +90,17 @@ class QMSettings
 
     void setQMMethod(QMMethod method);
 
-    void        setMaceModel(MaceModel model);
-    void        setMaceModelType(MaceModelType model);
-    void        setMaceMode(MaceMode mode);
-    static void setMaceModelPath(const std::string_view &path);
+    void setMaceModel(MaceModel model);
+    void setMaceModelType(MaceModelType model);
+    void setMaceMode(MaceMode mode);
+    void setMaceModelPath(const std::string &path);
 
-    static void setQMScript(const std::string_view &script);
-    static void setQMScriptFullPath(const std::string_view &script);
+    void setQMScript(const std::string &script);
+    void setQMScriptFullPath(const std::string &script);
 
     void setSlakosType(SlakosType slakos, bool resolveBuiltInPath);
     void setSlakosType(SlakosType slakos);
-    void setSlakosPath(const std::string_view &path);
+    void setSlakosPath(const std::string &path);
 
     static void setUseDispersionCorrection(bool use);
     static void setRemoveNetForce(bool removeNetForce);
@@ -104,27 +113,29 @@ class QMSettings
 
     void setXtbMethod(XtbMethod method);
 
-    static void setFennolModelPath(const std::string_view &path);
+    void        setFennolModelPath(const std::string &path);
     static void setUseGPUPreprocessing(bool use);
 
     static void setQMLoopTimeLimit(double time);
+
+    void setScriptPath(const std::string &scriptPath);
 
     /***************************
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] QMMethod           getQMMethod() const;
-    [[nodiscard]] bool               isQMMethodSet() const;
-    [[nodiscard]] MaceModel          getMaceModel() const;
-    [[nodiscard]] MaceModelType      getMaceModelType() const;
-    [[nodiscard]] MaceMode           getMaceMode() const;
-    [[nodiscard]] static std::string getMaceModelPath();
+    [[nodiscard]] QMMethod      getQMMethod() const;
+    [[nodiscard]] bool          isQMMethodSet() const;
+    [[nodiscard]] MaceModel     getMaceModel() const;
+    [[nodiscard]] MaceModelType getMaceModelType() const;
+    [[nodiscard]] MaceMode      getMaceMode() const;
+    [[nodiscard]] std::string   getMaceModelPath() const;
 
-    [[nodiscard]] static std::string getQMScript();
-    [[nodiscard]] static std::string getQMScriptFullPath();
+    [[nodiscard]] std::string getQMScript() const;
+    [[nodiscard]] std::string getQMScriptFullPath() const;
 
-    [[nodiscard]] SlakosType         getSlakosType() const;
-    [[nodiscard]] static std::string getSlakosPath();
+    [[nodiscard]] SlakosType  getSlakosType() const;
+    [[nodiscard]] std::string getSlakosPath() const;
 
     [[nodiscard]] static bool useDispersionCorr();
     [[nodiscard]] static bool getRemoveNetForce();
@@ -136,10 +147,15 @@ class QMSettings
 
     [[nodiscard]] XtbMethod getXtbMethod() const;
 
-    [[nodiscard]] static std::string getFennolModelPath();
-    [[nodiscard]] static bool        useGPUPreprocessing();
+    [[nodiscard]] std::string getFennolModelPath() const;
+    [[nodiscard]] static bool useGPUPreprocessing();
 
     [[nodiscard]] static double getQMLoopTimeLimit();
+
+    [[nodiscard]] std::string getScriptPath() const;
+
+   private:
+    void _setupQMScript();
 };
 
 #endif   // _QM_SETTINGS_HPP_
