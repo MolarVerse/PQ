@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TURBOMOLE_RUNNER_HPP_
-
-#define _TURBOMOLE_RUNNER_HPP_
+#ifndef QM__EXTERNAL__TURBOMOLE_RUNNER_HPP
+#define QM__EXTERNAL__TURBOMOLE_RUNNER_HPP
 
 #include "externalQMRunner.hpp"
 
@@ -51,4 +50,4 @@ namespace QM
     };
 }   // namespace QM
 
-#endif   // _TURBOMOLE_RUNNER_HPP_
+#endif   // QM__EXTERNAL__TURBOMOLE_RUNNER_HPP

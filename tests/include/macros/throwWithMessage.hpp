@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXPECT_THROW_WITH_MESSAGE_HPP_
-
-#define _EXPECT_THROW_WITH_MESSAGE_HPP_
+#ifndef TESTS__INCLUDE__MACROS__THROW_WITH_MESSAGE_HPP
+#define TESTS__INCLUDE__MACROS__THROW_WITH_MESSAGE_HPP
 
 #include <gtest/gtest.h>
 
@@ -60,4 +59,4 @@
 #define ASSERT_THROW_MSG(statement, expected_exception, expected_what) \
     EXPECT_THROW_MSG(statement, expected_exception, expected_what)
 
-#endif   // _EXPECT_THROW_WITH_MESSAGE_HPP_
+#endif   // TESTS__INCLUDE__MACROS__THROW_WITH_MESSAGE_HPP

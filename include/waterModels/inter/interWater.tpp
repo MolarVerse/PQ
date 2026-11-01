@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_TPP_
-
-#define _INTER_WATER_TPP_
+#ifndef WATER_MODELS__INTER__INTER_WATER_TPP
+#define WATER_MODELS__INTER__INTER_WATER_TPP
 
 #include <cstdlib>
 
@@ -67,4 +66,4 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#endif   //  _INTER_WATER_TPP_
+#endif   //  WATER_MODELS__INTER__INTER_WATER_TPP

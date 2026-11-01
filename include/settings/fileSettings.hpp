@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FILE_SETTINGS_HPP_
-
-#define _FILE_SETTINGS_HPP_
+#ifndef SETTINGS__FILE_SETTINGS_HPP
+#define SETTINGS__FILE_SETTINGS_HPP
 
 #include <string>
 #include <string_view>
@@ -134,4 +133,4 @@ namespace settings
 
 }   // namespace settings
 
-#endif   // _FILE_SETTINGS_HPP_
+#endif   // SETTINGS__FILE_SETTINGS_HPP

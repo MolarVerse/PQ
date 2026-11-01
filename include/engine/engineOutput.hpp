@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_OUTPUT_HPP_
-
-#define _ENGINE_OUTPUT_HPP_
+#ifndef ENGINE__ENGINE_OUTPUT_HPP
+#define ENGINE__ENGINE_OUTPUT_HPP
 
 #include <cstddef>
 #include <memory>
@@ -196,4 +195,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _ENGINE_OUTPUT_HPP_
+#endif   // ENGINE__ENGINE_OUTPUT_HPP

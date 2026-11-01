@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _M_SHAKE_READER_HPP_
-
-#define _M_SHAKE_READER_HPP_
+#ifndef INPUT__M_SHAKE_READER_HPP
+#define INPUT__M_SHAKE_READER_HPP
 
 #include <cstddef>
 #include <fstream>
@@ -75,4 +74,4 @@ namespace input::mShake
     };
 }   // namespace input::mShake
 
-#endif   // _M_SHAKE_READER_HPP_
+#endif   // INPUT__M_SHAKE_READER_HPP

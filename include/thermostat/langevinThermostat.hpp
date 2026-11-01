@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LANGEVIN_THERMOSTAT_HPP_
-
-#define _LANGEVIN_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__LANGEVIN_THERMOSTAT_HPP
+#define THERMOSTAT__LANGEVIN_THERMOSTAT_HPP
 
 #include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
@@ -90,4 +89,4 @@ namespace thermostat
 
 }   // namespace thermostat
 
-#endif   // _LANGEVIN_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__LANGEVIN_THERMOSTAT_HPP

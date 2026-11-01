@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_MANOSTAT_HPP_
-
-#define _TEST_MANOSTAT_HPP_
+#ifndef TESTS__INCLUDE__MANOSTAT__TEST_MANOSTAT_HPP
+#define TESTS__INCLUDE__MANOSTAT__TEST_MANOSTAT_HPP
 
 #include <gtest/gtest.h>
 

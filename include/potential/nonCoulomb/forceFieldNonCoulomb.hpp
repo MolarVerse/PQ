@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_NON_COULOMB_HPP_
-
-#define _FORCE_FIELD_NON_COULOMB_HPP_
+#ifndef POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_HPP
+#define POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_HPP
 
 #include <optional>
 #include <unordered_map>
@@ -112,4 +111,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _FORCE_FIELD_NON_COULOMB_HPP_
+#endif   // POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_HPP

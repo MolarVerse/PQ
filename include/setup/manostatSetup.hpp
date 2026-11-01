@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_SETUP_HPP_
-
-#define _MANOSTAT_SETUP_HPP_
+#ifndef SETUP__MANOSTAT_SETUP_HPP
+#define SETUP__MANOSTAT_SETUP_HPP
 
 namespace engine
 {
@@ -81,4 +80,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _MANOSTAT_SETUP_HPP_
+#endif   // SETUP__MANOSTAT_SETUP_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_SETTINGS_HPP_
-
-#define _MANOSTAT_SETTINGS_HPP_
+#ifndef SETTINGS__MANOSTAT_SETTINGS_HPP
+#define SETTINGS__MANOSTAT_SETTINGS_HPP
 
 #include "enums/manostat.hpp"
 #include "setting.hpp"
@@ -79,4 +78,4 @@ class ManostatSettings
     [[nodiscard]] double       getCompressibility() const;
 };
 
-#endif   // _MANOSTAT_SETTINGS_HPP_
+#endif   // SETTINGS__MANOSTAT_SETTINGS_HPP

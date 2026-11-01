@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTERNAL_CONVERSION_FACTORS_HPP_
-
-#define _INTERNAL_CONVERSION_FACTORS_HPP_
+#ifndef CONFIG__CONSTANTS__INTERNAL_CONVERSION_FACTORS_HPP
+#define CONFIG__CONSTANTS__INTERNAL_CONVERSION_FACTORS_HPP
 
 #include "conversionFactors.hpp"
 #include "natureConstants.hpp"
@@ -144,4 +143,4 @@ static constexpr double MOMENTUM_TO_FORCE =
 
 static constexpr auto NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL = 1.0e12;
 
-#endif   // _INTERNAL_CONVERSION_FACTORS_HPP_
+#endif   // CONFIG__CONSTANTS__INTERNAL_CONVERSION_FACTORS_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_HPP_
-
-#define _POTENTIAL_HPP_
+#ifndef POTENTIAL__POTENTIAL_HPP
+#define POTENTIAL__POTENTIAL_HPP
 
 #include <memory>
 #include <utility>
@@ -180,8 +179,8 @@ namespace pot
 
 }   // namespace pot
 
-#ifndef _POTENTIAL_TPP_
-#include "potential.tpp.hpp"   // IWYU pragma: export
+#ifndef POTENTIAL__POTENTIAL_TPP
+#include "potential.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _POTENTIAL_HPP_
+#endif   // POTENTIAL__POTENTIAL_HPP

@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTING_HPP_
-#define _SETTING_HPP_
+#ifndef SETTINGS__SETTING_HPP
+#define SETTINGS__SETTING_HPP
 
 #include <optional>
 
@@ -50,8 +50,8 @@ class Setting
     bool isSet() const;
 };
 
-#ifndef _SETTING_TPP_
+#ifndef SETTINGS__SETTING_TPP
 #include "setting.tpp"
 #endif
 
-#endif   // _SETTING_HPP_
+#endif   // SETTINGS__SETTING_HPP

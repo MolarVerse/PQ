@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_HPP_
-
-#define _CELL_HPP_
+#ifndef MOLSYS__CELL_HPP
+#define MOLSYS__CELL_HPP
 
 #include <cstddef>
 #include <vector>
@@ -120,4 +119,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _CELL_HPP_
+#endif   // MOLSYS__CELL_HPP

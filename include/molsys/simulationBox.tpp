@@ -20,50 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MD_ENGINE_TPP_
+#ifndef MOLSYS__SIMULATION_BOX_TPP
+#define MOLSYS__SIMULATION_BOX_TPP
 
-#define _MD_ENGINE_TPP_
+#include "simulationBox.hpp"
 
-#include "mdEngine.hpp"
-
-/***************************
- * make unique_ptr methods *
- ***************************/
-
-namespace engine
+namespace molsys
 {
     /**
-     * @brief make unique_ptr for integrator
+     * @brief set the box depending on dynamic type
      *
      * @tparam T
+     * @param box
+     * @param boxSetViaStartFile Indicates if the box was set via the start file
      */
     template <typename T>
-    inline void MDEngine::makeIntegrator(T integrator)
+    void SimulationBox::setBox(const T& box, bool boxSetViaStartFile)
     {
-        _integrator = std::make_unique<T>(integrator);
+        _box                = std::make_shared<T>(box);
+        _boxSetViaStartFile = boxSetViaStartFile;
     }
 
-    /**
-     * @brief make unique_ptr for thermostat
-     *
-     * @tparam T
-     */
-    template <typename T>
-    inline void MDEngine::makeThermostat(T thermostat)
-    {
-        _thermostat = std::make_unique<T>(thermostat);
-    }
+}   // namespace molsys
 
-    /**
-     * @brief make unique_ptr for manostat
-     *
-     * @tparam T
-     */
-    template <typename T>
-    inline void MDEngine::makeManostat(T manostat)
-    {
-        _manostat = std::make_unique<T>(manostat);
-    }
-}   // namespace engine
-
-#endif   // _MD_ENGINE_TPP_
+#endif   // MOLSYS__SIMULATION_BOX_TPP

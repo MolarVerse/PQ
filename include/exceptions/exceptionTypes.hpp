@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXCEPTION_TYPES_HPP_
-#define _EXCEPTION_TYPES_HPP_
+#ifndef EXCEPTIONS__EXCEPTION_TYPES_HPP
+#define EXCEPTIONS__EXCEPTION_TYPES_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -58,4 +58,4 @@
 
 MSTD_ENUM(ExceptionType, std::uint8_t, EXCEPTION_TYPES)
 
-#endif   // _EXCEPTION_TYPES_HPP_
+#endif   // EXCEPTIONS__EXCEPTION_TYPES_HPP

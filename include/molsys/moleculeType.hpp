@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLECULE_TYPE_HPP_
-
-#define _MOLECULE_TYPE_HPP_
+#ifndef MOLSYS__MOLECULE_TYPE_HPP
+#define MOLSYS__MOLECULE_TYPE_HPP
 
 #include <map>
 #include <string>
@@ -116,4 +115,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _MOLECULE_TYPE_HPP_
+#endif   // MOLSYS__MOLECULE_TYPE_HPP

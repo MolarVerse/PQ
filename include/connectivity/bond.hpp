@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_HPP_
-
-#define _BOND_HPP_
+#ifndef CONNECTIVITY__BOND_HPP
+#define CONNECTIVITY__BOND_HPP
 
 #include "connectivityElement.hpp"
 
@@ -44,4 +43,4 @@ namespace connectivity
 
 }   // namespace connectivity
 
-#endif   // _BOND_HPP_
+#endif   // CONNECTIVITY__BOND_HPP

@@ -20,10 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MATRIX_HPP_
-
-#define _MATRIX_HPP_
+#ifndef LINEAR_ALGEBRA__MATRIX__MATRIX_HPP
+#define LINEAR_ALGEBRA__MATRIX__MATRIX_HPP
 
 #include "matrixClass.hpp"   // IWYU pragma: export
 
-#endif   // _MATRIX_HPP_
+#endif   // LINEAR_ALGEBRA__MATRIX__MATRIX_HPP

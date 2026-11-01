@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DFTBPLUS_RUNNER_HPP_
-
-#define _DFTBPLUS_RUNNER_HPP_
+#ifndef QM__EXTERNAL__DFTBPLUS_RUNNER_HPP
+#define QM__EXTERNAL__DFTBPLUS_RUNNER_HPP
 
 #include "externalQMRunner.hpp"
 
@@ -66,4 +65,4 @@ namespace QM
     };
 }   // namespace QM
 
-#endif   // _DFTBPLUS_RUNNER_HPP_
+#endif   // QM__EXTERNAL__DFTBPLUS_RUNNER_HPP

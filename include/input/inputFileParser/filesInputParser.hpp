@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FILES_INPUT_PARSER_HPP_
-
-#define _FILES_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__FILES_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__FILES_INPUT_PARSER_HPP
 
 #include "inputFileParser.hpp"
 
@@ -57,4 +56,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _FILES_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__FILES_INPUT_PARSER_HPP

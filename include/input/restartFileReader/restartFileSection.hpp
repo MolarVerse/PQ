@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESTART_FILE_SECTION_HPP_
-
-#define _RESTART_FILE_SECTION_HPP_
+#ifndef INPUT__RESTART_FILE_READER__RESTART_FILE_SECTION_HPP
+#define INPUT__RESTART_FILE_READER__RESTART_FILE_SECTION_HPP
 
 #include <fstream>
 #include <string>
@@ -65,4 +64,4 @@ namespace input::restartFile
 
 }   // namespace input::restartFile
 
-#endif   // _RESTART_FILE_SECTION_HPP_
+#endif   // INPUT__RESTART_FILE_READER__RESTART_FILE_SECTION_HPP

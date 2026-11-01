@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CUSTOM_VALIDATOR_HPP_
-#define _CUSTOM_VALIDATOR_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__CUSTOM_VALIDATOR_HPP
+#define INPUT__INPUT_FILE_PARSER__CUSTOM_VALIDATOR_HPP
 
 #include "keyValidatorBase.hpp"
 
@@ -53,8 +53,8 @@ namespace input
     };
 }   // namespace input
 
-#ifndef _CUSTOM_VALIDATOR_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__CUSTOM_VALIDATOR_TPP
 #include "customValidator.tpp"
 #endif
 
-#endif   // _CUSTOM_VALIDATOR_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__CUSTOM_VALIDATOR_HPP

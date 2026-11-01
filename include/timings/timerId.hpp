@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMER_ID_HPP_
-#define _TIMER_ID_HPP_
+#ifndef TIMINGS__TIMER_ID_HPP
+#define TIMINGS__TIMER_ID_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -51,4 +51,4 @@ MSTD_ENUM(TimerId, std::uint8_t, TIMER_ID_LIST);
 
 std::string toString(TimerId id);
 
-#endif   // _TIMER_ID_HPP_
+#endif   // TIMINGS__TIMER_ID_HPP

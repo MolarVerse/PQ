@@ -24,7 +24,7 @@
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
-#include "potentialKernels.tpp.hpp"   // IWYU pragma: keep -- for template specialization
+#include "potentialKernels.tpp"   // IWYU pragma: keep -- for template specialization
 
 namespace pot
 {

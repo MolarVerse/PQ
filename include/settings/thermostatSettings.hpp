@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_SETTINGS_HPP_
-
-#define _THERMOSTAT_SETTINGS_HPP_
+#ifndef SETTINGS__THERMOSTAT_SETTINGS_HPP
+#define SETTINGS__THERMOSTAT_SETTINGS_HPP
 
 #include <cstddef>
 #include <map>
@@ -127,4 +126,4 @@ namespace settings
     };
 }   // namespace settings
 
-#endif   // _THERMOSTAT_SETTINGS_HPP_
+#endif   // SETTINGS__THERMOSTAT_SETTINGS_HPP

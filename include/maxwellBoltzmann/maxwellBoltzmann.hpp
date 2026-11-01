@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MAXWELL_BOLTZMANN_HPP_
-
-#define _MAXWELL_BOLTZMANN_HPP_
+#ifndef MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP
+#define MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP
 
 #include "randomNumberGenerator.hpp"
 
@@ -53,4 +52,4 @@ namespace maxwellBoltzmann
     };
 }   // namespace maxwellBoltzmann
 
-#endif   // _MAXWELL_BOLTZMANN_HPP_
+#endif   // MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP

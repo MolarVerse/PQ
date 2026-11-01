@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GENERAL_SETTINGS_HPP_
-
-#define _GENERAL_SETTINGS_HPP_
+#ifndef SETTINGS__GENERAL_SETTINGS_HPP
+#define SETTINGS__GENERAL_SETTINGS_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -135,4 +134,4 @@ namespace settings
 
 }   // namespace settings
 
-#endif   // _GENERAL_SETTINGS_HPP_
+#endif   // SETTINGS__GENERAL_SETTINGS_HPP

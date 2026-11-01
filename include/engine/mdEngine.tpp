@@ -20,46 +20,49 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_TPP_
+#ifndef ENGINE__MD_ENGINE_TPP
+#define ENGINE__MD_ENGINE_TPP
 
-#define _ENGINE_TPP_
+#include "mdEngine.hpp"
 
-#include <memory>
-#include <type_traits>
-#include <utility>
-
-#include "engine.hpp"
+/***************************
+ * make unique_ptr methods *
+ ***************************/
 
 namespace engine
 {
-    /***************************
-     * make unique_ptr methods *
-     ***************************/
-
     /**
-     * @brief make unique_ptr for potential
+     * @brief make unique_ptr for integrator
      *
      * @tparam T
      */
     template <typename T>
-    inline void Engine::makePotential(T /*potential*/)
+    inline void MDEngine::makeIntegrator(T integrator)
     {
-        _potential = std::make_unique<T>();
+        _integrator = std::make_unique<T>(integrator);
     }
 
     /**
-     * @brief make unique_ptr for waterIntra
+     * @brief make unique_ptr for thermostat
      *
      * @tparam T
      */
     template <typename T>
-    inline void Engine::makeIntraWater(T &&intraWaterModel)
+    inline void MDEngine::makeThermostat(T thermostat)
     {
-        using IntraWaterType = std::decay_t<T>;
-        _intraWater =
-            std::make_unique<IntraWaterType>(std::forward<T>(intraWaterModel));
+        _thermostat = std::make_unique<T>(thermostat);
     }
 
+    /**
+     * @brief make unique_ptr for manostat
+     *
+     * @tparam T
+     */
+    template <typename T>
+    inline void MDEngine::makeManostat(T manostat)
+    {
+        _manostat = std::make_unique<T>(manostat);
+    }
 }   // namespace engine
 
-#endif   // _ENGINE_TPP_
+#endif   // ENGINE__MD_ENGINE_TPP

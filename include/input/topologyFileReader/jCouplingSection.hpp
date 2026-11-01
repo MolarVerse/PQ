@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _J_COUPLING_SECTION_HPP_
-
-#define _J_COUPLING_SECTION_HPP_
+#ifndef INPUT__TOPOLOGY_FILE_READER__J_COUPLING_SECTION_HPP
+#define INPUT__TOPOLOGY_FILE_READER__J_COUPLING_SECTION_HPP
 
 #include "topologySection.hpp"
 
@@ -53,4 +52,4 @@ namespace input::topology
     };
 }   // namespace input::topology
 
-#endif   // _J_COUPLING_SECTION_HPP_
+#endif   // INPUT__TOPOLOGY_FILE_READER__J_COUPLING_SECTION_HPP

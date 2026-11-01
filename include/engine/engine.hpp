@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_HPP_
-
-#define _ENGINE_HPP_
+#ifndef ENGINE__ENGINE_HPP
+#define ENGINE__ENGINE_HPP
 
 #include <cstddef>
 #include <memory>
@@ -177,8 +176,8 @@ namespace engine
     };
 }   // namespace engine
 
-#ifndef _ENGINE_TPP_
-#include "engine.tpp.hpp"   // IWYU pragma: export
+#ifndef ENGINE__ENGINE_TPP
+#include "engine.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _ENGINE_HPP_
+#endif   // ENGINE__ENGINE_HPP

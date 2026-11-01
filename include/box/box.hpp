@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOX_HPP_
-
-#define _BOX_HPP_
+#ifndef BOX__BOX_HPP
+#define BOX__BOX_HPP
 
 #include <memory>
 #include <mstd/types.hpp>
@@ -134,4 +133,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _BOX_HPP_
+#endif   // BOX__BOX_HPP

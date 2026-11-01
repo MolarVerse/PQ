@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_TPP_
-
-#define _POTENTIAL_TPP_
+#ifndef POTENTIAL__POTENTIAL_TPP
+#define POTENTIAL__POTENTIAL_TPP
 
 #include <cmath>
 #include <cstdlib>
@@ -122,4 +121,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _POTENTIAL_TPP_
+#endif   // POTENTIAL__POTENTIAL_TPP

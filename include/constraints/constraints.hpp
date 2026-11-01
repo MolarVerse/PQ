@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTRAINTS_HPP_
-
-#define _CONSTRAINTS_HPP_
+#ifndef CONSTRAINTS__CONSTRAINTS_HPP
+#define CONSTRAINTS__CONSTRAINTS_HPP
 
 #include <cstddef>
 #include <mstd/types.hpp>
@@ -130,4 +129,4 @@ namespace constraints
 
 }   // namespace constraints
 
-#endif   // _CONSTRAINTS_HPP_
+#endif   // CONSTRAINTS__CONSTRAINTS_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DIHEDRAL_TYPE_HPP_
-
-#define _DIHEDRAL_TYPE_HPP_
+#ifndef FORCE_FIELD__DIHEDRAL_TYPE_HPP
+#define FORCE_FIELD__DIHEDRAL_TYPE_HPP
 
 #include "strongTypes.hpp"
 
@@ -64,4 +63,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _DIHEDRAL_TYPE_HPP_
+#endif   // FORCE_FIELD__DIHEDRAL_TYPE_HPP

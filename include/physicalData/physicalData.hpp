@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PHYSICAL_DATA_HPP_
-
-#define _PHYSICAL_DATA_HPP_
+#ifndef PHYSICAL_DATA__PHYSICAL_DATA_HPP
+#define PHYSICAL_DATA__PHYSICAL_DATA_HPP
 
 #include <memory>
 #include <vector>
@@ -239,4 +238,4 @@ namespace physicalData
 
 }   // namespace physicalData
 
-#endif   // _PHYSICAL_DATA_HPP_
+#endif   // PHYSICAL_DATA__PHYSICAL_DATA_HPP

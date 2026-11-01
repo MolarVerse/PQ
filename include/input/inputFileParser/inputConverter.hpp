@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_CONVERTER_HPP_
-#define _INPUT_CONVERTER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_HPP
+#define INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_HPP
 
 #include <concepts>
 #include <cstdint>
@@ -299,8 +299,8 @@ namespace input
 
 }   // namespace input
 
-#ifndef _INPUT_CONVERTER_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_TPP
 #include "inputConverter.tpp"
 #endif
 
-#endif   // _INPUT_CONVERTER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_HPP

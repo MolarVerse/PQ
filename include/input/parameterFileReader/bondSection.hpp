@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_SECTION_HPP_
-
-#define _BOND_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__BOND_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__BOND_SECTION_HPP
 
 #include <string>
 
@@ -65,4 +64,4 @@ namespace input::parameterFile
 
 }   // namespace input::parameterFile
 
-#endif   // _BOND_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__BOND_SECTION_HPP

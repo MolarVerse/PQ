@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_SETUP_HPP_
-
-#define _RING_POLYMER_SETUP_HPP_
+#ifndef SETUP__RING_POLYMER_SETUP_HPP
+#define SETUP__RING_POLYMER_SETUP_HPP
 
 namespace engine
 {
@@ -57,4 +56,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _RING_POLYMER_SETUP_HPP_
+#endif   // SETUP__RING_POLYMER_SETUP_HPP

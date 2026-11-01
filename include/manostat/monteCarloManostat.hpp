@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MONTE_CARLO_MANOSTAT_HPP_
-
-#define _MONTE_CARLO_MANOSTAT_HPP_
+#ifndef MANOSTAT__MONTE_CARLO_MANOSTAT_HPP
+#define MANOSTAT__MONTE_CARLO_MANOSTAT_HPP
 
 #include "manostat.hpp"
 #include "randomNumberGenerator.hpp"
@@ -52,4 +51,4 @@ namespace manostat
     };
 }   // namespace manostat
 
-#endif   // _MONTE_CARLO_MANOSTAT_HPP_
+#endif   // MANOSTAT__MONTE_CARLO_MANOSTAT_HPP

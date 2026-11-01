@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TOPOLOGY_SECTION_HPP_
-
-#define _TOPOLOGY_SECTION_HPP_
+#ifndef INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_SECTION_HPP
+#define INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_SECTION_HPP
 
 #include <iosfwd>
 #include <string>
@@ -76,4 +75,4 @@ namespace input::topology
 
 }   // namespace input::topology
 
-#endif   // _TOPOLOGY_SECTION_HPP_
+#endif   // INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_SECTION_HPP

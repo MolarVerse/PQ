@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_RESTART_FILE_SECTION_HPP_
-#define _TEST_RESTART_FILE_SECTION_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_SECTION_HPP
+#define TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_SECTION_HPP
 
 #include <gtest/gtest.h>
 
@@ -158,4 +158,4 @@ class TestAtomSection : public ::testing::Test
     }
 };
 
-#endif   // _TEST_RESTART_FILE_SECTION_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_SECTION_HPP

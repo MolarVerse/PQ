@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
-
-#define _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
+#ifndef SETUP__RANDOM_NUMBER_GENERATOR_SETUP_HPP
+#define SETUP__RANDOM_NUMBER_GENERATOR_SETUP_HPP
 
 namespace engine
 {
@@ -53,4 +52,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
+#endif   // SETUP__RANDOM_NUMBER_GENERATOR_SETUP_HPP

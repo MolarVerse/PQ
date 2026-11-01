@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RIGID_WATER_GEOMETRY_HPP_
-
-#define _RIGID_WATER_GEOMETRY_HPP_
+#ifndef CONFIG__RIGID_WATER_GEOMETRY_HPP
+#define CONFIG__RIGID_WATER_GEOMETRY_HPP
 
 static constexpr double SPC_OH_DIST = 1.0;           // Angström
 static constexpr double SPC_HH_DIST = 1.632993162;   // Angström
@@ -42,4 +41,4 @@ static constexpr double TIP3P_HH_DIST = 1.5139;   // Angström
 static constexpr double OPC3_OH_DIST = 0.97888;       // Angström
 static constexpr double OPC3_HH_DIST = 1.598492306;   // Angström
 
-#endif   // _RIGID_WATER_GEOMETRY_HPP_
+#endif   // CONFIG__RIGID_WATER_GEOMETRY_HPP

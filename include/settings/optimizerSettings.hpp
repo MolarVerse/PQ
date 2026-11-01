@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_SETTINGS_HPP_
-
-#define _OPTIMIZER_SETTINGS_HPP_
+#ifndef SETTINGS__OPTIMIZER_SETTINGS_HPP
+#define SETTINGS__OPTIMIZER_SETTINGS_HPP
 
 #include <cstddef>
 #include <optional>
@@ -97,4 +96,4 @@ class OptimizerSettings
     [[nodiscard]] bool isMaxLearningRateSet() const;
 };
 
-#endif   // _OPTIMIZER_SETTINGS_HPP_
+#endif   // SETTINGS__OPTIMIZER_SETTINGS_HPP
