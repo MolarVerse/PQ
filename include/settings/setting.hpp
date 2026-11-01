@@ -53,6 +53,9 @@ class Setting
 
     [[nodiscard]]
     bool isSet() const;
+
+   private:
+    void _throwIfNotSet() const;
 };
 
 #ifndef SETTINGS__SETTING_TPP

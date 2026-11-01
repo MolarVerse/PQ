@@ -58,14 +58,7 @@ template <typename T, mstd::Tag Name>
 const T& Setting<T, Name>::get() const
 {
     if (!_value.has_value() && !_default.has_value())
-    {
-        std::string errorMessage =
-            "Setting value is not set and no default is available.";
-
-        errorMessage = Name.to_string() + ": " + errorMessage;
-
-        throw exc::SettingsException(errorMessage);
-    }
+        _throwIfNotSet();
 
     if (!_value.has_value())
         return _default.value();
@@ -82,6 +75,23 @@ template <typename T, mstd::Tag Name>
 void Setting<T, Name>::set(const T& value)
 {
     _value = value;
+}
+
+/**
+ * Throw an exception if the setting is not set and no default is available.
+ *
+ * @throws exc::SettingsException if the setting is not set and no default
+ * is available.
+ */
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::_throwIfNotSet() const
+{
+    std::string errorMessage =
+        "Setting value is not set and no default is available.";
+
+    errorMessage = Name.to_string() + ": " + errorMessage;
+
+    throw exc::SettingsException(errorMessage);
 }
 
 #endif   // SETTINGS__SETTING_TPP
