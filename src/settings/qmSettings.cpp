@@ -509,7 +509,6 @@ bool QMSettings::useGPUPreprocessing() const
  * provided QMSettings. It checks for singularity and static build settings
  * and ensures that the appropriate script path is provided.
  *
- * @param qmSettings The QMSettings object containing the relevant settings.
  */
 void QMSettings::_setupQMScript()
 {

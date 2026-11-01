@@ -53,27 +53,32 @@ class QMSettings
     constexpr static auto *_staticBuild = STATIC_BUILD_;
     std::string            _scriptPath  = SCRIPT_PATH_;
 
-    Setting<QMMethod>      _qmMethod;
-    Setting<MaceModel>     _maceModel{MaceModel::MEDIUM};
-    Setting<MaceModelType> _maceModelType{MaceModelType::MACE_MP};
-    Setting<MaceMode>      _maceMode{MaceMode::ACCURATE};
-    Setting<SlakosType>    _slakosType{SlakosType::NONE};
-    Setting<XtbMethod>     _xtbMethod{XtbMethod::GFN2};
+    Setting<QMMethod, "QM method">            _qmMethod;
+    Setting<MaceModel, "MACE model">          _maceModel{MaceModel::MEDIUM};
+    Setting<MaceModelType, "MACE model type"> _maceModelType{
+        MaceModelType::MACE_MP
+    };
+    Setting<MaceMode, "MACE mode">     _maceMode{MaceMode::ACCURATE};
+    Setting<SlakosType, "Slakos type"> _slakosType{SlakosType::NONE};
+    Setting<XtbMethod, "XTB method">   _xtbMethod{XtbMethod::GFN2};
 
-    Setting<std::string> _qmScript{""};
-    Setting<std::string> _qmScriptFullPath{""};
-    Setting<std::string> _maceModelPath{""};
-    Setting<std::string> _slakosPath{""};
-    Setting<std::string> _fennolModelPath{""};
+    Setting<std::string, "QM script">           _qmScript{""};
+    Setting<std::string, "QM script full path"> _qmScriptFullPath{""};
+    Setting<std::string, "MACE model path">     _maceModelPath{""};
+    Setting<std::string, "Slakos path">         _slakosPath{""};
+    Setting<std::string, "Fennol model path">   _fennolModelPath{""};
 
-    Setting<bool> _useDispersionCorrection{false};
-    Setting<bool> _removeNetForce{false};
-    Setting<bool> _useThirdOrderDftb;
-    Setting<bool> _useGPUPreprocessing{true};
+    Setting<bool, "Use dispersion correction"> _useDispersionCorrection{false};
+    Setting<bool, "Remove net force">          _removeNetForce{false};
+    Setting<bool, "Use third order DFTB">      _useThirdOrderDftb;
+    Setting<bool, "Use GPU preprocessing">     _useGPUPreprocessing{true};
 
-    Setting<std::unordered_map<std::string, double>> _hubbardDerivs;
+    Setting<std::unordered_map<std::string, double>, "Hubbard derivatives">
+        _hubbardDerivs;
 
-    Setting<double> _qmLoopTimeLimit{defaults::QM_LOOP_TIME_LIMIT_DEFAULT};
+    Setting<double, "QM loop time limit"> _qmLoopTimeLimit{
+        defaults::QM_LOOP_TIME_LIMIT_DEFAULT
+    };
 
    public:
     void finalize();

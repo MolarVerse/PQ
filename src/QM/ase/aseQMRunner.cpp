@@ -249,13 +249,12 @@ namespace QM
         void interruptAfterTimeout(
             const std::stop_token &stopToken,
             std::atomic_bool      &timedOut,
-            PythonThread           pythonThread
+            PythonThread           pythonThread,
+            double                 timeLimit
+
         )
         {
             constexpr auto pollInterval = std::chrono::milliseconds(10);
-
-            // qm_loop_time_limit is given in s
-            const auto timeLimit = settings::QMSettings::getQMLoopTimeLimit();
 
             if (timeLimit <= 0.0)
             {
@@ -362,8 +361,17 @@ namespace QM
         auto         timedOut = std::atomic_bool{false};
         std::jthread timeoutThread{
             [&timedOut,
-             pythonThread = currentThread()](const std::stop_token &stopToken)
-            { interruptAfterTimeout(stopToken, timedOut, pythonThread); }
+             pythonThread = currentThread(
+             )](const std::stop_token &stopToken, double timeLimit)
+            {
+                interruptAfterTimeout(
+                    stopToken,
+                    timedOut,
+                    pythonThread,
+                    timeLimit
+                );
+            },
+            _getQMSettings().getQMLoopTimeLimit()
         };
 
         try

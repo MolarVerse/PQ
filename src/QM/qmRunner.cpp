@@ -57,6 +57,8 @@ namespace QM
      * function will return without throwing an exception.
      *
      * @param stopToken
+     * @param qmLoopTimeLimit The time limit for the QM loop in seconds. If set
+     * to 0, no timeout will be enforced.
      *
      * @throw QMRunnerException if the timeout is exceeded
      */

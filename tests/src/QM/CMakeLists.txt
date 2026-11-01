@@ -27,10 +27,11 @@ if(BUILD_WITH_ASE)
 
     target_link_libraries(testAseQMRunner
         PRIVATE
-        aseQM
+        QM
         gtest
         gmock
         pq_test_main
+        pybind11::module
     )
 
     add_test_with_gcda_cleanup(testAseQMRunner testAseQMRunner)

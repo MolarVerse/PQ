@@ -47,7 +47,8 @@ namespace QM
     /**
      * @brief Create a QM runner based on the specified method
      *
-     * @param method The QM method to use
+     * @param settings The QMSettings object containing the relevant settings
+     * for configuring the QM runner
      * @return std::unique_ptr<QMRunner> Shared pointer to the created QM
      * runner
      * @throws InputFileException if the method is not supported

@@ -251,12 +251,12 @@ namespace setup
 
         if (qmMethod == ASE_DFTBPLUS)
         {
-            const auto slakosType         = qmSettings.getSlakosType();
-            const auto slakosPath         = qmSettings.getSlakosPath();
-            const auto thirdOrder         = qmSettings.useThirdOrderDftb();
-            const auto hubbardDerivs      = qmSettings.getHubbardDerivs();
-            const auto ishubbardDerivsSet = qmSettings.isHubbardDerivsSet();
-            const auto dispersion         = qmSettings.useDispersionCorr();
+            const auto slakosType = qmSettings.getSlakosType();
+            const auto slakosPath = qmSettings.getSlakosPath();
+            const auto thirdOrder = (qmSettings.isThirdOrderDftbSet())
+                                        ? qmSettings.useThirdOrderDftb()
+                                        : false;
+            const auto dispersion = qmSettings.useDispersionCorr();
 
             const auto slakosTypeMsg = std::format(
                 "DFTB approach:        {}",
@@ -276,8 +276,6 @@ namespace setup
                 "3ob approach has been chosen while disabling 3rd order DFTB. "
                 "This setup is not recommended."
             );
-            const auto hubbardDerivsMsg =
-                std::format("Hubbard derivatives:  {}", string(hubbardDerivs));
             const auto threeOBHubbardDerivsMsg = std::format(
                 "3ob approach has been chosen while setting custom Hubbard "
                 "derivatives. This setup is not recommended."
@@ -287,8 +285,15 @@ namespace setup
             logOutput.writeSetupInfo(slakosPathMsg);
             logOutput.writeSetupInfo(dispersionMsg);
             logOutput.writeSetupInfo(thirdOrderMsg);
-            if (ishubbardDerivsSet)
+
+            if (qmSettings.isHubbardDerivsSet())
+            {
+                const auto hubbardDerivsMsg = std::format(
+                    "Hubbard derivatives:  {}",
+                    string(qmSettings.getHubbardDerivs())
+                );
                 logOutput.writeSetupInfo(hubbardDerivsMsg);
+            }
 
             // Warnings for non-recommended setups
             if (slakosType == SlakosType::THREEOB && !thirdOrder)
@@ -298,7 +303,8 @@ namespace setup
                 out::StdoutOutput::writeSetupWarning(threeOBThirdOrderMsg);
             }
 
-            if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
+            if (slakosType == SlakosType::THREEOB &&
+                qmSettings.isHubbardDerivsSet())
             {
                 logOutput.writeEmptyLine();
                 logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);

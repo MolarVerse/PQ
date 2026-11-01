@@ -479,12 +479,10 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 
     _clearParser(parser);
 
-    QMSettings settings2;
-    auto       parser2 = input::QMInputParser{true, settings2};
     slakosParseFunc({"slakos", "=", "3ob"}, 0);
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
-    EXPECT_EQ(settings2.getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(settings2.useThirdOrderDftb());
+    EXPECT_EQ(settings.getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(settings.useThirdOrderDftb());
 }
 #endif
 
@@ -508,7 +506,7 @@ TEST_F(TestInputFileReader, parseSlakosPath)
 TEST_F(TestInputFileReader, parseThirdOrder)
 {
     QMSettings settings;
-    EXPECT_FALSE(settings.useThirdOrderDftb());
+    EXPECT_FALSE(settings.isThirdOrderDftbSet());
     input::QMInputParser parser{true, settings};
     const auto           funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("third_order"));
