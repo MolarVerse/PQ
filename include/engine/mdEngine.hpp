@@ -30,6 +30,7 @@
 #include "integrator.hpp"
 #include "manostat.hpp"
 #include "momentumOutput.hpp"
+#include "outputFileSettings.hpp"
 #include "resetKinetics.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
@@ -60,8 +61,8 @@ namespace engine
         explicit MDEngine(const Settings &settings);
         ~MDEngine() override = default;
 
-        void         run() override;
-        void         writeOutput() override;
+        void run() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
         virtual void takeStep();
 
         void takeStepBeforeForces();

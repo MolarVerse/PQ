@@ -170,7 +170,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
         std::make_unique<engine::QMMDEngine>(settings);
     setup::QMSetup qmSetup(*engine);
 
-    engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
     settings.qmSettings.setQMScript("path/To/myQMScript");
 
@@ -200,7 +200,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
         std::make_unique<engine::QMMDEngine>(settings);
     setup::QMSetup qmSetup(*engine);
 
-    engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
     settings.qmSettings.setQMScript("path/To/myQMScript");
     settings.qmSettings.setQMLoopTimeLimit(-1.2);
@@ -231,7 +231,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
         std::make_unique<engine::QMMDEngine>(settings);
     setup::QMSetup qmSetup(*engine);
 
-    engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
     settings.qmSettings.setQMScript("path/To/myQMScript");
     settings.qmSettings.setQMLoopTimeLimit(0);
@@ -262,7 +262,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
         std::make_unique<engine::QMMDEngine>(settings);
     setup::QMSetup qmSetup(*engine);
 
-    engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
     settings.qmSettings.setQMScript("path/To/myQMScript");
     settings.qmSettings.setQMLoopTimeLimit(3.14);
@@ -293,7 +293,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
         std::make_unique<engine::QMMDEngine>(settings);
     setup::QMSetup _qmSetup(*_engine);
 
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethod(QMMethod::FENNOL);
     settings.qmSettings.setFennolModelPath("path/To/fennol_model.fnx");
     settings.qmSettings.setUseGPUPreprocessing(false);

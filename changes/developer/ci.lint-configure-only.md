@@ -1,0 +1,2 @@
+- LINT workflow no longer runs a full build to generate `compile_commands.json`; it configures with `CMAKE_DISABLE_PRECOMPILE_HEADERS=ON` instead, so `clangd-tidy` can re-parse every file from real headers without anything being compiled first.
+- Drops the ccache/mold setup and the best-effort build step (including its `-Wmaybe-uninitialized`/`mShake.cpp` workaround) from the LINT job, since it no longer builds anything.

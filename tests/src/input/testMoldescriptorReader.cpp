@@ -59,7 +59,8 @@ TEST_F(TestMoldescriptorReader, argumentsInMoldescriptor)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithOneWordLine.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings));
+    const auto                                engine = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader(*engine);
     ASSERT_THROW_MSG(
         reader.read(),
         exc::MolDescriptorException,
@@ -76,7 +77,8 @@ TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithErrorInAtomArguments.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings));
+    const auto                                engine = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader(*engine);
     ASSERT_THROW_MSG(
         reader.read(),
         exc::MolDescriptorException,
@@ -113,7 +115,8 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
     settings::FileSettings::setMolDescriptorFileName(
         "examples/setup/moldescriptor.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings));
+    const auto                                engine = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader(*engine);
     ASSERT_NO_THROW(reader.read());
 }
 

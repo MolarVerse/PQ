@@ -35,7 +35,7 @@ TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
     const std::string path = "default.opt.test";
 
     out::OptOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     opt::SteepestDescent opt(1U);
     opt::Convergence     conv(
@@ -68,7 +68,7 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
     const std::string path = "default.opt.test";
 
     out::OptOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     opt::SteepestDescent opt(1U);
     opt::Convergence     conv(
@@ -101,7 +101,7 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
     const std::string path = "default.opt.test";
 
     out::OptOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     opt::SteepestDescent opt(1U);
     opt::Convergence     conv(
@@ -132,7 +132,7 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
     const std::string path = "default.opt.test";
 
     out::OptOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     opt::SteepestDescent opt(1U);
     opt::Convergence     conv(

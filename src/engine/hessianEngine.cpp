@@ -292,7 +292,9 @@ namespace engine
 
         timings::GlobalTimer::get().stopSimulationTimer();
 
-        references::ReferencesOutput::writeReferencesFile();
+        references::ReferencesOutput::writeReferencesFile(
+            getSettings().outputFiles.getRefFileName()
+        );
         getEngineOutput().writeTimingsFile();
 
         const auto elapsedTime =
@@ -302,7 +304,56 @@ namespace engine
         out::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 
-    void HessianEngine::writeOutput() {}
+    /**
+     * @brief Writes output files for the Hessian engine.
+     *
+     * @param outputSettings The settings for output files.
+     */
+    void HessianEngine::writeOutput(const OutputFileSettings &outputSettings)
+    {
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto effStep    = getStep() + step0;
+
+        if (0 == getStep() % outputFreq)
+        {
+            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
+            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptFile(getStep(), *_optimizer);
+        }
+
+        timings::GlobalTimer::get().stopAndRestartSimulationTimer();
+
+        getPhysicalData().setLoopTime(
+            timings::GlobalTimer::get().calculateLoopTime()
+        );
+        getAveragePhysicalData().updateAverages(getPhysicalData());
+
+        if (0 == getStep() % outputFreq)
+        {
+            getAveragePhysicalData().makeAverages(
+                static_cast<double>(outputFreq)
+            );
+
+            const auto effStepDouble = static_cast<double>(effStep);
+
+            getEngineOutput().writeEnergyFile(
+                effStep,
+                getAveragePhysicalData(),
+                getSettings()
+            );
+            getEngineOutput().writeInfoFile(
+                effStepDouble,
+                getAveragePhysicalData(),
+                getSettings()
+            );
+
+            getAveragePhysicalData() = physicalData::PhysicalData();
+        }
+
+        getPhysicalData().reset();
+    }
 
     std::shared_ptr<opt::Evaluator> HessianEngine::_setupEvaluator()
     {
@@ -356,7 +407,7 @@ namespace engine
 
         _setNSteps(_optimizer->getNEpochs());
 
-        _writeOptimizationOutput();
+        writeOutput(getSettings().outputFiles);
 
         progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
 
@@ -369,7 +420,7 @@ namespace engine
             if (_converged || _optStopped)
                 break;
 
-            _writeOptimizationOutput();
+            writeOutput(getSettings().outputFiles);
             deleteTmpFiles();
         }
 
@@ -427,53 +478,6 @@ namespace engine
         }
 
         _setStep(getStep() + 1);
-    }
-
-    void HessianEngine::_writeOptimizationOutput()
-    {
-        const auto outputFreq =
-            settings::OutputFileSettings::getOutputFrequency();
-        const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = getStep() + step0;
-
-        if (0 == getStep() % outputFreq)
-        {
-            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
-            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
-            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
-            getEngineOutput().writeOptFile(getStep(), *_optimizer);
-        }
-
-        timings::GlobalTimer::get().stopAndRestartSimulationTimer();
-
-        getPhysicalData().setLoopTime(
-            timings::GlobalTimer::get().calculateLoopTime()
-        );
-        getAveragePhysicalData().updateAverages(getPhysicalData());
-
-        if (0 == getStep() % outputFreq)
-        {
-            getAveragePhysicalData().makeAverages(
-                static_cast<double>(outputFreq)
-            );
-
-            const auto effStepDouble = static_cast<double>(effStep);
-
-            getEngineOutput().writeEnergyFile(
-                effStep,
-                getAveragePhysicalData(),
-                getSettings()
-            );
-            getEngineOutput().writeInfoFile(
-                effStepDouble,
-                getAveragePhysicalData(),
-                getSettings()
-            );
-
-            getAveragePhysicalData() = physicalData::PhysicalData();
-        }
-
-        getPhysicalData().reset();
     }
 
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()

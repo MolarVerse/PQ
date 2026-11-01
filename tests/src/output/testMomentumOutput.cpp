@@ -39,7 +39,7 @@ TEST_F(TestEnergyOutput, writeMomentumFile)
     _physicalData->setMomentum(linalg::Vec3D(3.0, 4.0, 0.0));
     _physicalData->setAngularMomentum(linalg::Vec3D(4.0, 0.0, 3.0));
 
-    _momentumOutput->setFilename("default.mom");
+    _momentumOutput->setFilename("default.mom", false);
     _momentumOutput->write(100, *_physicalData);
     _momentumOutput->close();
 

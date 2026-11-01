@@ -29,6 +29,7 @@
 #include "hessianSettings.hpp"
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
+#include "outputFileSettings.hpp"
 #include "qmSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
@@ -51,6 +52,7 @@ struct Settings
     ForceFieldSettings    forceFieldSettings;
     QMSettings            qmSettings;
     ManostatSettings      manostatSettings;
+    OutputFileSettings    outputFiles;
 
     void finalize();
 };

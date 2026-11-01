@@ -35,7 +35,7 @@ TEST(TestStressOutput, writeEmitsStepAndAllNineTensorComponents)
     const std::string path = "default.stress.test";
 
     out::StressOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     physicalData::PhysicalData data;
     // Distinct values per row so we can locate them in the output.
@@ -65,7 +65,7 @@ TEST(TestStressOutput, writeEmitsOneLinePerCall)
     const std::string path = "default.stress.test";
 
     out::StressOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     physicalData::PhysicalData data;
 

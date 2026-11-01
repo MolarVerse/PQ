@@ -33,6 +33,7 @@
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
 #include "optOutput.hpp"
+#include "outputFileSettings.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
@@ -60,8 +61,9 @@ namespace engine
     /**
      * @brief constructor
      */
-    EngineOutput::EngineOutput()
-        : _energyOutput(
+    EngineOutput::EngineOutput(const OutputFileSettings &outputFileSettings)
+        : _outputFileSettings(outputFileSettings),
+          _energyOutput(
               std::make_unique<out::EnergyOutput>(DefaultFiles::energyFile)
           ),
           _instantEnergyOutput(
@@ -207,7 +209,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _xyzOutput->writeXyz(simulationBox, step);
+        _xyzOutput->writeXyz(
+            simulationBox,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -222,7 +228,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _xyzHybridCenterOutput->writeHybridCenterXyz(configurator, step);
+        _xyzHybridCenterOutput->writeHybridCenterXyz(
+            configurator,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -237,7 +247,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _velOutput->writeVelocities(simulationBox, step);
+        _velOutput->writeVelocities(
+            simulationBox,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -252,7 +266,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _forceOutput->writeForces(simulationBox, step);
+        _forceOutput->writeForces(
+            simulationBox,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -267,7 +285,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _chargeOutput->writeCharges(simulationBox, step);
+        _chargeOutput->writeCharges(
+            simulationBox,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -404,7 +426,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-        _rpmdXyzOutput->writeXyz(beads, step);
+        _rpmdXyzOutput->writeXyz(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -419,7 +445,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-        _rpmdVelOutput->writeVelocities(beads, step);
+        _rpmdVelOutput->writeVelocities(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -434,7 +464,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-        _rpmdForceOutput->writeForces(beads, step);
+        _rpmdForceOutput->writeForces(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -449,7 +483,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-        _rpmdChargeOutput->writeCharges(beads, step);
+        _rpmdChargeOutput->writeCharges(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**

@@ -35,7 +35,7 @@ TEST(TestTimingsOutput, writeProducesHeaderAndTotalRow)
     const std::string path = "default.timings.test";
 
     out::TimingsOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
     timings::GlobalTimer::get().stopSimulationTimer();
@@ -58,7 +58,7 @@ TEST(TestTimingsOutput, writeListsRegisteredSubTimers)
     const std::string path = "default.timings.test";
 
     out::TimingsOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     {
         auto _ = scopedTimer(TimerId::DefaultTimings, "inner");

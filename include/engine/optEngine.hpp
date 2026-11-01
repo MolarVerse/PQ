@@ -59,7 +59,7 @@ namespace engine
 
         void run() override;
         void takeStep();
-        void writeOutput() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
 
         static void throwOnFailure(
             bool                            converged,

@@ -29,7 +29,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "outputFileSettings.hpp"
 #include "referencesOutput.hpp"
 #include "testOutputBase.hpp"
 #include "throwWithMessage.hpp"
@@ -47,9 +46,8 @@ class ReferencesOutputTest : public ::testing::Test
 TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
 {
     const std::string path = "default.refs.test";
-    settings::OutputFileSettings::setRefFileName(path);
 
-    references::ReferencesOutput::writeReferencesFile();
+    references::ReferencesOutput::writeReferencesFile(path);
 
     const auto content = slurp(path);
     // Top banner.
@@ -73,12 +71,8 @@ TEST_F(ReferencesOutputTest, writeReferencesFileEmitsHeaderAndBibtexBanner)
 
 TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 {
-    settings::OutputFileSettings::setRefFileName(".");
-
     EXPECT_THROW_MSG(
-
-        references::ReferencesOutput::writeReferencesFile(),
-
+        references::ReferencesOutput::writeReferencesFile("."),
         std::runtime_error,
         "Could not open reference output file \".\""
 
@@ -88,12 +82,8 @@ TEST_F(ReferencesOutputTest, rejectsUnwritableOutput)
 #if defined(__linux__)
 TEST_F(ReferencesOutputTest, rejectsFailedOutputWrites)
 {
-    settings::OutputFileSettings::setRefFileName("/dev/full");
-
     EXPECT_THROW_MSG(
-
-        references::ReferencesOutput::writeReferencesFile(),
-
+        references::ReferencesOutput::writeReferencesFile("/dev/full"),
         std::runtime_error,
         "Could not write reference output file \"/dev/full\""
 
@@ -112,9 +102,10 @@ TEST_F(ReferencesOutputTest, rendersAdditionalReferenceFiles)
     std::ofstream(referencePath) << "ADDITIONAL REFERENCE\n";
     std::ofstream(bibtexPath) << "ADDITIONAL BIBTEX\n";
     references::ReferencesOutput::addReferenceFile(referencePath.string());
-    settings::OutputFileSettings::setRefFileName(outputPath);
 
-    EXPECT_NO_THROW(references::ReferencesOutput::writeReferencesFile());
+    EXPECT_NO_THROW(
+        references::ReferencesOutput::writeReferencesFile(outputPath)
+    );
     const auto content = slurp(outputPath);
     EXPECT_NE(content.find("ADDITIONAL REFERENCE"), std::string::npos);
     EXPECT_NE(content.find("ADDITIONAL BIBTEX"), std::string::npos);
@@ -145,10 +136,9 @@ TEST_F(ReferencesOutputTest, rejectsUnreadableReferenceFiles)
     }
 
     references::ReferencesOutput::addReferenceFile(unreadablePath.string());
-    settings::OutputFileSettings::setRefFileName(outputPath);
 
     EXPECT_THROW_MSG(
-        references::ReferencesOutput::writeReferencesFile(),
+        references::ReferencesOutput::writeReferencesFile(outputPath),
         std::runtime_error,
         std::format(
             "Could not open PQ reference file "
@@ -175,10 +165,8 @@ TEST_F(ReferencesOutputTest, rejectsMissingReferenceFiles)
     EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
     EXPECT_NO_THROW(references::ReferencesOutput::addReferenceFile(file));
 
-    settings::OutputFileSettings::setRefFileName(outputPath);
-
     EXPECT_THROW_MSG(
-        references::ReferencesOutput::writeReferencesFile(),
+        references::ReferencesOutput::writeReferencesFile(outputPath),
         std::runtime_error,
         std::format(
             "PQ reference file "
