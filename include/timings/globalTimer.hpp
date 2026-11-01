@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GLOBAL_TIMER_HPP_
-
-#define _GLOBAL_TIMER_HPP_
+#ifndef TIMINGS__GLOBAL_TIMER_HPP
+#define TIMINGS__GLOBAL_TIMER_HPP
 
 #include "singleton.hpp"
 #include "timer.hpp"
@@ -82,4 +81,4 @@ inline timings::TimingsSectionGuard scopedTimer(
     return timings::GlobalTimer::get().scoped(id, sectionName);
 }
 
-#endif   // _GLOBAL_TIMER_HPP_
+#endif   // TIMINGS__GLOBAL_TIMER_HPP

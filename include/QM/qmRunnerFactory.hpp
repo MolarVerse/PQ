@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_RUNNER_FACTORY_HPP_
-#define _QM_RUNNER_FACTORY_HPP_
+#ifndef QM__QM_RUNNER_FACTORY_HPP
+#define QM__QM_RUNNER_FACTORY_HPP
 
 #include <memory>
 
@@ -72,4 +72,4 @@ namespace QM
 
 }   // namespace QM
 
-#endif   // _QM_RUNNER_FACTORY_HPP_
+#endif   // QM__QM_RUNNER_FACTORY_HPP

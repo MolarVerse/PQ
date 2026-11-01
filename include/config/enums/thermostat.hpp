@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_ENUM_HPP_
-#define _THERMOSTAT_ENUM_HPP_
+#ifndef CONFIG__ENUMS__THERMOSTAT_HPP
+#define CONFIG__ENUMS__THERMOSTAT_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -66,4 +66,4 @@ namespace mstd
 
 }   // namespace mstd
 
-#endif   // _THERMOSTAT_ENUM_HPP_
+#endif   // CONFIG__ENUMS__THERMOSTAT_HPP

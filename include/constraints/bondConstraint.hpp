@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_CONSTRAINT_HPP_
-
-#define _BOND_CONSTRAINT_HPP_
+#ifndef CONSTRAINTS__BOND_CONSTRAINT_HPP
+#define CONSTRAINTS__BOND_CONSTRAINT_HPP
 
 #include "bond.hpp"
 #include "vector3d.hpp"
@@ -86,4 +85,4 @@ namespace constraints
 
 }   // namespace constraints
 
-#endif   // _BOND_CONSTRAINT_HPP_
+#endif   // CONSTRAINTS__BOND_CONSTRAINT_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _WATER_MODEL_SETUP_HPP_
-
-#define _WATER_MODEL_SETUP_HPP_
+#ifndef SETUP__WATER_MODEL_SETUP_HPP
+#define SETUP__WATER_MODEL_SETUP_HPP
 
 #include "interWater.hpp"
 #include "mdEngine.hpp"
@@ -62,4 +61,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _WATER_MODEL_SETUP_HPP_
+#endif   // SETUP__WATER_MODEL_SETUP_HPP

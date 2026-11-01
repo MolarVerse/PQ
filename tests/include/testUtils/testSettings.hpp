@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_SETTINGS_HPP_
-#define _TEST_SETTINGS_HPP_
+#ifndef TESTS__INCLUDE__TEST_UTILS__TEST_SETTINGS_HPP
+#define TESTS__INCLUDE__TEST_UTILS__TEST_SETTINGS_HPP
 
 #include <utility>
 
@@ -117,4 +117,4 @@ namespace testSettings
     }
 }   // namespace testSettings
 
-#endif   // _TEST_SETTINGS_HPP_
+#endif   // TESTS__INCLUDE__TEST_UTILS__TEST_SETTINGS_HPP

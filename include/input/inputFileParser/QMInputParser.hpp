@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_INPUT_PARSER_HPP_
-
-#define _QM_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP
 
 #include <mstd/types.hpp>
 
@@ -71,4 +70,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _QM_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP

@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __FILTER_VIEW_HPP__
-#define __FILTER_VIEW_HPP__
+#ifndef VIEWS__FILTER_VIEW_HPP
+#define VIEWS__FILTER_VIEW_HPP
 
 #include <utility>
 
@@ -83,7 +83,7 @@ namespace pqviews
      * @return iterator
      */
     template <typename Range, typename Pred>
-    FilterView<Range, Pred>::iterator FilterView<Range, Pred>::begin()
+    typename FilterView<Range, Pred>::iterator FilterView<Range, Pred>::begin()
     {
         return iterator{std::begin(_range), std::end(_range), &_pred};
     }
@@ -94,7 +94,7 @@ namespace pqviews
      * @return sentinel
      */
     template <typename Range, typename Pred>
-    FilterView<Range, Pred>::sentinel FilterView<Range, Pred>::end()
+    typename FilterView<Range, Pred>::sentinel FilterView<Range, Pred>::end()
     {
         return sentinel{std::end(_range)};
     }
@@ -106,8 +106,8 @@ namespace pqviews
      * @return const_iterator
      */
     template <typename Range, typename Pred>
-    FilterView<Range, Pred>::const_iterator FilterView<Range, Pred>::begin(
-    ) const
+    typename FilterView<Range, Pred>::const_iterator FilterView<Range, Pred>::
+        begin() const
     {
         return const_iterator{std::begin(_range), std::end(_range), &_pred};
     }
@@ -118,11 +118,12 @@ namespace pqviews
      * @return const_sentinel
      */
     template <typename Range, typename Pred>
-    FilterView<Range, Pred>::const_sentinel FilterView<Range, Pred>::end() const
+    typename FilterView<Range, Pred>::const_sentinel FilterView<Range, Pred>::
+        end() const
     {
         return const_sentinel{std::end(_range)};
     }
 
 }   // namespace pqviews
 
-#endif   // __FILTER_VIEW_HPP__
+#endif   // VIEWS__FILTER_VIEW_HPP

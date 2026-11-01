@@ -29,98 +29,15 @@
 #include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "globalTimer.hpp"
+#include "manostatSettings.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace manostat
 {
-
-    /**
-     * @brief copy constructor for Stochastic Rescaling Manostat
-     *
-     * @param other
-     */
-    StochasticRescalingManostat::StochasticRescalingManostat(
-        const StochasticRescalingManostat &other
-    )
-        : Manostat(other),
-          _tau(other._tau),
-          _compressibility(other._compressibility),
-          _fixedAxis(other._fixedAxis)
-    {
-    }
-
-    /**
-     * @brief copy assignment operator for Stochastic Rescaling Manostat
-     *
-     * @param other
-     * @return StochasticRescalingManostat&
-     */
-    StochasticRescalingManostat &StochasticRescalingManostat::operator=(
-        const StochasticRescalingManostat &other
-    )
-    {
-        if (this != &other)
-        {
-            Manostat::operator=(other);
-            _tau             = other._tau;
-            _compressibility = other._compressibility;
-            _fixedAxis       = other._fixedAxis;
-        }
-        return *this;
-    }
-
-    /**
-     * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic
-     * Rescaling
-     *
-     * @param targetPressure
-     * @param tau
-     * @param compressibility
-     * @param isotropy
-     * @param fixedAxis
-     */
-    SemiIsotropicStochasticRescalingManostat::
-        SemiIsotropicStochasticRescalingManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            Isotropy  isotropy,
-            FixedAxis fixedAxis
-        )
-        : StochasticRescalingManostat(
-              targetPressure,
-              tau,
-              compressibility,
-              fixedAxis
-          ),
-          _isotropy(isotropy)
-    {
-    }
-
-    /**
-     * @brief Construct a new Stochastic Rescaling Manostat:: Stochastic
-     * Rescaling Manostat object
-     *
-     * @param targetPressure
-     * @param tau
-     * @param compressibility
-     * @param fixedAxis
-     */
-    StochasticRescalingManostat::StochasticRescalingManostat(
-        double    targetPressure,
-        double    tau,
-        double    compressibility,
-        FixedAxis fixedAxis
-    )
-        : Manostat(targetPressure),
-          _tau(tau),
-          _compressibility(compressibility),
-          _fixedAxis(fixedAxis)
-    {
-    }
 
     /**
      * @brief apply Stochastic Rescaling manostat for NPT ensemble
@@ -184,11 +101,15 @@ namespace manostat
      */
     linalg::tensor3D StochasticRescalingManostat::calculateMu(double volume)
     {
-        if (_fixedAxis == FixedAxis::ALL)
+        const auto fixedAxis       = _getSettings().getFixedAxis();
+        const auto compressibility = _getSettings().getCompressibility();
+        const auto tau = _getSettings().getTau().numerical_value_in(fs);
+
+        if (fixedAxis == FixedAxis::ALL)
             return diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
         const auto compress =
-            _compressibility * settings::TimingsSettings::getTimeStep() / _tau;
+            compressibility * settings::TimingsSettings::getTimeStep() / tau;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -202,9 +123,10 @@ namespace manostat
         stochasticFactor      *= PRESSURE_FACTOR;
         stochasticFactor       = ::sqrt(stochasticFactor) * random;
 
-        if (_fixedAxis == FixedAxis::NONE)
+        if (fixedAxis == FixedAxis::NONE)
         {
-            const auto     deltaP    = _getTargetPressure() - _getPressure();
+            const auto deltaP =
+                _getSettings().getTargetPressure() - _getPressure();
             constexpr auto dimension = 3.0;
 
             return linalg::diagonalMatrix(
@@ -219,7 +141,7 @@ namespace manostat
 
         for (size_t axis = 0; axis < 3; ++axis)
         {
-            if (!_hasFixedAxis(axis))
+            if (!_hasFixedAxis(axis))   // use the fixedAxis from settings
             {
                 p_avg += p_xyz[axis];
                 ++numFree;
@@ -228,7 +150,7 @@ namespace manostat
 
         p_avg /= static_cast<double>(numFree);
 
-        const auto deltaP    = _getTargetPressure() - p_avg;
+        const auto deltaP    = _getSettings().getTargetPressure() - p_avg;
         const auto dimension = static_cast<double>(numFree);
 
         const auto mu_scaled =
@@ -252,7 +174,7 @@ namespace manostat
      */
     bool StochasticRescalingManostat::_hasFixedAxis(size_t index) const
     {
-        return isAxisFixed(_fixedAxis, index);
+        return isAxisFixed(_getSettings().getFixedAxis(), index);
     }
 
     /**
@@ -276,9 +198,9 @@ namespace manostat
         double volume
     )
     {
-        const auto compress = getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() /
-                              getTau();
+        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
+        const auto compress = _getSettings().getCompressibility() *
+                              settings::TimingsSettings::getTimeStep() / tau;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -297,16 +219,18 @@ namespace manostat
             ::sqrt(2.0 * stochasticFactor) *
             _getRNG().getNormalDistribution(0.0, 1.0);
 
+        const auto isotropy        = _getSettings().getIsotropy();
         const auto p_xyz           = diagonal(_getPressureTensor());
-        const auto isotropicAxes   = get2DIsotropicAxes(_isotropy);
-        const auto anisotropicAxis = get2DAnisotropicAxis(_isotropy);
+        const auto isotropicAxes   = get2DIsotropicAxes(isotropy);
+        const auto anisotropicAxis = get2DAnisotropicAxis(isotropy);
         const auto p_x             = p_xyz[isotropicAxes[0]];
         const auto p_y             = p_xyz[isotropicAxes[1]];
         const auto p_xy            = (p_x + p_y) / 2.0;
         const auto p_z             = p_xyz[anisotropicAxis];
 
-        const auto deltaPxy = _getTargetPressure() - p_xy;
-        const auto deltaPz  = _getTargetPressure() - p_z;
+        const auto targetPressure = _getSettings().getTargetPressure();
+        const auto deltaPxy       = targetPressure - p_xy;
+        const auto deltaPz        = targetPressure - p_z;
 
         const auto mu_xy =
             ::exp((-compress * deltaPxy / 3.0) + (stochasticFactor_xy / 2.0));
@@ -338,9 +262,9 @@ namespace manostat
         double volume
     )
     {
-        const auto compress = getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() /
-                              getTau();
+        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
+        const auto compress = _getSettings().getCompressibility() *
+                              settings::TimingsSettings::getTimeStep() / tau;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -353,7 +277,7 @@ namespace manostat
         stochasticFactor  = ::sqrt(stochasticFactor);
 
         const auto deltaP =
-            _getTargetPressure() - diagonal(_getPressureTensor());
+            _getSettings().getTargetPressure() - diagonal(_getPressureTensor());
 
         auto mu = linalg::Vec3D{1.0, 1.0, 1.0};
         for (size_t i = 0; i < 3; ++i)
@@ -385,9 +309,9 @@ namespace manostat
         double volume
     )
     {
-        const auto compress = getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() /
-                              getTau();
+        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
+        const auto compress = _getSettings().getCompressibility() *
+                              settings::TimingsSettings::getTimeStep() / tau;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -400,7 +324,8 @@ namespace manostat
         stochasticFactor  = ::sqrt(stochasticFactor);
 
         const auto deltaP =
-            linalg::diagonalMatrix(_getTargetPressure()) - _getPressureTensor();
+            linalg::diagonalMatrix(_getSettings().getTargetPressure()) -
+            _getPressureTensor();
 
         auto strain = -compress * deltaP / linalg::tensor3D::size;
         for (size_t i = 0; i < 3; ++i)
@@ -420,39 +345,6 @@ namespace manostat
         rotateMu(mu);
 
         return mu;
-    }
-
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief get tau (relaxation time)
-     *
-     * @return double
-     */
-    double StochasticRescalingManostat::getTau() const { return _tau; }
-
-    /**
-     * @brief get compressibility
-     *
-     * @return double
-     */
-    double StochasticRescalingManostat::getCompressibility() const
-    {
-        return _compressibility;
-    }
-
-    /**
-     * @brief get the manostat type
-     *
-     * @return ManostatType
-     */
-    ManostatType StochasticRescalingManostat::getManostatType() const
-    {
-        return ManostatType::STOCHASTIC_RESCALING;
     }
 
 }   // namespace manostat

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_INTEGRATOR_HPP_
-
-#define _TEST_INTEGRATOR_HPP_
+#ifndef TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP
+#define TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP
 
 #include <gtest/gtest.h>
 
@@ -85,4 +84,4 @@ class TestIntegrator : public ::testing::Test
     }
 };
 
-#endif   // _TEST_INTEGRATOR_HPP_
+#endif   // TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP

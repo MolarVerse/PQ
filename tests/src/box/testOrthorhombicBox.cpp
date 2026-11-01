@@ -48,7 +48,8 @@ TEST(TestBox, clonedGeometryIsIndependent)
         std::make_unique<molsys::OrthorhombicBox>(boxDimensions),
         std::make_unique<molsys::TriclinicBox>(
             boxDimensions,
-            linalg::Vec3D{90.0, 90.0, 60.0}
+            linalg::Vec3D{90.0, 90.0, 60.0},
+            false
         )
     };
     const std::array expectedVolumes{6.0, 3.0 * std::numbers::sqrt3};

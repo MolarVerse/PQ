@@ -8,4 +8,6 @@
 - Replace static `ConvSettings`
 - Replace static `WaterModelSettings`
 - Replace static `ConstraintSettings`
+- Replace static `ManostatSettings`
 - Replace static `ForceFieldSettings`
+- Add the possibility to add names for `Setting` as an `mstd::Tag`

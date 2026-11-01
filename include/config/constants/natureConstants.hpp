@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NATURE_CONSTANTS_HPP_
-
-#define _NATURE_CONSTANTS_HPP_
+#ifndef CONFIG__CONSTANTS__NATURE_CONSTANTS_HPP
+#define CONFIG__CONSTANTS__NATURE_CONSTANTS_HPP
 
 #include <cmath>
 
@@ -80,4 +79,4 @@ static constexpr double PERMITTIVITY_VACUUM = 8.854187817e-12;
  */
 static constexpr double SPEED_OF_LIGHT = 299792458.0;
 
-#endif   // _NATURE_CONSTANTS_HPP_
+#endif   // CONFIG__CONSTANTS__NATURE_CONSTANTS_HPP

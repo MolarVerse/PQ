@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __UNITS_HPP__
-#define __UNITS_HPP__
+#ifndef CONFIG__UNITS_HPP
+#define CONFIG__UNITS_HPP
 
 /// NOTE FOR DEVELOPERS
 /// This header provides convenient type aliases for commonly used angular
@@ -33,7 +33,13 @@
 
 #include <mstd/units.hpp>
 
+// NOLINTBEGIN(readability-identifier-length)
+
 inline constexpr auto rad = mstd::units::rad;
 inline constexpr auto deg = mstd::units::deg;
 
-#endif   // __UNITS_HPP__
+inline constexpr auto ps = mstd::units::ps;
+inline constexpr auto fs = mstd::units::fs;
+
+// NOLINTEND(readability-identifier-length)
+#endif   // CONFIG__UNITS_HPP

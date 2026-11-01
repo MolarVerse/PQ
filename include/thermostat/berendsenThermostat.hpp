@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BERENDSEN_THERMOSTAT_HPP_
-
-#define _BERENDSEN_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__BERENDSEN_THERMOSTAT_HPP
+#define THERMOSTAT__BERENDSEN_THERMOSTAT_HPP
 
 #include "thermostat.hpp"
 
@@ -59,4 +58,4 @@ namespace thermostat
 
 }   // namespace thermostat
 
-#endif   // _BERENDSEN_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__BERENDSEN_THERMOSTAT_HPP

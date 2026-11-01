@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _M_SHAKE_HPP_
-
-#define _M_SHAKE_HPP_
+#ifndef CONSTRAINTS__M_SHAKE_HPP
+#define CONSTRAINTS__M_SHAKE_HPP
 
 #include <memory>
 #include <vector>
@@ -82,4 +81,4 @@ namespace constraints
     };
 }   // namespace constraints
 
-#endif   // _M_SHAKE_HPP_
+#endif   // CONSTRAINTS__M_SHAKE_HPP

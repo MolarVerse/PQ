@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_TIMINGS_HPP_
-
-#define _TEST_TIMINGS_HPP_
+#ifndef TESTS__INCLUDE__TIMINGS__TEST_TIMINGS_HPP
+#define TESTS__INCLUDE__TIMINGS__TEST_TIMINGS_HPP
 
 #include <gtest/gtest.h>
 
@@ -60,4 +59,4 @@ class TestTimer : public ::testing::Test
     void SetUp() override { _timer = std::make_unique<timings::Timer>(); }
 };
 
-#endif   // _TEST_TIMINGS_HPP_
+#endif   // TESTS__INCLUDE__TIMINGS__TEST_TIMINGS_HPP

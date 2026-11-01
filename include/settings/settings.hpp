@@ -20,13 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTINGS_HPP_
-#define _SETTINGS_HPP_
+#ifndef SETTINGS__SETTINGS_HPP
+#define SETTINGS__SETTINGS_HPP
 
 #include "constraintSettings.hpp"
 #include "convergenceSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "hessianSettings.hpp"
+#include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "qmSettings.hpp"
 #include "resetKineticsSettings.hpp"
@@ -49,8 +50,9 @@ struct Settings
     WaterModelSettings    waterModelSettings;
     ForceFieldSettings    forceFieldSettings;
     QMSettings            qmSettings;
+    ManostatSettings      manostatSettings;
 
     void finalize();
 };
 
-#endif   // _SETTINGS_HPP_
+#endif   // SETTINGS__SETTINGS_HPP

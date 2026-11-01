@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_HPP_
-
-#define _RESET_KINETICS_HPP_
+#ifndef RESET_KINETICS__RESET_KINETICS_HPP
+#define RESET_KINETICS__RESET_KINETICS_HPP
 
 #include <cstddef>
 #include <mstd/types.hpp>
@@ -80,4 +79,4 @@ namespace resetKinetics
 
 }   // namespace resetKinetics
 
-#endif   // _RESET_KINETICS_HPP_
+#endif   // RESET_KINETICS__RESET_KINETICS_HPP

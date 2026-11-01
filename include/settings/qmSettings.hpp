@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_SETTINGS_HPP_
-
-#define _QM_SETTINGS_HPP_
+#ifndef SETTINGS__QM_SETTINGS_HPP
+#define SETTINGS__QM_SETTINGS_HPP
 
 #include <string>
 #include <unordered_map>
@@ -156,4 +155,4 @@ class QMSettings
     friend struct ::TestQMSettings;
 };
 
-#endif   // _QM_SETTINGS_HPP_
+#endif   // SETTINGS__QM_SETTINGS_HPP

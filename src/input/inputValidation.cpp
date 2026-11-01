@@ -38,6 +38,7 @@
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -80,7 +81,7 @@ namespace input
         validateOptimizer(settings);
         _validateQM(settings.qmSettings);
         _validateThermostat(settings.simulationBoxSettings);
-        _validateManostat();
+        _validateManostat(settings.manostatSettings);
         _validateCellList();
         _validateReactionFieldCoulomb();
         _validateRingPolymer();
@@ -396,9 +397,11 @@ namespace input
      * @throws exc::InputFileException if a manostat is selected without
      * `pressure`
      */
-    void InputFileReader::_validateManostat() const
+    void InputFileReader::_validateManostat(
+        const ManostatSettings& manostatSettings
+    ) const
     {
-        const auto manostatType = settings::ManostatSettings::getManostatType();
+        const auto manostatType = manostatSettings.getManostatType();
 
         if (manostatType == ManostatType::NONE)
             return;
@@ -414,7 +417,7 @@ namespace input
         }
 
         const auto relaxationTime =
-            settings::ManostatSettings::getTauManostat() * PS_TO_FS;
+            manostatSettings.getTau().numerical_value_in(fs);
 
         if (settings::TimingsSettings::getTimeStep() > relaxationTime)
             throw exc::InputFileException(

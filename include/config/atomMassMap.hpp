@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ATOM_MASS_MAP_HPP_
-
-#define _ATOM_MASS_MAP_HPP_
+#ifndef CONFIG__ATOM_MASS_MAP_HPP
+#define CONFIG__ATOM_MASS_MAP_HPP
 
 #include <map>
 #include <string>
@@ -81,4 +80,4 @@ const std::map<std::string, double> atomMassMap = {
     {"sup", 1000000.0}, {"dum", 1.0}
 };
 
-#endif   // _ATOM_MASS_MAP_HPP_
+#endif   // CONFIG__ATOM_MASS_MAP_HPP

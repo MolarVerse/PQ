@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DEFAULTS_HPP_
-
-#define _DEFAULTS_HPP_
+#ifndef CONFIG__DEFAULTS_HPP
+#define CONFIG__DEFAULTS_HPP
 
 #include <cstddef>
 
 #include "enums/convergence.hpp"
+#include "unit_types.hpp"
 
 /**
  * @brief struct containing all default file names
@@ -116,7 +116,7 @@ namespace defaults
     static constexpr double NH_COUPLING_FREQ             = 1.0e3;    // in cm^-1
     static constexpr double MAX_FRICTION_CONVERSION      = 1.0e12;   // in s^-1
 
-    static constexpr double BERENDSEN_MANOSTAT_RELAX_TIME = 1.0;   // in ps
+    static constexpr Time   BERENDSEN_MANOSTAT_RELAX_TIME = 1 * mstd::units::ps;
     static constexpr double COMPRESSIBILITY_WATER_DEFAULT =
         4.591e-5;   // in bar^-1 default value for berendsen manostat
 
@@ -144,4 +144,4 @@ namespace defaults
 
 }   // namespace defaults
 
-#endif   // _DEFAULTS_HPP_
+#endif   // CONFIG__DEFAULTS_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_RST_FILE_READER_H_
-
-#define _TEST_RST_FILE_READER_H_
+#ifndef TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_READER_HPP
 
 #include <gtest/gtest.h>
 

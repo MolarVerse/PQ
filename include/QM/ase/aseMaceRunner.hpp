@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MACE_RUNNER_HPP_
-
-#define _MACE_RUNNER_HPP_
+#ifndef QM__ASE__ASE_MACE_RUNNER_HPP
+#define QM__ASE__ASE_MACE_RUNNER_HPP
 
 #include "aseQMRunner.hpp"
 
@@ -49,4 +48,4 @@ namespace QM
     };
 }   // namespace QM
 
-#endif   // _MACE_RUNNER_HPP_
+#endif   // QM__ASE__ASE_MACE_RUNNER_HPP

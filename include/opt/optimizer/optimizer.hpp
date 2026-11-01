@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_HPP_
-
-#define _OPTIMIZER_HPP_
+#ifndef OPT__OPTIMIZER__OPTIMIZER_HPP
+#define OPT__OPTIMIZER__OPTIMIZER_HPP
 
 #include <cstddef>
 #include <deque>
@@ -128,4 +127,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _OPTIMIZER_HPP_
+#endif   // OPT__OPTIMIZER__OPTIMIZER_HPP

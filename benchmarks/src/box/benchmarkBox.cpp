@@ -37,7 +37,11 @@ namespace
 
     molsys::TriclinicBox makeTriclinicBox()
     {
-        molsys::TriclinicBox box{{20.0, 25.0, 30.0}, {80.0, 90.0, 100.0}};
+        molsys::TriclinicBox box{
+            {20.0, 25.0, 30.0},
+            {80.0, 90.0, 100.0},
+            false
+        };
         return box;
     }
 

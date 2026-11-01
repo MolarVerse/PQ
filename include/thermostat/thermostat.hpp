@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_HPP_
-
-#define _THERMOSTAT_HPP_
+#ifndef THERMOSTAT__THERMOSTAT_HPP
+#define THERMOSTAT__THERMOSTAT_HPP
 
 #include <cstddef>
 #include <string>
@@ -119,4 +118,4 @@ namespace thermostat
 
 }   // namespace thermostat
 
-#endif   // _THERMOSTAT_HPP_
+#endif   // THERMOSTAT__THERMOSTAT_HPP

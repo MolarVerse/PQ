@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BASE_CONCEPTS_HPP_
-
-#define _BASE_CONCEPTS_HPP_
+#ifndef CONCEPTS__BASE_HPP
+#define CONCEPTS__BASE_HPP
 
 #include <concepts>
 
@@ -62,4 +61,4 @@ namespace pq
 
 }   // namespace pq
 
-#endif   // _BASE_CONCEPTS_HPP_
+#endif   // CONCEPTS__BASE_HPP

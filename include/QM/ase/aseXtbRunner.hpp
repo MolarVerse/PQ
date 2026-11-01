@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ASE_XTB_RUNNER_HPP_
-
-#define _ASE_XTB_RUNNER_HPP_
+#ifndef QM__ASE__ASE_XTB_RUNNER_HPP
+#define QM__ASE__ASE_XTB_RUNNER_HPP
 
 #include "aseQMRunner.hpp"
 
@@ -45,4 +44,4 @@ namespace QM
     };
 }   // namespace QM
 
-#endif   // _ASE_XTB_RUNNER_HPP_
+#endif   // QM__ASE__ASE_XTB_RUNNER_HPP

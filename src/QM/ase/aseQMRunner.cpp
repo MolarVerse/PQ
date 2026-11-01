@@ -27,10 +27,19 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
+#include <atomic>
+#include <chrono>
 #include <thread>
+
+#if !defined(_WIN32)
+#include <pthread.h>
+
+#include <csignal>
+#endif
 
 #include "box.hpp"
 #include "constants.hpp"
+#include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
@@ -213,6 +222,75 @@ namespace QM
             }
         }
 
+#if !defined(_WIN32)
+        using PythonThread = pthread_t;
+
+        PythonThread currentThread() { return ::pthread_self(); }
+#else
+        using PythonThread = int;
+
+        PythonThread currentThread() { return 0; }
+#endif
+
+        /**
+         * @brief interrupts the running Python code once qm_loop_time_limit
+         * is exceeded
+         *
+         * @details an exception thrown in this thread would terminate PQ, so
+         * the Python call in the calling thread is interrupted instead
+         * (KeyboardInterrupt) and timedOut is set. If Python handles SIGINT,
+         * the signal is also sent to the calling thread to wake up blocking
+         * calls such as time.sleep or subprocess waits.
+         *
+         * @param stopToken stops the watchdog when the QM step is done
+         * @param timedOut set to true if the time limit was exceeded
+         * @param pythonThread thread that runs the Python calculation
+         */
+        void interruptAfterTimeout(
+            const std::stop_token &stopToken,
+            std::atomic_bool      &timedOut,
+            PythonThread           pythonThread
+        )
+        {
+            constexpr auto pollInterval = std::chrono::milliseconds(10);
+
+            // qm_loop_time_limit is given in s
+            const auto timeLimit = settings::QMSettings::getQMLoopTimeLimit();
+
+            if (timeLimit <= 0.0)
+            {
+                return;
+            }
+
+            const auto deadline = std::chrono::steady_clock::now() +
+                                  std::chrono::duration<double>(timeLimit);
+
+            while (std::chrono::steady_clock::now() < deadline)
+            {
+                if (stopToken.stop_requested())
+                {
+                    return;
+                }
+
+                std::this_thread::sleep_for(pollInterval);
+            }
+
+            timedOut = true;
+            ::PyErr_SetInterrupt();
+
+#if !defined(_WIN32)
+            struct sigaction current{};
+            ::sigaction(SIGINT, nullptr, &current);
+
+            if (current.sa_handler != SIG_DFL && current.sa_handler != SIG_IGN)
+            {
+                ::pthread_kill(pythonThread, SIGINT);
+            }
+#else
+            static_cast<void>(pythonThread);
+#endif
+        }
+
     }   // namespace
 
     /**
@@ -271,7 +349,7 @@ namespace QM
      * @param physicalData
      * @param per the periodicity to apply to the simulation box
      *
-     * @throw QMRunnerException if the calculation takes too long
+     * @throw QMRunnerException if the calculation exceeds qm_loop_time_limit
      */
     void AseQMRunner::run(
         molsys::SimulationBox      &simulationBox,
@@ -281,28 +359,52 @@ namespace QM
     {
         _setPeriodicity(per);
 
+        auto         timedOut = std::atomic_bool{false};
         std::jthread timeoutThread{
-            [](const std::stop_token &stopToken, double qmLoopTimeLimit)
-            { throwAfterTimeout(stopToken, qmLoopTimeLimit); },
-            _getQMSettings().getQMLoopTimeLimit()
+            [&timedOut,
+             pythonThread = currentThread()](const std::stop_token &stopToken)
+            { interruptAfterTimeout(stopToken, timedOut, pythonThread); }
         };
 
+        try
         {
-            auto _ = scopedTimer(TimerId::QMEngine, "Build ASE Atoms");
-            buildAseAtoms(simulationBox);
-        }
+            {
+                auto _ = scopedTimer(TimerId::QMEngine, "Build ASE Atoms");
+                buildAseAtoms(simulationBox);
+            }
 
-        {
-            auto _ = scopedTimer(TimerId::QMEngine, "Execute ASE QM");
-            execute();
-        }
+            {
+                auto _ = scopedTimer(TimerId::QMEngine, "Execute ASE QM");
+                execute();
+            }
 
+            {
+                auto _ = scopedTimer(TimerId::QMEngine, "Collect ASE Data");
+                collectData(simulationBox, physicalData);
+            }
+        }
+        catch (const pybind11::error_already_set &error)
         {
-            auto _ = scopedTimer(TimerId::QMEngine, "Collect ASE Data");
-            collectData(simulationBox, physicalData);
+            timeoutThread.request_stop();
+            timeoutThread.join();
+
+            if (timedOut && error.matches(PyExc_KeyboardInterrupt))
+            {
+                throw exc::QMRunnerException("QM calculation timeout");
+            }
+
+            throw;
         }
 
         timeoutThread.request_stop();
+        timeoutThread.join();
+
+        // the limit was hit right after Python returned: drop the pending
+        // interrupt so it does not abort the next Python call
+        if (timedOut && ::PyErr_CheckSignals() != 0)
+        {
+            ::PyErr_Clear();
+        }
     }
 
     /**

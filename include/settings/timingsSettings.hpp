@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_SETTINGS_HPP_
-
-#define _TIMINGS_SETTINGS_HPP_
+#ifndef SETTINGS__TIMINGS_SETTINGS_HPP
+#define SETTINGS__TIMINGS_SETTINGS_HPP
 
 #include <cstddef>
 
@@ -63,4 +62,4 @@ namespace settings
     };
 }   // namespace settings
 
-#endif   // _TIMINGS_SETTINGS_HPP_
+#endif   // SETTINGS__TIMINGS_SETTINGS_HPP

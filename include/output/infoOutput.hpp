@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __INFO_OUTPUT_HPP__
-
-#define __INFO_OUTPUT_HPP__
+#ifndef OUTPUT__INFO_OUTPUT_HPP
+#define OUTPUT__INFO_OUTPUT_HPP
 
 #include <string_view>
 
@@ -82,4 +81,4 @@ namespace out
 
 }   // namespace out
 
-#endif /* __INFO_OUTPUT_HPP__ */
+#endif /* OUTPUT__INFO_OUTPUT_HPP */

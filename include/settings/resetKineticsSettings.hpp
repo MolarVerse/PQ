@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_SETTINGS_HPP_
-
-#define _RESET_KINETICS_SETTINGS_HPP_
+#ifndef SETTINGS__RESET_KINETICS_SETTINGS_HPP
+#define SETTINGS__RESET_KINETICS_SETTINGS_HPP
 
 #include <cstddef>
 
@@ -75,4 +74,4 @@ class ResetKineticsSettings
     [[nodiscard]] size_t getFResetForces() const;
 };
 
-#endif   // _RESET_KINETICS_SETTINGS_HPP_
+#endif   // SETTINGS__RESET_KINETICS_SETTINGS_HPP

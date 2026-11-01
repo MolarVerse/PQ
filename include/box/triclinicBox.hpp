@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TRICLINIC_BOX_HPP_
-
-#define _TRICLINIC_BOX_HPP_
+#ifndef BOX__TRICLINIC_BOX_HPP
+#define BOX__TRICLINIC_BOX_HPP
 
 #include <memory>
 #include <mstd/types.hpp>
@@ -69,10 +68,13 @@ namespace molsys
         TensorCache<_boxMatrixPtr>      _inverse{_calculateInverse};
         BoxCache<double, _boxMatrixPtr> _volume{_calculateVolume};
 
+        bool _allowChangeOfAngles;
+
        public:
         TriclinicBox(
             const linalg::Vec3D &boxDimensions,
-            const linalg::Vec3D &boxAngles
+            const linalg::Vec3D &boxAngles,
+            bool                 allowChangeOfAngles
         );
 
         [[nodiscard]]
@@ -105,6 +107,9 @@ namespace molsys
         linalg::Vec3D wrapPositionIntoBox(
             const linalg::Vec3D &pos
         ) const override;
+
+        [[nodiscard]]
+        bool allowChangeOfAngles() const override;
 
        private:
         [[nodiscard]]
@@ -142,4 +147,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _TRICLINIC_BOX_HPP_
+#endif   // BOX__TRICLINIC_BOX_HPP

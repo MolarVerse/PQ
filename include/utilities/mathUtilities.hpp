@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MATH_UTILITIES_HPP_
-
-#define _MATH_UTILITIES_HPP_
+#ifndef UTILITIES__MATH_UTILITIES_HPP
+#define UTILITIES__MATH_UTILITIES_HPP
 
 #include <cmath>
 #include <cstdlib>
@@ -123,4 +122,4 @@ namespace utilities
 
 }   // namespace utilities
 
-#endif   // _MATH_UTILITIES_HPP_
+#endif   // UTILITIES__MATH_UTILITIES_HPP

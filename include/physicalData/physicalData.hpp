@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PHYSICAL_DATA_HPP_
-
-#define _PHYSICAL_DATA_HPP_
+#ifndef PHYSICAL_DATA__PHYSICAL_DATA_HPP
+#define PHYSICAL_DATA__PHYSICAL_DATA_HPP
 
 #include <memory>
 #include <vector>
@@ -87,7 +86,8 @@ namespace physicalData
         double _dihedralEnergy = 0.0;
         double _improperEnergy = 0.0;
 
-        double _qmEnergy = 0.0;
+        double _qmEnergy          = 0.0;
+        double _qmReferenceEnergy = 0.0;
 
         double _numberOfSmoothingMol = 0.0;
 
@@ -130,6 +130,7 @@ namespace physicalData
 
         void addVirial(const linalg::tensor3D& virial);
         void addQMEnergy(double qmEnergy);
+        void addQMReferenceEnergy(double qmReferenceEnergy);
         void addCoulombEnergy(double coulombEnergy);
         void addNonCoulombEnergy(double nonCoulombEnergy);
 
@@ -174,6 +175,7 @@ namespace physicalData
         void setImproperEnergy(double improperEnergy);
 
         void setQMEnergy(double qmEnergy);
+        void setQMReferenceEnergy(double qmReferenceEnergy);
 
         void setNumberOfSmoothingMolecules(double numberSmMol);
 
@@ -211,6 +213,7 @@ namespace physicalData
         [[nodiscard]] double getImproperEnergy() const;
 
         [[nodiscard]] double getQMEnergy() const;
+        [[nodiscard]] double getQMReferenceEnergy() const;
 
         [[nodiscard]] double getNumberOfSmoothingMolecules() const;
 
@@ -239,4 +242,4 @@ namespace physicalData
 
 }   // namespace physicalData
 
-#endif   // _PHYSICAL_DATA_HPP_
+#endif   // PHYSICAL_DATA__PHYSICAL_DATA_HPP

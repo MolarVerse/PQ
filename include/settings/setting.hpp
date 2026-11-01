@@ -20,17 +20,22 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTING_HPP_
-#define _SETTING_HPP_
+#ifndef SETTINGS__SETTING_HPP
+#define SETTINGS__SETTING_HPP
 
+#include <mstd/types.hpp>
 #include <optional>
 
 /**
  * @brief A template class representing a configurable setting.
  *
  * @tparam T The type of the setting value.
+ * @tparam Tag The tag type providing a name for the setting. This should be an
+ * instance of `mstd::Tag` with a unique string identifier. The tag is used to
+ * generate meaningful error messages when the setting is not set and no default
+ * is available.
  */
-template <typename T>
+template <typename T, mstd::Tag Name = mstd::Tag("Settings")>
 class Setting
 {
    private:
@@ -48,10 +53,13 @@ class Setting
 
     [[nodiscard]]
     bool isSet() const;
+
+   private:
+    void _throwIfNotSet() const;
 };
 
-#ifndef _SETTING_TPP_
+#ifndef SETTINGS__SETTING_TPP
 #include "setting.tpp"
 #endif
 
-#endif   // _SETTING_HPP_
+#endif   // SETTINGS__SETTING_HPP

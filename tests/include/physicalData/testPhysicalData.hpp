@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_PHYSICAL_DATA_HPP_
-
-#define _TEST_PHYSICAL_DATA_HPP_
+#ifndef TESTS__INCLUDE__PHYSICAL_DATA__TEST_PHYSICAL_DATA_HPP
+#define TESTS__INCLUDE__PHYSICAL_DATA__TEST_PHYSICAL_DATA_HPP
 
 #include <gtest/gtest.h>
 
@@ -58,6 +57,7 @@ class TestPhysicalData : public ::testing::Test
         _physicalData->setPressure(8.0);
         _physicalData->setCoupledPressure(8.5);
         _physicalData->setQMEnergy(9.0);
+        _physicalData->setQMReferenceEnergy(1.0);
 
         _simulationBox = std::make_unique<molsys::SimulationBox>();
 

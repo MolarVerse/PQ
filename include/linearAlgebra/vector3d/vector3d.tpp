@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VECTOR3D_TPP_
-
-#define _VECTOR3D_TPP_
+#ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_TPP
+#define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_TPP
 
 #include <algorithm>
 #include <mstd/math.hpp>
@@ -1359,4 +1358,4 @@ namespace linalg
 
 }   // namespace linalg
 
-#endif   // _VECTOR3D_TPP_
+#endif   // LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_TPP

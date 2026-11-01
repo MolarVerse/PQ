@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SHAKE_SECTION_HPP_
-
-#define _SHAKE_SECTION_HPP_
+#ifndef INPUT__TOPOLOGY_FILE_READER__SHAKE_SECTION_HPP
+#define INPUT__TOPOLOGY_FILE_READER__SHAKE_SECTION_HPP
 
 #include <string>
 
@@ -50,4 +49,4 @@ namespace input::topology
     };
 }   // namespace input::topology
 
-#endif   // _SHAKE_SECTION_HPP_
+#endif   // INPUT__TOPOLOGY_FILE_READER__SHAKE_SECTION_HPP

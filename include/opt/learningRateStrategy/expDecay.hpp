@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXP_DECAY_HPP_
-
-#define _EXP_DECAY_HPP_
+#ifndef OPT__LEARNING_RATE_STRATEGY__EXP_DECAY_HPP
+#define OPT__LEARNING_RATE_STRATEGY__EXP_DECAY_HPP
 
 #include <cmath>
 
@@ -51,4 +50,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _EXP_DECAY_HPP_
+#endif   // OPT__LEARNING_RATE_STRATEGY__EXP_DECAY_HPP

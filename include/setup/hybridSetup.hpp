@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_SETUP_HPP_
-
-#define _HYBRID_SETUP_HPP_
+#ifndef SETUP__HYBRID_SETUP_HPP
+#define SETUP__HYBRID_SETUP_HPP
 
 namespace engine
 {
@@ -57,6 +56,7 @@ namespace setup
         void setupForcedOuterList();
         void checkZoneRadii();
         void validateQMChargeSettings();
+        void validateQMReferenceEnergies();
         void setupWriteInfo() const;
 
        private:
@@ -67,4 +67,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _HYBRID_SETUP_HPP_
+#endif   // SETUP__HYBRID_SETUP_HPP

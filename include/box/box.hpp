@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOX_HPP_
-
-#define _BOX_HPP_
+#ifndef BOX__BOX_HPP
+#define BOX__BOX_HPP
 
 #include <memory>
 #include <mstd/types.hpp>
@@ -109,6 +108,9 @@ namespace molsys
         [[nodiscard]]
         virtual linalg::tensor3D toSimSpace(const linalg::tensor3D &) const = 0;
 
+        [[nodiscard]]
+        virtual bool allowChangeOfAngles() const = 0;
+
         /********************
          * standard getters *
          ********************/
@@ -131,4 +133,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _BOX_HPP_
+#endif   // BOX__BOX_HPP

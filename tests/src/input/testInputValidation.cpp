@@ -40,6 +40,7 @@
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 class TestInputValidation : public ::testing::Test
 {
@@ -59,8 +60,8 @@ class TestInputValidation : public ::testing::Test
         _settings.optimizerSettings.setMinLearningRate(1.0e-15);
         _settings.optimizerSettings.setMaxLearningRate(1.0);
 
-        settings::ManostatSettings::setManostatType(ManostatType::NONE);
-        settings::ManostatSettings::setTauManostat(
+        _settings.manostatSettings.setManostatType(ManostatType::NONE);
+        _settings.manostatSettings.setTau(
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
@@ -181,7 +182,7 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
 
 TEST_F(TestInputValidation, requiresPressureForManostat)
 {
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -193,8 +194,8 @@ TEST_F(TestInputValidation, requiresPressureForManostat)
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setTauManostat(0.0001);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setTau(0.0001 * ps);
     _setKeyword("pressure");
 
     ASSERT_THROW_MSG(
@@ -608,7 +609,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::MACE);
     _settings.qmSettings.setMaceModel(MaceModel::CUSTOM);
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
     settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     _setKeyword("mace_model_path");
     _setKeyword("pressure");

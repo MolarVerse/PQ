@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NOSE_HOOVER_SECTION_HPP_
-
-#define _NOSE_HOOVER_SECTION_HPP_
+#ifndef INPUT__RESTART_FILE_READER__NOSE_HOOVER_SECTION_HPP
+#define INPUT__RESTART_FILE_READER__NOSE_HOOVER_SECTION_HPP
 
 #include <string>
 
@@ -51,4 +50,4 @@ namespace input::restartFile
 
 }   // namespace input::restartFile
 
-#endif   // _NOSE_HOOVER_SECTION_HPP_
+#endif   // INPUT__RESTART_FILE_READER__NOSE_HOOVER_SECTION_HPP

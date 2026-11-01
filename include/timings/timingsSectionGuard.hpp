@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_SECTION_GUARD_HPP_
-
-#define _TIMINGS_SECTION_GUARD_HPP_
+#ifndef TIMINGS__TIMINGS_SECTION_GUARD_HPP
+#define TIMINGS__TIMINGS_SECTION_GUARD_HPP
 
 #include <string>
 #include <string_view>
@@ -65,4 +64,4 @@ namespace timings
 
 }   // namespace timings
 
-#endif   // _TIMINGS_SECTION_GUARD_HPP_
+#endif   // TIMINGS__TIMINGS_SECTION_GUARD_HPP

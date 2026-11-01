@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __TRANSFORM_ADAPTOR_HPP__
-#define __TRANSFORM_ADAPTOR_HPP__
+#ifndef VIEWS__TRANSFORM_ADAPTOR_HPP
+#define VIEWS__TRANSFORM_ADAPTOR_HPP
 
 #include "transformView.hpp"
 
@@ -62,4 +62,4 @@ namespace pqviews
 
 }   // namespace pqviews
 
-#endif   // __TRANSFORM_ADAPTOR_HPP__
+#endif   // VIEWS__TRANSFORM_ADAPTOR_HPP

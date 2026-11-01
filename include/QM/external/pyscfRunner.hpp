@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PYSCF_RUNNER_HPP_
-
-#define _PYSCF_RUNNER_HPP_
+#ifndef QM__EXTERNAL__PYSCF_RUNNER_HPP
+#define QM__EXTERNAL__PYSCF_RUNNER_HPP
 
 #include "externalQMRunner.hpp"
 
@@ -44,4 +43,4 @@ namespace QM
 
 }   // namespace QM
 
-#endif   // _PYSCF_RUNNER_HPP_
+#endif   // QM__EXTERNAL__PYSCF_RUNNER_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
-
-#define _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
+#ifndef OPT__LEARNING_RATE_STRATEGY__CONSTANT_DECAY_HPP
+#define OPT__LEARNING_RATE_STRATEGY__CONSTANT_DECAY_HPP
 
 #include "learningRateStrategy.hpp"
 
@@ -62,4 +61,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
+#endif   // OPT__LEARNING_RATE_STRATEGY__CONSTANT_DECAY_HPP

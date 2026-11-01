@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STEEPEST_DESCENT_HPP_
-
-#define _STEEPEST_DESCENT_HPP_
+#ifndef OPT__OPTIMIZER__STEEPEST_DESCENT_HPP
+#define OPT__OPTIMIZER__STEEPEST_DESCENT_HPP
 
 #include "optimizer.hpp"
 
@@ -52,4 +51,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _STEEPEST_DESCENT_HPP_
+#endif   // OPT__OPTIMIZER__STEEPEST_DESCENT_HPP

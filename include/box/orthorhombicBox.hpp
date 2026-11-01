@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ORTHORHOMBIC_BOX_HPP_
-
-#define _ORTHORHOMBIC_BOX_HPP_
+#ifndef BOX__ORTHORHOMBIC_BOX_HPP
+#define BOX__ORTHORHOMBIC_BOX_HPP
 
 #include <memory>
 
@@ -89,8 +88,11 @@ namespace molsys
         linalg::tensor3D toSimSpace(
             const linalg::tensor3D &position
         ) const override;
+
+        [[nodiscard]]
+        bool allowChangeOfAngles() const override;
     };
 
 }   // namespace molsys
 
-#endif   // _ORTHORHOMBIC_BOX_HPP_
+#endif   // BOX__ORTHORHOMBIC_BOX_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_READER_HPP_
-
-#define _INPUT_FILE_READER_HPP_
+#ifndef INPUT__INPUT_FILE_READER_HPP
+#define INPUT__INPUT_FILE_READER_HPP
 
 #include <cstddef>
 #include <map>
@@ -42,6 +41,7 @@ namespace engine
 struct Settings;               // forward declaration
 class SimulationBoxSettings;   // forward declaration
 class QMSettings;              // forward declaration
+class ManostatSettings;        // forward declaration
 
 /**
  * @brief namespace for reading input files
@@ -123,12 +123,12 @@ namespace input
         void _validateThermostat(
             const SimulationBoxSettings &simBoxSettings
         ) const;
-        void        _validateManostat() const;
-        void        _validateReactionFieldCoulomb() const;
-        void        _validateRingPolymer() const;
+        void _validateManostat(const ManostatSettings &manostatSettings) const;
+        void _validateReactionFieldCoulomb() const;
+        void _validateRingPolymer() const;
         static void _validateCellList();
     };
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_READER_HPP_
+#endif   // INPUT__INPUT_FILE_READER_HPP

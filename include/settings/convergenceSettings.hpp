@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONVERGENCE_SETTINGS_HPP_
-
-#define _CONVERGENCE_SETTINGS_HPP_
+#ifndef SETTINGS__CONVERGENCE_SETTINGS_HPP
+#define SETTINGS__CONVERGENCE_SETTINGS_HPP
 
 #include "enums/convergence.hpp"
 #include "setting.hpp"
@@ -93,4 +92,4 @@ class ConvSettings
     [[nodiscard]] ConvStrategy getEnConvStrategy() const;
 };
 
-#endif   // _CONVERGENCE_SETTINGS_HPP_
+#endif   // SETTINGS__CONVERGENCE_SETTINGS_HPP

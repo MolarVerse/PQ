@@ -20,15 +20,21 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_SETUP_HPP_
-
-#define _MANOSTAT_SETUP_HPP_
+#ifndef SETUP__MANOSTAT_SETUP_HPP
+#define SETUP__MANOSTAT_SETUP_HPP
 
 namespace engine
 {
     class Engine;     // forward declaration
     class MDEngine;   // forward declaration
 }   // namespace engine
+
+class ManostatSettings;   // forward declaration
+
+namespace out
+{
+    class LogOutput;   // forward declaration
+}   // namespace out
 
 namespace setup
 {
@@ -50,19 +56,28 @@ namespace setup
 
         void setup();
 
-        void setupBerendsenManostat();
-        void setupStochasticRescalingManostat();
-
-        static void validateIsotropyFixedAxisCombination();
-
-        void writeSetupInfo() const;
-        void writeManostatSelection() const;
-        void writeBerendsenSetup() const;
-        void writeIsotropy() const;
+        void validateIsotropyFixedAxisCombination() const;
 
         [[nodiscard]] engine::MDEngine &getEngine() const;
+
+       protected:
+        static void _writeManostatSelection(
+            out::LogOutput         &logOutput,
+            const ManostatSettings &manostatSettings
+        );
+        static void _writeBerendsenSetup(
+            out::LogOutput         &logOutput,
+            const ManostatSettings &settings
+        );
+        static void _writeIsotropy(
+            out::LogOutput         &logOutput,
+            const ManostatSettings &settings
+        );
+
+       private:
+        void _writeSetupInfo() const;
     };
 
 }   // namespace setup
 
-#endif   // _MANOSTAT_SETUP_HPP_
+#endif   // SETUP__MANOSTAT_SETUP_HPP

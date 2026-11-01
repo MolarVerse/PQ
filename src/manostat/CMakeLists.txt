@@ -4,6 +4,7 @@ add_library(manostat
     berendsenManostat.cpp
     stochasticRescalingManostat.cpp
     monteCarloManostat.cpp
+    manostatFactory.cpp
 )
 
 target_include_directories(manostat

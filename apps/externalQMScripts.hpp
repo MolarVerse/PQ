@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXTERNAL_QM_SCRIPTS_HPP_
-
-#define _EXTERNAL_QM_SCRIPTS_HPP_
+#ifndef APPS__EXTERNAL_QM_SCRIPTS_HPP
+#define APPS__EXTERNAL_QM_SCRIPTS_HPP
 
 #include <algorithm>
 #include <array>
@@ -146,4 +145,4 @@ namespace cli
     }
 }   // namespace cli
 
-#endif   // _EXTERNAL_QM_SCRIPTS_HPP_
+#endif   // APPS__EXTERNAL_QM_SCRIPTS_HPP

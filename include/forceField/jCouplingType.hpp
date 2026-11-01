@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _J_COUPLING_TYPE_HPP_
-
-#define _J_COUPLING_TYPE_HPP_
+#ifndef FORCE_FIELD__J_COUPLING_TYPE_HPP
+#define FORCE_FIELD__J_COUPLING_TYPE_HPP
 
 #include <cstddef>
 
@@ -75,4 +74,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _J_COUPLING_TYPE_HPP_
+#endif   // FORCE_FIELD__J_COUPLING_TYPE_HPP

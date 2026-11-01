@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_REGISTRY_HPP_
-#define _INPUT_REGISTRY_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_REGISTRY_HPP
+#define INPUT__INPUT_FILE_PARSER__INPUT_REGISTRY_HPP
 
 #include "inputParam.hpp"
 
@@ -63,8 +63,8 @@ namespace input
     };
 }   // namespace input
 
-#ifndef _INPUT_REGISTRY_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_REGISTRY_TPP
 #include "inputRegistry.tpp"
 #endif
 
-#endif   // _INPUT_REGISTRY_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INPUT_REGISTRY_HPP

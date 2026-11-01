@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_QMSETUP_ASE_HPP_
-
-#define _TEST_QMSETUP_ASE_HPP_
+#ifndef TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP
+#define TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP
 
 #include <gtest/gtest.h>
 
@@ -61,4 +60,4 @@ class TestQMSetupAse : public ::testing::Test
     }
 };
 
-#endif   // _TEST_QMSETUP_ASE_HPP_
+#endif   // TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP

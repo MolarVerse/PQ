@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_SETUP_HPP_
-
-#define _SIMULATION_BOX_SETUP_HPP_
+#ifndef SETUP__SIMULATION_BOX_SETUP_HPP
+#define SETUP__SIMULATION_BOX_SETUP_HPP
 
 #include "setupBase.hpp"
 namespace engine
@@ -84,4 +83,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _SIMULATION_BOX_SETUP_HPP_
+#endif   // SETUP__SIMULATION_BOX_SETUP_HPP

@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLECULE_TYPE_HPP_
-
-#define _MOLECULE_TYPE_HPP_
+#ifndef MOLSYS__MOLECULE_TYPE_HPP
+#define MOLSYS__MOLECULE_TYPE_HPP
 
 #include <map>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -46,7 +46,8 @@ namespace molsys
         MolType               _moltype;
         std::optional<size_t> _numberOfAtoms;
 
-        int _charge = 0;
+        int                   _charge = 0;
+        std::optional<double> _qmReferenceEnergy;
 
         std::vector<std::string> _atomNames;
         std::vector<AtomType>    _atomTypes;
@@ -85,6 +86,7 @@ namespace molsys
         void setMoltype(MolType moltype);
 
         void setCharge(int charge);
+        void setQMReferenceEnergy(double qmReferenceEnergy);
         void setPartialCharge(AtomIndex index, double partialCharge);
         void setPartialCharges(const std::vector<double> &partialCharges);
 
@@ -99,6 +101,8 @@ namespace molsys
         [[nodiscard]] AtomType    getInternalAtomType(ExtAtomType type) const;
 
         [[nodiscard]] int    getCharge() const;
+        [[nodiscard]] double getQMReferenceEnergy() const;
+        [[nodiscard]] bool   hasQMReferenceEnergy() const;
         [[nodiscard]] double getPartialCharge(AtomIndex index) const;
 
         [[nodiscard]] std::string getName() const;
@@ -116,4 +120,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _MOLECULE_TYPE_HPP_
+#endif   // MOLSYS__MOLECULE_TYPE_HPP

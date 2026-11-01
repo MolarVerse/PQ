@@ -27,6 +27,7 @@
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
+#include "manostatFactory.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "referencesOutput.hpp"
@@ -43,10 +44,14 @@ namespace engine
      */
     MDEngine::MDEngine(const Settings &settings)
         : Engine(settings),
-          _resetKinetics(getSettings().resetKinetics),
+          _resetKinetics(settings.resetKinetics),
           _integrator(std::make_unique<integrator::VelocityVerlet>()),
           _thermostat(std::make_unique<thermostat::Thermostat>()),
-          _manostat(std::make_unique<manostat::Manostat>())
+          _manostat(
+              manostat::ManostatFactory::createManostat(
+                  settings.manostatSettings
+              )
+          )
     {
     }
 

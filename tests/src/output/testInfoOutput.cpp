@@ -241,7 +241,8 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     _physicalData->setLoopTime(0.1);
 
     _settings->forceFieldSettings.setType(ForceFieldType::OFF);
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
@@ -335,8 +336,8 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _physicalData->setLoopTime(0.1);
 
     _settings->forceFieldSettings.setType(ForceFieldType::OFF);
-    settings::ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
+    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxis(FixedAxis::Z);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info");
@@ -411,8 +412,6 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
         "----------------------------------------------------------------------"
         "-------------------"
     );
-
-    settings::ManostatSettings::setFixedAxis(FixedAxis::Z);
 }
 
 /**
@@ -440,7 +439,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
 
     _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
-    settings::ManostatSettings::setManostatType(ManostatType::NONE);
+    _settings->manostatSettings.setManostatType(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info");
     _infoOutput->write(100.0, *_physicalData, *_settings);
@@ -526,7 +525,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
 
     _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::ManostatSettings::setManostatType(ManostatType::NONE);
+    _settings->manostatSettings.setManostatType(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
         ThermostatType::NOSE_HOOVER
     );
