@@ -22,10 +22,16 @@
 
 #include "moldescriptorReader.hpp"
 
+#include <algorithm>
+#include <charconv>
 #include <cstddef>
 #include <format>
+#include <memory>
+#include <stdexcept>
 #include <string>
 #include <string_view>
+#include <system_error>
+#include <vector>
 
 #include "engine.hpp"
 #include "exceptions.hpp"
@@ -135,6 +141,43 @@ namespace input::molDescriptor
                 );
             }
         }
+
+        _checkQMReferenceEnergies();
+    }
+
+    /**
+     * @brief checks that either no moltype or every moltype has a QM
+     * reference energy
+     *
+     * @throws MolDescriptorException if only some moltypes have one
+     */
+    void MoldescriptorReader::_checkQMReferenceEnergies() const
+    {
+        const auto &moleculeTypes =
+            _engine.getSimulationBox().getMoleculeTypes();
+
+        const auto hasReference = [](const auto &moleculeType)
+        { return moleculeType.hasQMReferenceEnergy(); };
+
+        if (std::ranges::none_of(moleculeTypes, hasReference))
+        {
+            return;
+        }
+
+        const auto missing =
+            std::ranges::find_if_not(moleculeTypes, hasReference);
+
+        if (missing != moleculeTypes.end())
+        {
+            throw exc::MolDescriptorException(
+                std::format(
+                    "Moltype {} has no qm_reference_energy line - once one "
+                    "moltype has a QM reference energy, every moltype needs "
+                    "one",
+                    missing->getName()
+                )
+            );
+        }
     }
 
     /**
@@ -228,6 +271,13 @@ namespace input::molDescriptor
             if (lineElements.empty())
                 continue;
 
+            if ("qm_reference_energy" ==
+                utilities::toLowerAndReplaceDashesCopy(lineElements[0]))
+            {
+                _processQMReferenceEnergy(lineElements, molecule);
+                continue;
+            }
+
             if ((3 == lineElements.size()) || (4 == lineElements.size()))
             {
                 molecule.addAtomName(lineElements[0]);
@@ -276,6 +326,47 @@ namespace input::molDescriptor
         _convertExternalToInternalAtomTypes(molecule);
 
         simBox.addMoleculeType(molecule);
+    }
+
+    /**
+     * @brief process the optional QM reference energy line of a molecule
+     *
+     * @details format: `qm_reference_energy <energy>` in kcal/mol
+     *
+     * @param lineElements
+     * @param molecule
+     *
+     * @throws MolDescriptorException if the line has not exactly 2 elements
+     * or the energy is not a number
+     */
+    void MoldescriptorReader::_processQMReferenceEnergy(
+        const std::vector<std::string> &lineElements,
+        molsys::MoleculeType           &molecule
+    ) const
+    {
+        auto isValid = lineElements.size() == 2;
+        auto energy  = 0.0;
+
+        if (isValid)
+        {
+            const auto &value  = lineElements[1];
+            const auto *end    = std::to_address(value.end());
+            const auto  result = std::from_chars(value.data(), end, energy);
+            isValid            = result.ec == std::errc{} && result.ptr == end;
+        }
+
+        if (!isValid)
+        {
+            throw exc::MolDescriptorException(
+                std::format(
+                    "Invalid QM reference energy line in moldescriptor file at "
+                    "line {} - expected \"qm_reference_energy <energy>\"",
+                    _lineNumber
+                )
+            );
+        }
+
+        molecule.setQMReferenceEnergy(energy);
     }
 
     /**

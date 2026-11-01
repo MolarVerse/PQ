@@ -330,3 +330,23 @@ TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
     settings::HybridSettings::setUseQMCharges(true);
     EXPECT_NO_THROW(setup.validateQMChargeSettings());
 }
+
+TEST_F(TestSetup, hybridSetupRejectsMoltypeZeroWithReferenceEnergies)
+{
+    auto &simBox = _engine->getSimulationBox();
+    simBox.addMoleculeType(molsys::MoleculeType(MolType{0}));
+    setup::HybridSetup setup{*_engine};
+
+    EXPECT_NO_THROW(setup.validateQMReferenceEnergies());
+
+    auto water = molsys::MoleculeType(MolType{1});
+    water.setQMReferenceEnergy(-10.0);
+    simBox.addMoleculeType(water);
+
+    EXPECT_THROW_MSG(
+        setup.validateQMReferenceEnergies(),
+        exc::InputFileException,
+        "Atoms with moltype \"0\" are not allowed when QM reference "
+        "energies are set in the moldescriptor file."
+    );
+}

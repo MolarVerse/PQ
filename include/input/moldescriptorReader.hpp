@@ -65,6 +65,12 @@ namespace input::molDescriptor
         void processMolecule(std::vector<std::string> &lineElements);
 
        private:
+        void _checkQMReferenceEnergies() const;
+        void _processQMReferenceEnergy(
+            const std::vector<std::string> &lineElements,
+            molsys::MoleculeType           &molecule
+        ) const;
+
         static void _convertExternalToInternalAtomTypes(
             molsys::MoleculeType &molecule
         );

@@ -22,12 +22,16 @@
 
 #include <gtest/gtest.h>
 
+#include <cstddef>
+
 #include "engine.hpp"
 #include "enums/potential.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "moldescriptorReader.hpp"
+#include "moleculeType.hpp"
+#include "simulationBox.hpp"
 #include "testMoldesctripotReader.hpp"
 #include "throwWithMessage.hpp"
 
@@ -172,5 +176,53 @@ TEST_F(TestMoldescriptorReader, globalVdwTypes)
         "Error in moldescriptor file at line 6 - force field noncoulombics is "
         "activated but no global van der Waals "
         "parameter given"
+    );
+}
+
+/**
+ * @brief tests the optional QM reference energy line of a molecule
+ *
+ */
+TEST_F(TestMoldescriptorReader, qmReferenceEnergy)
+{
+    auto engine = _makeEngine(*_settings);
+    settings::FileSettings::setMolDescriptorFileName(
+        "data/moldescriptorReader/moldescriptorWithQMReferenceEnergy.dat"
+    );
+    input::molDescriptor::readMolDescriptor(*engine);
+
+    auto &simBox = engine->getSimulationBox();
+    EXPECT_DOUBLE_EQ(
+        simBox.findMoleculeType(MolType{1}).getQMReferenceEnergy(),
+        -2554.71
+    );
+    EXPECT_EQ(
+        simBox.findMoleculeType(MolType{1}).getNumberOfAtoms(),
+        size_t{3}
+    );
+    EXPECT_DOUBLE_EQ(
+        simBox.findMoleculeType(MolType{2}).getQMReferenceEnergy(),
+        0.0
+    );
+    EXPECT_TRUE(simBox.findMoleculeType(MolType{2}).hasQMReferenceEnergy());
+
+    settings::FileSettings::setMolDescriptorFileName(
+        "data/moldescriptorReader/moldescriptorWithInvalidQMReferenceEnergy.dat"
+    );
+    EXPECT_THROW_MSG(
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings)),
+        exc::MolDescriptorException,
+        "Invalid QM reference energy line in moldescriptor file at line 3 - "
+        "expected \"qm_reference_energy <energy>\""
+    );
+
+    settings::FileSettings::setMolDescriptorFileName(
+        "data/moldescriptorReader/moldescriptorWithMissingQMReferenceEnergy.dat"
+    );
+    EXPECT_THROW_MSG(
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings)),
+        exc::MolDescriptorException,
+        "Moltype K has no qm_reference_energy line - once one moltype has a "
+        "QM reference energy, every moltype needs one"
     );
 }

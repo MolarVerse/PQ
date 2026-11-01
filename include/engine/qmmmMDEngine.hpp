@@ -57,6 +57,7 @@ namespace engine
 
         void _moltypeCheck();
         void _setNumberOfQMAtoms();
+        void _calculateQMReferenceEnergy();
 
         void _scaleAndAccumulateEnergies(double globalSmF);
         void _moveEnergiesToPhysicalData();

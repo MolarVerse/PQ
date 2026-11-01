@@ -161,6 +161,19 @@ namespace molsys
     void MoleculeType::setCharge(int charge) { _charge = charge; }
 
     /**
+     * @brief sets the QM reference energy of the molecule type
+     *
+     * @details subtracted from the QM energy for each QM molecule of this
+     * type in QM/MM simulations
+     *
+     * @param qmReferenceEnergy in kcal/mol
+     */
+    void MoleculeType::setQMReferenceEnergy(double qmReferenceEnergy)
+    {
+        _qmReferenceEnergy = qmReferenceEnergy;
+    }
+
+    /**
      * @brief sets the partial charge of an atom
      *
      * @param index
@@ -250,6 +263,26 @@ namespace molsys
      * @return int
      */
     int MoleculeType::getCharge() const { return _charge; }
+
+    /**
+     * @brief get the QM reference energy of the molecule type
+     *
+     * @return double in kcal/mol, 0 if not set
+     */
+    double MoleculeType::getQMReferenceEnergy() const
+    {
+        return _qmReferenceEnergy.value_or(0.0);
+    }
+
+    /**
+     * @brief check if the QM reference energy of the molecule type is set
+     *
+     * @return bool
+     */
+    bool MoleculeType::hasQMReferenceEnergy() const
+    {
+        return _qmReferenceEnergy.has_value();
+    }
 
     /**
      * @brief get the partial charge of an atom
