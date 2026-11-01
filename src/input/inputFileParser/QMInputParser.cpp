@@ -70,6 +70,7 @@ namespace input
         addQMLoopTimeLimitKey();
         addDispersionKey();
         addRemoveNetForceKey();
+        addQMChargeKey();
         addMaceModelKey();
         addMaceModeKey();
         addMaceModelPathKey();
@@ -239,6 +240,29 @@ namespace input
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void QMInputParser::addQMChargeKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "qm_charge",
+            .title = "QM Charge",
+            .description =
+                "Total charge of the QM atoms without a moltype (moltype 0). "
+                "Added to the charges of the active moltypes.",
+        };
+
+        const auto setValue = [](int value)
+        { settings::QMSettings::setQMCharge(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<int>{
                 .metadata = metaData,
                 .onSet    = setValue,
             }

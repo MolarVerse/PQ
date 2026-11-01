@@ -135,6 +135,7 @@ qm_script_full_path          false      /path/to/qm_script.py
 qm_loop_time_limit           false      60.0
 dispersion                   false      true
 remove_net_force             false      true
+qm_charge false 0
 mace_model                   false      small
 mace_model_path              false      mace_model.pt
 mace_mode                    false      accurate

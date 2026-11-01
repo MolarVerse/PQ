@@ -61,6 +61,7 @@ namespace settings
 
         static inline bool _useDispersionCorrection = false;
         static inline bool _removeNetForce          = false;
+        static inline int  _qmCharge                = 0;
         static inline bool _useThirdOrderDftb       = false;
         static inline bool _isThirdOrderDftbSet     = false;
         static inline bool _isHubbardDerivsSet      = false;
@@ -94,6 +95,7 @@ namespace settings
 
         static void setUseDispersionCorrection(bool use);
         static void setRemoveNetForce(bool removeNetForce);
+        static void setQMCharge(int charge);
         static void setUseThirdOrderDftb(bool use);
         static void setIsThirdOrderDftbSet(bool isThirdOrderDftbSet);
         static void setHubbardDerivs(
@@ -126,6 +128,7 @@ namespace settings
 
         [[nodiscard]] static bool useDispersionCorr();
         [[nodiscard]] static bool getRemoveNetForce();
+        [[nodiscard]] static int  getQMCharge();
         [[nodiscard]] static bool useThirdOrderDftb();
         [[nodiscard]] static bool isThirdOrderDftbSet();
         [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(

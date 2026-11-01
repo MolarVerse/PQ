@@ -49,6 +49,7 @@ namespace input
         void        addQMLoopTimeLimitKey();
         void        addDispersionKey();
         void        addRemoveNetForceKey();
+        void        addQMChargeKey();
         void        addMaceModelKey();
         void        addMaceModeKey();
         void        addMaceModelPathKey();
