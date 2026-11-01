@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __UNITS_HPP__
-#define __UNITS_HPP__
+#ifndef CONFIG__UNITS_HPP
+#define CONFIG__UNITS_HPP
 
 /// NOTE FOR DEVELOPERS
 /// This header provides convenient type aliases for commonly used angular
@@ -42,4 +42,4 @@ inline constexpr auto ps = mstd::units::ps;
 inline constexpr auto fs = mstd::units::fs;
 
 // NOLINTEND(readability-identifier-length)
-#endif   // __UNITS_HPP__
+#endif   // CONFIG__UNITS_HPP

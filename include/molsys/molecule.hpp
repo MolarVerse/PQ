@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLECULE_HPP_
-
-#define _MOLECULE_HPP_
+#ifndef MOLSYS__MOLECULE_HPP
+#define MOLSYS__MOLECULE_HPP
 
 #include <cstddef>
 #include <memory>
@@ -212,4 +211,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _MOLECULE_HPP_
+#endif   // MOLSYS__MOLECULE_HPP

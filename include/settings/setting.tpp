@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTING_TPP_
-#define _SETTING_TPP_
+#ifndef SETTINGS__SETTING_TPP
+#define SETTINGS__SETTING_TPP
 
 #include "exceptions.hpp"
 #include "setting.hpp"
@@ -79,4 +79,4 @@ void Setting<T>::set(const T& value)
     _value = value;
 }
 
-#endif   // _SETTING_TPP_
+#endif   // SETTINGS__SETTING_TPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STRING_UTILITIES_HPP_
-
-#define _STRING_UTILITIES_HPP_
+#ifndef UTILITIES__STRING_UTILITIES_HPP
+#define UTILITIES__STRING_UTILITIES_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -59,4 +58,4 @@ namespace utilities
 
 }   // namespace utilities
 
-#endif   // _STRING_UTILITIES_HPP_
+#endif   // UTILITIES__STRING_UTILITIES_HPP

@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CUSTOM_VALIDATOR_TPP_
-#define _CUSTOM_VALIDATOR_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__CUSTOM_VALIDATOR_TPP
+#define INPUT__INPUT_FILE_PARSER__CUSTOM_VALIDATOR_TPP
 
 #include "customValidator.hpp"
 
@@ -68,4 +68,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _CUSTOM_VALIDATOR_TPP_
+#endif   // INPUT__INPUT_FILE_PARSER__CUSTOM_VALIDATOR_TPP

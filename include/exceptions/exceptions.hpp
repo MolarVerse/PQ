@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXCEPTIONS_HPP_
-
-#define _EXCEPTIONS_HPP_
+#ifndef EXCEPTIONS__EXCEPTIONS_HPP
+#define EXCEPTIONS__EXCEPTIONS_HPP
 
 #include "baseException.hpp"
 #include "color.hpp"
@@ -115,4 +114,4 @@ namespace exc
 
 }   // namespace exc
 
-#endif   // _EXCEPTIONS_HPP_
+#endif   // EXCEPTIONS__EXCEPTIONS_HPP

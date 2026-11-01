@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MATRIX_CLASS_TPP_
-
-#define _MATRIX_CLASS_TPP_
+#ifndef LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_TPP
+#define LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_TPP
 
 #include <cstddef>
 #include <cstdint>
@@ -174,4 +173,4 @@ namespace linalg
     }
 }   // namespace linalg
 
-#endif   // _MATRIX_CLASS_TPP_
+#endif   // LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_TPP

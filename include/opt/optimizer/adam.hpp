@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ADAM_HPP_
-
-#define _ADAM_HPP_
+#ifndef OPT__OPTIMIZER__ADAM_HPP
+#define OPT__OPTIMIZER__ADAM_HPP
 
 #include <vector>
 
@@ -60,4 +59,4 @@ namespace opt
     };
 }   // namespace opt
 
-#endif   // _ADAM_HPP_
+#endif   // OPT__OPTIMIZER__ADAM_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTRA_NON_BONDED_HPP_
-
-#define _INTRA_NON_BONDED_HPP_
+#ifndef INTRA_NON_BONDED__INTRA_NON_BONDED_HPP
+#define INTRA_NON_BONDED__INTRA_NON_BONDED_HPP
 
 #include <memory>
 #include <vector>
@@ -106,4 +105,4 @@ namespace intraNonBonded
 
 }   // namespace intraNonBonded
 
-#endif   // _INTRA_NON_BONDED_HPP_
+#endif   // INTRA_NON_BONDED__INTRA_NON_BONDED_HPP

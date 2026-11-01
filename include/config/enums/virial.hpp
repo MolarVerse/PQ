@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_ENUM_HPP_
-#define _VIRIAL_ENUM_HPP_
+#ifndef CONFIG__ENUMS__VIRIAL_HPP
+#define CONFIG__ENUMS__VIRIAL_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -39,4 +39,4 @@ MSTD_ENUM(VirialType, std::uint8_t, VIRIAL_TYPE_LIST)
 
 #undef VIRIAL_TYPE_LIST
 
-#endif   // _VIRIAL_ENUM_HPP_
+#endif   // CONFIG__ENUMS__VIRIAL_HPP

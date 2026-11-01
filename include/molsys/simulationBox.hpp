@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_HPP_
-
-#define _SIMULATION_BOX_HPP_
+#ifndef MOLSYS__SIMULATION_BOX_HPP
+#define MOLSYS__SIMULATION_BOX_HPP
 
 #include <memory>
 #include <optional>
@@ -262,8 +261,8 @@ namespace molsys
 
 }   // namespace molsys
 
-#ifndef _SIMULATION_BOX_TPP_
-#include "simulationBox.tpp.hpp"   // IWYU pragma: export
+#ifndef MOLSYS__SIMULATION_BOX_TPP
+#include "simulationBox.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _SIMULATION_BOX_HPP_
+#endif   // MOLSYS__SIMULATION_BOX_HPP

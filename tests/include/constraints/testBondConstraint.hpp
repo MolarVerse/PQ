@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_BOND_CONSTRAINT_HPP_
-
-#define _TEST_BOND_CONSTRAINT_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP
 
 #include <gtest/gtest.h>
 
@@ -82,4 +81,4 @@ class TestBondConstraint : public ::testing::Test
     }
 };
 
-#endif   // _TEST_BOND_CONSTRAINT_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VELOCITY_RESCALING_THERMOSTAT_HPP_
-
-#define _VELOCITY_RESCALING_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP
+#define THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP
 
 #include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
@@ -78,4 +77,4 @@ namespace thermostat
     };
 }   // namespace thermostat
 
-#endif   // _VELOCITY_RESCALING_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP

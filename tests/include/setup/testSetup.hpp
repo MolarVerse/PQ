@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_SETUP_H_
-
-#define _TEST_SETUP_H_
+#ifndef TESTS__INCLUDE__SETUP__TEST_SETUP_HPP
+#define TESTS__INCLUDE__SETUP__TEST_SETUP_HPP
 
 #include <gtest/gtest.h>
 

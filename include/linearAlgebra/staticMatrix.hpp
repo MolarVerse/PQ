@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STATIC_MATRIX_INTERFACE_HPP_
-
-#define _STATIC_MATRIX_INTERFACE_HPP_
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX_HPP
+#define LINEAR_ALGEBRA__STATIC_MATRIX_HPP
 
 #include "staticMatrix/staticMatrix3x3.hpp"        // IWYU pragma: export
 #include "staticMatrix/staticMatrix3x3Class.hpp"   // IWYU pragma: export
 
-#endif   // _STATIC_MATRIX_INTERFACE_HPP_
+#endif   // LINEAR_ALGEBRA__STATIC_MATRIX_HPP

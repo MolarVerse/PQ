@@ -20,4 +20,45 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "potentialKernels.tpp.hpp"
+#ifndef ENGINE__ENGINE_TPP
+#define ENGINE__ENGINE_TPP
+
+#include <memory>
+#include <type_traits>
+#include <utility>
+
+#include "engine.hpp"
+
+namespace engine
+{
+    /***************************
+     * make unique_ptr methods *
+     ***************************/
+
+    /**
+     * @brief make unique_ptr for potential
+     *
+     * @tparam T
+     */
+    template <typename T>
+    inline void Engine::makePotential(T /*potential*/)
+    {
+        _potential = std::make_unique<T>();
+    }
+
+    /**
+     * @brief make unique_ptr for waterIntra
+     *
+     * @tparam T
+     */
+    template <typename T>
+    inline void Engine::makeIntraWater(T &&intraWaterModel)
+    {
+        using IntraWaterType = std::decay_t<T>;
+        _intraWater =
+            std::make_unique<IntraWaterType>(std::forward<T>(intraWaterModel));
+    }
+
+}   // namespace engine
+
+#endif   // ENGINE__ENGINE_TPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTEGRATOR_HPP_
-
-#define _INTEGRATOR_HPP_
+#ifndef INTEGRATOR__INTEGRATOR_HPP
+#define INTEGRATOR__INTEGRATOR_HPP
 
 namespace molsys
 {
@@ -56,4 +55,4 @@ namespace integrator
 
 }   // namespace integrator
 
-#endif   // _INTEGRATOR_HPP_
+#endif   // INTEGRATOR__INTEGRATOR_HPP

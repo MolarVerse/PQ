@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OUTPUT_FILE_SETTINGS_HPP_
-
-#define _OUTPUT_FILE_SETTINGS_HPP_
+#ifndef SETTINGS__OUTPUT_FILE_SETTINGS_HPP
+#define SETTINGS__OUTPUT_FILE_SETTINGS_HPP
 
 #include <cstddef>
 #include <string>
@@ -163,4 +162,4 @@ class OutputFileSettings
     friend struct TestOutputFileSettings;
 };
 
-#endif   // _OUTPUT_FILE_SETTINGS_HPP_
+#endif   // SETTINGS__OUTPUT_FILE_SETTINGS_HPP

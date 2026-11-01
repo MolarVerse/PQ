@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _JSON_OUTPUT_HPP_
-
-#define _JSON_OUTPUT_HPP_
+#ifndef APPS__JSON_OUTPUT_HPP
+#define APPS__JSON_OUTPUT_HPP
 
 #include <concepts>
 #include <cstddef>
@@ -91,4 +90,4 @@ namespace cli
     };
 }   // namespace cli
 
-#endif   // _JSON_OUTPUT_HPP_
+#endif   // APPS__JSON_OUTPUT_HPP

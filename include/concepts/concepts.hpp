@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONCEPTS_HPP_
-#define _CONCEPTS_HPP_
+#ifndef CONCEPTS__CONCEPTS_HPP
+#define CONCEPTS__CONCEPTS_HPP
 
 #include "base.hpp"        // IWYU pragma: export
 #include "innerType.hpp"   // IWYU pragma: export
 
-#endif   // _CONCEPTS_HPP_
+#endif   // CONCEPTS__CONCEPTS_HPP

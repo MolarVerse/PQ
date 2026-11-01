@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DIHEDRAL_HPP_
-
-#define _DIHEDRAL_HPP_
+#ifndef CONNECTIVITY__DIHEDRAL_HPP
+#define CONNECTIVITY__DIHEDRAL_HPP
 
 #include "connectivityElement.hpp"
 
@@ -42,4 +41,4 @@ namespace connectivity
 
 }   // namespace connectivity
 
-#endif   // _DIHEDRAL_HPP_
+#endif   // CONNECTIVITY__DIHEDRAL_HPP

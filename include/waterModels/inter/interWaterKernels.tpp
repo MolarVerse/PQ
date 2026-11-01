@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_KERNELS_TPP_
-
-#define _INTER_WATER_KERNELS_TPP_
+#ifndef WATER_MODELS__INTER__INTER_WATER_KERNELS_TPP
+#define WATER_MODELS__INTER__INTER_WATER_KERNELS_TPP
 
 /**
  * @file interWaterKernels.tpp
@@ -226,4 +225,4 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#endif   //  _INTER_WATER_KERNELS_TPP_
+#endif   //  WATER_MODELS__INTER__INTER_WATER_KERNELS_TPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETUP_HPP_
-
-#define _SETUP_HPP_
+#ifndef SETUP__SETUP_HPP
+#define SETUP__SETUP_HPP
 
 namespace engine
 {
@@ -54,4 +53,4 @@ namespace setup
     void setupEngine(engine::Engine &);
 }   // namespace setup
 
-#endif   // _SETUP_HPP_
+#endif   // SETUP__SETUP_HPP

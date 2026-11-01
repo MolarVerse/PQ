@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_SETTINGS_HPP_
-
-#define _RING_POLYMER_SETTINGS_HPP_
+#ifndef SETTINGS__RING_POLYMER_SETTINGS_HPP
+#define SETTINGS__RING_POLYMER_SETTINGS_HPP
 
 #include <cstddef>
 
@@ -45,4 +44,4 @@ class RingPolymerSettings
     [[nodiscard]] size_t getNumberOfBeads() const;
 };
 
-#endif   // _RING_POLYMER_SETTINGS_HPP_
+#endif   // SETTINGS__RING_POLYMER_SETTINGS_HPP

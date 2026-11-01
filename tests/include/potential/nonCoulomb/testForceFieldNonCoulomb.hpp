@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_FORCE_FIELD_NON_COULOMB_HPP_
-#define _TEST_FORCE_FIELD_NON_COULOMB_HPP_
+#ifndef TESTS__INCLUDE__POTENTIAL__NON_COULOMB__TEST_FORCE_FIELD_NON_COULOMB_HPP
+#define TESTS__INCLUDE__POTENTIAL__NON_COULOMB__TEST_FORCE_FIELD_NON_COULOMB_HPP
 
 #include <gtest/gtest.h>
 
@@ -94,4 +94,4 @@ class TestNonCoulombPotentialFF : public ::testing::Test
     }
 };
 
-#endif   // _TEST_FORCE_FIELD_NON_COULOMB_HPP_
+#endif   // TESTS__INCLUDE__POTENTIAL__NON_COULOMB__TEST_FORCE_FIELD_NON_COULOMB_HPP

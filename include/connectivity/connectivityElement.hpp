@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONNECTIVITY_ELEMENT_HPP_
-
-#define _CONNECTIVITY_ELEMENT_HPP_
+#ifndef CONNECTIVITY__CONNECTIVITY_ELEMENT_HPP
+#define CONNECTIVITY__CONNECTIVITY_ELEMENT_HPP
 
 #include <mstd/utils.hpp>
 #include <vector>
@@ -61,4 +60,4 @@ namespace connectivity
 
 }   // namespace connectivity
 
-#endif   // _CONNECTIVITY_ELEMENT_HPP_
+#endif   // CONNECTIVITY__CONNECTIVITY_ELEMENT_HPP

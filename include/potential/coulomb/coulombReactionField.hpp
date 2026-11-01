@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COULOMB_REACTION_FIELD_HPP_
-
-#define _COULOMB_REACTION_FIELD_HPP_
+#ifndef POTENTIAL__COULOMB__COULOMB_REACTION_FIELD_HPP
+#define POTENTIAL__COULOMB__COULOMB_REACTION_FIELD_HPP
 
 #include <utility>
 
@@ -56,4 +55,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _COULOMB_REACTION_FIELD_HPP_
+#endif   // POTENTIAL__COULOMB__COULOMB_REACTION_FIELD_HPP

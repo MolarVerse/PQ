@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_QM_MD_ENGINE_HPP_
-
-#define _RING_POLYMER_QM_MD_ENGINE_HPP_
+#ifndef ENGINE__RING_POLYMERQMMD_ENGINE_HPP
+#define ENGINE__RING_POLYMERQMMD_ENGINE_HPP
 
 #include "qmmdEngine.hpp"
 #include "ringPolymerEngine.hpp"
@@ -50,4 +49,4 @@ namespace engine
     };
 }   // namespace engine
 
-#endif   // _RING_POLYMER_QM_MD_ENGINE_HPP_
+#endif   // ENGINE__RING_POLYMERQMMD_ENGINE_HPP

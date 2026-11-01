@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_CONSTRAINTS_HPP_
-
-#define _TEST_CONSTRAINTS_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP
 
 #include <gtest/gtest.h>
 
@@ -135,4 +134,4 @@ class TestConstraints : public ::testing::Test
     }
 };
 
-#endif   // _TEST_CONSTRAINTS_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP

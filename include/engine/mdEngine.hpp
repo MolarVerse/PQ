@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MD_ENGINE_HPP_
-
-#define _MD_ENGINE_HPP_
+#ifndef ENGINE__MD_ENGINE_HPP
+#define ENGINE__MD_ENGINE_HPP
 
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
@@ -121,8 +120,8 @@ namespace engine
     };
 }   // namespace engine
 
-#ifndef _MD_ENGINE_TPP_
-#include "mdEngine.tpp.hpp"   // IWYU pragma: export
+#ifndef ENGINE__MD_ENGINE_TPP
+#include "mdEngine.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _MD_ENGINE_HPP_
+#endif   // ENGINE__MD_ENGINE_HPP

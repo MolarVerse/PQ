@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_RUNNER_MANAGER_HPP_
-
-#define _QM_RUNNER_MANAGER_HPP_
+#ifndef ENGINE__QM_RUNNER_MANAGER_HPP
+#define ENGINE__QM_RUNNER_MANAGER_HPP
 
 #include <memory>
 
@@ -56,4 +55,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _QM_RUNNER_MANAGER_HPP_
+#endif   // ENGINE__QM_RUNNER_MANAGER_HPP

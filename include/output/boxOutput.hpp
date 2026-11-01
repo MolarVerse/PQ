@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOX_FILE_OUTPUT_HPP_
-
-#define _BOX_FILE_OUTPUT_HPP_
+#ifndef OUTPUT__BOX_OUTPUT_HPP
+#define OUTPUT__BOX_OUTPUT_HPP
 
 #include <cstddef>
 
@@ -52,4 +51,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _BOX_FILE_OUTPUT_HPP_
+#endif   // OUTPUT__BOX_OUTPUT_HPP

@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_PARAM_HPP_
-#define _INPUT_PARAM_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_PARAM_HPP
+#define INPUT__INPUT_FILE_PARSER__INPUT_PARAM_HPP
 
 #include <functional>
 #include <memory>
@@ -88,8 +88,8 @@ namespace input
 
 }   // namespace input
 
-#ifndef _INPUT_PARAM_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_PARAM_TPP
 #include "inputParam.tpp"
 #endif
 
-#endif   // _INPUT_PARAM_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INPUT_PARAM_HPP

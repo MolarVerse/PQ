@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VELOCITY_VERLET_HPP_
-
-#define _VELOCITY_VERLET_HPP_
+#ifndef INTEGRATOR__VELOCITY_VERLET_HPP
+#define INTEGRATOR__VELOCITY_VERLET_HPP
 
 #include "integrator.hpp"
 
@@ -45,4 +44,4 @@ namespace integrator
 
 }   // namespace integrator
 
-#endif   // _VELOCITY_VERLET_HPP_
+#endif   // INTEGRATOR__VELOCITY_VERLET_HPP

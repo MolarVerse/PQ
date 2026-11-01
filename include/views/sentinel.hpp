@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __SENTINEL_HPP__
-#define __SENTINEL_HPP__
+#ifndef VIEWS__SENTINEL_HPP
+#define VIEWS__SENTINEL_HPP
 
 #include <iterator>
 #include <type_traits>
@@ -161,4 +161,4 @@ namespace pqviews
 
 }   // namespace pqviews
 
-#endif   // __SENTINEL_HPP__
+#endif   // VIEWS__SENTINEL_HPP

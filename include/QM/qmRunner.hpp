@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_RUNNER_HPP_
-
-#define _QM_RUNNER_HPP_
+#ifndef QM__QM_RUNNER_HPP
+#define QM__QM_RUNNER_HPP
 
 #define SCRIPT_PATH_  _SCRIPT_PATH_
 #define SINGULARITY_  _SINGULARITY_
@@ -75,4 +74,4 @@ namespace QM
     };
 }   // namespace QM
 
-#endif   // _QM_RUNNER_HPP_
+#endif   // QM__QM_RUNNER_HPP

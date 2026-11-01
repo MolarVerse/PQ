@@ -22,6 +22,7 @@
 
 #include "hybridSetup.hpp"
 
+#include <algorithm>
 #include <format>
 #include <string>
 #include <vector>
@@ -73,6 +74,7 @@ namespace setup
         setupForcedLayerList();
         setupForcedOuterList();
         validateQMChargeSettings();
+        validateQMReferenceEnergies();
         checkZoneRadii();
 
         setupWriteInfo();
@@ -276,6 +278,32 @@ namespace setup
                 "system. Either set \"qm_charges = qm\" or ensure all atoms "
                 "have a"
                 "non-zero moltype."
+            );
+        }
+    }
+
+    /**
+     * @brief Validate that no moltype 0 atoms are present when QM reference
+     * energies are used
+     *
+     * @throws exc::InputFileException if a moltype has a QM reference energy
+     * and atoms with moltype 0 are present in the simulation box
+     */
+    void HybridSetup::validateQMReferenceEnergies()
+    {
+        auto &simBox = _engine.getSimulationBox();
+
+        const auto hasReference = [](const auto &moleculeType)
+        { return moleculeType.hasQMReferenceEnergy(); };
+
+        const auto usesReferences =
+            std::ranges::any_of(simBox.getMoleculeTypes(), hasReference);
+
+        if (usesReferences && simBox.moleculeTypeExists(MolType{0}))
+        {
+            throw exc::InputFileException(
+                "Atoms with moltype \"0\" are not allowed when QM reference "
+                "energies are set in the moldescriptor file."
             );
         }
     }

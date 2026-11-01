@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _Force_FIELD_CLASS_HPP_
-
-#define _Force_FIELD_CLASS_HPP_
+#ifndef FORCE_FIELD__FORCE_FIELD_CLASS_HPP
+#define FORCE_FIELD__FORCE_FIELD_CLASS_HPP
 
 #include <cstddef>
 #include <memory>
@@ -170,4 +169,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _Force_FIELD_CLASS_HPP_
+#endif   // FORCE_FIELD__FORCE_FIELD_CLASS_HPP

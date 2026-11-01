@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_SETUP_HPP_
-
-#define _POTENTIAL_SETUP_HPP_
+#ifndef SETUP__POTENTIAL_SETUP_HPP
+#define SETUP__POTENTIAL_SETUP_HPP
 
 namespace engine
 {
@@ -65,4 +64,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _POTENTIAL_SETUP_HPP_
+#endif   // SETUP__POTENTIAL_SETUP_HPP

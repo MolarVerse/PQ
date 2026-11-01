@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DISTANCE_KERNELS_HPP_
-
-#define _DISTANCE_KERNELS_HPP_
+#ifndef KERNELS__DISTANCE_KERNELS_HPP
+#define KERNELS__DISTANCE_KERNELS_HPP
 
 #include "vector3d.hpp"
 
@@ -63,4 +62,4 @@ namespace kernel
 
 }   // namespace kernel
 
-#endif   // _DISTANCE_KERNELS_HPP_
+#endif   // KERNELS__DISTANCE_KERNELS_HPP

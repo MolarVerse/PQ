@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MTR_INTRA_WATER_HPP_
-
-#define _MTR_INTRA_WATER_HPP_
+#ifndef WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP
+#define WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP
 
 #include "intraWater.hpp"
 
@@ -119,4 +118,4 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#endif   //  _MTR_INTRA_WATER_HPP_
+#endif   //  WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP

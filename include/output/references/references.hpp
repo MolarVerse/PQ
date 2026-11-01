@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _REFERENCES_HPP_
-
-#define _REFERENCES_HPP_
+#ifndef OUTPUT__REFERENCES__REFERENCES_HPP
+#define OUTPUT__REFERENCES__REFERENCES_HPP
 
 namespace references
 {
@@ -70,4 +69,4 @@ namespace references
 
 }   // namespace references
 
-#endif   // _REFERENCES_HPP_
+#endif   // OUTPUT__REFERENCES__REFERENCES_HPP

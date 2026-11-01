@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_SETTINGS_HPP_
-
-#define _HESSIAN_SETTINGS_HPP_
+#ifndef SETTINGS__HESSIAN_SETTINGS_HPP
+#define SETTINGS__HESSIAN_SETTINGS_HPP
 
 #include <string>
 
@@ -61,4 +60,4 @@ class HessianSettings
     [[nodiscard]] HessianBuilderType getBuilder() const;
 };
 
-#endif   // _HESSIAN_SETTINGS_HPP_
+#endif   // SETTINGS__HESSIAN_SETTINGS_HPP

@@ -22,8 +22,8 @@
 
 #include <string>
 
-#ifndef _OUTPUT_MESSAGES_HPP_
-#define _OUTPUT_MESSAGES_HPP_
+#ifndef OUTPUT__OUTPUT_MESSAGES_HPP
+#define OUTPUT__OUTPUT_MESSAGES_HPP
 
 namespace out
 {
@@ -43,4 +43,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _OUTPUT_MESSAGES_HPP_
+#endif   // OUTPUT__OUTPUT_MESSAGES_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TYPES_SECTION_HPP_
-
-#define _TYPES_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__TYPES_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__TYPES_SECTION_HPP
 
 #include <string>
 
@@ -66,4 +65,4 @@ namespace input::parameterFile
 
 }   // namespace input::parameterFile
 
-#endif   // _TYPES_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__TYPES_SECTION_HPP

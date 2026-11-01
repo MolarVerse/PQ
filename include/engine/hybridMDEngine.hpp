@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_MD_ENGINE_HPP_
-
-#define _HYBRID_MD_ENGINE_HPP_
+#ifndef ENGINE__HYBRID_MD_ENGINE_HPP
+#define ENGINE__HYBRID_MD_ENGINE_HPP
 
 #include "mdEngine.hpp"
 #include "qmCapableEngine.hpp"
@@ -87,4 +86,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _HYBRID_MD_ENGINE_HPP_
+#endif   // ENGINE__HYBRID_MD_ENGINE_HPP

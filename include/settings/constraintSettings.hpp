@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTRAINT_SETTINGS_HPP_
-
-#define _CONSTRAINT_SETTINGS_HPP_
+#ifndef SETTINGS__CONSTRAINT_SETTINGS_HPP
+#define SETTINGS__CONSTRAINT_SETTINGS_HPP
 
 #include <cstddef>
 #include <mstd/enum.hpp>
@@ -104,4 +103,4 @@ class ConstraintSettings
     void setMShakeTolerance(double mshakeTolerance);
 };
 
-#endif   // _CONSTRAINT_SETTINGS_HPP_
+#endif   // SETTINGS__CONSTRAINT_SETTINGS_HPP

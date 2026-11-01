@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STATIC_MATRIX_CLASS_3X3_HPP_
-
-#define _STATIC_MATRIX_CLASS_3X3_HPP_
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_HPP
+#define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_HPP
 
 #include "vector3d.hpp"
 
@@ -83,8 +82,8 @@ namespace linalg
     };
 }   // namespace linalg
 
-#ifndef _STATIC_MATRIX_CLASS_3x3_TPP_
-#include "staticMatrix3x3Class.tpp.hpp"   // IWYU pragma: export
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP
+#include "staticMatrix3x3Class.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _STATIC_MATRIX_CLASS_3X3_HPP_
+#endif   // LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_HPP

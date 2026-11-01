@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DISTANCE_CONSTRAINT_HPP_
-
-#define _DISTANCE_CONSTRAINT_HPP_
+#ifndef CONSTRAINTS__DISTANCE_CONSTRAINT_HPP
+#define CONSTRAINTS__DISTANCE_CONSTRAINT_HPP
 
 #include "bond.hpp"
 #include "strongTypes.hpp"
@@ -79,4 +78,4 @@ namespace constraints
 
 }   // namespace constraints
 
-#endif   // _DISTANCE_CONSTRAINT_HPP_
+#endif   // CONSTRAINTS__DISTANCE_CONSTRAINT_HPP

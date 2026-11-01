@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NON_COULOMBICS_SECTION_HPP_
-
-#define _NON_COULOMBICS_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__NON_COULOMBICS_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__NON_COULOMBICS_SECTION_HPP
 
 #include <string>
 #include <vector>
@@ -80,4 +79,4 @@ namespace input::parameterFile
 
 }   // namespace input::parameterFile
 
-#endif   // _NON_COULOMBICS_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__NON_COULOMBICS_SECTION_HPP

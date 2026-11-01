@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HUBBARD_DERIV_MAP_HPP_
-
-#define _HUBBARD_DERIV_MAP_HPP_
+#ifndef CONFIG__HUBBARD_DERIV_MAP_HPP
+#define CONFIG__HUBBARD_DERIV_MAP_HPP
 
 #include <string>
 #include <unordered_map>
@@ -48,4 +47,4 @@ const std::unordered_map<std::string, double> hubbardDerivMap3ob = {
     {"Ca", -0.0340},
 };
 
-#endif   // _HUBBARD_DERIV_MAP_HPP_
+#endif   // CONFIG__HUBBARD_DERIV_MAP_HPP

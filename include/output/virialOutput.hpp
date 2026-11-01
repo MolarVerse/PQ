@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_OUTPUT_HPP_
-
-#define _VIRIAL_OUTPUT_HPP_
+#ifndef OUTPUT__VIRIAL_OUTPUT_HPP
+#define OUTPUT__VIRIAL_OUTPUT_HPP
 
 #include <cstddef>
 
@@ -51,4 +50,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _VIRIAL_OUTPUT_HPP_
+#endif   // OUTPUT__VIRIAL_OUTPUT_HPP

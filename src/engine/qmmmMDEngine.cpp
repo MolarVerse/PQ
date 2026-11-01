@@ -22,6 +22,7 @@
 
 #include "qmmmMDEngine.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdlib>
 #include <format>
@@ -224,6 +225,7 @@ namespace engine
 
             getQMRunner()
                 ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+            _calculateQMReferenceEnergy();
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
             virial +=
@@ -334,6 +336,7 @@ namespace engine
         );
 
         getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+        _calculateQMReferenceEnergy();
 
         if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
             _scaleSmoothingMoleculeForcesInner();
@@ -457,6 +460,43 @@ namespace engine
     }
 
     /**
+     * @brief Store the summed QM reference energies of all QM molecules in
+     * PhysicalData; they are subtracted from the total energy
+     *
+     * @details Must be called directly after the QM calculation, while
+     * exactly the QM molecules are active. Without it, E_tot jumps by a
+     * molecule's QM energy whenever it enters or leaves the QM region.
+     * Molecules without a moltype entry have no reference energy.
+     */
+    void QMMMMDEngine::_calculateQMReferenceEnergy()
+    {
+        auto &simBox          = getSimulationBox();
+        auto &moleculeTypes   = simBox.getMoleculeTypes();
+        auto  referenceEnergy = 0.0;
+
+        for (const auto &mol : simBox.getMolecules())
+        {
+            if (!mol.isActive())
+            {
+                continue;
+            }
+
+            const auto isMoltype = [&mol](const auto &moleculeType)
+            { return moleculeType.getMoltype() == mol.getMoltype(); };
+
+            const auto moleculeType =
+                std::ranges::find_if(moleculeTypes, isMoltype);
+
+            if (moleculeType != moleculeTypes.end())
+            {
+                referenceEnergy += moleculeType->getQMReferenceEnergy();
+            }
+        }
+
+        getPhysicalDataPtr()->setQMReferenceEnergy(referenceEnergy);
+    }
+
+    /**
      * @brief Validates that all non-core molecules have a non-zero moltype
      *
      * @details This function iterates through all molecules and verifies
@@ -500,6 +540,9 @@ namespace engine
         _qmmmPhysicalData.addQMEnergy(
             getPhysicalDataPtr()->getQMEnergy() * globalSmF
         );
+        _qmmmPhysicalData.addQMReferenceEnergy(
+            getPhysicalDataPtr()->getQMReferenceEnergy() * globalSmF
+        );
         _qmmmPhysicalData.addCoulombEnergy(
             getPhysicalDataPtr()->getCoulombEnergy() * globalSmF
         );
@@ -536,6 +579,9 @@ namespace engine
     void QMMMMDEngine::_moveEnergiesToPhysicalData()
     {
         getPhysicalDataPtr()->setQMEnergy(_qmmmPhysicalData.getQMEnergy());
+        getPhysicalDataPtr()->setQMReferenceEnergy(
+            _qmmmPhysicalData.getQMReferenceEnergy()
+        );
         getPhysicalDataPtr()->setCoulombEnergy(
             _qmmmPhysicalData.getCoulombEnergy()
         );

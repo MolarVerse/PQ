@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SINGLETON_HPP_
-#define _SINGLETON_HPP_
+#ifndef UTILITIES__SINGLETON_HPP
+#define UTILITIES__SINGLETON_HPP
 
 /**
  * @brief Singleton class template.
@@ -53,4 +53,4 @@ class Singleton
     ~Singleton() = default;
 };
 
-#endif   // _SINGLETON_HPP_
+#endif   // UTILITIES__SINGLETON_HPP

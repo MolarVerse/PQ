@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_SETTINGS_HPP_
-
-#define _POTENTIAL_SETTINGS_HPP_
+#ifndef SETTINGS__POTENTIAL_SETTINGS_HPP
+#define SETTINGS__POTENTIAL_SETTINGS_HPP
 
 #include <mstd/enum.hpp>
 #include <optional>
@@ -92,4 +91,4 @@ namespace settings
 
 }   // namespace settings
 
-#endif   // _POTENTIAL_SETTINGS_HPP_
+#endif   // SETTINGS__POTENTIAL_SETTINGS_HPP

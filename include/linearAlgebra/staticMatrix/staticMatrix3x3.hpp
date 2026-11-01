@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STATIC_MATRIX_3X3_HPP_
-
-#define _STATIC_MATRIX_3X3_HPP_
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_HPP
+#define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_HPP
 
 #include <ostream>
 
@@ -166,8 +165,8 @@ namespace linalg
 
 }   // namespace linalg
 
-#ifndef _STATIC_MATRIX_3X3_TPP_
-#include "staticMatrix3x3.tpp.hpp"   // IWYU pragma: export
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_TPP
+#include "staticMatrix3x3.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _STATIC_MATRIX_3X3_HPP_
+#endif   // LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_HPP

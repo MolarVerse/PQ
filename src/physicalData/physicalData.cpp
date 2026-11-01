@@ -159,7 +159,8 @@ namespace physicalData
         _pressure        += other.getPressure();
         _coupledPressure += other.getCoupledPressure();
 
-        _qmEnergy += other.getQMEnergy();
+        _qmEnergy          += other.getQMEnergy();
+        _qmReferenceEnergy += other.getQMReferenceEnergy();
 
         _numberOfSmoothingMol += other.getNumberOfSmoothingMolecules();
 
@@ -208,7 +209,8 @@ namespace physicalData
         _pressure        /= outputFrequency;
         _coupledPressure /= outputFrequency;
 
-        _qmEnergy /= outputFrequency;
+        _qmEnergy          /= outputFrequency;
+        _qmReferenceEnergy /= outputFrequency;
 
         _numberOfSmoothingMol /= outputFrequency;
 
@@ -253,7 +255,8 @@ namespace physicalData
         _dihedralEnergy = 0.0;
         _improperEnergy = 0.0;
 
-        _qmEnergy = 0.0;
+        _qmEnergy          = 0.0;
+        _qmReferenceEnergy = 0.0;
 
         _numberOfSmoothingMol = 0.0;
 
@@ -297,7 +300,8 @@ namespace physicalData
         _dihedralEnergy = 0.0;
         _improperEnergy = 0.0;
 
-        _qmEnergy = 0.0;
+        _qmEnergy          = 0.0;
+        _qmReferenceEnergy = 0.0;
 
         _kinEnergyVirialTensor.atomic    = {0.0};
         _kinEnergyVirialTensor.molecular = {0.0};
@@ -335,6 +339,7 @@ namespace physicalData
         totalEnergy += _kineticEnergy;
 
         totalEnergy += _qmEnergy;
+        totalEnergy -= _qmReferenceEnergy;
 
         return totalEnergy;
     }

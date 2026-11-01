@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LEARNING_RATE_STRATEGY_HPP_
-
-#define _LEARNING_RATE_STRATEGY_HPP_
+#ifndef OPT__LEARNING_RATE_STRATEGY__LEARNING_RATE_STRATEGY_HPP
+#define OPT__LEARNING_RATE_STRATEGY__LEARNING_RATE_STRATEGY_HPP
 
 #include <cstddef>
 #include <memory>
@@ -101,4 +100,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _LEARNING_RATE_STRATEGY_HPP_
+#endif   // OPT__LEARNING_RATE_STRATEGY__LEARNING_RATE_STRATEGY_HPP
