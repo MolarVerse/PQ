@@ -121,7 +121,9 @@ namespace input
         _parsers.push_back(
             std::make_unique<ManostatInputParser>(settings.manostatSettings)
         );
-        _parsers.push_back(std::make_unique<OutputInputParser>());
+        _parsers.push_back(
+            std::make_unique<OutputInputParser>(settings.outputFiles)
+        );
         _parsers.push_back(
             std::make_unique<ResetKineticsInputParser>(settings.resetKinetics)
         );

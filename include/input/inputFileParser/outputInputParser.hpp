@@ -23,7 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__OUTPUT_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__OUTPUT_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class OutputFileSettings;
 
 namespace input
 {
@@ -35,8 +39,10 @@ namespace input
      */
     class OutputInputParser : public InputFileParser
     {
+        mstd::Ref<OutputFileSettings> _outputFileSettings;
+
        public:
-        OutputInputParser();
+        explicit OutputInputParser(OutputFileSettings &outputFileSettings);
 
         void addOverwriteOutputKeyword();
         void addIncludeOutputMetadataKeyword();

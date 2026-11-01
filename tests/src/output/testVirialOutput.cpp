@@ -35,7 +35,7 @@ TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
     const std::string path = "default.vir.test";
 
     out::VirialOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     physicalData::PhysicalData data;
     data.setVirial(
@@ -64,7 +64,7 @@ TEST(TestVirialOutput, writeEmitsOneLinePerCall)
     const std::string path = "default.vir.test";
 
     out::VirialOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     physicalData::PhysicalData data;
 

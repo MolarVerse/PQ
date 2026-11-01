@@ -66,17 +66,18 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefix(PREFIX);
+    _settings->finalize();
 
     EXPECT_NO_THROW(setup::setupOutputFiles(*_engine));
 
     // After setup, the log/timings/info filenames are now prefix-substituted.
     EXPECT_EQ(
-        settings::OutputFileSettings::getLogFileName(),
+        _settings->outputFiles.getLogFileName(),
         std::string(PREFIX) + ".log"
     );
     EXPECT_EQ(
-        settings::OutputFileSettings::getOptFileName(),
+        _settings->outputFiles.getOptFileName(),
         std::string(PREFIX) + ".opt"
     );
 
@@ -88,8 +89,9 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefix(PREFIX);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -107,10 +109,10 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    _settings->outputFiles.setFilePrefix(PREFIX);
     settings::TimingsSettings::setTimeStep(0.5);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -132,10 +134,11 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
+    _settings->outputFiles.setFilePrefix(PREFIX);
+    _settings->outputFiles.setIncludeOutputMetadata(true);
     settings::TimingsSettings::setTimeStep(0.5);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -151,7 +154,6 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     std::getline(instantEnergyFile, line);
     EXPECT_EQ(line, "# timestep = 0.5 fs");
 
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
     cleanupPrefix();
 }
 
@@ -160,8 +162,9 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(true);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefix(PREFIX);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 

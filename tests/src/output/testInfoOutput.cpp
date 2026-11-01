@@ -57,7 +57,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     _settings->forceFieldSettings.setType(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    _infoOutput->setFilename("default.info");
+    _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
@@ -145,7 +145,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     _settings->forceFieldSettings.setType(ForceFieldType::ON);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    _infoOutput->setFilename("default.info");
+    _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
@@ -245,7 +245,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    _infoOutput->setFilename("default.info");
+    _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
@@ -340,7 +340,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _settings->manostatSettings.setFixedAxis(FixedAxis::Z);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    _infoOutput->setFilename("default.info");
+    _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
@@ -441,7 +441,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
     _settings->manostatSettings.setManostatType(ManostatType::NONE);
 
-    _infoOutput->setFilename("default.info");
+    _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 
@@ -530,7 +530,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
         ThermostatType::NOSE_HOOVER
     );
 
-    _infoOutput->setFilename("default.info");
+    _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0, *_physicalData, *_settings);
     _infoOutput->close();
 

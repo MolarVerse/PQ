@@ -39,14 +39,15 @@
  */
 TEST_F(TestInputFileReader, testParseOutputFreq)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("output_freq"));
     const auto &parseFunc = funcMap.at("output_freq");
 
     std::vector<std::string> lineElements = {"output_freq", "=", "1000"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getOutputFrequency(), 1000);
+    EXPECT_EQ(outputFileSettings.getOutputFrequency(), 1000);
 
     _clearParser(parser);
 
@@ -65,7 +66,8 @@ TEST_F(TestInputFileReader, testParseOutputFreq)
  */
 TEST_F(TestInputFileReader, testParseFilePrefix)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("file_prefix"));
     const auto &parseFunc = funcMap.at("file_prefix");
@@ -76,7 +78,7 @@ TEST_F(TestInputFileReader, testParseFilePrefix)
         "prefix"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getFilePrefix(), "prefix");
+    EXPECT_EQ(outputFileSettings.getFilePrefix(), "prefix");
 }
 
 /**
@@ -85,7 +87,8 @@ TEST_F(TestInputFileReader, testParseFilePrefix)
  */
 TEST_F(TestInputFileReader, testParseLogFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("output_file"));
     const auto &parseFunc = funcMap.at("output_file");
@@ -93,7 +96,7 @@ TEST_F(TestInputFileReader, testParseLogFilename)
     _fileName                             = "log.txt";
     std::vector<std::string> lineElements = {"output_file", "=", _fileName};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getLogFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getLogFileName(), _fileName);
 }
 
 /**
@@ -102,7 +105,8 @@ TEST_F(TestInputFileReader, testParseLogFilename)
  */
 TEST_F(TestInputFileReader, testParseInfoFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("info_file"));
     const auto &parseFunc = funcMap.at("info_file");
@@ -110,7 +114,7 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
     _fileName                             = "info.txt";
     std::vector<std::string> lineElements = {"info_file", "=", "info.txt"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getInfoFileName(), "info.txt");
+    EXPECT_EQ(outputFileSettings.getInfoFileName(), "info.txt");
 }
 
 /**
@@ -119,7 +123,8 @@ TEST_F(TestInputFileReader, testParseInfoFilename)
  */
 TEST_F(TestInputFileReader, testParseEnergyFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("energy_file"));
     const auto &parseFunc = funcMap.at("energy_file");
@@ -127,7 +132,7 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
     _fileName                             = "energy.txt";
     std::vector<std::string> lineElements = {"energy_file", "=", _fileName};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getEnergyFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getEnergyFileName(), _fileName);
 }
 
 /**
@@ -136,7 +141,8 @@ TEST_F(TestInputFileReader, testParseEnergyFilename)
  */
 TEST_F(TestInputFileReader, testParseInstantEnergyFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("instant_energy_file"));
     const auto &parseFunc = funcMap.at("instant_energy_file");
@@ -148,10 +154,7 @@ TEST_F(TestInputFileReader, testParseInstantEnergyFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getInstantEnergyFileName(),
-        _fileName
-    );
+    EXPECT_EQ(outputFileSettings.getInstantEnergyFileName(), _fileName);
 }
 
 /**
@@ -160,7 +163,8 @@ TEST_F(TestInputFileReader, testParseInstantEnergyFilename)
  */
 TEST_F(TestInputFileReader, testParseTrajectoryFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("traj_file"));
     const auto &parseFunc = funcMap.at("traj_file");
@@ -168,7 +172,7 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
     _fileName                             = "trajectory.xyz";
     std::vector<std::string> lineElements = {"traj_file", "=", _fileName};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getTrajectoryFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getTrajectoryFileName(), _fileName);
 }
 
 /**
@@ -177,7 +181,8 @@ TEST_F(TestInputFileReader, testParseTrajectoryFilename)
  */
 TEST_F(TestInputFileReader, testParseHybridCenterFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("hybrid_center_file"));
     const auto &parseFunc = funcMap.at("hybrid_center_file");
@@ -189,10 +194,7 @@ TEST_F(TestInputFileReader, testParseHybridCenterFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getHybridCenterFileName(),
-        _fileName
-    );
+    EXPECT_EQ(outputFileSettings.getHybridCenterFileName(), _fileName);
 }
 
 /**
@@ -201,7 +203,8 @@ TEST_F(TestInputFileReader, testParseHybridCenterFilename)
  */
 TEST_F(TestInputFileReader, testVelocityFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("vel_file"));
     const auto &parseFunc = funcMap.at("vel_file");
@@ -209,7 +212,7 @@ TEST_F(TestInputFileReader, testVelocityFilename)
     _fileName                             = "velocity.xyz";
     std::vector<std::string> lineElements = {"vel_file", "=", _fileName};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getVelocityFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getVelocityFileName(), _fileName);
 }
 
 /**
@@ -218,7 +221,8 @@ TEST_F(TestInputFileReader, testVelocityFilename)
  */
 TEST_F(TestInputFileReader, testForceFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("force_file"));
     const auto &parseFunc = funcMap.at("force_file");
@@ -226,7 +230,7 @@ TEST_F(TestInputFileReader, testForceFilename)
     _fileName                             = "force.xyz";
     std::vector<std::string> lineElements = {"force_file", "=", _fileName};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getForceFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getForceFileName(), _fileName);
 }
 
 /**
@@ -235,7 +239,8 @@ TEST_F(TestInputFileReader, testForceFilename)
  */
 TEST_F(TestInputFileReader, testParseRestartFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("restart_file"));
     const auto &parseFunc = funcMap.at("restart_file");
@@ -243,7 +248,7 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
     _fileName                             = "restart.xyz";
     std::vector<std::string> lineElements = {"restart_file", "=", _fileName};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRestartFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getRestartFileName(), _fileName);
 }
 
 /**
@@ -252,7 +257,8 @@ TEST_F(TestInputFileReader, testParseRestartFilename)
  */
 TEST_F(TestInputFileReader, testChargeFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("charge_file"));
     const auto &parseFunc = funcMap.at("charge_file");
@@ -260,7 +266,7 @@ TEST_F(TestInputFileReader, testChargeFilename)
     _fileName                             = "charge.xyz";
     std::vector<std::string> lineElements = {"charge_file", "=", _fileName};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getChargeFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getChargeFileName(), _fileName);
 }
 
 /**
@@ -269,7 +275,8 @@ TEST_F(TestInputFileReader, testChargeFilename)
  */
 TEST_F(TestInputFileReader, testMomentumFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("momentum_file"));
     const auto &parseFunc = funcMap.at("momentum_file");
@@ -281,7 +288,7 @@ TEST_F(TestInputFileReader, testMomentumFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getMomentumFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getMomentumFileName(), _fileName);
 }
 
 /**
@@ -290,7 +297,8 @@ TEST_F(TestInputFileReader, testMomentumFilename)
  */
 TEST_F(TestInputFileReader, testVirialFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("virial_file"));
     const auto &parseFunc = funcMap.at("virial_file");
@@ -302,7 +310,7 @@ TEST_F(TestInputFileReader, testVirialFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getVirialFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getVirialFileName(), _fileName);
 }
 
 /**
@@ -311,7 +319,8 @@ TEST_F(TestInputFileReader, testVirialFilename)
  */
 TEST_F(TestInputFileReader, testStressFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("stress_file"));
     const auto &parseFunc = funcMap.at("stress_file");
@@ -323,7 +332,7 @@ TEST_F(TestInputFileReader, testStressFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getStressFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getStressFileName(), _fileName);
 }
 
 /**
@@ -332,7 +341,8 @@ TEST_F(TestInputFileReader, testStressFilename)
  */
 TEST_F(TestInputFileReader, testBoxFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("box_file"));
     const auto &parseFunc = funcMap.at("box_file");
@@ -340,7 +350,7 @@ TEST_F(TestInputFileReader, testBoxFilename)
     _fileName                                   = "box.xyz";
     const std::vector<std::string> lineElements = {"box_file", "=", _fileName};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getBoxFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getBoxFileName(), _fileName);
 }
 
 /**
@@ -349,7 +359,8 @@ TEST_F(TestInputFileReader, testBoxFilename)
  */
 TEST_F(TestInputFileReader, testTimingsFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("timings_file"));
     const auto &parseFunc = funcMap.at("timings_file");
@@ -361,7 +372,7 @@ TEST_F(TestInputFileReader, testTimingsFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getTimingsFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getTimingsFileName(), _fileName);
 }
 
 /**
@@ -370,7 +381,8 @@ TEST_F(TestInputFileReader, testTimingsFilename)
  */
 TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_traj_file"));
     const auto &parseFunc = funcMap.at("rpmd_traj_file");
@@ -382,7 +394,7 @@ TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRPMDTrajFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getRPMDTrajFileName(), _fileName);
 }
 
 /**
@@ -391,7 +403,8 @@ TEST_F(TestInputFileReader, testRPMDTrajectoryFilename)
  */
 TEST_F(TestInputFileReader, testRPMDRestartFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_restart_file"));
     const auto &parseFunc = funcMap.at("rpmd_restart_file");
@@ -403,10 +416,7 @@ TEST_F(TestInputFileReader, testRPMDRestartFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getRPMDRestartFileName(),
-        _fileName
-    );
+    EXPECT_EQ(outputFileSettings.getRPMDRestartFileName(), _fileName);
 }
 
 /**
@@ -415,7 +425,8 @@ TEST_F(TestInputFileReader, testRPMDRestartFilename)
  */
 TEST_F(TestInputFileReader, testRPMDEnergyFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_energy_file"));
     const auto &parseFunc = funcMap.at("rpmd_energy_file");
@@ -427,7 +438,7 @@ TEST_F(TestInputFileReader, testRPMDEnergyFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRPMDEnergyFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getRPMDEnergyFileName(), _fileName);
 }
 
 /**
@@ -436,7 +447,8 @@ TEST_F(TestInputFileReader, testRPMDEnergyFilename)
  */
 TEST_F(TestInputFileReader, testRPMDForceFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_force_file"));
     const auto &parseFunc = funcMap.at("rpmd_force_file");
@@ -448,7 +460,7 @@ TEST_F(TestInputFileReader, testRPMDForceFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRPMDForceFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getRPMDForceFileName(), _fileName);
 }
 
 /**
@@ -457,7 +469,8 @@ TEST_F(TestInputFileReader, testRPMDForceFilename)
  */
 TEST_F(TestInputFileReader, testRPMDChargeFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_charge_file"));
     const auto &parseFunc = funcMap.at("rpmd_charge_file");
@@ -469,7 +482,7 @@ TEST_F(TestInputFileReader, testRPMDChargeFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::OutputFileSettings::getRPMDChargeFileName(), _fileName);
+    EXPECT_EQ(outputFileSettings.getRPMDChargeFileName(), _fileName);
 }
 
 /**
@@ -478,7 +491,8 @@ TEST_F(TestInputFileReader, testRPMDChargeFilename)
  */
 TEST_F(TestInputFileReader, testRPMDVelocityFilename)
 {
-    input::OutputInputParser parser;
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_vel_file"));
     const auto &parseFunc = funcMap.at("rpmd_vel_file");
@@ -490,10 +504,7 @@ TEST_F(TestInputFileReader, testRPMDVelocityFilename)
         _fileName
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::OutputFileSettings::getRPMDVelocityFileName(),
-        _fileName
-    );
+    EXPECT_EQ(outputFileSettings.getRPMDVelocityFileName(), _fileName);
 }
 
 /**
@@ -502,40 +513,40 @@ TEST_F(TestInputFileReader, testRPMDVelocityFilename)
  */
 TEST_F(TestInputFileReader, parseOverwriteOutput)
 {
-    EXPECT_FALSE(settings::OutputFileSettings::getOverwriteOutputFiles());
-
-    input::OutputInputParser parser;
+    OutputFileSettings outputFileSettings;
+    EXPECT_FALSE(outputFileSettings.getOverwriteOutputFiles());
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("overwrite_output"));
     const auto &parseFunc = funcMap.at("overwrite_output");
 
     parseFunc({"overwrite_output", "=", "true"}, 0);
-    EXPECT_TRUE(settings::OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_TRUE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "yes"}, 0);
-    EXPECT_TRUE(settings::OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_TRUE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "on"}, 0);
-    EXPECT_TRUE(settings::OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_TRUE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "false"}, 0);
-    EXPECT_FALSE(settings::OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_FALSE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "no"}, 0);
-    EXPECT_FALSE(settings::OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_FALSE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
     parseFunc({"overwrite_output", "=", "off"}, 0);
-    EXPECT_FALSE(settings::OutputFileSettings::getOverwriteOutputFiles());
+    EXPECT_FALSE(outputFileSettings.getOverwriteOutputFiles());
 
     _clearParser(parser);
 
@@ -553,20 +564,20 @@ TEST_F(TestInputFileReader, parseOverwriteOutput)
  */
 TEST_F(TestInputFileReader, parseIncludeOutputMetadata)
 {
-    EXPECT_FALSE(settings::OutputFileSettings::getIncludeOutputMetadata());
-
-    input::OutputInputParser parser;
+    OutputFileSettings outputFileSettings;
+    EXPECT_FALSE(outputFileSettings.getIncludeOutputMetadata());
+    input::OutputInputParser parser(outputFileSettings);
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("include_output_metadata"));
     const auto &parseFunc = funcMap.at("include_output_metadata");
 
     parseFunc({"include_output_metadata", "=", "true"}, 0);
-    EXPECT_TRUE(settings::OutputFileSettings::getIncludeOutputMetadata());
+    EXPECT_TRUE(outputFileSettings.getIncludeOutputMetadata());
 
     _clearParser(parser);
 
     parseFunc({"include_output_metadata", "=", "false"}, 0);
-    EXPECT_FALSE(settings::OutputFileSettings::getIncludeOutputMetadata());
+    EXPECT_FALSE(outputFileSettings.getIncludeOutputMetadata());
 
     _clearParser(parser);
 
