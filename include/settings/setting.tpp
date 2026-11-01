@@ -31,8 +31,8 @@
  *
  * @param defaultValue the default value for the setting.
  */
-template <typename T>
-Setting<T>::Setting(const T& defaultValue) : _default(defaultValue)
+template <typename T, mstd::Tag Name>
+Setting<T, Name>::Setting(const T& defaultValue) : _default(defaultValue)
 {
 }
 
@@ -41,8 +41,8 @@ Setting<T>::Setting(const T& defaultValue) : _default(defaultValue)
  *
  * @return true if the setting has a value, false otherwise.
  */
-template <typename T>
-bool Setting<T>::isSet() const
+template <typename T, mstd::Tag Name>
+bool Setting<T, Name>::isSet() const
 {
     return _value.has_value();
 }
@@ -54,13 +54,11 @@ bool Setting<T>::isSet() const
  * @throws exc::SettingsException if the setting is not set and no default
  * is available.
  */
-template <typename T>
-const T& Setting<T>::get() const
+template <typename T, mstd::Tag Name>
+const T& Setting<T, Name>::get() const
 {
     if (!_value.has_value() && !_default.has_value())
-        throw exc::SettingsException(
-            "Setting value is not set and no default is available."
-        );
+        _throwIfNotSet();
 
     if (!_value.has_value())
         return _default.value();
@@ -73,10 +71,27 @@ const T& Setting<T>::get() const
  *
  * @param value the value to set for the setting.
  */
-template <typename T>
-void Setting<T>::set(const T& value)
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::set(const T& value)
 {
     _value = value;
+}
+
+/**
+ * Throw an exception if the setting is not set and no default is available.
+ *
+ * @throws exc::SettingsException if the setting is not set and no default
+ * is available.
+ */
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::_throwIfNotSet() const
+{
+    std::string errorMessage =
+        "Setting value is not set and no default is available.";
+
+    errorMessage = Name.to_string() + ": " + errorMessage;
+
+    throw exc::SettingsException(errorMessage);
 }
 
 #endif   // SETTINGS__SETTING_TPP
