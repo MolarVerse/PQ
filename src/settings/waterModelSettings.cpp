@@ -165,7 +165,7 @@ void WaterModelSettings::setWaterInterModel(WaterInterModel model)
  */
 void WaterModelSettings::_addReferences(ReferenceSettings &references) const
 {
-    if (_waterInterModel.isSet())
+    if (_waterIntraModel.isSet())
     {
         switch (_waterIntraModel.get())
         {

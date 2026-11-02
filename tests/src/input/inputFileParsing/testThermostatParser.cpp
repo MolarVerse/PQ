@@ -144,6 +144,7 @@ TEST_F(TestInputFileReader, testParseThermostat)
         settings::ThermostatSettings::getThermostatType(),
         ThermostatType::NONE
     );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().empty());
 
     _clearParser(parser);
 
@@ -153,6 +154,9 @@ TEST_F(TestInputFileReader, testParseThermostat)
         settings::ThermostatSettings::getThermostatType(),
         ThermostatType::BERENDSEN
     );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::BERENDSEN_FILE
+    ));
 
     _clearParser(parser);
 
@@ -162,6 +166,9 @@ TEST_F(TestInputFileReader, testParseThermostat)
         settings::ThermostatSettings::getThermostatType(),
         ThermostatType::LANGEVIN
     );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::LANGEVIN_FILE
+    ));
 
     _clearParser(parser);
 
@@ -171,6 +178,9 @@ TEST_F(TestInputFileReader, testParseThermostat)
         settings::ThermostatSettings::getThermostatType(),
         ThermostatType::VELOCITY_RESCALING
     );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::VELOCITY_RESCALING_FILE
+    ));
 
     _clearParser(parser);
 
@@ -189,6 +199,9 @@ TEST_F(TestInputFileReader, testParseThermostat)
         settings::ThermostatSettings::getThermostatType(),
         ThermostatType::NOSE_HOOVER
     );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::NOSE_HOOVER_CHAIN_FILE
+    ));
 
     _clearParser(parser);
 

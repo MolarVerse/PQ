@@ -43,16 +43,25 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
     parseFunc({"qm_prog", "=", "dftbplus"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), DFTBPLUS);
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::DFTBPLUS_FILE
+    ));
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "pyscf"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), PYSCF);
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::PYSCF_FILE
+    ));
 
     _clearParser(parser);
 
     parseFunc({"qm_prog", "=", "turbomole"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), TURBOMOLE);
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::TURBOMOLE_FILE
+    ));
 
     _clearParser(parser);
 
@@ -73,6 +82,9 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
     parseFunc({"qm_prog", "=", "fennol"}, 0);
     EXPECT_EQ(settings::QMSettings::getQMMethod(), FENNOL);
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::FENNOL_FILE
+    ));
 
     _clearParser(parser);
 
@@ -263,12 +275,18 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
 
     parser.parseMaceQMMethod("mace");
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::MACEMP_FILE
+    ));
 
     parser.parseMaceQMMethod("mace_mp");
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
 
     parser.parseMaceQMMethod("mace_off");
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_OFF);
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::MACEOFF_FILE
+    ));
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("mace_ani"),
@@ -425,11 +443,17 @@ TEST_F(TestInputFileReader, parseSlakosType)
 #ifdef WITH_ASE
     parseFunc({"slakos", "=", "3ob"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::THREEOB_FILE
+    ));
 
     _clearParser(parser);
 
     parseFunc({"slakos", "=", "matsci"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::MATSCI);
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::MATSCI_FILE
+    ));
 
     _clearParser(parser);
 #else

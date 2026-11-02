@@ -55,6 +55,9 @@ TEST_F(TestInputFileReader, testParseIntegrator)
         settings::GeneralSettings::getIntegratorType(),
         IntegratorType::VELOCITY_VERLET
     );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::VELOCITY_VERLET_FILE
+    ));
 
     _clearParser(parser);
 
