@@ -20,6 +20,9 @@ set(perf_benchmarks
     perfShakeRattle.cpp
     perfMShake.cpp
     perfHybridZones.cpp
+    perfInputReadersN100.cpp
+    perfInputReadersN400.cpp
+    perfInputReadersN1600.cpp
     perfBerendsenThermostat.cpp
     perfLangevinThermostat.cpp
     perfNoseHooverThermostat.cpp
@@ -79,6 +82,10 @@ foreach(perf_source ${perf_benchmarks})
         physicalData
         box
         linearAlgebra
+        engine
+        PQ_input
+        restartFileReader
+        topologyFileReader
     )
 
     # the end-to-end benchmark runs the real driver on a small input set
