@@ -312,6 +312,17 @@ class PerfGateTest(unittest.TestCase):
         _, report = self.run_gate()
         self.assertIn("| `a` | 100000 (–) | 20000 (–) | 5000 (–) |  |", report)
 
+    def test_the_simulation_can_be_switched_off(self):
+        self.bench(self.pr, "a", 1_000_000, sim="1 1 1")
+        self.bench(self.base, "a", 1_000_000, sim="1 1 1")
+        result, report = self.run_gate(env_extra={"PERF_CACHE_SIM": "0"})
+        self.assertEqual(0, result.returncode)
+        calls = list(self.root.rglob("*.call"))
+        self.assertTrue(calls)
+        for call in calls:
+            self.assertNotIn("--cache-sim", call.read_text())
+            self.assertIn("--tool=callgrind", call.read_text())
+
     def test_valgrind_gets_the_simulation_options_a_fixed_path_and_an_empty_environment(self):
         self.bench(self.pr, "a", 1_000_000, sim="1 1 1")
         self.bench(self.base, "a", 1_000_000, sim="1 1 1")

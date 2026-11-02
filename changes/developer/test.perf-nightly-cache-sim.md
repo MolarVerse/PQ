@@ -1,0 +1,1 @@
+- Skip the simulated cache and branch counts in the pull request performance gate (`PERF_CACHE_SIM=0`) and report them in a nightly run of `dev`.

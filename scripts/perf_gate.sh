@@ -49,8 +49,11 @@ LARGE_DROP="${PERF_LARGE_DROP_PERCENT:-30}"
 ALLOC_LIB="${PERF_ALLOC_LIB:-$PR_DIR/libperf_alloc_counter.so}"
 ALLOC_THRESHOLD="${PERF_ALLOC_THRESHOLD_PERCENT:-2}"
 VALGRIND_BIN="$(command -v valgrind || echo valgrind)"
+# PERF_CACHE_SIM=0 skips the simulation (about 3 times faster, no cache/branch
+# table); the pull request workflow does that and a nightly run keeps it on.
 SIM_OPTIONS=(--cache-sim=yes --branch-sim=yes
     --I1=32768,8,64 --D1=32768,8,64 --LL=8388608,16,64)
+if [ "${PERF_CACHE_SIM:-1}" = "0" ]; then SIM_OPTIONS=(); fi
 SIM_WARN_PERCENT="${PERF_SIM_WARN_PERCENT:-10}"
 SIM_WARN_MIN_EVENTS="${PERF_SIM_WARN_MIN_EVENTS:-5000}"
 REPORT="${PERF_REPORT_FILE:-perf_report.md}"
