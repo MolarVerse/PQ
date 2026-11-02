@@ -34,6 +34,9 @@ set(perf_benchmarks
     perfInterWaterN216.cpp
     perfInterWaterN512.cpp
     perfInterWaterN1728.cpp
+    perfOutputWritersN100.cpp
+    perfOutputWritersN400.cpp
+    perfOutputWritersN1600.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -67,6 +70,7 @@ foreach(perf_source ${perf_benchmarks})
         resetKinetics
         virial
         constraints
+        output
         hybridConfigurator
         molsys
         potential
