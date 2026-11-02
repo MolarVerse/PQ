@@ -19,6 +19,7 @@ set(perf_benchmarks
     perfVirial.cpp
     perfShakeRattle.cpp
     perfMShake.cpp
+    perfHybridZones.cpp
     perfBerendsenThermostat.cpp
     perfLangevinThermostat.cpp
     perfNoseHooverThermostat.cpp
@@ -66,6 +67,7 @@ foreach(perf_source ${perf_benchmarks})
         resetKinetics
         virial
         constraints
+        hybridConfigurator
         molsys
         potential
         interWater
