@@ -20,6 +20,10 @@ set(perf_benchmarks
     perfShakeRattle.cpp
     perfMShake.cpp
     perfHybridZones.cpp
+    perfSteepestDescent.cpp
+    perfAdam.cpp
+    perfOptimizerHistory.cpp
+    perfLearningRate.cpp
     perfInputReadersN100.cpp
     perfInputReadersN400.cpp
     perfInputReadersN1600.cpp
@@ -82,6 +86,7 @@ foreach(perf_source ${perf_benchmarks})
         physicalData
         box
         linearAlgebra
+        optimization
         engine
         PQ_input
         restartFileReader
