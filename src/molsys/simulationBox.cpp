@@ -912,22 +912,26 @@ namespace molsys
     }
 
     /**
-     * @brief Remove net force from the system
+     * @brief Remove net force from the QM atoms
      *
-     * @details Computes the total force vector, distributes the opposite mean
-     * force equally to all atoms, and thereby enforces zero total force.
+     * @details Computes the total force on the QM atoms, distributes the
+     * opposite mean force equally to the QM atoms, and thereby enforces zero
+     * total QM force. MM atoms are not touched.
      */
     void SimulationBox::removeNetForce()
     {
-        const auto nAtoms = getNumberOfAtoms();
+        const auto nAtoms = getNumberOfQMAtoms();
 
         if (nAtoms == 0)
             return;
 
-        const auto correctionForce =
-            -calculateTotalForceVector() / static_cast<double>(nAtoms);
+        auto totalForce = linalg::Vec3D(0.0);
 
-        for (auto& atom : getAtoms()) atom->addForce(correctionForce);
+        for (const auto& atom : getQMAtoms()) totalForce += atom->getForce();
+
+        const auto correctionForce = -totalForce / static_cast<double>(nAtoms);
+
+        for (auto& atom : getQMAtoms()) atom->addForce(correctionForce);
     }
 
 }   // namespace molsys

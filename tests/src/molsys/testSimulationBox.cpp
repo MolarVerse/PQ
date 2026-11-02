@@ -25,11 +25,13 @@
 #include <gtest/gtest.h>
 
 #include <cstddef>
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
 
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
 #include "strongTypes.hpp"
@@ -394,6 +396,9 @@ TEST_F(
  */
 TEST_F(TestSimulationBox, removeNetForce)
 {
+    const auto jobtype = settings::GeneralSettings::getJobtype();
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+
     molsys::SimulationBox simBox;
     auto                  atom1 = molsys::Atom();
     auto                  atom2 = molsys::Atom();
@@ -426,6 +431,8 @@ TEST_F(TestSimulationBox, removeNetForce)
         linalg::Vec3D({1.0, -2.0, 0.0}),
         1e-10
     );
+
+    settings::GeneralSettings::setJobtype(jobtype);
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(1).getForce(),
         linalg::Vec3D({0.0, 1.0, -2.0}),
@@ -661,4 +668,43 @@ TEST_F(TestSimulationBox, activeChargeAndEmptyForceRemoval)
 
     molsys::SimulationBox empty;
     EXPECT_NO_THROW(empty.removeNetForce());
+}
+
+TEST_F(TestSimulationBox, removeNetForceTouchesOnlyQMAtoms)
+{
+    const auto jobtype = settings::GeneralSettings::getJobtype();
+    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+
+    molsys::SimulationBox simBox;
+    auto                  qmAtom1 = std::make_shared<molsys::Atom>();
+    auto                  qmAtom2 = std::make_shared<molsys::Atom>();
+    auto                  mmAtom  = std::make_shared<molsys::Atom>();
+
+    qmAtom1->setForce({3.0, 0.0, 0.0});
+    qmAtom2->setForce({1.0, 0.0, 0.0});
+    mmAtom->setActive(false);
+
+    simBox.addAtom(qmAtom1);
+    simBox.addAtom(qmAtom2);
+    simBox.addAtom(mmAtom);
+
+    simBox.removeNetForce();
+
+    EXPECT_VECTOR_NEAR(
+        qmAtom1->getForce(),
+        linalg::Vec3D({1.0, 0.0, 0.0}),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        qmAtom2->getForce(),
+        linalg::Vec3D({-1.0, 0.0, 0.0}),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        mmAtom->getForce(),
+        linalg::Vec3D({0.0, 0.0, 0.0}),
+        1e-10
+    );
+
+    settings::GeneralSettings::setJobtype(jobtype);
 }

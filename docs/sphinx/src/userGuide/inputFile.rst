@@ -1662,7 +1662,8 @@ Remove Net Force
     remove_net_force = {bool} -> false
 
 With the ``remove_net_force`` keyword the user can request the removal of the net force after reading in forces from the QM program.
-Removal is achieved by distributing the total net force evenly across all atoms in the system.
+Removal is achieved by distributing the net force of the QM atoms evenly across the QM atoms. In QM/MM runs these are the atoms of the
+active QM region; MM atoms are not touched.
 This can increase momentum conservation when using a QM program with limited numerical precision.
 
 .. centered:: *default value* = false
