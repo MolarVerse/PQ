@@ -53,6 +53,8 @@ namespace setup
      * @brief wrapper to build QMSetup object and call setup
      *
      * @param engine
+     * @param references Reference settings object used to manage and add
+     * necessary reference files for the specified QM method.
      * TODO(97gamjak): remove references as soon as qmsettings is in place
      */
     void setupQM(engine::Engine &engine, ReferenceSettings &references)

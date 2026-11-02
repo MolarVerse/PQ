@@ -62,6 +62,8 @@ namespace input
      * "<string>"
      *
      * @param resolveBuiltInSlakosPath
+     * @param referenceSettings Reference settings object used to manage and add
+     * necessary reference files for the specified QM method.
      */
     QMInputParser::QMInputParser(
         const bool                   resolveBuiltInSlakosPath,

@@ -51,7 +51,6 @@
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
 #include "progressbar.hpp"
-#include "referencesOutput.hpp"
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
