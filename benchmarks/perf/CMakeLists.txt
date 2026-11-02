@@ -20,6 +20,9 @@ set(perf_benchmarks
     perfShakeRattle.cpp
     perfMShake.cpp
     perfHybridZones.cpp
+    perfDftbRunnerFiles.cpp
+    perfTurbomoleRunnerFiles.cpp
+    perfPyscfRunnerFiles.cpp
     perfSteepestDescent.cpp
     perfAdam.cpp
     perfOptimizerHistory.cpp
@@ -86,6 +89,7 @@ foreach(perf_source ${perf_benchmarks})
         physicalData
         box
         linearAlgebra
+        externalQM
         optimization
         engine
         PQ_input
