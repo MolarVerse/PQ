@@ -1,0 +1,1 @@
+- Document that QM atoms with moltype 0 always count as neutral in the total QM charge.

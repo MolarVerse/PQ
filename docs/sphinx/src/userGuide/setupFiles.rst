@@ -39,6 +39,8 @@ identical elements exposed to a similar chemical environment from different molt
     atom type name. In case of a pure QM calculation the charge of the moltype, the atom_type_index as well as the point_charge can be 
     set to 0 and the global_vdW_type can be omitted. For MM calculations that utilize just the :ref:`guffdatFile`, the 
     point_charge can be set to 0 and the global_vdW_type can be omitted.
+    QM atoms with moltype 0 in the :ref:`restartFile` have no moldescriptor entry and always count as neutral in the
+    total QM charge. Give charged QM atoms their own moltype in the moldescriptor file.
 
 .. Attention::
 
