@@ -30,7 +30,6 @@
 #include "manostatFactory.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
-#include "referencesOutput.hpp"
 #include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
 
@@ -85,9 +84,7 @@ namespace engine
         const auto elapsedTime =
             timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
-        references::ReferencesOutput::writeReferencesFile(
-            outputFileSettings.getRefFileName()
-        );
+        getEngineOutput().writeReferencesFile();
 
         getEngineOutput().writeTimingsFile();
 

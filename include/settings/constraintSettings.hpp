@@ -28,6 +28,9 @@
 
 #include "setting.hpp"
 
+class ReferenceSettings;
+class WaterModelSettings;
+
 /**
  * @class ConstraintSettings
  *
@@ -53,6 +56,11 @@ class ConstraintSettings
 
    public:
     ConstraintSettings();
+
+    void finalize(
+        ReferenceSettings&        referenceSettings,
+        const WaterModelSettings& waterModelSettings
+    );
 
     void activateShakeForWaterModel();
 

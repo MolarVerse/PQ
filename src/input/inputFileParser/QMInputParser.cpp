@@ -33,8 +33,7 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "qmSettings.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
+#include "referenceSettings.hpp"
 #include "stringUtilities.hpp"
 
 namespace input
@@ -49,7 +48,10 @@ namespace input
      * "<string>"
      *
      */
-    QMInputParser::QMInputParser() : QMInputParser(true) {}
+    QMInputParser::QMInputParser(mstd::Ref<ReferenceSettings> referenceSettings)
+        : QMInputParser(true, referenceSettings)
+    {
+    }
 
     /**
      * @brief Construct a new QMInputParser:: QMInputParser object
@@ -61,8 +63,12 @@ namespace input
      *
      * @param resolveBuiltInSlakosPath
      */
-    QMInputParser::QMInputParser(const bool resolveBuiltInSlakosPath)
-        : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
+    QMInputParser::QMInputParser(
+        const bool                   resolveBuiltInSlakosPath,
+        mstd::Ref<ReferenceSettings> referenceSettings
+    )
+        : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath),
+          _referenceSettings(referenceSettings)
     {
         addQMMethodKey();
         addQMScriptKey();
@@ -91,7 +97,7 @@ namespace input
                 "Specifies the quantum mechanical method to be used.",
         };
 
-        const auto setValue = [](QMMethod value)
+        const auto setValue = [this](QMMethod value)
         {
             settings::QMSettings::setQMMethod(value);
 
@@ -99,23 +105,23 @@ namespace input
             {
                 case QMMethod::ASE_DFTBPLUS:
                 case QMMethod::DFTBPLUS:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::DFTBPLUS_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::DFTBPLUS_FILE
                     );
                     break;
                 case QMMethod::TURBOMOLE:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::TURBOMOLE_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::TURBOMOLE_FILE
                     );
                     break;
                 case QMMethod::FENNOL:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::FENNOL_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::FENNOL_FILE
                     );
                     break;
                 case QMMethod::PYSCF:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::PYSCF_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::PYSCF_FILE
                     );
                     break;
                 case QMMethod::MACE:
@@ -124,7 +130,7 @@ namespace input
             }
         };
 
-        const auto finalize = [](const std::string &value, QMMethod method)
+        const auto finalize = [this](const std::string &value, QMMethod method)
         {
             if (method == QMMethod::MACE)
                 parseMaceQMMethod(value);
@@ -328,8 +334,8 @@ namespace input
                         _resolveBuiltInSlakosPath
                     );
                     settings::QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
-                    references::ReferencesOutput::addReferenceFile(
-                        references::THREEOB_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::THREEOB_FILE
                     );
                     break;
                 case SlakosType::MATSCI:
@@ -337,8 +343,8 @@ namespace input
                         SlakosType::MATSCI,
                         _resolveBuiltInSlakosPath
                     );
-                    references::ReferencesOutput::addReferenceFile(
-                        references::MATSCI_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::MATSCI_FILE
                     );
                     break;
                 case SlakosType::CUSTOM:
@@ -529,13 +535,13 @@ namespace input
         switch (modelTypeOpt.value())
         {
             case MaceModelType::MACE_MP:
-                references::ReferencesOutput::addReferenceFile(
-                    references::MACEMP_FILE
+                _referenceSettings->addReferenceFile(
+                    ReferenceFiles::MACEMP_FILE
                 );
                 break;
             case MaceModelType::MACE_OFF:
-                references::ReferencesOutput::addReferenceFile(
-                    references::MACEOFF_FILE
+                _referenceSettings->addReferenceFile(
+                    ReferenceFiles::MACEOFF_FILE
                 );
                 break;
             case MaceModelType::MACE_ANICC:

@@ -41,7 +41,8 @@ TEST_F(TestInputFileReader, testParseTemperature)
 {
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), false);
 
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp"));
     const auto& parseFunc = funcMap.at("temp");
@@ -78,7 +79,8 @@ TEST_F(TestInputFileReader, testParseTemperature)
  */
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("t_relaxation"));
     const auto& parseFunc = funcMap.at("t_relaxation");
@@ -130,7 +132,8 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
  */
 TEST_F(TestInputFileReader, testParseThermostat)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("thermostat"));
     const auto& parseFunc = funcMap.at("thermostat");
@@ -205,7 +208,8 @@ TEST_F(TestInputFileReader, testParseThermostat)
  */
 TEST_F(TestInputFileReader, testParseFriction)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("friction"));
     const auto& parseFunc = funcMap.at("friction");
@@ -245,7 +249,8 @@ TEST_F(TestInputFileReader, testParseFriction)
  */
 TEST_F(TestInputFileReader, testParseChainLength)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nh_chain_length"));
     const auto& parseFunc = funcMap.at("nh_chain_length");
@@ -282,7 +287,8 @@ TEST_F(TestInputFileReader, testParseChainLength)
  */
 TEST_F(TestInputFileReader, testParseCouplingFrequency)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("coupling_frequency"));
     const auto& parseFunc = funcMap.at("coupling_frequency");
@@ -325,7 +331,8 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
  */
 TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp_ramp_steps"));
     const auto& parseFunc = funcMap.at("temp_ramp_steps");
@@ -353,7 +360,8 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
  */
 TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp_ramp_frequency"));
     const auto& parseFunc = funcMap.at("temp_ramp_frequency");
@@ -392,7 +400,8 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
  */
 TEST_F(TestInputFileReader, testParseStartTemperature)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("start_temp"));
     const auto& parseFunc = funcMap.at("start_temp");
@@ -426,7 +435,8 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
  */
 TEST_F(TestInputFileReader, testParseEndTemperature)
 {
-    input::ThermostatInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::ThermostatInputParser parser{referenceSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("end_temp"));
     const auto& parseFunc = funcMap.at("end_temp");

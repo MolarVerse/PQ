@@ -1,29 +1,26 @@
-/*****************************************************************************
-<GPL_HEADER>
+#ifndef SETTINGS__REFERENCE_SETTINGS_HPP
+#define SETTINGS__REFERENCE_SETTINGS_HPP
 
-    PQ
-    Copyright (C) 2023-now  Jakob Gamper
+#include <string>
+#include <unordered_set>
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+/**
+ * @brief Class to manage reference and BibTeX file settings.
+ */
+class ReferenceSettings
+{
+   private:
+    std::unordered_set<std::string> _referenceFileNames;
+    std::unordered_set<std::string> _bibtexFileNames;
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+   public:
+    void addReferenceFile(const std::string& referenceFileName);
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    const std::unordered_set<std::string>& getReferenceFileNames() const;
+    const std::unordered_set<std::string>& getBibtexFileNames() const;
+};
 
-<GPL_HEADER>
-******************************************************************************/
-
-#ifndef OUTPUT__REFERENCES__REFERENCES_HPP
-#define OUTPUT__REFERENCES__REFERENCES_HPP
-
-namespace references
+struct ReferenceFiles
 {
     // PQ Software
     static constexpr auto* PQ_FILE = "pq.ref";
@@ -66,7 +63,6 @@ namespace references
     static constexpr auto* OPC3_FILE      = "water_model_opc3.ref";
     static constexpr auto* SPC_MTR_FILE   = "water_model_spcmtr.ref";
     static constexpr auto* TIP3P_MTR_FILE = "water_model_tip3pmtr.ref";
+};
 
-}   // namespace references
-
-#endif   // OUTPUT__REFERENCES__REFERENCES_HPP
+#endif   // SETTINGS__REFERENCE_SETTINGS_HPP

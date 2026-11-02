@@ -29,6 +29,7 @@
 #include <format>
 #include <iostream>
 
+#include "referenceSettings.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -59,7 +60,8 @@ int main()
     manostatSettings.setTargetPressure(1.0);
     manostatSettings.setTau(100.0 * fs);
     manostatSettings.setCompressibility(4.6e-5);
-    manostatSettings.finalize();
+    ReferenceSettings referenceSettings;
+    manostatSettings.finalize(referenceSettings);
     auto manostat = manostat::BerendsenManostat(manostatSettings);
 
     perfAllocBegin();

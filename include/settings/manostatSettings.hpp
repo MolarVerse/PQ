@@ -27,6 +27,8 @@
 #include "setting.hpp"
 #include "unit_types.hpp"
 
+class ReferenceSettings;
+
 /**
  * @class ManostatSettings
  *
@@ -48,7 +50,7 @@ class ManostatSettings
    public:
     ManostatSettings();
 
-    void finalize();
+    void finalize(ReferenceSettings& referenceSettings);
 
     /***************************
      * standard setter methods *
@@ -76,6 +78,9 @@ class ManostatSettings
     [[nodiscard]] double       getTargetPressure() const;
     [[nodiscard]] const Time&  getTau() const;
     [[nodiscard]] double       getCompressibility() const;
+
+   private:
+    void _addReferenceFile(ReferenceSettings& referenceSettings);
 };
 
 #endif   // SETTINGS__MANOSTAT_SETTINGS_HPP

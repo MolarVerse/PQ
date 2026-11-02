@@ -19,6 +19,7 @@ add_library(settings
 
     settings.cpp
     resetKineticsSettings.cpp
+    referenceSettings.cpp
 )
 
 target_include_directories(settings

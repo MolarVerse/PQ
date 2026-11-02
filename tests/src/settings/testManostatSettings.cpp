@@ -24,6 +24,7 @@
 
 #include "enums/manostat.hpp"
 #include "manostatSettings.hpp"
+#include "referenceSettings.hpp"
 #include "units.hpp"
 
 TEST(ManostatSettingsTest, DoubleSettersAndGetters)
@@ -101,30 +102,31 @@ TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)
     ManostatSettings settings;
     settings.setManostatType(ManostatType::NONE);
     EXPECT_FALSE(settings.isFixedAxisSet());
-    settings.finalize();
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings);
     EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
 
     // When manostat is selected, default becomes NONE
     ManostatSettings settings2;
     settings2.setManostatType(ManostatType::BERENDSEN);
-    settings2.finalize();
+    settings2.finalize(referenceSettings);
     EXPECT_EQ(settings2.getFixedAxis(), FixedAxis::NONE);
 
     ManostatSettings settings3;
     settings3.setManostatType(ManostatType::STOCHASTIC_RESCALING);
-    settings3.finalize();
+    settings3.finalize(referenceSettings);
     EXPECT_EQ(settings3.getFixedAxis(), FixedAxis::NONE);
 
     // When explicitly set, it overrides the default and remains set
     ManostatSettings settings4;
     settings4.setManostatType(ManostatType::BERENDSEN);
     settings4.setFixedAxis(FixedAxis::Z);
-    settings4.finalize();
+    settings4.finalize(referenceSettings);
     EXPECT_TRUE(settings4.isFixedAxisSet());
     EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
 
     // Changing manostat type does not override explicitly set fixed axis
     settings4.setManostatType(ManostatType::BERENDSEN);
-    settings4.finalize();
+    settings4.finalize(referenceSettings);
     EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
 }

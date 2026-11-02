@@ -292,9 +292,7 @@ namespace engine
 
         timings::GlobalTimer::get().stopSimulationTimer();
 
-        references::ReferencesOutput::writeReferencesFile(
-            getSettings().outputFiles.getRefFileName()
-        );
+        getEngineOutput().writeReferencesFile();
         getEngineOutput().writeTimingsFile();
 
         const auto elapsedTime =

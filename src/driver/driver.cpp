@@ -48,7 +48,7 @@ namespace driver
         std::unique_ptr<engine::Engine> engine =
             engine::engineFactory.at(jobType)(settings);
 
-        setup::setupRequestedJob(*engine);
+        setup::setupRequestedJob(*engine, settings.referenceSettings);
 
         engine->run();
     }

@@ -34,6 +34,7 @@
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
 #include "optOutput.hpp"
+#include "referencesOutput.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
@@ -94,8 +95,13 @@ namespace engine
 
         std::unique_ptr<out::TimingsOutput> _timingsOutput;
 
+        references::ReferencesOutput _referencesOutput;
+
        public:
-        explicit EngineOutput(const OutputFileSettings &outputFileSettings);
+        explicit EngineOutput(
+            const OutputFileSettings &outputFileSettings,
+            const ReferenceSettings  &referenceSettings
+        );
 
         void writeEnergyFile(
             size_t step,
@@ -157,6 +163,7 @@ namespace engine
         );
 
         void writeTimingsFile();
+        void writeReferencesFile();
 
         /***************************
          * standard getter methods *

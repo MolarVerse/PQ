@@ -32,8 +32,7 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
+#include "referenceSettings.hpp"
 #include "thermostatSettings.hpp"
 
 namespace input
@@ -49,7 +48,10 @@ namespace input
      * "<double>" 3) t_relaxation "<double>" 4) friction "<double>" 5)
      * nh-chain_length "<size_t>" 6) coupling_frequency "<double>"
      */
-    ThermostatInputParser::ThermostatInputParser()
+    ThermostatInputParser::ThermostatInputParser(
+        ReferenceSettings &referenceSettings
+    )
+        : _referenceSettings(referenceSettings)
     {
         addThermostatKey();
         addTemperatureKey();
@@ -72,29 +74,29 @@ namespace input
                 "Specifies the type of thermostat used in the simulation"
         };
 
-        const auto setValue = [&](ThermostatType value)
+        const auto setValue = [this](ThermostatType value)
         {
             settings::ThermostatSettings::setThermostatType(value);
             switch (value)
             {
                 case ThermostatType::BERENDSEN:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::BERENDSEN_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::BERENDSEN_FILE
                     );
                     break;
                 case ThermostatType::VELOCITY_RESCALING:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::VELOCITY_RESCALING_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::VELOCITY_RESCALING_FILE
                     );
                     break;
                 case ThermostatType::LANGEVIN:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::LANGEVIN_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::LANGEVIN_FILE
                     );
                     break;
                 case ThermostatType::NOSE_HOOVER:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::NOSE_HOOVER_CHAIN_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::NOSE_HOOVER_CHAIN_FILE
                     );
                     break;
                 case ThermostatType::NONE: break;

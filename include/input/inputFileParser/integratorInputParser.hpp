@@ -23,7 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__INTEGRATOR_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__INTEGRATOR_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class ReferenceSettings;
 
 namespace input
 {
@@ -35,8 +39,10 @@ namespace input
      */
     class IntegratorInputParser : public InputFileParser
     {
+        mstd::Ref<ReferenceSettings> _referenceSettings;
+
        public:
-        IntegratorInputParser();
+        explicit IntegratorInputParser(ReferenceSettings& referenceSettings);
 
         void addIntegratorKey();
     };

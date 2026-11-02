@@ -35,8 +35,9 @@ TEST_F(TestInputFileReader, parseQMMethod)
     using enum QMMethod;
     EXPECT_EQ(settings::QMSettings::getQMMethod(), NONE);
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_prog"));
     const auto& parseFunc = funcMap.at("qm_prog");
 
@@ -117,8 +118,9 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
 TEST_F(TestInputFileReader, parseQMScript)
 {
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_script"));
     const auto& parseFunc = funcMap.at("qm_script");
     parseFunc({"qm_script", "=", "script.sh"}, 0);
@@ -127,8 +129,9 @@ TEST_F(TestInputFileReader, parseQMScript)
 
 TEST_F(TestInputFileReader, parseQMScriptFullPath)
 {
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_script_full_path"));
     const auto& parseFunc = funcMap.at("qm_script_full_path");
     parseFunc({"qm_script_full_path", "=", "/path/to/QM/Script.sh"}, 0);
@@ -140,8 +143,9 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
 
 TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
 {
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_loop_time_limit"));
     const auto& parseFunc = funcMap.at("qm_loop_time_limit");
     parseFunc({"qm_loop_time_limit", "=", "10"}, 0);
@@ -157,8 +161,9 @@ TEST_F(TestInputFileReader, parseDispersion)
 {
     EXPECT_FALSE(settings::QMSettings::useDispersionCorr());
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("dispersion"));
     const auto& parseFunc = funcMap.at("dispersion");
 
@@ -204,8 +209,9 @@ TEST_F(TestInputFileReader, parseRemoveNetForce)
 {
     EXPECT_FALSE(settings::QMSettings::getRemoveNetForce());
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("remove_net_force"));
     const auto& parseFunc = funcMap.at("remove_net_force");
 
@@ -252,43 +258,45 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
     using enum QMMethod;
     using enum MaceModelType;
 
-    auto parser = input::QMInputParser();
+    ReferenceSettings referenceSettings;
+    auto              parser = input::QMInputParser(referenceSettings);
 
-    input::QMInputParser::parseMaceQMMethod("mace");
+    parser.parseMaceQMMethod("mace");
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
 
-    input::QMInputParser::parseMaceQMMethod("mace_mp");
+    parser.parseMaceQMMethod("mace_mp");
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_MP);
 
-    input::QMInputParser::parseMaceQMMethod("mace_off");
+    parser.parseMaceQMMethod("mace_off");
     EXPECT_EQ(settings::QMSettings::getMaceModelType(), MACE_OFF);
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("mace_ani"),
         exc::InputFileException,
         "The mace ani model is not supported in this version of PQ.\n"
-    )
+    );
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("mace_anicc"),
         exc::InputFileException,
         "The mace ani model is not supported in this version of PQ.\n"
-    )
+    );
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("notAMaceModel"),
         exc::InputFileException,
         "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
         "Possible values are: mace_mp, mace_off, mace_anicc, mace, mace_ani"
-    )
+    );
 }
 
 TEST_F(TestInputFileReader, parseMaceModel)
 {
     using enum MaceModel;
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_model"));
     const auto& parseFunc = funcMap.at("mace_model");
 
@@ -359,15 +367,16 @@ TEST_F(TestInputFileReader, parseMaceModel)
         "file. Allowed values: small, medium, large, small_0b, medium_0b, "
         "small_0b2, medium_0b2, large_0b2, medium_0b3, medium_mpa_0, "
         "medium_omat_0, custom"
-    )
+    );
 }
 
 TEST_F(TestInputFileReader, parseMaceMode)
 {
     using enum MaceMode;
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_mode"));
     const auto& parseFunc = funcMap.at("mace_mode");
 
@@ -391,8 +400,9 @@ TEST_F(TestInputFileReader, parseMaceMode)
 
 TEST_F(TestInputFileReader, parseMaceModelPath)
 {
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_model_path"));
     const auto& parseFunc = funcMap.at("mace_model_path");
 
@@ -406,8 +416,9 @@ TEST_F(TestInputFileReader, parseSlakosType)
 {
     using enum QMMethod;
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
     const auto& parseFunc = funcMap.at("slakos");
 
@@ -459,8 +470,9 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 {
     using enum QMMethod;
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
     const auto& slakosParseFunc = funcMap.at("slakos");
     ASSERT_TRUE(funcMap.contains("third_order"));
@@ -473,9 +485,15 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 
     _clearParser(parser);
 
-    auto parser2 = input::QMInputParser();
-    slakosParseFunc({"slakos", "=", "3ob"}, 0);
-    thirdOrderParseFunc({"third_order", "=", "off"}, 0);
+    auto parser2  = input::QMInputParser(referenceSettings);
+    auto funcMap2 = parser2.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap2.contains("slakos"));
+    const auto& slakosParseFunc2 = funcMap2.at("slakos");
+    ASSERT_TRUE(funcMap2.contains("third_order"));
+    const auto& thirdOrderParseFunc2 = funcMap2.at("third_order");
+
+    slakosParseFunc2({"slakos", "=", "3ob"}, 0);
+    thirdOrderParseFunc2({"third_order", "=", "off"}, 0);
     EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 }
@@ -485,8 +503,9 @@ TEST_F(TestInputFileReader, parseSlakosPath)
 {
     using enum QMMethod;
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
     const auto& slakosParseFunc = funcMap.at("slakos");
     ASSERT_TRUE(funcMap.contains("slakos_path"));
@@ -501,8 +520,9 @@ TEST_F(TestInputFileReader, parseThirdOrder)
 {
     EXPECT_FALSE(settings::QMSettings::useThirdOrderDftb());
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("third_order"));
     const auto& thirdOrderParseFunc = funcMap.at("third_order");
 
@@ -547,8 +567,9 @@ TEST_F(TestInputFileReader, parseThirdOrder)
 
 TEST_F(TestInputFileReader, parseHubbardDerivs)
 {
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("hubbard_derivs"));
     const auto& hubbardDerivsParseFunc = funcMap.at("hubbard_derivs");
 
@@ -594,8 +615,9 @@ TEST_F(TestInputFileReader, parseXtbMethod)
 {
     using enum QMMethod;
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("xtb_method"));
     const auto& xtbMethodParseFunc = funcMap.at("xtb_method");
 
@@ -627,8 +649,9 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
 {
     using enum QMMethod;
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("fennol_model_path"));
     const auto& fennolModelPathParseFunc = funcMap.at("fennol_model_path");
 
@@ -647,8 +670,9 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
 {
     using enum QMMethod;
 
-    auto       parser  = input::QMInputParser();
-    const auto funcMap = parser.getKeywordFuncMap();
+    ReferenceSettings referenceSettings;
+    auto              parser  = input::QMInputParser(referenceSettings);
+    const auto        funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("gpu_preprocessing"));
     const auto& gpuPreprocessingParseFunc = funcMap.at("gpu_preprocessing");
 

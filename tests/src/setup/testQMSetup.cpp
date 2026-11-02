@@ -100,14 +100,14 @@ TEST(TestQMSetup, setupDftbplus)
 
     settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
     setBuildCompatibleQMScript();
-    setupQM.setup();
+    setupQM.setup(settings.referenceSettings);
 
     test::checkType(*engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
 
     settings::QMSettings::setQMMethod(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
-        setupQM.setup(),
+        setupQM.setup(settings.referenceSettings),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -122,14 +122,14 @@ TEST(TestQMSetup, setupPySCF)
 
     settings::QMSettings::setQMMethod(QMMethod::PYSCF);
     setBuildCompatibleQMScript();
-    setupQM.setup();
+    setupQM.setup(settings.referenceSettings);
 
     test::checkType(*engine.getQMRunner(), typeid(QM::PySCFRunner));
 
     settings::QMSettings::setQMMethod(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
-        setupQM.setup(),
+        setupQM.setup(settings.referenceSettings),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -144,14 +144,14 @@ TEST(TestQMSetup, setupTurbomoleRunner)
 
     settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
     setBuildCompatibleQMScript();
-    setupQM.setup();
+    setupQM.setup(settings.referenceSettings);
 
     test::checkType(*engine.getQMRunner(), typeid(QM::TurbomoleRunner));
 
     settings::QMSettings::setQMMethod(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
-        setupQM.setup(),
+        setupQM.setup(settings.referenceSettings),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -165,7 +165,7 @@ TEST(TestQMSetup, setupQMFull)
 
     Settings           settings;
     engine::QMMDEngine engine(settings);
-    EXPECT_NO_THROW(setup::setupQM(engine));
+    EXPECT_NO_THROW(setup::setupQM(engine, settings.referenceSettings));
 }
 
 #ifdef WITH_ASE

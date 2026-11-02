@@ -23,6 +23,7 @@
 #include "manostatSettings.hpp"
 
 #include "defaults.hpp"
+#include "referenceSettings.hpp"
 
 /**
  * @brief Construct a new Manostat Settings object with default values
@@ -41,7 +42,7 @@ ManostatSettings::ManostatSettings()
  * explicitly set
  *
  */
-void ManostatSettings::finalize()
+void ManostatSettings::finalize(ReferenceSettings& referenceSettings)
 {
     if (!_fixedAxis.isSet())
     {
@@ -50,6 +51,8 @@ void ManostatSettings::finalize()
         else
             _fixedAxis.set(FixedAxis::NONE);
     }
+
+    _addReferenceFile(referenceSettings);
 }
 
 /***************************
@@ -185,4 +188,29 @@ const Time& ManostatSettings::getTau() const { return _tau.get(); }
 double ManostatSettings::getCompressibility() const
 {
     return _compressibility.get();
+}
+
+/**
+ * @brief adds the appropriate reference file for the current manostat type
+ * to the given reference settings
+ *
+ * @param referenceSettings
+ */
+void ManostatSettings::_addReferenceFile(ReferenceSettings& referenceSettings)
+{
+    if (!_manostatType.isSet())
+        return;
+
+    switch (_manostatType.get())
+    {
+        case ManostatType::BERENDSEN:
+            referenceSettings.addReferenceFile(ReferenceFiles::BERENDSEN_FILE);
+            break;
+        case ManostatType::STOCHASTIC_RESCALING:
+            referenceSettings.addReferenceFile(
+                ReferenceFiles::STOCHASTIC_RESCALING_FILE
+            );
+            break;
+        case ManostatType::NONE: break;
+    }
 }

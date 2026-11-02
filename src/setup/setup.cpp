@@ -60,7 +60,10 @@ namespace setup
      *
      * @param engine The engine to set up.
      */
-    void setupRequestedJob(engine::Engine& engine)
+    void setupRequestedJob(
+        engine::Engine&    engine,
+        ReferenceSettings& references
+    )
     {
         auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
 
@@ -76,7 +79,7 @@ namespace setup
 
         readFiles(engine);
 
-        setupEngine(engine);
+        setupEngine(engine, references);
 
         // needs setup of engine before reading guff.dat
         input::guffdat::readGuffDat(engine);
@@ -124,11 +127,11 @@ namespace setup
      *
      * @param engine
      */
-    void setupEngine(engine::Engine& engine)
+    void setupEngine(engine::Engine& engine, ReferenceSettings& references)
     {
         const auto& settings = engine.getSettings();
         if (settings::GeneralSettings::isQMActivated())
-            setupQM(engine);
+            setupQM(engine, references);
 
         if (settings::GeneralSettings::isMDJobType())
         {

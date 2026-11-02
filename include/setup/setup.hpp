@@ -28,6 +28,7 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+class ReferenceSettings;
 namespace timings
 {
     class Timer;   // forward declaration
@@ -44,13 +45,16 @@ namespace timings
  */
 namespace setup
 {
-    void setupRequestedJob(engine::Engine &engine);
+    void setupRequestedJob(
+        engine::Engine    &engine,
+        ReferenceSettings &references
+    );
 
     void startSetup();
     void endSetup(engine::Engine &);
 
     void readFiles(engine::Engine &);
-    void setupEngine(engine::Engine &);
+    void setupEngine(engine::Engine &, ReferenceSettings &references);
 }   // namespace setup
 
 #endif   // SETUP__SETUP_HPP

@@ -30,9 +30,11 @@ namespace engine
     class QMMDEngine;   // forward declaration
 }   // namespace engine
 
+class ReferenceSettings;
+
 namespace setup
 {
-    void setupQM(engine::Engine &);
+    void setupQM(engine::Engine &, ReferenceSettings &references);
 
     /**
      * @class QMSetup
@@ -48,10 +50,10 @@ namespace setup
        public:
         explicit QMSetup(engine::QMCapableEngine &qmCapableEngine);
 
-        void        setup();
+        void        setup(ReferenceSettings &references);
         void        setupQMMethod();
         static void setupQMMethodAseDftbPlus();
-        static void setupQMMethodAseXtb();
+        static void setupQMMethodAseXtb(ReferenceSettings &references);
         void        setupQMScript() const;
         static void setupCoulombRadiusCutOff();
         void        setupWriteInfo() const;
