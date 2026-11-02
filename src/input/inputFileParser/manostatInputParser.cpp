@@ -31,8 +31,6 @@
 #include "keyMetaData.hpp"
 #include "manostatSettings.hpp"
 #include "rangeValidator.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
 #include "units.hpp"
 
 namespace input
@@ -75,23 +73,7 @@ namespace input
         };
 
         const auto setValue = [this](ManostatType manostatType)
-        {
-            switch (manostatType)
-            {
-                case ManostatType::BERENDSEN:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::BERENDSEN_FILE
-                    );
-                    break;
-                case ManostatType::STOCHASTIC_RESCALING:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::STOCHASTIC_RESCALING_FILE
-                    );
-                    break;
-                case ManostatType::NONE: break;
-            }
-            _manostatSettings->setManostatType(manostatType);
-        };
+        { _manostatSettings->setManostatType(manostatType); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ManostatType>{

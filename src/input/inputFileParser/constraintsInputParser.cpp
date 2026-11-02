@@ -31,8 +31,6 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
 
 namespace input
 {
@@ -89,9 +87,6 @@ namespace input
                 case ShakeType::SHAKE:
                 {
                     _constraintSettings->activateShake();
-                    references::ReferencesOutput::addReferenceFile(
-                        references::RATTLE_FILE
-                    );
                     break;
                 }
                 case ShakeType::OFF:

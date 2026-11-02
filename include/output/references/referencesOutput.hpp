@@ -23,12 +23,10 @@
 #ifndef OUTPUT__REFERENCES__REFERENCES_OUTPUT_HPP
 #define OUTPUT__REFERENCES__REFERENCES_OUTPUT_HPP
 
+#include <mstd/types.hpp>
 #include <string>
-#include <unordered_set>
 
-#define REFERENCES_PATH_ _REFERENCES_PATH_
-
-class ReferencesOutputTest;
+class ReferenceSettings;
 
 namespace references
 {
@@ -41,17 +39,12 @@ namespace references
     class ReferencesOutput
     {
        private:
-        static inline std::unordered_set<std::string> _referenceFileNames;
-        static inline std::unordered_set<std::string> _bibtexFileNames;
-
-#ifdef WITH_TESTS
-        friend class ::ReferencesOutputTest;
-#endif
+        mstd::ConstRef<ReferenceSettings> _referenceSettings;
 
        public:
-        static void writeReferencesFile(const std::string &referenceFileName);
+        explicit ReferencesOutput(const ReferenceSettings &referenceSettings);
 
-        static void addReferenceFile(const std::string &referenceFileName);
+        void writeReferencesFile(const std::string &referenceFileName) const;
     };
 
 }   // namespace references

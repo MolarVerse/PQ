@@ -117,7 +117,9 @@ namespace input
         _parsers.push_back(
             std::make_unique<HessianInputParser>(settings.hessianSettings)
         );
-        _parsers.push_back(std::make_unique<IntegratorInputParser>());
+        _parsers.push_back(
+            std::make_unique<IntegratorInputParser>(settings.referenceSettings)
+        );
         _parsers.push_back(
             std::make_unique<ManostatInputParser>(settings.manostatSettings)
         );
@@ -132,7 +134,9 @@ namespace input
                 settings.simulationBoxSettings
             )
         );
-        _parsers.push_back(std::make_unique<ThermostatInputParser>());
+        _parsers.push_back(
+            std::make_unique<ThermostatInputParser>(settings.referenceSettings)
+        );
         _parsers.push_back(std::make_unique<TimingsInputParser>());
         _parsers.push_back(std::make_unique<VirialInputParser>());
         _parsers.push_back(std::make_unique<HybridInputParser>());
@@ -148,7 +152,10 @@ namespace input
             std::make_unique<OptInputParser>(settings.optimizerSettings)
         );
         _parsers.push_back(
-            std::make_unique<QMInputParser>(resolveBuiltInSlakosPath)
+            std::make_unique<QMInputParser>(
+                resolveBuiltInSlakosPath,
+                settings.referenceSettings
+            )
         );
 
         addKeywords();

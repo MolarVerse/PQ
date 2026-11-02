@@ -20,10 +20,29 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef OUTPUT__REFERENCES__REFERENCES_HPP
-#define OUTPUT__REFERENCES__REFERENCES_HPP
+#ifndef SETTINGS__REFERENCE_SETTINGS_HPP
+#define SETTINGS__REFERENCE_SETTINGS_HPP
 
-namespace references
+#include <string>
+#include <unordered_set>
+
+/**
+ * @brief Class to manage reference and BibTeX file settings.
+ */
+class ReferenceSettings
+{
+   private:
+    std::unordered_set<std::string> _referenceFileNames;
+    std::unordered_set<std::string> _bibtexFileNames;
+
+   public:
+    void addReferenceFile(const std::string& referenceFileName);
+
+    const std::unordered_set<std::string>& getReferenceFileNames() const;
+    const std::unordered_set<std::string>& getBibtexFileNames() const;
+};
+
+struct ReferenceFiles
 {
     // PQ Software
     static constexpr auto* PQ_FILE = "pq.ref";
@@ -66,7 +85,6 @@ namespace references
     static constexpr auto* OPC3_FILE      = "water_model_opc3.ref";
     static constexpr auto* SPC_MTR_FILE   = "water_model_spcmtr.ref";
     static constexpr auto* TIP3P_MTR_FILE = "water_model_tip3pmtr.ref";
+};
 
-}   // namespace references
-
-#endif   // OUTPUT__REFERENCES__REFERENCES_HPP
+#endif   // SETTINGS__REFERENCE_SETTINGS_HPP

@@ -23,6 +23,8 @@
 #include "constraintSettings.hpp"
 
 #include "defaults.hpp"
+#include "referenceSettings.hpp"
+#include "waterModelSettings.hpp"
 
 /**
  * @brief Construct a new Constraint Settings object
@@ -40,6 +42,26 @@ ConstraintSettings::ConstraintSettings()
       _rattleTolerance(defaults::RATTLE_TOLERANCE_DEFAULT),
       _mshakeTolerance(defaults::MSHAKE_TOLERANCE_DEFAULT)
 {
+}
+
+/**
+ * @brief finalize the constraint settings
+ *
+ * Ensures that the shake-only-water-model flag is consistent with the shake
+ * activation state.
+ */
+void ConstraintSettings::finalize(
+    ReferenceSettings&        referenceSettings,
+    const WaterModelSettings& waterModelSettings
+)
+{
+    const auto rigidWaterGeometry = waterModelSettings.getRigidWaterGeometry();
+
+    if (rigidWaterGeometry.has_value())
+        activateShakeForWaterModel();
+
+    if (_shakeActive.get())
+        referenceSettings.addReferenceFile(ReferenceFiles::RATTLE_FILE);
 }
 
 /**

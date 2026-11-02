@@ -33,8 +33,6 @@
 #include "potentialSettings.hpp"
 #include "qmCapableEngine.hpp"
 #include "qmSettings.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
 #include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 
@@ -55,8 +53,11 @@ namespace setup
      * @brief wrapper to build QMSetup object and call setup
      *
      * @param engine
+     * @param references Reference settings object used to manage and add
+     * necessary reference files for the specified QM method.
+     * TODO(97gamjak): remove references as soon as qmsettings is in place
      */
-    void setupQM(engine::Engine &engine)
+    void setupQM(engine::Engine &engine, ReferenceSettings &references)
     {
         if (!settings::GeneralSettings::isQMActivated())
             return;
@@ -70,7 +71,7 @@ namespace setup
                 dynamic_cast<engine::QMCapableEngine *>(&engine))
         {
             QMSetup qmSetup(*qmCapableEngine);
-            qmSetup.setup();
+            qmSetup.setup(references);
         }
         else
         {
@@ -84,13 +85,13 @@ namespace setup
      * @brief setup QM-MD for all subtypes
      *
      */
-    void QMSetup::setup()
+    void QMSetup::setup(ReferenceSettings &references)
     {
         setupQMMethod();
 
         setupQMMethodAseDftbPlus();
 
-        setupQMMethodAseXtb();
+        setupQMMethodAseXtb(references);
 
         if (settings::QMSettings::isExternalQMRunner())
             setupQMScript();
@@ -127,28 +128,22 @@ namespace setup
      * @brief setup the ASE DFTB+ method of the system
      *
      */
-    void QMSetup::setupQMMethodAseXtb()
+    void QMSetup::setupQMMethodAseXtb(ReferenceSettings &references)
     {
         if (!(settings::QMSettings::getQMMethod() == QMMethod::ASE_XTB))
             return;
 
         if (settings::QMSettings::getXtbMethod() == XtbMethod::GFN1)
         {
-            references::ReferencesOutput::addReferenceFile(
-                references::GFN1_FILE
-            );
+            references.addReferenceFile(ReferenceFiles::GFN1_FILE);
         }
         else if (settings::QMSettings::getXtbMethod() == XtbMethod::GFN2)
         {
-            references::ReferencesOutput::addReferenceFile(
-                references::GFN2_FILE
-            );
+            references.addReferenceFile(ReferenceFiles::GFN2_FILE);
         }
         else if (settings::QMSettings::getXtbMethod() == XtbMethod::IPEA1)
         {
-            references::ReferencesOutput::addReferenceFile(
-                references::IPEA1_FILE
-            );
+            references.addReferenceFile(ReferenceFiles::IPEA1_FILE);
         }
     }
 

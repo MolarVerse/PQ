@@ -24,6 +24,7 @@
 
 #include "enums/manostat.hpp"
 #include "manostatSettings.hpp"
+#include "referenceSettings.hpp"
 #include "units.hpp"
 
 TEST(ManostatSettingsTest, DoubleSettersAndGetters)
@@ -101,30 +102,83 @@ TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)
     ManostatSettings settings;
     settings.setManostatType(ManostatType::NONE);
     EXPECT_FALSE(settings.isFixedAxisSet());
-    settings.finalize();
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings);
     EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
 
     // When manostat is selected, default becomes NONE
     ManostatSettings settings2;
     settings2.setManostatType(ManostatType::BERENDSEN);
-    settings2.finalize();
+    settings2.finalize(referenceSettings);
     EXPECT_EQ(settings2.getFixedAxis(), FixedAxis::NONE);
 
     ManostatSettings settings3;
     settings3.setManostatType(ManostatType::STOCHASTIC_RESCALING);
-    settings3.finalize();
+    settings3.finalize(referenceSettings);
     EXPECT_EQ(settings3.getFixedAxis(), FixedAxis::NONE);
 
     // When explicitly set, it overrides the default and remains set
     ManostatSettings settings4;
     settings4.setManostatType(ManostatType::BERENDSEN);
     settings4.setFixedAxis(FixedAxis::Z);
-    settings4.finalize();
+    settings4.finalize(referenceSettings);
     EXPECT_TRUE(settings4.isFixedAxisSet());
     EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
 
     // Changing manostat type does not override explicitly set fixed axis
     settings4.setManostatType(ManostatType::BERENDSEN);
-    settings4.finalize();
+    settings4.finalize(referenceSettings);
     EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
+}
+
+/**
+ * @brief finalize() must add the reference file matching the configured
+ * manostat type.
+ */
+TEST(ManostatSettingsTest, FinalizeAddsReferenceFileForManostatType)
+{
+    ManostatSettings berendsen;
+    berendsen.setManostatType(ManostatType::BERENDSEN);
+    ReferenceSettings berendsenReferences;
+    berendsen.finalize(berendsenReferences);
+    EXPECT_TRUE(berendsenReferences.getReferenceFileNames().contains(
+        ReferenceFiles::BERENDSEN_FILE
+    ));
+
+    ManostatSettings stochasticRescaling;
+    stochasticRescaling.setManostatType(ManostatType::STOCHASTIC_RESCALING);
+    ReferenceSettings stochasticReferences;
+    stochasticRescaling.finalize(stochasticReferences);
+    EXPECT_TRUE(stochasticReferences.getReferenceFileNames().contains(
+        ReferenceFiles::STOCHASTIC_RESCALING_FILE
+    ));
+}
+
+/**
+ * @brief finalize() must not add any reference file when no manostat type
+ * has been set.
+ */
+TEST(ManostatSettingsTest, FinalizeAddsNoReferenceFileWhenManostatTypeUnset)
+{
+    ManostatSettings settings;
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings);
+
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().empty());
+}
+
+/**
+ * @brief finalize() must not add any reference file when the manostat
+ * type is explicitly NONE.
+ */
+TEST(ManostatSettingsTest, FinalizeAddsNoReferenceFileForManostatTypeNone)
+{
+    ManostatSettings settings;
+    settings.setManostatType(ManostatType::NONE);
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings);
+
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().empty());
 }

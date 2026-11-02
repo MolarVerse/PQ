@@ -394,7 +394,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
     _settings->manostatSettings.setTargetPressure(300.0);
     _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
-    _settings->manostatSettings.finalize();
+    _settings->manostatSettings.finalize(_settings->referenceSettings);
     const auto types = std::array{
         ManostatType::BERENDSEN,
         ManostatType::STOCHASTIC_RESCALING,
@@ -579,7 +579,7 @@ TEST_F(TestSetup, setupWritesSelectionParametersAndIsotropyInOrder)
     _settings->manostatSettings.setTargetPressure(300.0);
     _settings->manostatSettings.setTau(0.2 * ps);
     _settings->manostatSettings.setCompressibility(4.0);
-    _settings->manostatSettings.finalize();
+    _settings->manostatSettings.finalize(_settings->referenceSettings);
 
     const auto expectedByType =
         std::vector<std::pair<ManostatType, std::vector<std::string>>>{
