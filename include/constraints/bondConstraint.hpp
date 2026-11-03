@@ -20,11 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_CONSTRAINT_HPP_
-
-#define _BOND_CONSTRAINT_HPP_
-
-#include <cstddef>
+#ifndef CONSTRAINTS__BOND_CONSTRAINT_HPP
+#define CONSTRAINTS__BOND_CONSTRAINT_HPP
 
 #include "bond.hpp"
 #include "vector3d.hpp"
@@ -38,9 +35,7 @@ namespace molsys
 namespace constraints
 {
     /**
-     * @class BondConstraint inherits from Bond
-     *
-     * @brief constraint object for single bond length
+     * @brief BondConstraint inherits from Bond
      *
      * @details it performs the shake and rattle algorithm on a bond constraint
      *
@@ -48,45 +43,46 @@ namespace constraints
     class BondConstraint : public connectivity::Bond
     {
        private:
-        double               _targetBondLength;
-        linearAlgebra::Vec3D _shakeDistanceRef;
+        double        _targetBondLength;
+        linalg::Vec3D _shakeDistanceRef;
 
        public:
         BondConstraint(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const size_t      atomIndex1,
-            const size_t      atomIndex2,
-            const double      bondLength
+            AtomIndex         atomIndex1,
+            AtomIndex         atomIndex2,
+            double            bondLength
         );
 
-        void calculateConstraintBondRef(const molsys::SimulationBox &);
+        void calculateConstraintBondRef(
+            const molsys::SimulationBox &simulationBox
+        );
 
         [[nodiscard]] double calculateDistanceDelta(
             const molsys::SimulationBox &
         ) const;
         [[nodiscard]] double calculateVelocityDelta() const;
 
-        [[nodiscard]] bool applyShake(
-            const molsys::SimulationBox &,
-            const double
-        );
-        [[nodiscard]] bool applyRattle(const double);
+        [[nodiscard]]
+        bool applyShake(const molsys::SimulationBox &, double);
+
+        [[nodiscard]] bool applyRattle(double);
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setShakeDistanceRef(const linearAlgebra::Vec3D &shakeDistanceRef);
+        void setShakeDistanceRef(const linalg::Vec3D &shakeDistanceRef);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double               getTargetBondLength() const;
-        [[nodiscard]] linearAlgebra::Vec3D getShakeDistanceRef() const;
+        [[nodiscard]] double        getTargetBondLength() const;
+        [[nodiscard]] linalg::Vec3D getShakeDistanceRef() const;
     };
 
 }   // namespace constraints
 
-#endif   // _BOND_CONSTRAINT_HPP_
+#endif   // CONSTRAINTS__BOND_CONSTRAINT_HPP

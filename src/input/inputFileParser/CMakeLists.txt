@@ -22,6 +22,12 @@ add_library(inputFileParser
     thermostatInputParser.cpp
     timingsInputParser.cpp
     virialInputParser.cpp
+
+    inputKeyAdapter.cpp
+    inputRegistry.cpp
+    inputConverter.cpp
+    parserUtils.cpp
+    inputKeyBase.cpp
 )
 
 target_include_directories(inputFileParser
@@ -50,7 +56,7 @@ endif()
 if(BUILD_WITH_PYTHON_BINDINGS)
     add_definitions(-DPYTHON_ENABLED)
 
-    target_link_libraries(setup
+    target_link_libraries(inputFileParser
         PUBLIC
         pq_python
     )

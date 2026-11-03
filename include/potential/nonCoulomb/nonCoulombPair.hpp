@@ -20,14 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NON_COULOMB_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__NON_COULOMB_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__NON_COULOMB_PAIR_HPP
 
-#define _NON_COULOMB_PAIR_HPP_
+#include <mstd/utils.hpp>
+#include <utility>
 
-#include <cstddef>   // for size_t
-#include <utility>   // for pair
+#include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class NonCoulombPair
@@ -41,52 +42,53 @@ namespace potential
      */
     class NonCoulombPair
     {
-       protected:
-        size_t _vanDerWaalsType1 = 0;
-        size_t _vanDerWaalsType2 = 0;
-        size_t _internalType1    = 0;
-        size_t _internalType2    = 0;
+       private:
+        std::pair<ExtVdwType, ExtVdwType> _vanDerWaalsTypes{
+            ExtVdwType{0},
+            ExtVdwType{0}
+        };
+        std::pair<VdwType, VdwType> _internalTypes{VdwType{0}, VdwType{0}};
 
-        double _radialCutOff;
-        double _energyCutOff = 0.0;
-        double _forceCutOff  = 0.0;
+        double _radialCutoff;
+        double _energyCutoff = 0.0;
+        double _forceCutoff  = 0.0;
 
        public:
-        explicit NonCoulombPair(const size_t, const size_t, const double);
-        explicit NonCoulombPair(const double);
-        explicit NonCoulombPair(const double, const double, const double);
+        explicit NonCoulombPair(ExtVdwType, ExtVdwType, double);
+        explicit NonCoulombPair(double);
+        explicit NonCoulombPair(double, double, double);
 
         virtual ~NonCoulombPair() = default;
 
         [[nodiscard]] bool operator==(const NonCoulombPair &other) const;
 
-        [[nodiscard]] virtual std::pair<double, double> calculate(
-            const double distance
-        ) const = 0;
+        [[nodiscard]]
+        virtual std::pair<double, double> calculate(double distance) const = 0;
 
         /********************
          * standard setters *
          ********************/
 
-        void setInternalType1(const size_t internalType1);
-        void setInternalType2(const size_t internalType2);
-        void setRadialCutOff(const double radialCutoff);
-        void setEnergyCutOff(const double energyCutoff);
-        void setForceCutOff(const double forceCutoff);
+        void setInternalType1(VdwType internalType1);
+        void setInternalType2(VdwType internalType2);
+        void setRadialCutOff(double radialCutoff);
+        void setEnergyCutOff(double energyCutoff);
+        void setForceCutOff(double forceCutoff);
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] size_t getVanDerWaalsType1() const;
-        [[nodiscard]] size_t getVanDerWaalsType2() const;
-        [[nodiscard]] size_t getInternalType1() const;
-        [[nodiscard]] size_t getInternalType2() const;
-        [[nodiscard]] double getRadialCutOff() const { return _radialCutOff; }
-        [[nodiscard]] double getEnergyCutOff() const;
-        [[nodiscard]] double getForceCutOff() const;
+        [[nodiscard]] ExtVdwType getVanDerWaalsType1() const;
+        [[nodiscard]] ExtVdwType getVanDerWaalsType2() const;
+        [[nodiscard]] VdwType    getInternalType1() const;
+        [[nodiscard]] VdwType    getInternalType2() const;
+
+        CONST_GETTER(_radialCutoff);
+        CONST_GETTER(_energyCutoff);
+        CONST_GETTER(_forceCutoff);
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _NON_COULOMB_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__NON_COULOMB_PAIR_HPP

@@ -22,399 +22,404 @@
 
 #include "fileSettings.hpp"
 
-using namespace settings;
-using namespace defaults;
-
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
-
-/**
- * @brief Get the mol descriptor file name
- *
- * @return std::string
- */
-std::string FileSettings::getMolDescriptorFileName()
+namespace settings
 {
-    return _molDescriptorFile;
-}
 
-/**
- * @brief Get the guff dat file name
- *
- * @return std::string
- */
-std::string FileSettings::getGuffDatFileName() { return _guffDatFile; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief Get the topology file name
- *
- * @return std::string
- */
-std::string FileSettings::getTopologyFileName() { return _topologyFile; }
+    /**
+     * @brief Get the mol descriptor file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getMolDescriptorFileName()
+    {
+        return _molDescriptorFile;
+    }
 
-/**
- * @brief Get the parameter file name
- *
- * @return std::string
- */
-std::string FileSettings::getParameterFilename() { return _parameterFile; }
+    /**
+     * @brief Get the guff dat file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getGuffDatFileName() { return _guffDatFile; }
 
-/**
- * @brief Get the intra non bonded file name
- *
- * @return std::string
- */
-std::string FileSettings::getIntraNonBondedFileName()
-{
-    return _intraNonBondedFile;
-}
+    /**
+     * @brief Get the topology file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getTopologyFileName() { return _topologyFile; }
 
-/**
- * @brief Get the start file name
- *
- * @return std::string
- */
-std::string FileSettings::getStartFileName() { return _startFile; }
+    /**
+     * @brief Get the parameter file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getParameterFilename() { return _parameterFile; }
 
-/**
- * @brief Get the ring polymer start file name
- *
- * @return std::string
- */
-std::string FileSettings::getRingPolymerStartFileName()
-{
-    return _rpmdStartFile;
-}
+    /**
+     * @brief Get the intra non bonded file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getIntraNonBondedFileName()
+    {
+        return _intraNonBondedFile;
+    }
 
-/**
- * @brief Get the mShake file name
- *
- * @return std::string
- */
-std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
+    /**
+     * @brief Get the start file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getStartFileName() { return _startFile; }
 
-/**
- * @brief Get the DFTB setup file name
- *
- * @return std::string
- */
-std::string FileSettings::getDFTBFileName() { return _dftbFile; }
+    /**
+     * @brief Get the ring polymer start file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getRingPolymerStartFileName()
+    {
+        return _rpmdStartFile;
+    }
 
-/**
- * @brief Get the TM setup file name
- *
- * @return std::string
- */
-std::string FileSettings::getTMFileName() { return _tmFile; }
+    /**
+     * @brief Get the mShake file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
 
-/**
- * @brief Get the pointcharge file name
- *
- * @return std::string
- */
-std::string FileSettings::getPointChargeFileName() { return _pointChargeFile; }
+    /**
+     * @brief Get the DFTB setup file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getDFTBFileName() { return _dftbFile; }
 
-/*
- * @brief Get the QM forces temp file name
- *
- * @return std::string
- */
-std::string FileSettings::getQMForcesTempFileName()
-{
-    return _qmForcesTempFile;
-}
+    /**
+     * @brief Get the TM setup file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getTMFileName() { return _tmFile; }
 
-/**
- * @brief Get the QM charges temp file name
- *
- * @return std::string
- */
-std::string FileSettings::getQMChargesTempFileName()
-{
-    return _qmChargesTempFile;
-}
+    /**
+     * @brief Get the pointcharge file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getPointChargeFileName()
+    {
+        return _pointChargeFile;
+    }
 
-/**
- * @brief Get the stress tensor temp file name
- *
- * @return std::string
- */
-std::string FileSettings::getStressTensorTempFileName()
-{
-    return _stressTensorTempFile;
-}
+    /*
+     * @brief Get the QM forces temp file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getQMForcesTempFileName()
+    {
+        return _qmForcesTempFile;
+    }
 
-/**
- * @brief Check if the topology file name is set
- *
- * @return bool
- */
-bool FileSettings::isTopologyFileNameSet() { return _isTopologyFileSet; }
+    /**
+     * @brief Get the QM charges temp file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getQMChargesTempFileName()
+    {
+        return _qmChargesTempFile;
+    }
 
-/**
- * @brief Check if the parameter file name is set
- *
- * @return bool
- */
-bool FileSettings::isParameterFileNameSet() { return _isParameterFileSet; }
+    /**
+     * @brief Get the stress tensor temp file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getStressTensorTempFileName()
+    {
+        return _stressTensorTempFile;
+    }
 
-/**
- * @brief Check if the intra non bonded file name is set
- *
- * @return bool
- */
-bool FileSettings::isIntraNonBondedFileNameSet()
-{
-    return _isIntraNonBondedFileSet;
-}
+    /**
+     * @brief Check if the topology file name is set
+     *
+     * @return bool
+     */
+    bool FileSettings::isTopologyFileNameSet() { return _isTopologyFileSet; }
 
-/**
- * @brief Check if the ring polymer start file name is set
- *
- * @return bool
- */
-bool FileSettings::isRingPolymerStartFileNameSet()
-{
-    return _isRPMDStartFileSet;
-}
+    /**
+     * @brief Check if the parameter file name is set
+     *
+     * @return bool
+     */
+    bool FileSettings::isParameterFileNameSet() { return _isParameterFileSet; }
 
-/**
- * @brief Check if the mShake file name is set
- *
- * @return bool
- */
-bool FileSettings::isMShakeFileNameSet() { return _isMShakeFileSet; }
+    /**
+     * @brief Check if the intra non bonded file name is set
+     *
+     * @return bool
+     */
+    bool FileSettings::isIntraNonBondedFileNameSet()
+    {
+        return _isIntraNonBondedFileSet;
+    }
 
-/**
- * @brief Check if the DFTB setup file name is set
- *
- * @return bool
- */
-bool FileSettings::isDFTBFileNameSet() { return _isDFTBFileSet; }
+    /**
+     * @brief Check if the ring polymer start file name is set
+     *
+     * @return bool
+     */
+    bool FileSettings::isRingPolymerStartFileNameSet()
+    {
+        return _isRPMDStartFileSet;
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief Check if the mShake file name is set
+     *
+     * @return bool
+     */
+    bool FileSettings::isMShakeFileNameSet() { return _isMShakeFileSet; }
 
-/**
- * @brief set the mol descriptor file name
- *
- * @param name
- */
-void FileSettings::setMolDescriptorFileName(const std::string_view& name)
-{
-    _molDescriptorFile = name;
-}
+    /**
+     * @brief Check if the DFTB setup file name is set
+     *
+     * @return bool
+     */
+    bool FileSettings::isDFTBFileNameSet() { return _isDFTBFileSet; }
 
-/**
- * @brief set the guff dat file name
- *
- * @param name
- */
-void FileSettings::setGuffDatFileName(const std::string_view& name)
-{
-    _guffDatFile = name;
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set the topology file name
- *
- * @param name
- */
-void FileSettings::setTopologyFileName(const std::string_view& name)
-{
-    FileSettings::_topologyFile = name;
-}
+    /**
+     * @brief set the mol descriptor file name
+     *
+     * @param name
+     */
+    void FileSettings::setMolDescriptorFileName(const std::string_view& name)
+    {
+        _molDescriptorFile = name;
+    }
 
-/**
- * @brief set the parameter file name
- *
- * @param name
- */
-void FileSettings::setParameterFileName(const std::string_view& name)
-{
-    FileSettings::_parameterFile = name;
-}
+    /**
+     * @brief set the guff dat file name
+     *
+     * @param name
+     */
+    void FileSettings::setGuffDatFileName(const std::string_view& name)
+    {
+        _guffDatFile = name;
+    }
 
-/**
- * @brief set the intra non bonded file name
- *
- * @param name
- */
-void FileSettings::setIntraNonBondedFileName(const std::string_view& name)
-{
-    FileSettings::_intraNonBondedFile = name;
-}
+    /**
+     * @brief set the topology file name
+     *
+     * @param name
+     */
+    void FileSettings::setTopologyFileName(const std::string_view& name)
+    {
+        FileSettings::_topologyFile = name;
+    }
 
-/**
- * @brief set the start file name
- *
- * @param name
- */
-void FileSettings::setStartFileName(const std::string_view& name)
-{
-    FileSettings::_startFile = name;
-}
+    /**
+     * @brief set the parameter file name
+     *
+     * @param name
+     */
+    void FileSettings::setParameterFileName(const std::string_view& name)
+    {
+        FileSettings::_parameterFile = name;
+    }
 
-/**
- * @brief set the ring polymer start file name
- *
- * @param name
- */
-void FileSettings::setRingPolymerStartFileName(const std::string_view& name)
-{
-    FileSettings::_rpmdStartFile = name;
-}
+    /**
+     * @brief set the intra non bonded file name
+     *
+     * @param name
+     */
+    void FileSettings::setIntraNonBondedFileName(const std::string_view& name)
+    {
+        FileSettings::_intraNonBondedFile = name;
+    }
 
-/**
- * @brief set the mShake file name
- *
- * @param name
- */
-void FileSettings::setMShakeFileName(const std::string_view& name)
-{
-    FileSettings::_mShakeFile = name;
-}
+    /**
+     * @brief set the start file name
+     *
+     * @param name
+     */
+    void FileSettings::setStartFileName(const std::string_view& name)
+    {
+        FileSettings::_startFile = name;
+    }
 
-/**
- * @brief set the DFTB setup file name
- *
- * @param name
- */
-void FileSettings::setDFTBFileName(const std::string_view& name)
-{
-    FileSettings::_dftbFile = name;
-}
+    /**
+     * @brief set the ring polymer start file name
+     *
+     * @param name
+     */
+    void FileSettings::setRingPolymerStartFileName(const std::string_view& name)
+    {
+        FileSettings::_rpmdStartFile = name;
+    }
 
-/**
- * @brief set the TM setup file name
- *
- * @param name
- */
-void FileSettings::setTMFileName(const std::string_view& name)
-{
-    FileSettings::_tmFile = name;
-}
+    /**
+     * @brief set the mShake file name
+     *
+     * @param name
+     */
+    void FileSettings::setMShakeFileName(const std::string_view& name)
+    {
+        FileSettings::_mShakeFile = name;
+    }
 
-/**
- * @brief set the pointcharge file name
- *
- * @param name
- */
-void FileSettings::setPointChargeFileName(const std::string_view& name)
-{
-    FileSettings::_pointChargeFile = name;
-}
+    /**
+     * @brief set the DFTB setup file name
+     *
+     * @param name
+     */
+    void FileSettings::setDFTBFileName(const std::string_view& name)
+    {
+        FileSettings::_dftbFile = name;
+    }
 
-/**
- * @brief set the topology file name flag to is set
- *
- */
-void FileSettings::setIsTopologyFileNameSet()
-{
-    FileSettings::_isTopologyFileSet = true;
-}
+    /**
+     * @brief set the TM setup file name
+     *
+     * @param name
+     */
+    void FileSettings::setTMFileName(const std::string_view& name)
+    {
+        FileSettings::_tmFile = name;
+    }
 
-/**
- * @brief set the parameter file name flag to is set
- *
- */
-void FileSettings::setIsParameterFileNameSet()
-{
-    FileSettings::_isParameterFileSet = true;
-}
+    /**
+     * @brief set the pointcharge file name
+     *
+     * @param name
+     */
+    void FileSettings::setPointChargeFileName(const std::string_view& name)
+    {
+        FileSettings::_pointChargeFile = name;
+    }
 
-/**
- * @brief set the intra non bonded file name flag to is set
- *
- */
-void FileSettings::setIsIntraNonBondedFileNameSet()
-{
-    FileSettings::_isIntraNonBondedFileSet = true;
-}
+    /**
+     * @brief set the topology file name flag to is set
+     *
+     */
+    void FileSettings::setIsTopologyFileNameSet()
+    {
+        FileSettings::_isTopologyFileSet = true;
+    }
 
-/**
- * @brief set the ring polymer start file name flag to is set
- *
- */
-void FileSettings::setIsRingPolymerStartFileNameSet()
-{
-    FileSettings::_isRPMDStartFileSet = true;
-}
+    /**
+     * @brief set the parameter file name flag to is set
+     *
+     */
+    void FileSettings::setIsParameterFileNameSet()
+    {
+        FileSettings::_isParameterFileSet = true;
+    }
 
-/**
- * @brief set the mShake file name flag to is set
- *
- */
-void FileSettings::setIsMShakeFileNameSet()
-{
-    FileSettings::_isMShakeFileSet = true;
-}
+    /**
+     * @brief set the intra non bonded file name flag to is set
+     *
+     */
+    void FileSettings::setIsIntraNonBondedFileNameSet()
+    {
+        FileSettings::_isIntraNonBondedFileSet = true;
+    }
 
-/**
- * @brief set the DFTB setup file name flag to is set
- *
- */
-void FileSettings::setIsDFTBFileNameSet()
-{
-    FileSettings::_isDFTBFileSet = true;
-}
+    /**
+     * @brief set the ring polymer start file name flag to is set
+     *
+     */
+    void FileSettings::setIsRingPolymerStartFileNameSet()
+    {
+        FileSettings::_isRPMDStartFileSet = true;
+    }
 
-/**
- * @brief set the topology file name flag to is not set
- *
- */
-void FileSettings::unsetIsTopologyFileNameSet()
-{
-    FileSettings::_isTopologyFileSet = false;
-}
+    /**
+     * @brief set the mShake file name flag to is set
+     *
+     */
+    void FileSettings::setIsMShakeFileNameSet()
+    {
+        FileSettings::_isMShakeFileSet = true;
+    }
 
-/**
- * @brief set the parameter file name flag to is not set
- *
- */
-void FileSettings::unsetIsParameterFileNameSet()
-{
-    FileSettings::_isParameterFileSet = false;
-}
+    /**
+     * @brief set the DFTB setup file name flag to is set
+     *
+     */
+    void FileSettings::setIsDFTBFileNameSet()
+    {
+        FileSettings::_isDFTBFileSet = true;
+    }
 
-/**
- * @brief set the intra non bonded file name flag to is not set
- *
- */
-void FileSettings::unsetIsIntraNonBondedFileNameSet()
-{
-    FileSettings::_isIntraNonBondedFileSet = false;
-}
+    /**
+     * @brief set the topology file name flag to is not set
+     *
+     */
+    void FileSettings::unsetIsTopologyFileNameSet()
+    {
+        FileSettings::_isTopologyFileSet = false;
+    }
 
-/**
- * @brief set the ring polymer start file name flag to is not set
- *
- */
-void FileSettings::unsetIsRingPolymerStartFileNameSet()
-{
-    FileSettings::_isRPMDStartFileSet = false;
-}
+    /**
+     * @brief set the parameter file name flag to is not set
+     *
+     */
+    void FileSettings::unsetIsParameterFileNameSet()
+    {
+        FileSettings::_isParameterFileSet = false;
+    }
 
-/**
- * @brief set the mShake file name flag to is not set
- *
- */
-void FileSettings::unsetIsMShakeFileNameSet()
-{
-    FileSettings::_isMShakeFileSet = false;
-}
+    /**
+     * @brief set the intra non bonded file name flag to is not set
+     *
+     */
+    void FileSettings::unsetIsIntraNonBondedFileNameSet()
+    {
+        FileSettings::_isIntraNonBondedFileSet = false;
+    }
 
-/**
- * @brief set the DFTB setup file name flag to is not set
- *
- */
-void FileSettings::unsetIsDFTBFileNameSet()
-{
-    FileSettings::_isDFTBFileSet = false;
-}
+    /**
+     * @brief set the ring polymer start file name flag to is not set
+     *
+     */
+    void FileSettings::unsetIsRingPolymerStartFileNameSet()
+    {
+        FileSettings::_isRPMDStartFileSet = false;
+    }
+
+    /**
+     * @brief set the mShake file name flag to is not set
+     *
+     */
+    void FileSettings::unsetIsMShakeFileNameSet()
+    {
+        FileSettings::_isMShakeFileSet = false;
+    }
+
+    /**
+     * @brief set the DFTB setup file name flag to is not set
+     *
+     */
+    void FileSettings::unsetIsDFTBFileNameSet()
+    {
+        FileSettings::_isDFTBFileSet = false;
+    }
+
+}   // namespace settings

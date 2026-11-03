@@ -20,15 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_QMSETUP_ASE_HPP_
+#ifndef TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP
+#define TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP
 
-#define _TEST_QMSETUP_ASE_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
-
-#include "qmSettings.hpp"   // for QMMethod, QMSettings
-#include "qmSetup.hpp"      // for QMSetup, setupQM
-#include "qmmdEngine.hpp"   // for QMMDEngine
+#include "qmSettings.hpp"
+#include "qmSetup.hpp"
+#include "qmmdEngine.hpp"
 
 /**
  * @class TestQMSetupAse
@@ -39,31 +38,33 @@
 class TestQMSetupAse : public ::testing::Test
 {
    protected:
+    Settings                            _settings;
+    std::unique_ptr<engine::QMMDEngine> _engine;
+    std::unique_ptr<setup::QMSetup>     _qmSetup;
+
     void SetUp() override
     {
-        _engine  = new engine::QMMDEngine();
-        _qmSetup = new setup::QMSetup(*_engine);
-        _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-        settings::QMSettings::setQMMethod(settings::QMMethod::ASEDFTBPLUS);
+        _engine  = std::make_unique<engine::QMMDEngine>(_settings);
+        _qmSetup = std::make_unique<setup::QMSetup>(*_engine);
+        _engine->getEngineOutput().getLogOutput().setFilename(
+            "default.log",
+            false
+        );
+        settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     }
 
     void TearDown() override
     {
-        delete _engine;
-        delete _qmSetup;
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        settings::QMSettings::setQMMethod(settings::QMMethod::NONE);
-        settings::QMSettings::setSlakosType("none");
+        settings::QMSettings::setQMMethod(QMMethod::NONE);
+        settings::QMSettings::setSlakosType(SlakosType::NONE);
         settings::QMSettings::setUseDispersionCorrection(false);
         settings::QMSettings::setUseThirdOrderDftb(false);
         settings::QMSettings::setIsThirdOrderDftbSet(false);
         settings::QMSettings::setHubbardDerivs({});
         settings::QMSettings::setIsHubbardDerivsSet(false);
     }
-
-    engine::QMMDEngine *_engine;
-    setup::QMSetup     *_qmSetup;
 };
 
-#endif   // _TEST_QMSETUP_ASE_HPP_
+#endif   // TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP

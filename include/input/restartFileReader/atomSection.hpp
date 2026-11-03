@@ -20,16 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ATOM_SECTION_HPP_
+#ifndef INPUT__RESTART_FILE_READER__ATOM_SECTION_HPP
+#define INPUT__RESTART_FILE_READER__ATOM_SECTION_HPP
 
-#define _ATOM_SECTION_HPP_
+#include <string>
 
-#include <string>   // for string
+#include "restartFileSection.hpp"
 
-#include "restartFileSection.hpp"   // for RestartFileSection
-
-class TestAtomSection_testProcessAtomLine_Test;     // Friend test class
-class TestAtomSection_testProcessQMAtomLine_Test;   // Friend test class
+class TestAtomSection;
 
 namespace engine
 {
@@ -53,42 +51,41 @@ namespace input::restartFile
      */
     class AtomSection : public RestartFileSection
     {
-       private:
-        void processQMAtomLine(
-            std::vector<std::string> &lineElements,
-            molsys::SimulationBox &
-        );
-        void processAtomLine(
-            std::vector<std::string> &,
-            molsys::SimulationBox &,
-            molsys::Molecule &
-        ) const;
-
-        void checkAtomLine(
-            std::vector<std::string> &lineElements,
-            const molsys::Molecule &
-        );
-        void setAtomPropertyVectors(
-            std::vector<std::string> &,
-            std::shared_ptr<molsys::Atom> &
-        ) const;
-
-#ifdef WITH_TESTS
-        friend class ::TestAtomSection_testProcessAtomLine_Test;
-        friend class ::TestAtomSection_testProcessQMAtomLine_Test;
-#endif
-
        public:
-        void checkNumberOfLineArguments(std::vector<std::string> &) const;
         void process(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                   &lineNumber
         ) override;
 
         [[nodiscard]] std::string keyword() override;
         [[nodiscard]] bool        isHeader() override;
+
+       private:
+        static void _checkNumberOfLineArguments(
+            std::vector<std::string> &lineElements,
+            size_t                    lineNumber
+        );
+        static void _processAtomLine(
+            std::vector<std::string> &lineElements,
+            molsys::SimulationBox    &simulationBox,
+            molsys::Molecule         &molecule
+        );
+
+        static void _processQMAtomLine(
+            std::vector<std::string> &lineElements,
+            molsys::SimulationBox    &simulationBox
+        );
+
+        void _checkAtomLine(
+            std::vector<std::string> &lineElements,
+            const molsys::Molecule   &molecule,
+            size_t                   &lineNumber
+        );
+
+        friend class ::TestAtomSection;
     };
 
 }   // namespace input::restartFile
 
-#endif   // _ATOM_SECTION_HPP_
+#endif   // INPUT__RESTART_FILE_READER__ATOM_SECTION_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_SETUP_HPP_
-
-#define _POTENTIAL_SETUP_HPP_
+#ifndef SETUP__POTENTIAL_SETUP_HPP
+#define SETUP__POTENTIAL_SETUP_HPP
 
 namespace engine
 {
@@ -32,6 +31,12 @@ namespace engine
 namespace setup
 {
     void setupPotential(engine::Engine &);
+
+    // NOTE: must run before the parameter file is read, since the
+    //       parameter file reader needs the non-Coulomb potential to
+    //       already have its final concrete type (ForceFieldNonCoulomb
+    //       or GuffNonCoulomb) to perform its dynamic_cast.
+    void setupNonCoulombPotentialType(engine::Engine &);
 
     /**
      * @class PotentialSetup
@@ -59,4 +64,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _POTENTIAL_SETUP_HPP_
+#endif   // SETUP__POTENTIAL_SETUP_HPP

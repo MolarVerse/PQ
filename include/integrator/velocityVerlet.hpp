@@ -20,30 +20,28 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VELOCITY_VERLET_HPP_
-
-#define _VELOCITY_VERLET_HPP_
+#ifndef INTEGRATOR__VELOCITY_VERLET_HPP
+#define INTEGRATOR__VELOCITY_VERLET_HPP
 
 #include "integrator.hpp"
 
 namespace integrator
 {
     /**
-     * @class VelocityVerlet inherits Integrator
+     * @brief VelocityVerlet inherits Integrator
      *
-     * @brief VelocityVerlet is a class for velocity verlet integrator
+     * @details VelocityVerlet is a class for velocity verlet integrator
      *
      */
     class VelocityVerlet : public Integrator
     {
        public:
-        explicit VelocityVerlet();
         ~VelocityVerlet() override = default;
 
-        void firstStep(molsys::SimulationBox &simBox) override;
-        void secondStep(molsys::SimulationBox &simBox) override;
+        void firstStep(molsys::SimulationBox &simulationBox) override;
+        void secondStep(molsys::SimulationBox &simulationBox) override;
     };
 
 }   // namespace integrator
 
-#endif   // _VELOCITY_VERLET_HPP_
+#endif   // INTEGRATOR__VELOCITY_VERLET_HPP

@@ -10,13 +10,13 @@ target_include_directories(aseQM
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/QM
     ${PROJECT_SOURCE_DIR}/include/QM/ase
-    ${PROJECT_SOURCE_DIR}/include/config
 
     ${pybind11_INCLUDE_DIRS}
 )
 
 target_link_libraries(aseQM
     PUBLIC
+    config_headers
     molsys
     settings
     utilities

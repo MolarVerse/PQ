@@ -22,11 +22,13 @@
 
 #include "testConstraints.hpp"
 
-#include "exceptions.hpp"         // for ShakeException
-#include "gmock/gmock.h"          // for DoubleNear, ElementsAre, MakePredica...
-#include "gtest/gtest.h"          // for Message, TestPartResult, InitGoogleTest
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
-#include "timingsSettings.hpp"    // for TimingsSettings
+#include <gtest/gtest.h>
+
+#include "exceptions.hpp"
+#include "gmock/gmock.h"
+#include "testSettings.hpp"
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"
 
 /**
  * @brief tests calculation of all bond constraints ref bond lengths
@@ -37,11 +39,11 @@ TEST_F(TestConstraints, calcRefBondLengths)
     _constraints->calculateConstraintBondRefs(*_box);
     EXPECT_EQ(
         _constraints->getBondConstraints()[0].getShakeDistanceRef(),
-        linearAlgebra::Vec3D(0.0, -1.0, -2.0)
+        linalg::Vec3D(0.0, -1.0, -2.0)
     );
     EXPECT_EQ(
         _constraints->getBondConstraints()[1].getShakeDistanceRef(),
-        linearAlgebra::Vec3D(1.0, -2.0, -3.0)
+        linalg::Vec3D(1.0, -2.0, -3.0)
     );
 }
 
@@ -51,45 +53,52 @@ TEST_F(TestConstraints, calcRefBondLengths)
  */
 TEST_F(TestConstraints, applyShakeConverged)
 {
-    _constraints->setShakeMaxIter(1000);
-    _constraints->setShakeTolerance(1.0e-4);
-    _constraints->calculateConstraintBondRefs(*_box);
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setShakeMaxIter, 1000)
+            .with(&ConstraintSettings::setShakeTolerance, 1.0e-8)
+            .apply([](auto &config) { config.activateShake(); })
+            .build();
+    constraints::Constraints constraints(settings);
+    _addDefaultBondConstraints(constraints);
+    constraints.calculateConstraintBondRefs(*_box);
 
     settings::TimingsSettings::setTimeStep(2.0);
 
-    EXPECT_NO_THROW(_constraints->applyShake(*_box));
+    EXPECT_NO_THROW(constraints.applyShake(*_box));
 
+    const auto mol = _box->getMolecules()[0];
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomPosition(0),
+        mol.getAtomPosition(AtomIndex{0}),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
-            testing::DoubleNear(1.23165, 1e-5),
-            testing::DoubleNear(1.46331, 1e-5)
+            testing::DoubleNear(1.23167, 1e-5),
+            testing::DoubleNear(1.46334, 1e-5)
         )
     );
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomPosition(1),
+        mol.getAtomPosition(AtomIndex{1}),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
-            testing::DoubleNear(1.76835, 1e-5),
-            testing::DoubleNear(2.53669, 1e-5)
+            testing::DoubleNear(1.76833, 1e-5),
+            testing::DoubleNear(2.53666, 1e-5)
         )
     );
 
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(0),
+        mol.getAtomVelocity(AtomIndex{0}),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e10),
-            testing::DoubleNear(1.15827e14, 1e10),
-            testing::DoubleNear(2.31654e14, 1e10)
+            testing::DoubleNear(1.15836e14, 1e10),
+            testing::DoubleNear(2.31672e14, 1e10)
         )
     );
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(1),
+        mol.getAtomVelocity(AtomIndex{1}),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e10),
-            testing::DoubleNear(1.0 - 1.15827e14, 1e10),
-            testing::DoubleNear(1.0 - 2.31654e14, 1e10)
+            testing::DoubleNear(1.0 - 1.15836e14, 1e10),
+            testing::DoubleNear(1.0 - 2.31672e14, 1e10)
         )
     );
 }
@@ -101,15 +110,21 @@ TEST_F(TestConstraints, applyShakeConverged)
  */
 TEST_F(TestConstraints, applyShakeNotConverged)
 {
-    _constraints->setShakeMaxIter(10);
-    _constraints->setShakeTolerance(0.0);
-    _constraints->calculateConstraintBondRefs(*_box);
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setShakeMaxIter, 10)
+            .with(&ConstraintSettings::setShakeTolerance, 0.0)
+            .apply([](auto &config) { config.activateShake(); })
+            .build();
+    constraints::Constraints constraints(settings);
+    _addDefaultBondConstraints(constraints);
+    constraints.calculateConstraintBondRefs(*_box);
 
     settings::TimingsSettings::setTimeStep(2.0);
 
     EXPECT_THROW_MSG(
-        _constraints->applyShake(*_box),
-        customException::ShakeException,
+        constraints.applyShake(*_box),
+        exc::ShakeException,
         "Shake algorithm did not converge for 2 bonds."
     );
 }
@@ -121,13 +136,15 @@ TEST_F(TestConstraints, applyShakeNotConverged)
  */
 TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
 {
-    _constraints->setShakeMaxIter(10);
-    _constraints->setShakeTolerance(0.0);
+    const auto settings = testSettings::make<ConstraintSettings>()
+                              .with(&ConstraintSettings::setShakeMaxIter, 10)
+                              .with(&ConstraintSettings::setShakeTolerance, 0.0)
+                              .build();
+    _constraints = std::make_unique<constraints::Constraints>(settings);
+    _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
 
     settings::TimingsSettings::setTimeStep(2.0);
-
-    _constraints->deactivateShake();
 
     EXPECT_NO_THROW(_constraints->applyShake(*_box));
 }
@@ -138,14 +155,21 @@ TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
  */
 TEST_F(TestConstraints, applyRattleConverged)
 {
-    _constraints->setRattleMaxIter(1000);
-    _constraints->setRattleTolerance(1.0e-4);
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setRattleMaxIter, 1000)
+            .with(&ConstraintSettings::setRattleTolerance, 1.0e-4)
+            .apply([](auto &config) { config.activateShake(); })
+            .build();
+    _constraints = std::make_unique<constraints::Constraints>(settings);
+    _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
 
     EXPECT_NO_THROW(_constraints->applyRattle(*_box));
 
+    const auto mol = _box->getMolecules()[0];
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(0),
+        mol.getAtomVelocity(AtomIndex{0}),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e-5),
             testing::DoubleNear(0.3, 1e-5),
@@ -153,7 +177,7 @@ TEST_F(TestConstraints, applyRattleConverged)
         )
     );
     EXPECT_THAT(
-        _box->getMolecules()[0].getAtomVelocity(1),
+        mol.getAtomVelocity(AtomIndex{1}),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(0.7, 1e-5),
@@ -169,13 +193,19 @@ TEST_F(TestConstraints, applyRattleConverged)
  */
 TEST_F(TestConstraints, applyRattleNotConverged)
 {
-    _constraints->setRattleMaxIter(10);
-    _constraints->setRattleTolerance(0.0);
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setRattleMaxIter, 10)
+            .with(&ConstraintSettings::setRattleTolerance, 0.0)
+            .apply([](auto &config) { config.activateShake(); })
+            .build();
+    _constraints = std::make_unique<constraints::Constraints>(settings);
+    _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
 
     EXPECT_THROW_MSG(
         _constraints->applyRattle(*_box),
-        customException::ShakeException,
+        exc::ShakeException,
         "Rattle algorithm did not converge for 2 bonds."
     );
 }
@@ -187,43 +217,14 @@ TEST_F(TestConstraints, applyRattleNotConverged)
  */
 TEST_F(TestConstraints, applyRattleNotConvergedDeactivated)
 {
-    _constraints->setRattleMaxIter(10);
-    _constraints->setRattleTolerance(0.0);
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setRattleMaxIter, 10)
+            .with(&ConstraintSettings::setRattleTolerance, 0.0)
+            .build();
+    _constraints = std::make_unique<constraints::Constraints>(settings);
+    _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
 
-    _constraints->deactivateShake();
-
     EXPECT_NO_THROW(_constraints->applyRattle(*_box));
-}
-
-/**
- * @brief test activate and deactivate different constraints
- *
- */
-TEST_F(TestConstraints, isActivated)
-{
-    _constraints->deactivateShake();
-    _constraints->deactivateMShake();
-    _constraints->deactivateDistanceConstraints();
-    EXPECT_FALSE(_constraints->isActive());
-
-    _constraints->activateShake();
-    EXPECT_TRUE(_constraints->isActive());
-    EXPECT_TRUE(_constraints->isShakeActive());
-
-    _constraints->deactivateShake();
-    EXPECT_FALSE(_constraints->isActive());
-    EXPECT_FALSE(_constraints->isShakeActive());
-
-    _constraints->activateMShake();
-    EXPECT_TRUE(_constraints->isActive());
-    EXPECT_TRUE(_constraints->isMShakeActive());
-
-    _constraints->deactivateMShake();
-    EXPECT_FALSE(_constraints->isActive());
-    EXPECT_FALSE(_constraints->isShakeActive());
-
-    _constraints->activateDistanceConstraints();
-    EXPECT_TRUE(_constraints->isActive());
-    EXPECT_TRUE(_constraints->isDistanceConstraintsActive());
 }

@@ -1,0 +1,67 @@
+# DevOps Configuration File
+
+[exclude]
+#buggy_cpp_macros = []
+
+[git]
+#main_branch = "main"
+
+[logging]
+cpp_level = "INFO"
+
+[file]
+#encoding = "utf-8"
+
+[cpp]
+check_dirs = ["src", "include", "tests", "benchmarks", "apps"]
+ast_check_compile_commands_db = ".build"
+incremental_state_file = ".build/.cpp_check_state.json"
+fail_fast = true
+header_guards_according_to_filepath = true
+header_guard_pattern = "{path}_{ext}"
+
+#style_checks = true
+#license_header_check = true
+#license_header = <some file path>
+#ast_checks = true
+ast_check_compile_args = ["-std=c++23", "-Iinclude/concepts"]
+ast_check_enabled_ids = [
+    "paramNameForType",
+    "noGlobalUsing",
+    "noGlobalUsingEnum",
+    "noThrowParen",
+    "macroReplacement",
+    "memberLeadingUnderscore",
+    "memberFunctionLeadingUnderscore",
+    "classMemberOrder",
+    "noPublicLeadingUnderscore",
+    "noDeleteInGtestTeardown",
+    "noNewInGtestSetup",
+    "includeIwyuPragmaOnly",
+    "noClangFormatToggle",
+    "noFinalKeyword",
+    "enforceTypenameOverClass",
+    "enforceSystemHeaderLibs",
+]
+
+# Per-check configuration — one sub-table per check id.
+# The paramNameForType check has NO built-in defaults, so you must
+# declare every type→name mapping you want enforced here.
+[cpp.ast_check_config.paramNameForType]
+type_to_name = { "molsys::SimulationBox" = [
+    "simulationBox",
+    "other",
+], "physicalData::PhysicalData" = [
+    "physicalData",
+    "other",
+] }
+
+[cpp.ast_check_config.classMemberOrder]
+excluded_macros = ["MSTD_ENUM", "MSTD_ENUM_BITFLAG", "TEST", "TEST_F"]
+
+[cpp.ast_check_config.includeIwyuPragmaOnly]
+allowed_pragmas = ["export", "keep"]
+pragma_required_reasons = { keep = "-- for template specialization" }
+
+[cpp.ast_check_config.enforceSystemHeaderLibs]
+libs = ["mstd"]

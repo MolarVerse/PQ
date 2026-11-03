@@ -22,42 +22,40 @@
 
 #include "simulationBoxSettings.hpp"
 
-using settings::InitVelocities;
-using settings::SimulationBoxSettings;
+/**
+ * @brief Construct a new Simulation Box Settings object
+ *
+ */
+SimulationBoxSettings::SimulationBoxSettings()
+    : _initializeVelocities(InitVelocities::FALSE)
+{
+}
 
 /********************
  *                  *
  * standard setters *
  *                  *
  ********************/
-
 /**
- * @brief Set the density set
+ * @brief Set the density
  *
- * @param densitySet
+ * @param density
  */
-void SimulationBoxSettings::setDensitySet(const bool densitySet)
+void SimulationBoxSettings::setDensity(double density)
 {
-    _isDensitySet = densitySet;
+    _density.set(density);
 }
-
-/**
- * @brief Set the box set
- *
- * @param boxSet
- */
-void SimulationBoxSettings::setBoxSet(const bool boxSet) { _isBoxSet = boxSet; }
 
 /**
  * @brief Set the initialize velocities
  *
- * @param initVelocities
+ * @param initializeVelocities
  */
 void SimulationBoxSettings::setInitializeVelocities(
-    const InitVelocities initializeVelocities
+    InitVelocities initializeVelocities
 )
 {
-    _initializeVelocities = initializeVelocities;
+    _initializeVelocities.set(initializeVelocities);
 }
 
 /********************
@@ -65,6 +63,12 @@ void SimulationBoxSettings::setInitializeVelocities(
  * standard getters *
  *                  *
  ********************/
+/**
+ * @brief Get the density
+ *
+ * @return double
+ */
+double SimulationBoxSettings::getDensity() const { return _density.get(); }
 
 /**
  * @brief get if the density is set
@@ -72,15 +76,7 @@ void SimulationBoxSettings::setInitializeVelocities(
  * @return true
  * @return false
  */
-bool SimulationBoxSettings::getDensitySet() { return _isDensitySet; }
-
-/**
- * @brief get if the box is set
- *
- * @return true
- * @return false
- */
-bool SimulationBoxSettings::getBoxSet() { return _isBoxSet; }
+bool SimulationBoxSettings::isDensitySet() const { return _density.isSet(); }
 
 /**
  * @brief get if the velocities are initialized
@@ -89,7 +85,7 @@ bool SimulationBoxSettings::getBoxSet() { return _isBoxSet; }
  * @return FALSE
  * @return FORCE
  */
-InitVelocities SimulationBoxSettings::getInitializeVelocities()
+InitVelocities SimulationBoxSettings::getInitializeVelocities() const
 {
-    return _initializeVelocities;
+    return _initializeVelocities.get();
 }

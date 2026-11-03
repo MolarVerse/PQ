@@ -22,90 +22,99 @@
 
 #include "ringPolymerEnergyOutput.hpp"
 
-#include <algorithm>   // for for_each
-#include <format>      // for format
+#include <algorithm>
+#include <format>
 #include <numeric>
-#include <vector>   // for vector
+#include <vector>
 
-#include "physicalData.hpp"   // for PhysicalData
+#include "physicalData.hpp"
 
-using namespace output;
-using namespace physicalData;
-
-/**
- * @brief write the energy output of each ring polymer
- *
- * @details
- * 1) step
- * 2) sum of all ring polymer spring energies
- * 3) ... 2+n) ring polymer spring energies
- *
- * @param step
- * @param loopTime
- * @param data
- */
-void RingPolymerEnergyOutput::write(
-    const size_t                     step,
-    const std::vector<PhysicalData> &dataVector
-)
+namespace out
 {
-    _fp << std::format("{:10d}\t", step);
 
-    _fp << std::format("{:20.12f}\t", sumOfRingPolymerEnergies(dataVector));
+    /**
+     * @brief sum of all ring polymer spring energies
+     *
+     * @param dataVector
+     *
+     * @return sum of all ring polymer spring energies
+     */
+    double RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(
+        const std::vector<physicalData::PhysicalData> &dataVector
+    )
+    {
+        return std::accumulate(
+            dataVector.begin(),
+            dataVector.end(),
+            0.0,
+            [](const auto &sum, const auto &data)
+            { return sum + data.getRingPolymerEnergy(); }
+        );
+    }
 
-    _fp << std::format("{:20.12f}\t", maxRingPolymerEnergy(dataVector));
+    /**
+     * @brief maximum ring polymer spring energy
+     *
+     * @param dataVector
+     *
+     * @return maximum ring polymer spring energy
+     */
+    double RingPolymerEnergyOutput::_maxRingPolymerEnergy(
+        const std::vector<physicalData::PhysicalData> &dataVector
+    )
+    {
+        return std::ranges::max_element(
+                   dataVector,
+                   [](const auto &lhs, const auto &rhs)
+                   {
+                       return lhs.getRingPolymerEnergy() <
+                              rhs.getRingPolymerEnergy();
+                   }
+        )->getRingPolymerEnergy();
+    }
 
-    _fp << std::format(
-        "{:20.12f}\t",
-        sumOfRingPolymerEnergies(dataVector) /
-            static_cast<double>(dataVector.size())
-    );
+    /**
+     * @brief write the energy output of each ring polymer
+     *
+     * @details
+     * 1) step
+     * 2) sum of all ring polymer spring energies
+     * 3) ... 2+n) ring polymer spring energies
+     *
+     * @param step
+     * @param dataVector
+     */
+    void RingPolymerEnergyOutput::write(
+        size_t                                         step,
+        const std::vector<physicalData::PhysicalData> &dataVector
+    )
+    {
+        _getFilePointer() << std::format("{:10d}\t", step);
 
-    std::ranges::for_each(
-        dataVector,
-        [&](const auto &data)
-        { _fp << std::format("{:20.12f}\t", data.getRingPolymerEnergy()); }
-    );
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", _sumOfRingPolymerEnergies(dataVector));
 
-    _fp << '\n' << std::flush;
+        _getFilePointer(
+        ) << std::format("{:20.12f}\t", _maxRingPolymerEnergy(dataVector));
 
-    _fp << std::flush;
-}
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            _sumOfRingPolymerEnergies(dataVector) /
+                static_cast<double>(dataVector.size())
+        );
 
-/**
- * @brief sum of all ring polymer spring energies
- *
- * @param dataVector
- *
- * @return sum of all ring polymer spring energies
- */
-double RingPolymerEnergyOutput::sumOfRingPolymerEnergies(
-    const std::vector<PhysicalData> &dataVector
-)
-{
-    return std::accumulate(
-        dataVector.begin(),
-        dataVector.end(),
-        0.0,
-        [](const auto &sum, const auto &data)
-        { return sum + data.getRingPolymerEnergy(); }
-    );
-}
+        std::ranges::for_each(
+            dataVector,
+            [&](const auto &data)
+            {
+                _getFilePointer()
+                    << std::format("{:20.12f}\t", data.getRingPolymerEnergy());
+            }
+        );
 
-/**
- * @brief maximum ring polymer spring energy
- *
- * @param dataVector
- *
- * @return maximum ring polymer spring energy
- */
-double RingPolymerEnergyOutput::maxRingPolymerEnergy(
-    const std::vector<PhysicalData> &dataVector
-)
-{
-    return std::ranges::max_element(
-               dataVector,
-               [](const auto &a, const auto &b)
-               { return a.getRingPolymerEnergy() < b.getRingPolymerEnergy(); }
-    )->getRingPolymerEnergy();
-}
+        _getFilePointer() << '\n' << std::flush;
+
+        _getFilePointer() << std::flush;
+    }
+
+}   // namespace out

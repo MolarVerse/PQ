@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXP_DECAY_HPP_
+#ifndef OPT__LEARNING_RATE_STRATEGY__EXP_DECAY_HPP
+#define OPT__LEARNING_RATE_STRATEGY__EXP_DECAY_HPP
 
-#define _EXP_DECAY_HPP_
-
-#include <cmath>   // for exp
+#include <cmath>
 
 #include "learningRateStrategy.hpp"
 
@@ -41,17 +40,14 @@ namespace opt
 
        public:
         ExpDecayLR() = default;
-        ExpDecayLR(const double, const double, const size_t);
+        ExpDecayLR(double, double, size_t);
 
         [[nodiscard]]
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
-        void updateLearningRate(
-            const size_t currentStep,
-            const size_t totalSteps
-        ) override;
+        void updateLearningRate(size_t step, size_t nEpochs) override;
     };
 
 }   // namespace opt
 
-#endif   // _EXP_DECAY_HPP_
+#endif   // OPT__LEARNING_RATE_STRATEGY__EXP_DECAY_HPP

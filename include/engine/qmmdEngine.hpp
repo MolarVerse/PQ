@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_MD_ENGINE_HPP_
+#ifndef ENGINE__QMMD_ENGINE_HPP
+#define ENGINE__QMMD_ENGINE_HPP
 
-#define _QM_MD_ENGINE_HPP_
-
-#include "mdEngine.hpp"          // for Engine
-#include "qmCapableEngine.hpp"   // for QMCapableEngine
+#include "mdEngine.hpp"
+#include "qmCapableEngine.hpp"
 
 namespace engine
 {
@@ -39,6 +38,8 @@ namespace engine
     class QMMDEngine : virtual public MDEngine, public QMCapableEngine
     {
        public:
+        using MDEngine::MDEngine;
+
         ~QMMDEngine() override = default;
 
         void calculateForces() override;
@@ -46,4 +47,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _QM_MD_ENGINE_HPP_
+#endif   // ENGINE__QMMD_ENGINE_HPP

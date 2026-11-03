@@ -25,6 +25,8 @@ The project uses the **git-flow** branching model: `main` is the stable/release 
 7. Use `git push -u origin <branch-name>` when pushing a new branch.
 8. **Install the commit-msg hook once per clone**: `cp .githooks/commit-msg .git/hooks/`. It rejects commits whose subject doesn't start with a recognized conventional-commit-style prefix (see below) — this is enforced locally, not just in CI.
 
+> **One documented exception to rule 1:** the CI metrics collector commits timing data under `.github/ci-metrics/data/` directly to `dev` using `GITHUB_TOKEN` (see `.github/ci-metrics/README.md`). It applies only to that workflow and that path. Contributors and coding assistants must still never push to `dev`.
+
 ```bash
 # Correct workflow
 git checkout dev
@@ -69,10 +71,12 @@ Example: `docs: add shared contributor guide`
 ```
 PQ/
 ├── .github/workflows/     # CI/CD pipelines (GitHub Actions)
+├── .github/ci-metrics/    # CI timing data + schema (data written by the collector)
 ├── .githooks/             # commit-msg hook (conventional-commit enforcement)
 ├── .cmake/                # CMake helper modules (config, eigen, testing, mpi, ...)
 ├── apps/                  # Main application executable (PQ.cpp)
 ├── benchmarks/            # Google Benchmark suite + benchmarks/perf (CI perf gate)
+├── changes/               # Unreleased changelog fragments (changes/user, changes/developer); see changes/README.md
 ├── config/                # licenseHeader.txt (mandatory GPL header template)
 ├── docs/                  # Sphinx (docs/sphinx) + Doxygen (docs/doxygen) documentation
 ├── examples/              # Example simulation input files
@@ -80,6 +84,8 @@ PQ/
 ├── include/               # Header files (.hpp), mirrors src/ module layout
 ├── integration_tests/     # pytest-based end-to-end tests
 ├── scripts/               # Build/Singularity/conda scripts, changelog tooling + its tests
+│   ├── pq_build_times/    # local build-time tracking (snapshots, baseline, graph); see its README
+│   └── pq_code_stats/     # lines/files per merged PR of dev by area and kind, CSV + report; see its README
 ├── src/                   # Implementation files (.cpp), one CMakeLists.txt per module
 ├── tests/                 # GoogleTest unit tests, mirrors src/ + include/ layout
 ├── CMakeLists.txt         # Root build configuration
@@ -117,6 +123,7 @@ make -j<#procs>
 | `BUILD_WITH_IWYU`             | `OFF`   | Build with include-what-you-use                 |
 | `BUILD_WITH_GCOVR`            | `OFF`   | Build with gcovr coverage                       |
 | `BUILD_WITH_DOCS`             | `ON`    | Build documentation                             |
+| `PQ_DOXYGEN_GRAPHS`           | `ON`    | Draw dot graphs in Doxygen (off in PR docs CI)  |
 | `BUILD_WITH_BENCHMARKING`     | `OFF`   | Build the Google Benchmark suite                |
 | `BUILD_WITH_ASE`              | `ON`    | Build with ASE (QM runner integration)          |
 | `BUILD_WITH_SINGULARITY`      | `OFF`   | Build with Singularity                          |
@@ -167,7 +174,7 @@ Formatting is enforced by **clang-format 20.1.3** (Google style base, customized
 - `BinPackArguments`/`BinPackParameters`: false
 - Line endings: LF
 
-CI (`clang_format.yml`) only checks **lines changed in the PR** via `git-clang-format` against the PR base, for `apps`, `benchmarks`, `include`, `src`, `tests` (excludes `external/`). Run locally before committing:
+CI (`clang_format.yml`) checks every C/C++ file the PR touches **as a whole** (not only the changed lines) with the pinned clang-format, for `apps`, `benchmarks`, `include`, `src`, `tests` (excludes `external/`). Run locally before committing:
 
 ```bash
 clang-format -i <file>
@@ -202,6 +209,8 @@ Run with `make test` or `ctest --output-on-failure` from the build directory. Wh
 
 **Integration tests** are `pytest`-based in `integration_tests/` (see `pytest.ini`). They require `pytest`, `pytest-cov`, `pqanalysis`, `ase`, `pyscf`, plus `dftbplus` and `xtb` (installed via conda in CI). Run with `pytest integration_tests`.
 
+**Integration tests run on both x86 and arm Release builds** (decided in #706, kept on purpose): dftbplus, xtb and pyscf come from architecture-specific conda-forge builds, so the arm run exercises different binaries. It costs no wall-clock time (the arm Release job has a median of about 3.6 min against 5.3 min for the slowest x86 job) and the repository is public, so runner minutes are free. Looking back over about 380 runs, no failure was specific to one architecture. Do not edit `.github/workflows/ci_build.yml` just to annotate this: the conda environment cache key hashes that file, so every edit forces a cold conda install.
+
 **Performance regression gate** (`perf.yml`): for PRs touching `src/`, `include/`, `apps/`, `benchmarks/`, or build config, CI builds `benchmarks/perf` (fixed-work benchmarks, `BUILD_WITH_PERF_BENCH=ON`) for both the PR and its base branch, runs them under `callgrind`, and fails if instruction counts regress beyond threshold (`scripts/perf_gate.sh`). Results are posted as a PR comment.
 
 ---
@@ -210,9 +219,28 @@ Run with `make test` or `ctest --output-on-failure` from the build directory. Wh
 
 All pipelines are in `.github/workflows/`:
 
-| Workflow                           | Trigger                     | Purpose                                              |
-| ----------------------------------- | ---------------------------- | ----------------------------------------------------- |
-| `ci_build.yml`                      | PRs (any branch), push to `dev`/`main` | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build + MPI build |
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| `ci_build.yml` | PRs (any branch), push to `dev`/`main`/`NEXT`, nightly, manual | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build + Python bindings |
+| `lint.yml` | PRs, push to `dev`/`main`/`NEXT`, manual | `clangd-tidy` on changed C++ files |
+| `devops_cpp_check.yml` | PRs to `main`/`dev`/`NEXT` | `cpp_checks` from `external/devops` (style and AST rules, `devops.toml`) |
+| `clang_format.yml` | PRs to `main`/`dev`/`NEXT` | clang-format 20.1.3 on every touched C/C++ file, as a whole file |
+| `license_check.yml` | PRs (any branch), push to `main` | Exact GPL header check on all C/C++ files |
+| `changelog.yml` | PRs to `dev`/`NEXT` | Script tests + valid changelog fragment required |
+| `gh_checks.yml` | PR events | PR must link an issue (`Closes/Fixes/Resolves/Related to #N`) |
+| `perf.yml` | PRs to `main`/`dev`/`NEXT` | Callgrind instruction-count regression gate |
+| `clang_build.yml` | PRs touching C++/build files | Non-gating clang 20 build and tests (build analysis for the CI metrics) |
+| `jekyll-gh-pages.yml` | PRs to `main`/`dev` touching docs/include/src; push to `main` | Sphinx + Doxygen build; deploys the site from `main` |
+| `ci_metrics.yml` | Daily, manual | Collects CI timing data (see `.github/ci-metrics/README.md`) |
+| `sync-dev-into-next.yml, sync-main-into-dev.yml` | Push to `dev` / `main`, manual | Automatic branch syncs |
+| `create-release-pr.yml, release.yml` | Manual; PRs to `main` from `release/*` , `hotfix/*` | Release process: changelogs, tag, GitHub release |
+| `dismiss_stale_approvals.yml` | New commits on PRs | Dismisses approvals unless the new commits only merge `dev` |
+| `pq-bot.yml, pq-bot-review.yml` | Comments | PQ Bot |
+
+See the developer guide page *Continuous Integration* for details.
+
+----------------------------------- | ---------------------------- | ----------------------------------------------------- |
+| `ci_build.yml`                      | PRs (any branch), push to `dev`/`main` | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build |
 | `clang_format.yml`                   | PRs to `main`/`dev`          | `git-clang-format` on changed C/C++ lines             |
 | `license_check.yml`                 | PRs (any branch), push to `main`/`master` | Exact GPL header check on all C/C++ files       |
 | `perf.yml`                           | PRs to `main`/`dev`          | Callgrind instruction-count regression gate           |
@@ -228,8 +256,22 @@ All pipelines are in `.github/workflows/`:
 
 - **`CHANGELOG.md`** — user-facing, curated by hand, one bullet per notable change.
 - **`DEV-CHANGELOG.md`** — developer/technical record, generated from conventional commits via `git-cliff` (`cliff.toml`) at release time.
+- **`changes/`** — unreleased changelog fragments; see below.
 
-**Regular feature/bugfix PRs (targeting `dev`) do not edit either changelog file.** Changelog curation happens only in the release PR from `dev` to `main`, validated by `scripts/update_changelog.py --check` (see `check-pr-for-release-version.yml`). Do not add changelog entries as part of routine PRs.
+**Regular feature/bugfix PRs never edit `CHANGELOG.md` or `DEV-CHANGELOG.md` directly.** Changelog curation/rendering happens only in the release PR from `dev` to `main`, validated by `scripts/update_changelog.py --check` (see `check-pr-for-release-version.yml`).
+
+**Every regular PR must instead add or update a changelog fragment under `changes/`** (see `changes/README.md`):
+
+```
+changes/user/<category>.<title>.md
+changes/developer/<category>.<title>.md
+```
+
+- Use `user` when an installed-PQ user would notice the change (behavior, results, inputs/outputs, errors, compatibility, runtime performance); use `developer` for build tooling, CI, tests, refactors, and internal maintenance. A PR may add fragments for either or both audiences.
+- `<category>` is one of the fixed categories in `changes/README.md` (user: `enhancement`, `change`, `bugfix`, `performance`, `compatibility`, `documentation`; developer: `enhancement`, `bugfix`, `performance`, `build`, `ci`, `test`, `internal`, `documentation`). `<title>` is a free-text lowercase-with-hyphens slug and does not appear in the rendered changelog.
+- If an existing unreleased fragment already covers the same change, append a bullet to it instead of creating a new file; a fragment can hold multiple bullets, one per line, each at most 360 characters.
+- Do not delete unreleased fragments or the `changes/user/.gitkeep` / `changes/developer/.gitkeep` placeholders.
+- The release workflow consumes every fragment into the matching changelog and removes them; this is the only point at which `CHANGELOG.md`/`DEV-CHANGELOG.md` change.
 
 ---
 
@@ -268,6 +310,7 @@ Before submitting any change:
 - [ ] Every new/modified `.cpp`/`.hpp`/`.c`/`.h` file has the exact license header (`scripts/addLicense.sh`)
 - [ ] Header guards follow `_NAME_HPP_`; namespaces match directory names
 - [ ] Tests added/updated in `tests/` mirroring the changed `src/`/`include/` module
+- [ ] A changelog fragment added under `changes/user/` and/or `changes/developer/` (or a bullet appended to an existing unreleased one)
 - [ ] No changes to `CHANGELOG.md` or `DEV-CHANGELOG.md` in routine PRs
 - [ ] Git submodules (`external/googletest`, `external/mstd`) not accidentally modified
 - [ ] No `-march=native`/native-only assumptions introduced into CI-relevant build paths (respect `BUILD_WITH_NATIVE`)

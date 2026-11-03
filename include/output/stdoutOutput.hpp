@@ -20,18 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STDOUT_OUTPUT_HPP_
-
-#define _STDOUT_OUTPUT_HPP_
+#ifndef OUTPUT__STDOUT_OUTPUT_HPP
+#define OUTPUT__STDOUT_OUTPUT_HPP
 
 #include "output.hpp"
 
-namespace output
+namespace out
 {
     /**
-     * @class StdoutOutput inherits from Output
+     * @brief StdoutOutput inherits from Output
      *
-     * @brief Output file for stdout
+     * @details Output file for stdout
      *
      */
     class StdoutOutput : public Output
@@ -39,20 +38,20 @@ namespace output
        public:
         using Output::Output;
 
-        void writeInfo(const std::string &message) const;
+        static void writeInfo(const std::string &message);
 
-        void writeHeader() const;
-        void writeEndedNormally(const double elapsedTime) const;
+        static void writeHeader();
+        static void writeEndedNormally(double elapsedTime);
 
-        void writeDensityWarning() const;
-        void writeOptWarning(const std::string &message) const;
+        static void writeDensityWarning();
+        static void writeOptWarning(const std::string &message);
 
-        void writeSetup(const std::string &setup) const;
-        void writeSetupWarning(const std::string &setup) const;
-        void writeSetupCompleted() const;
-        void writeRead(const std::string &, const std::string &) const;
+        static void writeSetup(const std::string &setup);
+        static void writeSetupWarning(const std::string &warning);
+        static void writeSetupCompleted();
+        static void writeRead(const std::string &, const std::string &);
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _STDOUT_OUTPUT_HPP_
+#endif   // OUTPUT__STDOUT_OUTPUT_HPP

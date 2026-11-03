@@ -20,135 +20,150 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
+#include "distanceConstraintsSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "distanceConstraint.hpp"   // for DistanceConstraint
-#include "engine.hpp"               // for Engine
-#include "exceptions.hpp"           // for TopologyException
-#include "simulationBox.hpp"        // for SimulationBox
+#include "distanceConstraint.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "simulationBox.hpp"
 
-using namespace input::topology;
-using namespace engine;
-using namespace customException;
-using namespace constraints;
-
-/**
- * @brief processes the distance constraints section of the topology file
- *
- * @details one line of the distance constraints section contains 4 elements:
- * 1. atom index 1
- * 2. atom index 2
- * 3. lower distance
- * 4. upper distance
- * 5. spring constant
- * 6. dk/dt
- *
- * @param line
- * @param engine
- *
- * @throws TopologyException if number of elements in line is
- * not 4
- * @throws TopologyException if atom indices are the same
- * (=same atoms)
- * @throws TopologyException if lower distance is greater than
- * upper distance
- */
-void DistanceConstraintsSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::topology
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
-    if (lineElements.size() != 6)
+
+    /**
+     * @brief processes the distance constraints section of the topology file
+     *
+     * @details one line of the distance constraints section contains 4
+     * elements:
+     * 1. atom index 1
+     * 2. atom index 2
+     * 3. lower distance
+     * 4. upper distance
+     * 5. spring constant
+     * 6. dk/dt
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the topology file being processed
+     *
+     * @throws exc::TopologyException if number of elements in line is
+     * not 4
+     * @throws exc::TopologyException if atom indices are the same
+     * (=same atoms)
+     * @throws exc::TopologyException if lower distance is greater than
+     * upper distance
+     */
+    void DistanceConstraintsSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine,
+        size_t                    lineNumber
+    )
     {
-        throw TopologyException(
-            std::format(
-                "Wrong number of arguments in topology file \"Distance "
-                "Constraints\" section at line {} - number of elements has to "
-                "be "
-                "6!",
-                _lineNumber
-            )
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 6)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Wrong number of arguments in topology file \"Distance "
+                    "Constraints\" section at line {} - number of elements has "
+                    "to "
+                    "be "
+                    "6!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto atom1             = stoul(lineElements[0]);
+        auto atom2             = stoul(lineElements[1]);
+        auto lowerDistance     = stod(lineElements[2]);
+        auto upperDistance     = stod(lineElements[3]);
+        auto springConstant    = stod(lineElements[4]);
+        auto dSpringConstantDt = stod(lineElements[5]);
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        if (atom1 == atom2)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file \"Distance "
+                    "Constraints\" at line {} - atoms cannot be the same!",
+                    lineNumber
+                )
+            );
+        }
+
+        if (lowerDistance > upperDistance)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file \"Distance "
+                    "Constraints\" at line {} - lower distance cannot be "
+                    "greater "
+                    "than upper distance!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto &simBox = engine.getSimulationBox();
+
+        const auto [molecule1, atomIndex1] =
+            simBox.findMoleculeByGlobalAtomIndex(atom1);
+        const auto [molecule2, atomIndex2] =
+            simBox.findMoleculeByGlobalAtomIndex(atom2);
+
+        auto distanceConstraint = constraints::DistanceConstraint(
+            molecule1,
+            molecule2,
+            atomIndex1,
+            atomIndex2,
+            lowerDistance,
+            upperDistance,
+            springConstant,
+            dSpringConstantDt
         );
+
+        engine.getConstraints()->addDistanceConstraint(distanceConstraint);
     }
 
-    auto atom1             = stoul(lineElements[0]);
-    auto atom2             = stoul(lineElements[1]);
-    auto lowerDistance     = stod(lineElements[2]);
-    auto upperDistance     = stod(lineElements[3]);
-    auto springConstant    = stod(lineElements[4]);
-    auto dSpringConstantDt = stod(lineElements[5]);
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
-
-    if (atom1 == atom2)
+    /**
+     * @brief returns the keyword of the distance constraints section
+     *
+     * @return "dist_constraints"
+     */
+    std::string DistanceConstraintsSection::keyword()
     {
-        throw TopologyException(
-            std::format(
-                "Topology file \"Distance "
-                "Constraints\" at line {} - atoms cannot be the same!",
-                _lineNumber
-            )
-        );
+        return "dist_constraints";
     }
 
-    if (lowerDistance > upperDistance)
+    /**
+     * @brief checks if distance constraints sections ends normally
+     *
+     * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
+     *
+     * @throws exc::TopologyException if endedNormal is false
+     */
+    void DistanceConstraintsSection::endedNormally(
+        bool   endedNormal,
+        size_t lineNumber
+    ) const
     {
-        throw TopologyException(
-            std::format(
-                "Topology file \"Distance "
-                "Constraints\" at line {} - lower distance cannot be greater "
-                "than upper distance!",
-                _lineNumber
-            )
-        );
+        if (!endedNormal)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file error in \"Distance Constraints\" section "
+                    "at "
+                    "line "
+                    "{} - no end of section found!",
+                    lineNumber
+                )
+            );
+        }
     }
 
-    auto &simBox = engine.getSimulationBox();
-
-    const auto [molecule1, atomIndex1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] = simBox.findMoleculeByAtomIndex(atom2);
-
-    auto distanceConstraint = DistanceConstraint(
-        molecule1,
-        molecule2,
-        atomIndex1,
-        atomIndex2,
-        lowerDistance,
-        upperDistance,
-        springConstant,
-        dSpringConstantDt
-    );
-
-    engine.getConstraints()->addDistanceConstraint(distanceConstraint);
-}
-
-/**
- * @brief returns the keyword of the distance constraints section
- *
- * @return "dist_constraints"
- */
-std::string DistanceConstraintsSection::keyword() { return "dist_constraints"; }
-
-/**
- * @brief checks if distance constraints sections ends normally
- *
- * @param endedNormal
- *
- * @throws TopologyException if endedNormal is false
- */
-void DistanceConstraintsSection::endedNormally(const bool endedNormal) const
-{
-    if (!endedNormal)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file error in \"Distance Constraints\" section at "
-                "line "
-                "{} - no end of section found!",
-                _lineNumber
-            )
-        );
-    }
-}
+}   // namespace input::topology

@@ -20,81 +20,95 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTRAINT_SETTINGS_HPP_
+#ifndef SETTINGS__CONSTRAINT_SETTINGS_HPP
+#define SETTINGS__CONSTRAINT_SETTINGS_HPP
 
-#define _CONSTRAINT_SETTINGS_HPP_
+#include <cstddef>
+#include <mstd/enum.hpp>
 
-#include <cstddef>   // for size_t
+#include "setting.hpp"
 
-#include "defaults.hpp"
+class ReferenceSettings;
+class WaterModelSettings;
 
-namespace settings
+/**
+ * @class ConstraintSettings
+ *
+ * @brief static class to store settings of the constraints
+ *
+ */
+class ConstraintSettings
 {
-    /**
-     * @class ConstraintSettings
-     *
-     * @brief static class to store settings of the constraints
-     *
-     */
-    class ConstraintSettings
-    {
-       private:
-        // clang-format off
-        static inline bool _shakeActive          = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
-        static inline bool _mShakeActive         = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
-        static inline bool _distanceConstsActive = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
+   private:
+    Setting<bool> _shakeActive;
+    Setting<bool> _mShakeActive;
+    Setting<bool> _distanceConstsActive;
 
-        static inline size_t _shakeMaxIter  = defaults::SHAKE_MAX_ITER_DEFAULT;
-        static inline size_t _rattleMaxIter = defaults::RATTLE_MAX_ITER_DEFAULT;
-        static inline size_t _mshakeMaxIter = defaults::MSHAKE_MAX_ITER_DEFAULT;
+    Setting<size_t> _shakeMaxIter;
+    Setting<size_t> _rattleMaxIter;
+    Setting<size_t> _mshakeMaxIter;
 
-        static inline double _shakeTolerance  = defaults::SHAKE_TOLERANCE_DEFAULT;
-        static inline double _rattleTolerance = defaults::RATTLE_TOLERANCE_DEFAULT;
-        static inline double _mshakeTolerance = defaults::MSHAKE_TOLERANCE_DEFAULT;
-        // clang-format on
+    Setting<double> _shakeTolerance;
+    Setting<double> _rattleTolerance;
+    Setting<double> _mshakeTolerance;
 
-       public:
-        ConstraintSettings()  = default;
-        ~ConstraintSettings() = default;
+    bool _shakeOnlyWaterModel = false;
 
-        /*****************************
-         * standard activate methods *
-         *****************************/
+   public:
+    ConstraintSettings();
 
-        static void activateShake();
-        static void deactivateShake();
-        static void activateMShake();
-        static void deactivateMShake();
-        static void activateDistanceConstraints();
-        static void deactivateDistanceConstraints();
+    void finalize(
+        ReferenceSettings&        referenceSettings,
+        const WaterModelSettings& waterModelSettings
+    );
 
-        /***************************
-         * standard getter methods *
-         ***************************/
+    void activateShakeForWaterModel();
 
-        [[nodiscard]] static bool isShakeActivated();
-        [[nodiscard]] static bool isMShakeActivated();
-        [[nodiscard]] static bool isDistanceConstraintsActivated();
+    [[nodiscard]]
+    bool isActive() const;
 
-        [[nodiscard]] static size_t getShakeMaxIter();
-        [[nodiscard]] static size_t getRattleMaxIter();
-        [[nodiscard]] static size_t getMShakeMaxIter();
-        [[nodiscard]] static double getShakeTolerance();
-        [[nodiscard]] static double getRattleTolerance();
-        [[nodiscard]] static double getMShakeTolerance();
+    [[nodiscard]]
+    bool isShakeLikeActive() const;
 
-        /***************************
-         * standard setter methods *
-         ***************************/
+    [[nodiscard]]
+    bool isShakeOnlyWaterModel() const;
 
-        static void setShakeMaxIter(const size_t shakeMaxIter);
-        static void setRattleMaxIter(const size_t rattleMaxIter);
-        static void setMShakeMaxIter(const size_t mshakeMaxIter);
-        static void setShakeTolerance(const double shakeTolerance);
-        static void setRattleTolerance(const double rattleTolerance);
-        static void setMShakeTolerance(const double mshakeTolerance);
-    };
+    /*****************************
+     * standard activate methods *
+     *****************************/
 
-}   // namespace settings
+    void activateShake();
+    void deactivateShake();
+    void activateMShake();
+    void deactivateMShake();
+    void activateDistanceConstraints();
+    void deactivateDistanceConstraints();
 
-#endif   // _CONSTRAINT_SETTINGS_HPP_
+    /***************************
+     * standard getter methods *
+     ***************************/
+
+    [[nodiscard]] bool isShakeActivated() const;
+    [[nodiscard]] bool isMShakeActivated() const;
+    [[nodiscard]] bool isDistanceConstraintsActivated() const;
+
+    [[nodiscard]] size_t getShakeMaxIter() const;
+    [[nodiscard]] size_t getRattleMaxIter() const;
+    [[nodiscard]] size_t getMShakeMaxIter() const;
+    [[nodiscard]] double getShakeTolerance() const;
+    [[nodiscard]] double getRattleTolerance() const;
+    [[nodiscard]] double getMShakeTolerance() const;
+
+    /***************************
+     * standard setter methods *
+     ***************************/
+
+    void setShakeMaxIter(size_t shakeMaxIter);
+    void setRattleMaxIter(size_t rattleMaxIter);
+    void setMShakeMaxIter(size_t mshakeMaxIter);
+    void setShakeTolerance(double shakeTolerance);
+    void setRattleTolerance(double rattleTolerance);
+    void setMShakeTolerance(double mshakeTolerance);
+};
+
+#endif   // SETTINGS__CONSTRAINT_SETTINGS_HPP

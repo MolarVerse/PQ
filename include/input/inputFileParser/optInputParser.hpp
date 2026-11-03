@@ -20,11 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__OPT_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__OPT_INPUT_PARSER_HPP
 
-#define _OPT_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
+
+class OptimizerSettings;   // Forward declaration
 
 namespace input
 {
@@ -36,38 +39,20 @@ namespace input
      */
     class OptInputParser : public InputFileParser
     {
+        mstd::Ref<OptimizerSettings> _optimizerSettings;
+
        public:
-        OptInputParser();
+        explicit OptInputParser(OptimizerSettings &optimizerSettings);
 
-        void parseOptimizer(const std::vector<std::string> &, const size_t);
-
-        void parseLearningRateStrategy(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseInitialLearningRate(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseLearningRateUpdateFreq(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseMinLearningRate(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseMaxLearningRate(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseLearningRateDecay(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addOptimizerKey();
+        void addLearningRateStrategyKey();
+        void addInitialLearningRateKey();
+        void addLearningRateUpdateFreqKey();
+        void addMinLearningRateKey();
+        void addMaxLearningRateKey();
+        void addLearningRateDecayKey();
     };
 
 }   // namespace input
 
-#endif   // _OPT_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__OPT_INPUT_PARSER_HPP

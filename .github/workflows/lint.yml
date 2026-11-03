@@ -8,7 +8,14 @@ on:
     branches:
       - dev
       - main
+      - NEXT
   workflow_dispatch:
+
+# Only superseded pull_request runs are cancelled; push and manual runs each
+# get their own group (see ci_build.yml for the rationale).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   changes:
@@ -31,10 +38,14 @@ jobs:
               - 'tests/**'
               - 'benchmarks/CMakeLists.txt'
               - 'benchmarks/src/**'
+              - 'benchmarks/perf/**'
               - 'CMakeLists.txt'
               - '.clang-tidy'
+              - 'tests/.clang-tidy'
+              - 'benchmarks/.clang-tidy'
               - 'scripts/clang_tidy.sh'
               - '.github/workflows/lint.yml'
+              - '.github/actions/setup-gcc/**'
 
   lint:
     needs: changes
@@ -43,12 +54,33 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history so the base and head commits of the PR (or the
+          # previous commit on a push) are both present for the changed-file
+          # diff below.
+          fetch-depth: 0
 
-      - name: Install build tools
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: ninja-build clangd-20
+
+      - name: Set clangd-20 as the default clangd
+        run: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+        shell: bash
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
         run: |
-          sudo apt update
-          sudo apt install -y gcc-13 g++-13 mold ninja-build clangd-20
-          sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
         shell: bash
 
       - name: Setup python
@@ -58,7 +90,7 @@ jobs:
 
       - name: install python dependencies
         run: |
-          python -m pip install numpy
+          python -m pip install numpy tqdm
         shell: bash
 
       - name: Install clangd-tidy
@@ -67,17 +99,43 @@ jobs:
 
       - name: Configure (generate compile_commands.json)
         run: |
+          # Enable tests and both benchmark suites so their sources are part
+          # of the compile database (googletest, google benchmark, the perf
+          # harness deps) — otherwise clangd-tidy has no compile command for
+          # a changed tests/ or benchmarks/ file and silently can't check it
+          # (issue #620).
+          #
+          # No actual build is needed: FetchContent (Eigen) and the
+          # googletest/mstd submodules are already fetched/checked out, so
+          # their headers exist right after configure. The only reason this
+          # job used to run a full build was to materialize the
+          # precompiled-header (.gch) binaries that compile_commands.json
+          # would otherwise reference; CMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+          # keeps PCH out of the generated compile commands entirely, so
+          # clangd-tidy can re-parse every file from real headers without
+          # anything being built first (and without ci_build.yml's
+          # authoritative build/warnings gate being duplicated here).
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DBUILD_WITH_NATIVE=Off
-        env:
-          CC: gcc-13
-          CXX: g++-13
+            -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON \
+            -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_TESTS=On \
+            -DBUILD_WITH_BENCHMARKING=On \
+            -DBUILD_WITH_PERF_BENCH=On \
+            -DBUILD_WITH_DOCS=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
 
-      - name: Run clangd-tidy
+      - name: Run clangd-tidy on changed files
         run: |
-          clangd-tidy --fail-on-severity=hint $(find src/ apps/ include/ -name "*.cpp" -o -name "*.hpp" -o -name "*.tpp" 2>/dev/null) -p=build
+          base_sha="${{ github.event.pull_request.base.sha }}"
+          head_sha="${{ github.event.pull_request.head.sha }}"
+          if [[ -z "$base_sha" ]]; then
+            base_sha="HEAD^"
+            head_sha="HEAD"
+          fi
+
+          scripts/clang_tidy.sh --base "$base_sha" --head "$head_sha" -p build
 
   lint-gate:
     if: always()

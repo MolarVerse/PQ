@@ -20,36 +20,38 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__RESET_KINETICS_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__RESET_KINETICS_INPUT_PARSER_HPP
 
-#define _RESET_KINETICS_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
+#include "resetKineticsSettings.hpp"
 
 namespace input
 {
     /**
-     * @class ResetKineticsInputParser inherits from InputFileParser
+     * @brief ResetKineticsInputParser inherits from InputFileParser
      *
-     * @brief Parses the reset kinetics commands in the input file
+     * @details Parses the reset kinetics commands in the input file
      *
      */
     class ResetKineticsInputParser : public InputFileParser
     {
-       public:
-        ResetKineticsInputParser();
+        mstd::Ref<ResetKineticsSettings> _settings;
 
-        void parseNScale(const std::vector<std::string> &, const size_t);
-        void parseFScale(const std::vector<std::string> &, const size_t);
-        void parseNReset(const std::vector<std::string> &, const size_t);
-        void parseFReset(const std::vector<std::string> &, const size_t);
-        void parseNResetAngular(const std::vector<std::string> &, const size_t);
-        void parseFResetAngular(const std::vector<std::string> &, const size_t);
-        void parseFResetForces(const std::vector<std::string> &, const size_t);
+       public:
+        explicit ResetKineticsInputParser(ResetKineticsSettings& settings);
+
+        void addNScaleKeyword();
+        void addFScaleKeyword();
+        void addNResetKeyword();
+        void addFResetKeyword();
+        void addNResetAngularKeyword();
+        void addFResetAngularKeyword();
+        void addFResetForcesKeyword();
     };
 
 }   // namespace input
 
-#endif   // _RESET_KINETICS_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__RESET_KINETICS_INPUT_PARSER_HPP

@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _M_SHAKE_READER_HPP_
+#ifndef INPUT__M_SHAKE_READER_HPP
+#define INPUT__M_SHAKE_READER_HPP
 
-#define _M_SHAKE_READER_HPP_
-
-#include <cstddef>   // for size_t
-#include <fstream>   // for ifstream
-#include <string>    // for string
+#include <cstddef>
+#include <fstream>
+#include <string>
 #include <vector>
 
 namespace constraints
@@ -64,15 +63,15 @@ namespace input::mShake
         void read();
         void processCommentLine(
             std::string                  &line,
-            constraints::MShakeReference &mShakeRef
+            constraints::MShakeReference &mShakeReference
         );
         void processAtomLines(
             std::vector<std::string>     &lines,
-            constraints::MShakeReference &mShakeRef
+            constraints::MShakeReference &mShakeReference
         );
 
         [[nodiscard]] std::string getFileName() const;
     };
 }   // namespace input::mShake
 
-#endif   // _M_SHAKE_READER_HPP_
+#endif   // INPUT__M_SHAKE_READER_HPP

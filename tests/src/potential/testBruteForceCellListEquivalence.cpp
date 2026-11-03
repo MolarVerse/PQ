@@ -30,30 +30,19 @@
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
-
-using linearAlgebra::Vec3D;
-using molsys::Atom;
-using molsys::CellList;
-using molsys::Molecule;
-using molsys::MoleculeType;
-using molsys::SimulationBox;
-using physicalData::PhysicalData;
-using potential::CoulombPotential;
-using potential::CoulombShiftedPotential;
-using potential::GuffNonCoulomb;
-using potential::LennardJonesPair;
-using potential::PotentialBruteForce;
-using potential::PotentialCellList;
-using settings::PotentialSettings;
+#include "strongTypes.hpp"
+#include "waterModelSettings.hpp"
 
 namespace
 {
@@ -62,7 +51,8 @@ namespace
     // alias the same physical cell: with nNeighbour = ceil(cutoff / cellSize)
     // we must have kCellsPerSide >= 2 * nNeighbour + 1. Here cellSize = 5 and
     // cutoff = 4 yield nNeighbour = 1, so kCellsPerSide = 3 is sufficient and
-    // the half-neighbour list in CellList visits each cell pair exactly once.
+    // the half-neighbour list in molsys::CellList visits each cell pair exactly
+    // once.
     constexpr double kBoxEdge        = 15.0;
     constexpr double kCoulombCutOff  = 4.0;
     constexpr size_t kCellsPerSide   = 3;
@@ -70,13 +60,13 @@ namespace
 
     struct Placement
     {
-        size_t molType;
-        Vec3D  position;
+        MolType       molType;
+        linalg::Vec3D position;
     };
 
     /*
-     * Build a SimulationBox with two single-atom molecule types and a handful
-     * of molecules placed so the workload exercises both code paths in
+     * Build a molsys::SimulationBox with two single-atom molecule types and a
+     * handful of molecules placed so the workload exercises both code paths in
      * PotentialCellList: pairs inside the same cell and pairs across
      * neighbouring cells, with some pairs above and below the cutoff.
      *
@@ -84,39 +74,47 @@ namespace
      * from the same placements are completely decoupled and can be
      * force-evaluated with the two potentials in parallel.
      */
-    SimulationBox buildSimulationBox(const std::vector<Placement> &placements)
+    molsys::SimulationBox buildSimulationBox(
+        const std::vector<Placement> &placements
+    )
     {
-        SimulationBox simBox;
-        simBox.setBoxDimensions({kBoxEdge, kBoxEdge, kBoxEdge});
+        molsys::SimulationBox simBox;
 
-        auto buildMoleculeType = [](const size_t molType, const double charge)
+        molsys::OrthorhombicBox orthoBox{{kBoxEdge, kBoxEdge, kBoxEdge}};
+        simBox.setBox(orthoBox, false);
+
+        auto buildMoleculeType = [](MolType molType, double charge)
         {
-            MoleculeType mt;
-            mt.setMoltype(molType);
-            mt.setNumberOfAtoms(1);
-            mt.addExternalAtomType(molType);
-            mt.addExternalToInternalAtomTypeElement(molType, 0);
-            mt.addPartialCharge(charge);
-            mt.addAtomType(0);
-            return mt;
+            molsys::MoleculeType molType_;
+            molType_.setMoltype(molType);
+            molType_.setNumberOfAtoms(1);
+            molType_.addExternalAtomType(ExtAtomType{molType.get()});
+            molType_.addExternalToInternalAtomTypeElement(
+                ExtAtomType{molType.get()},
+                AtomType{0}
+            );
+            molType_.addPartialCharge(charge);
+            molType_.addAtomType(AtomType{0});
+            return molType_;
         };
 
-        simBox.addMoleculeType(buildMoleculeType(1, 0.5));
-        simBox.addMoleculeType(buildMoleculeType(2, -0.3));
+        simBox.addMoleculeType(buildMoleculeType(MolType{1}, 0.5));
+        simBox.addMoleculeType(buildMoleculeType(MolType{2}, -0.3));
 
-        for (const auto &p : placements)
+        for (const auto &placement : placements)
         {
-            auto atom = std::make_shared<Atom>();
-            atom->setPosition(p.position);
-            atom->setAtomType(0);
-            atom->setExternalAtomType(p.molType);
-            atom->setPartialCharge(p.molType == 1 ? 0.5 : -0.3);
-            atom->setInternalGlobalVDWType(0);
+            auto atom = std::make_shared<molsys::Atom>();
+            atom->setPosition(placement.position);
+            atom->setAtomType(AtomType{0});
+            atom->setExternalAtomType(ExtAtomType{placement.molType.get()});
+            atom->setPartialCharge(
+                placement.molType == MolType{1} ? 0.5 : -0.3
+            );
+            atom->setInternalGlobalVDWType(VdwType{0});
             atom->setForceToZero();
 
-            Molecule molecule;
-            molecule.setMoltype(p.molType);
-            molecule.setNumberOfAtoms(1);
+            molsys::Molecule molecule;
+            molecule.setMoltype(placement.molType);
             molecule.addAtom(atom);
 
             simBox.addMolecule(molecule);
@@ -125,9 +123,9 @@ namespace
         return simBox;
     }
 
-    std::shared_ptr<GuffNonCoulomb> buildGuffNonCoulomb()
+    std::shared_ptr<pot::GuffNonCoulomb> buildGuffNonCoulomb()
     {
-        auto guff = std::make_shared<GuffNonCoulomb>();
+        auto guff = std::make_shared<pot::GuffNonCoulomb>();
         guff->resizeGuff(2);
         for (size_t m1 = 0; m1 < 2; ++m1)
         {
@@ -139,15 +137,21 @@ namespace
             }
         }
 
-        const auto pair = std::make_shared<LennardJonesPair>(
+        const auto pair = std::make_shared<pot::LennardJonesPair>(
             kCoulombCutOff,
-            /*c6=*/-1.0,
-            /*c12=*/1.0
+            LJParams{.c6 = -1.0, .c12 = 1.0}
         );
 
         for (size_t m1 = 1; m1 <= 2; ++m1)
+        {
             for (size_t m2 = 1; m2 <= 2; ++m2)
-                guff->setGuffNonCoulPair({m1, m2, 0, 0}, pair);
+            {
+                guff->setGuffNonCoulPair(
+                    {MolType{m1}, MolType{m2}, AtomType{0}, AtomType{0}},
+                    pair
+                );
+            }
+        }
 
         return guff;
     }
@@ -156,10 +160,10 @@ namespace
 
 TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
-    PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
-    CoulombPotential::setCoulombRadiusCutOff(kCoulombCutOff);
-    CoulombPotential::setCoulombEnergyCutOff(0.0);
-    CoulombPotential::setCoulombForceCutOff(0.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
+    pot::CoulombPotential::setCoulombRadiusCutOff(kCoulombCutOff);
+    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
+    pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
     // Cell layout: box 15 Å, 3 cells per side, cellSize 5 Å, cutoff 4 Å.
     // Cells per axis: [-7.5,-2.5], [-2.5,+2.5], [+2.5,+7.5]. Placements are
@@ -167,41 +171,56 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     // cell, one in-cutoff pair across neighbouring cells (including across a
     // periodic boundary), and an out-of-cutoff pair both paths must skip.
     const std::vector<Placement> placements = {
-        {.molType = 1, .position = {-5.0, -5.0, -5.0}},
-        {.molType = 2, .position = {-3.0, -4.0, -3.5}},
-        {.molType = 1, .position = {1.0, 1.5, 2.0}},
-        {.molType = 2, .position = {2.0, 2.5, 3.5}},
-        {.molType = 1, .position = {-1.0, 3.0, 1.0}},
-        {.molType = 2, .position = {7.0, -7.0, 6.0}},
+        {.molType = MolType{1}, .position = {-5.0, -5.0, -5.0}},
+        {.molType = MolType{2}, .position = {-3.0, -4.0, -3.5}},
+        {.molType = MolType{1}, .position = {1.0, 1.5, 2.0}},
+        {.molType = MolType{2}, .position = {2.0, 2.5, 3.5}},
+        {.molType = MolType{1}, .position = {-1.0, 3.0, 1.0}},
+        {.molType = MolType{2}, .position = {7.0, -7.0, 6.0}},
     };
 
     auto simBoxBF = buildSimulationBox(placements);
     auto simBoxCL = buildSimulationBox(placements);
 
-    PhysicalData physicalDataBF;
-    PhysicalData physicalDataCL;
+    physicalData::PhysicalData physicalDataBF;
+    physicalData::PhysicalData physicalDataCL;
 
-    PotentialBruteForce bf;
-    bf.makeCoulombPotential(CoulombShiftedPotential(kCoulombCutOff));
-    bf.setNonCoulombPotential(buildGuffNonCoulomb());
+    pot::PotentialBruteForce bruteForce;
+    bruteForce.makeCoulombPotential(
+        pot::CoulombShiftedPotential(kCoulombCutOff)
+    );
+    bruteForce.setNonCoulombPotential(buildGuffNonCoulomb());
 
-    PotentialCellList cl;
-    cl.makeCoulombPotential(CoulombShiftedPotential(kCoulombCutOff));
-    cl.setNonCoulombPotential(buildGuffNonCoulomb());
+    pot::PotentialCellList cellListPotential;
+    cellListPotential.makeCoulombPotential(
+        pot::CoulombShiftedPotential(kCoulombCutOff)
+    );
+    cellListPotential.setNonCoulombPotential(buildGuffNonCoulomb());
 
-    // Brute force ignores its CellList argument; pass a default-constructed
-    // one purely to satisfy the signature.
-    CellList dummyCellList;
-    bf.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
+    // Brute force ignores its molsys::CellList argument; pass a
+    // default-constructed one purely to satisfy the signature.
+    WaterModelSettings waterModelSettings;
+    molsys::CellList   dummyCellList;
+    bruteForce.calculateForces(
+        simBoxBF,
+        physicalDataBF,
+        dummyCellList,
+        waterModelSettings
+    );
 
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
 
-    CellList cellList;
+    molsys::CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);
     cellList.resizeCells();
     cellList.setup(simBoxCL);
     cellList.updateCellList(simBoxCL);
-    cl.calculateForces(simBoxCL, physicalDataCL, cellList);
+    cellListPotential.calculateForces(
+        simBoxCL,
+        physicalDataCL,
+        cellList,
+        waterModelSettings
+    );
 
     EXPECT_NEAR(
         physicalDataBF.getCoulombEnergy(),
@@ -222,17 +241,21 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 
         ASSERT_EQ(molBF.getNumberOfAtoms(), molCL.getNumberOfAtoms());
 
-        for (size_t a = 0; a < molBF.getNumberOfAtoms(); ++a)
+        for (AtomIndex atomIdx{0}; atomIdx.get() < molBF.getNumberOfAtoms();
+             ++atomIdx)
         {
-            const auto fBF = molBF.getAtomForce(a);
-            const auto fCL = molCL.getAtomForce(a);
+            const auto fBF = molBF.getAtomForce(atomIdx);
+            const auto fCL = molCL.getAtomForce(atomIdx);
 
             EXPECT_NEAR(fBF[0], fCL[0], kForceTolerance)
-                << "force x mismatch on molecule " << i << " atom " << a;
+                << "force x mismatch on molecule " << i << " atom "
+                << atomIdx.get();
             EXPECT_NEAR(fBF[1], fCL[1], kForceTolerance)
-                << "force y mismatch on molecule " << i << " atom " << a;
+                << "force y mismatch on molecule " << i << " atom "
+                << atomIdx.get();
             EXPECT_NEAR(fBF[2], fCL[2], kForceTolerance)
-                << "force z mismatch on molecule " << i << " atom " << a;
+                << "force z mismatch on molecule " << i << " atom "
+                << atomIdx.get();
         }
     }
 }

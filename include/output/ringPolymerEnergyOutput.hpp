@@ -20,26 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_ENERGY_OUTPUT_HPP_
+#ifndef OUTPUT__RING_POLYMER_ENERGY_OUTPUT_HPP
+#define OUTPUT__RING_POLYMER_ENERGY_OUTPUT_HPP
 
-#define _RING_POLYMER_ENERGY_OUTPUT_HPP_
+#include <cstddef>
+#include <vector>
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include "output.hpp"
 
-#include "output.hpp"   // for Output
+class TestRingPolymerEnergyOutput;   // forward declaration
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace output
+namespace out
 {
     /**
-     * @class RingPolymerEnergyOutput inherits from Output
+     * @brief RingPolymerEnergyOutput inherits from Output
      *
-     * @brief Output file for spring energies
+     * @details Output file for spring energies
      *
      */
     class RingPolymerEnergyOutput : public Output
@@ -48,18 +49,24 @@ namespace output
         using Output::Output;
 
         void write(
-            const size_t step,
-            const std::vector<physicalData::PhysicalData>&
+            size_t step,
+            const std::vector<physicalData::PhysicalData> &
         );
 
-        double sumOfRingPolymerEnergies(
-            const std::vector<physicalData::PhysicalData>&
+       private:
+        [[nodiscard]]
+        static double _sumOfRingPolymerEnergies(
+            const std::vector<physicalData::PhysicalData> &dataVector
         );
-        double maxRingPolymerEnergy(
-            const std::vector<physicalData::PhysicalData>&
+
+        [[nodiscard]]
+        static double _maxRingPolymerEnergy(
+            const std::vector<physicalData::PhysicalData> &dataVector
         );
+
+        friend class ::TestRingPolymerEnergyOutput;   // for unit testing
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _RING_POLYMER_ENERGY_OUTPUT_HPP_
+#endif   // OUTPUT__RING_POLYMER_ENERGY_OUTPUT_HPP

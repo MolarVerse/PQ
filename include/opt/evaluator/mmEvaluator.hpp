@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_EVALUATOR_HPP_
-
-#define _MM_EVALUATOR_HPP_
+#ifndef OPT__EVALUATOR__MM_EVALUATOR_HPP
+#define OPT__EVALUATOR__MM_EVALUATOR_HPP
 
 #include "evaluator.hpp"
 
@@ -37,8 +36,7 @@ namespace opt
     class MMEvaluator : public Evaluator
     {
        public:
-        MMEvaluator()           = default;
-        ~MMEvaluator() override = default;
+        using Evaluator::Evaluator;
 
         [[nodiscard]] std::shared_ptr<Evaluator> clone() const override;
         void                                     evaluate() override;
@@ -46,4 +44,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _MM_EVALUATOR_HPP_
+#endif   // OPT__EVALUATOR__MM_EVALUATOR_HPP

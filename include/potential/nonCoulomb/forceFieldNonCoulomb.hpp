@@ -20,15 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_NON_COULOMB_HPP_
+#ifndef POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_HPP
+#define POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_HPP
 
-#define _FORCE_FIELD_NON_COULOMB_HPP_
-
-#include <cstddef>   // for size_t
-#include <map>       // for map
 #include <optional>
+#include <unordered_map>
+#include <vector>
 
 #include "nonCoulombPotential.hpp"
+#include "strongTypes.hpp"
 
 class TestNonCoulombPotentialFF;   // forward declaration
 
@@ -37,7 +37,7 @@ namespace benchSetup
     struct BenchNonCoulombFFPot;   // forward declaration
 }   // namespace benchSetup
 
-namespace potential
+namespace pot
 {
     class ForceFieldNonCoulomb : public NonCoulombPotential
     {
@@ -46,9 +46,6 @@ namespace potential
 
         struct matrix;
         std::unique_ptr<matrix> _nonCoulPairsMatPtr;
-
-        static constexpr auto _globalVdwType1Index = 4;
-        static constexpr auto _globalVdwType2Index = 5;
 
        public:
         ForceFieldNonCoulomb();
@@ -60,15 +57,17 @@ namespace potential
         ForceFieldNonCoulomb &operator=(ForceFieldNonCoulomb &&) noexcept;
 
         void setupNonCoulombicCutoffs();
-        void determineInternalGlobalVdwTypes(const std::map<size_t, size_t> &);
+        void determineInternalGlobalVdwTypes(
+            const std::unordered_map<ExtVdwType, VdwType> &
+        );
         void fillDiagOfNonCoulPairsMatrix(
             std::vector<std::shared_ptr<NonCoulombPair>> &
         );
-        void fillOffDiagOfNonCoulPairsMatrix();
-        void sortNonCoulombicsPairs(
+        void        fillOffDiagOfNonCoulPairsMatrix();
+        static void sortNonCoulombicsPairs(
             std::vector<std::shared_ptr<NonCoulombPair>> &diagonalElements
         );
-        void setOffDiagonalElement(const size_t, const size_t);
+        void setOffDiagonalElement(VdwType atomType1, VdwType atomType2);
 
         [[nodiscard]]
         std::vector<std::shared_ptr<
@@ -77,8 +76,8 @@ namespace potential
         [[nodiscard]]
         std::
             optional<std::shared_ptr<NonCoulombPair>> findNonCoulPairByInternalTypes(
-                const size_t,
-                const size_t
+                VdwType intType1,
+                VdwType intType2
             ) const;
 
         void addNonCoulombicPair(const std::shared_ptr<NonCoulombPair> &pair);
@@ -89,13 +88,10 @@ namespace potential
 
         [[nodiscard]]
         std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t> &indices
+            const std::tuple<MolType, MolType, AtomType, AtomType>
+                & /*indices*/,
+            const std::pair<VdwType, VdwType> &vdwTypes
         ) override;
-
-        [[nodiscard]]
-        size_t getGlobalVdwType1(const std::vector<size_t> &) const;
-        [[nodiscard]]
-        size_t getGlobalVdwType2(const std::vector<size_t> &) const;
 
         [[nodiscard]]
         std::vector<std::shared_ptr<NonCoulombPair>> &getNonCoulombPairsVector(
@@ -113,6 +109,6 @@ namespace potential
         );
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _FORCE_FIELD_NON_COULOMB_HPP_
+#endif   // POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_HPP

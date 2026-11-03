@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COULOMB_POTENTIAL_HPP_
+#ifndef POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP
+#define POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP
 
-#define _COULOMB_POTENTIAL_HPP_
+#include <utility>
 
-#include <utility>   // for pair
-
-namespace potential
+namespace pot
 {
     /**
      * @class CoulombPotential
@@ -51,40 +50,37 @@ namespace potential
 
        public:
         virtual ~CoulombPotential() = default;
-        explicit CoulombPotential(const double coulombRadiusCutOff);
+        explicit CoulombPotential(double coulombRadiusCutOff);
 
         [[nodiscard]]
-        virtual std::pair<double, double> calculate(
-            const double,
-            const double
-        ) const = 0;
+        virtual std::pair<double, double> calculate(double, double) const = 0;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        static void setCoulombRadiusCutOff(const double coulombRadiusCutOff);
-        static void setCoulombEnergyCutOff(const double coulombEnergyCutOff);
-        static void setCoulombForceCutOff(const double coulombForceCutOff);
+        static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
+        static void setCoulombEnergyCutOff(double coulombEnergyCutOff);
+        static void setCoulombForceCutOff(double coulombForceCutOff);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] inline static double getCoulombRadiusCutOff()
+        [[nodiscard]] static double getCoulombRadiusCutOff()
         {
             return _coulombRadiusCutOff;
         }
-        [[nodiscard]] inline static double getCoulombEnergyCutOff()
+        [[nodiscard]] static double getCoulombEnergyCutOff()
         {
             return _coulombEnergyCutOff;
         }
-        [[nodiscard]] inline static double getCoulombForceCutOff()
+        [[nodiscard]] static double getCoulombForceCutOff()
         {
             return _coulombForceCutOff;
         }
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _COULOMB_POTENTIAL_HPP_
+#endif   // POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP

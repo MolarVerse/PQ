@@ -20,15 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, InitGo...
+#include <gtest/gtest.h>
 
-#include <cmath>    // for ::pow, ::exp
-#include <vector>   // for vector, allocator
+#include <cmath>
 
-#include "gtest/gtest.h"        // for Message, TestPartResult
-#include "guffPair.hpp"         // for GuffPair
-
-using namespace potential;
+#include "guffPair.hpp"
 
 /**
  * @brief tests the calculation of the energy and force of a GuffPair
@@ -37,21 +33,22 @@ using namespace potential;
 TEST(TestGuffPair, calculateEnergyAndForces)
 {
     const auto coefficients =
-        std::vector<double>{2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0,
-                            10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0,
-                            18.0, 19.0, 20.0, 21.0, 22.0, 23.0};
+        std::array<double, defaults::NUM_GUFF_COEFFICIENTS>{
+            2.0,  3.0,  4.0,  5.0,  6.0,  7.0,  8.0,  9.0,  10.0, 11.0, 12.0,
+            13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0
+        };
     const auto   rncCutoff    = 3.0;
     const double energyCutoff = 1.0;
     const double forceCutoff  = 2.0;
 
     const auto guffNonCoulomb =
-        potential::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
+        pot::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
 
     auto distance              = 2.0;
     const auto [energy, force] = guffNonCoulomb.calculate(distance);
 
-    auto energyREF = coefficients[0] / ::pow(distance, coefficients[1]) +
-                     coefficients[2] / ::pow(distance, coefficients[3]);
+    auto energyREF = (coefficients[0] / ::pow(distance, coefficients[1])) +
+                     (coefficients[2] / ::pow(distance, coefficients[3]));
     energyREF += coefficients[4] / ::pow(distance, coefficients[5]) +
                  coefficients[6] / ::pow(distance, coefficients[7]);
     energyREF += coefficients[8] /
@@ -121,38 +118,37 @@ TEST(TestGuffPair, calculateWithSparseCoefficients)
     // and c19 blocks would otherwise compute pow(distance - rExp17/21, n)
     // with rExp17 == rExp21 == distance, which is 0^0 = NaN-prone; the gate
     // keeps the result finite.
-    auto coefficients = std::vector<double>(22, 0.0);
-    coefficients[0]  = 4.0;        // c1
-    coefficients[1]  = 6.0;        // n2
-    coefficients[8]  = 1.5;        // c9
-    coefficients[9]  = 2.0;        // cexp10
-    coefficients[10] = 1.0;        // rExp11
-    coefficients[16] = distance;   // rExp17  - would make distance - rExp17 == 0
-    coefficients[17] = 3.0;        // n18
+    auto coefficients = std::array<double, defaults::NUM_GUFF_COEFFICIENTS>{};
+    coefficients.fill(0.0);
+    coefficients[0]  = 4.0;   // c1
+    coefficients[1]  = 6.0;   // n2
+    coefficients[8]  = 1.5;   // c9
+    coefficients[9]  = 2.0;   // cexp10
+    coefficients[10] = 1.0;   // rExp11
+    coefficients[16] =
+        distance;             // rExp17  - would make distance - rExp17 == 0
+    coefficients[17] = 3.0;   // n18
     coefficients[20] = distance;   // rExp21
     coefficients[21] = 3.0;        // n22
 
     const auto pair =
-        potential::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
+        pot::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
 
     const auto [energy, force] = pair.calculate(distance);
 
     // Only the two non-zero terms contribute. Distance cutoff terms are zero
     // because energyCutoff = forceCutoff = 0.
     const auto expectedEnergy =
-        coefficients[0] / ::pow(distance, coefficients[1]) +
-        coefficients[8] /
-            (1 + ::exp(coefficients[9] * (distance - coefficients[10])));
+        (coefficients[0] / ::pow(distance, coefficients[1])) +
+        (coefficients[8] /
+         (1 + ::exp(coefficients[9] * (distance - coefficients[10]))));
 
     const auto expectedForce =
-        coefficients[1] * coefficients[0] /
-            (::pow(distance, coefficients[1]) * distance) +
-        coefficients[8] * coefficients[9] *
-            ::exp(coefficients[9] * (distance - coefficients[10])) /
-            ::pow(
-                1 + ::exp(coefficients[9] * (distance - coefficients[10])),
-                2
-            );
+        (coefficients[1] * coefficients[0] /
+         (::pow(distance, coefficients[1]) * distance)) +
+        (coefficients[8] * coefficients[9] *
+         ::exp(coefficients[9] * (distance - coefficients[10])) /
+         ::pow(1 + ::exp(coefficients[9] * (distance - coefficients[10])), 2));
 
     EXPECT_DOUBLE_EQ(energy, expectedEnergy);
     EXPECT_DOUBLE_EQ(force, expectedForce);

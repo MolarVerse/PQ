@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__SIMULATION_BOX_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__SIMULATION_BOX_INPUT_PARSER_HPP
 
-#define _SIMULATION_BOX_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
-
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
+#include "simulationBoxSettings.hpp"
 
 namespace molsys
 {
@@ -36,33 +36,24 @@ namespace molsys
 namespace input
 {
     /**
-     * @class SimulationBoxInputParser inherits from InputFileParser
+     * @brief SimulationBoxInputParser inherits from InputFileParser
      *
-     * @brief Parses the simulation box commands in the input file
+     * @details Parses the simulation box commands in the input file
      *
      */
     class SimulationBoxInputParser : public InputFileParser
     {
-       private:
-        std::shared_ptr<molsys::SimulationBox> _simulationBox;
+        mstd::Ref<SimulationBoxSettings> _settings;
 
        public:
-        explicit SimulationBoxInputParser(
-            std::shared_ptr<molsys::SimulationBox>
-        );
+        explicit SimulationBoxInputParser(SimulationBoxSettings& settings);
 
-        void parseCoulombRadius(const std::vector<std::string> &, const size_t);
-        void parseNonCoulombRadius(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseDensity(const std::vector<std::string> &, const size_t);
-        void parseInitializeVelocities(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addCoulombRadiusKey();
+        void addNonCoulombRadiusKey();
+        void addDensityKey();
+        void addInitializeVelocitiesKey();
     };
 
 }   // namespace input
 
-#endif   // _SIMULATION_BOX_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__SIMULATION_BOX_INPUT_PARSER_HPP

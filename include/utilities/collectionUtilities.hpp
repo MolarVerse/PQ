@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COLLECTION_UTILITIES_HPP_
+#ifndef UTILITIES__COLLECTION_UTILITIES_HPP
+#define UTILITIES__COLLECTION_UTILITIES_HPP
 
-#define _COLLECTION_UTILITIES_HPP_
-
-#include <algorithm>   // for ranges::sort, ranges::unique
-#include <vector>      // for vector
+#include <algorithm>
+#include <vector>
 
 namespace utilities
 {
@@ -49,4 +48,4 @@ namespace utilities
 
 }   // namespace utilities
 
-#endif   // _COLLECTION_UTILITIES_HPP_
+#endif   // UTILITIES__COLLECTION_UTILITIES_HPP

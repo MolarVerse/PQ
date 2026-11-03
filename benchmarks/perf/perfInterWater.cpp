@@ -29,6 +29,9 @@
 #include <iostream>
 #include <memory>
 
+#include "orthorhombicBox.hpp"
+#include "strongTypes.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -38,23 +41,20 @@
 #include "atom.hpp"
 #include "celllist.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "generalSettings.hpp"
 #include "interWater.hpp"
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "perfAlloc.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "vector3d.hpp"
 #include "waterModelSettings.hpp"
 
-using namespace molsys;
-using namespace potential;
-using namespace waterModel;
-using linearAlgebra::Vec3D;
-
-static constexpr std::uint64_t ITERATIONS             = 50;
-static constexpr size_t        WATER_TYPE             = 1;
+static constexpr std::uint64_t ITERATIONS = 50;
+static constexpr MolType       WATER_TYPE{1};
 static constexpr double        CUTOFF                 = 9.0;
 static constexpr auto          HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
 static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
@@ -62,35 +62,38 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 int main()
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
-    CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-    CoulombPotential::setCoulombEnergyCutOff(0.0);
-    CoulombPotential::setCoulombForceCutOff(0.0);
-    settings::WaterModelSettings::setIsInterWaterModelSet(true);
+    pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
+    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
+    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    WaterModelSettings waterModelSettings;
+    waterModelSettings.setWaterInterModel(WaterInterModel::SPC_E);
 
     // ~6x6x6 = 216 water molecules (648 atoms) on a 3 Å grid in a 30 Å box.
     constexpr size_t perSide = 6;
     constexpr double spacing = 4.5;
 
-    SimulationBox simBox;
-    simBox.setBoxDimensions({30.0, 30.0, 30.0});
+    molsys::SimulationBox simBox;
+
+    molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
+    simBox.setBox(orthoBox, false);
     simBox.setWaterType(WATER_TYPE);
 
-    MoleculeType waterType;
+    molsys::MoleculeType waterType;
     waterType.setMoltype(WATER_TYPE);
     waterType.setNumberOfAtoms(3);
     simBox.addMoleculeType(waterType);
 
     const auto makeAtom = [](const std::string_view name,
-                             const Vec3D           &pos,
+                             const linalg::Vec3D   &pos,
                              const double           charge,
                              const AtomNumber       atomicNumber)
     {
-        auto atom = std::make_shared<Atom>();
+        auto atom = std::make_shared<molsys::Atom>();
         atom->setName(name);
         atom->setAtomicNumber(atomicNumber);
         atom->setPosition(pos);
-        atom->setAtomType(0);
-        atom->setInternalGlobalVDWType(0);
+        atom->setAtomType(AtomType{0});
+        atom->setInternalGlobalVDWType(VdwType{0});
         atom->setPartialCharge(charge);
         atom->setForceToZero();
         return atom;
@@ -102,25 +105,26 @@ int main()
         {
             for (size_t iz = 0; iz < perSide; ++iz)
             {
-                const Vec3D o{
-                    1.0 + spacing * static_cast<double>(ix),
-                    1.0 + spacing * static_cast<double>(iy),
-                    1.0 + spacing * static_cast<double>(iz)
+                const linalg::Vec3D oxygen{
+                    1.0 + (spacing * static_cast<double>(ix)),
+                    1.0 + (spacing * static_cast<double>(iy)),
+                    1.0 + (spacing * static_cast<double>(iz))
                 };
 
-                Molecule molecule;
+                molsys::Molecule molecule;
                 molecule.setMoltype(WATER_TYPE);
-                molecule.setNumberOfAtoms(3);
-                molecule.addAtom(makeAtom("O", o, -0.82, OXYGEN_ATOMIC_NUMBER));
+                molecule.addAtom(
+                    makeAtom("O", oxygen, -0.82, OXYGEN_ATOMIC_NUMBER)
+                );
                 molecule.addAtom(makeAtom(
                     "H",
-                    o + Vec3D(0.9572, 0.0, 0.0),
+                    oxygen + linalg::Vec3D(0.9572, 0.0, 0.0),
                     0.41,
                     HYDROGEN_ATOMIC_NUMBER
                 ));
                 molecule.addAtom(makeAtom(
                     "H",
-                    o + Vec3D(-0.24, 0.927, 0.0),
+                    oxygen + linalg::Vec3D(-0.24, 0.927, 0.0),
                     0.41,
                     HYDROGEN_ATOMIC_NUMBER
                 ));
@@ -129,32 +133,40 @@ int main()
         }
     }
 
-    InterWaterState state;
-    state._oxygenCharge   = -0.82;
-    state._hydrogenCharge = 0.41;
-    state._nonCoulombPairOO =
-        std::make_unique<LennardJonesPair>(CUTOFF, -2.0, 4.0);
-    state._nonCoulombPairOH =
-        std::make_unique<LennardJonesPair>(CUTOFF, -0.5, 1.5);
-    state._nonCoulombPairHH =
-        std::make_unique<LennardJonesPair>(CUTOFF, -0.2, 0.8);
-
-    InterWater interWater(
-        std::move(state),
-        std::make_unique<InterWaterStrategyCellList>()
+    waterModel::InterWaterState state;
+    state.oxygenCharge     = -0.82;
+    state.hydrogenCharge   = 0.41;
+    state.nonCoulombPairOO = std::make_unique<pot::LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 2.0, .c12 = 4.0}
+    );
+    state.nonCoulombPairOH = std::make_unique<pot::LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 0.5, .c12 = 1.5}
+    );
+    state.nonCoulombPairHH = std::make_unique<pot::LennardJonesPair>(
+        CUTOFF,
+        LJParams{.c6 = 0.2, .c12 = 0.8}
     );
 
-    auto coulombPot = std::make_shared<CoulombShiftedPotential>(CUTOFF);
+    waterModel::InterWater interWater(
+        std::move(state),
+        std::make_unique<waterModel::InterWaterStrategyCellList>()
+    );
 
-    settings::Settings::activateCellList();
+    auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
 
-    CellList cellList;
+    settings::GeneralSettings::activateCellList();
+
+    molsys::CellList cellList;
     cellList.setNumberOfCells(3);
     cellList.resizeCells();
     cellList.setup(simBox);
     cellList.updateCellList(simBox);
 
     auto physicalData = physicalData::PhysicalData();
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

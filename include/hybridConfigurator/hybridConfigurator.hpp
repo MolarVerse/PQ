@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_CONFIGURATOR_HPP_
-
-#define _HYBRID_CONFIGURATOR_HPP_
+#ifndef HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP
+#define HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP
 
 #include <unordered_set>
 
@@ -39,34 +38,34 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        linearAlgebra::Vec3D _innerRegionCenter = {0.0};
-        static inline bool   _molChangedZone    = false;
+        linalg::Vec3D      _innerRegionCenter = {0.0};
+        static inline bool _molChangedZone    = false;
 
        public:
-        void calculateInnerRegionCenter(molsys::SimulationBox &);
-        void shiftAtomsToInnerRegionCenter(molsys::SimulationBox &);
-        void shiftAtomsBackToInitialPositions(molsys::SimulationBox &);
-        void assignHybridZones(molsys::SimulationBox &);
-        void activateMolecules(molsys::SimulationBox &);
-        void deactivateOuterMolecules(molsys::SimulationBox &);
-        void activateSmoothingMolecules(molsys::SimulationBox &);
-        void deactivateSmoothingMolecules(
-            std::unordered_set<size_t> inactiveMolecules,
+        void        calculateInnerRegionCenter(molsys::SimulationBox &);
+        void        shiftAtomsToInnerRegionCenter(molsys::SimulationBox &);
+        void        shiftAtomsBackToInitialPositions(molsys::SimulationBox &);
+        static void assignHybridZones(molsys::SimulationBox &);
+        static void activateMolecules(molsys::SimulationBox &);
+        static void deactivateOuterMolecules(molsys::SimulationBox &);
+        static void activateSmoothingMolecules(molsys::SimulationBox &);
+        static void deactivateSmoothingMolecules(
+            const std::unordered_set<size_t> &inactiveMolecules,
             molsys::SimulationBox &
         );
-        void toggleMoleculeActivation(molsys::SimulationBox &);
-        void calculateSmoothingFactors(molsys::SimulationBox &);
+        static void toggleMoleculeActivation(molsys::SimulationBox &);
+        static void calculateSmoothingFactors(molsys::SimulationBox &);
 
         /********************************
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] linearAlgebra::Vec3D getInnerRegionCenter() const;
-        [[nodiscard]] static bool          getMoleculeChangedZone();
+        [[nodiscard]] linalg::Vec3D getInnerRegionCenter() const;
+        [[nodiscard]] static bool   getMoleculeChangedZone();
 
         static void setMoleculeChangedZone(bool);
     };
 
 }   // namespace configurator
 
-#endif   // _HYBRID_CONFIGURATOR_HPP_
+#endif   // HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP

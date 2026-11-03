@@ -20,29 +20,28 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_PARAMETERS_HPP_
-
-#define _INTER_WATER_PARAMETERS_HPP_
+#ifndef WATER_MODELS__INTER__INTER_WATER_PARAMTERS_HPP
+#define WATER_MODELS__INTER__INTER_WATER_PARAMTERS_HPP
 
 #include <concepts>
 #include <memory>
 #include <type_traits>
 
 #include "defaults.hpp"
-#include "guffCoefficients.hpp"   // for Guff coefficients
-#include "interWater.hpp"         // for InterWater
-#include "lennardJonesPair.hpp"   // for LennardJonesPair
+#include "guffCoefficients.hpp"
+#include "interWater.hpp"
+#include "lennardJonesPair.hpp"
 
 namespace waterModel
 {
-    template <class T>
+    template <typename T>
     concept InterWaterParameterClass = requires {
-        { T::_oxygenCharge } -> std::convertible_to<double>;
-        { T::_hydrogenCharge } -> std::convertible_to<double>;
-        { T::_oxygenOnlyNonCoulomb } -> std::convertible_to<bool>;
-        { T::_nonCoulombPairOO };
-        { T::_nonCoulombPairOH };
-        { T::_nonCoulombPairHH };
+        { T::oxygenCharge } -> std::convertible_to<double>;
+        { T::hydrogenCharge } -> std::convertible_to<double>;
+        { T::oxygenOnlyNonCoulomb } -> std::convertible_to<bool>;
+        { T::nonCoulombPairOO };
+        { T::nonCoulombPairOH };
+        { T::nonCoulombPairHH };
     };
 
     template <InterWaterParameterClass T>
@@ -50,20 +49,20 @@ namespace waterModel
     {
         auto state = InterWaterState();
 
-        state._oxygenCharge         = T::_oxygenCharge;
-        state._hydrogenCharge       = T::_hydrogenCharge;
-        state._oxygenOnlyNonCoulomb = T::_oxygenOnlyNonCoulomb;
-        state._nonCoulombPairOO =
-            std::make_unique<std::decay_t<decltype(T::_nonCoulombPairOO)>>(
-                T::_nonCoulombPairOO
+        state.oxygenCharge         = T::oxygenCharge;
+        state.hydrogenCharge       = T::hydrogenCharge;
+        state.oxygenOnlyNonCoulomb = T::oxygenOnlyNonCoulomb;
+        state.nonCoulombPairOO =
+            std::make_unique<std::decay_t<decltype(T::nonCoulombPairOO)>>(
+                T::nonCoulombPairOO
             );
-        state._nonCoulombPairOH =
-            std::make_unique<std::decay_t<decltype(T::_nonCoulombPairOH)>>(
-                T::_nonCoulombPairOH
+        state.nonCoulombPairOH =
+            std::make_unique<std::decay_t<decltype(T::nonCoulombPairOH)>>(
+                T::nonCoulombPairOH
             );
-        state._nonCoulombPairHH =
-            std::make_unique<std::decay_t<decltype(T::_nonCoulombPairHH)>>(
-                T::_nonCoulombPairHH
+        state.nonCoulombPairHH =
+            std::make_unique<std::decay_t<decltype(T::nonCoulombPairHH)>>(
+                T::nonCoulombPairHH
             );
 
         return state;
@@ -71,174 +70,154 @@ namespace waterModel
 
     struct SPCInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.82;
-        static constexpr auto    _hydrogenCharge       = 0.41;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_LJ_C6_OO,
-                constants::SPC_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.82;
+        static constexpr auto    hydrogenCharge       = 0.41;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            SPC_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct SPCEInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.8476;
-        static constexpr auto    _hydrogenCharge       = 0.4238;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_E_LJ_C6_OO,
-                constants::SPC_E_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.8476;
+        static constexpr auto    hydrogenCharge       = 0.4238;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            SPC_E_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct SPCFwInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.82;
-        static constexpr auto    _hydrogenCharge       = 0.41;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_FW_LJ_C6_OO,
-                constants::SPC_FW_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.82;
+        static constexpr auto    hydrogenCharge       = 0.41;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            SPC_FW_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct qSPCFwInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.84;
-        static constexpr auto    _hydrogenCharge       = 0.42;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::QSPC_FW_LJ_C6_OO,
-                constants::QSPC_FW_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.84;
+        static constexpr auto    hydrogenCharge       = 0.42;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            QSPC_FW_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct SPCDCInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.87362;
-        static constexpr auto    _hydrogenCharge       = 0.43681;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_DC_LJ_C6_OO,
-                constants::SPC_DC_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.87362;
+        static constexpr auto    hydrogenCharge       = 0.43681;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            SPC_DC_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct H2ODCInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.9099;
-        static constexpr auto    _hydrogenCharge       = 0.45495;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::H2O_DC_LJ_C6_OO,
-                constants::H2O_DC_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.9099;
+        static constexpr auto    hydrogenCharge       = 0.45495;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            H2O_DC_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct TIP3PInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.834;
-        static constexpr auto    _hydrogenCharge       = 0.417;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::TIP3P_LJ_C6_OO,
-                constants::TIP3P_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.834;
+        static constexpr auto    hydrogenCharge       = 0.417;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            TIP3P_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct OPC3InterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.89517;
-        static constexpr auto    _hydrogenCharge       = 0.447585;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::OPC3_LJ_C6_OO,
-                constants::OPC3_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.89517;
+        static constexpr auto    hydrogenCharge       = 0.447585;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            OPC3_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct SPCmTRInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.82;
-        static constexpr auto    _hydrogenCharge       = 0.41;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::SPC_MTR_LJ_C6_OO,
-                constants::SPC_MTR_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.82;
+        static constexpr auto    hydrogenCharge       = 0.41;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            SPC_MTR_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
     struct TIP3PmTRInterParam
     {
-        static constexpr auto    _oxygenCharge         = -0.834;
-        static constexpr auto    _hydrogenCharge       = 0.417;
-        static constexpr bool    _oxygenOnlyNonCoulomb = true;
-        inline static const auto _nonCoulombPairOO =
-            potential::LennardJonesPair(
-                defaults::COULOMB_CUT_OFF_DEFAULT,
-                constants::TIP3P_MTR_LJ_C6_OO,
-                constants::TIP3P_MTR_LJ_C12_OO
-            );
-        inline static const auto _nonCoulombPairOH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
-        inline static const auto _nonCoulombPairHH =
-            potential::LennardJonesPair(0.01, 0.0, 0.0);
+        static constexpr auto    oxygenCharge         = -0.834;
+        static constexpr auto    hydrogenCharge       = 0.417;
+        static constexpr bool    oxygenOnlyNonCoulomb = true;
+        inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
+            defaults::COULOMB_CUT_OFF_DEFAULT,
+            TIP3P_MTR_LJ_PARAMS_OO
+        );
+        inline static const auto nonCoulombPairOH =
+            pot::LennardJonesPair(0.01, LJParams{});
+        inline static const auto nonCoulombPairHH =
+            pot::LennardJonesPair(0.01, LJParams{});
     };
 
 }   // namespace waterModel
 
-#endif   //  _INTER_WATER_PARAMETERS_HPP_
+#endif   //  WATER_MODELS__INTER__INTER_WATER_PARAMTERS_HPP

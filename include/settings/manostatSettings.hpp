@@ -20,106 +20,67 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_SETTINGS_HPP_
+#ifndef SETTINGS__MANOSTAT_SETTINGS_HPP
+#define SETTINGS__MANOSTAT_SETTINGS_HPP
 
-#define _MANOSTAT_SETTINGS_HPP_
+#include "enums/manostat.hpp"
+#include "setting.hpp"
+#include "unit_types.hpp"
 
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+class ReferenceSettings;
 
-#include "defaults.hpp"
-
-namespace settings
+/**
+ * @class ManostatSettings
+ *
+ * @brief  class to store settings of the manosta constt
+ *
+ */
+class ManostatSettings
 {
-    /**
-     * @enum ManostatType
-     *
-     * @brief enum class to store the type of the manostat
-     *
-     */
-    enum class ManostatType
-    {
-        NONE,
-        BERENDSEN,
-        STOCHASTIC_RESCALING
-    };
+   private:
+    Setting<ManostatType> _manostatType;
+    Setting<Isotropy>     _isotropy;
+    Setting<FixedAxis>    _fixedAxis;
 
-    /**
-     * @enum Isotropy
-     *
-     * @brief enum class to store the isotropy of the manostat
-     *
-     */
-    enum class Isotropy
-    {
-        NONE,
-        ISOTROPIC,
-        SEMI_ISOTROPIC,
-        ANISOTROPIC,
-        FULL_ANISOTROPIC
-    };
+    Setting<double> _targetPressure;
 
-    [[nodiscard]] std::string string(const ManostatType &manostatType);
-    [[nodiscard]] std::string string(const Isotropy &isotropy);
+    Setting<Time>   _tau;
+    Setting<double> _compressibility;
 
-    /**
-     * @class ManostatSettings
-     *
-     * @brief static class to store settings of the manostat
-     *
-     */
-    class ManostatSettings
-    {
-       private:
-        static inline ManostatType _manostatType = ManostatType::NONE;
-        static inline Isotropy     _isotropy     = Isotropy::ISOTROPIC;
+   public:
+    ManostatSettings();
 
-        static inline double _targetPressure;
+    void finalize(ReferenceSettings& referenceSettings);
 
-        // clang-format off
-        static inline double _tauManostat     = defaults::BERENDSEN_MANOSTAT_RELAX_TIME;
-        static inline double _compressibility = defaults::COMPRESSIBILITY_WATER_DEFAULT;
-        // clang-format on
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-        static inline std::vector<size_t> _2DIsotropicAxes;
-        static inline size_t              _2DAnisotropicAxis;
+    void setManostatType(ManostatType manostatType);
+    void setIsotropy(Isotropy isotropy);
 
-       public:
-        ManostatSettings()  = default;
-        ~ManostatSettings() = default;
+    void setFixedAxis(FixedAxis fixedAxis);
 
-        /***************************
-         * standard setter methods *
-         ***************************/
+    void setTargetPressure(double targetPressure);
+    void setTau(const Time& tau);
+    void setCompressibility(double compressibility);
 
-        static void setManostatType(const std::string_view &manostatType);
-        static void setManostatType(const ManostatType &manostatType);
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-        static void setIsotropy(const std::string_view &isotropy);
-        static void setIsotropy(const Isotropy &isotropy);
+    [[nodiscard]] bool isBerendsenBased() const;
 
-        static void setTargetPressure(const double targetPressure);
-        static void setTauManostat(const double tauManostat);
-        static void setCompressibility(const double compressibility);
-        static void set2DIsotropicAxes(const std::vector<size_t> &indices);
-        static void set2DAnisotropicAxis(const size_t index);
+    [[nodiscard]] ManostatType getManostatType() const;
+    [[nodiscard]] Isotropy     getIsotropy() const;
+    [[nodiscard]] FixedAxis    getFixedAxis() const;
+    [[nodiscard]] bool         isFixedAxisSet() const;
+    [[nodiscard]] double       getTargetPressure() const;
+    [[nodiscard]] const Time&  getTau() const;
+    [[nodiscard]] double       getCompressibility() const;
 
-        /***************************
-         * standard getter methods *
-         ***************************/
+   private:
+    void _addReferenceFile(ReferenceSettings& referenceSettings);
+};
 
-        [[nodiscard]] static bool isBerendsenBased();
-
-        [[nodiscard]] static ManostatType        getManostatType();
-        [[nodiscard]] static Isotropy            getIsotropy();
-        [[nodiscard]] static double              getTargetPressure();
-        [[nodiscard]] static double              getTauManostat();
-        [[nodiscard]] static double              getCompressibility();
-        [[nodiscard]] static std::vector<size_t> get2DIsotropicAxes();
-        [[nodiscard]] static size_t              get2DAnisotropicAxis();
-    };
-
-}   // namespace settings
-
-#endif   // _MANOSTAT_SETTINGS_HPP_
+#endif   // SETTINGS__MANOSTAT_SETTINGS_HPP

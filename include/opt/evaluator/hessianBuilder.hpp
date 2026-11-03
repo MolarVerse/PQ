@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_BUILDER_HPP_
-
-#define _HESSIAN_BUILDER_HPP_
+#ifndef OPT__EVALUATOR__HESSIAN_BUILDER_HPP
+#define OPT__EVALUATOR__HESSIAN_BUILDER_HPP
 
 #include <memory>
 #include <vector>
 
-#include "hessianSettings.hpp"
+#include "enums/hessian.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -56,37 +55,22 @@ namespace opt
 
     class ForceDifferenceHessianBuilder : public HessianBuilder
     {
-       protected:
+       private:
         double _displacement;
 
-        [[nodiscard]]
-        std::vector<double> evaluateForces(
-            Evaluator             &evaluator,
-            molsys::SimulationBox &simulationBox,
-            const size_t           coordinateIndex,
-            const double           displacement
-        ) const;
-
-        static void restorePositions(
-            molsys::SimulationBox                   &simulationBox,
-            const std::vector<linearAlgebra::Vec3D> &positions
-        );
-
-        static void displaceCoordinate(
-            molsys::SimulationBox &simulationBox,
-            const size_t           coordinateIndex,
-            const double           displacement
-        );
-
-        [[nodiscard]]
-        static std::vector<double> flattenForces(
-            const molsys::SimulationBox &simulationBox
-        );
-
        public:
-        explicit ForceDifferenceHessianBuilder(const double displacement);
+        explicit ForceDifferenceHessianBuilder(double displacement);
 
         static void symmetrize(HessianMatrix &hessian);
+
+       protected:
+        static void _restorePositions(
+            molsys::SimulationBox            &simulationBox,
+            const std::vector<linalg::Vec3D> &positions
+        );
+
+        [[nodiscard]]
+        double _getDisplacement() const;
     };
 
     class CentralForceDifferenceHessianBuilder
@@ -140,10 +124,10 @@ namespace opt
 
     [[nodiscard]]
     std::shared_ptr<HessianBuilder> makeHessianBuilder(
-        const settings::HessianBuilderType builder,
-        const double                       displacement
+        HessianBuilderType builder,
+        double             displacement
     );
 
 }   // namespace opt
 
-#endif   // _HESSIAN_BUILDER_HPP_
+#endif   // OPT__EVALUATOR__HESSIAN_BUILDER_HPP

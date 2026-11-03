@@ -22,319 +22,399 @@
 
 #include "engine.hpp"
 
-#include <filesystem>   // for remove
+#include <filesystem>
 #include <memory>
 
-#include "fileSettings.hpp"   // for FileSettings
-#include "logOutput.hpp"      // for LogOutput
+#include "celllist.hpp"
+#include "fileSettings.hpp"
+#include "logOutput.hpp"
 #include "potentialBruteForce.hpp"
-#include "stdoutOutput.hpp"      // for StdoutOutput
-#include "timingsSettings.hpp"   // for TimingsSettings
+#include "settings.hpp"
+#include "stdoutOutput.hpp"
+#include "timingsSettings.hpp"
 
-using namespace engine;
-using namespace molsys;
-using namespace physicalData;
-using namespace forceField;
-using namespace intraNonBonded;
-using namespace virial;
-using namespace potential;
-using namespace constraints;
-using namespace output;
-using namespace timings;
-using namespace settings;
-
-/**
- * @brief Construct an Engine object with default simulation components.
- *
- * @details Initializes virial, potential, physical data, simulation box,
- * cell list, intra-non-bonded handler, force field, and constraints.
- */
-Engine::Engine()
-    : _potential{std::make_shared<potential::PotentialBruteForce>()},
-      _physicalData{std::make_shared<physicalData::PhysicalData>()},
-      _simulationBox{std::make_shared<molsys::SimulationBox>()},
-      _cellList{std::make_shared<molsys::CellList>()},
-      _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
-      _forceField{std::make_shared<forceField::ForceField>()},
-      _constraints{std::make_shared<constraints::Constraints>()}
+namespace engine
 {
-}
+    /**
+     * @brief Implementation details for the Engine class.
+     *
+     * @details This struct holds the private members that are hidden
+     * from the public interface of the Engine class.
+     */
+    struct Engine::Impl
+    {
+        molsys::CellList cellList;
+    };
 
-/**
- * @brief Calculate total simulation time.
- *
- * @return double
- */
-double Engine::calculateTotalSimulationTime() const
-{
-    const auto step0   = TimingsSettings::getStepCount();
-    const auto dt      = TimingsSettings::getTimeStep();
-    const auto effStep = _step + step0;
+    /**
+     * @brief Construct an Engine object with default simulation components.
+     *
+     * @details Initializes virial, potential, physical data, simulation box,
+     * cell list, intra-non-bonded handler, force field, and constraints.
+     */
+    Engine::Engine(const Settings &settings)
+        : _engineOutput(settings.outputFiles, settings.referenceSettings),
+          _potential{std::make_shared<pot::PotentialBruteForce>()},
+          _physicalData{std::make_shared<physicalData::PhysicalData>()},
+          _simulationBox{std::make_shared<molsys::SimulationBox>()},
+          _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
+          _forceField{std::make_shared<ff::ForceField>()},
+          _constraints{std::make_shared<constraints::Constraints>(
+              settings.constraintSettings
+          )},
+          _settings{settings},
+          _impl{std::make_unique<Impl>()}
+    {
+    }
 
-    return static_cast<double>(effStep) * dt;
-}
+    Engine::~Engine() = default;
 
-/**
- * @brief Delete temporary files
- *
- * @details This function removes temporary files created during calculations.
- * The files are safely deleted using std::filesystem::remove, which does not
- * throw exceptions if the files do not exist.
- */
-void Engine::deleteTmpFiles()
-{
-    using std::filesystem::remove;
+    /**
+     * @brief Calculate total simulation time.
+     *
+     * @return double
+     */
+    double Engine::calculateTotalSimulationTime() const
+    {
+        const auto step0    = settings::TimingsSettings::getStepCount();
+        const auto timeStep = settings::TimingsSettings::getTimeStep();
+        const auto effStep  = _step + step0;
 
-    const auto qm_forces     = FileSettings::getQMForcesTempFileName();
-    const auto qm_charges    = FileSettings::getQMChargesTempFileName();
-    const auto stress_tensor = FileSettings::getStressTensorTempFileName();
-    const auto pointcharges  = FileSettings::getPointChargeFileName();
+        return static_cast<double>(effStep) * timeStep;
+    }
 
-    remove(qm_forces);
-    remove(qm_charges);
-    remove(stress_tensor);
-    remove(pointcharges);
-}
+    /**
+     * @brief Delete temporary files
+     *
+     * @details This function removes temporary files created during
+     * calculations. The files are safely deleted using std::filesystem::remove,
+     * which does not throw exceptions if the files do not exist.
+     */
+    void Engine::deleteTmpFiles()
+    {
+        using std::filesystem::remove;
 
-/**
- * @brief checks if the force field is activated
- *
- * @return true
- * @return false
- */
-bool Engine::isForceFieldNonCoulombicsActivated() const
-{
-    return _forceField->isNonCoulombicActivated();
-}
+        const auto qm_forces =
+            settings::FileSettings::getQMForcesTempFileName();
+        const auto qm_charges =
+            settings::FileSettings::getQMChargesTempFileName();
+        const auto stress_tensor =
+            settings::FileSettings::getStressTensorTempFileName();
+        const auto pointcharges =
+            settings::FileSettings::getPointChargeFileName();
 
-/**
- * @brief checks if the guff formalism is activated
- *
- * @return true
- * @return false
- */
-bool Engine::isGuffActivated() const
-{
-    return !_forceField->isNonCoulombicActivated();
-}
+        remove(qm_forces);
+        remove(qm_charges);
+        remove(stress_tensor);
+        remove(pointcharges);
+    }
 
-/**
- * @brief checks if any constraints are activated
- *
- * @return true
- * @return false
- */
-bool Engine::isConstraintsActivated() const { return _constraints->isActive(); }
+    /**
+     * @brief get the reference to the simulation box
+     *
+     * @return SimulationBox&
+     */
+    molsys::SimulationBox &Engine::getSimulationBox()
+    {
+        return *_simulationBox;
+    }
 
-/**
- * @brief checks if the intra non bonded interactions are activated
- *
- * @return true
- * @return false
- */
-bool Engine::isIntraNonBondedActivated() const
-{
-    return _intraNonBonded->isActive();
-}
+    /**
+     * @brief get the reference to the simulation box (const)
+     *
+     * @return const SimulationBox&
+     */
+    const molsys::SimulationBox &Engine::getSimulationBox() const
+    {
+        return *_simulationBox;
+    }
 
-/**
- * @brief get the reference to the simulation box
- *
- * @return SimulationBox&
- */
-SimulationBox &Engine::getSimulationBox() { return *_simulationBox; }
+    /**
+     * @brief get the reference to the physical data
+     *
+     * @return physicalData::PhysicalData&
+     */
+    physicalData::PhysicalData &Engine::getPhysicalData()
+    {
+        return *_physicalData;
+    }
 
-/**
- * @brief get the reference to the physical data
- *
- * @return PhysicalData&
- */
-PhysicalData &Engine::getPhysicalData() { return *_physicalData; }
+    /**
+     * @brief get the reference to the average physical data
+     *
+     * @return physicalData::PhysicalData&
+     */
+    physicalData::PhysicalData &Engine::getAveragePhysicalData()
+    {
+        return _averagePhysicalData;
+    }
 
-/**
- * @brief get the reference to the average physical data
- *
- * @return PhysicalData&
- */
-PhysicalData &Engine::getAveragePhysicalData() { return _averagePhysicalData; }
+    /**
+     * @brief get the reference to the force field
+     *
+     * @return const std::shared_ptr<ff::ForceField>&
+     */
+    const std::shared_ptr<ff::ForceField> &Engine::getForceField() const
+    {
+        return _forceField;
+    }
 
-/**
- * @brief get the reference to the force field
- *
- * @return const std::shared_ptr<forceField::ForceField>&
- */
-const std::shared_ptr<forceField::ForceField> &Engine::getForceField() const
-{
-    return _forceField;
-}
+    /**
+     * @brief get the reference to the intra non bonded interactions
+     *
+     * @return const std::shared_ptr<intraNonBonded::IntraNonBonded>&
+     */
+    const std::shared_ptr<intraNonBonded::IntraNonBonded> &Engine::
+        getIntraNonBonded() const
+    {
+        return _intraNonBonded;
+    }
 
-/**
- * @brief get the reference to the intra non bonded interactions
- *
- * @return const std::shared_ptr<IntraNonBonded>&
- */
-const std::shared_ptr<IntraNonBonded> &Engine::getIntraNonBonded() const
-{
-    return _intraNonBonded;
-}
+    /**
+     * @brief get the reference to the potential
+     *
+     * @return const Potential&
+     */
+    const std::shared_ptr<pot::Potential> &Engine::getPotential() const
+    {
+        return _potential;
+    }
 
-/**
- * @brief get the reference to the potential
- *
- * @return const Potential&
- */
-const std::shared_ptr<potential::Potential> &Engine::getPotential() const
-{
-    return _potential;
-}
+    /**
+     * @brief get the pointer to the simulation box
+     *
+     * @return SimulationBox*
+     */
+    molsys::SimulationBox *Engine::getSimulationBoxPtr()
+    {
+        return _simulationBox.get();
+    }
 
-/**
- * @brief get the pointer to the simulation box
- *
- * @return SimulationBox*
- */
-SimulationBox *Engine::getSimulationBoxPtr() { return _simulationBox.get(); }
+    /**
+     * @brief get the pointer to the physical data
+     *
+     * @return physicalData::PhysicalData*
+     */
+    physicalData::PhysicalData *Engine::getPhysicalDataPtr()
+    {
+        return _physicalData.get();
+    }
 
-/**
- * @brief get the pointer to the physical data
- *
- * @return PhysicalData*
- */
-PhysicalData *Engine::getPhysicalDataPtr() { return _physicalData.get(); }
+    /**
+     * @brief set the inter-water interactions handler
+     *
+     * @param interWater The new inter-water handler to use
+     */
+    void Engine::setInterWater(
+        std::unique_ptr<waterModel::InterWater> interWater
+    )
+    {
+        _interWater = std::move(interWater);
+    }
 
-/**
- * @brief set the inter-water interactions handler
- *
- * @param interWater The new inter-water handler to use
- */
-void Engine::setInterWater(std::unique_ptr<waterModel::InterWater> interWater)
-{
-    _interWater = std::move(interWater);
-}
+    /**
+     * @brief get the reference to the engine output
+     *
+     * @return EngineOutput&
+     */
+    EngineOutput &Engine::getEngineOutput() { return _engineOutput; }
 
-/**
- * @brief get the reference to the engine output
- *
- * @return EngineOutput&
- */
-EngineOutput &Engine::getEngineOutput() { return _engineOutput; }
+    /**
+     * @brief get the reference to the log output
+     *
+     * @return LogOutput&
+     */
+    out::LogOutput &Engine::getLogOutput()
+    {
+        return _engineOutput.getLogOutput();
+    }
 
-/**
- * @brief get the reference to the log output
- *
- * @return LogOutput&
- */
-LogOutput &Engine::getLogOutput() { return _engineOutput.getLogOutput(); }
+    /**
+     * @brief get the reference to the stdout output
+     *
+     * @return StdoutOutput&
+     */
+    out::StdoutOutput &Engine::getStdoutOutput()
+    {
+        return _engineOutput.getStdoutOutput();
+    }
 
-/**
- * @brief get the reference to the stdout output
- *
- * @return StdoutOutput&
- */
-StdoutOutput &Engine::getStdoutOutput()
-{
-    return _engineOutput.getStdoutOutput();
-}
+    /**
+     * @brief get the TimingsOutput
+     *
+     * @return TimingsOutput&
+     */
+    out::TimingsOutput &Engine::getTimingsOutput()
+    {
+        return _engineOutput.getTimingsOutput();
+    }
 
-/**
- * @brief get the TimingsOutput
- *
- * @return TimingsOutput&
- */
-TimingsOutput &Engine::getTimingsOutput()
-{
-    return _engineOutput.getTimingsOutput();
-}
+    /**
+     * @brief get the reference to the energy output
+     *
+     * @return EnergyOutput&
+     */
+    out::EnergyOutput &Engine::getEnergyOutput()
+    {
+        return _engineOutput.getEnergyOutput();
+    }
 
-/**
- * @brief get the reference to the energy output
- *
- * @return EnergyOutput&
- */
-EnergyOutput &Engine::getEnergyOutput()
-{
-    return _engineOutput.getEnergyOutput();
-}
+    /**
+     * @brief get the reference to the xyz output
+     *
+     * @return TrajectoryOutput&
+     */
+    out::TrajectoryOutput &Engine::getXyzOutput()
+    {
+        return _engineOutput.getXyzOutput();
+    }
 
-/**
- * @brief get the reference to the xyz output
- *
- * @return TrajectoryOutput&
- */
-TrajectoryOutput &Engine::getXyzOutput()
-{
-    return _engineOutput.getXyzOutput();
-}
+    /**
+     * @brief get the reference to the force output
+     *
+     * @return TrajectoryOutput&
+     */
+    out::TrajectoryOutput &Engine::getForceOutput()
+    {
+        return _engineOutput.getForceOutput();
+    }
 
-/**
- * @brief get the reference to the force output
- *
- * @return TrajectoryOutput&
- */
-TrajectoryOutput &Engine::getForceOutput()
-{
-    return _engineOutput.getForceOutput();
-}
+    /**
+     * @brief get the reference to the rst file output
+     *
+     * @return RstFileOutput&
+     */
+    out::RstFileOutput &Engine::getRstFileOutput()
+    {
+        return _engineOutput.getRstFileOutput();
+    }
 
-/**
- * @brief get the reference to the rst file output
- *
- * @return RstFileOutput&
- */
-RstFileOutput &Engine::getRstFileOutput()
-{
-    return _engineOutput.getRstFileOutput();
-}
+    /**
+     * @brief get the reference to the info output
+     *
+     * @return InfoOutput&
+     */
+    out::InfoOutput &Engine::getInfoOutput()
+    {
+        return _engineOutput.getInfoOutput();
+    }
 
-/**
- * @brief get the reference to the info output
- *
- * @return InfoOutput&
- */
-InfoOutput &Engine::getInfoOutput() { return _engineOutput.getInfoOutput(); }
+    /******************************
+     *                            *
+     * get shared pointer methods *
+     *                            *
+     ******************************/
 
-/******************************
- *                            *
- * get shared pointer methods *
- *                            *
- ******************************/
+    /**
+     * @brief get the shared pointer to the simulation box
+     *
+     * @return std::shared_ptr<SimulationBox>
+     */
+    std::shared_ptr<molsys::SimulationBox> Engine::getSharedSimulationBox(
+    ) const
+    {
+        return _simulationBox;
+    }
 
-/**
- * @brief get the shared pointer to the simulation box
- *
- * @return std::shared_ptr<SimulationBox>
- */
-std::shared_ptr<SimulationBox> Engine::getSharedSimulationBox() const
-{
-    return _simulationBox;
-}
+    /**
+     * @brief get the shared pointer to the physical data
+     *
+     * @return std::shared_ptr<PhysicalData>
+     */
+    std::shared_ptr<physicalData::PhysicalData> Engine::getSharedPhysicalData(
+    ) const
+    {
+        return _physicalData;
+    }
 
-/**
- * @brief get the shared pointer to the physical data
- *
- * @return std::shared_ptr<PhysicalData>
- */
-std::shared_ptr<PhysicalData> Engine::getSharedPhysicalData() const
-{
-    return _physicalData;
-}
+    /**
+     * @brief get the shared pointer to the cell list
+     *
+     * @return const molsys::CellList&
+     */
+    const molsys::CellList &Engine::getCellList() const
+    {
+        return _impl->cellList;
+    }
 
-/**
- * @brief get the shared pointer to the cell list
- *
- * @return const std::shared_ptr<CellList>&
- */
-const std::shared_ptr<CellList> &Engine::getCellList() const
-{
-    return _cellList;
-}
+    /**
+     * @brief get the reference to the cell list
+     *
+     * @return molsys::CellList&
+     */
+    molsys::CellList &Engine::getCellList() { return _impl->cellList; }
 
-/**
- * @brief get the shared pointer to the constraints
- *
- * @return const std::shared_ptr<Constraints>&
- */
-const std::shared_ptr<Constraints> &Engine::getConstraints() const
-{
-    return _constraints;
-}
+    /**
+     * @brief get the shared pointer to the constraints
+     *
+     * @return const std::shared_ptr<Constraints>&
+     */
+    const std::shared_ptr<constraints::Constraints> &Engine::getConstraints(
+    ) const
+    {
+        return _constraints;
+    }
+
+    /**
+     * @brief get the reference to the inter water model
+     *
+     * @return waterModel::InterWater&
+     */
+    waterModel::InterWater &Engine::_getInterWater() { return *_interWater; }
+
+    /**
+     * @brief get the reference to the inter water model (const)
+     *
+     * @return const waterModel::InterWater&
+     */
+    const waterModel::InterWater &Engine::_getInterWater() const
+    {
+        return *_interWater;
+    }
+
+    /**
+     * @brief get the reference to the intra water model
+     *
+     * @return waterModel::IntraWater&
+     */
+    waterModel::IntraWater &Engine::_getIntraWater() { return *_intraWater; }
+
+    /**
+     * @brief get the reference to the intra water model (const)
+     *
+     * @return const waterModel::IntraWater&
+     */
+    const waterModel::IntraWater &Engine::_getIntraWater() const
+    {
+        return *_intraWater;
+    }
+
+    /**
+     * @brief get the number of steps
+     *
+     * @return size_t
+     */
+    size_t Engine::_getNSteps() const { return _nSteps; }
+
+    /**
+     * @brief set the number of steps
+     *
+     * @param nSteps
+     */
+    void Engine::_setNSteps(size_t nSteps) { _nSteps = nSteps; }
+
+    /**
+     * @brief set the current step
+     *
+     * @param step
+     */
+    void Engine::_setStep(size_t step) { _step = step; }
+
+    /**
+     * @brief get the reference to the settings
+     *
+     * @return const Settings&
+     */
+    const Settings &Engine::getSettings() const { return _settings; }
+
+}   // namespace engine

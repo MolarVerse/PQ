@@ -33,18 +33,20 @@
 #include <string>
 #include <string_view>
 
+#include "constraintSettings.hpp"
 #include "engine.hpp"
+#include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "executablePath.hpp"
 #include "externalQMScripts.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "inputFileReader.hpp"
 #include "jsonOutput.hpp"
 #include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "qmSettings.hpp"
-#include "settings.hpp"
 #include "thermostatSettings.hpp"
 
 namespace
@@ -95,7 +97,7 @@ namespace
     {
         if (!std::filesystem::is_regular_file(fileName))
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "{} \"{}\" does not exist or is not a regular file",
                     description,
@@ -112,7 +114,7 @@ namespace
     {
         if (!std::filesystem::is_directory(directoryName))
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "{} \"{}\" does not exist or is not a directory",
                     description,
@@ -127,57 +129,66 @@ namespace
         return value.starts_with("https://") || value.starts_with("http://");
     }
 
-    std::filesystem::path runtimeAssetPath(
-        const std::filesystem::path &installedRelativePath,
-        const std::filesystem::path &buildPath
-    )
+    struct Files
+    {
+        std::filesystem::path installedRelativePath;
+        std::filesystem::path buildPath;
+    };
+
+    std::filesystem::path runtimeAssetPath(const Files &files)
     {
         const auto executable = utilities::executablePath();
         if (executable.empty())
-            return buildPath;
+            return files.buildPath;
 
         std::error_code error;
         const auto      buildExecutableDirectory =
             std::filesystem::weakly_canonical(PQ_BUILD_EXECUTABLE_DIR, error);
 
         if (!error && executable.parent_path() == buildExecutableDirectory)
-            return buildPath;
+            return files.buildPath;
 
-        return utilities::installedDataPath(installedRelativePath);
+        return utilities::installedDataPath(files.installedRelativePath);
     }
 
     std::filesystem::path bundledQMScriptPath(const std::string_view script)
     {
         return runtimeAssetPath(
-            std::filesystem::path("scripts") / script,
-            std::filesystem::path(PQ_BUILD_QM_SCRIPT_DIR) / script
+            Files{
+                .installedRelativePath =
+                    std::filesystem::path("scripts") / script,
+                .buildPath =
+                    std::filesystem::path(PQ_BUILD_QM_SCRIPT_DIR) / script
+            }
         );
     }
 
-    std::filesystem::path bundledSlakosPath(const settings::SlakosType type)
+    std::filesystem::path bundledSlakosPath(const SlakosType type)
     {
-        const auto name = settings::string(type);
+        const auto name = SlakosTypeMeta::toString(type);
 
         return runtimeAssetPath(
-            std::filesystem::path("slakos") / name / "skfiles",
-            std::filesystem::path(PQ_BUILD_SLAKOS_DIR) / name / "skfiles"
+            Files{
+                .installedRelativePath =
+                    std::filesystem::path("slakos") / name / "skfiles",
+                .buildPath = std::filesystem::path(PQ_BUILD_SLAKOS_DIR) / name /
+                             "skfiles"
+            }
         );
     }
 
     void validateExternalQMScriptSelection()
     {
-        using settings::QMSettings;
-        using settings::Settings;
-
-        if (!Settings::isQMActivated() || !QMSettings::isExternalQMRunner())
+        if (!settings::GeneralSettings::isQMActivated() ||
+            !settings::QMSettings::isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto script         = settings::QMSettings::getQMScript();
+        const auto fullPathScript = settings::QMSettings::getQMScriptFullPath();
 
         if (script.empty() && fullPathScript.empty())
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 "No qm_script provided. Please provide a qm_script in the "
                 "input file."
             );
@@ -185,20 +196,24 @@ namespace
 
         if (!script.empty() && !fullPathScript.empty())
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 "\"qm_script\" and \"qm_script_full_path\" are mutually "
                 "exclusive"
             );
         }
 
-        if (!script.empty() &&
-            !cli::isExternalQMScript(QMSettings::getQMMethod(), script))
+        if (!script.empty() && !cli::isExternalQMScript(
+                                   settings::QMSettings::getQMMethod(),
+                                   script
+                               ))
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "Bundled QM script \"{}\" is not available for {}",
                     script,
-                    cli::externalQMProgramName(QMSettings::getQMMethod())
+                    cli::externalQMProgramName(
+                        settings::QMSettings::getQMMethod()
+                    )
                 )
             );
         }
@@ -206,14 +221,12 @@ namespace
 
     void validateInstalledExternalQMScript()
     {
-        using settings::QMSettings;
-        using settings::Settings;
-
-        if (!Settings::isQMActivated() || !QMSettings::isExternalQMRunner())
+        if (!settings::GeneralSettings::isQMActivated() ||
+            !settings::QMSettings::isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto script         = settings::QMSettings::getQMScript();
+        const auto fullPathScript = settings::QMSettings::getQMScriptFullPath();
 
         // NOTE: these compile flags seem redundant with certain cmake
         // configurations, but are necessary for some build configurations (e.g.
@@ -225,7 +238,7 @@ namespace
 
         if (isStaticBuild && fullPathScript.empty())
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 "This PQ build requires \"qm_script_full_path\" for "
                 "external QM programs"
             );
@@ -239,7 +252,8 @@ namespace
 
         requireFile(bundledQMScriptPath(script), "Bundled QM script");
 
-        const auto scripts  = cli::externalQMScripts(QMSettings::getQMMethod());
+        const auto scripts =
+            cli::externalQMScripts(settings::QMSettings::getQMMethod());
         const auto selected = std::ranges::find_if(
             scripts,
             [&script](const auto &candidate)
@@ -255,101 +269,125 @@ namespace
         }
     }
 
-    void validateInputDependencies(engine::Engine &engine)
+    /**
+     * @brief Validates the input dependencies for the given settings.
+     *
+     * This function checks if the necessary input files are provided based on
+     * the active simulation settings, such as constraints, force fields, and
+     * QM settings.
+     *
+     * @param settings The simulation settings to validate.
+     */
+    void validateInputDependencies(const Settings &settings)
     {
-        using settings::FileSettings;
-        using settings::ForceFieldSettings;
-
-        if (engine.isConstraintsActivated() || ForceFieldSettings::isActive())
+        if (settings.constraintSettings.isActive() ||
+            settings.forceFieldSettings.isActive())
         {
-            if (!FileSettings::isTopologyFileNameSet())
-                throw customException::InputFileException(
+            if (!settings::FileSettings::isTopologyFileNameSet())
+                throw exc::InputFileException(
                     "Topology file needed for requested simulation setup"
                 );
         }
 
-        if (ForceFieldSettings::isActive() &&
-            !FileSettings::isParameterFileNameSet())
-            throw customException::InputFileException(
+        if (settings.forceFieldSettings.isActive() &&
+            !settings::FileSettings::isParameterFileNameSet())
+            throw exc::InputFileException(
                 "Parameter file needed for requested simulation setup"
             );
 
-        if (engine.getConstraints()->isMShakeActive() &&
-            FileSettings::getMShakeFileName().empty())
-            throw customException::InputFileException(
+        if (settings.constraintSettings.isMShakeActivated() &&
+            settings::FileSettings::getMShakeFileName().empty())
+            throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
             );
 
         validateExternalQMScriptSelection();
     }
 
-    void validateEffectiveFiles(engine::Engine &engine)
+    void validateEffectiveFiles(const Settings &settings)
     {
-        using settings::FileSettings;
-        using settings::ForceFieldSettings;
-        using settings::ManostatSettings;
-        using settings::ManostatType;
-        using settings::QMMethod;
-        using settings::QMSettings;
-        using settings::Settings;
-        using settings::SlakosType;
+        requireFile(settings::FileSettings::getStartFileName(), "Start file");
 
-        requireFile(FileSettings::getStartFileName(), "Start file");
-
-        if (FileSettings::isRingPolymerStartFileNameSet())
+        if (settings::FileSettings::isRingPolymerStartFileNameSet())
         {
             requireFile(
-                FileSettings::getRingPolymerStartFileName(),
+                settings::FileSettings::getRingPolymerStartFileName(),
                 "Ring-polymer start file"
             );
         }
 
-        if (FileSettings::isIntraNonBondedFileNameSet())
+        if (settings::FileSettings::isIntraNonBondedFileNameSet())
         {
             requireFile(
-                FileSettings::getIntraNonBondedFileName(),
+                settings::FileSettings::getIntraNonBondedFileName(),
                 "Intra non-bonded file"
             );
         }
 
-        if (Settings::isMMActivated() ||
-            ManostatSettings::getManostatType() != ManostatType::NONE)
+        if (settings::GeneralSettings::isMMActivated() ||
+            settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             requireFile(
-                FileSettings::getMolDescriptorFileName(),
+                settings::FileSettings::getMolDescriptorFileName(),
                 "Moldescriptor file"
             );
         }
 
-        if (Settings::isMMActivated() &&
-            !engine.isForceFieldNonCoulombicsActivated())
-            requireFile(FileSettings::getGuffDatFileName(), "Guff file");
+        if (settings::GeneralSettings::isMMActivated() &&
+            !settings.forceFieldSettings.isNonCoulombicActive())
+        {
+            requireFile(
+                settings::FileSettings::getGuffDatFileName(),
+                "Guff file"
+            );
+        }
 
-        if (engine.isConstraintsActivated() || ForceFieldSettings::isActive())
-            requireFile(FileSettings::getTopologyFileName(), "Topology file");
+        if (settings.constraintSettings.isActive() ||
+            settings.forceFieldSettings.isActive())
+        {
+            requireFile(
+                settings::FileSettings::getTopologyFileName(),
+                "Topology file"
+            );
+        }
 
-        if (ForceFieldSettings::isActive())
-            requireFile(FileSettings::getParameterFilename(), "Parameter file");
+        if (settings.forceFieldSettings.isActive())
+        {
+            requireFile(
+                settings::FileSettings::getParameterFilename(),
+                "Parameter file"
+            );
+        }
 
-        if (FileSettings::isMShakeFileNameSet())
-            requireFile(FileSettings::getMShakeFileName(), "M-SHAKE file");
+        if (settings::FileSettings::isMShakeFileNameSet())
+        {
+            requireFile(
+                settings::FileSettings::getMShakeFileName(),
+                "M-SHAKE file"
+            );
+        }
 
-        if (!Settings::isQMActivated())
+        if (!settings::GeneralSettings::isQMActivated())
             return;
 
-        const auto method = QMSettings::getQMMethod();
+        const auto method = settings::QMSettings::getQMMethod();
 
         if (method == QMMethod::DFTBPLUS)
-            requireFile(FileSettings::getDFTBFileName(), "DFTB setup file");
-
-        if (method == QMMethod::ASEDFTBPLUS &&
-            QMSettings::getSlakosType() != SlakosType::NONE)
         {
-            const auto slakosType = QMSettings::getSlakosType();
+            requireFile(
+                settings::FileSettings::getDFTBFileName(),
+                "DFTB setup file"
+            );
+        }
+
+        if (method == QMMethod::ASE_DFTBPLUS &&
+            settings::QMSettings::getSlakosType() != SlakosType::NONE)
+        {
+            const auto slakosType = settings::QMSettings::getSlakosType();
             if (slakosType == SlakosType::CUSTOM)
             {
                 requireDirectory(
-                    QMSettings::getSlakosPath(),
+                    settings::QMSettings::getSlakosPath(),
                     "Slater-Koster directory"
                 );
             }
@@ -363,12 +401,17 @@ namespace
         }
 
         if (method == QMMethod::FENNOL)
-            requireFile(QMSettings::getFennolModelPath(), "FeNNol model file");
+        {
+            requireFile(
+                settings::QMSettings::getFennolModelPath(),
+                "FeNNol model file"
+            );
+        }
 
         if (method == QMMethod::MACE &&
-            QMSettings::getMaceModel() == settings::MaceModel::CUSTOM)
+            settings::QMSettings::getMaceModel() == MaceModel::CUSTOM)
         {
-            const auto modelPath = QMSettings::getMaceModelPath();
+            const auto modelPath = settings::QMSettings::getMaceModelPath();
             if (!isRemoteResource(modelPath))
                 requireFile(modelPath, "MACE model file");
         }
@@ -378,20 +421,18 @@ namespace
 
     void validateCompiledCapabilities()
     {
-        if (PQ_BUILD_WITH_ASE || !settings::Settings::isQMActivated())
+        if (PQ_BUILD_WITH_ASE || !settings::GeneralSettings::isQMActivated())
             return;
 
         const auto method = settings::QMSettings::getQMMethod();
-        if (method == settings::QMMethod::ASEDFTBPLUS ||
-            method == settings::QMMethod::ASEXTB ||
-            method == settings::QMMethod::FENNOL ||
-            method == settings::QMMethod::MACE)
+        if (method == QMMethod::ASE_DFTBPLUS || method == QMMethod::ASE_XTB ||
+            method == QMMethod::FENNOL || method == QMMethod::MACE)
         {
-            throw customException::InputFileException(
+            throw exc::InputFileException(
                 std::format(
                     "QM method {} requires ASE support, but this PQ build "
                     "does not include it",
-                    settings::string(method)
+                    QMMethodMeta::toString(method)
                 )
             );
         }
@@ -402,10 +443,7 @@ namespace
         cli::ValidationResult        &result
     )
     {
-        using settings::ManostatSettings;
-        using settings::ManostatType;
-        using settings::ThermostatSettings;
-        using settings::ThermostatType;
+        using enum ThermostatType;
 
         if (reader.getKeywordSet("mace_model_size"))
         {
@@ -415,10 +453,10 @@ namespace
                  std::nullopt}
             );
         }
-        if (ThermostatSettings::getThermostatType() ==
+        if (settings::ThermostatSettings::getThermostatType() ==
                 ThermostatType::NOSE_HOOVER &&
             utilities::isZero(
-                ThermostatSettings::getNoseHooverCouplingFrequency()
+                settings::ThermostatSettings::getNoseHooverCouplingFrequency()
             ))
         {
             result.diagnostics.push_back(
@@ -429,23 +467,13 @@ namespace
             );
         }
 
-        if (ThermostatSettings::getThermostatType() ==
+        if (settings::ThermostatSettings::getThermostatType() ==
                 ThermostatType::LANGEVIN &&
-            utilities::isZero(ThermostatSettings::getFriction()))
+            utilities::isZero(settings::ThermostatSettings::getFriction()))
         {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
                  "A zero Langevin friction disables thermostat coupling",
-                 std::nullopt}
-            );
-        }
-
-        if (ManostatSettings::getManostatType() != ManostatType::NONE &&
-            utilities::isZero(ManostatSettings::getCompressibility()))
-        {
-            result.diagnostics.push_back(
-                {cli::ValidationSeverity::WARNING,
-                 "A zero compressibility disables cell response",
                  std::nullopt}
             );
         }
@@ -480,22 +508,23 @@ cli::ValidationResult cli::validateInputFile(
 
     try
     {
-        input::readJobType(std::string(inputFile), engine);
+        Settings   settings;
+        const auto _ = input::readJobType(std::string(inputFile));
 
         input::InputFileReader reader(
             inputFile,
-            *engine,
+            settings,
             scope == ValidationScope::INSTALLED,
             false
         );
         reader.read();
         reader.postProcess();
-        reader.validateInputConfiguration();
-        validateInputDependencies(*engine);
+        reader.validateInputConfiguration(settings);
+        validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)
         {
             validateCompiledCapabilities();
-            validateEffectiveFiles(*engine);
+            validateEffectiveFiles(settings);
         }
 
         auto result = ValidationResult{
@@ -507,7 +536,7 @@ cli::ValidationResult cli::validateInputFile(
         appendWarnings(reader, result);
         return result;
     }
-    catch (const customException::CustomException &exception)
+    catch (const exc::PQException &exception)
     {
         return invalidResult(
             inputFile,

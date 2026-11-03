@@ -20,14 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXTERNAL_QM_RUNNER_HPP_
-
-#define _EXTERNAL_QM_RUNNER_HPP_
+#ifndef QM__EXTERNAL__EXTERNAL_QM_RUNNER_HPP
+#define QM__EXTERNAL__EXTERNAL_QM_RUNNER_HPP
 
 #include <string>
 #include <string_view>
 
 #include "qmRunner.hpp"
+
+class ExternalQMRunnerTest;   // forward declaration
 
 namespace physicalData
 {
@@ -50,28 +51,19 @@ namespace QM
      */
     class ExternalQMRunner : public QMRunner
     {
-       protected:
+       private:
         std::string            _scriptPath  = SCRIPT_PATH_;
         constexpr static auto *_singularity = SINGULARITY_;
         constexpr static auto *_staticBuild = STATIC_BUILD_;
-
-        [[nodiscard]] std::string resolveScriptPath(
-            std::string_view script
-        ) const;
-
-        virtual void executeCommand(
-            std::string_view command,
-            std::string_view program
-        ) const;
 
        public:
         ExternalQMRunner()           = default;
         ~ExternalQMRunner() override = default;
 
         void run(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
-            molsys::Periodicity         periodicity
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            molsys::Periodicity         per
         ) override;
 
         virtual void execute(molsys::SimulationBox &) = 0;
@@ -91,22 +83,34 @@ namespace QM
         {
         }
 
-        void readForceFile(
-            molsys::SimulationBox &,
-            physicalData::PhysicalData &
-        );
-        void readChargeFile(molsys::SimulationBox &);
-
         /*******************************
          * standard getter and setters *
          *******************************/
 
         [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] std::string        getSingularity() const;
-        [[nodiscard]] std::string        getStaticBuild() const;
+        [[nodiscard]] static std::string getSingularity();
+        [[nodiscard]] static std::string getStaticBuild();
 
         void setScriptPath(const std::string_view &scriptPath);
+
+       protected:
+        [[nodiscard]]
+        std::string _resolveScriptPath(std::string_view script) const;
+
+        virtual void _executeCommand(
+            std::string_view command,
+            std::string_view program
+        ) const;
+
+       private:
+        static void _readForceFile(
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
+        );
+        static void _readChargeFile(molsys::SimulationBox &simulationBox);
+
+        friend class ::ExternalQMRunnerTest;   // for testing private methods
     };
 }   // namespace QM
 
-#endif   // _EXTERNAL_QM_RUNNER_HPP_
+#endif   // QM__EXTERNAL__EXTERNAL_QM_RUNNER_HPP

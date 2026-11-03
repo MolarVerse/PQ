@@ -20,107 +20,76 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONVERGENCE_SETTINGS_HPP_
+#ifndef SETTINGS__CONVERGENCE_SETTINGS_HPP
+#define SETTINGS__CONVERGENCE_SETTINGS_HPP
 
-#define _CONVERGENCE_SETTINGS_HPP_
+#include "enums/convergence.hpp"
+#include "setting.hpp"
 
-#include <cstddef>       // for size_t
-#include <optional>      // for optional
-#include <string>        // for string
-#include <string_view>   // for string_view
-
-#include "defaults.hpp"   // for _OPTIMIZER_DEFAULT_
-
-namespace settings
+/**
+ * @class ConvSettings
+ *
+ * @brief stores all information about the optimizer
+ *
+ */
+class ConvSettings
 {
-    /**
-     * @brief enum ConvStrategy
-     *
-     */
-    enum class ConvStrategy : size_t
-    {
-        RIGOROUS,
-        LOOSE,
-        ABSOLUTE,
-        RELATIVE
-    };
+   private:
+    Setting<double> _energyConv;
+    Setting<double> _relEnergyConv;
+    Setting<double> _absEnergyConv;
 
-    std::string string(const ConvStrategy method);
+    Setting<double> _forceConv;
+    Setting<double> _maxForceConv;
+    Setting<double> _rmsForceConv;
 
-    /**
-     * @class ConvSettings
-     *
-     * @brief stores all information about the optimizer
-     *
-     */
-    class ConvSettings
-    {
-       private:
-        static inline std::optional<double> _energyConv;
-        static inline std::optional<double> _relEnergyConv;
-        static inline std::optional<double> _absEnergyConv;
+    Setting<bool> _useEnergyConv;
+    Setting<bool> _useForceConv;
+    Setting<bool> _useMaxForceConv;
+    Setting<bool> _useRMSForceConv;
 
-        static inline std::optional<double> _forceConv;
-        static inline std::optional<double> _maxForceConv;
-        static inline std::optional<double> _rmsForceConv;
+    Setting<ConvStrategy> _energyConvStrategy;
 
-        static inline bool _useEnergyConv   = true;
-        static inline bool _useForceConv    = true;
-        static inline bool _useMaxForceConv = true;
-        static inline bool _useRMSForceConv = true;
+   public:
+    ConvSettings();
 
-        static inline std::optional<ConvStrategy> _energyConvStrategy;
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-        // clang-format off
-        static inline std::string _defaultEnergyConvStrategy = defaults::EN_CONV_STRATEGY_DEFAULT;
-        // clang-format on
+    void setEnergyConv(double);
+    void setRelEnergyConv(double);
+    void setAbsEnergyConv(double);
 
-       public:
-        [[nodiscard]] static ConvStrategy getConvStrategy(
-            const std::string_view &strategy
-        );
+    void setForceConv(double);
+    void setMaxForceConv(double);
+    void setRMSForceConv(double);
 
-        /***************************
-         * standard setter methods *
-         ***************************/
+    void setUseEnergyConv(bool);
+    void setUseForceConv(bool);
+    void setUseMaxForceConv(bool);
+    void setUseRMSForceConv(bool);
 
-        static void setEnergyConv(const double);
-        static void setRelEnergyConv(const double);
-        static void setAbsEnergyConv(const double);
+    void setEnergyConvStrategy(ConvStrategy);
 
-        static void setForceConv(const double);
-        static void setMaxForceConv(const double);
-        static void setRMSForceConv(const double);
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-        static void setUseEnergyConv(const bool);
-        static void setUseForceConv(const bool);
-        static void setUseMaxForceConv(const bool);
-        static void setUseRMSForceConv(const bool);
+    [[nodiscard]] std::optional<double> getEnergyConv() const;
+    [[nodiscard]] std::optional<double> getRelEnergyConv() const;
+    [[nodiscard]] std::optional<double> getAbsEnergyConv() const;
 
-        static void setEnergyConvStrategy(const ConvStrategy);
-        static void setEnergyConvStrategy(const std::string_view &);
+    [[nodiscard]] std::optional<double> getForceConv() const;
+    [[nodiscard]] std::optional<double> getMaxForceConv() const;
+    [[nodiscard]] std::optional<double> getRMSForceConv() const;
 
-        /***************************
-         * standard getter methods *
-         ***************************/
+    [[nodiscard]] bool getUseEnergyConv() const;
+    [[nodiscard]] bool getUseForceConv() const;
+    [[nodiscard]] bool getUseMaxForceConv() const;
+    [[nodiscard]] bool getUseRMSForceConv() const;
 
-        [[nodiscard]] static std::optional<double> getEnergyConv();
-        [[nodiscard]] static std::optional<double> getRelEnergyConv();
-        [[nodiscard]] static std::optional<double> getAbsEnergyConv();
+    [[nodiscard]] ConvStrategy getEnConvStrategy() const;
+};
 
-        [[nodiscard]] static std::optional<double> getForceConv();
-        [[nodiscard]] static std::optional<double> getMaxForceConv();
-        [[nodiscard]] static std::optional<double> getRMSForceConv();
-
-        [[nodiscard]] static bool getUseEnergyConv();
-        [[nodiscard]] static bool getUseForceConv();
-        [[nodiscard]] static bool getUseMaxForceConv();
-        [[nodiscard]] static bool getUseRMSForceConv();
-
-        [[nodiscard]] static std::optional<ConvStrategy> getEnConvStrategy();
-        [[nodiscard]] static ConvStrategy getDefaultEnergyConvStrategy();
-    };
-
-}   // namespace settings
-
-#endif   // _CONVERGENCE_SETTINGS_HPP_
+#endif   // SETTINGS__CONVERGENCE_SETTINGS_HPP

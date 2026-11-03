@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_SECTION_HPP_
+#ifndef TIMINGS__TIMINGS_SECTION_HPP
+#define TIMINGS__TIMINGS_SECTION_HPP
 
-#define _TIMINGS_SECTION_HPP_
-
-#include <cstddef>   // for size_t
-#include <memory>    // for unique_ptr
-#include <string>    // for string, allocator, basic_string
+#include <cstddef>
+#include <memory>
+#include <string>
 
 namespace timings
 {
@@ -51,7 +50,7 @@ namespace timings
         std::unique_ptr<Timings> _time;
 
        public:
-        explicit TimingsSection(const std::string_view name);
+        explicit TimingsSection(std::string_view name);
         ~TimingsSection();
 
         TimingsSection(const TimingsSection&);
@@ -71,4 +70,4 @@ namespace timings
 
 }   // namespace timings
 
-#endif   // _TIMINGS_SECTION_HPP_
+#endif   // TIMINGS__TIMINGS_SECTION_HPP

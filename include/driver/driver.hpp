@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DRIVER_HPP_
-#define _DRIVER_HPP_
+#ifndef DRIVER__DRIVER_HPP
+#define DRIVER__DRIVER_HPP
 
 #include <string>
 
@@ -34,8 +34,8 @@ namespace driver
     class Driver
     {
        public:
-        void run(const std::string &inputFileName);
+        static void run(const std::string &inputFileName);
     };
 }   // namespace driver
 
-#endif   // _DRIVER_HPP_
+#endif   // DRIVER__DRIVER_HPP

@@ -20,30 +20,29 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <vector>   // for allocator, vector
+#include <vector>
 
-#include "gtest/gtest.h"   // for Message, TestPartResult
-#include "stlVector.hpp"   // for max, mean, sum
+#include "stlVector.hpp"
 
 TEST(TestStlVector, sum)
 {
-    const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
+    const std::vector<double> vec = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(stl::sum(v1), 10.0);
+    EXPECT_EQ(stl::sum(vec), 10.0);
 }
 
 TEST(TestStlVector, mean)
 {
-    const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
+    const std::vector<double> vec = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(stl::mean(v1), 2.5);
+    EXPECT_EQ(stl::mean(vec), 2.5);
 }
 
 TEST(TestStlVector, max)
 {
-    const std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0};
+    const std::vector<double> vec = {1.0, 2.0, 3.0, 4.0};
 
-    EXPECT_EQ(stl::max(v1), 4.0);
+    EXPECT_EQ(stl::max(vec), 4.0);
 }

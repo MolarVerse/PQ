@@ -20,19 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS, TEST_F, TestPartResult
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "cellListInputParser.hpp"   // for CellListInputParser
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, AssertionResult
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
-
-using namespace input;
+#include "cellListInputParser.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "cell-list" command
@@ -42,22 +39,29 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    CellListInputParser      parser(_engine->getCellList());
+    input::CellListInputParser parser;
+    const auto                 funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("cell_list"));
+    const auto& parseFunc = funcMap.at("cell_list");
+
     std::vector<std::string> lineElements = {"cell-list", "=", "off"};
-    parser.parseCellListActivated(lineElements, 0);
-    EXPECT_FALSE(settings::Settings::isCellListActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_FALSE(settings::GeneralSettings::isCellListActivated());
+
+    _clearParser(parser);
 
     lineElements = {"cell-list", "=", "on"};
-    parser.parseCellListActivated(lineElements, 0);
-    EXPECT_TRUE(settings::Settings::isCellListActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_TRUE(settings::GeneralSettings::isCellListActivated());
+
+    _clearParser(parser);
 
     lineElements = {"cell-list", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseCellListActivated(lineElements, 0),
-        customException::InputFileException,
-        "Invalid cell-list keyword \"notValid\" at line 0 "
-        "in input file\n"
-        "Possible keywords are \"on\" and \"off\""
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"cell-list\" at line 0 "
+        "in input file. Allowed values: on|off|true|false|yes|no"
     );
 }
 
@@ -69,18 +73,23 @@ TEST_F(TestInputFileReader, parseCellListActivated)
  */
 TEST_F(TestInputFileReader, numberOfCells)
 {
-    CellListInputParser      parser(_engine->getCellList());
+    input::CellListInputParser parser;
+    const auto                 funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("cell_number"));
+    const auto& parseFunc = funcMap.at("cell_number");
+
     std::vector<std::string> lineElements = {"cell-number", "=", "3"};
-    parser.parseNumberOfCells(lineElements, 0);
-    EXPECT_EQ(
-        _engine->getCellList()->getNumberOfCells(),
-        linearAlgebra::Vec3Dul(3, 3, 3)
-    );
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getNumberOfCells(), 3);
+
+    _clearParser(parser);
 
     lineElements = {"cell-number", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseNumberOfCells(lineElements, 0),
-        customException::InputFileException,
-        "Number of cells must be positive - number of cells = 0"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0\" for key \"cell-number\" at line 0 in input file: "
+        "failed validation with message Value must be greater than or equal to "
+        "1"
     );
 }

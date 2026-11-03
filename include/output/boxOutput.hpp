@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOX_FILE_OUTPUT_HPP_
+#ifndef OUTPUT__BOX_OUTPUT_HPP
+#define OUTPUT__BOX_OUTPUT_HPP
 
-#define _BOX_FILE_OUTPUT_HPP_
-
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 #include "output.hpp"
 
@@ -33,12 +32,13 @@ namespace molsys
     class Box;   // forward declaration
 }   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
-     * @class BoxFileOutput inherits from Output
+     * @brief BoxFileOutput inherits from Output
      *
-     * @brief Output file for lattice parameter data a, b, c, alpha, beta, gamma
+     * @details Output file for lattice parameter data a, b, c, alpha, beta,
+     * gamma
      *
      */
     class BoxFileOutput : public Output
@@ -46,9 +46,9 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t, const molsys::Box &);
+        void write(size_t, const molsys::Box &);
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _BOX_FILE_OUTPUT_HPP_
+#endif   // OUTPUT__BOX_OUTPUT_HPP

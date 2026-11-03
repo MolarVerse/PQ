@@ -22,49 +22,37 @@
 
 #include "manostatSettings.hpp"
 
-#include "stringUtilities.hpp"
-
-using namespace settings;
+#include "defaults.hpp"
+#include "referenceSettings.hpp"
 
 /**
- * @brief return string of manostatType
+ * @brief Construct a new Manostat Settings object with default values
  *
- * @param manostatType
  */
-std::string settings::string(const ManostatType &manostatType)
+ManostatSettings::ManostatSettings()
+    : _manostatType(ManostatType::NONE),
+      _isotropy(Isotropy::ISOTROPIC),
+      _tau(defaults::BERENDSEN_MANOSTAT_RELAX_TIME),
+      _compressibility(defaults::COMPRESSIBILITY_WATER_DEFAULT)
 {
-    switch (manostatType)
-    {
-        case ManostatType::BERENDSEN: return "berendsen";
-
-        case ManostatType::STOCHASTIC_RESCALING: return "stochastic_rescaling";
-
-        case ManostatType::NONE: break;
-    }
-
-    return "none";
 }
 
 /**
- * @brief return string of isotropy
+ * @brief finalizes the settings by setting the fixed axis if it was not
+ * explicitly set
  *
- * @param isotropy
  */
-std::string settings::string(const Isotropy &isotropy)
+void ManostatSettings::finalize(ReferenceSettings& referenceSettings)
 {
-    switch (isotropy)
+    if (!_fixedAxis.isSet())
     {
-        using enum Isotropy;
-
-        case ISOTROPIC: return "isotropic";
-        case SEMI_ISOTROPIC: return "semi_isotropic";
-        case ANISOTROPIC: return "anisotropic";
-        case FULL_ANISOTROPIC: return "full_anisotropic";
-
-        case NONE: break;
+        if (_manostatType.get() == ManostatType::NONE)
+            _fixedAxis.set(FixedAxis::ALL);
+        else
+            _fixedAxis.set(FixedAxis::NONE);
     }
 
-    return "isotropic";
+    _addReferenceFile(referenceSettings);
 }
 
 /***************************
@@ -78,30 +66,9 @@ std::string settings::string(const Isotropy &isotropy)
  *
  * @param manostatType
  */
-void ManostatSettings::setManostatType(const std::string_view &manostatType)
+void ManostatSettings::setManostatType(ManostatType manostatType)
 {
-    using enum ManostatType;
-    const auto manostatTypeToLower =
-        utilities::toLowerAndReplaceDashesCopy(manostatType);
-
-    if (manostatTypeToLower == "berendsen")
-        _manostatType = BERENDSEN;
-
-    else if (manostatTypeToLower == "stochastic_rescaling")
-        _manostatType = STOCHASTIC_RESCALING;
-
-    else
-        _manostatType = NONE;
-}
-
-/**
- * @brief sets the manostatType to enum in settings
- *
- * @param manostatType
- */
-void ManostatSettings::setManostatType(const ManostatType &manostatType)
-{
-    _manostatType = manostatType;
+    _manostatType.set(manostatType);
 }
 
 /**
@@ -109,85 +76,41 @@ void ManostatSettings::setManostatType(const ManostatType &manostatType)
  *
  * @param isotropy
  */
-void ManostatSettings::setIsotropy(const std::string_view &isotropy)
+void ManostatSettings::setIsotropy(Isotropy isotropy)
 {
-    using enum Isotropy;
-    const auto isotropyToLower =
-        utilities::toLowerAndReplaceDashesCopy(isotropy);
-
-    _isotropy = ISOTROPIC;
-
-    if (isotropyToLower == "isotropic")
-        _isotropy = ISOTROPIC;
-
-    else if (isotropyToLower == "semi_isotropic")
-        _isotropy = SEMI_ISOTROPIC;
-
-    else if (isotropyToLower == "anisotropic")
-        _isotropy = ANISOTROPIC;
-
-    else if (isotropyToLower == "full_anisotropic")
-        _isotropy = FULL_ANISOTROPIC;
+    _isotropy.set(isotropy);
 }
 
-/**
- * @brief sets the isotropy to enum in settings
- *
- * @param isotropy
- */
-void ManostatSettings::setIsotropy(const Isotropy &isotropy)
+void ManostatSettings::setFixedAxis(FixedAxis fixedAxis)
 {
-    _isotropy = isotropy;
+    _fixedAxis.set(fixedAxis);
 }
 
 /**
  * @brief sets the targetPressure to double in settings
  *
- * @param target
+ * @param targetPressure
  */
-void ManostatSettings::setTargetPressure(const double targetPressure)
+void ManostatSettings::setTargetPressure(double targetPressure)
 {
-    _targetPressure = targetPressure;
+    _targetPressure.set(targetPressure);
 }
 
 /**
- * @brief sets the tauManostat to double in settings
+ * @brief sets the tau of the manostat to Time in settings
  *
- * @param tauManostat
+ * @param tau
  */
-void ManostatSettings::setTauManostat(const double tauManostat)
-{
-    _tauManostat = tauManostat;
-}
+void ManostatSettings::setTau(const Time& tau) { _tau.set(tau); }
 
 /**
  * @brief sets the compressibility to double in settings
  *
  * @param compressibility
  */
-void ManostatSettings::setCompressibility(const double compressibility)
+void ManostatSettings::setCompressibility(double compressibility)
 {
-    _compressibility = compressibility;
-}
-
-/**
- * @brief sets the 2D isotropic axes to vector<size_t> in settings
- *
- * @param indices
- */
-void ManostatSettings::set2DIsotropicAxes(const std::vector<size_t> &indices)
-{
-    _2DIsotropicAxes = indices;
-}
-
-/**
- * @brief sets the 2D anisotropic axis to size_t in settings
- *
- * @param index
- */
-void ManostatSettings::set2DAnisotropicAxis(const size_t index)
-{
-    _2DAnisotropicAxis = index;
+    _compressibility.set(compressibility);
 }
 
 /***************************
@@ -201,11 +124,12 @@ void ManostatSettings::set2DAnisotropicAxis(const size_t index)
  *
  * @return bool
  */
-bool ManostatSettings::isBerendsenBased()
+bool ManostatSettings::isBerendsenBased() const
 {
     using enum ManostatType;
 
-    return _manostatType == BERENDSEN || _manostatType == STOCHASTIC_RESCALING;
+    return _manostatType.get() == BERENDSEN ||
+           _manostatType.get() == STOCHASTIC_RESCALING;
 }
 
 /**
@@ -213,49 +137,80 @@ bool ManostatSettings::isBerendsenBased()
  *
  * @return ManostatType
  */
-ManostatType ManostatSettings::getManostatType() { return _manostatType; }
+ManostatType ManostatSettings::getManostatType() const
+{
+    return _manostatType.get();
+}
 
 /**
  * @brief get the isotropy
  *
  * @return Isotropy
  */
-Isotropy ManostatSettings::getIsotropy() { return _isotropy; }
+Isotropy ManostatSettings::getIsotropy() const { return _isotropy.get(); }
+
+/**
+ * @brief get the FixedAxis
+ *
+ * @return FixedAxis
+ */
+FixedAxis ManostatSettings::getFixedAxis() const { return _fixedAxis.get(); }
+
+/**
+ * @brief get whether FixedAxis was explicitly set
+ *
+ * @return bool
+ */
+bool ManostatSettings::isFixedAxisSet() const { return _fixedAxis.isSet(); }
 
 /**
  * @brief get the target pressure
  *
  * @return double
  */
-double ManostatSettings::getTargetPressure() { return _targetPressure; }
+double ManostatSettings::getTargetPressure() const
+{
+    return _targetPressure.get();
+}
 
 /**
- * @brief get the tauManostat
+ * @brief get the tau of the manostat
  *
- * @return double
+ * @return Time
  */
-double ManostatSettings::getTauManostat() { return _tauManostat; }
+const Time& ManostatSettings::getTau() const { return _tau.get(); }
 
 /**
  * @brief get the compressibility
  *
  * @return double
  */
-double ManostatSettings::getCompressibility() { return _compressibility; }
-
-/**
- * @brief get the 2D isotropic axes
- *
- * @return std::vector<size_t>
- */
-std::vector<size_t> ManostatSettings::get2DIsotropicAxes()
+double ManostatSettings::getCompressibility() const
 {
-    return _2DIsotropicAxes;
+    return _compressibility.get();
 }
 
 /**
- * @brief get the 2D anisotropic axis
+ * @brief adds the appropriate reference file for the current manostat type
+ * to the given reference settings
  *
- * @return size_t
+ * @param referenceSettings
  */
-size_t ManostatSettings::get2DAnisotropicAxis() { return _2DAnisotropicAxis; }
+void ManostatSettings::_addReferenceFile(ReferenceSettings& referenceSettings)
+{
+    if (!_manostatType.isSet())
+        return;
+
+    switch (_manostatType.get())
+    {
+        case ManostatType::BERENDSEN:
+            referenceSettings.addReferenceFile(ReferenceFiles::BERENDSEN_FILE);
+            break;
+        case ManostatType::STOCHASTIC_RESCALING:
+            referenceSettings.addReferenceFile(
+                ReferenceFiles::STOCHASTIC_RESCALING_FILE
+            );
+            break;
+        case ManostatType::NONE: break;
+    }
+}

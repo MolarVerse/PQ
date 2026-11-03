@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _JSON_OUTPUT_HPP_
-
-#define _JSON_OUTPUT_HPP_
+#ifndef APPS__JSON_OUTPUT_HPP
+#define APPS__JSON_OUTPUT_HPP
 
 #include <concepts>
 #include <cstddef>
@@ -41,13 +40,6 @@ namespace cli
         std::ostream     &_output;
         std::size_t       _depth = 0;
         std::vector<bool> _firstValues;
-
-        void indent() const;
-        void beforeValue();
-        void beforeMember(std::string_view key);
-        void beginContainer(char opening);
-        void beginContainer(std::string_view key, char opening);
-        void endContainer(char closing);
 
        public:
         explicit JsonWriter(std::ostream &output);
@@ -76,7 +68,7 @@ namespace cli
         requires(!std::same_as<std::remove_cv_t<T>, bool>)
         void value(const T value)
         {
-            beforeValue();
+            _beforeValue();
             _output << value;
         }
 
@@ -84,10 +76,18 @@ namespace cli
         requires(!std::same_as<std::remove_cv_t<T>, bool>)
         void value(const std::string_view key, const T value)
         {
-            beforeMember(key);
+            _beforeMember(key);
             _output << value;
         }
+
+       private:
+        void _indent() const;
+        void _beforeValue();
+        void _beforeMember(std::string_view key);
+        void _beginContainer(char opening);
+        void _beginContainer(std::string_view key, char opening);
+        void _endContainer(char closing);
     };
 }   // namespace cli
 
-#endif   // _JSON_OUTPUT_HPP_
+#endif   // APPS__JSON_OUTPUT_HPP

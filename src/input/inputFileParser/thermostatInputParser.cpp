@@ -22,423 +22,320 @@
 
 #include "thermostatInputParser.hpp"
 
-#include <cmath>         // for sqrt
-#include <cstddef>       // for size_t, std
-#include <format>        // for format
-#include <limits>        // for numeric_limits
-#include <string_view>   // for string_view
+#include <cmath>
+#include <cstddef>
+#include <limits>
+#include <optional>
 
 #include "constants.hpp"
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
-#include "references.hpp"           // for References
-#include "referencesOutput.hpp"     // for ReferencesOutput
-#include "stringUtilities.hpp"      // for toLowerCopy
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
+#include "referenceSettings.hpp"
+#include "thermostatSettings.hpp"
 
-using namespace input;
-using namespace customException;
-using namespace settings;
-using namespace utilities;
-using namespace references;
-using namespace constants;
-
-/**
- * @brief Construct a new Input File Parser Thermostat:: Input File Parser
- * Thermostat object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) thermostat <string> 2) temp
- * <double> 3) t_relaxation <double> 4) friction <double> 5) nh-chain_length
- * <size_t> 6) coupling_frequency <double>
- *
- * @param engine
- */
-ThermostatInputParser::ThermostatInputParser()
+namespace input
 {
-    addKeyword(
-        std::string("thermostat"),
-        bindMember(&ThermostatInputParser::parseThermostat, this),
-        false
-    );
-    addKeyword(
-        std::string("temp"),
-        bindMember(&ThermostatInputParser::parseTemperature, this),
-        false
-    );
-    addKeyword(
-        std::string("start_temp"),
-        bindMember(&ThermostatInputParser::parseStartTemperature, this),
-        false
-    );
-    addKeyword(
-        std::string("end_temp"),
-        bindMember(&ThermostatInputParser::parseEndTemperature, this),
-        false
-    );
-    addKeyword(
-        std::string("temp_ramp_steps"),
-        bindMember(&ThermostatInputParser::parseTemperatureRampSteps, this),
-        false
-    );
-    addKeyword(
-        std::string("temp_ramp_frequency"),
-        bindMember(&ThermostatInputParser::parseTemperatureRampFrequency, this),
-        false
-    );
-    addKeyword(
-        std::string("t_relaxation"),
-        bindMember(&ThermostatInputParser::parseThermostatRelaxationTime, this),
-        false
-    );
-    addKeyword(
-        std::string("friction"),
-        bindMember(&ThermostatInputParser::parseThermostatFriction, this),
-        false
-    );
-    addKeyword(
-        std::string("nh-chain_length"),
-        bindMember(&ThermostatInputParser::parseThermostatChainLength, this),
-        false
-    );
-    addKeyword(
-        std::string("coupling_frequency"),
-        bindMember(
-            &ThermostatInputParser::parseThermostatCouplingFrequency,
-            this
-        ),
-        false
-    );
-}
 
-/**
- * @brief Parse the thermostat used in the simulation
- *
- * @details Possible options are:
- * 1) none               - no thermostat (default)
- * 2) berendsen          - berendsen thermostat
- * 3) velocity_rescaling - velocity rescaling thermostat
- * 4) langevin           - langevin thermostat
- *
- * @param lineElements
- *
- * @throws InputFileException if thermostat is not "none" or
- * "berendsen"
- */
-void ThermostatInputParser::parseThermostat(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto thermostat = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    using enum ThermostatType;
-
-    if (thermostat == "none")
-        ThermostatSettings::setThermostatType(NONE);
-
-    else if (thermostat == "berendsen")
+    /**
+     * @brief Construct a new Input File Parser Thermostat:: Input File Parser
+     * Thermostat object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) thermostat "<string>" 2)
+     * temp
+     * "<double>" 3) t_relaxation "<double>" 4) friction "<double>" 5)
+     * nh-chain_length "<size_t>" 6) coupling_frequency "<double>"
+     */
+    ThermostatInputParser::ThermostatInputParser(
+        ReferenceSettings &referenceSettings
+    )
+        : _referenceSettings(referenceSettings)
     {
-        ThermostatSettings::setThermostatType(BERENDSEN);
-        ReferencesOutput::addReferenceFile(BERENDSEN_FILE);
+        addThermostatKey();
+        addTemperatureKey();
+        addStartTemperatureKey();
+        addEndTemperatureKey();
+        addTemperatureRampStepsKey();
+        addTemperatureRampFrequencyKey();
+        addThermostatRelaxationTimeKey();
+        addThermostatFrictionKey();
+        addThermostatChainLengthKey();
+        addThermostatCouplingFrequencyKey();
     }
 
-    else if (thermostat == "velocity_rescaling" || thermostat == "rescale")
+    void ThermostatInputParser::addThermostatKey()
     {
-        ThermostatSettings::setThermostatType(VELOCITY_RESCALING);
-        ReferencesOutput::addReferenceFile(VELOCITY_RESCALING_FILE);
+        const auto metaData = KeyMetadata{
+            .name  = "thermostat",
+            .title = "Thermostat Type",
+            .description =
+                "Specifies the type of thermostat used in the simulation"
+        };
+
+        const auto setValue = [this](ThermostatType value)
+        {
+            settings::ThermostatSettings::setThermostatType(value);
+            switch (value)
+            {
+                case ThermostatType::BERENDSEN:
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::BERENDSEN_FILE
+                    );
+                    break;
+                case ThermostatType::VELOCITY_RESCALING:
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::VELOCITY_RESCALING_FILE
+                    );
+                    break;
+                case ThermostatType::LANGEVIN:
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::LANGEVIN_FILE
+                    );
+                    break;
+                case ThermostatType::NOSE_HOOVER:
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::NOSE_HOOVER_CHAIN_FILE
+                    );
+                    break;
+                case ThermostatType::NONE: break;
+            }
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<ThermostatType>{.metadata = metaData, .onSet = setValue}
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    else if (thermostat == "langevin")
+    void ThermostatInputParser::addTemperatureKey()
     {
-        ThermostatSettings::setThermostatType(LANGEVIN);
-        ReferencesOutput::addReferenceFile(LANGEVIN_FILE);
+        const auto metaData = KeyMetadata{
+            .name        = "temp",
+            .title       = "Target Temperature",
+            .description = "Specifies the target temperature for the simulation"
+        };
+
+        const auto setValue = [&](double value)
+        { settings::ThermostatSettings::setTargetTemperature(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    else if (thermostat == "nh_chain")
+    void ThermostatInputParser::addStartTemperatureKey()
     {
-        ThermostatSettings::setThermostatType(NOSE_HOOVER);
-        ReferencesOutput::addReferenceFile(NOSE_HOOVER_CHAIN_FILE);
+        const auto metaData = KeyMetadata{
+            .name        = "start_temp",
+            .title       = "Start Temperature",
+            .description = "Specifies the start temperature for the simulation"
+        };
+
+        const auto setValue = [&](double value)
+        { settings::ThermostatSettings::setStartTemperature(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    else
+    void ThermostatInputParser::addEndTemperatureKey()
     {
-        throw InputFileException(format(
-            "Invalid thermostat \"{}\" at line {} in input file.\n"
-            "Possible options are: none, berendsen, velocity_rescaling, "
-            "langevin, nh-chain",
-            lineElements[2],
-            lineNumber
-        ));
-    }
-}
+        const auto metaData = KeyMetadata{
+            .name        = "end_temp",
+            .title       = "End Temperature",
+            .description = "Specifies the end temperature for the simulation"
+        };
 
-/**
- * @brief Parse the temperature used in the simulation
- *
- * @details Temperature is needs to be set if thermostat is not "none"
- *
- * @param lineElements
- *
- * @throws InputFileException if temperature is negative
- */
-void ThermostatInputParser::parseTemperature(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
+        const auto setValue = [&](double value)
+        { settings::ThermostatSettings::setEndTemperature(value); };
 
-    const auto temperature = stringToFiniteDouble(lineElements[2]);
-
-    if (temperature < 0.0)
-        throw InputFileException("Temperature must be finite and non-negative");
-
-    ThermostatSettings::setTargetTemperature(temperature);
-}
-
-/**
- * @brief Parse the start temperature used in the simulation
- *
- * @details Start temperature is needs to be set if thermostat is not "none"
- *
- * @param lineElements
- *
- * @throws InputFileException if start temperature is negative
- */
-void ThermostatInputParser::parseStartTemperature(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto startTemperature = stringToFiniteDouble(lineElements[2]);
-
-    if (startTemperature < 0.0)
-        throw InputFileException(
-            "Start temperature must be finite and non-negative"
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
+            }
         );
 
-    ThermostatSettings::setStartTemperature(startTemperature);
-}
-
-/**
- * @brief Parse the end temperature used in the simulation
- *
- * @details End temperature is needs to be set if thermostat is not "none"
- *
- * @param lineElements
- *
- * @throws InputFileException if end temperature is negative
- */
-void ThermostatInputParser::parseEndTemperature(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto endTemperature = stringToFiniteDouble(lineElements[2]);
-
-    if (endTemperature < 0.0)
-        throw InputFileException(
-            "End temperature must be finite and non-negative"
-        );
-
-    ThermostatSettings::setEndTemperature(endTemperature);
-}
-
-/**
- * @brief Parse the temperature ramp steps used in the simulation
- *
- * @details if start_temp and end_temp are set, then if temperature_ramp_steps
- * is not set, the temperature will be ramped linearly from start_temp to
- * end_temp over the full simulation time.
- *
- * @param lineElements
- *
- * @throws InputFileException if temperature ramp steps is
- * negative
- */
-void ThermostatInputParser::parseTemperatureRampSteps(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto temperatureRampSteps = stringToInt(lineElements[2]);
-
-    if (temperatureRampSteps < 0)
-        throw InputFileException("Temperature ramp steps cannot be negative");
-
-    ThermostatSettings::setTemperatureRampSteps(
-        static_cast<size_t>(temperatureRampSteps)
-    );
-}
-
-/**
- * @brief Parse the temperature ramp frequency used in the simulation
- *
- * @details default value is 1
- *
- * @param lineElements
- *
- * @throws InputFileException if temperature ramp frequency is
- * negative
- */
-void ThermostatInputParser::parseTemperatureRampFrequency(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto tempRampFreq = stringToInt(lineElements[2]);
-
-    if (tempRampFreq < 1)
-        throw InputFileException(
-            "Temperature ramp frequency must be greater than zero"
-        );
-
-    ThermostatSettings::setTemperatureRampFrequency(
-        static_cast<size_t>(tempRampFreq)
-    );
-}
-
-/**
- * @brief parses the relaxation time of the thermostat
- *
- * @details default value is 0.1
- *
- * @param lineElements
- *
- * @throws InputFileException if relaxation time is negative
- */
-void ThermostatInputParser::parseThermostatRelaxationTime(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto relaxationTime = stringToFiniteDouble(lineElements[2]);
-
-    if (relaxationTime <= 0.0)
-        throw InputFileException(
-            "Relaxation time of thermostat must be finite and greater than zero"
-        );
-
-    if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
-    {
-        throw InputFileException(
-            "Relaxation time of thermostat is too large to represent in "
-            "femtoseconds"
-        );
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ThermostatSettings::setRelaxationTime(relaxationTime);
-}
-
-/**
- * @brief parses the friction of the langevin thermostat
- *
- * @details default value is 1,0e11
- *
- * @param lineElements
- *
- * @throws InputFileException if friction is negative
- */
-void ThermostatInputParser::parseThermostatFriction(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto friction = stringToFiniteDouble(lineElements[2]);
-
-    if (friction < 0.0)
-        throw InputFileException(
-            "Friction of thermostat must be finite and non-negative"
-        );
-
-    if (friction >
-        std::numeric_limits<double>::max() / defaults::MAX_FRICTION_CONVERSION)
+    void ThermostatInputParser::addTemperatureRampStepsKey()
     {
-        throw InputFileException(
-            "Friction of thermostat is too large to represent in inverse "
-            "seconds"
+        const auto metaData = KeyMetadata{
+            .name  = "temp_ramp_steps",
+            .title = "Temperature Ramp Steps",
+            .description =
+                "Specifies the number of steps for the temperature ramp"
+        };
+
+        const auto setValue = [&](size_t value)
+        { settings::ThermostatSettings::setTemperatureRampSteps(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata = metaData,
+                .onSet    = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ThermostatSettings::setFriction(
-        friction * constants::NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
-    );
-}
-
-/**
- * @brief parses the chain length of the nh-chain thermostat
- *
- * @details default value is 3
- *
- * @param lineElements
- *
- * @throws InputFileException if chain length is negative
- */
-void ThermostatInputParser::parseThermostatChainLength(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto chainLength = stringToInt(lineElements[2]);
-
-    if (chainLength < 1)
-        throw InputFileException(
-            "Chain length of thermostat must be greater than zero"
-        );
-
-    ThermostatSettings::setNoseHooverChainLength(
-        static_cast<size_t>(chainLength)
-    );
-}
-
-/**
- * @brief parses the coupling frequency of the nh-chain thermostat
- *
- * @details default value is 1.0e3 cm⁻¹
- *
- * @param lineElements
- *
- * @throws InputFileException if coupling frequency is negative
- */
-void ThermostatInputParser::parseThermostatCouplingFrequency(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto couplingFrequency = stringToFiniteDouble(lineElements[2]);
-
-    if (couplingFrequency < 0.0)
-        throw InputFileException(
-            "Coupling frequency of thermostat must be finite and non-negative"
-        );
-
-    if (couplingFrequency >
-        std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ)
+    void ThermostatInputParser::addTemperatureRampFrequencyKey()
     {
-        throw InputFileException(
-            "Coupling frequency of thermostat is too large to represent in "
-            "hertz"
+        const auto metaData = KeyMetadata{
+            .name        = "temp_ramp_frequency",
+            .title       = "Temperature Ramp Frequency",
+            .description = "Specifies the frequency of the temperature ramp"
+        };
+
+        const auto setValue = [&](size_t value)
+        { settings::ThermostatSettings::setTemperatureRampFrequency(value); };
+
+        const auto validator =
+            RangeValidator<size_t, Greater::GT>{0, std::nullopt};
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(validator)}
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ThermostatSettings::setNoseHooverCouplingFrequency(couplingFrequency);
-}
+    void ThermostatInputParser::addThermostatRelaxationTimeKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "t_relaxation",
+            .title       = "Relaxation Time",
+            .description = "Specifies the relaxation time of the thermostat"
+        };
+
+        const auto setValue = [&](double value)
+        { settings::ThermostatSettings::setRelaxationTime(value); };
+
+        const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
+            0.0,
+            std::numeric_limits<double>::max() / PS_TO_FS
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(validator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void ThermostatInputParser::addThermostatFrictionKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "friction",
+            .title       = "Friction",
+            .description = "Specifies the friction of the thermostat"
+        };
+
+        const auto setValue = [&](double value)
+        {
+            settings::ThermostatSettings::setFriction(
+                value * NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+            );
+        };
+
+        const auto validator = RangeValidator<double, Greater::GE, Less::LE>{
+            0.0,
+            std::numeric_limits<double>::max() /
+                NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(validator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void ThermostatInputParser::addThermostatChainLengthKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "nh_chain_length",
+            .title = "Thermostat Chain Length",
+            .description =
+                "Specifies the chain length of the nh-chain thermostat"
+        };
+
+        const auto setValue = [&](size_t value)
+        { settings::ThermostatSettings::setNoseHooverChainLength(value); };
+
+        const auto minValidator =
+            RangeValidator<size_t, Greater::GE>{1, std::nullopt};
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(minValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void ThermostatInputParser::addThermostatCouplingFrequencyKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "coupling_frequency",
+            .title = "Thermostat Coupling Frequency",
+            .description =
+                "Specifies the coupling frequency of the nh-chain thermostat"
+        };
+
+        const auto setValue = [&](double value)
+        {
+            settings::ThermostatSettings::setNoseHooverCouplingFrequency(value);
+        };
+
+        const auto validator = RangeValidator<double, Greater::GE, Less::LE>{
+            0.0,
+            std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ
+        };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(validator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+}   // namespace input

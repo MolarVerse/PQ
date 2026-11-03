@@ -20,20 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "angleSection.hpp"                  // for AngleSection
-#include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"                    // for ParameterFileException
-#include "gtest/gtest.h"                     // for Message, TestPartResult
-#include "testParameterFileSection.hpp"      // for TestParameterFileSection
-#include "throwWithMessage.hpp"              // for ASSERT_THROW_MSG
-
-using namespace input::parameterFile;
+#include "angleSection.hpp"
+#include "constants/conversionFactors.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "testParameterFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test bonds section processing one line
@@ -43,33 +40,32 @@ TEST_F(TestParameterFileSection, processSectionAngle)
 {
     std::vector<std::string>           lineElements = {"0", "1.22", "234.3"};
     input::parameterFile::AngleSection angleSection;
-    angleSection.processSection(lineElements, *_engine);
+    angleSection.processSection(lineElements, *_engine, 0);
 
     const auto &angleTypes = _engine->getForceField()->getAngleTypes();
 
     EXPECT_EQ(angleTypes.size(), 1);
     EXPECT_EQ(angleTypes[0].getId(), AngleId{0});
-    EXPECT_EQ(
-        angleTypes[0].getEquilibriumAngle(),
-        1.22 * constants::DEG_TO_RAD
-    );
-    EXPECT_EQ(angleTypes[0].getForceConstant(), 234.3);
+    EXPECT_EQ(angleTypes[0].getParams().equilibrium, 1.22 * DEG_TO_RAD);
+    EXPECT_EQ(angleTypes[0].getParams().forceConstant, 234.3);
 
     lineElements = {"1", "2", "1.0", "0"};
-    EXPECT_THROW(
-        angleSection.processSection(lineElements, *_engine),
-        customException::ParameterFileException
+    EXPECT_THROW_MSG(
+        angleSection.processSection(lineElements, *_engine, 0),
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file angle section at line 0 - "
+        "number of elements has to be 3!"
     );
 }
 
 TEST_F(TestParameterFileSection, endedNormallyAngle)
 {
-    auto angleSection = AngleSection();
+    auto angleSection = input::parameterFile::AngleSection();
     ASSERT_NO_THROW(angleSection.endedNormally(true));
 
     ASSERT_THROW_MSG(
         angleSection.endedNormally(false),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Parameter file angles section ended abnormally!"
     );
 }

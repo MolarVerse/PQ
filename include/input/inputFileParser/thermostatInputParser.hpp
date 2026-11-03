@@ -20,63 +20,43 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__THERMOSTAT_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__THERMOSTAT_INPUT_PARSER_HPP
 
-#define _THERMOSTAT_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
+#include "inputFileParser.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
+class ReferenceSettings;
 
 namespace input
 {
     /**
-     * @class ThermostatInputParser inherits from InputFileParser
+     * @brief ThermostatInputParser inherits from InputFileParser
      *
-     * @brief Parses the thermostat commands in the input file
+     * @details Parses the thermostat commands in the input file
      *
      */
     class ThermostatInputParser : public InputFileParser
     {
-       public:
-        ThermostatInputParser();
+       private:
+        mstd::Ref<ReferenceSettings> _referenceSettings;
 
-        void parseThermostat(const std::vector<std::string> &, const size_t);
-        void parseTemperature(const std::vector<std::string> &, const size_t);
-        void parseStartTemperature(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseEndTemperature(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseTemperatureRampSteps(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseTemperatureRampFrequency(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseThermostatRelaxationTime(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseThermostatFriction(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseThermostatChainLength(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseThermostatCouplingFrequency(
-            const std::vector<std::string> &,
-            const size_t
-        );
+       public:
+        explicit ThermostatInputParser(ReferenceSettings& referenceSettings);
+
+        void addThermostatKey();
+        void addTemperatureKey();
+        void addStartTemperatureKey();
+        void addEndTemperatureKey();
+        void addTemperatureRampStepsKey();
+        void addTemperatureRampFrequencyKey();
+        void addThermostatRelaxationTimeKey();
+        void addThermostatFrictionKey();
+        void addThermostatChainLengthKey();
+        void addThermostatCouplingFrequencyKey();
     };
 
 }   // namespace input
 
-#endif   // _THERMOSTAT_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__THERMOSTAT_INPUT_PARSER_HPP

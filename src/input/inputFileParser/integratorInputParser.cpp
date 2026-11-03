@@ -22,79 +22,75 @@
 
 #include "integratorInputParser.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
+#include <format>
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "parserUtils.hpp"
-#include "references.hpp"         // for ReferencesOutput
-#include "referencesOutput.hpp"   // for ReferencesOutput
-#include "settings.hpp"           // for Settings
-#include "stringUtilities.hpp"    // for toLowerCopy
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "referenceSettings.hpp"
+#include "referencesOutput.hpp"
 
-using namespace input;
-using namespace customException;
-using namespace settings;
-using namespace utilities;
-using namespace references;
-
-/**
- * @brief Construct a new Input File Parser Integrator:: Input File Parser
- * Integrator object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) integrator <string>
- *
- * @param engine
- */
-IntegratorInputParser::IntegratorInputParser()
+namespace input
 {
-    addKeyword(
-        std::string("integrator"),
-        bindMember(&IntegratorInputParser::parseIntegrator, this),
-        false
-    );
-}
 
-/**
- * @brief Parse the integrator used in the simulation
- *
- * @details Possible options are:
- * 1) "v-verlet"  - velocity verlet integrator is used (default)
- *
- * @param lineElements
- *
- * @throws InputFileException if integrator is not valid -
- * currently only velocity verlet is supported
- */
-void IntegratorInputParser::parseIntegrator(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto integrator = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    if (!Settings::isMDJobType())
-        throw InputFileException(
-            std::format("Integrator is only supported for MD simulations!")
-        );
-
-    if (integrator == "v_verlet")
+    /**
+     * @brief Construct a new Input File Parser Integrator:: Input File Parser
+     * Integrator object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
+     */
+    IntegratorInputParser::IntegratorInputParser(
+        ReferenceSettings& referenceSettings
+    )
+        : _referenceSettings(referenceSettings)
     {
-        Settings::setIntegratorType(IntegratorType::VELOCITY_VERLET);
-        ReferencesOutput::addReferenceFile(VELOCITY_VERLET_FILE);
+        addIntegratorKey();
     }
 
-    else
+    /**
+     * @brief Add the integrator key to the input file parser
+     *
+     * @details This function adds the "integrator" key to the input file parser
+     * along with its metadata.
+     */
+    void IntegratorInputParser::addIntegratorKey()
     {
-        throw InputFileException(
-            std::format(
-                "Invalid integrator \"{}\" at line {} in input file",
-                lineElements[2],
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "integrator",
+            .title = "Integrator Type",
+            .description =
+                "Specifies the integrator type to be used in the simulation",
+        };
+
+        const auto setValue = [this](IntegratorType integratorType)
+        {
+            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/908
+            if (!settings::GeneralSettings::isMDJobType())
+            {
+                throw exc::InputFileException(
+                    std::format(
+                        "Integrator is only supported for MD simulations!"
+                    )
+                );
+            }
+
+            settings::GeneralSettings::setIntegratorType(integratorType);
+            _referenceSettings->addReferenceFile(
+                ReferenceFiles::VELOCITY_VERLET_FILE
+            );
+        };
+
+        auto& key = _getRegistry().registerKey(
+            KeyRegistry<IntegratorType>{
+                .metadata     = metaData,
+                .defaultValue = IntegratorType::VELOCITY_VERLET,
+                .onSet        = setValue,
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
-}
+}   // namespace input

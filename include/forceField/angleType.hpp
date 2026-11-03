@@ -20,17 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ANGLE_TYPE_HPP_
-
-#define _ANGLE_TYPE_HPP_
+#ifndef FORCE_FIELD__ANGLE_TYPE_HPP
+#define FORCE_FIELD__ANGLE_TYPE_HPP
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class AngleType;   // forward declaration
 
-    bool operator==(const AngleType &, const AngleType &);
     /**
      * @class AngleType
      *
@@ -43,25 +41,22 @@ namespace forceField
     class AngleType
     {
        private:
-        AngleId _id;
-
-        double _equilibriumAngle;
-        double _forceConstant;
+        AngleId     _id;
+        AngleParams _params;
 
        public:
-        AngleType(const AngleId, const double, const double);
+        AngleType(AngleId, const AngleParams &params);
 
-        friend bool operator==(const AngleType &, const AngleType &);
+        friend bool operator==(const AngleType &self, const AngleType &other);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] AngleId getId() const;
-        [[nodiscard]] double  getEquilibriumAngle() const;
-        [[nodiscard]] double  getForceConstant() const;
+        [[nodiscard]] AngleId            getId() const;
+        [[nodiscard]] const AngleParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _ANGLE_TYPE_HPP_
+#endif   // FORCE_FIELD__ANGLE_TYPE_HPP

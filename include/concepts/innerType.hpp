@@ -20,9 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INNER_TYPE_HPP_
+#ifndef CONCEPTS__INNER_TYPE_HPP
+#define CONCEPTS__INNER_TYPE_HPP
 
-#define _INNER_TYPE_HPP_
+#include <mstd/type_traits.hpp>
 
 #include "base.hpp"
 
@@ -65,6 +66,10 @@ namespace pq
     template <typename T>
     constexpr bool is_InnerType_arithmetic_v = is_arithmetic_v<InnerType_t<T>>;
 
+    template <typename T>
+    constexpr bool is_InnerType_quantity_like_v =
+        mstd::is_quantity_like_v<InnerType_t<T>>;
+
 }   // namespace pq
 
-#endif   // _INNER_TYPE_HPP_
+#endif   // CONCEPTS__INNER_TYPE_HPP

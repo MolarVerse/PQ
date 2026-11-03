@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOX_SECTION_HPP_
+#ifndef INPUT__RESTART_FILE_READER__BOX_SECTION_HPP
+#define INPUT__RESTART_FILE_READER__BOX_SECTION_HPP
 
-#define _BOX_SECTION_HPP_
-
-#include <string>   // for string
+#include <string>
 
 #include "restartFileSection.hpp"
 
@@ -41,7 +40,8 @@ namespace input::restartFile
        public:
         void process(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                   &lineNumber
         ) override;
 
         [[nodiscard]] std::string keyword() override;
@@ -50,4 +50,4 @@ namespace input::restartFile
 
 }   // namespace input::restartFile
 
-#endif   // _BOX_SECTION_HPP_
+#endif   // INPUT__RESTART_FILE_READER__BOX_SECTION_HPP

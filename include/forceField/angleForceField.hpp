@@ -20,12 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ANGLE_FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__ANGLE_FORCE_FIELD_HPP
+#define FORCE_FIELD__ANGLE_FORCE_FIELD_HPP
 
-#define _ANGLE_FORCE_FIELD_HPP_
-
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <vector>
 
 #include "angle.hpp"
 
@@ -40,18 +38,18 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
-namespace forceField
+namespace ff
 {
     /**
-     * @class BondForceField inherits from Bond
+     * @brief BondForceField inherits from Bond
      *
-     * @brief force field object for single angle
+     * @details force field object for single angle
      *
      */
     class AngleForceField : public connectivity::Angle
@@ -60,41 +58,38 @@ namespace forceField
         AngleId _type;
         bool    _isLinker = false;
 
-        double _equilibriumAngle = 0.0;
-        double _forceConstant    = 0.0;
+        AngleParams _params;
 
        public:
         AngleForceField(
             const std::vector<molsys::Molecule *> &molecules,
-            const std::vector<size_t>             &atomIndices,
-            const AngleId                          type
+            const std::vector<AtomIndex>          &atomIndices,
+            AngleId                                type
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox       &simBox,
-            physicalData::PhysicalData        &data,
-            const potential::CoulombPotential &coulombPot,
-            potential::NonCoulombPotential    &nonCoulombPot
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData,
+            const pot::CoulombPotential &coulombPot,
+            pot::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
-        void setEquilibriumAngle(const double equilibriumAngle);
-        void setForceConstant(const double forceConstant);
+        void setIsLinker(bool isLinker);
+        void setParams(const AngleParams &params);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] AngleId getType() const;
-        [[nodiscard]] bool    isLinker() const;
-        [[nodiscard]] double  getEquilibriumAngle() const;
-        [[nodiscard]] double  getForceConstant() const;
+        [[nodiscard]] AngleId            getType() const;
+        [[nodiscard]] bool               isLinker() const;
+        [[nodiscard]] const AngleParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _ANGLE_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__ANGLE_FORCE_FIELD_HPP

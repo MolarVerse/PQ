@@ -20,29 +20,29 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_NEAR, Test, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <cmath>     // for sqrt
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr, allocator
+#include <cmath>
+#include <memory>
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
-#include "atom.hpp"                      // for Atom
-#include "bondForceField.hpp"            // for BondForceField
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gmock/gmock.h"                 // for DoubleNear, ElementsAre
-#include "gtest/gtest.h"                 // for Message, TestPartResult
-#include "lennardJonesPair.hpp"          // for LennardJonesPair
-#include "matrix.hpp"                    // for Matrix
-#include "molecule.hpp"                  // for Molecule
-#include "physicalData.hpp"              // for PhysicalData
-#include "simulationBox.hpp"             // for SimulationBox
+#include "atom.hpp"
+#include "bondForceField.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "gmock/gmock.h"
+#include "lennardJonesPair.hpp"
+#include "matrix.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 class TestBondForceField : public TestNonCoulombPotentialFF
 {
@@ -51,27 +51,27 @@ class TestBondForceField : public TestNonCoulombPotentialFF
 TEST_F(TestBondForceField, calculateEnergyAndForces)
 {
     auto box = molsys::SimulationBox();
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    box.setBox(orthoBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
 
-    auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(0),
-        static_cast<size_t>(1),
+    auto nonCoulombPair = pot::LennardJonesPair(
+        ExtVdwType(0),
+        ExtVdwType(1),
         5.0,
-        2.0,
-        4.0
+        LJParams{.c6 = 2.0, .c12 = 4.0}
     );
-    setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+    _setNonCoulombPairsMatrix(
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    _setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
 
     auto molecule = molsys::Molecule();
 
-    molecule.setMoltype(0);
-    molecule.setNumberOfAtoms(2);
+    molecule.setMoltype(MolType{0});
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -80,20 +80,26 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     atom2->setPosition({1.0, 2.0, 3.0});
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
     atom1->setPartialCharge(1.0);
     atom2->setPartialCharge(-0.5);
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
 
-    auto bondForceField =
-        forceField::BondForceField(&molecule, &molecule, 0, 1, BondId{0});
-    bondForceField.setEquilibriumBondLength(1.2);
-    bondForceField.setForceConstant(3.0);
+    auto bondForceField = ff::BondForceField(
+        &molecule,
+        &molecule,
+        AtomIndex{0},
+        AtomIndex{1},
+        BondId{0}
+    );
+    bondForceField.setParams(
+        BondParams{.equilibrium = 1.2, .forceConstant = 3.0}
+    );
     bondForceField.setIsLinker(false);
 
     bondForceField.calculateEnergyAndForces(
@@ -103,24 +109,24 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         *_nonCoulombPotential
     );
 
-    auto force = (::sqrt(14) - 1.2) * 3.0 / ::sqrt(14) *
-                 linearAlgebra::Vec3D(1.0, 2.0, 3.0);
+    auto force =
+        (::sqrt(14) - 1.2) * 3.0 / ::sqrt(14) * linalg::Vec3D(1.0, 2.0, 3.0);
 
     EXPECT_NEAR(
         physicalData.getBondEnergy(),
         (::sqrt(14) - 1.2) * (::sqrt(14) - 1.2) * 3.0 / 2.0,
         1e-6
     );
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], force[0], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], force[1], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], force[2], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], -force[0], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], -force[1], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -force[2], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[0], force[0], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[1], force[1], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[2], force[2], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[0], -force[0], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[1], -force[1], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[2], -force[2], 1e-6);
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
     EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
 
-    auto virial = force * linearAlgebra::Vec3D{-1.0, -2.0, -3.0};
+    auto virial = force * linalg::Vec3D{-1.0, -2.0, -3.0};
     EXPECT_THAT(
         diagonal(physicalData.getVirial()),
         testing::ElementsAre(
@@ -150,12 +156,12 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         (::sqrt(14) - 1.2) * (::sqrt(14) - 1.2) * 3.0 / 2.0,
         1e-6
     );
-    EXPECT_NEAR(molecule.getAtomForce(0)[0], force[0], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[1], force[1], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(0)[2], force[2], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[0], -force[0], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[1], -force[1], 1e-6);
-    EXPECT_NEAR(molecule.getAtomForce(1)[2], -force[2], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[0], force[0], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[1], force[1], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{0})[2], force[2], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[0], -force[0], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[1], -force[1], 1e-6);
+    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[2], -force[2], 1e-6);
     EXPECT_NEAR(physicalData.getCoulombEnergy(), 17.379852093794977, 1e-6);
     EXPECT_NEAR(
         physicalData.getNonCoulombEnergy(),
@@ -163,7 +169,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         1e-6
     );
 
-    virial = force * linearAlgebra::Vec3D{-1.0, -2.0, -3.0};
+    virial = force * linalg::Vec3D{-1.0, -2.0, -3.0};
     EXPECT_THAT(
         diagonal(physicalData.getVirial()),
         testing::ElementsAre(

@@ -20,15 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_CAPABLE_ENGINE_HPP_
-
-#define _QM_CAPABLE_ENGINE_HPP_
+#ifndef ENGINE__QM_CAPABLE_ENGINE_HPP
+#define ENGINE__QM_CAPABLE_ENGINE_HPP
 
 #include <memory>
 
+#include "enums/qm.hpp"
 #include "qmRunner.hpp"
-#include "qmSettings.hpp"
-
 namespace engine
 {
     /**
@@ -42,17 +40,17 @@ namespace engine
      */
     class QMCapableEngine
     {
-       protected:
+       private:
         std::shared_ptr<QM::QMRunner> _qmRunner;
 
        public:
         virtual ~QMCapableEngine() = default;
 
-        void setQMRunner(const settings::QMMethod method);
+        void setQMRunner(QMMethod method);
         [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
         [[nodiscard]] bool                          hasQMRunner() const;
     };
 
 }   // namespace engine
 
-#endif   // _QM_CAPABLE_ENGINE_HPP_
+#endif   // ENGINE__QM_CAPABLE_ENGINE_HPP

@@ -20,19 +20,21 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STATIC_MATRIX_3X3_HPP_
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_HPP
+#define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_HPP
 
-#define _STATIC_MATRIX_3X3_HPP_
+#include <ostream>
 
-#include <ostream>   // for operator<<, ostream
+#include "staticMatrix3x3Class.hpp"
 
-#include "staticMatrix3x3Class.hpp"   // for StaticMatrix3x3
-
-namespace linearAlgebra
+namespace linalg
 {
 
     template <typename T>
-    std::ostream &operator<<(std::ostream &os, const StaticMatrix3x3<T> &mat);
+    std::ostream &operator<<(
+        std::ostream             &ostream,
+        const StaticMatrix3x3<T> &mat
+    );
 
     /****************************
      * operator+ and operator+= *
@@ -74,10 +76,16 @@ namespace linearAlgebra
     );
 
     template <typename T>
-    StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &mat, const T t);
+    StaticMatrix3x3<T> operator*(
+        const StaticMatrix3x3<T> &mat,
+        const T                  &scalar
+    );
 
     template <typename T>
-    StaticMatrix3x3<T> operator*(const T t, const StaticMatrix3x3<T> &mat);
+    StaticMatrix3x3<T> operator*(
+        const T                  &scalar,
+        const StaticMatrix3x3<T> &mat
+    );
 
     template <typename T>
     Vector3D<T> operator*(
@@ -86,7 +94,7 @@ namespace linearAlgebra
     );
 
     template <typename T>
-    void operator*=(StaticMatrix3x3<T> &lhs, const T t);
+    void operator*=(StaticMatrix3x3<T> &lhs, const T &scalar);
 
     /****************************
      * operator/ and operator/= *
@@ -94,18 +102,27 @@ namespace linearAlgebra
 
     template <typename T, typename U>
     requires std::convertible_to<U, T>
-    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const U t);
+    StaticMatrix3x3<T> operator/(
+        const StaticMatrix3x3<T> &mat,
+        const U                  &scalar
+    );
 
     template <typename T, typename U>
     requires std::convertible_to<U, T>
-    StaticMatrix3x3<T> operator/(const U t, const StaticMatrix3x3<T> &mat);
+    StaticMatrix3x3<T> operator/(
+        const U                  &scalar,
+        const StaticMatrix3x3<T> &mat
+    );
 
     template <typename T>
-    void operator/=(StaticMatrix3x3<T> &lhs, const T t);
+    void operator/=(StaticMatrix3x3<T> &lhs, const T &scalar);
 
     /****************************
      * general matrix functions *
      ****************************/
+
+    template <typename T>
+    auto isFinite(const StaticMatrix3x3<T> &mat) -> bool;
 
     template <typename T>
     StaticMatrix3x3<T> transpose(const StaticMatrix3x3<T> &mat);
@@ -132,7 +149,7 @@ namespace linearAlgebra
     StaticMatrix3x3<T> diagonalMatrix(const Vector3D<T> &vec);
 
     template <typename T>
-    StaticMatrix3x3<T> diagonalMatrix(const T t);
+    StaticMatrix3x3<T> diagonalMatrix(const T &scalar);
 
     template <typename T>
     T trace(const StaticMatrix3x3<T> &mat);
@@ -146,10 +163,10 @@ namespace linearAlgebra
     template <typename T>
     [[nodiscard]] StaticMatrix3x3<T> expPade(const StaticMatrix3x3<T> &mat);
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
-#ifndef _STATIC_MATRIX_3X3_TPP_
-#include "staticMatrix3x3.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_TPP
+#include "staticMatrix3x3.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _STATIC_MATRIX_3X3_HPP_
+#endif   // LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_HPP

@@ -20,19 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F, InitG...
+#include <gtest/gtest.h>
 
-#include <cstddef>   // for size_t
-#include <string>    // for string, allocator, basic_string
-#include <vector>    // for vector
+#include <cstddef>
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"   // for RstFileException, customException
-#include "gtest/gtest.h"    // for AssertionResult, Message, TestPart...
-#include "restartFileReader/restartFileSection.hpp"   // for RstFileSection, readInput
-#include "testRestartFileSection.hpp"   // for TestStepCountSection
-#include "timingsSettings.hpp"          // for TimingsSettings
-
-using namespace input;
+#include "exceptions.hpp"
+#include "restartFileReader/restartFileSection.hpp"
+#include "testRestartFileSection.hpp"
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"
 
 TEST_F(TestStepCountSection, testKeyword)
 {
@@ -46,14 +44,16 @@ TEST_F(TestStepCountSection, testIsHeader)
 
 TEST_F(TestStepCountSection, testNumberOfArguments)
 {
+    size_t lineNumber = 0;
     for (size_t i = 0; i < 10; ++i)
     {
         if (i != 2)
         {
             auto line = std::vector<std::string>(i);
-            ASSERT_THROW(
-                _section->process(line, *_engine),
-                customException::RstFileException
+            ASSERT_THROW_MSG(
+                _section->process(line, *_engine, lineNumber),
+                exc::RstFileException,
+                "Error in line 0: Step count section must have 2 elements"
             );
         }
     }
@@ -61,18 +61,21 @@ TEST_F(TestStepCountSection, testNumberOfArguments)
 
 TEST_F(TestStepCountSection, testNegativeStepCount)
 {
-    auto line = std::vector<std::string>(2);
-    line[1]   = "-1";
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
+    auto line         = std::vector<std::string>(2);
+    line[1]           = "-1";
+    size_t lineNumber = 0;
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine, lineNumber),
+        exc::RstFileException,
+        "Error in line 0: Step count must be positive"
     );
 }
 
 TEST_F(TestStepCountSection, testProcess)
 {
-    auto line = std::vector<std::string>(2);
-    line[1]   = "1000";
-    _section->process(line, *_engine);
+    auto line         = std::vector<std::string>(2);
+    line[1]           = "1000";
+    size_t lineNumber = 0;
+    _section->process(line, *_engine, lineNumber);
     EXPECT_EQ(settings::TimingsSettings::getStepCount(), 1000);
 }

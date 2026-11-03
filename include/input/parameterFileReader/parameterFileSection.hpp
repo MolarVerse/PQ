@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARAMETER_FILE_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_SECTION_HPP
 
-#define _PARAMETER_FILE_SECTION_HPP_
-
-#include <iosfwd>   // for ifstream
-#include <string>   // for string, allocator
-#include <vector>   // for vector
+#include <iosfwd>
+#include <string>
+#include <vector>
 
 namespace engine
 {
@@ -43,38 +42,37 @@ namespace input::parameterFile
      */
     class ParameterFileSection
     {
-       protected:
-        int            _lineNumber = 0;
-        std::ifstream *_fp         = nullptr;
+       private:
+        std::ifstream *_fp = nullptr;
 
        public:
         virtual ~ParameterFileSection() = default;
 
         virtual void process(
             std::vector<std::string> &lineElements,
-            engine::Engine &
+            engine::Engine           &engine,
+            size_t                   &lineNumber
         );
 
-        void endedNormally(const bool);
+        void endedNormally(bool);
 
         virtual std::string keyword() = 0;
 
         virtual void processSection(
             std::vector<std::string> &lineElements,
-            engine::Engine &
+            engine::Engine &,
+            size_t lineNumber
         ) = 0;
 
         virtual void processHeader(
             std::vector<std::string> &lineElements,
-            engine::Engine &
+            engine::Engine &,
+            size_t lineNumber
         ) = 0;
 
-        void setLineNumber(const int lineNumber);
-        void setFp(std::ifstream *fp);
-
-        [[nodiscard]] int getLineNumber() const;
+        void setFp(std::ifstream *file);
     };
 
 }   // namespace input::parameterFile
 
-#endif   // _PARAMETER_FILE_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_SECTION_HPP

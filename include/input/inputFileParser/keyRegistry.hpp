@@ -1,0 +1,52 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef INPUT__INPUT_FILE_PARSER__KEY_REGISTRY_HPP
+#define INPUT__INPUT_FILE_PARSER__KEY_REGISTRY_HPP
+
+#include <functional>
+#include <memory>
+#include <vector>
+
+#include "keyMetaData.hpp"
+#include "keyValidatorBase.hpp"
+
+namespace input
+{
+    template <typename T>
+    struct KeyRegistry
+    {
+        using CustomParser = std::function<std::optional<T>(std::string_view)>;
+
+        KeyMetadata                    metadata;
+        std::optional<T>               defaultValue = std::nullopt;
+        bool                           isArray      = false;
+        std::vector<T>                 notAllowed   = {};
+        CustomParser                   customParser = nullptr;
+        std::function<void(const T &)> onSet        = nullptr;
+
+        std::vector<std::shared_ptr<KeyValidator<T>>>       validators = {};
+        std::function<void(const std::string &, const T &)> finalizer = nullptr;
+    };
+}   // namespace input
+
+#endif   // INPUT__INPUT_FILE_PARSER__KEY_REGISTRY_HPP

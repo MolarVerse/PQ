@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SPC_INTRA_WATER_HPP_
+#ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
+#define WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
 
-#define _SPC_INTRA_WATER_HPP_
-
-#include "constants/conversionFactors.hpp"   // for constants
-#include "intraWater.hpp"                    // for IntraWater
+#include "constants/conversionFactors.hpp"
+#include "intraWater.hpp"
 
 namespace molsys
 {
@@ -43,56 +42,92 @@ namespace waterModel
     {
        public:
         void calculate(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
-        ) final;
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
+        ) override;
 
-        // clang-format off
-        [[nodiscard]] virtual double getEqOHDistance() const = 0;          // Angström
-        [[nodiscard]] virtual double getEqHOHAngle() const = 0;            // radians
-        [[nodiscard]] virtual double getForceConstantOHBond() const = 0;   // kcal mol^-1 Angström^-2
-        [[nodiscard]] virtual double getForceConstantHOHAngle() const = 0; // kcal mol^-1 rad^-2
-        // clang-format on
+        [[nodiscard]]
+        virtual double getEqOHDistance() const = 0;   // Angström
+        [[nodiscard]]
+        virtual double getEqHOHAngle() const = 0;   // radians
+        [[nodiscard]]
+        virtual double getForceConstantOHBond(
+        ) const = 0;   // kcal mol^-1 Angström^-2
+        [[nodiscard]]
+        virtual double getForceConstantHOHAngle(
+        ) const = 0;   // kcal mol^-1 rad^-2
     };
 
     class SPCFwIntraWater : public SPCIntraWater
     {
-        // clang-format off
        private:
-        static constexpr double _eqOHDistance          = 1.012;                 // Angström
-        static constexpr double _eqHOHAngle            = 113.24 * constants::DEG_TO_RAD;
-        static constexpr double _forceConstantOHBond   = 1059.162;              // kcal mol^-1 Angström^-2
-        static constexpr double _forceConstantHOHAngle = 75.9;                  // kcal mol^-1 rad^-2
+        static constexpr double _eqOHDistance = 1.012;   // Angström
+        static constexpr double _eqHOHAngle   = 113.24 * DEG_TO_RAD;
+        static constexpr double _forceConstantOHBond =
+            1059.162;   // kcal mol^-1 Angström^-2
+        static constexpr double _forceConstantHOHAngle =
+            75.9;   // kcal mol^-1 rad^-2
 
        public:
-        [[nodiscard]] double getEqOHDistance() const final          { return _eqOHDistance; }         
-        [[nodiscard]] double getEqHOHAngle() const final            { return _eqHOHAngle; }           
-        [[nodiscard]] double getForceConstantOHBond() const final   { return _forceConstantOHBond; }  
-        [[nodiscard]] double getForceConstantHOHAngle() const final { return _forceConstantHOHAngle; }
-        // clang-format on
+        [[nodiscard]]
+        double getEqOHDistance() const override
+        {
+            return _eqOHDistance;
+        }
+        [[nodiscard]]
+        double getEqHOHAngle() const override
+        {
+            return _eqHOHAngle;
+        }
+        [[nodiscard]]
+        double getForceConstantOHBond() const override
+        {
+            return _forceConstantOHBond;
+        }
+        [[nodiscard]]
+        double getForceConstantHOHAngle() const override
+        {
+            return _forceConstantHOHAngle;
+        }
     };
 
     class qSPCFwIntraWater : public SPCIntraWater
     {
-        // clang-format off
        private:
-        static constexpr double _eqOHDistance          = 1.0;                  // Angström
-        static constexpr double _eqHOHAngle            = 112.0 * constants::DEG_TO_RAD;
-        static constexpr double _forceConstantOHBond   = 1059.162;             // kcal mol^-1 Angström^-2
-        static constexpr double _forceConstantHOHAngle = 75.9;                 // kcal mol^-1 rad^-2
+        static constexpr double _eqOHDistance = 1.0;   // Angström
+        static constexpr double _eqHOHAngle   = 112.0 * DEG_TO_RAD;
+        static constexpr double _forceConstantOHBond =
+            1059.162;   // kcal mol^-1 Angström^-2
+        static constexpr double _forceConstantHOHAngle =
+            75.9;   // kcal mol^-1 rad^-2
 
        public:
-        [[nodiscard]] double getEqOHDistance() const final          { return _eqOHDistance; }         
-        [[nodiscard]] double getEqHOHAngle() const final            { return _eqHOHAngle; }           
-        [[nodiscard]] double getForceConstantOHBond() const final   { return _forceConstantOHBond; }  
-        [[nodiscard]] double getForceConstantHOHAngle() const final { return _forceConstantHOHAngle; }
-        // clang-format on
+        [[nodiscard]]
+        double getEqOHDistance() const override
+        {
+            return _eqOHDistance;
+        }
+        [[nodiscard]]
+        double getEqHOHAngle() const override
+        {
+            return _eqHOHAngle;
+        }
+        [[nodiscard]]
+        double getForceConstantOHBond() const override
+        {
+            return _forceConstantOHBond;
+        }
+        [[nodiscard]]
+        double getForceConstantHOHAngle() const override
+        {
+            return _forceConstantHOHAngle;
+        }
     };
 
 }   // namespace waterModel
 
-#ifndef _SPC_INTRA_WATER_TPP_
-#include "SPCIntraWater.tpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
+#ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP
+#include "SPCIntraWater.tpp"   // IWYU pragma: export
 #endif
 
-#endif   //  _SPC_INTRA_WATER_HPP_
+#endif   //  WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP

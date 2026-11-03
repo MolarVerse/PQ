@@ -20,14 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONNECTIVITY_ELEMENT_HPP_
+#ifndef CONNECTIVITY__CONNECTIVITY_ELEMENT_HPP
+#define CONNECTIVITY__CONNECTIVITY_ELEMENT_HPP
 
-#define _CONNECTIVITY_ELEMENT_HPP_
-
-#include <cstddef>
+#include <mstd/utils.hpp>
 #include <vector>
 
-#include "molecule.hpp"   // for Molecule
+#include "strongTypes.hpp"
+
+namespace molsys
+{
+    class Molecule;
+}   // namespace molsys
 
 namespace connectivity
 {
@@ -40,25 +44,20 @@ namespace connectivity
      */
     class ConnectivityElement
     {
-       protected:
+       private:
         std::vector<molsys::Molecule *> _molecules;
-        std::vector<size_t>             _atomIndices;
+        std::vector<AtomIndex>          _atomIndices;
 
        public:
         ConnectivityElement(
             const std::vector<molsys::Molecule *> &,
-            const std::vector<size_t> &
+            const std::vector<AtomIndex> &
         );
 
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]]
-        std::vector<molsys::Molecule *>   getMolecules() const;
-        [[nodiscard]] std::vector<size_t> getAtomIndices() const;
+        CONST_GETTER(_molecules);
+        CONST_GETTER(_atomIndices);
     };
 
 }   // namespace connectivity
 
-#endif   // _CONNECTIVITY_ELEMENT_HPP_
+#endif   // CONNECTIVITY__CONNECTIVITY_ELEMENT_HPP

@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _IMPROPER_DIHEDRAL_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__IMPROPER_DIHEDRAL_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__IMPROPER_DIHEDRAL_SECTION_HPP
 
-#define _IMPROPER_DIHEDRAL_SECTION_HPP_
+#include <string>
 
-#include <string>   // for allocator, string
-
-#include "parameterFileSection.hpp"   // for ParameterFileSection
+#include "parameterFileSection.hpp"
 
 namespace input::parameterFile
 {
@@ -43,17 +42,20 @@ namespace input::parameterFile
 
         void processSection(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                    lineNumber
         ) override;
         void processHeader(
             std::vector<std::string> & /* lineElements */,
-            engine::Engine & /* engine */
+            engine::Engine & /* engine */,
+            size_t /* lineNumber */
         ) override
         {
+            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/905
+            // implement processHeader
         }
-        // TODO: implement processHeader
     };
 
 }   // namespace input::parameterFile
 
-#endif   // _IMPROPER_DIHEDRAL_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__IMPROPER_DIHEDRAL_SECTION_HPP

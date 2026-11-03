@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP
 
-#define _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
-
-#include "atom.hpp"               // for Atom
-#include "molecule.hpp"           // for Molecule
-#include "simulationBox.hpp"      // for SimulationBox
-#include "trajectoryOutput.hpp"   // for TrajectoryOutput
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "simulationBox.hpp"
+#include "trajectoryOutput.hpp"
 
 /**
  * @class TestTrajectoryOutput
@@ -42,31 +42,34 @@
 class TestTrajectoryOutput : public ::testing::Test
 {
    protected:
+    std::unique_ptr<out::TrajectoryOutput> _trajectoryOutput;
+    std::unique_ptr<molsys::SimulationBox> _simulationBox;
+
     void SetUp() override
     {
-        _trajectoryOutput = new output::TrajectoryOutput("default.xyz");
-        _simulationBox    = new molsys::SimulationBox();
+        _trajectoryOutput =
+            std::make_unique<out::TrajectoryOutput>("default.xyz");
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
-        _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simulationBox->setBox(orthoBox, false);
 
         auto molecule1 = molsys::Molecule();
 
         const auto atom1 = std::make_shared<molsys::Atom>();
         const auto atom2 = std::make_shared<molsys::Atom>();
 
-        molecule1.setNumberOfAtoms(2);
-
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linearAlgebra::Vec3D(2.0, 3.0, 4.0));
-        atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(3.0, 4.0, 5.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
+        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
         atom1->setName("H");
         atom2->setName("O");
         atom1->setPartialCharge(1.0);
         atom2->setPartialCharge(-1.0);
-        molecule1.setMoltype(1);
+        molecule1.setMoltype(MolType{1});
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
@@ -74,14 +77,12 @@ class TestTrajectoryOutput : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        molecule2.setNumberOfAtoms(1);
-
-        atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         atom3->setName("Ar");
         atom3->setPartialCharge(0.0);
-        molecule2.setMoltype(2);
+        molecule2.setMoltype(MolType{2});
         molecule2.addAtom(atom3);
 
         _simulationBox->addMolecule(molecule1);
@@ -93,14 +94,9 @@ class TestTrajectoryOutput : public ::testing::Test
 
     void TearDown() override
     {
-        delete _trajectoryOutput;
-        delete _simulationBox;
         const auto errorCode = std::remove("default.xyz");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.xyz";
     }
-
-    output::TrajectoryOutput *_trajectoryOutput;
-    molsys::SimulationBox    *_simulationBox;
 };
 
-#endif   // _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP

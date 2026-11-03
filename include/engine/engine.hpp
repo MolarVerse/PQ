@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_HPP_
+#ifndef ENGINE__ENGINE_HPP
+#define ENGINE__ENGINE_HPP
 
-#define _ENGINE_HPP_
-
-#include <cstddef>   // for size_t
+#include <cstddef>
 #include <memory>
+#include <mstd/types.hpp>
 
-#include "celllist.hpp"
 #include "constraints.hpp"
 #include "engineOutput.hpp"
 #include "forceFieldClass.hpp"
@@ -36,6 +35,7 @@
 #include "intraWater.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
@@ -50,7 +50,7 @@ namespace engine
      */
     class Engine
     {
-       protected:
+       private:
         size_t _step   = 1;
         size_t _nSteps = 0;
 
@@ -58,12 +58,11 @@ namespace engine
 
         physicalData::PhysicalData _averagePhysicalData;
 
-        std::shared_ptr<potential::Potential>           _potential;
+        std::shared_ptr<pot::Potential>                 _potential;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
-        std::shared_ptr<molsys::CellList>               _cellList;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
-        std::shared_ptr<forceField::ForceField>         _forceField;
+        std::shared_ptr<ff::ForceField>                 _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
 
         std::unique_ptr<waterModel::IntraWater> _intraWater =
@@ -71,59 +70,60 @@ namespace engine
         std::unique_ptr<waterModel::InterWater> _interWater =
             std::make_unique<waterModel::InterWater>();
 
-       public:
-        Engine();
-        virtual ~Engine() = default;
+        mstd::ConstRef<Settings> _settings;
 
-        virtual void run()         = 0;
-        virtual void writeOutput() = 0;
-        void         deleteTmpFiles();
+        struct Impl;
+        std::unique_ptr<Impl> _impl;
+
+       public:
+        explicit Engine(const Settings &settings);
+        virtual ~Engine();
+
+        virtual void run()                                                 = 0;
+        virtual void writeOutput(const OutputFileSettings &outputSettings) = 0;
+        static void  deleteTmpFiles();
 
         [[nodiscard]] double calculateTotalSimulationTime() const;
-
-        /**********************************
-         * information about active parts *
-         **********************************/
-
-        [[nodiscard]] bool isForceFieldNonCoulombicsActivated() const;
-        [[nodiscard]] bool isGuffActivated() const;
-        [[nodiscard]] bool isConstraintsActivated() const;
-        [[nodiscard]] bool isIntraNonBondedActivated() const;
 
         /***************************
          * standard getter methods *
          ***************************/
 
         [[nodiscard]]
-        const std::shared_ptr<molsys::CellList> &getCellList() const;
+        const molsys::CellList &getCellList() const;
+        [[nodiscard]]
+        molsys::CellList &getCellList();
         [[nodiscard]]
         const std::shared_ptr<constraints::Constraints> &getConstraints() const;
         [[nodiscard]]
         const std::shared_ptr<
             intraNonBonded::IntraNonBonded> &getIntraNonBonded() const;
         [[nodiscard]]
-        const std::shared_ptr<forceField::ForceField> &getForceField() const;
+        const std::shared_ptr<ff::ForceField> &getForceField() const;
         [[nodiscard]]
-        const std::shared_ptr<potential::Potential> &getPotential() const;
+        const std::shared_ptr<pot::Potential> &getPotential() const;
 
-        [[nodiscard]] molsys::SimulationBox      &getSimulationBox();
-        [[nodiscard]] physicalData::PhysicalData &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData &getAveragePhysicalData();
+        [[nodiscard]] molsys::SimulationBox       &getSimulationBox();
+        [[nodiscard]] const molsys::SimulationBox &getSimulationBox() const;
+        [[nodiscard]] physicalData::PhysicalData  &getPhysicalData();
+        [[nodiscard]] physicalData::PhysicalData  &getAveragePhysicalData();
+
+        [[nodiscard]] const Settings &getSettings() const;
 
         /*************************
          * output getter methods *
          *************************/
 
-        [[nodiscard]] EngineOutput          &getEngineOutput();
-        [[nodiscard]] output::LogOutput     &getLogOutput();
-        [[nodiscard]] output::StdoutOutput  &getStdoutOutput();
-        [[nodiscard]] output::TimingsOutput &getTimingsOutput();
+        [[nodiscard]] EngineOutput       &getEngineOutput();
+        [[nodiscard]] out::LogOutput     &getLogOutput();
+        [[nodiscard]] out::StdoutOutput  &getStdoutOutput();
+        [[nodiscard]] out::TimingsOutput &getTimingsOutput();
 
-        [[nodiscard]] output::TrajectoryOutput &getXyzOutput();
-        [[nodiscard]] output::TrajectoryOutput &getForceOutput();
-        [[nodiscard]] output::InfoOutput       &getInfoOutput();
-        [[nodiscard]] output::EnergyOutput     &getEnergyOutput();
-        [[nodiscard]] output::RstFileOutput    &getRstFileOutput();
+        [[nodiscard]] out::TrajectoryOutput &getXyzOutput();
+        [[nodiscard]] out::TrajectoryOutput &getForceOutput();
+        [[nodiscard]] out::InfoOutput       &getInfoOutput();
+        [[nodiscard]] out::EnergyOutput     &getEnergyOutput();
+        [[nodiscard]] out::RstFileOutput    &getRstFileOutput();
 
         /***********************
          * get pointer methods *
@@ -158,11 +158,26 @@ namespace engine
         [[nodiscard]] size_t getStep() const { return _step; }
 
         void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
+
+       protected:
+        [[nodiscard]]
+        waterModel::InterWater &_getInterWater();
+        [[nodiscard]]
+        const waterModel::InterWater &_getInterWater() const;
+
+        [[nodiscard]]
+        waterModel::IntraWater &_getIntraWater();
+        [[nodiscard]]
+        const waterModel::IntraWater &_getIntraWater() const;
+
+        [[nodiscard]] size_t _getNSteps() const;
+        void                 _setNSteps(size_t nSteps);
+        void                 _setStep(size_t step);
     };
 }   // namespace engine
 
-#ifndef _ENGINE_TPP_
-#include "engine.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE!
+#ifndef ENGINE__ENGINE_TPP
+#include "engine.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _ENGINE_HPP_
+#endif   // ENGINE__ENGINE_HPP

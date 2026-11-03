@@ -20,9 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <string>   // for operator==
+#include <string>
 
-namespace output
+#ifndef OUTPUT__OUTPUT_MESSAGES_HPP
+#define OUTPUT__OUTPUT_MESSAGES_HPP
+
+namespace out
 {
     static constexpr auto* WARNING  = "WARNING: ";
     static constexpr auto* INFO     = "INFO:    ";
@@ -32,12 +35,12 @@ namespace output
     std::string header();
     std::string endedNormally();
 
-    std::string initialMomentumMessage(const double initialMomentum);
-
-    std::string elapsedTimeMessage(const double elapsedTime);
+    std::string elapsedTimeMessage(double elapsedTime);
 
     std::string setupMessage(const std::string& setup);
     std::string setupCompletedMessage();
     std::string readMessage(const std::string&, const std::string&);
 
-}   // namespace output
+}   // namespace out
+
+#endif   // OUTPUT__OUTPUT_MESSAGES_HPP

@@ -20,16 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GENERAL_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__GENERAL_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__GENERAL_INPUT_PARSER_HPP
 
-#define _GENERAL_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
-#include <memory>
+#include <cstddef>
 #include <string>
 #include <vector>
 
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 
 namespace engine
 {
@@ -39,9 +37,9 @@ namespace engine
 namespace input
 {
     /**
-     * @class GeneralInputParser inherits from InputFileParser
+     * @brief GeneralInputParser inherits from InputFileParser
      *
-     * @brief Parses the general commands in the input file
+     * @details Parses the general commands in the input file
      *
      */
     class GeneralInputParser : public InputFileParser
@@ -49,27 +47,23 @@ namespace input
        public:
         GeneralInputParser();
 
-        void parseJobType(const std::vector<std::string> &, const size_t);
+        void addFloatingPointTypeKey();
 
-        void parseDimensionality(
+        void parseJobType(const std::vector<std::string> &, size_t);
+
+        static void parseDimensionality(
             const std::vector<std::string> &,
-            const size_t
+            size_t
         );
 
-        void parseFloatingPointType(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRandomSeed(const std::vector<std::string> &, const size_t);
+        static void parseRandomSeed(const std::vector<std::string> &, size_t);
 
         static void parseJobTypeForEngine(
             const std::vector<std::string> &,
-            const size_t,
-            std::unique_ptr<engine::Engine> &
+            size_t
         );
     };
 
 }   // namespace input
 
-#endif   // _GENERAL_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__GENERAL_INPUT_PARSER_HPP

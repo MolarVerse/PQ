@@ -22,267 +22,227 @@
 
 #include "manostatInputParser.hpp"
 
-#include <cstddef>       // for size_t
-#include <format>        // for format
-#include <limits>        // for numeric_limits
-#include <string_view>   // for string_view
+#include <limits>
+#include <optional>
 
 #include "constants/conversionFactors.hpp"
-#include "exceptions.hpp"         // for InputFileException, customException
-#include "manostatSettings.hpp"   // for ManostatSettings
-#include "parserUtils.hpp"
-#include "references.hpp"         // for ReferencesOutput
-#include "referencesOutput.hpp"   // for ReferencesOutput
-#include "stringUtilities.hpp"    // for toLowerCopy
+#include "defaults.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "manostatSettings.hpp"
+#include "rangeValidator.hpp"
+#include "units.hpp"
 
-using namespace input;
-using namespace settings;
-using namespace customException;
-using namespace references;
-using namespace utilities;
-using namespace constants;
-
-/**
- * @brief Construct a new Input File Parser Manostat:: Input File Parser
- * Manostat object
- *
- * @details following keywords are added to the _keywordFuncMap,
- * _keywordRequiredMap and _keywordCountMap: 1) manostat <string> 2) pressure
- * <double> (only required if manostat is not none) 3) p_relaxation <double> 4)
- * compressibility <double>
- *
- * @param engine
- */
-ManostatInputParser::ManostatInputParser()
+namespace input
 {
-    addKeyword(
-        std::string("manostat"),
-        bindMember(&ManostatInputParser::parseManostat, this),
-        false
-    );
 
-    addKeyword(
-        std::string("pressure"),
-        bindMember(&ManostatInputParser::parsePressure, this),
-        false
-    );
-
-    addKeyword(
-        std::string("p_relaxation"),
-        bindMember(&ManostatInputParser::parseManostatRelaxationTime, this),
-        false
-    );
-
-    addKeyword(
-        std::string("compressibility"),
-        bindMember(&ManostatInputParser::parseCompressibility, this),
-        false
-    );
-
-    addKeyword(
-        std::string("isotropy"),
-        bindMember(&ManostatInputParser::parseIsotropy, this),
-        false
-    );
-}
-
-/**
- * @brief Parse the manostat used in the simulation
- *
- * @details Possible options are:
- * 1) "none"                 - no manostat is used (default)
- * 2) "berendsen"            - berendsen manostat is used
- * 3) "stochastic_rescaling" - stochastic rescaling manostat is used
- *
- * @param lineElements
- *
- * @throws InputFileException if manostat is not berendsen or
- * none
- */
-void ManostatInputParser::parseManostat(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto manostat = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    using enum ManostatType;
-
-    if (manostat == "none")
-        ManostatSettings::setManostatType(NONE);
-
-    else if (manostat == "berendsen")
+    /**
+     * @brief Construct a new Input File Parser Manostat:: Input File Parser
+     * Manostat object
+     *
+     * @details following keywords are added to the _keywordFuncMap,
+     * _keywordRequiredMap and _keywordCountMap: 1) manostat "<string>" 2)
+     * pressure
+     * "<double>" (only required if manostat is not none) 3) p_relaxation
+     * "<double>" 4) compressibility "<double>"
+     */
+    ManostatInputParser::ManostatInputParser(ManostatSettings &manostatSettings)
+        : _manostatSettings(manostatSettings)
     {
-        ManostatSettings::setManostatType(BERENDSEN);
-        ReferencesOutput::addReferenceFile(BERENDSEN_FILE);
+        addManostatKey();
+        addPressureKey();
+        addManostatRelaxationTimeKey();
+        addCompressibilityKey();
+        addIsotropyKey();
+        addFixedAxisKey();
     }
 
-    else if (manostat == "stochastic_rescaling")
+    /**
+     * @brief Add the manostat key to the input parser
+     *
+     * @details This function registers the "manostat" key with the input
+     * parser, including its metadata, default value, and on-set behavior.
+     */
+    void ManostatInputParser::addManostatKey()
     {
-        ManostatSettings::setManostatType(STOCHASTIC_RESCALING);
-        ReferencesOutput::addReferenceFile(STOCHASTIC_RESCALING_FILE);
-    }
+        const auto metaData = KeyMetadata{
+            .name  = "manostat",
+            .title = "Manostat type",
+            .description =
+                "Specifies the type of manostat to be used in the simulation",
+        };
 
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid manostat \"{}\" at line {} in input file.\n"
-                "Possible options are: berendsen, stochastic_rescaling and "
-                "none",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
+        const auto setValue = [this](ManostatType manostatType)
+        { _manostatSettings->setManostatType(manostatType); };
 
-/**
- * @brief Parse the pressure used in the simulation
- *
- * @details no default value - if needed it has to be set in the input file
- *
- * @param lineElements
- */
-void ManostatInputParser::parsePressure(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto pressure = stringToFiniteDouble(lineElements[2]);
-
-    ManostatSettings::setTargetPressure(pressure);
-}
-
-/**
- * @brief parses the relaxation time of the manostat
- *
- * @details default value is 1.0
- *
- * @param lineElements
- *
- * @throw InputFileException if relaxation time is negative
- */
-void ManostatInputParser::parseManostatRelaxationTime(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    const auto relaxationTime = stringToFiniteDouble(lineElements[2]);
-
-    if (relaxationTime <= 0.0)
-        throw InputFileException(
-            "Relaxation time of manostat must be finite and greater than zero"
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<ManostatType>{
+                .metadata     = metaData,
+                .defaultValue = ManostatType::NONE,
+                .onSet        = setValue,
+            }
         );
 
-    if (relaxationTime > std::numeric_limits<double>::max() / PS_TO_FS)
-    {
-        throw InputFileException(
-            "Relaxation time of manostat is too large to represent in "
-            "femtoseconds"
-        );
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ManostatSettings::setTauManostat(relaxationTime);
-}
+    /**
+     * @brief Add the pressure key to the input parser
+     *
+     * @details This function registers the "pressure" key with the input
+     * parser, including its metadata, default value, and on-set behavior.
+     */
+    void ManostatInputParser::addPressureKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "pressure",
+            .title       = "Pressure",
+            .description = "Specifies the pressure used in the simulation",
+        };
 
-/**
- * @brief Parse the compressibility used in the simulation (isothermal
- * compressibility)
- *
- * @details default value is 4.5e-5
- *
- * @param lineElements
- *
- * @throw InputFileException if compressibility is negative
- */
-void ManostatInputParser::parseCompressibility(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-    const auto compressibility = stringToFiniteDouble(lineElements[2]);
+        const auto setValue = [this](double pressure)
+        { _manostatSettings->setTargetPressure(pressure); };
 
-    if (compressibility < 0.0)
-        throw InputFileException(
-            "Compressibility must be finite and non-negative"
+        const RangeValidator<double> validator{std::nullopt, std::nullopt};
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(validator)},
+            }
         );
 
-    ManostatSettings::setCompressibility(compressibility);
-}
-
-/**
- * @brief Parse the isotropy of the manostat
- *
- * @details Possible options are:
- * 1) "isotropic"                        - isotropic manostat is used (default)
- * 2) "xy", "yx", "xz", "zx", "yz", "zy" - semi isotropic manostat is used
- * 3) "anisotropic"                      - anisotropic manostat is used
- *
- * @param lineElements
- *
- * @throws InputFileException if isotropy is not isotropic,
- * semi_isotropic or anisotropic
- */
-void ManostatInputParser::parseIsotropy(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto isotropy = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    using enum Isotropy;
-
-    if (isotropy == "isotropic")
-        ManostatSettings::setIsotropy(ISOTROPIC);
-
-    else if (isotropy == "xy" || isotropy == "yx")
-    {
-        ManostatSettings::setIsotropy(SEMI_ISOTROPIC);
-        ManostatSettings::set2DIsotropicAxes({0, 1});
-        ManostatSettings::set2DAnisotropicAxis(2);
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    else if (isotropy == "xz" || isotropy == "zx")
+    /**
+     * @brief Add the manostat relaxation time key to the input parser
+     *
+     * @details This function registers the "manostat_relaxation_time" key with
+     * the input parser, including its metadata, default value, and on-set
+     * behavior.
+     */
+    void ManostatInputParser::addManostatRelaxationTimeKey()
     {
-        ManostatSettings::setIsotropy(SEMI_ISOTROPIC);
-        ManostatSettings::set2DIsotropicAxes({0, 2});
-        ManostatSettings::set2DAnisotropicAxis(1);
-    }
+        const auto metaData = KeyMetadata{
+            .name        = "p_relaxation",
+            .title       = "Manostat Relaxation Time",
+            .description = "Specifies the relaxation time of the manostat",
+            .unit        = "ps",
+        };
 
-    else if (isotropy == "yz" || isotropy == "zy")
-    {
-        ManostatSettings::setIsotropy(SEMI_ISOTROPIC);
-        ManostatSettings::set2DIsotropicAxes({1, 2});
-        ManostatSettings::set2DAnisotropicAxis(0);
-    }
+        const auto setValue = [this](double relaxationTime)
+        { _manostatSettings->setTau(relaxationTime * ps); };
 
-    else if (isotropy == "anisotropic")
-    {
-        ManostatSettings::setIsotropy(ANISOTROPIC);
-    }
-    else if (isotropy == "full_anisotropic")
-    {
-        ManostatSettings::setIsotropy(FULL_ANISOTROPIC);
-    }
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Invalid isotropy \"{}\" at line {} in input file.\n"
-                "Possible options are: isotropic, xy, xz, yz, "
-                "anisotropic and full_anisotropic",
-                lineElements[2],
-                lineNumber
-            )
+        const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
+            0.0,
+            std::numeric_limits<double>::max() / PS_TO_FS
+        };
+
+        const auto defaultValue = 1.0;
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue,
+                .validators   = {makeShared(validator)}
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
-}
+
+    /**
+     * @brief Add the compressibility key to the input parser
+     *
+     * @details This function registers the "compressibility" key with
+     * the input parser, including its metadata, default value, and on-set
+     * behavior.
+     */
+    void ManostatInputParser::addCompressibilityKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "compressibility",
+            .title = "Compressibility",
+            .description =
+                "Specifies the isothermal compressibility used in the "
+                "simulation",
+        };
+
+        const auto setValue = [this](double compressibility)
+        { _manostatSettings->setCompressibility(compressibility); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaults::COMPRESSIBILITY_WATER_DEFAULT,
+                .onSet        = setValue,
+                .validators   = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief Add the isotropy key to the input parser
+     *
+     * @details This function registers the "isotropy" key with
+     * the input parser, including its metadata, default value, and on-set
+     * behavior.
+     */
+    void ManostatInputParser::addIsotropyKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "isotropy",
+            .title = "Isotropy",
+            .description =
+                "Specifies the isotropy of the manostat (isotropic, "
+                "semi-isotropic, anisotropic, full_anisotropic)",
+        };
+
+        const auto setValue = [this](Isotropy isotropy)
+        { _manostatSettings->setIsotropy(isotropy); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<Isotropy>{
+                .metadata     = metaData,
+                .defaultValue = Isotropy::ISOTROPIC,
+                .onSet        = setValue,
+                .validators   = {}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief Adds the fixed axis key to the input parser
+     *
+     * This key allows the user to specify the fixed axis in the simulation.
+     */
+    void ManostatInputParser::addFixedAxisKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name        = "fixed_axis",
+            .title       = "Fixed axis",
+            .description = "Specifies the fixed axis in the simulation",
+        };
+
+        const auto setValue = [this](FixedAxis fixedAxis)
+        { _manostatSettings->setFixedAxis(fixedAxis); };
+
+        auto &fixedAxisKey = _getRegistry().registerKey(
+            KeyRegistry<FixedAxis>{
+                .metadata     = metaData,
+                .defaultValue = FixedAxis::NONE,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(fixedAxisKey), false);
+    }
+
+}   // namespace input

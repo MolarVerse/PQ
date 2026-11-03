@@ -11,5 +11,15 @@ ignore:
   - src/engine/*.cpp # just one combining all engine methods - tested by integration tests
   - include/engine/*.hpp # just one combining all engine methods - tested by integration tests
   - src/QM/**
+
+coverage:
+  status:
+    project:
+      default:
+        threshold: 0.5%
+    patch:
+      default:
+        threshold: 0.5%
+
 codecov:
   token: bf914a3c-fad4-4ea0-936e-5fdf8a80e211

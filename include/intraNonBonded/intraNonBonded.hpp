@@ -20,17 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTRA_NON_BONDED_HPP_
+#ifndef INTRA_NON_BONDED__INTRA_NON_BONDED_HPP
+#define INTRA_NON_BONDED__INTRA_NON_BONDED_HPP
 
-#define _INTRA_NON_BONDED_HPP_
-
-#include <cstddef>   // for size_t
-#include <memory>    // for shared_ptr
-#include <vector>    // for vector
+#include <memory>
+#include <vector>
 
 #include "coulombPotential.hpp"
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
+#include "intraNonBondedContainer.hpp"
+#include "intraNonBondedMap.hpp"
 
 namespace intraNonBonded
 {
@@ -39,7 +37,7 @@ namespace intraNonBonded
      * interactions
      *
      */
-    enum class IntraNonBondedType : size_t
+    enum class IntraNonBondedType : std::uint8_t
     {
         NONE,
         GUFF,
@@ -53,13 +51,12 @@ namespace intraNonBonded
      */
     class IntraNonBonded
     {
-       protected:
+       private:
         IntraNonBondedType _intraNonBondedType = IntraNonBondedType::NONE;
-        bool               _isActivated        = false;
 
-        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPot;
-        std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
-        std::vector<IntraNonBondedMap>                  _intraNonBondedMaps;
+        std::shared_ptr<pot::NonCoulombPotential> _nonCoulombPot;
+        std::shared_ptr<pot::CoulombPotential>    _coulombPotential;
+        std::vector<IntraNonBondedMap>            _intraNonBondedMaps;
 
         std::vector<IntraNonBondedContainer> _intraNonBondedContainers;
 
@@ -72,8 +69,9 @@ namespace intraNonBonded
         );
         void fillIntraNonBondedMaps(molsys::SimulationBox &);
 
-        [[nodiscard]] IntraNonBondedContainer *findIntraNonBondedContainerByMolType(
-            const size_t
+        [[nodiscard]]
+        IntraNonBondedContainer *findIntraNonBondedContainerByMolType(
+            MolType molType
         );
 
         /*************************
@@ -83,23 +81,15 @@ namespace intraNonBonded
         void addIntraNonBondedContainer(const IntraNonBondedContainer &type);
         void addIntraNonBondedMap(const IntraNonBondedMap &interaction);
 
-        /*****************************
-         * standard activate methods *
-         *****************************/
-
-        void               activate();
-        void               deactivate();
-        [[nodiscard]] bool isActive() const;
-
         /***************************
          * standard setter methods *
          ***************************/
 
         void setNonCoulombPotential(
-            const std::shared_ptr<potential::NonCoulombPotential> &pot
+            const std::shared_ptr<pot::NonCoulombPotential> &pot
         );
         void setCoulombPotential(
-            const std::shared_ptr<potential::CoulombPotential> &pot
+            const std::shared_ptr<pot::CoulombPotential> &pot
         );
 
         /***************************
@@ -115,4 +105,4 @@ namespace intraNonBonded
 
 }   // namespace intraNonBonded
 
-#endif   // _INTRA_NON_BONDED_HPP_
+#endif   // INTRA_NON_BONDED__INTRA_NON_BONDED_HPP

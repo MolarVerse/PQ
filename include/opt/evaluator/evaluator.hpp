@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EVALUATOR_HPP_
-
-#define _EVALUATOR_HPP_
+#ifndef OPT__EVALUATOR__EVALUATOR_HPP
+#define OPT__EVALUATOR__EVALUATOR_HPP
 
 #include <memory>
+#include <mstd/types.hpp>
 
 #include "celllist.hpp"
 #include "constraints.hpp"
@@ -35,6 +35,8 @@
 #include "potential.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
+
+struct Settings;
 
 namespace opt
 {
@@ -47,19 +49,20 @@ namespace opt
      */
     class Evaluator
     {
-       protected:
-        std::shared_ptr<potential::Potential>           _potential;
+       private:
+        mstd::ConstRef<Settings>                        _settings;
+        molsys::CellList*                               _cellList;
+        std::shared_ptr<pot::Potential>                 _potential;
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
         std::shared_ptr<constraints::Constraints>       _constraints;
-        std::shared_ptr<molsys::CellList>               _cellList;
-        std::shared_ptr<forceField::ForceField>         _forceField;
+        std::shared_ptr<ff::ForceField>                 _forceField;
         std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
 
        public:
-        Evaluator()          = default;
-        virtual ~Evaluator() = default;
+        explicit Evaluator(const Settings& settings);
+        virtual ~Evaluator();
 
         [[nodiscard]] virtual std::shared_ptr<Evaluator> clone() const = 0;
         virtual void                                     evaluate()    = 0;
@@ -71,22 +74,68 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setPotential(const std::shared_ptr<potential::Potential>);
-        void setCellList(const std::shared_ptr<molsys::CellList>);
-        void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>);
-        void setConstraints(const std::shared_ptr<constraints::Constraints>);
+        void setPotential(const std::shared_ptr<pot::Potential>&);
+        void setCellList(molsys::CellList&);
+        void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
+        void setConstraints(const std::shared_ptr<constraints::Constraints>&);
 
-        void setPhysicalData(const std::shared_ptr<physicalData::PhysicalData>);
+        void setPhysicalData(
+            const std::shared_ptr<physicalData::PhysicalData>&
+        );
         void setPhysicalDataOld(
-            const std::shared_ptr<physicalData::PhysicalData>
+            const std::shared_ptr<physicalData::PhysicalData>&
         );
 
-        void setForceField(const std::shared_ptr<forceField::ForceField>);
+        void setForceField(const std::shared_ptr<ff::ForceField>&);
         void setIntraNonBonded(
-            const std::shared_ptr<intraNonBonded::IntraNonBonded>
+            const std::shared_ptr<intraNonBonded::IntraNonBonded>&
         );
+
+       protected:
+        [[nodiscard]]
+        physicalData::PhysicalData& _getPhysicalData();
+        [[nodiscard]]
+        const physicalData::PhysicalData& _getPhysicalData() const;
+
+        [[nodiscard]]
+        physicalData::PhysicalData& _getPhysicalDataOld();
+        [[nodiscard]]
+        const physicalData::PhysicalData& _getPhysicalDataOld() const;
+
+        [[nodiscard]]
+        molsys::SimulationBox& _getSimulationBox();
+        [[nodiscard]]
+        const molsys::SimulationBox& _getSimulationBox() const;
+
+        [[nodiscard]]
+        molsys::CellList& _getCellList();
+        [[nodiscard]]
+        const molsys::CellList& _getCellList() const;
+
+        [[nodiscard]]
+        pot::Potential& _getPotential();
+        [[nodiscard]]
+        const pot::Potential& _getPotential() const;
+
+        [[nodiscard]]
+        ff::ForceField& _getForceField();
+        [[nodiscard]]
+        const ff::ForceField& _getForceField() const;
+
+        [[nodiscard]]
+        constraints::Constraints& _getConstraints();
+        [[nodiscard]]
+        const constraints::Constraints& _getConstraints() const;
+
+        [[nodiscard]]
+        intraNonBonded::IntraNonBonded& _getIntraNonBonded();
+        [[nodiscard]]
+        const intraNonBonded::IntraNonBonded& _getIntraNonBonded() const;
+
+        [[nodiscard]]
+        const Settings& _getSettings() const;
     };
 
 }   // namespace opt
 
-#endif   // _EVALUATOR_HPP_
+#endif   // OPT__EVALUATOR__EVALUATOR_HPP

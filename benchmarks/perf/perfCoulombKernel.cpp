@@ -35,13 +35,16 @@
 
 #include "coulombShiftedPotential.hpp"
 #include "coulombWolf.hpp"
+#include "perfAlloc.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto shifted = potential::CoulombShiftedPotential(9.0);
-    auto wolf    = potential::CoulombWolf(9.0, 0.25);
+    auto shifted = pot::CoulombShiftedPotential(9.0);
+    auto wolf    = pot::CoulombWolf(9.0, 0.25);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
@@ -49,7 +52,7 @@ int main()
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         const double distance =
-            1.0 + static_cast<double>(i & 255U) * 0.03;   // within cutoff
+            1.0 + (static_cast<double>(i & 255U) * 0.03);   // within cutoff
         const double chargeProduct = 0.5 * -0.5;
 
         const auto [eShift, fShift] =

@@ -22,18 +22,16 @@
 
 #include "testMolecule.hpp"
 
-#include "gtest/gtest.h"          // for Message, TestPartResult
-#include "manostatSettings.hpp"   // for ManostatSettings
-#include "mathUtilities.hpp"      // for compare
-#include "moleculeType.hpp"       // for MoleculeType
-#include "orthorhombicBox.hpp"    // for OrthorhombicBox
+#include "mathUtilities.hpp"
+#include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
-    const linearAlgebra::Vec3D boxDimensions = {10.0, 10.0, 10.0};
-    const linearAlgebra::Vec3D centerOfMass  = {1.0 / 3.0, 1.0 / 2.0, 0.0};
-    molsys::OrthorhombicBox    box;
-    box.setBoxDimensions(boxDimensions);
+    const linalg::Vec3D     boxDimensions = {10.0, 10.0, 10.0};
+    const linalg::Vec3D     centerOfMass  = {1.0 / 3.0, 1.0 / 2.0, 0.0};
+    molsys::OrthorhombicBox box(boxDimensions);
 
     _molecule->calculateCenterOfMass(box);
     EXPECT_EQ(_molecule->getCenterOfMass(), centerOfMass);
@@ -41,35 +39,31 @@ TEST_F(TestMolecule, calculateCenterOfMass)
 
 TEST_F(TestMolecule, scaleAtoms)
 {
-    const linearAlgebra::tensor3D scale =
-        diagonalMatrix(linearAlgebra::Vec3D{1.0, 2.0, 3.0});
-    const linearAlgebra::Vec3D atomPosition1 = _molecule->getAtomPosition(0);
-    const linearAlgebra::Vec3D atomPosition2 = _molecule->getAtomPosition(1);
-    const linearAlgebra::Vec3D atomPosition3 = _molecule->getAtomPosition(2);
+    const linalg::tensor3D scale = diagonalMatrix(linalg::Vec3D{1.0, 2.0, 3.0});
+    const auto atomPosition1     = _molecule->getAtomPosition(AtomIndex{0});
+    const auto atomPosition2     = _molecule->getAtomPosition(AtomIndex{1});
+    const auto atomPosition3     = _molecule->getAtomPosition(AtomIndex{2});
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+    molsys::OrthorhombicBox box({10.0, 10.0, 10.0});
 
     _molecule->calculateCenterOfMass(box);
 
     const auto centerOfMassBeforeScaling = _molecule->getCenterOfMass();
-    const linearAlgebra::Vec3D shift =
+    const linalg::Vec3D shift =
         centerOfMassBeforeScaling * (diagonal(scale) - 1.0);
 
     _molecule->scale(scale, box);
 
-    EXPECT_EQ(_molecule->getAtomPosition(0), atomPosition1 + shift);
-    EXPECT_EQ(_molecule->getAtomPosition(1), atomPosition2 + shift);
-    EXPECT_EQ(_molecule->getAtomPosition(2), atomPosition3 + shift);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{0}), atomPosition1 + shift);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{1}), atomPosition2 + shift);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{2}), atomPosition3 + shift);
 }
 
 TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
 {
-    const linearAlgebra::tensor3D scale =
-        diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.5, 0.5});
+    const linalg::tensor3D scale = diagonalMatrix(linalg::Vec3D{0.5, 0.5, 0.5});
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({2.0, 2.0, 2.0});
+    molsys::OrthorhombicBox box({2.0, 2.0, 2.0});
 
     _molecule->setAtomPosition(0, {0.9, 0.0, 0.0});
     _molecule->setAtomPosition(1, {-0.9, 0.0, 0.0});
@@ -82,44 +76,42 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
     box.scaleBox(scale);
     _molecule->scale(scale, box);
 
-    auto expectedPosition0 = linearAlgebra::Vec3D{0.9, 0.0, 0.0} + shift;
-    auto expectedPosition1 = linearAlgebra::Vec3D{-0.9, 0.0, 0.0} + shift;
-    auto expectedPosition2 = linearAlgebra::Vec3D{0.9, 0.1, 0.0} + shift;
+    auto expectedPosition0 = linalg::Vec3D{0.9, 0.0, 0.0} + shift;
+    auto expectedPosition1 = linalg::Vec3D{-0.9, 0.0, 0.0} + shift;
+    auto expectedPosition2 = linalg::Vec3D{0.9, 0.1, 0.0} + shift;
     box.applyPBC(expectedPosition0);
     box.applyPBC(expectedPosition1);
     box.applyPBC(expectedPosition2);
 
-    EXPECT_EQ(_molecule->getAtomPosition(0), expectedPosition0);
-    EXPECT_EQ(_molecule->getAtomPosition(1), expectedPosition1);
-    EXPECT_EQ(_molecule->getAtomPosition(2), expectedPosition2);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{0}), expectedPosition0);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{1}), expectedPosition1);
+    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{2}), expectedPosition2);
 }
 
 TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
 {
-    settings::ManostatSettings::setIsotropy(settings::Isotropy::ISOTROPIC);
+    const linalg::tensor3D scale =
+        diagonalMatrix(linalg::Vec3D{0.5, 0.25, 2.0});
 
-    const linearAlgebra::tensor3D scale =
-        diagonalMatrix(linearAlgebra::Vec3D{0.5, 0.25, 2.0});
+    molsys::OrthorhombicBox box({10.0, 10.0, 10.0});
 
-    molsys::OrthorhombicBox box;
-    box.setBoxDimensions({10.0, 10.0, 10.0});
+    const auto relativeVelocity10 = _molecule->getAtomVelocity(AtomIndex{1}) -
+                                    _molecule->getAtomVelocity(AtomIndex{0});
+    const auto relativeVelocity20 = _molecule->getAtomVelocity(AtomIndex{2}) -
+                                    _molecule->getAtomVelocity(AtomIndex{0});
 
-    const auto relativeVelocity10 =
-        _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0);
-    const auto relativeVelocity20 =
-        _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0);
-
-    const auto centerOfMassVelocity = (1.0 * _molecule->getAtomVelocity(0) +
-                                       2.0 * _molecule->getAtomVelocity(1) +
-                                       3.0 * _molecule->getAtomVelocity(2)) /
-                                      6.0;
+    const auto centerOfMassVelocity =
+        (1.0 * _molecule->getAtomVelocity(AtomIndex{0}) +
+         2.0 * _molecule->getAtomVelocity(AtomIndex{1}) +
+         3.0 * _molecule->getAtomVelocity(AtomIndex{2})) /
+        6.0;
 
     _molecule->scaleVelocity(scale, box);
 
     const auto scaledCenterOfMassVelocity =
-        (1.0 * _molecule->getAtomVelocity(0) +
-         2.0 * _molecule->getAtomVelocity(1) +
-         3.0 * _molecule->getAtomVelocity(2)) /
+        (1.0 * _molecule->getAtomVelocity(AtomIndex{0}) +
+         2.0 * _molecule->getAtomVelocity(AtomIndex{1}) +
+         3.0 * _molecule->getAtomVelocity(AtomIndex{2})) /
         6.0;
 
     EXPECT_TRUE(
@@ -131,14 +123,16 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
     );
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomVelocity(1) - _molecule->getAtomVelocity(0),
+            _molecule->getAtomVelocity(AtomIndex{1}) -
+                _molecule->getAtomVelocity(AtomIndex{0}),
             relativeVelocity10,
             1e-12
         )
     );
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomVelocity(2) - _molecule->getAtomVelocity(0),
+            _molecule->getAtomVelocity(AtomIndex{2}) -
+                _molecule->getAtomVelocity(AtomIndex{0}),
             relativeVelocity20,
             1e-12
         )
@@ -148,9 +142,9 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
 TEST_F(TestMolecule, setAtomForceToZero)
 {
     _molecule->setAtomForcesToZero();
-    EXPECT_EQ(_molecule->getAtomForce(0), linearAlgebra::Vec3D());
-    EXPECT_EQ(_molecule->getAtomForce(1), linearAlgebra::Vec3D());
-    EXPECT_EQ(_molecule->getAtomForce(2), linearAlgebra::Vec3D());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{0}), linalg::Vec3D());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{1}), linalg::Vec3D());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{2}), linalg::Vec3D());
 }
 
 TEST_F(TestMolecule, getNumberOfAtomTypes)
@@ -161,15 +155,14 @@ TEST_F(TestMolecule, getNumberOfAtomTypes)
 TEST_F(TestMolecule, getNumberOfAtomTypesCountsNonAdjacentDuplicates)
 {
     auto molecule = molsys::Molecule();
-    molecule.setNumberOfAtoms(3);
 
     const auto atom1 = std::make_shared<molsys::Atom>();
     const auto atom2 = std::make_shared<molsys::Atom>();
     const auto atom3 = std::make_shared<molsys::Atom>();
 
-    atom1->setExternalAtomType(1);
-    atom2->setExternalAtomType(2);
-    atom3->setExternalAtomType(1);
+    atom1->setExternalAtomType(ExtAtomType{1});
+    atom2->setExternalAtomType(ExtAtomType{2});
+    atom3->setExternalAtomType(ExtAtomType{1});
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -182,9 +175,79 @@ TEST_F(TestMolecule, moleculeTypeCountsNonAdjacentDuplicates)
 {
     auto moleculeType = molsys::MoleculeType();
 
-    moleculeType.addAtomType(1);
-    moleculeType.addAtomType(2);
-    moleculeType.addAtomType(1);
+    moleculeType.addAtomType(AtomType{1});
+    moleculeType.addAtomType(AtomType{2});
+    moleculeType.addAtomType(AtomType{1});
 
     EXPECT_EQ(moleculeType.getNumberOfAtomTypes(), 2);
+}
+
+TEST_F(TestMolecule, getNumberOfAtomsIsDerivedFromAtoms)
+{
+    EXPECT_EQ(_molecule->getNumberOfAtoms(), 3);
+    EXPECT_EQ(_molecule->getDegreesOfFreedom(), 9);
+
+    _molecule->addAtom(std::make_shared<molsys::Atom>());
+
+    EXPECT_EQ(_molecule->getNumberOfAtoms(), 4);
+    EXPECT_EQ(_molecule->getDegreesOfFreedom(), 12);
+
+    EXPECT_EQ(molsys::Molecule().getNumberOfAtoms(), 0);
+}
+
+TEST_F(TestMolecule, getMolMassIsSumOfAtomMasses)
+{
+    EXPECT_DOUBLE_EQ(_molecule->getMolMass(), 6.0);
+
+    auto atom = std::make_shared<molsys::Atom>();
+    atom->setMass(4.5);
+    _molecule->addAtom(atom);
+
+    EXPECT_DOUBLE_EQ(_molecule->getMolMass(), 10.5);
+}
+
+TEST_F(TestMolecule, getMolMassOfEmptyMoleculeIsZero)
+{
+    EXPECT_DOUBLE_EQ(molsys::Molecule().getMolMass(), 0.0);
+}
+
+TEST_F(TestMolecule, getSmoothingFactor)
+{
+    _molecule->setSmoothingFactor(0.25);
+
+    EXPECT_DOUBLE_EQ(_molecule->getSmoothingFactor(), 0.25);
+}
+
+TEST_F(TestMolecule, getSmoothingFactorThrowsIfNotSet)
+{
+    EXPECT_THROW_MSG(
+        static_cast<void>(_molecule->getSmoothingFactor()),
+        std::runtime_error,
+        "Smoothing factor is not set for this molecule."
+    );
+}
+
+TEST_F(TestMolecule, moleculeTypeGetNumberOfAtoms)
+{
+    auto moleculeType = molsys::MoleculeType();
+
+    moleculeType.setNumberOfAtoms(5);
+
+    EXPECT_EQ(moleculeType.getNumberOfAtoms(), 5);
+}
+
+TEST_F(TestMolecule, moleculeTypeGetNumberOfAtomsThrowsIfNotSet)
+{
+    const auto moleculeType = molsys::MoleculeType();
+
+    EXPECT_THROW_MSG(
+        static_cast<void>(moleculeType.getNumberOfAtoms()),
+        std::runtime_error,
+        "Number of atoms is not set for this molecule."
+    );
+}
+
+TEST_F(TestMolecule, moleculeTypeChargeDefaultsToZero)
+{
+    EXPECT_EQ(molsys::MoleculeType().getCharge(), 0);
 }

@@ -22,7 +22,43 @@
 
 #include "resetKineticsSettings.hpp"
 
-using settings::ResetKineticsSettings;
+#include "timingsSettings.hpp"
+
+/**
+ * @brief Construct a new Reset Kinetics Settings object
+ *
+ */
+ResetKineticsSettings::ResetKineticsSettings()
+    : _nScale(0),
+      _fScale(0),
+      _nReset(0),
+      _fReset(0),
+      _nResetAngular(0),
+      _fResetAngular(0),
+      _fResetForces(0)
+{
+}
+
+/**
+ * @brief Finalize the reset kinetics settings by setting default values for
+ * certain fields if they are zero
+ */
+void ResetKineticsSettings::finalize()
+{
+    const auto numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
+
+    if (_fScale.get() == 0)
+        _fScale.set(numberOfSteps + 1);
+
+    if (_fReset.get() == 0)
+        _fReset.set(numberOfSteps + 1);
+
+    if (_fResetAngular.get() == 0)
+        _fResetAngular.set(numberOfSteps + 1);
+
+    if (_fResetForces.get() == 0)
+        _fResetForces.set(numberOfSteps + 1);
+}
 
 /***************************
  *                         *
@@ -35,37 +71,37 @@ using settings::ResetKineticsSettings;
  *
  * @param nScale
  */
-void ResetKineticsSettings::setNScale(const size_t nScale) { _nScale = nScale; }
+void ResetKineticsSettings::setNScale(size_t nScale) { _nScale.set(nScale); }
 
 /**
  * @brief set fScale
  *
  * @param fScale
  */
-void ResetKineticsSettings::setFScale(const size_t fScale) { _fScale = fScale; }
+void ResetKineticsSettings::setFScale(size_t fScale) { _fScale.set(fScale); }
 
 /**
  * @brief set nReset
  *
  * @param nReset
  */
-void ResetKineticsSettings::setNReset(const size_t nReset) { _nReset = nReset; }
+void ResetKineticsSettings::setNReset(size_t nReset) { _nReset.set(nReset); }
 
 /**
  * @brief set fReset
  *
  * @param fReset
  */
-void ResetKineticsSettings::setFReset(const size_t fReset) { _fReset = fReset; }
+void ResetKineticsSettings::setFReset(size_t fReset) { _fReset.set(fReset); }
 
 /**
  * @brief set nResetAngular
  *
  * @param nResetAngular
  */
-void ResetKineticsSettings::setNResetAngular(const size_t nResetAngular)
+void ResetKineticsSettings::setNResetAngular(size_t nResetAngular)
 {
-    _nResetAngular = nResetAngular;
+    _nResetAngular.set(nResetAngular);
 }
 
 /**
@@ -73,9 +109,9 @@ void ResetKineticsSettings::setNResetAngular(const size_t nResetAngular)
  *
  * @param fResetAngular
  */
-void ResetKineticsSettings::setFResetAngular(const size_t fResetAngular)
+void ResetKineticsSettings::setFResetAngular(size_t fResetAngular)
 {
-    _fResetAngular = fResetAngular;
+    _fResetAngular.set(fResetAngular);
 }
 
 /**
@@ -83,9 +119,9 @@ void ResetKineticsSettings::setFResetAngular(const size_t fResetAngular)
  *
  * @param fResetForces
  */
-void ResetKineticsSettings::setFResetForces(const size_t fResetForces)
+void ResetKineticsSettings::setFResetForces(size_t fResetForces)
 {
-    _fResetForces = fResetForces;
+    _fResetForces.set(fResetForces);
 }
 
 /***************************
@@ -99,46 +135,55 @@ void ResetKineticsSettings::setFResetForces(const size_t fResetForces)
  *
  * @return size_t
  */
-size_t ResetKineticsSettings::getNScale() { return _nScale; }
+size_t ResetKineticsSettings::getNScale() const { return _nScale.get(); }
 
 /**
  * @brief get fScale
  *
  * @return size_t
  */
-size_t ResetKineticsSettings::getFScale() { return _fScale; }
+size_t ResetKineticsSettings::getFScale() const { return _fScale.get(); }
 
 /**
  * @brief get nReset
  *
  * @return size_t
  */
-size_t ResetKineticsSettings::getNReset() { return _nReset; }
+size_t ResetKineticsSettings::getNReset() const { return _nReset.get(); }
 
 /**
  * @brief get fReset
  *
  * @return size_t
  */
-size_t ResetKineticsSettings::getFReset() { return _fReset; }
+size_t ResetKineticsSettings::getFReset() const { return _fReset.get(); }
 
 /**
  * @brief get nResetAngular
  *
  * @return size_t
  */
-size_t ResetKineticsSettings::getNResetAngular() { return _nResetAngular; }
+size_t ResetKineticsSettings::getNResetAngular() const
+{
+    return _nResetAngular.get();
+}
 
 /**
  * @brief get fResetAngular
  *
  * @return size_t
  */
-size_t ResetKineticsSettings::getFResetAngular() { return _fResetAngular; }
+size_t ResetKineticsSettings::getFResetAngular() const
+{
+    return _fResetAngular.get();
+}
 
 /**
  * @brief get fResetForces
  *
  * @return size_t
  */
-size_t ResetKineticsSettings::getFResetForces() { return _fResetForces; }
+size_t ResetKineticsSettings::getFResetForces() const
+{
+    return _fResetForces.get();
+}

@@ -22,45 +22,50 @@
 
 #include "stressOutput.hpp"
 
-#include <format>    // for format
+#include <format>
 
-#include "physicalData.hpp"   // for PhysicalData
+#include "physicalData.hpp"
 
-using output::StressOutput;
-using namespace physicalData;
-
-/**
- * @brief Write the stress output
- *
- * @details The stress output is written in the following format:
- * - step
- * - s_xx
- * - s_xy
- * - s_xz
- * - s_yx
- * - s_yy
- * - s_yz
- * - s_zx
- * - s_zy
- * - s_zz
- *
- * @param step
- * @param data
- */
-void StressOutput::write(const size_t step, const PhysicalData &data)
+namespace out
 {
-    const auto &stress = data.getStressTensor();
 
-    _fp << std::format("{:10d}\t", step);
-    _fp << std::format("{:20.5e}\t", stress[0][0]);
-    _fp << std::format("{:20.5e}\t", stress[0][1]);
-    _fp << std::format("{:20.5e}\t", stress[0][2]);
-    _fp << std::format("{:20.5e}\t", stress[1][0]);
-    _fp << std::format("{:20.5e}\t", stress[1][1]);
-    _fp << std::format("{:20.5e}\t", stress[1][2]);
-    _fp << std::format("{:20.5e}\t", stress[2][0]);
-    _fp << std::format("{:20.5e}\t", stress[2][1]);
-    _fp << std::format("{:20.5e}\n", stress[2][2]);
+    /**
+     * @brief Write the stress output
+     *
+     * @details The stress output is written in the following format:
+     * - step
+     * - s_xx
+     * - s_xy
+     * - s_xz
+     * - s_yx
+     * - s_yy
+     * - s_yz
+     * - s_zx
+     * - s_zy
+     * - s_zz
+     *
+     * @param step
+     * @param physicalData the physical data of the system
+     */
+    void StressOutput::write(
+        size_t                            step,
+        const physicalData::PhysicalData &physicalData
+    )
+    {
+        const auto &stress = physicalData.getStressTensor();
 
-    _fp << std::flush;
-}
+        _getFilePointer() << std::format("{:10d}\t", step);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[0][0]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[0][1]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[0][2]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[1][0]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[1][1]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[1][2]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[2][0]);
+        _getFilePointer() << std::format("{:20.5e}\t", stress[2][1]);
+        _getFilePointer() << std::format("{:20.5e}\n", stress[2][2]);
+
+        _getFilePointer() << std::flush;
+    }
+
+}   // namespace out

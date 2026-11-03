@@ -35,33 +35,34 @@
 #endif
 
 #include "orthorhombicBox.hpp"
+#include "perfAlloc.hpp"
 #include "triclinicBox.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    using linearAlgebra::Vec3D;
+    using linalg::Vec3D;
 
-    auto ortho = molsys::OrthorhombicBox();
-    ortho.setBoxDimensions({20.0, 20.0, 20.0});
+    auto ortho = molsys::OrthorhombicBox({20.0, 20.0, 20.0});
 
-    auto triclinic = molsys::TriclinicBox();
-    triclinic.setBoxDimensions({20.0, 20.0, 20.0});
-    triclinic.setBoxAngles({80.0, 90.0, 100.0});
+    auto triclinic =
+        molsys::TriclinicBox({20.0, 20.0, 20.0}, {80.0, 90.0, 100.0}, false);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
     double sink = 0.0;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double x = static_cast<double>(i & 127U) * 0.3 - 19.0;
-        const Vec3D  v(x, 0.5 * x, -x);
+        const double tmp = (static_cast<double>(i & 127U) * 0.3) - 19.0;
+        const Vec3D  pos(tmp, 0.5 * tmp, -tmp);
 
-        sink += norm(ortho.wrapPositionIntoBox(v));
-        sink += norm(triclinic.wrapPositionIntoBox(v));
-        sink += norm(triclinic.toOrthoSpace(v));
-        sink += norm(triclinic.toSimSpace(v));
+        sink += norm(ortho.wrapPositionIntoBox(pos));
+        sink += norm(triclinic.wrapPositionIntoBox(pos));
+        sink += norm(triclinic.toOrthoSpace(pos));
+        sink += norm(triclinic.toSimSpace(pos));
     }
 
     std::cout << std::format("{:.6f}\n", sink);

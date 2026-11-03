@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_M_SHAKE_READER_HPP_
-
-#define _TEST_M_SHAKE_READER_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_M_SHAKE_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_M_SHAKE_READER_HPP
 
 #include <gtest/gtest.h>
 
@@ -37,15 +36,16 @@
 class TestMShakeReader : public ::testing::Test
 {
    protected:
+    Settings                        _settings;
+    std::unique_ptr<engine::Engine> _engine;
+
     void SetUp() override
     {
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
-
-    engine::Engine *_engine;
 };
 
-#endif   // _TEST_M_SHAKE_READER_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_M_SHAKE_READER_HPP

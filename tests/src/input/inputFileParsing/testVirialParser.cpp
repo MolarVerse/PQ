@@ -20,20 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, TestPartResult, testing
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 #include "virialInputParser.hpp"
-
-using namespace std;
-using namespace input;
-using namespace ::testing;
 
 /**
  * @brief tests parsing the "virial" command
@@ -44,26 +40,31 @@ using namespace ::testing;
  */
 TEST_F(TestInputFileReader, testParseVirial)
 {
-    VirialInputParser        parser;
+    input::VirialInputParser parser;
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("virial"));
+    const auto& parseFunc = funcMap.at("virial");
+
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
-    parser.parseVirial(lineElements, 0);
-    EXPECT_EQ(
-        settings::Settings::getVirialType(),
-        settings::VirialType::ATOMIC
-    );
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getVirialType(), VirialType::ATOMIC);
+
+    _clearParser(parser);
 
     lineElements = {"virial", "=", "molecular"};
-    parser.parseVirial(lineElements, 0);
+    parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings::Settings::getVirialType(),
-        settings::VirialType::MOLECULAR
+        settings::GeneralSettings::getVirialType(),
+        VirialType::MOLECULAR
     );
+
+    _clearParser(parser);
 
     lineElements = {"virial", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseVirial(lineElements, 0),
-        customException::InputFileException,
-        "Invalid virial setting \"notValid\" at line 0 in input file.\n"
-        "Possible options are: molecular or atomic"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"virial\" at line 0 in input "
+        "file. Allowed values: atomic, molecular"
     );
 }

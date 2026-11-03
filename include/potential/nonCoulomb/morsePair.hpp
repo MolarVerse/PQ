@@ -20,16 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MORSE_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP
 
-#define _MORSE_PAIR_HPP_
-
-#include <cstddef>   // size_t
-#include <utility>   // pair
+#include <utility>
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+struct TestMorsePairUtils;   // forward declaration
+
+namespace pot
 {
     /**
      * @class MorsePair
@@ -40,46 +41,39 @@ namespace potential
     class MorsePair : public NonCoulombPair
     {
        private:
-        double _dissociationEnergy;
-        double _wellWidth;
-        double _equilibriumDistance;
+        MorseParams _params;
 
        public:
         explicit MorsePair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
+            ExtVdwType         vanDerWaalsType1,
+            ExtVdwType         vanDerWaalsType2,
+            double             cutOff,
+            const MorseParams &params
         );
 
-        explicit MorsePair(
-            const double cutOff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
-        );
+        explicit MorsePair(double cutOff, const MorseParams &params);
 
         explicit MorsePair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double dissociationEnergy,
-            const double wellWidth,
-            const double equilibriumDistance
+            double             cutOff,
+            double             energyCutoff,
+            double             forceCutoff,
+            const MorseParams &params
         );
+
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/906
+        // explicitly deleted to not implicitly create it with the wrong
+        // types!!! Needs cleanup
+        explicit MorsePair(size_t, size_t, double, const MorseParams &) =
+            delete;
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
-        [[nodiscard]] double getDissociationEnergy() const;
-        [[nodiscard]] double getWellWidth() const;
-        [[nodiscard]] double getEquilibriumDistance() const;
+        friend struct ::TestMorsePairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _MORSE_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP

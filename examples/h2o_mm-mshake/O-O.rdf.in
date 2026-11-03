@@ -1,0 +1,8 @@
+reference_selection = O
+target_selection = O
+delta_r = 0.02
+
+out_file = O-O_rdf.out
+traj_files
+./h2o-md-01.xyz
+END

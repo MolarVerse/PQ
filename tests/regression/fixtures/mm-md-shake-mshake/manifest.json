@@ -1,0 +1,29 @@
+{
+  "input": [
+    "shake.in",
+    "mshake.in"
+  ],
+  "timeout_seconds": 30,
+  "stdout_contains": [
+    "PQ ended normally"
+  ],
+  "stdout_rejects": [
+    "Exception:"
+  ],
+  "expected_files": [
+    "shake.xyz",
+    "shake.vel",
+    "mshake.xyz",
+    "mshake.vel"
+  ],
+  "compare_last_frame": [
+    {
+      "files": ["shake.xyz", "mshake.xyz"],
+      "atol": 1.0e-4
+    },
+    {
+      "files": ["shake.vel", "mshake.vel"],
+      "atol": 1.0e10
+    }
+  ]
+}

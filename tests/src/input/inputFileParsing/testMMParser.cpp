@@ -20,21 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_FALSE, EXPECT_TRUE
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
 #include "MMInputParser.hpp"
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for InputFileException, customException
-#include "forceFieldSettings.hpp"    // for ForceFieldSettings
-#include "gtest/gtest.h"             // for AssertionResult, Message
-#include "potentialSettings.hpp"     // for PotentialSettings
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
-
-using namespace input;
+#include "exceptions.hpp"
+#include "forceFieldSettings.hpp"
+#include "potentialSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "force-field" command
@@ -45,28 +41,45 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseForceField)
 {
-    MMInputParser parser(_engine->getForceField(), _engine->getPotential());
+    Settings             settings;
+    input::MMInputParser parser{
+        settings.waterModelSettings,
+        settings.forceFieldSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("force_field"));
+    const auto& parseFunc = funcMap.at("force_field");
+
     std::vector<std::string> lineElements = {"force-field", "=", "on"};
-    parser.parseForceFieldType(lineElements, 0);
-    EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_TRUE(_engine->getForceField()->isNonCoulombicActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_TRUE(settings.forceFieldSettings.isActive());
+    EXPECT_TRUE(settings.forceFieldSettings.isNonCoulombicActive());
+
+    settings.forceFieldSettings.setType(ForceFieldType::OFF);
+    _clearParser(parser);
 
     lineElements = {"force-field", "=", "off"};
-    parser.parseForceFieldType(lineElements, 0);
-    EXPECT_FALSE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_FALSE(settings.forceFieldSettings.isActive());
+    EXPECT_FALSE(settings.forceFieldSettings.isNonCoulombicActive());
+
+    settings.forceFieldSettings.setType(ForceFieldType::OFF);
+    _clearParser(parser);
 
     lineElements = {"force-field", "=", "bonded"};
-    parser.parseForceFieldType(lineElements, 0);
-    EXPECT_TRUE(settings::ForceFieldSettings::isActive());
-    EXPECT_FALSE(_engine->getForceField()->isNonCoulombicActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_TRUE(settings.forceFieldSettings.isActive());
+    EXPECT_FALSE(settings.forceFieldSettings.isNonCoulombicActive());
+
+    settings.forceFieldSettings.setType(ForceFieldType::OFF);
+    _clearParser(parser);
 
     lineElements = {"forceField", "=", "notValid"};
     ASSERT_THROW_MSG(
-        parser.parseForceFieldType(lineElements, 0),
-        customException::InputFileException,
-        "Invalid force-field keyword \"notValid\" at line 0 in input file\n"
-        "Possible options are \"on\", \"off\" or \"bonded\""
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"force-field\" at line 0 in input "
+        "file. Allowed values: off, on, bonded"
     );
 }
 
@@ -79,40 +92,57 @@ TEST_F(TestInputFileReader, testParseForceField)
  */
 TEST_F(TestInputFileReader, testParseNonCoulombType)
 {
-    MMInputParser parser(_engine->getForceField(), _engine->getPotential());
+    Settings settings;
+
+    input::MMInputParser parser{
+        settings.waterModelSettings,
+        settings.forceFieldSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("noncoulomb"));
+    const auto& parseNonCoulombFunc = funcMap.at("noncoulomb");
+
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
-    parser.parseNonCoulombType(lineElements, 0);
+    parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::GUFF
+        NonCoulombType::GUFF
     );
+
+    _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "lj"};
-    parser.parseNonCoulombType(lineElements, 0);
+    parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::LJ
+        NonCoulombType::LJ
     );
+
+    _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "buck"};
-    parser.parseNonCoulombType(lineElements, 0);
+    parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::BUCKINGHAM
+        NonCoulombType::BUCKINGHAM
     );
+
+    _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "morse"};
-    parser.parseNonCoulombType(lineElements, 0);
+    parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
         settings::PotentialSettings::getNonCoulombType(),
-        settings::NonCoulombType::MORSE
+        NonCoulombType::MORSE
     );
 
-    lineElements = {"coulomb", "=", "notValid"};
+    _clearParser(parser);
+
+    lineElements = {"noncoulomb", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseNonCoulombType(lineElements, 0),
-        customException::InputFileException,
-        "Invalid nonCoulomb type \"notValid\" at line 0 in input file.\n"
-        "Possible options are: lj, buck, morse and guff"
+        parseNonCoulombFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"noncoulomb\" at line 0 in input "
+        "file. Allowed values: none, lj, buckingham, morse, guff, buck"
     );
 }

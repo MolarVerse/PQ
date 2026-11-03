@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_STDOUTOUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_STDOUT_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_STDOUT_OUTPUT_HPP
 
-#define _TEST_STDOUTOUTPUT_HPP_
+#include <gtest/gtest.h>
 
-#include "stdoutOutput.hpp"   // for StdoutOutput
-
-#include <gtest/gtest.h>   // for Test
+#include "stdoutOutput.hpp"
 
 /**
  * @class TestStdoutOutput
@@ -36,12 +35,13 @@
  */
 class TestStdoutOutput : public ::testing::Test
 {
-  protected:
-    void SetUp() override { _stdoutOutput = new output::StdoutOutput("stdout"); }
+   protected:
+    std::unique_ptr<out::StdoutOutput> _stdoutOutput;
 
-    void TearDown() override { delete _stdoutOutput; }
-
-    output::StdoutOutput *_stdoutOutput;
+    void SetUp() override
+    {
+        _stdoutOutput = std::make_unique<out::StdoutOutput>("stdout");
+    }
 };
 
-#endif   // _TEST_STDOUTOUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_STDOUT_OUTPUT_HPP

@@ -22,71 +22,77 @@
 
 #include "noseHooverSection.hpp"
 
-#include <format>   // for format
-#include <string>   // for string
+#include <format>
+#include <string>
 
-#include "exceptions.hpp"           // for RstFileException
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "exceptions.hpp"
+#include "thermostatSettings.hpp"
 
-using input::restartFile::NoseHooverSection;
-using namespace engine;
-using namespace customException;
-using namespace settings;
-
-/**
- * @brief checks the number of arguments in the line
- *
- * @param lineElements all elements of the line
- *
- * @throws RstFileException if the number of arguments is not
- * correct
- */
-void NoseHooverSection::process(
-    std::vector<std::string> &lineElements,
-    Engine & /*engine*/
-)
+namespace input::restartFile
 {
-    if (4 != lineElements.size())
+
+    /**
+     * @brief checks the number of arguments in the line
+     *
+     * @param lineElements all elements of the line
+     * @param lineNumber the line number in the rst file being processed
+     *
+     * @throws exc::RstFileException if the number of arguments is not
+     * correct
+     */
+    void NoseHooverSection::process(
+        std::vector<std::string> &lineElements,
+        engine::Engine & /*engine*/,
+        size_t &lineNumber
+    )
     {
-        throw RstFileException(
-            std::format(
-                "Error not enough arguments in line {} for a chi entry of the "
-                "nose "
-                "hoover thermostat",
-                _lineNumber
-            )
-        );
+        if (4 != lineElements.size())
+        {
+            throw exc::RstFileException(
+                std::format(
+                    "Error not enough arguments in line {} for a chi entry of "
+                    "the "
+                    "nose "
+                    "hoover thermostat",
+                    lineNumber
+                )
+            );
+        }
+
+        const auto idx  = stoul(lineElements[1]);
+        const auto chi  = stod(lineElements[2]);
+        const auto zeta = stod(lineElements[3]);
+
+        auto [iterChi, chiIsInserted] =
+            settings::ThermostatSettings::addChi(idx, chi);
+        auto [iterZeta, zetaIsInserted] =
+            settings::ThermostatSettings::addZeta(idx, zeta);
+
+        if (!chiIsInserted || !zetaIsInserted)
+        {
+            throw exc::RstFileException(
+                std::format(
+                    "Error in line {} in restart file; chi or zeta entry "
+                    "already "
+                    "exists",
+                    lineNumber
+                )
+            );
+        }
     }
 
-    const auto idx  = stoul(lineElements[1]);
-    const auto chi  = stod(lineElements[2]);
-    const auto zeta = stod(lineElements[3]);
+    /**
+     * @brief returns the keyword of the section
+     *
+     * @return std::string "chi"
+     */
+    std::string NoseHooverSection::keyword() { return "chi"; }
 
-    auto [iterChi, chiIsInserted]   = ThermostatSettings::addChi(idx, chi);
-    auto [iterZeta, zetaIsInserted] = ThermostatSettings::addZeta(idx, zeta);
+    /**
+     * @brief returns if the section is a header
+     *
+     * @return bool true
+     */
+    bool NoseHooverSection::isHeader() { return true; }
 
-    if (!chiIsInserted || !zetaIsInserted)
-    {
-        throw RstFileException(
-            std::format(
-                "Error in line {} in restart file; chi or zeta entry already "
-                "exists",
-                _lineNumber
-            )
-        );
-    }
-}
-
-/**
- * @brief returns the keyword of the section
- *
- * @return std::string "chi"
- */
-std::string NoseHooverSection::keyword() { return "chi"; }
-
-/**
- * @brief returns if the section is a header
- *
- * @return bool true
- */
-bool NoseHooverSection::isHeader() { return true; }
+}   // namespace input::restartFile

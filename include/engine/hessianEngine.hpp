@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_ENGINE_HPP_
-
-#define _HESSIAN_ENGINE_HPP_
+#ifndef ENGINE__HESSIAN_ENGINE_HPP
+#define ENGINE__HESSIAN_ENGINE_HPP
 
 #include <memory>
 
@@ -45,41 +44,32 @@ namespace engine
         bool _converged  = false;
         bool _optStopped = false;
 
-        [[nodiscard]]
-        std::shared_ptr<opt::Evaluator> setupEvaluator();
-        [[nodiscard]]
-        std::shared_ptr<opt::HessianBuilder> setupHessianBuilder() const;
+       public:
+        using Engine::Engine;
 
-        void setupOptimization(
+        void run() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
+
+        [[nodiscard]]
+        std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
+        [[nodiscard]] out::OptOutput               &getOptOutput();
+
+       private:
+        [[nodiscard]]
+        std::shared_ptr<opt::Evaluator> _setupEvaluator();
+
+        void _setupOptimization(
             const std::shared_ptr<opt::Evaluator> &evaluator
         );
-        void runOptimization();
-        void takeOptimizationStep();
-        void writeOptimizationOutput();
+        void _runOptimization();
+        void _takeOptimizationStep();
 
         [[nodiscard]]
-        std::shared_ptr<opt::Optimizer> setupEmptyOptimizer();
-        [[nodiscard]]
-        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy();
+        std::shared_ptr<opt::Optimizer> _setupEmptyOptimizer();
 
-        void setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer);
-        void setupMinMaxLearningRate(
-            std::shared_ptr<opt::LearningRateStrategy> &learningRate
-        );
-        void writeOptimizationSetupInfo();
-
-        void writeHessian(const opt::HessianMatrix &hessian) const;
-        void writeHessianInfo(const opt::HessianMatrix &hessian) const;
-
-       public:
-        void run() final;
-        void writeOutput() final;
-
-        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld(
-        );
-        [[nodiscard]] output::OptOutput &getOptOutput();
+        void _writeOptimizationSetupInfo();
     };
 
 }   // namespace engine
 
-#endif   // _HESSIAN_ENGINE_HPP_
+#endif   // ENGINE__HESSIAN_ENGINE_HPP

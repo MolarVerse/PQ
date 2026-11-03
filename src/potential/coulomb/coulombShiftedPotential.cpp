@@ -22,32 +22,33 @@
 
 #include "coulombShiftedPotential.hpp"
 
-#include "constants/internalConversionFactors.hpp"   // for _COULOMB_PREFACTOR_
+#include "constants/internalConversionFactors.hpp"
 
-using namespace potential;
-using namespace constants;
-
-/**
- * @brief calculate the energy and force of the shifted Coulomb potential
- *
- * @param distance
- * @return std::pair<double, double>
- */
-std::pair<double, double> CoulombShiftedPotential::calculate(
-    const double distance,
-    const double chargeProduct
-) const
+namespace pot
 {
-    const auto coulombPrefactor    = chargeProduct * COULOMB_PREFACTOR;
-    const auto dInv                = 1 / distance;
-    const auto deltaCutOff         = _coulombRadiusCutOff - distance;
-    const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
+    /**
+     * @brief calculate the energy and force of the shifted Coulomb potential
+     *
+     * @param distance
+     * @param chargeProduct
+     * @return std::pair<double, double>
+     */
+    std::pair<double, double> CoulombShiftedPotential::calculate(
+        double distance,
+        double chargeProduct
+    ) const
+    {
+        const auto prefactor           = chargeProduct * COULOMB_PREFACTOR;
+        const auto dInv                = 1 / distance;
+        const auto deltaCutOff         = _coulombRadiusCutOff - distance;
+        const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
 
-    auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;
-    auto force  = dInv * dInv - _coulombForceCutOff;
+        auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;
+        auto force  = (dInv * dInv) - _coulombForceCutOff;
 
-    energy *= coulombPrefactor;
-    force  *= coulombPrefactor;
+        energy *= prefactor;
+        force  *= prefactor;
 
-    return {energy, force};
-}
+        return {energy, force};
+    }
+}   // namespace pot

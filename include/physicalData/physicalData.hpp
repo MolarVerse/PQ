@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PHYSICAL_DATA_HPP_
-
-#define _PHYSICAL_DATA_HPP_
+#ifndef PHYSICAL_DATA__PHYSICAL_DATA_HPP
+#define PHYSICAL_DATA__PHYSICAL_DATA_HPP
 
 #include <memory>
-#include <vector>   // for vector
+#include <vector>
 
-#include "settings.hpp"
+#include "enums/virial.hpp"
 #include "staticMatrix.hpp"
 
 namespace molsys
@@ -51,13 +50,11 @@ namespace physicalData
      */
     struct KineticEnergyVirialTensor
     {
-        linearAlgebra::tensor3D atomic;
-        linearAlgebra::tensor3D molecular;
+        linalg::tensor3D atomic;
+        linalg::tensor3D molecular;
 
         [[nodiscard]]
-        const linearAlgebra::tensor3D& getVirialTensor(
-            settings::VirialType virialType
-        ) const;
+        const linalg::tensor3D& getVirialTensor(VirialType virialType) const;
     };
 
     /**
@@ -72,10 +69,11 @@ namespace physicalData
         double _numberOfQMAtoms = 0.0;
         double _loopTime        = 0.0;
 
-        double _volume      = 0.0;
-        double _density     = 0.0;
-        double _temperature = 0.0;
-        double _pressure    = 0.0;
+        double _volume          = 0.0;
+        double _density         = 0.0;
+        double _temperature     = 0.0;
+        double _pressure        = 0.0;
+        double _coupledPressure = 0.0;
 
         double _kineticEnergy         = 0.0;
         double _coulombEnergy         = 0.0;
@@ -88,7 +86,8 @@ namespace physicalData
         double _dihedralEnergy = 0.0;
         double _improperEnergy = 0.0;
 
-        double _qmEnergy = 0.0;
+        double _qmEnergy          = 0.0;
+        double _qmReferenceEnergy = 0.0;
 
         double _numberOfSmoothingMol = 0.0;
 
@@ -98,13 +97,13 @@ namespace physicalData
         double _lowerDistanceConstraints = 0.0;
         double _upperDistanceConstraints = 0.0;
 
-        linearAlgebra::Vec3D _momentum;
-        linearAlgebra::Vec3D _angularMomentum;
+        linalg::Vec3D _momentum;
+        linalg::Vec3D _angularMomentum;
 
         KineticEnergyVirialTensor _kinEnergyVirialTensor;
 
-        linearAlgebra::tensor3D _virial;
-        linearAlgebra::tensor3D _stressTensor;
+        linalg::tensor3D _virial;
+        linalg::tensor3D _stressTensor;
 
         double _ringPolymerEnergy = 0.0;
 
@@ -116,12 +115,12 @@ namespace physicalData
 
         void copy(const PhysicalData&);
         void updateAverages(const PhysicalData&);
-        void makeAverages(const double);
+        void makeAverages(double);
         void reset();
         void resetEnergies();
 
-        void addIntraCoulombEnergy(const double intraCoulombEnergy);
-        void addIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
+        void addIntraCoulombEnergy(double intraCoulombEnergy);
+        void addIntraNonCoulombEnergy(double intraNonCoulombEnergy);
 
         [[nodiscard]] double getTotalEnergy() const;
 
@@ -129,63 +128,64 @@ namespace physicalData
          * standard add methods  *
          *************************/
 
-        void addVirial(const linearAlgebra::tensor3D& virial);
-        void addQMEnergy(const double qmEnergy);
-        void addCoulombEnergy(const double coulombEnergy);
-        void addNonCoulombEnergy(const double nonCoulombEnergy);
+        void addVirial(const linalg::tensor3D& virial);
+        void addQMEnergy(double qmEnergy);
+        void addQMReferenceEnergy(double qmReferenceEnergy);
+        void addCoulombEnergy(double coulombEnergy);
+        void addNonCoulombEnergy(double nonCoulombEnergy);
 
-        void addBondEnergy(const double bondEnergy);
-        void addAngleEnergy(const double angleEnergy);
-        void addDihedralEnergy(const double dihedralEnergy);
-        void addImproperEnergy(const double improperEnergy);
+        void addBondEnergy(double bondEnergy);
+        void addAngleEnergy(double angleEnergy);
+        void addDihedralEnergy(double dihedralEnergy);
+        void addImproperEnergy(double improperEnergy);
 
-        void addRingPolymerEnergy(const double ringPolymerEnergy);
+        void addRingPolymerEnergy(double ringPolymerEnergy);
 
         /********************
          * standard setters *
          ********************/
 
-        void setNumberOfQMAtoms(const double nQMAtoms);
-        void setLoopTime(const double loopTime);
+        void setNumberOfQMAtoms(double nQMAtoms);
+        void setLoopTime(double loopTime);
 
-        void setVolume(const double volume);
-        void setDensity(const double density);
-        void setTemperature(const double temperature);
-        void setPressure(const double pressure);
+        void setVolume(double volume);
+        void setDensity(double density);
+        void setTemperature(double temperature);
+        void setPressure(double pressure);
+        void setCoupledPressure(double coupledPressure);
 
-        void setVirial(const linearAlgebra::tensor3D& virial);
-        void setStressTensor(const linearAlgebra::tensor3D& stressTensor);
+        void setVirial(const linalg::tensor3D& virial);
+        void setStressTensor(const linalg::tensor3D& stressTensor);
 
-        void setMomentum(const linearAlgebra::Vec3D& vec);
-        void setAngularMomentum(const linearAlgebra::Vec3D& vec);
+        void setMomentum(const linalg::Vec3D& momentum);
+        void setAngularMomentum(const linalg::Vec3D& angularMomentum);
 
-        void setKineticEnergy(const double kineticEnergy);
-        void setKineticEnergyAtomicVector(const linearAlgebra::tensor3D& vec);
-        void setKineticEnergyMolecularVector(
-            const linearAlgebra::tensor3D& vec
-        );
+        void setKineticEnergy(double kineticEnergy);
+        void setKineticEnergyAtomicVector(const linalg::tensor3D& vec);
+        void setKineticEnergyMolecularVector(const linalg::tensor3D& vec);
 
-        void setCoulombEnergy(const double coulombEnergy);
-        void setNonCoulombEnergy(const double nonCoulombEnergy);
-        void setIntraCoulombEnergy(const double intraCoulombEnergy);
-        void setIntraNonCoulombEnergy(const double intraNonCoulombEnergy);
+        void setCoulombEnergy(double coulombEnergy);
+        void setNonCoulombEnergy(double nonCoulombEnergy);
+        void setIntraCoulombEnergy(double intraCoulombEnergy);
+        void setIntraNonCoulombEnergy(double intraNonCoulombEnergy);
 
-        void setBondEnergy(const double bondEnergy);
-        void setAngleEnergy(const double angleEnergy);
-        void setDihedralEnergy(const double dihedralEnergy);
-        void setImproperEnergy(const double improperEnergy);
+        void setBondEnergy(double bondEnergy);
+        void setAngleEnergy(double angleEnergy);
+        void setDihedralEnergy(double dihedralEnergy);
+        void setImproperEnergy(double improperEnergy);
 
-        void setQMEnergy(const double qmEnergy);
+        void setQMEnergy(double qmEnergy);
+        void setQMReferenceEnergy(double qmReferenceEnergy);
 
-        void setNumberOfSmoothingMolecules(const double numberSmMol);
+        void setNumberOfSmoothingMolecules(double numberSmMol);
 
-        void setNoseHooverMomentumEnergy(const double momentumEnergy);
-        void setNoseHooverFrictionEnergy(const double frictionEnergy);
+        void setNoseHooverMomentumEnergy(double momentumEnergy);
+        void setNoseHooverFrictionEnergy(double frictionEnergy);
 
-        void setLowerDistanceConstraints(const double lowerDistanceConstraints);
-        void setUpperDistanceConstraints(const double upperDistanceConstraints);
+        void setLowerDistanceConstraints(double lowerDistanceConstraints);
+        void setUpperDistanceConstraints(double upperDistanceConstraints);
 
-        void setRingPolymerEnergy(const double ringPolymerEnergy);
+        void setRingPolymerEnergy(double ringPolymerEnergy);
 
         /********************
          * standard getters *
@@ -198,6 +198,7 @@ namespace physicalData
         [[nodiscard]] double getDensity() const;
         [[nodiscard]] double getTemperature() const;
         [[nodiscard]] double getPressure() const;
+        [[nodiscard]] double getCoupledPressure() const;
 
         [[nodiscard]] double getKineticEnergy() const;
         [[nodiscard]] double getNonCoulombEnergy() const;
@@ -212,6 +213,7 @@ namespace physicalData
         [[nodiscard]] double getImproperEnergy() const;
 
         [[nodiscard]] double getQMEnergy() const;
+        [[nodiscard]] double getQMReferenceEnergy() const;
 
         [[nodiscard]] double getNumberOfSmoothingMolecules() const;
 
@@ -223,21 +225,21 @@ namespace physicalData
 
         [[nodiscard]] double getRingPolymerEnergy() const;
 
-        [[nodiscard]] linearAlgebra::tensor3D getKinEnergyAtomTensor() const;
-        [[nodiscard]] linearAlgebra::tensor3D getKinEnergyMolTensor() const;
+        [[nodiscard]] linalg::tensor3D getKinEnergyAtomTensor() const;
+        [[nodiscard]] linalg::tensor3D getKinEnergyMolTensor() const;
 
         [[nodiscard]]
-        const linearAlgebra::tensor3D& getKinEnergyVirialTensor(
-            settings::VirialType virialType
+        const linalg::tensor3D& getKinEnergyVirialTensor(
+            VirialType virialType
         ) const;
 
-        [[nodiscard]] linearAlgebra::tensor3D getVirial() const;
-        [[nodiscard]] linearAlgebra::tensor3D getStressTensor() const;
+        [[nodiscard]] linalg::tensor3D getVirial() const;
+        [[nodiscard]] linalg::tensor3D getStressTensor() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getMomentum() const;
-        [[nodiscard]] linearAlgebra::Vec3D getAngularMomentum() const;
+        [[nodiscard]] linalg::Vec3D getMomentum() const;
+        [[nodiscard]] linalg::Vec3D getAngularMomentum() const;
     };
 
 }   // namespace physicalData
 
-#endif   // _PHYSICAL_DATA_HPP_
+#endif   // PHYSICAL_DATA__PHYSICAL_DATA_HPP

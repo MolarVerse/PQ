@@ -22,34 +22,45 @@
 
 #include "mmmdEngine.hpp"
 
+#include "celllist.hpp"
 #include "virial.hpp"
 
-using namespace engine;
-using virial::calculateVirial;
-
-/**
- * @brief calculate MM forces
- *
- */
-void MMMDEngine::calculateForces()
+namespace engine
 {
-    _cellList->updateCellList(*_simulationBox);
 
-    _potential->calculateForces(*_simulationBox, *_physicalData, *_cellList);
+    /**
+     * @brief calculate MM forces
+     *
+     */
+    void MMMDEngine::calculateForces()
+    {
+        getCellList().updateCellList(getSimulationBox());
 
-    _interWater->calculate(
-        *_simulationBox,
-        *_physicalData,
-        _potential->getCoulombPotSharedPtr(),
-        *_cellList
-    );
+        getPotential()->calculateForces(
+            getSimulationBox(),
+            getPhysicalData(),
+            getCellList(),
+            getSettings().waterModelSettings
+        );
 
-    _intraNonBonded->calculate(*_simulationBox, *_physicalData);
+        _getInterWater().calculate(
+            getSimulationBox(),
+            getPhysicalData(),
+            getPotential()->getCoulombPotSharedPtr(),
+            getCellList()
+        );
 
-    const auto virial = calculateVirial(*_simulationBox);
-    _physicalData->setVirial(virial);
+        getIntraNonBonded()->calculate(getSimulationBox(), getPhysicalData());
 
-    _forceField->calculateBondedInteractions(*_simulationBox, *_physicalData);
+        const auto virial = virial::calculateVirial(getSimulationBox());
+        getPhysicalData().setVirial(virial);
 
-    _intraWater->calculate(*_simulationBox, *_physicalData);
-}
+        getForceField()->calculateBondedInteractions(
+            getSimulationBox(),
+            getPhysicalData()
+        );
+
+        _getIntraWater().calculate(getSimulationBox(), getPhysicalData());
+    }
+
+}   // namespace engine

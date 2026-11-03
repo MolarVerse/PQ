@@ -20,83 +20,40 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FILES_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__FILES_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__FILES_INPUT_PARSER_HPP
 
-#define _FILES_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
-
-#include "inputFileParser.hpp"   // for InputFileParser
-#include "intraNonBonded.hpp"
+#include "inputFileParser.hpp"
 
 namespace input
 {
     /**
-     * @class FilesInputParser inherits from InputFileParser
+     * @brief FilesInputParser inherits from InputFileParser
      *
-     * @brief Parses all input file commands related to input files
+     * @details Parses all input file commands related to input files
      *
      */
     class FilesInputParser : public InputFileParser
     {
-       private:
-        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
-
         bool _validateFilePaths;
 
        public:
-        explicit FilesInputParser(
-            std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded,
-            bool                                            validateFilePaths
-        );
-        explicit FilesInputParser(
-            std::shared_ptr<intraNonBonded::IntraNonBonded> intraNonBonded
-        );
+        explicit FilesInputParser(bool validateFilePaths);
+        explicit FilesInputParser();
 
-        void parseIntraNonBondedFile(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseTopologyFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseParameterFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseStartFilename(const std::vector<std::string> &, const size_t);
-
-        void parseRingPolymerStartFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseMoldescriptorFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseGuffDatFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseGuffPath(const std::vector<std::string> &, const size_t);
-
-        void parseMShakeFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseDFTBFilename(const std::vector<std::string> &, const size_t);
-
-        void parseTMFilename(const std::vector<std::string> &, const size_t);
+        void addIntraNonBondedFileKey();
+        void addTopologyFileKey();
+        void addParameterFileKey();
+        void addStartFileKey();
+        void addRingPolymerStartFileKey();
+        void addMoldescriptorFileKey();
+        void addGuffDatFileKey();
+        void addGuffPathKey();
+        void addMShakeFileKey();
+        void addDFTBFileKey();
+        void addTMFileKey();
     };
 
 }   // namespace input
 
-#endif   // _FILES_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__FILES_INPUT_PARSER_HPP

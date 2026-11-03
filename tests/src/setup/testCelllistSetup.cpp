@@ -20,18 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS, EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include "celllistSetup.hpp"   // for CellListSetup, setupCellList, setup
-#include "engine.hpp"          // for Engine
-#include "gtest/gtest.h"       // for Message, TestPartResult
+#include "celllistSetup.hpp"
+#include "engine.hpp"
+#include "orthorhombicBox.hpp"
 #include "potentialBruteForce.hpp"
-#include "potentialCellList.hpp"   // for PotentialCellList
+#include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
-#include "testSetup.hpp"   // for TestSetup
+#include "testSetup.hpp"
 #include "testUtils.hpp"
-
-using namespace setup;
 
 /**
  * @brief test the setup cell list function after parsing input
@@ -39,24 +37,20 @@ using namespace setup;
  */
 TEST_F(TestSetup, setupCellList)
 {
-    CellListSetup cellListSetup(*_engine);
+    setup::CellListSetup cellListSetup(*_engine);
     cellListSetup.setup();
 
-    test::checkType(
-        _engine->getPotential(),
-        typeid(potential::PotentialBruteForce)
-    );
+    test::checkType(_engine->getPotential(), typeid(pot::PotentialBruteForce));
 
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
-    settings::Settings::activateCellList();
-    _engine->getSimulationBox().setBoxDimensions({15.0, 15.0, 15.0});
-    _engine->getCellList()->setNumberOfCells(3);
+    settings::GeneralSettings::activateCellList();
+
+    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    _engine->getSimulationBox().setBox(orthoBox, false);
+    _engine->getCellList().setNumberOfCells(3);
     cellListSetup.setup();
 
-    test::checkType(
-        _engine->getPotential(),
-        typeid(potential::PotentialCellList)
-    );
+    test::checkType(_engine->getPotential(), typeid(pot::PotentialCellList));
 
-    EXPECT_NO_THROW(setupCellList(*_engine));
+    EXPECT_NO_THROW(setup::setupCellList(*_engine));
 }

@@ -1,0 +1,196 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP
+#define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP
+
+#include "exceptions.hpp"
+#include "staticMatrix3x3Class.hpp"
+
+namespace linalg
+{
+    /**
+     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     *
+     * @tparam T
+     * @param data
+     */
+    template <typename T>
+    StaticMatrix3x3<T>::StaticMatrix3x3(const Vector3D<Vector3D<T>> &data)
+        : _data(data)
+    {
+    }
+
+    /**
+     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     *
+     * @tparam T
+     * @param data
+     */
+    template <typename T>
+    StaticMatrix3x3<T>::StaticMatrix3x3(const Vector3D<Vector3D<T>> &&data)
+        : _data(std::move(data))
+    {
+    }
+
+    /**
+     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     *
+     * @tparam T
+     * @param row1
+     * @param row2
+     * @param row3
+     */
+    template <typename T>
+    StaticMatrix3x3<T>::StaticMatrix3x3(
+        const Vector3D<T> &row1,
+        const Vector3D<T> &row2,
+        const Vector3D<T> &row3
+    )
+        : _data(row1, row2, row3){};
+
+    /**
+     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     *
+     * @tparam T
+     * @param mat
+     */
+    template <typename T>
+    StaticMatrix3x3<T>::StaticMatrix3x3(const T &mat)
+    {
+        _data[0] = Vector3D<T>(mat);
+        _data[1] = Vector3D<T>(mat);
+        _data[2] = Vector3D<T>(mat);
+    }
+
+    /**
+     * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
+     *
+     * @tparam T
+     * @param vector
+     */
+    template <typename T>
+    StaticMatrix3x3<T>::StaticMatrix3x3(const std::vector<T> &vector)
+    {
+        if (vector.size() != _nElements)
+            throw exc::LinearAlgebraException(
+                "vector size must be " + std::to_string(_nElements)
+            );
+
+        for (size_t i = 0; i < 3; ++i)
+        {
+            for (size_t j = 0; j < 3; ++j)
+            {
+                _data[i][j] = vector[(i * 3) + j];
+            }
+        }
+    }
+
+    /**
+     * @brief index operator
+     *
+     * @tparam T
+     * @param index
+     * @return `Vector3D<T> &`
+     */
+    template <typename T>
+    Vector3D<T> &StaticMatrix3x3<T>::operator[](size_t index)
+    {
+        return _data[index];
+    }
+
+    /**
+     * @brief index operator
+     *
+     * @tparam T
+     * @param index
+     * @return `const Vector3D<T> &`
+     */
+    template <typename T>
+    const Vector3D<T> &StaticMatrix3x3<T>::operator[](size_t index) const
+    {
+        return _data[index];
+    }
+
+    /**
+     * @brief unary operator- for StaticMatrix3x3
+     *
+     * @tparam T
+     * @return StaticMatrix3x3
+     */
+    template <typename T>
+    StaticMatrix3x3<T> StaticMatrix3x3<T>::operator-()
+    {
+        return StaticMatrix3x3(-_data[0], -_data[1], -_data[2]);
+    }
+
+    /**
+     * @brief operator+ for two StaticMatrix3x3's
+     *
+     * @tparam T
+     * @return StaticMatrix3x3
+     */
+    template <typename T>
+    std::vector<T> StaticMatrix3x3<T>::toStdVector() const
+    {
+        std::vector<T> result;
+        result.reserve(_nElements);
+        for (const auto &row : _data)
+        {
+            for (const auto &element : row)
+            {
+                result.push_back(element);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @brief set the diagonal elements to the given value
+     *
+     * @tparam T
+     * @param value
+     */
+    template <typename T>
+    void StaticMatrix3x3<T>::setDiagonal(const T &value)
+    {
+        _data[0][0] = value;
+        _data[1][1] = value;
+        _data[2][2] = value;
+    }
+
+    /**
+     * @brief set the diagonal elements to the given values
+     *
+     * @tparam T
+     * @param values
+     */
+    template <typename T>
+    void StaticMatrix3x3<T>::setDiagonal(const Vector3D<T> &values)
+    {
+        _data[0][0] = values[0];
+        _data[1][1] = values[1];
+        _data[2][2] = values[2];
+    }
+}   // namespace linalg
+
+#endif   // LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP

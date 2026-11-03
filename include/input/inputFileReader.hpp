@@ -20,23 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_READER_HPP_
+#ifndef INPUT__INPUT_FILE_READER_HPP
+#define INPUT__INPUT_FILE_READER_HPP
 
-#define _INPUT_FILE_READER_HPP_
+#include <cstddef>
+#include <map>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include <cstddef>       // for size_t
-#include <map>           // for map
-#include <memory>        // for unique_ptr
-#include <string>        // for string, operator<=>
-#include <string_view>   // for string_view
-#include <vector>        // for vector
-
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "enums/jobtype.hpp"
+#include "inputFileParser.hpp"
 
 namespace engine
 {
     class Engine;   // forward declaration
 }   // namespace engine
+
+struct Settings;               // forward declaration
+class SimulationBoxSettings;   // forward declaration
+class ManostatSettings;        // forward declaration
 
 /**
  * @brief namespace for reading input files
@@ -44,12 +48,10 @@ namespace engine
  */
 namespace input
 {
-    void readInputFile(const std::string_view &fileName, engine::Engine &);
-    void readJobType(
-        const std::string &fileName,
-        std::unique_ptr<engine::Engine> &
-    );
-    void processEqualSign(std::string &command, const size_t lineNumber);
+    [[nodiscard]]
+    JobType readJobType(const std::string &fileName);
+    void    readInputFile(const std::string_view &fileName, Settings &settings);
+    void    processEqualSign(std::string &command, size_t lineNumber);
 
     /**
      * @class InputFileReader
@@ -73,25 +75,28 @@ namespace input
 
        public:
         explicit InputFileReader(
-            const std::string_view &,
-            engine::Engine &,
-            bool validateFilePaths,
-            bool resolveBuiltInSlakosPath
+            const std::string_view &fileName,
+            Settings               &settings,
+            bool                    validateFilePaths,
+            bool                    resolveBuiltInSlakosPath
         );
-        explicit InputFileReader(const std::string_view &, engine::Engine &);
+        explicit InputFileReader(
+            const std::string_view &fileName,
+            Settings               &settings
+        );
 
         void read();
         void addKeywords();
         void process(const std::vector<std::string> &lineElements);
         void postProcess();
-        void validateInputConfiguration() const;
+        void validateInputConfiguration(const Settings &settings) const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setFilename(const std::string_view fileName);
-        void setKeywordCount(const std::string &keyword, const size_t count);
+        void setFilename(std::string_view fileName);
+        void setKeywordCount(const std::string &keyword, size_t count);
 
         /***************************
          * standard getter methods *
@@ -101,28 +106,28 @@ namespace input
         [[nodiscard]] bool   getKeywordSet(const std::string &keyword) const;
         [[nodiscard]] bool getKeywordRequired(const std::string &keyword) const;
 
-        // clang-format off
         [[nodiscard]] std::map<std::string, size_t> getKeywordCountMap() const;
-        [[nodiscard]] std::map<std::string, bool> getKeywordSetMap() const;
+        [[nodiscard]] std::map<std::string, bool>   getKeywordSetMap() const;
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
-        [[nodiscard]] std::map<std::string, InputFileParser::ParseFunc> getKeywordFuncMap() const;
-        // clang-format on
+        [[nodiscard]] std::map<std::string, InputFileParser::ParseFunc> getKeywordFuncMap(
+        ) const;
 
        private:
         /******************************
          * input validation functions *
          ******************************/
 
-        void validateTimings() const;
-        void validateOptimizer() const;
-        void validateQM() const;
-        void validateThermostat() const;
-        void validateManostat() const;
-        void validateCellList() const;
-        void validateReactionFieldCoulomb() const;
-        void validateRingPolymer() const;
+        void _validateTimings(const Settings &settings) const;
+        void _validateQM() const;
+        void _validateThermostat(
+            const SimulationBoxSettings &simBoxSettings
+        ) const;
+        void _validateManostat(const ManostatSettings &manostatSettings) const;
+        void _validateReactionFieldCoulomb() const;
+        void _validateRingPolymer() const;
+        static void _validateCellList();
     };
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_READER_HPP_
+#endif   // INPUT__INPUT_FILE_READER_HPP

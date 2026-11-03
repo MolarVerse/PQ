@@ -20,22 +20,22 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <climits>      // for INT_MAX, INT_MIN
-#include <cstdint>      // for UINT32_MAX
-#include <cstdio>       // for remove
-#include <filesystem>   // for create_directory
+#include <climits>
+#include <cstdint>
+#include <cstdio>
+#include <filesystem>
 #include <format>
-#include <fstream>     // for ofstream
-#include <stdexcept>   // for out_of_range and invalid_argument
-#include <string>      // for string, allocator
+#include <fstream>
+#include <mstd/file.hpp>
+#include <stdexcept>
+#include <string>
 
-#include "exceptions.hpp"        // for InputFileException
-#include "gmock/gmock.h"         // for ElementsAre, MakePredicateFormatter
-#include "gtest/gtest.h"         // for AssertionResult, Message, TestPartResult
-#include "stringUtilities.hpp"   // for getLineCommands, splitString, fileExists
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG and ASSERT_THROW_MSG
+#include "exceptions.hpp"
+#include "gmock/gmock.h"
+#include "stringUtilities.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief removeComments test by comment character
@@ -59,14 +59,16 @@ TEST(TestStringUtilities, removeComments)
 TEST(TestStringUtilities, getLineCommands)
 {
     std::string line2 = "test";
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         utilities::getLineCommands(line2, 0),
-        customException::InputFileException
+        exc::InputFileException,
+        "Missing semicolon in input file at line 0"
     );
-    auto *line = "nstep = 1";
-    ASSERT_THROW(
+    const auto *line = "nstep = 1";
+    ASSERT_THROW_MSG(
         utilities::getLineCommands(line, 1),
-        customException::InputFileException
+        exc::InputFileException,
+        "Missing semicolon in input file at line 1"
     );
 
     line = "nstep = 1;";
@@ -76,14 +78,15 @@ TEST(TestStringUtilities, getLineCommands)
     );
 
     line = "nstep = 1; nstep = 2";
-    ASSERT_THROW(
-        utilities::getLineCommands(line, 1),
-        customException::InputFileException
+    ASSERT_THROW_MSG(
+        utilities::getLineCommands(line, 2),
+        exc::InputFileException,
+        "Missing semicolon in input file at line 2"
     );
 
     line = "nstep = 1; nstep = 2;";
     ASSERT_THAT(
-        utilities::getLineCommands(line, 1),
+        utilities::getLineCommands(line, 2),
         testing::ElementsAre("nstep = 1", " nstep = 2")
     );
 }
@@ -147,7 +150,7 @@ TEST(TestStringUtilities, keywordToBool)
     line = {"keyword", "=", "notABool"};
     ASSERT_THROW_MSG(
         utilities::keywordToBool(line),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid boolean option \"notABool\" for keyword \"keyword\" in "
         "input file.\n"
         "Possible values are: on, yes, true, off, no, false."
@@ -188,9 +191,9 @@ TEST(TestStringUtilities, fileExists)
     std::ofstream out(file);
     out.close();
     std::filesystem::create_directory(directory);
-    EXPECT_TRUE(utilities::fileExists(file));
-    EXPECT_FALSE(utilities::fileExists("testFile2.txt"));
-    EXPECT_FALSE(utilities::fileExists(directory));
+    EXPECT_TRUE(mstd::File(file).exists());
+    EXPECT_FALSE(mstd::File("testFile2.txt").exists());
+    EXPECT_FALSE(mstd::File(directory).exists());
     std::filesystem::remove(file);
     std::filesystem::remove(directory);
 }

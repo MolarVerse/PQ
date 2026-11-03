@@ -34,12 +34,12 @@ namespace timings
      * @param name
      */
     TimingsSectionGuard::TimingsSectionGuard(
-        Timer&                 timer,
-        const std::string_view name
+        Timer&           timer,
+        std::string_view name
     )
         : _timer(timer), _name(name)
     {
-        _timer.startTimingsSection(_name);
+        _timer._startTimingsSection(_name);
     }
 
     /**
@@ -48,6 +48,6 @@ namespace timings
      */
     TimingsSectionGuard::~TimingsSectionGuard()
     {
-        _timer.stopTimingsSection(_name);
+        _timer._stopTimingsSection(_name);
     }
 }   // namespace timings

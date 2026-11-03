@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
+#ifndef OUTPUT__RING_POLYMER_RESTART_FILE_OUTPUT_HPP
+#define OUTPUT__RING_POLYMER_RESTART_FILE_OUTPUT_HPP
 
-#define _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
-
-#include <vector>   // for vector
+#include <vector>
 
 #include "output.hpp"
 
@@ -33,12 +32,12 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
-     * @class RingPolymerRestartFileOutput inherits from Output
+     * @brief RingPolymerRestartFileOutput inherits from Output
      *
-     * @brief Output file for restart file
+     * @details Output file for restart file
      *
      */
     class RingPolymerRestartFileOutput : public Output
@@ -46,9 +45,9 @@ namespace output
        public:
         using Output::Output;
 
-        void write(std::vector<molsys::SimulationBox> &);
+        void write(const std::vector<molsys::SimulationBox> &);
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _RST_FILE_OUTPUT_HPP_
+#endif   // OUTPUT__RING_POLYMER_RESTART_FILE_OUTPUT_HPP

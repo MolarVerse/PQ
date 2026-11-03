@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESTART_FILE_SECTION_HPP_
+#ifndef INPUT__RESTART_FILE_READER__RESTART_FILE_SECTION_HPP
+#define INPUT__RESTART_FILE_READER__RESTART_FILE_SECTION_HPP
 
-#define _RESTART_FILE_SECTION_HPP_
-
-#include <fstream>   // for ifstream
-#include <string>    // for string, allocator
+#include <fstream>
+#include <string>
 #include <vector>
 
 namespace engine
@@ -43,10 +42,8 @@ namespace input::restartFile
      */
     class RestartFileSection
     {
-        // TODO: remove this public access
-       public:
-        int            _lineNumber = 0;
-        std::ifstream *_fp         = nullptr;
+       private:
+        std::ifstream *_fp = nullptr;
 
        public:
         virtual ~RestartFileSection() = default;
@@ -55,10 +52,16 @@ namespace input::restartFile
         virtual bool        isHeader() = 0;
         virtual void        process(
                    std::vector<std::string> &lineElements,
-                   engine::Engine &
+                   engine::Engine           &engine,
+                   size_t                   &lineNumber
                ) = 0;
+
+        void setFilePointer(std::ifstream *file) { _fp = file; }
+
+       protected:
+        [[nodiscard]] std::ifstream *_getFilePointer() const { return _fp; }
     };
 
 }   // namespace input::restartFile
 
-#endif   // _RESTART_FILE_SECTION_HPP_
+#endif   // INPUT__RESTART_FILE_READER__RESTART_FILE_SECTION_HPP

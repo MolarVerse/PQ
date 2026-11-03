@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_RUNNER_HPP_
-
-#define _QM_RUNNER_HPP_
+#ifndef QM__QM_RUNNER_HPP
+#define QM__QM_RUNNER_HPP
 
 #define SCRIPT_PATH_  _SCRIPT_PATH_
 #define SINGULARITY_  _SINGULARITY_
@@ -52,20 +51,27 @@ namespace QM
      */
     class QMRunner
     {
-       protected:
-        molsys::Periodicity _periodicity;
+       private:
+        molsys::Periodicity _periodicity = molsys::Periodicity::NON_PERIODIC;
 
        public:
         virtual ~QMRunner() = default;
 
-        void         throwAfterTimeout(const std::stop_token stopToken) const;
+        static void throwAfterTimeout(const std::stop_token &stopToken);
+
         void         run(molsys::SimulationBox &, physicalData::PhysicalData &);
         virtual void run(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             molsys::Periodicity per
         ) = 0;
+
+       protected:
+        [[nodiscard]]
+        molsys::Periodicity _getPeriodicity() const;
+
+        void _setPeriodicity(molsys::Periodicity per);
     };
 }   // namespace QM
 
-#endif   // _QM_RUNNER_HPP_
+#endif   // QM__QM_RUNNER_HPP

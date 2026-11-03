@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_UTILS_HPP_
-
-#define _TEST_UTILS_HPP_
+#ifndef TESTS__INCLUDE__TEST_UTILS__TEST_UTILS_HPP
+#define TESTS__INCLUDE__TEST_UTILS__TEST_UTILS_HPP
 
 #include <gtest/gtest.h>
 
@@ -34,4 +33,4 @@ namespace test
     void checkType(const T& obj, const std::type_info& expectedType);
 }   // namespace test
 
-#endif   // _TEST_UTILS_HPP_
+#endif   // TESTS__INCLUDE__TEST_UTILS__TEST_UTILS_HPP

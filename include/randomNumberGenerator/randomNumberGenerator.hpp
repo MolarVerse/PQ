@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RANDOM_NUMBER_GENERATOR_HPP_
+#ifndef RANDOM_NUMBER_GENERATOR__RANDOM_NUMBER_GENERATOR_HPP
+#define RANDOM_NUMBER_GENERATOR__RANDOM_NUMBER_GENERATOR_HPP
 
-#define _RANDOM_NUMBER_GENERATOR_HPP_
+#include <random>
 
-#include <random>   // for std::random_device and std::mt19937
-
-namespace randomNumberGenerator
+namespace rng
 {
     /**
      * @class RandomNumberGenerator
@@ -37,7 +36,7 @@ namespace randomNumberGenerator
     class RandomNumberGenerator
     {
        private:
-        std::random_device _randomDevice{};
+        std::random_device _randomDevice;
         std::mt19937       _generator;
 
        public:
@@ -47,6 +46,6 @@ namespace randomNumberGenerator
         double getUniformRealDistribution(double min, double max);
     };
 
-}   // namespace randomNumberGenerator
+}   // namespace rng
 
-#endif   // _RANDOM_NUMBER_GENERATOR_HPP_
+#endif   // RANDOM_NUMBER_GENERATOR__RANDOM_NUMBER_GENERATOR_HPP

@@ -134,12 +134,9 @@ foreach(source_file ${source_files})
         gtest
         gmock
         pq_test_main
+        config_headers
     )
-    add_test(
-        NAME ${test_name}
-        COMMAND ${test_name}
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
-    )
+    add_test_with_gcda_cleanup(${test_name} ${test_name})
     target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
     target_link_libraries(${test_name} PRIVATE pq_test_pch)
 

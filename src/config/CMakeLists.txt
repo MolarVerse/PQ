@@ -1,14 +1,14 @@
 add_library(config_headers 
-    INTERFACE
+    enums/manostat.cpp
 )
 
 target_link_libraries(config_headers
-    INTERFACE
+    PUBLIC
     utilities
 )
 
 target_include_directories(config_headers
-    INTERFACE
+    PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/config
 )

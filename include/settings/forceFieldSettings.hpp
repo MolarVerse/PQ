@@ -20,41 +20,39 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_SETTINGS_HPP_
+#ifndef SETTINGS__FORCE_FIELD_SETTINGS_HPP
+#define SETTINGS__FORCE_FIELD_SETTINGS_HPP
 
-#define _FORCE_FIELD_SETTINGS_HPP_
+#include "enums/potential.hpp"
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @class ForceFieldSettings
+ *
+ * @brief static class to store settings of the force field
+ *
+ */
+class ForceFieldSettings
 {
-    /**
-     * @class ForceFieldSettings
-     *
-     * @brief static class to store settings of the force field
-     *
-     */
-    class ForceFieldSettings
-    {
-       private:
-        static inline bool _active = false;
+   private:
+    Setting<ForceFieldType> _type;
 
-       public:
-        ForceFieldSettings()  = default;
-        ~ForceFieldSettings() = default;
+   public:
+    ForceFieldSettings();
 
-        /********************
-         * standard getters *
-         ********************/
+    /********************
+     * standard getters *
+     ********************/
 
-        [[nodiscard]] static bool isActive();
+    [[nodiscard]] bool           isActive() const;
+    [[nodiscard]] bool           isNonCoulombicActive() const;
+    [[nodiscard]] ForceFieldType getType() const;
 
-        /********************
-         * standard setters *
-         ********************/
+    /********************
+     * standard setters *
+     ********************/
 
-        static void activate();
-        static void deactivate();
-    };
+    void setType(ForceFieldType value);
+};
 
-}   // namespace settings
-
-#endif   // _FORCE_FIELD_SETTINGS_HPP_
+#endif   // SETTINGS__FORCE_FIELD_SETTINGS_HPP

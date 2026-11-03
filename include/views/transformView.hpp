@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __TRANSFORM_VIEW_HPP__
-#define __TRANSFORM_VIEW_HPP__
+#ifndef VIEWS__TRANSFORM_VIEW_HPP
+#define VIEWS__TRANSFORM_VIEW_HPP
 
 #include <utility>
 
@@ -56,7 +56,7 @@ namespace pqviews
         using sentinel       = Sentinel<end_t>;
         using const_sentinel = Sentinel<c_end_t>;
 
-        TransformView(Range r, Func f);
+        TransformView(Range range, Func func);
 
         iterator begin();
         sentinel end();
@@ -68,12 +68,12 @@ namespace pqviews
     /**
      * @brief Constructor for TransformView
      *
-     * @param r The range to be transformed
-     * @param f The function to be used for transformation
+     * @param range The range to be transformed
+     * @param func The function to be used for transformation
      */
     template <typename Range, typename Func>
-    TransformView<Range, Func>::TransformView(Range r, Func f)
-        : _range(std::move(r)), _func(std::move(f))
+    TransformView<Range, Func>::TransformView(Range range, Func func)
+        : _range(std::move(range)), _func(std::move(func))
     {
     }
 
@@ -83,7 +83,8 @@ namespace pqviews
      * @return iterator
      */
     template <typename Range, typename Func>
-    TransformView<Range, Func>::iterator TransformView<Range, Func>::begin()
+    typename TransformView<Range, Func>::iterator TransformView<Range, Func>::
+        begin()
     {
         return iterator{std::begin(_range), &_func};
     }
@@ -94,7 +95,8 @@ namespace pqviews
      * @return sentinel
      */
     template <typename Range, typename Func>
-    TransformView<Range, Func>::sentinel TransformView<Range, Func>::end()
+    typename TransformView<Range, Func>::sentinel TransformView<Range, Func>::
+        end()
     {
         return sentinel{std::end(_range)};
     }
@@ -106,8 +108,9 @@ namespace pqviews
      * @return const_iterator
      */
     template <typename Range, typename Func>
-    TransformView<Range, Func>::const_iterator TransformView<Range, Func>::
-        begin() const
+    typename TransformView<Range, Func>::const_iterator TransformView<
+        Range,
+        Func>::begin() const
     {
         return const_iterator{std::begin(_range), &_func};
     }
@@ -118,12 +121,13 @@ namespace pqviews
      * @return const_sentinel
      */
     template <typename Range, typename Func>
-    TransformView<Range, Func>::const_sentinel TransformView<Range, Func>::end(
-    ) const
+    typename TransformView<Range, Func>::const_sentinel TransformView<
+        Range,
+        Func>::end() const
     {
         return const_sentinel{std::end(_range)};
     }
 
 }   // namespace pqviews
 
-#endif   // __TRANSFORM_VIEW_HPP__
+#endif   // VIEWS__TRANSFORM_VIEW_HPP

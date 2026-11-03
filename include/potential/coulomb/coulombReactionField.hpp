@@ -20,15 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COULOMB_REACTION_FIELD_HPP_
+#ifndef POTENTIAL__COULOMB__COULOMB_REACTION_FIELD_HPP
+#define POTENTIAL__COULOMB__COULOMB_REACTION_FIELD_HPP
 
-#define _COULOMB_REACTION_FIELD_HPP_
-
-#include <utility>   // for pair
+#include <utility>
 
 #include "coulombPotential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class CoulombReactionField
@@ -42,26 +41,18 @@ namespace potential
     class CoulombReactionField : public CoulombPotential
     {
        private:
-        double _epsilon{};
         double _rfPrefactor{};
 
        public:
-        CoulombReactionField(
-            const double coulombRadiusCutOff,
-            const double epsilon
-        )
-            : CoulombPotential{coulombRadiusCutOff},
-              _epsilon{epsilon},
-              _rfPrefactor{(epsilon - 1.0) / (2.0 * epsilon + 1.0)}
-        {
-        }
+        CoulombReactionField(double coulombRadiusCutOff, double epsilon);
 
-        [[nodiscard]] std::pair<double, double> calculate(
-            const double distance,
-            const double chargeProduct
+        [[nodiscard]]
+        std::pair<double, double> calculate(
+            double distance,
+            double chargeProduct
         ) const override;
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _COULOMB_REACTION_FIELD_HPP_
+#endif   // POTENTIAL__COULOMB__COULOMB_REACTION_FIELD_HPP

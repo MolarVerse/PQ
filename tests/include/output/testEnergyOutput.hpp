@@ -20,18 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_ENERGY_OUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_ENERGY_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_ENERGY_OUTPUT_HPP
 
-#define _TEST_ENERGY_OUTPUT_HPP_
-
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
 #include <filesystem>
+#include <memory>
 
-#include "energyOutput.hpp"     // for EnergyOutput
-#include "infoOutput.hpp"       // for InfoOutput
-#include "momentumOutput.hpp"   // for MomentumOutput
-#include "physicalData.hpp"     // for PhysicalDat
+#include "energyOutput.hpp"
+#include "infoOutput.hpp"
+#include "momentumOutput.hpp"
+#include "physicalData.hpp"
+#include "settings.hpp"
 
 /**
  * @class TestEnergyOutput
@@ -42,29 +43,27 @@
 class TestEnergyOutput : public ::testing::Test
 {
    protected:
+    std::unique_ptr<out::InfoOutput>            _infoOutput;
+    std::unique_ptr<out::EnergyOutput>          _energyOutput;
+    std::unique_ptr<out::MomentumOutput>        _momentumOutput;
+    std::unique_ptr<physicalData::PhysicalData> _physicalData;
+    std::unique_ptr<Settings>                   _settings;
+
     void SetUp() override
     {
-        _infoOutput     = new output::InfoOutput("default.info");
-        _energyOutput   = new output::EnergyOutput("default.en");
-        _momentumOutput = new output::MomentumOutput("default.mom");
-        _physicalData   = new physicalData::PhysicalData();
+        _infoOutput     = std::make_unique<out::InfoOutput>("default.info");
+        _energyOutput   = std::make_unique<out::EnergyOutput>("default.en");
+        _momentumOutput = std::make_unique<out::MomentumOutput>("default.mom");
+        _physicalData   = std::make_unique<physicalData::PhysicalData>();
+        _settings       = std::make_unique<Settings>();
     }
 
     void TearDown() override
     {
-        delete _infoOutput;
-        delete _energyOutput;
-        delete _momentumOutput;
-        delete _physicalData;
         static_cast<void>(std::filesystem::remove("default.info"));
         static_cast<void>(std::filesystem::remove("default.en"));
         static_cast<void>(std::filesystem::remove("default.mom"));
     }
-
-    output::InfoOutput         *_infoOutput;
-    output::EnergyOutput       *_energyOutput;
-    output::MomentumOutput     *_momentumOutput;
-    physicalData::PhysicalData *_physicalData;
 };
 
-#endif   // _TEST_ENERGY_OUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_ENERGY_OUTPUT_HPP

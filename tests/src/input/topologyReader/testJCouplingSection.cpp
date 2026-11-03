@@ -29,34 +29,36 @@
 #include "exceptions.hpp"
 #include "jCouplingSection.hpp"
 #include "testTopologySection.hpp"
-
-using input::topology::JCouplingSection;
-using namespace customException;
+#include "throwWithMessage.hpp"
 
 TEST_F(TestTopologySection, jCouplingSectionKeyword)
 {
-    JCouplingSection section;
+    input::topology::JCouplingSection section;
     EXPECT_EQ(section.keyword(), "j_couplings");
 }
 
 TEST_F(TestTopologySection, jCouplingSectionEndedNormally)
 {
-    JCouplingSection section;
-    EXPECT_NO_THROW(section.endedNormally(true));
-    EXPECT_THROW(section.endedNormally(false), TopologyException);
+    input::topology::JCouplingSection section;
+    EXPECT_NO_THROW(section.endedNormally(true, 0));
+    EXPECT_THROW_MSG(
+        section.endedNormally(false, 0),
+        exc::TopologyException,
+        "Topology file j-coupling section at line 0 - no end of section found!"
+    );
 }
 
 TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
 {
-    JCouplingSection section;
+    input::topology::JCouplingSection section;
     // atom1, atom2, atom3, atom4, type
     std::vector<std::string> lineElements = {"1", "2", "3", "4", "9"};
-    section.processSection(lineElements, *_engine);
+    section.processSection(lineElements, *_engine, 0);
 
     const auto &jCouplings = _engine->getForceField()->getJCouplings();
     ASSERT_EQ(jCouplings.size(), 1U);
 
-    const auto molecules = jCouplings.front().getMolecules();
+    const auto molecules = jCouplings.front().get_molecules();
     ASSERT_EQ(molecules.size(), 4U);
 
     auto &simBox = _engine->getSimulationBox();
@@ -68,27 +70,32 @@ TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
 
 TEST_F(TestTopologySection, jCouplingSectionThrowsOnWrongElementCount)
 {
-    JCouplingSection         section;
-    std::vector<std::string> lineElements = {"1", "2", "3"};
-    EXPECT_THROW(
-        section.processSection(lineElements, *_engine),
-        TopologyException
+    input::topology::JCouplingSection section;
+    std::vector<std::string>          lineElements = {"1", "2", "3"};
+    EXPECT_THROW_MSG(
+        section.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Wrong number of arguments in topology file j-coupling section at line "
+        "0 - number of elements has to be 5!"
     );
 
     lineElements = {"1", "2", "3", "4", "9", "extra"};
-    EXPECT_THROW(
-        section.processSection(lineElements, *_engine),
-        TopologyException
+    EXPECT_THROW_MSG(
+        section.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Wrong number of arguments in topology file j-coupling section at line "
+        "0 - number of elements has to be 5!"
     );
 }
 
 TEST_F(TestTopologySection, jCouplingSectionThrowsOnDuplicateAtomIndices)
 {
-    JCouplingSection section;
+    input::topology::JCouplingSection section;
     // atom1 == atom2 — unique check should fire.
     std::vector<std::string> lineElements = {"1", "1", "2", "3", "9"};
-    EXPECT_THROW(
-        section.processSection(lineElements, *_engine),
-        TopologyException
+    EXPECT_THROW_MSG(
+        section.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Topology file j-coupling section at line 0 - atoms cannot be the same!"
     );
 }

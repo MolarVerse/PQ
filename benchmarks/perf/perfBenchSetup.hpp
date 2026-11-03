@@ -25,9 +25,10 @@
 // runs before CALLGRIND_ZERO_STATS in every benchmark, so it is excluded from
 // the measured instruction count.
 
-#ifndef PQ_BENCH_SETUP_HPP
-#define PQ_BENCH_SETUP_HPP
+#ifndef BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP
+#define BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP
 
+#include <cmath>
 #include <cstddef>
 #include <memory>
 
@@ -37,32 +38,33 @@
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 namespace benchSetup
 {
     struct BenchNonCoulombFFPot
     {
-        potential::ForceFieldNonCoulomb nonCoulomb;
+        pot::ForceFieldNonCoulomb nonCoulomb;
 
         void setNonCoulombPairsMatrix(
-            const std::size_t                  i,
-            const std::size_t                  j,
-            const potential::LennardJonesPair& pair
+            std::size_t                  index1,
+            std::size_t                  index2,
+            const pot::LennardJonesPair& pair
         )
         {
-            nonCoulomb._nonCoulPairsMatPtr->matrix(i, j) =
-                std::make_shared<potential::LennardJonesPair>(pair);
+            nonCoulomb._nonCoulPairsMatPtr->matrix(index1, index2) =
+                std::make_shared<pot::LennardJonesPair>(pair);
         }
 
         void setNonCoulombPairsMatrix(
-            const linearAlgebra::Matrix<
-                std::shared_ptr<potential::NonCoulombPair>>& matrix
+            const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>& matrix
         )
         {
             nonCoulomb._nonCoulPairsMatPtr->matrix = matrix;
@@ -84,54 +86,52 @@ namespace benchSetup
     inline molsys::Molecule makeMolecule(const MoleculeParams& params)
     {
         auto molecule = molsys::Molecule();
-        molecule.setMoltype(1);
-        molecule.setNumberOfAtoms(params.nAtoms);
+        molecule.setMoltype(MolType{1});
 
-        double molMass = 0.0;
         for (std::size_t i = 0; i < params.nAtoms; ++i)
         {
             auto atom = std::make_shared<molsys::Atom>();
 
-            const auto d = static_cast<double>(i);
+            const auto deviation = static_cast<double>(i);
             // Quadratic y-term keeps atoms non-collinear so the bend-force
             // and dihedral kernels exercise their hot path (sin(alpha) != 0).
-            const linearAlgebra::Vec3D pos{
-                params.origin + 1.0 + 0.7 * d,
-                0.4 * d + 0.1 * d * d,
-                0.25 * d
+            const linalg::Vec3D pos{
+                params.origin + 1.0 + (0.7 * deviation),
+                (0.4 * deviation) + (0.1 * deviation * deviation),
+                0.25 * deviation
             };
             atom->setPosition(pos);
             atom->setPositionOld(
                 pos
             );   // at-rest start (stable for constraints)
-            atom->setVelocity({0.01 * (d + 1.0), -0.015, 0.02});
+            atom->setVelocity({0.01 * (deviation + 1.0), -0.015, 0.02});
             atom->setForce({0.1, -0.2, 0.05});
             atom->setShiftForce({0.0, 0.0, 0.0});
             atom->setMass(12.0);
-            atom->setAtomType(i % 2);
-            atom->setInternalGlobalVDWType(i % 2);
+            atom->setAtomType(AtomType{i % 2});
+            atom->setInternalGlobalVDWType(VdwType{i % 2});
             atom->setPartialCharge((i % 2 == 0) ? 0.4 : -0.4);
 
             molecule.addAtom(atom);
-            molMass += 12.0;
         }
-        molecule.setMolMass(molMass);
 
         return molecule;
     }
 
     // A ForceFieldNonCoulomb with a Lennard-Jones pair for the 0/1 vdW types.
-    inline potential::ForceFieldNonCoulomb makeNonCoulomb()
+    inline pot::ForceFieldNonCoulomb makeNonCoulomb()
     {
         benchSetup::BenchNonCoulombFFPot potential;
         potential.setNonCoulombPairsMatrix(
-            linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(
-                2,
-                2
-            )
+            linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
         );
 
-        auto pair = potential::LennardJonesPair(0UL, 1UL, 12.0, 2.0, 3.0);
+        auto pair = pot::LennardJonesPair(
+            ExtVdwType(0),
+            ExtVdwType(1),
+            12.0,
+            LJParams{.c6 = 2.0, .c12 = 3.0}
+        );
         potential.setNonCoulombPairsMatrix(0, 1, pair);
         potential.setNonCoulombPairsMatrix(1, 0, pair);
 
@@ -154,13 +154,15 @@ namespace benchSetup
     inline molsys::SimulationBox makePopulatedBox(const BoxParams& params)
     {
         auto box = molsys::SimulationBox();
-        box.setBoxDimensions({30.0, 30.0, 30.0});
 
-        for (std::size_t m = 0; m < params.nMolecules; ++m)
+        molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
+        box.setBox(orthoBox, false);
+
+        for (std::size_t mol = 0; mol < params.nMolecules; ++mol)
         {
             auto molecule = makeMolecule(
                 {.nAtoms = params.nAtomsPerMol,
-                 .origin = 3.0 * static_cast<double>(m)}
+                 .origin = 3.0 * static_cast<double>(mol)}
             );
 
             for (std::size_t i = 0; i < params.nAtomsPerMol; ++i)
@@ -176,6 +178,21 @@ namespace benchSetup
 
         return box;
     }
+
+    // Scale all velocities so the box has the given temperature. The velocities
+    // of makeMolecule() are tiny (about 1e-6 K); a thermostat with a realistic
+    // target would heat such a system explosively instead of doing a steady
+    // amount of work.
+    inline void scaleVelocitiesToTemperature(
+        molsys::SimulationBox& simulationBox,
+        double                 temperature
+    )
+    {
+        const auto factor =
+            std::sqrt(temperature / simulationBox.calculateTemperature());
+        for (auto& atom : simulationBox.getAtoms())
+            atom->setVelocity(atom->getVelocity() * factor);
+    }
 }   // namespace benchSetup
 
-#endif   // PQ_BENCH_SETUP_HPP
+#endif   // BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP

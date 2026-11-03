@@ -9,6 +9,7 @@ on:
     branches:
       - main
       - dev
+      - NEXT
     # Only run when something that can actually affect instruction counts
     # changes — code, benchmarks, build config, submodules, or the gate
     # itself. Doc / changelog / unrelated-workflow PRs skip the gate.
@@ -21,8 +22,20 @@ on:
       - 'CMakeLists.txt'
       - '.cmake/**'
       - '.github/workflows/perf.yml'
+      - '.github/actions/setup-gcc/**'
       - 'scripts/perf_gate.sh'
+  # Nightly run of dev against dev of a day earlier, with the (slow) simulation
+  # of the caches and the branch predictor. Scheduled runs use the workflow file
+  # of the default branch.
+  schedule:
+    - cron: '0 3 * * *'
   workflow_dispatch:
+
+# Only superseded pull_request runs are cancelled; manual runs each get their
+# own group (see ci_build.yml for the rationale).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -34,11 +47,31 @@ jobs:
     # branches require a human-run performance check on a trusted branch.
     if: github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'pq-bot/')
     runs-on: ubuntu-24.04
+    env:
+      # The simulation makes the callgrind runs about 3 times slower, so pull
+      # requests skip it; scheduled and manual runs report it.
+      PERF_CACHE_SIM: ${{ github.event_name == 'pull_request' && '0' || '1' }}
     steps:
       - name: Checkout PR
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
+          fetch-depth: ${{ github.event_name == 'pull_request' && 1 || 0 }}
           submodules: recursive
+
+      # Base of the comparison: the base branch of a pull request, otherwise
+      # the last commit that is at least a day older than the checked out one.
+      - name: Resolve base commit
+        id: base-sha
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            sha="${{ github.event.pull_request.base.sha }}"
+          else
+            sha="$(git rev-list -n1 --before='24 hours ago' HEAD)"
+            [ -n "$sha" ] || sha="$(git rev-parse HEAD~1)"
+          fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+        shell: bash
 
       # Callgrind instruction counts are a pure function of the binary, which
       # is a pure function of the base commit SHA. So we cache the measured
@@ -49,37 +82,52 @@ jobs:
         uses: actions/cache@v4
         with:
           path: base_ir.tsv
-          key: perf-base-ir-${{ github.event.pull_request.base.sha || github.sha }}
+          key: perf-base-ir-sim${{ env.PERF_CACHE_SIM }}-${{ steps.base-sha.outputs.sha }}
 
       - name: Checkout base branch
         if: steps.base-ir-cache.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.base_ref || 'dev' }}
+          ref: ${{ github.event_name == 'pull_request' && github.base_ref || steps.base-sha.outputs.sha }}
           submodules: recursive
           path: base
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-13 g++-13 valgrind mold
-        shell: bash
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: valgrind mold
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: perf-${{ github.base_ref || 'dev' }}
 
+      # Only used for the PR build below, not the base-branch build: if a PR
+      # bumps EIGEN_TAG itself, the base branch's own (older) pin must still
+      # be fetched fresh so the comparison stays correct. The base build is
+      # usually skipped anyway via the base_ir.tsv cache above.
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
       - name: Build PR benchmarks
         run: |
           cmake -S . -B build-pr \
             -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
             -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_ASE=Off \
-            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off
+            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build-pr --target perf_benchmarks -j$(nproc)
-        env:
-          CC: gcc-13
-          CXX: g++-13
 
       - name: Build base benchmarks (baseline)
         if: steps.base-ir-cache.outputs.cache-hit != 'true'
@@ -90,9 +138,6 @@ jobs:
             -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off || true
           cmake --build build-base --target perf_benchmarks -j$(nproc) \
             || echo "base branch has no perf benchmarks yet - baseline skipped"
-        env:
-          CC: gcc-13
-          CXX: g++-13
 
       - name: Compare instruction counts (gate)
         id: gate

@@ -20,18 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLECULE_HPP_
+#ifndef MOLSYS__MOLECULE_HPP
+#define MOLSYS__MOLECULE_HPP
 
-#define _MOLECULE_HPP_
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include <cstddef>       // for size_t
-#include <map>           // for map
-#include <memory>        // for shared_ptr
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
-
-#include "atom.hpp"   // for Atom
+#include "atom.hpp"
+#include "strongTypes.hpp"
 
 namespace molsys
 {
@@ -43,7 +42,7 @@ namespace molsys
      * the center of mass in hybrid calculations. The zones are assigned
      * concentrically based on radial distance thresholds.
      */
-    enum class HybridZone : size_t
+    enum class HybridZone : std::uint8_t
     {
         /** Default, molecule not assigned to any hybrid zone */
         NOT_HYBRID,
@@ -77,42 +76,40 @@ namespace molsys
     {
        private:
         std::string _name;
-        size_t      _moltype;
-        size_t      _numberOfAtoms;
+        MolType     _moltype;
 
         // set via molDescriptor not sum of partial charges!!!
         // 0 (neutral) as default when molecule has no moltype
         int _charge = 0;
 
-        double _molMass;
+        linalg::Vec3D _centerOfMass{0.0, 0.0, 0.0};
 
-        linearAlgebra::Vec3D _centerOfMass{0.0, 0.0, 0.0};
-
-        std::map<size_t, size_t>           _externalToInternalAtomTypes;
         std::vector<std::shared_ptr<Atom>> _atoms;
 
         // hybrid calculation related member variables
-        HybridZone _hybridZone = HybridZone::NOT_HYBRID;
-        bool       _isActive   = true;
-        double     _smoothingFactor;
+        HybridZone _hybridZone    = HybridZone::NOT_HYBRID;
+        bool       _isActive      = true;
         bool       _isForcedCore  = false;
         bool       _isForcedLayer = false;
         bool       _isForcedOuter = false;
 
+        std::optional<double> _smoothingFactor;
+
        public:
         Molecule() = default;
-        explicit Molecule(const std::string_view name);
-        explicit Molecule(const size_t moltype);
+        explicit Molecule(std::string_view name);
+        explicit Molecule(MolType moltype);
 
         void calculateCenterOfMass(const Box &);
         void reconstructAtomsAroundCenterOfMass(const Box &);
-        void scale(const linearAlgebra::tensor3D &, const Box &);
-        void scaleVelocity(const linearAlgebra::tensor3D &, const Box &);
+        void scale(const linalg::tensor3D &, const Box &);
+        void scaleVelocity(const linalg::tensor3D &, const Box &);
 
-        [[nodiscard]] size_t              getNumberOfAtomTypes();
-        [[nodiscard]] std::vector<size_t> getExternalGlobalVDWTypes() const;
+        [[nodiscard]] size_t                  getNumberOfAtomTypes();
+        [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
 
         [[nodiscard]] std::vector<double> getAtomMasses() const;
+        [[nodiscard]] double              getMolMass() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
 
         [[nodiscard]] bool isMMMolecule() const;
@@ -126,90 +123,67 @@ namespace molsys
          * standard adder methods for atom data *
          *****************************************/
 
-        void addAtom(const std::shared_ptr<Atom> atom);
-        void addAtomPosition(
-            const size_t                index,
-            const linearAlgebra::Vec3D &position
-        );
-        void addAtomVelocity(
-            const size_t                index,
-            const linearAlgebra::Vec3D &velocity
-        );
-        void addAtomForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &force
-        );
+        void addAtom(const std::shared_ptr<Atom> &atom);
+        void addAtomPosition(AtomIndex index, const linalg::Vec3D &position);
+        void addAtomVelocity(AtomIndex index, const linalg::Vec3D &velocity);
+        void addAtomForce(AtomIndex index, const linalg::Vec3D &force);
         void addAtomShiftForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &shiftForce
+            AtomIndex            index,
+            const linalg::Vec3D &shiftForce
         );
 
         /*****************************************
          * standard setter methods for atom data *
          ****************************************/
 
-        void setAtomPosition(
-            const size_t                index,
-            const linearAlgebra::Vec3D &position
-        );
-        void setAtomVelocity(
-            const size_t                index,
-            const linearAlgebra::Vec3D &velocity
-        );
-        void setAtomForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &force
-        );
-        void setAtomShiftForce(
-            const size_t                index,
-            const linearAlgebra::Vec3D &shiftForce
-        );
+        void setAtomPosition(size_t index, const linalg::Vec3D &position);
+        void setAtomVelocity(size_t index, const linalg::Vec3D &velocity);
+        void setAtomForce(size_t index, const linalg::Vec3D &force);
+        void setAtomShiftForce(size_t index, const linalg::Vec3D &shiftForce);
 
         /****************************************
          * standard getters for atom properties *
          *****************************************/
 
-        [[nodiscard]] linearAlgebra::Vec3D getAtomPosition(
-            const size_t index
-        ) const;
-        [[nodiscard]] std::vector<linearAlgebra::Vec3D> getAtomPositions(
-        ) const;
-        [[nodiscard]] linearAlgebra::Vec3D getAtomVelocity(
-            const size_t index
-        ) const;
-        [[nodiscard]] linearAlgebra::Vec3D getAtomForce(
-            const size_t index
-        ) const;
-        [[nodiscard]] linearAlgebra::Vec3D getAtomShiftForce(
-            const size_t index
-        ) const;
+        [[nodiscard]]
+        linalg::Vec3D getAtomPosition(AtomIndex index) const;
 
-        [[nodiscard]] AtomNumber getAtomicNumber(const size_t index) const;
-        [[nodiscard]] double     getAtomMass(const size_t index) const;
-        [[nodiscard]] double     getPartialCharge(const size_t index) const;
-        [[nodiscard]] size_t     getAtomType(const size_t index) const;
-        [[nodiscard]] size_t getInternalGlobalVDWType(const size_t index) const;
-        [[nodiscard]] std::string getAtomName(const size_t index) const;
+        [[nodiscard]]
+        std::vector<linalg::Vec3D> getAtomPositions() const;
+
+        [[nodiscard]]
+        linalg::Vec3D getAtomVelocity(AtomIndex index) const;
+
+        [[nodiscard]]
+        linalg::Vec3D getAtomForce(AtomIndex) const;
+
+        [[nodiscard]] linalg::Vec3D getAtomShiftForce(size_t index) const;
+
+        [[nodiscard]] AtomNumber  getAtomicNumber(size_t index) const;
+        [[nodiscard]] double      getAtomMass(AtomIndex index) const;
+        [[nodiscard]] double      getPartialCharge(AtomIndex index) const;
+        [[nodiscard]] AtomType    getAtomType(AtomIndex index) const;
+        [[nodiscard]] std::string getAtomName(AtomIndex index) const;
+        [[nodiscard]]
+        VdwType getInternalGlobalVDWType(AtomIndex index) const;
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getMoltype() const { return _moltype; }
-        [[nodiscard]] size_t getNumberOfAtoms() const;
-        [[nodiscard]] size_t getDegreesOfFreedom() const;
+        [[nodiscard]] MolType getMoltype() const { return _moltype; }
+        [[nodiscard]] size_t  getNumberOfAtoms() const;
+        [[nodiscard]] size_t  getDegreesOfFreedom() const;
 
-        [[nodiscard]] int    getCharge() const;
-        [[nodiscard]] double getMolMass() const;
-
+        [[nodiscard]] int         getCharge() const;
         [[nodiscard]] std::string getName() const;
 
-        [[nodiscard]] linearAlgebra::Vec3D getCenterOfMass() const;
-        [[nodiscard]] HybridZone           getHybridZone() const;
-        [[nodiscard]] bool   isActive() const { return _isActive; }
-        [[nodiscard]] double getSmoothingFactor() const;
+        [[nodiscard]] linalg::Vec3D getCenterOfMass() const;
+        [[nodiscard]] HybridZone    getHybridZone() const;
+        [[nodiscard]] bool          isActive() const { return _isActive; }
+        [[nodiscard]] double        getSmoothingFactor() const;
 
-        [[nodiscard]] Atom &getAtom(const size_t index);
+        [[nodiscard]] Atom &getAtom(AtomIndex index);
         [[nodiscard]] std::vector<std::shared_ptr<Atom>>       &getAtoms();
         [[nodiscard]] const std::vector<std::shared_ptr<Atom>> &getAtoms(
         ) const;
@@ -222,22 +196,19 @@ namespace molsys
          * standard setter methods *
          ***************************/
 
-        void setName(const std::string_view name);
+        void setName(std::string_view name);
+        void setMoltype(MolType moltype);
 
-        void setNumberOfAtoms(const size_t numberOfAtoms);
-        void setMoltype(const size_t moltype);
+        void setCharge(int charge);
+        void setCenterOfMass(const linalg::Vec3D &centerOfMass);
+        void setHybridZone(HybridZone hybridZone);
+        void setSmoothingFactor(double factor);
 
-        void setCharge(const int charge);
-        void setMolMass(const double molMass);
-        void setCenterOfMass(const linearAlgebra::Vec3D &centerOfMass);
-        void setHybridZone(const HybridZone hybridZone);
-        void setSmoothingFactor(const double factor);
-
-        void setForcedCore(const bool isForcedCore);
-        void setForcedLayer(const bool isForcedLayer);
-        void setForcedOuter(const bool isForcedOuter);
+        void setForcedCore(bool isForcedCore);
+        void setForcedLayer(bool isForcedLayer);
+        void setForcedOuter(bool isForcedOuter);
     };
 
 }   // namespace molsys
 
-#endif   // _MOLECULE_HPP_
+#endif   // MOLSYS__MOLECULE_HPP

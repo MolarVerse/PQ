@@ -22,146 +22,159 @@
 
 #include "referencesOutput.hpp"
 
-#include <filesystem>   // for is_directory, is_regular_file, path
-#include <format>       // for format
-#include <fstream>      // for fstream
-#include <sstream>      // for ostringstream
-#include <stdexcept>    // for runtime_error
-#include <string>       // for string
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
-#include "executablePath.hpp"       // for executablePath
-#include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "references.hpp"           // for ReferencesOutput
+#include "executablePath.hpp"
+#include "referenceSettings.hpp"
 
-using references::ReferencesOutput;
-using namespace settings;
+#define REFERENCES_PATH_ _REFERENCES_PATH_
 
-namespace
+namespace references
 {
-    std::filesystem::path referenceFilesPath()
+
+    namespace
     {
-        const auto installedPath = utilities::installedDataPath("references");
-        if (std::filesystem::is_directory(installedPath))
-            return installedPath;
+        std::filesystem::path referenceFilesPath()
+        {
+            auto installedPath = utilities::installedDataPath("references");
+            if (std::filesystem::is_directory(installedPath))
+                return installedPath;
 
-        const auto buildPath = std::filesystem::path(REFERENCES_PATH_);
-        if (std::filesystem::is_directory(buildPath))
-            return buildPath;
+            const auto buildPath = std::filesystem::path(REFERENCES_PATH_);
+            if (std::filesystem::is_directory(buildPath))
+                return buildPath;
 
-        throw std::runtime_error("PQ reference data could not be found");
-    }
+            throw std::runtime_error("PQ reference data could not be found");
+        }
 
-    void renderReferenceFile(
-        const std::filesystem::path &path,
-        std::ostream                &output
+        void renderReferenceFile(
+            const std::filesystem::path &path,
+            std::ostream                &output
+        )
+        {
+            if (!std::filesystem::is_regular_file(path))
+            {
+                throw std::runtime_error(
+                    std::format(
+                        "PQ reference file \"{}\" could not be found",
+                        path.string()
+                    )
+                );
+            }
+
+            std::ifstream referenceFile(path);
+            if (!referenceFile.is_open())
+            {
+                throw std::runtime_error(
+                    std::format(
+                        "Could not open PQ reference file \"{}\"",
+                        path.string()
+                    )
+                );
+            }
+
+            std::string line;
+            while (getline(referenceFile, line)) output << line << '\n';
+
+            if (referenceFile.bad())
+            {
+                throw std::runtime_error(
+                    std::format(
+                        "Could not read PQ reference file \"{}\"",
+                        path.string()
+                    )
+                );
+            }
+
+            output << "\n\n";
+        }
+    }   // namespace
+
+    /**
+     * @brief constructs a ReferencesOutput object with the given reference
+     * settings
+     *
+     */
+    ReferencesOutput::ReferencesOutput(
+        const ReferenceSettings &referenceSettings
     )
+        : _referenceSettings(referenceSettings)
     {
-        if (!std::filesystem::is_regular_file(path))
-        {
-            throw std::runtime_error(
-                std::format(
-                    "PQ reference file \"{}\" could not be found",
-                    path.string()
-                )
-            );
-        }
-
-        std::ifstream referenceFile(path);
-        if (!referenceFile.is_open())
-        {
-            throw std::runtime_error(
-                std::format(
-                    "Could not open PQ reference file \"{}\"",
-                    path.string()
-                )
-            );
-        }
-
-        std::string line;
-        while (getline(referenceFile, line)) output << line << '\n';
-
-        if (referenceFile.bad())
-        {
-            throw std::runtime_error(
-                std::format(
-                    "Could not read PQ reference file \"{}\"",
-                    path.string()
-                )
-            );
-        }
-
-        output << "\n\n";
     }
-}   // namespace
 
-/**
- * @brief writes the references file
- *
- * @param filename
- */
-void ReferencesOutput::writeReferencesFile()
-{
-    const auto sourceDirectory = referenceFilesPath();
-    const auto filename        = OutputFileSettings::getRefFileName();
-
-    std::ostringstream rendered;
-
-    // clang-format off
-    rendered << "########################################################################\n";
-    rendered << "#                                                                      #\n";
-    rendered << "#  This file contains all references to the software and theory used.  #\n";
-    rendered << "#                                                                      #\n";
-    rendered << "########################################################################\n";
-    rendered << '\n';
-    // clang-format on
-
-    renderReferenceFile(sourceDirectory / PQ_FILE, rendered);
-    for (const auto &referenceFileName : _referenceFileNames)
-        renderReferenceFile(sourceDirectory / referenceFileName, rendered);
-
-    // clang-format off
-    rendered << '\n';
-    rendered << "########################################################################\n";
-    rendered << "#                                                                      #\n";
-    rendered << "#                            BIBTEX ENTRIES                            #\n";
-    rendered << "#                                                                      #\n";
-    rendered << "########################################################################\n";
-    rendered << '\n';
-    // clang-format on
-
-    renderReferenceFile(
-        sourceDirectory / (static_cast<std::string>(PQ_FILE) + ".bib"),
-        rendered
-    );
-    for (const auto &referenceFileName : _bibtexFileNames)
-        renderReferenceFile(sourceDirectory / referenceFileName, rendered);
-
-    std::ofstream output(filename);
-    if (!output.is_open())
-        throw std::runtime_error(
-            std::format("Could not open reference output file \"{}\"", filename)
-        );
-
-    output << rendered.str();
-    output.close();
-    if (!output)
+    /**
+     * @brief writes the references file
+     *
+     */
+    void ReferencesOutput::writeReferencesFile(
+        const std::string &referenceFileName
+    ) const
     {
-        throw std::runtime_error(
-            std::format(
-                "Could not write reference output file \"{}\"",
-                filename
-            )
-        );
-    }
-}
+        const auto sourceDirectory = referenceFilesPath();
 
-/**
- * @brief adds a reference file to the list of reference files and bibtex files
- *
- * @param referenceFileName
- */
-void ReferencesOutput::addReferenceFile(const std::string &referenceFileName)
-{
-    _referenceFileNames.insert(referenceFileName);
-    _bibtexFileNames.insert(referenceFileName + ".bib");
-}
+        std::ostringstream rendered;
+
+        std::string text = R"(
+########################################################################
+#                                                                      #
+#  This file contains all references to the software and theory used.  #
+#                                                                      #
+########################################################################
+)";
+        rendered << text << '\n';
+
+        renderReferenceFile(
+            sourceDirectory / ReferenceFiles::PQ_FILE,
+            rendered
+        );
+        for (const auto &refFileName :
+             _referenceSettings->getReferenceFileNames())
+            renderReferenceFile(sourceDirectory / refFileName, rendered);
+
+        text = R"(
+########################################################################
+#                                                                      #
+#                            BIBTEX ENTRIES                            #
+#                                                                      #
+########################################################################
+)";
+        rendered << '\n' << text << '\n';
+
+        renderReferenceFile(
+            sourceDirectory /
+                (static_cast<std::string>(ReferenceFiles::PQ_FILE) + ".bib"),
+            rendered
+        );
+        for (const auto &bibFileName : _referenceSettings->getBibtexFileNames())
+            renderReferenceFile(sourceDirectory / bibFileName, rendered);
+
+        std::ofstream output(referenceFileName);
+        if (!output.is_open())
+        {
+            throw std::runtime_error(
+                std::format(
+                    "Could not open reference output file \"{}\"",
+                    referenceFileName
+                )
+            );
+        }
+
+        output << rendered.str();
+        output.close();
+        if (!output)
+        {
+            throw std::runtime_error(
+                std::format(
+                    "Could not write reference output file \"{}\"",
+                    referenceFileName
+                )
+            );
+        }
+    }
+
+}   // namespace references

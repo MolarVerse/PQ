@@ -22,220 +22,262 @@
 
 #include "infoOutput.hpp"
 
-#include <format>    // for format
-#include <ostream>   // for operator<<, basic_ostream, char_traits
+#include <format>
 
-#include "constraintSettings.hpp"   // for ConstraintSettings
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "manostatSettings.hpp"     // for ManostatSettings
-#include "physicalData.hpp"         // for PhysicalData
-#include "settings.hpp"             // for Settings
-#include "thermostatSettings.hpp"   // for ThermostatSettings
+#include "constraintSettings.hpp"
+#include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
+#include "manostatSettings.hpp"
+#include "physicalData.hpp"
+#include "settings.hpp"
+#include "thermostatSettings.hpp"
 
-using namespace output;
-using namespace physicalData;
-using namespace settings;
-
-/**
- * @brief write info file
- *
- * @details
- * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
- * - Bond, Angle, Dihedral and Improper energies are only available if the force
- * field is active.
- * - qm energy is only available if qm is active.
- * - coulomb and non-coulomb energies are only available if mm is active.
- * - volume and density are only available if manostat is active.
- * - nose hoover momentum and friction energies are only available if nose
- * hoover thermostat is active.
- *
- * @param simulationTime
- * @param data
- */
-void InfoOutput::write(const double simulationTime, const PhysicalData &data)
+namespace out
 {
-    _fp.close();
 
-    _fp.open(_fileName);
-
-    writeHeader();
-
-    if (Settings::isMDJobType())
-        writeLeft(simulationTime, "SIMULATION-TIME", "ps");
-    else
-        writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
-
-    writeRight(data.getTemperature(), "TEMPERATURE", "K");
-
-    writeLeft(data.getPressure(), "PRESSURE", "bar");
-    writeRight(data.getTotalEnergy(), "E(TOT)", "kcal/mol");
-
-    if (Settings::isQMActivated())
+    /**
+     * @brief write info file
+     *
+     * @details
+     * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
+     * - Bond, Angle, Dihedral and Improper energies are only available if the
+     * force field is active.
+     * - qm energy is only available if qm is active.
+     * - coulomb and non-coulomb energies are only available if mm is active.
+     * - volume and density are only available if manostat is active.
+     * - nose hoover momentum and friction energies are only available if nose
+     * hoover thermostat is active.
+     *
+     * @param simulationTime
+     * @param physicalData the physical data of the system
+     * @param settings the simulation settings
+     */
+    void InfoOutput::write(
+        double                            simulationTime,
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
+    )
     {
-        writeLeft(data.getQMEnergy(), "E(QM)", "kcal/mol");
-        writeRight(data.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
-    }
+        _getFilePointer().close();
 
-    writeLeft(data.getKineticEnergy(), "E(KIN)", "kcal/mol");
-    writeRight(data.getIntraEnergy(), "E(INTRA)", "kcal/mol");
+        _openFile();
 
-    if (Settings::isMMActivated())
-    {
-        writeLeft(data.getCoulombEnergy(), "E(COUL)", "kcal/mol");
-        writeRight(data.getNonCoulombEnergy(), "E(NON-COUL)", "kcal/mol");
-    }
+        _writeHeader();
 
-    if (ForceFieldSettings::isActive())
-    {
-        writeLeft(data.getBondEnergy(), "E(BOND)", "kcal/mol");
-        writeRight(data.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
-        writeLeft(data.getDihedralEnergy(), "E(DIHEDRAL)", "kcal/mol");
-        writeRight(data.getImproperEnergy(), "E(IMPROPER)", "kcal/mol");
-    }
+        if (settings::GeneralSettings::isMDJobType())
+            _writeLeft(simulationTime, "SIMULATION-TIME", "ps");
+        else
+            _writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
 
-    if (Settings::isHybridJobtype())
-    {
-        writeLeft(data.getNumberOfSmoothingMolecules(), "N(SM-MOL)", "-");
-        writeRight();
-    }
+        _writeRight(physicalData.getTemperature(), "TEMPERATURE", "K");
 
-    if (ManostatSettings::getManostatType() != ManostatType::NONE)
-    {
-        writeLeft(data.getVolume(), "VOLUME", "A^3");
-        writeRight(data.getDensity(), "DENSITY", "g/cm^3");
-    }
+        _writeLeft(physicalData.getPressure(), "PRESSURE", "bar");
+        _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
 
-    if (ThermostatSettings::getThermostatType() == ThermostatType::NOSE_HOOVER)
-    {
-        writeLeft(
-            data.getNoseHooverMomentumEnergy(),
-            "E(NH-MOMENTUM)",
-            "kcal/mol"
+        if (settings::GeneralSettings::isQMActivated())
+        {
+            _writeLeft(
+                physicalData.getQMEnergy() -
+                    physicalData.getQMReferenceEnergy(),
+                "E(QM)",
+                "kcal/mol"
+            );
+            _writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
+        }
+
+        _writeLeft(physicalData.getKineticEnergy(), "E(KIN)", "kcal/mol");
+        _writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
+
+        if (settings::GeneralSettings::isMMActivated())
+        {
+            _writeLeft(physicalData.getCoulombEnergy(), "E(COUL)", "kcal/mol");
+            _writeRight(
+                physicalData.getNonCoulombEnergy(),
+                "E(NON-COUL)",
+                "kcal/mol"
+            );
+        }
+
+        if (settings.forceFieldSettings.isActive())
+        {
+            _writeLeft(physicalData.getBondEnergy(), "E(BOND)", "kcal/mol");
+            _writeRight(physicalData.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
+            _writeLeft(
+                physicalData.getDihedralEnergy(),
+                "E(DIHEDRAL)",
+                "kcal/mol"
+            );
+            _writeRight(
+                physicalData.getImproperEnergy(),
+                "E(IMPROPER)",
+                "kcal/mol"
+            );
+        }
+
+        if (settings::GeneralSettings::isHybridJobtype())
+        {
+            _writeLeft(
+                physicalData.getNumberOfSmoothingMolecules(),
+                "N(SM-MOL)",
+                "-"
+            );
+            _writeRight(
+                physicalData.getQMReferenceEnergy(),
+                "E(QM-REF)",
+                "kcal/mol"
+            );
+        }
+
+        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
+        {
+            _writeLeft(physicalData.getVolume(), "VOLUME", "A^3");
+            _writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
+
+            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
+            {
+                _writeLeft(
+                    physicalData.getCoupledPressure(),
+                    "P(COUPLED)",
+                    "bar"
+                );
+                _writeRight();
+            }
+        }
+
+        if (settings::ThermostatSettings::getThermostatType() ==
+            ThermostatType::NOSE_HOOVER)
+        {
+            _writeLeft(
+                physicalData.getNoseHooverMomentumEnergy(),
+                "E(NH-MOMENTUM)",
+                "kcal/mol"
+            );
+            _writeRight(
+                physicalData.getNoseHooverFrictionEnergy(),
+                "E(NH-FRICTION)",
+                "kcal/mol"
+            );
+        }
+
+        if (settings.constraintSettings.isDistanceConstraintsActivated())
+        {
+            _writeLeft(
+                physicalData.getLowerDistanceConstraints(),
+                "LOWER-DIST-CONSTR",
+                "kcal/mol"
+            );
+            _writeRight(
+                physicalData.getUpperDistanceConstraints(),
+                "UPPER-DIST-CONSTR",
+                "kcal/mol"
+            );
+        }
+
+        _writeLeftScientific(
+            norm(physicalData.getMomentum()),
+            "MOMENTUM",
+            "amuA/fs"
         );
-        writeRight(
-            data.getNoseHooverFrictionEnergy(),
-            "E(NH-FRICTION)",
-            "kcal/mol"
-        );
+        _writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
+
+        _getFilePointer() << std::format("{:-^89}", "") << "\n\n";
+
+        _getFilePointer().flush();
     }
 
-    if (ConstraintSettings::isDistanceConstraintsActivated())
+    /**
+     * @brief write header of info file
+     *
+     */
+    void InfoOutput::_writeHeader()
     {
-        writeLeft(
-            data.getLowerDistanceConstraints(),
-            "LOWER-DIST-CONSTR",
-            "kcal/mol"
-        );
-        writeRight(
-            data.getUpperDistanceConstraints(),
-            "UPPER-DIST-CONSTR",
-            "kcal/mol"
+        _getFilePointer() << std::format("{:-^89}", "") << '\n';
+
+        _getFilePointer() << '|' << std::format("{:^87}", "PQ info file") << '|'
+                          << '\n';
+
+        _getFilePointer() << std::format("{:-^89}", "") << '\n';
+    }
+
+    /**
+     * @brief write left column of info file
+     *
+     * @param value
+     * @param name
+     * @param unit
+     */
+    void InfoOutput::_writeLeft(
+        double                  value,
+        const std::string_view &name,
+        const std::string_view &unit
+    )
+    {
+        _getFilePointer(
+        ) << std::format("|   {:<15} {:15.5f} {:<8} ", name, value, unit);
+    }
+
+    /**
+     * @brief write left column of info file
+     *
+     * @param value
+     * @param name
+     * @param unit
+     */
+    void InfoOutput::_writeLeftInteger(
+        double                  value,
+        const std::string_view &name,
+        const std::string_view &unit
+    )
+    {
+        _getFilePointer() << std::format(
+            "|   {:<15} {:15d} {:<8} ",
+            name,
+            static_cast<int>(value),
+            unit
         );
     }
 
-    writeLeftScientific(norm(data.getMomentum()), "MOMENTUM", "amuA/fs");
-    writeRight(data.getLoopTime(), "LOOPTIME", "s");
+    /**
+     * @brief write left column of info file
+     *
+     * @param value
+     * @param name
+     * @param unit
+     */
+    void InfoOutput::_writeLeftScientific(
+        double                  value,
+        const std::string_view &name,
+        const std::string_view &unit
+    )
+    {
+        _getFilePointer(
+        ) << std::format("|   {:<15} {:15.1e} {:<8} ", name, value, unit);
+    }
 
-    _fp << std::format("{:-^89}", "") << "\n\n";
+    /**
+     * @brief write std::right column of info file
+     *
+     * @param value
+     * @param name
+     * @param unit
+     */
+    void InfoOutput::_writeRight(
+        double                  value,
+        const std::string_view &name,
+        const std::string_view &unit
+    )
+    {
+        _getFilePointer(
+        ) << std::format("{:<15} {:15.5f} {:<8}   |\n", name, value, unit);
+    }
 
-    _fp.flush();
-}
+    /**
+     * @brief write empty right column to info file
+     *
+     */
+    void InfoOutput::_writeRight()
+    {
+        _getFilePointer() << "                                           |\n";
+    }
 
-/**
- * @brief write header of info file
- *
- */
-void InfoOutput::writeHeader()
-{
-    _fp << std::format("{:-^89}", "") << '\n';
-
-    _fp << '|' << std::format("{:^87}", "PQ info file") << '|' << '\n';
-
-    _fp << std::format("{:-^89}", "") << '\n';
-}
-
-/**
- * @brief write left column of info file
- *
- * @param value
- * @param name
- * @param unit
- * @param formatter
- * @param precision
- */
-void InfoOutput::writeLeft(
-    const double            value,
-    const std::string_view &name,
-    const std::string_view &unit
-)
-{
-    _fp << std::format("|   {:<15} {:15.5f} {:<8} ", name, value, unit);
-}
-
-/**
- * @brief write left column of info file
- *
- * @param value
- * @param name
- * @param unit
- * @param formatter
- * @param precision
- */
-void InfoOutput::writeLeftInteger(
-    const double            value,
-    const std::string_view &name,
-    const std::string_view &unit
-)
-{
-    _fp << std::format(
-        "|   {:<15} {:15d} {:<8} ",
-        name,
-        static_cast<int>(value),
-        unit
-    );
-}
-
-/**
- * @brief write left column of info file
- *
- * @param value
- * @param name
- * @param unit
- * @param formatter
- * @param precision
- */
-void InfoOutput::writeLeftScientific(
-    const double            value,
-    const std::string_view &name,
-    const std::string_view &unit
-)
-{
-    _fp << std::format("|   {:<15} {:15.1e} {:<8} ", name, value, unit);
-}
-
-/**
- * @brief write std::right column of info file
- *
- * @param value
- * @param name
- * @param unit
- * @param formatter
- * @param precision
- */
-void InfoOutput::writeRight(
-    const double            value,
-    const std::string_view &name,
-    const std::string_view &unit
-)
-{
-    _fp << std::format("{:<15} {:15.5f} {:<8}   |\n", name, value, unit);
-}
-
-/**
- * @brief write empty right column to info file
- *
- */
-void InfoOutput::writeRight()
-{
-    _fp << "                                           |\n";
-}
+}   // namespace out

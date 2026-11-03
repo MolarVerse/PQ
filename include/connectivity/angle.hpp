@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ANGLE_HPP_
-
-#define _ANGLE_HPP_
+#ifndef CONNECTIVITY__ANGLE_HPP
+#define CONNECTIVITY__ANGLE_HPP
 
 #include "connectivityElement.hpp"
 
@@ -42,4 +41,4 @@ namespace connectivity
 
 }   // namespace connectivity
 
-#endif   // _ANGLE_HPP_
+#endif   // CONNECTIVITY__ANGLE_HPP

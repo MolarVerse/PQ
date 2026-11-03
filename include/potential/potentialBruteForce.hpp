@@ -20,13 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_BRUTE_FORCE_HPP_
-
-#define _POTENTIAL_BRUTE_FORCE_HPP_
+#ifndef POTENTIAL__POTENTIAL_BRUTE_FORCE_HPP
+#define POTENTIAL__POTENTIAL_BRUTE_FORCE_HPP
 
 #include "potential.hpp"
 
-namespace potential
+class WaterModelSettings;   // forward declaration
+
+namespace pot
 {
     /**
      * @class PotentialBruteForce
@@ -40,37 +41,42 @@ namespace potential
         ~PotentialBruteForce() override;
 
         void calculateForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
-            molsys::CellList           &cellList
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            const molsys::CellList & /*cellList*/,
+            const WaterModelSettings &waterModelSettings
         ) override;
 
         void calculateCoreToOuterForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
-            molsys::CellList           &cellList
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            const molsys::CellList & /*cellList*/,
+            const WaterModelSettings &waterModelSettings
         ) override;
 
         void calculateLayerToOuterForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
-            molsys::CellList           &cellList
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            const molsys::CellList & /*cellList*/,
+            const WaterModelSettings &waterModelSettings
         ) override;
 
         void calculateOuterToOuterForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
-            molsys::CellList           &cellList
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            const molsys::CellList     &cellList,
+            const WaterModelSettings   &waterModelSettings
         ) override;
 
         void calculateHotspotSmoothingMMForces(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
-            molsys::CellList           &cellList
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            const molsys::CellList & /*cellList*/,
+            const WaterModelSettings &waterModelSettings
         ) override;
 
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;
     };
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _POTENTIAL_BRUTE_FORCE_HPP_
+#endif   // POTENTIAL__POTENTIAL_BRUTE_FORCE_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
-
-#define _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
+#ifndef SETUP__RANDOM_NUMBER_GENERATOR_SETUP_HPP
+#define SETUP__RANDOM_NUMBER_GENERATOR_SETUP_HPP
 
 namespace engine
 {
@@ -47,10 +46,10 @@ namespace setup
        public:
         explicit RandomNumberGeneratorSetup(engine::Engine &engine);
 
-        void setup();
+        void setup() const;
         void setupWriteInfo() const;
     };
 
 }   // namespace setup
 
-#endif   // _RANDOM_NUMBER_GENERATOR_SETUP_HPP_
+#endif   // SETUP__RANDOM_NUMBER_GENERATOR_SETUP_HPP

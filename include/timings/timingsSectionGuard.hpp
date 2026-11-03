@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_SECTION_GUARD_HPP_
+#ifndef TIMINGS__TIMINGS_SECTION_GUARD_HPP
+#define TIMINGS__TIMINGS_SECTION_GUARD_HPP
 
-#define _TIMINGS_SECTION_GUARD_HPP_
-
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <string>
+#include <string_view>
 
 namespace timings
 {
@@ -54,7 +53,7 @@ namespace timings
         std::string _name;
 
        public:
-        explicit TimingsSectionGuard(Timer& timer, const std::string_view name);
+        explicit TimingsSectionGuard(Timer& timer, std::string_view name);
         ~TimingsSectionGuard();
 
         TimingsSectionGuard(const TimingsSectionGuard&)            = delete;
@@ -65,4 +64,4 @@ namespace timings
 
 }   // namespace timings
 
-#endif   // _TIMINGS_SECTION_GUARD_HPP_
+#endif   // TIMINGS__TIMINGS_SECTION_GUARD_HPP

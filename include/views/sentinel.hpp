@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __SENTINEL_HPP__
-#define __SENTINEL_HPP__
+#ifndef VIEWS__SENTINEL_HPP
+#define VIEWS__SENTINEL_HPP
 
-#include <iterator>      // for std::iterator_traits
-#include <type_traits>   // for std::conditional_t
+#include <iterator>
+#include <type_traits>
 
 namespace pqviews
 {
@@ -34,16 +34,19 @@ namespace pqviews
         struct has_difference_type
         {
            private:
-            template <typename U>
-            static auto test(
-                int
-            ) -> decltype(typename std::iterator_traits<U>::difference_type{}, std::true_type{});
+            struct _detail
+            {
+                template <typename U>
+                static auto test(
+                    int
+                ) -> decltype(typename std::iterator_traits<U>::difference_type{}, std::true_type{});
 
-            template <typename>
-            static std::false_type test(...);
+                template <typename>
+                static std::false_type test(...);
+            };
 
            public:
-            using type                  = decltype(test<T>(0));
+            using type = decltype(_detail::template test<T>(0));
             static constexpr bool value = type::value;
         };
 
@@ -92,40 +95,45 @@ namespace pqviews
          * @brief checks if the iterator is equal to the sentinel
          *
          * @param it the Iterator to compare with
+         * @param sentinel the Sentinel to compare with
          * @return true if they are equal, false otherwise
          */
         template <typename Iterator>
-        friend bool operator==(const Iterator& it, const Sentinel& s)
+        friend bool operator==(const Iterator& it, const Sentinel& sentinel)
         {
-            return it.current() == s._end;
+            return it.current() == sentinel._end;
         }
 
         /**
          * @brief checks if the sentinel is equal to the iterator
          *
          * @param it the Iterator to compare with
+         * @param sentinel the Sentinel to compare with
          * @return true if they are equal, false otherwise
          */
         template <typename Iterator>
-        friend bool operator!=(const Iterator& it, const Sentinel& s)
+        friend bool operator!=(const Iterator& it, const Sentinel& sentinel)
         {
-            return !(it == s);
+            return !(it == sentinel);
         }
 
         /**
          * @brief calculates the distance between the sentinel and the iterator
          *
-         * @param s the Sentinel to compare with
+         * @param sentinel the Sentinel to compare with
          * @param it the Iterator to compare with
          * @return difference_type the distance between the two
          */
         template <typename Iterator>
-        friend difference_type operator-(const Sentinel& s, const Iterator& it)
+        friend difference_type operator-(
+            const Sentinel& sentinel,
+            const Iterator& it
+        )
         {
             Iterator        temp  = it;
             difference_type count = 0;
 
-            while (temp != s)
+            while (temp != sentinel)
             {
                 ++temp;
                 ++count;
@@ -138,16 +146,19 @@ namespace pqviews
          * @brief calculates the distance between the iterator and the sentinel
          *
          * @param it the Iterator to compare with
-         * @param s the Sentinel to compare with
+         * @param sentinel the Sentinel to compare with
          * @return difference_type the distance between the two
          */
         template <typename Iterator>
-        friend difference_type operator-(const Iterator& it, const Sentinel& s)
+        friend difference_type operator-(
+            const Iterator& it,
+            const Sentinel& sentinel
+        )
         {
-            return -(s - it);
+            return -(sentinel - it);
         }
     };
 
 }   // namespace pqviews
 
-#endif   // __SENTINEL_HPP__
+#endif   // VIEWS__SENTINEL_HPP

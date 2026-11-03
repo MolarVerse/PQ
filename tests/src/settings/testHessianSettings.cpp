@@ -24,52 +24,24 @@
 
 #include "hessianSettings.hpp"
 
-using namespace settings;
-
-TEST(TestHessianSettings, setBuilder)
-{
-    HessianSettings::setBuilder("central");
-    EXPECT_EQ(
-        HessianSettings::getBuilder(),
-        HessianBuilderType::FINITE_DIFFERENCE_FORCES_CENTRAL
-    );
-
-    HessianSettings::setBuilder("forward");
-    EXPECT_EQ(
-        HessianSettings::getBuilder(),
-        HessianBuilderType::FINITE_DIFFERENCE_FORCES_FORWARD
-    );
-
-    HessianSettings::setBuilder("five-point");
-    EXPECT_EQ(
-        HessianSettings::getBuilder(),
-        HessianBuilderType::FINITE_DIFFERENCE_FORCES_FIVE_POINT
-    );
-
-    HessianSettings::setBuilder("analytic");
-    EXPECT_EQ(HessianSettings::getBuilder(), HessianBuilderType::ANALYTIC);
-
-    HessianSettings::setBuilder("unknown");
-    EXPECT_EQ(HessianSettings::getBuilder(), HessianBuilderType::NONE);
-    EXPECT_EQ(string(HessianBuilderType::NONE), "NONE");
-}
-
 TEST(TestHessianSettings, setFilesAndDisplacement)
 {
-    HessianSettings::setHessianFile("water.hessian");
-    HessianSettings::setHessianInfoFile("water.hessian.info");
-    HessianSettings::setDisplacement(0.002);
+    HessianSettings hessianSettings;
+    hessianSettings.setHessianFile("water.hessian");
+    hessianSettings.setHessianInfoFile("water.hessian.info");
+    hessianSettings.setDisplacement(0.002);
 
-    EXPECT_EQ(HessianSettings::getHessianFile(), "water.hessian");
-    EXPECT_EQ(HessianSettings::getHessianInfoFile(), "water.hessian.info");
-    EXPECT_EQ(HessianSettings::getDisplacement(), 0.002);
+    EXPECT_EQ(hessianSettings.getHessianFile(), "water.hessian");
+    EXPECT_EQ(hessianSettings.getHessianInfoFile(), "water.hessian.info");
+    EXPECT_EQ(hessianSettings.getDisplacement(), 0.002);
 }
 
 TEST(TestHessianSettings, setOptimizeBeforeHessian)
 {
-    HessianSettings::setOptimizeBeforeHessian(false);
-    EXPECT_FALSE(HessianSettings::optimizeBeforeHessian());
+    HessianSettings hessianSettings;
+    hessianSettings.setOptimizeBeforeHessian(false);
+    EXPECT_FALSE(hessianSettings.optimizeBeforeHessian());
 
-    HessianSettings::setOptimizeBeforeHessian(true);
-    EXPECT_TRUE(HessianSettings::optimizeBeforeHessian());
+    hessianSettings.setOptimizeBeforeHessian(true);
+    EXPECT_TRUE(hessianSettings.optimizeBeforeHessian());
 }

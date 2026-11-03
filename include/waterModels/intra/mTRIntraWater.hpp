@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MTR_INTRA_WATER_HPP_
+#ifndef WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP
+#define WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP
 
-#define _MTR_INTRA_WATER_HPP_
-
-#include "intraWater.hpp"   // for IntraWater
+#include "intraWater.hpp"
 
 namespace waterModel
 {
@@ -32,9 +31,9 @@ namespace waterModel
     {
        public:
         void calculate(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
-        ) final;
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
+        ) override;
 
         [[nodiscard]] virtual double getEqOHDistance() const = 0;   // Angström
         [[nodiscard]] virtual double getEqHHDistance() const = 0;   // Angström
@@ -51,74 +50,72 @@ namespace waterModel
 
     class SPCMTRIntraWater : public MTRIntraWater
     {
-        // clang-format off
-        private:
-        static constexpr double eqOHDistance = 1.0;         // Angström
-        static constexpr double eqHHDistance = 1.632993162; // Angström
-        static constexpr double dOH = 101.9048757170172;    // kcal mol^-1
-        static constexpr double alpha = 2.511;              // Angström^-1
-        static constexpr double beta = 3.0;                 // Angström^-2
-        static constexpr double Ltt = 264.5841300191204;    // kcal mol^-1 Angström^-2
-        static constexpr double Lrt = -211.0444550669216;   // kcal mol^-1 Angström^-2
-        static constexpr double Lrr = 155.7839388145315;    // kcal mol^-1 Angström^-2
-        // clang-format on
+       private:
+        static constexpr double _eqOHDistance = 1.0;           // Angström
+        static constexpr double _eqHHDistance = 1.632993162;   // Angström
+        static constexpr double _dOH   = 101.9048757170172;    // kcal mol^-1
+        static constexpr double _alpha = 2.511;                // Angström^-1
+        static constexpr double _beta  = 3.0;                  // Angström^-2
+        static constexpr double _ltt =
+            264.5841300191204;   // kcal mol^-1 Angström^-2
+        static constexpr double _lrt =
+            -211.0444550669216;   // kcal mol^-1 Angström^-2
+        static constexpr double _lrr =
+            155.7839388145315;   // kcal mol^-1 Angström^-2
 
        public:
         [[nodiscard]]
-        double getEqOHDistance() const final
+        double getEqOHDistance() const override
         {
-            return eqOHDistance;
+            return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHHDistance() const final
+        double getEqHHDistance() const override
         {
-            return eqHHDistance;
+            return _eqHHDistance;
         }
-        [[nodiscard]] double getDOH() const final { return dOH; }
-        [[nodiscard]] double getAlpha() const final { return alpha; }
-        [[nodiscard]] double getBeta() const final { return beta; }
-        [[nodiscard]] double getLtt() const final { return Ltt; }
-        [[nodiscard]] double getLrt() const final { return Lrt; }
-        [[nodiscard]] double getLrr() const final { return Lrr; }
+        [[nodiscard]] double getDOH() const override { return _dOH; }
+        [[nodiscard]] double getAlpha() const override { return _alpha; }
+        [[nodiscard]] double getBeta() const override { return _beta; }
+        [[nodiscard]] double getLtt() const override { return _ltt; }
+        [[nodiscard]] double getLrt() const override { return _lrt; }
+        [[nodiscard]] double getLrr() const override { return _lrr; }
     };
 
     class TIP3PMTRIntraWater : public MTRIntraWater
     {
-        // clang-format off
-        private:
-        static constexpr double eqOHDistance = 0.9572;    // Angström
-        static constexpr double eqHHDistance = 1.5139;    // Angström
-        static constexpr double dOH = 101.9048757170172;  // kcal mol^-1
-        static constexpr double alpha = 2.483;            // Angström^-1
-        static constexpr double beta = 3.0;               // Angström^-2
-        static constexpr double Ltt = 235.2449808795411;  // kcal mol^-1 Angström^-2
-        static constexpr double Lrt = -181.2906309751434; // kcal mol^-1 Angström^-2
-        static constexpr double Lrr = 127.1534416826004;  // kcal mol^-1 Angström^-2
-        // clang-format on
+       private:
+        static constexpr double _eqOHDistance = 0.9572;       // Angström
+        static constexpr double _eqHHDistance = 1.5139;       // Angström
+        static constexpr double _dOH   = 101.9048757170172;   // kcal mol^-1
+        static constexpr double _alpha = 2.483;               // Angström^-1
+        static constexpr double _beta  = 3.0;                 // Angström^-2
+        static constexpr double _ltt =
+            235.2449808795411;   // kcal mol^-1 Angström^-2
+        static constexpr double _lrt =
+            -181.2906309751434;   // kcal mol^-1 Angström^-2
+        static constexpr double _lrr =
+            127.1534416826004;   // kcal mol^-1 Angström^-2
 
        public:
         [[nodiscard]]
-        double getEqOHDistance() const final
+        double getEqOHDistance() const override
         {
-            return eqOHDistance;
+            return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHHDistance() const final
+        double getEqHHDistance() const override
         {
-            return eqHHDistance;
+            return _eqHHDistance;
         }
-        [[nodiscard]] double getDOH() const final { return dOH; }
-        [[nodiscard]] double getAlpha() const final { return alpha; }
-        [[nodiscard]] double getBeta() const final { return beta; }
-        [[nodiscard]] double getLtt() const final { return Ltt; }
-        [[nodiscard]] double getLrt() const final { return Lrt; }
-        [[nodiscard]] double getLrr() const final { return Lrr; }
+        [[nodiscard]] double getDOH() const override { return _dOH; }
+        [[nodiscard]] double getAlpha() const override { return _alpha; }
+        [[nodiscard]] double getBeta() const override { return _beta; }
+        [[nodiscard]] double getLtt() const override { return _ltt; }
+        [[nodiscard]] double getLrt() const override { return _lrt; }
+        [[nodiscard]] double getLrr() const override { return _lrr; }
     };
 
 }   // namespace waterModel
 
-#ifndef _MTR_INTRA_WATER_TPP_
-#include "mTRIntraWater.tpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
-#endif
-
-#endif   //  _MTR_INTRA_WATER_HPP_
+#endif   //  WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP

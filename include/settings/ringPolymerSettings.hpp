@@ -20,30 +20,28 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_SETTINGS_HPP_
+#ifndef SETTINGS__RING_POLYMER_SETTINGS_HPP
+#define SETTINGS__RING_POLYMER_SETTINGS_HPP
 
-#define _RING_POLYMER_SETTINGS_HPP_
+#include <cstddef>
 
-#include <cstddef>   // for size_t
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @class RingPolymerSettings
+ *
+ * @brief class for storing settings for ring polymer md
+ *
+ */
+class RingPolymerSettings
 {
-    /**
-     * @class RingPolymerSettings
-     *
-     * @brief class for storing settings for ring polymer md
-     *
-     */
-    class RingPolymerSettings
-    {
-       private:
-        static inline size_t _numberOfBeads = 0;
+   private:
+    Setting<size_t> _numberOfBeads;
 
-       public:
-        static void setNumberOfBeads(const size_t numberOfBeads);
+   public:
+    void setNumberOfBeads(size_t numberOfBeads);
 
-        [[nodiscard]] static size_t getNumberOfBeads();
-    };
-}   // namespace settings
+    [[nodiscard]] size_t getNumberOfBeads() const;
+};
 
-#endif   // _RING_POLYMER_SETTINGS_HPP_
+#endif   // SETTINGS__RING_POLYMER_SETTINGS_HPP

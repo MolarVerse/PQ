@@ -20,11 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DEFAULTS_HPP_
+#ifndef CONFIG__DEFAULTS_HPP
+#define CONFIG__DEFAULTS_HPP
 
-#define _DEFAULTS_HPP_
+#include <cstddef>
 
-#include <cstddef>   // for size_t
+#include "enums/convergence.hpp"
+#include "unit_types.hpp"
 
 /**
  * @brief struct containing all default file names
@@ -32,6 +34,8 @@
  */
 struct DefaultFiles
 {
+    static constexpr auto prefix = "default";
+
     static constexpr auto restartFile      = "default.rst";
     static constexpr auto energyFile       = "default.en";
     static constexpr auto instEnFile       = "default.instant_en";
@@ -89,7 +93,9 @@ namespace defaults
     static constexpr double COULOMB_CUT_OFF_DEFAULT  = 12.5;   // in Angstrom
     static constexpr double SCALE_14_COULOMB_DEFAULT = 1.0;
     static constexpr double SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;
-    static constexpr double WOLF_PARAM_DEFAULT = 0.25;   // TODO: add unit
+    // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/903 add unit
+    static constexpr double WOLF_PARAM_DEFAULT = 0.25;
+    static constexpr double RF_EPSILON_DEFAULT = 1.0;
 
     static constexpr bool   CONSTRAINTS_ACTIVE_DEFAULT = false;
     static constexpr size_t SHAKE_MAX_ITER_DEFAULT     = 20;
@@ -110,7 +116,7 @@ namespace defaults
     static constexpr double NH_COUPLING_FREQ             = 1.0e3;    // in cm^-1
     static constexpr double MAX_FRICTION_CONVERSION      = 1.0e12;   // in s^-1
 
-    static constexpr double BERENDSEN_MANOSTAT_RELAX_TIME = 1.0;   // in ps
+    static constexpr Time   BERENDSEN_MANOSTAT_RELAX_TIME = 1 * mstd::units::ps;
     static constexpr double COMPRESSIBILITY_WATER_DEFAULT =
         4.591e-5;   // in bar^-1 default value for berendsen manostat
 
@@ -125,14 +131,17 @@ namespace defaults
     static constexpr double INITIAL_LEARNING_RATE_DEFAULT = 1.0e-4;
     static constexpr double MIN_LEARNING_RATE_DEFAULT     = 1e-15;
 
-    static constexpr auto*  EN_CONV_STRATEGY_DEFAULT    = "rigorous";
-    static constexpr auto*  FORCE_CONV_STRATEGY_DEFAULT = "rigorous";
-    static constexpr double REL_ENERGY_CONV_DEFAULT     = 1.0e-6;
-    static constexpr double ABS_ENERGY_CONV_DEFAULT     = 1.0e-6;
-    static constexpr double MAX_FORCE_CONV_DEFAULT      = 1.0e-6;
-    static constexpr double RMS_FORCE_CONV_DEFAULT      = 1.0e-6;
-    // clang-format on
+    static constexpr ConvStrategy EN_CONV_STRATEGY_DEFAULT =
+        ConvStrategy::RIGOROUS;
+    static constexpr ConvStrategy FORCE_CONV_STRATEGY_DEFAULT =
+        ConvStrategy::RIGOROUS;
+    static constexpr double REL_ENERGY_CONV_DEFAULT = 1.0e-6;
+    static constexpr double ABS_ENERGY_CONV_DEFAULT = 1.0e-6;
+    static constexpr double MAX_FORCE_CONV_DEFAULT  = 1.0e-6;
+    static constexpr double RMS_FORCE_CONV_DEFAULT  = 1.0e-6;
+
+    static constexpr auto NUM_GUFF_COEFFICIENTS = 22;
 
 }   // namespace defaults
 
-#endif   // _DEFAULTS_HPP_
+#endif   // CONFIG__DEFAULTS_HPP

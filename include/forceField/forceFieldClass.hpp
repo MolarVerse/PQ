@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _Force_FIELD_CLASS_HPP_
-
-#define _Force_FIELD_CLASS_HPP_
+#ifndef FORCE_FIELD__FORCE_FIELD_CLASS_HPP
+#define FORCE_FIELD__FORCE_FIELD_CLASS_HPP
 
 #include <cstddef>
 #include <memory>
@@ -40,7 +39,7 @@
 #include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 
-namespace forceField
+namespace ff
 {
     /**
      * @class ForceField
@@ -51,8 +50,6 @@ namespace forceField
     class ForceField
     {
        private:
-        bool _isNonCoulombicActivated = false;
-
         std::vector<BondForceField>      _bonds;
         std::vector<AngleForceField>     _angles;
         std::vector<DihedralForceField>  _dihedrals;
@@ -65,8 +62,8 @@ namespace forceField
         std::vector<DihedralType>  _improperDihedralTypes;
         std::vector<JCouplingType> _jCouplingTypes;
 
-        std::shared_ptr<potential::NonCoulombPotential> _nonCoulombPot;
-        std::shared_ptr<potential::CoulombPotential>    _coulombPotential;
+        std::shared_ptr<pot::NonCoulombPotential> _nonCoulombPot;
+        std::shared_ptr<pot::CoulombPotential>    _coulombPotential;
 
        public:
         [[nodiscard]] std::shared_ptr<ForceField> clone() const;
@@ -112,15 +109,6 @@ namespace forceField
         [[nodiscard]]
         const JCouplingType &findJCouplingTypeById(size_t id) const;
 
-        /*****************************
-         * standard activate methods *
-         *****************************/
-
-        void activateNonCoulombic();
-        void deactivateNonCoulombic();
-
-        [[nodiscard]] bool isNonCoulombicActivated() const;
-
         /***********************************
          * standard add ForceField Objects *
          ***********************************/
@@ -156,10 +144,10 @@ namespace forceField
          ********************/
 
         void setNonCoulombPotential(
-            const std::shared_ptr<potential::NonCoulombPotential> &pot
+            const std::shared_ptr<pot::NonCoulombPotential> &pot
         );
         void setCoulombPotential(
-            const std::shared_ptr<potential::CoulombPotential> &pot
+            const std::shared_ptr<pot::CoulombPotential> &pot
         );
 
         /********************
@@ -179,6 +167,6 @@ namespace forceField
         [[nodiscard]] const std::vector<JCouplingType> &getJCouplTypes() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _Force_FIELD_CLASS_HPP_
+#endif   // FORCE_FIELD__FORCE_FIELD_CLASS_HPP

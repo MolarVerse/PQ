@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ASE_QM_RUNNER_HPP_
-
-#define _ASE_QM_RUNNER_HPP_
+#ifndef QM__ASE__ASE_QM_RUNNER_HPP
+#define QM__ASE__ASE_QM_RUNNER_HPP
 
 #include "qmRunner.hpp"
 
@@ -39,7 +38,7 @@ namespace QM
      */
     class AseQMRunner : public QMRunner
     {
-       protected:
+       private:
         double _energy;
 
         struct AseInterface;
@@ -50,9 +49,9 @@ namespace QM
         ~AseQMRunner() override;
 
         void run(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData,
-            molsys::Periodicity         periodicity
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            molsys::Periodicity         per
         ) override;
         void buildAseAtoms(const molsys::SimulationBox &);
         void execute();
@@ -69,9 +68,9 @@ namespace QM
         ) const;
 
        protected:
-        void setAseCalculator(const pybind11::object &calculator);
+        void _setAseCalculator(const pybind11::object &calculator);
     };
 
 }   // namespace QM
 
-#endif   // _ASE_QM_RUNNER_HPP_
+#endif   // QM__ASE__ASE_QM_RUNNER_HPP

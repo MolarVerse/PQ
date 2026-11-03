@@ -20,15 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_ENGINE_HPP_
+#ifndef ENGINE__RING_POLYMER_ENGINE_HPP
+#define ENGINE__RING_POLYMER_ENGINE_HPP
 
-#define _RING_POLYMER_ENGINE_HPP_
+#include <vector>
 
-#include <vector>   // for vector
-
-#include "mdEngine.hpp"        // for Engine
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
+#include "mdEngine.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 namespace engine
 {
@@ -41,16 +40,16 @@ namespace engine
      */
     class RingPolymerEngine : virtual public MDEngine
     {
-       protected:
+       private:
         std::vector<molsys::SimulationBox>      _ringPolymerBeads;
         std::vector<physicalData::PhysicalData> _ringPolymerBeadsPhysicalData;
         std::vector<physicalData::PhysicalData>
             _averageRingPolymerBeadsPhysicalData;
 
        public:
-        void writeOutput() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
 
-        void resizeRingPolymerBeadPhysicalData(const size_t numberOfBeads);
+        void resizeRingPolymerBeadPhysicalData(size_t numberOfBeads);
 
         void coupleRingPolymerBeads();
         void combineBeads();
@@ -59,9 +58,9 @@ namespace engine
          * standard add methods *
          ************************/
 
-        void addRingPolymerBead(const molsys::SimulationBox &bead)
+        void addRingPolymerBead(const molsys::SimulationBox &simulationBox)
         {
-            _ringPolymerBeads.push_back(bead);
+            _ringPolymerBeads.push_back(simulationBox);
         }
 
         /***************************
@@ -72,7 +71,13 @@ namespace engine
         {
             return _ringPolymerBeads;
         }
+
+        [[nodiscard]] std::vector<physicalData::PhysicalData> &getRingPolymerBeadsPhysicalData(
+        )
+        {
+            return _ringPolymerBeadsPhysicalData;
+        }
     };
 }   // namespace engine
 
-#endif   // _RING_POLYMER_ENGINE_HPP_
+#endif   // ENGINE__RING_POLYMER_ENGINE_HPP

@@ -20,22 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), ASSERT_THROW
+#include <gtest/gtest.h>
 
-#include <cstddef>   // for size_t, std
-#include <string>    // for string, allocator, basic_string
-#include <vector>    // for vector
+#include <cstddef>
+#include <string>
+#include <vector>
 
-#include "engine.hpp"       // for Engine
-#include "exceptions.hpp"   // for RstFileException, customException
-#include "gmock/gmock.h"    // for ElementsAre, MakePredicateForma...
-#include "gtest/gtest.h"    // for Message, TestPartResult, Assert...
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "gmock/gmock.h"
 #include "restartFileReader/restartFileSection.hpp"
-#include "settings.hpp"                 // for Settings
-#include "simulationBoxSettings.hpp"    // for SimulationBoxSettings
-#include "testRestartFileSection.hpp"   // for TestBoxSection
-
-using namespace input;
+#include "testRestartFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestBoxSection, testKeyword) { EXPECT_EQ(_section->keyword(), "box"); }
 
@@ -43,14 +40,16 @@ TEST_F(TestBoxSection, testIsHeader) { EXPECT_TRUE(_section->isHeader()); }
 
 TEST_F(TestBoxSection, testNumberOfArguments)
 {
+    size_t lineNumber = 0;
     for (size_t i = 0; i < 10; ++i)
     {
         if (i != 4 && i != 7)
         {
             auto line = std::vector<std::string>(i);
-            ASSERT_THROW(
-                _section->process(line, *_engine),
-                customException::RstFileException
+            ASSERT_THROW_MSG(
+                _section->process(line, *_engine, lineNumber),
+                exc::RstFileException,
+                "Error in line 0: Box section must have 4 or 7 elements"
             );
         }
     }
@@ -58,12 +57,14 @@ TEST_F(TestBoxSection, testNumberOfArguments)
 
 TEST_F(TestBoxSection, testProcess)
 {
-    settings::Settings::setJobtype(settings::JobType::QM_MD);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
 
-    EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), false);
+    EXPECT_EQ(_wasBoxSetViaStartFile(), false);
+
+    size_t lineNumber = 0;
 
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
-    _section->process(line, *_engine);
+    _section->process(line, *_engine, lineNumber);
     ASSERT_THAT(
         _engine->getSimulationBox().getBoxDimensions(),
         testing::ElementsAre(1.0, 2.0, 3.0)
@@ -74,7 +75,7 @@ TEST_F(TestBoxSection, testProcess)
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
-    _section->process(line, *_engine);
+    _section->process(line, *_engine, lineNumber);
     ASSERT_THAT(
         _engine->getSimulationBox().getBoxDimensions(),
         testing::ElementsAre(1.0, 2.0, 3.0)
@@ -85,22 +86,25 @@ TEST_F(TestBoxSection, testProcess)
     );
 
     line = {"box", "1.0", "2.0", "-3.0", "90.0", "90.0", "90.0"};
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine, lineNumber),
+        exc::RstFileException,
+        "All box dimensions must be positive"
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "190.0"};
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine, lineNumber),
+        exc::RstFileException,
+        "Box angles must be positive and smaller than 180°"
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "-90.0"};
-    ASSERT_THROW(
-        _section->process(line, *_engine),
-        customException::RstFileException
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine, lineNumber),
+        exc::RstFileException,
+        "Box angles must be positive and smaller than 180°"
     );
 
-    EXPECT_EQ(settings::SimulationBoxSettings::getBoxSet(), true);
+    EXPECT_EQ(_wasBoxSetViaStartFile(), true);
 }

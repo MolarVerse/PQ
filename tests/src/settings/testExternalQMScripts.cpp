@@ -24,8 +24,6 @@
 
 #include "externalQMScripts.hpp"
 
-using settings::QMMethod;
-
 TEST(ExternalQMScriptsTest, catalogsSupportedPrograms)
 {
     ASSERT_EQ(cli::externalQMMethods.size(), 3);

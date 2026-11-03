@@ -7,6 +7,68 @@ implementation changes are documented in
 ## Next Release
 
 <!-- insertion marker -->
+## [v1.0.0](https://github.com/MolarVerse/PQ/releases/tag/v1.0.0) - 2026-11-03
+
+### New Features
+
+- Add "fixed_axis" keyword to enable keeping lattice parameters constant during pressure coupling
+- Add the forced_layer_list keyword to specify molecules which are forced to be LAYER molecules in the hybrid calculations
+- Add potassium in water example QM/MM input to the examples directory
+- Add script for Turbomole RI-DFT calculations
+- Print the inner region center of hybrid type calculations (e.g. QM/MM) to a separate output file with the file ending .center.xyz
+- Add QM/MM hybrid type calculations with two smoothing options (hotspot, exact)
+- Add timing subsections to external QM runners
+- Add intra- and intermolecular water models (SPC, SPC_E, SPC_Fw, qSPC_Fw, SPC_DC, H2O-DC, TIP3P, OPC3, SPC-mTR, TIP3P-mTR)
+
+### Changes
+
+- QM/MM: the reported QM energy now has the QM reference energies subtracted; the subtracted sum is printed as E(QM-REF) next to N(SM-MOL) in the `.info` and `.en` files.
+- The forced_inner_list keyword has been renamed to forced_core_list
+
+### Bug Fixes
+
+- Fix QM timeouts of ASE calculations aborting PQ; the Python calculation is now interrupted and a regular error is raised.
+- Fix stale box dimensions, angles, and volume by caching them instead of tracking ad-hoc "has changed" flags, so scaling and manostat updates are reflected consistently everywhere the box is read.
+- Cell-list assignment wraps escaped atom positions correctly and rejects non-finite coordinates with a clear error instead of segfaulting.
+- Invalid or overflowing cell-list dimensions are rejected before storage is allocated.
+- Fix SHAKE/distance constraints and cell-list setup silently producing NaN/Inf forces or an unstable layout on degenerate geometry (e.g. colliding atoms, or the box collapsing); these now throw a descriptive exception instead.
+- Fix DFTB+ QM/MM energies counting the QM–point-charge Coulomb interaction twice.
+- Fix exact QM/MM smoothing counting intramolecular non-bonded energy twice in Coulomb, non-Coulomb and total energy.
+- Fix exact smoothing with 32 or more smoothing molecules silently using a wrong set of configurations; too many smoothing molecules now raise an error.
+- External-QM calculations now fail cleanly on process errors or incomplete result files, including when paths contain spaces.
+- `forced_core_list`, `forced_layer_list` and `forced_outer_list` take molecule indices only; a selection-grammar value now gives an input error instead of being read as atom indices.
+- Fix examples/h2o_mm: the Coulomb coefficients in guff.dat did not match the charges of moldescriptor.dat any more (the GUFF reader checks them), so the example stopped with an error during setup.
+- Fix inner_region_center rejecting atom index 0, the documented default.
+- Fix optimization and Hessian runs without max-learning-rate: the maximum learning rate is optional, but PQ stopped with 'Setting value is not set and no default is available' when it was not given (for example examples/oh_mm_hessian/run-01.in).
+- Fix the sign of the M-RATTLE velocity correction. M-SHAKE runs added velocity along constrained bonds instead of removing it, so the thermostat cooled the real motion and rigid water became over-structured with far too slow diffusion.
+- Optimizer and Hessian runs that are stopped by the learning rate strategy now report its error messages instead of the generic "Optimizer did not converge" message, which hid them.
+- Fix the build with BUILD_WITH_PYTHON_BINDINGS=ON: the first configure no longer aborts after a successful pip install of PQAnalysis (and no longer installs a stray "update" package), and the Python-enabled selection code compiles again.
+- fix broken build pipeline for python bindings
+- Fix atom selections through PQAnalysis (e.g. `inner_region_center = res(LIG)`) crashing PQ, and a second selection failing after the first.
+- Add the optional `qm_reference_energy` line to moltype blocks in the moldescriptor file. QM/MM subtracts it for each QM molecule, so the total energy no longer jumps when molecules enter or leave the QM region.
+- Fix QM timeouts of external QM programs aborting PQ; the QM process is now stopped and a regular error is raised.
+- Preserve molecular geometry during QM/MM pressure coupling and correct molecular and triclinic pressure calculations.
+- Correct Berendsen relaxation rates, stochastic cell noise, and cached kinetics after velocity rescaling.
+- Warn about atomic virial for pressure coupling of multi-atom molecules and reject invalid cell updates before changing the simulation state.
+- `remove_net_force` now removes the net QM force over the QM atoms only. In QM/MM runs it no longer spreads part of it onto MM atoms.
+- Fix ring-polymer MD under MPI: non-root ranks no longer write the trajectory, restart, energy, and reference output files, removing a filesystem race that could abort the run with "Could not open file".
+- Temperature ramps validate their schedule and reach the requested target across partial final intervals.
+- Berendsen thermostat: a relaxation time shorter than the time step now gives a clear error instead of NaN velocities. Nose-Hoover rejects a zero target temperature; it and velocity rescaling reject zero degrees of freedom.
+- Throw a exc::QMRunnerException when an external QM runner does not finish successfully
+- output of timings detail sections in `.timings` was not sorted
+- Fix the flexible SPC and MTR water models silently producing NaN forces for degenerate geometries (a hydrogen on the oxygen, or both hydrogens on the same ray from it); they now stop with a descriptive error.
+- Fix missing citation entry when only an intramolecular water model is configured without an intermolecular one: the reference file is now added based on whether the intramolecular model itself is set, not on whether the intermolecular model is set.
+- Temperature rescaling rejects zero kinetic energy before division and handles a zero target from a finite temperature.
+
+### Build and Compatibility
+
+- Remove the `BUILD_WITH_KOKKOS` option and Kokkos capability; PQ now uses the CPU MM implementation for all builds.
+
+### Documentation
+
+- Document that QM atoms with moltype 0 always count as neutral in the total QM charge.
+- The `h2o_mm-mshake` example now writes every 50th step, ships an O-O RDF input for PQAnalysis and lists the expected RDF and diffusion values.
+
 ## [v0.7.1](https://github.com/MolarVerse/PQ/releases/tag/v0.7.1) - 2026-08-18
 
 ### Documentation

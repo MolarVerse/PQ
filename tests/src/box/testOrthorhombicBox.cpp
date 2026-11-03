@@ -20,85 +20,122 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gtest/gtest.h>
+
 #include <array>
+#include <memory>
+#include <numbers>
 
-#include "constants/conversionFactors.hpp"   // for _KG_PER_LITER_TO_AMU_PER_ANGSTROM_CUBIC_
-#include "defaults.hpp"                      // for VACUUM_BOX_DIMENSION
-#include "gtest/gtest.h"                     // for Message, TestPartResult
-#include "matrixNear.hpp"                    // for EXPECT_MATRIX_NEAR
-#include "orthorhombicBox.hpp"               // for OrthorhombicBox
-#include "vectorNear.hpp"                    // for EXPECT_VECTOR_NEAR
-
-using namespace molsys;
+#include "box.hpp"
+#include "constants/conversionFactors.hpp"
+#include "defaults.hpp"
+#include "matrixNear.hpp"
+#include "orthorhombicBox.hpp"
+#include "triclinicBox.hpp"
+#include "vectorNear.hpp"
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
 {
-    auto                       box           = OrthorhombicBox();
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
-    EXPECT_EQ(box.getBoxDimensions(), boxDimensions);
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
+}
+
+TEST(TestBox, clonedGeometryIsIndependent)
+{
+    const linalg::Vec3D                         boxDimensions = {1.0, 2.0, 3.0};
+    std::array<std::unique_ptr<molsys::Box>, 2> boxes{
+        std::make_unique<molsys::OrthorhombicBox>(boxDimensions),
+        std::make_unique<molsys::TriclinicBox>(
+            boxDimensions,
+            linalg::Vec3D{90.0, 90.0, 60.0},
+            false
+        )
+    };
+    const std::array expectedVolumes{6.0, 3.0 * std::numbers::sqrt3};
+    constexpr double tolerance = 1e-12;
+
+    for (size_t i = 0; i < boxes.size(); ++i)
+    {
+        SCOPED_TRACE(i);
+        auto      &box            = *boxes.at(i);
+        const auto expectedVolume = expectedVolumes.at(i);
+        EXPECT_NEAR(box.getVolume(), expectedVolume, tolerance);
+
+        auto candidate = box.clone();
+        candidate->scaleBox(linalg::diagonalMatrix(2.0));
+
+        EXPECT_VECTOR_NEAR(
+            candidate->get_boxDimensions(),
+            linalg::Vec3D(2.0, 4.0, 6.0),
+            tolerance
+        );
+        EXPECT_NEAR(candidate->getVolume(), 8.0 * expectedVolume, tolerance);
+        EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
+        EXPECT_NEAR(box.getVolume(), expectedVolume, tolerance);
+
+        box.scaleBox(linalg::diagonalMatrix(3.0));
+        EXPECT_NEAR(box.getVolume(), 27.0 * expectedVolume, tolerance);
+        EXPECT_NEAR(candidate->getVolume(), 8.0 * expectedVolume, tolerance);
+    }
 }
 
 TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 {
-    auto         box       = OrthorhombicBox();
-    const double density   = 1.0 / constants::KG_PER_L_TO_AMU_PER_ANGSTROM3;
-    const double totalMass = 1.0;
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    EXPECT_EQ(box.calcBoxDimFromDensity(totalMass, density), boxDimensions);
+    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
+    const double        density       = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
+    const double        totalMass     = 1.0;
+    EXPECT_EQ(
+        molsys::OrthorhombicBox::calcBoxDimFromDensity(totalMass, density),
+        boxDimensions
+    );
 }
 
 TEST(TestOrthoRhombicBox, calculateVolume)
 {
-    auto                       box           = OrthorhombicBox();
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
-    EXPECT_EQ(box.calculateVolume(), 6.0);
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    EXPECT_EQ(box.getVolume(), 6.0);
 }
 
 TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
 {
-    auto                       box           = OrthorhombicBox();
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
 
-    linearAlgebra::Vec3D position = {0.5, 1.5, 2.5};
+    linalg::Vec3D position = {0.5, 1.5, 2.5};
     box.applyPBC(position);
 
-    const linearAlgebra::Vec3D expectedPosition = {0.5, -0.5, -0.5};
+    const linalg::Vec3D expectedPosition = {0.5, -0.5, -0.5};
     EXPECT_EQ(position, expectedPosition);
 }
 
 TEST(TestOrthoRhombicBox, scaleBox)
 {
-    auto box = OrthorhombicBox();
+    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
 
-    const linearAlgebra::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
-
-    const linearAlgebra::tensor3D scaleFactors =
-        diagonalMatrix(linearAlgebra::Vec3D{2.0, 2.0, 2.0});
+    const linalg::tensor3D scaleFactors =
+        diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0});
     box.scaleBox(scaleFactors);
 
-    const linearAlgebra::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};
-    EXPECT_EQ(box.getBoxDimensions(), expectedBoxDimensions);
+    const linalg::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};
+    EXPECT_EQ(box.get_boxDimensions(), expectedBoxDimensions);
 }
 
 TEST(TestOrthoRhombicBox, getMinimalBoxDimension)
 {
-    auto                       box           = OrthorhombicBox();
-    const linearAlgebra::Vec3D boxDimensions = {2.0, 1.0, 3.0};
-    box.setBoxDimensions(boxDimensions);
+    const linalg::Vec3D boxDimensions = {2.0, 1.0, 3.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
 
     EXPECT_EQ(box.getMinimalBoxDimension(), 1.0);
 }
 
 TEST(TestOrthoRhombicBox, calculateShiftVector)
 {
-    auto box = OrthorhombicBox();
-
-    box.setBoxDimensions({1.0, 1.0, 1.0});
-    const linearAlgebra::Vec3D vector{0.2, 1.2, -0.8};
+    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    const linalg::Vec3D vector{0.2, 1.2, -0.8};
 
     EXPECT_EQ(box.calcShiftVector(vector)[0], 0.0);
     EXPECT_EQ(box.calcShiftVector(vector)[1], 1.0);
@@ -107,25 +144,24 @@ TEST(TestOrthoRhombicBox, calculateShiftVector)
 
 TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
 {
-    auto             box       = OrthorhombicBox();
-    constexpr double tolerance = 1e-10;
-
-    box.setBoxDimensions({1.0, 1.0, 1.0});
-    const linearAlgebra::Vec3D vector{1.2, 1.7, -0.6};
+    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
+    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    constexpr double    tolerance     = 1e-10;
+    const linalg::Vec3D vector{1.2, 1.7, -0.6};
 
     EXPECT_VECTOR_NEAR(
         box.wrapPositionIntoBox(vector),
-        linearAlgebra::Vec3D(0.2, -0.3, 0.4),
+        linalg::Vec3D(0.2, -0.3, 0.4),
         tolerance
     );
 }
 
 TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
 {
-    OrthorhombicBox box;
-    box.setBoxDimensions({1.0, 2.0, 3.0});
+    const linalg::Vec3D     boxDimensions = {1.0, 2.0, 3.0};
+    molsys::OrthorhombicBox box(boxDimensions);
 
-    using enum Periodicity;
+    using enum molsys::Periodicity;
     constexpr std::array periodicities{NON_PERIODIC, X, Y, Z, XY, XZ, YZ, XYZ};
     constexpr std::array expectedPeriodicAxes{
         std::array{false, false, false},
@@ -144,7 +180,7 @@ TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
         for (size_t axis = 0; axis < 3; ++axis)
         {
             const auto expected = expectedPeriodicAxes.at(i).at(axis)
-                                      ? box.getBoxDimensions()[axis]
+                                      ? box.get_boxDimensions()[axis]
                                       : defaults::VACUUM_BOX_DIMENSION;
             EXPECT_DOUBLE_EQ(matrix[axis][axis], expected);
         }
@@ -153,20 +189,15 @@ TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
 
 TEST(TestOrthoRhombicBox, baseTransformsAndStateAccessors)
 {
-    OrthorhombicBox box;
-    box.setBoxDimensions({2.0, 3.0, 4.0});
+    const linalg::Vec3D     boxDimensions = {2.0, 3.0, 4.0};
+    molsys::OrthorhombicBox box(boxDimensions);
 
-    const linearAlgebra::Vec3D vector{1.0, 2.0, 3.0};
-    const auto tensor = diagonalMatrix(linearAlgebra::Vec3D{1.0, 2.0, 3.0});
+    const linalg::Vec3D vector{1.0, 2.0, 3.0};
+    const auto          tensor = diagonalMatrix(linalg::Vec3D{1.0, 2.0, 3.0});
 
-    EXPECT_EQ(box.getBoxAngles(), linearAlgebra::Vec3D(90.0));
+    EXPECT_EQ(box.getBoxAngles(), linalg::Vec3D(90.0));
     EXPECT_EQ(box.toOrthoSpace(vector), vector);
     EXPECT_EQ(box.toSimSpace(vector), vector);
     EXPECT_MATRIX_NEAR(box.toOrthoSpace(tensor), tensor, 0.0);
     EXPECT_MATRIX_NEAR(box.toSimSpace(tensor), tensor, 0.0);
-
-    box.setVolume(24.0);
-    box.setBoxSizeHasChanged(true);
-    EXPECT_DOUBLE_EQ(box.getVolume(), 24.0);
-    EXPECT_TRUE(box.getBoxSizeHasChanged());
 }

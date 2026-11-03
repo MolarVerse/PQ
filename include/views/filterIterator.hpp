@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __FILTER_ITERATOR_HPP__
-#define __FILTER_ITERATOR_HPP__
+#ifndef VIEWS__FILTER_ITERATOR_HPP
+#define VIEWS__FILTER_ITERATOR_HPP
 
-#include <iterator>   // clang-format on
+#include <iterator>
 
 namespace pqviews
 {
@@ -38,8 +38,6 @@ namespace pqviews
     class FilterIterator
     {
        private:
-        void satisfy();
-
         Iter        _current;
         Iter        _end;
         const Pred* _pred;
@@ -64,6 +62,9 @@ namespace pqviews
         bool operator!=(const FilterIterator& other) const;
 
         Iter current() const;
+
+       private:
+        void _satisfy();
     };
 
     /**
@@ -73,7 +74,7 @@ namespace pqviews
      * satisfies the predicate or reaches the end of the range.
      */
     template <typename Iter, typename Pred>
-    void FilterIterator<Iter, Pred>::satisfy()
+    void FilterIterator<Iter, Pred>::_satisfy()
     {
         while (_current != _end && !_pred->operator()(*_current))
         {
@@ -99,7 +100,7 @@ namespace pqviews
     )
         : _current(current), _end(end), _pred(pred)
     {
-        satisfy();
+        _satisfy();
     }
 
     /**
@@ -136,7 +137,7 @@ namespace pqviews
     FilterIterator<Iter, Pred>& FilterIterator<Iter, Pred>::operator++()
     {
         ++_current;
-        satisfy();
+        _satisfy();
         return *this;
     }
 
@@ -193,4 +194,4 @@ namespace pqviews
 
 }   // namespace pqviews
 
-#endif   // __FILTER_ITERATOR_HPP__
+#endif   // VIEWS__FILTER_ITERATOR_HPP

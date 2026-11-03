@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_RST_FILE_READER_H_
-
-#define _TEST_RST_FILE_READER_H_
+#ifndef TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_READER_HPP
 
 #include <gtest/gtest.h>
 
-#include "mmmdEngine.hpp"   // for Engine
+#include "mmmdEngine.hpp"
 
 /**
  * @brief Fixture class for testing the RestartFileReader class
@@ -35,15 +34,16 @@
 class TestRstFileReader : public ::testing::Test
 {
    protected:
+    Settings                        _settings;
+    std::unique_ptr<engine::Engine> _engine;
+
     void SetUp() override
     {
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
-
-    engine::Engine *_engine;
 };
 
 #endif

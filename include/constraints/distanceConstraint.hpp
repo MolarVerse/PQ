@@ -20,13 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DISTANCE_CONSTRAINT_HPP_
-
-#define _DISTANCE_CONSTRAINT_HPP_
-
-#include <cstddef>
+#ifndef CONSTRAINTS__DISTANCE_CONSTRAINT_HPP
+#define CONSTRAINTS__DISTANCE_CONSTRAINT_HPP
 
 #include "bond.hpp"
+#include "strongTypes.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -39,9 +37,7 @@ namespace constraints
 {
 
     /**
-     * @class DistanceConstraint inherits from Bond
-     *
-     * @brief constraint object for single bond length
+     * @brief DistanceConstraint inherits from Bond
      *
      * @details it performs the shake and rattle algorithm on a bond constraint
      *
@@ -54,26 +50,23 @@ namespace constraints
         double _springConstant;
         double _dSpringConstantDt;
 
-        double               _lowerEnergy = 0.0;
-        double               _upperEnergy = 0.0;
-        linearAlgebra::Vec3D _force;
+        double        _lowerEnergy = 0.0;
+        double        _upperEnergy = 0.0;
+        linalg::Vec3D _force;
 
        public:
         DistanceConstraint(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const size_t      atomIndex1,
-            const size_t      atomIndex2,
-            const double      lowerDistance,
-            const double      upperDistance,
-            const double      springConstant,
-            const double      dSpringConstantDt
+            AtomIndex         atomIndex1,
+            AtomIndex         atomIndex2,
+            double            lowerDistance,
+            double            upperDistance,
+            double            springConstant,
+            double            dSpringConstantDt
         );
 
-        void applyDistanceConstraint(
-            const molsys::SimulationBox &,
-            const double
-        );
+        void applyDistanceConstraint(const molsys::SimulationBox &, double);
 
         [[nodiscard]] double getLowerDistance() const;
         [[nodiscard]] double getUpperDistance() const;
@@ -85,4 +78,4 @@ namespace constraints
 
 }   // namespace constraints
 
-#endif   // _DISTANCE_CONSTRAINT_HPP_
+#endif   // CONSTRAINTS__DISTANCE_CONSTRAINT_HPP

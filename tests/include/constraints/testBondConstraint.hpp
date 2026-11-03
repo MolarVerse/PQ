@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_BOND_CONSTRAINT_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP
 
-#define _TEST_BOND_CONSTRAINT_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
-
-#include "atom.hpp"             // for Atom
-#include "bondConstraint.hpp"   // for BondConstraint
-#include "molecule.hpp"         // for Molecule
-#include "simulationBox.hpp"    // for SimulationBox
+#include "atom.hpp"
+#include "bondConstraint.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class TestBondConstraint
@@ -42,48 +42,43 @@
 class TestBondConstraint : public ::testing::Test
 {
    protected:
+    std::unique_ptr<molsys::SimulationBox>       _box;
+    std::unique_ptr<constraints::BondConstraint> _bondConstraint;
+    double                                       _targetBondLength = 1.2;
+
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(3);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
 
         atom1->setMass(1.0);
         atom2->setMass(2.0);
 
-        atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
 
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
-        _box = new molsys::SimulationBox();
+        _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
-        _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
-        _bondConstraint = new constraints::BondConstraint(
-            &(_box->getMolecules()[0]),
-            &(_box->getMolecules()[0]),
-            0,
-            1,
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _box->setBox(orthoBox, false);
+
+        _bondConstraint = std::make_unique<constraints::BondConstraint>(
+            _box->getMolecules().data(),
+            _box->getMolecules().data(),
+            AtomIndex{0},
+            AtomIndex{1},
             _targetBondLength
         );
     }
-
-    void TearDown() override
-    {
-        delete _box;
-        delete _bondConstraint;
-    }
-
-    molsys::SimulationBox       *_box;
-    constraints::BondConstraint *_bondConstraint;
-    double                       _targetBondLength = 1.2;
 };
 
-#endif   // _TEST_BOND_CONSTRAINT_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP

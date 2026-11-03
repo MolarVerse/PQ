@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTANT_LEARNING_RATE_STRATEGY_HPP_
-
-#define _CONSTANT_LEARNING_RATE_STRATEGY_HPP_
+#ifndef OPT__LEARNING_RATE_STRATEGY__CONSTANT_HPP
+#define OPT__LEARNING_RATE_STRATEGY__CONSTANT_HPP
 
 #include "learningRateStrategy.hpp"
 
@@ -37,7 +36,7 @@ namespace opt
     class ConstantLRStrategy : public LearningRateStrategy
     {
        public:
-        explicit ConstantLRStrategy(const double initialLearningRate);
+        explicit ConstantLRStrategy(double initialLearningRate);
 
         ConstantLRStrategy()           = default;
         ~ConstantLRStrategy() override = default;
@@ -46,11 +45,13 @@ namespace opt
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
         void updateLearningRate(
-            const size_t /*currentStep*/,
-            const size_t /*totalSteps*/
-        ) override;
+            size_t /*currentStep*/,
+            size_t /*totalSteps*/
+        ) override
+        {
+        }
     };
 
 }   // namespace opt
 
-#endif   // _CONSTANT_LEARNING_RATE_STRATEGY_HPP_
+#endif   // OPT__LEARNING_RATE_STRATEGY__CONSTANT_HPP

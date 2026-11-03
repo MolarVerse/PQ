@@ -20,56 +20,44 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_SETTINGS_HPP_
-
-#define _HESSIAN_SETTINGS_HPP_
+#ifndef SETTINGS__HESSIAN_SETTINGS_HPP
+#define SETTINGS__HESSIAN_SETTINGS_HPP
 
 #include <string>
-#include <string_view>
 
-#include "defaults.hpp"
+#include "enums/hessian.hpp"
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @brief Class representing the settings for Hessian calculations.
+ *
+ * This class encapsulates various settings related to Hessian calculations,
+ * including file paths, displacement values, optimization flags, and the
+ * Hessian builder type.
+ */
+class HessianSettings
 {
-    enum class HessianBuilderType
-    {
-        FINITE_DIFFERENCE_FORCES_CENTRAL,
-        FINITE_DIFFERENCE_FORCES_FORWARD,
-        FINITE_DIFFERENCE_FORCES_FIVE_POINT,
-        ANALYTIC,
-        NONE
-    };
+   private:
+    Setting<std::string>        _hessianFile;
+    Setting<std::string>        _hessianInfoFile;
+    Setting<double>             _displacement;
+    Setting<bool>               _optimizeBeforeHessian;
+    Setting<HessianBuilderType> _builder;
 
-    [[nodiscard]] std::string string(const HessianBuilderType builder);
+   public:
+    HessianSettings();
 
-    class HessianSettings
-    {
-       private:
-        static inline std::string _hessianFile = DefaultFiles::hessianFile;
-        static inline std::string _hessianInfoFile =
-            DefaultFiles::hessianInfoFile;
-        static inline double _displacement =
-            defaults::HESSIAN_DISPLACEMENT_DEFAULT;
-        static inline bool _optimizeBeforeHessian =
-            defaults::HESSIAN_OPTIMIZE_DEFAULT;
-        static inline HessianBuilderType _builder =
-            HessianBuilderType::FINITE_DIFFERENCE_FORCES_CENTRAL;
+    void setHessianFile(const std::string &filename);
+    void setHessianInfoFile(const std::string &filename);
+    void setDisplacement(double displacement);
+    void setOptimizeBeforeHessian(bool optimize);
+    void setBuilder(HessianBuilderType builder);
 
-       public:
-        static void setHessianFile(const std::string_view &filename);
-        static void setHessianInfoFile(const std::string_view &filename);
-        static void setDisplacement(const double displacement);
-        static void setOptimizeBeforeHessian(const bool optimize);
-        static void setBuilder(const std::string_view &builder);
-        static void setBuilder(const HessianBuilderType builder);
+    [[nodiscard]] std::string        getHessianFile() const;
+    [[nodiscard]] std::string        getHessianInfoFile() const;
+    [[nodiscard]] double             getDisplacement() const;
+    [[nodiscard]] bool               optimizeBeforeHessian() const;
+    [[nodiscard]] HessianBuilderType getBuilder() const;
+};
 
-        [[nodiscard]] static std::string        getHessianFile();
-        [[nodiscard]] static std::string        getHessianInfoFile();
-        [[nodiscard]] static double             getDisplacement();
-        [[nodiscard]] static bool               optimizeBeforeHessian();
-        [[nodiscard]] static HessianBuilderType getBuilder();
-    };
-
-}   // namespace settings
-
-#endif   // _HESSIAN_SETTINGS_HPP_
+#endif   // SETTINGS__HESSIAN_SETTINGS_HPP

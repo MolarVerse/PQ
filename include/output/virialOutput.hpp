@@ -20,25 +20,24 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_OUTPUT_HPP_
+#ifndef OUTPUT__VIRIAL_OUTPUT_HPP
+#define OUTPUT__VIRIAL_OUTPUT_HPP
 
-#define _VIRIAL_OUTPUT_HPP_
+#include <cstddef>
 
-#include <cstddef>   // for size_t
-
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace output
+namespace out
 {
     /**
-     * @class VirialOutput inherits from Output
+     * @brief VirialOutput inherits from Output
      *
-     * @brief Output file for virial tensor
+     * @details Output file for virial tensor
      *
      */
     class VirialOutput : public Output
@@ -46,9 +45,9 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t step, const physicalData::PhysicalData &);
+        void write(size_t step, const physicalData::PhysicalData &);
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _VIRIAL_OUTPUT_HPP_
+#endif   // OUTPUT__VIRIAL_OUTPUT_HPP

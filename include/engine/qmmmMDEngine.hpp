@@ -20,12 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_MM_MD_ENGINE_HPP_
-
-#define _QM_MM_MD_ENGINE_HPP_
+#ifndef ENGINE__QMMM_MD_ENGINE_HPP
+#define ENGINE__QMMM_MD_ENGINE_HPP
 
 #include "hybridMDEngine.hpp"
 #include "randomNumberGenerator.hpp"
+
+class QMMMEnergiesTest;   // forward declaration for friend
 
 namespace engine
 {
@@ -38,34 +39,35 @@ namespace engine
      */
     class QMMMMDEngine : public HybridMDEngine
     {
+       private:
+        rng::RandomNumberGenerator _rng;
+        physicalData::PhysicalData _qmmmPhysicalData{};
+
        public:
-        QMMMMDEngine()           = default;
+        using HybridMDEngine::HybridMDEngine;
+
         ~QMMMMDEngine() override = default;
 
         void calculateForces() override;
 
        private:
-        randomNumberGenerator::RandomNumberGenerator _rng{};
-        physicalData::PhysicalData                   _qmmmPhysicalData{};
+        void _applySmoothing();
+        void _applyExactSmoothing();
+        void _applyHotspotSmoothing();
 
-        void applySmoothing();
-        void applyExactSmoothing();
-        void applyHotspotSmoothing();
+        void _moltypeCheck();
+        void _setNumberOfQMAtoms();
+        void _calculateQMReferenceEnergy();
 
-        void moltypeCheck();
-        void setNumberOfQMAtoms();
+        void _scaleAndAccumulateEnergies(double globalSmF);
+        void _moveEnergiesToPhysicalData();
 
-        void scaleAndAccumulateEnergies(const double globalSmF);
-        void moveEnergiesToPhysicalData();
+        friend class ::QMMMEnergiesTest;   // for testing private methods
 
-        void distributeSmoothingMolQMForces();
+        void _distributeSmoothingMolQMForces();
 
-        std::vector<double> getRandomWeights(
-            const std::vector<std::reference_wrapper<molsys::Molecule>>
-                &recipientMolecules
-        );
-        std::vector<double> getDistanceWeights(
-            const molsys::Molecule &smoothingMol,
+        [[nodiscard]]
+        std::vector<double> _getRandomWeights(
             const std::vector<std::reference_wrapper<molsys::Molecule>>
                 &recipientMolecules
         );
@@ -73,4 +75,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _QM_MM_MD_ENGINE_HPP_
+#endif   // ENGINE__QMMM_MD_ENGINE_HPP

@@ -20,23 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
+#include <gtest/gtest.h>
 
-#include "engine.hpp"                    // for Engine
-#include "exceptions.hpp"                // for MolDescriptorException
-#include "fileSettings.hpp"              // for FileSettings
-#include "gtest/gtest.h"                 // for Message, TestPartResult, testing
-#include "moldescriptorReader.hpp"       // for MoldescriptorReader
-#include "testMoldesctripotReader.hpp"   // for TestMoldescriptorReader
-#include "throwWithMessage.hpp"          // for ASSERT_THROW_MSG
+#include <cstddef>
 
-using namespace std;
-using namespace ::testing;
-using namespace input::molDescriptor;
-using namespace customException;
+#include "engine.hpp"
+#include "enums/potential.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
+#include "moldescriptorReader.hpp"
+#include "moleculeType.hpp"
+#include "simulationBox.hpp"
+#include "testMoldesctripotReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
- * @brief tests constructor of MoldescriptorReader
+ * @brief tests constructor of input::molDescriptor::MoldescriptorReader
  *
  */
 TEST_F(TestMoldescriptorReader, constructor)
@@ -44,7 +44,10 @@ TEST_F(TestMoldescriptorReader, constructor)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor.dat"
     );
-    ASSERT_NO_THROW(MoldescriptorReader reader(*_engine));
+    ASSERT_NO_THROW(
+        input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings
+        ))
+    );
 }
 
 /**
@@ -56,10 +59,11 @@ TEST_F(TestMoldescriptorReader, argumentsInMoldescriptor)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithOneWordLine.dat"
     );
-    MoldescriptorReader reader(*_engine);
+    const auto                                engine = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader(*engine);
     ASSERT_THROW_MSG(
         reader.read(),
-        MolDescriptorException,
+        exc::MolDescriptorException,
         "Error in moldescriptor file at line 1"
     );
 }
@@ -73,30 +77,31 @@ TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithErrorInAtomArguments.dat"
     );
-    MoldescriptorReader reader(*_engine);
+    const auto                                engine = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader(*engine);
     ASSERT_THROW_MSG(
         reader.read(),
-        MolDescriptorException,
+        exc::MolDescriptorException,
         "Atom line in moldescriptor file at line 4 has to have 3 or 4 elements"
     );
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithErrorInAtomArguments2.dat"
     );
-    MoldescriptorReader reader2(*_engine);
+    input::molDescriptor::MoldescriptorReader reader2(*_makeEngine(*_settings));
     ASSERT_THROW_MSG(
         reader2.read(),
-        MolDescriptorException,
+        exc::MolDescriptorException,
         "Atom line in moldescriptor file at line 5 has to have 3 or 4 elements"
     );
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorWithErrorInMolArguments.dat"
     );
-    MoldescriptorReader reader3(*_engine);
+    input::molDescriptor::MoldescriptorReader reader3(*_makeEngine(*_settings));
     ASSERT_THROW_MSG(
         reader3.read(),
-        MolDescriptorException,
+        exc::MolDescriptorException,
         "Not enough arguments in moldescriptor file at line 3"
     );
 }
@@ -110,7 +115,8 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
     settings::FileSettings::setMolDescriptorFileName(
         "examples/setup/moldescriptor.dat"
     );
-    MoldescriptorReader reader(*_engine);
+    const auto                                engine = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader(*engine);
     ASSERT_NO_THROW(reader.read());
 }
 
@@ -120,13 +126,14 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
  */
 TEST_F(TestMoldescriptorReader, specialTypes)
 {
-    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), std::nullopt);
+    auto engine = _makeEngine(*_settings);
+    ASSERT_EQ(engine->getSimulationBox().getWaterType(), std::nullopt);
     settings::FileSettings::setMolDescriptorFileName(
         "examples/setup/moldescriptor.dat"
     );
-    readMolDescriptor(*_engine);
-    ASSERT_EQ(_engine->getSimulationBox().getWaterType(), 1);
-    ASSERT_EQ(_engine->getSimulationBox().getAmmoniaType(), 2);
+    input::molDescriptor::readMolDescriptor(*engine);
+    ASSERT_EQ(engine->getSimulationBox().getWaterType(), MolType{1});
+    ASSERT_EQ(engine->getSimulationBox().getAmmoniaType(), MolType{2});
 }
 
 /**
@@ -138,10 +145,10 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptorTooManyAtomsPerMoltype.dat"
     );
-    MoldescriptorReader reader2(*_engine);
+    input::molDescriptor::MoldescriptorReader reader2(*_makeEngine(*_settings));
     ASSERT_THROW_MSG(
         reader2.read(),
-        MolDescriptorException,
+        exc::MolDescriptorException,
         "Error reading of moldescriptor stopped before last molecule was "
         "finished"
     );
@@ -154,21 +161,71 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
  */
 TEST_F(TestMoldescriptorReader, globalVdwTypes)
 {
-    _engine->getForceField()->activateNonCoulombic();
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor_withGlobalVdwTypes.dat"
     );
-    EXPECT_NO_THROW(readMolDescriptor(*_engine));
+    EXPECT_NO_THROW(
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings))
+    );
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor_withMissingGlobalVdwTypes.dat"
     );
     EXPECT_THROW_MSG(
-        readMolDescriptor(*_engine),
-        MolDescriptorException,
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings)),
+        exc::MolDescriptorException,
         "Error in moldescriptor file at line 6 - force field noncoulombics is "
         "activated but no global van der Waals "
         "parameter given"
+    );
+}
+
+/**
+ * @brief tests the optional QM reference energy line of a molecule
+ *
+ */
+TEST_F(TestMoldescriptorReader, qmReferenceEnergy)
+{
+    auto engine = _makeEngine(*_settings);
+    settings::FileSettings::setMolDescriptorFileName(
+        "data/moldescriptorReader/moldescriptorWithQMReferenceEnergy.dat"
+    );
+    input::molDescriptor::readMolDescriptor(*engine);
+
+    auto &simBox = engine->getSimulationBox();
+    EXPECT_DOUBLE_EQ(
+        simBox.findMoleculeType(MolType{1}).getQMReferenceEnergy(),
+        -2554.71
+    );
+    EXPECT_EQ(
+        simBox.findMoleculeType(MolType{1}).getNumberOfAtoms(),
+        size_t{3}
+    );
+    EXPECT_DOUBLE_EQ(
+        simBox.findMoleculeType(MolType{2}).getQMReferenceEnergy(),
+        0.0
+    );
+    EXPECT_TRUE(simBox.findMoleculeType(MolType{2}).hasQMReferenceEnergy());
+
+    settings::FileSettings::setMolDescriptorFileName(
+        "data/moldescriptorReader/moldescriptorWithInvalidQMReferenceEnergy.dat"
+    );
+    EXPECT_THROW_MSG(
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings)),
+        exc::MolDescriptorException,
+        "Invalid QM reference energy line in moldescriptor file at line 3 - "
+        "expected \"qm_reference_energy <energy>\""
+    );
+
+    settings::FileSettings::setMolDescriptorFileName(
+        "data/moldescriptorReader/moldescriptorWithMissingQMReferenceEnergy.dat"
+    );
+    EXPECT_THROW_MSG(
+        input::molDescriptor::readMolDescriptor(*_makeEngine(*_settings)),
+        exc::MolDescriptorException,
+        "Moltype K has no qm_reference_energy line - once one moltype has a "
+        "QM reference energy, every moltype needs one"
     );
 }

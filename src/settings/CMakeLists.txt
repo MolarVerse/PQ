@@ -1,5 +1,5 @@
 add_library(settings
-    settings.cpp
+    generalSettings.cpp
     simulationBoxSettings.cpp
     manostatSettings.cpp
     thermostatSettings.cpp
@@ -7,7 +7,6 @@ add_library(settings
     potentialSettings.cpp
     fileSettings.cpp
     hybridSettings.cpp
-    resetKineticsSettings.cpp
     timingsSettings.cpp
     forceFieldSettings.cpp
     qmSettings.cpp
@@ -17,17 +16,21 @@ add_library(settings
     convergenceSettings.cpp
     waterModelSettings.cpp
     hessianSettings.cpp
+
+    settings.cpp
+    resetKineticsSettings.cpp
+    referenceSettings.cpp
 )
 
 target_include_directories(settings
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/settings
-    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(settings
     PUBLIC
     utilities
+    config_headers
 )
 
 install(TARGETS settings

@@ -20,96 +20,64 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STOCHASTIC_RESCALING_MANOSTAT_HPP_
+#ifndef MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP
+#define MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP
 
-#define _STOCHASTIC_RESCALING_MANOSTAT_HPP_
-
-#include "manostat.hpp"                // for Manostat
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
+#include "manostat.hpp"
+#include "randomNumberGenerator.hpp"
 
 namespace manostat
 {
     /**
-     * @class StochasticRescalingManostat inherits from Manostat
+     * @brief StochasticRescalingManostat inherits from Manostat
      *
-     * @link https://doi.org/10.1063/5.0020514
+     * _(https://doi.org/10.1063/5.0020514)
      *
      */
     class StochasticRescalingManostat : public Manostat
     {
-       protected:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
-
-        double _tau;
-        double _compressibility;
-        double _dt;
+       private:
+        rng::RandomNumberGenerator _randomNumberGenerator;
 
        public:
-        StochasticRescalingManostat() = default;
-        explicit StochasticRescalingManostat(
-            const double targetPressure,
-            const double tau,
-            const double compressibility
-        );
-        ~StochasticRescalingManostat() override = default;
-
-        // copy constructor and copy assignment needed for random number
-        // generator
-        StochasticRescalingManostat(const StochasticRescalingManostat &other);
-        StochasticRescalingManostat &operator=(
-            const StochasticRescalingManostat &other
-        );
-        StochasticRescalingManostat(StochasticRescalingManostat &&) noexcept =
-            delete;
-        StochasticRescalingManostat &operator=(StochasticRescalingManostat &&
-        ) noexcept = delete;
+        using Manostat::Manostat;
 
         void applyManostat(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) override;
 
-        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu(const double);
+        [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
 
-        [[nodiscard]] settings::ManostatType getManostatType() const override;
-        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
+       protected:
+        [[nodiscard]]
+        bool _hasFixedAxis(size_t index) const;
 
-        [[nodiscard]] double getTau() const;
-        [[nodiscard]] double getCompressibility() const;
+        [[nodiscard]]
+        rng::RandomNumberGenerator &_getRNG();
     };
 
     /**
-     * @class SemiIsotropicStochasticRescalingManostat inherits from Manostat
+     * @brief SemiIsotropicStochasticRescalingManostat inherits from Manostat
      *
-     * @link https://doi.org/10.1063/5.0020514
+     * _(https://doi.org/10.1063/5.0020514)
      *
      */
     class SemiIsotropicStochasticRescalingManostat
         : public StochasticRescalingManostat
     {
-       private:
-        size_t              _2DAnisotropicAxis;
-        std::vector<size_t> _2DIsotropicAxes;
-
        public:
-        explicit SemiIsotropicStochasticRescalingManostat(
-            const double               targetPressure,
-            const double               tau,
-            const double               compressibility,
-            const size_t               anisotropicAxis,
-            const std::vector<size_t> &isotropicAxes
-        );
+        using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(const double volume) override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        linalg::tensor3D calculateMu(double volume) override;
     };
 
     /**
-     * @class AnisotropicStochasticRescalingManostat inherits from Manostat
+     * @brief AnisotropicStochasticRescalingManostat inherits from
+     * StochasticRescalingManostat
      *
-     * @link https://doi.org/10.1063/5.0020514
+     * _(https://doi.org/10.1063/5.0020514)
      *
      */
     class AnisotropicStochasticRescalingManostat
@@ -119,15 +87,14 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(const double volume) override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        linalg::tensor3D calculateMu(double volume) override;
     };
 
     /**
-     * @class FullAnisotropicStochasticRescalingManostat inherits from Manostat
+     * @brief FullAnisotropicStochasticRescalingManostat inherits from
+     * StochasticRescalingManostat
      *
-     * @link https://doi.org/10.1063/5.0020514
+     * _(https://doi.org/10.1063/5.0020514)
      *
      */
     class FullAnisotropicStochasticRescalingManostat
@@ -137,11 +104,9 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linearAlgebra::tensor3D calculateMu(const double volume) override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        linalg::tensor3D calculateMu(double volume) override;
     };
 
 }   // namespace manostat
 
-#endif   // _STOCHASTIC_RESCALING_MANOSTAT_HPP_
+#endif   // MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP

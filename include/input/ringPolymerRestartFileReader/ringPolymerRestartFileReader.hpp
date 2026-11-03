@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_RESTART_FILE_READER_HPP_
-
-#define _RING_POLYMER_RESTART_FILE_READER_HPP_
+#ifndef INPUT__RING_POLYMER_RESTART_FILE_READER__RING_POLYMER_RESTART_FILE_READER_HPP
+#define INPUT__RING_POLYMER_RESTART_FILE_READER__RING_POLYMER_RESTART_FILE_READER_HPP
 
 #include <fstream>
-#include <string>   // for string
+#include <string>
 
 namespace engine
 {
@@ -55,8 +54,8 @@ namespace input::ringPolymer
             engine::RingPolymerEngine &
         );
 
-        void read();
+        void read(size_t numberOfBeads);
     };
 }   // namespace input::ringPolymer
 
-#endif   // _RING_POLYMER_RESTART_FILE_READER_HPP_
+#endif   // INPUT__RING_POLYMER_RESTART_FILE_READER__RING_POLYMER_RESTART_FILE_READER_HPP

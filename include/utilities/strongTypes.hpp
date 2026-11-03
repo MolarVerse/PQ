@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STRONG_TYPES_HPP_
-#define _STRONG_TYPES_HPP_
+#ifndef UTILITIES__STRONG_TYPES_HPP
+#define UTILITIES__STRONG_TYPES_HPP
 
 #include <cstddef>
 #include <format>
@@ -31,12 +31,41 @@ template <typename Tag>
 using StrongSizeT = mstd::StrongType<
     size_t,
     Tag,
-    mstd::StrongTypeTrait::ORDERED | mstd::StrongTypeTrait::HASHABLE>;
+    mstd::StrongTypeTrait::ORDERED | mstd::StrongTypeTrait::HASHABLE |
+        mstd::StrongTypeTrait::INCREMENT>;
 
-// clang-format off
-struct AtomNumberTag{};
+struct AtomNumberTag
+{
+};
 using AtomNumber = StrongSizeT<struct AtomNumberTag>;
-// clang-format on
+
+struct AtomIndexTag
+{
+};
+using AtomIndex = StrongSizeT<struct AtomIndexTag>;
+
+struct AtomTypeTag
+{
+};
+using AtomType = StrongSizeT<struct AtomTypeTag>;
+
+struct ExtAtomTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("ExtAtomType({})", value);
+    }
+};
+using ExtAtomType = StrongSizeT<struct ExtAtomTypeTag>;
+
+struct MolTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("MolType({})", value);
+    }
+};
+using MolType = StrongSizeT<struct MolTypeTag>;
 
 struct BondIdTag
 {
@@ -65,4 +94,111 @@ struct DihedralIdTag
 };
 using DihedralId = StrongSizeT<struct DihedralIdTag>;
 
-#endif   // _STRONG_TYPES_HPP_
+struct ExtVdwTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("ExtVdwType({})", value);
+    }
+};
+using ExtVdwType = StrongSizeT<struct ExtVdwTypeTag>;
+
+struct VdwTypeTag
+{
+    static std::string toString(const size_t &value)
+    {
+        return std::format("VdwType({})", value);
+    }
+};
+using VdwType = StrongSizeT<struct VdwTypeTag>;
+
+/**
+ * @struct LJParams
+ *
+ * @brief Struct to hold Lennard-Jones parameters c6 and c12
+ *
+ */
+struct LJParams
+{
+    double c6{0.0};
+    double c12{0.0};
+
+    [[nodiscard]]
+    bool operator==(const LJParams &other) const;
+};
+
+/**
+ * @struct MorseParams
+ *
+ * @brief Struct to hold Morse parameters dissociationEnergy, wellWidth and
+ * equilibriumDistance
+ *
+ */
+struct MorseParams
+{
+    double dissociationEnergy;
+    double wellWidth;
+    double equilibriumDistance;
+
+    [[nodiscard]]
+    bool operator==(const MorseParams &other) const;
+};
+
+/**
+ * @struct BuckinghamParams
+ *
+ * @brief Struct to hold Buckingham parameters a, dRho and c6
+ *
+ */
+struct BuckinghamParams
+{
+    double scaling;
+    double dRho;
+    double c6;
+
+    [[nodiscard]]
+    bool operator==(const BuckinghamParams &other) const;
+};
+
+struct AngleParams
+{
+    double equilibrium;
+    double forceConstant;
+
+    [[nodiscard]]
+    bool operator==(const AngleParams &other) const;
+};
+
+struct BondParams
+{
+    double equilibrium;
+    double forceConstant;
+
+    [[nodiscard]]
+    bool operator==(const BondParams &other) const;
+};
+
+struct DihedralParams
+{
+    double forceConstant;
+    double frequency;
+    double phaseShift;
+
+    [[nodiscard]]
+    bool operator==(const DihedralParams &other) const;
+};
+
+struct JCouplingParams
+{
+    double J0;
+    double forceConstant;
+    double a;
+    double b;
+    double c;
+    double phaseShift;
+
+    [[nodiscard]]
+    bool operator==(const JCouplingParams &other) const;
+};
+
+#endif   // UTILITIES__STRONG_TYPES_HPP

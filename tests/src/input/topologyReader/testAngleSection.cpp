@@ -20,17 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW, TestInfo...
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "angleSection.hpp"   // for AngleSection
-#include "engine.hpp"         // for Engine
-#include "exceptions.hpp"     // for TopologyException
-#include "gtest/gtest.h"      // for Message, TestPartResult
+#include "angleSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 #include "strongTypes.hpp"
-#include "testTopologySection.hpp"   // for TestTopologySection
+#include "testTopologySection.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test angle section processing one line
@@ -40,41 +40,46 @@ TEST_F(TestTopologySection, processSectionAngle)
 {
     std::vector<std::string>      lineElements = {"2", "1", "3", "7"};
     input::topology::AngleSection angleSection;
-    angleSection.processSection(lineElements, *_engine);
+    angleSection.processSection(lineElements, *_engine, 0);
 
-    const auto &angles    = _engine->getForceField()->getAngles();
-    const auto &molecules = _engine->getSimulationBox().getMolecules();
+    const auto& angles = _engine->getForceField()->getAngles();
+    const auto& simBox = _engine->getSimulationBox();
 
     EXPECT_EQ(angles.size(), 1);
-    EXPECT_EQ(angles[0].getMolecules()[0], &(molecules[0]));
-    EXPECT_EQ(angles[0].getMolecules()[1], &(molecules[1]));
-    EXPECT_EQ(angles[0].getMolecules()[2], &(molecules[1]));
-    EXPECT_EQ(angles[0].getAtomIndices()[0], 0);
-    EXPECT_EQ(angles[0].getAtomIndices()[1], 0);
-    EXPECT_EQ(angles[0].getAtomIndices()[2], 1);
+    EXPECT_EQ(angles[0].get_molecules()[0], simBox.getMolecules().data());
+    EXPECT_EQ(angles[0].get_molecules()[1], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(angles[0].get_molecules()[2], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(angles[0].get_atomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(angles[0].get_atomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(angles[0].get_atomIndices()[2], AtomIndex{1});
     EXPECT_EQ(angles[0].getType(), AngleId{7});
     EXPECT_EQ(angles[0].isLinker(), false);
 
     lineElements = {"2", "1", "3", "7", "*"};
-    angleSection.processSection(lineElements, *_engine);
-    EXPECT_EQ(_engine->getForceField()->getAngles()[1].isLinker(), true);
+    angleSection.processSection(lineElements, *_engine, 0);
+    EXPECT_EQ(angles[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3"};
-    EXPECT_THROW(
-        angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        angleSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Topology file angle section at line 0 - atoms cannot be the same!"
     );
 
     lineElements = {"1", "2", "7"};
-    EXPECT_THROW(
-        angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        angleSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Wrong number of arguments in topology file angle section at line 0 - "
+        "number of elements has to be 4 or 5!"
     );
 
     lineElements = {"1", "2", "3", "7", "#"};
-    EXPECT_THROW(
-        angleSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        angleSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Fifth entry in topology file in angle section has to be a '*' or "
+        "empty at line 0!"
     );
 }
 
@@ -85,9 +90,10 @@ TEST_F(TestTopologySection, processSectionAngle)
 TEST_F(TestTopologySection, endedNormallyAngle)
 {
     input::topology::AngleSection angleSection;
-    EXPECT_THROW(
-        angleSection.endedNormally(false),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        angleSection.endedNormally(false, 0),
+        exc::TopologyException,
+        "Topology file angle section at line 0 - no end of section found!"
     );
-    EXPECT_NO_THROW(angleSection.endedNormally(true));
+    EXPECT_NO_THROW(angleSection.endedNormally(true, 0));
 }

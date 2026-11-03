@@ -20,14 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef PQ_GOOGLE_BENCHMARK_SETUP_HPP
-#define PQ_GOOGLE_BENCHMARK_SETUP_HPP
+#ifndef BENCHMARKS__SRC__BENCHMARK_SETUP_HPP
+#define BENCHMARKS__SRC__BENCHMARK_SETUP_HPP
 
 #include <cstddef>
 
 #include "atom.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "strongTypes.hpp"
 #include "vector3d.hpp"
 
 namespace benchmarkSetup
@@ -39,8 +41,9 @@ namespace benchmarkSetup
     {
         const double boxEdge = cellEdge * static_cast<double>(cellsPerSide);
 
-        molsys::SimulationBox simulationBox;
-        simulationBox.setBoxDimensions({boxEdge, boxEdge, boxEdge});
+        molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
+        molsys::SimulationBox   simulationBox;
+        simulationBox.setBox(box, false);
 
         std::size_t atomIndex = 0;
         for (std::size_t x = 0; x < cellsPerSide; ++x)
@@ -49,14 +52,14 @@ namespace benchmarkSetup
             {
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
-                    auto atom = std::make_shared<molsys::Atom>();
-                    const linearAlgebra::Vec3D position{
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(x) + 0.5) * cellEdge,
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(y) + 0.5) * cellEdge,
-                        -boxEdge / 2.0 +
-                            (static_cast<double>(z) + 0.5) * cellEdge,
+                    auto                atom = std::make_shared<molsys::Atom>();
+                    const linalg::Vec3D position{
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(x) + 0.5) * cellEdge),
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(y) + 0.5) * cellEdge),
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(z) + 0.5) * cellEdge),
                     };
                     atom->setPosition(position);
                     atom->setPositionOld(position);
@@ -67,15 +70,13 @@ namespace benchmarkSetup
                     });
                     atom->setForce({0.1, -0.2, 0.05});
                     atom->setMass(12.0);
-                    atom->setAtomType(0);
-                    atom->setInternalGlobalVDWType(0);
+                    atom->setAtomType(AtomType{0});
+                    atom->setInternalGlobalVDWType(VdwType{0});
                     atom->setPartialCharge(atomIndex++ % 2 == 0 ? 0.4 : -0.4);
                     atom->setShiftForce({0.0, 0.0, 0.0});
 
                     molsys::Molecule molecule;
-                    molecule.setMoltype(1);
-                    molecule.setNumberOfAtoms(1);
-                    molecule.setMolMass(12.0);
+                    molecule.setMoltype(MolType{1});
                     molecule.addAtom(atom);
 
                     simulationBox.addAtom(atom);
@@ -99,4 +100,4 @@ namespace benchmarkSetup
     }
 }   // namespace benchmarkSetup
 
-#endif   // PQ_GOOGLE_BENCHMARK_SETUP_HPP
+#endif   // BENCHMARKS__SRC__BENCHMARK_SETUP_HPP

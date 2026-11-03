@@ -20,25 +20,24 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOMENTUM_OUTPUT_HPP_
+#ifndef OUTPUT__MOMENTUM_OUTPUT_HPP
+#define OUTPUT__MOMENTUM_OUTPUT_HPP
 
-#define _MOMENTUM_OUTPUT_HPP_
+#include <cstddef>
 
-#include <cstddef>   // for size_t
-
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace output
+namespace out
 {
     /**
-     * @class MomentumOutput inherits from Output
+     * @brief MomentumOutput inherits from Output
      *
-     * @brief Output file for momentum and angular momentum vectors
+     * @details Output file for momentum and angular momentum vectors
      *
      */
     class MomentumOutput : public Output
@@ -46,9 +45,9 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t step, const physicalData::PhysicalData &);
+        void write(size_t step, const physicalData::PhysicalData &);
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _MOMENTUM_OUTPUT_HPP_
+#endif   // OUTPUT__MOMENTUM_OUTPUT_HPP

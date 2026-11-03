@@ -20,78 +20,40 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTRAINTS_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__CONSTRAINTS_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__CONSTRAINTS_INPUT_PARSER_HPP
 
-#define _CONSTRAINTS_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
+#include "inputFileParser.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
-namespace constraints
-{
-    class Constraints;
-}   // namespace constraints
+class ConstraintSettings;
 
 namespace input
 {
     /**
-     * @class ConstraintsInputParser inherits from InputFileParser
+     * @brief ConstraintsInputParser inherits from InputFileParser
      *
-     * @brief Parses the constraints commands in the input file
+     * @details Parses the constraints commands in the input file
      *
      */
     class ConstraintsInputParser : public InputFileParser
     {
-       private:
-        std::shared_ptr<constraints::Constraints> _constraints;
+        mstd::Ref<ConstraintSettings> _constraintSettings;
 
        public:
-        explicit ConstraintsInputParser(
-            std::shared_ptr<constraints::Constraints> constraints
-        );
+        explicit ConstraintsInputParser(ConstraintSettings &constraintSettings);
 
-        void parseShakeActivated(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseShakeTolerance(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseShakeIteration(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRattleTolerance(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRattleIteration(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseMShakeTolerance(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseMShakeIteration(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseDistanceConstraintActivated(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addShakeActivatedKeyword();
+        void addShakeToleranceKeyword();
+        void addShakeIterationKeyword();
+        void addRattleToleranceKeyword();
+        void addRattleIterationKeyword();
+        void addMShakeToleranceKeyword();
+        void addMShakeIterationKeyword();
+        void addDistanceConstraintActivatedKeyword();
     };
 
 }   // namespace input
 
-#endif   // _CONSTRAINTS_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__CONSTRAINTS_INPUT_PARSER_HPP

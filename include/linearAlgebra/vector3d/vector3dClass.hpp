@@ -20,17 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VECTOR3D_CLASS_HPP_
+#ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_HPP
+#define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_HPP
 
-#define _VECTOR3D_CLASS_HPP_
-
-#include <array>     // for array
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <array>
+#include <cstddef>
+#include <mstd/type_traits/quantity_traits.hpp>
+#include <vector>
 
 #include "concepts/vector3dConcepts.hpp"
 
-namespace linearAlgebra
+namespace linalg
 {
     template <typename T>
     using iterator = typename std::array<T, 3>::iterator;
@@ -38,7 +38,7 @@ namespace linearAlgebra
     template <typename T>
     using const_iterator = typename std::array<T, 3>::const_iterator;
 
-    template <class T>
+    template <typename T>
     class Vector3D;   // forward declaration
 
     using Vec3D   = Vector3D<double>;
@@ -56,26 +56,35 @@ namespace linearAlgebra
     class Vector3D
     {
        private:
+// this is to suppress the pedantic warning for the anonymous struct within the
+// union as Vector3D will be migrated to mstd in the future it will be cleaned
+// up there
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
         union
         {
-            std::array<T, 3> _xyz;
+            std::array<T, 3> xyz;
             struct
             {
-                T _x;
-                T _y;
-                T _z;
+                T x;
+                T y;
+                T z;
             };
         };
+#pragma GCC diagnostic pop
 
        public:
         ~Vector3D() = default;
 
         Vector3D() = default;
-        Vector3D(const T x, const T y, const T z) : _x(x), _y(y), _z(z) {}
-        Vector3D(const Vector3D<T> &xyz) : _xyz(xyz._xyz) {}
-        Vector3D(Vector3D<T> &&xyz) noexcept : _xyz(std::move(xyz._xyz)) {}
+        Vector3D(const T xValue, const T yValue, const T zValue)
+            : x(xValue), y(yValue), z(zValue)
+        {
+        }
+        Vector3D(const Vector3D<T> &xyz_) : xyz(xyz_.xyz) {}
+        Vector3D(Vector3D<T> &&xyz_) noexcept : xyz(std::move(xyz_.xyz)) {}
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
-        Vector3D(const T xyz) : _x(xyz), _y(xyz), _z(xyz) {}
+        Vector3D(const T xyz_) : x(xyz_), y(xyz_), z(xyz_) {}
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
 
         using value_type = T;
@@ -92,36 +101,36 @@ namespace linearAlgebra
         void operator+=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator+=(const T t)
+        Vector3D &operator+=(const T &vec)
         requires pq::Arithmetic<T>;
 
         // -= operators
         Vector3D &operator-=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator-=(const T t)
+        Vector3D &operator-=(const T &vec)
         requires pq::Arithmetic<T>;
 
         // *= operators
         Vector3D &operator*=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator*=(const T t)
+        Vector3D &operator*=(const T &vec)
         requires pq::Arithmetic<T>;
 
         // /= operators
         Vector3D &operator/=(const Vector3D<T> &vec)
         requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
 
-        Vector3D &operator/=(const T t)
+        Vector3D &operator/=(const T &vec)
         requires pq::Arithmetic<T>;
 
         /**********************
          * indexing operators *
          **********************/
 
-        T       &operator[](const size_t index);
-        const T &operator[](const size_t index) const;
+        T       &operator[](size_t index);
+        const T &operator[](size_t index) const;
 
         /*******************
          * unary operators *
@@ -141,16 +150,26 @@ namespace linearAlgebra
          * casting methods *
          *******************/
 
-        template <class U>
+        template <typename U>
         explicit operator Vector3D<U>() const;
 
-        std::vector<T> toStdVector();
+        std::vector<T> toStdVector() const;
+
+        /****************
+         * unit methods *
+         ****************/
+
+        template <mstd::UnitLike U>
+        auto in(const U &unit) const;
+
+        template <mstd::UnitLike U>
+        auto numerical_value_in(const U &unit) const;
     };
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
-#ifndef _VECTOR3D_CLASS_TPP_
-#include "vector3dClass.tpp.hpp"   // IWYU pragma: export
+#ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_TPP
+#include "vector3dClass.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _VECTOR3D_CLASS_HPP_
+#endif   // LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_HPP

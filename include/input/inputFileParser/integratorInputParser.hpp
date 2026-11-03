@@ -20,30 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTEGRATOR_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INTEGRATOR_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__INTEGRATOR_INPUT_PARSER_HPP
 
-#define _INTEGRATOR_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
+#include "inputFileParser.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
+class ReferenceSettings;
 
 namespace input
 {
     /**
-     * @class IntegratorInputParser inherits from InputFileParser
+     * @brief IntegratorInputParser inherits from InputFileParser
      *
-     * @brief Parses the integrator commands in the input file
+     * @details Parses the integrator commands in the input file
      *
      */
     class IntegratorInputParser : public InputFileParser
     {
-       public:
-        IntegratorInputParser();
+        mstd::Ref<ReferenceSettings> _referenceSettings;
 
-        void parseIntegrator(const std::vector<std::string> &, const size_t);
+       public:
+        explicit IntegratorInputParser(ReferenceSettings& referenceSettings);
+
+        void addIntegratorKey();
     };
 
 }   // namespace input
 
-#endif   // _INTEGRATOR_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INTEGRATOR_INPUT_PARSER_HPP

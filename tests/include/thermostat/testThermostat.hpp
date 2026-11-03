@@ -20,52 +20,51 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_THERMOSTAT_HPP_
+#ifndef TESTS__INCLUDE__THERMOSTAT__TEST_THERMOSTAT_HPP
+#define TESTS__INCLUDE__THERMOSTAT__TEST_THERMOSTAT_HPP
 
-#define _TEST_THERMOSTAT_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
-
-#include "atom.hpp"            // for Atom
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
-#include "thermostat.hpp"      // for Thermostat
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "thermostat.hpp"
 
 class TestThermostat : public ::testing::Test
 {
    protected:
+    std::unique_ptr<physicalData::PhysicalData> _data;
+    std::unique_ptr<molsys::SimulationBox>      _simulationBox;
+    std::unique_ptr<thermostat::Thermostat>     _thermostat;
+
     void SetUp() override
     {
-        _thermostat = new thermostat::Thermostat();
-        _data       = new physicalData::PhysicalData();
+        _thermostat = std::make_unique<thermostat::Thermostat>();
+        _data       = std::make_unique<physicalData::PhysicalData>();
 
-        _simulationBox = new molsys::SimulationBox();
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(2);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
         atom1->setMass(1.0);
         atom2->setMass(1.0);
-        atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule1.setMolMass(2.0);
+        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(1);
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
         atom3->setMass(1.0);
-        atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.setMolMass(1.0);
+        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
 
         molecule2.addAtom(atom3);
 
@@ -77,17 +76,6 @@ class TestThermostat : public ::testing::Test
 
         _simulationBox->calculateDegreesOfFreedom();
     }
-
-    void TearDown() override
-    {
-        delete _data;
-        delete _simulationBox;
-        delete _thermostat;
-    }
-
-    physicalData::PhysicalData *_data;
-    molsys::SimulationBox      *_simulationBox;
-    thermostat::Thermostat     *_thermostat;
 };
 
 #endif

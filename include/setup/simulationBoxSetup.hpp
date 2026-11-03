@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_SETUP_HPP_
+#ifndef SETUP__SIMULATION_BOX_SETUP_HPP
+#define SETUP__SIMULATION_BOX_SETUP_HPP
 
-#define _SIMULATION_BOX_SETUP_HPP_
-
+#include "setupBase.hpp"
 namespace engine
 {
     class Engine;   // forward declaration
 }   // namespace engine
 
-namespace setup::molsys
+namespace setup
 {
     void setupSimulationBox(engine::Engine &);
 
@@ -39,7 +39,7 @@ namespace setup::molsys
      * @brief Setup simulation box
      *
      */
-    class SimulationBoxSetup
+    class SimulationBoxSetup : public SetupBase
     {
        private:
         engine::Engine    &_engine;
@@ -58,7 +58,6 @@ namespace setup::molsys
         void setAtomMasses();
         void setAtomicNumbers();
 
-        void calculateMolMasses();
         void calculateTotalCharge();
 
         void checkBoxSettings();
@@ -73,7 +72,7 @@ namespace setup::molsys
          * standard setter methods *
          ***************************/
 
-        static void setZeroVelocities(const bool zeroVelocities);
+        static void setZeroVelocities(bool zeroVelocities);
 
         /***************************
          * standard getter methods *
@@ -82,6 +81,6 @@ namespace setup::molsys
         [[nodiscard]] static bool getZeroVelocities();
     };
 
-}   // namespace setup::molsys
+}   // namespace setup
 
-#endif   // _SIMULATION_BOX_SETUP_HPP_
+#endif   // SETUP__SIMULATION_BOX_SETUP_HPP

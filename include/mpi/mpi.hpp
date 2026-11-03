@@ -22,13 +22,12 @@
 
 #ifdef WITH_MPI
 
-#ifndef _PQ_MPI_HPP_
+#ifndef MPI__MPI_HPP
+#define MPI__MPI_HPP
 
-#define _PQ_MPI_HPP_
-
-#include <cstddef>    // for size_t
-#include <fstream>    // for ofstream
-#include <iostream>   // for cout, cerr
+#include <cstddef>
+#include <fstream>
+#include <iostream>
 
 namespace mpi
 {
@@ -84,6 +83,6 @@ namespace mpi
     };
 }   // namespace mpi
 
-#endif   // _PQ_MPI_HPP_
+#endif   // MPI__MPI_HPP
 
 #endif   // WITH_MPI

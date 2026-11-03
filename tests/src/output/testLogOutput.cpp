@@ -22,13 +22,12 @@
 
 #include "testLogOutput.hpp"
 
-#include <format>   // for format
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, allocator, string
+#include <format>
+#include <iosfwd>
+#include <string>
 
-#include "gtest/gtest.h"        // for Message, TestPartResult
-#include "outputMessages.hpp"   // for _ANGSTROM_
-#include "systemInfo.hpp"       // for _AUTHOR_, _EMAIL_
+#include "outputMessages.hpp"
+#include "systemInfo.hpp"
 
 /**
  * @brief tests writing header to log file
@@ -36,7 +35,7 @@
  */
 TEST_F(TestLogOutput, writeHeader)
 {
-    _logOutput->setFilename("default.log");
+    _logOutput->setFilename("default.log", false);
     _logOutput->writeHeader();
     _logOutput->close();
     std::ifstream file("default.log");
@@ -127,7 +126,7 @@ TEST_F(TestLogOutput, writeHeader)
  */
 TEST_F(TestLogOutput, writeEndedNormally)
 {
-    _logOutput->setFilename("default.log");
+    _logOutput->setFilename("default.log", false);
     _logOutput->writeEndedNormally(0.1);
     _logOutput->close();
     std::ifstream file("default.log");
@@ -179,7 +178,7 @@ TEST_F(TestLogOutput, writeEndedNormally)
  */
 TEST_F(TestLogOutput, writeDensityWarning)
 {
-    _logOutput->setFilename("default.log");
+    _logOutput->setFilename("default.log", false);
     _logOutput->writeDensityWarning();
     _logOutput->close();
     std::ifstream file("default.log");
@@ -197,7 +196,7 @@ TEST_F(TestLogOutput, writeDensityWarning)
  */
 TEST_F(TestLogOutput, writeInitialMomentum)
 {
-    _logOutput->setFilename("default.log");
+    _logOutput->setFilename("default.log", false);
     _logOutput->writeInitialMomentum(0.1);
     _logOutput->close();
     std::ifstream file("default.log");
@@ -208,7 +207,7 @@ TEST_F(TestLogOutput, writeInitialMomentum)
         line,
         std::format(
             "INFO:    Initial momentum = 1.00000e-01 {}*amu/fs",
-            output::ANGSTROM
+            out::ANGSTROM
         )
     );
 }
@@ -219,7 +218,7 @@ TEST_F(TestLogOutput, writeInitialMomentum)
  */
 TEST_F(TestLogOutput, TestwriteSetupWarning)
 {
-    _logOutput->setFilename("default.log");
+    _logOutput->setFilename("default.log", false);
     _logOutput->writeSetupWarning("This is a warning message.");
     _logOutput->close();
     std::ifstream file("default.log");
@@ -238,19 +237,23 @@ TEST_F(TestLogOutput, TestAddAndFlushQueuedWarnings)
     _logOutput->queueWarning("This keyword is deprecated and will be removed.");
     _logOutput->queueWarning("Combining these two methods is discouraged.");
 
-    _logOutput->setFilename("default.log");
+    _logOutput->setFilename("default.log", false);
     _logOutput->flushQueuedWarnings();
     _logOutput->close();
     std::ifstream file("default.log");
     std::string   line;
-    // clang-format off
     getline(file, line);
-    EXPECT_EQ(line, std::format("WARNING: This keyword is deprecated and will be removed."));
-    getline(file, line);
-    EXPECT_EQ(line, std::format(""));
-    getline(file, line);
-    EXPECT_EQ(line, std::format("WARNING: Combining these two methods is discouraged."));
+    EXPECT_EQ(
+        line,
+        std::format("WARNING: This keyword is deprecated and will be removed.")
+    );
     getline(file, line);
     EXPECT_EQ(line, std::format(""));
-    // clang-format on
+    getline(file, line);
+    EXPECT_EQ(
+        line,
+        std::format("WARNING: Combining these two methods is discouraged.")
+    );
+    getline(file, line);
+    EXPECT_EQ(line, std::format(""));
 }

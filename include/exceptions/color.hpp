@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COLOR_HPP_
+#ifndef EXCEPTIONS__COLOR_HPP
+#define EXCEPTIONS__COLOR_HPP
 
-#define _COLOR_HPP_
-
+#include <cstdint>
 #include <ostream>
 
 namespace Color
@@ -34,7 +34,7 @@ namespace Color
      * @brief ANSI escape codes for colors
      *
      */
-    enum Code
+    enum class Code : std::uint8_t
     {
         FG_RED = 31,
         // FG_GREEN   = 32,
@@ -55,15 +55,20 @@ namespace Color
      */
     class Modifier
     {
-        Code code;
+       private:
+        Code _code;
 
        public:
-        explicit Modifier(const Code pCode) : code(pCode) {}
-        friend std::ostream &operator<<(std::ostream &os, const Modifier &mod)
+        explicit Modifier(const Code pCode) : _code(pCode) {}
+        friend std::ostream &operator<<(
+            std::ostream   &ostream,
+            const Modifier &mod
+        )
         {
-            return os << "\033" << "[" << mod.code << "m";
+            return ostream << "\033" << "[" << static_cast<int>(mod._code)
+                           << "m";
         }
     };
 }   // namespace Color
 
-#endif   // _COLOR_HPP_
+#endif   // EXCEPTIONS__COLOR_HPP

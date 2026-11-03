@@ -20,113 +20,80 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_SETTINGS_HPP_
+#ifndef SETTINGS__OPTIMIZER_SETTINGS_HPP
+#define SETTINGS__OPTIMIZER_SETTINGS_HPP
 
-#define _OPTIMIZER_SETTINGS_HPP_
+#include <cstddef>
+#include <optional>
 
-#include <cstddef>       // for size_t
-#include <optional>      // for optional
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include "enums/optimizer.hpp"
+#include "setting.hpp"
 
-#include "defaults.hpp"   // for _OPTIMIZER_DEFAULT_
-
-namespace settings
+/**
+ * @brief OptimizerSettings
+ *
+ * @details stores all information about the optimizer
+ *
+ */
+class OptimizerSettings
 {
-    /**
-     * @class enum OptimizerType
-     *
-     */
-    enum class OptimizerType : size_t
-    {
-        NONE,
-        STEEPEST_DESCENT,
-        ADAM
-    };
+   private:
+    Setting<OptimizerType> _optimizer;
+    Setting<LearningRate>  _lRStrategy;
 
-    /**
-     * @class enum LREnum
-     *
-     */
-    enum class LREnum : size_t
-    {
-        NONE,
-        CONSTANT,
-        CONSTANT_DECAY,
-        EXPONENTIAL_DECAY,
-        LINESEARCH_WOLFE
-    };
+    Setting<size_t> _nEpochs;
+    Setting<size_t> _lRupdateFrequency;
 
-    std::string string(const OptimizerType method);
-    std::string string(const LREnum method);
+    Setting<double> _initialLearningRate;
+    Setting<double> _minLearningRate;
 
-    /**
-     * @class OptimizerSettings
-     *
-     * @brief stores all information about the optimizer
-     *
-     */
-    class OptimizerSettings
-    {
-       private:
-        // clang-format off
-        static inline OptimizerType _optimizer = OptimizerType::STEEPEST_DESCENT;
-        static inline LREnum _lRStrategy   = LREnum::EXPONENTIAL_DECAY;
+    Setting<double> _learningRateDecay;
+    Setting<double> _maxLearningRate;
 
-        static inline size_t _nEpochs           = defaults::N_EPOCHS_DEFAULT;
-        static inline size_t _lRupdateFrequency = defaults::LR_UPDATE_FREQUENCY_DEFAULT;
+   public:
+    OptimizerSettings();
 
-        static inline double _initialLearningRate = defaults::INITIAL_LEARNING_RATE_DEFAULT;
-        static inline double _minLearningRate     = defaults::MIN_LEARNING_RATE_DEFAULT;
-        // clang-format on
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-        static inline std::optional<double> _learningRateDecay;
-        static inline std::optional<double> _maxLearningRate;
+    void setOptimizer(OptimizerType optimizer);
+    void setLearningRateStrategy(LearningRate);
 
-       public:
-        /***************************
-         * standard setter methods *
-         ***************************/
+    void setNumberOfEpochs(size_t);
+    void setLRUpdateFrequency(size_t);
 
-        static void setOptimizer(const std::string_view &optimizer);
-        static void setOptimizer(const OptimizerType optimizer);
+    void setInitialLearningRate(double);
+    void setLearningRateDecay(double);
 
-        static void setLearningRateStrategy(const std::string_view &);
-        static void setLearningRateStrategy(const LREnum);
+    void setMaxLearningRate(double);
+    void setMinLearningRate(double);
 
-        static void setNumberOfEpochs(const size_t);
-        static void setLRUpdateFrequency(const size_t);
+    /******************************
+     * validation helper methods *
+     ******************************/
 
-        static void setInitialLearningRate(const double);
-        static void setLearningRateDecay(const double);
+    void validateLearningRateStrategy() const;
+    void validateLearningRateBounds() const;
 
-        static void setMaxLearningRate(const double);
-        static void setMinLearningRate(const double);
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-        /******************************
-         * validation helper methods *
-         ******************************/
+    [[nodiscard]] OptimizerType getOptimizer() const;
+    [[nodiscard]] LearningRate  getLearningRateStrategy() const;
 
-        static void validateLearningRateStrategy();
-        static void validateLearningRateBounds();
+    [[nodiscard]] size_t getNumberOfEpochs() const;
+    [[nodiscard]] size_t getLRUpdateFrequency() const;
 
-        /***************************
-         * standard getter methods *
-         ***************************/
+    [[nodiscard]] double getInitialLearningRate() const;
+    [[nodiscard]] double getMinLearningRate() const;
 
-        [[nodiscard]] static OptimizerType getOptimizer();
-        [[nodiscard]] static LREnum        getLearningRateStrategy();
+    [[nodiscard]] double                getLearningRateDecay() const;
+    [[nodiscard]] std::optional<double> getMaxLearningRate() const;
 
-        [[nodiscard]] static size_t getNumberOfEpochs();
-        [[nodiscard]] static size_t getLRUpdateFrequency();
+    [[nodiscard]] bool isLearningRateDecaySet() const;
+    [[nodiscard]] bool isMaxLearningRateSet() const;
+};
 
-        [[nodiscard]] static double getInitialLearningRate();
-        [[nodiscard]] static double getMinLearningRate();
-
-        [[nodiscard]] static std::optional<double> getLearningRateDecay();
-        [[nodiscard]] static std::optional<double> getMaxLearningRate();
-
-    };   // namespace settings
-}   // namespace settings
-
-#endif   // _OPTIMIZER_SETTINGS_HPP_
+#endif   // SETTINGS__OPTIMIZER_SETTINGS_HPP

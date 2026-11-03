@@ -20,17 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SPC_INTRA_WATER_TPP_
+#ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP
+#define WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP
 
-#define _SPC_INTRA_WATER_TPP_
+#include <cmath>
 
-#include <cmath>   // for sin
-
-#include "SPCIntraWater.hpp"   // for SPCIntraWater
+#include "SPCIntraWater.hpp"
+#include "degenerateGeometry.hpp"
 #include "globalTimer.hpp"
-#include "hybridSettings.hpp"   // for HybridSettings
-#include "physicalData.hpp"     // for PhysicalData
-#include "simulationBox.hpp"    // for SimulationBox
+#include "hybridSettings.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @brief Calculate intramolecular SPC water interactions for all water
@@ -43,7 +43,8 @@
  * - Accumulates bond energy, angle energy, and virial contributions.
  * - Handles hybrid-zone smoothing factors if applicable.
  *
- * @param box The simulation box containing water molecules and PBC settings.
+ * @param simulationBox The simulation box containing water molecules and PBC
+ * settings.
  * @param physicalData The physical data container to accumulate energies and
  * virial.
  *
@@ -52,8 +53,8 @@
  *
  * @note Inactive molecules are skipped.
  */
-void waterModel::SPCIntraWater::calculate(
-    molsys::SimulationBox&      box,
+inline void waterModel::SPCIntraWater::calculate(
+    molsys::SimulationBox&      simulationBox,
     physicalData::PhysicalData& physicalData
 )
 {
@@ -64,11 +65,11 @@ void waterModel::SPCIntraWater::calculate(
     const auto kOHBond      = getForceConstantOHBond();
     const auto kHOHAngle    = getForceConstantHOHAngle();
 
-    for (auto& water : box.getWaterTypeMolecules())
+    for (auto& water : simulationBox.getWaterTypeMolecules())
     {
-        auto& oxygen    = water.getAtom(0);
-        auto& hydrogen1 = water.getAtom(1);
-        auto& hydrogen2 = water.getAtom(2);
+        auto& oxygen    = water.getAtom(AtomIndex{0});
+        auto& hydrogen1 = water.getAtom(AtomIndex{1});
+        auto& hydrogen2 = water.getAtom(AtomIndex{2});
 
         const auto posO  = oxygen.getPosition();
         const auto posH1 = hydrogen1.getPosition();
@@ -76,9 +77,11 @@ void waterModel::SPCIntraWater::calculate(
 
         auto dOH1 = posO - posH1;
 
-        box.applyPBC(dOH1);
+        simulationBox.applyPBC(dOH1);
 
-        const auto distOH1          = norm(dOH1);
+        const auto distOH1 = norm(dOH1);
+        waterModel::checkNonDegenerate(distOH1, "O-H1 distance");
+
         const auto deltaDistanceOH1 = distOH1 - eqOHDistance;
 
         auto forceMagnitudeOH1 = -kOHBond * deltaDistanceOH1;
@@ -93,9 +96,11 @@ void waterModel::SPCIntraWater::calculate(
 
         auto dOH2 = posO - posH2;
 
-        box.applyPBC(dOH2);
+        simulationBox.applyPBC(dOH2);
 
-        const auto distOH2          = norm(dOH2);
+        const auto distOH2 = norm(dOH2);
+        waterModel::checkNonDegenerate(distOH2, "O-H2 distance");
+
         const auto deltaDistanceOH2 = distOH2 - eqOHDistance;
 
         auto forceMagnitudeOH2 = -kOHBond * deltaDistanceOH2;
@@ -109,7 +114,7 @@ void waterModel::SPCIntraWater::calculate(
         hydrogen2.addForce(-forceOH2);
 
         using enum molsys::HybridZone;
-        using enum settings::SmoothingMethod;
+        using enum SmoothingMethod;
 
         auto       smF       = 0.0;
         const auto smoothing = settings::HybridSettings::getSmoothingMethod();
@@ -128,6 +133,11 @@ void waterModel::SPCIntraWater::calculate(
         physicalData.addAngleEnergy(-forceMagnitudeAngle * deltaAngle / 2.0);
 
         const auto normalDistance = distOH1 * distOH2 * ::sin(alpha);
+        waterModel::checkNonDegenerate(
+            normalDistance,
+            "sine of the H-O-H angle times both O-H distances (an angle of "
+            "0, both hydrogens on the same ray from the oxygen)"
+        );
 
         auto normalPosition  = cross(dOH2, dOH1);
         normalPosition      /= normalDistance;
@@ -146,4 +156,4 @@ void waterModel::SPCIntraWater::calculate(
     }
 }
 
-#endif   //  _SPC_INTRA_WATER_TPP_
+#endif   //  WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP

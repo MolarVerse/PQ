@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_MD_ENGINE_HPP_
-
-#define _HYBRID_MD_ENGINE_HPP_
+#ifndef ENGINE__HYBRID_MD_ENGINE_HPP
+#define ENGINE__HYBRID_MD_ENGINE_HPP
 
 #include "mdEngine.hpp"
 #include "qmCapableEngine.hpp"
@@ -39,44 +38,52 @@ namespace engine
      */
     class HybridMDEngine : virtual public MDEngine, public QMCapableEngine
     {
-       protected:
-        void combineInnerOuterForces();
-
-        void addCurrentForcesToInnerAndReset(
-            std::vector<std::shared_ptr<molsys::Atom>>& atoms
-        );
-        void addScaledCurrentForcesToInnerAndReset(
-            std::vector<std::shared_ptr<molsys::Atom>>& atoms,
-            const double                                globalSmF
-        );
-
-        void addCurrentForcesToOuterAndReset(
-            std::vector<std::shared_ptr<molsys::Atom>>& atoms
-        );
-        void addScaledCurrentForcesToOuterAndReset(
-            std::vector<std::shared_ptr<molsys::Atom>>& atoms,
-            const double                                globalSmF
-        );
-
-        void scaleSmoothingMoleculeForcesInner();
-        void scaleSmoothingMoleculeForcesOuter();
-
-        [[nodiscard]] std::unordered_set<size_t> generateInactiveSmoothingMoleculeSet(
-            size_t bitPattern,
-            size_t totalMolecules
-        ) const;
-
-        [[nodiscard]] double calculateGlobalSmoothingFactor(
-            const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
-        ) const;
-
        public:
-        HybridMDEngine()           = default;
+        using MDEngine::MDEngine;
+
         ~HybridMDEngine() override = default;
 
         void calculateForces() override = 0;
+
+       protected:
+        void _combineInnerOuterForces();
+
+        void _addCurrentForcesToInnerAndReset(
+            std::vector<std::shared_ptr<molsys::Atom>>& atoms
+        );
+        void _addScaledCurrentForcesToInnerAndReset(
+            std::vector<std::shared_ptr<molsys::Atom>>& atoms,
+            double                                      globalSmF
+        );
+
+        void _addCurrentForcesToOuterAndReset(
+            std::vector<std::shared_ptr<molsys::Atom>>& atoms
+        );
+        void _addScaledCurrentForcesToOuterAndReset(
+            std::vector<std::shared_ptr<molsys::Atom>>& atoms,
+            double                                      globalSmF
+        );
+
+        void _scaleSmoothingMoleculeForcesInner();
+        void _scaleSmoothingMoleculeForcesOuter();
+
+        [[nodiscard]]
+        static std::unordered_set<size_t> _generateInactiveSmoothingMoleculeSet(
+            size_t bitPattern,
+            size_t totalMolecules
+        );
+
+        [[nodiscard]]
+        static size_t _numberOfSmoothingConfigurations(
+            size_t nSmoothingMolecules
+        );
+
+        [[nodiscard]]
+        double _calculateGlobalSmoothingFactor(
+            const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
+        ) const;
     };
 
 }   // namespace engine
 
-#endif   // _HYBRID_MD_ENGINE_HPP_
+#endif   // ENGINE__HYBRID_MD_ENGINE_HPP

@@ -20,12 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTEGRATOR_HPP_
-
-#define _INTEGRATOR_HPP_
-
-#include <string>        // for string
-#include <string_view>   // for string_view
+#ifndef INTEGRATOR__INTEGRATOR_HPP
+#define INTEGRATOR__INTEGRATOR_HPP
 
 namespace molsys
 {
@@ -43,30 +39,20 @@ namespace integrator
      */
     class Integrator
     {
-       protected:
-        std::string _integratorType;   // TODO: make enum
-
        public:
-        explicit Integrator(const std::string_view integratorType);
         Integrator()          = default;
         virtual ~Integrator() = default;
 
         virtual void firstStep(molsys::SimulationBox &)  = 0;
         virtual void secondStep(molsys::SimulationBox &) = 0;
 
-        void integrateVelocities(molsys::Atom *) const;
-        void integratePositions(
+        static void integrateVelocities(molsys::Atom *);
+        static void integratePositions(
             molsys::Atom *,
             const molsys::SimulationBox &
-        ) const;
-
-        /********************************
-         * standard getters and setters *
-         ********************************/
-
-        [[nodiscard]] std::string_view getIntegratorType() const;
+        );
     };
 
 }   // namespace integrator
 
-#endif   // _INTEGRATOR_HPP_
+#endif   // INTEGRATOR__INTEGRATOR_HPP

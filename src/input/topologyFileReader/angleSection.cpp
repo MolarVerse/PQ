@@ -22,133 +22,145 @@
 
 #include "angleSection.hpp"
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <string>    // for stoul, string, operator==, char_traits
-#include <vector>    // for vector
+#include <format>
+#include <string>
+#include <vector>
 
-#include "angleForceField.hpp"   // for AngleForceField
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for TopologyException
-#include "simulationBox.hpp"     // for SimulationBox
+#include "angleForceField.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "simulationBox.hpp"
 
-using namespace input::topology;
-using namespace molsys;
-using namespace forceField;
-using namespace customException;
-using namespace engine;
-
-/**
- * @brief processes the angle section of the topology file
- *
- * @details one line consists of 4 or 5 elements:
- * 1. atom index 1
- * 2. atom index 2 (center atom)
- * 3. atom index 3
- * 4. angle type
- * 5. linker marked with a '*' (optional)
- *
- * @param line
- * @param engine
- *
- * @throws TopologyException if number of elements in line is
- * not 4 or 5
- * @throws TopologyException if atom indices are the same
- * (=same atoms)
- * @throws TopologyException if fifth element is not a '*'
- */
-void AngleSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::topology
 {
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
-    if (lineElements.size() != 4 && lineElements.size() != 5)
+
+    /**
+     * @brief processes the angle section of the topology file
+     *
+     * @details one line consists of 4 or 5 elements:
+     * 1. atom index 1
+     * 2. atom index 2 (center atom)
+     * 3. atom index 3
+     * 4. angle type
+     * 5. linker marked with a '*' (optional)
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the topology file being processed
+     *
+     * @throws exc::TopologyException if number of elements in line is
+     * not 4 or 5
+     * @throws exc::TopologyException if atom indices are the same
+     * (=same atoms)
+     * @throws exc::TopologyException if fifth element is not a '*'
+     */
+    void AngleSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine,
+        size_t                    lineNumber
+    )
     {
-        throw TopologyException(
-            std::format(
-                "Wrong number of arguments in topology file angle section at "
-                "line "
-                "{} - number of elements has to be 4 or 5!",
-                _lineNumber
-            )
-        );
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 4 && lineElements.size() != 5)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Wrong number of arguments in topology file angle section "
+                    "at "
+                    "line "
+                    "{} - number of elements has to be 4 or 5!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto atom1     = stoul(lineElements[0]);
+        auto atom2     = stoul(lineElements[1]);
+        auto atom3     = stoul(lineElements[2]);
+        auto angleType = AngleId{stoul(lineElements[3])};
+        auto isLinker  = false;
+
+        if (5 == lineElements.size())
+        {
+            if (lineElements[4] == "*")
+                isLinker = true;
+
+            else
+            {
+                throw exc::TopologyException(
+                    std::format(
+                        "Fifth entry in topology file in angle section has to "
+                        "be a "
+                        "\'*\' or empty at line {}!",
+                        lineNumber
+                    )
+                );
+            }
+        }
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file angle section at line {} - atoms cannot be "
+                    "the "
+                    "same!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto &simBox = engine.getSimulationBox();
+
+        const auto [molecule1, atomIdx1] =
+            simBox.findMoleculeByGlobalAtomIndex(atom1);
+        const auto [molecule2, atomIdx2] =
+            simBox.findMoleculeByGlobalAtomIndex(atom2);
+        const auto [molecule3, atomIdx3] =
+            simBox.findMoleculeByGlobalAtomIndex(atom3);
+
+        const auto mols        = {molecule2, molecule1, molecule3};
+        const auto atomIndices = {atomIdx2, atomIdx1, atomIdx3};
+
+        auto angleForceField =
+            ff::AngleForceField(mols, atomIndices, angleType);
+        angleForceField.setIsLinker(isLinker);
+
+        engine.getForceField()->addAngle(angleForceField);
     }
 
-    auto atom1     = stoul(lineElements[0]);
-    auto atom2     = stoul(lineElements[1]);
-    auto atom3     = stoul(lineElements[2]);
-    auto angleType = AngleId{stoul(lineElements[3])};
-    auto isLinker  = false;
+    /**
+     * @brief returns the keyword of the angle section
+     *
+     * @return "angles"
+     */
+    std::string AngleSection::keyword() { return "angles"; }
 
-    if (5 == lineElements.size())
+    /**
+     * @brief checks if angle sections ends normally
+     *
+     * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
+     *
+     * @throws exc::TopologyException if endedNormal is false
+     */
+    void AngleSection::endedNormally(
+        const bool endedNormal,
+        size_t     lineNumber
+    ) const
     {
-        if (lineElements[4] == "*")
-            isLinker = true;
-
-        else
+        if (!endedNormal)
         {
-            throw TopologyException(
+            throw exc::TopologyException(
                 std::format(
-                    "Fifth entry in topology file in angle section has to be a "
-                    "\'*\' or empty at line {}!",
-                    _lineNumber
+                    "Topology file angle section at line {} - no end of "
+                    "section "
+                    "found!",
+                    lineNumber
                 )
             );
         }
     }
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 
-    if (atom1 == atom2 || atom1 == atom3 || atom2 == atom3)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file angle section at line {} - atoms cannot be the "
-                "same!",
-                _lineNumber
-            )
-        );
-    }
-
-    auto &simBox = engine.getSimulationBox();
-
-    const auto [molecule1, atomIdx1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIdx2] = simBox.findMoleculeByAtomIndex(atom2);
-    const auto [molecule3, atomIdx3] = simBox.findMoleculeByAtomIndex(atom3);
-
-    const auto mols = std::vector<Molecule *>{molecule2, molecule1, molecule3};
-    const auto atomIndices = std::vector<size_t>{atomIdx2, atomIdx1, atomIdx3};
-
-    auto angleForceField = AngleForceField(mols, atomIndices, angleType);
-    angleForceField.setIsLinker(isLinker);
-
-    engine.getForceField()->addAngle(angleForceField);
-}
-
-/**
- * @brief returns the keyword of the angle section
- *
- * @return "angles"
- */
-std::string AngleSection::keyword() { return "angles"; }
-
-/**
- * @brief checks if angle sections ends normally
- *
- * @param endedNormal
- *
- * @throws TopologyException if endedNormal is false
- */
-void AngleSection::endedNormally(const bool endedNormal) const
-{
-    if (!endedNormal)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file angle section at line {} - no end of section "
-                "found!",
-                _lineNumber
-            )
-        );
-    }
-}
+}   // namespace input::topology

@@ -31,29 +31,33 @@
 #include "celllist.hpp"
 #include "coulombPotential.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
 #include "lennardJonesPair.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "waterModelSettings.hpp"
 
 namespace
 {
-    std::shared_ptr<potential::GuffNonCoulomb> makeNonCoulombPotential()
+    std::shared_ptr<pot::GuffNonCoulomb> makeNonCoulombPotential()
     {
-        auto nonCoulomb = std::make_shared<potential::GuffNonCoulomb>();
+        auto nonCoulomb = std::make_shared<pot::GuffNonCoulomb>();
         nonCoulomb->resizeGuff(1);
         nonCoulomb->resizeGuff(0, 1);
         nonCoulomb->resizeGuff(0, 0, 1);
         nonCoulomb->resizeGuff(0, 0, 0, 1);
 
-        const auto pair = std::make_shared<potential::LennardJonesPair>(
+        const auto pair = std::make_shared<pot::LennardJonesPair>(
             benchmarkSetup::cutOff,
-            1.0,
-            1.0
+            LJParams{.c6 = 1.0, .c12 = 1.0}
         );
-        nonCoulomb->setGuffNonCoulPair({1, 1, 0, 0}, pair);
+        nonCoulomb->setGuffNonCoulPair(
+            {MolType{1}, MolType{1}, AtomType{0}, AtomType{0}},
+            pair
+        );
 
         return nonCoulomb;
     }
@@ -67,24 +71,20 @@ namespace
         settings::PotentialSettings::setCoulombRadiusCutOff(
             benchmarkSetup::cutOff
         );
-        potential::CoulombPotential::setCoulombRadiusCutOff(
-            benchmarkSetup::cutOff
-        );
-        potential::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        potential::CoulombPotential::setCoulombForceCutOff(0.0);
+        pot::CoulombPotential::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
+        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
+        pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
         PotentialType forceCalculation;
         forceCalculation.makeCoulombPotential(
-            potential::CoulombShiftedPotential(benchmarkSetup::cutOff)
+            pot::CoulombShiftedPotential(benchmarkSetup::cutOff)
         );
         forceCalculation.setNonCoulombPotential(makeNonCoulombPotential());
 
         molsys::CellList cellList;
-        if constexpr (std::is_same_v<
-                          PotentialType,
-                          potential::PotentialCellList>)
+        if constexpr (std::is_same_v<PotentialType, pot::PotentialCellList>)
         {
-            settings::Settings::activateCellList();
+            settings::GeneralSettings::activateCellList();
             cellList.setNumberOfCells(cellsPerSide);
             cellList.resizeCells();
             cellList.setup(simBox);
@@ -92,6 +92,7 @@ namespace
         }
 
         physicalData::PhysicalData physicalData;
+        WaterModelSettings         waterModelSettings;
 
         for (auto _ : state)
         {
@@ -99,7 +100,12 @@ namespace
             benchmarkSetup::resetForces(simBox);
             state.ResumeTiming();
 
-            forceCalculation.calculateForces(simBox, physicalData, cellList);
+            forceCalculation.calculateForces(
+                simBox,
+                physicalData,
+                cellList,
+                waterModelSettings
+            );
             benchmark::DoNotOptimize(physicalData.getCoulombEnergy());
             benchmark::DoNotOptimize(physicalData.getNonCoulombEnergy());
         }
@@ -110,7 +116,7 @@ namespace
         state.SetComplexityN(numberOfMolecules);
     }
 
-    BENCHMARK_TEMPLATE(BM_ForceCalculation, potential::PotentialBruteForce)
+    BENCHMARK_TEMPLATE(BM_ForceCalculation, pot::PotentialBruteForce)
         ->ArgName("cells_per_side")
         ->Arg(5)
         ->Arg(6)
@@ -118,7 +124,7 @@ namespace
         ->Arg(10)
         ->Complexity(benchmark::oNSquared);
 
-    BENCHMARK_TEMPLATE(BM_ForceCalculation, potential::PotentialCellList)
+    BENCHMARK_TEMPLATE(BM_ForceCalculation, pot::PotentialCellList)
         ->ArgName("cells_per_side")
         ->Arg(5)
         ->Arg(8)

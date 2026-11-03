@@ -20,48 +20,46 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_SIMULATION_BOX_HPP_
+#ifndef TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP
+#define TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP
 
-#define _TEST_SIMULATION_BOX_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for make_shared, __shared_ptr_access, share...
-
-#include "atom.hpp"            // for Atom
-#include "molecule.hpp"        // for Molecule
-#include "moleculeType.hpp"    // for MoleculeType
-#include "simulationBox.hpp"   // for SimulationBox
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
+#include "simulationBox.hpp"
 
 class TestSimulationBox : public ::testing::Test
 {
    protected:
+    std::unique_ptr<molsys::SimulationBox> _simulationBox;
+
     void SetUp() override
     {
-        _simulationBox = new molsys::SimulationBox();
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         auto molecule1 = molsys::Molecule();
         auto molecule2 = molsys::Molecule();
-
-        molecule1.setNumberOfAtoms(3);
-        molecule2.setNumberOfAtoms(2);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        atom3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
-        atom1->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setForce(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        atom3->setForce(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0));
+        atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0));
+        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0));
+        atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0));
         atom1->setMass(1.0);
         atom2->setMass(2.0);
         atom3->setMass(3.0);
 
-        molecule1.setMolMass(6.0);
-        molecule1.setMoltype(1);
+        molecule1.setMoltype(MolType{1});
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
         molecule1.addAtom(atom3);
@@ -69,23 +67,22 @@ class TestSimulationBox : public ::testing::Test
         auto atom4 = std::make_shared<molsys::Atom>();
         auto atom5 = std::make_shared<molsys::Atom>();
 
-        atom4->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom5->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        atom4->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom5->setForce(linearAlgebra::Vec3D(0.0, 0.0, 1.0));
+        atom4->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom5->setPosition(linalg::Vec3D(1.0, 0.0, 0.0));
+        atom4->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom5->setForce(linalg::Vec3D(0.0, 0.0, 1.0));
         atom4->setMass(1.0);
         atom5->setMass(2.0);
 
-        molecule2.setMolMass(3.0);
-        molecule2.setMoltype(2);
+        molecule2.setMoltype(MolType{2});
         molecule2.addAtom(atom4);
         molecule2.addAtom(atom5);
 
         _simulationBox->addMolecule(molecule1);
         _simulationBox->addMolecule(molecule2);
 
-        auto moleculeType1 = molsys::MoleculeType(1);
-        auto moleculeType2 = molsys::MoleculeType(2);
+        const auto moleculeType1 = molsys::MoleculeType(MolType{1});
+        const auto moleculeType2 = molsys::MoleculeType(MolType{2});
 
         _simulationBox->addMoleculeType(moleculeType1);
         _simulationBox->addMoleculeType(moleculeType2);
@@ -95,12 +92,9 @@ class TestSimulationBox : public ::testing::Test
         _simulationBox->addAtom(atom4);
         _simulationBox->addAtom(atom5);
 
-        _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simulationBox->setBox(orthoBox, false);
     }
-
-    void TearDown() override { delete _simulationBox; }
-
-    molsys::SimulationBox *_simulationBox;
 };
 
-#endif   // _TEST_SIMULATION_BOX_HPP_
+#endif   // TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP

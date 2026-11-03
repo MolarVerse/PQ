@@ -4,13 +4,15 @@ on:
   pull_request:
     branches:
       - dev
+      - NEXT
     types: [opened, reopened, synchronize]
 
 jobs:
   check-changelog-fragment:
     if: >-
       github.event.pull_request.head.repo.full_name != github.repository ||
-      github.event.pull_request.head.ref != 'main'
+      (github.event.pull_request.head.ref != 'main' &&
+      !startsWith(github.event.pull_request.head.ref, 'merge/'))
     runs-on: ubuntu-latest
 
     steps:

@@ -22,16 +22,15 @@
 
 #include "testRestartFileReader.hpp"
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <gtest/gtest.h>
 
-#include "fileSettings.hpp"          // for FileSettings
-#include "gtest/gtest.h"             // for Message, TestPartResult
-#include "moldescriptorReader.hpp"   // for MoldescriptorReader
-#include "restartFileReader.hpp"     // for RstFileReader, readRstFile
-#include "restartFileSection.hpp"    // for RstFileSection, readInput
+#include <string>
+#include <vector>
 
-using namespace input;
+#include "fileSettings.hpp"
+#include "moldescriptorReader.hpp"
+#include "restartFileReader.hpp"
+#include "restartFileSection.hpp"
 
 /**
  * @brief tests determineSection base on the first element of the line
@@ -39,8 +38,8 @@ using namespace input;
  */
 TEST_F(TestRstFileReader, determineSection)
 {
-    std::string                    filename = "examples/setup/h2o_qmcfc.rst";
-    restartFile::RestartFileReader rstFileReader(filename, *_engine);
+    std::string filename = "examples/setup/h2o_qmcfc.rst";
+    input::restartFile::RestartFileReader rstFileReader(filename, *_engine);
 
     auto  lineElements = std::vector<std::string>{"sTeP", "1"};
     auto *section      = rstFileReader.determineSection(lineElements);
@@ -64,11 +63,11 @@ TEST_F(TestRstFileReader, rstFileReading)
     settings::FileSettings::setMolDescriptorFileName(
         "examples/setup/moldescriptor.dat"
     );
-    molDescriptor::MoldescriptorReader moldescriptor(*_engine);
+    input::molDescriptor::MoldescriptorReader moldescriptor(*_engine);
 
     std::string filename = "examples/setup/h2o-qmcf.rst";
     settings::FileSettings::setStartFileName(filename);
 
     moldescriptor.read();
-    ASSERT_NO_THROW(restartFile::readRestartFile(*_engine));
+    ASSERT_NO_THROW(input::restartFile::readRestartFile(*_engine));
 }

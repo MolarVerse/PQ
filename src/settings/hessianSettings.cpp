@@ -22,83 +22,118 @@
 
 #include "hessianSettings.hpp"
 
-#include "stringUtilities.hpp"
+#include "defaults.hpp"
 
-using namespace settings;
-using namespace utilities;
-
-std::string settings::string(const HessianBuilderType builder)
+/**
+ * @brief Construct a new HessianSettings object with default values.
+ *
+ * Initializes the Hessian settings with default file paths, displacement,
+ * optimization flag, and Hessian builder type.
+ */
+HessianSettings::HessianSettings()
+    : _hessianFile(DefaultFiles::hessianFile),
+      _hessianInfoFile(DefaultFiles::hessianInfoFile),
+      _displacement(defaults::HESSIAN_DISPLACEMENT_DEFAULT),
+      _optimizeBeforeHessian(defaults::HESSIAN_OPTIMIZE_DEFAULT),
+      _builder(HessianBuilderType::CENTRAL)
 {
-    switch (builder)
-    {
-        using enum HessianBuilderType;
-
-        case FINITE_DIFFERENCE_FORCES_CENTRAL: return "CENTRAL";
-        case FINITE_DIFFERENCE_FORCES_FORWARD: return "FORWARD";
-        case FINITE_DIFFERENCE_FORCES_FIVE_POINT: return "FIVE-POINT";
-        case ANALYTIC: return "ANALYTIC";
-        case NONE: break;
-    }
-
-    return "NONE";
 }
 
-void HessianSettings::setHessianFile(const std::string_view &filename)
+/**
+ * @brief Set the Hessian file path.
+ *
+ * @param filename The path to the Hessian file.
+ */
+void HessianSettings::setHessianFile(const std::string &filename)
 {
-    _hessianFile = filename;
+    _hessianFile.set(filename);
 }
 
-void HessianSettings::setHessianInfoFile(const std::string_view &filename)
+/**
+ * @brief Set the Hessian info file path.
+ *
+ * @param filename The path to the Hessian info file.
+ */
+void HessianSettings::setHessianInfoFile(const std::string &filename)
 {
-    _hessianInfoFile = filename;
+    _hessianInfoFile.set(filename);
 }
 
-void HessianSettings::setDisplacement(const double displacement)
+/**
+ * @brief Set the displacement value for Hessian calculations.
+ *
+ * @param displacement The displacement value to be used.
+ */
+void HessianSettings::setDisplacement(double displacement)
 {
-    _displacement = displacement;
+    _displacement.set(displacement);
 }
 
-void HessianSettings::setOptimizeBeforeHessian(const bool optimize)
+/**
+ * @brief Set whether to optimize before Hessian calculations.
+ *
+ * @param optimize True to optimize before Hessian calculations, false
+ * otherwise.
+ */
+void HessianSettings::setOptimizeBeforeHessian(bool optimize)
 {
-    _optimizeBeforeHessian = optimize;
+    _optimizeBeforeHessian.set(optimize);
 }
 
-void HessianSettings::setBuilder(const std::string_view &builder)
+/**
+ * @brief Set the Hessian builder type.
+ *
+ * @param builder The Hessian builder type to be used.
+ */
+void HessianSettings::setBuilder(HessianBuilderType builder)
 {
-    using enum HessianBuilderType;
-
-    const auto builderLower = toLowerAndReplaceDashesCopy(builder);
-
-    if ("central" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_CENTRAL);
-
-    else if ("forward" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_FORWARD);
-
-    else if ("five_point" == builderLower)
-        setBuilder(FINITE_DIFFERENCE_FORCES_FIVE_POINT);
-
-    else if ("analytic" == builderLower)
-        setBuilder(ANALYTIC);
-
-    else
-        setBuilder(NONE);
+    _builder.set(builder);
 }
 
-void HessianSettings::setBuilder(const HessianBuilderType builder)
+/**
+ * @brief Get the Hessian file path.
+ *
+ * @return The path to the Hessian file.
+ */
+std::string HessianSettings::getHessianFile() const
 {
-    _builder = builder;
+    return _hessianFile.get();
 }
 
-std::string HessianSettings::getHessianFile() { return _hessianFile; }
-
-std::string HessianSettings::getHessianInfoFile() { return _hessianInfoFile; }
-
-double HessianSettings::getDisplacement() { return _displacement; }
-
-bool HessianSettings::optimizeBeforeHessian()
+/**
+ * @brief Get the Hessian info file path.
+ *
+ * @return The path to the Hessian info file.
+ */
+std::string HessianSettings::getHessianInfoFile() const
 {
-    return _optimizeBeforeHessian;
+    return _hessianInfoFile.get();
 }
 
-HessianBuilderType HessianSettings::getBuilder() { return _builder; }
+/**
+ * @brief Get the displacement value for Hessian calculations.
+ *
+ * @return The displacement value.
+ */
+double HessianSettings::getDisplacement() const { return _displacement.get(); }
+
+/**
+ * @brief Check whether to optimize before Hessian calculations.
+ *
+ * @return True if optimization before Hessian calculations is enabled,
+ * false otherwise.
+ */
+bool HessianSettings::optimizeBeforeHessian() const
+{
+    return _optimizeBeforeHessian.get();
+}
+
+/**
+ * @brief Get the Hessian builder type.
+ *
+ * @return The Hessian builder type.
+ */
+HessianBuilderType HessianSettings::getBuilder() const
+{
+    return _builder.get();
+}

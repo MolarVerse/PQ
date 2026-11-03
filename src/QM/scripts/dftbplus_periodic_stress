@@ -420,6 +420,62 @@ if ($pointcharges == 1)
   `mv $dftb_out  $dftb_out_prev`;
 }
 
+# DFTB+ includes the QM-point-charge Coulomb energy in its total energy, but PQ
+# adds the same interaction classically -> remove it from the QM energy
+if ($pointcharges == 1 && $energy_found == 1 && $charges_found == 1)
+{
+  my $bohr = 0.529177210903;
+
+  open (GEOM_FILE, "< geom.gen") or
+    die "\n\n\t (-) $progname: Error opening file geom.gen\n";
+  my ($n_qm, $format) = split ' ', <GEOM_FILE>;
+  die "\n\n\t (-) $progname: Fractional coordinates are not supported with point charges.\n"
+    if ($format eq 'F');
+  <GEOM_FILE>;
+  my @qm_xyz = ();
+  for (1 .. $n_qm)
+  {
+    my @fields = split ' ', <GEOM_FILE>;
+    push @qm_xyz, [@fields[2 .. 4]];
+  }
+  close (GEOM_FILE);
+
+  open (CHRG_FILE, "< $qm_charges") or
+    die "\n\n\t (-) $progname: Error opening file '$qm_charges'\n";
+  my @qm_q = ();
+  for (1 .. $n_qm) { push @qm_q, 0 + <CHRG_FILE>; }
+  close (CHRG_FILE);
+
+  my $e_pc = 0.0;
+  open (PC_FILE, "< $pointcharges_file") or
+    die "\n\n\t (-) $progname: Error opening file $pointcharges_file'\n";
+  while (<PC_FILE>)
+  {
+    my @pc = split;
+    next if (scalar(@pc) < 4);
+    for my $i (0 .. $n_qm - 1)
+    {
+      my $r = sqrt(($qm_xyz[$i][0] - $pc[0])**2 +
+                   ($qm_xyz[$i][1] - $pc[1])**2 +
+                   ($qm_xyz[$i][2] - $pc[2])**2) / $bohr;
+      $e_pc += $qm_q[$i] * $pc[3] / $r;
+    }
+  }
+  close (PC_FILE);
+
+  open (FORCES, "< $qm_forces") or
+    die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
+  my @forces_lines = <FORCES>;
+  close (FORCES);
+
+  $forces_lines[0] = sprintf("%20.9f\n", $forces_lines[0] - $e_pc);
+
+  open (FORCES, "> $qm_forces") or
+    die "\n\n\t (-) $progname: Error opening file '$qm_forces'\n";
+  print FORCES @forces_lines;
+  close (FORCES);
+}
+
 if ($energy_found != 1)
 {
   printf("\n\n\t (-) $progname: Error encountered while reading $dftb_out.");

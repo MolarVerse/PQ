@@ -22,173 +22,174 @@
 
 #include "guffNonCoulomb.hpp"
 
-using namespace potential;
-
-/**
- * @brief resizes the outermost vector of the 4d vector _guffNonCoulombPairs
- *
- * @param numberOfMoleculeTypes
- */
-void GuffNonCoulomb::resizeGuff(const size_t numberOfMoleculeTypes)
+namespace pot
 {
-    _guffNonCoulombPairs.resize(numberOfMoleculeTypes);
-}
 
-/**
- * @brief resizes the second outermost vector of the 4d vector
- * _guffNonCoulombPairs
- *
- * @param m1
- * @param numberOfMoleculeTypes
- */
-void GuffNonCoulomb::resizeGuff(
-    const size_t m1,
-    const size_t numberOfMoleculeTypes
-)
-{
-    _guffNonCoulombPairs[m1].resize(numberOfMoleculeTypes);
-}
+    /**
+     * @brief resizes the outermost vector of the 4d vector _guffNonCoulombPairs
+     *
+     * @param numberOfMoleculeTypes
+     */
+    void GuffNonCoulomb::resizeGuff(size_t numberOfMoleculeTypes)
+    {
+        _guffNonCoulombPairs.resize(numberOfMoleculeTypes);
+    }
 
-/**
- * @brief resizes the third outermost vector of the 4d vector
- * _guffNonCoulombPairs
- *
- * @param m1
- * @param m2
- * @param numberOfAtoms
- */
-void GuffNonCoulomb::resizeGuff(
-    const size_t m1,
-    const size_t m2,
-    const size_t numberOfAtoms
-)
-{
-    _guffNonCoulombPairs[m1][m2].resize(numberOfAtoms);
-}
+    /**
+     * @brief resizes the second outermost vector of the 4d vector
+     * _guffNonCoulombPairs
+     *
+     * @param mol1
+     * @param numberOfMoleculeTypes
+     */
+    void GuffNonCoulomb::resizeGuff(size_t mol1, size_t numberOfMoleculeTypes)
+    {
+        _guffNonCoulombPairs[mol1].resize(numberOfMoleculeTypes);
+    }
 
-/**
- * @brief resizes the innermost vector of the 4d vector _guffNonCoulombPairs
- *
- * @param m1
- * @param m2
- * @param a1
- * @param numberOfAtoms
- */
-void GuffNonCoulomb::resizeGuff(
-    const size_t m1,
-    const size_t m2,
-    const size_t a1,
-    const size_t numberOfAtoms
-)
-{
-    _guffNonCoulombPairs[m1][m2][a1].resize(numberOfAtoms);
-}
+    /**
+     * @brief resizes the third outermost vector of the 4d vector
+     * _guffNonCoulombPairs
+     *
+     * @param mol1
+     * @param mol2
+     * @param numberOfAtoms
+     */
+    void GuffNonCoulomb::resizeGuff(
+        size_t mol1,
+        size_t mol2,
+        size_t numberOfAtoms
+    )
+    {
+        _guffNonCoulombPairs[mol1][mol2].resize(numberOfAtoms);
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief resizes the innermost vector of the 4d vector _guffNonCoulombPairs
+     *
+     * @param mol1
+     * @param mol2
+     * @param atom1
+     * @param numberOfAtoms
+     */
+    void GuffNonCoulomb::resizeGuff(
+        size_t mol1,
+        size_t mol2,
+        size_t atom1,
+        size_t numberOfAtoms
+    )
+    {
+        _guffNonCoulombPairs[mol1][mol2][atom1].resize(numberOfAtoms);
+    }
 
-/**
- * @brief sets the GuffNonCoulombicPair for the given indices
- *
- * @param indices
- * @param nonCoulombPair
- */
-void GuffNonCoulomb::setGuffNonCoulPair(
-    const std::vector<size_t>             &indices,
-    const std::shared_ptr<NonCoulombPair> &nonCoulombPair
-)
-{
-    const auto m1 = getMolType1(indices) - 1;
-    const auto m2 = getMolType2(indices) - 1;
-    const auto a1 = getAtomType1(indices);
-    const auto a2 = getAtomType2(indices);
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-    _guffNonCoulombPairs[m1][m2][a1][a2] = nonCoulombPair;
-}
+    /**
+     * @brief sets the GuffNonCoulombicPair for the given indices
+     *
+     * @param indices
+     * @param nonCoulombPair
+     */
+    void GuffNonCoulomb::setGuffNonCoulPair(
+        const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+        const std::shared_ptr<NonCoulombPair>                  &nonCoulombPair
+    )
+    {
+        const auto mol1  = std::get<0>(indices).get() - 1;
+        const auto mol2  = std::get<1>(indices).get() - 1;
+        const auto atom1 = std::get<2>(indices).get();
+        const auto atom2 = std::get<3>(indices).get();
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+        _guffNonCoulombPairs[mol1][mol2][atom1][atom2] = nonCoulombPair;
+    }
 
-/**
- * @brief gets a shared pointer to a NonCoulombPair object
- *
- * @param indices
- * @return std::shared_ptr<NonCoulombPair>
- */
-std::shared_ptr<NonCoulombPair> GuffNonCoulomb::getNonCoulPair(
-    const std::vector<size_t> &indices
-)
-{
-    const auto m1 = getMolType1(indices) - 1;
-    const auto m2 = getMolType2(indices) - 1;
-    const auto a1 = getAtomType1(indices);
-    const auto a2 = getAtomType2(indices);
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-    return _guffNonCoulombPairs[m1][m2][a1][a2];
-}
+    /**
+     * @brief gets a shared pointer to a NonCoulombPair object
+     *
+     * @param indices
+     * @return std::shared_ptr<NonCoulombPair>
+     */
+    std::shared_ptr<NonCoulombPair> GuffNonCoulomb::getNonCoulPair(
+        const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+        const std::pair<VdwType, VdwType> & /*vdwTypes*/
+    )
+    {
+        const auto mol1  = std::get<0>(indices).get() - 1;
+        const auto mol2  = std::get<1>(indices).get() - 1;
+        const auto atom1 = std::get<2>(indices).get();
+        const auto atom2 = std::get<3>(indices).get();
 
-/**
- * @brief get the 4d vector of shared pointers to NonCoulombPair objects
- *
- * @details it is a 4d vector with the following structure:
- *         _guffNonCoulombPairs[m1][m2][a1][a2]
- *
- *
- * @return
- * std::vector<std::vector<std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>>>
- */
-std::vector<std::vector<std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>> GuffNonCoulomb::
-    getNonCoulombPairs() const
-{
-    return _guffNonCoulombPairs;
-}
+        return _guffNonCoulombPairs[mol1][mol2][atom1][atom2];
+    }
 
-/**
- * @brief get the molecule type 1
- *
- * @param indices
- * @return size_t
- */
-size_t GuffNonCoulomb::getMolType1(const std::vector<size_t> &indices) const
-{
-    return indices[0];
-}
+    /**
+     * @brief get the 4d vector of shared pointers to NonCoulombPair objects
+     *
+     * @details it is a 4d vector with the following structure:
+     *         _guffNonCoulombPairs[m1][m2][a1][a2]
+     *
+     *
+     * @return
+     * std::vector<std::vector<std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>>>
+     */
+    std::vector<std::vector<std::vector<std::vector<std::shared_ptr<NonCoulombPair>>>>> GuffNonCoulomb::
+        getNonCoulombPairs() const
+    {
+        return _guffNonCoulombPairs;
+    }
 
-/**
- * @brief get the molecule type 2
- *
- * @param indices
- * @return size_t
- */
-size_t GuffNonCoulomb::getMolType2(const std::vector<size_t> &indices) const
-{
-    return indices[1];
-}
+    /**
+     * @brief get the molecule type 1
+     *
+     * @param indices
+     * @return size_t
+     */
+    size_t GuffNonCoulomb::getMolType1(const std::vector<size_t> &indices)
+    {
+        return indices[0];
+    }
 
-/**
- * @brief get the atom type 1
- *
- * @param indices
- * @return size_t
- */
-size_t GuffNonCoulomb::getAtomType1(const std::vector<size_t> &indices) const
-{
-    return indices[2];
-}
+    /**
+     * @brief get the molecule type 2
+     *
+     * @param indices
+     * @return size_t
+     */
+    size_t GuffNonCoulomb::getMolType2(const std::vector<size_t> &indices)
+    {
+        return indices[1];
+    }
 
-/**
- * @brief get the atom type 2
- *
- * @param indices
- * @return size_t
- */
-size_t GuffNonCoulomb::getAtomType2(const std::vector<size_t> &indices) const
-{
-    return indices[3];
-}
+    /**
+     * @brief get the atom type 1
+     *
+     * @param indices
+     * @return size_t
+     */
+    size_t GuffNonCoulomb::getAtomType1(const std::vector<size_t> &indices)
+    {
+        return indices[2];
+    }
+
+    /**
+     * @brief get the atom type 2
+     *
+     * @param indices
+     * @return size_t
+     */
+    size_t GuffNonCoulomb::getAtomType2(const std::vector<size_t> &indices)
+    {
+        return indices[3];
+    }
+
+}   // namespace pot

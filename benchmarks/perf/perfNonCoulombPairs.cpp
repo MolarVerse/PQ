@@ -37,14 +37,27 @@
 #include "buckinghamPair.hpp"
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
+#include "perfAlloc.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto lj    = potential::LennardJonesPair(9.0, 2.0, 3.0);
-    auto buck  = potential::BuckinghamPair(9.0, 1.0, 0.3, 2.0);
-    auto morse = potential::MorsePair(9.0, 1.0, 2.0, 1.5);
+    auto lj   = pot::LennardJonesPair(9.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto buck = pot::BuckinghamPair(
+        9.0,
+        BuckinghamParams{.scaling = 1.0, .dRho = 0.3, .c6 = 2.0}
+    );
+    auto morse = pot::MorsePair(
+        9.0,
+        MorseParams{
+            .dissociationEnergy  = 1.0,
+            .wellWidth           = 2.0,
+            .equilibriumDistance = 1.5
+        }
+    );
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
@@ -52,7 +65,7 @@ int main()
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         const double distance =
-            1.0 + static_cast<double>(i & 255U) * 0.03;   // within cutoff
+            1.0 + (static_cast<double>(i & 255U) * 0.03);   // within cutoff
 
         const auto [eLj, fLj]       = lj.calculate(distance);
         const auto [eBuck, fBuck]   = buck.calculate(distance);

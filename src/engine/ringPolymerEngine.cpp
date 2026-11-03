@@ -22,188 +22,236 @@
 
 #include "ringPolymerEngine.hpp"
 
-#include <algorithm>   // for __for_each_fn
-#include <cstddef>     // for size_t
+#include <algorithm>
+#include <cstddef>
 
-#include "atom.hpp"                                  // for Atom
-#include "constants/internalConversionFactors.hpp"   // for _RPMD_PREFACTOR_
-#include "engineOutput.hpp"                          // for EngineOutput
+#include "atom.hpp"
+#include "constants/internalConversionFactors.hpp"
+#include "engineOutput.hpp"
 #include "globalTimer.hpp"
-#include "outputFileSettings.hpp"    // for OutputFileSettings
-#include "physicalData.hpp"          // for PhysicalData
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "thermostatSettings.hpp"    // for ThermostatSettings
-#include "timingsSettings.hpp"       // for TimingsSettings
+#include "outputFileSettings.hpp"
+#include "physicalData.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
 
-using engine::RingPolymerEngine;
+#ifdef WITH_MPI
+#include "mpi.hpp"
+#endif
 
-using namespace settings;
-using namespace constants;
-using namespace physicalData;
-
-/**
- * @brief resizes the vector of physical data for the ring polymer beads
- *
- * @param physicalData
- */
-void RingPolymerEngine::resizeRingPolymerBeadPhysicalData(
-    const size_t numberOfBeads
-)
+namespace engine
 {
-    _ringPolymerBeadsPhysicalData.resize(numberOfBeads);
-    _averageRingPolymerBeadsPhysicalData.resize(numberOfBeads);
-}
 
-/**
- * @brief writes the ring polymer output files.
- *
- */
-void RingPolymerEngine::writeOutput()
-{
-    auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
-    auto &rpmdData        = _ringPolymerBeadsPhysicalData;
-
-    const auto outputFreq = OutputFileSettings::getOutputFrequency();
-    const auto step0      = TimingsSettings::getStepCount();
-    const auto effStep    = _step + step0;
-
-    if (0 == _step % outputFreq)
+    /**
+     * @brief resizes the vector of physical data for the ring polymer beads
+     *
+     * @param numberOfBeads
+     */
+    void RingPolymerEngine::resizeRingPolymerBeadPhysicalData(
+        size_t numberOfBeads
+    )
     {
-        _engineOutput.writeXyzFile(*_simulationBox, effStep);
-        _engineOutput.writeVelFile(*_simulationBox, effStep);
-        _engineOutput.writeForceFile(*_simulationBox, effStep);
-        _engineOutput.writeChargeFile(*_simulationBox, effStep);
-        _engineOutput.writeRstFile(*_simulationBox, *_thermostat, effStep);
-
-        _engineOutput.writeRingPolymerRstFile(_ringPolymerBeads);
-        _engineOutput.writeRingPolymerXyzFile(_ringPolymerBeads, effStep);
-        _engineOutput.writeRingPolymerVelFile(_ringPolymerBeads, effStep);
-        _engineOutput.writeRingPolymerForceFile(_ringPolymerBeads, effStep);
-        _engineOutput.writeRingPolymerChargeFile(_ringPolymerBeads, effStep);
+        _ringPolymerBeadsPhysicalData.resize(numberOfBeads);
+        _averageRingPolymerBeadsPhysicalData.resize(numberOfBeads);
     }
 
-    // NOTE:
-    // stop and restart immediately time manager - maximum lost time is en
-    // file writing in last step of simulation but on the other hand setup
-    // is now included in total simulation time Unfortunately, setup is
-    // therefore included in the first looptime output but this is not a big
-    // problem - could also be a feature and not a bug
-    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
-    const auto elapsedTime = timings::GlobalTimer::get().calculateElapsedTime();
-
-    for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
+    /**
+     * @brief writes the ring polymer output files.
+     *
+     */
+    void RingPolymerEngine::writeOutput(
+        const OutputFileSettings &outputSettings
+    )
     {
-        rpmdData[i].setLoopTime(elapsedTime);
-        averageRPMDData[i].updateAverages(rpmdData[i]);
-    }
+        auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
+        auto &rpmdData        = _ringPolymerBeadsPhysicalData;
 
-    if (0 == _step % outputFreq)
-    {
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto effStep    = getStep() + step0;
+
+        if (0 == getStep() % outputFreq)
+        {
+#ifdef WITH_MPI
+            if (mpi::MPI::isRoot())
+#endif
+            {
+                getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
+                getEngineOutput().writeVelFile(getSimulationBox(), effStep);
+                getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+                getEngineOutput().writeChargeFile(getSimulationBox(), effStep);
+                getEngineOutput()
+                    .writeRstFile(getSimulationBox(), getThermostat(), effStep);
+
+                getEngineOutput().writeRingPolymerRstFile(_ringPolymerBeads);
+                getEngineOutput().writeRingPolymerXyzFile(
+                    _ringPolymerBeads,
+                    effStep
+                );
+                getEngineOutput().writeRingPolymerVelFile(
+                    _ringPolymerBeads,
+                    effStep
+                );
+                getEngineOutput().writeRingPolymerForceFile(
+                    _ringPolymerBeads,
+                    effStep
+                );
+                getEngineOutput().writeRingPolymerChargeFile(
+                    _ringPolymerBeads,
+                    effStep
+                );
+            }
+        }
+
+        // NOTE:
+        // stop and restart immediately time manager - maximum lost time is en
+        // file writing in last step of simulation but on the other hand setup
+        // is now included in total simulation time Unfortunately, setup is
+        // therefore included in the first looptime output but this is not a big
+        // problem - could also be a feature and not a bug
+        timings::GlobalTimer::get().stopAndRestartSimulationTimer();
+        const auto elapsedTime =
+            timings::GlobalTimer::get().calculateElapsedTime();
+
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-            averageRPMDData[i].makeAverages(static_cast<double>(outputFreq));
+        {
+            rpmdData[i].setLoopTime(elapsedTime);
+            averageRPMDData[i].updateAverages(rpmdData[i]);
+        }
 
-        _physicalData->copy(mean(rpmdData));
-        _averagePhysicalData = mean(averageRPMDData);
+        if (0 == getStep() % outputFreq)
+        {
+            for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
+                averageRPMDData[i].makeAverages(
+                    static_cast<double>(outputFreq)
+                );
 
-        const auto dt            = TimingsSettings::getTimeStep();
-        const auto effStepDouble = static_cast<double>(effStep);
-        const auto simTime       = effStepDouble * dt * FS_TO_PS;
+            getPhysicalData().copy(mean(rpmdData));
+            getAveragePhysicalData() = mean(averageRPMDData);
 
-        _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInstantEnergyFile(effStep, *_physicalData);
-        _engineOutput.writeMomentumFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInfoFile(simTime, _averagePhysicalData);
+            const auto timeStep      = settings::TimingsSettings::getTimeStep();
+            const auto effStepDouble = static_cast<double>(effStep);
+            const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
 
-        _engineOutput.writeRingPolymerEnergyFile(
-            step0 + _step,
-            averageRPMDData
+#ifdef WITH_MPI
+            if (mpi::MPI::isRoot())
+#endif
+            {
+                getEngineOutput().writeEnergyFile(
+                    effStep,
+                    getAveragePhysicalData(),
+                    getSettings()
+                );
+                getEngineOutput().writeInstantEnergyFile(
+                    effStep,
+                    getPhysicalData(),
+                    getSettings()
+                );
+                getEngineOutput().writeMomentumFile(
+                    effStep,
+                    getAveragePhysicalData()
+                );
+                getEngineOutput().writeInfoFile(
+                    simTime,
+                    getAveragePhysicalData(),
+                    getSettings()
+                );
+
+                getEngineOutput().writeRingPolymerEnergyFile(
+                    step0 + getStep(),
+                    averageRPMDData
+                );
+            }
+
+            for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
+                averageRPMDData[i] = physicalData::PhysicalData();
+
+            getAveragePhysicalData() = physicalData::PhysicalData();
+        }
+
+        for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
+            rpmdData[i].reset();
+    }
+
+    /**
+     * @brief coupling step of ring polymers
+     *
+     */
+    void RingPolymerEngine::coupleRingPolymerBeads()
+    {
+        const auto nBeads = _ringPolymerBeads.size();
+        const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
+        const auto temp =
+            settings::ThermostatSettings::getActualTargetTemperature();
+
+        // to silence narrowing conversion warning -- here not a problem
+        const auto nBeads_ = static_cast<double>(nBeads);
+
+        const auto rpmd_factor =
+            RPMD_PREFACTOR * nBeads_ * nBeads_ * temp * temp;
+
+        for (size_t i = 0; i < nBeads; ++i)
+        {
+            auto &bead1 = _ringPolymerBeads[i];
+            auto &bead2 = _ringPolymerBeads[(i + 1) % nBeads];
+
+            for (size_t j = 0; j < nAtoms; ++j)
+            {
+                auto &atom1 = bead1.getAtom(j);
+                auto &atom2 = bead2.getAtom(j);
+
+                const auto deltaPos = atom2.getPosition() - atom1.getPosition();
+
+                const auto forceConstant = rpmd_factor * atom1.getMass();
+                const auto force         = forceConstant * deltaPos;
+
+                const auto energy = 0.5 * forceConstant * normSquared(deltaPos);
+
+                _ringPolymerBeadsPhysicalData[i].addRingPolymerEnergy(energy);
+
+                atom1.addForce(force);
+                atom2.addForce(-force);
+            }
+        }
+    }
+
+    /**
+     * @brief combining all beads into one simulation box
+     *
+     * @details coords, velocities and forces are averaged over all beads
+     *
+     */
+    void RingPolymerEngine::combineBeads()
+    {
+        const auto numberOfBeads = _ringPolymerBeads.size();
+
+        std::ranges::for_each(
+            getSimulationBox().getAtoms(),
+            [](auto &atom)
+            {
+                atom->setPosition({0.0, 0.0, 0.0});
+                atom->setVelocity({0.0, 0.0, 0.0});
+                atom->setForce({0.0, 0.0, 0.0});
+            }
         );
 
-        for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
-            averageRPMDData[i] = PhysicalData();
+        auto addCoordinates = [this, numberOfBeads](auto &bead)
+        {
+            for (size_t i = 0; i < bead.getNumberOfAtoms(); ++i)
+            {
+                auto      &atom   = bead.getAtom(i);
+                const auto nBeads = static_cast<double>(numberOfBeads);
 
-        _averagePhysicalData = PhysicalData();
+                const auto pos   = atom.getPosition() / nBeads;
+                const auto vel   = atom.getVelocity() / nBeads;
+                const auto force = atom.getForce() / nBeads;
+
+                getSimulationBox().getAtom(i).addPosition(pos);
+                getSimulationBox().getAtom(i).addVelocity(vel);
+                getSimulationBox().getAtom(i).addForce(force);
+            }
+        };
+
+        std::ranges::for_each(_ringPolymerBeads, addCoordinates);
     }
 
-    for (size_t i = 0; i < _ringPolymerBeads.size(); ++i) rpmdData[i].reset();
-}
-
-/**
- * @brief coupling step of ring polymers
- *
- */
-void RingPolymerEngine::coupleRingPolymerBeads()
-{
-    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
-    const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
-    const auto temp   = ThermostatSettings::getActualTargetTemperature();
-
-    // to silence narrowing conversion warning -- here not a problem
-    const auto nBeads_ = static_cast<double>(nBeads);
-
-    const auto rpmd_factor = RPMD_PREFACTOR * nBeads_ * nBeads_ * temp * temp;
-
-    for (size_t i = 0; i < nBeads; ++i)
-    {
-        auto &bead1 = _ringPolymerBeads[i];
-        auto &bead2 = _ringPolymerBeads[(i + 1) % nBeads];
-
-        for (size_t j = 0; j < nAtoms; ++j)
-        {
-            auto &atom1 = bead1.getAtom(j);
-            auto &atom2 = bead2.getAtom(j);
-
-            const auto deltaPos = atom2.getPosition() - atom1.getPosition();
-
-            const auto forceConstant = rpmd_factor * atom1.getMass();
-            const auto force         = forceConstant * deltaPos;
-
-            const auto energy = 0.5 * forceConstant * normSquared(deltaPos);
-
-            _ringPolymerBeadsPhysicalData[i].addRingPolymerEnergy(energy);
-
-            atom1.addForce(force);
-            atom2.addForce(-force);
-        }
-    }
-}
-
-/**
- * @brief combining all beads into one simulation box
- *
- * @details coords, velocities and forces are averaged over all beads
- *
- */
-void RingPolymerEngine::combineBeads()
-{
-    const auto numberOfBeads = RingPolymerSettings::getNumberOfBeads();
-
-    std::ranges::for_each(
-        _simulationBox->getAtoms(),
-        [](auto &atom)
-        {
-            atom->setPosition({0.0, 0.0, 0.0});
-            atom->setVelocity({0.0, 0.0, 0.0});
-            atom->setForce({0.0, 0.0, 0.0});
-        }
-    );
-
-    auto addCoordinates = [this, numberOfBeads](auto &bead)
-    {
-        for (size_t i = 0; i < bead.getNumberOfAtoms(); ++i)
-        {
-            auto      &atom   = bead.getAtom(i);
-            const auto nBeads = static_cast<double>(numberOfBeads);
-
-            const auto pos   = atom.getPosition() / nBeads;
-            const auto vel   = atom.getVelocity() / nBeads;
-            const auto force = atom.getForce() / nBeads;
-
-            _simulationBox->getAtom(i).addPosition(pos);
-            _simulationBox->getAtom(i).addVelocity(vel);
-            _simulationBox->getAtom(i).addForce(force);
-        }
-    };
-
-    std::ranges::for_each(_ringPolymerBeads, addCoordinates);
-}
+}   // namespace engine

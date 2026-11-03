@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VELOCITY_RESCALING_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP
+#define THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP
 
-#define _VELOCITY_RESCALING_THERMOSTAT_HPP_
-
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
+#include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
 
 namespace molsys
@@ -44,13 +43,13 @@ namespace thermostat
     class VelocityRescalingThermostat : public Thermostat
     {
        private:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        rng::RandomNumberGenerator _randomNumberGenerator;
 
         double _tau = 0.0;
 
        public:
         VelocityRescalingThermostat() = default;
-        explicit VelocityRescalingThermostat(const double, const double);
+        explicit VelocityRescalingThermostat(double, double);
         ~VelocityRescalingThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -65,17 +64,17 @@ namespace thermostat
         ) noexcept = delete;
 
         void applyThermostat(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) override;
 
-        void setTau(const double tau);
+        void setTau(double tau);
 
         [[nodiscard]]
-        settings::ThermostatType getThermostatType() const override;
+        ThermostatType getThermostatType() const override;
 
         [[nodiscard]] double getTau() const;
     };
 }   // namespace thermostat
 
-#endif   // _VELOCITY_RESCALING_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP

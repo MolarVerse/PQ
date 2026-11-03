@@ -20,20 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MATH_UTILITIES_HPP_
+#ifndef UTILITIES__MATH_UTILITIES_HPP
+#define UTILITIES__MATH_UTILITIES_HPP
 
-#define _MATH_UTILITIES_HPP_
+#include <cmath>
+#include <cstdlib>
+#include <limits>
 
-#include <cmath>     // for fabs
-#include <cstdlib>   // for abs
-#include <limits>    // for numeric_limits
-
-namespace linearAlgebra
+namespace linalg
 {
     template <typename T>
     class Vector3D;   // forward declaration
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
 namespace utilities
 {
@@ -41,42 +40,45 @@ namespace utilities
      * @brief compares two numbers with a tolerance
      *
      * @tparam T
-     * @param a
-     * @param b
+     * @param lhs
+     * @param rhs
      * @param tolerance
      * @return true
      * @return false
      */
     template <typename T>
-    [[nodiscard]] bool compare(const T &a, const T &b, const T &tolerance)
+    [[nodiscard]]
+    bool compare(const T &lhs, const T &rhs, const T &tolerance)
     {
-        return std::abs(a - b) < tolerance;
+        return std::abs(lhs - rhs) < tolerance;
     }
 
     [[nodiscard]] bool compare(
-        const linearAlgebra::Vector3D<double> &a,
-        const linearAlgebra::Vector3D<double> &b,
-        const double                          &tol
+        const linalg::Vector3D<double> &lhs,
+        const linalg::Vector3D<double> &rhs,
+        const double                   &tol
     );
 
     /**
      * @brief compares two numbers via machine precision
      *
      * @tparam T
-     * @param a
-     * @param b
+     * @param lhs
+     * @param rhs
      * @return true
      * @return false
      */
     template <typename T>
-    [[nodiscard]] bool compare(const T &a, const T &b)
+    [[nodiscard]]
+    bool compare(const T &lhs, const T &rhs)
     {
-        return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
+        return std::fabs(lhs - rhs) < std::numeric_limits<T>::epsilon();
     }
 
-    [[nodiscard]] bool compare(
-        const linearAlgebra::Vector3D<double> &a,
-        const linearAlgebra::Vector3D<double> &b
+    [[nodiscard]]
+    bool compare(
+        const linalg::Vector3D<double> &lhs,
+        const linalg::Vector3D<double> &rhs
     );
 
     /**
@@ -88,36 +90,36 @@ namespace utilities
      * `compare(a, T(0), tol)` overload when a tolerance is wanted.
      *
      * @tparam T
-     * @param a
-     * @return true if a == T(0), false otherwise
+     * @param value
+     * @return true if value == T(0), false otherwise
      */
     template <typename T>
-    [[nodiscard]] bool isZero(const T &a)
+    [[nodiscard]] bool isZero(const T &value)
     {
-        return a == T(0);
+        return value == T(0);
     }
 
     /**
      * @brief calculates the sign of a number
      *
      * @tparam T
-     * @param a
+     * @param value
      * @return int
      */
     template <typename T>
-    [[nodiscard]] int sign(const T &a)
+    [[nodiscard]] int sign(const T &value)
     {
-        if (compare(a, T(0)))
+        if (compare(value, T(0)))
             return 0;
 
-        if (a > T(0))
+        if (value > T(0))
             return 1;
 
         return -1;
     }
 
-    [[nodiscard]] size_t kroneckerDelta(const size_t i, const size_t j);
+    [[nodiscard]] size_t kroneckerDelta(size_t lhs, size_t rhs);
 
 }   // namespace utilities
 
-#endif   // _MATH_UTILITIES_HPP_
+#endif   // UTILITIES__MATH_UTILITIES_HPP

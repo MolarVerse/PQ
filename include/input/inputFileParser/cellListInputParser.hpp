@@ -20,42 +20,28 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_LIST_INPUT_PARSER_HPP_
-
-#define _CELL_LIST_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__CELL_LIST_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__CELL_LIST_INPUT_PARSER_HPP
 
 #include "inputFileParser.hpp"
-
-namespace molsys
-{
-    class CellList;   // forward declaration
-}   // namespace molsys
 
 namespace input
 {
     /**
-     * @class CellListInputParser inherits from InputFileParser
+     * @brief CellListInputParser inherits from InputFileParser
      *
-     * @brief Parses the cell list commands in the input file
+     * @details Parses the cell list commands in the input file
      *
      */
     class CellListInputParser : public InputFileParser
     {
-        std::shared_ptr<molsys::CellList> _cellListPtr;
-
        public:
-        explicit CellListInputParser(
-            std::shared_ptr<molsys::CellList> cellListPtr
-        );
+        explicit CellListInputParser();
 
-        void parseCellListActivated(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseNumberOfCells(const std::vector<std::string> &, const size_t);
+        void addCellListActivated();
+        void addNumberOfCells();
     };
 
 }   // namespace input
 
-#endif   // _CELL_LIST_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__CELL_LIST_INPUT_PARSER_HPP

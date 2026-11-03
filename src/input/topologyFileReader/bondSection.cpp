@@ -22,125 +22,132 @@
 
 #include "bondSection.hpp"
 
-#include <format>   // for format
-#include <string>   // for stoul, string, operator==, char_traits
-#include <vector>   // for vector
+#include <format>
+#include <string>
+#include <vector>
 
-#include "bondForceField.hpp"   // for BondForceField
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for TopologyException
-#include "simulationBox.hpp"    // for SimulationBox
+#include "bondForceField.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "simulationBox.hpp"
 
-using namespace input::topology;
-using namespace molsys;
-using namespace forceField;
-using namespace customException;
-using namespace engine;
-
-/**
- * @brief processes the bond section of the topology file
- *
- * @details one line consists of 3 or 4 elements:
- * 1. atom index 1
- * 2. atom index 2
- * 3. bond type
- * 4. linker marked with a '*'
- *
- * @param line
- * @param engine
- *
- * @throws TopologyException if number of elements in line is
- * not 3 or 4
- * @throws TopologyException if atom indices are the same
- * (=same atoms)
- * @throws TopologyException if forth element is not a '*'
- */
-void BondSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::topology
 {
-    if (lineElements.size() != 3 && lineElements.size() != 4)
+
+    /**
+     * @brief processes the bond section of the topology file
+     *
+     * @details one line consists of 3 or 4 elements:
+     * 1. atom index 1
+     * 2. atom index 2
+     * 3. bond type
+     * 4. linker marked with a '*'
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the topology file being processed
+     *
+     * @throws exc::TopologyException if number of elements in line is
+     * not 3 or 4
+     * @throws exc::TopologyException if atom indices are the same
+     * (=same atoms)
+     * @throws exc::TopologyException if forth element is not a '*'
+     */
+    void BondSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine,
+        size_t                    lineNumber
+    )
     {
-        throw TopologyException(
+        if (lineElements.size() != 3 && lineElements.size() != 4)
+        {
+            throw exc::TopologyException(
 
-            std::format(
-                "Wrong number of arguments in topology file bond section at "
-                "line {} - number of elements has to be 3 or 4!",
-                _lineNumber
-            )
+                std::format(
+                    "Wrong number of arguments in topology file bond section "
+                    "at "
+                    "line {} - number of elements has to be 3 or 4!",
+                    lineNumber
+                )
 
-        );
+            );
+        }
+
+        const auto atom1    = stoul(lineElements[0]);
+        const auto atom2    = stoul(lineElements[1]);
+        const auto bondType = BondId{stoul(lineElements[2])};
+        auto       isLinker = false;
+
+        if (4 == lineElements.size())
+        {
+            if (lineElements[3] == "*")
+                isLinker = true;
+
+            else
+            {
+                throw exc::TopologyException(
+                    std::format(
+                        "Forth entry in topology file in bond section has to "
+                        "be a "
+                        "\'*\' or empty at line {}!",
+                        lineNumber
+                    )
+                );
+            }
+        }
+
+        if (atom1 == atom2)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file bond section at line {} - atoms cannot be "
+                    "the same!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto &simBox = engine.getSimulationBox();
+
+        const auto [mol1, atomIdx1] =
+            simBox.findMoleculeByGlobalAtomIndex(atom1);
+        const auto [mol2, atomIdx2] =
+            simBox.findMoleculeByGlobalAtomIndex(atom2);
+
+        auto bondFF =
+            ff::BondForceField(mol1, mol2, atomIdx1, atomIdx2, bondType);
+        bondFF.setIsLinker(isLinker);
+
+        engine.getForceField()->addBond(bondFF);
     }
 
-    const auto atom1    = stoul(lineElements[0]);
-    const auto atom2    = stoul(lineElements[1]);
-    const auto bondType = BondId{stoul(lineElements[2])};
-    auto       isLinker = false;
+    /**
+     * @brief returns the keyword of the bond section
+     *
+     * @return "bonds"
+     */
+    std::string BondSection::keyword() { return "bonds"; }
 
-    if (4 == lineElements.size())
+    /**
+     * @brief checks if bond sections ends normally
+     *
+     * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
+     *
+     * @throws exc::TopologyException if endedNormal is false
+     */
+    void BondSection::endedNormally(bool endedNormal, size_t lineNumber) const
     {
-        if (lineElements[3] == "*")
-            isLinker = true;
-
-        else
+        if (!endedNormal)
         {
-            throw TopologyException(
+            throw exc::TopologyException(
                 std::format(
-                    "Forth entry in topology file in bond section has to be a "
-                    "\'*\' or empty at line {}!",
-                    _lineNumber
+                    "Topology file bond section at line {} - no end of section "
+                    "found!",
+                    lineNumber
                 )
             );
         }
     }
 
-    if (atom1 == atom2)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file shake section at line {} - atoms cannot be the "
-                "same!",
-                _lineNumber
-            )
-        );
-    }
-
-    auto &simBox = engine.getSimulationBox();
-
-    const auto [mol1, atomIdx1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [mol2, atomIdx2] = simBox.findMoleculeByAtomIndex(atom2);
-
-    auto bondFF = BondForceField(mol1, mol2, atomIdx1, atomIdx2, bondType);
-    bondFF.setIsLinker(isLinker);
-
-    engine.getForceField()->addBond(bondFF);
-}
-
-/**
- * @brief returns the keyword of the bond section
- *
- * @return "bonds"
- */
-std::string BondSection::keyword() { return "bonds"; }
-
-/**
- * @brief checks if bond sections ends normally
- *
- * @param endedNormal
- *
- * @throws TopologyException if endedNormal is false
- */
-void BondSection::endedNormally(const bool endedNormal) const
-{
-    if (!endedNormal)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file bond section at line {} - no end of section "
-                "found!",
-                _lineNumber
-            )
-        );
-    }
-}
+}   // namespace input::topology

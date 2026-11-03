@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STATIC_MATRIX_CLASS_3X3_HPP_
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_HPP
+#define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_HPP
 
-#define _STATIC_MATRIX_CLASS_3X3_HPP_
+#include "vector3d.hpp"
 
-#include "vector3d.hpp"   // IWYU pragma: keep
-
-namespace linearAlgebra
+namespace linalg
 {
     template <typename T>
     class StaticMatrix3x3;
@@ -43,6 +42,9 @@ namespace linearAlgebra
     template <typename T>
     class StaticMatrix3x3
     {
+       public:
+        static constexpr auto size = 3;
+
        private:
         Vector3D<Vector3D<T>> _data;
 
@@ -50,8 +52,6 @@ namespace linearAlgebra
 
        public:
         StaticMatrix3x3() = default;
-
-        static constexpr auto size = 3;
 
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &data);
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &&data);
@@ -62,12 +62,12 @@ namespace linearAlgebra
         );
 
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
-        StaticMatrix3x3(const T t);
+        StaticMatrix3x3(const T &mat);
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
         explicit StaticMatrix3x3(const std::vector<T> &vector);
 
-        Vector3D<T>       &operator[](const size_t index);
-        const Vector3D<T> &operator[](const size_t index) const;
+        Vector3D<T>       &operator[](size_t index);
+        const Vector3D<T> &operator[](size_t index) const;
 
         friend bool operator==(
             const StaticMatrix3x3 &lhs,
@@ -76,11 +76,14 @@ namespace linearAlgebra
 
         StaticMatrix3x3 operator-();
         std::vector<T>  toStdVector() const;
-    };
-}   // namespace linearAlgebra
 
-#ifndef _STATIC_MATRIX_CLASS_3x3_TPP_
-#include "staticMatrix3x3Class.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+        void setDiagonal(const T &value);
+        void setDiagonal(const Vector3D<T> &values);
+    };
+}   // namespace linalg
+
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP
+#include "staticMatrix3x3Class.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _STATIC_MATRIX_CLASS_3X3_HPP_
+#endif   // LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
-
-#define _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
+#ifndef OPT__LEARNING_RATE_STRATEGY__CONSTANT_DECAY_HPP
+#define OPT__LEARNING_RATE_STRATEGY__CONSTANT_DECAY_HPP
 
 #include "learningRateStrategy.hpp"
 
@@ -41,14 +40,14 @@ namespace opt
 
        public:
         explicit ConstantDecayLRStrategy(
-            const double initialLearningRate,
-            const double decay,
-            const size_t frequency
+            double initialLearningRate,
+            double decay,
+            size_t frequency
         );
 
         explicit ConstantDecayLRStrategy(
-            const double initialLearningRate,
-            const double decay
+            double initialLearningRate,
+            double decay
         );
 
         ConstantDecayLRStrategy()           = default;
@@ -57,12 +56,9 @@ namespace opt
         [[nodiscard]]
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
-        void updateLearningRate(
-            const size_t currentStep,
-            const size_t totalSteps
-        ) override;
+        void updateLearningRate(size_t currentStep, size_t totalSteps) override;
     };
 
 }   // namespace opt
 
-#endif   // _CONSTANT_DECAY_LEARNING_RATE_STRATEGY_HPP_
+#endif   // OPT__LEARNING_RATE_STRATEGY__CONSTANT_DECAY_HPP

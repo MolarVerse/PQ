@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLDESCRIPTOR_READER_HPP_
+#ifndef INPUT__MOLDESCRIPTOR_READER_HPP
+#define INPUT__MOLDESCRIPTOR_READER_HPP
 
-#define _MOLDESCRIPTOR_READER_HPP_
-
-#include <fstream>   // for ifstream
-#include <string>    // for string
-#include <vector>    // for vector
+#include <fstream>
+#include <string>
+#include <vector>
 
 #include "defaults.hpp"
 
@@ -64,9 +63,19 @@ namespace input::molDescriptor
 
         void read();
         void processMolecule(std::vector<std::string> &lineElements);
-        void convertExternalToInternalAtomTypes(molsys::MoleculeType &) const;
+
+       private:
+        void _checkQMReferenceEnergies() const;
+        void _processQMReferenceEnergy(
+            const std::vector<std::string> &lineElements,
+            molsys::MoleculeType           &molecule
+        ) const;
+
+        static void _convertExternalToInternalAtomTypes(
+            molsys::MoleculeType &molecule
+        );
     };
 
 }   // namespace input::molDescriptor
 
-#endif   // _MOLDESCRIPTOR_READER_HPP_
+#endif   // INPUT__MOLDESCRIPTOR_READER_HPP

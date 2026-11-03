@@ -20,20 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo (pt...
+#include <gtest/gtest.h>
 
-#include "coulombPotential.hpp"          // for CoulombPotential, potential
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "gtest/gtest.h"                 // for Message, TestPartResult
-
-using namespace potential;
+#include "coulombPotential.hpp"
+#include "coulombShiftedPotential.hpp"
 
 /**
  * @brief tests the general constructor of a coulombPotential
  */
 TEST(TestCoulombPotential, constructor)
 {
-    auto potential = CoulombShiftedPotential(2.0);
+    auto potential = pot::CoulombShiftedPotential(2.0);
     EXPECT_EQ(potential.getCoulombRadiusCutOff(), 2.0);
     EXPECT_EQ(potential.getCoulombEnergyCutOff(), 0.5);
     EXPECT_EQ(potential.getCoulombForceCutOff(), 0.25);
@@ -44,9 +41,9 @@ TEST(TestCoulombPotential, constructor)
  */
 TEST(TestCoulombPotential, setCoulombRadiusCutOff)
 {
-    CoulombPotential::setCoulombRadiusCutOff(2.0);
+    pot::CoulombPotential::setCoulombRadiusCutOff(2.0);
 
-    EXPECT_EQ(CoulombPotential::getCoulombRadiusCutOff(), 2.0);
-    EXPECT_EQ(CoulombPotential::getCoulombEnergyCutOff(), 0.5);
-    EXPECT_EQ(CoulombPotential::getCoulombForceCutOff(), 0.25);
+    EXPECT_EQ(pot::CoulombPotential::getCoulombRadiusCutOff(), 2.0);
+    EXPECT_EQ(pot::CoulombPotential::getCoulombEnergyCutOff(), 0.5);
+    EXPECT_EQ(pot::CoulombPotential::getCoulombForceCutOff(), 0.25);
 }

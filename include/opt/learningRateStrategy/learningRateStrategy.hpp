@@ -20,15 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LEARNING_RATE_STRATEGY_HPP_
+#ifndef OPT__LEARNING_RATE_STRATEGY__LEARNING_RATE_STRATEGY_HPP
+#define OPT__LEARNING_RATE_STRATEGY__LEARNING_RATE_STRATEGY_HPP
 
-#define _LEARNING_RATE_STRATEGY_HPP_
-
-#include <cstddef>    // for size_t
-#include <memory>     // for shared_ptr
-#include <optional>   // for optional
-#include <string>     // for string
-#include <vector>     // for vector
+#include <cstddef>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
 
 namespace opt
 {
@@ -43,7 +42,7 @@ namespace opt
      */
     class LearningRateStrategy
     {
-       protected:
+       private:
         size_t _frequency = 1;
         double _initialLearningRate;
         double _learningRate;
@@ -58,8 +57,8 @@ namespace opt
         std::vector<std::string> _errorMessages;
 
        public:
-        explicit LearningRateStrategy(const double);
-        explicit LearningRateStrategy(const double, const size_t);
+        explicit LearningRateStrategy(double);
+        explicit LearningRateStrategy(double, size_t);
 
         LearningRateStrategy()          = default;
         virtual ~LearningRateStrategy() = default;
@@ -67,10 +66,7 @@ namespace opt
         [[nodiscard]]
         virtual std::shared_ptr<LearningRateStrategy> clone() const = 0;
 
-        virtual void updateLearningRate(
-            const size_t step,
-            const size_t nEpochs
-        ) = 0;
+        virtual void updateLearningRate(size_t step, size_t nEpochs) = 0;
 
         void checkLearningRate();
 
@@ -86,13 +82,22 @@ namespace opt
          * standard setter methods *
          ***************************/
 
-        void setEvaluator(const std::shared_ptr<opt::Evaluator>);
-        void setOptimizer(const std::shared_ptr<opt::Optimizer>);
+        void setEvaluator(const std::shared_ptr<opt::Evaluator>&);
+        void setOptimizer(const std::shared_ptr<opt::Optimizer>&);
 
-        void setMinLearningRate(const double);
-        void setMaxLearningRate(const std::optional<double>);
+        void setMinLearningRate(double);
+        void setMaxLearningRate(std::optional<double>);
+
+       protected:
+        [[nodiscard]]
+        double _getInitialLearningRate() const;
+
+        [[nodiscard]]
+        size_t _getFrequency() const;
+
+        void _setLearningRate(double learningRate);
     };
 
 }   // namespace opt
 
-#endif   // _LEARNING_RATE_STRATEGY_HPP_
+#endif   // OPT__LEARNING_RATE_STRATEGY__LEARNING_RATE_STRATEGY_HPP

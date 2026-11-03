@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-#  turbomole_hf+dft
+#  turbomole_hf-dft
 #
 #  Interface between PQ and Turbomole
 #  initializes QM run: define

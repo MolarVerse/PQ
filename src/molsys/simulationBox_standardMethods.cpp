@@ -20,16 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <algorithm>   // for std::ranges:find
-#include <optional>    // for optional
+#include <algorithm>
+#include <optional>
 
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
-
-using std::optional;
-using std::ranges::distance;
 
 namespace molsys
 {
+
+    /**
+     * @brief Construct a new Simulation Box object
+     *
+     * Initializes the simulation box with a default orthorhombic vacuum box.
+     */
+    SimulationBox::SimulationBox()
+        : _box(
+              std::make_shared<OrthorhombicBox>(OrthorhombicBox::makeVacuumBox()
+              )
+          )
+    {
+    }
 
     /************************
      *                      *
@@ -42,7 +53,7 @@ namespace molsys
      *
      * @param atom
      */
-    void SimulationBox::addAtom(const std::shared_ptr<Atom> atom)
+    void SimulationBox::addAtom(const std::shared_ptr<Atom> &atom)
     {
         _atoms.push_back(atom);
     }
@@ -76,16 +87,19 @@ namespace molsys
     /**
      * @brief Get the water type
      *
-     * @return std::optional<size_t>
+     * @return std::optional<MolType>
      */
-    optional<size_t> SimulationBox::getWaterType() const { return _waterType; }
+    std::optional<MolType> SimulationBox::getWaterType() const
+    {
+        return _waterType;
+    }
 
     /**
      * @brief Get the ammonia type
      *
-     * @return std::optional<size_t>
+     * @return std::optional<MolType>
      */
-    optional<size_t> SimulationBox::getAmmoniaType() const
+    std::optional<MolType> SimulationBox::getAmmoniaType() const
     {
         return _ammoniaType;
     }
@@ -124,7 +138,7 @@ namespace molsys
      */
     size_t SimulationBox::getNumberOfQMAtoms() const
     {
-        return distance(getQMAtoms());
+        return static_cast<size_t>(std::ranges::distance(getQMAtoms()));
     }
 
     /**
@@ -164,20 +178,17 @@ namespace molsys
     /**
      * @brief get the center of mass
      *
-     * @return linearAlgebra::Vec3D&
+     * @return linalg::Vec3D&
      */
-    linearAlgebra::Vec3D &SimulationBox::getCenterOfMass()
-    {
-        return _centerOfMass;
-    }
+    linalg::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
 
     /**
      * @brief get the indices of the atoms marking the center of the inner
      * region for hybrid type calculations
      *
-     * @return vector<int>
+     * @return vector<size_t>
      */
-    std::vector<int> SimulationBox::getInnerRegionCenterAtomIndices()
+    std::vector<size_t> SimulationBox::getInnerRegionCenterAtomIndices()
     {
         return _innerRegionCenterAtomIndices;
     }
@@ -223,6 +234,7 @@ namespace molsys
     std::vector<double> SimulationBox::getAtomicScalarForces() const
     {
         std::vector<double> atomicScalarForces;
+        atomicScalarForces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             atomicScalarForces.push_back(norm(atom->getForce()));
@@ -238,6 +250,7 @@ namespace molsys
     std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
     {
         std::vector<double> atomicScalarForces;
+        atomicScalarForces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             atomicScalarForces.push_back(norm(atom->getForceOld()));
@@ -295,9 +308,9 @@ namespace molsys
     /**
      * @brief get the external global VDW types
      *
-     * @return std::vector<size_t>&
+     * @return std::vector<ExtVdwType>&
      */
-    std::vector<size_t> &SimulationBox::getExternalGlobalVdwTypes()
+    std::vector<ExtVdwType> &SimulationBox::getExternalGlobalVdwTypes()
     {
         return _externalGlobalVdwTypes;
     }
@@ -305,9 +318,9 @@ namespace molsys
     /**
      * @brief get the external to internal global VDW types map
      *
-     * @return std::unordered_map<size_t, size_t>&
+     * @return std::unordered_map<ExtVdwType, VdwType>&
      */
-    std::map<size_t, size_t> &SimulationBox::
+    std::unordered_map<ExtVdwType, VdwType> &SimulationBox::
         getExternalToInternalGlobalVDWTypes()
     {
         return _externalToInternalGlobalVDWTypes;
@@ -344,11 +357,12 @@ namespace molsys
     /**
      * @brief get all positions of all atoms
      *
-     * @return std::vector<linearAlgebra::Vec3D>
+     * @return std::vector<linalg::Vec3D>
      */
-    std::vector<linearAlgebra::Vec3D> SimulationBox::getPositions() const
+    std::vector<linalg::Vec3D> SimulationBox::getPositions() const
     {
-        std::vector<linearAlgebra::Vec3D> positions;
+        std::vector<linalg::Vec3D> positions;
+        positions.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             positions.push_back(atom->getPosition());
@@ -359,11 +373,12 @@ namespace molsys
     /**
      * @brief get all velocities of all atoms
      *
-     * @return std::vector<linearAlgebra::Vec3D>
+     * @return std::vector<linalg::Vec3D>
      */
-    std::vector<linearAlgebra::Vec3D> SimulationBox::getVelocities() const
+    std::vector<linalg::Vec3D> SimulationBox::getVelocities() const
     {
-        std::vector<linearAlgebra::Vec3D> velocities;
+        std::vector<linalg::Vec3D> velocities;
+        velocities.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             velocities.push_back(atom->getVelocity());
@@ -374,11 +389,12 @@ namespace molsys
     /**
      * @brief get all forces of all atoms
      *
-     * @return std::vector<linearAlgebra::Vec3D>
+     * @return std::vector<linalg::Vec3D>
      */
-    std::vector<linearAlgebra::Vec3D> SimulationBox::getForces() const
+    std::vector<linalg::Vec3D> SimulationBox::getForces() const
     {
-        std::vector<linearAlgebra::Vec3D> forces;
+        std::vector<linalg::Vec3D> forces;
+        forces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms) forces.push_back(atom->getForce());
 
@@ -393,6 +409,7 @@ namespace molsys
     std::vector<AtomNumber> SimulationBox::getAtomicNumbers() const
     {
         std::vector<AtomNumber> atomicNumbers;
+        atomicNumbers.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
             atomicNumbers.push_back(atom->getAtomicNumber());
@@ -423,6 +440,16 @@ namespace molsys
         return positions;
     }
 
+    /**
+     * @brief check if the box was set via a start file
+     *
+     * @return true if the box was set via a start file, false otherwise
+     */
+    bool SimulationBox::wasBoxSetViaStartFile() const
+    {
+        return _boxSetViaStartFile;
+    }
+
     /***************************
      *                         *
      * standard setter methods *
@@ -434,7 +461,7 @@ namespace molsys
      *
      * @param waterType
      */
-    void SimulationBox::setWaterType(const size_t waterType)
+    void SimulationBox::setWaterType(MolType waterType)
     {
         _waterType = waterType;
     }
@@ -444,7 +471,7 @@ namespace molsys
      *
      * @param ammoniaType
      */
-    void SimulationBox::setAmmoniaType(const size_t ammoniaType)
+    void SimulationBox::setAmmoniaType(MolType ammoniaType)
     {
         _ammoniaType = ammoniaType;
     }
@@ -452,7 +479,7 @@ namespace molsys
     /**
      * @brief set the total mass
      *
-     * @param centerOfMass
+     * @param totalMass
      */
     void SimulationBox::setTotalMass(const double totalMass)
     {
@@ -462,7 +489,7 @@ namespace molsys
     /**
      * @brief set the total charge
      *
-     * @param centerOfMass
+     * @param totalCharge
      */
     void SimulationBox::setTotalCharge(const double totalCharge)
     {
@@ -472,14 +499,14 @@ namespace molsys
     /**
      * @brief set the density
      *
-     * @param centerOfMass
+     * @param density
      */
     void SimulationBox::setDensity(const double density) { _density = density; }
 
     /**
      * @brief set the degrees of freedom
      *
-     * @param centerOfMass
+     * @param degreesOfFreedom
      */
     void SimulationBox::setDegreesOfFreedom(const size_t degreesOfFreedom)
     {
@@ -497,7 +524,7 @@ namespace molsys
      *
      * @param position
      */
-    void SimulationBox::applyPBC(linearAlgebra::Vec3D &position) const
+    void SimulationBox::applyPBC(linalg::Vec3D &position) const
     {
         _box->applyPBC(position);
     }
@@ -507,7 +534,7 @@ namespace molsys
      *
      * @param scalingTensor
      */
-    void SimulationBox::scaleBox(const linearAlgebra::tensor3D &scalingTensor)
+    void SimulationBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
         _box->scaleBox(scalingTensor);
         calculateDensity();
@@ -518,10 +545,7 @@ namespace molsys
      *
      * @return double
      */
-    double SimulationBox::calculateVolume() const
-    {
-        return _box->calculateVolume();
-    }
+    double SimulationBox::getVolume() const { return _box->getVolume(); }
 
     /**
      * @brief gets the minimal box dimension
@@ -534,72 +558,23 @@ namespace molsys
     }
 
     /**
-     * @brief gets the volume
-     *
-     * @return double
-     */
-    double SimulationBox::getVolume() const { return _box->getVolume(); }
-
-    /**
-     * @brief gets if the box size has changed
-     *
-     * @return bool
-     */
-    bool SimulationBox::getBoxSizeHasChanged() const
-    {
-        return _box->getBoxSizeHasChanged();
-    }
-
-    /**
      * @brief gets the box dimensions
      *
-     * @return linearAlgebra::Vec3D
+     * @return const linalg::Vec3D &
      */
-    linearAlgebra::Vec3D SimulationBox::getBoxDimensions() const
+    const linalg::Vec3D &SimulationBox::getBoxDimensions() const
     {
-        return _box->getBoxDimensions();
+        return _box->get_boxDimensions();
     }
 
     /**
      * @brief gets the box angles
      *
-     * @return linearAlgebra::Vec3D
+     * @return linalg::Vec3D
      */
-    linearAlgebra::Vec3D SimulationBox::getBoxAngles() const
+    linalg::Vec3D SimulationBox::getBoxAngles() const
     {
         return _box->getBoxAngles();
-    }
-
-    /**
-     * @brief sets the volume
-     *
-     * @param volume
-     */
-    void SimulationBox::setVolume(const double volume) const
-    {
-        _box->setVolume(volume);
-    }
-
-    /**
-     * @brief sets the box dimensions
-     *
-     * @param boxDimensions
-     */
-    void SimulationBox::setBoxDimensions(
-        const linearAlgebra::Vec3D &boxDimensions
-    ) const
-    {
-        _box->setBoxDimensions(boxDimensions);
-    }
-
-    /**
-     * @brief sets if the box size has changed
-     *
-     * @param boxSizeHasChanged
-     */
-    void SimulationBox::setBoxSizeHasChanged(const bool boxSizeHasChanged) const
-    {
-        _box->setBoxSizeHasChanged(boxSizeHasChanged);
     }
 
 }   // namespace molsys

@@ -20,11 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_HPP_
-
-#define _BOND_HPP_
-
-#include <cstddef>
+#ifndef CONNECTIVITY__BOND_HPP
+#define CONNECTIVITY__BOND_HPP
 
 #include "connectivityElement.hpp"
 
@@ -41,19 +38,9 @@ namespace connectivity
        public:
         using ConnectivityElement::ConnectivityElement;
 
-        Bond(molsys::Molecule *, molsys::Molecule *, size_t, size_t);
-        Bond(molsys::Molecule *, size_t, molsys::Molecule *, size_t);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] molsys::Molecule *getMolecule1() const;
-        [[nodiscard]] molsys::Molecule *getMolecule2() const;
-        [[nodiscard]] size_t            getAtomIndex1() const;
-        [[nodiscard]] size_t            getAtomIndex2() const;
+        Bond(molsys::Molecule *, molsys::Molecule *, AtomIndex, AtomIndex);
     };
 
 }   // namespace connectivity
 
-#endif   // _BOND_HPP_
+#endif   // CONNECTIVITY__BOND_HPP

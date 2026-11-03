@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __VIEWS_HPP__
-#define __VIEWS_HPP__
+#ifndef VIEWS__VIEWS_HPP
+#define VIEWS__VIEWS_HPP
 
 #include <utility>
 
@@ -37,16 +37,16 @@ namespace pqviews
      *
      * @tparam Range The type of the range to be adapted
      * @tparam Adaptor The type of the adaptor to be applied
-     * @param r The range to be adapted
-     * @param a The adaptor to be applied
+     * @param range The range to be adapted
+     * @param adaptor The adaptor to be applied
      * @return auto A view of the adapted range
      */
     template <typename Range, typename Adaptor>
-    auto operator|(Range&& r, const Adaptor& a)
+    auto operator|(Range&& range, const Adaptor& adaptor)
     {
-        return a(std::forward<Range>(r));
+        return adaptor(std::forward<Range>(range));
     }
 
 }   // namespace pqviews
 
-#endif   // __VIEWS_HPP__
+#endif   // VIEWS__VIEWS_HPP

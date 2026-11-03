@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _J_COUPLING_FORCE_FIELD_HPP_
-
-#define _J_COUPLING_FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__J_COUPLING_FORCE_FIELD_HPP
+#define FORCE_FIELD__J_COUPLING_FORCE_FIELD_HPP
 
 #include <cstddef>
 #include <vector>
@@ -40,7 +39,7 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace forceField
+namespace ff
 {
     /**
      * @class DihedralForceField
@@ -65,30 +64,32 @@ namespace forceField
        public:
         JCouplingForceField(
             const std::vector<molsys::Molecule *> &molecules,
-            const std::vector<size_t>             &atomIndices,
-            const size_t                           type
+            const std::vector<AtomIndex>          &atomIndices,
+            size_t                                 type
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox & /*simBox*/,
+            const molsys::SimulationBox & /*simulationBox*/,
             physicalData::PhysicalData & /*physData*/
         )
         {
-        }   // TODO: implement
+            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/904
+            // implement
+        }
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setUpperSymmetry(const bool boolean);
-        void setLowerSymmetry(const bool boolean);
+        void setUpperSymmetry(bool boolean);
+        void setLowerSymmetry(bool boolean);
 
-        void setJ0(const double J0);
-        void setForceConstant(const double k);
-        void setA(const double a);
-        void setB(const double b);
-        void setC(const double c);
-        void setPhaseShift(const double phi);
+        void setJ0(double J0);
+        void setForceConstant(double forceConstant);
+        void setA(double constA);
+        void setB(double constB);
+        void setC(double constC);
+        void setPhaseShift(double phaseShift);
 
         /***************************
          * standard getter methods *
@@ -107,6 +108,6 @@ namespace forceField
         [[nodiscard]] double getPhaseShift() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _J_COUPLING_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__J_COUPLING_FORCE_FIELD_HPP

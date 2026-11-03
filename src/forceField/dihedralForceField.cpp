@@ -22,255 +22,235 @@
 
 #include "dihedralForceField.hpp"
 
-#include <cmath>   // for cos, sin
+#include <cmath>
 
-#include "coulombPotential.hpp"   // for CoulombPotential
-#include "forceField.hpp"         // IWYU pragma: keep - for correctLinker
-#include "hybridSettings.hpp"     // for HybridSettings
-#include "molecule.hpp"           // for Molecule
-#include "physicalData.hpp"       // for PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
+#include "coulombPotential.hpp"
+#include "forceField.hpp"
+#include "hybridSettings.hpp"
+#include "molecule.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
 
-using namespace forceField;
-using namespace connectivity;
-using namespace linearAlgebra;
-using namespace physicalData;
-using namespace potential;
-using namespace settings;
-using namespace molsys;
-
-using enum HybridZone;
-
-/**
- * @brief Construct a new Dihedral Force Field:: Dihedral Force Field object
- *
- * @param molecules
- * @param atomIndices
- * @param type
- */
-DihedralForceField::DihedralForceField(
-    const std::vector<Molecule *> &molecules,
-    const std::vector<size_t>     &atomIndices,
-    const DihedralId               type
-)
-    : Dihedral(molecules, atomIndices), _type(type)
+namespace ff
 {
-}
 
-/**
- * @brief calculate energy and forces for a single dihedral
- *
- * @details if dihedral is a linker dihedral, correct coulomb and non-coulomb
- * energy and forces (only for non improper dihedrals)
- *
- * @param box
- * @param physicalData
- */
-void DihedralForceField::calculateEnergyAndForces(
-    const SimulationBox    &box,
-    PhysicalData           &physicalData,
-    const bool              isImproperDihedral,
-    const CoulombPotential &coulombPotential,
-    NonCoulombPotential    &nonCoulombPotential
-)
-{
-    const bool allInactive =
-        !_molecules[0]->isActive() && !_molecules[1]->isActive() &&
-        !_molecules[2]->isActive() && !_molecules[3]->isActive();
-
-    if (allInactive)
-        return;
-
-    const auto position2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
-    const auto position3 = _molecules[2]->getAtomPosition(_atomIndices[2]);
-
-    const auto position1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-    const auto position4 = _molecules[3]->getAtomPosition(_atomIndices[3]);
-
-    auto dPosition12 = position1 - position2;
-    auto dPosition23 = position2 - position3;
-    auto dPosition43 = position4 - position3;
-
-    box.applyPBC(dPosition12);
-    box.applyPBC(dPosition23);
-    box.applyPBC(dPosition43);
-
-    const auto crossPosition123 = cross(dPosition12, dPosition23);
-    const auto crossPosition432 = cross(dPosition43, dPosition23);
-
-    const auto distance123Squared = normSquared(crossPosition123);
-    const auto distance432Squared = normSquared(crossPosition432);
-
-    const auto distance23 = norm(dPosition23);
-
-    auto phi = angle(crossPosition123, crossPosition432);
-    phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
-
-    const auto cosine = ::cos(_periodicity * phi + _phaseShift);
-    const auto energy = _forceConstant * (1.0 + cosine);
-
-    if (isImproperDihedral)
-        physicalData.addImproperEnergy(energy);
-    else
-        physicalData.addDihedralEnergy(energy);
-
-    auto       forceMagnitude = distance23 / distance123Squared;
-    const auto forceVector12  = forceMagnitude * crossPosition123;
-
-    forceMagnitude           = distance23 / distance432Squared;
-    const auto forceVector43 = forceMagnitude * crossPosition432;
-
-    forceMagnitude             = dot(dPosition12, dPosition23);
-    forceMagnitude            /= (distance123Squared * distance23);
-    const auto forceVector123  = forceMagnitude * crossPosition123;
-
-    forceMagnitude             = dot(dPosition43, dPosition23);
-    forceMagnitude            /= (distance432Squared * distance23);
-    const auto forceVector432  = forceMagnitude * crossPosition432;
-
-    const auto sine = ::sin(_periodicity * phi + _phaseShift);
-    forceMagnitude  = _forceConstant * _periodicity * sine;
-
-    const auto diffForce123_432 = forceVector123 - forceVector432;
-
-    const auto force_0 = -forceMagnitude * forceVector12;
-    const auto force_1 = forceMagnitude * (forceVector12 + diffForce123_432);
-    const auto force_2 = +forceMagnitude * (-forceVector43 - diffForce123_432);
-    const auto force_3 = forceMagnitude * forceVector43;
-
-    _molecules[0]->addAtomForce(_atomIndices[0], force_0);
-    _molecules[1]->addAtomForce(_atomIndices[1], force_1);
-    _molecules[2]->addAtomForce(_atomIndices[2], force_2);
-    _molecules[3]->addAtomForce(_atomIndices[3], force_3);
-
-    if (_isLinker)
+    /**
+     * @brief Construct a new Dihedral Force Field:: Dihedral Force Field object
+     *
+     * @param molecules
+     * @param atomIndices
+     * @param type
+     */
+    DihedralForceField::DihedralForceField(
+        const std::vector<molsys::Molecule *> &molecules,
+        const std::vector<AtomIndex>          &atomIndices,
+        DihedralId                             type
+    )
+        : Dihedral(molecules, atomIndices), _type(type)
     {
-        auto dPosition14 = position1 - position4;
-        box.applyPBC(dPosition14);
+    }
 
-        const auto distance14 = norm(dPosition14);
+    /**
+     * @brief calculate energy and forces for a single dihedral
+     *
+     * @details if dihedral is a linker dihedral, correct coulomb and
+     * non-coulomb energy and forces (only for non improper dihedrals)
+     *
+     * @param simulationBox the simulation simulationBox containing the system
+     * @param physicalData the physical data of the system
+     * @param isImproperDihedral true if the dihedral is improper, false
+     * otherwise
+     * @param coulombPot the coulomb potential of the system
+     * @param nonCoulombPot the non-coulomb potential of the system
+     */
+    void DihedralForceField::calculateEnergyAndForces(
+        const molsys::SimulationBox &simulationBox,
+        physicalData::PhysicalData  &physicalData,
+        bool                         isImproperDihedral,
+        const pot::CoulombPotential &coulombPot,
+        pot::NonCoulombPotential    &nonCoulombPot
+    )
+    {
+        const auto &molecules = get_molecules();
+        auto       *molecule1 = molecules[0];
+        auto       *molecule2 = molecules[1];
+        auto       *molecule3 = molecules[2];
+        auto       *molecule4 = molecules[3];
 
-        if (distance14 < CoulombPotential::getCoulombRadiusCutOff())
+        const bool allInactive =
+            !molecule1->isActive() && !molecule2->isActive() &&
+            !molecule3->isActive() && !molecule4->isActive();
+
+        if (allInactive)
+            return;
+
+        const auto &atomIndices = get_atomIndices();
+
+        const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
+        const auto position3 = molecule3->getAtomPosition(atomIndices[2]);
+
+        const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
+        const auto position4 = molecule4->getAtomPosition(atomIndices[3]);
+
+        auto dPosition12 = position1 - position2;
+        auto dPosition23 = position2 - position3;
+        auto dPosition43 = position4 - position3;
+
+        simulationBox.applyPBC(dPosition12);
+        simulationBox.applyPBC(dPosition23);
+        simulationBox.applyPBC(dPosition43);
+
+        const auto crossPosition123 = cross(dPosition12, dPosition23);
+        const auto crossPosition432 = cross(dPosition43, dPosition23);
+
+        const auto distance123Squared = normSquared(crossPosition123);
+        const auto distance432Squared = normSquared(crossPosition432);
+
+        const auto distance23 = norm(dPosition23);
+
+        auto phi = angle(crossPosition123, crossPosition432);
+        phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
+
+        const auto cosine =
+            ::cos((_params.frequency * phi) + _params.phaseShift);
+        const auto energy = _params.forceConstant * (1.0 + cosine);
+
+        if (isImproperDihedral)
+            physicalData.addImproperEnergy(energy);
+        else
+            physicalData.addDihedralEnergy(energy);
+
+        auto       forceMagnitude = distance23 / distance123Squared;
+        const auto forceVector12  = forceMagnitude * crossPosition123;
+
+        forceMagnitude           = distance23 / distance432Squared;
+        const auto forceVector43 = forceMagnitude * crossPosition432;
+
+        forceMagnitude             = dot(dPosition12, dPosition23);
+        forceMagnitude            /= (distance123Squared * distance23);
+        const auto forceVector123  = forceMagnitude * crossPosition123;
+
+        forceMagnitude             = dot(dPosition43, dPosition23);
+        forceMagnitude            /= (distance432Squared * distance23);
+        const auto forceVector432  = forceMagnitude * crossPosition432;
+
+        const auto sine = ::sin((_params.frequency * phi) + _params.phaseShift);
+        forceMagnitude  = _params.forceConstant * _params.frequency * sine;
+
+        const auto diffForce123_432 = forceVector123 - forceVector432;
+
+        const auto force_0 = -forceMagnitude * forceVector12;
+        const auto force_1 =
+            forceMagnitude * (forceVector12 + diffForce123_432);
+        const auto force_2 =
+            +forceMagnitude * (-forceVector43 - diffForce123_432);
+        const auto force_3 = forceMagnitude * forceVector43;
+
+        molecule1->addAtomForce(atomIndices[0], force_0);
+        molecule2->addAtomForce(atomIndices[1], force_1);
+        molecule3->addAtomForce(atomIndices[2], force_2);
+        molecule4->addAtomForce(atomIndices[3], force_3);
+
+        if (_isLinker)
         {
-            forceMagnitude = correctLinker<DihedralForceField>(
-                coulombPotential,
-                nonCoulombPotential,
-                physicalData,
-                _molecules[0],
-                _molecules[3],
-                _atomIndices[0],
-                _atomIndices[3],
-                distance14
-            );
+            auto dPosition14 = position1 - position4;
+            simulationBox.applyPBC(dPosition14);
 
-            forceMagnitude /= distance14;
+            const auto distance14 = norm(dPosition14);
 
-            const auto forcexyz = forceMagnitude * dPosition14;
-
-            using enum SmoothingMethod;
-
-            auto       smF       = 0.0;
-            const auto smoothing = HybridSettings::getSmoothingMethod();
-
-            if (smoothing == HOTSPOT &&
-                _molecules[0]->getHybridZone() == SMOOTHING)
-                smF = _molecules[0]->getSmoothingFactor();
-
-            if (!isImproperDihedral)
-                physicalData.addVirial(
-                    tensorProduct(dPosition14, forcexyz) * (1 - smF)
+            if (distance14 < pot::CoulombPotential::getCoulombRadiusCutOff())
+            {
+                forceMagnitude = correctLinker<DihedralForceField>(
+                    coulombPot,
+                    nonCoulombPot,
+                    physicalData,
+                    molecule1,
+                    molecule4,
+                    atomIndices[0],
+                    atomIndices[3],
+                    distance14
                 );
 
-            _molecules[0]->addAtomForce(_atomIndices[0], forcexyz);
-            _molecules[3]->addAtomForce(_atomIndices[3], -forcexyz);
+                forceMagnitude /= distance14;
+
+                const auto forcexyz = forceMagnitude * dPosition14;
+
+                using enum SmoothingMethod;
+
+                auto       smF = 0.0;
+                const auto smoothing =
+                    settings::HybridSettings::getSmoothingMethod();
+
+                if (smoothing == HOTSPOT &&
+                    molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)
+                    smF = molecule1->getSmoothingFactor();
+
+                if (!isImproperDihedral)
+                    physicalData.addVirial(
+                        tensorProduct(dPosition14, forcexyz) * (1 - smF)
+                    );
+
+                molecule1->addAtomForce(atomIndices[0], forcexyz);
+                molecule4->addAtomForce(atomIndices[3], -forcexyz);
+            }
         }
     }
-}
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set if dihedral is a linker dihedral
- *
- * @param isLinker
- */
-void DihedralForceField::setIsLinker(const bool isLinker)
-{
-    _isLinker = isLinker;
-}
+    /**
+     * @brief set if dihedral is a linker dihedral
+     *
+     * @param isLinker
+     */
+    void DihedralForceField::setIsLinker(bool isLinker)
+    {
+        _isLinker = isLinker;
+    }
 
-/**
- * @brief set force constant
- *
- * @param forceConstant
- */
-void DihedralForceField::setForceConstant(const double forceConstant)
-{
-    _forceConstant = forceConstant;
-}
+    /**
+     * @brief set dihedral parameters
+     *
+     * @param params
+     */
+    void DihedralForceField::setParams(const DihedralParams &params)
+    {
+        _params = params;
+    }
 
-/**
- * @brief set periodicity
- *
- * @param periodicity
- */
-void DihedralForceField::setPeriodicity(const double periodicity)
-{
-    _periodicity = periodicity;
-}
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set phase shift
- *
- * @param phaseShift
- */
-void DihedralForceField::setPhaseShift(const double phaseShift)
-{
-    _phaseShift = phaseShift;
-}
+    /**
+     * @brief get if dihedral is a linker dihedral
+     *
+     * @return true
+     * @return false
+     */
+    bool DihedralForceField::isLinker() const { return _isLinker; }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief get type of dihedral
+     *
+     * @return DihedralId
+     */
+    DihedralId DihedralForceField::getType() const { return _type; }
 
-/**
- * @brief get if dihedral is a linker dihedral
- *
- * @return true
- * @return false
- */
-bool DihedralForceField::isLinker() const { return _isLinker; }
+    /**
+     * @brief get dihedral parameters
 
-/**
- * @brief get type of dihedral
- *
- * @return DihedralId
- */
-DihedralId DihedralForceField::getType() const { return _type; }
+     * @return const DihedralParams&
+     */
+    const DihedralParams &DihedralForceField::getParams() const
+    {
+        return _params;
+    }
 
-/**
- * @brief get force constant
- *
- * @return double
- */
-double DihedralForceField::getForceConstant() const { return _forceConstant; }
-
-/**
- * @brief get periodicity
- *
- * @return double
- */
-double DihedralForceField::getPeriodicity() const { return _periodicity; }
-
-/**
- * @brief get phase shift
- *
- * @return double
- */
-double DihedralForceField::getPhaseShift() const { return _phaseShift; }
+}   // namespace ff

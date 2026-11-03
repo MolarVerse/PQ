@@ -20,6 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#ifndef TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_SECTION_HPP
+#define TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_SECTION_HPP
+
 #include <gtest/gtest.h>
 
 #include "mmmdEngine.hpp"
@@ -38,93 +41,121 @@
 class TestBoxSection : public ::testing::Test
 {
    protected:
+    Settings                                                _settings;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
+
     void SetUp() override
     {
-        _section = new input::restartFile::BoxSection;
+        _section = std::make_unique<input::restartFile::BoxSection>();
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
 
-    void TearDown() override { delete _section; }
-
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
+    [[nodiscard]]
+    bool _wasBoxSetViaStartFile() const
+    {
+        return _engine->getSimulationBox().wasBoxSetViaStartFile();
+    }
 };
 
 /**
- * @class TestBondSection
+ * @class TestNoseHooverSection
  *
- * @brief Test fixture for testing the BondSection class.
+ * @brief Test fixture for testing the NoseHooverSection class.
  *
  */
 class TestNoseHooverSection : public ::testing::Test
 {
    protected:
+    Settings                                                _settings;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
+
     void SetUp() override
     {
-        _section = new input::restartFile::NoseHooverSection;
+        _section = std::make_unique<input::restartFile::NoseHooverSection>();
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
-
-    void TearDown() override { delete _section; }
-
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
 };
 
 /**
- * @class TestBondSection
+ * @class TestStepCountSection
  *
- * @brief Test fixture for testing the BondSection class.
+ * @brief Test fixture for testing the StepCountSection class.
  *
  */
 class TestStepCountSection : public ::testing::Test
 {
    protected:
+    Settings                                                _settings;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
+
     void SetUp() override
     {
-        _section = new input::restartFile::StepCountSection;
+        _section = std::make_unique<input::restartFile::StepCountSection>();
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
-
-    void TearDown() override { delete _section; }
-
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
 };
 
 /**
- * @class TestBondSection
+ * @class TestAtomSection
  *
- * @brief Test fixture for testing the BondSection class.
+ * @brief Test fixture for testing the AtomSection class.
  *
  */
 class TestAtomSection : public ::testing::Test
 {
    protected:
+    Settings                                                _settings;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
+
+    static void _processAtomLine(
+        std::vector<std::string> &line,
+        molsys::SimulationBox    &simulationBox,
+        molsys::Molecule         &molecule
+    )
+    {
+        input::restartFile::AtomSection::_processAtomLine(
+            line,
+            simulationBox,
+            molecule
+        );
+    }
+
+    static void _processQMAtomLine(
+        std::vector<std::string> &line,
+        molsys::SimulationBox    &simulationBox
+    )
+    {
+        input::restartFile::AtomSection::_processQMAtomLine(
+            line,
+            simulationBox
+        );
+    }
+
     void SetUp() override
     {
-        _section = new input::restartFile::AtomSection;
+        _section = std::make_unique<input::restartFile::AtomSection>();
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
-
-    void TearDown() override { delete _section; }
-
-    input::restartFile::RestartFileSection *_section;
-    engine::Engine                         *_engine;
 };
+
+#endif   // TESTS__INCLUDE__INPUT__TEST_RESTART_FILE_SECTION_HPP

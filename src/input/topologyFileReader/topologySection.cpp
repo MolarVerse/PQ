@@ -22,79 +22,65 @@
 
 #include "topologySection.hpp"
 
-#include <fstream>   // for getline
+#include <fstream>
 
-#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
+#include "stringUtilities.hpp"
 
-using namespace input::topology;
-using namespace utilities;
-using namespace engine;
-
-/**
- * @brief general process function for topology sections
- *
- * @details Reads the topology file line by line and calls the processSection
- * function for each line until the "end" keyword is found. At the end of the
- * section the endedNormally function is called, which checks if the "end"
- * keyword was found.
- *
- * @param line
- * @param engine
- */
-void TopologySection::process(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::topology
 {
-    std::string line;
-    auto        endedNormal = false;
 
-    while (getline(*_fp, line))
+    /**
+     * @brief general process function for topology sections
+     *
+     * @details Reads the topology file line by line and calls the
+     * processSection function for each line until the "end" keyword is found.
+     * At the end of the section the endedNormally function is called, which
+     * checks if the "end" keyword was found.
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the topology file being processed
+     */
+    void TopologySection::process(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine,
+        size_t                   &lineNumber
+    )
     {
-        line         = removeComments(line, "#");
-        lineElements = splitString(line);
+        std::string line;
+        auto        endedNormal = false;
 
-        if (lineElements.empty())
+        while (getline(*_fp, line))
         {
-            ++_lineNumber;
-            continue;
+            line         = utilities::removeComments(line, "#");
+            lineElements = utilities::splitString(line);
+
+            if (lineElements.empty())
+            {
+                ++lineNumber;
+                continue;
+            }
+
+            if (utilities::toLowerCopy(lineElements[0]) == "end")
+            {
+                ++lineNumber;
+                endedNormal = true;
+                break;
+            }
+
+            processSection(lineElements, engine, lineNumber);
+
+            ++lineNumber;
         }
 
-        if (toLowerCopy(lineElements[0]) == "end")
-        {
-            ++_lineNumber;
-            endedNormal = true;
-            break;
-        }
-
-        processSection(lineElements, engine);
-
-        ++_lineNumber;
+        endedNormally(endedNormal, lineNumber);
     }
 
-    endedNormally(endedNormal);
-}
+    /**
+     * @brief set file pointer
+     *
+     * @param file
+     */
+    void TopologySection::setFp(std::ifstream *file) { _fp = file; }
 
-/**
- * @brief set line number
- *
- * @param lineNumber
- */
-void TopologySection::setLineNumber(const int lineNumber)
-{
-    _lineNumber = lineNumber;
-}
-
-/**
- * @brief set file pointer
- *
- * @param fp
- */
-void TopologySection::setFp(std::ifstream *fp) { _fp = fp; }
-
-/**
- * @brief get line number
- *
- * @return int
- */
-int TopologySection::getLineNumber() const { return _lineNumber; }
+}   // namespace input::topology

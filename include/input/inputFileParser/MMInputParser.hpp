@@ -20,54 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__MM_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__MM_INPUT_PARSER_HPP
 
-#define _MM_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
+#include "inputFileParser.hpp"
 
-#include "forceFieldClass.hpp"
-#include "inputFileParser.hpp"   // for InputFileParser
-#include "potential.hpp"
+class WaterModelSettings;   // Forward declaration
+class ForceFieldSettings;   // Forward declaration
 
 namespace input
 {
     /**
-     * @class MMInputParser inherits from InputFileParser
+     * @brief MMInputParser inherits from InputFileParser
      *
-     * @brief Parses the MM related commands in the input file
+     * @details Parses the MM related commands in the input file
      *
      */
     class MMInputParser : public InputFileParser
     {
-       private:
-        std::shared_ptr<forceField::ForceField> _forceField;
-        std::shared_ptr<potential::Potential>   _potential;
+        mstd::Ref<WaterModelSettings> _waterModelSettings;
+        mstd::Ref<ForceFieldSettings> _forceFieldSettings;
 
        public:
         explicit MMInputParser(
-            std::shared_ptr<forceField::ForceField> forceField,
-            std::shared_ptr<potential::Potential>   potential
+            WaterModelSettings &waterModelSettings,
+            ForceFieldSettings &forceFieldSettings
         );
 
-        void parseForceFieldType(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseNonCoulombType(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseWaterIntraModel(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseWaterInterModel(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addForceFieldTypeKey();
+        void addNonCoulombTypeKey();
+        void addWaterIntraModelKey();
+        void addWaterInterModelKey();
     };
 
 }   // namespace input
 
-#endif   // _MM_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__MM_INPUT_PARSER_HPP

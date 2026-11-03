@@ -33,7 +33,39 @@ import os
 import shutil
 import pathlib
 import subprocess
+import zipfile
 import pytest
+
+
+ZIP_CACHE_DIRNAME = ".zip_cache"
+
+
+def _resolve_example_dir(file_folder, example_dir):
+    """
+    Resolves example_dir to a source directory to copy test data from.
+
+    Large example data sets are stored as "<top-level-dir>.zip" next to
+    their directory (e.g. "qm-mm.zip") to keep the repository small. If
+    such a zip exists for the top-level component of example_dir, it is
+    lazily extracted into a cache dir and the matching subdirectory of the
+    extracted tree is returned. Otherwise example_dir is used as-is.
+    """
+
+    example_path = pathlib.Path(example_dir)
+    top_level = example_path.parts[0]
+
+    zip_path = file_folder / f"{top_level}.zip"
+    if not zip_path.exists():
+        return file_folder / example_path
+
+    cache_dir = file_folder / ZIP_CACHE_DIRNAME
+    if not (cache_dir / top_level).exists():
+        with zipfile.ZipFile(zip_path) as zf:
+            zf.extractall(cache_dir)
+
+    return cache_dir / example_path
+
+
 @pytest.fixture(scope="function")
 def tmpdir():
 
@@ -56,7 +88,7 @@ def test_with_data_dir(example_dir):
 
     file_folder = pathlib.Path(__file__).parent.absolute()
 
-    example_dir = file_folder / example_dir
+    source_dir = _resolve_example_dir(file_folder, example_dir)
     tmpdir = str(file_folder / "tmpdir")
 
     if os.path.exists(tmpdir) and os.path.isdir(tmpdir):
@@ -64,7 +96,7 @@ def test_with_data_dir(example_dir):
 
     print(os.path.abspath(tmpdir))
 
-    shutil.copytree(example_dir, tmpdir)
+    shutil.copytree(source_dir, tmpdir)
 
     os.chdir(tmpdir)
 

@@ -1,0 +1,10 @@
+
+H2O 3 0
+qm_reference_energy -2554.71
+O 1 -0.82
+H 2 0.41
+H 2 0.41
+
+K 1 1
+qm_reference_energy 0.0
+K 3 1.0

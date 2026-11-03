@@ -22,7 +22,10 @@
 
 #include "hybridMDEngine.hpp"
 
-using enum molsys::HybridZone;
+#include <format>
+#include <limits>
+
+#include "exceptions.hpp"
 
 namespace engine
 {
@@ -36,9 +39,9 @@ namespace engine
      * function combines them to produce the final total force on each atom that
      * will be used for integration.
      */
-    void HybridMDEngine::combineInnerOuterForces()
+    void HybridMDEngine::_combineInnerOuterForces()
     {
-        for (auto& atom : _simulationBox->getAtoms())
+        for (auto& atom : getSimulationBox().getAtoms())
         {
             const auto innerForce = atom->getForceInner();
             const auto outerForce = atom->getForceOuter();
@@ -55,7 +58,7 @@ namespace engine
      * force accumulator using addForceInner(), then resets all forces in the
      * simulation box to zero.
      */
-    void HybridMDEngine::addCurrentForcesToInnerAndReset(
+    void HybridMDEngine::_addCurrentForcesToInnerAndReset(
         std::vector<std::shared_ptr<molsys::Atom>>& atoms
     )
     {
@@ -65,7 +68,7 @@ namespace engine
             atom->addForceInner(force);
         }
 
-        _simulationBox->resetForces();
+        getSimulationBox().resetForces();
     }
 
     /**
@@ -82,9 +85,9 @@ namespace engine
      * smoothing where forces need to be weighted by the configuration-specific
      * global smoothing factor.
      */
-    void HybridMDEngine::addScaledCurrentForcesToInnerAndReset(
+    void HybridMDEngine::_addScaledCurrentForcesToInnerAndReset(
         std::vector<std::shared_ptr<molsys::Atom>>& atoms,
-        const double                                globalSmF
+        double                                      globalSmF
     )
     {
         for (auto& atom : atoms)
@@ -93,7 +96,7 @@ namespace engine
             atom->addForceInner(force * globalSmF);
         }
 
-        _simulationBox->resetForces();
+        getSimulationBox().resetForces();
     }
 
     /**
@@ -105,7 +108,7 @@ namespace engine
      * force accumulator using addForceOuter(), then resets all forces in the
      * simulation box to zero.
      */
-    void HybridMDEngine::addCurrentForcesToOuterAndReset(
+    void HybridMDEngine::_addCurrentForcesToOuterAndReset(
         std::vector<std::shared_ptr<molsys::Atom>>& atoms
     )
     {
@@ -115,7 +118,7 @@ namespace engine
             atom->addForceOuter(force);
         }
 
-        _simulationBox->resetForces();
+        getSimulationBox().resetForces();
     }
 
     /**
@@ -132,9 +135,9 @@ namespace engine
      * smoothing where forces need to be weighted by the configuration-specific
      * global smoothing factor.
      */
-    void HybridMDEngine::addScaledCurrentForcesToOuterAndReset(
+    void HybridMDEngine::_addScaledCurrentForcesToOuterAndReset(
         std::vector<std::shared_ptr<molsys::Atom>>& atoms,
-        const double                                globalSmF
+        double                                      globalSmF
     )
     {
         for (auto& atom : atoms)
@@ -143,7 +146,7 @@ namespace engine
             atom->addForceOuter(force * globalSmF);
         }
 
-        _simulationBox->resetForces();
+        getSimulationBox().resetForces();
     }
 
     /**
@@ -157,9 +160,11 @@ namespace engine
      * factor represents the degree to which a molecule should be treated with
      * QM methods, with smF = 1 being fully QM and smF = 0 being fully MM.
      */
-    void HybridMDEngine::scaleSmoothingMoleculeForcesInner()
+    void HybridMDEngine::_scaleSmoothingMoleculeForcesInner()
     {
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        for (auto& mol : getSimulationBox().getMoleculesInsideZone(
+                 molsys::HybridZone::SMOOTHING
+             ))
         {
             const auto smF = mol.getSmoothingFactor();
             for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
@@ -177,9 +182,11 @@ namespace engine
      * must sum to 1, molecules with high QM character (high smF) receive low MM
      * weight (1 - smF), ensuring a smooth transition between QM and MM regions.
      */
-    void HybridMDEngine::scaleSmoothingMoleculeForcesOuter()
+    void HybridMDEngine::_scaleSmoothingMoleculeForcesOuter()
     {
-        for (auto& mol : _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        for (auto& mol : getSimulationBox().getMoleculesInsideZone(
+                 molsys::HybridZone::SMOOTHING
+             ))
         {
             const auto smF = mol.getSmoothingFactor();
             for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
@@ -200,18 +207,49 @@ namespace engine
      * bit j is set, molecule j will be included in the inactive set.
      */
     std::unordered_set<size_t> HybridMDEngine::
-        generateInactiveSmoothingMoleculeSet(
+        _generateInactiveSmoothingMoleculeSet(
             size_t bitPattern,
             size_t totalMolecules
-        ) const
+        )
     {
         std::unordered_set<size_t> inactiveMolecules;
 
         for (size_t j = 0; j < totalMolecules; ++j)
-            if (bitPattern & (1U << j))
+            if (static_cast<bool>(bitPattern & (size_t{1} << j)))
                 inactiveMolecules.insert(j);
 
         return inactiveMolecules;
+    }
+
+    /**
+     * @brief Number of configurations for "exact" smoothing
+     *
+     * @param nSmoothingMolecules Number of smoothing molecules
+     * @return size_t 2^nSmoothingMolecules
+     *
+     * @throws HybridMDEngineException if 2^nSmoothingMolecules does not fit
+     * into size_t
+     */
+    size_t HybridMDEngine::_numberOfSmoothingConfigurations(
+        const size_t nSmoothingMolecules
+    )
+    {
+        constexpr auto maxMolecules =
+            static_cast<size_t>(std::numeric_limits<size_t>::digits) - 1;
+
+        if (nSmoothingMolecules > maxMolecules)
+        {
+            throw exc::HybridMDEngineException(
+                std::format(
+                    "Exact smoothing supports at most {} smoothing molecules, "
+                    "found {}",
+                    maxMolecules,
+                    nSmoothingMolecules
+                )
+            );
+        }
+
+        return size_t{1} << nSmoothingMolecules;
     }
 
     /**
@@ -227,15 +265,16 @@ namespace engine
      * inner calculation, it uses (1 - smoothingFactor), otherwise it uses
      * the smoothingFactor directly.
      */
-    double HybridMDEngine::calculateGlobalSmoothingFactor(
+    double HybridMDEngine::_calculateGlobalSmoothingFactor(
         const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
     ) const
     {
-        double globalSmoothingFactor = 1.0;
+        double globalSmoothingFactor = 1;
 
         size_t index = 0;
-        for (const auto& mol :
-             _simulationBox->getMoleculesInsideZone(SMOOTHING))
+        for (const auto& mol : getSimulationBox().getMoleculesInsideZone(
+                 molsys::HybridZone::SMOOTHING
+             ))
         {
             if (inactiveForInnerCalcMolecules.contains(index))
                 globalSmoothingFactor *= 1 - mol.getSmoothingFactor();

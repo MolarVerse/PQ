@@ -20,60 +20,65 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __INFO_OUTPUT_HPP__
+#ifndef OUTPUT__INFO_OUTPUT_HPP
+#define OUTPUT__INFO_OUTPUT_HPP
 
-#define __INFO_OUTPUT_HPP__
+#include <string_view>
 
-#include <string_view>   // for string_view
-
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
-namespace output
+struct Settings;   // forward declaration
+
+namespace out
 {
 
     /**
-     * @class InfoOutput inherits from Output
+     * @brief InfoOutput inherits from Output
      *
-     * @brief Output file for info file
+     * @details Output file for info file
      *
      */
     class InfoOutput : public Output
     {
-       private:
-        void writeHeader();
-        void writeLeft(
-            const double,
-            const std::string_view &,
-            const std::string_view &
-        );
-        void writeLeftScientific(
-            const double,
-            const std::string_view &,
-            const std::string_view &
-        );
-        void writeLeftInteger(
-            const double,
-            const std::string_view &,
-            const std::string_view &
-        );
-        void writeRight(
-            const double,
-            const std::string_view &,
-            const std::string_view &
-        );
-        void writeRight();
-
        public:
         using Output::Output;
 
-        void write(const double, const physicalData::PhysicalData &);
+        void write(
+            double                            simulationTime,
+            const physicalData::PhysicalData &physicalData,
+            const Settings                   &settings
+        );
+
+       private:
+        void _writeHeader();
+        void _writeLeft(
+            double,
+            const std::string_view &,
+            const std::string_view &
+        );
+        void _writeLeftScientific(
+            double,
+            const std::string_view &,
+            const std::string_view &
+        );
+        void _writeLeftInteger(
+            double,
+            const std::string_view &,
+            const std::string_view &
+        );
+        void _writeRight(
+            double,
+            const std::string_view &,
+            const std::string_view &
+        );
+        void _writeRight();
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif /* __INFO_OUTPUT_HPP__ */
+#endif /* OUTPUT__INFO_OUTPUT_HPP */

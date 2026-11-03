@@ -22,140 +22,98 @@
 
 #include "morsePair.hpp"
 
-#include <cmath>   // for exp
+#include <cmath>
 
-#include "mathUtilities.hpp"   // for compare
-
-using namespace potential;
-using namespace utilities;
-
-/**
- * @brief Construct a new Morse Pair:: Morse Pair object
- *
- * @param vanDerWaalsType1
- * @param vanDerWaalsType2
- * @param cutOff
- * @param dissociationEnergy
- * @param wellWidth
- * @param equilibriumDistance
- */
-MorsePair::MorsePair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff,
-    const double dissociationEnergy,
-    const double wellWidth,
-    const double equilibriumDistance
-)
-    : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
-      _dissociationEnergy(dissociationEnergy),
-      _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
-
-/**
- * @brief Construct a new Morse Pair:: Morse Pair object
- *
- * @param cutOff
- * @param dissociationEnergy
- * @param wellWidth
- * @param equilibriumDistance
- */
-MorsePair::MorsePair(
-    const double cutOff,
-    const double dissociationEnergy,
-    const double wellWidth,
-    const double equilibriumDistance
-)
-    : NonCoulombPair(cutOff),
-      _dissociationEnergy(dissociationEnergy),
-      _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
-
-/**
- * @brief Construct a new Morse Pair:: Morse Pair object
- *
- * @param cutOff
- * @param energyCutoff
- * @param forceCutoff
- * @param dissociationEnergy
- * @param wellWidth
- * @param equilibriumDistance
- */
-MorsePair::MorsePair(
-    const double cutOff,
-    const double energyCutoff,
-    const double forceCutoff,
-    const double dissociationEnergy,
-    const double wellWidth,
-    const double equilibriumDistance
-)
-    : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
-      _dissociationEnergy(dissociationEnergy),
-      _wellWidth(wellWidth),
-      _equilibriumDistance(equilibriumDistance){};
-
-/**
- * @brief operator overload for the comparison of two MorsePair objects
- *
- * @param other
- * @return true
- * @return false
- */
-bool MorsePair::operator==(const MorsePair &other) const
+namespace pot
 {
-    auto isEq = true;
 
-    isEq = isEq && NonCoulombPair::operator==(other);
-    isEq = isEq && compare(_dissociationEnergy, other._dissociationEnergy);
-    isEq = isEq && compare(_wellWidth, other._wellWidth);
-    isEq = isEq && compare(_equilibriumDistance, other._equilibriumDistance);
+    /**
+     * @brief Construct a new Morse Pair:: Morse Pair object
+     *
+     * @param vanDerWaalsType1
+     * @param vanDerWaalsType2
+     * @param cutOff
+     * @param params
+     */
+    MorsePair::MorsePair(
+        ExtVdwType         vanDerWaalsType1,
+        ExtVdwType         vanDerWaalsType2,
+        double             cutOff,
+        const MorseParams &params
+    )
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+          _params(params)
+    {
+    }
 
-    return isEq;
-}
+    /**
+     * @brief Construct a new Morse Pair:: Morse Pair object
+     *
+     * @param cutOff
+     * @param params
+     */
+    MorsePair::MorsePair(const double cutOff, const MorseParams &params)
+        : NonCoulombPair(cutOff), _params(params)
+    {
+    }
 
-/**
- * @brief calculates the energy and force of a MorsePair
- *
- * @param distance
- * @return std::pair<double, double>
- */
-std::pair<double, double> MorsePair::calculate(const double distance) const
-{
-    const auto deltaEquilibrium = distance - _equilibriumDistance;
-    const auto expTerm          = std::exp(-_wellWidth * deltaEquilibrium);
-    const auto oneMinusExpTerm  = 1.0 - expTerm;
+    /**
+     * @brief Construct a new Morse Pair:: Morse Pair object
+     *
+     * @param cutOff
+     * @param energyCutoff
+     * @param forceCutoff
+     * @param params
+     */
+    MorsePair::MorsePair(
+        double             cutOff,
+        double             energyCutoff,
+        double             forceCutoff,
+        const MorseParams &params
+    )
+        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
+    {
+    }
 
-    auto energy  = _dissociationEnergy * oneMinusExpTerm * oneMinusExpTerm;
-    energy      -= _energyCutOff;
-    energy      -= _forceCutOff * (_radialCutOff - distance);
+    /**
+     * @brief operator overload for the comparison of two MorsePair objects
+     *
+     * @param other
+     * @return true
+     * @return false
+     */
+    bool MorsePair::operator==(const MorsePair &other) const
+    {
+        auto isEq = true;
 
-    auto force  = -2.0 * _dissociationEnergy * _wellWidth;
-    force      *= expTerm * oneMinusExpTerm;
-    force      -= _forceCutOff;
+        isEq = isEq && NonCoulombPair::operator==(other);
+        isEq = isEq && _params == other._params;
 
-    return {energy, force};
-}
+        return isEq;
+    }
 
-/**
- * @brief get the dissociation energy
- *
- * @return double
- */
-double MorsePair::getDissociationEnergy() const { return _dissociationEnergy; }
+    /**
+     * @brief calculates the energy and force of a MorsePair
+     *
+     * @param distance
+     * @return std::pair<double, double>
+     */
+    std::pair<double, double> MorsePair::calculate(double distance) const
+    {
+        const auto deltaEquilibrium = distance - _params.equilibriumDistance;
+        const auto expTerm = std::exp(-_params.wellWidth * deltaEquilibrium);
+        const auto oneMinusExpTerm = 1.0 - expTerm;
 
-/**
- * @brief get the well width
- *
- * @return double
- */
-double MorsePair::getWellWidth() const { return _wellWidth; }
+        auto energy =
+            _params.dissociationEnergy * oneMinusExpTerm * oneMinusExpTerm;
+        energy -= get_energyCutoff();
+        energy -= get_forceCutoff() * (get_radialCutoff() - distance);
 
-/**
- * @brief get the equilibrium distance
- *
- * @return double
- */
-double MorsePair::getEquilibriumDistance() const
-{
-    return _equilibriumDistance;
-}
+        auto force  = -2.0 * _params.dissociationEnergy * _params.wellWidth;
+        force      *= expTerm * oneMinusExpTerm;
+        force      -= get_forceCutoff();
+
+        return {energy, force};
+    }
+
+}   // namespace pot

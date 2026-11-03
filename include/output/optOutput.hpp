@@ -20,25 +20,24 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_OUTPUT_HPP_
+#ifndef OUTPUT__OPT_OUTPUT_HPP
+#define OUTPUT__OPT_OUTPUT_HPP
 
-#define _OPT_OUTPUT_HPP_
+#include <cstddef>
 
-#include <cstddef>   // for size_t
-
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace opt
 {
     class Optimizer;   // forward declaration
 }   // namespace opt
 
-namespace output
+namespace out
 {
     /**
-     * @class OptOutput inherits from Output
+     * @brief OptOutput inherits from Output
      *
-     * @brief Output file for energy, temperature and pressure
+     * @details Output file for energy, temperature and pressure
      *
      */
     class OptOutput : public Output
@@ -46,9 +45,9 @@ namespace output
        public:
         using Output::Output;
 
-        void write(const size_t step, const opt::Optimizer& optimizer);
+        void write(size_t step, const opt::Optimizer& optimizer);
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _OPT_OUTPUT_HPP_
+#endif   // OUTPUT__OPT_OUTPUT_HPP

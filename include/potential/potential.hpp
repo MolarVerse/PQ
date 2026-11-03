@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_HPP_
+#ifndef POTENTIAL__POTENTIAL_HPP
+#define POTENTIAL__POTENTIAL_HPP
 
-#define _POTENTIAL_HPP_
-
-#include <memory>    // for shared_ptr
-#include <utility>   // for pair
+#include <memory>
+#include <utility>
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
@@ -44,7 +43,9 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+class WaterModelSettings;   // forward declaration
+
+namespace pot
 {
     struct QMChargeTag
     {
@@ -70,47 +71,53 @@ namespace potential
      */
     class Potential
     {
-       protected:
+       private:
         std::shared_ptr<CoulombPotential>    _coulombPotential;
         std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
-        virtual ~Potential() = default;
+        virtual ~Potential();
 
         virtual void calculateForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         void calculateQMMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         );
 
         virtual void calculateCoreToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         virtual void calculateLayerToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         virtual void calculateOuterToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         virtual void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         [[nodiscard]]
@@ -142,7 +149,7 @@ namespace potential
         ) const;
 
         template <typename T>
-        void makeCoulombPotential(T p);
+        void makeCoulombPotential(T potential);
 
         template <typename T>
         void makeNonCoulombPotential(const T &nonCoulombPot);
@@ -155,7 +162,7 @@ namespace potential
          ***************************/
 
         void setNonCoulombPotential(
-            const std::shared_ptr<NonCoulombPotential> pot
+            const std::shared_ptr<NonCoulombPotential> &pot
         );
 
         /***************************
@@ -170,10 +177,10 @@ namespace potential
         std::shared_ptr<NonCoulombPotential> getNonCoulombPotSharedPtr() const;
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#ifndef _POTENTIAL_TPP_
-#include "potential.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#ifndef POTENTIAL__POTENTIAL_TPP
+#include "potential.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _POTENTIAL_HPP_
+#endif   // POTENTIAL__POTENTIAL_HPP

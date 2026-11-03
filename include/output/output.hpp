@@ -20,19 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OUTPUT_HPP_
+#ifndef OUTPUT__OUTPUT_HPP
+#define OUTPUT__OUTPUT_HPP
 
-#define _OUTPUT_HPP_
-
-#include <cstddef>       // for size_t
-#include <fstream>       // for ofstream
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <cstddef>
+#include <fstream>
+#include <string>
+#include <string_view>
 #include <utility>
 
-class TestOutput_testSpecialSetFilename_Test;   // Friend test class
+struct TestOutputUtils;   // Friend test class
 
-namespace output
+namespace out
 {
     /**
      * @class Output
@@ -42,15 +41,9 @@ namespace output
      */
     class Output
     {
-       protected:
+       private:
         std::string   _fileName;
         std::ofstream _fp;
-        int           _rank;
-
-        void               openFile();
-        void               writeComment(std::size_t);
-        void               writeForceComment(std::size_t, double);
-        static std::string formatForceComment(std::size_t, double);
 
        public:
         explicit Output(std::string filename) : _fileName(std::move(filename))
@@ -62,20 +55,36 @@ namespace output
         Output(Output &&) noexcept            = default;
         Output &operator=(Output &&) noexcept = default;
 
-        void setFilename(const std::string_view &);
         void close();
+        void setFilename(const std::string_view &, bool overwriteOutputFiles);
 
-#ifdef WITH_TESTS
-        friend class ::TestOutput_testSpecialSetFilename_Test;
-#endif
+        friend struct ::TestOutputUtils;
 
         /***************************
          * standard getter methods *
          ***************************/
 
         std::string getFilename() const;
+
+       protected:
+        void _openFile();
+        void _writeComment(size_t, bool includeMetadata);
+        void _writeForceComment(size_t, double, bool includeMetadata);
+
+        [[nodiscard]]
+        static std::string _formatForceComment(
+            size_t step,
+            double totalForce,
+            bool   includeMetadata
+        );
+
+        [[nodiscard]]
+        std::ofstream &_getFilePointer()
+        {
+            return _fp;
+        }
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _OUTPUT_HPP_
+#endif   // OUTPUT__OUTPUT_HPP

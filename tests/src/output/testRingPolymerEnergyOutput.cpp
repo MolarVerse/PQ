@@ -23,64 +23,69 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 #include <vector>
 
 #include "physicalData.hpp"
 #include "ringPolymerEnergyOutput.hpp"
+#include "testOutputBase.hpp"
 
-using namespace output;
-using physicalData::PhysicalData;
-
-namespace
+class TestRingPolymerEnergyOutput : public testing::Test
 {
-    std::string slurp(const std::string &path)
+   protected:
+    static double _sumOfRingPolymerEnergies(
+        const std::vector<physicalData::PhysicalData> &dataVector
+    )
     {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
+        return out::RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(
+            dataVector
+        );
     }
-}   // namespace
 
-TEST(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
+    static double _maxRingPolymerEnergy(
+        const std::vector<physicalData::PhysicalData> &dataVector
+    )
+    {
+        return out::RingPolymerEnergyOutput::_maxRingPolymerEnergy(dataVector);
+    }
+};
+
+TEST_F(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
 {
-    RingPolymerEnergyOutput   out("dummy.rpe");
-    std::vector<PhysicalData> v(3);
-    v[0].setRingPolymerEnergy(1.0);
-    v[1].setRingPolymerEnergy(2.5);
-    v[2].setRingPolymerEnergy(3.5);
-    EXPECT_DOUBLE_EQ(out.sumOfRingPolymerEnergies(v), 7.0);
+    out::RingPolymerEnergyOutput            out("dummy.rpe");
+    std::vector<physicalData::PhysicalData> vec(3);
+    vec[0].setRingPolymerEnergy(1.0);
+    vec[1].setRingPolymerEnergy(2.5);
+    vec[2].setRingPolymerEnergy(3.5);
+    EXPECT_DOUBLE_EQ(_sumOfRingPolymerEnergies(vec), 7.0);
 }
 
-TEST(TestRingPolymerEnergyOutput, maxRingPolymerEnergyReturnsLargestEntry)
+TEST_F(TestRingPolymerEnergyOutput, maxRingPolymerEnergyReturnsLargestEntry)
 {
-    RingPolymerEnergyOutput   out("dummy.rpe");
-    std::vector<PhysicalData> v(3);
-    v[0].setRingPolymerEnergy(1.0);
-    v[1].setRingPolymerEnergy(9.0);
-    v[2].setRingPolymerEnergy(5.0);
-    EXPECT_DOUBLE_EQ(out.maxRingPolymerEnergy(v), 9.0);
+    out::RingPolymerEnergyOutput            out("dummy.rpe");
+    std::vector<physicalData::PhysicalData> vec(3);
+    vec[0].setRingPolymerEnergy(1.0);
+    vec[1].setRingPolymerEnergy(9.0);
+    vec[2].setRingPolymerEnergy(5.0);
+    EXPECT_DOUBLE_EQ(_maxRingPolymerEnergy(vec), 9.0);
 }
 
-TEST(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)
+TEST_F(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)
 {
     const std::string path = "default.rpe.test";
 
-    RingPolymerEnergyOutput out(path);
-    out.setFilename(path);
+    out::RingPolymerEnergyOutput out(path);
+    out.setFilename(path, false);
 
-    std::vector<PhysicalData> v(2);
-    v[0].setRingPolymerEnergy(1.0);
-    v[1].setRingPolymerEnergy(3.0);
+    std::vector<physicalData::PhysicalData> vec(2);
+    vec[0].setRingPolymerEnergy(1.0);
+    vec[1].setRingPolymerEnergy(3.0);
 
-    out.write(5, v);
+    out.write(5, vec);
     out.close();
 
     const auto content = slurp(path);
-    EXPECT_NE(content.find("5"), std::string::npos);
+    EXPECT_NE(content.find('5'), std::string::npos);
     // Sum = 4.0
     EXPECT_NE(content.find("4.000000000000"), std::string::npos);
     // Max = 3.0 (also serves as the second value)

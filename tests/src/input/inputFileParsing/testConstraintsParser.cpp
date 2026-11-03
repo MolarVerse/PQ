@@ -20,21 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), TEST_F
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "constraintSettings.hpp"   // for ConstraintSettings
+#include "constraintSettings.hpp"
 #include "constraintsInputParser.hpp"
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for InputFileException
-#include "gtest/gtest.h"             // for Message, TestPartResult
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for EXPECT_THROW_MSG
-
-using namespace input;
-using namespace settings;
+#include "exceptions.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "shake" command
@@ -45,46 +40,51 @@ using namespace settings;
  */
 TEST_F(TestInputFileReader, testParseShakeActivated)
 {
-    const auto              &constraints = _engine->getConstraints();
-    ConstraintsInputParser   parser(constraints);
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("shake"));
+    const auto &parseFunc = funcMap.at("shake");
+
     std::vector<std::string> lineElements = {"shake", "=", "off"};
-    parser.parseShakeActivated(lineElements, 0);
-    EXPECT_FALSE(constraints->isActive());
-    EXPECT_FALSE(constraints->isShakeActive());
-    EXPECT_FALSE(ConstraintSettings::isShakeActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_FALSE(constraintSettings.isActive());
+    EXPECT_FALSE(constraintSettings.isShakeActivated());
+
+    _clearParser(parser);
 
     lineElements = {"shake", "=", "on"};
-    parser.parseShakeActivated(lineElements, 0);
-    EXPECT_TRUE(constraints->isActive());
-    EXPECT_TRUE(constraints->isShakeActive());
-    EXPECT_TRUE(ConstraintSettings::isShakeActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_TRUE(constraintSettings.isActive());
+    EXPECT_TRUE(constraintSettings.isShakeActivated());
 
-    ConstraintSettings::deactivateShake();
-    constraints->deactivateShake();
+    _clearParser(parser);
+
+    constraintSettings.deactivateShake();
 
     lineElements = {"shake", "=", "shake"};
-    parser.parseShakeActivated(lineElements, 0);
-    EXPECT_TRUE(constraints->isActive());
-    EXPECT_TRUE(constraints->isShakeActive());
-    EXPECT_TRUE(ConstraintSettings::isShakeActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_TRUE(constraintSettings.isActive());
+    EXPECT_TRUE(constraintSettings.isShakeActivated());
 
-    ConstraintSettings::deactivateShake();
-    constraints->deactivateShake();
+    _clearParser(parser);
+
+    constraintSettings.deactivateShake();
 
     lineElements = {"shake", "=", "mshake"};
-    parser.parseShakeActivated(lineElements, 0);
-    EXPECT_TRUE(constraints->isActive());
-    EXPECT_TRUE(constraints->isMShakeActive());
-    EXPECT_TRUE(constraints->isShakeActive());
-    EXPECT_TRUE(ConstraintSettings::isShakeActivated());
-    EXPECT_TRUE(ConstraintSettings::isMShakeActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_TRUE(constraintSettings.isActive());
+    EXPECT_TRUE(constraintSettings.isShakeActivated());
+    EXPECT_TRUE(constraintSettings.isMShakeActivated());
+
+    _clearParser(parser);
 
     lineElements = {"shake", "=", "1"};
     EXPECT_THROW_MSG(
-        parser.parseShakeActivated(lineElements, 0),
-        customException::InputFileException,
-        "Invalid shake keyword \"1\" at line 0 in input file\n"
-        "Possible keywords are: \"on\", \"off\", \"shake\", \"mshake\""
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"1\" for key \"shake\" at line 0 in input file. "
+        "Allowed values: off, on, shake, mshake"
     );
 }
 
@@ -96,23 +96,35 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
  */
 TEST_F(TestInputFileReader, testParseShakeTolerance)
 {
-    ConstraintsInputParser   parser(_engine->getConstraints());
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("shake_tolerance"));
+    const auto &parseFunc = funcMap.at("shake_tolerance");
+
     std::vector<std::string> lineElements = {"shake-tolerance", "=", "0.0001"};
-    parser.parseShakeTolerance(lineElements, 0);
-    EXPECT_EQ(ConstraintSettings::getShakeTolerance(), 0.0001);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(constraintSettings.getShakeTolerance(), 0.0001);
+
+    _clearParser(parser);
 
     lineElements = {"shake-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
-        parser.parseShakeTolerance(lineElements, 0),
-        customException::InputFileException,
-        "Shake tolerance must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.0001\" for key \"shake-tolerance\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
     );
+
+    _clearParser(parser);
 
     lineElements = {"shake-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseShakeTolerance(lineElements, 0),
-        customException::InputFileException,
-        "Shake tolerance must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0\" for key \"shake-tolerance\" at line 0 in input "
+        "file: failed validation with message Value must be greater than 0"
     );
 }
 
@@ -124,23 +136,35 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseShakeIteration)
 {
-    ConstraintsInputParser   parser(_engine->getConstraints());
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("shake_iter"));
+    const auto &parseFunc = funcMap.at("shake_iter");
+
     std::vector<std::string> lineElements = {"shake-iter", "=", "100"};
-    parser.parseShakeIteration(lineElements, 0);
-    EXPECT_EQ(ConstraintSettings::getShakeMaxIter(), 100);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(constraintSettings.getShakeMaxIter(), 100);
+
+    _clearParser(parser);
 
     lineElements = {"shake-iter", "=", "-100"};
     EXPECT_THROW_MSG(
-        parser.parseShakeIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum shake iterations must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-100\" for key \"shake-iter\" at line 0 in input "
+        "file. Value must be a positive integer"
     );
+
+    _clearParser(parser);
 
     lineElements = {"shake-iter", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseShakeIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum shake iterations must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0\" for key \"shake-iter\" at line 0 in input file: "
+        "failed validation with message Value must be greater than or equal to "
+        "1"
     );
 }
 
@@ -152,23 +176,35 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseRattleTolerance)
 {
-    ConstraintsInputParser   parser(_engine->getConstraints());
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("rattle_tolerance"));
+    const auto &parseFunc = funcMap.at("rattle_tolerance");
+
     std::vector<std::string> lineElements = {"rattle-tolerance", "=", "0.0001"};
-    parser.parseRattleTolerance(lineElements, 0);
-    EXPECT_EQ(ConstraintSettings::getRattleTolerance(), 0.0001);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(constraintSettings.getRattleTolerance(), 0.0001);
+
+    _clearParser(parser);
 
     lineElements = {"rattle-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
-        parser.parseRattleTolerance(lineElements, 0),
-        customException::InputFileException,
-        "Rattle tolerance must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.0001\" for key \"rattle-tolerance\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
     );
+
+    _clearParser(parser);
 
     lineElements = {"rattle-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseRattleTolerance(lineElements, 0),
-        customException::InputFileException,
-        "Rattle tolerance must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0\" for key \"rattle-tolerance\" at line 0 in input "
+        "file: failed validation with message Value must be greater than 0"
     );
 }
 
@@ -180,23 +216,35 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
  */
 TEST_F(TestInputFileReader, testParseRattleIteration)
 {
-    ConstraintsInputParser   parser(_engine->getConstraints());
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("rattle_iter"));
+    const auto &parseFunc = funcMap.at("rattle_iter");
+
     std::vector<std::string> lineElements = {"rattle-iter", "=", "100"};
-    parser.parseRattleIteration(lineElements, 0);
-    EXPECT_EQ(ConstraintSettings::getRattleMaxIter(), 100);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(constraintSettings.getRattleMaxIter(), 100);
+
+    _clearParser(parser);
 
     lineElements = {"rattle-iter", "=", "-100"};
     EXPECT_THROW_MSG(
-        parser.parseRattleIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum rattle iterations must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-100\" for key \"rattle-iter\" at line 0 in input "
+        "file. Value must be a positive integer"
     );
+
+    _clearParser(parser);
 
     lineElements = {"rattle-iter", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseRattleIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum rattle iterations must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0\" for key \"rattle-iter\" at line 0 in input file: "
+        "failed validation with message Value must be greater than or equal to "
+        "1"
     );
 }
 
@@ -208,23 +256,35 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
  */
 TEST_F(TestInputFileReader, testParseMShakeTolerance)
 {
-    ConstraintsInputParser   parser(_engine->getConstraints());
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("mshake_tolerance"));
+    const auto &parseFunc = funcMap.at("mshake_tolerance");
+
     std::vector<std::string> lineElements = {"mshake-tolerance", "=", "0.01"};
-    parser.parseMShakeTolerance(lineElements, 0);
-    EXPECT_EQ(ConstraintSettings::getMShakeTolerance(), 0.01);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(constraintSettings.getMShakeTolerance(), 0.01);
+
+    _clearParser(parser);
 
     lineElements = {"mshake-tolerance", "=", "-0.0001"};
     EXPECT_THROW_MSG(
-        parser.parseMShakeTolerance(lineElements, 0),
-        customException::InputFileException,
-        "MShake tolerance must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.0001\" for key \"mshake-tolerance\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
     );
+
+    _clearParser(parser);
 
     lineElements = {"mshake-tolerance", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseMShakeTolerance(lineElements, 0),
-        customException::InputFileException,
-        "MShake tolerance must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0\" for key \"mshake-tolerance\" at line 0 in input "
+        "file: failed validation with message Value must be greater than 0"
     );
 }
 
@@ -236,23 +296,35 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
  */
 TEST_F(TestInputFileReader, testParseMShakeIteration)
 {
-    ConstraintsInputParser   parser(_engine->getConstraints());
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("mshake_iter"));
+    const auto &parseFunc = funcMap.at("mshake_iter");
+
     std::vector<std::string> lineElements = {"mshake-iter", "=", "73"};
-    parser.parseMShakeIteration(lineElements, 0);
-    EXPECT_EQ(ConstraintSettings::getMShakeMaxIter(), 73);
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(constraintSettings.getMShakeMaxIter(), 73);
+
+    _clearParser(parser);
 
     lineElements = {"mshake-iter", "=", "-100"};
     EXPECT_THROW_MSG(
-        parser.parseMShakeIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum MShake iterations must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-100\" for key \"mshake-iter\" at line 0 in input "
+        "file. Value must be a positive integer"
     );
+
+    _clearParser(parser);
 
     lineElements = {"mshake-iter", "=", "0"};
     EXPECT_THROW_MSG(
-        parser.parseMShakeIteration(lineElements, 0),
-        customException::InputFileException,
-        "Maximum MShake iterations must be positive"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0\" for key \"mshake-iter\" at line 0 in input file: "
+        "failed validation with message Value must be greater than or equal to "
+        "1"
     );
 }
 
@@ -262,27 +334,33 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
  */
 TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
 {
-    const auto              &constraints = _engine->getConstraints();
-    ConstraintsInputParser   parser(constraints);
-    std::vector<std::string> lineElements = {"distance-constraints", "=", "on"};
-    parser.parseDistanceConstraintActivated(lineElements, 0);
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("distance_constraints"));
+    const auto &parseFunc = funcMap.at("distance_constraints");
 
-    EXPECT_TRUE(constraints->isActive());
-    EXPECT_TRUE(constraints->isDistanceConstraintsActive());
-    EXPECT_TRUE(ConstraintSettings::isDistanceConstraintsActivated());
+    std::vector<std::string> lineElements = {"distance-constraints", "=", "on"};
+    parseFunc(lineElements, 0);
+    EXPECT_TRUE(constraintSettings.isActive());
+    EXPECT_TRUE(constraintSettings.isDistanceConstraintsActivated());
+
+    constraintSettings.deactivateDistanceConstraints();
+
+    _clearParser(parser);
 
     lineElements = {"distance-constraints", "=", "off"};
-    parser.parseDistanceConstraintActivated(lineElements, 0);
-    EXPECT_FALSE(constraints->isActive());
-    EXPECT_FALSE(constraints->isDistanceConstraintsActive());
-    EXPECT_FALSE(ConstraintSettings::isDistanceConstraintsActivated());
+    parseFunc(lineElements, 0);
+    EXPECT_FALSE(constraintSettings.isActive());
+    EXPECT_FALSE(constraintSettings.isDistanceConstraintsActivated());
+
+    _clearParser(parser);
 
     lineElements = {"distance-constraints", "=", "1"};
     EXPECT_THROW_MSG(
-        parser.parseDistanceConstraintActivated(lineElements, 0),
-        customException::InputFileException,
-        "Invalid distance-constraints keyword \"1\" "
-        "at line 0 in input file\n"
-        "Possible keywords are \"on\" and \"off\""
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"1\" for key \"distance-constraints\" at line 0 in "
+        "input file. Allowed values: on|off|true|false|yes|no"
     );
 }

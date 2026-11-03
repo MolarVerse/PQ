@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
+#ifndef OUTPUT__RING_POLYMER_TRAJECTORY_OUTPUT_HPP
+#define OUTPUT__RING_POLYMER_TRAJECTORY_OUTPUT_HPP
 
-#define _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
-
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cstddef>
+#include <vector>
 
 #include "output.hpp"
 
@@ -34,12 +33,12 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
-     * @class RingPolymerTrajectoryOutput inherits from Output
+     * @brief RingPolymerTrajectoryOutput inherits from Output
      *
-     * @brief Output for xyz, vel, force, charges files for all ring polymer
+     * @details Output for xyz, vel, force, charges files for all ring polymer
      * beads
      *
      */
@@ -48,15 +47,28 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const molsys::SimulationBox &);
-        void writeXyz(std::vector<molsys::SimulationBox> &, const size_t);
-        void writeVelocities(
-            std::vector<molsys::SimulationBox> &,
-            const size_t
+        void writeHeader(const molsys::SimulationBox &, size_t);
+        void writeXyz(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
         );
-        void writeForces(std::vector<molsys::SimulationBox> &, const size_t);
-        void writeCharges(std::vector<molsys::SimulationBox> &, const size_t);
+        void writeVelocities(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
+        void writeForces(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
+        void writeCharges(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
     };
-}   // namespace output
+}   // namespace out
 
-#endif   // _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
+#endif   // OUTPUT__RING_POLYMER_TRAJECTORY_OUTPUT_HPP

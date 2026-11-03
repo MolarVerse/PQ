@@ -1,1 +1,0 @@
-- Generate standard release notes and request release contributors on generated release and sync pull requests.

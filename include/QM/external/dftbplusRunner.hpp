@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DFTBPLUS_RUNNER_HPP_
+#ifndef QM__EXTERNAL__DFTBPLUS_RUNNER_HPP
+#define QM__EXTERNAL__DFTBPLUS_RUNNER_HPP
 
-#define _DFTBPLUS_RUNNER_HPP_
-
-#include "externalQMRunner.hpp"   // for ExternalQMRunner
+#include "externalQMRunner.hpp"
 
 namespace physicalData
 {
@@ -51,17 +50,19 @@ namespace QM
         bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(molsys::SimulationBox &simBox) override;
+        void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
 
-        void writePointChargeFile(molsys::SimulationBox &simBox) override;
+        void writePointChargeFile(
+            molsys::SimulationBox &simulationBox
+        ) override;
 
-        void execute(molsys::SimulationBox &simBox) override;
+        void execute(molsys::SimulationBox &simulationBox) override;
 
         void readStressTensor(
             molsys::Box                &box,
-            physicalData::PhysicalData &data
+            physicalData::PhysicalData &physicalData
         ) override;
     };
 }   // namespace QM
 
-#endif   // _DFTBPLUS_RUNNER_HPP_
+#endif   // QM__EXTERNAL__DFTBPLUS_RUNNER_HPP

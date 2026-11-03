@@ -61,7 +61,7 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
 
     EXPECT_THROW_MSG(
         reader.processCommentLine(commentLine, mShakeReference),
-        customException::MShakeFileException,
+        exc::MShakeFileException,
         error_message
     );
 
@@ -69,15 +69,15 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
 
     EXPECT_THROW_MSG(
         reader.processCommentLine(commentLine, mShakeReference),
-        customException::MShakeFileException,
-        "Molecule type 1 not found"
+        exc::MShakeFileException,
+        "Molecule type MolType(1) not found"
     );
 
-    auto molType = molsys::MoleculeType(1);
+    auto molType = molsys::MoleculeType(MolType{1});
     _engine->getSimulationBox().addMoleculeType(molType);
 
     reader.processCommentLine(commentLine, mShakeReference);
-    EXPECT_EQ(mShakeReference.getMoleculeType().getMoltype(), 1);
+    EXPECT_EQ(mShakeReference.getMoleculeType().getMoltype(), MolType{1});
 }
 
 TEST_F(TestMShakeReader, testProcessAtomLines)
@@ -99,20 +99,20 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
     EXPECT_THROW_MSG(
         reader.processAtomLines(atomLines, mShakeReference),
-        customException::MShakeFileException,
+        exc::MShakeFileException,
         error_message
     );
 
-    auto molType = molsys::MoleculeType(1);
+    auto molType = molsys::MoleculeType(MolType{1});
     mShakeReference.setMoleculeType(molType);
 
     atomLines = std::vector<std::string>{atomLine1};
 
     EXPECT_THROW_MSG(
         reader.processAtomLines(atomLines, mShakeReference),
-        customException::MShakeFileException,
-        "Molecule type 1 has only one atom. M-Shake requires at least two "
-        "atoms."
+        exc::MShakeFileException,
+        "Molecule type MolType(1) has only one atom. M-Shake requires at least "
+        "two atoms."
     );
 
     atomLine1 = "H 0.0 0.0 0.0";
@@ -123,7 +123,7 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
     EXPECT_THROW_MSG(
         reader.processAtomLines(atomLines, mShakeReference),
-        customException::MShakeFileException,
+        exc::MShakeFileException,
         "Atom names in mShake file at line 0 do not match the atom names of "
         "the molecule type! The M-Shake file should be in the form a an "
         "extended xyz file. Therefore, the atom names in the atom lines should "
@@ -144,28 +144,28 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
     EXPECT_EQ(atoms[0].getName(), "H");
     EXPECT_EQ(atoms[1].getName(), "O");
     EXPECT_EQ(atoms[2].getName(), "C");
-    EXPECT_EQ(atoms[0].getPosition()[0], 0.0);
-    EXPECT_EQ(atoms[0].getPosition()[1], 0.0);
-    EXPECT_EQ(atoms[0].getPosition()[2], 0.0);
-    EXPECT_EQ(atoms[1].getPosition()[0], 1.0);
-    EXPECT_EQ(atoms[1].getPosition()[1], 1.0);
-    EXPECT_EQ(atoms[1].getPosition()[2], 1.0);
-    EXPECT_EQ(atoms[2].getPosition()[0], 2.0);
-    EXPECT_EQ(atoms[2].getPosition()[1], 2.0);
-    EXPECT_EQ(atoms[2].getPosition()[2], 2.0);
+    EXPECT_NEAR(atoms[0].getPosition()[0], 0.0, 1e-15);
+    EXPECT_NEAR(atoms[0].getPosition()[1], 0.0, 1e-15);
+    EXPECT_NEAR(atoms[0].getPosition()[2], 0.0, 1e-15);
+    EXPECT_NEAR(atoms[1].getPosition()[0], 1.0, 1e-15);
+    EXPECT_NEAR(atoms[1].getPosition()[1], 1.0, 1e-15);
+    EXPECT_NEAR(atoms[1].getPosition()[2], 1.0, 1e-15);
+    EXPECT_NEAR(atoms[2].getPosition()[0], 2.0, 1e-15);
+    EXPECT_NEAR(atoms[2].getPosition()[1], 2.0, 1e-15);
+    EXPECT_NEAR(atoms[2].getPosition()[2], 2.0, 1e-15);
 }
 
 TEST_F(TestMShakeReader, testReadMemberFunction)
 {
     settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
 
-    auto molType = molsys::MoleculeType(1);
+    auto molType = molsys::MoleculeType(MolType{1});
     molType.addAtomName("H");
     molType.addAtomName("O");
     molType.addAtomName("C");
     _engine->getSimulationBox().addMoleculeType(molType);
 
-    auto molType2 = molsys::MoleculeType(2);
+    auto molType2 = molsys::MoleculeType(MolType{2});
     molType2.addAtomName("H");
     molType2.addAtomName("O");
     _engine->getSimulationBox().addMoleculeType(molType2);
@@ -175,8 +175,8 @@ TEST_F(TestMShakeReader, testReadMemberFunction)
     auto mShakeReferences = _engine->getConstraints()->getMShakeReferences();
 
     EXPECT_EQ(mShakeReferences.size(), 2);
-    EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), 1);
-    EXPECT_EQ(mShakeReferences[1].getMoleculeType().getMoltype(), 2);
+    EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), MolType{1});
+    EXPECT_EQ(mShakeReferences[1].getMoleculeType().getMoltype(), MolType{2});
     EXPECT_EQ(mShakeReferences[0].getAtoms().size(), 3);
     EXPECT_EQ(mShakeReferences[1].getAtoms().size(), 2);
     EXPECT_EQ(mShakeReferences[0].getAtoms()[0].getName(), "H");
@@ -206,13 +206,13 @@ TEST_F(TestMShakeReader, testRead)
     settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
     auto reader = input::mShake::MShakeReader(*_engine);
 
-    auto molType = molsys::MoleculeType(1);
+    auto molType = molsys::MoleculeType(MolType{1});
     molType.addAtomName("H");
     molType.addAtomName("O");
     molType.addAtomName("C");
     _engine->getSimulationBox().addMoleculeType(molType);
 
-    auto molType2 = molsys::MoleculeType(2);
+    auto molType2 = molsys::MoleculeType(MolType{2});
     molType2.addAtomName("H");
     molType2.addAtomName("O");
     _engine->getSimulationBox().addMoleculeType(molType2);
@@ -222,8 +222,8 @@ TEST_F(TestMShakeReader, testRead)
     auto mShakeReferences = _engine->getConstraints()->getMShakeReferences();
 
     EXPECT_EQ(mShakeReferences.size(), 2);
-    EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), 1);
-    EXPECT_EQ(mShakeReferences[1].getMoleculeType().getMoltype(), 2);
+    EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), MolType{1});
+    EXPECT_EQ(mShakeReferences[1].getMoleculeType().getMoltype(), MolType{2});
     EXPECT_EQ(mShakeReferences[0].getAtoms().size(), 3);
     EXPECT_EQ(mShakeReferences[1].getAtoms().size(), 2);
     EXPECT_EQ(mShakeReferences[0].getAtoms()[0].getName(), "H");

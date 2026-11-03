@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_SETUP_HPP_
-
-#define _RESET_KINETICS_SETUP_HPP_
+#ifndef SETUP__RESET_KINETICS_SETUP_HPP
+#define SETUP__RESET_KINETICS_SETUP_HPP
 
 namespace engine
 {
@@ -30,7 +29,7 @@ namespace engine
     class MDEngine;   // forward declaration
 }   // namespace engine
 
-namespace setup::resetKinetics
+namespace setup
 {
     void setupResetKinetics(engine::Engine &);
 
@@ -48,10 +47,10 @@ namespace setup::resetKinetics
        public:
         explicit ResetKineticsSetup(engine::MDEngine &engine);
 
-        void setup();
+        void setup() const;
         void writeSetupInfo() const;
     };
 
-}   // namespace setup::resetKinetics
+}   // namespace setup
 
-#endif   // _RESET_KINETICS_SETUP_HPP_
+#endif   // SETUP__RESET_KINETICS_SETUP_HPP

@@ -20,17 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _J_COUPLING_TYPE_HPP_
-
-#define _J_COUPLING_TYPE_HPP_
+#ifndef FORCE_FIELD__J_COUPLING_TYPE_HPP
+#define FORCE_FIELD__J_COUPLING_TYPE_HPP
 
 #include <cstddef>
 
-namespace forceField
+#include "strongTypes.hpp"
+
+namespace ff
 {
     class JCouplingType;   // forward declaration
-
-    bool operator==(const JCouplingType &lhs, const JCouplingType &rhs);
 
     /**
      * @class JCouplingType
@@ -48,46 +47,31 @@ namespace forceField
         bool   _upperSymmetry = true;
         bool   _lowerSymmetry = true;
 
-        double _j0;
-        double _forceConstant;
-        double _a;
-        double _b;
-        double _c;
-        double _phaseShift;
+        JCouplingParams _params;
 
        public:
-        JCouplingType(
-            const size_t id,
-            const double J0,
-            const double forceConstant,
-            const double a,
-            const double b,
-            const double c,
-            const double phaseShift
-        );
+        JCouplingType(size_t id, const JCouplingParams &params);
 
-        friend bool operator==(const JCouplingType &, const JCouplingType &);
+        friend bool operator==(
+            const JCouplingType &self,
+            const JCouplingType &other
+        );
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getId() const;
-        [[nodiscard]] double getJ0() const;
-        [[nodiscard]] double getForceConstant() const;
-        [[nodiscard]] double getA() const;
-        [[nodiscard]] double getB() const;
-        [[nodiscard]] double getC() const;
-        [[nodiscard]] double getPhaseShift() const;
+        [[nodiscard]] size_t                 getId() const;
+        [[nodiscard]] const JCouplingParams &getParams() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setUpperSymmetry(const bool boolean);
-        void setLowerSymmetry(const bool boolean);
+        void setUpperSymmetry(bool boolean);
+        void setLowerSymmetry(bool boolean);
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _J_COUPLING_TYPE_HPP_
+#endif   // FORCE_FIELD__J_COUPLING_TYPE_HPP

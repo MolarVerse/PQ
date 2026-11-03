@@ -22,146 +22,100 @@
 
 #include "buckinghamPair.hpp"
 
-#include <cmath>   // for exp
+#include <cmath>
 
-#include "mathUtilities.hpp"   // for compare
-
-using namespace potential;
-using namespace utilities;
-
-/**
- * @brief Construct a new Buckingham Pair:: Buckingham Pair object
- *
- * @param vanDerWaalsType1
- * @param vanDerWaalsType2
- * @param cutOff
- * @param a
- * @param dRho
- * @param c6
- */
-BuckinghamPair::BuckinghamPair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff,
-    const double a,
-    const double dRho,
-    const double c6
-)
-    : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
-      _a(a),
-      _dRho(dRho),
-      _c6(c6)
+namespace pot
 {
-}
+    /**
+     * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+     *
+     * @param vanDerWaalsType1
+     * @param vanDerWaalsType2
+     * @param cutOff
+     * @param params
+     */
+    BuckinghamPair::BuckinghamPair(
+        ExtVdwType              vanDerWaalsType1,
+        ExtVdwType              vanDerWaalsType2,
+        double                  cutOff,
+        const BuckinghamParams& params
+    )
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+          _params(params)
+    {
+    }
 
-/**
- * @brief Construct a new Buckingham Pair:: Buckingham Pair object
- *
- * @param cutOff
- * @param a
- * @param dRho
- * @param c6
- */
-BuckinghamPair::BuckinghamPair(
-    const double cutOff,
-    const double a,
-    const double dRho,
-    const double c6
-)
-    : NonCoulombPair(cutOff), _a(a), _dRho(dRho), _c6(c6)
-{
-}
+    /**
+     * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+     *
+     * @param cutOff
+     * @param params
+     */
+    BuckinghamPair::BuckinghamPair(
+        const double            cutOff,
+        const BuckinghamParams& params
+    )
+        : NonCoulombPair(cutOff), _params(params)
+    {
+    }
 
-/**
- * @brief Construct a new Buckingham Pair:: Buckingham Pair object
- *
- * @param cutOff
- * @param energyCutoff
- * @param forceCutoff
- * @param a
- * @param dRho
- * @param c6
- */
-BuckinghamPair::BuckinghamPair(
-    const double cutOff,
-    const double energyCutoff,
-    const double forceCutoff,
-    const double a,
-    const double dRho,
-    const double c6
-)
-    : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
-      _a(a),
-      _dRho(dRho),
-      _c6(c6)
-{
-}
+    /**
+     * @brief Construct a new Buckingham Pair:: Buckingham Pair object
+     *
+     * @param cutOff
+     * @param energyCutoff
+     * @param forceCutoff
+     * @param params
+     */
+    BuckinghamPair::BuckinghamPair(
+        double                  cutOff,
+        double                  energyCutoff,
+        double                  forceCutoff,
+        const BuckinghamParams& params
+    )
+        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
+    {
+    }
 
-/**
- * @brief operator overload for the comparison of two BuckinghamPair objects
- *
- * @param other
- * @return true
- * @return false
- */
-bool BuckinghamPair::operator==(const BuckinghamPair &other) const
-{
-    auto isEqual = NonCoulombPair::operator==(other);
-    isEqual      = isEqual && compare(_a, other._a);
-    isEqual      = isEqual && compare(_dRho, other._dRho);
-    isEqual      = isEqual && compare(_c6, other._c6);
+    /**
+     * @brief operator overload for the comparison of two BuckinghamPair objects
+     *
+     * @param other
+     * @return true
+     * @return false
+     */
+    bool BuckinghamPair::operator==(const BuckinghamPair& other) const
+    {
+        return NonCoulombPair::operator==(other) && _params == other._params;
+    }
 
-    return isEqual;
-}
+    /**
+     * @brief calculates the energy and force of a
+     * [BuckinghamPair](https://doi.org/10.1098/rspa.1938.0173)
+     *
+     * @param distance
+     * @return std::pair<double, double>
+     */
+    std::pair<double, double> BuckinghamPair::calculate(double distance) const
+    {
+        const auto distanceThird = distance * distance * distance;
+        const auto distanceSixth = distanceThird * distanceThird;
+        const auto expTerm = _params.scaling * ::exp(_params.dRho * distance);
 
-/**
- * @brief calculates the energy and force of a BuckinghamPair
- *
- * @link https://doi.org/10.1098/rspa.1938.0173
- *
- * @param distance
- * @return std::pair<double, double>
- */
-std::pair<double, double> BuckinghamPair::calculate(const double distance) const
-{
-    const auto distanceThird = distance * distance * distance;
-    const auto distanceSixth = distanceThird * distanceThird;
-    const auto expTerm       = _a * ::exp(_dRho * distance);
+        auto energy =
+            expTerm + (_params.c6 / distanceSixth) - get_energyCutoff();
+        energy -= get_forceCutoff() * (get_radialCutoff() - distance);
 
-    auto energy  = expTerm + _c6 / distanceSixth - _energyCutOff;
-    energy      -= _forceCutOff * (_radialCutOff - distance);
+        auto force = -_params.dRho * expTerm;
 
-    auto force = -_dRho * expTerm;
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
+        // readability-magic-numbers)
+        force +=
+            6.0 * _params.c6 / (distanceSixth * distance) - get_forceCutoff();
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
+        // readability-magic-numbers)
 
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
-    force += 6.0 * _c6 / (distanceSixth * distance) - _forceCutOff;
+        return {energy, force};
+    }
 
-    return {energy, force};
-}
-
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
-
-/**
- * @brief get the A parameter
- *
- * @return double
- */
-double BuckinghamPair::getA() const { return _a; }
-
-/**
- * @brief get the dRho parameter
- *
- * @return double
- */
-double BuckinghamPair::getDRho() const { return _dRho; }
-
-/**
- * @brief get the C6 parameter
- *
- * @return double
- */
-double BuckinghamPair::getC6() const { return _c6; }
+}   // namespace pot

@@ -20,17 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_TOPOLOGY_SECTION_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_TOPOLOGY_SECTION_HPP
+#define TESTS__INCLUDE__INPUT__TEST_TOPOLOGY_SECTION_HPP
 
-#define _TEST_TOPOLOGY_SECTION_HPP_
-
-#include <gtest/gtest.h>   // for Test
+#include <gtest/gtest.h>
 
 #include <filesystem>
-#include <string>   // for allocator, string
+#include <string>
 
-#include "mmmdEngine.hpp"   // for Engine
-#include "molecule.hpp"     // for Molecule
+#include "mmmdEngine.hpp"
+#include "molecule.hpp"
 
 /**
  * @class TestTopologySection
@@ -41,21 +40,31 @@
 class TestTopologySection : public ::testing::Test
 {
    protected:
-    engine::Engine *_engine;
-    std::string     _topologyFileName = "shake.top";
+    Settings                        _settings;
+    std::unique_ptr<engine::Engine> _engine;
+    std::string                     _topologyFileName = "shake.top";
 
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(1);
-
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(3);
+
+        molsys::Atom atom1_1;
+        molsys::Atom atom2_1;
+        molsys::Atom atom2_2;
+        molsys::Atom atom2_3;
+        molsys::Atom atom2_4;
+
+        molecule1.addAtom(std::make_shared<molsys::Atom>(atom1_1));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_1));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_2));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_3));
+        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_4));
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
@@ -63,9 +72,8 @@ class TestTopologySection : public ::testing::Test
 
     void TearDown() override
     {
-        delete _engine;
         static_cast<void>(std::filesystem::remove(_topologyFileName));
     }
 };
 
-#endif   // _TEST_TOPOLOGY_SECTION_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_TOPOLOGY_SECTION_HPP

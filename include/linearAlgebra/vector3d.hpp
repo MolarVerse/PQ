@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VECTOR3D_INTERFACE_HPP_
-
-#define _VECTOR3D_INTERFACE_HPP_
+#ifndef LINEAR_ALGEBRA__VECTOR3D_HPP
+#define LINEAR_ALGEBRA__VECTOR3D_HPP
 
 #include "vector3d/vector3d.hpp"        // IWYU pragma: export
 #include "vector3d/vector3dClass.hpp"   // IWYU pragma: export
 
-#endif   // _VECTOR3D_INTERFACE_HPP_
+#endif   // LINEAR_ALGEBRA__VECTOR3D_HPP

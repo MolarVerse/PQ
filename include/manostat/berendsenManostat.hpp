@@ -20,81 +20,50 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BERENDSEN_MANOSTAT_HPP_
+#ifndef MANOSTAT__BERENDSEN_MANOSTAT_HPP
+#define MANOSTAT__BERENDSEN_MANOSTAT_HPP
 
-#define _BERENDSEN_MANOSTAT_HPP_
-
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
-
-#include "manostat.hpp"   // for Manostat
+#include "manostat.hpp"
 
 namespace manostat
 {
     /**
-     * @class BerendsenManostat inherits from Manostat
+     * @brief BerendsenManostat inherits from Manostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      */
     class BerendsenManostat : public Manostat
     {
-       protected:
-        double _tau;
-        double _compressibility;
-        double _dt;
-
        public:
-        explicit BerendsenManostat(const double, const double, const double);
+        using Manostat::Manostat;
 
         void applyManostat(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) override;
 
-        [[nodiscard]] virtual linearAlgebra::tensor3D calculateMu() const;
-
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] double getTau() const;
-        [[nodiscard]] double getCompressibility() const;
-
-        [[nodiscard]] settings::ManostatType getManostatType() const final;
-        [[nodiscard]] settings::Isotropy     getIsotropy() const override;
+        [[nodiscard]] virtual linalg::tensor3D calculateMu() const;
     };
 
     /**
-     * @class SemiIsotropicBerendsenManostat inherits from BerendsenManostat
+     * @brief SemiIsotropicBerendsenManostat inherits from BerendsenManostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      */
     class SemiIsotropicBerendsenManostat : public BerendsenManostat
     {
-       private:
-        size_t              _2DAnisotropicAxis;
-        std::vector<size_t> _2DIsotropicAxes;
-
        public:
-        SemiIsotropicBerendsenManostat(
-            const double,
-            const double,
-            const double,
-            const size_t,
-            const std::vector<size_t> &
-        );
+        using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] linalg::tensor3D calculateMu() const override;
     };
 
     /**
-     * @class AnisotropicBerendsenManostat inherits from BerendsenManostat
+     * @brief AnisotropicBerendsenManostat inherits from BerendsenManostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      */
     class AnisotropicBerendsenManostat : public BerendsenManostat
@@ -102,15 +71,13 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] linalg::tensor3D calculateMu() const override;
     };
 
     /**
-     * @class FullAnisotropicBerendsenManostat inherits from BerendsenManostat
+     * @brief FullAnisotropicBerendsenManostat inherits from BerendsenManostat
      *
-     * @link https://doi.org/10.1063/1.448118
+     * _(https://doi.org/10.1063/1.448118)
      *
      * @details Full anisotropic means that also the angles between the axes are
      * scaled not only the lengths
@@ -121,11 +88,9 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linearAlgebra::tensor3D calculateMu() const override;
-
-        [[nodiscard]] settings::Isotropy getIsotropy() const final;
+        [[nodiscard]] linalg::tensor3D calculateMu() const override;
     };
 
 }   // namespace manostat
 
-#endif   // _BERENDSEN_MANOSTAT_HPP_
+#endif   // MANOSTAT__BERENDSEN_MANOSTAT_HPP

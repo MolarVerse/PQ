@@ -25,138 +25,170 @@
 #include <cmath>
 #include <vector>
 
+#include "exceptions.hpp"
 #include "simulationBox.hpp"
 
-using namespace constraints;
-using namespace molsys;
-using namespace connectivity;
-
-/**
- * @brief Construct a new Distance Constraint:: Distance Constraint object
- *
- * @param molecule1
- * @param molecule2
- * @param atomIndex1
- * @param atomIndex2
- * @param lowerDistance
- * @param upperDistance
- * @param springConstant
- * @param dSpringConstantDt
- */
-DistanceConstraint::DistanceConstraint(
-    Molecule    *molecule1,
-    Molecule    *molecule2,
-    const size_t atomIndex1,
-    const size_t atomIndex2,
-    const double lowerDistance,
-    const double upperDistance,
-    const double springConstant,
-    const double dSpringConstantDt
-)
-    : Bond(molecule1, molecule2, atomIndex1, atomIndex2),
-      _lowerDistance(lowerDistance),
-      _upperDistance(upperDistance),
-      _springConstant(springConstant),
-      _dSpringConstantDt(dSpringConstantDt)
+namespace constraints
 {
-}
 
-/**
- * @brief calculates the reference distance of all distance constraints
- *
- * @param simulationBox
- * @param dt
- *
- */
-void DistanceConstraint::applyDistanceConstraint(
-    const molsys::SimulationBox &simulationBox,
-    const double                 dt
-)
-{
-    _lowerEnergy = 0.0;
-    _upperEnergy = 0.0;
-    _force       = {0.0};
-
-    if (dt < 0.0)
-        return;
-
-    const auto pos1 = _molecules[0]->getAtomPosition(_atomIndices[0]);
-    const auto pos2 = _molecules[1]->getAtomPosition(_atomIndices[1]);
-
-    auto dPos = pos2 - pos1;
-    simulationBox.applyPBC(dPos);
-
-    const auto distance       = norm(dPos);
-    const auto force_constant = _springConstant + _dSpringConstantDt * dt;
-
-    if (distance < _lowerDistance)
+    /**
+     * @brief Construct a new Distance Constraint:: Distance Constraint object
+     *
+     * @param molecule1
+     * @param molecule2
+     * @param atomIndex1
+     * @param atomIndex2
+     * @param lowerDistance
+     * @param upperDistance
+     * @param springConstant
+     * @param dSpringConstantDt
+     */
+    DistanceConstraint::DistanceConstraint(
+        molsys::Molecule *molecule1,
+        molsys::Molecule *molecule2,
+        AtomIndex         atomIndex1,
+        AtomIndex         atomIndex2,
+        double            lowerDistance,
+        double            upperDistance,
+        double            springConstant,
+        double            dSpringConstantDt
+    )
+        : Bond(molecule1, molecule2, atomIndex1, atomIndex2),
+          _lowerDistance(lowerDistance),
+          _upperDistance(upperDistance),
+          _springConstant(springConstant),
+          _dSpringConstantDt(dSpringConstantDt)
     {
-        const auto delta = _lowerDistance - distance;
-        _lowerEnergy     = 0.5 * force_constant * delta * delta;
-        _force           = -force_constant * delta * dPos / distance;
-    }
-    else if (distance > _upperDistance)
-    {
-        const auto delta = distance - _upperDistance;
-        _upperEnergy     = 0.5 * force_constant * delta * delta;
-        _force           = +force_constant * delta * dPos / distance;
-    }
-    else
-    {
-        return;
     }
 
-    _molecules[0]->addAtomForce(_atomIndices[0], _force);
-    _molecules[1]->addAtomForce(_atomIndices[1], -_force);
-}
+    /**
+     * @brief calculates the reference distance of all distance constraints
+     *
+     * @param simulationBox
+     * @param timeInterval the time interval over which the constraint is
+     * applied
+     *
+     * @throws exc::ShakeException if the constraint is violated and the
+     * atom separation is zero-length or non-finite, meaning the simulation
+     * has become unstable
+     */
+    void DistanceConstraint::applyDistanceConstraint(
+        const molsys::SimulationBox &simulationBox,
+        double                       timeInterval
+    )
+    {
+        _lowerEnergy = 0.0;
+        _upperEnergy = 0.0;
+        _force       = {0.0};
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+        if (timeInterval < 0.0)
+            return;
 
-/**
- * @brief get lower distance
- *
- * @return double
- */
-double DistanceConstraint::getLowerDistance() const { return _lowerDistance; }
+        const auto &molecules   = get_molecules();
+        const auto &atomIndices = get_atomIndices();
 
-/**
- * @brief get upper distance
- *
- * @return double
- */
-double DistanceConstraint::getUpperDistance() const { return _upperDistance; }
+        auto *molecule1 = molecules[0];
+        auto *molecule2 = molecules[1];
 
-/**
- * @brief get spring constant
- *
- * @return double
- */
-double DistanceConstraint::getSpringConstant() const { return _springConstant; }
+        const auto pos1 = molecule1->getAtomPosition(atomIndices[0]);
+        const auto pos2 = molecule2->getAtomPosition(atomIndices[1]);
 
-/**
- * @brief get dSpringConstantDt
- *
- * @return double
- */
-double DistanceConstraint::getDSpringConstantDt() const
-{
-    return _dSpringConstantDt;
-}
+        auto dPos = pos2 - pos1;
+        simulationBox.applyPBC(dPos);
 
-/**
- * @brief get lower energy
- *
- * @return double
- */
-double DistanceConstraint::getLowerEnergy() const { return _lowerEnergy; }
+        const auto distance = norm(dPos);
+        const auto force_constant =
+            _springConstant + (_dSpringConstantDt * timeInterval);
 
-/**
- * @brief get upper energy
- *
- * @return double
- */
-double DistanceConstraint::getUpperEnergy() const { return _upperEnergy; }
+        if ((distance < _lowerDistance || distance > _upperDistance) &&
+            (!std::isfinite(distance) || 0.0 == distance))
+        {
+            throw exc::ShakeException(
+                "Degenerate distance-constraint separation - the atom "
+                "separation is zero-length or non-finite, the simulation "
+                "has become unstable"
+            );
+        }
+
+        if (distance < _lowerDistance)
+        {
+            const auto delta = _lowerDistance - distance;
+            _lowerEnergy     = 0.5 * force_constant * delta * delta;
+            _force           = -force_constant * delta * dPos / distance;
+        }
+        else if (distance > _upperDistance)
+        {
+            const auto delta = distance - _upperDistance;
+            _upperEnergy     = 0.5 * force_constant * delta * delta;
+            _force           = +force_constant * delta * dPos / distance;
+        }
+        else
+        {
+            return;
+        }
+
+        molecule1->addAtomForce(atomIndices[0], _force);
+        molecule2->addAtomForce(atomIndices[1], -_force);
+    }
+
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief get lower distance
+     *
+     * @return double
+     */
+    double DistanceConstraint::getLowerDistance() const
+    {
+        return _lowerDistance;
+    }
+
+    /**
+     * @brief get upper distance
+     *
+     * @return double
+     */
+    double DistanceConstraint::getUpperDistance() const
+    {
+        return _upperDistance;
+    }
+
+    /**
+     * @brief get spring constant
+     *
+     * @return double
+     */
+    double DistanceConstraint::getSpringConstant() const
+    {
+        return _springConstant;
+    }
+
+    /**
+     * @brief get dSpringConstantDt
+     *
+     * @return double
+     */
+    double DistanceConstraint::getDSpringConstantDt() const
+    {
+        return _dSpringConstantDt;
+    }
+
+    /**
+     * @brief get lower energy
+     *
+     * @return double
+     */
+    double DistanceConstraint::getLowerEnergy() const { return _lowerEnergy; }
+
+    /**
+     * @brief get upper energy
+     *
+     * @return double
+     */
+    double DistanceConstraint::getUpperEnergy() const { return _upperEnergy; }
+
+}   // namespace constraints

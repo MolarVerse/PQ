@@ -22,16 +22,14 @@
 
 #include "ringPolymerSettings.hpp"
 
-using settings::RingPolymerSettings;
-
 /**
  * @brief set number of beads for ring polymer md
  *
  * @param numberOfBeads
  */
-void RingPolymerSettings::setNumberOfBeads(const size_t numberOfBeads)
+void RingPolymerSettings::setNumberOfBeads(size_t numberOfBeads)
 {
-    _numberOfBeads = numberOfBeads;
+    _numberOfBeads.set(numberOfBeads);
 }
 
 /**
@@ -39,4 +37,7 @@ void RingPolymerSettings::setNumberOfBeads(const size_t numberOfBeads)
  *
  * @return size_t
  */
-size_t RingPolymerSettings::getNumberOfBeads() { return _numberOfBeads; }
+size_t RingPolymerSettings::getNumberOfBeads() const
+{
+    return _numberOfBeads.get();
+}

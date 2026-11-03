@@ -20,11 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ORTHORHOMBIC_BOX_HPP_
+#ifndef BOX__ORTHORHOMBIC_BOX_HPP
+#define BOX__ORTHORHOMBIC_BOX_HPP
 
-#define _ORTHORHOMBIC_BOX_HPP_
+#include <memory>
 
-#include "box.hpp"   // for Box
+#include "box.hpp"
 
 namespace molsys
 {
@@ -37,25 +38,61 @@ namespace molsys
     class OrthorhombicBox : public Box
     {
        public:
-        [[nodiscard]] double calculateVolume() override;
+        explicit OrthorhombicBox(const linalg::Vec3D &boxDimensions);
 
-        void applyPBC(linearAlgebra::Vec3D &position) const override;
-        void scaleBox(const linearAlgebra::tensor3D &scalingTensor) override;
+        [[nodiscard]]
+        std::unique_ptr<Box> clone() const override;
 
-        [[nodiscard]] linearAlgebra::Vec3D calcShiftVector(
-            const linearAlgebra::Vec3D &shiftVector
+        [[nodiscard]]
+        static OrthorhombicBox makeVacuumBox();
+
+        void applyPBC(linalg::Vec3D &position) const override;
+        void scaleBox(const linalg::tensor3D &scalingTensor) override;
+
+        [[nodiscard]] linalg::Vec3D calcShiftVector(
+            const linalg::Vec3D &shiftVector
         ) const override;
 
-        [[nodiscard]] linearAlgebra::Vec3D calcBoxDimFromDensity(
-            const double totalMass,
-            const double density
+        [[nodiscard]]
+        static linalg::Vec3D calcBoxDimFromDensity(
+            double totalMass,
+            double density
         );
 
-        [[nodiscard]] linearAlgebra::Vec3D wrapPositionIntoBox(
-            const linearAlgebra::Vec3D &pos
+        [[nodiscard]]
+        linalg::Vec3D wrapPositionIntoBox(
+            const linalg::Vec3D &pos
         ) const override;
+
+        [[nodiscard]]
+        double getVolume() const override;
+
+        [[nodiscard]]
+        double getMinimalBoxDimension() const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getBoxMatrix(Periodicity per) const override;
+
+        [[nodiscard]]
+        linalg::Vec3D toOrthoSpace(
+            const linalg::Vec3D &position
+        ) const override;
+        [[nodiscard]]
+        linalg::tensor3D toOrthoSpace(
+            const linalg::tensor3D &position
+        ) const override;
+
+        [[nodiscard]]
+        linalg::Vec3D toSimSpace(const linalg::Vec3D &position) const override;
+        [[nodiscard]]
+        linalg::tensor3D toSimSpace(
+            const linalg::tensor3D &position
+        ) const override;
+
+        [[nodiscard]]
+        bool allowChangeOfAngles() const override;
     };
 
 }   // namespace molsys
 
-#endif   // _ORTHORHOMBIC_BOX_HPP_
+#endif   // BOX__ORTHORHOMBIC_BOX_HPP

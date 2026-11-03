@@ -20,34 +20,33 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, EXPECT_EQ, TestInfo
+#include <gtest/gtest.h>
 
-#include <cstddef>   // for size_t
-#include <format>    // for format
-#include <memory>    // for shared_ptr, allocator, make_shared
-#include <vector>    // for vector
+#include <memory>
+#include <vector>
 
 #include "../potential/nonCoulomb/testForceFieldNonCoulomb.hpp"
-#include "atom.hpp"                      // for Atom
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "exceptions.hpp"                // for IntraNonBondedException
-#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                 // for Message, TestPartResult
-#include "intraNonBonded.hpp"            // for IntraNonBonded
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "intraNonBondedMap.hpp"         // for IntraNonBondedMap
-#include "lennardJonesPair.hpp"          // for LennardJonesPair
-#include "matrix.hpp"                    // for Matrix
-#include "molecule.hpp"                  // for Molecule
-#include "physicalData.hpp"              // for PhysicalData
-#include "potentialSettings.hpp"         // for PotentialSettings
-#include "simulationBox.hpp"             // for SimulationBox
-#include "throwWithMessage.hpp"          // for EXPECT_THROW_MSG
+#include "atom.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "intraNonBonded.hpp"
+#include "intraNonBondedContainer.hpp"
+#include "intraNonBondedMap.hpp"
+#include "lennardJonesPair.hpp"
+#include "matrix.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "physicalData.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
+#include "strongTypes.hpp"
+#include "throwWithMessage.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 class TestIntraNonBonded : public TestNonCoulombPotentialFF
 {
@@ -59,11 +58,11 @@ class TestIntraNonBonded : public TestNonCoulombPotentialFF
 TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 {
     const auto intraNonBondedContainer1 =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     const auto intraNonBondedContainer2 =
-        intraNonBonded::IntraNonBondedContainer(1, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
     const auto intraNonBondedContainer3 =
-        intraNonBonded::IntraNonBondedContainer(2, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{2}, {{-1}});
 
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer1);
@@ -71,7 +70,7 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer3);
 
     const auto *intraNonBondedContainerPtr =
-        intraNonBonded.findIntraNonBondedContainerByMolType(1);
+        intraNonBonded.findIntraNonBondedContainerByMolType(MolType{1});
 
     EXPECT_EQ(
         intraNonBondedContainerPtr->getMolType(),
@@ -84,9 +83,9 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 
     EXPECT_THROW_MSG(
         [[maybe_unused]] const auto dummy =
-            intraNonBonded.findIntraNonBondedContainerByMolType(3),
-        customException::IntraNonBondedException,
-        std::format("IntraNonBondedContainer with molType 3 not found!")
+            intraNonBonded.findIntraNonBondedContainerByMolType(MolType{3}),
+        exc::IntraNonBondedException,
+        "IntraNonBondedContainer with molType MolType(3) not found!"
     )
 }
 
@@ -96,11 +95,11 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
 {
     const auto intraNonBondedContainer1 =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     const auto intraNonBondedContainer2 =
-        intraNonBonded::IntraNonBondedContainer(1, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
     const auto intraNonBondedContainer3 =
-        intraNonBonded::IntraNonBondedContainer(2, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{2}, {{-1}});
 
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer1);
@@ -108,11 +107,11 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer3);
 
     auto simulationBox = molsys::SimulationBox();
-    auto molecule1     = molsys::Molecule(0);
-    auto molecule2     = molsys::Molecule(1);
-    auto molecule3     = molsys::Molecule(2);
-    auto molecule4     = molsys::Molecule(1);
-    auto molecule5     = molsys::Molecule(2);
+    auto molecule1     = molsys::Molecule{MolType{0}};
+    auto molecule2     = molsys::Molecule{MolType{1}};
+    auto molecule3     = molsys::Molecule{MolType{2}};
+    auto molecule4     = molsys::Molecule{MolType{1}};
+    auto molecule5     = molsys::Molecule{MolType{2}};
 
     simulationBox.addMolecule(molecule1);
     simulationBox.addMolecule(molecule2);
@@ -172,8 +171,7 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
  */
 TEST_F(TestIntraNonBonded, calculate)
 {
-    auto molecule = molsys::Molecule(0);
-    molecule.setNumberOfAtoms(2);
+    auto molecule = molsys::Molecule{MolType{0}};
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -182,10 +180,10 @@ TEST_F(TestIntraNonBonded, calculate)
     atom2->setPosition({0.0, 0.0, 11.0});
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});
-    atom1->setInternalGlobalVDWType(0);
-    atom2->setInternalGlobalVDWType(1);
-    atom1->setAtomType(0);
-    atom2->setAtomType(1);
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
     atom1->setPartialCharge(0.5);
     atom2->setPartialCharge(-0.5);
 
@@ -196,27 +194,28 @@ TEST_F(TestIntraNonBonded, calculate)
     settings::PotentialSettings::setScale14VanDerWaals(0.75);
 
     auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    auto coulombPotential = potential::CoulombShiftedPotential(10.0);
-    setNonCoulombPairsMatrix(
-        linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>(2, 2)
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    _setNonCoulombPairsMatrix(
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
 
-    auto nonCoulombPair = potential::LennardJonesPair(
-        static_cast<size_t>(0),
-        static_cast<size_t>(1),
+    auto nonCoulombPair = pot::LennardJonesPair(
+        ExtVdwType(0),
+        ExtVdwType(1),
         10.0,
-        2.0,
-        3.0
+        LJParams{.c6 = 2.0, .c12 = 3.0}
     );
-    setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
-    setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
+    _setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    _setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
 
     auto simulationBox = molsys::SimulationBox();
-    simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    simulationBox.setBox(orthoBox, false);
 
     auto physicalData = physicalData::PhysicalData();
 
@@ -224,10 +223,10 @@ TEST_F(TestIntraNonBonded, calculate)
     intraNonBonded.addIntraNonBondedMap(intraNonBondedMap);
 
     intraNonBonded.setCoulombPotential(
-        std::make_shared<potential::CoulombShiftedPotential>(coulombPotential)
+        std::make_shared<pot::CoulombShiftedPotential>(coulombPotential)
     );
     intraNonBonded.setNonCoulombPotential(
-        std::make_shared<potential::ForceFieldNonCoulomb>(*_nonCoulombPotential)
+        std::make_shared<pot::ForceFieldNonCoulomb>(*_nonCoulombPotential)
     );
     EXPECT_NO_THROW(intraNonBonded.calculate(simulationBox, physicalData));
 }

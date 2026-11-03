@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MATRIX_CLASS_HPP_
-
-#define _MATRIX_CLASS_HPP_
+#ifndef LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_HPP
+#define LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_HPP
 
 #include <Eigen/Dense>
 #include <cstddef>
 
-namespace linearAlgebra
+namespace linalg
 {
     /**
      * @class Matrix
@@ -36,7 +35,7 @@ namespace linearAlgebra
     template <typename T>
     class Matrix
     {
-       protected:
+       private:
         size_t _rows = 0;
         size_t _cols = 0;
 
@@ -44,12 +43,12 @@ namespace linearAlgebra
 
        public:
         Matrix() = default;
-        explicit Matrix(const size_t rows, const size_t cols);
-        explicit Matrix(const size_t rowsAndCols);
+        explicit Matrix(size_t rows, size_t cols);
+        explicit Matrix(size_t rowsAndCols);
         explicit Matrix(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> data);
 
-        [[nodiscard]] T &operator()(const size_t index_i, const size_t index_j);
-        [[nodiscard]] std::vector<T> operator()(const size_t index);
+        [[nodiscard]] T             &operator()(size_t index_i, size_t index_j);
+        [[nodiscard]] std::vector<T> operator()(size_t index);
 
         [[nodiscard]] std::pair<size_t, size_t> shape() const;
 
@@ -58,13 +57,13 @@ namespace linearAlgebra
         [[nodiscard]] size_t size() const { return _rows * _cols; }
 
         Matrix<T>      inverse();
-        std::vector<T> solve(const std::vector<T> &b);
+        std::vector<T> solve(const std::vector<T> &rhs);
     };
 
-}   // namespace linearAlgebra
+}   // namespace linalg
 
-#ifndef _MATRIX_CLASS_TPP_
-#include "matrixClass.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#ifndef LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_TPP
+#include "matrixClass.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _MATRIX_CLASS_HPP_
+#endif   // LINEAR_ALGEBRA__MATRIX__MATRIX_CLASS_HPP

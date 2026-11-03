@@ -8,12 +8,30 @@ on:
     branches:
       - dev
       - main
+      - NEXT
   schedule:
     - cron: '0 2 * * *'
   workflow_dispatch:
 
+# Only superseded pull_request runs are cancelled. Every other event (push to
+# dev/main, schedule, manual dispatch) gets its own group so it is neither
+# cancelled nor queued behind another run: post-merge runs give the real
+# verdict for a commit and populate the branch's cache scope.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
+
+# ccache does not cache compiles that use a precompiled header unless it may
+# ignore the header's defines and __DATE__/__TIME__ (measured: about 65% of the
+# compiler calls of every build job were uncacheable, counter
+# could_not_use_precompiled_header, #732). The cost is that an object restored
+# from the cache keeps the compile date of the run that built it (printed in the
+# output header; nothing built by CI is shipped).
+env:
+  CCACHE_SLOPPINESS: pch_defines,time_macros
 
 jobs:
   changes:
@@ -29,6 +47,9 @@ jobs:
           filters: |
             relevant:
               - '.github/workflows/ci_build.yml'
+              - '.github/actions/upload-build-timings/**'
+              - '.github/actions/setup-gcc/**'
+              - '.github/ci-metrics/summarise_build.py'
               - '.cmake/**'
               - 'apps/**'
               - 'include/**'
@@ -51,17 +72,42 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install gcc13
-        run: |
-          sudo apt update
-          sudo apt install gcc-13 g++-13 mold
-        shell: bash
+      - name: Setup GCC
+        id: setup-gcc
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build cmake
 
-      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects)
+      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects).
+      # A Debug build (with coverage on x86) does not fit into the default
+      # 500 MB: the cache stayed at its limit, evicting what the next build
+      # needs, so only 56% (x86) and 78% (arm) of the calls hit on a rebuild of
+      # the same code (#745). Release builds need about 140 MB.
       - name: setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: ${{ matrix.os }}-${{ matrix.build }}
+          max-size: ${{ matrix.build == 'Debug' && '1500MB' || '500MB' }}
+
+      # Eigen is a header-only FetchContent dependency fetched from GitLab on
+      # every job that configures CMake; cache the cloned source once and
+      # point every subsequent job at it via FETCHCONTENT_SOURCE_DIR_EIGEN
+      # (CMake's official "use this local checkout instead of fetching"
+      # mechanism) so we don't re-clone it ~10 times per PR, and so a GitLab
+      # hiccup can't fail the whole matrix at once.
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
 
       - name: setup python ubuntu
         uses: actions/setup-python@v3
@@ -80,29 +126,39 @@ jobs:
           python -m pip install gcovr
         shell: bash
 
+      # The Debug build uses -Werror and the strict warning set, which makes it
+      # the gate for the benchmark sources too (#620): lint builds them with
+      # errors tolerated, and the Release jobs do not use the strict flags.
+      # Only the arm Debug job runs this step with Debug, and it is the
+      # fastest job. The benchmark smoke tests are left to the benchmark job.
       - name: Build and Test Project
+        id: build
         if : ${{ matrix.os != 'ubuntu-24.04' || (matrix.os == 'ubuntu-24.04' && matrix.build != 'Debug') }}
         run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off ..
-          make -j$(nproc)
-          make test
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH="$BENCH_SOURCES" -DBUILD_WITH_BENCHMARKING="$BENCH_SOURCES" \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)"
+          ctest --test-dir build --output-on-failure -LE benchmark
         env:
-          CC: gcc-13
-          CXX: g++-13
+          BENCH_SOURCES: ${{ matrix.build == 'Debug' && 'On' || 'Off' }}
 
       - name: Build and Test Project with coverage
+        id: build-coverage
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' }}
         run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off ..
-          make -j$(nproc)
-          make coverage_xml
-        env:
-          CC: gcc-13
-          CXX: g++-13
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)"
+          cmake --build build --target coverage_xml
+
+      - name: Collect build timings
+        if: always()
+        uses: ./.github/actions/upload-build-timings
+        with:
+          name: build-${{ matrix.os }}-${{ matrix.build }}
+          job-id: ${{ job.check_run_id }}
+          build-status: ${{ steps.build.outcome != 'skipped' && steps.build.outcome || steps.build-coverage.outcome }}
 
       - name: Upload coverage to Codecov
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'pq-bot/')) }}
@@ -110,7 +166,7 @@ jobs:
         with:
           fail_ci_if_error: true # optional (default = false)
           gcov: true
-          gcov_executable: gcov-13
+          gcov_executable: ${{ steps.setup-gcc.outputs.gcov }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -151,10 +207,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install gcc13
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
         run: |
-          sudo apt update
-          sudo apt install gcc-13 g++-13
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
         shell: bash
 
       - name: Build benchmark suite
@@ -165,42 +232,85 @@ jobs:
             -DBUILD_WITH_TESTS=Off \
             -DBUILD_WITH_ASE=Off \
             -DBUILD_WITH_DOCS=Off \
-            -DBUILD_WITH_NATIVE=Off
+            -DBUILD_WITH_NATIVE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build-benchmark --target google_benchmarks -j$(nproc)
-        env:
-          CC: gcc-13
-          CXX: g++-13
 
       - name: Run benchmark smoke tests
         run: |
           ctest --test-dir build-benchmark -L benchmark --output-on-failure
 
+  # Pull requests and pushes only build the static LTO application: linking
+  # the 165 test executables, each with its own whole-program LTO link, took
+  # 78% of this job's CPU time (#746) and the regular build matrix already
+  # runs every test. The nightly run builds and runs the tests too. Scheduled
+  # workflows run on the default branch (main), so the nightly part checks
+  # main and only starts working once a release brings this file to main.
   build-static-lto:
-    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    if: >-
+      !cancelled() && (
+        github.event_name == 'schedule' ||
+        (needs.changes.result == 'success' && needs.changes.outputs.relevant == 'true')
+      )
     needs: changes
     runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install GCC 13
-        run: |
-          sudo apt update
-          sudo apt install gcc-13 g++-13 mold ninja-build
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build
 
-      - name: Build and test static LTO
+      # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects);
+      # LTO's whole-program link pass itself isn't cached by ccache, but the
+      # per-file compile step is, which is most of the wall time on PRs that
+      # only touch a handful of files.
+      - name: setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: static-lto
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      - name: Build static LTO (with tests in the nightly run)
+        id: build
         run: |
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=OFF \
             -DBUILD_WITH_ASE=OFF \
             -DBUILD_WITH_LTO=ON \
-            -DBUILD_WITH_NATIVE=OFF
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS="$WITH_TESTS" \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel
-          ctest --test-dir build --output-on-failure -j1
+          if [[ "$WITH_TESTS" == "ON" ]]; then
+            ctest --test-dir build --output-on-failure -j1
+          fi
         env:
-          CC: gcc-13
-          CXX: g++-13
+          WITH_TESTS: ${{ github.event_name == 'schedule' && 'ON' || 'OFF' }}
+
+      - name: Collect build timings
+        if: always()
+        uses: ./.github/actions/upload-build-timings
+        with:
+          name: static-lto
+          job-id: ${{ job.check_run_id }}
+          build-status: ${{ steps.build.outcome }}
 
   static-singularity-build:
     if: >-
@@ -211,15 +321,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt update
-          sudo apt install gcc-13 g++-13 mold
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: static-singularity
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
 
       - name: Build project
         run: |
@@ -229,11 +353,9 @@ jobs:
             -DBUILD_WITH_SINGULARITY=ON \
             -DBUILD_WITH_TESTS=ON \
             -DBUILD_WITH_ASE=OFF \
-            -DBUILD_WITH_NATIVE=OFF
+            -DBUILD_WITH_NATIVE=OFF \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
-        env:
-          CC: gcc-13
-          CXX: g++-13
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
@@ -246,21 +368,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt update
-          sudo apt install \
-            gcc-13 \
-            g++-13 \
-            mold \
-            openmpi-bin \
-            libopenmpi-dev \
-            python-is-python3
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold openmpi-bin libopenmpi-dev python-is-python3
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: mpi-release
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
 
       - name: Build project
         run: |
@@ -269,18 +399,85 @@ jobs:
             -DBUILD_WITH_MPI=ON \
             -DBUILD_WITH_ASE=OFF \
             -DBUILD_WITH_NATIVE=OFF \
-            -DBUILD_WITH_TESTS=ON
+            -DBUILD_WITH_TESTS=ON \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
-        env:
-          CC: gcc-13
-          CXX: g++-13
+
+      - name: Collect build timings
+        if: always()
+        uses: ./.github/actions/upload-build-timings
+        with:
+          name: mpi-release
+          job-id: ${{ job.check_run_id }}
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
 
+  # BUILD_WITH_PYTHON_BINDINGS is off in every other job (#543). It installs
+  # PQAnalysis through pip while CMake configures and then has to report the
+  # capability, which testPQCli checks. Only PQ and the PQAnalysis selection
+  # test are built.
+  python-bindings:
+    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    needs: changes
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: python-bindings-release
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      - name: Build PQ with the Python bindings option
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_PYTHON_BINDINGS=ON \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=ON \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)" --target PQ testSelection
+
+      - name: Collect build timings
+        if: always()
+        uses: ./.github/actions/upload-build-timings
+        with:
+          name: python-bindings
+          job-id: ${{ job.check_run_id }}
+
+      - name: Run the Python-binding tests
+        run: ctest --test-dir build --output-on-failure -R 'testPQCli|testSelection'
+
   ci-build-gate:
     if: always()
-    needs: [changes, build, benchmark, build-static-lto, mpi-build]
+    needs: [changes, build, benchmark, build-static-lto, mpi-build, python-bindings]
     runs-on: ubuntu-24.04
     steps:
       - name: Check CI build results
@@ -289,7 +486,8 @@ jobs:
             "${{ needs.build.result }}" \
             "${{ needs.benchmark.result }}" \
             "${{ needs.build-static-lto.result }}" \
-            "${{ needs.mpi-build.result }}"; do
+            "${{ needs.mpi-build.result }}" \
+            "${{ needs.python-bindings.result }}"; do
             if [[ "$result" == "failure" ]]; then
               exit 1
             fi

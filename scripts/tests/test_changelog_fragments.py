@@ -11,6 +11,22 @@ import changelog_fragments as fragments
 
 
 class ChangelogFragmentTests(unittest.TestCase):
+    def test_a_placeholder_file_is_not_loaded_as_a_fragment(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            changes_dir = Path(temporary_directory)
+            for audience in ("user", "developer"):
+                (changes_dir / audience).mkdir()
+                (changes_dir / audience / ".gitkeep").touch()
+            (changes_dir / "user" / "bugfix.output.md").write_text(
+                "- Fix the output.\n", encoding="utf-8"
+            )
+
+            loaded = fragments.load_fragments(changes_dir)
+
+            self.assertEqual(
+                ["bugfix.output.md"], [fragment.path.name for fragment in loaded]
+            )
+
     def test_user_and_developer_names_select_distinct_sections(self):
         self.assertEqual(
             "Bug Fixes",

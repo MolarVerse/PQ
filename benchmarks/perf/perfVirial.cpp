@@ -35,6 +35,8 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
+#include "generalSettings.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 
@@ -44,12 +46,15 @@ int main()
 {
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
+
     auto physicalData = physicalData::PhysicalData();
-    settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
+    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
-    linearAlgebra::tensor3D result{0.0};
+    linalg::tensor3D result{0.0};
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {

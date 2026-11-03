@@ -22,36 +22,27 @@
 
 #include "constant.hpp"
 
-using namespace opt;
-
-/**
- * @brief Construct a new ConstantLRStrategy::ConstantLRStrategy object
- *
- * @param initialLearningRate
- */
-ConstantLRStrategy::ConstantLRStrategy(const double initialLearningRate)
-    : LearningRateStrategy(initialLearningRate)
+namespace opt
 {
-}
 
-/**
- * @brief Clone the learning rate strategy
- *
- * @return std::shared_ptr<LearningRateStrategy>
- */
-std::shared_ptr<LearningRateStrategy> ConstantLRStrategy::clone() const
-{
-    return std::make_shared<ConstantLRStrategy>(*this);
-}
+    /**
+     * @brief Construct a new ConstantLRStrategy::ConstantLRStrategy object
+     *
+     * @param initialLearningRate
+     */
+    ConstantLRStrategy::ConstantLRStrategy(double initialLearningRate)
+        : LearningRateStrategy(initialLearningRate)
+    {
+    }
 
-/**
- * @brief Update the learning rate
- *
- * @details This function does nothing, as the learning rate is constant.
- */
-void ConstantLRStrategy::updateLearningRate(
-    const size_t /*currentStep*/,
-    const size_t /*totalSteps*/
-)
-{
-}
+    /**
+     * @brief Clone the learning rate strategy
+     *
+     * @return std::shared_ptr<LearningRateStrategy>
+     */
+    std::shared_ptr<LearningRateStrategy> ConstantLRStrategy::clone() const
+    {
+        return std::make_shared<ConstantLRStrategy>(*this);
+    }
+
+}   // namespace opt

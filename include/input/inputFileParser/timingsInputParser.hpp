@@ -20,20 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_INPUT_PARSER_HPP_
-
-#define _TIMINGS_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
+#ifndef INPUT__INPUT_FILE_PARSER__TIMINGS_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__TIMINGS_INPUT_PARSER_HPP
 
 #include "inputFileParser.hpp"
 
 namespace input
 {
     /**
-     * @class TimingsInputParser inherits from InputFileParser
+     * @brief TimingsInputParser inherits from InputFileParser
      *
-     * @brief Parses the timings commands in the input file
+     * @details Parses the timings commands in the input file
      *
      */
     class TimingsInputParser : public InputFileParser
@@ -41,10 +38,10 @@ namespace input
        public:
         TimingsInputParser();
 
-        void parseTimeStep(const std::vector<std::string> &, const size_t);
-        void parseNumberOfSteps(const std::vector<std::string> &, const size_t);
+        void addTimeStep();
+        void addNumberOfSteps();
     };
 
 }   // namespace input
 
-#endif   // _TIMINGS_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__TIMINGS_INPUT_PARSER_HPP

@@ -22,22 +22,17 @@
 
 #include "simulationBox.hpp"
 
-#include <algorithm>   // for sort, unique
-#include <format>      // for format
-#include <numeric>     // for accumulate
+#include <algorithm>
+#include <format>
+#include <numeric>
 
-#include "constants.hpp"           // for _TEMPERATURE_FACTOR_
-#include "exceptions.hpp"          // for RstFileException, UserInputException
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "randomNumberGenerator.hpp"   // for randomNumberGenerator
-#include "settings.hpp"                // for Settings
-#include "stlVector.hpp"               // for rms
-
-using namespace linearAlgebra;
-using namespace customException;
-using namespace constants;
-using namespace settings;
-using namespace randomNumberGenerator;
+#include "constants.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "orthorhombicBox.hpp"
+#include "potentialSettings.hpp"
+#include "randomNumberGenerator.hpp"
+#include "stlVector.hpp"
 
 namespace molsys
 {
@@ -45,19 +40,19 @@ namespace molsys
     /**
      * @brief copy simulationBox object this
      *
-     * @details shared_ptrs are not copied but new ones are created
+     * @details shared_ptrs are not copied but new ones are created,
+     * additionally, copy constructor is not used because it would break
+     * semantics here
      *
-     * @notes copy constructor is not used because it would break semantics here
-     *
-     * @param toCopy
+     * @param other
      */
-    void SimulationBox::copy(const SimulationBox& toCopy)
+    void SimulationBox::copy(const SimulationBox& other)
     {
-        *this = toCopy;
+        *this = other;
 
         this->_atoms.clear();
 
-        for (const auto& _atom : toCopy._atoms)
+        for (const auto& _atom : other._atoms)
         {
             const auto atom = std::make_shared<Atom>(*_atom);
             this->_atoms.push_back(atom);
@@ -99,9 +94,7 @@ namespace molsys
      * @param moleculeType
      * @return std::optional<Molecule &>
      */
-    std::optional<Molecule> SimulationBox::findMolecule(
-        const size_t moleculeType
-    )
+    std::optional<Molecule> SimulationBox::findMolecule(MolType moleculeType)
     {
         auto isMoleculeType = [moleculeType](const Molecule& mol)
         { return mol.getMoltype() == moleculeType; };
@@ -119,17 +112,17 @@ namespace molsys
      *
      * @param atomIndices
      *
-     * @throw UserInputException if atom index out of range
+     * @throw exc::UserInputException if atom index out of range
      */
     void SimulationBox::addInnerRegionCenterAtoms(
-        const std::vector<int>& atomIndices
+        const std::vector<size_t>& atomIndices
     )
     {
         for (const auto index : atomIndices)
         {
-            if (index < 0 || index >= static_cast<int>(_atoms.size()))
+            if (index >= _atoms.size())
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Inner region center atom index {} out of range",
                         index
@@ -151,8 +144,8 @@ namespace molsys
      * @param moleculeIndices indices of molecules to assign to the forced-core
      * region
      *
-     * @throw UserInputException if molecule index is out of range
-     * @throw UserInputException if the molecule is already assigned to the
+     * @throw exc::UserInputException if molecule index is out of range
+     * @throw exc::UserInputException if the molecule is already assigned to the
      * forced-layer or forced-outer region
      */
     void SimulationBox::setupForcedCoreMolecules(
@@ -163,7 +156,7 @@ namespace molsys
         {
             if (index < 0 || index >= static_cast<int>(_molecules.size()))
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Forced CORE region molecule index {} out of range",
                         index
@@ -175,7 +168,7 @@ namespace molsys
 
             if (molecule.isForcedOuter() || molecule.isForcedLayer())
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Ambiguous molecule index {} - molecule cannot be in "
                         "forced_core_list AND "
@@ -199,8 +192,8 @@ namespace molsys
      * @param moleculeIndices indices of molecules to assign to the forced-layer
      * region
      *
-     * @throw UserInputException if molecule index is out of range
-     * @throw UserInputException if the molecule is already assigned to the
+     * @throw exc::UserInputException if molecule index is out of range
+     * @throw exc::UserInputException if the molecule is already assigned to the
      * forced-core or forced-outer region
      */
     void SimulationBox::setupForcedLayerMolecules(
@@ -211,7 +204,7 @@ namespace molsys
         {
             if (index < 0 || index >= static_cast<int>(_molecules.size()))
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Forced Layer region molecule index {} out of range",
                         index
@@ -223,7 +216,7 @@ namespace molsys
 
             if (molecule.isForcedCore() || molecule.isForcedOuter())
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Ambiguous molecule index {} - molecule cannot be in "
                         "forced_layer_list AND "
@@ -248,8 +241,8 @@ namespace molsys
      * @param moleculeIndices indices of molecules to assign to the forced-outer
      * region
      *
-     * @throw UserInputException if molecule index is out of range
-     * @throw UserInputException if the molecule is already assigned to the
+     * @throw exc::UserInputException if molecule index is out of range
+     * @throw exc::UserInputException if the molecule is already assigned to the
      * forced-core or forced-layer region
      */
     void SimulationBox::setupForcedOuterMolecules(
@@ -260,7 +253,7 @@ namespace molsys
         {
             if (index < 0 || index >= static_cast<int>(_molecules.size()))
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Forced outer region molecule index {} out of range",
                         index
@@ -272,7 +265,7 @@ namespace molsys
 
             if (molecule.isForcedCore() || molecule.isForcedLayer())
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Ambiguous molecule index {} - molecule cannot be in "
                         "forced_outer_list AND "
@@ -289,23 +282,24 @@ namespace molsys
     /**
      * @brief find moleculeType by moleculeType if size_t
      *
-     * @param moleculeType
+     * @param molType
      * @return Molecule
      *
-     * @throw RstFileException if molecule type not found
+     * @throw exc::RstFileException if molecule type not found
      */
-    MoleculeType& SimulationBox::findMoleculeType(const size_t moleculeType)
+    MoleculeType& SimulationBox::findMoleculeType(MolType molType)
     {
-        auto isMoleculeType = [moleculeType](const auto& mol)
-        { return mol.getMoltype() == moleculeType; };
+        auto isMoleculeType = [molType](const auto& mol)
+        { return mol.getMoltype() == molType; };
 
         const auto molecule =
             std::ranges::find_if(_moleculeTypes, isMoleculeType);
 
         if (molecule != _moleculeTypes.end())
             return *molecule;
-        throw RstFileException(
-            std::format("Molecule type {} not found", moleculeType)
+
+        throw exc::RstFileException(
+            std::format("Molecule type {} not found", molType.toString())
         );
     }
 
@@ -316,7 +310,7 @@ namespace molsys
      * @return true
      * @return false
      */
-    bool SimulationBox::moleculeTypeExists(const size_t moleculeType) const
+    bool SimulationBox::moleculeTypeExists(MolType moleculeType) const
     {
         auto isMoleculeType = [moleculeType](const auto& mol)
         { return mol.getMoltype() == moleculeType; };
@@ -331,12 +325,12 @@ namespace molsys
      * @brief find molecule type by string id
      *
      * @details return an optional - if moleculeType found it returns the
-     * moleculeType as a size_t otherwise it returns nullopt
+     * moleculeType as a MolType otherwise it returns nullopt
      *
      * @param moleculeType
-     * @return optional<size_t>
+     * @return std::optional<MolType>
      */
-    std::optional<size_t> SimulationBox::findMoleculeTypeByString(
+    std::optional<MolType> SimulationBox::findMoleculeTypeByString(
         const std::string& moleculeType
     ) const
     {
@@ -358,11 +352,10 @@ namespace molsys
      * atom in the molecule
      *
      * @param atomIndex
-     * @return pair<Molecule *, size_t>
+     * @return pair<Molecule *, AtomIndex>
      */
-    std::pair<Molecule*, size_t> SimulationBox::findMoleculeByAtomIndex(
-        const size_t atomIndex
-    )
+    std::pair<Molecule*, AtomIndex> SimulationBox::
+        findMoleculeByGlobalAtomIndex(const size_t atomIndex)
     {
         size_t sum = 0;
 
@@ -376,11 +369,11 @@ namespace molsys
                 if (atomIndex == 0)
                     break;
                 const auto index = atomIndex - (sum - nAtomsInMolecule) - 1;
-                return std::make_pair(&molecule, index);
+                return std::make_pair(&molecule, AtomIndex{index});
             }
         }
 
-        throw UserInputException(
+        throw exc::UserInputException(
             std::format(
                 "Atom index {} out of range - total number of atoms: {}",
                 atomIndex,
@@ -405,13 +398,14 @@ namespace molsys
 
         auto searchMoleculeTypes = [&neededMolTypes, this](const auto& molecule)
         {
-            auto predicate = [&molecule](const auto moleculeType)
+            auto predicate = [&molecule](const auto& moleculeType)
             { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
             const auto molType =
                 std::ranges::find_if(neededMolTypes, predicate);
 
-            if (molType == neededMolTypes.end() && molecule.getMoltype() != 0)
+            if (molType == neededMolTypes.end() &&
+                molecule.getMoltype() != MolType{0})
                 neededMolTypes.push_back(findMoleculeType(molecule.getMoltype())
                 );
         };
@@ -424,7 +418,8 @@ namespace molsys
     /**
      * @brief set partial charges of molecules from molecule types
      *
-     * @throw UserInputException if molecule type not found in _moleculeTypes
+     * @throw exc::UserInputException if molecule type not found in
+     * _moleculeTypes
      *
      */
     void SimulationBox::setPartialChargesOfMoleculesFromMoleculeTypes()
@@ -432,7 +427,7 @@ namespace molsys
         auto setPartialCharges =
             [&moleculeTypes = _moleculeTypes](Molecule& molecule)
         {
-            auto predicate = [&molecule](const auto moleculeType)
+            auto predicate = [&molecule](const auto& moleculeType)
             { return molecule.getMoltype() == moleculeType.getMoltype(); };
 
             const auto molType = std::ranges::find_if(moleculeTypes, predicate);
@@ -440,12 +435,12 @@ namespace molsys
             if (molType != moleculeTypes.end())
                 molecule.setPartialCharges(molType->getPartialCharges());
 
-            else if (molecule.getMoltype() != 0)
+            else if (molecule.getMoltype() != MolType{0})
             {
-                throw UserInputException(
+                throw exc::UserInputException(
                     std::format(
                         "Molecule type {} not found in molecule types",
-                        molecule.getMoltype()
+                        molecule.getMoltype().toString()
                     )
                 );
             }
@@ -513,12 +508,13 @@ namespace molsys
             [&extToIntGlobalVDWTypes =
                  _externalToInternalGlobalVDWTypes](auto& molecule)
         {
-            for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
+            for (AtomIndex i{0}; i.get() < molecule.getNumberOfAtoms(); ++i)
             {
-                const auto extType =
-                    molecule.getAtom(i).getExternalGlobalVDWType();
-                molecule.getAtom(i).setInternalGlobalVDWType(
-                    extToIntGlobalVDWTypes.at(extType)
+                auto& atom = molecule.getAtom(i);
+
+                const auto extType = atom.getExternalGlobalVDWType();
+
+                atom.setInternalGlobalVDWType(extToIntGlobalVDWTypes.at(extType)
                 );
             }
         };
@@ -534,7 +530,8 @@ namespace molsys
     {
         const auto nAtoms = getNumberOfAtoms();
 
-        _degreesOfFreedom = 3 * nAtoms - Settings::getDimensionality();
+        _degreesOfFreedom =
+            3 * nAtoms - settings::GeneralSettings::getDimensionality();
     }
 
     /**
@@ -557,7 +554,7 @@ namespace molsys
      */
     void SimulationBox::calculateCenterOfMass()
     {
-        _centerOfMass = Vec3D{0.0};
+        _centerOfMass = linalg::Vec3D{0.0};
 
         auto accumulateMassWeightedPos = [this](const auto& atom)
         { _centerOfMass += atom->getMass() * atom->getPosition(); };
@@ -582,11 +579,11 @@ namespace molsys
     /**
      * @brief calculate momentum of simulationBox
      *
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
-    Vec3D SimulationBox::calculateMomentum()
+    linalg::Vec3D SimulationBox::calculateMomentum()
     {
-        auto momentum = Vec3D{0.0};
+        auto momentum = linalg::Vec3D{0.0};
 
         auto accumulateAtomicMomentum = [&momentum](const auto& atom)
         { momentum += atom->getMass() * atom->getVelocity(); };
@@ -600,9 +597,15 @@ namespace molsys
      * @brief calculate angular momentum of simulationBox
      *
      */
-    Vec3D SimulationBox::calculateAngularMomentum(const Vec3D& momentum)
+    linalg::Vec3D SimulationBox::calculateAngularMomentum(
+        const linalg::Vec3D& momentum
+    )
     {
-        auto angularMom = Vec3D{0.0};
+        auto angularMom = linalg::Vec3D{0.0};
+
+        calculateCenterOfMass();
+
+        calculateCenterOfMass();
 
         auto accumulateAngularMomentum = [&angularMom](const auto& atom)
         {
@@ -623,7 +626,7 @@ namespace molsys
      *
      * @return double
      */
-    double SimulationBox::calculateTotalForce()
+    double SimulationBox::calculateTotalForce() const
     {
         const auto totalForce = calculateTotalForceVector();
 
@@ -633,11 +636,11 @@ namespace molsys
     /**
      * @brief calculate total force of simulationBox as vector
      *
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
-    Vec3D SimulationBox::calculateTotalForceVector()
+    linalg::Vec3D SimulationBox::calculateTotalForceVector() const
     {
-        Vec3D totalForce(0.0);
+        linalg::Vec3D totalForce(0.0);
 
         auto accumulateForce = [&totalForce](const auto& atom)
         { totalForce += atom->getForce(); };
@@ -718,15 +721,15 @@ namespace molsys
      * @brief checks if the coulomb radius cut off is smaller than half of the
      * minimal box dimension
      *
-     * @throw UserInputException if coulomb radius cut off is larger than half
-     * of the minimal box dimension
+     * @throw exc::UserInputException if coulomb radius cut off is larger than
+     * half of the minimal box dimension
      */
     void SimulationBox::checkCoulRadiusCutOff(
-        const ExceptionType exceptionType
+        const ExceptionType& exceptionType
     ) const
     {
         const auto coulRadiusCutOff =
-            PotentialSettings::getCoulombRadiusCutOff();
+            settings::PotentialSettings::getCoulombRadiusCutOff();
 
         if (getMinimalBoxDimension() < 2.0 * coulRadiusCutOff)
         {
@@ -734,10 +737,10 @@ namespace molsys
                 "Coulomb radius cut off is larger than half of the minimal box "
                 "dimension";
 
-            if (exceptionType == ExceptionType::MANOSTATEXCEPTION)
-                throw ManostatException(message);
+            if (exceptionType == ExceptionType::ManostatError)
+                throw exc::ManostatException(message);
 
-            throw UserInputException(message);
+            throw exc::UserInputException(message);
         }
     }
 
@@ -747,19 +750,28 @@ namespace molsys
      */
     void SimulationBox::calculateDensity()
     {
-        const auto volume = _box->calculateVolume();
+        const auto volume = _box->getVolume();
         _density          = _totalMass / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
     }
 
     /**
      * @brief calculate box dimensions from density
      *
-     * @return Vec3D
      */
-    Vec3D SimulationBox::calcBoxDimFromDensity() const
+    linalg::Vec3D SimulationBox::calcBoxDimFromDensity() const
     {
-        auto& orthoBox = dynamic_cast<OrthorhombicBox&>(*_box);
-        return orthoBox.calcBoxDimFromDensity(_totalMass, _density);
+        return OrthorhombicBox::calcBoxDimFromDensity(_totalMass, _density);
+    }
+
+    /**
+     * @brief calculate shift vector for a given position
+     *
+     */
+    [[nodiscard]] linalg::Vec3D SimulationBox::calcShiftVector(
+        const linalg::Vec3D& position
+    ) const
+    {
+        return _box->calcShiftVector(position);
     }
 
     int SimulationBox::calcActiveMolCharge() const
@@ -777,12 +789,12 @@ namespace molsys
      */
     void SimulationBox::initPositions(const double displacement)
     {
-        RandomNumberGenerator randomNumberGenerator{};
+        rng::RandomNumberGenerator randomNumberGenerator{};
 
         auto displacePositions =
             [&randomNumberGenerator, displacement, this](auto& atom)
         {
-            const auto random = Vec3D{
+            const auto random = linalg::Vec3D{
                 randomNumberGenerator
                     .getUniformRealDistribution(-displacement, displacement),
                 randomNumberGenerator
@@ -900,22 +912,26 @@ namespace molsys
     }
 
     /**
-     * @brief Remove net force from the system
+     * @brief Remove net force from the QM atoms
      *
-     * @details Computes the total force vector, distributes the opposite mean
-     * force equally to all atoms, and thereby enforces zero total force.
+     * @details Computes the total force on the QM atoms, distributes the
+     * opposite mean force equally to the QM atoms, and thereby enforces zero
+     * total QM force. MM atoms are not touched.
      */
     void SimulationBox::removeNetForce()
     {
-        const auto nAtoms = getNumberOfAtoms();
+        const auto nAtoms = getNumberOfQMAtoms();
 
         if (nAtoms == 0)
             return;
 
-        const auto correctionForce =
-            -calculateTotalForceVector() / static_cast<double>(nAtoms);
+        auto totalForce = linalg::Vec3D(0.0);
 
-        for (auto& atom : getAtoms()) atom->addForce(correctionForce);
+        for (const auto& atom : getQMAtoms()) totalForce += atom->getForce();
+
+        const auto correctionForce = -totalForce / static_cast<double>(nAtoms);
+
+        for (auto& atom : getQMAtoms()) atom->addForce(correctionForce);
     }
 
 }   // namespace molsys

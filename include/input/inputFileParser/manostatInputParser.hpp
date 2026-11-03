@@ -20,44 +20,38 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__MANOSTAT_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__MANOSTAT_INPUT_PARSER_HPP
 
-#define _MANOSTAT_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
+#include "inputFileParser.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
+class ManostatSettings;
 
 namespace input
 {
     /**
-     * @class ManostatInputParser inherits from InputFileParser
+     * @brief ManostatInputParser inherits from InputFileParser
      *
-     * @brief Parses the manostat commands in the input file
+     * @details Parses the manostat commands in the input file
      *
      */
     class ManostatInputParser : public InputFileParser
     {
+        mstd::Ref<ManostatSettings> _manostatSettings;
+
        public:
-        explicit ManostatInputParser();
+        explicit ManostatInputParser(ManostatSettings& manostatSettings);
 
-        void parseManostat(const std::vector<std::string> &, const size_t);
-
-        void parsePressure(const std::vector<std::string> &, const size_t);
-
-        void parseManostatRelaxationTime(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseCompressibility(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseIsotropy(const std::vector<std::string> &, const size_t);
+        void addManostatKey();
+        void addPressureKey();
+        void addManostatRelaxationTimeKey();
+        void addCompressibilityKey();
+        void addIsotropyKey();
+        void addFixedAxisKey();
     };
 
 }   // namespace input
 
-#endif   // _MANOSTAT_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__MANOSTAT_INPUT_PARSER_HPP

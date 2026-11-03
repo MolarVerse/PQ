@@ -20,16 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MD_ENGINE_HPP_
-
-#define _MD_ENGINE_HPP_
+#ifndef ENGINE__MD_ENGINE_HPP
+#define ENGINE__MD_ENGINE_HPP
 
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
 #include "engine.hpp"
+#include "hybridConfigurator.hpp"
 #include "integrator.hpp"
 #include "manostat.hpp"
 #include "momentumOutput.hpp"
+#include "outputFileSettings.hpp"
 #include "resetKinetics.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
@@ -48,7 +49,7 @@ namespace engine
      */
     class MDEngine : public Engine
     {
-       protected:
+       private:
         resetKinetics::ResetKinetics     _resetKinetics;
         configurator::HybridConfigurator _configurator{};
 
@@ -57,11 +58,11 @@ namespace engine
         std::unique_ptr<manostat::Manostat>     _manostat;
 
        public:
-        MDEngine();
+        explicit MDEngine(const Settings &settings);
         ~MDEngine() override = default;
 
-        void         run() override;
-        void         writeOutput() override;
+        void run() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
         virtual void takeStep();
 
         void takeStepBeforeForces();
@@ -69,36 +70,6 @@ namespace engine
 
         void         calculateForcesWrapper();
         virtual void calculateForces() = 0;
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] resetKinetics::ResetKinetics &getResetKinetics();
-        [[nodiscard]] integrator::Integrator       &getIntegrator();
-        [[nodiscard]] thermostat::Thermostat       &getThermostat();
-        [[nodiscard]] manostat::Manostat           &getManostat();
-        [[nodiscard]] output::EnergyOutput         &getInstantEnergyOutput();
-        [[nodiscard]] output::MomentumOutput       &getMomentumOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getXyzHybridCenterOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getVelOutput();
-        [[nodiscard]] output::TrajectoryOutput     &getChargeOutput();
-        [[nodiscard]] output::VirialOutput         &getVirialOutput();
-        [[nodiscard]] output::StressOutput         &getStressOutput();
-        [[nodiscard]] output::BoxFileOutput        &getBoxFileOutput();
-
-        [[nodiscard]]
-        output::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
-        [[nodiscard]]
-        output::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
-        [[nodiscard]]
-        output::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
-        [[nodiscard]]
-        output::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
-        [[nodiscard]]
-        output::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
-        [[nodiscard]]
-        output::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
 
         /***************************
          * make unique_ptr methods *
@@ -110,11 +81,47 @@ namespace engine
         void makeThermostat(T thermostat);
         template <typename T>
         void makeManostat(T manostat);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] resetKinetics::ResetKinetics &getResetKinetics();
+        [[nodiscard]] integrator::Integrator       &getIntegrator();
+        [[nodiscard]] thermostat::Thermostat       &getThermostat();
+        [[nodiscard]] manostat::Manostat           &getManostat();
+        [[nodiscard]] out::EnergyOutput            &getInstantEnergyOutput();
+        [[nodiscard]] out::MomentumOutput          &getMomentumOutput();
+        [[nodiscard]] out::TrajectoryOutput        &getXyzHybridCenterOutput();
+        [[nodiscard]] out::TrajectoryOutput        &getVelOutput();
+        [[nodiscard]] out::TrajectoryOutput        &getChargeOutput();
+        [[nodiscard]] out::VirialOutput            &getVirialOutput();
+        [[nodiscard]] out::StressOutput            &getStressOutput();
+        [[nodiscard]] out::BoxFileOutput           &getBoxFileOutput();
+
+        [[nodiscard]]
+        out::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
+        [[nodiscard]]
+        out::RingPolymerTrajectoryOutput &getRingPolymerXyzOutput();
+        [[nodiscard]]
+        out::RingPolymerTrajectoryOutput &getRingPolymerVelOutput();
+        [[nodiscard]]
+        out::RingPolymerTrajectoryOutput &getRingPolymerForceOutput();
+        [[nodiscard]]
+        out::RingPolymerTrajectoryOutput &getRingPolymerChargeOutput();
+        [[nodiscard]]
+        out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
+
+       protected:
+        [[nodiscard]]
+        configurator::HybridConfigurator &_getHybridConfigurator();
+        [[nodiscard]]
+        configurator::HybridConfigurator const &_getHybridConfigurator() const;
     };
 }   // namespace engine
 
-#ifndef _MD_ENGINE_TPP_
-#include "mdEngine.tpp.hpp"   // IWYU pragma: keep - DO NOT MOVE THIS LINE
+#ifndef ENGINE__MD_ENGINE_TPP
+#include "mdEngine.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _MD_ENGINE_HPP_
+#endif   // ENGINE__MD_ENGINE_HPP

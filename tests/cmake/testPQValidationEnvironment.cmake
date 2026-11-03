@@ -86,7 +86,7 @@ file(
 assert_invalid(
     "directory-reference.in"
     installed
-    "Cannot open start file.*start-directory"
+    "Invalid value.*start-directory.*start_file.*existing file path"
 )
 
 file(MAKE_DIRECTORY "${VALIDATION_WORK_DIR}/topology-directory")
@@ -104,14 +104,14 @@ file(
 assert_invalid(
     "force-field.in"
     installed
-    "Cannot open topology file.*topology-directory"
+    "Invalid value.*topology-directory.*topology_file.*existing file path"
 )
 file(REMOVE_RECURSE "${VALIDATION_WORK_DIR}/topology-directory")
 file(WRITE "${VALIDATION_WORK_DIR}/topology-directory" "")
 assert_invalid(
     "force-field.in"
     installed
-    "Cannot open parameter file.*parameter-directory"
+    "Invalid value.*parameter-directory.*parameter_file.*existing file path"
 )
 file(REMOVE_RECURSE "${VALIDATION_WORK_DIR}/parameter-directory")
 file(WRITE "${VALIDATION_WORK_DIR}/parameter-directory" "")
@@ -322,6 +322,23 @@ if(EXPECTED_ASE)
 else()
     assert_invalid("mace-local.in" installed "requires ASE support")
 endif()
+
+file(
+    WRITE "${VALIDATION_WORK_DIR}/zero-compressibility.in"
+    "jobtype = mm-md;\n"
+    "nstep = 1;\n"
+    "timestep = 0.5;\n"
+    "force-field = off;\n"
+    "manostat = berendsen;\n"
+    "pressure = 1;\n"
+    "compressibility = 0;\n"
+    "start_file = start.rst;\n"
+)
+assert_invalid(
+    "zero-compressibility.in"
+    installed
+    "compressibility.*Value must be greater than 0"
+)
 
 file(
     WRITE "${VALIDATION_WORK_DIR}/mace-remote.in"

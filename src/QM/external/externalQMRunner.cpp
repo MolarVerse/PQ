@@ -22,362 +22,577 @@
 
 #include "externalQMRunner.hpp"
 
-#include <algorithm>    // for __for_each_fn, for_each
-#include <array>        // for array
-#include <cmath>        // for isfinite
-#include <cstdlib>      // for system
-#include <filesystem>   // for is_regular_file, path, remove
-#include <format>       // for format
-#include <fstream>      // for ofstream
-#include <string>       // for string
-#include <thread>       // for sleep_for
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdlib>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <string>
+#include <thread>
 
-#include "constants/conversionFactors.hpp"   // for _HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM_, _HARTREE_TO_KCAL_PER_MOL_
-#include "exceptions.hpp"                    // for InputFileException
-#include "executablePath.hpp"                // for executablePath
-#include "fileSettings.hpp"                  // for FileSettings
-#include "globalTimer.hpp"
-#include "physicalData.hpp"   // for PhysicalData
-#include "qmSettings.hpp"     // for QMSettings
-#include "settings.hpp"
-#include "simulationBox.hpp"   // for SimulationBox
+#if !defined(_WIN32)
+#include <sys/wait.h>
+#include <unistd.h>
 
-using QM::ExternalQMRunner;
-using enum molsys::Periodicity;
-
-using namespace molsys;
-using namespace physicalData;
-using namespace customException;
-using namespace settings;
-using namespace constants;
-
-std::string QM::bundledQMScriptPath(const std::string_view script)
-{
-    const auto installedPath =
-        utilities::installedDataPath(std::filesystem::path("scripts") / script);
-    if (std::filesystem::is_regular_file(installedPath))
-        return installedPath.string();
-
-    return (std::filesystem::path(SCRIPT_PATH_) / script).string();
-}
-
-/**
- * @brief run the qm engine
- *
- * @param simBox SimulationBox reference
- * @param physicalData PhysicalData reference
- * @param per periodicity of the system
- */
-void ExternalQMRunner::run(
-    SimulationBox &simBox,
-    PhysicalData  &physicalData,
-    Periodicity    per
-)
-{
-    if (per != XYZ && per != NON_PERIODIC)
-    {
-        throw QMRunnerException(
-            "External QM runners only available for non- and 3D-periodic "
-            "calculations."
-        );
-    }
-
-    _periodicity = per;
-
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
-        writeCoordsFile(simBox);
-    }
-
-    if (Settings::isHybridJobtype())
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
-        writePointChargeFile(simBox);
-    }
-
-    const auto resultFiles = std::array{
-        FileSettings::getQMForcesTempFileName(),
-        FileSettings::getQMChargesTempFileName(),
-        FileSettings::getStressTensorTempFileName()
-    };
-    for (const auto &file : resultFiles) std::filesystem::remove(file);
-
-    std::jthread timeoutThread{[this](const std::stop_token stopToken)
-                               { throwAfterTimeout(stopToken); }};
-
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
-        execute(simBox);
-    }
-
-    timeoutThread.request_stop();
-
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
-        readForceFile(simBox, physicalData);
-    }
-
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
-        readChargeFile(simBox);
-    }
-
-    if (per != NON_PERIODIC)
-    {
-        auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
-        readStressTensor(simBox.getBox(), physicalData);
-    }
-}
-
-std::string ExternalQMRunner::resolveScriptPath(
-    const std::string_view script
-) const
-{
-    if (_scriptPath.empty())
-        return std::string(script);
-
-    if (_scriptPath == SCRIPT_PATH_)
-        return bundledQMScriptPath(script);
-
-    return _scriptPath + std::string(script);
-}
-
-void ExternalQMRunner::executeCommand(
-    const std::string_view command,
-    const std::string_view program
-) const
-{
-#if defined(_WIN32)
-    static_cast<void>(command);
-    throw QMRunnerException(
-        std::format("{} command execution is not supported on Windows", program)
-    );
-#else
-    const auto status = std::system(std::string(command).c_str());
-    if (status != EXIT_SUCCESS)
-        throw QMRunnerException(
-            std::format("{} command failed with status {}", program, status)
-        );
+#include <cerrno>
+#include <chrono>
+#include <csignal>
 #endif
-}
+
+#include "box.hpp"
+#include "constants/conversionFactors.hpp"
+#include "exceptions.hpp"
+#include "executablePath.hpp"
+#include "fileSettings.hpp"
+#include "generalSettings.hpp"
+#include "globalTimer.hpp"
+#include "physicalData.hpp"
+#include "qmSettings.hpp"
+#include "simulationBox.hpp"
+
+#if !defined(_WIN32)
+namespace
+{
+    struct CancelState
+    {
+        static inline volatile std::sig_atomic_t flag = 0;
+    };
+}   // namespace
 
 /**
- * @brief reads the force file (including qm energy) and sets the forces of
- * the atoms
+ * @brief signal handler that records SIGINT, SIGTERM or SIGHUP while an
+ * external QM program runs
  *
- * @param box
- * @param physicalData
+ * @details signal handlers need C language linkage, which is ignored for names
+ * with internal linkage, so this cannot live in the unnamed namespace
  *
- * @throw QMRunnerException
- *  - if the force file cannot be opened
- *  - if the force file is empty
+ * @param signalNumber received signal
  */
-void ExternalQMRunner::readForceFile(
-    SimulationBox &box,
-    PhysicalData  &physicalData
-)
+// NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
+// linkage
+extern "C" void pqRecordQMCancelSignal(const int signalNumber)
 {
-    const auto forceFileName = FileSettings::getQMForcesTempFileName();
+    CancelState::flag = signalNumber;
+}
 
-    std::ifstream forceFile(forceFileName);
-
-    if (!forceFile.is_open())
+namespace
+{
+    /**
+     * @brief records SIGINT, SIGTERM and SIGHUP while the QM process runs, so
+     * its process group can be stopped before PQ exits; restores the previous
+     * handlers on destruction
+     */
+    class ScopedCancelSignals
     {
-        throw QMRunnerException(
-            std::format(
-                "Cannot open {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
-    }
+       private:
+        static constexpr auto _nSignals = 3;
 
-    if (forceFile.peek() == std::ifstream::traits_type::eof())
-    {
-        throw QMRunnerException(
-            std::format(
-                "Empty {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
-    }
+        std::array<int, _nSignals> _signals{SIGINT, SIGTERM, SIGHUP};
+        std::array<struct sigaction, _nSignals> _previous{};
 
-    double energy = 0.0;
-
-    if (!(forceFile >> energy))
-    {
-        throw QMRunnerException(
-            std::format(
-                "Cannot read QM energy from {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
-    }
-
-    if (!std::isfinite(energy))
-    {
-        throw QMRunnerException(
-            std::format(
-                "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                forceFileName
-            )
-        );
-    }
-
-    physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
-
-    auto readForces = [&forceFile, &forceFileName](auto &atom)
-    {
-        auto grad = linearAlgebra::Vec3D();
-
-        if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
+       public:
+        ScopedCancelSignals()
         {
-            throw QMRunnerException(
+            CancelState::flag = 0;
+
+            struct sigaction action{};
+            action.sa_handler = pqRecordQMCancelSignal;
+            ::sigemptyset(&action.sa_mask);
+
+            for (std::size_t i = 0; i < _signals.size(); ++i)
+            {
+                ::sigaction(_signals.at(i), &action, &_previous.at(i));
+
+                // keep signals ignored by the caller (e.g. nohup) ignored
+                if (_previous.at(i).sa_handler == SIG_IGN)
+                {
+                    ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
+                }
+            }
+        }
+
+        ~ScopedCancelSignals()
+        {
+            for (std::size_t i = 0; i < _signals.size(); ++i)
+            {
+                ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
+            }
+        }
+
+        ScopedCancelSignals(const ScopedCancelSignals &)            = delete;
+        ScopedCancelSignals &operator=(const ScopedCancelSignals &) = delete;
+        ScopedCancelSignals(ScopedCancelSignals &&)                 = delete;
+        ScopedCancelSignals &operator=(ScopedCancelSignals &&)      = delete;
+    };
+
+    /**
+     * @brief terminates the process group of pid and reaps pid
+     *
+     * @details sends SIGTERM and waits until pid exits, at most
+     * terminateGracePeriod; SIGKILL then stops any remaining group members.
+     * pid is reaped last so its process group id cannot be reused before.
+     *
+     * @param pid process (group leader) to stop
+     * @param status wait status of pid
+     * @param pollInterval interval between checks whether pid exited
+     */
+    void stopProcessGroup(
+        const pid_t                     pid,
+        int                            &status,
+        const std::chrono::milliseconds pollInterval
+    )
+    {
+        constexpr auto terminateGracePeriod = std::chrono::seconds(1);
+
+        const auto deadline =
+            std::chrono::steady_clock::now() + terminateGracePeriod;
+
+        ::killpg(pid, SIGTERM);
+
+        siginfo_t info{};
+        while (std::chrono::steady_clock::now() < deadline)
+        {
+            info.si_pid = 0;
+            ::waitid(
+                P_PID,
+                static_cast<id_t>(pid),
+                &info,
+                WEXITED | WNOHANG | WNOWAIT
+            );
+            if (info.si_pid == pid)
+            {
+                break;
+            }
+
+            std::this_thread::sleep_for(pollInterval);
+        }
+
+        ::killpg(pid, SIGKILL);
+        ::waitpid(pid, &status, 0);
+    }
+}   // namespace
+#endif
+
+namespace QM
+{
+
+    /**
+     * @brief reads the force file (including qm energy) and sets the forces of
+     * the atoms
+     *
+     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param physicalData
+     *
+     * @throw QMRunnerException
+     *  - if the force file cannot be opened
+     *  - if the force file is empty
+     */
+    void ExternalQMRunner::_readForceFile(
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
+    )
+    {
+        const auto forceFileName =
+            settings::FileSettings::getQMForcesTempFileName();
+
+        std::ifstream forceFile(forceFileName);
+
+        if (!forceFile.is_open())
+        {
+            throw exc::QMRunnerException(
                 std::format(
-                    "Incomplete {} force file \"{}\"",
-                    string(QMSettings::getQMMethod()),
+                    "Cannot open {} force file \"{}\"",
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
         }
 
-        for (size_t i = 0; i < 3; ++i)
+        if (forceFile.peek() == std::ifstream::traits_type::eof())
         {
-            if (!std::isfinite(grad[i]))
+            throw exc::QMRunnerException(
+                std::format(
+                    "Empty {} force file \"{}\"",
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    forceFileName
+                )
+            );
+        }
+
+        double energy = 0.0;
+
+        if (!(forceFile >> energy))
+        {
+            throw exc::QMRunnerException(
+                std::format(
+                    "Cannot read QM energy from {} force file \"{}\"",
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    forceFileName
+                )
+            );
+        }
+
+        if (!std::isfinite(energy))
+        {
+            throw exc::QMRunnerException(
+                std::format(
+                    "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    forceFileName
+                )
+            );
+        }
+
+        physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
+
+        auto readForces = [&forceFile, &forceFileName](auto &atom)
+        {
+            auto grad = linalg::Vec3D();
+
+            if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
             {
-                throw QMRunnerException(
+                throw exc::QMRunnerException(
                     std::format(
-                        "Invalid QM force component (NaN/Inf) in {} force file "
-                        "\"{}\"",
-                        string(QMSettings::getQMMethod()),
+                        "Incomplete {} force file \"{}\"",
+                        QMMethodMeta::toString(
+                            settings::QMSettings::getQMMethod()
+                        ),
                         forceFileName
                     )
                 );
             }
-        }
 
-        atom->setForce(-grad * HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM);
-    };
+            for (size_t i = 0; i < 3; ++i)
+            {
+                if (!std::isfinite(grad[i]))
+                {
+                    throw exc::QMRunnerException(
+                        std::format(
+                            "Invalid QM force component (NaN/Inf) in {} force "
+                            "file "
+                            "\"{}\"",
+                            QMMethodMeta::toString(
+                                settings::QMSettings::getQMMethod()
+                            ),
+                            forceFileName
+                        )
+                    );
+                }
+            }
 
-    std::ranges::for_each(box.getQMAtoms(), readForces);
-
-    forceFile.close();
-
-    if (QMSettings::getRemoveNetForce())
-        box.removeNetForce();
-}
-
-/**
- * @brief reads the charge file (qm_charges) and sets the _qmCharge of the atoms
- *
- * @param box
- *
- * @throw QMRunnerException
- *  - if the charge file cannot be opened
- *  - if the charge file is empty
- */
-void ExternalQMRunner::readChargeFile(SimulationBox &box)
-{
-    const auto chargeFileName = FileSettings::getQMChargesTempFileName();
-
-    std::ifstream chargeFile(chargeFileName);
-
-    if (!chargeFile.is_open())
-    {
-        throw QMRunnerException(
-            std::format(
-                "Cannot open {} charge file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                chargeFileName
-            )
-        );
-    }
-
-    if (chargeFile.peek() == std::ifstream::traits_type::eof())
-    {
-        throw QMRunnerException(
-            std::format(
-                "Empty {} charge file \"{}\"",
-                string(QMSettings::getQMMethod()),
-                chargeFileName
-            )
-        );
-    }
-
-    box.resetQMCharges();
-
-    auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
-    {
-        auto charge = 0.0;
-
-        if (!(chargeFile >> charge))
-        {
-            throw QMRunnerException(
-                std::format(
-                    "Incomplete {} charge file \"{}\"",
-                    string(QMSettings::getQMMethod()),
-                    chargeFileName
-                )
+            atom->setForce(
+                -grad * HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM
             );
-        }
-        if (!std::isfinite(charge))
+        };
+
+        std::ranges::for_each(simulationBox.getQMAtoms(), readForces);
+
+        forceFile.close();
+
+        if (settings::QMSettings::getRemoveNetForce())
+            simulationBox.removeNetForce();
+    }
+
+    /**
+     * @brief reads the charge file (qm_charges) and sets the _qmCharge of the
+     * atoms
+     *
+     * @param simulationBox Simulation box containing molecules and atoms.
+     *
+     * @throw QMRunnerException
+     *  - if the charge file cannot be opened
+     *  - if the charge file is empty
+     */
+    void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &simulationBox)
+    {
+        const auto chargeFileName =
+            settings::FileSettings::getQMChargesTempFileName();
+
+        std::ifstream chargeFile(chargeFileName);
+
+        if (!chargeFile.is_open())
         {
-            throw QMRunnerException(
+            throw exc::QMRunnerException(
                 std::format(
-                    "Invalid value in {} charge file \"{}\"",
-                    string(QMSettings::getQMMethod()),
+                    "Cannot open {} charge file \"{}\"",
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
                     chargeFileName
                 )
             );
         }
 
-        atom->setQMCharge(charge);
-    };
+        if (chargeFile.peek() == std::ifstream::traits_type::eof())
+        {
+            throw exc::QMRunnerException(
+                std::format(
+                    "Empty {} charge file \"{}\"",
+                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    chargeFileName
+                )
+            );
+        }
 
-    std::ranges::for_each(box.getQMAtoms(), readCharges);
+        simulationBox.resetQMCharges();
 
-    chargeFile.close();
-}
+        auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
+        {
+            auto charge = 0.0;
 
-/********************************
- *                              *
- * standard getters and setters *
- *                              *
- ********************************/
+            if (!(chargeFile >> charge))
+            {
+                throw exc::QMRunnerException(
+                    std::format(
+                        "Incomplete {} charge file \"{}\"",
+                        QMMethodMeta::toString(
+                            settings::QMSettings::getQMMethod()
+                        ),
+                        chargeFileName
+                    )
+                );
+            }
+            if (!std::isfinite(charge))
+            {
+                throw exc::QMRunnerException(
+                    std::format(
+                        "Invalid value in {} charge file \"{}\"",
+                        QMMethodMeta::toString(
+                            settings::QMSettings::getQMMethod()
+                        ),
+                        chargeFileName
+                    )
+                );
+            }
 
-/**
- * @brief getter for the script path
- *
- * @return const std::string&
- */
-const std::string &ExternalQMRunner::getScriptPath() const
-{
-    return _scriptPath;
-}
+            atom->setQMCharge(charge);
+        };
 
-/**
- * @brief getter for the singularity path
- *
- * @return std::string
- */
-std::string ExternalQMRunner::getSingularity() const { return _singularity; }
+        std::ranges::for_each(simulationBox.getQMAtoms(), readCharges);
 
-/**
- * @brief getter for the static build path
- *
- * @return std::string
- */
-std::string ExternalQMRunner::getStaticBuild() const { return _staticBuild; }
+        chargeFile.close();
+    }
 
-/**
- * @brief setter for the script path
- *
- * @param scriptPath
- */
-void ExternalQMRunner::setScriptPath(const std::string_view &scriptPath)
-{
-    _scriptPath = scriptPath;
-}
+    std::string bundledQMScriptPath(const std::string_view script)
+    {
+        const auto installedPath = utilities::installedDataPath(
+            std::filesystem::path("scripts") / script
+        );
+        if (std::filesystem::is_regular_file(installedPath))
+            return installedPath.string();
+
+        return (std::filesystem::path(SCRIPT_PATH_) / script).string();
+    }
+
+    /**
+     * @brief run the qm engine
+     *
+     * @param simulationBox SimulationBox reference
+     * @param physicalData PhysicalData reference
+     * @param per periodicity of the system
+     */
+    void ExternalQMRunner::run(
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData,
+        molsys::Periodicity         per
+    )
+    {
+        if (per != molsys::Periodicity::XYZ &&
+            per != molsys::Periodicity::NON_PERIODIC)
+        {
+            throw exc::QMRunnerException(
+                "External QM runners only available for non- and 3D-periodic "
+                "calculations."
+            );
+        }
+
+        _setPeriodicity(per);
+
+        {
+            auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
+            writeCoordsFile(simulationBox);
+        }
+
+        if (settings::GeneralSettings::isHybridJobtype())
+        {
+            auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
+            writePointChargeFile(simulationBox);
+        }
+
+        const auto resultFiles = std::array{
+            settings::FileSettings::getQMForcesTempFileName(),
+            settings::FileSettings::getQMChargesTempFileName(),
+            settings::FileSettings::getStressTensorTempFileName()
+        };
+        for (const auto &file : resultFiles) std::filesystem::remove(file);
+
+        {
+            auto _ =
+                scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
+            execute(simulationBox);
+        }
+
+        {
+            auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
+            _readForceFile(simulationBox, physicalData);
+        }
+
+        {
+            auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
+            _readChargeFile(simulationBox);
+        }
+
+        if (per != molsys::Periodicity::NON_PERIODIC)
+        {
+            auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
+            readStressTensor(simulationBox.getBox(), physicalData);
+        }
+    }
+
+    std::string ExternalQMRunner::_resolveScriptPath(
+        const std::string_view script
+    ) const
+    {
+        if (_scriptPath.empty())
+            return std::string(script);
+
+        if (_scriptPath == SCRIPT_PATH_)
+            return bundledQMScriptPath(script);
+
+        return _scriptPath + std::string(script);
+    }
+
+    void ExternalQMRunner::_executeCommand(
+        const std::string_view command,
+        const std::string_view program
+    ) const
+    {
+#if defined(_WIN32)
+        static_cast<void>(command);
+        throw QMRunnerException(
+            std::format(
+                "{} command execution is not supported on Windows",
+                program
+            )
+        );
+#else
+        constexpr auto execFailedStatus = 127;
+        constexpr auto pollInterval     = std::chrono::milliseconds(10);
+
+        auto       shell         = std::string("sh");
+        auto       shellFlag     = std::string("-c");
+        auto       commandString = std::string(command);
+        const auto timeLimit     = settings::QMSettings::getQMLoopTimeLimit();
+
+        const pid_t pid = ::fork();
+        if (pid < 0)
+            throw exc::QMRunnerException(
+                std::format("{} command could not be started", program)
+            );
+
+        if (pid == 0)
+        {
+            ::setpgid(0, 0);
+            auto argv = std::array<char *, 4>{
+                shell.data(),
+                shellFlag.data(),
+                commandString.data(),
+                nullptr
+            };
+            ::execv("/bin/sh", argv.data());
+            ::_exit(execFailedStatus);
+        }
+
+        ::setpgid(pid, pid);
+
+        // qm_loop_time_limit is given in s
+        const auto deadline = std::chrono::steady_clock::now() +
+                              std::chrono::duration<double>(timeLimit);
+
+        int status = 0;
+        {
+            const auto cancelSignals = ScopedCancelSignals{};
+
+            while (true)
+            {
+                const auto result = ::waitpid(pid, &status, WNOHANG);
+
+                if (result == pid)
+                    break;
+
+                if (result < 0 && errno != EINTR)
+                    throw exc::QMRunnerException(
+                        std::format("{} command could not be awaited", program)
+                    );
+
+                if (CancelState::flag != 0)
+                {
+                    stopProcessGroup(pid, status, pollInterval);
+                    break;
+                }
+
+                if (timeLimit > 0.0 &&
+                    std::chrono::steady_clock::now() >= deadline)
+                {
+                    stopProcessGroup(pid, status, pollInterval);
+                    throw exc::QMRunnerException("QM calculation timeout");
+                }
+
+                std::this_thread::sleep_for(pollInterval);
+            }
+        }
+
+        // previous handlers are restored; deliver the signal to PQ itself
+        if (CancelState::flag != 0)
+        {
+            static_cast<void>(::raise(CancelState::flag));
+        }
+
+        if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)
+            throw exc::QMRunnerException(
+                std::format("{} command failed with status {}", program, status)
+            );
+#endif
+    }
+
+    /********************************
+     *                              *
+     * standard getters and setters *
+     *                              *
+     ********************************/
+
+    /**
+     * @brief getter for the script path
+     *
+     * @return const std::string&
+     */
+    const std::string &ExternalQMRunner::getScriptPath() const
+    {
+        return _scriptPath;
+    }
+
+    /**
+     * @brief getter for the singularity path
+     *
+     * @return  std::string
+     */
+    std::string ExternalQMRunner::getSingularity() { return _singularity; }
+
+    /**
+     * @brief getter for the static build path
+     *
+     * @return  std::string
+     */
+    std::string ExternalQMRunner::getStaticBuild() { return _staticBuild; }
+
+    /**
+     * @brief setter for the script path
+     *
+     * @param scriptPath
+     */
+    void ExternalQMRunner::setScriptPath(const std::string_view &scriptPath)
+    {
+        _scriptPath = scriptPath;
+    }
+
+}   // namespace QM

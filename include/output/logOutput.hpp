@@ -20,25 +20,27 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LOG_OUTPUT_HPP_
-
-#define _LOG_OUTPUT_HPP_
+#ifndef OUTPUT__LOG_OUTPUT_HPP
+#define OUTPUT__LOG_OUTPUT_HPP
 
 #include <string>
 #include <vector>
 
 #include "output.hpp"
 
-namespace output
+namespace out
 {
     /**
-     * @class LogOutput inherits from Output
+     * @brief LogOutput inherits from Output
      *
-     * @brief Output file for log file
+     * @details Output file for log file
      *
      */
     class LogOutput : public Output
     {
+       private:
+        std::vector<std::string> _pendingWarnings;
+
        public:
         using Output::Output;
 
@@ -46,10 +48,10 @@ namespace output
         void writeInfo(const std::string &message);
 
         void writeHeader();
-        void writeEndedNormally(const double elapsedTime);
+        void writeEndedNormally(double elapsedTime);
 
         void writeDensityWarning();
-        void writeInitialMomentum(const double momentum);
+        void writeInitialMomentum(double momentum);
 
         void writeOptWarning(const std::string &message);
 
@@ -61,11 +63,8 @@ namespace output
 
         void queueWarning(const std::string &warning);
         void flushQueuedWarnings();
-
-       private:
-        std::vector<std::string> _pendingWarnings;
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _LOG_OUTPUT_HPP_
+#endif   // OUTPUT__LOG_OUTPUT_HPP

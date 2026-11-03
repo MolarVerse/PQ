@@ -22,67 +22,67 @@
 
 #include "timingsSettings.hpp"
 
-using settings::TimingsSettings;
-
-/********************
- *                  *
- * standard setters *
- *                  *
- ********************/
-
-/**
- * @brief Set the time step
- *
- * @param timeStep
- */
-void TimingsSettings::setTimeStep(const double timeStep)
+namespace settings
 {
-    _timeStep = timeStep;
-}
 
-/**
- * @brief Set the step count
- *
- * @param stepCount
- */
-void TimingsSettings::setStepCount(const size_t stepCount)
-{
-    _stepCount = stepCount;
-}
+    /********************
+     *                  *
+     * standard setters *
+     *                  *
+     ********************/
 
-/**
- * @brief Set the number of steps
- *
- * @param numberOfSteps
- */
-void TimingsSettings::setNumberOfSteps(const size_t numberOfSteps)
-{
-    _numberOfSteps = numberOfSteps;
-}
+    /**
+     * @brief Set the time step
+     *
+     * @param timeStep
+     */
+    void TimingsSettings::setTimeStep(double timeStep) { _timeStep = timeStep; }
 
-/********************
- *                  *
- * standard setters *
- *                  *
- ********************/
+    /**
+     * @brief Set the step count
+     *
+     * @param stepCount
+     */
+    void TimingsSettings::setStepCount(size_t stepCount)
+    {
+        _stepCount = stepCount;
+    }
 
-/**
- * @brief get the time step
- *
- * @return double
- */
-double TimingsSettings::getTimeStep() { return _timeStep; }
+    /**
+     * @brief Set the number of steps
+     *
+     * @param numberOfSteps
+     */
+    void TimingsSettings::setNumberOfSteps(size_t numberOfSteps)
+    {
+        _numberOfSteps = numberOfSteps;
+    }
 
-/**
- * @brief get the step count
- *
- * @return size_t
- */
-size_t TimingsSettings::getStepCount() { return _stepCount; }
+    /********************
+     *                  *
+     * standard setters *
+     *                  *
+     ********************/
 
-/**
- * @brief get the number of steps
- *
- * @return size_t
- */
-size_t TimingsSettings::getNumberOfSteps() { return _numberOfSteps; }
+    /**
+     * @brief get the time step
+     *
+     * @return double
+     */
+    double TimingsSettings::getTimeStep() { return _timeStep; }
+
+    /**
+     * @brief get the step count
+     *
+     * @return size_t
+     */
+    size_t TimingsSettings::getStepCount() { return _stepCount; }
+
+    /**
+     * @brief get the number of steps
+     *
+     * @return size_t
+     */
+    size_t TimingsSettings::getNumberOfSteps() { return _numberOfSteps; }
+
+}   // namespace settings

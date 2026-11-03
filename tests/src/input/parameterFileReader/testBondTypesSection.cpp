@@ -20,19 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "bondSection.hpp"                // for BondSection
-#include "engine.hpp"                     // for Engine
-#include "exceptions.hpp"                 // for ParameterFileException
-#include "gtest/gtest.h"                  // for Message, TestPartResult
-#include "testParameterFileSection.hpp"   // for TestParameterFileSection
-#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
-
-using namespace input::parameterFile;
+#include "bondSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "testParameterFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test bonds section processing one line
@@ -42,34 +39,38 @@ TEST_F(TestParameterFileSection, processSectionBonds)
 {
     std::vector<std::string>          lineElements = {"0", "1.22", "234.3"};
     input::parameterFile::BondSection bondSection;
-    bondSection.processSection(lineElements, *_engine);
+    bondSection.processSection(lineElements, *_engine, 0);
     const auto &bondTypes = _engine->getForceField()->getBondTypes();
     EXPECT_EQ(bondTypes.size(), 1);
     EXPECT_EQ(bondTypes[0].getId(), BondId{0});
-    EXPECT_EQ(bondTypes[0].getEquilibriumBondLength(), 1.22);
-    EXPECT_EQ(bondTypes[0].getForceConstant(), 234.3);
+    EXPECT_EQ(bondTypes[0].getParams().equilibrium, 1.22);
+    EXPECT_EQ(bondTypes[0].getParams().forceConstant, 234.3);
 
     lineElements = {"1", "2", "1.0", "0"};
-    EXPECT_THROW(
-        bondSection.processSection(lineElements, *_engine),
-        customException::ParameterFileException
+    EXPECT_THROW_MSG(
+        bondSection.processSection(lineElements, *_engine, 0),
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file bond section at line 0 - "
+        "number of elements has to be 3!"
     );
 
     lineElements = {"1", "-2", "1.0"};
-    EXPECT_THROW(
-        bondSection.processSection(lineElements, *_engine),
-        customException::ParameterFileException
+    EXPECT_THROW_MSG(
+        bondSection.processSection(lineElements, *_engine, 0),
+        exc::ParameterFileException,
+        "Parameter file bond section at line 0 - equilibrium distance has to "
+        "be positive!"
     );
 }
 
 TEST_F(TestParameterFileSection, endedNormallyBonds)
 {
-    auto bondSection = BondSection();
+    auto bondSection = input::parameterFile::BondSection();
     ASSERT_NO_THROW(bondSection.endedNormally(true));
 
     ASSERT_THROW_MSG(
         bondSection.endedNormally(false),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Parameter file bonds section ended abnormally!"
     );
 }

@@ -22,8 +22,13 @@
 
 #include "testBondConstraint.hpp"
 
+#include <gtest/gtest.h>
+
+#include <limits>
+
 #include "constants/conversionFactors.hpp"
-#include "gtest/gtest.h"   // for AssertionResult, Message, TestPartResult
+#include "exceptions.hpp"
+#include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 
 /**
@@ -35,7 +40,7 @@ TEST_F(TestBondConstraint, calcRefBondLength)
     _bondConstraint->calculateConstraintBondRef(*_box);
     EXPECT_EQ(
         _bondConstraint->getShakeDistanceRef(),
-        linearAlgebra::Vec3D(0.0, -1.0, -2.0)
+        linalg::Vec3D(0.0, -1.0, -2.0)
     );
 }
 
@@ -46,8 +51,7 @@ TEST_F(TestBondConstraint, calcRefBondLength)
 TEST_F(TestBondConstraint, calculateDistanceDelta)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
-    const auto distanceSquared =
-        normSquared(linearAlgebra::Vec3D(0.0, -1.0, -2.0));
+    const auto distanceSquared = normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
     const auto targetBondLengthSquared = _targetBondLength * _targetBondLength;
     EXPECT_EQ(
         _bondConstraint->calculateDistanceDelta(*_box),
@@ -63,34 +67,68 @@ TEST_F(TestBondConstraint, applyShake)
     _bondConstraint->calculateConstraintBondRef(*_box);
     const auto delta = _bondConstraint->calculateDistanceDelta(*_box);
 
-    const auto shakeForce = delta / (1.0 + 0.5) /
-                            normSquared(linearAlgebra::Vec3D(0.0, -1.0, -2.0));
-    const auto dPos     = shakeForce * linearAlgebra::Vec3D(0.0, -1.0, -2.0);
+    const auto shakeForce =
+        delta / (1.0 + 0.5) / normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
+    const auto dPos     = shakeForce * linalg::Vec3D(0.0, -1.0, -2.0);
     const auto timestep = 2.0;
     settings::TimingsSettings::setTimeStep(timestep);
 
     EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0));
 
+    const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomPosition(0),
-        linearAlgebra::Vec3D(1.0, 1.0, 1.0) + dPos
+        mol.getAtomPosition(AtomIndex{0}),
+        linalg::Vec3D(1.0, 1.0, 1.0) + dPos
     );
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomPosition(1),
-        linearAlgebra::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
+        mol.getAtomPosition(AtomIndex{1}),
+        linalg::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
     );
 
-    const auto expectedDeltaVel = dPos / (timestep * constants::FS_TO_S);
+    const auto expectedDeltaVel = dPos / (timestep * FS_TO_S);
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomVelocity(0),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0) + expectedDeltaVel
+        mol.getAtomVelocity(AtomIndex{0}),
+        linalg::Vec3D(0.0, 0.0, 0.0) + expectedDeltaVel
     );
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomVelocity(1),
-        linearAlgebra::Vec3D(1.0, 1.0, 1.0) - 0.5 * expectedDeltaVel
+        mol.getAtomVelocity(AtomIndex{1}),
+        linalg::Vec3D(1.0, 1.0, 1.0) - 0.5 * expectedDeltaVel
     );
 
     EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0));
+}
+
+/**
+ * @brief tests that applyShake rejects a zero-length reference bond vector
+ * instead of silently dividing by zero
+ */
+TEST_F(TestBondConstraint, applyShakeRejectsZeroLengthReference)
+{
+    _bondConstraint->setShakeDistanceRef(linalg::Vec3D(0.0, 0.0, 0.0));
+
+    EXPECT_THROW_MSG(
+        (void) _bondConstraint->applyShake(*_box, 0.0),
+        exc::ShakeException,
+        "Degenerate shake reference bond vector - the reference distance is "
+        "zero-length or non-finite, the simulation has become unstable"
+    );
+}
+
+/**
+ * @brief tests that applyShake rejects a non-finite reference bond vector
+ * instead of silently propagating NaN forces
+ */
+TEST_F(TestBondConstraint, applyShakeRejectsNonFiniteReference)
+{
+    const auto nan = std::numeric_limits<double>::quiet_NaN();
+    _bondConstraint->setShakeDistanceRef(linalg::Vec3D(nan, 0.0, 0.0));
+
+    EXPECT_THROW_MSG(
+        (void) _bondConstraint->applyShake(*_box, 0.0),
+        exc::ShakeException,
+        "Degenerate shake reference bond vector - the reference distance is "
+        "zero-length or non-finite, the simulation has become unstable"
+    );
 }
 
 /**
@@ -101,8 +139,7 @@ TEST_F(TestBondConstraint, calculateVelocityDelta)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
     const auto scalarProduct =
-        dot(linearAlgebra::Vec3D(-1.0, -1.0, -1.0),
-            linearAlgebra::Vec3D(0.0, -1.0, -2.0));
+        dot(linalg::Vec3D(-1.0, -1.0, -1.0), linalg::Vec3D(0.0, -1.0, -2.0));
     EXPECT_EQ(
         _bondConstraint->calculateVelocityDelta(),
         -scalarProduct / (1.0 + 0.5) / 5.0
@@ -115,17 +152,19 @@ TEST_F(TestBondConstraint, calculateVelocityDelta)
 TEST_F(TestBondConstraint, applyRattle)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
-    const auto delta = _bondConstraint->calculateVelocityDelta();
-    const auto dv    = delta * _bondConstraint->getShakeDistanceRef();
+    const auto delta    = _bondConstraint->calculateVelocityDelta();
+    const auto deltaVel = delta * _bondConstraint->getShakeDistanceRef();
 
     EXPECT_FALSE(_bondConstraint->applyRattle(0.0));
+
+    const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomVelocity(0),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0) + dv
+        mol.getAtomVelocity(AtomIndex{0}),
+        linalg::Vec3D(0.0, 0.0, 0.0) + deltaVel
     );
     EXPECT_EQ(
-        _box->getMolecules()[0].getAtomVelocity(1),
-        linearAlgebra::Vec3D(1.0, 1.0, 1.0) - 0.5 * dv
+        mol.getAtomVelocity(AtomIndex{1}),
+        linalg::Vec3D(1.0, 1.0, 1.0) - 0.5 * deltaVel
     );
 
     EXPECT_TRUE(_bondConstraint->applyRattle(1000.0));

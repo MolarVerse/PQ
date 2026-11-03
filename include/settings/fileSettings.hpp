@@ -20,12 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FILE_SETTINGS_HPP_
+#ifndef SETTINGS__FILE_SETTINGS_HPP
+#define SETTINGS__FILE_SETTINGS_HPP
 
-#define _FILE_SETTINGS_HPP_
-
-#include <string>        // for string, allocator
-#include <string_view>   // for string_view
+#include <string>
+#include <string_view>
 
 #include "defaults.hpp"
 
@@ -40,9 +39,8 @@ namespace settings
     class FileSettings
     {
        private:
-        // clang-format off
-        static inline std::string _molDescriptorFile = defaults::MOLDESCRIPTOR_FILE_DEFAULT;
-        // clang-format on
+        static inline std::string _molDescriptorFile =
+            defaults::MOLDESCRIPTOR_FILE_DEFAULT;
 
         static inline std::string _guffDatFile = defaults::GUFF_FILE_DEFAULT;
 
@@ -57,11 +55,12 @@ namespace settings
         static inline std::string _pointChargeFile =
             defaults::POINTCHARGE_FILE_DEFAULT;
 
-        // clang-format off
-        static inline std::string _qmForcesTempFile     = defaults::QM_FORCES_TEMP_FILE_DEFAULT;
-        static inline std::string _qmChargesTempFile    = defaults::QM_CHARGES_TEMP_FILE_DEFAULT;
-        static inline std::string _stressTensorTempFile = defaults::STRESS_TENSOR_TEMP_FILE_DEFAULT;
-        // clang-format on
+        static inline std::string _qmForcesTempFile =
+            defaults::QM_FORCES_TEMP_FILE_DEFAULT;
+        static inline std::string _qmChargesTempFile =
+            defaults::QM_CHARGES_TEMP_FILE_DEFAULT;
+        static inline std::string _stressTensorTempFile =
+            defaults::STRESS_TENSOR_TEMP_FILE_DEFAULT;
 
         static bool inline _isTopologyFileSet       = false;
         static bool inline _isParameterFileSet      = false;
@@ -69,7 +68,6 @@ namespace settings
         static bool inline _isRPMDStartFileSet      = false;
         static bool inline _isMShakeFileSet         = false;
         static bool inline _isDFTBFileSet           = false;
-        // clang-format on
 
        public:
         FileSettings()  = default;
@@ -135,4 +133,4 @@ namespace settings
 
 }   // namespace settings
 
-#endif   // _FILE_SETTINGS_HPP_
+#endif   // SETTINGS__FILE_SETTINGS_HPP

@@ -20,234 +20,291 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include "buckinghamPair.hpp"             // for BuckinghamPair
-#include "engine.hpp"                     // for Engine
-#include "exceptions.hpp"                 // for ParameterFileException
-#include "forceFieldNonCoulomb.hpp"       // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                  // for Message, TestPartResult, tes...
-#include "lennardJonesPair.hpp"           // for LennardJonesPair
-#include "morsePair.hpp"                  // for MorsePair
-#include "nonCoulombicsSection.hpp"       // for NonCoulombicsSection
-#include "potentialSettings.hpp"          // for PotentialSettings
-#include "testParameterFileSection.hpp"   // for TestParameterFileSection
-#include "throwWithMessage.hpp"           // for ASSERT_THROW_MSG
-
-using namespace input::parameterFile;
-using namespace potential;
-using namespace customException;
-using namespace settings;
+#include "buckinghamPair.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "lennardJonesPair.hpp"
+#include "morsePair.hpp"
+#include "nonCoulombicsSection.hpp"
+#include "potentialSettings.hpp"
+#include "strongTypes.hpp"
+#include "testNonCoulombPairUtils.hpp"
+#include "testParameterFileSection.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestParameterFileSection, processSectionLennardJones)
 {
-    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(
+    auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(
         _engine->getPotential()->getNonCoulombPotential()
     );
 
     std::vector<std::string> lineElements =
         {"0", "1", "1.22", "234.3", "324.3"};
-    NonCoulombicsSection nonCoulombicsSection;
-    nonCoulombicsSection.processLJ(lineElements, *_engine);
+    input::parameterFile::NonCoulombicsSection::processLJ(
+        lineElements,
+        *_engine,
+        0
+    );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
 
     const auto *pairVector = potential.getNonCoulombPairsVector()[0].get();
-    const auto *pair       = dynamic_cast<const LennardJonesPair *>(pairVector);
-    EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair->getC6(), 1.22);
-    EXPECT_EQ(pair->getC12(), 234.3);
-    EXPECT_EQ(pair->getRadialCutOff(), 324.3);
+    const auto *pair = dynamic_cast<const pot::LennardJonesPair *>(pairVector);
+    EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
+    EXPECT_EQ(TestLJPairUtils::params(pair).c6, 1.22);
+    EXPECT_EQ(TestLJPairUtils::params(pair).c12, 234.3);
+    EXPECT_EQ(pair->get_radialCutoff(), 324.3);
 
     lineElements = {"0", "1", "1.22", "234.3"};
-    nonCoulombicsSection.processLJ(lineElements, *_engine);
+    input::parameterFile::NonCoulombicsSection::processLJ(
+        lineElements,
+        *_engine,
+        0
+    );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
 
     const auto *pairVector2 = potential.getNonCoulombPairsVector()[1].get();
-    auto       *pair2 = dynamic_cast<const LennardJonesPair *>(pairVector2);
-    EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair2->getC6(), 1.22);
-    EXPECT_EQ(pair2->getC12(), 234.3);
-    EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
+    const auto *pair2 =
+        dynamic_cast<const pot::LennardJonesPair *>(pairVector2);
+    EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
+    EXPECT_EQ(TestLJPairUtils::params(pair2).c6, 1.22);
+    EXPECT_EQ(TestLJPairUtils::params(pair2).c12, 234.3);
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3"};
-    EXPECT_THROW(
-        nonCoulombicsSection.processLJ(lineElements, *_engine),
-        ParameterFileException
+    EXPECT_THROW_MSG(
+        input::parameterFile::NonCoulombicsSection::processLJ(
+            lineElements,
+            *_engine,
+            0
+        ),
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file in Lennard Jones "
+        "nonCoulombics section at line 0 - number of elements has to be 4 or 5!"
     );
 }
 
 TEST_F(TestParameterFileSection, processSectionBuckingham)
 {
-    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(
+    auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(
         _engine->getPotential()->getNonCoulombPotential()
     );
 
     std::vector<std::string> lineElements =
         {"0", "1", "1.22", "234.3", "324.3", "435"};
-    NonCoulombicsSection nonCoulombicsSection;
-    nonCoulombicsSection.processBuckingham(lineElements, *_engine);
+    input::parameterFile::NonCoulombicsSection::processBuckingham(
+        lineElements,
+        *_engine,
+        0
+    );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
 
     const auto *pairVector = potential.getNonCoulombPairsVector()[0].get();
-    const auto *pair       = dynamic_cast<const BuckinghamPair *>(pairVector);
-    EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair->getA(), 1.22);
-    EXPECT_EQ(pair->getDRho(), 234.3);
-    EXPECT_EQ(pair->getC6(), 324.3);
-    EXPECT_EQ(pair->getRadialCutOff(), 435.0);
+    const auto *pair = dynamic_cast<const pot::BuckinghamPair *>(pairVector);
+    EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).scaling, 1.22);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).dRho, 234.3);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).c6, 324.3);
+    EXPECT_EQ(pair->get_radialCutoff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    nonCoulombicsSection.processBuckingham(lineElements, *_engine);
+    input::parameterFile::NonCoulombicsSection::processBuckingham(
+        lineElements,
+        *_engine,
+        0
+    );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
 
     const auto *pairVector2 = potential.getNonCoulombPairsVector()[1].get();
-    const auto *pair2       = dynamic_cast<const BuckinghamPair *>(pairVector2);
-    EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair2->getA(), 1.22);
-    EXPECT_EQ(pair2->getDRho(), 234.3);
-    EXPECT_EQ(pair2->getC6(), 324.3);
-    EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
+    const auto *pair2 = dynamic_cast<const pot::BuckinghamPair *>(pairVector2);
+    EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).scaling, 1.22);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).dRho, 234.3);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).c6, 324.3);
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
-    EXPECT_THROW(
-        nonCoulombicsSection.processBuckingham(lineElements, *_engine),
-        ParameterFileException
+    EXPECT_THROW_MSG(
+        input::parameterFile::NonCoulombicsSection::processBuckingham(
+            lineElements,
+            *_engine,
+            0
+        ),
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file in Buckingham "
+        "nonCoulombics section at line 0 - number of elements has to be 5 or 6!"
     );
 }
 
 TEST_F(TestParameterFileSection, processSectionMorse)
 {
-    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(
+    auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(
         _engine->getPotential()->getNonCoulombPotential()
     );
 
     std::vector<std::string> lineElements =
         {"0", "1", "1.22", "234.3", "324.3", "435"};
-    NonCoulombicsSection nonCoulombicsSection;
-    nonCoulombicsSection.processMorse(lineElements, *_engine);
+    input::parameterFile::NonCoulombicsSection::processMorse(
+        lineElements,
+        *_engine,
+        0
+    );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
-    auto *pair = dynamic_cast<const MorsePair *>(
+    const auto *pair = dynamic_cast<const pot::MorsePair *>(
         potential.getNonCoulombPairsVector()[0].get()
     );
-    EXPECT_EQ(pair->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair->getDissociationEnergy(), 1.22);
-    EXPECT_EQ(pair->getWellWidth(), 234.3);
-    EXPECT_EQ(pair->getEquilibriumDistance(), 324.3);
-    EXPECT_EQ(pair->getRadialCutOff(), 435.0);
+    EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
+
+    const auto &morseParams = TestMorsePairUtils::params(pair);
+    EXPECT_EQ(morseParams.dissociationEnergy, 1.22);
+    EXPECT_EQ(morseParams.wellWidth, 234.3);
+    EXPECT_EQ(morseParams.equilibriumDistance, 324.3);
+    EXPECT_EQ(pair->get_radialCutoff(), 435.0);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    nonCoulombicsSection.processMorse(lineElements, *_engine);
+    input::parameterFile::NonCoulombicsSection::processMorse(
+        lineElements,
+        *_engine,
+        0
+    );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
-    auto *pair2 = dynamic_cast<const MorsePair *>(
+    const auto *pair2 = dynamic_cast<const pot::MorsePair *>(
         potential.getNonCoulombPairsVector()[1].get()
     );
-    EXPECT_EQ(pair2->getVanDerWaalsType1(), 0);
-    EXPECT_EQ(pair2->getVanDerWaalsType2(), 1);
-    EXPECT_EQ(pair2->getDissociationEnergy(), 1.22);
-    EXPECT_EQ(pair2->getWellWidth(), 234.3);
-    EXPECT_EQ(pair2->getEquilibriumDistance(), 324.3);
-    EXPECT_EQ(pair2->getRadialCutOff(), 12.5);
+    EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
+    EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
+
+    const auto &morseParams2 = TestMorsePairUtils::params(pair2);
+    EXPECT_EQ(morseParams2.dissociationEnergy, 1.22);
+    EXPECT_EQ(morseParams2.wellWidth, 234.3);
+    EXPECT_EQ(morseParams2.equilibriumDistance, 324.3);
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
-    EXPECT_THROW(
-        nonCoulombicsSection.processMorse(lineElements, *_engine),
-        ParameterFileException
+    EXPECT_THROW_MSG(
+        input::parameterFile::NonCoulombicsSection::processMorse(
+            lineElements,
+            *_engine,
+            0
+        ),
+        exc::ParameterFileException,
+        "Wrong number of arguments in parameter file in Morse nonCoulombics "
+        "section at line 0 - number of elements has to be 5 or 6!"
     );
 }
 
 TEST_F(TestParameterFileSection, processHeader)
 {
-    std::vector<std::string> lineElements = {"noncoulombics"};
-    NonCoulombicsSection     nonCoulombicsSection;
-    nonCoulombicsSection.processHeader(lineElements, *_engine);
-    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::LJ);
+    std::vector<std::string>                   lineElements = {"noncoulombics"};
+    input::parameterFile::NonCoulombicsSection nonCoulombicsSection;
+    nonCoulombicsSection.processHeader(lineElements, *_engine, 0);
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        NonCoulombType::LJ
+    );
 
     lineElements = {"noncoulombics", "lj"};
-    nonCoulombicsSection.processHeader(lineElements, *_engine);
-    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::LJ);
+    nonCoulombicsSection.processHeader(lineElements, *_engine, 0);
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        NonCoulombType::LJ
+    );
 
     lineElements = {"noncoulombics", "buckingham"};
-    nonCoulombicsSection.processHeader(lineElements, *_engine);
+    nonCoulombicsSection.processHeader(lineElements, *_engine, 0);
     EXPECT_EQ(
-        PotentialSettings::getNonCoulombType(),
+        settings::PotentialSettings::getNonCoulombType(),
         NonCoulombType::BUCKINGHAM
     );
 
     lineElements = {"noncoulombics", "morse"};
-    nonCoulombicsSection.processHeader(lineElements, *_engine);
-    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::MORSE);
+    nonCoulombicsSection.processHeader(lineElements, *_engine, 0);
+    EXPECT_EQ(
+        settings::PotentialSettings::getNonCoulombType(),
+        NonCoulombType::MORSE
+    );
 
     lineElements = {"noncoulombics", "lj", "dummy"};
-    EXPECT_NO_THROW(nonCoulombicsSection.processHeader(lineElements, *_engine));
+    EXPECT_NO_THROW(
+        nonCoulombicsSection.processHeader(lineElements, *_engine, 0)
+    );
 
     lineElements = {"noncoulombics", "noValidType"};
-    EXPECT_THROW(
-        nonCoulombicsSection.processHeader(lineElements, *_engine),
-        ParameterFileException
+    EXPECT_THROW_MSG(
+        nonCoulombicsSection.processHeader(lineElements, *_engine, 0),
+        exc::ParameterFileException,
+        "Invalid type of nonCoulombic in parameter file nonCoulombic section "
+        "at line 0 - has to be lj, buckingham or morse!"
     );
 }
 
 TEST_F(TestParameterFileSection, processSectionNonCoulombics)
 {
-    auto &potential = dynamic_cast<ForceFieldNonCoulomb &>(
+    auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(
         _engine->getPotential()->getNonCoulombPotential()
     );
 
     std::vector<std::string> lineElements =
         {"0", "1", "1.22", "234.3", "324.3"};
-    NonCoulombicsSection nonCoulombicsSection;
-    PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
-    nonCoulombicsSection.processSection(lineElements, *_engine);
+    input::parameterFile::NonCoulombicsSection nonCoulombicsSection;
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
+    nonCoulombicsSection.processSection(lineElements, *_engine, 0);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
     EXPECT_NO_THROW(
-        [[maybe_unused]] auto ret = dynamic_cast<const LennardJonesPair *>(
+        [[maybe_unused]] auto ret = dynamic_cast<const pot::LennardJonesPair *>(
             potential.getNonCoulombPairsVector()[0].get()
         )
     );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    PotentialSettings::setNonCoulombType(NonCoulombType::BUCKINGHAM);
-    EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine)
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::BUCKINGHAM);
+    EXPECT_NO_THROW(
+        nonCoulombicsSection.processSection(lineElements, *_engine, 0)
     );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 2);
     EXPECT_NO_THROW(
-        [[maybe_unused]] auto ret = dynamic_cast<const BuckinghamPair *>(
+        [[maybe_unused]] auto ret = dynamic_cast<const pot::BuckinghamPair *>(
             potential.getNonCoulombPairsVector()[0].get()
         )
     );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    PotentialSettings::setNonCoulombType(NonCoulombType::MORSE);
-    EXPECT_NO_THROW(nonCoulombicsSection.processSection(lineElements, *_engine)
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::MORSE);
+    EXPECT_NO_THROW(
+        nonCoulombicsSection.processSection(lineElements, *_engine, 0)
     );
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 3);
     EXPECT_NO_THROW(
-        [[maybe_unused]] auto ret = dynamic_cast<const MorsePair *>(
+        [[maybe_unused]] auto ret = dynamic_cast<const pot::MorsePair *>(
             potential.getNonCoulombPairsVector()[0].get()
         )
     );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    PotentialSettings::setNonCoulombType(NonCoulombType::LJ_9_12);
-    EXPECT_THROW(
-        nonCoulombicsSection.processSection(lineElements, *_engine),
-        ParameterFileException
+    settings::PotentialSettings::setNonCoulombType(NonCoulombType::LJ_9_12);
+    EXPECT_THROW_MSG(
+        nonCoulombicsSection.processSection(lineElements, *_engine, 0),
+        exc::ParameterFileException,
+        "Wrong type of nonCoulombic in parameter file nonCoulombic section at "
+        "line 0  - has to be lj, buckingham or morse!"
     );
 }
 
 TEST_F(TestParameterFileSection, endedNormallyNonCoulombic)
 {
-    auto nonCoulombicsSection = NonCoulombicsSection();
+    auto nonCoulombicsSection = input::parameterFile::NonCoulombicsSection();
     ASSERT_NO_THROW(nonCoulombicsSection.endedNormally(true));
 
     ASSERT_THROW_MSG(
         nonCoulombicsSection.endedNormally(false),
-        ParameterFileException,
+        exc::ParameterFileException,
         "Parameter file noncoulombics section ended abnormally!"
     );
 }

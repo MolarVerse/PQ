@@ -22,484 +22,290 @@
 
 #include "convergenceInputParser.hpp"
 
-#include <format>   // for std::format
-#include <string>   // for std::string
+#include "convergenceSettings.hpp"
+#include "enums/convergence.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
 
-#include "convergenceSettings.hpp"   // for ConvSettings
-#include "exceptions.hpp"            // for InputFileException
-#include "parserUtils.hpp"
-#include "stringUtilities.hpp"   // for toLowerCopy
-
-using namespace input;
-using namespace settings;
-using namespace utilities;
-using namespace customException;
-
-/**
- * @brief Constructor
- *
- * @details following keywords are added:
- * - energy-conv-strategy <string>
- *
- * - use-energy-conv <bool>
- * - use-force-conv <bool>
- * - use-max-force-conv <bool>
- * - use-rms-force-conv <bool>
- *
- * - energy-conv <double>
- * - rel-energy-conv <double>
- * - abs-energy-conv <double>
- *
- * - force-conv <double>
- * - max-force-conv <double>
- * - rms-force-conv <double>
- *
- * @param engine The engine
- */
-ConvInputParser::ConvInputParser()
+namespace input
 {
-    addKeyword(
-        "energy-conv-strategy",
-        bindMember(&ConvInputParser::parseEnergyConvergenceStrategy, this),
-        false
-    );
 
-    addKeyword(
-        "use-energy-conv",
-        bindMember(&ConvInputParser::parseUseEnergyConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "use-force-conv",
-        bindMember(&ConvInputParser::parseUseForceConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "use-max-force-conv",
-        bindMember(&ConvInputParser::parseUseMaxForceConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "use-rms-force-conv",
-        bindMember(&ConvInputParser::parseUseRMSForceConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "energy-conv",
-        bindMember(&ConvInputParser::parseEnergyConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "rel-energy-conv",
-        bindMember(&ConvInputParser::parseRelativeEnergyConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "abs-energy-conv",
-        bindMember(&ConvInputParser::parseAbsoluteEnergyConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "force-conv",
-        bindMember(&ConvInputParser::parseForceConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "max-force-conv",
-        bindMember(&ConvInputParser::parseMaxForceConvergence, this),
-        false
-    );
-
-    addKeyword(
-        "rms-force-conv",
-        bindMember(&ConvInputParser::parseRMSForceConvergence, this),
-        false
-    );
-}
-
-/**
- * @brief Parses the energy convergence strategy
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- */
-void ConvInputParser::parseEnergyConvergenceStrategy(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto strategy = toLowerCopy(lineElements[2]);
-
-    using enum ConvStrategy;
-
-    if ("rigorous" == strategy)
-        ConvSettings::setEnergyConvStrategy(RIGOROUS);
-
-    else if ("loose" == strategy)
-        ConvSettings::setEnergyConvStrategy(LOOSE);
-
-    else if ("absolute" == strategy)
-        ConvSettings::setEnergyConvStrategy(ABSOLUTE);
-
-    else if ("relative" == strategy)
-        ConvSettings::setEnergyConvStrategy(RELATIVE);
-
-    else
+    /**
+     * @brief Constructor
+     *
+     * @details following keywords are added:
+     * - energy-conv-strategy "<string>"
+     *
+     * - use-energy-conv "<bool>"
+     * - use-force-conv "<bool>"
+     * - use-max-force-conv "<bool>"
+     * - use-rms-force-conv "<bool>"
+     *
+     * - energy-conv "<double>"
+     * - rel-energy-conv "<double>"
+     * - abs-energy-conv "<double>"
+     *
+     * - force-conv "<double>"
+     * - max-force-conv "<double>"
+     * - rms-force-conv "<double>"
+     *
+     */
+    ConvInputParser::ConvInputParser(ConvSettings &convSettings)
+        : _convSettings(convSettings)
     {
-        throw InputFileException(
-            std::format(
-                "Unknown energy convergence strategy \"{}\" in input file "
-                "at line {}.\n"
-                "Possible options are: rigorous, loose, absolute, relative",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
-
-/**
- * @brief Parses the use energy convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- */
-void ConvInputParser::parseUseEnergyConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto useEnergyConvergence = toLowerCopy(lineElements[2]);
-
-    if ("true" == useEnergyConvergence)
-        ConvSettings::setUseEnergyConv(true);
-
-    else if ("false" == useEnergyConvergence)
-        ConvSettings::setUseEnergyConv(false);
-
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Unknown option \"{}\" for use-energy-conv in input file "
-                "at line {}.\n"
-                "Possible options are: true, false",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
-
-/**
- * @brief Parses the use force convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- */
-void ConvInputParser::parseUseForceConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto useForceConvergence = toLowerCopy(lineElements[2]);
-
-    if ("true" == useForceConvergence)
-        ConvSettings::setUseForceConv(true);
-
-    else if ("false" == useForceConvergence)
-        ConvSettings::setUseForceConv(false);
-
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Unknown option \"{}\" for use-force-conv in input file "
-                "at line {}.\n"
-                "Possible options are: true, false",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
-
-/**
- * @brief Parses the use max force convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- */
-void ConvInputParser::parseUseMaxForceConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto useMaxForceConvergence = toLowerCopy(lineElements[2]);
-
-    if ("true" == useMaxForceConvergence)
-        ConvSettings::setUseMaxForceConv(true);
-
-    else if ("false" == useMaxForceConvergence)
-        ConvSettings::setUseMaxForceConv(false);
-
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Unknown option \"{}\" for use-max-force-conv in input file "
-                "at line {}.\n"
-                "Possible options are: true, false",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
-
-/**
- * @brief Parses the use RMS force convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- */
-void ConvInputParser::parseUseRMSForceConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto useRMSForceConvergence = toLowerCopy(lineElements[2]);
-
-    if ("true" == useRMSForceConvergence)
-        ConvSettings::setUseRMSForceConv(true);
-
-    else if ("false" == useRMSForceConvergence)
-        ConvSettings::setUseRMSForceConv(false);
-
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Unknown option \"{}\" for use-rms-force-conv in input file "
-                "at line {}.\n"
-                "Possible options are: true, false",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
-
-/**
- * @brief Parses the energy convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the energy convergence is
- * less than or equal to 0.0
- */
-void ConvInputParser::parseEnergyConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto energyConvergence = stringToFiniteDouble(lineElements[2]);
-
-    if (energyConvergence <= 0.0)
-    {
-        throw InputFileException(
-            std::format(
-                "Energy convergence must be greater than 0.0 in input file "
-                "at line {}.",
-                lineNumber
-            )
-        );
+        addEnergyConvergenceStrategyKey();
+        addUseEnergyConvergenceKey();
+        addUseForceConvergenceKey();
+        addUseMaxForceConvergenceKey();
+        addUseRMSForceConvergenceKey();
+        addEnergyConvergenceKey();
+        addRelativeEnergyConvergenceKey();
+        addAbsoluteEnergyConvergenceKey();
+        addForceConvergenceKey();
+        addMaxForceConvergenceKey();
+        addRMSForceConvergenceKey();
     }
 
-    ConvSettings::setEnergyConv(energyConvergence);
-}
-
-/**
- * @brief Parses the relative energy convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the relative energy
- * convergence is less than or equal to 0.0
- */
-void ConvInputParser::parseRelativeEnergyConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto relativeEnergyConvergence =
-        stringToFiniteDouble(lineElements[2]);
-
-    if (relativeEnergyConvergence <= 0.0)
+    void ConvInputParser::addEnergyConvergenceStrategyKey()
     {
-        throw InputFileException(
-            std::format(
-                "Relative energy convergence must be greater than 0.0 in input "
-                "file "
-                "at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "energy-conv-strategy",
+            .title = "Energy Convergence Strategy",
+            .description =
+                "Specifies the strategy for energy convergence (rigorous, "
+                "loose, absolute, relative)"
+        };
+
+        const auto setValue = [this](ConvStrategy strategy)
+        { _convSettings->setEnergyConvStrategy(strategy); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<ConvStrategy>{.metadata = metaData, .onSet = setValue}
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ConvSettings::setRelEnergyConv(relativeEnergyConvergence);
-}
-
-/**
- * @brief Parses the absolute energy convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the absolute energy
- * convergence is less than or equal to 0.0
- */
-void ConvInputParser::parseAbsoluteEnergyConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto absoluteEnergyConvergence =
-        stringToFiniteDouble(lineElements[2]);
-
-    if (absoluteEnergyConvergence <= 0.0)
+    void ConvInputParser::addUseEnergyConvergenceKey()
     {
-        throw InputFileException(
-            std::format(
-                "Absolute energy convergence must be greater than 0.0 in input "
-                "file "
-                "at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "use-energy-conv",
+            .title = "Use Energy Convergence",
+            .description =
+                "Specifies whether to use energy convergence (true or false)"
+        };
+
+        const auto setValue = [this](bool useEnergyConv)
+        { _convSettings->setUseEnergyConv(useEnergyConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ConvSettings::setAbsEnergyConv(absoluteEnergyConvergence);
-}
-
-/**
- * @brief Parses the force convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the force convergence is
- * less than or equal to 0.0
- */
-void ConvInputParser::parseForceConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto forceConvergence = stringToFiniteDouble(lineElements[2]);
-
-    if (forceConvergence <= 0.0)
+    void ConvInputParser::addUseForceConvergenceKey()
     {
-        throw InputFileException(
-            std::format(
-                "Force convergence must be greater than 0.0 in input file "
-                "at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "use-force-conv",
+            .title = "Use Force Convergence",
+            .description =
+                "Specifies whether to use force convergence (true or false)"
+        };
+
+        const auto setValue = [this](bool useForceConv)
+        { _convSettings->setUseForceConv(useForceConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ConvSettings::setForceConv(forceConvergence);
-}
-
-/**
- * @brief Parses the max force convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the max force convergence is
- * less than or equal to 0.0
- */
-void ConvInputParser::parseMaxForceConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto maxForceConvergence = stringToFiniteDouble(lineElements[2]);
-
-    if (maxForceConvergence <= 0.0)
+    void ConvInputParser::addUseMaxForceConvergenceKey()
     {
-        throw InputFileException(
-            std::format(
-                "Max force convergence must be greater than 0.0 in input file "
-                "at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "use-max-force-conv",
+            .title = "Use Max Force Convergence",
+            .description =
+                "Specifies whether to use max force convergence (true or false)"
+        };
+
+        const auto setValue = [this](bool useMaxForceConv)
+        { _convSettings->setUseMaxForceConv(useMaxForceConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ConvSettings::setMaxForceConv(maxForceConvergence);
-}
-
-/**
- * @brief Parses the RMS force convergence
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the RMS force convergence is
- * less than or equal to 0.0
- */
-void ConvInputParser::parseRMSForceConvergence(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto rmsForceConvergence = stringToFiniteDouble(lineElements[2]);
-
-    if (rmsForceConvergence <= 0.0)
+    void ConvInputParser::addUseRMSForceConvergenceKey()
     {
-        throw InputFileException(
-            std::format(
-                "RMS force convergence must be greater than 0.0 in input file "
-                "at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "use-rms-force-conv",
+            .title = "Use RMS Force Convergence",
+            .description =
+                "Specifies whether to use RMS force convergence (true or false)"
+        };
+
+        const auto setValue = [this](bool useRMSForceConv)
+        { _convSettings->setUseRMSForceConv(useRMSForceConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    ConvSettings::setRMSForceConv(rmsForceConvergence);
-}
+    void ConvInputParser::addEnergyConvergenceKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "energy-conv",
+            .title = "Energy Convergence",
+            .description =
+                "Specifies the energy convergence threshold (must be greater "
+                "than 0.0)"
+        };
+
+        const auto setValue = [this](double energyConv)
+        { _convSettings->setEnergyConv(energyConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void ConvInputParser::addRelativeEnergyConvergenceKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "rel-energy-conv",
+            .title = "Relative Energy Convergence",
+            .description =
+                "Specifies the relative energy convergence threshold (must be "
+                "greater than 0.0)"
+        };
+
+        const auto setValue = [this](double relEnergyConv)
+        { _convSettings->setRelEnergyConv(relEnergyConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void ConvInputParser::addAbsoluteEnergyConvergenceKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "abs-energy-conv",
+            .title = "Absolute Energy Convergence",
+            .description =
+                "Specifies the absolute energy convergence threshold (must be "
+                "greater than 0.0)"
+        };
+
+        const auto setValue = [this](double absEnergyConv)
+        { _convSettings->setAbsEnergyConv(absEnergyConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void ConvInputParser::addForceConvergenceKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "force-conv",
+            .title = "Force Convergence",
+            .description =
+                "Specifies the force convergence threshold (must be "
+                "greater than 0.0)"
+        };
+
+        const auto setValue = [this](double forceConv)
+        { _convSettings->setForceConv(forceConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void ConvInputParser::addRMSForceConvergenceKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "rms-force-conv",
+            .title = "RMS Force Convergence",
+            .description =
+                "Specifies the RMS force convergence threshold (must be "
+                "greater than 0.0)"
+        };
+
+        const auto setValue = [this](double rmsForceConv)
+        { _convSettings->setRMSForceConv(rmsForceConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    void ConvInputParser::addMaxForceConvergenceKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "max-force-conv",
+            .title = "Max Force Convergence",
+            .description =
+                "Specifies the max force convergence threshold (must be "
+                "greater than 0.0)"
+        };
+
+        const auto setValue = [this](double maxForceConv)
+        { _convSettings->setMaxForceConv(maxForceConv); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+}   // namespace input

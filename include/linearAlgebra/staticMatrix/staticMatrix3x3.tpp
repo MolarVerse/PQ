@@ -1,0 +1,532 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_TPP
+#define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_TPP
+
+#include <concepts>
+
+#include "staticMatrix3x3.hpp"
+
+namespace linalg
+{
+    /**
+     * @brief ostream operator for StaticMatrix3x3
+     *
+     * @param ostream
+     * @param mat
+     * @return std::ostream&
+     */
+    template <typename T>
+    std::ostream &operator<<(
+        std::ostream             &ostream,
+        const StaticMatrix3x3<T> &mat
+    )
+    {
+        return ostream << "[[" << mat[0] << "]\n"
+                       << " [" << mat[1] << "]\n"
+                       << " [" << mat[2] << "]]";
+    }
+
+    /****************************
+     *                          *
+     * operator+ and operator+= *
+     *                          *
+     ****************************/
+
+    /**
+     * @brief operator+ for two StaticMatrix3x3's
+     *
+     * @param lhs
+     * @param rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator+(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    )
+    {
+        StaticMatrix3x3<T> result(lhs);
+
+        result += rhs;
+
+        return result;
+    }
+
+    /**
+     * @brief operator+ for two StaticMatrix3x3's
+     *
+     * @param lhs
+     * @param rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator+(const StaticMatrix3x3<T> &lhs, const T &rhs)
+    {
+        StaticMatrix3x3<T> result(lhs);
+
+        result = lhs + StaticMatrix3x3<T>(rhs);
+
+        return result;
+    }
+
+    /**
+     * @brief operator+= for two StaticMatrix3x3's
+     *
+     * @param lhs
+     * @param rhs
+     */
+    template <typename T>
+    void operator+=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    {
+        lhs[0] += rhs[0];
+        lhs[1] += rhs[1];
+        lhs[2] += rhs[2];
+    }
+
+    /****************************
+     *                          *
+     * operator- and operator-= *
+     *                          *
+     ****************************/
+
+    /**
+     * @brief operator- for two StaticMatrix3x3's
+     *
+     * @param lhs
+     * @param rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator-(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    )
+    {
+        StaticMatrix3x3<T> result(lhs);
+
+        result -= rhs;
+
+        return result;
+    }
+
+    /**
+     * @brief operator-= for two StaticMatrix3x3's
+     *
+     * @param lhs
+     * @param rhs
+     */
+    template <typename T>
+    void operator-=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs)
+    {
+        lhs[0] -= rhs[0];
+        lhs[1] -= rhs[1];
+        lhs[2] -= rhs[2];
+    }
+
+    /****************************
+     *                          *
+     * operator* and operator*= *
+     *                          *
+     ****************************/
+
+    /**
+     * @brief operator* for two StaticMatrix3x3's
+     *
+     * @param lhs Left-hand side matrix
+     * @param rhs Right-hand side matrix
+     * @return `StaticMatrix3x3<T>`
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator*(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<T> &rhs
+    )
+    {
+        StaticMatrix3x3<T> result;
+        StaticMatrix3x3<T> rhsTransposed = transpose(rhs);
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j)
+                result[i][j] = sum(lhs[i] * rhsTransposed[j]);
+
+        return result;
+    }
+
+    /**
+     * @brief operator* for StaticMatrix3x3 and scalar
+     *
+     * @param mat
+     * @param scalar
+     * @return `StaticMatrix3x3<T>`
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator*(const StaticMatrix3x3<T> &mat, const T &scalar)
+    {
+        return StaticMatrix3x3<T>(
+            mat[0] * scalar,
+            mat[1] * scalar,
+            mat[2] * scalar
+        );
+    }
+
+    /**
+     * @brief operator* for StaticMatrix3x3 and scalar
+     *
+     * @param scalar
+     * @param mat
+     * @return `StaticMatrix3x3<T>`
+     */
+    template <typename T>
+    StaticMatrix3x3<T> operator*(const T &scalar, const StaticMatrix3x3<T> &mat)
+    {
+        return StaticMatrix3x3<T>(
+            mat[0] * scalar,
+            mat[1] * scalar,
+            mat[2] * scalar
+        );
+    }
+
+    /**
+     * @brief operator* for StaticMatrix3x3 and Vector3D
+     *
+     * @tparam T
+     * @param mat
+     * @param vec
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    Vector3D<T> operator*(const StaticMatrix3x3<T> &mat, const Vector3D<T> &vec)
+    {
+        Vector3D<T> result;
+
+        result[0] = sum(mat[0] * vec);
+        result[1] = sum(mat[1] * vec);
+        result[2] = sum(mat[2] * vec);
+
+        return result;
+    }
+
+    /**
+     * @brief operator*= for a StaticMatrix3x3 and a scalar
+     *
+     * @param lhs
+     * @param scalar
+     */
+    template <typename T>
+    void operator*=(StaticMatrix3x3<T> &lhs, const T &scalar)
+    {
+        lhs[0] *= scalar;
+        lhs[1] *= scalar;
+        lhs[2] *= scalar;
+    }
+
+    /****************************
+     *                          *
+     * operator/ and operator/= *
+     *                          *
+     ****************************/
+
+    /**
+     * @brief operator/ for StaticMatrix3x3 and scalar
+     *
+     * @param mat
+     * @param scalar
+     * @return `StaticMatrix3x3<T>`
+     */
+    template <typename T, typename U>
+    requires std::convertible_to<U, T>
+    StaticMatrix3x3<T> operator/(const StaticMatrix3x3<T> &mat, const U &scalar)
+    {
+        return StaticMatrix3x3<T>(
+            mat[0] / scalar,
+            mat[1] / scalar,
+            mat[2] / scalar
+        );
+    }
+
+    /**
+     * @brief operator/ for scalar and StaticMatrix3x3
+     *
+     * @param scalar
+     * @param mat
+     * @return `StaticMatrix3x3<T>`
+     */
+    template <typename T, typename U>
+    requires std::convertible_to<U, T>
+    StaticMatrix3x3<T> operator/(const U &scalar, const StaticMatrix3x3<T> &mat)
+    {
+        return StaticMatrix3x3<T>(
+            scalar / mat[0],
+            scalar / mat[1],
+            scalar / mat[2]
+        );
+    }
+
+    /**
+     * @brief operator/= for a StaticMatrix3x3 and a scalar
+     *
+     * @param lhs
+     * @param scalar
+     */
+    template <typename T>
+    void operator/=(StaticMatrix3x3<T> &lhs, const T &scalar)
+    {
+        lhs[0] /= scalar;
+        lhs[1] /= scalar;
+        lhs[2] /= scalar;
+    }
+
+    /****************************
+     *                          *
+     * general matrix functions *
+     *                          *
+     ****************************/
+
+    /** @brief Check whether all matrix elements are finite. */
+    template <typename T>
+    auto isFinite(const StaticMatrix3x3<T> &mat) -> bool
+    {
+        return isFinite(mat[0]) && isFinite(mat[1]) && isFinite(mat[2]);
+    }
+
+    /**
+     * @brief transpose a StaticMatrix3x3
+     *
+     * @param mat
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> transpose(const StaticMatrix3x3<T> &mat)
+    {
+        StaticMatrix3x3<T> result;
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) result[i][j] = mat[j][i];
+
+        return result;
+    }
+
+    /**
+     * @brief determinant of a StaticMatrix3x3
+     *
+     * @param mat
+     * @return T
+     */
+    template <typename T>
+    T det(const StaticMatrix3x3<T> &mat)
+    {
+        auto result = mat[0][0] * mat[1][1] * mat[2][2];
+
+        result += mat[0][1] * mat[1][2] * mat[2][0];
+        result += mat[0][2] * mat[1][0] * mat[2][1];
+        result -= mat[0][2] * mat[1][1] * mat[2][0];
+        result -= mat[0][1] * mat[1][0] * mat[2][2];
+        result -= mat[0][0] * mat[1][2] * mat[2][1];
+
+        return result;
+    }
+
+    /**
+     * @brief tensor product of two Vector3D's
+     *
+     * @details it performs v1 * v2^T
+     *
+     * @tparam T
+     * @param lhs
+     * @param rhs
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> tensorProduct(
+        const Vector3D<T> &lhs,
+        const Vector3D<T> &rhs
+    )
+    {
+        StaticMatrix3x3<T> lhsMatrix{};
+        StaticMatrix3x3<T> rhsMatrix{};
+
+        lhsMatrix[0] = lhs;
+        rhsMatrix[0] = rhs;
+
+        lhsMatrix = transpose(lhsMatrix);
+
+        return lhsMatrix * rhsMatrix;
+    }
+
+    /**
+     * @brief cofactor matrix of a StaticMatrix3x3
+     *
+     * @param mat
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> cofactorMatrix(const StaticMatrix3x3<T> &mat)
+    {
+        StaticMatrix3x3<T> result;
+
+        result[0][0] = mat[1][1] * mat[2][2] - mat[1][2] * mat[2][1];
+        result[0][1] = mat[1][2] * mat[2][0] - mat[1][0] * mat[2][2];
+        result[0][2] = mat[1][0] * mat[2][1] - mat[1][1] * mat[2][0];
+        result[1][0] = mat[0][2] * mat[2][1] - mat[0][1] * mat[2][2];
+        result[1][1] = mat[0][0] * mat[2][2] - mat[0][2] * mat[2][0];
+        result[1][2] = mat[0][1] * mat[2][0] - mat[0][0] * mat[2][1];
+        result[2][0] = mat[0][1] * mat[1][2] - mat[0][2] * mat[1][1];
+        result[2][1] = mat[0][2] * mat[1][0] - mat[0][0] * mat[1][2];
+        result[2][2] = mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
+
+        return result;
+    }
+
+    /**
+     * @brief inverse of a StaticMatrix3x3
+     *
+     * @param mat
+     * @return StaticMatrix3x3<T>
+     */
+    template <typename T>
+    StaticMatrix3x3<T> inverse(const StaticMatrix3x3<T> &mat)
+    {
+        StaticMatrix3x3<T> result = cofactorMatrix(mat);
+
+        result = transpose(result);
+
+        return result / det(mat);
+    }
+
+    /**
+     * @brief diagonal of a StaticMatrix3x3
+     *
+     * @param mat
+     * @return Vector3D<T>
+     */
+    template <typename T>
+    Vector3D<T> diagonal(const StaticMatrix3x3<T> &mat)
+    {
+        return Vector3D<T>(mat[0][0], mat[1][1], mat[2][2]);
+    }
+
+    /**
+     * @brief build diagonalMatrix from a Vector3D
+     *
+     * @param vec
+     */
+    template <typename T>
+    StaticMatrix3x3<T> diagonalMatrix(const Vector3D<T> &vec)
+    {
+        StaticMatrix3x3<T> result{T()};
+
+        result[0][0] = vec[0];
+        result[1][1] = vec[1];
+        result[2][2] = vec[2];
+
+        return result;
+    }
+
+    /**
+     * @brief build diagonalMatrix from a scalar
+     *
+     * @param scalar
+     */
+    template <typename T>
+    StaticMatrix3x3<T> diagonalMatrix(const T &scalar)
+    {
+        StaticMatrix3x3<T> result{T()};
+
+        result[0][0] = scalar;
+        result[1][1] = scalar;
+        result[2][2] = scalar;
+
+        return result;
+    }
+
+    /**
+     * @brief trace of a StaticMatrix3x3
+     *
+     * @param mat
+     * @return T
+     */
+    template <typename T>
+    T trace(const StaticMatrix3x3<T> &mat)
+    {
+        return mat[0][0] + mat[1][1] + mat[2][2];
+    }
+
+    /**
+     * @brief Kronecker delta
+     */
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> kroneckerDeltaMatrix()
+    {
+        return StaticMatrix3x3<T>(
+            Vec3D{T(1), 0.0, 0.0},
+            Vec3D{0.0, T(1), 0.0},
+            Vec3D{0.0, 0.0, T(1)}
+        );
+    }
+
+    /**
+     * @brief exponential of a StaticMatrix3x3
+     *
+     */
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> exp(const StaticMatrix3x3<T> &mat)
+    {
+        auto result = StaticMatrix3x3<T>(0.0);
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) result[i][j] = ::exp(mat[i][j]);
+
+        return result;
+    }
+
+    /**
+     * @brief Pade approximation of the exponential of a StaticMatrix3x3
+     *
+     * _(https://en.wikipedia.org/wiki/Matrix_exponential)
+     * _(https://en.wikipedia.org/wiki/Pad%C3%A9_table)
+     * _(https://en.wikipedia.org/wiki/Pad%C3%A9_approximant)
+     * _(https://github.com/bussilab/crescale/blob/master/simplemd_anisotropic/simplemd.cpp#L351)
+     */
+    template <typename T>
+    [[nodiscard]] StaticMatrix3x3<T> expPade(const StaticMatrix3x3<T> &mat)
+    {
+        auto result = StaticMatrix3x3<T>(0.0);
+
+        auto mat2 = mat * mat;
+        auto mat3 = mat2 * mat;
+
+        const auto padeMat  = mat / 2.0;
+        const auto padeMat2 = mat2 / 10.0;
+        const auto padeMat3 = mat3 / 120.0;
+
+        auto den = diagonalMatrix(T{1}) - padeMat + padeMat2 - padeMat3;
+        auto num = diagonalMatrix(T{1}) + padeMat + padeMat2 + padeMat3;
+
+        result = inverse(den) * num;
+
+        return result;
+    }
+}   // namespace linalg
+
+#endif   // LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_TPP

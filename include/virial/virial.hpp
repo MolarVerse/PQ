@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_HPP_
-
-#define _VIRIAL_HPP_
+#ifndef VIRIAL__VIRIAL_HPP
+#define VIRIAL__VIRIAL_HPP
 
 #include "staticMatrix.hpp"
 
@@ -34,15 +33,15 @@ namespace molsys
 namespace virial
 {
     [[nodiscard]]
-    linearAlgebra::tensor3D calculateQMVirial(const molsys::SimulationBox&);
+    linalg::tensor3D calculateQMVirial(const molsys::SimulationBox&);
 
     [[nodiscard]]
-    linearAlgebra::tensor3D calculateVirial(molsys::SimulationBox&);
+    linalg::tensor3D calculateVirial(molsys::SimulationBox&);
 
     [[nodiscard]]
-    linearAlgebra::tensor3D intraMolecularVirialCorrection(
+    linalg::tensor3D intraMolecularVirialCorrection(
         const molsys::SimulationBox&
     );
 }   // namespace virial
 
-#endif   // _VIRIAL_HPP_
+#endif   // VIRIAL__VIRIAL_HPP

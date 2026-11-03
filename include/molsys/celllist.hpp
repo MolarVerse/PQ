@@ -20,15 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_LIST_HPP_
+#ifndef MOLSYS__CELLLIST_HPP
+#define MOLSYS__CELLLIST_HPP
 
-#define _CELL_LIST_HPP_
+#include <cstddef>
+#include <vector>
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
-
-#include "cell.hpp"       // for Cell
-#include "defaults.hpp"   // for _NUMBER_OF_CELLS_DEFAULT_, _CELL_LIST_IS_ACT...
+#include "cell.hpp"
+#include "defaults.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -46,9 +45,12 @@ namespace molsys
        private:
         std::vector<Cell> _cells;
 
-        linearAlgebra::Vec3D   _cellSize;
-        linearAlgebra::Vec3Dul _nNeighbourCells{0, 0, 0};
-        linearAlgebra::Vec3Dul _nCells{defaults::NUMBER_OF_CELLS_DEFAULT};
+        linalg::Vec3D   _cellSize;
+        linalg::Vec3Dul _nNeighbourCells{0, 0, 0};
+        linalg::Vec3Dul _nCells{defaults::NUMBER_OF_CELLS_DEFAULT};
+
+        std::optional<linalg::Vec3D> _oldBoxDimensions = std::nullopt;
+        std::optional<linalg::Vec3D> _oldBoxAngles     = std::nullopt;
 
        public:
         [[nodiscard]] std::shared_ptr<CellList> clone() const;
@@ -56,22 +58,25 @@ namespace molsys
         void setup(const SimulationBox &);
         void updateCellList(SimulationBox &);
 
-        void determineCellSize(const linearAlgebra::Vec3D &box);
-        void determineCellBoundaries(const linearAlgebra::Vec3D &box);
-        void checkCoulombCutoff(const double coulombCutoff) const;
+        void determineCellSize(const linalg::Vec3D &box);
+        void determineCellBoundaries(const linalg::Vec3D &box);
+        void checkCoulombCutoff(double coulombCutoff) const;
 
-        void addNeighbouringCells(const double coulombCutoff);
+        void addNeighbouringCells(double coulombCutoff);
         void addNeighbouringCellPointers(Cell &);
         void addMoleculesToCells(SimulationBox &simulationBox);
         void assignMoleculeHybridZoneIndices();
-        void assignWaterMoleculeIndices(SimulationBox &);
+        void assignWaterMoleculeIndices(
+            const SimulationBox &,
+            const WaterModelSettings &
+        );
 
         [[nodiscard]] size_t getCellIndex(
-            const linearAlgebra::Vec3Dul &cellIndices
+            const linalg::Vec3Dul &cellIndices
         ) const;
-        [[nodiscard]] linearAlgebra::Vec3Dul getCellIndexOfAtom(
-            const linearAlgebra::Vec3D &,
-            const linearAlgebra::Vec3D &
+        [[nodiscard]] linalg::Vec3Dul getCellIndexOfAtom(
+            const linalg::Vec3D &,
+            const linalg::Vec3D &
         ) const;
 
         void resizeCells();
@@ -81,20 +86,26 @@ namespace molsys
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] linearAlgebra::Vec3Dul getNumberOfCells() const;
-        [[nodiscard]] linearAlgebra::Vec3Dul getNumberOfNeighbourCells() const;
-        [[nodiscard]] linearAlgebra::Vec3D   getCellSize() const;
+        [[nodiscard]] linalg::Vec3Dul getNumberOfCells() const;
+        [[nodiscard]] linalg::Vec3Dul getNumberOfNeighbourCells() const;
+        [[nodiscard]] linalg::Vec3D   getCellSize() const;
         [[nodiscard]] const std::vector<Cell> &getCells() const;
-        [[nodiscard]] Cell                    &getCell(const size_t index);
+        [[nodiscard]] Cell                    &getCell(size_t index);
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setNumberOfCells(const size_t nCells);
-        void setNumberOfNeighbourCells(const size_t nCells);
+        void setNumberOfCells(size_t nCells);
+        void setNumberOfNeighbourCells(size_t nCells);
+
+       private:
+        [[nodiscard]]
+        bool _hasBoxSizeChanged(
+            const molsys::SimulationBox &simulationBox
+        ) const;
     };
 
 }   // namespace molsys
 
-#endif   // _CELL_LIST_HPP_
+#endif   // MOLSYS__CELLLIST_HPP

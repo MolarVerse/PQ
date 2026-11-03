@@ -22,113 +22,125 @@
 
 #include "output.hpp"
 
-#include <format>       // for format
-#include <fstream>      // for ifstream, ofstream, std
+#include <format>
+#include <fstream>
 
-#include "exceptions.hpp"           // for InputFileException, customException
-#include "outputFileSettings.hpp"   // for OutputFileSettings
+#include "exceptions.hpp"
 
-using namespace std;
-using namespace customException;
-using namespace output;
-using namespace settings;
-
-/**
- * @brief Sets the filename of the output file
- *
- * @param filename
- *
- * @throw InputFileException if filename is empty
- * @throw InputFileException if file already exists
- * and output should not be overwritten
- */
-void Output::setFilename(const string_view &filename)
+namespace out
 {
-    _fileName = filename;
-    const auto overwriteOutputFiles =
-        OutputFileSettings::getOverwriteOutputFiles();
 
-    if (_fileName.empty())
-        throw InputFileException("Filename cannot be empty");
+    /**
+     * @brief Sets the filename of the output file
+     *
+     * @param filename
+     * @param overwriteOutputFiles
+     *
+     * @throw InputFileException if filename is empty
+     * @throw InputFileException if file already exists
+     * and output should not be overwritten
+     */
+    void Output::setFilename(
+        const std::string_view &filename,
+        bool                    overwriteOutputFiles
+    )
+    {
+        _fileName = filename;
 
-    if (const ifstream fp(_fileName.c_str());
-        fp.good() && !overwriteOutputFiles)
-        throw InputFileException(
-            "File already exists - filename = " + string(_fileName)
+        if (_fileName.empty())
+            throw exc::InputFileException("Filename cannot be empty");
+
+        if (const std::ifstream file(_fileName.c_str());
+            file.good() && !overwriteOutputFiles)
+            throw exc::InputFileException(
+                "File already exists - filename = " + std::string(_fileName)
+            );
+
+        _openFile();
+    }
+
+    /**
+     * @brief Opens the output file
+     *
+     * @throw InputFileException if file cannot be opened
+     *
+     */
+    void Output::_openFile()
+    {
+        _fp.open(_fileName);
+
+        if (!_fp.is_open())
+            throw exc::InputFileException(
+                "Could not open file - filename = " + _fileName
+            );
+    }
+
+    /**
+     * @brief Write the shared trajectory frame comment
+     *
+     * @param step simulation step
+     * @param includeMetadata whether to include metadata in the comment
+     */
+    void Output::_writeComment(size_t step, bool includeMetadata)
+    {
+        if (includeMetadata)
+            _fp << std::format("# step = {}\n", step);
+        else
+            _fp << '\n';
+    }
+
+    /**
+     * @brief Write the shared trajectory force comment
+     *
+     * @param step simulation step
+     * @param totalForce total force acting on the system
+     * @param includeMetadata whether to include metadata in the comment
+     */
+    void Output::_writeForceComment(
+        size_t step,
+        double totalForce,
+        bool   includeMetadata
+    )
+    {
+        _fp << _formatForceComment(step, totalForce, includeMetadata);
+    }
+
+    /**
+     * @brief Formats the shared trajectory force comment
+     *
+     * @param step simulation step
+     * @param totalForce total force acting on the system
+     * @param includeMetadata whether to include metadata in the formatted
+     * comment
+     * @return formatted force comment
+     */
+    std::string Output::_formatForceComment(
+        const size_t step,
+        const double totalForce,
+        bool         includeMetadata
+    )
+    {
+        const auto stepMetadata =
+            includeMetadata ? std::format("step = {}; ", step) : "";
+
+        return format(
+            "# {}Total force = {:.5e} kcal/mol/Angstrom\n",
+            stepMetadata,
+            totalForce
         );
+    }
 
-    openFile();
-}
+    /**
+     * @brief Closes the output file
+     *
+     */
+    void Output::close() { _fp.close(); }
 
-/**
- * @brief Opens the output file
- *
- * @throw InputFileException if file cannot be opened
- *
- */
-void Output::openFile()
-{
-    _fp.open(_fileName);
+    /**
+     * @brief get filename
+     *
+     * @return string
+     */
+    std::string Output::getFilename() const { return _fileName; }
 
-    if (!_fp.is_open())
-        throw InputFileException(
-            "Could not open file - filename = " + _fileName
-        );
-}
-
-/**
- * @brief Write the shared trajectory frame comment
- *
- * @param step simulation step
- */
-void Output::writeComment(const size_t step)
-{
-    if (OutputFileSettings::getIncludeOutputMetadata())
-        _fp << format("# step = {}\n", step);
-    else
-        _fp << '\n';
-}
-
-/**
- * @brief Write the shared trajectory force comment
- *
- * @param step simulation step
- * @param totalForce total force acting on the system
- */
-void Output::writeForceComment(const size_t step, const double totalForce)
-{
-    _fp << formatForceComment(step, totalForce);
-}
-
-/**
- * @brief Formats the shared trajectory force comment
- *
- * @param step simulation step
- * @param totalForce total force acting on the system
- * @return formatted force comment
- */
-string Output::formatForceComment(const size_t step, const double totalForce)
-{
-    const auto stepMetadata = OutputFileSettings::getIncludeOutputMetadata()
-                                  ? format("step = {}; ", step)
-                                  : "";
-
-    return format(
-        "# {}Total force = {:.5e} kcal/mol/Angstrom\n",
-        stepMetadata,
-        totalForce
-    );
-}
-
-/**
- * @brief Closes the output file
- *
- */
-void Output::close() { _fp.close(); }
-
-/**
- * @brief get filename
- *
- * @return string
- */
-string Output::getFilename() const { return _fileName; }
+}   // namespace out

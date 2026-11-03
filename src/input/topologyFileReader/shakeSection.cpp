@@ -22,108 +22,117 @@
 
 #include "shakeSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "bondConstraint.hpp"   // for BondConstraint
-#include "engine.hpp"           // for Engine
-#include "exceptions.hpp"       // for TopologyException
-#include "simulationBox.hpp"    // for SimulationBox
+#include "bondConstraint.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "simulationBox.hpp"
 
-using namespace input::topology;
-using namespace engine;
-using namespace customException;
-using namespace constraints;
-
-/**
- * @brief processes the shake section of the topology file
- *
- * @details one line of the shake section contains 4 elements:
- * 1. atom index 1
- * 2. atom index 2
- * 3. target bond length
- * 4. linker (not used yet - not sure what it is for)
- *
- * @param line
- * @param engine
- *
- * @throws TopologyException if number of elements in line is
- * not 4
- * @throws TopologyException if atom indices are the same
- * (=same atoms)
- */
-void ShakeSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::topology
 {
-    if (lineElements.size() != 4 && lineElements.size() != 3)
+
+    /**
+     * @brief processes the shake section of the topology file
+     *
+     * @details one line of the shake section contains 4 elements:
+     * 1. atom index 1
+     * 2. atom index 2
+     * 3. target bond length
+     * 4. linker (not used yet - not sure what it is for)
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the topology file being processed
+     *
+     * @throws exc::TopologyException if number of elements in line is
+     * not 4
+     * @throws exc::TopologyException if atom indices are the same
+     * (=same atoms)
+     */
+    void ShakeSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine,
+        size_t                    lineNumber
+    )
     {
-        throw TopologyException(
-            std::format(
-                "Wrong number of arguments in topology file shake section at "
-                "line "
-                "{} - number of elements has to be 3 or 4!",
-                _lineNumber
-            )
+        if (lineElements.size() != 4 && lineElements.size() != 3)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Wrong number of arguments in topology file shake section "
+                    "at "
+                    "line "
+                    "{} - number of elements has to be 3 or 4!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto atom1      = stoul(lineElements[0]);
+        auto atom2      = stoul(lineElements[1]);
+        auto bondLength = stod(lineElements[2]);
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/912
+        // auto linker = lineElements[3];
+
+        if (atom1 == atom2)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file shake section at line {} - atoms cannot be "
+                    "the "
+                    "same!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto &simBox = engine.getSimulationBox();
+
+        const auto [molecule1, atomIndex1] =
+            simBox.findMoleculeByGlobalAtomIndex(atom1);
+        const auto [molecule2, atomIndex2] =
+            simBox.findMoleculeByGlobalAtomIndex(atom2);
+
+        auto bondConstraint = constraints::BondConstraint(
+            molecule1,
+            molecule2,
+            atomIndex1,
+            atomIndex2,
+            bondLength
         );
+
+        engine.getConstraints()->addBondConstraint(bondConstraint);
     }
 
-    auto atom1      = stoul(lineElements[0]);
-    auto atom2      = stoul(lineElements[1]);
-    auto bondLength = stod(lineElements[2]);
-    // TODO: auto linker = lineElements[3];
+    /**
+     * @brief returns the keyword of the shake section
+     *
+     * @return std::string
+     */
+    std::string ShakeSection::keyword() { return "shake"; }
 
-    if (atom1 == atom2)
+    /**
+     * @brief checks if shake sections ends normally
+     *
+     * @param endedNormal
+     * @param lineNumber the line number in the topology file being processed
+     *
+     * @throws exc::TopologyException if endedNormal is false
+     */
+    void ShakeSection::endedNormally(bool endedNormal, size_t lineNumber) const
     {
-        throw TopologyException(
-            std::format(
-                "Topology file shake section at line {} - atoms cannot be the "
-                "same!",
-                _lineNumber
-            )
-        );
+        if (!endedNormal)
+        {
+            throw exc::TopologyException(
+                std::format(
+                    "Topology file shake section at line {} - no end of "
+                    "section "
+                    "found!",
+                    lineNumber
+                )
+            );
+        }
     }
 
-    auto &simBox = engine.getSimulationBox();
-
-    const auto [molecule1, atomIndex1] = simBox.findMoleculeByAtomIndex(atom1);
-    const auto [molecule2, atomIndex2] = simBox.findMoleculeByAtomIndex(atom2);
-
-    auto bondConstraint = BondConstraint(
-        molecule1,
-        molecule2,
-        atomIndex1,
-        atomIndex2,
-        bondLength
-    );
-
-    engine.getConstraints()->addBondConstraint(bondConstraint);
-}
-
-/**
- * @brief returns the keyword of the shake section
- *
- * @return std::string
- */
-std::string ShakeSection::keyword() { return "shake"; }
-
-/**
- * @brief checks if shake sections ends normally
- *
- * @param endedNormal
- *
- * @throws TopologyException if endedNormal is false
- */
-void ShakeSection::endedNormally(const bool endedNormal) const
-{
-    if (!endedNormal)
-    {
-        throw TopologyException(
-            std::format(
-                "Topology file shake section at line {} - no end of section "
-                "found!",
-                _lineNumber
-            )
-        );
-    }
-}
+}   // namespace input::topology

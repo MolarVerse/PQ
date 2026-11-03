@@ -20,25 +20,40 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include "gtest/gtest.h"               // for Message, TestPartResult
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
-#include "settings.hpp"                // for Settings
+#include "generalSettings.hpp"
+#include "randomNumberGenerator.hpp"
 
-using namespace randomNumberGenerator;
-using namespace settings;
+/**
+ * @brief seed every test, so the statistical checks do not fail at random
+ *
+ */
+class TestRandomNumberGenerator : public ::testing::Test
+{
+   protected:
+    void SetUp() override
+    {
+        settings::GeneralSettings::setIsRandomSeedSet(true);
+        settings::GeneralSettings::setRandomSeed(42);
+    }
+
+    void TearDown() override
+    {
+        settings::GeneralSettings::setIsRandomSeedSet(false);
+    }
+};
 
 /**
  * @brief test randomNumberGenerator uniform real distribution range
  *
  */
-TEST(TestRandomNumberGenerator, uniformRealDistributionRange)
+TEST_F(TestRandomNumberGenerator, uniformRealDistributionRange)
 {
-    RandomNumberGenerator rng{};
-    constexpr double      min{5.0};
-    constexpr double      max{10.0};
-    constexpr int         numSamples{1000};
+    rng::RandomNumberGenerator rng{};
+    constexpr double           min{5.0};
+    constexpr double           max{10.0};
+    constexpr int              numSamples{1000};
 
     for (int i{0}; i < numSamples; ++i)
     {
@@ -52,12 +67,12 @@ TEST(TestRandomNumberGenerator, uniformRealDistributionRange)
  * @brief test randomNumberGenerator uniform real distribution mean
  *
  */
-TEST(TestRandomNumberGenerator, uniformRealDistributionMean)
+TEST_F(TestRandomNumberGenerator, uniformRealDistributionMean)
 {
-    RandomNumberGenerator rng{};
-    constexpr double      min{0.0};
-    constexpr double      max{10.0};
-    constexpr int         numSamples{10000};
+    rng::RandomNumberGenerator rng{};
+    constexpr double           min{0.0};
+    constexpr double           max{10.0};
+    constexpr int              numSamples{10000};
 
     double sum{0.0};
     for (int i{0}; i < numSamples; ++i)
@@ -74,12 +89,12 @@ TEST(TestRandomNumberGenerator, uniformRealDistributionMean)
  * @brief test randomNumberGenerator normal distribution mean
  *
  */
-TEST(TestRandomNumberGenerator, normalDistributionMean)
+TEST_F(TestRandomNumberGenerator, normalDistributionMean)
 {
-    RandomNumberGenerator rng{};
-    constexpr double      mean{5.0};
-    constexpr double      stddev{2.0};
-    constexpr int         numSamples{10000};
+    rng::RandomNumberGenerator rng{};
+    constexpr double           mean{5.0};
+    constexpr double           stddev{2.0};
+    constexpr int              numSamples{10000};
 
     double sum{0.0};
     for (int i{0}; i < numSamples; ++i)
@@ -95,13 +110,13 @@ TEST(TestRandomNumberGenerator, normalDistributionMean)
  * @brief test randomNumberGenerator determinism with seed
  *
  */
-TEST(TestRandomNumberGenerator, determinismWithSeed)
+TEST_F(TestRandomNumberGenerator, determinismWithSeed)
 {
-    Settings::setIsRandomSeedSet(true);
-    Settings::setRandomSeed(73);
+    settings::GeneralSettings::setIsRandomSeedSet(true);
+    settings::GeneralSettings::setRandomSeed(73);
 
-    RandomNumberGenerator rng1{};
-    RandomNumberGenerator rng2{};
+    rng::RandomNumberGenerator rng1{};
+    rng::RandomNumberGenerator rng2{};
 
     for (int i{0}; i < 100; ++i)
     {
@@ -115,9 +130,9 @@ TEST(TestRandomNumberGenerator, determinismWithSeed)
  * @brief test randomNumberGenerator edge cases
  *
  */
-TEST(TestRandomNumberGenerator, edgeCases)
+TEST_F(TestRandomNumberGenerator, edgeCases)
 {
-    RandomNumberGenerator rng{};
+    rng::RandomNumberGenerator rng{};
 
     EXPECT_NO_THROW(rng.getUniformRealDistribution(5.0, 5.0));
     EXPECT_NO_THROW(rng.getNormalDistribution(0.0, 0.0));
@@ -129,9 +144,9 @@ TEST(TestRandomNumberGenerator, edgeCases)
  * @brief test randomNumberGenerator normal distribution shape
  *
  */
-TEST(TestRandomNumberGenerator, normalDistributionShape)
+TEST_F(TestRandomNumberGenerator, normalDistributionShape)
 {
-    RandomNumberGenerator rng{};
+    rng::RandomNumberGenerator rng{};
 
     constexpr double mean{0.0};
     constexpr double stddev{1.0};

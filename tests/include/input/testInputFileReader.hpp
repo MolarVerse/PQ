@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_INPUT_FILE_READER_H_
+#ifndef TESTS__INCLUDE__INPUT__TEST_INPUT_FILE_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_INPUT_FILE_READER_HPP
 
-#define _TEST_INPUT_FILE_READER_H_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <cstdio>
+#include <string>
 
-#include <cstdio>   // for remove
-#include <string>   // for allocator, string
-
-#include "inputFileReader.hpp"   // for InputFileReader
-#include "mmmdEngine.hpp"        // for MDEngine
-#include "optEngine.hpp"         // for MDEngine
+#include "inputConverter.hpp"
+#include "inputFileParser.hpp"
+#include "inputFileReader.hpp"
+#include "settings.hpp"
 
 /**
  * @class TestInputFileReader
@@ -42,39 +42,39 @@
 class TestInputFileReader : public ::testing::Test
 {
    protected:
+    std::string _fileName;
+
+    Settings                                _settings;
+    std::unique_ptr<input::InputFileReader> _inputFileReader;
+
     void SetUp() override
     {
         // NOTE: here the MMOPTEngine is used as dummy engine
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine          = new engine::OptEngine();
-        _mdEngine        = new engine::MMMDEngine();
-        _inputFileReader = new input::InputFileReader("input.in", *_engine);
-        _inputFileReader_mdEngine =
-            new input::InputFileReader("input.in", *_mdEngine);
+        _inputFileReader =
+            std::make_unique<input::InputFileReader>("input.in", _settings);
     }
 
-    void TearDown() override
+    void TearDown() override { _removeFile(); }
+
+    static void _clearParser(input::InputFileParser &parser)
     {
-        delete _inputFileReader;
-        delete _inputFileReader_mdEngine;
-        delete _engine;
-        delete _mdEngine;
-        removeFile();
+        parser._clear();
     }
 
-    std::string _fileName = "";
-
-    engine::Engine         *_engine;
-    input::InputFileReader *_inputFileReader;
-
-    engine::MDEngine       *_mdEngine;
-    input::InputFileReader *_inputFileReader_mdEngine;
-
-    void removeFile() const
+    void _removeFile() const
     {
         static_cast<void>(std::remove(_fileName.c_str()));
+    }
+
+    static auto _parseSelectionNoPython(
+        input::Converter<input::SelectionTag> &converter,
+        const std::string                     &key
+    )
+    {
+        return converter._parseSelectionNoPython(key);
     }
 };
 

@@ -23,41 +23,26 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 
 #include "physicalData.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
+#include "testOutputBase.hpp"
+#include "vector3d.hpp"
 #include "virialOutput.hpp"
-
-using namespace output;
-using physicalData::PhysicalData;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
 
 TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
 {
     const std::string path = "default.vir.test";
 
-    VirialOutput out(path);
-    out.setFilename(path);
+    out::VirialOutput out(path);
+    out.setFilename(path, false);
 
-    PhysicalData data;
+    physicalData::PhysicalData data;
     data.setVirial(
-        linearAlgebra::tensor3D{
-            linearAlgebra::Vec3D{0.1, 0.2, 0.3},
-            linearAlgebra::Vec3D{0.4, 0.5, 0.6},
-            linearAlgebra::Vec3D{0.7, 0.8, 0.9}
+        linalg::tensor3D{
+            linalg::Vec3D{0.1, 0.2, 0.3},
+            linalg::Vec3D{0.4, 0.5, 0.6},
+            linalg::Vec3D{0.7, 0.8, 0.9}
         }
     );
 
@@ -78,10 +63,10 @@ TEST(TestVirialOutput, writeEmitsOneLinePerCall)
 {
     const std::string path = "default.vir.test";
 
-    VirialOutput out(path);
-    out.setFilename(path);
+    out::VirialOutput out(path);
+    out.setFilename(path, false);
 
-    PhysicalData data;
+    physicalData::PhysicalData data;
 
     out.write(1, data);
     out.write(2, data);
@@ -90,8 +75,8 @@ TEST(TestVirialOutput, writeEmitsOneLinePerCall)
 
     const auto content  = slurp(path);
     size_t     newlines = 0;
-    for (auto c : content)
-        if (c == '\n')
+    for (auto character : content)
+        if (character == '\n')
             ++newlines;
     EXPECT_EQ(newlines, 3U);
 

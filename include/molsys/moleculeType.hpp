@@ -20,14 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLECULE_TYPE_HPP_
+#ifndef MOLSYS__MOLECULE_TYPE_HPP
+#define MOLSYS__MOLECULE_TYPE_HPP
 
-#define _MOLECULE_TYPE_HPP_
+#include <map>
+#include <optional>
+#include <string>
+#include <string_view>
+#include <vector>
 
-#include <map>           // for map
-#include <string>        // for string
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include "strongTypes.hpp"
 
 namespace molsys
 {
@@ -41,22 +43,23 @@ namespace molsys
        private:
         std::string _name;
 
-        size_t _moltype;
-        size_t _numberOfAtoms;
+        MolType               _moltype;
+        std::optional<size_t> _numberOfAtoms;
 
-        int _charge;
+        int                   _charge = 0;
+        std::optional<double> _qmReferenceEnergy;
 
         std::vector<std::string> _atomNames;
-        std::vector<size_t>      _atomTypes;
-        std::vector<size_t>      _externalAtomTypes;
-        std::vector<size_t>      _externalGlobalVDWTypes;
+        std::vector<AtomType>    _atomTypes;
+        std::vector<ExtAtomType> _externalAtomTypes;
+        std::vector<ExtVdwType>  _externalGlobalVDWTypes;
         std::vector<double>      _partialCharges;
 
-        std::map<size_t, size_t> _externalToInternalAtomTypes;
+        std::map<ExtAtomType, AtomType> _externalToInternalAtomTypes;
 
        public:
         MoleculeType() = default;
-        explicit MoleculeType(const size_t moltype);
+        explicit MoleculeType(MolType moltype);
         explicit MoleculeType(const std::string_view &name);
 
         [[nodiscard]] size_t getNumberOfAtomTypes();
@@ -66,12 +69,12 @@ namespace molsys
          **************************/
 
         void addAtomName(const std::string &atomName);
-        void addExternalAtomType(const size_t externalAtomType);
-        void addPartialCharge(const double partialCharge);
-        void addExternalGlobalVDWType(const size_t externalGlobalVDWType);
+        void addExternalAtomType(ExtAtomType externalAtomType);
+        void addPartialCharge(double partialCharge);
+        void addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
 
-        void addExternalToInternalAtomTypeElement(const size_t, const size_t);
-        void addAtomType(const size_t atomType);
+        void addExternalToInternalAtomTypeElement(ExtAtomType, AtomType);
+        void addAtomType(AtomType atomType);
 
         /***************************
          * standard setter methods *
@@ -79,38 +82,42 @@ namespace molsys
 
         void setName(const std::string_view &name);
 
-        void setNumberOfAtoms(const size_t numberOfAtoms);
-        void setMoltype(const size_t moltype);
+        void setNumberOfAtoms(size_t numberOfAtoms);
+        void setMoltype(MolType moltype);
 
-        void setCharge(const int charge);
-        void setPartialCharge(const size_t index, const double partialCharge);
+        void setCharge(int charge);
+        void setQMReferenceEnergy(double qmReferenceEnergy);
+        void setPartialCharge(AtomIndex index, double partialCharge);
         void setPartialCharges(const std::vector<double> &partialCharges);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getNumberOfAtoms() const;
-        [[nodiscard]] size_t getMoltype() const;
-        [[nodiscard]] size_t getExternalAtomType(const size_t index) const;
-        [[nodiscard]] size_t getAtomType(const size_t index) const;
-        [[nodiscard]] size_t getInternalAtomType(const size_t type) const;
+        [[nodiscard]] size_t      getNumberOfAtoms() const;
+        [[nodiscard]] MolType     getMoltype() const;
+        [[nodiscard]] ExtAtomType getExternalAtomType(AtomIndex index) const;
+        [[nodiscard]] AtomType    getAtomType(AtomIndex index) const;
+        [[nodiscard]] AtomType    getInternalAtomType(ExtAtomType type) const;
 
         [[nodiscard]] int    getCharge() const;
-        [[nodiscard]] double getPartialCharge(const size_t index) const;
+        [[nodiscard]] double getQMReferenceEnergy() const;
+        [[nodiscard]] bool   hasQMReferenceEnergy() const;
+        [[nodiscard]] double getPartialCharge(AtomIndex index) const;
 
         [[nodiscard]] std::string getName() const;
-        [[nodiscard]] std::string getAtomName(const size_t index) const;
+        [[nodiscard]] std::string getAtomName(AtomIndex index) const;
 
-        [[nodiscard]] std::vector<std::string> getAtomNames() const;
-        [[nodiscard]] std::vector<size_t>     &getExternalAtomTypes();
-        [[nodiscard]] std::vector<size_t>     &getExternalGlobalVDWTypes();
-        [[nodiscard]] std::vector<double>     &getPartialCharges();
+        [[nodiscard]] std::vector<std::string>  getAtomNames() const;
+        [[nodiscard]] std::vector<ExtAtomType> &getExternalAtomTypes();
+        [[nodiscard]] std::vector<ExtVdwType>  &getExternalGlobalVDWTypes();
+        [[nodiscard]] std::vector<double>      &getPartialCharges();
 
-        [[nodiscard]] std::map<size_t, size_t> getExternalToInternalAtomTypes(
+        [[nodiscard]]
+        const std::map<ExtAtomType, AtomType> &getExternalToInternalAtomTypes(
         ) const;
     };
 
 }   // namespace molsys
 
-#endif   // _MOLECULE_TYPE_HPP_
+#endif   // MOLSYS__MOLECULE_TYPE_HPP

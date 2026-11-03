@@ -20,18 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_INTRA_NON_BONDED_READER_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_INTRA_NON_BONDED_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_INTRA_NON_BONDED_READER_HPP
 
-#define _TEST_INTRA_NON_BONDED_READER_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
-
-#include <string>   // for allocator
-
-#include "fileSettings.hpp"           // for FileSettings
-#include "intraNonBondedReader.hpp"   // for IntraNonBondedReader
-#include "mmmdEngine.hpp"             // for Engine
-#include "moleculeType.hpp"           // for MoleculeType
+#include "fileSettings.hpp"
+#include "generalSettings.hpp"
+#include "intraNonBondedReader.hpp"
+#include "mmmdEngine.hpp"
+#include "moleculeType.hpp"
+#include "settings.hpp"
 
 /**
  * @class TestIntraNonBondedReader
@@ -42,37 +41,33 @@
 class TestIntraNonBondedReader : public ::testing::Test
 {
    protected:
-    engine::Engine                                    *_engine;
-    input::intraNonBondedReader::IntraNonBondedReader *_intraNonBondedReader;
+    Settings                        _settings;
+    std::unique_ptr<engine::Engine> _engine;
+    std::unique_ptr<input::intraNonBondedReader::IntraNonBondedReader>
+        _intraNonBondedReader;
 
     void SetUp() override
     {
         auto molecule1 = molsys::MoleculeType();
         molecule1.setNumberOfAtoms(3);
-        molecule1.setMoltype(0);
+        molecule1.setMoltype(MolType{0});
         molecule1.setName("molecule1");
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
         _engine->getSimulationBox().addMoleculeType(molecule1);
-        _engine->getIntraNonBonded()->activate();
+        settings::GeneralSettings::activateIntraNonBonded();
 
         _intraNonBondedReader =
-            new input::intraNonBondedReader::IntraNonBondedReader(
+            std::make_unique<input::intraNonBondedReader::IntraNonBondedReader>(
                 "data/intraNonBondedReader/intraNonBonded.dat",
                 *_engine
             );
         settings::FileSettings::setIsIntraNonBondedFileNameSet();
     }
-
-    void TearDown() override
-    {
-        delete _intraNonBondedReader;
-        delete _engine;
-    }
 };
 
-#endif   // _TEST_INTRA_NON_BONDED_READER_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_INTRA_NON_BONDED_READER_HPP

@@ -20,20 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COULOMB_LONG_RANGE_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__COULOMB_LONG_RANGE_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__COULOMB_LONG_RANGE_INPUT_PARSER_HPP
 
-#define _COULOMB_LONG_RANGE_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
-
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 
 namespace input
 {
     /**
-     * @class CoulombLongRangeInputParser inherits from InputFileParser
+     * @brief CoulombLongRangeInputParser inherits from InputFileParser
      *
-     * @brief Parses the Coulomb long range commands in the input file
+     * @details Parses the Coulomb long range commands in the input file
      *
      */
     class CoulombLongRangeInputParser : public InputFileParser
@@ -41,19 +38,11 @@ namespace input
        public:
         CoulombLongRangeInputParser();
 
-        void parseCoulombLongRange(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseReactionFieldEpsilon(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseWolfParameter(const std::vector<std::string> &, const size_t);
+        void addCoulombLongRangeKey();
+        void addReactionFieldEpsilonKey();
+        void addWolfParameterKey();
     };
 
 }   // namespace input
 
-#endif   // _COULOMB_LONG_RANGE_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__COULOMB_LONG_RANGE_INPUT_PARSER_HPP

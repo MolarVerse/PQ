@@ -22,13 +22,14 @@
 
 #include "testTopologyReader.hpp"
 
-#include "exceptions.hpp"           // for InputFileException, TopologyException
-#include "fileSettings.hpp"         // for FileSettings
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
-#include "topologyReader.hpp"   // for TopologyReader
+#include <memory>
 
-using namespace input::topology;
+#include "constraintSettings.hpp"
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "forceFieldSettings.hpp"
+#include "throwWithMessage.hpp"
+#include "topologyReader.hpp"
 
 /**
  * @brief tests isNeeded function
@@ -39,16 +40,15 @@ using namespace input::topology;
  */
 TEST_F(TestTopologyReader, isNeeded)
 {
-    EXPECT_FALSE(isNeeded(*_engine));
+    Settings settings;
+    EXPECT_FALSE(input::topology::isNeeded(settings));
 
-    const auto& constraints = _engine->getConstraints();
+    settings.constraintSettings.activateShake();
+    EXPECT_TRUE(input::topology::isNeeded(settings));
 
-    constraints->activateShake();
-    EXPECT_TRUE(isNeeded(*_engine));
-
-    constraints->deactivateShake();
-    settings::ForceFieldSettings::activate();
-    EXPECT_TRUE(isNeeded(*_engine));
+    settings.constraintSettings.deactivateShake();
+    settings.forceFieldSettings.setType(ForceFieldType::ON);
+    EXPECT_TRUE(input::topology::isNeeded(settings));
 }
 
 /**
@@ -61,10 +61,10 @@ TEST_F(TestTopologyReader, determineSection)
         [[maybe_unused]] const auto dummy =
             _topologyReader->determineSection({"shake"})
     );
-    EXPECT_THROW(
-        [[maybe_unused]] const auto dummy =
-            _topologyReader->determineSection({"unknown"}),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        const auto _ = _topologyReader->determineSection({"unknown"}),
+        exc::TopologyException,
+        "Unknown or already parsed keyword \"unknown\" in topology file"
     );
 }
 
@@ -75,11 +75,20 @@ TEST_F(TestTopologyReader, read)
 {
     EXPECT_NO_THROW(_topologyReader->read());
 
-    _engine->getConstraints()->activateShake();
+    _settings.constraintSettings.activateShake();
+    engine::MMMDEngine engine{_settings};
+    _topologyReader = std::make_unique<input::topology::TopologyReader>(
+        settings::FileSettings::getTopologyFileName(),
+        engine
+    );
     EXPECT_NO_THROW(_topologyReader->read());
 
     settings::FileSettings::unsetIsTopologyFileNameSet();
-    EXPECT_THROW(_topologyReader->read(), customException::InputFileException);
+    EXPECT_THROW_MSG(
+        _topologyReader->read(),
+        exc::InputFileException,
+        "Topology file needed for requested simulation setup"
+    );
 }
 
 /**

@@ -22,103 +22,109 @@
 
 #include "typesSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "exceptions.hpp"          // for ParameterFileException
-#include "potentialSettings.hpp"   // for PotentialSettings
+#include "exceptions.hpp"
+#include "potentialSettings.hpp"
 
-using namespace input::parameterFile;
-using namespace engine;
-using namespace customException;
-using namespace settings;
-
-/**
- * @brief returns the keyword of the section
- *
- * @return std::string
- */
-std::string TypesSection::keyword() { return "types"; }
-
-/**
- * @brief Overwrites process function of ParameterFileSection base class. It
- * just forwards the call to processSection.
- *
- * @param lineElements
- * @param engine
- */
-void TypesSection::process(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::parameterFile
 {
-    processSection(lineElements, engine);
-}
 
-/**
- * @brief process types section and sets the scale factors for the 1-4
- * interactions in potentialSettings
- *
- * @details The types section is used to set the scale factors for the 1-4
- * interactions. The line must have the following form for backward
- * compatibility: 1) dummy 2) dummy 3) dummy 4) dummy 5) dummy 6) dummy 7)
- * scaleCoulomb 8) scaleVanDerWaals
- *
- * @param lineElements
- * @param engine
- *
- * @throw ParameterFileException if number of elements in line
- * is not 8
- * @throw ParameterFileException if scaleCoulomb is not between
- * 0 and 1
- * @throw ParameterFileException if scaleVanDerWaals is not
- * between 0 and 1
- */
-void TypesSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine & /*engine*/
-)
-{
-    // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
-    if (lineElements.size() != 8)
+    /**
+     * @brief returns the keyword of the section
+     *
+     * @return std::string
+     */
+    std::string TypesSection::keyword() { return "types"; }
+
+    /**
+     * @brief Overwrites process function of ParameterFileSection base class. It
+     * just forwards the call to processSection.
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the parameter file being processed
+     */
+    void TypesSection::process(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine,
+        size_t                   &lineNumber
+    )
     {
-        throw ParameterFileException(
-            std::format(
-                "Wrong number of arguments in parameter file types section at "
-                "line "
-                "{} - number of elements has to be 8!",
-                _lineNumber
-            )
-        );
+        processSection(lineElements, engine, lineNumber);
     }
 
-    const auto scaleCoulomb     = stod(lineElements[6]);
-    const auto scaleVanDerWaals = stod(lineElements[7]);
-    // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
-
-    if (scaleCoulomb < 0.0 || scaleCoulomb > 1.0)
+    /**
+     * @brief process types section and sets the scale factors for the 1-4
+     * interactions in potentialSettings
+     *
+     * @details The types section is used to set the scale factors for the 1-4
+     * interactions. The line must have the following form for backward
+     * compatibility: 1) dummy 2) dummy 3) dummy 4) dummy 5) dummy 6) dummy 7)
+     * scaleCoulomb 8) scaleVanDerWaals
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the parameter file being processed
+     *
+     * @throw exc::ParameterFileException if number of elements in line
+     * is not 8
+     * @throw exc::ParameterFileException if scaleCoulomb is not between
+     * 0 and 1
+     * @throw exc::ParameterFileException if scaleVanDerWaals is not
+     * between 0 and 1
+     */
+    void TypesSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine & /*engine*/,
+        size_t lineNumber
+    )
     {
-        throw ParameterFileException(
-            std::format(
-                "Wrong scaleCoulomb in parameter file types section at line {} "
-                "- "
-                "has to be between 0 and 1!",
-                _lineNumber
-            )
-        );
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        if (lineElements.size() != 8)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Wrong number of arguments in parameter file types section "
+                    "at "
+                    "line "
+                    "{} - number of elements has to be 8!",
+                    lineNumber
+                )
+            );
+        }
+
+        const auto scaleCoulomb     = stod(lineElements[6]);
+        const auto scaleVanDerWaals = stod(lineElements[7]);
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        if (scaleCoulomb < 0.0 || scaleCoulomb > 1)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Wrong scaleCoulomb in parameter file types section at "
+                    "line {} "
+                    "- "
+                    "has to be between 0 and 1!",
+                    lineNumber
+                )
+            );
+        }
+
+        if (scaleVanDerWaals < 0.0 || scaleVanDerWaals > 1)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Wrong scaleVanDerWaals in parameter file types section at "
+                    "line {} "
+                    "- has to be between 0 and 1!",
+                    lineNumber
+                )
+            );
+        }
+
+        settings::PotentialSettings::setScale14Coulomb(scaleCoulomb);
+        settings::PotentialSettings::setScale14VanDerWaals(scaleVanDerWaals);
     }
 
-    if (scaleVanDerWaals < 0.0 || scaleVanDerWaals > 1.0)
-    {
-        throw ParameterFileException(
-            std::format(
-                "Wrong scaleVanDerWaals in parameter file types section at "
-                "line {} "
-                "- has to be between 0 and 1!",
-                _lineNumber
-            )
-        );
-    }
-
-    PotentialSettings::setScale14Coulomb(scaleCoulomb);
-    PotentialSettings::setScale14VanDerWaals(scaleVanDerWaals);
-}
+}   // namespace input::parameterFile

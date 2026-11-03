@@ -23,305 +23,337 @@
 #include "hessianBuilder.hpp"
 
 #include <memory>
+#include <utility>
 
 #include "atom.hpp"
+#include "enums/hessian.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 
-using namespace opt;
-using namespace settings;
-using namespace customException;
-
-/**
- * @brief Construct a new Force Difference Hessian Builder:: Force Difference
- * Hessian Builder object
- *
- * @param displacement
- */
-ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
-    const double displacement
-)
-    : _displacement(displacement)
+namespace opt
 {
-}
 
-/**
- * @brief Construct a new Central Force Difference Hessian Builder:: Central
- * Force Difference Hessian Builder object
- *
- * @param displacement
- */
-std::vector<double> ForceDifferenceHessianBuilder::evaluateForces(
-    Evaluator             &evaluator,
-    molsys::SimulationBox &simulationBox,
-    const size_t           coordinateIndex,
-    const double           displacement
-) const
-{
-    displaceCoordinate(simulationBox, coordinateIndex, displacement);
-    evaluator.evaluate();
-    const auto forces = flattenForces(simulationBox);
-    displaceCoordinate(simulationBox, coordinateIndex, -displacement);
-
-    return forces;
-}
-
-/**
- * @brief restore the original positions of the atoms in the simulation box
- *
- * @param simulationBox
- * @param positions
- */
-void ForceDifferenceHessianBuilder::restorePositions(
-    molsys::SimulationBox                   &simulationBox,
-    const std::vector<linearAlgebra::Vec3D> &positions
-)
-{
-    for (size_t atomIndex = 0; atomIndex < positions.size(); ++atomIndex)
-        simulationBox.getAtom(atomIndex).setPosition(positions[atomIndex]);
-}
-
-/**
- * @brief displace a specific coordinate of the simulation box
- *
- * @param simulationBox
- * @param coordinateIndex
- * @param displacement
- */
-void ForceDifferenceHessianBuilder::displaceCoordinate(
-    molsys::SimulationBox &simulationBox,
-    const size_t           coordinateIndex,
-    const double           displacement
-)
-{
-    const auto atomIndex = coordinateIndex / 3;
-    const auto dimension = coordinateIndex % 3;
-
-    auto position        = simulationBox.getAtom(atomIndex).getPosition();
-    position[dimension] += displacement;
-
-    simulationBox.getAtom(atomIndex).setPosition(position);
-}
-
-/**
- * @brief flatten the forces of the simulation box into a 1D vector
- *
- * @param simulationBox
- * @return std::vector<double>
- */
-std::vector<double> ForceDifferenceHessianBuilder::flattenForces(
-    const molsys::SimulationBox &simulationBox
-)
-{
-    std::vector<double> flattenedForces;
-    flattenedForces.reserve(3 * simulationBox.getNumberOfAtoms());
-
-    for (const auto &force : simulationBox.getForces())
+    namespace
     {
-        flattenedForces.push_back(force[0]);
-        flattenedForces.push_back(force[1]);
-        flattenedForces.push_back(force[2]);
-    }
-
-    return flattenedForces;
-}
-
-/**
- * @brief symmetrize the Hessian matrix
- *
- * @param hessian
- */
-void ForceDifferenceHessianBuilder::symmetrize(HessianMatrix &hessian)
-{
-    for (size_t row = 0; row < hessian.size(); ++row)
-    {
-        for (size_t col = row + 1; col < hessian.size(); ++col)
+        /**
+         * @brief displace a specific coordinate of the simulation box
+         *
+         * @param simulationBox
+         * @param coordinateIndex
+         * @param displacement
+         */
+        void displaceCoordinate(
+            molsys::SimulationBox &simulationBox,
+            size_t                 coordinateIndex,
+            double                 displacement
+        )
         {
-            const auto value  = 0.5 * (hessian[row][col] + hessian[col][row]);
-            hessian[row][col] = value;
-            hessian[col][row] = value;
-        }
-    }
-}
+            const auto atomIndex = coordinateIndex / 3;
+            const auto dimension = coordinateIndex % 3;
 
-/**
- * @brief Construct a new Central Force Difference Hessian Builder:: Central
- * Force Difference Hessian Builder object
- *
- * @param displacement
- */
-HessianMatrix CentralForceDifferenceHessianBuilder::build(
-    Evaluator             &evaluator,
-    molsys::SimulationBox &simulationBox
-) const
-{
-    const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto       hessian             = HessianMatrix(
-        numberOfCoordinates,
-        std::vector<double>(numberOfCoordinates, 0.0)
-    );
+            auto position = simulationBox.getAtom(atomIndex).getPosition();
+            position[dimension] += displacement;
 
-    const auto originalPositions = simulationBox.getPositions();
-
-    for (size_t col = 0; col < numberOfCoordinates; ++col)
-    {
-        const auto fPlus =
-            evaluateForces(evaluator, simulationBox, col, _displacement);
-        const auto fMinus =
-            evaluateForces(evaluator, simulationBox, col, -_displacement);
-
-        for (size_t row = 0; row < numberOfCoordinates; ++row)
-            hessian[row][col] =
-                -(fPlus[row] - fMinus[row]) / (2.0 * _displacement);
-
-        restorePositions(simulationBox, originalPositions);
-    }
-
-    evaluator.evaluate();
-    symmetrize(hessian);
-
-    return hessian;
-}
-
-/**
- * @brief Construct a new Forward Force Difference Hessian Builder:: Forward
- * Force Difference Hessian Builder object
- *
- * @param displacement
- */
-HessianMatrix ForwardForceDifferenceHessianBuilder::build(
-    Evaluator             &evaluator,
-    molsys::SimulationBox &simulationBox
-) const
-{
-    const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto       hessian             = HessianMatrix(
-        numberOfCoordinates,
-        std::vector<double>(numberOfCoordinates, 0.0)
-    );
-
-    const auto originalPositions = simulationBox.getPositions();
-    evaluator.evaluate();
-    const auto f0 = flattenForces(simulationBox);
-
-    for (size_t col = 0; col < numberOfCoordinates; ++col)
-    {
-        const auto fPlus =
-            evaluateForces(evaluator, simulationBox, col, _displacement);
-
-        for (size_t row = 0; row < numberOfCoordinates; ++row)
-            hessian[row][col] = -(fPlus[row] - f0[row]) / _displacement;
-
-        restorePositions(simulationBox, originalPositions);
-    }
-
-    evaluator.evaluate();
-    symmetrize(hessian);
-
-    return hessian;
-}
-
-/**
- * @brief Construct a new Five Point Force Difference Hessian Builder:: Five
- * Point Force Difference Hessian Builder object
- *
- * @param displacement
- */
-HessianMatrix FivePointForceDifferenceHessianBuilder::build(
-    Evaluator             &evaluator,
-    molsys::SimulationBox &simulationBox
-) const
-{
-    const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-    auto       hessian             = HessianMatrix(
-        numberOfCoordinates,
-        std::vector<double>(numberOfCoordinates, 0.0)
-    );
-
-    const auto originalPositions = simulationBox.getPositions();
-
-    for (size_t col = 0; col < numberOfCoordinates; ++col)
-    {
-        const auto fPlus =
-            evaluateForces(evaluator, simulationBox, col, _displacement);
-        const auto fMinus =
-            evaluateForces(evaluator, simulationBox, col, -_displacement);
-        const auto fPlus2 =
-            evaluateForces(evaluator, simulationBox, col, 2.0 * _displacement);
-        const auto fMinus2 =
-            evaluateForces(evaluator, simulationBox, col, -2.0 * _displacement);
-
-        for (size_t row = 0; row < numberOfCoordinates; ++row)
-        {
-            const auto derivative = (-fPlus2[row] + 8.0 * fPlus[row] -
-                                     8.0 * fMinus[row] + fMinus2[row]) /
-                                    (12.0 * _displacement);
-
-            hessian[row][col] = -derivative;
+            simulationBox.getAtom(atomIndex).setPosition(position);
         }
 
-        restorePositions(simulationBox, originalPositions);
+        /**
+         * @brief flatten the forces of the simulation box into a 1D vector
+         *
+         * @param simulationBox
+         * @return std::vector<double>
+         */
+        std::vector<double> flattenForces(
+            const molsys::SimulationBox &simulationBox
+        )
+        {
+            std::vector<double> flattenedForces;
+            flattenedForces.reserve(3 * simulationBox.getNumberOfAtoms());
+
+            for (const auto &force : simulationBox.getForces())
+            {
+                flattenedForces.push_back(force[0]);
+                flattenedForces.push_back(force[1]);
+                flattenedForces.push_back(force[2]);
+            }
+
+            return flattenedForces;
+        }
+
+        /**
+         * @brief Construct a new Central Force Difference Hessian Builder::
+         * Central Force Difference Hessian Builder object
+         *
+         * @param displacement
+         */
+        [[nodiscard]]
+        std::vector<double> evaluateForces(
+            Evaluator             &evaluator,
+            molsys::SimulationBox &simulationBox,
+            size_t                 coordinateIndex,
+            double                 displacement
+        )
+        {
+            displaceCoordinate(simulationBox, coordinateIndex, displacement);
+            evaluator.evaluate();
+            const auto forces = flattenForces(simulationBox);
+            displaceCoordinate(simulationBox, coordinateIndex, -displacement);
+
+            return forces;
+        }
+    }   // namespace
+
+    /**
+     * @brief Construct a new Force Difference Hessian Builder:: Force
+     * Difference Hessian Builder object
+     *
+     * @param displacement
+     */
+    ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
+        double displacement
+    )
+        : _displacement(displacement)
+    {
     }
 
-    evaluator.evaluate();
-    symmetrize(hessian);
+    /**
+     * @brief restore the original positions of the atoms in the simulation box
+     *
+     * @param simulationBox
+     * @param positions
+     */
+    void ForceDifferenceHessianBuilder::_restorePositions(
+        molsys::SimulationBox            &simulationBox,
+        const std::vector<linalg::Vec3D> &positions
+    )
+    {
+        for (size_t atomIndex = 0; atomIndex < positions.size(); ++atomIndex)
+            simulationBox.getAtom(atomIndex).setPosition(positions[atomIndex]);
+    }
 
-    return hessian;
-}
+    /**
+     * @brief symmetrize the Hessian matrix
+     *
+     * @param hessian
+     */
+    void ForceDifferenceHessianBuilder::symmetrize(HessianMatrix &hessian)
+    {
+        for (size_t row = 0; row < hessian.size(); ++row)
+        {
+            for (size_t col = row + 1; col < hessian.size(); ++col)
+            {
+                const auto value =
+                    0.5 * (hessian[row][col] + hessian[col][row]);
+                hessian[row][col] = value;
+                hessian[col][row] = value;
+            }
+        }
+    }
 
-/**
- * @brief Construct a new Analytic Hessian Builder:: Analytic Hessian Builder
- * object
- */
-HessianMatrix AnalyticHessianBuilder::build(
-    Evaluator &evaluator,
-    molsys::SimulationBox & /*simulationBox*/
-) const
-{
-    if (!evaluator.supportsAnalyticHessian())
-        throw UserInputException(
-            "The selected evaluator does not support analytic Hessians."
+    /**
+     * @brief Construct a new Central Force Difference Hessian Builder:: Central
+     * Force Difference Hessian Builder object
+     *
+     * @param evaluator
+     * @param simulationBox
+     */
+    HessianMatrix CentralForceDifferenceHessianBuilder::build(
+        Evaluator             &evaluator,
+        molsys::SimulationBox &simulationBox
+    ) const
+    {
+        const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
+        auto       hessian             = HessianMatrix(
+            numberOfCoordinates,
+            std::vector<double>(numberOfCoordinates, 0.0)
         );
 
-    auto hessian = evaluator.calculateAnalyticHessian();
-    ForceDifferenceHessianBuilder::symmetrize(hessian);
+        const auto originalPositions = simulationBox.getPositions();
+        const auto displacement      = _getDisplacement();
 
-    return hessian;
-}
+        for (size_t col = 0; col < numberOfCoordinates; ++col)
+        {
+            const auto fPlus =
+                evaluateForces(evaluator, simulationBox, col, displacement);
+            const auto fMinus =
+                evaluateForces(evaluator, simulationBox, col, -displacement);
 
-/**
- * @brief factory function to create a HessianBuilder object based on the
- * HessianBuilderType
- *
- * @param builder
- * @param displacement
- * @return std::shared_ptr<HessianBuilder>
- */
-std::shared_ptr<HessianBuilder> opt::makeHessianBuilder(
-    const HessianBuilderType builder,
-    const double             displacement
-)
-{
-    using enum HessianBuilderType;
+            for (size_t row = 0; row < numberOfCoordinates; ++row)
+                hessian[row][col] =
+                    -(fPlus[row] - fMinus[row]) / (2.0 * displacement);
 
-    // TODO: use switch statement
-    if (builder == FINITE_DIFFERENCE_FORCES_CENTRAL)
-        return std::make_shared<CentralForceDifferenceHessianBuilder>(
-            displacement
+            _restorePositions(simulationBox, originalPositions);
+        }
+
+        evaluator.evaluate();
+        symmetrize(hessian);
+
+        return hessian;
+    }
+
+    /**
+     * @brief Construct a new Forward Force Difference Hessian Builder:: Forward
+     * Force Difference Hessian Builder object
+     *
+     * @param evaluator
+     * @param simulationBox
+     */
+    HessianMatrix ForwardForceDifferenceHessianBuilder::build(
+        Evaluator             &evaluator,
+        molsys::SimulationBox &simulationBox
+    ) const
+    {
+        const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
+        auto       hessian             = HessianMatrix(
+            numberOfCoordinates,
+            std::vector<double>(numberOfCoordinates, 0.0)
         );
 
-    if (builder == FINITE_DIFFERENCE_FORCES_FORWARD)
-        return std::make_shared<ForwardForceDifferenceHessianBuilder>(
-            displacement
+        const auto originalPositions = simulationBox.getPositions();
+        evaluator.evaluate();
+        const auto forces0 = flattenForces(simulationBox);
+
+        const auto displacement = _getDisplacement();
+
+        for (size_t col = 0; col < numberOfCoordinates; ++col)
+        {
+            const auto fPlus =
+                evaluateForces(evaluator, simulationBox, col, displacement);
+
+            for (size_t row = 0; row < numberOfCoordinates; ++row)
+                hessian[row][col] = -(fPlus[row] - forces0[row]) / displacement;
+
+            _restorePositions(simulationBox, originalPositions);
+        }
+
+        evaluator.evaluate();
+        symmetrize(hessian);
+
+        return hessian;
+    }
+
+    /**
+     * @brief Construct a new Five Point Force Difference Hessian Builder:: Five
+     * Point Force Difference Hessian Builder object
+     *
+     * @param evaluator
+     * @param simulationBox
+     */
+    HessianMatrix FivePointForceDifferenceHessianBuilder::build(
+        Evaluator             &evaluator,
+        molsys::SimulationBox &simulationBox
+    ) const
+    {
+        const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
+        auto       hessian             = HessianMatrix(
+            numberOfCoordinates,
+            std::vector<double>(numberOfCoordinates, 0.0)
         );
 
-    if (builder == FINITE_DIFFERENCE_FORCES_FIVE_POINT)
-        return std::make_shared<FivePointForceDifferenceHessianBuilder>(
-            displacement
-        );
+        const auto originalPositions = simulationBox.getPositions();
 
-    if (builder == ANALYTIC)
-        return std::make_shared<AnalyticHessianBuilder>();
+        const auto displacement = _getDisplacement();
 
-    throw UserInputException("Unknown Hessian builder.");
-}
+        for (size_t col = 0; col < numberOfCoordinates; ++col)
+        {
+            const auto fPlus =
+                evaluateForces(evaluator, simulationBox, col, displacement);
+            const auto fMinus =
+                evaluateForces(evaluator, simulationBox, col, -displacement);
+            const auto fPlus2 = evaluateForces(
+                evaluator,
+                simulationBox,
+                col,
+                2.0 * displacement
+            );
+            const auto fMinus2 = evaluateForces(
+                evaluator,
+                simulationBox,
+                col,
+                -2.0 * displacement
+            );
+
+            for (size_t row = 0; row < numberOfCoordinates; ++row)
+            {
+                const auto derivative = (-fPlus2[row] + 8.0 * fPlus[row] -
+                                         8.0 * fMinus[row] + fMinus2[row]) /
+                                        (12.0 * displacement);
+
+                hessian[row][col] = -derivative;
+            }
+
+            _restorePositions(simulationBox, originalPositions);
+        }
+
+        evaluator.evaluate();
+        symmetrize(hessian);
+
+        return hessian;
+    }
+
+    /**
+     * @brief Construct a new Analytic Hessian Builder:: Analytic Hessian
+     * Builder object
+     */
+    HessianMatrix AnalyticHessianBuilder::build(
+        Evaluator &evaluator,
+        molsys::SimulationBox & /*simulationBox*/
+    ) const
+    {
+        if (!evaluator.supportsAnalyticHessian())
+            throw exc::UserInputException(
+                "The selected evaluator does not support analytic Hessians."
+            );
+
+        auto hessian = evaluator.calculateAnalyticHessian();
+        ForceDifferenceHessianBuilder::symmetrize(hessian);
+
+        return hessian;
+    }
+
+    /**
+     * @brief factory function to create a HessianBuilder object based on the
+     * settings::HessianBuilderType
+     *
+     * @param builder
+     * @param displacement
+     * @return std::shared_ptr<HessianBuilder>
+     */
+    std::shared_ptr<HessianBuilder> makeHessianBuilder(
+        HessianBuilderType builder,
+        double             displacement
+    )
+    {
+        switch (builder)
+        {
+            using enum HessianBuilderType;
+
+            case CENTRAL:
+                return std::make_shared<CentralForceDifferenceHessianBuilder>(
+                    displacement
+                );
+            case FORWARD:
+                return std::make_shared<ForwardForceDifferenceHessianBuilder>(
+                    displacement
+                );
+            case FIVE_POINT:
+                return std::make_shared<FivePointForceDifferenceHessianBuilder>(
+                    displacement
+                );
+            case ANALYTIC: return std::make_shared<AnalyticHessianBuilder>();
+        }
+
+        std::unreachable();
+    }
+
+    /**
+     * @brief Get the displacement used in the ForceDifferenceHessianBuilder
+     *
+     * @return double The displacement value
+     */
+    double ForceDifferenceHessianBuilder::_getDisplacement() const
+    {
+        return _displacement;
+    }
+
+}   // namespace opt

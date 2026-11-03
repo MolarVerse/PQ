@@ -23,39 +23,22 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 
 #include "convergence.hpp"
-#include "convergenceSettings.hpp"
 #include "optOutput.hpp"
 #include "steepestDescent.hpp"
-
-using namespace output;
-using namespace opt;
-using settings::ConvStrategy;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
+#include "testOutputBase.hpp"
 
 TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
-    out.setFilename(path);
+    out::OptOutput out(path);
+    out.setFilename(path, false);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -84,11 +67,11 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
-    out.setFilename(path);
+    out::OptOutput out(path);
+    out.setFilename(path, false);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -117,11 +100,11 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
-    out.setFilename(path);
+    out::OptOutput out(path);
+    out.setFilename(path, false);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -148,11 +131,11 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
 {
     const std::string path = "default.opt.test";
 
-    OptOutput out(path);
-    out.setFilename(path);
+    out::OptOutput out(path);
+    out.setFilename(path, false);
 
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         false,   // energy disabled
         true,
         true,

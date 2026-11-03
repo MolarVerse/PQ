@@ -1,1 +1,0 @@
-- preparation of main app for architectural rework

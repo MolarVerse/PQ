@@ -1,0 +1,137 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef SETTINGS__GENERAL_SETTINGS_HPP
+#define SETTINGS__GENERAL_SETTINGS_HPP
+
+#include <cstdint>
+#include <mstd/enum.hpp>
+
+#include "defaults.hpp"
+#include "enums/general.hpp"
+#include "enums/integrator.hpp"
+#include "enums/jobtype.hpp"
+#include "enums/virial.hpp"
+
+namespace settings
+{
+
+    /**
+     * @class Settings
+     *
+     * @brief Stores the general settings of the simulation
+     *
+     */
+    class GeneralSettings
+    {
+       private:
+        static inline JobType       _jobtype;
+        static inline FPType        _floatingPointType = FPType::DOUBLE;
+        static inline uint_fast32_t _randomSeed;
+        static inline bool          _isRandomSeedset = false;
+
+        static inline bool _isRingPolymerMDActivated = false;
+
+        static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
+
+        static inline VirialType _virial = VirialType::MOLECULAR;
+
+        // setting velocity verlet as default integrator type for backward
+        // compatibility until 0.7.0 it was not necessary to specify the
+        // integrator type in the input file, so we set it to velocity verlet by
+        // default
+        static inline IntegratorType _integrator =
+            IntegratorType::VELOCITY_VERLET;
+
+        static inline bool _isCellListActivated =
+            defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
+
+        static inline size_t _numberOfCells = defaults::NUMBER_OF_CELLS_DEFAULT;
+
+        static inline bool _isIntraNonBondedActivated = false;
+
+       public:
+        /***************************
+         * standard setter methods *
+         ***************************/
+
+        static void setJobtype(JobType jobtype);
+
+        static void setFloatingPointType(FPType);
+
+        static void setRandomSeed(uint_fast32_t randomSeed);
+        static void setIsRandomSeedSet(bool isRandomSeedSet);
+
+        static void setIsRingPolymerMDActivated(bool isRingPolymerMD);
+        static void setDimensionality(size_t dimensionality);
+
+        static void setVirialType(VirialType virialType);
+        static void setIntegratorType(IntegratorType integratorType);
+
+        static void setNumberOfCells(size_t numberOfCells);
+
+        /***************************
+         * standard getter methods *
+         ***************************/
+
+        [[nodiscard]] static JobType getJobtype();
+
+        [[nodiscard]] static FPType      getFloatingPointType();
+        [[nodiscard]] static std::string getFloatingPointPybindString();
+
+        [[nodiscard]] static uint_fast32_t getRandomSeed();
+        [[nodiscard]] static bool          isRandomSeedSet();
+
+        [[nodiscard]] static size_t getDimensionality();
+
+        [[nodiscard]] static VirialType     getVirialType();
+        [[nodiscard]] static IntegratorType getIntegratorType();
+        [[nodiscard]] static size_t         getNumberOfCells();
+
+        /******************************
+         * standard is-active methods *
+         ******************************/
+
+        static void activateRingPolymerMD();
+        static void deactivateRingPolymerMD();
+        static void activateCellList();
+        static void deactivateCellList();
+        static void activateIntraNonBonded();
+        static void deactivateIntraNonBonded();
+
+        [[nodiscard]] static bool isQMOnlyJobtype();
+        [[nodiscard]] static bool isMMOnlyJobtype();
+        [[nodiscard]] static bool isHybridJobtype();
+        [[nodiscard]] static bool isMMActivated();
+        [[nodiscard]] static bool isQMActivated();
+        [[nodiscard]] static bool isQMOnlyActivated();
+        [[nodiscard]] static bool isMMOnlyActivated();
+        [[nodiscard]] static bool isRingPolymerMDActivated();
+        [[nodiscard]] static bool isMDJobType();
+        [[nodiscard]] static bool isOptJobType();
+        [[nodiscard]] static bool isCellListActivated();
+        [[nodiscard]] static bool isIntraNonBondedActivated();
+    };
+
+}   // namespace settings
+
+#endif   // SETTINGS__GENERAL_SETTINGS_HPP

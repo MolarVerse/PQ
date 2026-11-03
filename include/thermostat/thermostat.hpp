@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_HPP_
+#ifndef THERMOSTAT__THERMOSTAT_HPP
+#define THERMOSTAT__THERMOSTAT_HPP
 
-#define _THERMOSTAT_HPP_
+#include <cstddef>
+#include <string>
 
-#include <cstddef>   // for size_t
-
-#include "thermostatSettings.hpp"
+#include "enums/thermostat.hpp"
 
 namespace physicalData
 {
@@ -51,7 +51,7 @@ namespace thermostat
      */
     class Thermostat
     {
-       protected:
+       private:
         double _temperature       = 0.0;
         double _targetTemperature = 0.0;
 
@@ -60,7 +60,7 @@ namespace thermostat
         size_t _rampingFrequency    = 0;
 
        public:
-        explicit Thermostat(const double targetTemperature);
+        explicit Thermostat(double targetTemperature);
 
         Thermostat()          = default;
         virtual ~Thermostat() = default;
@@ -89,10 +89,11 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        virtual void setTargetTemperature(const double targetTemperature);
-        void         setTemperatureIncrease(const double temperatureIncrease);
-        void         setTemperatureRampingSteps(const size_t steps);
-        void         setTemperatureRampingFrequency(const size_t frequency);
+        virtual void setTargetTemperature(double targetTemperature);
+        void         setTemperature(double temperature);
+        void         setTemperatureIncrease(double temperatureIncrease);
+        void         setTemperatureRampingSteps(size_t steps);
+        void         setTemperatureRampingFrequency(size_t frequency);
 
         /***************************
          * standard getter methods *
@@ -106,9 +107,15 @@ namespace thermostat
         [[nodiscard]] size_t getRampingFrequency() const;
 
         [[nodiscard]]
-        virtual settings::ThermostatType getThermostatType() const;
+        virtual ThermostatType getThermostatType() const;
+
+       protected:
+        static void _requireDegreesOfFreedom(
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &thermostatName
+        );
     };
 
 }   // namespace thermostat
 
-#endif   // _THERMOSTAT_HPP_
+#endif   // THERMOSTAT__THERMOSTAT_HPP

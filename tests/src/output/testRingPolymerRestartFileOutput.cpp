@@ -22,13 +22,10 @@
 
 #include "testRingPolymerRestartFileOutput.hpp"
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <iosfwd>   // for ifstream
-#include <string>   // for getline, string
-
-#include "gtest/gtest.h"             // for Message, TestPartResult
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
+#include <iosfwd>
+#include <string>
 
 /**
  * @brief tests writing restart file for ring polymer
@@ -36,9 +33,7 @@
  */
 TEST_F(TestRingPolymerRestartFileOutput, write)
 {
-    settings::RingPolymerSettings::setNumberOfBeads(_beads.size());
-
-    _rstFileOutput->setFilename("default.rpmd.rst");
+    _rstFileOutput->setFilename("default.rpmd.rst", false);
     _rstFileOutput->write(_beads);
     _rstFileOutput->close();
     std::ifstream file("default.rpmd.rst");

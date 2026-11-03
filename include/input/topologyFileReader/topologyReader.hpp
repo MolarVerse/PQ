@@ -20,22 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TOPOLOGY_READER_HPP_
+#ifndef INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_READER_HPP
+#define INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_READER_HPP
 
-#define _TOPOLOGY_READER_HPP_
-
-#include <fstream>   // for ifstream
+#include <fstream>
 #include <memory>
 #include <string>
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <string_view>
+#include <vector>
 
 #include "topologySection.hpp"
+
+struct Settings;
 
 namespace input::topology
 {
     void               readTopologyFile(engine::Engine &);
-    [[nodiscard]] bool isNeeded(engine::Engine &engine);
+    [[nodiscard]] bool isNeeded(const Settings &);
 
     /**
      * @class TopologyReader
@@ -65,4 +66,4 @@ namespace input::topology
 
 }   // namespace input::topology
 
-#endif   // _TOPOLOGY_READER_HPP_
+#endif   // INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_READER_HPP

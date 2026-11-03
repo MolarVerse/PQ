@@ -20,16 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <vector>   // for vector, allocator
+#include <vector>
 
-#include "engine.hpp"                    // for Engine
-#include "gtest/gtest.h"                 // for Message, TestPartResult
-#include "intraNonBondedContainer.hpp"   // for IntraNonBondedContainer
-#include "intraNonBondedSetup.hpp"       // for setupIntraNonBonded
-#include "molecule.hpp"                  // for Molecule
-#include "testSetup.hpp"                 // for TestSetup
+#include "engine.hpp"
+#include "intraNonBondedContainer.hpp"
+#include "intraNonBondedSetup.hpp"
+#include "molecule.hpp"
+#include "testSetup.hpp"
 
 /**
  * @brief tests the setup of the intra non bonded interactions
@@ -37,20 +36,20 @@
  */
 TEST_F(TestSetup, setupIntraNonBonded)
 {
-    auto molecule = molsys::Molecule(1);
+    auto molecule = molsys::Molecule{MolType{1}};
     auto intraNonBondedContainer =
-        intraNonBonded::IntraNonBondedContainer(1, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
 
     const auto& intraNonBonded = _engine->getIntraNonBonded();
     intraNonBonded->addIntraNonBondedContainer(intraNonBondedContainer);
     _engine->getSimulationBox().addMolecule(molecule);
 
-    intraNonBonded->deactivate();
+    settings::GeneralSettings::deactivateIntraNonBonded();
     setup::setupIntraNonBonded(*_engine);
 
     EXPECT_EQ(intraNonBonded->getIntraNonBondedMaps().size(), 0);
 
-    intraNonBonded->activate();
+    settings::GeneralSettings::activateIntraNonBonded();
     setup::setupIntraNonBonded(*_engine);
 
     EXPECT_EQ(intraNonBonded->getIntraNonBondedMaps().size(), 1);

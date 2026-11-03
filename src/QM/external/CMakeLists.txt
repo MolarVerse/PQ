@@ -10,7 +10,6 @@ target_include_directories(externalQM
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/QM
     ${PROJECT_SOURCE_DIR}/include/QM/external
-    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(externalQM
@@ -22,6 +21,7 @@ target_link_libraries(externalQM
     exceptions
     hybridConfigurator
     QM
+    config_headers
 )
 
 if(BUILD_SHARED_LIBS)

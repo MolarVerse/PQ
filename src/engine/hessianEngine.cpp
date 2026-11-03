@@ -34,465 +34,529 @@
 #include "constants.hpp"
 #include "convergenceSettings.hpp"
 #include "defaults.hpp"
+#include "enums/hessian.hpp"
+#include "enums/optimizer.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
 #include "logOutput.hpp"
 #include "mmEvaluator.hpp"
+#include "optEngine.hpp"
 #include "optimizer.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
 #include "progressbar.hpp"
-#include "referencesOutput.hpp"
-#include "settings.hpp"
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
 
-using namespace engine;
-using namespace opt;
-using namespace settings;
-using namespace customException;
-using namespace physicalData;
-using namespace defaults;
-
-void HessianEngine::run()
+namespace engine
 {
-    auto evaluator = setupEvaluator();
 
-    if (HessianSettings::optimizeBeforeHessian())
+    namespace
     {
-        setupOptimization(evaluator);
-        runOptimization();
-    }
-
-    auto builder = setupHessianBuilder();
-
-    const auto hessian = builder->build(*evaluator, *_simulationBox);
-
-    writeHessian(hessian);
-    writeHessianInfo(hessian);
-
-    timings::GlobalTimer::get().stopSimulationTimer();
-
-    references::ReferencesOutput::writeReferencesFile();
-    _engineOutput.writeTimingsFile();
-
-    const auto elapsedTime =
-        timings::GlobalTimer::get().calculateElapsedTime() * constants::MS_TO_S;
-
-    _engineOutput.getLogOutput().writeEndedNormally(elapsedTime);
-    _engineOutput.getStdoutOutput().writeEndedNormally(elapsedTime);
-}
-
-void HessianEngine::writeOutput() {}
-
-std::shared_ptr<Evaluator> HessianEngine::setupEvaluator()
-{
-    std::shared_ptr<Evaluator> evaluator;
-
-    if (Settings::getJobtype() == JobType::MM_HESSIAN)
-        evaluator = std::make_shared<MMEvaluator>();
-
-    else
-        throw UserInputException(
-            "Unknown job type for Hessian evaluator setup."
-        );
-
-    evaluator->setCellList(getCellList());
-    evaluator->setSimulationBox(getSharedSimulationBox());
-    evaluator->setPotential(getPotential());
-    evaluator->setForceField(getForceField());
-    evaluator->setConstraints(getConstraints());
-    evaluator->setIntraNonBonded(getIntraNonBonded());
-    evaluator->setPhysicalData(getSharedPhysicalData());
-    evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
-
-    return evaluator;
-}
-
-std::shared_ptr<opt::HessianBuilder> HessianEngine::setupHessianBuilder() const
-{
-    return makeHessianBuilder(
-        HessianSettings::getBuilder(),
-        HessianSettings::getDisplacement()
-    );
-}
-
-void HessianEngine::setupOptimization(
-    const std::shared_ptr<Evaluator> &evaluator
-)
-{
-    _evaluator            = evaluator;
-    _learningRateStrategy = setupLearningRateStrategy();
-    _optimizer            = setupEmptyOptimizer();
-
-    setupConvergence(_optimizer);
-    setupMinMaxLearningRate(_learningRateStrategy);
-
-    _learningRateStrategy->setEvaluator(evaluator);
-    _learningRateStrategy->setOptimizer(_optimizer);
-
-    writeOptimizationSetupInfo();
-}
-
-void HessianEngine::runOptimization()
-{
-    _converged  = false;
-    _optStopped = false;
-
-    _evaluator->evaluate();
-    _optimizer->updateHistory();
-
-    _nSteps = _optimizer->getNEpochs();
-
-    writeOptimizationOutput();
-
-    progressbar bar(static_cast<int>(_nSteps), true, std::cout);
-
-    for (size_t i = 0; i < _nSteps; ++i)
-    {
-        bar.update();
-
-        takeOptimizationStep();
-
-        if (_converged || _optStopped)
-            break;
-
-        writeOptimizationOutput();
-        deleteTmpFiles();
-    }
-
-    if (!_converged)
-    {
-        throw OptException(
-            std::format(
-                "Optimizer did not converge after {} epochs.",
-                _optimizer->getNEpochs()
-            )
-        );
-    }
-
-    if (_optStopped)
-    {
-        auto msg = std::format(
-            "Optimizer stopped after {} epochs out of {}. The following error "
-            "messages were raised:\n",
-            _step,
-            _optimizer->getNEpochs()
-        );
-
-        const auto &errorMessages = _learningRateStrategy->getErrorMessages();
-
-        for (size_t i = 0; i < errorMessages.size(); ++i)
-            msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
-
-        throw OptException(msg);
-    }
-
-    const auto msg = std::format("Optimizer converged after {} epochs.", _step);
-
-    getLogOutput().writeInfo(msg);
-    getStdoutOutput().writeInfo(msg);
-}
-
-void HessianEngine::takeOptimizationStep()
-{
-    _optimizer->update(_learningRateStrategy->getLearningRate(), _step);
-
-    _evaluator->evaluate();
-
-    _optimizer->updateHistory();
-
-    _converged = _optimizer->hasConverged();
-
-    if (!_converged)
-    {
-        _learningRateStrategy->updateLearningRate(_step, _nSteps);
-
-        if (!_learningRateStrategy->getErrorMessages().empty())
-            _optStopped = true;
-
-        const auto &msg = _learningRateStrategy->getWarningMessages();
-
-        if (!msg.empty())
+        /**
+         * @brief write the hessian matrix to a file
+         *
+         * @param hessian
+         */
+        [[nodiscard]]
+        std::shared_ptr<opt::HessianBuilder> setupHessianBuilder(
+            const HessianSettings &hessianSettings
+        )
         {
-            const auto headerMessage = std::format(
-                "Updating learning rate did raise "
-                "the following warnings in epoch {} out of {}:",
-                _step,
-                _optimizer->getNEpochs()
+            return opt::makeHessianBuilder(
+                hessianSettings.getBuilder(),
+                hessianSettings.getDisplacement()
             );
-            getLogOutput().writeOptWarning(headerMessage);
-            getStdoutOutput().writeOptWarning(headerMessage);
+        }
 
-            for (const auto &message : msg)
+        /**
+         * @brief setup the learning rate strategy based on user input
+         *
+         * @return std::shared_ptr<opt::LearningRateStrategy>
+         */
+        [[nodiscard]]
+        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy(
+            const OptimizerSettings &settings
+        )
+        {
+            const auto alpha0     = settings.getInitialLearningRate();
+            const auto lrStrategy = settings.getLearningRateStrategy();
+
+            settings.validateLearningRateStrategy();
+
+            switch (lrStrategy)
             {
-                getLogOutput().writeOptWarning(message);
-                getStdoutOutput().writeOptWarning(message);
+                using enum LearningRate;
+
+                case CONSTANT:
+                    return std::make_shared<opt::ConstantLRStrategy>(alpha0);
+
+                case CONSTANT_DECAY:
+                {
+                    const auto alphaFreq = settings.getLRUpdateFrequency();
+
+                    return std::make_shared<opt::ConstantDecayLRStrategy>(
+                        alpha0,
+                        settings.getLearningRateDecay(),
+                        alphaFreq
+                    );
+                }
+
+                case EXPONENTIAL_DECAY:
+                {
+                    const auto alphaFreq = settings.getLRUpdateFrequency();
+
+                    return std::make_shared<opt::ExpDecayLR>(
+                        alpha0,
+                        settings.getLearningRateDecay(),
+                        alphaFreq
+                    );
+                }
+
+                case LINESEARCH_WOLFE: break;
+            }
+
+            throw exc::UserInputException(
+                "In order to run the optimizer, you need to specify a "
+                "learning rate strategy."
+            );
+        }
+
+        /**
+         * @brief setup the min and max learning rate for the learning rate
+         * strategy
+         *
+         * @param learningRate
+         */
+        void setupMinMaxLearningRate(
+            std::shared_ptr<opt::LearningRateStrategy> &learningRate,
+            const OptimizerSettings                    &settings
+        )
+        {
+            const auto minLR = settings.getMinLearningRate();
+            const auto maxLR = settings.getMaxLearningRate();
+
+            settings.validateLearningRateBounds();
+
+            learningRate->setMinLearningRate(minLR);
+            learningRate->setMaxLearningRate(maxLR);
+        }
+
+        /**
+         * @brief setup the convergence criteria for the optimizer
+         *
+         * @param optimizer
+         */
+        void setupConvergence(
+            std::shared_ptr<opt::Optimizer> &optimizer,
+            const ConvSettings              &settings
+        )
+        {
+            const auto energyStrategy = settings.getEnConvStrategy();
+
+            const auto useEnergyOptional   = settings.getUseEnergyConv();
+            const auto useMaxForceOptional = settings.getUseMaxForceConv();
+            const auto useRMSForceOptional = settings.getUseRMSForceConv();
+
+            const auto energyOptional    = settings.getEnergyConv();
+            const auto absEnergyOptional = settings.getAbsEnergyConv();
+            const auto relEnergyOptional = settings.getRelEnergyConv();
+            const auto forceOptional     = settings.getForceConv();
+            const auto maxForceOptional  = settings.getMaxForceConv();
+            const auto rmsForceOptional  = settings.getRMSForceConv();
+
+            auto relEnergy =
+                energyOptional.value_or(defaults::REL_ENERGY_CONV_DEFAULT);
+            auto absEnergy =
+                energyOptional.value_or(defaults::ABS_ENERGY_CONV_DEFAULT);
+
+            relEnergy = relEnergyOptional.value_or(relEnergy);
+            absEnergy = absEnergyOptional.value_or(absEnergy);
+
+            auto maxForce =
+                forceOptional.value_or(defaults::MAX_FORCE_CONV_DEFAULT);
+            auto rmsForce =
+                forceOptional.value_or(defaults::RMS_FORCE_CONV_DEFAULT);
+
+            maxForce = maxForceOptional.value_or(maxForce);
+            rmsForce = rmsForceOptional.value_or(rmsForce);
+
+            const opt::Convergence convergence(
+                useEnergyOptional,
+                useMaxForceOptional,
+                useRMSForceOptional,
+                relEnergy,
+                absEnergy,
+                maxForce,
+                rmsForce,
+                energyStrategy
+            );
+
+            optimizer->setConvergence(convergence);
+        }
+
+        /**
+         * @brief write the hessian matrix to the file
+         */
+        void writeHessian(
+            const opt::HessianMatrix &hessian,
+            const HessianSettings    &hessianSettings
+        )
+        {
+            std::ofstream file(hessianSettings.getHessianFile());
+
+            if (file.fail())
+                throw exc::UserInputException(
+                    "Could not open Hessian file for writing."
+                );
+
+            constexpr auto precision = 16;
+            file << std::scientific << std::setprecision(precision);
+
+            for (const auto &row : hessian)
+            {
+                for (size_t col = 0; col < row.size(); ++col)
+                {
+                    if (col != 0)
+                        file << ' ';
+
+                    file << row[col];
+                }
+
+                file << '\n';
             }
         }
-    }
 
-    ++_step;
-}
-
-void HessianEngine::writeOptimizationOutput()
-{
-    const auto outputFreq = OutputFileSettings::getOutputFrequency();
-    const auto step0      = TimingsSettings::getStepCount();
-    const auto effStep    = _step + step0;
-
-    if (0 == _step % outputFreq)
-    {
-        _engineOutput.writeXyzFile(*_simulationBox, effStep);
-        _engineOutput.writeForceFile(*_simulationBox, effStep);
-        _engineOutput.writeOptRstFile(*_simulationBox, effStep);
-        _engineOutput.writeOptFile(_step, *_optimizer);
-    }
-
-    timings::GlobalTimer::get().stopAndRestartSimulationTimer();
-
-    _physicalData->setLoopTime(timings::GlobalTimer::get().calculateLoopTime());
-    _averagePhysicalData.updateAverages(*_physicalData);
-
-    if (0 == _step % outputFreq)
-    {
-        _averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
-
-        const auto effStepDouble = static_cast<double>(effStep);
-
-        _engineOutput.writeEnergyFile(effStep, _averagePhysicalData);
-        _engineOutput.writeInfoFile(effStepDouble, _averagePhysicalData);
-
-        _averagePhysicalData = PhysicalData();
-    }
-
-    _physicalData->reset();
-}
-
-std::shared_ptr<Optimizer> HessianEngine::setupEmptyOptimizer()
-{
-    const auto nEpochs       = TimingsSettings::getNumberOfSteps();
-    const auto optimizerType = OptimizerSettings::getOptimizer();
-
-    std::shared_ptr<Optimizer> optimizer;
-
-    switch (optimizerType)
-    {
-        using enum OptimizerType;
-
-        case STEEPEST_DESCENT:
+        /**
+         * @brief write the hessian info file
+         *
+         * @param hessian
+         */
+        void writeHessianInfo(
+            const opt::HessianMatrix &hessian,
+            const HessianSettings    &hessianSettings
+        )
         {
-            optimizer = std::make_shared<SteepestDescent>(nEpochs);
-            break;
+            std::ofstream file(hessianSettings.getHessianInfoFile());
+
+            if (file.fail())
+                throw exc::UserInputException(
+                    "Could not open Hessian info file for writing."
+                );
+
+            file << "format = pq-hessian-info-v1\n";
+            file << "hessian_file = " << hessianSettings.getHessianFile()
+                 << '\n';
+            file << "hessian_builder = "
+                 << HessianBuilderTypeMeta::toString(hessianSettings.getBuilder(
+                    ))
+                 << '\n';
+            file << "optimize_before_hessian = "
+                 << (hessianSettings.optimizeBeforeHessian() ? "true" : "false")
+                 << '\n';
+            file << "hessian_displacement = "
+                 << hessianSettings.getDisplacement() << '\n';
+            file << "hessian_definition = -dF_i/dx_j\n";
+            file << "hessian_unit = kcal_mol-1_angstrom-2\n";
+            file << "rows = " << hessian.size() << '\n';
+            file << "columns = " << (hessian.empty() ? 0 : hessian[0].size())
+                 << '\n';
+        }
+    }   // namespace
+
+    void HessianEngine::run()
+    {
+        auto        evaluator       = _setupEvaluator();
+        const auto &hessianSettings = getSettings().hessianSettings;
+
+        if (hessianSettings.optimizeBeforeHessian())
+        {
+            _setupOptimization(evaluator);
+            _runOptimization();
         }
 
-        case ADAM:
-        {
-            const auto nAtoms = getSimulationBox().getNumberOfAtoms();
-            optimizer         = std::make_shared<Adam>(nEpochs, nAtoms);
-            break;
-        }
+        auto builder = setupHessianBuilder(hessianSettings);
 
-        case NONE: break;
+        const auto hessian = builder->build(*evaluator, getSimulationBox());
+
+        writeHessian(hessian, hessianSettings);
+        writeHessianInfo(hessian, hessianSettings);
+
+        timings::GlobalTimer::get().stopSimulationTimer();
+
+        getEngineOutput().writeReferencesFile();
+        getEngineOutput().writeTimingsFile();
+
+        const auto elapsedTime =
+            timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
+
+        getEngineOutput().getLogOutput().writeEndedNormally(elapsedTime);
+        out::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 
-    if (!optimizer)
-        throw UserInputException(
-            std::format("Unknown optimizer type {}", string(optimizerType))
+    /**
+     * @brief Writes output files for the Hessian engine.
+     *
+     * @param outputSettings The settings for output files.
+     */
+    void HessianEngine::writeOutput(const OutputFileSettings &outputSettings)
+    {
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto effStep    = getStep() + step0;
+
+        if (0 == getStep() % outputFreq)
+        {
+            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
+            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptFile(getStep(), *_optimizer);
+        }
+
+        timings::GlobalTimer::get().stopAndRestartSimulationTimer();
+
+        getPhysicalData().setLoopTime(
+            timings::GlobalTimer::get().calculateLoopTime()
+        );
+        getAveragePhysicalData().updateAverages(getPhysicalData());
+
+        if (0 == getStep() % outputFreq)
+        {
+            getAveragePhysicalData().makeAverages(
+                static_cast<double>(outputFreq)
+            );
+
+            const auto effStepDouble = static_cast<double>(effStep);
+
+            getEngineOutput().writeEnergyFile(
+                effStep,
+                getAveragePhysicalData(),
+                getSettings()
+            );
+            getEngineOutput().writeInfoFile(
+                effStepDouble,
+                getAveragePhysicalData(),
+                getSettings()
+            );
+
+            getAveragePhysicalData() = physicalData::PhysicalData();
+        }
+
+        getPhysicalData().reset();
+    }
+
+    std::shared_ptr<opt::Evaluator> HessianEngine::_setupEvaluator()
+    {
+        std::shared_ptr<opt::Evaluator> evaluator;
+
+        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN)
+            evaluator = std::make_shared<opt::MMEvaluator>(getSettings());
+
+        else
+            throw exc::UserInputException(
+                "Unknown job type for Hessian evaluator setup."
+            );
+
+        evaluator->setCellList(getCellList());
+        evaluator->setSimulationBox(getSharedSimulationBox());
+        evaluator->setPotential(getPotential());
+        evaluator->setForceField(getForceField());
+        evaluator->setConstraints(getConstraints());
+        evaluator->setIntraNonBonded(getIntraNonBonded());
+        evaluator->setPhysicalData(getSharedPhysicalData());
+        evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
+
+        return evaluator;
+    }
+
+    void HessianEngine::_setupOptimization(
+        const std::shared_ptr<opt::Evaluator> &evaluator
+    )
+    {
+        const auto optimizerSettings = getSettings().optimizerSettings;
+        _evaluator                   = evaluator;
+        _learningRateStrategy = setupLearningRateStrategy(optimizerSettings);
+        _optimizer            = _setupEmptyOptimizer();
+
+        setupConvergence(_optimizer, getSettings().convSettings);
+        setupMinMaxLearningRate(_learningRateStrategy, optimizerSettings);
+
+        _learningRateStrategy->setEvaluator(evaluator);
+        _learningRateStrategy->setOptimizer(_optimizer);
+
+        _writeOptimizationSetupInfo();
+    }
+
+    void HessianEngine::_runOptimization()
+    {
+        _converged  = false;
+        _optStopped = false;
+
+        _evaluator->evaluate();
+        _optimizer->updateHistory();
+
+        _setNSteps(_optimizer->getNEpochs());
+
+        writeOutput(getSettings().outputFiles);
+
+        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
+
+        for (size_t i = 0; i < _getNSteps(); ++i)
+        {
+            bar.update();
+
+            _takeOptimizationStep();
+
+            if (_converged || _optStopped)
+                break;
+
+            writeOutput(getSettings().outputFiles);
+            deleteTmpFiles();
+        }
+
+        OptEngine::throwOnFailure(
+            _converged,
+            _optStopped,
+            getStep(),
+            _optimizer->getNEpochs(),
+            _learningRateStrategy->getErrorMessages()
         );
 
-    optimizer->setSimulationBox(getSharedSimulationBox());
-    optimizer->setPhysicalData(getSharedPhysicalData());
-    optimizer->setPhysicalDataOld(getSharedPhysicalDataOld());
+        const auto msg =
+            std::format("Optimizer converged after {} epochs.", getStep());
 
-    return optimizer;
-}
+        getLogOutput().writeInfo(msg);
+        out::StdoutOutput::writeInfo(msg);
+    }
 
-std::shared_ptr<LearningRateStrategy> HessianEngine::setupLearningRateStrategy()
-{
-    const auto alpha0     = OptimizerSettings::getInitialLearningRate();
-    const auto lrStrategy = OptimizerSettings::getLearningRateStrategy();
-
-    OptimizerSettings::validateLearningRateStrategy();
-
-    switch (lrStrategy)
+    void HessianEngine::_takeOptimizationStep()
     {
-        using enum LREnum;
+        _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
 
-        case CONSTANT: return std::make_shared<ConstantLRStrategy>(alpha0);
+        _evaluator->evaluate();
 
-        case CONSTANT_DECAY:
+        _optimizer->updateHistory();
+
+        _converged = _optimizer->hasConverged();
+
+        if (!_converged)
         {
-            const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
+            _learningRateStrategy->updateLearningRate(getStep(), _getNSteps());
 
-            return std::make_shared<ConstantDecayLRStrategy>(
-                alpha0,
-                OptimizerSettings::getLearningRateDecay().value(),
-                alphaFreq
+            if (!_learningRateStrategy->getErrorMessages().empty())
+                _optStopped = true;
+
+            const auto &msg = _learningRateStrategy->getWarningMessages();
+
+            if (!msg.empty())
+            {
+                const auto headerMessage = std::format(
+                    "Updating learning rate did raise "
+                    "the following warnings in epoch {} out of {}:",
+                    getStep(),
+                    _optimizer->getNEpochs()
+                );
+                getLogOutput().writeOptWarning(headerMessage);
+                out::StdoutOutput::writeOptWarning(headerMessage);
+
+                for (const auto &message : msg)
+                {
+                    getLogOutput().writeOptWarning(message);
+                    out::StdoutOutput::writeOptWarning(message);
+                }
+            }
+        }
+
+        _setStep(getStep() + 1);
+    }
+
+    std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()
+    {
+        const auto nEpochs = settings::TimingsSettings::getNumberOfSteps();
+        const auto optimizerType =
+            getSettings().optimizerSettings.getOptimizer();
+
+        std::shared_ptr<opt::Optimizer> optimizer;
+
+        switch (optimizerType)
+        {
+            using enum OptimizerType;
+
+            case STEEPEST_DESCENT:
+            {
+                optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
+                break;
+            }
+
+            case ADAM:
+            {
+                const auto nAtoms = getSimulationBox().getNumberOfAtoms();
+                optimizer = std::make_shared<opt::Adam>(nEpochs, nAtoms);
+                break;
+            }
+        }
+
+        if (!optimizer)
+        {
+            throw exc::UserInputException(
+                std::format(
+                    "Unknown optimizer type {}",
+                    OptimizerTypeMeta::toString(optimizerType)
+                )
             );
         }
 
-        case EXPONENTIAL_DECAY:
-        {
-            const auto alphaFreq = OptimizerSettings::getLRUpdateFrequency();
+        optimizer->setSimulationBox(getSharedSimulationBox());
+        optimizer->setPhysicalData(getSharedPhysicalData());
+        optimizer->setPhysicalDataOld(getSharedPhysicalDataOld());
 
-            return std::make_shared<ExpDecayLR>(
-                alpha0,
-                OptimizerSettings::getLearningRateDecay().value(),
-                alphaFreq
-            );
-        }
-
-        case LINESEARCH_WOLFE:
-        case NONE: break;
+        return optimizer;
     }
 
-    throw UserInputException(
-        "In order to run the optimizer, you need to specify a "
-        "learning rate strategy."
-    );
-}
-
-void HessianEngine::setupConvergence(std::shared_ptr<opt::Optimizer> &optimizer)
-{
-    const auto strategyOptional = ConvSettings::getEnConvStrategy();
-    const auto defaultStrategy  = ConvSettings::getDefaultEnergyConvStrategy();
-    const auto energyStrategy   = strategyOptional.value_or(defaultStrategy);
-
-    const auto useEnergyOptional   = ConvSettings::getUseEnergyConv();
-    const auto useMaxForceOptional = ConvSettings::getUseMaxForceConv();
-    const auto useRMSForceOptional = ConvSettings::getUseRMSForceConv();
-
-    const auto energyOptional    = ConvSettings::getEnergyConv();
-    const auto absEnergyOptional = ConvSettings::getAbsEnergyConv();
-    const auto relEnergyOptional = ConvSettings::getRelEnergyConv();
-    const auto forceOptional     = ConvSettings::getForceConv();
-    const auto maxForceOptional  = ConvSettings::getMaxForceConv();
-    const auto rmsForceOptional  = ConvSettings::getRMSForceConv();
-
-    auto relEnergy = energyOptional.value_or(REL_ENERGY_CONV_DEFAULT);
-    auto absEnergy = energyOptional.value_or(ABS_ENERGY_CONV_DEFAULT);
-
-    relEnergy = relEnergyOptional.value_or(relEnergy);
-    absEnergy = absEnergyOptional.value_or(absEnergy);
-
-    auto maxForce = forceOptional.value_or(MAX_FORCE_CONV_DEFAULT);
-    auto rmsForce = forceOptional.value_or(RMS_FORCE_CONV_DEFAULT);
-
-    maxForce = maxForceOptional.value_or(maxForce);
-    rmsForce = rmsForceOptional.value_or(rmsForce);
-
-    const Convergence convergence(
-        useEnergyOptional,
-        useMaxForceOptional,
-        useRMSForceOptional,
-        relEnergy,
-        absEnergy,
-        maxForce,
-        rmsForce,
-        energyStrategy
-    );
-
-    optimizer->setConvergence(convergence);
-}
-
-void HessianEngine::setupMinMaxLearningRate(
-    std::shared_ptr<LearningRateStrategy> &learningRate
-)
-{
-    const auto minLR = OptimizerSettings::getMinLearningRate();
-    const auto maxLR = OptimizerSettings::getMaxLearningRate();
-
-    OptimizerSettings::validateLearningRateBounds();
-
-    learningRate->setMinLearningRate(minLR);
-    learningRate->setMaxLearningRate(maxLR);
-}
-
-void HessianEngine::writeOptimizationSetupInfo()
-{
-    _engineOutput.getLogOutput().writeSetupInfo(
-        std::format(
-            "Optimize before Hessian:    {}",
-            HessianSettings::optimizeBeforeHessian() ? "true" : "false"
-        )
-    );
-    _engineOutput.getLogOutput().writeSetupInfo(
-        std::format(
-            "Optimizer:                  {}",
-            string(OptimizerSettings::getOptimizer())
-        )
-    );
-    _engineOutput.getLogOutput().writeSetupInfo(
-        std::format(
-            "Learning rate strategy:     {}",
-            string(OptimizerSettings::getLearningRateStrategy())
-        )
-    );
-    _engineOutput.getLogOutput().writeEmptyLine();
-}
-
-void HessianEngine::writeHessian(const HessianMatrix &hessian) const
-{
-    std::ofstream file(HessianSettings::getHessianFile());
-
-    if (file.fail())
-        throw UserInputException("Could not open Hessian file for writing.");
-
-    constexpr auto precision = 16;
-    file << std::scientific << std::setprecision(precision);
-
-    for (const auto &row : hessian)
+    void HessianEngine::_writeOptimizationSetupInfo()
     {
-        for (size_t col = 0; col < row.size(); ++col)
-        {
-            if (col != 0)
-                file << ' ';
-
-            file << row[col];
-        }
-
-        file << '\n';
-    }
-}
-
-void HessianEngine::writeHessianInfo(const HessianMatrix &hessian) const
-{
-    std::ofstream file(HessianSettings::getHessianInfoFile());
-
-    if (file.fail())
-        throw UserInputException(
-            "Could not open Hessian info file for writing."
+        getEngineOutput().getLogOutput().writeSetupInfo(
+            std::format(
+                "Optimize before Hessian:    {}",
+                getSettings().hessianSettings.optimizeBeforeHessian() ? "true"
+                                                                      : "false"
+            )
         );
+        getEngineOutput().getLogOutput().writeSetupInfo(
+            std::format(
+                "Optimizer:                  {}",
+                OptimizerTypeMeta::toString(
+                    getSettings().optimizerSettings.getOptimizer()
+                )
+            )
+        );
+        getEngineOutput().getLogOutput().writeSetupInfo(
+            std::format(
+                "Learning rate strategy:     {}",
+                LearningRateMeta::toString(
+                    getSettings().optimizerSettings.getLearningRateStrategy()
+                )
+            )
+        );
+        getEngineOutput().getLogOutput().writeEmptyLine();
+    }
 
-    file << "format = pq-hessian-info-v1\n";
-    file << "hessian_file = " << HessianSettings::getHessianFile() << '\n';
-    file << "hessian_builder = " << string(HessianSettings::getBuilder())
-         << '\n';
-    file << "optimize_before_hessian = "
-         << (HessianSettings::optimizeBeforeHessian() ? "true" : "false")
-         << '\n';
-    file << "hessian_displacement = " << HessianSettings::getDisplacement()
-         << '\n';
-    file << "hessian_definition = -dF_i/dx_j\n";
-    file << "hessian_unit = kcal_mol-1_angstrom-2\n";
-    file << "rows = " << hessian.size() << '\n';
-    file << "columns = " << (hessian.empty() ? 0 : hessian[0].size()) << '\n';
-}
+    std::shared_ptr<physicalData::PhysicalData> HessianEngine::
+        getSharedPhysicalDataOld()
+    {
+        return _physicalDataOld;
+    }
 
-std::shared_ptr<physicalData::PhysicalData> HessianEngine::
-    getSharedPhysicalDataOld()
-{
-    return _physicalDataOld;
-}
+    out::OptOutput &HessianEngine::getOptOutput()
+    {
+        return getEngineOutput().getOptOutput();
+    }
 
-output::OptOutput &HessianEngine::getOptOutput()
-{
-    return _engineOutput.getOptOutput();
-}
+}   // namespace engine

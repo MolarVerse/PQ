@@ -22,181 +22,180 @@
 
 #include "setup.hpp"
 
-#include "celllistSetup.hpp"        // for setupCellList
-#include "constraintsSetup.hpp"     // for setupConstraints
-#include "engine.hpp"               // for Engine
-#include "forceFieldSettings.hpp"   // for ForceFieldSettings
-#include "forceFieldSetup.hpp"      // for setupForceField
+#include "celllistSetup.hpp"
+#include "constraintsSetup.hpp"
+#include "engine.hpp"
+#include "forceFieldSettings.hpp"
+#include "forceFieldSetup.hpp"
+#include "generalSettings.hpp"
 #include "globalTimer.hpp"
-#include "guffDatReader.hpp"                // for readGuffDat, readInput
-#include "hybridSetup.hpp"                  // for setupQMMM
-#include "inputFileReader.hpp"              // for readInputFile
-#include "intraNonBondedReader.hpp"         // for readIntraNonBondedFile
-#include "intraNonBondedSetup.hpp"          // for setupIntraNonBonded
-#include "manostatSetup.hpp"                // for setupManostat
-#include "moldescriptorReader.hpp"          // for readMolDescriptor
-#include "optimizerSetup.hpp"               // for setupOptimizer
-#include "outputFilesSetup.hpp"             // for setupOutputFiles
-#include "parameterFileReader.hpp"          // for readParameterFile
-#include "potentialSetup.hpp"               // for setupPotential
-#include "qmSetup.hpp"                      // for setupQM
-#include "randomNumberGeneratorSetup.hpp"   // for setupRandomNumberGenerator
-#include "resetKineticsSetup.hpp"           // for setupResetKinetics
-#include "restartFileReader.hpp"            // for readRestartFile
-#include "ringPolymerSetup.hpp"             // for setupRingPolymer
-#include "settings.hpp"                     // for Settings
-#include "simulationBoxSetup.hpp"           // for setupSimulationBox
-#include "thermostatSetup.hpp"              // for setupThermostat
-#include "topologyReader.hpp"               // for readTopologyFile
+#include "guffDatReader.hpp"
+#include "hybridSetup.hpp"
+#include "inputFileReader.hpp"
+#include "intraNonBondedReader.hpp"
+#include "intraNonBondedSetup.hpp"
+#include "manostatSetup.hpp"
+#include "moldescriptorReader.hpp"
+#include "optimizerSetup.hpp"
+#include "outputFilesSetup.hpp"
+#include "parameterFileReader.hpp"
+#include "potentialSetup.hpp"
+#include "qmSetup.hpp"
+#include "randomNumberGeneratorSetup.hpp"
+#include "resetKineticsSetup.hpp"
+#include "restartFileReader.hpp"
+#include "ringPolymerSetup.hpp"
+#include "simulationBoxSetup.hpp"
+#include "thermostatSetup.hpp"
+#include "topologyReader.hpp"
 #include "velocityVerlet.hpp"
-#include "waterModelSettings.hpp"   // for WaterModelSettings
-#include "waterModelSetup.hpp"      // for setupWaterModel
+#include "waterModelSettings.hpp"
+#include "waterModelSetup.hpp"
 
-using namespace engine;
-using namespace input;
-using namespace timings;
-using namespace settings;
-using namespace guffdat;
-using namespace molDescriptor;
-using namespace restartFile;
-using namespace topology;
-using namespace parameterFile;
-using namespace input::intraNonBondedReader;
-using namespace setup::molsys;
-using namespace setup::resetKinetics;
-
-/**
- * @brief setup the engine
- *
- * @param inputFileName
- * @param engine
- */
-void setup::setupRequestedJob(const std::string& inputFileName, Engine& engine)
+namespace setup
 {
-    auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
 
-    startSetup(engine);
-
-    readInputFile(inputFileName, engine);
-
-    setupOutputFiles(engine);
-
-    readFiles(engine);
-
-    setupEngine(engine);
-
-    // needs setup of engine before reading guff.dat
-    readGuffDat(engine);
-
-    endSetup(engine);
-}
-
-/**
- * @brief start the setup
- *
- * @param engine
- */
-void setup::startSetup(engine::Engine& engine)
-{
-    engine.getStdoutOutput().writeHeader();
-}
-
-/**
- * @brief end the setup
- *
- * @param engine
- */
-void setup::endSetup(Engine& engine)
-{
-    engine.getStdoutOutput().writeSetupCompleted();
-    engine.getLogOutput().writeSetupCompleted();
-}
-
-/**
- * @brief reads all the files needed for the simulation
- *
- * @param inputFileName
- * @param engine
- */
-void setup::readFiles(Engine& engine)
-{
-    readMolDescriptor(engine);
-
-    readRestartFile(engine);
-
-    readTopologyFile(engine);
-
-    readParameterFile(engine);
-
-    readIntraNonBondedFile(engine);
-}
-
-/**
- * @brief setup the engine
- *
- * @param engine
- */
-void setup::setupEngine(Engine& engine)
-{
-    if (Settings::isQMActivated())
-        setupQM(engine);
-
-    if (Settings::isMDJobType())
+    /**
+     * @brief setup the engine
+     *
+     * @param engine The engine to set up.
+     * @param references Reference settings object used to manage and add
+     * necessary reference files for the specified QM method.
+     */
+    void setupRequestedJob(
+        engine::Engine&    engine,
+        ReferenceSettings& references
+    )
     {
-        switch (Settings::getIntegratorType())
+        auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
+
+        startSetup();
+
+        // needs to happen before readFiles(): the parameter file reader
+        // dynamic_casts the non-Coulomb potential to its concrete type
+        // while parsing the NONCOULOMBICS section
+        if (settings::GeneralSettings::isMMActivated())
+            setupNonCoulombPotentialType(engine);
+
+        setupOutputFiles(engine);
+
+        readFiles(engine);
+
+        setupEngine(engine, references);
+
+        // needs setup of engine before reading guff.dat
+        input::guffdat::readGuffDat(engine);
+
+        endSetup(engine);
+    }
+
+    /**
+     * @brief start the setup
+     *
+     */
+    void startSetup() { out::StdoutOutput::writeHeader(); }
+
+    /**
+     * @brief end the setup
+     *
+     * @param engine
+     */
+    void endSetup(engine::Engine& engine)
+    {
+        out::StdoutOutput::writeSetupCompleted();
+        engine.getLogOutput().writeSetupCompleted();
+    }
+
+    /**
+     * @brief reads all the files needed for the simulation
+     *
+     * @param engine
+     */
+    void readFiles(engine::Engine& engine)
+    {
+        input::molDescriptor::readMolDescriptor(engine);
+
+        input::restartFile::readRestartFile(engine);
+
+        input::topology::readTopologyFile(engine);
+
+        input::parameterFile::readParameterFile(engine);
+
+        input::intraNonBondedReader::readIntraNonBondedFile(engine);
+    }
+
+    /**
+     * @brief setup the engine
+     *
+     * @param engine
+     * @param references Reference settings object used to manage and add
+     * necessary reference files for the specified QM method.
+     */
+    void setupEngine(engine::Engine& engine, ReferenceSettings& references)
+    {
+        const auto& settings = engine.getSettings();
+        if (settings::GeneralSettings::isQMActivated())
+            setupQM(engine, references);
+
+        if (settings::GeneralSettings::isMDJobType())
         {
-            case IntegratorType::VELOCITY_VERLET:
+            switch (settings::GeneralSettings::getIntegratorType())
             {
-                auto& mdEngine = dynamic_cast<MDEngine&>(engine);
-                mdEngine.makeIntegrator(integrator::VelocityVerlet());
-                break;
+                case IntegratorType::VELOCITY_VERLET:
+                {
+                    auto& mdEngine = dynamic_cast<engine::MDEngine&>(engine);
+                    mdEngine.makeIntegrator(integrator::VelocityVerlet());
+                    break;
+                }
+                case IntegratorType::NONE:
+                {
+                    throw exc::InputFileException(
+                        "Integrator is not set for MD simulation - please set "
+                        "it "
+                        "in the input file"
+                    );
+                }
             }
-            case IntegratorType::NONE:
-            {
-                throw customException::InputFileException(
-                    "Integrator is not set for MD simulation - please set it "
-                    "in the input file"
-                );
-            }
+            setupRandomNumberGenerator(engine);
+            setupResetKinetics(engine);
         }
-        setupRandomNumberGenerator(engine);
-        setupResetKinetics(engine);
+
+        setupSimulationBox(engine);
+
+        setupCellList(engine);
+
+        if (settings::GeneralSettings::isMDJobType())
+        {
+            setupThermostat(engine);
+
+            setupManostat(engine);
+        }
+
+        if (settings::GeneralSettings::isMMActivated())
+        {
+            setupPotential(engine);
+
+            setupIntraNonBonded(engine);
+        }
+
+        if (settings.forceFieldSettings.isActive())
+            setupForceField(engine);
+
+        if (settings.waterModelSettings.isWaterModelSet())
+            setupWaterModel(engine);
+
+        setupConstraints(engine);
+
+        if (settings::GeneralSettings::isMDJobType())
+            setupRingPolymer(engine);
+
+        if (settings::GeneralSettings::isHybridJobtype())
+            setupHybrid(engine);
+
+        if (settings::GeneralSettings::isOptJobType())
+            setupOptimizer(engine);
+
+        engine.getLogOutput().flushQueuedWarnings();
     }
 
-    setupSimulationBox(engine);
-
-    setupCellList(engine);
-
-    if (Settings::isMDJobType())
-    {
-        setupThermostat(engine);
-
-        setupManostat(engine);
-    }
-
-    if (Settings::isMMActivated())
-    {
-        setupPotential(engine);
-
-        setupIntraNonBonded(engine);
-    }
-
-    if (ForceFieldSettings::isActive())
-        setupForceField(engine);
-
-    if (WaterModelSettings::isWaterModelSet())
-        setupWaterModel(engine);
-
-    setupConstraints(engine);
-
-    if (Settings::isMDJobType())
-        setupRingPolymer(engine);
-
-    if (Settings::isHybridJobtype())
-        setupHybrid(engine);
-
-    if (Settings::isOptJobType())
-        setupOptimizer(engine);
-
-    engine.getLogOutput().flushQueuedWarnings();
-}
+}   // namespace setup

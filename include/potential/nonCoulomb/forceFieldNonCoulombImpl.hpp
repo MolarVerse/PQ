@@ -20,24 +20,24 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_
-#define _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_
+#ifndef POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_IMPL_HPP
+#define POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_IMPL_HPP
 
 #include "forceFieldNonCoulomb.hpp"
 #include "matrix.hpp"
 
-namespace potential
+namespace pot
 {
     class NonCoulombPair;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
 /**
  * @brief struct to hold the non-coulombic pairs matrix
  *
  */
-struct potential::ForceFieldNonCoulomb::matrix
+struct pot::ForceFieldNonCoulomb::matrix
 {
-    linearAlgebra::Matrix<std::shared_ptr<NonCoulombPair>> matrix;
+    linalg::Matrix<std::shared_ptr<NonCoulombPair>> matrix;
 };
 
-#endif   // _FORCE_FIELD_NON_COULOMB_PIMPL_HPP_
+#endif   // POTENTIAL__NON_COULOMB__FORCE_FIELD_NON_COULOMB_IMPL_HPP

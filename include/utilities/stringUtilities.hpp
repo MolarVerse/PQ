@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STRING_UTILITIES_HPP_
+#ifndef UTILITIES__STRING_UTILITIES_HPP
+#define UTILITIES__STRING_UTILITIES_HPP
 
-#define _STRING_UTILITIES_HPP_
-
-#include <cstddef>   // for size_t
+#include <cstddef>
 #include <cstdint>
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <string>
+#include <string_view>
 #include <vector>
 
 /**
@@ -37,7 +36,7 @@ namespace utilities
 {
     std::string removeComments(std::string &, const std::string_view &);
 
-    std::vector<std::string> getLineCommands(const std::string &, const size_t);
+    std::vector<std::string> getLineCommands(const std::string &, size_t);
 
     std::vector<std::string> splitString(const std::string &);
 
@@ -48,16 +47,15 @@ namespace utilities
     std::string firstLetterToUpperCaseCopy(std::string);
     std::string shellQuote(std::string_view);
 
-    void addSpaces(std::string &, const std::string &, const size_t);
+    void addSpaces(std::string &, const std::string &, size_t);
 
     std::uint_fast32_t stringToUintFast32t(const std::string &);
     std::uint64_t      stringToULL(const std::string &str);
     int                stringToInt(const std::string &);
     double             stringToFiniteDouble(const std::string &);
 
-    bool fileExists(const std::string &);
     bool keywordToBool(const std::vector<std::string> &);
 
 }   // namespace utilities
 
-#endif   // _STRING_UTILITIES_HPP_
+#endif   // UTILITIES__STRING_UTILITIES_HPP

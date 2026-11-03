@@ -22,148 +22,208 @@
 
 #include "outputFilesSetup.hpp"
 
-#include <string>   // for string
+#include <string>
 
-#include "engine.hpp"               // for Engine
-#include "hessianEngine.hpp"        // for HessianEngine
-#include "hessianSettings.hpp"      // for HessianSettings
-#include "infoOutput.hpp"           // for InfoOutput
-#include "logOutput.hpp"            // for LogOutput
-#include "mdEngine.hpp"             // for MDEngine
-#include "optEngine.hpp"            // for OptEngine
-#include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "settings.hpp"             // for Settings
-#include "stdoutOutput.hpp"         // for StdoutOutput
-#include "timingsSettings.hpp"      // for TimingsSettings
-#include "trajectoryOutput.hpp"     // for TrajectoryOutput
+#include "engine.hpp"
+#include "generalSettings.hpp"
+#include "hessianEngine.hpp"
+#include "hessianSettings.hpp"
+#include "infoOutput.hpp"
+#include "logOutput.hpp"
+#include "mdEngine.hpp"
+#include "optEngine.hpp"
+#include "outputFileSettings.hpp"
+#include "stdoutOutput.hpp"
+#include "timingsSettings.hpp"
+#include "trajectoryOutput.hpp"
 
-using setup::OutputFilesSetup;
-using namespace settings;
-using namespace engine;
-
-/**
- * @brief wrapper function to setup output files
- *
- */
-void setup::setupOutputFiles(Engine &engine)
+namespace setup
 {
-    engine.getStdoutOutput().writeSetup("Output Files");
 
-    OutputFilesSetup outputFilesSetup(engine);
-    outputFilesSetup.setup();
-
-    engine.getLogOutput().writeHeader();
-}
-
-/**
- * @brief Construct a new Output Files Setup object
- *
- * @param engine
- */
-OutputFilesSetup::OutputFilesSetup(Engine &engine) : _engine(engine) {}
-
-/**
- * @brief setup output files
- *
- */
-void OutputFilesSetup::setup()
-{
-    const auto isPrefixSet = OutputFileSettings::isFilePrefixSet();
-    auto       prefix      = std::string();
-
-    if (isPrefixSet)
-        prefix = OutputFileSettings::getFilePrefix();
-    else
-        prefix = OutputFileSettings::determineMostCommonPrefix();
-
-    OutputFileSettings::replaceDefaultValues(prefix);
-
-    const auto logFileName     = OutputFileSettings::getLogFileName();
-    const auto timingsFileName = OutputFileSettings::getTimingsFileName();
-    const auto restartFileName = OutputFileSettings::getRestartFileName();
-    const auto energyFileName  = OutputFileSettings::getEnergyFileName();
-    const auto xyzFileName     = OutputFileSettings::getTrajectoryFileName();
-    const auto infoFileName    = OutputFileSettings::getInfoFileName();
-    const auto forceFileName   = OutputFileSettings::getForceFileName();
-
-    _engine.getLogOutput().setFilename(logFileName);
-    _engine.getTimingsOutput().setFilename(timingsFileName);
-    _engine.getRstFileOutput().setFilename(restartFileName);
-    _engine.getEnergyOutput().setFilename(energyFileName);
-    _engine.getXyzOutput().setFilename(xyzFileName);
-    _engine.getInfoOutput().setFilename(infoFileName);
-    _engine.getForceOutput().setFilename(forceFileName);
-
-    if (Settings::isMDJobType())
+    /**
+     * @brief wrapper function to setup output files
+     *
+     */
+    void setupOutputFiles(engine::Engine &engine)
     {
-        auto &mdEngine = dynamic_cast<MDEngine &>(_engine);
+        out::StdoutOutput::writeSetup("Output Files");
 
-        const auto instEnFile = OutputFileSettings::getInstantEnergyFileName();
-        const auto velFile    = OutputFileSettings::getVelocityFileName();
-        const auto chargeFile = OutputFileSettings::getChargeFileName();
-        const auto momFile    = OutputFileSettings::getMomentumFileName();
-        const auto virialFile = OutputFileSettings::getVirialFileName();
-        const auto stressFile = OutputFileSettings::getStressFileName();
-        const auto boxFile    = OutputFileSettings::getBoxFileName();
+        OutputFilesSetup outputFilesSetup(engine);
+        outputFilesSetup.setup();
 
-        mdEngine.getInstantEnergyOutput().setFilename(instEnFile);
-        mdEngine.getVelOutput().setFilename(velFile);
-        mdEngine.getChargeOutput().setFilename(chargeFile);
-        mdEngine.getMomentumOutput().setFilename(momFile);
-        mdEngine.getVirialOutput().setFilename(virialFile);
-        mdEngine.getStressOutput().setFilename(stressFile);
-        mdEngine.getBoxFileOutput().setFilename(boxFile);
+        engine.getLogOutput().writeHeader();
+    }
 
-        if (Settings::isHybridJobtype())
+    /**
+     * @brief Construct a new Output Files Setup object
+     *
+     * @param engine
+     */
+    OutputFilesSetup::OutputFilesSetup(engine::Engine &engine) : _engine(engine)
+    {
+    }
+
+    /**
+     * @brief setup output files
+     *
+     */
+    void OutputFilesSetup::setup()
+    {
+        const auto &outputFileSettings = _engine.getSettings().outputFiles;
+
+        const auto overwriteOutputFiles =
+            outputFileSettings.getOverwriteOutputFiles();
+
+        const auto logFileName     = outputFileSettings.getLogFileName();
+        const auto timingsFileName = outputFileSettings.getTimingsFileName();
+        const auto restartFileName = outputFileSettings.getRestartFileName();
+        const auto energyFileName  = outputFileSettings.getEnergyFileName();
+        const auto xyzFileName     = outputFileSettings.getTrajectoryFileName();
+        const auto infoFileName    = outputFileSettings.getInfoFileName();
+        const auto forceFileName   = outputFileSettings.getForceFileName();
+
+        _engine.getLogOutput().setFilename(logFileName, overwriteOutputFiles);
+        _engine.getTimingsOutput().setFilename(
+            timingsFileName,
+            overwriteOutputFiles
+        );
+        _engine.getRstFileOutput().setFilename(
+            restartFileName,
+            overwriteOutputFiles
+        );
+        _engine.getEnergyOutput().setFilename(
+            energyFileName,
+            overwriteOutputFiles
+        );
+        _engine.getXyzOutput().setFilename(xyzFileName, overwriteOutputFiles);
+        _engine.getInfoOutput().setFilename(infoFileName, overwriteOutputFiles);
+        _engine.getForceOutput().setFilename(
+            forceFileName,
+            overwriteOutputFiles
+        );
+
+        if (settings::GeneralSettings::isMDJobType())
         {
-            const auto hybridCenterFile =
-                OutputFileSettings::getHybridCenterFileName();
-            mdEngine.getXyzHybridCenterOutput().setFilename(hybridCenterFile);
+            auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
+
+            const auto instEnFile =
+                outputFileSettings.getInstantEnergyFileName();
+            const auto velFile    = outputFileSettings.getVelocityFileName();
+            const auto chargeFile = outputFileSettings.getChargeFileName();
+            const auto momFile    = outputFileSettings.getMomentumFileName();
+            const auto virialFile = outputFileSettings.getVirialFileName();
+            const auto stressFile = outputFileSettings.getStressFileName();
+            const auto boxFile    = outputFileSettings.getBoxFileName();
+
+            mdEngine.getInstantEnergyOutput().setFilename(
+                instEnFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getVelOutput().setFilename(velFile, overwriteOutputFiles);
+            mdEngine.getChargeOutput().setFilename(
+                chargeFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getMomentumOutput().setFilename(
+                momFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getVirialOutput().setFilename(
+                virialFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getStressOutput().setFilename(
+                stressFile,
+                overwriteOutputFiles
+            );
+            mdEngine.getBoxFileOutput().setFilename(
+                boxFile,
+                overwriteOutputFiles
+            );
+
+            if (settings::GeneralSettings::isHybridJobtype())
+            {
+                const auto hybridCenterFile =
+                    outputFileSettings.getHybridCenterFileName();
+                mdEngine.getXyzHybridCenterOutput().setFilename(
+                    hybridCenterFile,
+                    overwriteOutputFiles
+                );
+            }
+
+            if (outputFileSettings.getIncludeOutputMetadata())
+            {
+                const auto timeStep = settings::TimingsSettings::getTimeStep();
+                _engine.getEnergyOutput().writeHeader(timeStep);
+                mdEngine.getInstantEnergyOutput().writeHeader(timeStep);
+            }
+
+            if (settings::GeneralSettings::isRingPolymerMDActivated())
+            {
+                const auto rstFile_ =
+                    outputFileSettings.getRPMDRestartFileName();
+                const auto xyzFile_ = outputFileSettings.getRPMDTrajFileName();
+                const auto velFile_ =
+                    outputFileSettings.getRPMDVelocityFileName();
+                const auto forceFile_ =
+                    outputFileSettings.getRPMDForceFileName();
+                const auto chargeFile_ =
+                    outputFileSettings.getRPMDChargeFileName();
+                const auto energyFile_ =
+                    outputFileSettings.getRPMDEnergyFileName();
+
+                mdEngine.getRingPolymerRstFileOutput().setFilename(
+                    rstFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerXyzOutput().setFilename(
+                    xyzFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerVelOutput().setFilename(
+                    velFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerForceOutput().setFilename(
+                    forceFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerChargeOutput().setFilename(
+                    chargeFile_,
+                    overwriteOutputFiles
+                );
+                mdEngine.getRingPolymerEnergyOutput().setFilename(
+                    energyFile_,
+                    overwriteOutputFiles
+                );
+            }
         }
 
-        if (OutputFileSettings::getIncludeOutputMetadata())
+        if (settings::GeneralSettings::isOptJobType())
         {
-            const auto timeStep = TimingsSettings::getTimeStep();
-            _engine.getEnergyOutput().writeHeader(timeStep);
-            mdEngine.getInstantEnergyOutput().writeHeader(timeStep);
+            auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
+
+            const auto optFileName = outputFileSettings.getOptFileName();
+
+            optEngine.getOptOutput().setFilename(
+                optFileName,
+                overwriteOutputFiles
+            );
         }
 
-        if (Settings::isRingPolymerMDActivated())
+        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN &&
+            _engine.getSettings().hessianSettings.optimizeBeforeHessian())
         {
-            const auto rstFile_ = OutputFileSettings::getRPMDRestartFileName();
-            const auto xyzFile_ = OutputFileSettings::getRPMDTrajFileName();
-            const auto velFile_ = OutputFileSettings::getRPMDVelocityFileName();
-            const auto forceFile_ = OutputFileSettings::getRPMDForceFileName();
-            const auto chargeFile_ =
-                OutputFileSettings::getRPMDChargeFileName();
-            const auto energyFile_ =
-                OutputFileSettings::getRPMDEnergyFileName();
+            auto &hessianEngine =
+                dynamic_cast<engine::HessianEngine &>(_engine);
 
-            mdEngine.getRingPolymerRstFileOutput().setFilename(rstFile_);
-            mdEngine.getRingPolymerXyzOutput().setFilename(xyzFile_);
-            mdEngine.getRingPolymerVelOutput().setFilename(velFile_);
-            mdEngine.getRingPolymerForceOutput().setFilename(forceFile_);
-            mdEngine.getRingPolymerChargeOutput().setFilename(chargeFile_);
-            mdEngine.getRingPolymerEnergyOutput().setFilename(energyFile_);
+            const auto optFileName = outputFileSettings.getOptFileName();
+
+            hessianEngine.getOptOutput().setFilename(
+                optFileName,
+                overwriteOutputFiles
+            );
         }
     }
 
-    if (Settings::isOptJobType())
-    {
-        auto &optEngine = dynamic_cast<OptEngine &>(_engine);
-
-        const auto optFileName = OutputFileSettings::getOptFileName();
-
-        optEngine.getOptOutput().setFilename(optFileName);
-    }
-
-    if (Settings::getJobtype() == JobType::MM_HESSIAN &&
-        HessianSettings::optimizeBeforeHessian())
-    {
-        auto &hessianEngine = dynamic_cast<HessianEngine &>(_engine);
-
-        const auto optFileName = OutputFileSettings::getOptFileName();
-
-        hessianEngine.getOptOutput().setFilename(optFileName);
-    }
-}
+}   // namespace setup

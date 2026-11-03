@@ -20,17 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NON_COULOMB_POTENTIAL_HPP_
+#ifndef POTENTIAL__NON_COULOMB__NON_COULOMB_POTENTIAL_HPP
+#define POTENTIAL__NON_COULOMB__NON_COULOMB_POTENTIAL_HPP
 
-#define _NON_COULOMB_POTENTIAL_HPP_
-
-#include <cstddef>   // for size_t
 #include <memory>
-#include <vector>   // for vector
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @enum MixingRule
@@ -40,7 +38,7 @@ namespace potential
      * TODO: implement the different mixing rules
      *
      */
-    enum class MixingRule : size_t
+    enum class MixingRule : std::uint8_t
     {
         NONE
     };
@@ -54,7 +52,7 @@ namespace potential
      */
     class NonCoulombPotential
     {
-       protected:
+       private:
         MixingRule _mixingRule = MixingRule::NONE;
 
        public:
@@ -62,14 +60,15 @@ namespace potential
 
         [[nodiscard]]
         virtual std::shared_ptr<NonCoulombPair> getNonCoulPair(
-            const std::vector<size_t> &indices
+            const std::tuple<MolType, MolType, AtomType, AtomType> &indices,
+            const std::pair<VdwType, VdwType>                      &vdwTypes
         ) = 0;
 
         [[nodiscard]] MixingRule getMixingRule() const;
 
-        void setMixingRule(const MixingRule mixingRule);
+        void setMixingRule(MixingRule mixingRule);
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _NON_COULOMB_POTENTIAL_HPP_
+#endif   // POTENTIAL__NON_COULOMB__NON_COULOMB_POTENTIAL_HPP

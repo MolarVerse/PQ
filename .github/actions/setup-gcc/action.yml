@@ -1,0 +1,61 @@
+name: Setup GCC
+description: >-
+  Installs a pinned GCC/G++ version plus any extra apt packages the caller
+  needs alongside it, and (by default) exports CC/CXX to GITHUB_ENV so every
+  later step in the job picks up the compiler without its own env: block.
+  Centralizes the GCC version pin so it is written once (the default below)
+  instead of once per step across every workflow file.
+
+inputs:
+  version:
+    description: GCC major version to install.
+    default: '14'
+  packages:
+    description: Extra space-separated apt packages to install alongside gcc/g++.
+    default: ''
+  set-env:
+    description: Export CC/CXX (gcc-<version>/g++-<version>) to GITHUB_ENV for later steps.
+    default: 'true'
+
+outputs:
+  cc:
+    description: The installed C compiler binary name (gcc-<version>).
+    value: ${{ steps.vars.outputs.cc }}
+  cxx:
+    description: The installed C++ compiler binary name (g++-<version>).
+    value: ${{ steps.vars.outputs.cxx }}
+  gcov:
+    description: The matching gcov binary name (gcov-<version>).
+    value: ${{ steps.vars.outputs.gcov }}
+
+runs:
+  using: composite
+  steps:
+    - name: Compute compiler binary names
+      id: vars
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+      run: |
+        echo "cc=gcc-$VERSION" >> "$GITHUB_OUTPUT"
+        echo "cxx=g++-$VERSION" >> "$GITHUB_OUTPUT"
+        echo "gcov=gcov-$VERSION" >> "$GITHUB_OUTPUT"
+
+    - name: Install GCC ${{ inputs.version }}
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+        PACKAGES: ${{ inputs.packages }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y "gcc-$VERSION" "g++-$VERSION" $PACKAGES
+
+    - name: Export CC/CXX
+      if: inputs.set-env == 'true'
+      shell: bash
+      env:
+        CC_VALUE: ${{ steps.vars.outputs.cc }}
+        CXX_VALUE: ${{ steps.vars.outputs.cxx }}
+      run: |
+        echo "CC=$CC_VALUE" >> "$GITHUB_ENV"
+        echo "CXX=$CXX_VALUE" >> "$GITHUB_ENV"

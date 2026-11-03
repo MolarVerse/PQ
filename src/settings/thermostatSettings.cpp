@@ -22,372 +22,364 @@
 
 #include "thermostatSettings.hpp"
 
-#include "stringUtilities.hpp"   // for toLowerCopy
+#include "stringUtilities.hpp"
 
-using namespace settings;
-using namespace utilities;
-
-/**
- * @brief return string of thermostatType
- *
- * @param thermostatType
- * @return std::string
- */
-std::string settings::string(const ThermostatType &thermostatType)
+namespace settings
 {
-    switch (thermostatType)
+
+    /**
+     * @brief add chi to the index map
+     *
+     * @param index
+     * @param chi
+     * @return auto
+     */
+    auto ThermostatSettings::addChi(size_t index, double chi)
+        -> decltype(_chi.try_emplace(index, chi))
     {
-        using enum ThermostatType;
-
-        case BERENDSEN: return "berendsen";
-        case VELOCITY_RESCALING: return "velocity_rescaling";
-        case LANGEVIN: return "langevin";
-        case NOSE_HOOVER: return "nh-chain";
-
-        case NONE: break;
+        return _chi.try_emplace(index, chi);
     }
 
-    return "none";
-}
+    /**
+     * @brief add zeta to the index map
+     *
+     * @param index
+     * @param zeta
+     * @return auto
+     */
+    auto ThermostatSettings::addZeta(size_t index, double zeta)
+        -> decltype(_zeta.try_emplace(index, zeta))
+    {
+        return _zeta.try_emplace(index, zeta);
+    }
 
-/**
- * @brief add chi to the index map
- *
- * @param index
- * @param chi
- * @return auto
- */
-auto ThermostatSettings::addChi(const size_t index, const double chi)
-    -> decltype(_chi.try_emplace(index, chi))
-{
-    return _chi.try_emplace(index, chi);
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief add zeta to the index map
- *
- * @param index
- * @param zeta
- * @return auto
- */
-auto ThermostatSettings::addZeta(const size_t index, const double zeta)
-    -> decltype(_zeta.try_emplace(index, zeta))
-{
-    return _zeta.try_emplace(index, zeta);
-}
+    /**
+     * @brief sets the thermostatType to enum in settings
+     *
+     * @param thermostatType
+     */
+    void ThermostatSettings::setThermostatType(
+        const std::string_view &thermostatType
+    )
+    {
+        using enum ThermostatType;
+        const auto thermostatTypeToLower =
+            utilities::toLowerAndReplaceDashesCopy(thermostatType);
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+        if (thermostatTypeToLower == "berendsen")
+            _thermostatType = BERENDSEN;
 
-/**
- * @brief sets the thermostatType to enum in settings
- *
- * @param thermostatType
- */
-void ThermostatSettings::setThermostatType(
-    const std::string_view &thermostatType
-)
-{
-    using enum ThermostatType;
-    const auto thermostatTypeToLower = toLowerAndReplaceDashesCopy(thermostatType);
+        else if (thermostatTypeToLower == "velocity_rescaling")
+            _thermostatType = VELOCITY_RESCALING;
 
-    if (thermostatTypeToLower == "berendsen")
-        _thermostatType = BERENDSEN;
+        else if (thermostatTypeToLower == "langevin")
+            _thermostatType = LANGEVIN;
 
-    else if (thermostatTypeToLower == "velocity_rescaling")
-        _thermostatType = VELOCITY_RESCALING;
+        else if (thermostatTypeToLower == "nh_chain")
+            _thermostatType = NOSE_HOOVER;
 
-    else if (thermostatTypeToLower == "langevin")
-        _thermostatType = LANGEVIN;
+        else
+            _thermostatType = NONE;
+    }
 
-    else if (thermostatTypeToLower == "nh_chain")
-        _thermostatType = NOSE_HOOVER;
+    /**
+     * @brief sets the thermostatType to enum in settings
+     *
+     * @param thermostatType
+     */
+    void ThermostatSettings::setThermostatType(ThermostatType thermostatType)
+    {
+        _thermostatType = thermostatType;
+    }
 
-    else
-        _thermostatType = NONE;
-}
+    /**
+     * @brief set the nose hoover chain length
+     *
+     * @param length
+     */
+    void ThermostatSettings::setNoseHooverChainLength(size_t length)
+    {
+        _nhChainLength = length;
+    }
 
-/**
- * @brief sets the thermostatType to enum in settings
- *
- * @param thermostatType
- */
-void ThermostatSettings::setThermostatType(const ThermostatType &thermostatType)
-{
-    _thermostatType = thermostatType;
-}
+    /**
+     * @brief set the temperature ramp steps
+     *
+     * @param steps
+     */
+    void ThermostatSettings::setTemperatureRampSteps(size_t steps)
+    {
+        _temperatureRampSteps = steps;
+    }
 
-/**
- * @brief set the nose hoover chain length
- *
- * @param length
- */
-void ThermostatSettings::setNoseHooverChainLength(const size_t length)
-{
-    _nhChainLength = length;
-}
+    /**
+     * @brief set the temperature ramp frequency
+     *
+     * @param frequency
+     */
+    void ThermostatSettings::setTemperatureRampFrequency(size_t frequency)
+    {
+        _temperatureRampFrequency = frequency;
+    }
 
-/**
- * @brief set the temperature ramp steps
- *
- * @param steps
- */
-void ThermostatSettings::setTemperatureRampSteps(const size_t steps)
-{
-    _temperatureRampSteps = steps;
-}
+    /**
+     * @brief set the temperature set
+     *
+     * @param temperatureSet
+     */
+    void ThermostatSettings::setTemperatureSet(bool temperatureSet)
+    {
+        _isTemperatureSet = temperatureSet;
+    }
 
-/**
- * @brief set the temperature ramp frequency
- *
- * @param frequency
- */
-void ThermostatSettings::setTemperatureRampFrequency(const size_t frequency)
-{
-    _temperatureRampFrequency = frequency;
-}
+    /**
+     * @brief set the start temperature set
+     *
+     * @param startTemperatureSet
+     */
+    void ThermostatSettings::setStartTemperatureSet(bool startTemperatureSet)
+    {
+        _isStartTemperatureSet = startTemperatureSet;
+    }
 
-/**
- * @brief set the temperature set
- *
- * @param temperatureSet
- */
-void ThermostatSettings::setTemperatureSet(const bool temperatureSet)
-{
-    _isTemperatureSet = temperatureSet;
-}
+    /**
+     * @brief set the end temperature set
+     *
+     * @param endTemperatureSet
+     */
+    void ThermostatSettings::setEndTemperatureSet(bool endTemperatureSet)
+    {
+        _isEndTemperatureSet = endTemperatureSet;
+    }
 
-/**
- * @brief set the start temperature set
- *
- * @param startTemperatureSet
- */
-void ThermostatSettings::setStartTemperatureSet(const bool startTemperatureSet)
-{
-    _isStartTemperatureSet = startTemperatureSet;
-}
+    /**
+     * @brief set the target temperature
+     *
+     * @param targetTemperature
+     */
+    void ThermostatSettings::setTargetTemperature(double targetTemperature)
+    {
+        _targetTemperature = targetTemperature;
+        setTemperatureSet(true);
+        setActualTargetTemperature(targetTemperature);
+    }
 
-/**
- * @brief set the end temperature set
- *
- * @param endTemperatureSet
- */
-void ThermostatSettings::setEndTemperatureSet(const bool endTemperatureSet)
-{
-    _isEndTemperatureSet = endTemperatureSet;
-}
+    /**
+     * @brief set the actual target temperature
+     *
+     * @param actualTargetTemperature
+     */
+    void ThermostatSettings::setActualTargetTemperature(
+        double actualTargetTemperature
+    )
+    {
+        _actualTargetTemperature = actualTargetTemperature;
+    }
 
-/**
- * @brief set the target temperature
- *
- * @param targetTemperature
- */
-void ThermostatSettings::setTargetTemperature(const double targetTemperature)
-{
-    _targetTemperature = targetTemperature;
-    setTemperatureSet(true);
-    setActualTargetTemperature(targetTemperature);
-}
+    /**
+     * @brief set the start temperature
+     *
+     * @param startTemperature
+     */
+    void ThermostatSettings::setStartTemperature(double startTemperature)
+    {
+        _startTemperature = startTemperature;
+        setStartTemperatureSet(true);
+    }
 
-/**
- * @brief set the actual target temperature
- *
- * @param actualTargetTemperature
- */
-void ThermostatSettings::setActualTargetTemperature(
-    const double actualTargetTemperature
-)
-{
-    _actualTargetTemperature = actualTargetTemperature;
-}
+    /**
+     * @brief set the end temperature
+     *
+     * @param endTemperature
+     */
+    void ThermostatSettings::setEndTemperature(double endTemperature)
+    {
+        _endTemperature = endTemperature;
+        setEndTemperatureSet(true);
+    }
 
-/**
- * @brief set the start temperature
- *
- * @param startTemperature
- */
-void ThermostatSettings::setStartTemperature(const double startTemperature)
-{
-    _startTemperature = startTemperature;
-    setStartTemperatureSet(true);
-}
+    /**
+     * @brief set the relaxation time
+     *
+     * @param relaxationTime
+     */
+    void ThermostatSettings::setRelaxationTime(double relaxationTime)
+    {
+        _relaxationTime = relaxationTime;
+    }
 
-/**
- * @brief set the end temperature
- *
- * @param endTemperature
- */
-void ThermostatSettings::setEndTemperature(const double endTemperature)
-{
-    _endTemperature = endTemperature;
-    setEndTemperatureSet(true);
-}
+    /**
+     * @brief set the friction
+     *
+     * @param friction
+     */
+    void ThermostatSettings::setFriction(double friction)
+    {
+        _friction = friction;
+    }
 
-/**
- * @brief set the relaxation time
- *
- * @param relaxationTime
- */
-void ThermostatSettings::setRelaxationTime(const double relaxationTime)
-{
-    _relaxationTime = relaxationTime;
-}
+    /**
+     * @brief set the nose hoover coupling frequency
+     *
+     * @param frequency
+     */
+    void ThermostatSettings::setNoseHooverCouplingFrequency(double frequency)
+    {
+        _nhCouplingFreq = frequency;
+    }
 
-/**
- * @brief set the friction
- *
- * @param friction
- */
-void ThermostatSettings::setFriction(const double friction)
-{
-    _friction = friction;
-}
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set the nose hoover coupling frequency
- *
- * @param frequency
- */
-void ThermostatSettings::setNoseHooverCouplingFrequency(const double frequency)
-{
-    _nhCouplingFreq = frequency;
-}
+    /**
+     * @brief get the nose hoover chain length
+     *
+     * @return size_t
+     */
+    size_t ThermostatSettings::getNoseHooverChainLength()
+    {
+        return _nhChainLength;
+    }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief get the temperature ramp steps
+     *
+     * @return size_t
+     */
+    size_t ThermostatSettings::getTemperatureRampSteps()
+    {
+        return _temperatureRampSteps;
+    }
 
-/**
- * @brief get the nose hoover chain length
- *
- * @return size_t
- */
-size_t ThermostatSettings::getNoseHooverChainLength() { return _nhChainLength; }
+    /**
+     * @brief get the temperature ramp frequency
+     *
+     * @return size_t
+     */
+    size_t ThermostatSettings::getTemperatureRampFrequency()
+    {
+        return _temperatureRampFrequency;
+    }
 
-/**
- * @brief get the temperature ramp steps
- *
- * @return size_t
- */
-size_t ThermostatSettings::getTemperatureRampSteps()
-{
-    return _temperatureRampSteps;
-}
+    /**
+     * @brief get the thermostat type
+     *
+     * @return ThermostatType
+     */
+    ThermostatType ThermostatSettings::getThermostatType()
+    {
+        return _thermostatType;
+    }
 
-/**
- * @brief get the temperature ramp frequency
- *
- * @return size_t
- */
-size_t ThermostatSettings::getTemperatureRampFrequency()
-{
-    return _temperatureRampFrequency;
-}
+    /**
+     * @brief is the temperature set
+     *
+     * @return bool
+     */
+    bool ThermostatSettings::isTemperatureSet() { return _isTemperatureSet; }
 
-/**
- * @brief get the thermostat type
- *
- * @return ThermostatType
- */
-ThermostatType ThermostatSettings::getThermostatType()
-{
-    return _thermostatType;
-}
+    /**
+     * @brief is the start temperature set
+     *
+     * @return bool
+     */
+    bool ThermostatSettings::isStartTemperatureSet()
+    {
+        return _isStartTemperatureSet;
+    }
 
-/**
- * @brief is the temperature set
- *
- * @return bool
- */
-bool ThermostatSettings::isTemperatureSet() { return _isTemperatureSet; }
+    /**
+     * @brief is the end temperature set
+     *
+     * @return bool
+     */
+    bool ThermostatSettings::isEndTemperatureSet()
+    {
+        return _isEndTemperatureSet;
+    }
 
-/**
- * @brief is the start temperature set
- *
- * @return bool
- */
-bool ThermostatSettings::isStartTemperatureSet()
-{
-    return _isStartTemperatureSet;
-}
+    /**
+     * @brief get the target temperature
+     *
+     * @return double
+     */
+    double ThermostatSettings::getTargetTemperature()
+    {
+        return _targetTemperature;
+    }
 
-/**
- * @brief is the end temperature set
- *
- * @return bool
- */
-bool ThermostatSettings::isEndTemperatureSet() { return _isEndTemperatureSet; }
+    /**
+     * @brief get the actual target temperature
+     *
+     * @return double
+     */
+    double ThermostatSettings::getActualTargetTemperature()
+    {
+        return _actualTargetTemperature;
+    }
 
-/**
- * @brief get the target temperature
- *
- * @return double
- */
-double ThermostatSettings::getTargetTemperature() { return _targetTemperature; }
+    /**
+     * @brief get the start temperature
+     *
+     * @return double
+     */
+    double ThermostatSettings::getStartTemperature()
+    {
+        return _startTemperature;
+    }
 
-/**
- * @brief get the actual target temperature
- *
- * @return double
- */
-double ThermostatSettings::getActualTargetTemperature()
-{
-    return _actualTargetTemperature;
-}
+    /**
+     * @brief get the end temperature
+     *
+     * @return double
+     */
+    double ThermostatSettings::getEndTemperature() { return _endTemperature; }
 
-/**
- * @brief get the start temperature
- *
- * @return double
- */
-double ThermostatSettings::getStartTemperature() { return _startTemperature; }
+    /**
+     * @brief get the relaxation time
+     *
+     * @return double
+     */
+    double ThermostatSettings::getRelaxationTime() { return _relaxationTime; }
 
-/**
- * @brief get the end temperature
- *
- * @return double
- */
-double ThermostatSettings::getEndTemperature() { return _endTemperature; }
+    /**
+     * @brief get the friction
+     *
+     * @return double
+     */
+    double ThermostatSettings::getFriction() { return _friction; }
 
-/**
- * @brief get the relaxation time
- *
- * @return double
- */
-double ThermostatSettings::getRelaxationTime() { return _relaxationTime; }
+    /**
+     * @brief get the nose hoover coupling frequency
+     *
+     * @return double
+     */
+    double ThermostatSettings::getNoseHooverCouplingFrequency()
+    {
+        return _nhCouplingFreq;
+    }
 
-/**
- * @brief get the friction
- *
- * @return double
- */
-double ThermostatSettings::getFriction() { return _friction; }
+    /**
+     * @brief get chi
+     *
+     * @return std::map<size_t, double>
+     */
+    std::map<size_t, double> ThermostatSettings::getChi() { return _chi; }
 
-/**
- * @brief get the nose hoover coupling frequency
- *
- * @return double
- */
-double ThermostatSettings::getNoseHooverCouplingFrequency()
-{
-    return _nhCouplingFreq;
-}
+    /**
+     * @brief get zeta
+     *
+     * @return std::map<size_t, double>
+     */
+    std::map<size_t, double> ThermostatSettings::getZeta() { return _zeta; }
 
-/**
- * @brief get chi
- *
- * @return std::map<size_t, double>
- */
-std::map<size_t, double> ThermostatSettings::getChi() { return _chi; }
-
-/**
- * @brief get zeta
- *
- * @return std::map<size_t, double>
- */
-std::map<size_t, double> ThermostatSettings::getZeta() { return _zeta; }
+}   // namespace settings

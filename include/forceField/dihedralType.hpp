@@ -20,17 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DIHEDRAL_TYPE_HPP_
-
-#define _DIHEDRAL_TYPE_HPP_
+#ifndef FORCE_FIELD__DIHEDRAL_TYPE_HPP
+#define FORCE_FIELD__DIHEDRAL_TYPE_HPP
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class DihedralType;   // forward declaration
-
-    bool operator==(const DihedralType &, const DihedralType &);
 
     /**
      * @class DihedralType
@@ -46,30 +43,24 @@ namespace forceField
        private:
         DihedralId _id;
 
-        double _forceConstant;
-        double _periodicity;
-        double _phaseShift;
+        DihedralParams _params;
 
        public:
-        DihedralType(
-            const DihedralId id,
-            const double     forceConstant,
-            const double     frequency,
-            const double     phaseShift
-        );
+        DihedralType(DihedralId id, const DihedralParams &params);
 
-        friend bool operator==(const DihedralType &, const DihedralType &);
+        friend bool operator==(
+            const DihedralType &self,
+            const DihedralType &other
+        );
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] DihedralId getId() const;
-        [[nodiscard]] double     getForceConstant() const;
-        [[nodiscard]] double     getPeriodicity() const;
-        [[nodiscard]] double     getPhaseShift() const;
+        [[nodiscard]] DihedralId            getId() const;
+        [[nodiscard]] const DihedralParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _DIHEDRAL_TYPE_HPP_
+#endif   // FORCE_FIELD__DIHEDRAL_TYPE_HPP

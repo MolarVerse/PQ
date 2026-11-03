@@ -1,0 +1,11 @@
+# Rigid water: mshake
+jobtype = mm-md;
+nstep = 20; timestep = 2.0;
+output_freq = 10;
+force-field = off;
+rcoulomb = 7.5;
+start_file = start.rst;
+file_prefix = mshake;
+shake = mshake;
+mshake_file = mshake.top;
+topology_file = empty.top;

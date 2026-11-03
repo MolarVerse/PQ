@@ -26,48 +26,43 @@
 
 #include "atom.hpp"
 #include "convergence.hpp"
-#include "convergenceSettings.hpp"
 #include "exceptions.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "steepestDescent.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
-
-using namespace opt;
-using molsys::Atom;
-using molsys::SimulationBox;
-using physicalData::PhysicalData;
+#include "throwWithMessage.hpp"
+#include "vector3d.hpp"
 
 namespace
 {
     struct Sample
     {
-        double               energy;
-        linearAlgebra::Vec3D force0;
-        linearAlgebra::Vec3D force1;
-        linearAlgebra::Vec3D pos0;
-        linearAlgebra::Vec3D pos1;
+        double        energy;
+        linalg::Vec3D force0;
+        linalg::Vec3D force1;
+        linalg::Vec3D pos0;
+        linalg::Vec3D pos1;
     };
 
     // Build a fresh box+physData pair, set the sample state on them, and call
     // updateHistory(). Used to seed the optimizer's deques deterministically.
-    void pushSample(SteepestDescent &opt, const Sample &s)
+    void pushSample(opt::SteepestDescent &opt, const Sample &sample)
     {
-        auto box     = std::make_shared<SimulationBox>();
-        auto physDat = std::make_shared<PhysicalData>();
+        auto box     = std::make_shared<molsys::SimulationBox>();
+        auto physDat = std::make_shared<physicalData::PhysicalData>();
 
-        auto a1 = std::make_shared<Atom>();
-        auto a2 = std::make_shared<Atom>();
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
 
-        a1->setPosition(s.pos0);
-        a2->setPosition(s.pos1);
-        a1->setForce(s.force0);
-        a2->setForce(s.force1);
+        atom1->setPosition(sample.pos0);
+        atom2->setPosition(sample.pos1);
+        atom1->setForce(sample.force0);
+        atom2->setForce(sample.force1);
 
-        box->addAtom(a1);
-        box->addAtom(a2);
+        box->addAtom(atom1);
+        box->addAtom(atom2);
 
-        physDat->setKineticEnergy(s.energy);
+        physDat->setKineticEnergy(sample.energy);
 
         opt.setSimulationBox(box);
         opt.setPhysicalData(physDat);
@@ -79,37 +74,38 @@ namespace
 
 TEST(TestOptimizer, constructorStoresEpochs)
 {
-    const SteepestDescent opt(42U);
+    const opt::SteepestDescent opt(42U);
     EXPECT_EQ(opt.getNEpochs(), 42U);
 }
 
 TEST(TestOptimizer, maxHistoryLengthIsTwoForSteepestDescent)
 {
-    const SteepestDescent opt(1U);
+    const opt::SteepestDescent opt(1U);
     EXPECT_EQ(opt.maxHistoryLength(), 2U);
-}
-
-TEST(TestOptimizer, cloneProducesEquivalentObject)
-{
-    const SteepestDescent opt(7U);
-    const auto            cloned = opt.clone();
-    EXPECT_EQ(cloned->getNEpochs(), 7U);
 }
 
 /* ---------- getHistoryIndex ---------- */
 
 TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)
 {
-    const SteepestDescent opt(1U);
-    EXPECT_THROW((void) opt.getHistoryIndex(0), customException::OptException);
-    EXPECT_THROW((void) opt.getHistoryIndex(1), customException::OptException);
+    const opt::SteepestDescent opt(1U);
+    EXPECT_THROW_MSG(
+        (void) opt.getHistoryIndex(0),
+        exc::OptException,
+        "Offset must be negative to access history in the past"
+    );
+    EXPECT_THROW_MSG(
+        (void) opt.getHistoryIndex(1),
+        exc::OptException,
+        "Offset must be negative to access history in the past"
+    );
 }
 
 /* ---------- updateHistory + getters ---------- */
 
 TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 {
-    SteepestDescent opt(1U);
+    opt::SteepestDescent opt(1U);
 
     pushSample(
         opt,
@@ -131,8 +127,8 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
     const auto positions = opt.getPositions();
     ASSERT_EQ(forces.size(), 2U);
     ASSERT_EQ(positions.size(), 2U);
-    EXPECT_EQ(forces[0], linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-    EXPECT_EQ(positions[1], linearAlgebra::Vec3D(0.4, 0.5, 0.6));
+    EXPECT_EQ(forces[0], linalg::Vec3D(1.0, 0.0, 0.0));
+    EXPECT_EQ(positions[1], linalg::Vec3D(0.4, 0.5, 0.6));
 
     const auto forcesOff    = opt.getForces(-1);
     const auto positionsOff = opt.getPositions(-1);
@@ -142,8 +138,8 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 
 TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
 {
-    SteepestDescent opt(1U);
-    const auto      maxLen = opt.maxHistoryLength();
+    opt::SteepestDescent opt(1U);
+    const auto           maxLen = opt.maxHistoryLength();
 
     for (size_t i = 0; i < maxLen + 3; ++i)
     {
@@ -174,8 +170,8 @@ TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
 
 TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
 {
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -183,14 +179,11 @@ TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
 
     opt.setConvergence(conv);
-    EXPECT_EQ(
-        opt.getConvergence().getEnConvStrategy(),
-        settings::ConvStrategy::RIGOROUS
-    );
+    EXPECT_EQ(opt.getConvergence().getEnConvStrategy(), ConvStrategy::RIGOROUS);
 
     // Non-const getConvergence() returns a reference — mutating via it should
     // be observable on subsequent reads.
@@ -201,8 +194,8 @@ TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
 
 TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
 {
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -210,7 +203,7 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
     opt.setConvergence(conv);
 
@@ -237,8 +230,8 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
 
 TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 {
-    SteepestDescent opt(1U);
-    Convergence     conv(
+    opt::SteepestDescent opt(1U);
+    opt::Convergence     conv(
         true,
         true,
         true,
@@ -246,7 +239,7 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
         1.0e-4,
         1.0e-3,
         1.0e-3,
-        settings::ConvStrategy::RIGOROUS
+        ConvStrategy::RIGOROUS
     );
     opt.setConvergence(conv);
 
@@ -274,8 +267,8 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 
 TEST(TestOptimizer, setPhysicalDataOldStoresPointer)
 {
-    SteepestDescent opt(1U);
-    auto            phys = std::make_shared<PhysicalData>();
+    opt::SteepestDescent opt(1U);
+    auto                 phys = std::make_shared<physicalData::PhysicalData>();
     phys->setKineticEnergy(0.42);
     EXPECT_NO_THROW(opt.setPhysicalDataOld(phys));
 }

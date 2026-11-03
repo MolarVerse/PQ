@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RST_FILE_OUTPUT_HPP_
+#ifndef OUTPUT__RST_FILE_OUTPUT_HPP
+#define OUTPUT__RST_FILE_OUTPUT_HPP
 
-#define _RST_FILE_OUTPUT_HPP_
-
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 #include "output.hpp"
 
@@ -38,12 +37,12 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace output
+namespace out
 {
     /**
-     * @class RstFileOutput inherits from Output
+     * @brief RstFileOutput inherits from Output
      *
-     * @brief Output file for restart file
+     * @details Output file for restart file
      *
      */
     class RstFileOutput : public Output
@@ -52,13 +51,12 @@ namespace output
         using Output::Output;
 
         void write(
-            molsys::SimulationBox &,
+            const molsys::SimulationBox &,
             const thermostat::Thermostat &,
-            const size_t
+            size_t
         );
-        void writeNHChain(const thermostat::Thermostat &, std::ostringstream &);
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _RST_FILE_OUTPUT_HPP_
+#endif   // OUTPUT__RST_FILE_OUTPUT_HPP

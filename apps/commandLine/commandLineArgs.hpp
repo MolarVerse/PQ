@@ -1,0 +1,78 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef APPS__COMMAND_LINE__COMMAND_LINE_ARGS_HPP
+#define APPS__COMMAND_LINE__COMMAND_LINE_ARGS_HPP
+
+#include <cstdint>
+#include <string>
+#include <vector>
+
+enum class CommandLineAction : std::uint8_t
+{
+    RUN,
+    HELP,
+    VERSION,
+    CAPABILITIES,
+    VALIDATE
+};
+
+enum class CommandLineFormat : std::uint8_t
+{
+    TEXT,
+    JSON
+};
+
+enum class ValidationScope : std::uint8_t
+{
+    INSTALLED,
+    PORTABLE
+};
+
+/**
+ * @class CommandLineArgs
+ *
+ * @brief Handles the command line arguments.
+ *
+ */
+class CommandLineArgs
+{
+   private:
+    int                      _argc;
+    std::vector<std::string> _argv;
+    std::string              _inputFileName;
+    CommandLineAction        _action          = CommandLineAction::RUN;
+    CommandLineFormat        _format          = CommandLineFormat::TEXT;
+    ValidationScope          _validationScope = ValidationScope::INSTALLED;
+
+   public:
+    CommandLineArgs(int argc, const std::vector<std::string> &argv);
+
+    void parse();
+
+    [[nodiscard]] std::string       getInputFileName() const;
+    [[nodiscard]] CommandLineAction getAction() const;
+    [[nodiscard]] CommandLineFormat getFormat() const;
+    [[nodiscard]] ValidationScope   getValidationScope() const;
+};
+
+#endif   // APPS__COMMAND_LINE__COMMAND_LINE_ARGS_HPP

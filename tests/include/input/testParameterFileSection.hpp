@@ -20,18 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_PARAMETER_FILE_SECTION_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_SECTION_HPP
+#define TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_SECTION_HPP
 
-#define _TEST_PARAMETER_FILE_SECTION_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <filesystem>
+#include <string>
 
-#include <filesystem>   // for remove
-#include <string>       // for allocator, string
-
-#include "forceFieldNonCoulomb.hpp"   // for ForceFieldNonCoulomb
-#include "mmmdEngine.hpp"             // for Engine
-#include "molecule.hpp"               // for Molecule
+#include "forceFieldNonCoulomb.hpp"
+#include "mmmdEngine.hpp"
+#include "molecule.hpp"
 
 /**
  * @class TestParameterFileSection
@@ -42,35 +41,32 @@
 class TestParameterFileSection : public ::testing::Test
 {
    protected:
-    engine::Engine *_engine;
-    std::string     _parameterFileName = "param.param";
+    Settings                        _settings;
+    std::unique_ptr<engine::Engine> _engine;
+    std::string                     _parameterFileName = "param.param";
 
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(1);
-
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(3);
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
         _engine->getPotential()->makeNonCoulombPotential(
-            potential::ForceFieldNonCoulomb()
+            pot::ForceFieldNonCoulomb()
         );
     }
 
     void TearDown() override
     {
-        delete _engine;
         static_cast<void>(std::filesystem::remove(_parameterFileName));
     }
 };
 
-#endif   // _TEST_PARAMETER_FILE_SECTION_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_SECTION_HPP

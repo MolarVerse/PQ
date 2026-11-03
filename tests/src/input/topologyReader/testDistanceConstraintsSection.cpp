@@ -20,77 +20,84 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "distanceConstraintsSection.hpp"   // for DistanceConstraintsSection
-#include "engine.hpp"                       // for Engine
-#include "exceptions.hpp"                   // for TopologyException
-#include "gtest/gtest.h"                    // for Message, TestPartResult
-#include "testTopologySection.hpp"          // for TestTopologySection
+#include "distanceConstraintsSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "testTopologySection.hpp"
+#include "throwWithMessage.hpp"
 
 /*
  * @brief Test for the DistanceConstraintsSection class
  *
  */
-TEST_F(TestTopologySection, processSectionShake)
+TEST_F(TestTopologySection, processSectionDistanceConstraints)
 {
     std::vector<std::string> lineElements = {"1", "2", "1.0", "2.0", "4", "6"};
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
-    distanceConstraintsSection.processSection(lineElements, *_engine);
+    distanceConstraintsSection.processSection(lineElements, *_engine, 0);
 
-    const auto& constraints = _engine->getConstraints();
+    const auto& constraints           = _engine->getConstraints();
+    const auto& distanceConstraint    = constraints->getDistConstraints()[0];
+    const auto& simBox                = _engine->getSimulationBox();
+    const auto& constraintMolecules   = distanceConstraint.get_molecules();
+    const auto& constraintAtomIndices = distanceConstraint.get_atomIndices();
 
     EXPECT_EQ(constraints->getDistConstraints().size(), 1);
-    EXPECT_EQ(
-        constraints->getDistConstraints()[0].getMolecule1(),
-        &(_engine->getSimulationBox().getMolecules()[0])
-    );
-    EXPECT_EQ(
-        constraints->getDistConstraints()[0].getMolecule2(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(constraints->getDistConstraints()[0].getAtomIndex1(), 0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getAtomIndex2(), 0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getLowerDistance(), 1.0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getUpperDistance(), 2.0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getSpringConstant(), 4.0);
-    EXPECT_EQ(constraints->getDistConstraints()[0].getDSpringConstantDt(), 6.0);
+    EXPECT_EQ(constraintMolecules[0], simBox.getMolecules().data());
+    EXPECT_EQ(constraintMolecules[1], &(simBox.getMolecules()[1]));
+    EXPECT_EQ(constraintAtomIndices[0], AtomIndex{0});
+    EXPECT_EQ(constraintAtomIndices[1], AtomIndex{0});
+    EXPECT_EQ(distanceConstraint.getLowerDistance(), 1.0);
+    EXPECT_EQ(distanceConstraint.getUpperDistance(), 2.0);
+    EXPECT_EQ(distanceConstraint.getSpringConstant(), 4.0);
+    EXPECT_EQ(distanceConstraint.getDSpringConstantDt(), 6.0);
 
     // not enough elements
     lineElements = {"1", "1", "1.0", "2", "1"};
-    EXPECT_THROW(
-        distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        distanceConstraintsSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Wrong number of arguments in topology file \"Distance Constraints\" "
+        "section at line 0 - number of elements has to be 6!"
     );
 
     // same atom indices
     lineElements = {"1", "1", "1.0", "2", "1", "2"};
-    EXPECT_THROW(
-        distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        distanceConstraintsSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Topology file \"Distance Constraints\" at line 0 - atoms cannot be "
+        "the same!"
     );
 
     // lower distance greater than upper distance
     lineElements = {"1", "2", "2.0", "1.0", "1", "2"};
-    EXPECT_THROW(
-        distanceConstraintsSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        distanceConstraintsSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Topology file \"Distance Constraints\" at line 0 - lower distance "
+        "cannot be greater than upper distance!"
     );
 }
 
 /**
- * @brief test if endedNormally throws exception
+ * @brief test if endedNormally throws exception for distance constraints
+ * section
  *
  */
-TEST_F(TestTopologySection, endedNormallyShake)
+TEST_F(TestTopologySection, endedNormallyDistanceConstraints)
 {
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
-    EXPECT_THROW(
-        distanceConstraintsSection.endedNormally(false),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        distanceConstraintsSection.endedNormally(false, 0),
+        exc::TopologyException,
+        "Topology file error in \"Distance Constraints\" section at line 0 - "
+        "no end of section found!"
     );
-    EXPECT_NO_THROW(distanceConstraintsSection.endedNormally(true));
+    EXPECT_NO_THROW(distanceConstraintsSection.endedNormally(true, 0));
 }

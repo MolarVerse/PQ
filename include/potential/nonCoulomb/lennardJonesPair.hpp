@@ -20,17 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LENNARD_JONES_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__LENNARD_JONES_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__LENNARD_JONES_PAIR_HPP
 
-#define _LENNARD_JONES_PAIR_HPP_
-
-#include <cstddef>   // size_t
-#include <utility>   // pair
+#include <utility>
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+struct TestLJPairUtils;
+
+namespace pot
 {
+
     /**
      * @class LennardJonesPair
      *
@@ -41,41 +43,40 @@ namespace potential
     class LennardJonesPair : public NonCoulombPair
     {
        private:
-        double _c6;
-        double _c12;
+        LJParams _params;
 
        public:
         explicit LennardJonesPair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double c6,
-            const double c12
+            ExtVdwType      vanDerWaalsType1,
+            ExtVdwType      vanDerWaalsType2,
+            double          cutOff,
+            const LJParams &params
         );
+
+        explicit LennardJonesPair(double cutOff, const LJParams &params);
 
         explicit LennardJonesPair(
-            const double cutOff,
-            const double c6,
-            const double c12
+            double          cutOff,
+            double          energyCutoff,
+            double          forceCutoff,
+            const LJParams &params
         );
 
-        explicit LennardJonesPair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double c6,
-            const double c12
-        );
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/906
+        // explicitly deleted to not implicitly create it with the wrong
+        // types!!! Needs cleanup
+        explicit LennardJonesPair(size_t, size_t, double, const LJParams &) =
+            delete;
 
-        [[nodiscard]] bool operator==(const LennardJonesPair &other) const;
+        [[nodiscard]]
+        bool operator==(const LennardJonesPair &other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
-        [[nodiscard]] double getC6() const;
-        [[nodiscard]] double getC12() const;
+        friend struct ::TestLJPairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _LENNARD_JONES_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__LENNARD_JONES_PAIR_HPP

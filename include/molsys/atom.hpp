@@ -20,14 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ATOM_HPP_
+#ifndef MOLSYS__ATOM_HPP
+#define MOLSYS__ATOM_HPP
 
-#define _ATOM_HPP_
-
-#include <cstddef>       // for size_t
-#include <optional>      // for optional
-#include <string>        // for string
-#include <string_view>   // for string_view
+#include <optional>
+#include <string>
+#include <string_view>
 
 #include "staticMatrix.hpp"
 #include "strongTypes.hpp"
@@ -49,11 +47,11 @@ namespace molsys
         std::string _name;
         std::string _atomTypeName;
 
-        size_t _externalGlobalVDWType;
-        size_t _internalGlobalVDWType;
+        ExtVdwType _externalGlobalVDWType;
+        VdwType    _internalGlobalVDWType;
 
-        size_t _externalAtomType;
-        size_t _atomType;
+        ExtAtomType _externalAtomType;
+        AtomType    _atomType;
 
         bool _isActive = true;
 
@@ -62,17 +60,17 @@ namespace molsys
         double                _partialCharge;
         std::optional<double> _qmCharge;
 
-        linearAlgebra::Vec3D _position;
-        linearAlgebra::Vec3D _positionOld;
+        linalg::Vec3D _position;
+        linalg::Vec3D _positionOld;
 
-        linearAlgebra::Vec3D _velocity;
-        linearAlgebra::Vec3D _velocityOld;
+        linalg::Vec3D _velocity;
+        linalg::Vec3D _velocityOld;
 
-        linearAlgebra::Vec3D _force;
-        linearAlgebra::Vec3D _forceOld;
-        linearAlgebra::Vec3D _forceInner;
-        linearAlgebra::Vec3D _forceOuter;
-        linearAlgebra::Vec3D _shiftForce;
+        linalg::Vec3D _force;
+        linalg::Vec3D _forceOld;
+        linalg::Vec3D _forceInner;
+        linalg::Vec3D _forceOuter;
+        linalg::Vec3D _shiftForce;
 
        public:
         Atom() = default;
@@ -87,26 +85,26 @@ namespace molsys
          * scaling methods *
          *******************/
 
-        void scaleVelocity(const double scaleFactor);
-        void scaleVelocity(const linearAlgebra::Vec3D &scaleFactor);
+        void scaleVelocity(double scaleFactor);
+        void scaleVelocity(const linalg::Vec3D &scaleFactor);
         void scaleVelocityOrthogonalSpace(
-            const linearAlgebra::tensor3D &,
+            const linalg::tensor3D &,
             const Box &
         );
-        void scaleForce(const double scaleFactor);
-        void scaleForce(const linearAlgebra::Vec3D &scaleFactor);
+        void scaleForce(double scaleFactor);
+        void scaleForce(const linalg::Vec3D &scaleFactor);
 
         /**************************
          * standard adder methods *
          **************************/
 
-        void addPosition(const linearAlgebra::Vec3D &position);
-        void addVelocity(const linearAlgebra::Vec3D &velocity);
-        void addForce(const linearAlgebra::Vec3D &force) { _force += force; }
-        void addForce(const double, const double, const double);
-        void addForceInner(const linearAlgebra::Vec3D &force);
-        void addForceOuter(const linearAlgebra::Vec3D &force);
-        void addShiftForce(const linearAlgebra::Vec3D &shiftForce)
+        void addPosition(const linalg::Vec3D &position);
+        void addVelocity(const linalg::Vec3D &velocity);
+        void addForce(const linalg::Vec3D &force) { _force += force; }
+        void addForce(double, double, double);
+        void addForceInner(const linalg::Vec3D &force);
+        void addForceOuter(const linalg::Vec3D &force);
+        void addShiftForce(const linalg::Vec3D &shiftForce)
         {
             _shiftForce += shiftForce;
         }
@@ -122,11 +120,11 @@ namespace molsys
         [[nodiscard]] const std::string &getName() const { return _name; }
         [[nodiscard]] std::string        getAtomTypeName() const;
 
-        [[nodiscard]] size_t getExternalAtomType() const;
-        [[nodiscard]] size_t getAtomType() const;
+        [[nodiscard]] ExtAtomType getExternalAtomType() const;
+        [[nodiscard]] AtomType    getAtomType() const;
 
-        [[nodiscard]] size_t getExternalGlobalVDWType() const;
-        [[nodiscard]] size_t getInternalGlobalVDWType() const;
+        [[nodiscard]] ExtVdwType getExternalGlobalVDWType() const;
+        [[nodiscard]] VdwType    getInternalGlobalVDWType() const;
 
         [[nodiscard]]
         AtomNumber getAtomicNumber() const
@@ -138,47 +136,47 @@ namespace molsys
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
-        [[nodiscard]] const linearAlgebra::Vec3D &getPosition() const
+        [[nodiscard]] const linalg::Vec3D &getPosition() const
         {
             return _position;
         }
-        [[nodiscard]] linearAlgebra::Vec3D getPositionOld() const;
-        [[nodiscard]] linearAlgebra::Vec3D getVelocity() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForce() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForceOld() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForceInner() const;
-        [[nodiscard]] linearAlgebra::Vec3D getForceOuter() const;
-        [[nodiscard]] linearAlgebra::Vec3D getShiftForce() const;
+        [[nodiscard]] linalg::Vec3D getPositionOld() const;
+        [[nodiscard]] linalg::Vec3D getVelocity() const;
+        [[nodiscard]] linalg::Vec3D getForce() const;
+        [[nodiscard]] linalg::Vec3D getForceOld() const;
+        [[nodiscard]] linalg::Vec3D getForceInner() const;
+        [[nodiscard]] linalg::Vec3D getForceOuter() const;
+        [[nodiscard]] linalg::Vec3D getShiftForce() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setActive(const bool isActive);
+        void setActive(bool isActive);
 
         void setName(const std::string_view &name);
         void setAtomTypeName(const std::string_view &atomTypeName);
-        void setAtomicNumber(const AtomNumber atomicNumber);
+        void setAtomicNumber(AtomNumber atomicNumber);
 
-        void setMass(const double mass);
-        void setPartialCharge(const double partialCharge);
-        void setQMCharge(const double charge);
+        void setMass(double mass);
+        void setPartialCharge(double partialCharge);
+        void setQMCharge(double charge);
 
-        void setAtomType(const size_t atomType);
-        void setExternalAtomType(const size_t externalAtomType);
-        void setExternalGlobalVDWType(const size_t externalGlobalVDWType);
-        void setInternalGlobalVDWType(const size_t internalGlobalVDWType);
+        void setAtomType(AtomType atomType);
+        void setExternalAtomType(ExtAtomType externalAtomType);
+        void setExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
+        void setInternalGlobalVDWType(VdwType internalGlobalVDWType);
 
-        void setPosition(const linearAlgebra::Vec3D &position);
-        void setVelocity(const linearAlgebra::Vec3D &velocity);
-        void setForce(const linearAlgebra::Vec3D &force);
-        void setForceInner(const linearAlgebra::Vec3D &force);
-        void setForceOuter(const linearAlgebra::Vec3D &force);
-        void setShiftForce(const linearAlgebra::Vec3D &shiftForce);
+        void setPosition(const linalg::Vec3D &position);
+        void setVelocity(const linalg::Vec3D &velocity);
+        void setForce(const linalg::Vec3D &force);
+        void setForceInner(const linalg::Vec3D &force);
+        void setForceOuter(const linalg::Vec3D &force);
+        void setShiftForce(const linalg::Vec3D &shiftForce);
 
-        void setPositionOld(const linearAlgebra::Vec3D &positionOld);
-        void setVelocityOld(const linearAlgebra::Vec3D &velocityOld);
-        void setForceOld(const linearAlgebra::Vec3D &forceOld);
+        void setPositionOld(const linalg::Vec3D &positionOld);
+        void setVelocityOld(const linalg::Vec3D &velocityOld);
+        void setForceOld(const linalg::Vec3D &forceOld);
 
         void setForceToZero();
         void setInnerForceToZero();
@@ -188,4 +186,4 @@ namespace molsys
     };
 }   // namespace molsys
 
-#endif   // _ATOM_HPP_
+#endif   // MOLSYS__ATOM_HPP

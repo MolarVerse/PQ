@@ -20,18 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_PARAMETER_FILE_READER_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP
 
-#define _TEST_PARAMETER_FILE_READER_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
-
-#include <string>   // for allocator
-
-#include "fileSettings.hpp"          // for FileSettings
-#include "mmmdEngine.hpp"            // for Engine
-#include "molecule.hpp"              // for Molecule
-#include "parameterFileReader.hpp"   // for ParameterFileReader
+#include "fileSettings.hpp"
+#include "mmmdEngine.hpp"
+#include "molecule.hpp"
+#include "parameterFileReader.hpp"
 
 /**
  * @class TestParameterFileReader
@@ -42,37 +39,31 @@
 class TestParameterFileReader : public ::testing::Test
 {
    protected:
-    engine::Engine                            *_engine;
-    input::parameterFile::ParameterFileReader *_parameterFileReader;
+    Settings                        _settings;
+    std::unique_ptr<engine::Engine> _engine;
+    std::unique_ptr<input::parameterFile::ParameterFileReader>
+        _parameterFileReader;
 
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(1);
-
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(2);
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
         //       and works therefore for all derived classes
-        _engine = new engine::MMMDEngine();
+        _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
-        _parameterFileReader = new input::parameterFile::ParameterFileReader(
-            "data/parameterFileReader/param.param",
-            *_engine
-        );
+        _parameterFileReader =
+            std::make_unique<input::parameterFile::ParameterFileReader>(
+                "data/parameterFileReader/param.param",
+                *_engine
+            );
         settings::FileSettings::setIsParameterFileNameSet();
-    }
-
-    void TearDown() override
-    {
-        delete _parameterFileReader;
-        delete _engine;
     }
 };
 
-#endif   // _TEST_PARAMETER_FILE_READER_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP

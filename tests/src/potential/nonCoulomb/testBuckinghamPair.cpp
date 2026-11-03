@@ -20,16 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, CmpHelperFloatingPointEQ, EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <cmath>     // for pow, exp
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
+#include <cmath>
+#include <vector>
 
-#include "buckinghamPair.hpp"   // for BuckinghamPair
-#include "gtest/gtest.h"        // for AssertionResult, Message, TestPartResult
-
-using namespace potential;
+#include "buckinghamPair.hpp"
 
 /**
  * @brief tests the equals operator of BuckinghamPair
@@ -37,38 +33,71 @@ using namespace potential;
  */
 TEST(TestBuckinghamPair, equalsOperator)
 {
-    const size_t vdwType1 = 0;
-    const size_t vdwType2 = 1;
-    const size_t vdwType3 = 2;
-    const auto   nonCoulombPair1 =
-        BuckinghamPair(vdwType1, vdwType2, 1.0, 2.0, 3.0, 4.0);
+    const ExtVdwType vdwType1{0};
+    const ExtVdwType vdwType2{1};
+    const ExtVdwType vdwType3{2};
 
-    const auto nonCoulombPair2 =
-        BuckinghamPair(vdwType1, vdwType2, 1.0, 2.0, 3.0, 4.0);
+    const auto nonCoulombPair1 = pot::BuckinghamPair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        BuckinghamParams{.scaling = 2.0, .dRho = 3.0, .c6 = 4.0}
+    );
+
+    const auto nonCoulombPair2 = pot::BuckinghamPair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        BuckinghamParams{.scaling = 2.0, .dRho = 3.0, .c6 = 4.0}
+    );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair2);
 
-    const auto nonCoulombPair3 =
-        BuckinghamPair(vdwType2, vdwType1, 1.0, 2.0, 3.0, 4.0);
+    const auto nonCoulombPair3 = pot::BuckinghamPair(
+        vdwType2,
+        vdwType1,
+        1.0,
+        BuckinghamParams{.scaling = 2.0, .dRho = 3.0, .c6 = 4.0}
+    );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair3);
 
-    const auto nonCoulombPair4 =
-        BuckinghamPair(vdwType1, vdwType3, 1.0, 2.0, 3.0, 4.0);
+    const auto nonCoulombPair4 = pot::BuckinghamPair(
+        vdwType1,
+        vdwType3,
+        1.0,
+        BuckinghamParams{.scaling = 2.0, .dRho = 3.0, .c6 = 4.0}
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair4);
 
-    const auto nonCoulombPair5 =
-        BuckinghamPair(vdwType1, vdwType2, 2.0, 2.0, 3.0, 4.0);
+    const auto nonCoulombPair5 = pot::BuckinghamPair(
+        vdwType1,
+        vdwType2,
+        2.0,
+        BuckinghamParams{.scaling = 2.0, .dRho = 3.0, .c6 = 4.0}
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair5);
 
-    const auto nonCoulombPair6 =
-        BuckinghamPair(vdwType1, vdwType2, 1.0, 3.0, 3.0, 4.0);
+    const auto nonCoulombPair6 = pot::BuckinghamPair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        BuckinghamParams{.scaling = 3.0, .dRho = 3.0, .c6 = 4.0}
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair6);
 
-    const auto nonCoulombPair7 =
-        BuckinghamPair(vdwType1, vdwType2, 1.0, 2.0, 4.0, 4.0);
+    const auto nonCoulombPair7 = pot::BuckinghamPair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        BuckinghamParams{.scaling = 2.0, .dRho = 4.0, .c6 = 4.0}
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair7);
 
-    const auto nonCoulombPair8 =
-        BuckinghamPair(vdwType1, vdwType2, 1.0, 2.0, 3.0, 5.0);
+    const auto nonCoulombPair8 = pot::BuckinghamPair(
+        vdwType1,
+        vdwType2,
+        1.0,
+        BuckinghamParams{.scaling = 2.0, .dRho = 3.0, .c6 = 5.0}
+    );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair8);
 }
 
@@ -83,13 +112,15 @@ TEST(TestBuckinghamPair, calculateEnergyAndForces)
     const double energyCutoff = 1.0;
     const double forceCutoff  = 2.0;
 
-    const auto potential = potential::BuckinghamPair(
+    const auto potential = pot::BuckinghamPair(
         rncCutoff,
         energyCutoff,
         forceCutoff,
-        coefficients[0],
-        coefficients[1],
-        coefficients[2]
+        BuckinghamParams{
+            .scaling = coefficients[0],
+            .dRho    = coefficients[1],
+            .c6      = coefficients[2]
+        }
     );
 
     auto distance        = 2.0;
@@ -99,12 +130,12 @@ TEST(TestBuckinghamPair, calculateEnergyAndForces)
 
     EXPECT_DOUBLE_EQ(
         energy,
-        helper + coefficients[2] / ::pow(distance, 6) - energyCutoff -
-            forceCutoff * (rncCutoff - distance)
+        helper + (coefficients[2] / ::pow(distance, 6)) - energyCutoff -
+            (forceCutoff * (rncCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
         force,
-        -helper * coefficients[1] + 6.0 * coefficients[2] / ::pow(distance, 7) -
-            forceCutoff
+        (-helper * coefficients[1]) +
+            (6.0 * coefficients[2] / ::pow(distance, 7)) - forceCutoff
     );
 }

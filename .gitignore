@@ -11,6 +11,9 @@ benchmark-results/
 
 install/
 
+integration_tests/.zip_cache/
+integration_tests/tmpdir/
+
 examples/cgo
 
 examples/**/testset*

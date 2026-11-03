@@ -20,16 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BUCKINGHAM_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__BUCKINGHAM_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__BUCKINGHAM_PAIR_HPP
 
-#define _BUCKINGHAM_PAIR_HPP_
-
-#include <cstddef>   // size_t
-#include <utility>   // pair
+#include <utility>
 
 #include "nonCoulombPair.hpp"
+#include "strongTypes.hpp"
 
-namespace potential
+struct TestBuckinghamPairUtils;   // forward declaration
+
+namespace pot
 {
     /**
      * @class BuckinghamPair
@@ -40,46 +41,43 @@ namespace potential
     class BuckinghamPair : public NonCoulombPair
     {
        private:
-        double _a;
-        double _dRho;
-        double _c6;
+        BuckinghamParams _params;
 
        public:
         explicit BuckinghamPair(
-            const size_t vanDerWaalsType1,
-            const size_t vanDerWaalsType2,
-            const double cutOff,
-            const double a,
-            const double dRho,
-            const double c6
+            ExtVdwType              vanDerWaalsType1,
+            ExtVdwType              vanDerWaalsType2,
+            double                  cutOff,
+            const BuckinghamParams& params
         );
+
+        explicit BuckinghamPair(double cutOff, const BuckinghamParams& params);
 
         explicit BuckinghamPair(
-            const double cutOff,
-            const double a,
-            const double dRho,
-            const double c6
+            double                  cutOff,
+            double                  energyCutoff,
+            double                  forceCutoff,
+            const BuckinghamParams& params
         );
 
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/906
+        // explicitly deleted to not implicitly create it with the wrong
+        // types!!! Needs cleanup
         explicit BuckinghamPair(
-            const double cutOff,
-            const double energyCutoff,
-            const double forceCutoff,
-            const double a,
-            const double dRho,
-            const double c6
-        );
+            size_t,
+            size_t,
+            double,
+            const BuckinghamParams& params
+        ) = delete;
 
-        [[nodiscard]] bool operator==(const BuckinghamPair &other) const;
+        [[nodiscard]] bool operator==(const BuckinghamPair& other) const;
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
-        [[nodiscard]] double getA() const;
-        [[nodiscard]] double getDRho() const;
-        [[nodiscard]] double getC6() const;
+        friend struct ::TestBuckinghamPairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _BUCKINGHAM_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__BUCKINGHAM_PAIR_HPP

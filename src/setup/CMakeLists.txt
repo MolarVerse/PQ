@@ -1,4 +1,5 @@
 set(setup_source_files
+    setupBase.cpp
     setup.cpp
     simulationBoxSetup.cpp
     celllistSetup.cpp
@@ -44,6 +45,9 @@ target_link_libraries(setup
     nonCoulombPotential
     maxwellBoltzmann
     optimization
+    config_headers
+    PRIVATE
+    intraWater
 )
 
 if(BUILD_WITH_MPI)

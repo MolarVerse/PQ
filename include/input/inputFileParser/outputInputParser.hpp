@@ -20,139 +20,61 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OUTPUT_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__OUTPUT_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__OUTPUT_INPUT_PARSER_HPP
 
-#define _OUTPUT_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
+#include "inputFileParser.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
+class OutputFileSettings;
 
 namespace input
 {
     /**
-     * @class OutputInputParser inherits from InputFileParser
+     * @brief OutputInputParser inherits from InputFileParser
      *
-     * @brief Parses the output commands in the input file
+     * @details Parses the output commands in the input file
      *
      */
     class OutputInputParser : public InputFileParser
     {
+        mstd::Ref<OutputFileSettings> _outputFileSettings;
+
        public:
-        OutputInputParser();
+        explicit OutputInputParser(OutputFileSettings &outputFileSettings);
 
-        void parseOverwriteOutput(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addOverwriteOutputKeyword();
+        void addIncludeOutputMetadataKeyword();
+        void addOutputFrequencyKeyword();
+        void addFilePrefixKeyword();
 
-        void parseIncludeOutputMetadata(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addLogFilenameKeyword();
+        void addReferenceFilenameKeyword();
+        void addInfoFilenameKeyword();
+        void addEnergyFilenameKeyword();
+        void addInstantEnergyFilenameKeyword();
+        void addTrajectoryFilenameKeyword();
+        void addHybridCenterFilenameKeyword();
+        void addVelocityFilenameKeyword();
+        void addForceFilenameKeyword();
+        void addRestartFilenameKeyword();
+        void addChargeFilenameKeyword();
+        void addMomentumFilenameKeyword();
+        void addVirialFilenameKeyword();
+        void addStressFilenameKeyword();
+        void addBoxFilenameKeyword();
+        void addTimingsFilenameKeyword();
+        void addOptFilenameKeyword();
 
-        void parseOutputFreq(const std::vector<std::string> &, const size_t);
-
-        void parseFilePrefix(const std::vector<std::string> &, const size_t);
-
-        void parseLogFilename(const std::vector<std::string> &, const size_t);
-
-        void parseRefFilename(const std::vector<std::string> &, const size_t);
-
-        void parseInfoFilename(const std::vector<std::string> &, const size_t);
-
-        void parseEnergyFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseInstantEnergyFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseTrajectoryFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseHybridCenterFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseVelocityFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseForceFilename(const std::vector<std::string> &, const size_t);
-
-        void parseRestartFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseChargeFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseMomentumFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseVirialFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseStressFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseBoxFilename(const std::vector<std::string> &, const size_t);
-
-        void parseTimingsFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseOptFilename(const std::vector<std::string> &, const size_t);
-
-        void parseRPMDRestartFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRPMDTrajectoryFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRPMDVelocityFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRPMDForceFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRPMDChargeFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRPMDEnergyFilename(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addRPMDRestartFilenameKeyword();
+        void addRPMDTrajectoryFilenameKeyword();
+        void addRPMDVelocityFilenameKeyword();
+        void addRPMDForceFilenameKeyword();
+        void addRPMDChargeFilenameKeyword();
+        void addRPMDEnergyFilenameKeyword();
     };
 
 }   // namespace input
 
-#endif   // _OUTPUT_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__OUTPUT_INPUT_PARSER_HPP

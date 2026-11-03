@@ -20,34 +20,38 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__HESSIAN_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__HESSIAN_INPUT_PARSER_HPP
 
-#define _HESSIAN_INPUT_PARSER_HPP_
-
-#include <cstddef>
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
 
+class HessianSettings;
+
 namespace input
 {
+    /**
+     * @brief Parser for Hessian-related input file keys.
+     *
+     * This class is responsible for parsing Hessian-specific settings
+     * from the input file and populating the corresponding HessianSettings
+     * object.
+     */
     class HessianInputParser : public InputFileParser
     {
-       public:
-        HessianInputParser();
+        mstd::Ref<HessianSettings> _hessianSettings;
 
-        void parseHessianFile(const std::vector<std::string> &, const size_t);
-        void parseHessianInfoFile(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseDisplacement(const std::vector<std::string> &, const size_t);
-        void parseOptimizeBeforeHessian(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseBuilder(const std::vector<std::string> &, const size_t);
+       public:
+        explicit HessianInputParser(HessianSettings &hessianSettings);
+
+        void addHessianFileKey();
+        void addHessianInfoFileKey();
+        void addDisplacementKey();
+        void addOptimizeBeforeHessianKey();
+        void addBuilderKey();
     };
 
 }   // namespace input
 
-#endif   // _HESSIAN_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__HESSIAN_INPUT_PARSER_HPP

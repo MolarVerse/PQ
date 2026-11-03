@@ -18,6 +18,15 @@ SPEC.loader.exec_module(CHECK)
 
 
 class ChangelogFragmentCheckTests(unittest.TestCase):
+    def test_a_placeholder_file_is_not_a_fragment(self):
+        for audience in ("user", "developer"):
+            self.assertIsNone(
+                CHECK.fragment_audience(f"changes/{audience}/.gitkeep")
+            )
+        self.assertEqual(
+            "user", CHECK.fragment_audience("changes/user/bugfix.output.md")
+        )
+
     def test_accepts_one_valid_fragment(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)

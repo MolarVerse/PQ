@@ -23,42 +23,27 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 
 #include "physicalData.hpp"
 #include "stressOutput.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
-
-using namespace output;
-using physicalData::PhysicalData;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
+#include "testOutputBase.hpp"
+#include "vector3d.hpp"
 
 TEST(TestStressOutput, writeEmitsStepAndAllNineTensorComponents)
 {
     const std::string path = "default.stress.test";
 
-    StressOutput out(path);
-    out.setFilename(path);
+    out::StressOutput out(path);
+    out.setFilename(path, false);
 
-    PhysicalData data;
+    physicalData::PhysicalData data;
     // Distinct values per row so we can locate them in the output.
     data.setStressTensor(
-        linearAlgebra::tensor3D{
-            linearAlgebra::Vec3D{1.1, 2.2, 3.3},
-            linearAlgebra::Vec3D{4.4, 5.5, 6.6},
-            linearAlgebra::Vec3D{7.7, 8.8, 9.9}
+        linalg::tensor3D{
+            linalg::Vec3D{1.1, 2.2, 3.3},
+            linalg::Vec3D{4.4, 5.5, 6.6},
+            linalg::Vec3D{7.7, 8.8, 9.9}
         }
     );
 
@@ -79,10 +64,10 @@ TEST(TestStressOutput, writeEmitsOneLinePerCall)
 {
     const std::string path = "default.stress.test";
 
-    StressOutput out(path);
-    out.setFilename(path);
+    out::StressOutput out(path);
+    out.setFilename(path, false);
 
-    PhysicalData data;
+    physicalData::PhysicalData data;
 
     out.write(1, data);
     out.write(2, data);
@@ -90,8 +75,8 @@ TEST(TestStressOutput, writeEmitsOneLinePerCall)
 
     const auto content  = slurp(path);
     size_t     newlines = 0;
-    for (auto c : content)
-        if (c == '\n')
+    for (auto character : content)
+        if (character == '\n')
             ++newlines;
     EXPECT_EQ(newlines, 2U);
 

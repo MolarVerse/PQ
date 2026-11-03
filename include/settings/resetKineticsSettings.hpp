@@ -20,59 +20,58 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_SETTINGS_HPP_
+#ifndef SETTINGS__RESET_KINETICS_SETTINGS_HPP
+#define SETTINGS__RESET_KINETICS_SETTINGS_HPP
 
-#define _RESET_KINETICS_SETTINGS_HPP_
+#include <cstddef>
 
-#include <cstddef>   // for size_t
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @class ResetKineticsSettings
+ *
+ * @brief  class to store settings of reset kinetics
+ *
+ */
+class ResetKineticsSettings
 {
-    /**
-     * @class ResetKineticsSettings
-     *
-     * @brief static class to store settings of reset kinetics
-     *
-     */
-    class ResetKineticsSettings
-    {
-       private:
-        static inline size_t _nScale        = 0;
-        static inline size_t _fScale        = 0;
-        static inline size_t _nReset        = 0;
-        static inline size_t _fReset        = 0;
-        static inline size_t _nResetAngular = 0;
-        static inline size_t _fResetAngular = 0;
-        static inline size_t _fResetForces  = 0;
+   private:
+    Setting<size_t> _nScale;
+    Setting<size_t> _fScale;
+    Setting<size_t> _nReset;
+    Setting<size_t> _fReset;
+    Setting<size_t> _nResetAngular;
+    Setting<size_t> _fResetAngular;
+    Setting<size_t> _fResetForces;
 
-       public:
-        ResetKineticsSettings()  = default;
-        ~ResetKineticsSettings() = default;
+   public:
+    ResetKineticsSettings();
 
-        /***************************
-         * standard setter methods *
-         ***************************/
+    void finalize();
 
-        static void setNScale(const size_t nScale);
-        static void setFScale(const size_t fScale);
-        static void setNReset(const size_t nReset);
-        static void setFReset(const size_t fReset);
-        static void setNResetAngular(const size_t nResetAngular);
-        static void setFResetAngular(const size_t fResetAngular);
-        static void setFResetForces(const size_t fResetForces);
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-        /***************************
-         * standard getter methods *
-         ***************************/
+    void setNScale(size_t nScale);
+    void setFScale(size_t fScale);
+    void setNReset(size_t nReset);
+    void setFReset(size_t fReset);
+    void setNResetAngular(size_t nResetAngular);
+    void setFResetAngular(size_t fResetAngular);
+    void setFResetForces(size_t fResetForces);
 
-        [[nodiscard]] static size_t getNScale();
-        [[nodiscard]] static size_t getFScale();
-        [[nodiscard]] static size_t getNReset();
-        [[nodiscard]] static size_t getFReset();
-        [[nodiscard]] static size_t getNResetAngular();
-        [[nodiscard]] static size_t getFResetAngular();
-        [[nodiscard]] static size_t getFResetForces();
-    };
-}   // namespace settings
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-#endif   // _RESET_KINETICS_SETTINGS_HPP_
+    [[nodiscard]] size_t getNScale() const;
+    [[nodiscard]] size_t getFScale() const;
+    [[nodiscard]] size_t getNReset() const;
+    [[nodiscard]] size_t getFReset() const;
+    [[nodiscard]] size_t getNResetAngular() const;
+    [[nodiscard]] size_t getFResetAngular() const;
+    [[nodiscard]] size_t getFResetForces() const;
+};
+
+#endif   // SETTINGS__RESET_KINETICS_SETTINGS_HPP

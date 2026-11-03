@@ -20,42 +20,47 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_VIRIAL_HPP_
+#ifndef TESTS__INCLUDE__VIRIAL__TEST_VIRIAL_HPP
+#define TESTS__INCLUDE__VIRIAL__TEST_VIRIAL_HPP
 
-#define _TEST_VIRIAL_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
-
-#include "atom.hpp"            // for Atom
-#include "molecule.hpp"        // for Molecule
-#include "physicalData.hpp"    // for PhysicalData
-#include "simulationBox.hpp"   // for SimulationBox
-#include "virial.hpp"          // for Virial
+#include "atom.hpp"
+#include "enums/jobtype.hpp"
+#include "generalSettings.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "virial.hpp"
 
 class TestVirial : public ::testing::Test
 {
    protected:
+    std::unique_ptr<molsys::SimulationBox> _simBox;
+    JobType                                _jobType;
+
     void SetUp() override
     {
-        _simBox = new molsys::SimulationBox();
-        settings::Settings::setVirialType(settings::VirialType::ATOMIC);
+        _jobType = settings::GeneralSettings::getJobtype();
+
+        _simBox = std::make_unique<molsys::SimulationBox>();
+        settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
 
         auto molecule1 = molsys::Molecule();
 
         const auto atom1 = std::make_shared<molsys::Atom>();
         const auto atom2 = std::make_shared<molsys::Atom>();
 
-        molecule1.setNumberOfAtoms(2);
-
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom1->setShiftForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setShiftForce(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        molecule1.setCenterOfMass(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setShiftForce(linalg::Vec3D(1.0, 2.0, 3.0));
+        molecule1.setCenterOfMass(linalg::Vec3D(1.0, 1.0, 1.0));
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
@@ -63,11 +68,10 @@ class TestVirial : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        molecule2.setNumberOfAtoms(1);
-        atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setShiftForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        molecule2.setCenterOfMass(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        molecule2.setCenterOfMass(linalg::Vec3D(0.0, 0.0, 0.0));
         molecule2.addAtom(atom3);
 
         _simBox->addMolecule(molecule1);
@@ -77,12 +81,14 @@ class TestVirial : public ::testing::Test
         _simBox->addAtom(atom2);
         _simBox->addAtom(atom3);
 
-        _simBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simBox->setBox(orthoBox, false);
     }
 
-    void TearDown() override { delete _simBox; }
-
-    molsys::SimulationBox *_simBox;
+    void TearDown() override
+    {
+        settings::GeneralSettings::setJobtype(_jobType);
+    }
 };
 
 #endif

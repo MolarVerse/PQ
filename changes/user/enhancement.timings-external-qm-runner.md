@@ -1,1 +1,0 @@
-- Add timing subsections to external QM runners

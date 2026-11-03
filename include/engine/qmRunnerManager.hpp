@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_RUNNER_MANAGER_HPP_
-
-#define _QM_RUNNER_MANAGER_HPP_
+#ifndef ENGINE__QM_RUNNER_MANAGER_HPP
+#define ENGINE__QM_RUNNER_MANAGER_HPP
 
 #include <memory>
 
+#include "enums/qm.hpp"
 #include "qmRunner.hpp"
-#include "qmSettings.hpp"
 
 namespace engine
 {
@@ -43,19 +42,17 @@ namespace engine
      */
     class QMRunnerManager
     {
-       private:
-        QMRunnerManager() = default;
-
        public:
-        static std::shared_ptr<QM::QMRunner> createQMRunner(
-            const settings::QMMethod method
-        );
+        static std::shared_ptr<QM::QMRunner> createQMRunner(QMMethod method);
         static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
         static std::shared_ptr<QM::QMRunner> createAseFennolRunner();
         static std::shared_ptr<QM::QMRunner> createAseMaceRunner();
         static std::shared_ptr<QM::QMRunner> createAseXtbRunner();
+
+       private:
+        QMRunnerManager() = default;
     };
 
 }   // namespace engine
 
-#endif   // _QM_RUNNER_MANAGER_HPP_
+#endif   // ENGINE__QM_RUNNER_MANAGER_HPP

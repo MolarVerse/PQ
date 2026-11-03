@@ -20,16 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GUFF_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__GUFF_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__GUFF_PAIR_HPP
 
-#define _GUFF_PAIR_HPP_
+#include <utility>
 
-#include <utility>   // pair
-#include <vector>    // vector
-
+#include "defaults.hpp"
 #include "nonCoulombPair.hpp"
 
-namespace potential
+struct TestGuffPairUtils;   // forward declaration
+
+namespace pot
 {
     /**
      * @class GuffPair
@@ -45,18 +46,26 @@ namespace potential
     class GuffPair : public NonCoulombPair
     {
        private:
-        std::vector<double> _coefficients;
+        std::array<double, defaults::NUM_GUFF_COEFFICIENTS> _coefficients{};
 
        public:
-        explicit GuffPair(const double, const std::vector<double> &);
-        explicit GuffPair(const double, const double, const double, const std::vector<double> &);
+        explicit GuffPair(
+            double,
+            const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>&
+        );
+        explicit GuffPair(
+            double,
+            double,
+            double,
+            const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>&
+        );
 
-        [[nodiscard]] std::pair<double, double> calculate(const double distance
-        ) const override;
+        [[nodiscard]]
+        std::pair<double, double> calculate(double distance) const override;
 
-        [[nodiscard]] std::vector<double> getCoefficients() const;
+        friend struct ::TestGuffPairUtils;
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _GUFF_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__GUFF_PAIR_HPP

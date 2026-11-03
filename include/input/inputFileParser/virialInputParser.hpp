@@ -20,20 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__VIRIAL_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__VIRIAL_INPUT_PARSER_HPP
 
-#define _VIRIAL_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
-
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 
 namespace input
 {
     /**
-     * @class VirialInputParser inherits from InputFileParser
+     * @brief VirialInputParser inherits from InputFileParser
      *
-     * @brief Parses the virial commands in the input file
+     * @details Parses the virial commands in the input file
      *
      */
     class VirialInputParser : public InputFileParser
@@ -41,9 +38,9 @@ namespace input
        public:
         VirialInputParser();
 
-        void parseVirial(const std::vector<std::string> &, const size_t);
+        void addVirialKey();
     };
 
 }   // namespace input
 
-#endif   // _VIRIAL_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__VIRIAL_INPUT_PARSER_HPP

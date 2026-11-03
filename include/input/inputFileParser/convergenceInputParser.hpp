@@ -20,11 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONVERGENCE_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__CONVERGENCE_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__CONVERGENCE_INPUT_PARSER_HPP
 
-#define _CONVERGENCE_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
+
+class ConvSettings;   // Forward declaration
 
 namespace input
 {
@@ -36,65 +39,24 @@ namespace input
      */
     class ConvInputParser : public InputFileParser
     {
+        mstd::Ref<ConvSettings> _convSettings;
+
        public:
-        ConvInputParser();
+        explicit ConvInputParser(ConvSettings &convSettings);
 
-        void parseEnergyConvergenceStrategy(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseUseEnergyConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseUseForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseUseMaxForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseUseRMSForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseEnergyConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRelativeEnergyConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseAbsoluteEnergyConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseMaxForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseRMSForceConvergence(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addEnergyConvergenceStrategyKey();
+        void addUseEnergyConvergenceKey();
+        void addUseForceConvergenceKey();
+        void addUseMaxForceConvergenceKey();
+        void addUseRMSForceConvergenceKey();
+        void addEnergyConvergenceKey();
+        void addRelativeEnergyConvergenceKey();
+        void addAbsoluteEnergyConvergenceKey();
+        void addForceConvergenceKey();
+        void addMaxForceConvergenceKey();
+        void addRMSForceConvergenceKey();
     };
 
 }   // namespace input
 
-#endif   // _CONVERGENCE_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__CONVERGENCE_INPUT_PARSER_HPP

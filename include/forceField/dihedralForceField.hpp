@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DIHEDRAL_FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP
+#define FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP
 
-#define _DIHEDRAL_FORCE_FIELD_HPP_
-
-#include <cstddef>
 #include <vector>
 
 #include "dihedral.hpp"
+#include "strongTypes.hpp"
 
 namespace physicalData
 {
@@ -40,13 +39,13 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
-namespace forceField
+namespace ff
 {
     /**
      * @class DihedralForceField
@@ -60,33 +59,29 @@ namespace forceField
         DihedralId _type;
         bool       _isLinker = false;
 
-        double _forceConstant = 0.0;
-        double _periodicity   = 0.0;
-        double _phaseShift    = 0.0;
+        DihedralParams _params;
 
        public:
         DihedralForceField(
             const std::vector<molsys::Molecule *> &molecules,
-            const std::vector<size_t>             &atomIndices,
-            const DihedralId                       type
+            const std::vector<AtomIndex>          &atomIndices,
+            DihedralId                             type
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox       &simBox,
-            physicalData::PhysicalData        &data,
-            const bool                         isImproperDihedral,
-            const potential::CoulombPotential &coulombPot,
-            potential::NonCoulombPotential    &nonCoulombPot
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData,
+            bool                         isImproperDihedral,
+            const pot::CoulombPotential &coulombPot,
+            pot::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
-        void setForceConstant(const double forceConstant);
-        void setPeriodicity(const double periodicity);
-        void setPhaseShift(const double phaseShift);
+        void setIsLinker(bool isLinker);
+        void setParams(const DihedralParams &params);
 
         /***************************
          * standard getter methods *
@@ -94,12 +89,10 @@ namespace forceField
 
         [[nodiscard]] bool isLinker() const;
 
-        [[nodiscard]] DihedralId getType() const;
-        [[nodiscard]] double     getForceConstant() const;
-        [[nodiscard]] double     getPeriodicity() const;
-        [[nodiscard]] double     getPhaseShift() const;
+        [[nodiscard]] DihedralId            getType() const;
+        [[nodiscard]] const DihedralParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _DIHEDRAL_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP

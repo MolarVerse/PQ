@@ -20,30 +20,34 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__RING_POLYMER_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__RING_POLYMER_INPUT_PARSER_HPP
 
-#define _RING_POLYMER_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
+#include "inputFileParser.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
-
+class RingPolymerSettings;
 namespace input
 {
     /**
-     * @class RingPolymerInputParser inherits from InputFileParser
+     * @brief RingPolymerInputParser inherits from InputFileParser
      *
-     * @brief Parses the general commands in the input file
+     * Parses the general commands in the input file
      *
      */
     class RingPolymerInputParser : public InputFileParser
     {
-       public:
-        RingPolymerInputParser();
+        mstd::Ref<RingPolymerSettings> _ringPolymerSettings;
 
-        void parseNumberOfBeads(const std::vector<std::string> &, const size_t);
+       public:
+        explicit RingPolymerInputParser(
+            RingPolymerSettings &ringPolymerSettings
+        );
+
+        void addNumberOfBeadsKeyword();
     };
 
 }   // namespace input
 
-#endif   // _RING_POLYMER_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__RING_POLYMER_INPUT_PARSER_HPP

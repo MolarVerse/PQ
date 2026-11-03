@@ -20,17 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <filesystem>   // for filesystem
-#include <format>       // for format
-#include <string>       // for string
+#include <filesystem>
+#include <format>
+#include <string>
 
-#include "exceptions.hpp"   // for InputFileException
-#include "gtest/gtest.h"   // for Test, Message, TestPartResult, InitGoogleTest, RUN_ALL_TESTS
-#include "output.hpp"               // for Output
-#include "outputFileSettings.hpp"   // for OutputFileSettings
-#include "throwWithMessage.hpp"     // for EXPECT_THROW_MSG
+#include "exceptions.hpp"
+#include "output.hpp"
+#include "throwWithMessage.hpp"
 
-using namespace settings;
+struct TestOutputUtils
+{
+    static void openFile(out::Output &output) { output._openFile(); }
+};
 
 /**
  * @brief tests setting output filename
@@ -38,42 +39,44 @@ using namespace settings;
  */
 TEST(TestOutput, testSpecialSetFilename)
 {
-    auto output = output::Output("default.log");
+    auto output = out::Output("default.log");
 
     EXPECT_THROW_MSG(
-        output.setFilename(""),
-        customException::InputFileException,
+        output.setFilename("", false),
+        exc::InputFileException,
         "Filename cannot be empty"
     );
 
+    const std::string testDirName = "test_output_dir";
+    std::filesystem::create_directory(testDirName);
+
     EXPECT_THROW_MSG(
-        output.setFilename("src"),
-        customException::InputFileException,
-        "File already exists - filename = src"
+        output.setFilename(testDirName, false),
+        exc::InputFileException,
+        std::format("File already exists - filename = {}", testDirName)
     );
 
     EXPECT_THROW_MSG(
-        output.openFile(),
-        customException::InputFileException,
-        std::format("Could not open file - filename = src")
+        TestOutputUtils::openFile(output),
+        exc::InputFileException,
+        std::format("Could not open file - filename = {}", testDirName)
     );
+
+    std::filesystem::remove(testDirName);
 
     const std::string testFileName = "test_output.txt";
     std::ofstream     testFile(testFileName);
     testFile.close();
 
     EXPECT_THROW_MSG(
-        output.setFilename(testFileName),
-        customException::InputFileException,
+        output.setFilename(testFileName, false),
+        exc::InputFileException,
         std::format("File already exists - filename = {}", testFileName)
     );
 
-    OutputFileSettings::setOverwriteOutputFiles(true);
-
-    EXPECT_NO_THROW(output.setFilename(testFileName));
+    EXPECT_NO_THROW(output.setFilename(testFileName, true));
     EXPECT_NO_THROW(output.close());
     EXPECT_EQ(output.getFilename(), testFileName);
 
-    OutputFileSettings::setOverwriteOutputFiles(false);
     std::filesystem::remove(testFileName);
 }

@@ -22,156 +22,169 @@
 
 #include "logOutput.hpp"
 
-#include <format>    // for format
-#include <ostream>   // for basic_ostream, operator<<, flush, std
-#include <string>    // for char_traits, operator<<
+#include <format>
+#include <ostream>
+#include <string>
 
-#include "outputMessages.hpp"   // for initialMomentumMessage
+#include "outputMessages.hpp"
 
-using output::LogOutput;
-
-/**
- * @brief write an empty line to the log file
- *
- */
-void LogOutput::writeEmptyLine() { _fp << '\n' << std::flush; }
-
-/**
- * @brief write a message to the log file
- *
- * @param message
- */
-void LogOutput::writeInfo(const std::string &message)
+namespace out
 {
-    _fp << message << '\n' << std::flush;
-}
 
-/**
- * @brief write header title
- *
- * @return string
- */
-void LogOutput::writeHeader() { _fp << header() << '\n' << std::flush; }
-
-/**
- * @brief write a message to the log file if the simulation ended normally
- *
- */
-void LogOutput::writeEndedNormally(const double elapsedTime)
-{
-    _fp << elapsedTimeMessage(elapsedTime) << '\n';
-    _fp << endedNormally() << '\n' << std::flush;
-}
-
-/**
- * @brief write a warning message to the log file if density and box dimensions
- * are set
- *
- */
-void LogOutput::writeDensityWarning()
-{
-    _fp << WARNING << "Density and box dimensions set. Density will be ignored."
-        << "\n\n"
-        << std::flush;
-}
-
-/**
- * @brief write a warning message to the log file if the optimization did not
- * converge
- *
- * @param message
- */
-void LogOutput::writeOptWarning(const std::string &message)
-{
-    _fp << WARNING << message << "\n\n" << std::flush;
-}
-
-/**
- * @brief write initial momentum to log file
- *
- * @param momentum
- */
-void LogOutput::writeInitialMomentum(const double momentum)
-{
-    _fp << "\n" << std::flush;
-
-    _fp << std::format(
-        "{}Initial momentum = {:.5e} {}*amu/fs\n",
-        INFO,
-        momentum,
-        ANGSTROM
-    );
-
-    _fp << std::flush;
-}
-
-/**
- * @brief write a message to inform about the start of the setup
- *
- */
-void LogOutput::writeSetup(const std::string &setup)
-{
-    _fp << setupMessage(setup) << '\n' << std::flush;
-}
-
-/**
- * @brief write a message to inform about the setup
- *
- */
-void LogOutput::writeSetupInfo(const std::string &setupInfo)
-{
-    _fp << OUTPUT << setupInfo << '\n' << std::flush;
-}
-
-/**
- * @brief write a message to issue a warning about the setup
- *
- */
-void LogOutput::writeSetupWarning(const std::string &setupWarning)
-{
-    _fp << WARNING << setupWarning << '\n' << std::flush;
-}
-
-/**
- * @brief write a message to the stdout to inform that the setup is completed
- *
- * @param momentum
- */
-void LogOutput::writeSetupCompleted()
-{
-    _fp << setupCompletedMessage() << '\n' << std::flush;
-}
-
-/**
- * @brief write a message to inform about starting to read a file
- *
- */
-void LogOutput::writeRead(const std::string &message, const std::string &file)
-{
-    _fp << readMessage(message, file) << '\n' << std::flush;
-}
-
-/**
- * @brief add a warning message that will be printed after the output file has
- * been created
- *
- */
-void LogOutput::queueWarning(const std::string &warning)
-{
-    _pendingWarnings.push_back(warning);
-}
-
-/**
- * @brief flush pending warning messages to the output file
- *
- */
-void LogOutput::flushQueuedWarnings()
-{
-    for (const auto &message : _pendingWarnings)
+    /**
+     * @brief write an empty line to the log file
+     *
+     */
+    void LogOutput::writeEmptyLine()
     {
-        writeSetupWarning(message);
-        writeEmptyLine();
+        _getFilePointer() << '\n' << std::flush;
     }
 
-    _pendingWarnings.clear();
-}
+    /**
+     * @brief write a message to the log file
+     *
+     * @param message
+     */
+    void LogOutput::writeInfo(const std::string &message)
+    {
+        _getFilePointer() << message << '\n' << std::flush;
+    }
+
+    /**
+     * @brief write header title
+     *
+     */
+    void LogOutput::writeHeader()
+    {
+        _getFilePointer() << header() << '\n' << std::flush;
+    }
+
+    /**
+     * @brief write a message to the log file if the simulation ended normally
+     *
+     */
+    void LogOutput::writeEndedNormally(double elapsedTime)
+    {
+        _getFilePointer() << elapsedTimeMessage(elapsedTime) << '\n';
+        _getFilePointer() << endedNormally() << '\n' << std::flush;
+    }
+
+    /**
+     * @brief write a warning message to the log file if density and box
+     * dimensions are set
+     *
+     */
+    void LogOutput::writeDensityWarning()
+    {
+        _getFilePointer(
+        ) << WARNING
+          << "Density and box dimensions set. Density will be ignored."
+          << "\n\n"
+          << std::flush;
+    }
+
+    /**
+     * @brief write a warning message to the log file if the optimization did
+     * not converge
+     *
+     * @param message
+     */
+    void LogOutput::writeOptWarning(const std::string &message)
+    {
+        _getFilePointer() << WARNING << message << "\n\n" << std::flush;
+    }
+
+    /**
+     * @brief write initial momentum to log file
+     *
+     * @param momentum
+     */
+    void LogOutput::writeInitialMomentum(double momentum)
+    {
+        _getFilePointer() << "\n" << std::flush;
+
+        _getFilePointer() << std::format(
+            "{}Initial momentum = {:.5e} {}*amu/fs\n",
+            INFO,
+            momentum,
+            ANGSTROM
+        );
+
+        _getFilePointer() << std::flush;
+    }
+
+    /**
+     * @brief write a message to inform about the start of the setup
+     *
+     */
+    void LogOutput::writeSetup(const std::string &setup)
+    {
+        _getFilePointer() << setupMessage(setup) << '\n' << std::flush;
+    }
+
+    /**
+     * @brief write a message to inform about the setup
+     *
+     */
+    void LogOutput::writeSetupInfo(const std::string &setupInfo)
+    {
+        _getFilePointer() << OUTPUT << setupInfo << '\n' << std::flush;
+    }
+
+    /**
+     * @brief write a message to issue a warning about the setup
+     *
+     */
+    void LogOutput::writeSetupWarning(const std::string &setupWarning)
+    {
+        _getFilePointer() << WARNING << setupWarning << '\n' << std::flush;
+    }
+
+    /**
+     * @brief write a message to the stdout to inform that the setup is
+     * completed
+     *
+     */
+    void LogOutput::writeSetupCompleted()
+    {
+        _getFilePointer() << setupCompletedMessage() << '\n' << std::flush;
+    }
+
+    /**
+     * @brief write a message to inform about starting to read a file
+     *
+     */
+    void LogOutput::writeRead(
+        const std::string &message,
+        const std::string &file
+    )
+    {
+        _getFilePointer() << readMessage(message, file) << '\n' << std::flush;
+    }
+
+    /**
+     * @brief add a warning message that will be printed after the output file
+     * has been created
+     *
+     */
+    void LogOutput::queueWarning(const std::string &warning)
+    {
+        _pendingWarnings.push_back(warning);
+    }
+
+    /**
+     * @brief flush pending warning messages to the output file
+     *
+     */
+    void LogOutput::flushQueuedWarnings()
+    {
+        for (const auto &message : _pendingWarnings)
+        {
+            writeSetupWarning(message);
+            writeEmptyLine();
+        }
+
+        _pendingWarnings.clear();
+    }
+
+}   // namespace out

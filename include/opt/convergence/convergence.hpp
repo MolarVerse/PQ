@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONVERGENCE_HPP_
+#ifndef OPT__CONVERGENCE__CONVERGENCE_HPP
+#define OPT__CONVERGENCE__CONVERGENCE_HPP
 
-#define _CONVERGENCE_HPP_
-
-#include "convergenceSettings.hpp"
+#include "enums/convergence.hpp"
 
 namespace opt
 {
@@ -34,7 +33,7 @@ namespace opt
      */
     class Convergence
     {
-       protected:
+       private:
         bool _isRelEnergyConv   = true;
         bool _isAbsEnergyConv   = true;
         bool _isAbsMaxForceConv = true;
@@ -54,25 +53,25 @@ namespace opt
         double _absMaxForceConvThreshold = 0.0;
         double _absRMSForceConvThreshold = 0.0;
 
-        settings::ConvStrategy _energyConvStrategy;
+        ConvStrategy _energyConvStrategy;
 
        public:
         Convergence() = default;
         Convergence(
-            const bool,
-            const bool,
-            const bool,
-            const double,
-            const double,
-            const double,
-            const double,
-            const settings::ConvStrategy
+            bool,
+            bool,
+            bool,
+            double,
+            double,
+            double,
+            double,
+            ConvStrategy
         );
 
         [[nodiscard]] bool checkConvergence() const;
 
-        void calcEnergyConvergence(const double, const double);
-        void calcForceConvergence(const double, const double);
+        void calcEnergyConvergence(double, double);
+        void calcForceConvergence(double, double);
 
         /***************************
          * standard getter methods *
@@ -83,7 +82,7 @@ namespace opt
         [[nodiscard]] double getAbsMaxForce() const;
         [[nodiscard]] double getAbsRMSForce() const;
 
-        [[nodiscard]] settings::ConvStrategy getEnConvStrategy() const;
+        [[nodiscard]] ConvStrategy getEnConvStrategy() const;
 
         [[nodiscard]] bool isEnergyConvEnabled() const;
         [[nodiscard]] bool isMaxForceConvEnabled() const;
@@ -101,4 +100,4 @@ namespace opt
     };
 }   // namespace opt
 
-#endif   // _CONVERGENCE_HPP_
+#endif   // OPT__CONVERGENCE__CONVERGENCE_HPP

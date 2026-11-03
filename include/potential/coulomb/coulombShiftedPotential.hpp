@@ -20,15 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COULOMB_SHIFTED_POTENTIAL_HPP_
+#ifndef POTENTIAL__COULOMB__COULOMB_SHIFTED_POTENTIAL_HPP
+#define POTENTIAL__COULOMB__COULOMB_SHIFTED_POTENTIAL_HPP
 
-#define _COULOMB_SHIFTED_POTENTIAL_HPP_
-
-#include <utility>   // for pair
+#include <utility>
 
 #include "coulombPotential.hpp"
 
-namespace potential
+namespace pot
 {
     /**
      * @class CoulombShiftedPotential
@@ -38,18 +37,18 @@ namespace potential
      * CoulombShiftedPotential is a class for the shifted Coulomb potential
      *
      */
-    class CoulombShiftedPotential : public potential::CoulombPotential
+    class CoulombShiftedPotential : public CoulombPotential
     {
        public:
         using CoulombPotential::CoulombPotential;
 
         [[nodiscard]]
         std::pair<double, double> calculate(
-            const double distance,
-            const double chargeProduct
+            double distance,
+            double chargeProduct
         ) const override;
     };
 
-}   // namespace potential
+}   // namespace pot
 
-#endif   // _COULOMB_SHIFTED_POTENTIAL_HPP_
+#endif   // POTENTIAL__COULOMB__COULOMB_SHIFTED_POTENTIAL_HPP

@@ -20,17 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_TYPE_HPP_
-
-#define _BOND_TYPE_HPP_
+#ifndef FORCE_FIELD__BOND_TYPE_HPP
+#define FORCE_FIELD__BOND_TYPE_HPP
 
 #include "strongTypes.hpp"
 
-namespace forceField
+namespace ff
 {
     class BondType;   // forward declaration
-
-    bool operator==(const BondType &, const BondType &);
 
     /**
      * @class BondType
@@ -46,23 +43,21 @@ namespace forceField
        private:
         BondId _id;
 
-        double _equilBondLength;
-        double _forceConstant;
+        BondParams _params;
 
        public:
-        BondType(const BondId, const double, const double);
+        BondType(BondId, const BondParams &);
 
-        friend bool operator==(const BondType &, const BondType &);
+        friend bool operator==(const BondType &self, const BondType &other);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] BondId getId() const;
-        [[nodiscard]] double getEquilibriumBondLength() const;
-        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] BondId            getId() const;
+        [[nodiscard]] const BondParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _BOND_TYPE_HPP_
+#endif   // FORCE_FIELD__BOND_TYPE_HPP

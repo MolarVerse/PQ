@@ -20,24 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __TIMINGS_OUTPUT_HPP__
+#ifndef OUTPUT__TIMINGS_OUTPUT_HPP
+#define OUTPUT__TIMINGS_OUTPUT_HPP
 
-#define __TIMINGS_OUTPUT_HPP__
-
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace timings
 {
     class GlobalTimer;   // forward declaration
 }   // namespace timings
 
-namespace output
+namespace out
 {
 
     /**
-     * @class TimingsOutput inherits from Output
+     * @brief TimingsOutput inherits from Output
      *
-     * @brief Output file for info file
+     * @details Output file for info file
      *
      */
     class TimingsOutput : public Output
@@ -48,6 +47,6 @@ namespace output
         void write();
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif /* __TIMINGS_OUTPUT_HPP__ */
+#endif /* OUTPUT__TIMINGS_OUTPUT_HPP */

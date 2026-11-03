@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TOPOLOGY_SECTION_HPP_
+#ifndef INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_SECTION_HPP
+#define INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_SECTION_HPP
 
-#define _TOPOLOGY_SECTION_HPP_
-
-#include <iosfwd>   // for ifstream
-#include <string>   // for string, allocator
-#include <vector>   // for vector
+#include <iosfwd>
+#include <string>
+#include <vector>
 
 namespace engine
 {
@@ -43,30 +42,37 @@ namespace input::topology
      */
     class TopologySection
     {
-       protected:
-        int            _lineNumber = 0;
-        std::ifstream *_fp         = nullptr;
+       private:
+        std::ifstream *_fp = nullptr;
 
        public:
         virtual ~TopologySection() = default;
 
-        void process(std::vector<std::string> &, engine::Engine &);
+        void process(std::vector<std::string> &, engine::Engine &, size_t &);
 
         virtual std::string keyword() = 0;
 
         virtual void processSection(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                    lineNumber
         ) = 0;
 
-        virtual void endedNormally(const bool) const = 0;
+        virtual void endedNormally(
+            bool   endedNormal,
+            size_t lineNumber
+        ) const = 0;
 
-        void setLineNumber(const int lineNumber);
-        void setFp(std::ifstream *fp);
+        void setFp(std::ifstream *file);
 
-        [[nodiscard]] int getLineNumber() const;
+       protected:
+        [[nodiscard]]
+        std::ifstream *_getFilePointer() const
+        {
+            return _fp;
+        }
     };
 
 }   // namespace input::topology
 
-#endif   // _TOPOLOGY_SECTION_HPP_
+#endif   // INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_SECTION_HPP

@@ -20,47 +20,47 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TestInfo (ptr only), EXPECT_EQ
+#include <gtest/gtest.h>
 
-#include <cstddef>   // for size_t
-#include <memory>    // for make_shared
+#include <memory>
 
-#include "coulombReactionField.hpp"      // for CoulombReactionField
-#include "coulombShiftedPotential.hpp"   // for CoulombShiftedPotential
-#include "coulombWolf.hpp"               // for CoulombWolf
-#include "engine.hpp"                    // for Engine
-#include "exceptions.hpp"                // for ParameterFileException
-#include "forceFieldNonCoulomb.hpp"      // for ForceFieldNonCoulomb
-#include "gtest/gtest.h"                 // for Message, TestPartResult
-#include "guffNonCoulomb.hpp"            // for GuffNonCoulomb
-#include "lennardJonesPair.hpp"          // for LennardJonesPair
-#include "moleculeType.hpp"              // for MoleculeType
-#include "potentialSettings.hpp"         // for PotentialSettings
-#include "potentialSetup.hpp"            // for PotentialSetup, setupPotential
-#include "testSetup.hpp"                 // for TestSetup
+#include "coulombReactionField.hpp"
+#include "coulombShiftedPotential.hpp"
+#include "coulombWolf.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "forceFieldNonCoulomb.hpp"
+#include "forceFieldSettings.hpp"
+#include "guffNonCoulomb.hpp"
+#include "lennardJonesPair.hpp"
+#include "moleculeType.hpp"
+#include "potentialSettings.hpp"
+#include "potentialSetup.hpp"
+#include "strongTypes.hpp"
+#include "testSetup.hpp"
 #include "testUtils.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
-
-using namespace setup;
-using namespace settings;
-using namespace potential;
+#include "throwWithMessage.hpp"
 
 /**
  * @brief setup the reaction-field Coulomb potential
  */
 TEST_F(TestSetup, setupReactionFieldPotential)
 {
-    PotentialSettings::setCoulombLongRangeType("reaction-field");
-    PotentialSetup potentialSetup(*_engine);
+    settings::PotentialSettings::setCoulombLongRangeType(
+        CoulombLongRangeType::REACTION_FIELD
+    );
+    setup::PotentialSetup potentialSetup(*_engine);
 
-    PotentialSettings::setReactionFieldEpsilon(80.0);
+    settings::PotentialSettings::setReactionFieldEpsilon(80.0);
     EXPECT_NO_THROW(potentialSetup.setup());
     test::checkType(
         &(_engine->getPotential()->getCoulombPotential()),
-        typeid(CoulombReactionField)
+        typeid(pot::CoulombReactionField)
     );
 
-    PotentialSettings::setCoulombLongRangeType("shifted");
+    settings::PotentialSettings::setCoulombLongRangeType(
+        CoulombLongRangeType::SHIFTED
+    );
 }
 
 /**
@@ -68,24 +68,28 @@ TEST_F(TestSetup, setupReactionFieldPotential)
  */
 TEST_F(TestSetup, setupCoulombPotential)
 {
-    PotentialSettings::setCoulombLongRangeType("shifted");
-    PotentialSetup potentialSetup(*_engine);
+    settings::PotentialSettings::setCoulombLongRangeType(
+        CoulombLongRangeType::SHIFTED
+    );
+    setup::PotentialSetup potentialSetup(*_engine);
     potentialSetup.setupCoulomb();
 
     test::checkType(
         &_engine->getPotential()->getCoulombPotential(),
-        typeid(CoulombShiftedPotential)
+        typeid(pot::CoulombShiftedPotential)
     );
 
-    PotentialSettings::setCoulombLongRangeType("wolf");
-    PotentialSetup potentialSetup2(*_engine);
+    settings::PotentialSettings::setCoulombLongRangeType(
+        CoulombLongRangeType::WOLF
+    );
+    setup::PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setup();
 
     test::checkType(
         &_engine->getPotential()->getCoulombPotential(),
-        typeid(CoulombWolf)
+        typeid(pot::CoulombWolf)
     );
-    const auto &wolfCoulomb = dynamic_cast<CoulombWolf &>(
+    const auto &wolfCoulomb = dynamic_cast<pot::CoulombWolf &>(
         _engine->getPotential()->getCoulombPotential()
     );
     EXPECT_EQ(wolfCoulomb.getKappa(), 0.25);
@@ -96,23 +100,25 @@ TEST_F(TestSetup, setupCoulombPotential)
  */
 TEST_F(TestSetup, setupNonCoulombPotential)
 {
-    _engine->getForceField()->activateNonCoulombic();
-    _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
-    PotentialSetup potentialSetup(*_engine);
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
+    _engine->getPotential()->makeNonCoulombPotential(
+        pot::ForceFieldNonCoulomb()
+    );
+    setup::PotentialSetup potentialSetup(*_engine);
     potentialSetup.setupNonCoulomb();
 
     test::checkType(
         &_engine->getPotential()->getNonCoulombPotential(),
-        typeid(ForceFieldNonCoulomb)
+        typeid(pot::ForceFieldNonCoulomb)
     );
 
-    _engine->getForceField()->deactivateNonCoulombic();
-    PotentialSetup potentialSetup2(*_engine);
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    setup::PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setupNonCoulomb();
 
     test::checkType(
         &_engine->getPotential()->getNonCoulombPotential(),
-        typeid(GuffNonCoulomb)
+        typeid(pot::GuffNonCoulomb)
     );
 }
 
@@ -121,50 +127,60 @@ TEST_F(TestSetup, setupNonCoulombPotential)
  */
 TEST_F(TestSetup, setupNonCoulombicPairs)
 {
-    _engine->getForceField()->activateNonCoulombic();
-    _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
-    PotentialSetup potentialSetup(*_engine);
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
+    _engine->getPotential()->makeNonCoulombPotential(
+        pot::ForceFieldNonCoulomb()
+    );
+    setup::PotentialSetup potentialSetup(*_engine);
 
-    auto molecule = molsys::MoleculeType(1);
-    molecule.addExternalGlobalVDWType(0);
-    molecule.addExternalGlobalVDWType(1);
+    auto molecule = molsys::MoleculeType(MolType{1});
+    molecule.addExternalGlobalVDWType(ExtVdwType{0});
+    molecule.addExternalGlobalVDWType(ExtVdwType{1});
 
     _engine->getSimulationBox().addMoleculeType(molecule);
 
     EXPECT_THROW_MSG(
         potentialSetup.setupNonCoulombicPairs(),
-        customException::ParameterFileException,
+        exc::ParameterFileException,
         "Not all self interacting non coulombics were set in the noncoulombics "
         "section of the parameter file"
     );
 
-    auto nonCoulombPotential = dynamic_cast<ForceFieldNonCoulomb &>(
+    auto nonCoulombPotential = dynamic_cast<pot::ForceFieldNonCoulomb &>(
         _engine->getPotential()->getNonCoulombPotential()
     );
 
-    const auto zero = static_cast<size_t>(0);
-    const auto one  = static_cast<size_t>(1);
+    const auto zero = ExtVdwType(0);
+    const auto one  = ExtVdwType(1);
 
-    auto nonCoulombPair1 = LennardJonesPair(zero, zero, 10.0, 2.0, 3.0);
-    auto nonCoulombPair2 = LennardJonesPair(one, zero, 10.0, 2.0, 3.0);
-    auto nonCoulombPair3 = LennardJonesPair(zero, one, 10.0, 2.0, 3.0);
-    auto nonCoulombPair4 = LennardJonesPair(one, one, 10.0, 2.0, 3.0);
+    auto nonCoulombPair1 = pot::LennardJonesPair(
+        zero,
+        zero,
+        10.0,
+        LJParams{.c6 = 2.0, .c12 = 3.0}
+    );
+    auto nonCoulombPair2 =
+        pot::LennardJonesPair(one, zero, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair3 =
+        pot::LennardJonesPair(zero, one, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair4 =
+        pot::LennardJonesPair(one, one, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
 
     nonCoulombPotential.addNonCoulombicPair(
-        std::make_shared<LennardJonesPair>(nonCoulombPair1)
+        std::make_shared<pot::LennardJonesPair>(nonCoulombPair1)
     );
     nonCoulombPotential.addNonCoulombicPair(
-        std::make_shared<LennardJonesPair>(nonCoulombPair2)
+        std::make_shared<pot::LennardJonesPair>(nonCoulombPair2)
     );
     nonCoulombPotential.addNonCoulombicPair(
-        std::make_shared<LennardJonesPair>(nonCoulombPair3)
+        std::make_shared<pot::LennardJonesPair>(nonCoulombPair3)
     );
     nonCoulombPotential.addNonCoulombicPair(
-        std::make_shared<LennardJonesPair>(nonCoulombPair4)
+        std::make_shared<pot::LennardJonesPair>(nonCoulombPair4)
     );
 
     _engine->getPotential()->makeNonCoulombPotential(nonCoulombPotential);
-    PotentialSetup potentialSetup2(*_engine);
+    setup::PotentialSetup potentialSetup2(*_engine);
 
     EXPECT_NO_THROW(potentialSetup2.setupNonCoulombicPairs());
 }
@@ -176,11 +192,11 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
  */
 TEST_F(TestSetup, setupPotential)
 {
-    EXPECT_NO_THROW(setupPotential(*_engine));
+    EXPECT_NO_THROW(setup::setupPotential(*_engine));
 
-    _engine->getForceField()->activateNonCoulombic();
-    _engine->getPotential()->makeNonCoulombPotential(ForceFieldNonCoulomb());
-    EXPECT_NO_THROW(setupPotential(*_engine));
+    _settings->forceFieldSettings.setType(ForceFieldType::ON);
+    _engine->getPotential()->makeNonCoulombPotential(
+        pot::ForceFieldNonCoulomb()
+    );
+    EXPECT_NO_THROW(setup::setupPotential(*_engine));
 }
-
-// TEST_F(TestSetup, setupNonCoulombicPairs)

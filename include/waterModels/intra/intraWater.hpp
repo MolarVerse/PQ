@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTRA_WATER_HPP_
-
-#define _INTRA_WATER_HPP_
+#ifndef WATER_MODELS__INTRA__INTRA_WATER_HPP
+#define WATER_MODELS__INTRA__INTRA_WATER_HPP
 
 namespace molsys
 {
@@ -51,4 +50,4 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#endif   //  _INTRA_WATER_HPP_
+#endif   //  WATER_MODELS__INTRA__INTRA_WATER_HPP

@@ -3,17 +3,23 @@ name: Docs
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ["main", "dev"]
     paths:
       - ".github/workflows/jekyll-gh-pages.yml"
-      - "docs/sphinx/**"
+      - ".github/actions/setup-gcc/**"
+      - "docs/**"
+      - "include/**"
+      - "src/**"
 
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
     paths:
       - ".github/workflows/jekyll-gh-pages.yml"
-      - "docs/sphinx/**"
+      - ".github/actions/setup-gcc/**"
+      - "docs/**"
+      - "include/**"
+      - "src/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,15 +36,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Build job
-  build:
+  # Runs on every PR and push — confirms the docs actually build cleanly.
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Requirements
-        run: sudo apt-get install -y doxygen
+        run: sudo apt-get install -y doxygen graphviz
           && sudo apt-get install -y python3-sphinx
           && pip3 install sphinx-rtd-theme
           && pip3 install breathe
@@ -46,11 +54,34 @@ jobs:
           && pip3 install sphinx==7.2.6
           && pip3 install m2r
 
-      - name: build doxygen
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
         run: |
-          cd docs/sphinx
-          make html
-          cd _build/html
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      # The dot graphs take most of the doxygen time and only matter for the
+      # site deployed from main; pull requests just check that the docs build.
+      - name: configure
+        env:
+          DOXYGEN_GRAPHS: ${{ github.event_name == 'push' && 'ON' || 'OFF' }}
+        run: cmake -S . -B build -DBUILD_WITH_DOCS=ON -DBUILD_WITH_ASE=OFF -DBUILD_WITH_TESTS=OFF -DPQ_DOXYGEN_GRAPHS="$DOXYGEN_GRAPHS" -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+
+      - name: build docs
+        run: |
+          cmake --build build --target sphinx-docs
+          cd docs/sphinx/_build/html
           touch .nojekyll
 
       - name: upload built site
@@ -63,13 +94,18 @@ jobs:
 
   # Only runs on push to main, and only if validate succeeded.
   deploy:
-    needs: build
+    needs: validate
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: write
       pages: write
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
       - name: download built site
         uses: actions/download-artifact@v4
         with:

@@ -22,176 +22,183 @@
 
 #include "nonCoulombPair.hpp"
 
-#include "mathUtilities.hpp"   // for compare
+#include "mathUtilities.hpp"
 
-using namespace potential;
-using namespace utilities;
-
-/**
- * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
- *
- * @param vanDerWaalsType1
- * @param vanDerWaalsType2
- * @param cutOff
- */
-NonCoulombPair::NonCoulombPair(
-    const size_t vanDerWaalsType1,
-    const size_t vanDerWaalsType2,
-    const double cutOff
-)
-    : _vanDerWaalsType1(vanDerWaalsType1),
-      _vanDerWaalsType2(vanDerWaalsType2),
-      _radialCutOff(cutOff){};
-
-/**
- * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
- *
- * @param cutOff
- */
-NonCoulombPair::NonCoulombPair(const double cutOff) : _radialCutOff(cutOff){};
-
-/**
- * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
- *
- * @param cutoff
- * @param energyCutoff
- * @param forceCutoff
- */
-NonCoulombPair::NonCoulombPair(
-    const double cutoff,
-    const double energyCutoff,
-    const double forceCutoff
-)
-    : _radialCutOff(cutoff),
-      _energyCutOff(energyCutoff),
-      _forceCutOff(forceCutoff){};
-
-/**
- * @brief operator overload for the comparison of two NonCoulombPair objects
- *
- * @details returns also true if the two types are switched
- *
- * @note uses only the van der Waals types and the radial cut off
- *
- * @param other
- * @return true
- * @return false
- */
-bool NonCoulombPair::operator==(const NonCoulombPair &other) const
+namespace pot
 {
-    auto isEq = true;
-    isEq      = isEq && _vanDerWaalsType1 == other._vanDerWaalsType1;
-    isEq      = isEq && _vanDerWaalsType2 == other._vanDerWaalsType2;
-    isEq      = isEq && compare(_radialCutOff, other._radialCutOff);
 
-    auto isEqSymm = true;
-    isEqSymm      = isEqSymm && _vanDerWaalsType1 == other._vanDerWaalsType2;
-    isEqSymm      = isEqSymm && _vanDerWaalsType2 == other._vanDerWaalsType1;
-    isEqSymm      = isEqSymm && compare(_radialCutOff, other._radialCutOff);
+    /**
+     * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
+     *
+     * @param vanDerWaalsType1
+     * @param vanDerWaalsType2
+     * @param cutOff
+     */
+    NonCoulombPair::NonCoulombPair(
+        ExtVdwType vanDerWaalsType1,
+        ExtVdwType vanDerWaalsType2,
+        double     cutOff
+    )
+        : _vanDerWaalsTypes{vanDerWaalsType1, vanDerWaalsType2},
+          _radialCutoff(cutOff)
+    {
+    }
 
-    return isEq || isEqSymm;
-}
+    /**
+     * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
+     *
+     * @param cutOff
+     */
+    NonCoulombPair::NonCoulombPair(double cutOff) : _radialCutoff(cutOff) {}
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
+     *
+     * @param cutoff
+     * @param energyCutoff
+     * @param forceCutoff
+     */
+    NonCoulombPair::NonCoulombPair(
+        double cutoff,
+        double energyCutoff,
+        double forceCutoff
+    )
+        : _radialCutoff(cutoff),
+          _energyCutoff(energyCutoff),
+          _forceCutoff(forceCutoff)
+    {
+    }
 
-/**
- * @brief set internal type 1
- *
- * @param internalType1
- */
-void NonCoulombPair::setInternalType1(const size_t internalType1)
-{
-    _internalType1 = internalType1;
-}
+    /**
+     * @brief operator overload for the comparison of two NonCoulombPair objects
+     *
+     * @details returns also true if the two types are switched
+     *
+     * @note uses only the van der Waals types and the radial cut off
+     *
+     * @param other
+     * @return true
+     * @return false
+     */
+    bool NonCoulombPair::operator==(const NonCoulombPair &other) const
+    {
+        auto isEq = true;
+        isEq = isEq && _vanDerWaalsTypes.first == other._vanDerWaalsTypes.first;
+        isEq =
+            isEq && _vanDerWaalsTypes.second == other._vanDerWaalsTypes.second;
+        isEq = isEq && utilities::compare(_radialCutoff, other._radialCutoff);
 
-/**
- * @brief set internal type 2
- *
- * @param internalType2
- */
-void NonCoulombPair::setInternalType2(const size_t internalType2)
-{
-    _internalType2 = internalType2;
-}
+        auto isEqSymm = true;
+        isEqSymm      = isEqSymm &&
+                   _vanDerWaalsTypes.first == other._vanDerWaalsTypes.second;
+        isEqSymm = isEqSymm &&
+                   _vanDerWaalsTypes.second == other._vanDerWaalsTypes.first;
+        isEqSymm =
+            isEqSymm && utilities::compare(_radialCutoff, other._radialCutoff);
 
-/**
- * @brief set radial cut off
- *
- * @param energyCutoff
- */
-void NonCoulombPair::setRadialCutOff(const double radialCutoff)
-{
-    _radialCutOff = radialCutoff;
-}
+        return isEq || isEqSymm;
+    }
 
-/**
- * @brief set energy cut off
- *
- * @param energyCutoff
- */
-void NonCoulombPair::setEnergyCutOff(const double energyCutoff)
-{
-    _energyCutOff = energyCutoff;
-}
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief set force cut off
- *
- * @param forceCutoff
- */
-void NonCoulombPair::setForceCutOff(const double forceCutoff)
-{
-    _forceCutOff = forceCutoff;
-}
+    /**
+     * @brief set internal type 1
+     *
+     * @param internalType1
+     */
+    void NonCoulombPair::setInternalType1(VdwType internalType1)
+    {
+        _internalTypes.first = internalType1;
+    }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    /**
+     * @brief set internal type 2
+     *
+     * @param internalType2
+     */
+    void NonCoulombPair::setInternalType2(VdwType internalType2)
+    {
+        _internalTypes.second = internalType2;
+    }
 
-/**
- * @brief get van der Waals type 1
- *
- * @return size_t
- */
-size_t NonCoulombPair::getVanDerWaalsType1() const { return _vanDerWaalsType1; }
+    /**
+     * @brief set radial cut off
+     *
+     * @param radialCutoff
+     */
+    void NonCoulombPair::setRadialCutOff(double radialCutoff)
+    {
+        _radialCutoff = radialCutoff;
+    }
 
-/**
- * @brief get van der Waals type 2
- *
- * @return size_t
- */
-size_t NonCoulombPair::getVanDerWaalsType2() const { return _vanDerWaalsType2; }
+    /**
+     * @brief set energy cut off
+     *
+     * @param energyCutoff
+     */
+    void NonCoulombPair::setEnergyCutOff(double energyCutoff)
+    {
+        _energyCutoff = energyCutoff;
+    }
 
-/**
- * @brief get internal type 1
- *
- * @return size_t
- */
-size_t NonCoulombPair::getInternalType1() const { return _internalType1; }
+    /**
+     * @brief set force cut off
+     *
+     * @param forceCutoff
+     */
+    void NonCoulombPair::setForceCutOff(double forceCutoff)
+    {
+        _forceCutoff = forceCutoff;
+    }
 
-/**
- * @brief get internal type 2
- *
- * @return size_t
- */
-size_t NonCoulombPair::getInternalType2() const { return _internalType2; }
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief get energy cut off
- *
- * @return double
- */
-double NonCoulombPair::getEnergyCutOff() const { return _energyCutOff; }
+    /**
+     * @brief get van der Waals type 1
+     *
+     * @return ExtVdwType
+     */
+    ExtVdwType NonCoulombPair::getVanDerWaalsType1() const
+    {
+        return _vanDerWaalsTypes.first;
+    }
 
-/**
- * @brief get force cut off
- *
- * @return double
- */
-double NonCoulombPair::getForceCutOff() const { return _forceCutOff; }
+    /**
+     * @brief get van der Waals type 2
+     *
+     * @return ExtVdwType
+     */
+    ExtVdwType NonCoulombPair::getVanDerWaalsType2() const
+    {
+        return _vanDerWaalsTypes.second;
+    }
+
+    /**
+     * @brief get internal type 1
+     *
+     * @return VdwType
+     */
+    VdwType NonCoulombPair::getInternalType1() const
+    {
+        return _internalTypes.first;
+    }
+
+    /**
+     * @brief get internal type 2
+     *
+     * @return VdwType
+     */
+    VdwType NonCoulombPair::getInternalType2() const
+    {
+        return _internalTypes.second;
+    }
+
+}   // namespace pot

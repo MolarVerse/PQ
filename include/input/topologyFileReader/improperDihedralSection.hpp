@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _IMPROPER_DIHEDRAL_SECTION_HPP_
-
-#define _IMPROPER_DIHEDRAL_SECTION_HPP_
+#ifndef INPUT__TOPOLOGY_FILE_READER__IMPROPER_DIHEDRAL_SECTION_HPP
+#define INPUT__TOPOLOGY_FILE_READER__IMPROPER_DIHEDRAL_SECTION_HPP
 
 #include "topologySection.hpp"
 
@@ -44,12 +43,13 @@ namespace input::topology
        public:
         void processSection(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                    lineNumber
         ) override;
 
         [[nodiscard]] std::string keyword() override;
-        void endedNormally(const bool endedNormal) const override;
+        void endedNormally(bool endedNormal, size_t lineNumber) const override;
     };
 }   // namespace input::topology
 
-#endif   // _IMPROPER_DIHEDRAL_SECTION_HPP_
+#endif   // INPUT__TOPOLOGY_FILE_READER__IMPROPER_DIHEDRAL_SECTION_HPP

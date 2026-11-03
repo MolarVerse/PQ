@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_SETUP_HPP_
-
-#define _FORCE_FIELD_SETUP_HPP_
+#ifndef SETUP__FORCE_FIELD_SETUP_HPP
+#define SETUP__FORCE_FIELD_SETUP_HPP
 
 #include <cstddef>
 
@@ -65,4 +64,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _FORCE_FIELD_SETUP_HPP_
+#endif   // SETUP__FORCE_FIELD_SETUP_HPP

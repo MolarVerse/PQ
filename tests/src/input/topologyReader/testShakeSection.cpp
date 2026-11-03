@@ -20,16 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, TestInfo (ptr only)
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "engine.hpp"                // for Engine
-#include "exceptions.hpp"            // for TopologyException
-#include "gtest/gtest.h"             // for Message, TestPartResult
-#include "shakeSection.hpp"          // for ShakeSection
-#include "testTopologySection.hpp"   // for TestTopologySection
+#include "engine.hpp"
+#include "exceptions.hpp"
+#include "shakeSection.hpp"
+#include "testTopologySection.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test shake section processing one line
@@ -39,33 +39,35 @@ TEST_F(TestTopologySection, processSectionShake)
 {
     std::vector<std::string>      lineElements = {"1", "2", "1.0", "0"};
     input::topology::ShakeSection shakeSection;
-    shakeSection.processSection(lineElements, *_engine);
+    shakeSection.processSection(lineElements, *_engine, 0);
 
     const auto& constraints = _engine->getConstraints();
 
     EXPECT_EQ(constraints->getBondConstraints().size(), 1);
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getMolecule1(),
-        &(_engine->getSimulationBox().getMolecules()[0])
-    );
-    EXPECT_EQ(
-        constraints->getBondConstraints()[0].getMolecule2(),
-        &(_engine->getSimulationBox().getMolecules()[1])
-    );
-    EXPECT_EQ(constraints->getBondConstraints()[0].getAtomIndex1(), 0);
-    EXPECT_EQ(constraints->getBondConstraints()[0].getAtomIndex2(), 0);
-    EXPECT_EQ(constraints->getBondConstraints()[0].getTargetBondLength(), 1.0);
+
+    const auto& bondConstraint0 = constraints->getBondConstraints()[0];
+    const auto& molecules       = bondConstraint0.get_molecules();
+    const auto& atomIndices     = bondConstraint0.get_atomIndices();
+
+    EXPECT_EQ(molecules[0], _engine->getSimulationBox().getMolecules().data());
+    EXPECT_EQ(molecules[1], &(_engine->getSimulationBox().getMolecules()[1]));
+    EXPECT_EQ(atomIndices[0], AtomIndex{0});
+    EXPECT_EQ(atomIndices[1], AtomIndex{0});
+    EXPECT_EQ(bondConstraint0.getTargetBondLength(), 1.0);
 
     lineElements = {"1", "1", "1.0", "0"};
-    EXPECT_THROW(
-        shakeSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        shakeSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Topology file shake section at line 0 - atoms cannot be the same!"
     );
 
     lineElements = {"1", "1", "1.0", "0", "1"};
-    EXPECT_THROW(
-        shakeSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        shakeSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Wrong number of arguments in topology file shake section at line 0 - "
+        "number of elements has to be 3 or 4!"
     );
 }
 
@@ -76,9 +78,10 @@ TEST_F(TestTopologySection, processSectionShake)
 TEST_F(TestTopologySection, endedNormallyShake)
 {
     input::topology::ShakeSection shakeSection;
-    EXPECT_THROW(
-        shakeSection.endedNormally(false),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        shakeSection.endedNormally(false, 0),
+        exc::TopologyException,
+        "Topology file shake section at line 0 - no end of section found!"
     );
-    EXPECT_NO_THROW(shakeSection.endedNormally(true));
+    EXPECT_NO_THROW(shakeSection.endedNormally(true, 0));
 }

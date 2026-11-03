@@ -27,35 +27,34 @@
 
 #include "adam.hpp"
 #include "atom.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
-
-using namespace opt;
-using molsys::Atom;
-using molsys::SimulationBox;
+#include "vector3d.hpp"
 
 namespace
 {
-    std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
-        const linearAlgebra::Vec3D &pos,
-        const linearAlgebra::Vec3D &force,
-        const linearAlgebra::Vec3D &boxDims
+    std::shared_ptr<molsys::SimulationBox> makeBoxWithOneAtom(
+        const linalg::Vec3D &pos,
+        const linalg::Vec3D &force,
+        const linalg::Vec3D &boxDims
     )
     {
-        auto box = std::make_shared<SimulationBox>();
-        box->setBoxDimensions(boxDims);
+        auto box = std::make_shared<molsys::SimulationBox>();
 
-        auto a = std::make_shared<Atom>();
-        a->setPosition(pos);
-        a->setForce(force);
-        box->addAtom(a);
+        molsys::OrthorhombicBox orthoBox{boxDims};
+        box->setBox(orthoBox, false);
+
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setPosition(pos);
+        atom->setForce(force);
+        box->addAtom(atom);
 
         return box;
     }
 
-    std::shared_ptr<SimulationBox> makeBoxWithOneAtom(
-        const linearAlgebra::Vec3D &pos,
-        const linearAlgebra::Vec3D &force
+    std::shared_ptr<molsys::SimulationBox> makeBoxWithOneAtom(
+        const linalg::Vec3D &pos,
+        const linalg::Vec3D &force
     )
     {
         return makeBoxWithOneAtom(pos, force, {100.0, 100.0, 100.0});
@@ -66,24 +65,19 @@ namespace
 
 TEST(TestAdam, defaultBetasConstructorAcceptsNAtoms)
 {
-    EXPECT_NO_THROW(Adam(10U, /*nAtoms=*/4U));
+    EXPECT_NO_THROW(opt::Adam(10U, /*nAtoms=*/4U));
 }
 
 TEST(TestAdam, customBetasConstructorAcceptsBeta1AndBeta2)
 {
-    EXPECT_NO_THROW(Adam(10U, /*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U));
-}
-
-TEST(TestAdam, cloneProducesAdamInstance)
-{
-    const Adam src(10U, 4U);
-    const auto cloned = src.clone();
-    EXPECT_NE(std::dynamic_pointer_cast<Adam>(cloned), nullptr);
+    EXPECT_NO_THROW(
+        opt::Adam(10U, /*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U)
+    );
 }
 
 TEST(TestAdam, maxHistoryLengthIsTwo)
 {
-    const Adam adam(10U, 4U);
+    const opt::Adam adam(10U, 4U);
     EXPECT_EQ(adam.maxHistoryLength(), 2U);
 }
 
@@ -98,11 +92,11 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     // sign(force).
     auto box = makeBoxWithOneAtom({0.0, 0.0, 0.0}, {2.0, -3.0, 0.5});
 
-    Adam adam(1U, /*nAtoms=*/1U);
+    opt::Adam adam(1U, /*nAtoms=*/1U);
     adam.setSimulationBox(box);
 
-    const auto lr = 0.01;
-    adam.update(lr, 1U);
+    const auto learningRate = 0.01;
+    adam.update(learningRate, 1U);
 
     // Per-component direction is preserved (no aliasing across xyz in Adam).
     const auto pos = box->getAtoms()[0]->getPosition();
@@ -111,22 +105,22 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     EXPECT_GT(pos[2], 0.0);   // positive force component
 
     // For large forces relative to eps, each component magnitude ≈ lr.
-    EXPECT_NEAR(std::abs(pos[0]), lr, 1.0e-6);
-    EXPECT_NEAR(std::abs(pos[1]), lr, 1.0e-6);
-    EXPECT_NEAR(std::abs(pos[2]), lr, 1.0e-6);
+    EXPECT_NEAR(std::abs(pos[0]), learningRate, 1.0e-6);
+    EXPECT_NEAR(std::abs(pos[1]), learningRate, 1.0e-6);
+    EXPECT_NEAR(std::abs(pos[2]), learningRate, 1.0e-6);
 }
 
 TEST(TestAdam, updateStoresOldPosition)
 {
     auto box = makeBoxWithOneAtom({3.0, 4.0, 5.0}, {1.0, 1.0, 1.0});
 
-    Adam adam(1U, 1U);
+    opt::Adam adam(1U, 1U);
     adam.setSimulationBox(box);
     adam.update(0.01, 1U);
 
     EXPECT_EQ(
         box->getAtoms()[0]->getPositionOld(),
-        linearAlgebra::Vec3D(3.0, 4.0, 5.0)
+        linalg::Vec3D(3.0, 4.0, 5.0)
     );
 }
 
@@ -140,7 +134,7 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
         {10.0, 10.0, 10.0}
     );
 
-    Adam adam(1U, 1U);
+    opt::Adam adam(1U, 1U);
     adam.setSimulationBox(box);
     adam.update(/*learningRate=*/0.5, /*step=*/1U);
 
@@ -153,12 +147,9 @@ TEST(TestAdam, updateLeavesPositionUnchangedWhenForceIsZero)
 {
     auto box = makeBoxWithOneAtom({1.0, 2.0, 3.0}, {0.0, 0.0, 0.0});
 
-    Adam adam(1U, 1U);
+    opt::Adam adam(1U, 1U);
     adam.setSimulationBox(box);
     adam.update(0.1, 1U);
 
-    EXPECT_EQ(
-        box->getAtoms()[0]->getPosition(),
-        linearAlgebra::Vec3D(1.0, 2.0, 3.0)
-    );
+    EXPECT_EQ(box->getAtoms()[0]->getPosition(), linalg::Vec3D(1.0, 2.0, 3.0));
 }

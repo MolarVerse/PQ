@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STEEPEST_DESCENT_HPP_
-
-#define _STEEPEST_DESCENT_HPP_
+#ifndef OPT__OPTIMIZER__STEEPEST_DESCENT_HPP
+#define OPT__OPTIMIZER__STEEPEST_DESCENT_HPP
 
 #include "optimizer.hpp"
 
@@ -34,23 +33,22 @@ namespace opt
      * @brief Steepest Descent optimizer
      *
      */
-    class SteepestDescent final : public Optimizer
+    class SteepestDescent : public Optimizer
     {
        private:
         constexpr static size_t _maxHistoryLength = 2;
 
        public:
-        explicit SteepestDescent(const size_t nEpochs);
+        explicit SteepestDescent(size_t nEpochs);
 
         SteepestDescent()           = default;
         ~SteepestDescent() override = default;
 
-        [[nodiscard]] std::shared_ptr<Optimizer> clone() const override;
         [[nodiscard]] size_t maxHistoryLength() const override;
 
-        void update(const double learningRate, const size_t step) override;
+        void update(double learningRate, size_t /*step*/) override;
     };
 
 }   // namespace opt
 
-#endif   // _STEEPEST_DESCENT_HPP_
+#endif   // OPT__OPTIMIZER__STEEPEST_DESCENT_HPP

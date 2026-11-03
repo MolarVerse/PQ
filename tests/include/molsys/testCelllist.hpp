@@ -20,39 +20,37 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_CELL_LIST_HPP_
-
-#define _TEST_CELL_LIST_HPP_
+#ifndef TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP
+#define TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP
 
 #include <gtest/gtest.h>
 
-#include "celllist.hpp"            // for CellList
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "simulationBox.hpp"       // for SimulationBox
+#include <memory>
+
+#include "celllist.hpp"
+#include "orthorhombicBox.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
 
 class TestCellList : public ::testing::Test
 {
    protected:
+    std::unique_ptr<molsys::CellList>      _cellList;
+    std::unique_ptr<molsys::SimulationBox> _simulationBox;
+
     void SetUp() override
     {
-        _cellList = new molsys::CellList();
+        _cellList = std::make_unique<molsys::CellList>();
         _cellList->setNumberOfCells(2);
         _cellList->setNumberOfNeighbourCells(1);
         _cellList->resizeCells();
 
-        _simulationBox = new molsys::SimulationBox();
-        _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
+
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simulationBox->setBox(orthoBox, false);
         settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
     }
-
-    void TearDown() override
-    {
-        delete _cellList;
-        delete _simulationBox;
-    }
-
-    molsys::CellList      *_cellList;
-    molsys::SimulationBox *_simulationBox;
 };
 
-#endif   // _TEST_CELL_LIST_HPP_
+#endif   // TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP

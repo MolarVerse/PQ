@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OUTPUT_FILES_SETUP_HPP_
-
-#define _OUTPUT_FILES_SETUP_HPP_
+#ifndef SETUP__OUTPUT_FILES_SETUP_HPP
+#define SETUP__OUTPUT_FILES_SETUP_HPP
 
 namespace engine
 {
@@ -52,4 +51,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _OUTPUT_FILES_SETUP_HPP_
+#endif   // SETUP__OUTPUT_FILES_SETUP_HPP

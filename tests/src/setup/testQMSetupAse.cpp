@@ -20,24 +20,22 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "testQMSetupAse.hpp"   // for TestQMSetupAse
+#include "testQMSetupAse.hpp"
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for allocator, basic_string
+#include <string>
 
 #ifdef WITH_ASE
-#include "aseFennolRunner.hpp"   // for AseFennolRunner
-#include "aseMaceRunner.hpp"     // for AseMaceRunner
-#include "pybind11/embed.h"      // for scoped_interpreter
+#include "aseFennolRunner.hpp"
+#include "aseMaceRunner.hpp"
+#include "pybind11/embed.h"
 #endif
-
-#include "gtest/gtest.h"   // for Message, TestPartResult
 
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
-    settings::QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
     settings::QMSettings::setUseThirdOrderDftb(true);
     settings::QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo();
@@ -45,16 +43,18 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    EXPECT_EQ(line, "         QM runner: ASE_DFTBPLUS");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
-    // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(settings::QMSettings::getSlakosType()) + "/skfiles/"};
+    std::string skPath{
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(settings::QMSettings::getSlakosType()) +
+        "/skfiles/"
+    };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
-    // clang-format on
     getline(file, line);
     EXPECT_EQ(line, "         Dispersion is turned: on");
     getline(file, line);
@@ -65,22 +65,24 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 {
     settings::QMSettings::setUseThirdOrderDftb(false);
     settings::QMSettings::setIsThirdOrderDftbSet(true);
-    settings::QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    EXPECT_EQ(line, "         QM runner: ASE_DFTBPLUS");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
-    // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(settings::QMSettings::getSlakosType()) + "/skfiles/"};
+    std::string skPath{
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(settings::QMSettings::getSlakosType()) +
+        "/skfiles/"
+    };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
-    // clang-format on
     getline(file, line);
     EXPECT_EQ(line, "         Dispersion is turned: off");
     getline(file, line);
@@ -88,14 +90,16 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    // clang-format off
-    EXPECT_EQ(line, "WARNING: 3ob approach has been chosen while disabling 3rd order DFTB. This setup is not recommended.");
-    // clang-format on
+    EXPECT_EQ(
+        line,
+        "WARNING: 3ob approach has been chosen while disabling 3rd order DFTB. "
+        "This setup is not recommended."
+    );
 }
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 {
-    settings::QMSettings::setSlakosType("3ob");
+    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
     settings::QMSettings::setUseThirdOrderDftb(true);
     settings::QMSettings::setHubbardDerivs({{"H", -0.3}});
     settings::QMSettings::setIsHubbardDerivsSet(true);
@@ -104,51 +108,55 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    EXPECT_EQ(line, "         QM runner: ASE_DFTBPLUS");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
-    // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(settings::QMSettings::getSlakosType()) + "/skfiles/"};
+    std::string skPath{
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(settings::QMSettings::getSlakosType()) +
+        "/skfiles/"
+    };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
-    // clang-format on
     getline(file, line);
     EXPECT_EQ(line, "         Dispersion is turned: off");
     getline(file, line);
     EXPECT_EQ(line, "         3rd order is turned:  on");
     getline(file, line);
-    // clang-format off
     EXPECT_EQ(line, "         Hubbard derivatives:  H: -0.3");
-    // clang-format on
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
-    // clang-format off
-    EXPECT_EQ(line, "WARNING: 3ob approach has been chosen while setting custom Hubbard derivatives. This setup is not recommended.");
-    // clang-format on
+    EXPECT_EQ(
+        line,
+        "WARNING: 3ob approach has been chosen while setting custom Hubbard "
+        "derivatives. This setup is not recommended."
+    );
 }
 
 TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 {
-    settings::QMSettings::setSlakosType("matsci");
+    settings::QMSettings::setSlakosType(SlakosType::MATSCI);
     settings::QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    EXPECT_EQ(line, "         QM runner: ASE_DFTBPLUS");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
     EXPECT_EQ(line, "         DFTB approach:        matsci");
     getline(file, line);
-    // clang-format off
-    std::string skPath {__SLAKOS_DIR__ + string(settings::QMSettings::getSlakosType()) + "/skfiles/"};
+    std::string skPath{
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(settings::QMSettings::getSlakosType()) +
+        "/skfiles/"
+    };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
-    // clang-format on
     getline(file, line);
     EXPECT_EQ(line, "         Dispersion is turned: on");
     getline(file, line);
@@ -158,14 +166,14 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 {
-    settings::QMSettings::setSlakosType("custom");
+    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
     settings::QMSettings::setSlakosPath("custom/path/");
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    EXPECT_EQ(line, "         QM runner: ASE_DFTBPLUS");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
@@ -180,7 +188,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
 {
-    settings::QMSettings::setSlakosType("custom");
+    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
     settings::QMSettings::setSlakosPath("custom/path/");
     settings::QMSettings::setUseDispersionCorrection(true);
     settings::QMSettings::setUseThirdOrderDftb(true);
@@ -193,7 +201,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "         QM runner: ASEDFTBPLUS");
+    EXPECT_EQ(line, "         QM runner: ASE_DFTBPLUS");
     getline(file, line);
     EXPECT_EQ(line, "");
     getline(file, line);
@@ -318,8 +326,8 @@ class MACECalculator:
 
 TEST_F(TestQMSetupAse, setupAseMaceWriteInfoFast)
 {
-    settings::QMSettings::setQMMethod(settings::QMMethod::MACE);
-    settings::QMSettings::setMaceMode("fast");
+    settings::QMSettings::setQMMethod(QMMethod::MACE);
+    settings::QMSettings::setMaceMode(MaceMode::FAST);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -327,7 +335,7 @@ TEST_F(TestQMSetupAse, setupAseMaceWriteInfoFast)
     std::string   all;
     while (std::getline(file, line)) all += line + "\n";
 
-    EXPECT_NE(all.find("Evaluation mode:       fast"), std::string::npos);
+    EXPECT_NE(all.find("Evaluation mode:       FAST"), std::string::npos);
     EXPECT_NE(all.find("cuequivariance-accelerated"), std::string::npos);
 }
 #endif

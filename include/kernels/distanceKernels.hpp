@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DISTANCE_KERNELS_HPP_
-
-#define _DISTANCE_KERNELS_HPP_
+#ifndef KERNELS__DISTANCE_KERNELS_HPP
+#define KERNELS__DISTANCE_KERNELS_HPP
 
 #include "vector3d.hpp"
 
@@ -34,33 +33,33 @@ namespace molsys
 namespace kernel
 {
     [[nodiscard]] double distSquared(
-        const linearAlgebra::Vec3D &,
-        const linearAlgebra::Vec3D &,
+        const linalg::Vec3D &,
+        const linalg::Vec3D &,
         const molsys::SimulationBox &
     );
 
-    [[nodiscard]] linearAlgebra::Vec3D distVec(
-        const linearAlgebra::Vec3D &,
-        const linearAlgebra::Vec3D &
+    [[nodiscard]] linalg::Vec3D distVec(
+        const linalg::Vec3D &,
+        const linalg::Vec3D &
     );
 
-    [[nodiscard]] linearAlgebra::Vec3D distVec(
-        const linearAlgebra::Vec3D &,
-        const linearAlgebra::Vec3D &,
+    [[nodiscard]] linalg::Vec3D distVec(
+        const linalg::Vec3D &,
+        const linalg::Vec3D &,
         const molsys::SimulationBox &
     );
 
-    [[nodiscard]] std::pair<linearAlgebra::Vec3D, double> distVecAndDist2(
-        const linearAlgebra::Vec3D &,
-        const linearAlgebra::Vec3D &
+    [[nodiscard]] std::pair<linalg::Vec3D, double> distVecAndDist2(
+        const linalg::Vec3D &,
+        const linalg::Vec3D &
     );
 
-    [[nodiscard]] std::pair<linearAlgebra::Vec3D, double> distVecAndDist2(
-        const linearAlgebra::Vec3D &,
-        const linearAlgebra::Vec3D &,
+    [[nodiscard]] std::pair<linalg::Vec3D, double> distVecAndDist2(
+        const linalg::Vec3D &,
+        const linalg::Vec3D &,
         const molsys::SimulationBox &
     );
 
 }   // namespace kernel
 
-#endif   // _DISTANCE_KERNELS_HPP_
+#endif   // KERNELS__DISTANCE_KERNELS_HPP

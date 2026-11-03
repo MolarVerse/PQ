@@ -32,113 +32,275 @@
 #include "simulationBox.hpp"
 #include "virial.hpp"
 
-using namespace opt;
-using namespace potential;
-using namespace molsys;
-using namespace physicalData;
-using namespace forceField;
-using namespace intraNonBonded;
-using namespace virial;
-using namespace constraints;
-using namespace customException;
-
-bool Evaluator::supportsAnalyticHessian() const { return false; }
-
-HessianMatrix Evaluator::calculateAnalyticHessian()
+namespace opt
 {
-    throw UserInputException(
-        "The selected evaluator does not support analytic Hessian generation."
-    );
-}
+    /**
+     * @brief Construct a new Evaluator object with the given settings
+     *
+     * @param settings - Reference to the Settings object
+     */
+    Evaluator::Evaluator(const Settings& settings) : _settings(settings) {}
 
-/***************************
- * standard setter methods *
- ***************************/
+    Evaluator::~Evaluator() = default;
 
-/**
- * @brief set the potential as shared pointer
- *
- * @param potential - std::shared_ptr<Potential>
- */
-void Evaluator::setPotential(const std::shared_ptr<Potential> potential)
-{
-    _potential = potential;
-}
+    /**
+     * @brief Check if the evaluator supports analytic Hessian calculation
+     *
+     * @return true
+     * @return false
+     */
+    bool Evaluator::supportsAnalyticHessian() const { return false; }
 
-/**
- * @brief set the cell list as shared pointer
- *
- * @param cellList - std::shared_ptr<CellList>
- */
-void Evaluator::setCellList(const std::shared_ptr<CellList> cellList)
-{
-    _cellList = cellList;
-}
+    /**
+     * @brief Calculate the analytic Hessian matrix
+     *
+     * @throws exc::UserInputException if the evaluator does not support
+     * analytic Hessian calculation
+     *
+     * @return HessianMatrix
+     */
+    HessianMatrix Evaluator::calculateAnalyticHessian()
+    {
+        throw exc::UserInputException(
+            "The selected evaluator does not support analytic Hessian "
+            "generation."
+        );
+    }
 
-/**
- * @brief set the simulation box as shared pointer
- *
- * @param simulationBox - std::shared_ptr<SimulationBox>
- */
-void Evaluator::setSimulationBox(
-    const std::shared_ptr<SimulationBox> simulationBox
-)
-{
-    _simulationBox = simulationBox;
-}
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-/**
- * @brief set the constraints as shared pointer
- *
- * @param constraints - std::shared_ptr<Constraints>
- */
-void Evaluator::setConstraints(const std::shared_ptr<Constraints> constraints)
-{
-    _constraints = constraints;
-}
+    /**
+     * @brief set the potential as shared pointer
+     *
+     * @param potential - std::shared_ptr<Potential>
+     */
+    void Evaluator::setPotential(
+        const std::shared_ptr<pot::Potential>& potential
+    )
+    {
+        _potential = potential;
+    }
 
-/**
- * @brief set the physical data as shared pointer
- *
- * @param physicalData - std::shared_ptr<PhysicalData>
- */
-void Evaluator::setPhysicalData(
-    const std::shared_ptr<PhysicalData> physicalData
-)
-{
-    _physicalData = physicalData;
-}
+    /**
+     * @brief set the cell list
+     *
+     * @param cellList - CellList&
+     */
+    void Evaluator::setCellList(molsys::CellList& cellList)
+    {
+        _cellList = &cellList;
+    }
 
-/**
- * @brief set the old physical data as shared pointer
- *
- * @param physicalData - std::shared_ptr<PhysicalData>
- */
-void Evaluator::setPhysicalDataOld(
-    const std::shared_ptr<PhysicalData> physicalData
-)
-{
-    _physicalDataOld = physicalData;
-}
+    /**
+     * @brief set the simulation box as shared pointer
+     *
+     * @param simulationBox - std::shared_ptr<SimulationBox>
+     */
+    void Evaluator::setSimulationBox(
+        const std::shared_ptr<molsys::SimulationBox>& simulationBox
+    )
+    {
+        _simulationBox = simulationBox;
+    }
 
-/**
- * @brief set the force field as shared pointer
- *
- * @param forceField - std::shared_ptr<ForceField>
- */
-void Evaluator::setForceField(const std::shared_ptr<ForceField> forceField)
-{
-    _forceField = forceField;
-}
+    /**
+     * @brief set the constraints as shared pointer
+     *
+     * @param constraints - std::shared_ptr<Constraints>
+     */
+    void Evaluator::setConstraints(
+        const std::shared_ptr<constraints::Constraints>& constraints
+    )
+    {
+        _constraints = constraints;
+    }
 
-/**
- * @brief set the intra non bonded as shared pointer
- *
- * @param intraNonBonded - std::shared_ptr<IntraNonBonded>
- */
-void Evaluator::setIntraNonBonded(
-    const std::shared_ptr<IntraNonBonded> intraNonBonded
-)
-{
-    _intraNonBonded = intraNonBonded;
-}
+    /**
+     * @brief set the physical data as shared pointer
+     *
+     * @param physicalData - std::shared_ptr<PhysicalData>
+     */
+    void Evaluator::setPhysicalData(
+        const std::shared_ptr<physicalData::PhysicalData>& physicalData
+    )
+    {
+        _physicalData = physicalData;
+    }
+
+    /**
+     * @brief set the old physical data as shared pointer
+     *
+     * @param physicalData - std::shared_ptr<PhysicalData>
+     */
+    void Evaluator::setPhysicalDataOld(
+        const std::shared_ptr<physicalData::PhysicalData>& physicalData
+    )
+    {
+        _physicalDataOld = physicalData;
+    }
+
+    /**
+     * @brief set the force field as shared pointer
+     *
+     * @param forceField - std::shared_ptr<ForceField>
+     */
+    void Evaluator::setForceField(
+        const std::shared_ptr<ff::ForceField>& forceField
+    )
+    {
+        _forceField = forceField;
+    }
+
+    /**
+     * @brief set the intra non bonded as shared pointer
+     *
+     * @param intraNonBonded - std::shared_ptr<IntraNonBonded>
+     */
+    void Evaluator::setIntraNonBonded(
+        const std::shared_ptr<intraNonBonded::IntraNonBonded>& intraNonBonded
+    )
+    {
+        _intraNonBonded = intraNonBonded;
+    }
+
+    /**
+     * @brief Get the physical data as a reference
+     *
+     * @return physicalData::PhysicalData&
+     */
+    physicalData::PhysicalData& Evaluator::_getPhysicalData()
+    {
+        return *_physicalData;
+    }
+
+    /**
+     * @brief Get the physical data as a const reference
+     *
+     * @return const physicalData::PhysicalData&
+     */
+    const physicalData::PhysicalData& Evaluator::_getPhysicalData() const
+    {
+        return *_physicalData;
+    }
+
+    /**
+     * @brief Get the old physical data as a reference
+     *
+     * @return physicalData::PhysicalData&
+     */
+    physicalData::PhysicalData& Evaluator::_getPhysicalDataOld()
+    {
+        return *_physicalDataOld;
+    }
+
+    /**
+     * @brief Get the old physical data as a const reference
+     *
+     * @return const physicalData::PhysicalData&
+     */
+    const physicalData::PhysicalData& Evaluator::_getPhysicalDataOld() const
+    {
+        return *_physicalDataOld;
+    }
+
+    /**
+     * @brief Get the force field as a reference
+     *
+     * @return ff::ForceField&
+     */
+    ff::ForceField& Evaluator::_getForceField() { return *_forceField; }
+
+    /**
+     * @brief Get the force field as a const reference
+     *
+     * @return const ff::ForceField&
+     */
+    const ff::ForceField& Evaluator::_getForceField() const
+    {
+        return *_forceField;
+    }
+
+    /**
+     * @brief Get the intra non bonded as a reference
+     *
+     * @return intraNonBonded::IntraNonBonded&
+     */
+    intraNonBonded::IntraNonBonded& Evaluator::_getIntraNonBonded()
+    {
+        return *_intraNonBonded;
+    }
+
+    /**
+     * @brief Get the intra non bonded as a const reference
+     *
+     * @return const intraNonBonded::IntraNonBonded&
+     */
+    const intraNonBonded::IntraNonBonded& Evaluator::_getIntraNonBonded() const
+    {
+        return *_intraNonBonded;
+    }
+
+    /**
+     * @brief Get the simulation box as a reference
+     *
+     * @return molsys::SimulationBox&
+     */
+    molsys::SimulationBox& Evaluator::_getSimulationBox()
+    {
+        return *_simulationBox;
+    }
+
+    /**
+     * @brief Get the simulation box as a const reference
+     *
+     * @return const molsys::SimulationBox&
+     */
+    const molsys::SimulationBox& Evaluator::_getSimulationBox() const
+    {
+        return *_simulationBox;
+    }
+
+    /**
+     * @brief Get the potential as a reference
+     *
+     * @return pot::Potential&
+     */
+    pot::Potential& Evaluator::_getPotential() { return *_potential; }
+
+    /**
+     * @brief Get the potential as a const reference
+     *
+     * @return const pot::Potential&
+     */
+    const pot::Potential& Evaluator::_getPotential() const
+    {
+        return *_potential;
+    }
+
+    /**
+     * @brief Get the cell list as a reference
+     *
+     * @return molsys::CellList&
+     */
+    molsys::CellList& Evaluator::_getCellList() { return *_cellList; }
+
+    /**
+     * @brief Get the cell list as a const reference
+     *
+     * @return const molsys::CellList&
+     */
+    const molsys::CellList& Evaluator::_getCellList() const
+    {
+        return *_cellList;
+    }
+
+    /**
+     * @brief Get the settings associated with this evaluator as a const
+     * reference
+     *
+     * @return const Settings&
+     */
+    const Settings& Evaluator::_getSettings() const { return _settings.get(); }
+}   // namespace opt

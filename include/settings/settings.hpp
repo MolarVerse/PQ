@@ -20,160 +20,41 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTINGS_HPP_
+#ifndef SETTINGS__SETTINGS_HPP
+#define SETTINGS__SETTINGS_HPP
 
-#define _SETTINGS_HPP_
+#include "constraintSettings.hpp"
+#include "convergenceSettings.hpp"
+#include "forceFieldSettings.hpp"
+#include "hessianSettings.hpp"
+#include "manostatSettings.hpp"
+#include "optimizerSettings.hpp"
+#include "outputFileSettings.hpp"
+#include "referenceSettings.hpp"
+#include "resetKineticsSettings.hpp"
+#include "ringPolymerSettings.hpp"
+#include "simulationBoxSettings.hpp"
+#include "waterModelSettings.hpp"
 
-#include <cstdint>       // for uint_fast32_t
-#include <string_view>   // for string_view
-
-#include "defaults.hpp"   // for _DIMENSIONALITY_DEFAULT_
-
-namespace settings
+/**
+ * @brief Settings class that holds various simulation settings
+ */
+struct Settings
 {
-    /**
-     * @enum JobType
-     *
-     * @brief enum class to store the type of the job
-     *
-     */
-    enum class JobType
-    {
-        MM_MD,
-        QM_MD,
-        QMMM_MD,
-        RING_POLYMER_QM_MD,
-        MM_OPT,
-        MM_HESSIAN,
-        NONE
-    };
+    ResetKineticsSettings resetKinetics;
+    SimulationBoxSettings simulationBoxSettings;
+    HessianSettings       hessianSettings;
+    RingPolymerSettings   ringPolymerSettings;
+    OptimizerSettings     optimizerSettings;
+    ConstraintSettings    constraintSettings;
+    ConvSettings          convSettings;
+    WaterModelSettings    waterModelSettings;
+    ForceFieldSettings    forceFieldSettings;
+    ManostatSettings      manostatSettings;
+    OutputFileSettings    outputFiles;
+    ReferenceSettings     referenceSettings;
 
-    /**
-     * @enum FPType
-     *
-     * @brief enum class to store the floating point type
-     *
-     */
-    enum class FPType
-    {
-        FLOAT,
-        DOUBLE
-    };
+    void finalize();
+};
 
-    enum class VirialType
-    {
-        ATOMIC,
-        MOLECULAR
-    };
-
-    enum class IntegratorType
-    {
-        NONE,
-        VELOCITY_VERLET,
-    };
-
-    [[nodiscard]] std::string string(const FPType fpType);
-    [[nodiscard]] std::string string(const VirialType virialType);
-    [[nodiscard]] std::string string(const JobType jobtype);
-    [[nodiscard]] JobType     jobtypeFromString(const std::string_view jobtype);
-    [[nodiscard]] FPType      fpTypeFromString(const std::string_view fpType);
-
-    [[nodiscard]] std::string string(const JobType jobtype);
-
-    /**
-     * @class Settings
-     *
-     * @brief Stores the general settings of the simulation
-     *
-     */
-    class Settings
-    {
-       private:
-        static inline JobType       _jobtype;
-        static inline FPType        _floatingPointType = FPType::DOUBLE;
-        static inline uint_fast32_t _randomSeed;
-        static inline bool          _isRandomSeedset = false;
-
-        static inline bool _isRingPolymerMDActivated = false;
-
-        // clang-format off
-        static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
-        // clang-format on
-
-        static inline VirialType _virial = VirialType::MOLECULAR;
-
-        // setting velocity verlet as default integrator type for backward
-        // compatibility until 0.7.0 it was not necessary to specify the
-        // integrator type in the input file, so we set it to velocity verlet by
-        // default
-        static inline IntegratorType _integrator =
-            IntegratorType::VELOCITY_VERLET;
-
-        static inline bool _isCellListActivated =
-            defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
-
-       public:
-        Settings()  = default;
-        ~Settings() = default;
-
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        static void setJobtype(const std::string_view jobtype);
-        static void setJobtype(const JobType jobtype);
-
-        static void setFloatingPointType(const std::string_view);
-        static void setFloatingPointType(const FPType);
-
-        static void setRandomSeed(const uint_fast32_t randomSeed);
-        static void setIsRandomSeedSet(const bool isRandomSeedSet);
-
-        static void setIsRingPolymerMDActivated(const bool isRingPolymerMD);
-        static void setDimensionality(const size_t dimensionality);
-
-        static void setVirialType(const VirialType virialType);
-        static void setIntegratorType(const IntegratorType integratorType);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] static JobType getJobtype();
-
-        [[nodiscard]] static FPType      getFloatingPointType();
-        [[nodiscard]] static std::string getFloatingPointPybindString();
-
-        [[nodiscard]] static uint_fast32_t getRandomSeed();
-        [[nodiscard]] static bool          isRandomSeedSet();
-
-        [[nodiscard]] static size_t getDimensionality();
-
-        [[nodiscard]] static VirialType     getVirialType();
-        [[nodiscard]] static IntegratorType getIntegratorType();
-
-        /******************************
-         * standard is-active methods *
-         ******************************/
-
-        static void activateRingPolymerMD();
-        static void deactivateRingPolymerMD();
-        static void activateCellList();
-        static void deactivateCellList();
-
-        [[nodiscard]] static bool isQMOnlyJobtype();
-        [[nodiscard]] static bool isMMOnlyJobtype();
-        [[nodiscard]] static bool isHybridJobtype();
-        [[nodiscard]] static bool isMMActivated();
-        [[nodiscard]] static bool isQMActivated();
-        [[nodiscard]] static bool isQMOnlyActivated();
-        [[nodiscard]] static bool isMMOnlyActivated();
-        [[nodiscard]] static bool isRingPolymerMDActivated();
-        [[nodiscard]] static bool isMDJobType();
-        [[nodiscard]] static bool isOptJobType();
-        [[nodiscard]] static bool isCellListActivated();
-    };
-
-}   // namespace settings
-
-#endif   // _SETTINGS_HPP_
+#endif   // SETTINGS__SETTINGS_HPP

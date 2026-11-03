@@ -32,12 +32,12 @@ namespace
 {
     void setItemsProcessed(
         benchmark::State&            state,
-        const molsys::SimulationBox& simBox
+        const molsys::SimulationBox& simulationBox
     )
     {
         state.SetItemsProcessed(
             state.iterations() *
-            static_cast<std::int64_t>(simBox.getNumberOfAtoms())
+            static_cast<std::int64_t>(simulationBox.getNumberOfAtoms())
         );
     }
 
@@ -71,9 +71,9 @@ namespace
 
     void BM_AngularMomentum(benchmark::State& state)
     {
-        const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
-        auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
-        linearAlgebra::Vec3D momentum{0.1, -0.2, 0.3};
+        const auto    cellsPerSide = static_cast<std::size_t>(state.range(0));
+        auto          simBox       = benchmarkSetup::makeLattice(cellsPerSide);
+        linalg::Vec3D momentum{0.1, -0.2, 0.3};
 
         for (auto _ : state)
         {

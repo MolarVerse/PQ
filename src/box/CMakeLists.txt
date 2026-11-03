@@ -7,10 +7,11 @@ add_library(box
 target_include_directories(box
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include/box
-    ${PROJECT_SOURCE_DIR}/include/config
 )
 
 target_link_libraries(box
+    PUBLIC
+    config_headers
     PRIVATE
     linearAlgebra
     exceptions

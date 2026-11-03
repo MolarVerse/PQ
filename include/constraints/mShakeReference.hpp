@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _M_SHAKE_REFERENCE_HPP_
+#ifndef CONSTRAINTS__M_SHAKE_REFERENCE_HPP
+#define CONSTRAINTS__M_SHAKE_REFERENCE_HPP
 
-#define _M_SHAKE_REFERENCE_HPP_
-
-#include <atom.hpp>   // for Atom
-#include <cstddef>    // for size_t
-#include <memory>     // for unique_ptr
-#include <vector>     // for vector
+#include <atom.hpp>
+#include <cstddef>
+#include <memory>
+#include <vector>
 
 namespace molsys
 {
@@ -69,4 +68,4 @@ namespace constraints
     };
 }   // namespace constraints
 
-#endif   // _M_SHAKE_REFERENCE_HPP_
+#endif   // CONSTRAINTS__M_SHAKE_REFERENCE_HPP

@@ -22,78 +22,88 @@
 
 #include "dihedralSection.hpp"
 
-#include <format>   // for format
+#include <format>
 
-#include "constants/conversionFactors.hpp"   // for _DEG_TO_RAD_
-#include "dihedralType.hpp"                  // for DihedralType
-#include "engine.hpp"                        // for Engine
-#include "exceptions.hpp"                    // for ParameterFileException
+#include "constants/conversionFactors.hpp"
+#include "dihedralType.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 
-using namespace input::parameterFile;
-using namespace engine;
-using namespace customException;
-using namespace forceField;
-using namespace constants;
-
-/**
- * @brief returns the keyword of the dihedral section
- *
- * @return "dihedrals"
- */
-std::string DihedralSection::keyword() { return "dihedrals"; }
-
-/**
- * @brief processes one line of the dihedral section of the parameter file and
- * adds the dihedral type to the force field
- *
- * @details The line is expected to have the following format:
- * 1. dihedralTypeId
- * 2. forceConstant
- * 3. periodicity
- * 4. phaseShift
- *
- * @param line
- * @param engine
- *
- * @throw ParameterFileException if number of elements in line
- * is not 3
- * @throw ParameterFileException if periodicity is negative
- */
-void DihedralSection::processSection(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::parameterFile
 {
-    if (lineElements.size() != 4)
+
+    /**
+     * @brief returns the keyword of the dihedral section
+     *
+     * @return "dihedrals"
+     */
+    std::string DihedralSection::keyword() { return "dihedrals"; }
+
+    /**
+     * @brief processes one line of the dihedral section of the parameter file
+     * and adds the dihedral type to the force field
+     *
+     * @details The line is expected to have the following format:
+     * 1. dihedralTypeId
+     * 2. forceConstant
+     * 3. periodicity
+     * 4. phaseShift
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the parameter file being processed
+     *
+     * @throw exc::ParameterFileException if number of elements in line
+     * is not 4
+     * @throw exc::ParameterFileException if periodicity is negative
+     */
+    void DihedralSection::processSection(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine,
+        size_t                    lineNumber
+    )
     {
-        throw ParameterFileException(
-            std::format(
-                "Wrong number of arguments in parameter file dihedral section "
-                "at "
-                "line {} - number of elements has to be 4!",
-                _lineNumber
-            )
+        if (lineElements.size() != 4)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Wrong number of arguments in parameter file dihedral "
+                    "section "
+                    "at "
+                    "line {} - number of elements has to be 4!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto id            = DihedralId{stoul(lineElements[0])};
+        auto forceConstant = stod(lineElements[1]);
+        auto periodicity   = stod(lineElements[2]);
+        auto phase         = stod(lineElements[3]) * DEG_TO_RAD;
+
+        if (periodicity < 0.0)
+        {
+            throw exc::ParameterFileException(
+                std::format(
+                    "Parameter file dihedral section at line {} - periodicity "
+                    "has "
+                    "to "
+                    "be positive!",
+                    lineNumber
+                )
+            );
+        }
+
+        auto dihedralType = ff::DihedralType(
+            id,
+            DihedralParams{
+                .forceConstant = forceConstant,
+                .frequency     = periodicity,
+                .phaseShift    = phase
+            }
         );
+
+        engine.getForceField()->addDihedralType(dihedralType);
     }
 
-    auto id            = DihedralId{stoul(lineElements[0])};
-    auto forceConstant = stod(lineElements[1]);
-    auto periodicity   = stod(lineElements[2]);
-    auto phase         = stod(lineElements[3]) * DEG_TO_RAD;
-
-    if (periodicity < 0.0)
-    {
-        throw ParameterFileException(
-            std::format(
-                "Parameter file dihedral section at line {} - periodicity has "
-                "to "
-                "be positive!",
-                _lineNumber
-            )
-        );
-    }
-
-    auto dihedralType = DihedralType(id, forceConstant, periodicity, phase);
-
-    engine.getForceField()->addDihedralType(dihedralType);
-}
+}   // namespace input::parameterFile

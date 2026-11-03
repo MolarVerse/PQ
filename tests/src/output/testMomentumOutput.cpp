@@ -20,18 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Message, TestPartResult
+#include <gtest/gtest.h>
 
-#include <fstream>   // for ifstream
-#include <string>    // for getline, allocator, string
+#include <fstream>
+#include <string>
 
-#include "gtest/gtest.h"   // for Test, TestInfo (ptr only), TEST, InitGoogleTest, RUN_ALL_TESTS
-#include "momentumOutput.hpp"     // for MomentumOutput
-#include "physicalData.hpp"       // for PhysicalData
-#include "testEnergyOutput.hpp"   // for TestEnergyOutput
-#include "vector3d.hpp"           // IWYU pragma: keep - for Vec3D
-
-using namespace linearAlgebra;
+#include "momentumOutput.hpp"
+#include "physicalData.hpp"
+#include "testEnergyOutput.hpp"
+#include "vector3d.hpp"
 
 /**
  * @brief tests writing momentum output file
@@ -39,10 +36,10 @@ using namespace linearAlgebra;
  */
 TEST_F(TestEnergyOutput, writeMomentumFile)
 {
-    _physicalData->setMomentum(Vec3D(3.0, 4.0, 0.0));
-    _physicalData->setAngularMomentum(Vec3D(4.0, 0.0, 3.0));
+    _physicalData->setMomentum(linalg::Vec3D(3.0, 4.0, 0.0));
+    _physicalData->setAngularMomentum(linalg::Vec3D(4.0, 0.0, 3.0));
 
-    _momentumOutput->setFilename("default.mom");
+    _momentumOutput->setFilename("default.mom", false);
     _momentumOutput->write(100, *_physicalData);
     _momentumOutput->close();
 

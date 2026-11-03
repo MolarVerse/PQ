@@ -1,0 +1,10 @@
+# Rigid water: shake
+jobtype = mm-md;
+nstep = 20; timestep = 2.0;
+output_freq = 10;
+force-field = off;
+rcoulomb = 7.5;
+start_file = start.rst;
+file_prefix = shake;
+shake = shake; shake-iter = 100; rattle-iter = 100;
+topology_file = shake.top;

@@ -20,19 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for TEST_F, EXPECT_EQ, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include "exceptions.hpp"            // for InputFileException, customException
-#include "gtest/gtest.h"             // for Message, TestPartResult
-#include "optInputParser.hpp"        // for InputFileParserOptimizer
-#include "optimizerSettings.hpp"     // for OptimizerSettings
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
+#include <optional>
 
-using namespace input;
-using namespace settings;
-using namespace customException;
-using namespace defaults;
+#include "defaults.hpp"
+#include "enums/optimizer.hpp"
+#include "exceptions.hpp"
+#include "optInputParser.hpp"
+#include "optimizerSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test parsing the optimizer input key
@@ -44,23 +42,28 @@ using namespace defaults;
 TEST_F(TestInputFileReader, parserOptimizer)
 {
     using enum OptimizerType;
+    OptimizerSettings optimizerSettings;
 
-    EXPECT_EQ(OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
+    auto       parser  = input::OptInputParser(optimizerSettings);
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("optimizer"));
+    const auto& parseFunc = funcMap.at("optimizer");
 
-    OptimizerSettings::setOptimizer("none");
+    parseFunc({"optimizer", "=", "steepest-descent"}, 0);
+    EXPECT_EQ(optimizerSettings.getOptimizer(), STEEPEST_DESCENT);
 
-    auto parser = OptInputParser();
-    parser.parseOptimizer({"optimizer", "=", "steepest-descent"}, 0);
-    EXPECT_EQ(OptimizerSettings::getOptimizer(), STEEPEST_DESCENT);
+    _clearParser(parser);
 
-    parser.parseOptimizer({"optimizer", "=", "adam"}, 0);
-    EXPECT_EQ(OptimizerSettings::getOptimizer(), ADAM);
+    parseFunc({"optimizer", "=", "adam"}, 0);
+    EXPECT_EQ(optimizerSettings.getOptimizer(), ADAM);
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseOptimizer({"optimizer", "=", "notValid"}, 0),
-        InputFileException,
-        "Unknown optimizer method \"notValid\" in input file at line 0.\n"
-        "Possible options are: steepest-descent, adam"
+        parseFunc({"optimizer", "=", "notValid"}, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"optimizer\" at line 0 in input "
+        "file. Allowed values: steepest_descent, adam"
     )
 }
 
@@ -75,52 +78,48 @@ TEST_F(TestInputFileReader, parserOptimizer)
  */
 TEST_F(TestInputFileReader, parserLearningRateStrategy)
 {
-    using enum LREnum;
+    using enum LearningRate;
 
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), EXPONENTIAL_DECAY);
+    OptimizerSettings optimizerSettings;
 
-    OptimizerSettings::setLearningRateStrategy("none");
+    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), EXPONENTIAL_DECAY);
 
-    auto parser = OptInputParser();
-    parser.parseLearningRateStrategy(
-        {"learning-rate-strategy", "=", "constant-decay"},
-        0
-    );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), CONSTANT_DECAY);
+    auto       parser  = input::OptInputParser(optimizerSettings);
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("learning_rate_strategy"));
+    const auto& parseFunc = funcMap.at("learning_rate_strategy");
 
-    parser.parseLearningRateStrategy(
-        {"learning-rate-strategy", "=", "constant"},
-        0
-    );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), CONSTANT);
+    parseFunc({"learning-rate-strategy", "=", "constant-decay"}, 0);
+    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), CONSTANT_DECAY);
 
-    parser.parseLearningRateStrategy(
-        {"learning-rate-strategy", "=", "exponential-decay"},
-        0
-    );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), EXPONENTIAL_DECAY);
+    _clearParser(parser);
 
-    parser.parseLearningRateStrategy(
-        {"learning-rate-strategy", "=", "lineSearch-wolfe"},
-        0
-    );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), LINESEARCH_WOLFE);
+    parseFunc({"learning-rate-strategy", "=", "constant"}, 0);
+    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), CONSTANT);
 
-    parser.parseLearningRateStrategy(
-        {"learning-rate-strategy", "=", "linesearch"},
-        0
-    );
-    EXPECT_EQ(OptimizerSettings::getLearningRateStrategy(), LINESEARCH_WOLFE);
+    _clearParser(parser);
+
+    parseFunc({"learning-rate-strategy", "=", "exponential-decay"}, 0);
+    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), EXPONENTIAL_DECAY);
+
+    _clearParser(parser);
+
+    parseFunc({"learning-rate-strategy", "=", "lineSearch-wolfe"}, 0);
+    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), LINESEARCH_WOLFE);
+
+    _clearParser(parser);
+
+    parseFunc({"learning-rate-strategy", "=", "linesearch"}, 0);
+    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), LINESEARCH_WOLFE);
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseLearningRateStrategy(
-            {"learning-rate-strategy", "=", "notValid"},
-            0
-        ),
-        InputFileException,
-        "Unknown learning rate strategy \"notValid\" in input file at line 0.\n"
-        "Possible options are: constant, constant-decay, exponential-decay, "
-        "linesearch (linesearch-wolfe)"
+        parseFunc({"learning-rate-strategy", "=", "notValid"}, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"learning-rate-strategy\" at line "
+        "0 in input file. Allowed values: constant, constant_decay, "
+        "exponential_decay, linesearch_wolfe, linesearch"
     )
 }
 
@@ -132,25 +131,30 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
  */
 TEST_F(TestInputFileReader, parserInitialLearningRate)
 {
+    OptimizerSettings optimizerSettings;
     EXPECT_EQ(
-        OptimizerSettings::getInitialLearningRate(),
-        INITIAL_LEARNING_RATE_DEFAULT
+        optimizerSettings.getInitialLearningRate(),
+        defaults::INITIAL_LEARNING_RATE_DEFAULT
     );
 
-    OptimizerSettings::setInitialLearningRate(0.0);
+    optimizerSettings.setInitialLearningRate(0.0);
 
-    auto parser = OptInputParser();
-    parser.parseInitialLearningRate({"initial-learning-rate", "=", "0.99"}, 0);
-    EXPECT_EQ(OptimizerSettings::getInitialLearningRate(), 0.99);
+    auto       parser  = input::OptInputParser(optimizerSettings);
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("initial_learning_rate"));
+    const auto& parseFunc = funcMap.at("initial_learning_rate");
+
+    parseFunc({"initial-learning-rate", "=", "0.99"}, 0);
+    EXPECT_EQ(optimizerSettings.getInitialLearningRate(), 0.99);
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseInitialLearningRate(
-            {"initial-learning-rate", "=", "-0.99"},
-            0
-        ),
-        InputFileException,
-        "Initial learning rate must be greater than 0.0 in input file at line "
-        "0."
+        parseFunc({"initial-learning-rate", "=", "-0.99"}, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.99\" for key \"initial-learning-rate\" at line 0 "
+        "in input file: failed validation with message Value must be greater "
+        "than 0"
     )
 }
 
@@ -162,18 +166,27 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
  */
 TEST_F(TestInputFileReader, parserLearningRateDecay)
 {
-    EXPECT_EQ(OptimizerSettings::getLearningRateDecay(), std::nullopt);
+    OptimizerSettings optimizerSettings;
+    EXPECT_FALSE(optimizerSettings.isLearningRateDecaySet());
 
-    OptimizerSettings::setLearningRateDecay(0.0);
+    optimizerSettings.setLearningRateDecay(0.0);
 
-    auto parser = OptInputParser();
-    parser.parseLearningRateDecay({"learning-rate-decay", "=", "0.99"}, 0);
-    EXPECT_EQ(OptimizerSettings::getLearningRateDecay(), 0.99);
+    auto       parser  = input::OptInputParser(optimizerSettings);
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("learning_rate_decay"));
+    const auto& parseFunc = funcMap.at("learning_rate_decay");
+
+    parseFunc({"learning-rate-decay", "=", "0.99"}, 0);
+    EXPECT_EQ(optimizerSettings.getLearningRateDecay(), 0.99);
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseLearningRateDecay({"learning-rate-decay", "=", "-0.99"}, 0),
-        InputFileException,
-        "Learning rate decay must be greater than 0.0 in input file at line 0."
+        parseFunc({"learning-rate-decay", "=", "-0.99"}, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.99\" for key \"learning-rate-decay\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
     )
 }
 
@@ -185,19 +198,31 @@ TEST_F(TestInputFileReader, parserLearningRateDecay)
  */
 TEST_F(TestInputFileReader, parserMaxLearningRate)
 {
-    EXPECT_EQ(OptimizerSettings::getMaxLearningRate(), std::nullopt);
+    OptimizerSettings optimizerSettings;
 
-    OptimizerSettings::setMaxLearningRate(0.0);
+    EXPECT_FALSE(optimizerSettings.isMaxLearningRateSet());
 
-    auto parser = OptInputParser();
-    parser.parseMaxLearningRate({"max-learning-rate", "=", "0.99"}, 0);
-    EXPECT_EQ(OptimizerSettings::getMaxLearningRate(), 0.99);
+    optimizerSettings.setMaxLearningRate(0.0);
+
+    auto       parser  = input::OptInputParser(optimizerSettings);
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("max_learning_rate"));
+    const auto& parseFunc = funcMap.at("max_learning_rate");
+
+    parseFunc({"max-learning-rate", "=", "0.99"}, 0);
+    EXPECT_EQ(
+        optimizerSettings.getMaxLearningRate(),
+        std::optional<double>{0.99}
+    );
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseMaxLearningRate({"max-learning-rate", "=", "-0.99"}, 0),
-        InputFileException,
-        "Maximum learning rate must be greater than 0.0 in input file at line "
-        "0."
+        parseFunc({"max-learning-rate", "=", "-0.99"}, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.99\" for key \"max-learning-rate\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
     )
 }
 
@@ -209,25 +234,29 @@ TEST_F(TestInputFileReader, parserMaxLearningRate)
  */
 TEST_F(TestInputFileReader, parserLRUpdateFrequency)
 {
+    OptimizerSettings optimizerSettings;
     EXPECT_EQ(
-        OptimizerSettings::getLRUpdateFrequency(),
-        LR_UPDATE_FREQUENCY_DEFAULT
+        optimizerSettings.getLRUpdateFrequency(),
+        defaults::LR_UPDATE_FREQUENCY_DEFAULT
     );
 
-    OptimizerSettings::setLRUpdateFrequency(0);
+    optimizerSettings.setLRUpdateFrequency(0);
 
-    auto parser = OptInputParser();
-    parser.parseLearningRateUpdateFreq({"lr-update-frequency", "=", "100"}, 0);
-    EXPECT_EQ(OptimizerSettings::getLRUpdateFrequency(), 100);
+    auto       parser  = input::OptInputParser(optimizerSettings);
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("learning_rate_update_freq"));
+    const auto& parseFunc = funcMap.at("learning_rate_update_freq");
+
+    parseFunc({"lr-update-frequency", "=", "100"}, 0);
+    EXPECT_EQ(optimizerSettings.getLRUpdateFrequency(), 100);
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseLearningRateUpdateFreq(
-            {"lr-update-frequency", "=", "-100"},
-            0
-        ),
-        InputFileException,
-        "Learning rate update frequency must be greater than 0 in input file "
-        "at line 0."
+        parseFunc({"lr-update-frequency", "=", "-100"}, 0),
+        exc::InputFileException,
+        "Invalid value \"-100\" for key \"learning-rate-update-freq\" at line "
+        "0 in input file. Value must be a positive integer"
     )
 }
 
@@ -239,21 +268,29 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
  */
 TEST_F(TestInputFileReader, parserMinLearningRate)
 {
+    OptimizerSettings optimizerSettings;
     EXPECT_EQ(
-        OptimizerSettings::getMinLearningRate(),
-        MIN_LEARNING_RATE_DEFAULT
+        optimizerSettings.getMinLearningRate(),
+        defaults::MIN_LEARNING_RATE_DEFAULT
     );
 
-    OptimizerSettings::setMinLearningRate(0.0);
+    optimizerSettings.setMinLearningRate(0.0);
 
-    auto parser = OptInputParser();
-    parser.parseMinLearningRate({"min-learning-rate", "=", "0.99"}, 0);
-    EXPECT_EQ(OptimizerSettings::getMinLearningRate(), 0.99);
+    auto       parser  = input::OptInputParser(optimizerSettings);
+    const auto funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("min_learning_rate"));
+    const auto& parseFunc = funcMap.at("min_learning_rate");
+
+    parseFunc({"min-learning-rate", "=", "0.99"}, 0);
+    EXPECT_EQ(optimizerSettings.getMinLearningRate(), 0.99);
+
+    _clearParser(parser);
 
     ASSERT_THROW_MSG(
-        parser.parseMinLearningRate({"min-learning-rate", "=", "-0.99"}, 0),
-        InputFileException,
-        "Minimum learning rate must be greater than 0.0 in input file at line "
-        "0."
+        parseFunc({"min-learning-rate", "=", "-0.99"}, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.99\" for key \"min-learning-rate\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
     )
 }

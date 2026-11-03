@@ -33,6 +33,7 @@
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
 #include "optOutput.hpp"
+#include "outputFileSettings.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
@@ -54,565 +55,704 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-using namespace engine;
-using namespace molsys;
-using namespace physicalData;
-using namespace thermostat;
-using namespace configurator;
-
-using output::BoxFileOutput;
-using output::EnergyOutput;
-using output::InfoOutput;
-using output::LogOutput;
-using output::MomentumOutput;
-using output::OptOutput;
-using output::RingPolymerEnergyOutput;
-using output::RingPolymerRestartFileOutput;
-using output::RingPolymerTrajectoryOutput;
-using output::RstFileOutput;
-using output::StdoutOutput;
-using output::StressOutput;
-using output::TimingsOutput;
-using output::TrajectoryOutput;
-using output::VirialOutput;
-
-// clang-format off
-/**
- * @brief constructor
- */
-EngineOutput::EngineOutput()
-    : _energyOutput(std::make_unique<EnergyOutput>(DefaultFiles::energyFile)), 
-      _instantEnergyOutput(std::make_unique<EnergyOutput>(DefaultFiles::instEnFile)),
-      _infoOutput(std::make_unique<InfoOutput>(DefaultFiles::infoFile)),
-      _xyzOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::trajFile)),
-      _xyzHybridCenterOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::hybridCenterFile)),
-      _velOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::velFile)),
-      _forceOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::forceFile)),
-      _chargeOutput(std::make_unique<TrajectoryOutput>(DefaultFiles::chargeFile)),
-      _rstFileOutput(std::make_unique<RstFileOutput>(DefaultFiles::restartFile)),
-      _logOutput(std::make_unique<LogOutput>(DefaultFiles::logFile)),
-      _stdoutOutput(std::make_unique<StdoutOutput>(DefaultFiles::stdoutFile)),
-      _momentumOutput(std::make_unique<MomentumOutput>(DefaultFiles::momentumFile)),
-      _virialOutput(std::make_unique<VirialOutput>(DefaultFiles::virialFile)),
-      _stressOutput(std::make_unique<StressOutput>(DefaultFiles::stressFile)),
-      _boxFileOutput(std::make_unique<BoxFileOutput>(DefaultFiles::boxFile)),
-      _optOutput(std::make_unique<OptOutput>(DefaultFiles::optFile)),
-      _rpmdRstFileOutput(std::make_unique<RingPolymerRestartFileOutput>(DefaultFiles::rpmdRstFile)),
-      _rpmdXyzOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdTrajFile)),
-      _rpmdVelOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdVelFile)),
-      _rpmdForceOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdForceFile)),
-      _rpmdChargeOutput(std::make_unique<RingPolymerTrajectoryOutput>(DefaultFiles::rpmdChargeFile)),
-      _rpmdEnergyOutput(std::make_unique<RingPolymerEnergyOutput>(DefaultFiles::rpmdEnergyFile)),
-      _timingsOutput(std::make_unique<TimingsOutput>(DefaultFiles::timingsFile))
-
+namespace engine
 {
-}
-// clang-format on
 
-/**
- * @brief wrapper for energy file output function
- *
- * @param step
- * @param physicalData
- */
-void EngineOutput::writeEnergyFile(
-    const size_t        step,
-    const PhysicalData &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "EnergyOutput");
-    _energyOutput->write(step, physicalData);
-}
+    /**
+     * @brief constructor
+     */
+    EngineOutput::EngineOutput(
+        const OutputFileSettings &outputFileSettings,
+        const ReferenceSettings  &referenceSettings
+    )
+        : _outputFileSettings(outputFileSettings),
+          _energyOutput(
+              std::make_unique<out::EnergyOutput>(DefaultFiles::energyFile)
+          ),
+          _instantEnergyOutput(
+              std::make_unique<out::EnergyOutput>(DefaultFiles::instEnFile)
+          ),
+          _infoOutput(
+              std::make_unique<out::InfoOutput>(DefaultFiles::infoFile)
+          ),
+          _xyzOutput(
+              std::make_unique<out::TrajectoryOutput>(DefaultFiles::trajFile)
+          ),
+          _xyzHybridCenterOutput(
+              std::make_unique<out::TrajectoryOutput>(
+                  DefaultFiles::hybridCenterFile
+              )
+          ),
+          _velOutput(
+              std::make_unique<out::TrajectoryOutput>(DefaultFiles::velFile)
+          ),
+          _forceOutput(
+              std::make_unique<out::TrajectoryOutput>(DefaultFiles::forceFile)
+          ),
+          _chargeOutput(
+              std::make_unique<out::TrajectoryOutput>(DefaultFiles::chargeFile)
+          ),
+          _rstFileOutput(
+              std::make_unique<out::RstFileOutput>(DefaultFiles::restartFile)
+          ),
+          _logOutput(std::make_unique<out::LogOutput>(DefaultFiles::logFile)),
+          _stdoutOutput(
+              std::make_unique<out::StdoutOutput>(DefaultFiles::stdoutFile)
+          ),
+          _momentumOutput(
+              std::make_unique<out::MomentumOutput>(DefaultFiles::momentumFile)
+          ),
+          _virialOutput(
+              std::make_unique<out::VirialOutput>(DefaultFiles::virialFile)
+          ),
+          _stressOutput(
+              std::make_unique<out::StressOutput>(DefaultFiles::stressFile)
+          ),
+          _boxFileOutput(
+              std::make_unique<out::BoxFileOutput>(DefaultFiles::boxFile)
+          ),
+          _optOutput(std::make_unique<out::OptOutput>(DefaultFiles::optFile)),
+          _rpmdRstFileOutput(
+              std::make_unique<out::RingPolymerRestartFileOutput>(
+                  DefaultFiles::rpmdRstFile
+              )
+          ),
+          _rpmdXyzOutput(
+              std::make_unique<out::RingPolymerTrajectoryOutput>(
+                  DefaultFiles::rpmdTrajFile
+              )
+          ),
+          _rpmdVelOutput(
+              std::make_unique<out::RingPolymerTrajectoryOutput>(
+                  DefaultFiles::rpmdVelFile
+              )
+          ),
+          _rpmdForceOutput(
+              std::make_unique<out::RingPolymerTrajectoryOutput>(
+                  DefaultFiles::rpmdForceFile
+              )
+          ),
+          _rpmdChargeOutput(
+              std::make_unique<out::RingPolymerTrajectoryOutput>(
+                  DefaultFiles::rpmdChargeFile
+              )
+          ),
+          _rpmdEnergyOutput(
+              std::make_unique<out::RingPolymerEnergyOutput>(
+                  DefaultFiles::rpmdEnergyFile
+              )
+          ),
+          _timingsOutput(
+              std::make_unique<out::TimingsOutput>(DefaultFiles::timingsFile)
+          ),
+          _referencesOutput(referenceSettings)
 
-/**
- * @brief wrapper for instant energy file output function
- *
- * @param step
- * @param physicalData
- */
-void EngineOutput::writeInstantEnergyFile(
-    const size_t        step,
-    const PhysicalData &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "InstantEnergyOutput");
-    _instantEnergyOutput->write(step, physicalData);
-}
+    {
+    }
 
-/**
- * @brief wrapper for momentum file output function
- *
- * @param step
- * @param physicalData
- */
-void EngineOutput::writeMomentumFile(
-    const size_t        step,
-    const PhysicalData &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "MomentumOutput");
-    _momentumOutput->write(step, physicalData);
-}
+    /**
+     * @brief wrapper for energy file output function
+     *
+     * @param step
+     * @param physicalData
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
+     */
+    void EngineOutput::writeEnergyFile(
+        size_t                            step,
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "EnergyOutput");
+        _energyOutput->write(step, physicalData, settings);
+    }
 
-/**
- * @brief wrapper for xyz file output function
- *
- * @param simulationBox
- * @param step
- */
-void EngineOutput::writeXyzFile(SimulationBox &simulationBox, const size_t step)
-{
-    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-    _xyzOutput->writeXyz(simulationBox, step);
-}
+    /**
+     * @brief wrapper for instant energy file output function
+     *
+     * @param step The current simulation step.
+     * @param physicalData The physical data of the system at the current step.
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
+     */
+    void EngineOutput::writeInstantEnergyFile(
+        size_t                            step,
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "InstantEnergyOutput");
+        _instantEnergyOutput->write(step, physicalData, settings);
+    }
 
-/**
- * @brief wrapper for hybrid center xyz file output function
- *
- * @param configurator
- * @param step
- */
-void EngineOutput::writeHybridCenterXyzFile(
-    const HybridConfigurator &configurator,
-    const size_t              step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-    _xyzHybridCenterOutput->writeHybridCenterXyz(configurator, step);
-}
+    /**
+     * @brief wrapper for momentum file output function
+     *
+     * @param step
+     * @param physicalData
+     */
+    void EngineOutput::writeMomentumFile(
+        size_t                            step,
+        const physicalData::PhysicalData &physicalData
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "MomentumOutput");
+        _momentumOutput->write(step, physicalData);
+    }
 
-/**
- * @brief wrapper for velocity file output function
- *
- * @param simulationBox
- * @param step
- */
-void EngineOutput::writeVelFile(SimulationBox &simulationBox, const size_t step)
-{
-    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-    _velOutput->writeVelocities(simulationBox, step);
-}
+    /**
+     * @brief wrapper for xyz file output function
+     *
+     * @param simulationBox
+     * @param step
+     */
+    void EngineOutput::writeXyzFile(
+        molsys::SimulationBox &simulationBox,
+        size_t                 step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
+        _xyzOutput->writeXyz(
+            simulationBox,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/**
- * @brief wrapper for force file output function
- *
- * @param simulationBox
- * @param step
- */
-void EngineOutput::writeForceFile(
-    SimulationBox &simulationBox,
-    const size_t   step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-    _forceOutput->writeForces(simulationBox, step);
-}
+    /**
+     * @brief wrapper for hybrid center xyz file output function
+     *
+     * @param configurator
+     * @param step
+     */
+    void EngineOutput::writeHybridCenterXyzFile(
+        const configurator::HybridConfigurator &configurator,
+        size_t                                  step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
+        _xyzHybridCenterOutput->writeHybridCenterXyz(
+            configurator,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/**
- * @brief wrapper for charge file output function
- *
- * @param simulationBox
- * @param step
- */
-void EngineOutput::writeChargeFile(
-    SimulationBox &simulationBox,
-    const size_t   step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-    _chargeOutput->writeCharges(simulationBox, step);
-}
+    /**
+     * @brief wrapper for velocity file output function
+     *
+     * @param simulationBox
+     * @param step
+     */
+    void EngineOutput::writeVelFile(
+        molsys::SimulationBox &simulationBox,
+        size_t                 step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
+        _velOutput->writeVelocities(
+            simulationBox,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/**
- * @brief wrapper for info file output function
- *
- * @param time
- * @param physicalData
- */
-void EngineOutput::writeInfoFile(
-    const double        time,
-    const PhysicalData &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "InfoOutput");
-    _infoOutput->write(time, physicalData);
-}
+    /**
+     * @brief wrapper for force file output function
+     *
+     * @param simulationBox
+     * @param step
+     */
+    void EngineOutput::writeForceFile(
+        molsys::SimulationBox &simulationBox,
+        size_t                 step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
+        _forceOutput->writeForces(
+            simulationBox,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/**
- * @brief wrapper for restart file output function
- *
- * @param simulationBox
- * @param step
- */
-void EngineOutput::writeRstFile(
-    SimulationBox    &simulationBox,
-    const Thermostat &thermostat,
-    const size_t      step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
-    _rstFileOutput->write(simulationBox, thermostat, step);
-}
+    /**
+     * @brief wrapper for charge file output function
+     *
+     * @param simulationBox
+     * @param step
+     */
+    void EngineOutput::writeChargeFile(
+        molsys::SimulationBox &simulationBox,
+        size_t                 step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
+        _chargeOutput->writeCharges(
+            simulationBox,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/**
- * @brief wrapper for restart file output function
- *
- * @param simulationBox
- * @param step
- */
-void EngineOutput::writeOptRstFile(
-    SimulationBox &simulationBox,
-    const size_t   step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
-    _rstFileOutput->write(simulationBox, Thermostat(), step);
-}
+    /**
+     * @brief wrapper for info file output function
+     *
+     * @param time
+     * @param physicalData
+     * @param settings
+     */
+    void EngineOutput::writeInfoFile(
+        double                            time,
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "InfoOutput");
+        _infoOutput->write(time, physicalData, settings);
+    }
 
-/**
- * @brief wrapper for virial file output function
- *
- * @param step
- * @param physicalData
- */
-void EngineOutput::writeVirialFile(
-    const size_t        step,
-    const PhysicalData &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "VirialOutput");
-    _virialOutput->write(step, physicalData);
-}
+    /**
+     * @brief wrapper for restart file output function
+     *
+     * @param simulationBox
+     * @param thermostat
+     * @param step
+     */
+    void EngineOutput::writeRstFile(
+        molsys::SimulationBox        &simulationBox,
+        const thermostat::Thermostat &thermostat,
+        size_t                        step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
+        _rstFileOutput->write(simulationBox, thermostat, step);
+    }
 
-/**
- * @brief wrapper for stress file output function
- *
- * @param step
- * @param physicalData
- */
-void EngineOutput::writeStressFile(
-    const size_t        step,
-    const PhysicalData &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "StressOutput");
-    _stressOutput->write(step, physicalData);
-}
+    /**
+     * @brief wrapper for restart file output function
+     *
+     * @param simulationBox
+     * @param step
+     */
+    void EngineOutput::writeOptRstFile(
+        molsys::SimulationBox &simulationBox,
+        size_t                 step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
+        _rstFileOutput->write(simulationBox, thermostat::Thermostat(), step);
+    }
 
-/**
- * @brief wrapper for box file output function
- *
- * @param step
- * @param simulationBox
- */
-void EngineOutput::writeBoxFile(const size_t step, const Box &simulationBox)
-{
-    auto _ = scopedTimer(TimerId::Output, "BoxFileOutput");
-    _boxFileOutput->write(step, simulationBox);
-}
+    /**
+     * @brief wrapper for virial file output function
+     *
+     * @param step
+     * @param physicalData
+     */
+    void EngineOutput::writeVirialFile(
+        size_t                            step,
+        const physicalData::PhysicalData &physicalData
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "VirialOutput");
+        _virialOutput->write(step, physicalData);
+    }
 
-/**
- * @brief wrapper for optimizer output function
- *
- * @param step
- * @param optimizer
- */
-void EngineOutput::writeOptFile(
-    const size_t          step,
-    const opt::Optimizer &optimizer
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "OptOutput");
-    _optOutput->write(step, optimizer);
-}
+    /**
+     * @brief wrapper for stress file output function
+     *
+     * @param step
+     * @param physicalData
+     */
+    void EngineOutput::writeStressFile(
+        size_t                            step,
+        const physicalData::PhysicalData &physicalData
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "StressOutput");
+        _stressOutput->write(step, physicalData);
+    }
 
-/**
- * @brief wrapper for ring polymer restart file output function
- *
- * @param simulationBox
- * @param step
- */
-void EngineOutput::writeRingPolymerRstFile(std::vector<SimulationBox> &beads)
-{
-    auto _ = scopedTimer(TimerId::Output, "RingPolymerRestartFileOutput");
-    _rpmdRstFileOutput->write(beads);
-}
+    /**
+     * @brief wrapper for box file output function
+     *
+     * @param step
+     * @param simulationBox
+     */
+    void EngineOutput::writeBoxFile(
+        size_t             step,
+        const molsys::Box &simulationBox
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "BoxFileOutput");
+        _boxFileOutput->write(step, simulationBox);
+    }
 
-/**
- * @brief wrapper for ring polymer xyz file output function
- *
- * @param beads
- * @param step
- */
-void EngineOutput::writeRingPolymerXyzFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-    _rpmdXyzOutput->writeXyz(beads, step);
-}
+    /**
+     * @brief wrapper for optimizer output function
+     *
+     * @param step
+     * @param optimizer
+     */
+    void EngineOutput::writeOptFile(
+        size_t                step,
+        const opt::Optimizer &optimizer
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "OptOutput");
+        _optOutput->write(step, optimizer);
+    }
 
-/**
- * @brief wrapper for ring polymer velocity file output function
- *
- * @param beads
- * @param step
- */
-void EngineOutput::writeRingPolymerVelFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-    _rpmdVelOutput->writeVelocities(beads, step);
-}
+    /**
+     * @brief wrapper for ring polymer restart file output function
+     *
+     * @param beads
+     */
+    void EngineOutput::writeRingPolymerRstFile(
+        std::vector<molsys::SimulationBox> &beads
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "RingPolymerRestartFileOutput");
+        _rpmdRstFileOutput->write(beads);
+    }
 
-/**
- * @brief wrapper for ring polymer force file output function
- *
- * @param beads
- * @param step
- */
-void EngineOutput::writeRingPolymerForceFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-    _rpmdForceOutput->writeForces(beads, step);
-}
+    /**
+     * @brief wrapper for ring polymer xyz file output function
+     *
+     * @param beads
+     * @param step
+     */
+    void EngineOutput::writeRingPolymerXyzFile(
+        std::vector<molsys::SimulationBox> &beads,
+        size_t                              step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
+        _rpmdXyzOutput->writeXyz(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/**
- * @brief wrapper for ring polymer charge file output function
- *
- * @param beads
- * @param step
- */
-void EngineOutput::writeRingPolymerChargeFile(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-    _rpmdChargeOutput->writeCharges(beads, step);
-}
+    /**
+     * @brief wrapper for ring polymer velocity file output function
+     *
+     * @param beads
+     * @param step
+     */
+    void EngineOutput::writeRingPolymerVelFile(
+        std::vector<molsys::SimulationBox> &beads,
+        size_t                              step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
+        _rpmdVelOutput->writeVelocities(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/**
- * @brief wrapper for ring polymer energy file output function
- *
- * @param step
- * @param physicalData
- */
-void EngineOutput::writeRingPolymerEnergyFile(
-    const size_t                     step,
-    const std::vector<PhysicalData> &dataVector
-)
-{
-    auto _ = scopedTimer(TimerId::Output, "RingPolymerEnergyOutput");
-    _rpmdEnergyOutput->write(step, dataVector);
-}
+    /**
+     * @brief wrapper for ring polymer force file output function
+     *
+     * @param beads
+     * @param step
+     */
+    void EngineOutput::writeRingPolymerForceFile(
+        std::vector<molsys::SimulationBox> &beads,
+        size_t                              step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
+        _rpmdForceOutput->writeForces(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/**
- * @brief wrapper for timings file output function
- *
- * @param timer
- */
-void EngineOutput::writeTimingsFile()
-{
-    // NOTE:
-    // here is no timer applied, since the timings file is written at the end of
-    // the simulation
-    _timingsOutput->write();
-}
+    /**
+     * @brief wrapper for ring polymer charge file output function
+     *
+     * @param beads
+     * @param step
+     */
+    void EngineOutput::writeRingPolymerChargeFile(
+        std::vector<molsys::SimulationBox> &beads,
+        size_t                              step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
+        _rpmdChargeOutput->writeCharges(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
+    }
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+    /**
+     * @brief wrapper for ring polymer energy file output function
+     *
+     * @param step
+     * @param dataVector
+     */
+    void EngineOutput::writeRingPolymerEnergyFile(
+        size_t                                         step,
+        const std::vector<physicalData::PhysicalData> &dataVector
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "RingPolymerEnergyOutput");
+        _rpmdEnergyOutput->write(step, dataVector);
+    }
 
-/**
- * @brief getter for energy output
- *
- * @return EnergyOutput
- */
-EnergyOutput &EngineOutput::getEnergyOutput() { return *_energyOutput; }
+    /**
+     * @brief wrapper for timings file output function
+     *
+     */
+    void EngineOutput::writeTimingsFile()
+    {
+        // NOTE:
+        // here is no timer applied, since the timings file is written at the
+        // end of the simulation
+        _timingsOutput->write();
+    }
 
-/**
- * @brief getter for instant energy output
- *
- * @return EnergyOutput
- */
-EnergyOutput &EngineOutput::getInstantEnergyOutput()
-{
-    return *_instantEnergyOutput;
-}
+    /**
+     * @brief wrapper for references file output function
+     *
+     */
+    void EngineOutput::writeReferencesFile()
+    {
+        auto _ = scopedTimer(TimerId::Output, "ReferencesOutput");
+        _referencesOutput.writeReferencesFile(
+            _outputFileSettings->getRefFileName()
+        );
+    }
 
-/**
- * @brief getter for momentum output
- *
- * @return MomentumOutput
- */
-MomentumOutput &EngineOutput::getMomentumOutput() { return *_momentumOutput; }
+    /***************************
+     *                         *
+     * standard getter methods *
+     *                         *
+     ***************************/
 
-/**
- * @brief getter for xyz output
- *
- * @return TrajectoryOutput
- */
-TrajectoryOutput &EngineOutput::getXyzOutput() { return *_xyzOutput; }
+    /**
+     * @brief getter for energy output
+     *
+     * @return EnergyOutput
+     */
+    out::EnergyOutput &EngineOutput::getEnergyOutput()
+    {
+        return *_energyOutput;
+    }
 
-/**
- * @brief getter for hybrid center xyz output
- *
- * @return TrajectoryOutput
- */
-TrajectoryOutput &EngineOutput::getXyzHybridCenterOutput()
-{
-    return *_xyzHybridCenterOutput;
-}
+    /**
+     * @brief getter for instant energy output
+     *
+     * @return EnergyOutput
+     */
+    out::EnergyOutput &EngineOutput::getInstantEnergyOutput()
+    {
+        return *_instantEnergyOutput;
+    }
 
-/**
- * @brief getter for velocity output
- *
- * @return TrajectoryOutput
- */
-TrajectoryOutput &EngineOutput::getVelOutput() { return *_velOutput; }
+    /**
+     * @brief getter for momentum output
+     *
+     * @return MomentumOutput
+     */
+    out::MomentumOutput &EngineOutput::getMomentumOutput()
+    {
+        return *_momentumOutput;
+    }
 
-/**
- * @brief getter for force output
- *
- * @return TrajectoryOutput
- */
-TrajectoryOutput &EngineOutput::getForceOutput() { return *_forceOutput; }
+    /**
+     * @brief getter for xyz output
+     *
+     * @return TrajectoryOutput
+     */
+    out::TrajectoryOutput &EngineOutput::getXyzOutput() { return *_xyzOutput; }
 
-/**
- * @brief getter for charge output
- *
- * @return TrajectoryOutput
- */
-TrajectoryOutput &EngineOutput::getChargeOutput() { return *_chargeOutput; }
+    /**
+     * @brief getter for hybrid center xyz output
+     *
+     * @return TrajectoryOutput
+     */
+    out::TrajectoryOutput &EngineOutput::getXyzHybridCenterOutput()
+    {
+        return *_xyzHybridCenterOutput;
+    }
 
-/**
- * @brief getter for log output
- *
- * @return LogOutput
- */
-LogOutput &EngineOutput::getLogOutput() { return *_logOutput; }
+    /**
+     * @brief getter for velocity output
+     *
+     * @return TrajectoryOutput
+     */
+    out::TrajectoryOutput &EngineOutput::getVelOutput() { return *_velOutput; }
 
-/**
- * @brief getter for stdout output
- *
- * @return StdoutOutput
- */
-StdoutOutput &EngineOutput::getStdoutOutput() { return *_stdoutOutput; }
+    /**
+     * @brief getter for force output
+     *
+     * @return TrajectoryOutput
+     */
+    out::TrajectoryOutput &EngineOutput::getForceOutput()
+    {
+        return *_forceOutput;
+    }
 
-/**
- * @brief getter for restart file output
- *
- * @return RstFileOutput
- */
-RstFileOutput &EngineOutput::getRstFileOutput() { return *_rstFileOutput; }
+    /**
+     * @brief getter for charge output
+     *
+     * @return TrajectoryOutput
+     */
+    out::TrajectoryOutput &EngineOutput::getChargeOutput()
+    {
+        return *_chargeOutput;
+    }
 
-/**
- * @brief getter for info output
- *
- * @return InfoOutput
- */
-InfoOutput &EngineOutput::getInfoOutput() { return *_infoOutput; }
+    /**
+     * @brief getter for log output
+     *
+     * @return LogOutput
+     */
+    out::LogOutput &EngineOutput::getLogOutput() { return *_logOutput; }
 
-/**
- * @brief getter for virial output
- *
- * @return VirialOutput
- */
-VirialOutput &EngineOutput::getVirialOutput() { return *_virialOutput; }
+    /**
+     * @brief getter for stdout output
+     *
+     * @return StdoutOutput
+     */
+    out::StdoutOutput &EngineOutput::getStdoutOutput()
+    {
+        return *_stdoutOutput;
+    }
 
-/**
- * @brief getter for stress output
- *
- * @return StressOutput
- */
-StressOutput &EngineOutput::getStressOutput() { return *_stressOutput; }
+    /**
+     * @brief getter for restart file output
+     *
+     * @return RstFileOutput
+     */
+    out::RstFileOutput &EngineOutput::getRstFileOutput()
+    {
+        return *_rstFileOutput;
+    }
 
-/**
- * @brief getter for box file output
- *
- * @return BoxFileOutput
- */
-BoxFileOutput &EngineOutput::getBoxFileOutput() { return *_boxFileOutput; }
+    /**
+     * @brief getter for info output
+     *
+     * @return InfoOutput
+     */
+    out::InfoOutput &EngineOutput::getInfoOutput() { return *_infoOutput; }
 
-/**
- * @brief getter for optimizer output
- *
- * @return OptOutput
- */
-OptOutput &EngineOutput::getOptOutput() { return *_optOutput; }
+    /**
+     * @brief getter for virial output
+     *
+     * @return VirialOutput
+     */
+    out::VirialOutput &EngineOutput::getVirialOutput()
+    {
+        return *_virialOutput;
+    }
 
-/**
- * @brief getter for ring polymer restart file output
- *
- * @return RPMDRestartFileOutput
- */
-RingPolymerRestartFileOutput &EngineOutput::getRingPolymerRstFileOutput()
-{
-    return *_rpmdRstFileOutput;
-}
+    /**
+     * @brief getter for stress output
+     *
+     * @return StressOutput
+     */
+    out::StressOutput &EngineOutput::getStressOutput()
+    {
+        return *_stressOutput;
+    }
 
-/**
- * @brief getter for ring polymer trajectory xyz output
- *
- * @return RPMDTrajectoryOutput
- */
-RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
-{
-    return *_rpmdXyzOutput;
-}
+    /**
+     * @brief getter for box file output
+     *
+     * @return BoxFileOutput
+     */
+    out::BoxFileOutput &EngineOutput::getBoxFileOutput()
+    {
+        return *_boxFileOutput;
+    }
 
-/**
- * @brief getter for ring polymer trajectory velocity output
- *
- * @return RPMDTrajectoryOutput
- */
-RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
-{
-    return *_rpmdVelOutput;
-}
+    /**
+     * @brief getter for optimizer output
+     *
+     * @return OptOutput
+     */
+    out::OptOutput &EngineOutput::getOptOutput() { return *_optOutput; }
 
-/**
- * @brief getter for ring polymer trajectory force output
- *
- * @return RPMDTrajectoryOutput
- */
-RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
-{
-    return *_rpmdForceOutput;
-}
+    /**
+     * @brief getter for ring polymer restart file output
+     *
+     * @return RPMDRestartFileOutput
+     */
+    out::RingPolymerRestartFileOutput &EngineOutput::
+        getRingPolymerRstFileOutput()
+    {
+        return *_rpmdRstFileOutput;
+    }
 
-/**
- * @brief getter for ring polymer trajectory charge output
- *
- * @return RPMDTrajectoryOutput
- */
-RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
-{
-    return *_rpmdChargeOutput;
-}
+    /**
+     * @brief getter for ring polymer trajectory xyz output
+     *
+     * @return RPMDTrajectoryOutput
+     */
+    out::RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerXyzOutput()
+    {
+        return *_rpmdXyzOutput;
+    }
 
-/**
- * @brief getter for ring polymer energy output
- *
- * @return RPMDEnergyOutput
- */
-RingPolymerEnergyOutput &EngineOutput::getRingPolymerEnergyOutput()
-{
-    return *_rpmdEnergyOutput;
-}
+    /**
+     * @brief getter for ring polymer trajectory velocity output
+     *
+     * @return RPMDTrajectoryOutput
+     */
+    out::RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerVelOutput()
+    {
+        return *_rpmdVelOutput;
+    }
 
-/**
- * @brief getter for timings output
- *
- * @return TimingsOutput
- */
-TimingsOutput &EngineOutput::getTimingsOutput() { return *_timingsOutput; }
+    /**
+     * @brief getter for ring polymer trajectory force output
+     *
+     * @return RPMDTrajectoryOutput
+     */
+    out::RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerForceOutput()
+    {
+        return *_rpmdForceOutput;
+    }
+
+    /**
+     * @brief getter for ring polymer trajectory charge output
+     *
+     * @return RPMDTrajectoryOutput
+     */
+    out::RingPolymerTrajectoryOutput &EngineOutput::getRingPolymerChargeOutput()
+    {
+        return *_rpmdChargeOutput;
+    }
+
+    /**
+     * @brief getter for ring polymer energy output
+     *
+     * @return RPMDEnergyOutput
+     */
+    out::RingPolymerEnergyOutput &EngineOutput::getRingPolymerEnergyOutput()
+    {
+        return *_rpmdEnergyOutput;
+    }
+
+    /**
+     * @brief getter for timings output
+     *
+     * @return TimingsOutput
+     */
+    out::TimingsOutput &EngineOutput::getTimingsOutput()
+    {
+        return *_timingsOutput;
+    }
+
+}   // namespace engine

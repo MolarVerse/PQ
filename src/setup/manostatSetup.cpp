@@ -22,274 +22,257 @@
 
 #include "manostatSetup.hpp"
 
-#include <format>   // for format
-#include <string>   // for operator==
+#include <algorithm>
+#include <format>
+#include <string>
 
-#include "berendsenManostat.hpp"             // for BerendsenManostat
-#include "constants/conversionFactors.hpp"   // for _PS_TO_FS_
-#include "manostat.hpp"           // for BerendsenManostat, Manostat, manostat
-#include "manostatSettings.hpp"   // for ManostatSettings
-#include "mdEngine.hpp"           // for Engine
-#include "settings.hpp"           // for IsMDJobType
-#include "stochasticRescalingManostat.hpp"
+#include "enums/manostat.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "logOutput.hpp"
+#include "manostat.hpp"
+#include "manostatSettings.hpp"
+#include "mdEngine.hpp"
+#include "simulationBox.hpp"
+#include "units.hpp"
 
-using namespace setup;
-using namespace engine;
-using namespace settings;
-using namespace manostat;
-using namespace constants;
-
-/**
- * @brief wrapper for setupManostat
- *
- * @param engine
- */
-void setup::setupManostat(Engine &engine)
+namespace setup
 {
-    if (!Settings::isMDJobType())
-        return;
 
-    engine.getStdoutOutput().writeSetup("Manostat");
-    engine.getLogOutput().writeSetup("Manostat");
-
-    ManostatSetup manostatSetup(dynamic_cast<MDEngine &>(engine));
-    manostatSetup.setup();
-}
-
-/**
- * @brief Construct a new Manostat Setup:: Manostat Setup object
- *
- * @param engine
- */
-ManostatSetup::ManostatSetup(MDEngine &engine) : _engine(engine) {}
-
-/**
- * @brief setup manostat
- *
- * @note the base class manostat does not apply any pressure coupling to the
- * system and therefore it represents the none manostat.
- */
-void ManostatSetup::setup()
-{
-    using enum ManostatType;
-
-    const auto manostatType = ManostatSettings::getManostatType();
-
-    if (manostatType == BERENDSEN)
-        setupBerendsenManostat();
-
-    else if (manostatType == STOCHASTIC_RESCALING)
-        setupStochasticRescalingManostat();
-
-    else
-        _engine.makeManostat(Manostat());
-
-    writeSetupInfo();
-}
-
-/**
- * @brief setup berendsen manostat
- *
- * @details constructs a berendsen manostat and adds it to the engine
- *
- */
-void ManostatSetup::setupBerendsenManostat()
-{
-    const auto isotropy = ManostatSettings::getIsotropy();
-    const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
-    const auto compress = ManostatSettings::getCompressibility();
-    const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
-    const auto iso      = ManostatSettings::get2DIsotropicAxes();
-
-    switch (isotropy)
+    /**
+     * @brief wrapper for setupManostat
+     *
+     * @param engine
+     */
+    void setupManostat(engine::Engine &engine)
     {
-        using enum Isotropy;
+        if (!settings::GeneralSettings::isMDJobType())
+            return;
 
-            // clang-format off
-        case SEMI_ISOTROPIC:
-            _engine.makeManostat(SemiIsotropicBerendsenManostat(pTarget, tau, compress, aniso, iso));
-            break;
+        out::StdoutOutput::writeSetup("Manostat");
+        engine.getLogOutput().writeSetup("Manostat");
 
-        case ANISOTROPIC:
-            _engine.makeManostat(AnisotropicBerendsenManostat(pTarget, tau, compress));
-            break;
-
-        case FULL_ANISOTROPIC:
-            _engine.makeManostat(FullAnisotropicBerendsenManostat(pTarget, tau, compress));
-            break;
-
-        case NONE: // fall through
-        case ISOTROPIC:
-            _engine.makeManostat(BerendsenManostat(pTarget, tau, compress));
-
-            // clang-format on
+        ManostatSetup manostatSetup(dynamic_cast<engine::MDEngine &>(engine));
+        manostatSetup.setup();
     }
-}
 
-/**
- * @brief setup stochastic rescaling manostat
- *
- * @details constructs a stochastic rescaling manostat and adds it to the engine
- *
- */
-void ManostatSetup::setupStochasticRescalingManostat()
-{
-    const auto isotropy = ManostatSettings::getIsotropy();
-    const auto pTarget  = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat() * PS_TO_FS;
-    const auto compress = ManostatSettings::getCompressibility();
-    const auto aniso    = ManostatSettings::get2DAnisotropicAxis();
-    const auto iso      = ManostatSettings::get2DIsotropicAxes();
+    /**
+     * @brief Construct a new Manostat Setup:: Manostat Setup object
+     *
+     * @param engine
+     */
+    ManostatSetup::ManostatSetup(engine::MDEngine &engine) : _engine(engine) {}
 
-    switch (isotropy)
-    {
-        using enum Isotropy;
-
-            // clang-format off
-
-        case SEMI_ISOTROPIC:
-            _engine.makeManostat(SemiIsotropicStochasticRescalingManostat(pTarget, tau, compress, aniso, iso));
-            break;
-
-        case ANISOTROPIC:
-            _engine.makeManostat(AnisotropicStochasticRescalingManostat(pTarget, tau, compress));
-            break;
-
-        case FULL_ANISOTROPIC:
-            _engine.makeManostat(FullAnisotropicStochasticRescalingManostat(pTarget, tau, compress));
-            break;
-
-        case NONE: // fall through
-        case ISOTROPIC:
-            _engine.makeManostat(StochasticRescalingManostat(pTarget, tau, compress));
-
-            // clang-format on
-    }
-}
-
-/**
- * @brief write setup info
- *
- */
-void ManostatSetup::writeSetupInfo() const
-{
-    writeManostatSelection();
-
-    if (ManostatSettings::isBerendsenBased())
-        writeBerendsenSetup();
-
-    if (ManostatSettings::getManostatType() != ManostatType::NONE)
-        writeIsotropy();
-}
-
-/**
- * @brief write manostat selection
- *
- */
-void ManostatSetup::writeManostatSelection() const
-{
-    auto &logOutput = _engine.getLogOutput();
-
-    switch (ManostatSettings::getManostatType())
+    /**
+     * @brief setup manostat
+     *
+     * @note the base class manostat does not apply any pressure coupling to the
+     * system and therefore it represents the none manostat.
+     */
+    void ManostatSetup::setup()
     {
         using enum ManostatType;
 
-        case BERENDSEN:
-            logOutput.writeSetupInfo("Berendsen manostat selected");
-            break;
+        const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
-        case STOCHASTIC_RESCALING:
-            logOutput.writeSetupInfo("Stochastic rescaling manostat selected");
-            break;
-
-        case NONE: logOutput.writeSetupInfo("No manostat selected");
-    }
-
-    logOutput.writeEmptyLine();
-}
-
-/**
- * @brief write berendsen setup
- *
- */
-void ManostatSetup::writeBerendsenSetup() const
-{
-    auto &logOutput = _engine.getLogOutput();
-
-    const auto pressure = ManostatSettings::getTargetPressure();
-    const auto tau      = ManostatSettings::getTauManostat();
-    const auto compr    = ManostatSettings::getCompressibility();
-
-    logOutput.writeSetupInfo(std::format("Target pressure: {}", pressure));
-    logOutput.writeSetupInfo(std::format("Relaxation time: {} ps", tau));
-    logOutput.writeSetupInfo(std::format("Compressibility: {} bar⁻¹", compr));
-    logOutput.writeEmptyLine();
-}
-
-/**
- * @brief write isotropy setup
- *
- */
-void ManostatSetup::writeIsotropy() const
-{
-    auto &logOutput = _engine.getLogOutput();
-
-    switch (ManostatSettings::getIsotropy())
-    {
-        using enum Isotropy;
-
-        case ISOTROPIC: logOutput.writeSetupInfo("Isotropy: isotropic"); break;
-
-        case SEMI_ISOTROPIC:
+        if (manostatSettings.isBerendsenBased() &&
+            settings::GeneralSettings::getVirialType() == VirialType::ATOMIC &&
+            std::ranges::any_of(
+                _engine.getSimulationBox().getMolecules(),
+                [](const auto &molecule)
+                { return molecule.getNumberOfAtoms() > 1; }
+            ))
         {
-            const auto  anisoAxis = ManostatSettings::get2DAnisotropicAxis();
-            std::string anisoAxisStr;
-            std::string isoAxesStr;
-
-            if (anisoAxis == 0)
-            {
-                isoAxesStr   = "y, z";
-                anisoAxisStr = "x";
-            }
-
-            else if (anisoAxis == 1)
-            {
-                isoAxesStr   = "x, z";
-                anisoAxisStr = "y";
-            }
-
-            else
-            {
-                isoAxesStr   = "x, y";
-                anisoAxisStr = "z";
-            }
-
-            // clang-format off
-            logOutput.writeSetupInfo(std::format("Isotropy:         semi-isotropic"));
-            logOutput.writeSetupInfo(std::format("Anisotropic axis: {}", anisoAxisStr));
-            logOutput.writeSetupInfo(std::format("Isotropic axes:   {}", isoAxesStr));
-            // clang-format on
-            break;
+            const std::string warning =
+                "Atomic virial is inconsistent with molecular scaling for "
+                "multi-atom molecules. Recommended: virial = molecular. "
+                "Continuing with virial = atomic.";
+            out::StdoutOutput::writeSetupWarning(warning);
+            _engine.getLogOutput().writeSetupWarning(warning);
         }
 
-        case ANISOTROPIC:
-            logOutput.writeSetupInfo("Isotropy: anisotropic");
-            break;
-
-        case FULL_ANISOTROPIC:
-            logOutput.writeSetupInfo("Isotropy: full anisotropic");
-            break;
-
-        case NONE: logOutput.writeSetupInfo("Isotropy: isotropic");
+        validateIsotropyFixedAxisCombination();
+        _writeSetupInfo();
     }
 
-    logOutput.writeEmptyLine();
-}
+    /**
+     * @brief validate isotropy and fixed_axis combination
+     *
+     * @throws SetupException if semi-isotropic mode conflicts with fixed_axis
+     */
+    void ManostatSetup::validateIsotropyFixedAxisCombination() const
+    {
+        const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
-/**
- * @brief Get the Engine object
- *
- * @return MDEngine&
- */
-MDEngine &ManostatSetup::getEngine() const { return _engine; }
+        const auto isotropy     = manostatSettings.getIsotropy();
+        const auto fixedAxis    = manostatSettings.getFixedAxis();
+        const auto manostatType = manostatSettings.getManostatType();
+
+        if (manostatType != ManostatType::NONE && fixedAxis == FixedAxis::ALL)
+        {
+            throw exc::UserInputException(
+                "Invalid combination: all axes cannot be fixed while a "
+                "manostat is selected."
+            );
+        }
+
+        if (isSemiIsotropic(isotropy) && fixedAxis != FixedAxis::NONE)
+        {
+            const auto anisoAxis = get2DAnisotropicAxis(isotropy);
+            const auto allowedFixedAxis =
+                static_cast<FixedAxis>(1U << anisoAxis);
+
+            if (fixedAxis != allowedFixedAxis)
+            {
+                throw exc::UserInputException(
+                    "Invalid combination: semi-isotropic pressure coupling "
+                    "only allows fixing the anisotropic axis or none."
+                );
+            }
+        }
+    }
+
+    /**
+     * @brief write setup info
+     *
+     */
+    void ManostatSetup::_writeSetupInfo() const
+    {
+        const auto &manostatSettings = _engine.getSettings().manostatSettings;
+        auto       &logOutput        = _engine.getLogOutput();
+
+        _writeManostatSelection(logOutput, manostatSettings);
+
+        if (manostatSettings.isBerendsenBased())
+            _writeBerendsenSetup(logOutput, manostatSettings);
+
+        if (manostatSettings.getManostatType() != ManostatType::NONE)
+            _writeIsotropy(logOutput, manostatSettings);
+    }
+
+    /**
+     * @brief write manostat selection
+     *
+     */
+    void ManostatSetup::_writeManostatSelection(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &manostatSettings
+    )
+    {
+        switch (manostatSettings.getManostatType())
+        {
+            using enum ManostatType;
+
+            case BERENDSEN:
+                logOutput.writeSetupInfo("Berendsen manostat selected");
+                break;
+
+            case STOCHASTIC_RESCALING:
+                logOutput.writeSetupInfo(
+                    "Stochastic rescaling manostat selected"
+                );
+                break;
+
+            case NONE: logOutput.writeSetupInfo("No manostat selected");
+        }
+
+        logOutput.writeEmptyLine();
+    }
+
+    /**
+     * @brief write berendsen setup
+     *
+     */
+    void ManostatSetup::_writeBerendsenSetup(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
+    {
+        const auto pressure = settings.getTargetPressure();
+        const auto tau      = settings.getTau();
+        const auto compr    = settings.getCompressibility();
+
+        logOutput.writeSetupInfo(std::format("Target pressure: {}", pressure));
+        logOutput.writeSetupInfo(
+            std::format("Relaxation time: {}", tau.in(ps))
+        );
+        logOutput.writeSetupInfo(
+            std::format("Compressibility: {} bar⁻¹", compr)
+        );
+        logOutput.writeEmptyLine();
+    }
+
+    /**
+     * @brief write isotropy setup
+     *
+     */
+    void ManostatSetup::_writeIsotropy(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
+    {
+        const auto &isotropy = settings.getIsotropy();
+
+        switch (isotropy)
+        {
+            using enum Isotropy;
+
+            case ISOTROPIC:
+                logOutput.writeSetupInfo("Isotropy: isotropic");
+                break;
+
+            case SEMI_ISOTROPIC_XY:
+            case SEMI_ISOTROPIC_XZ:
+            case SEMI_ISOTROPIC_YZ:
+            {
+                std::string isoAxesStr;
+                std::string anisoAxisStr;
+
+                if (isotropy == SEMI_ISOTROPIC_XY)
+                {
+                    isoAxesStr   = "x, y";
+                    anisoAxisStr = "z";
+                }
+                else if (isotropy == SEMI_ISOTROPIC_XZ)
+                {
+                    isoAxesStr   = "x, z";
+                    anisoAxisStr = "y";
+                }
+                else if (isotropy == SEMI_ISOTROPIC_YZ)
+                {
+                    isoAxesStr   = "y, z";
+                    anisoAxisStr = "x";
+                }
+
+                logOutput.writeSetupInfo(
+                    std::format("Isotropy:         semi-isotropic")
+                );
+                logOutput.writeSetupInfo(
+                    std::format("Anisotropic axis: {}", anisoAxisStr)
+                );
+                logOutput.writeSetupInfo(
+                    std::format("Isotropic axes:   {}", isoAxesStr)
+                );
+                break;
+            }
+
+            case ANISOTROPIC:
+                logOutput.writeSetupInfo("Isotropy: anisotropic");
+                break;
+
+            case FULL_ANISOTROPIC:
+                logOutput.writeSetupInfo("Isotropy: full anisotropic");
+                break;
+        }
+
+        logOutput.writeEmptyLine();
+    }
+
+    /**
+     * @brief Get the Engine object
+     *
+     * @return MDEngine&
+     */
+    engine::MDEngine &ManostatSetup::getEngine() const { return _engine; }
+
+}   // namespace setup

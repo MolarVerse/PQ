@@ -22,31 +22,28 @@
 
 #include "testInputFileReader.hpp"
 
-#include <gtest/gtest.h>   // for Message, TestPartResult
+#include <gtest/gtest.h>
 
-#include <fstream>   // for ofstream
-#include <map>       // for map
-#include <memory>    // for unique_ptr
-#include <sstream>   // for basic_istringstream
-#include <vector>    // for vector, _Bit_iterator, _Bit_reference
+#include <algorithm>
+#include <fstream>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <vector>
 
 #include "exceptions.hpp"
-#include "gtest/gtest.h"
-#include "mmmdEngine.hpp"
+#include "generalSettings.hpp"
 #include "potentialSettings.hpp"
-#include "settings.hpp"
-#include "testUtils.hpp"
+#include "stringUtilities.hpp"
 #include "throwWithMessage.hpp"
-
-using namespace input;
-using namespace settings;
 
 namespace
 {
     void readKeywordList(
         const std::string        &filename,
         std::vector<std::string> &keywords,
-        std::vector<bool>        &required
+        std::vector<bool>        &required,
+        std::vector<std::string> &values
     )
     {
         std::string   line;
@@ -55,30 +52,34 @@ namespace
         while (getline(inputFile, line))
         {
             std::string keyword;
-            std::string requiredString = "";
-            bool        requiredBool   = false;
+            std::string requiredString;
+            std::string value;
+            bool        requiredBool = false;
 
             if (std::istringstream(line).str().empty())
                 continue;
-            std::istringstream(line) >> keyword >> requiredString;
+            std::istringstream(line) >> keyword >> requiredString >> value;
             std::istringstream(requiredString) >> std::boolalpha >>
                 requiredBool;
 
             keywords.push_back(keyword);
             required.push_back(requiredBool);
+            values.push_back(value);
         }
     }
 }   // namespace
 
 TEST_F(TestInputFileReader, testAddKeyword)
 {
-    std::vector<std::string> keywordsRef(0);
-    std::vector<bool>        requiredRef(0);
+    std::vector<std::string>                  keywordsRef(0);
+    std::vector<bool>                         requiredRef(0);
+    [[maybe_unused]] std::vector<std::string> valuesRef(0);
 
     ::readKeywordList(
         "data/inputFileReader/keywordList.txt",
         keywordsRef,
-        requiredRef
+        requiredRef,
+        valuesRef
     );
 
     EXPECT_EQ(
@@ -93,8 +94,8 @@ TEST_F(TestInputFileReader, testAddKeyword)
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        std::string keyword  = keywordsRef[i];
-        bool        required = requiredRef[i];
+        const std::string &keyword  = keywordsRef[i];
+        bool               required = requiredRef[i];
 
         EXPECT_EQ(_inputFileReader->getKeywordCount(keyword), 0);
         EXPECT_FALSE(_inputFileReader->getKeywordSet(keyword));
@@ -105,9 +106,10 @@ TEST_F(TestInputFileReader, testAddKeyword)
 TEST_F(TestInputFileReader, testNotAValidKeyword)
 {
     auto lineElements = std::vector<std::string>{"notAValidKeyword", "=", "1"};
-    ASSERT_THROW(
+    ASSERT_THROW_MSG(
         _inputFileReader->process(lineElements),
-        customException::InputFileException
+        exc::InputFileException,
+        "Invalid keyword \"notAValidKeyword\" at line 1"
     );
 }
 
@@ -130,24 +132,21 @@ TEST_F(TestInputFileReader, testGetKeywordSetFromSetKeywordCount)
     EXPECT_TRUE(_inputFileReader->getKeywordSet(keyword));
 }
 
-TEST_F(TestInputFileReader, testRead)
-{
-    std::string filename = "data/inputFileReader/inputFile.txt";
-    _inputFileReader_mdEngine->setFilename(filename);
-    ASSERT_NO_THROW(_inputFileReader_mdEngine->read());
-}
-
 TEST_F(TestInputFileReader, testReadFileNotFound)
 {
     std::string filename = "data/inputFileReader/inputFileNotFound.txt";
     _inputFileReader->setFilename(filename);
-    ASSERT_THROW(_inputFileReader->read(), customException::InputFileException);
+    ASSERT_THROW_MSG(
+        _inputFileReader->read(),
+        exc::InputFileException,
+        "\"data/inputFileReader/inputFileNotFound.txt\" File not found"
+    );
 }
 
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(readInputFile(filename, *_mdEngine));
+    ASSERT_NO_THROW(input::readInputFile(filename, _settings));
 }
 
 TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
@@ -165,8 +164,8 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
     }
 
     ASSERT_THROW_MSG(
-        readInputFile(_fileName, *_mdEngine),
-        customException::InputFileException,
+        input::readInputFile(_fileName, _settings),
+        exc::InputFileException,
         "Missing required keyword \"rf_epsilon\" in input file: it must be "
         "set when the Coulomb long-range correction is set to "
         "\"reaction-field\"."
@@ -188,31 +187,33 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
-    ASSERT_NO_THROW(readInputFile(_fileName, *_mdEngine));
+    ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
-        PotentialSettings::getCoulombLongRangeType(),
+        settings::PotentialSettings::getCoulombLongRangeType(),
         CoulombLongRangeType::REACTION_FIELD
     );
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 80.0);
+    EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 {
-    std::vector<std::string> keywordsRef(0);
-    std::vector<bool>        requiredRef(0);
+    std::vector<std::string>                  keywordsRef(0);
+    std::vector<bool>                         requiredRef(0);
+    [[maybe_unused]] std::vector<std::string> valuesRef(0);
 
     ::readKeywordList(
         "data/inputFileReader/keywordList.txt",
         keywordsRef,
-        requiredRef
+        requiredRef,
+        valuesRef
     );
 
     std::vector<size_t> requiredIndex(0);
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {
-        std::string keyword  = keywordsRef[i];
-        bool        required = requiredRef[i];
+        const std::string &keyword  = keywordsRef[i];
+        bool               required = requiredRef[i];
 
         if (required)
         {
@@ -225,9 +226,10 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
     {
         const auto &keyword = keywordsRef[index];
         _inputFileReader->setKeywordCount(keyword, 0);
-        ASSERT_THROW(
+        ASSERT_THROW_MSG(
             _inputFileReader->postProcess(),
-            customException::InputFileException
+            exc::InputFileException,
+            "Missing keyword \"" + keyword + "\" in input file"
         );
         _inputFileReader->setKeywordCount(keyword, 1);
     }
@@ -235,13 +237,15 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 
 TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 {
-    std::vector<std::string> keywordsRef(0);
-    std::vector<bool>        requiredRef(0);
+    std::vector<std::string>                  keywordsRef(0);
+    std::vector<bool>                         requiredRef(0);
+    [[maybe_unused]] std::vector<std::string> valuesRef(0);
 
     ::readKeywordList(
         "data/inputFileReader/keywordList.txt",
         keywordsRef,
-        requiredRef
+        requiredRef,
+        valuesRef
     );
 
     std::vector<size_t> requiredIndex(0);
@@ -264,9 +268,16 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
         {
             const auto &keyword = keywordsRef[index];
             _inputFileReader->setKeywordCount(keyword, index);
-            ASSERT_THROW(
+            std::string excMsg;
+            if (index > 1)
+                excMsg = "Multiple keywords \"" + keyword + "\" in input file";
+            else
+                excMsg = "Missing keyword \"" + keyword + "\" in input file";
+
+            ASSERT_THROW_MSG(
                 _inputFileReader->postProcess(),
-                customException::InputFileException
+                exc::InputFileException,
+                excMsg
             );
             _inputFileReader->setKeywordCount(keyword, 1);
         }
@@ -275,13 +286,15 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 
 TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
 {
-    std::vector<std::string> keywordsRef(0);
-    std::vector<bool>        requiredRef(0);
+    std::vector<std::string>                  keywordsRef(0);
+    std::vector<bool>                         requiredRef(0);
+    [[maybe_unused]] std::vector<std::string> valuesRef(0);
 
     ::readKeywordList(
         "data/inputFileReader/keywordList.txt",
         keywordsRef,
-        requiredRef
+        requiredRef,
+        valuesRef
     );
 
     std::vector<size_t> requiredIndex(0);
@@ -304,22 +317,76 @@ TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
 TEST_F(TestInputFileReader, testReadJobType)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    auto        engine   = std::unique_ptr<engine::Engine>();
-    ASSERT_NO_THROW(input::readJobType(filename, engine));
-    EXPECT_EQ(settings::Settings::getJobtype(), settings::JobType::MM_MD);
-    test::checkType(engine, typeid(engine::MMMDEngine));
+    ASSERT_EQ(input::readJobType(filename), JobType::MM_MD);
+    EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_MD);
 
     filename = "fileNotFound";
     ASSERT_THROW_MSG(
-        input::readJobType(filename, engine),
-        customException::InputFileException,
+        const auto _ = input::readJobType(filename),
+        exc::InputFileException,
         "\"fileNotFound\" File not found"
     );
 
     filename = "data/inputFileReader/missingJobType.txt";
     ASSERT_THROW_MSG(
-        input::readJobType(filename, engine),
-        customException::InputFileException,
+        const auto _ = input::readJobType(filename),
+        exc::InputFileException,
         "Missing keyword \"jobtype\" in input file"
     );
+}
+
+TEST_F(TestInputFileReader, testAllKeywordsAcceptValidValue)
+{
+    std::vector<std::string> keywordsRef(0);
+    std::vector<bool>        requiredRef(0);
+    std::vector<std::string> valuesRef(0);
+
+    ::readKeywordList(
+        "data/inputFileReader/keywordList.txt",
+        keywordsRef,
+        requiredRef,
+        valuesRef
+    );
+
+    // "guff_path" is deprecated: its parse function always throws
+    // regardless of the value given (see FilesInputParser::addGuffPathKey),
+    // so it cannot be exercised by this "does a valid value get accepted"
+    // check and is skipped here.
+    const std::vector<std::string> keywordsToSkip = {"guff_path"};
+
+    // the "integrator" key refuses to parse unless the current job type is
+    // an MD job type (IntegratorInputParser::addIntegratorKey). Pin it
+    // explicitly so this test does not depend on whatever job type a
+    // previously run test left behind in the shared, static
+    // GeneralSettings state.
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+
+    for (size_t i = 0; i < keywordsRef.size(); ++i)
+    {
+        const std::string &keyword = keywordsRef[i];
+        const std::string &value   = valuesRef[i];
+
+        if (std::ranges::find(keywordsToSkip, keyword) != keywordsToSkip.end())
+            continue;
+
+        SCOPED_TRACE(
+            std::format("keyword \"{}\" with value \"{}\"", keyword, value)
+        );
+
+        // keys are looked up/counted internally under their lower-cased,
+        // dash-free spelling (see InputFileReader::process and
+        // InputFileParser::addKeyword), so keyword counts have to be reset
+        // and queried via that same normalized spelling
+        const auto normalizedKeyword =
+            utilities::toLowerAndReplaceDashesCopy(keyword);
+
+        _inputFileReader->setKeywordCount(normalizedKeyword, 0);
+
+        EXPECT_NO_THROW(_inputFileReader->process(
+            std::vector<std::string>{keyword, "=", value}
+        ));
+
+        EXPECT_TRUE(_inputFileReader->getKeywordSet(normalizedKeyword));
+        EXPECT_EQ(_inputFileReader->getKeywordCount(normalizedKeyword), 1);
+    }
 }

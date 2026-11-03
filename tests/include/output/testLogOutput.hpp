@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_LOGOUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_LOG_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_LOG_OUTPUT_HPP
 
-#define _TEST_LOGOUTPUT_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
-
-#include "logOutput.hpp"   // for LogOutput
+#include "logOutput.hpp"
 
 /**
  * @class TestLogOutput
@@ -37,16 +36,18 @@
 class TestLogOutput : public ::testing::Test
 {
    protected:
-    void SetUp() override { _logOutput = new output::LogOutput("default.log"); }
+    std::unique_ptr<out::LogOutput> _logOutput;
+
+    void SetUp() override
+    {
+        _logOutput = std::make_unique<out::LogOutput>("default.log");
+    }
 
     void TearDown() override
     {
-        delete _logOutput;
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
     }
-
-    output::LogOutput *_logOutput;
 };
 
-#endif   // _TEST_LOGOUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_LOG_OUTPUT_HPP

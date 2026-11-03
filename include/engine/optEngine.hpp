@@ -20,11 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_ENGINE_HPP_
+#ifndef ENGINE__OPT_ENGINE_HPP
+#define ENGINE__OPT_ENGINE_HPP
 
-#define _OPT_ENGINE_HPP_
-
-#include <memory>   // for unique_ptr
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "engine.hpp"
 #include "evaluator.hpp"
@@ -53,19 +55,30 @@ namespace engine
         bool _optStopped = false;
 
        public:
-        void run() final;
+        using Engine::Engine;
+
+        void run() override;
         void takeStep();
-        void writeOutput() final;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
+
+        static void throwOnFailure(
+            bool                            converged,
+            bool                            optStopped,
+            size_t                          step,
+            size_t                          nEpochs,
+            const std::vector<std::string> &errorMessages
+        );
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setOptimizer(const std::shared_ptr<opt::Optimizer>);
+        void setOptimizer(const std::shared_ptr<opt::Optimizer> &optimizer);
         void setLearningRateStrategy(
             const std::shared_ptr<opt::LearningRateStrategy>
+                &learningRateStrategy
         );
-        void setEvaluator(const std::shared_ptr<opt::Evaluator>);
+        void setEvaluator(const std::shared_ptr<opt::Evaluator> &evaluator);
 
         /***************************
          * standard getter methods *
@@ -76,18 +89,18 @@ namespace engine
         [[nodiscard]] opt::Evaluator            &getEvaluator();
         [[nodiscard]] opt::Convergence          &getConvergence();
 
-        // clang-format off
         [[nodiscard]] std::shared_ptr<opt::Optimizer> getSharedOptimizer();
-        [[nodiscard]] std::shared_ptr<opt::LearningRateStrategy> getSharedLearningRate();
+        [[nodiscard]] std::shared_ptr<opt::LearningRateStrategy> getSharedLearningRate(
+        );
         [[nodiscard]] std::shared_ptr<opt::Evaluator> getSharedEvaluator();
-        
-        [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
-        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
-        // clang-format on
 
-        [[nodiscard]] output::OptOutput &getOptOutput();
+        [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
+        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld(
+        );
+
+        [[nodiscard]] out::OptOutput &getOptOutput();
     };
 
 }   // namespace engine
 
-#endif   // _OPT_ENGINE_HPP_
+#endif   // ENGINE__OPT_ENGINE_HPP

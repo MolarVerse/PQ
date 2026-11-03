@@ -22,318 +22,224 @@
 
 #include "optInputParser.hpp"
 
-#include <format>   // for std::format
-#include <string>   // for std::string
+#include "enums/optimizer.hpp"
+#include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "keyValidatorBase.hpp"
+#include "optimizerSettings.hpp"
+#include "rangeValidator.hpp"
 
-#include "exceptions.hpp"          // for InputFileException
-#include "optimizerSettings.hpp"   // for OptimizerSettings
-#include "parserUtils.hpp"
-#include "stringUtilities.hpp"   // for toLowerCopy
-
-using namespace input;
-using namespace settings;
-using namespace customException;
-using namespace utilities;
-
-/**
- * @brief Constructor
- *
- * @details following keywords are added:
- * - optimizer <string>
- * - n-iterations <int>
- * - learning-rate-strategy <string>
- * - initial-learning-rate <double>
- *
- * @param engine The engine
- */
-OptInputParser::OptInputParser()
+namespace input
 {
-    addKeyword(
-        "optimizer",
-        bindMember(&OptInputParser::parseOptimizer, this),
-        false
-    );
 
-    addKeyword(
-        "learning-rate-strategy",
-        bindMember(&OptInputParser::parseLearningRateStrategy, this),
-        false
-    );
-
-    addKeyword(
-        "initial-learning-rate",
-        bindMember(&OptInputParser::parseInitialLearningRate, this),
-        false
-    );
-
-    addKeyword(
-        "learning-rate-decay",
-        bindMember(&OptInputParser::parseLearningRateDecay, this),
-        false
-    );
-
-    addKeyword(
-        "learning-rate-update-freq",
-        bindMember(&OptInputParser::parseLearningRateUpdateFreq, this),
-        false
-    );
-
-    addKeyword(
-        "min-learning-rate",
-        bindMember(&OptInputParser::parseMinLearningRate, this),
-        false
-    );
-
-    addKeyword(
-        "max-learning-rate",
-        bindMember(&OptInputParser::parseMaxLearningRate, this),
-        false
-    );
-}
-
-/**
- * @brief Parses the optimizer
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the optimizer method is
- * unknown
- */
-void OptInputParser::parseOptimizer(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommand(lineElements, lineNumber);
-
-    const auto method = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    using enum OptimizerType;
-
-    if ("steepest_descent" == method)
-        OptimizerSettings::setOptimizer(STEEPEST_DESCENT);
-
-    else if ("adam" == method)
-        OptimizerSettings::setOptimizer(ADAM);
-
-    else
+    /**
+     * @brief Constructor
+     *
+     * @details following keywords are added:
+     * - optimizer "<string>"
+     * - n-iterations "<int>"
+     * - learning-rate-strategy "<string>"
+     * - initial-learning-rate "<double>"
+     */
+    OptInputParser::OptInputParser(OptimizerSettings &optimizerSettings)
+        : _optimizerSettings(optimizerSettings)
     {
-        throw InputFileException(
-            std::format(
-                "Unknown optimizer method \"{}\" in input file "
-                "at line {}.\nPossible options are: steepest-descent, "
-                "adam",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
-
-/**
- * @brief Parses the learning rate strategy
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the learning rate strategy is
- * unknown
- */
-void OptInputParser::parseLearningRateStrategy(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    using enum LREnum;
-    checkCommand(lineElements, lineNumber);
-
-    const auto strategy = toLowerAndReplaceDashesCopy(lineElements[2]);
-
-    if ("constant" == strategy)
-        OptimizerSettings::setLearningRateStrategy(CONSTANT);
-
-    else if ("constant_decay" == strategy)
-        OptimizerSettings::setLearningRateStrategy(CONSTANT_DECAY);
-
-    else if ("exponential_decay" == strategy)
-        OptimizerSettings::setLearningRateStrategy(EXPONENTIAL_DECAY);
-
-    else if ("linesearch_wolfe" == strategy || "linesearch" == strategy)
-        OptimizerSettings::setLearningRateStrategy(LINESEARCH_WOLFE);
-
-    else
-    {
-        throw InputFileException(
-            std::format(
-                "Unknown learning rate strategy \"{}\" in input file "
-                "at line {}.\nPossible options are: constant, "
-                "constant-decay, exponential-decay, linesearch "
-                "(linesearch-wolfe)",
-                lineElements[2],
-                lineNumber
-            )
-        );
-    }
-}
-
-/**
- * @brief Parses the initial learning rate
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the initial learning rate is
- * less than or equal to 0.0
- */
-void OptInputParser::parseInitialLearningRate(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto initialLearningRate = stringToFiniteDouble(lineElements[2]);
-
-    if (initialLearningRate <= 0.0)
-    {
-        throw InputFileException(
-            std::format(
-                "Initial learning rate must be greater than 0.0 in input file "
-                "at line {}.",
-                lineNumber
-            )
-        );
+        addOptimizerKey();
+        addLearningRateStrategyKey();
+        addInitialLearningRateKey();
+        addLearningRateUpdateFreqKey();
+        addMinLearningRateKey();
+        addMaxLearningRateKey();
+        addLearningRateDecayKey();
     }
 
-    OptimizerSettings::setInitialLearningRate(initialLearningRate);
-}
-
-/**
- * @brief Parses the learning rate update frequency
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the learning rate update
- * frequency is less than or equal to 0
- */
-void OptInputParser::parseLearningRateUpdateFreq(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto frequency = stringToInt(lineElements[2]);
-
-    if (frequency <= 0)
+    /**
+     * @brief Adds the optimizer key to the input parser.
+     *
+     */
+    void OptInputParser::addOptimizerKey()
     {
-        throw InputFileException(
-            std::format(
-                "Learning rate update frequency must be greater than 0 in "
-                "input "
-                "file at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "optimizer",
+            .title = "Optimizer Type",
+            .description =
+                "Specifies the optimizer to be used for the optimization "
+                "process.",
+        };
+
+        const auto setValue = [this](OptimizerType value)
+        { _optimizerSettings->setOptimizer(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<OptimizerType>{.metadata = metaData, .onSet = setValue}
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    OptimizerSettings::setLRUpdateFrequency(static_cast<size_t>(frequency));
-}
-
-/**
- * @brief Parses the minimum learning rate
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the minimum learning rate is
- * less than or equal to 0.0
- */
-void OptInputParser::parseMinLearningRate(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto minLearningRate = stringToFiniteDouble(lineElements[2]);
-
-    if (minLearningRate <= 0.0)
+    /**
+     * @brief Adds the learning rate strategy key to the input parser.
+     *
+     */
+    void OptInputParser::addLearningRateStrategyKey()
     {
-        throw InputFileException(
-            std::format(
-                "Minimum learning rate must be greater than 0.0 in input file "
-                "at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "learning-rate-strategy",
+            .title = "Learning Rate Strategy",
+            .description =
+                "Specifies the strategy for updating the learning rate during "
+                "the optimization process."
+        };
+
+        const auto setValue = [this](LearningRate value)
+        { _optimizerSettings->setLearningRateStrategy(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<LearningRate>{.metadata = metaData, .onSet = setValue}
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    OptimizerSettings::setMinLearningRate(minLearningRate);
-}
-
-/**
- * @brief Parses the maximum learning rate
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the maximum learning rate is
- * less than or equal to 0.0
- */
-void OptInputParser::parseMaxLearningRate(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto maxLearningRate = stringToFiniteDouble(lineElements[2]);
-
-    if (maxLearningRate <= 0.0)
+    /**
+     * @brief Adds the initial learning rate key to the input parser.
+     *
+     */
+    void OptInputParser::addInitialLearningRateKey()
     {
-        throw InputFileException(
-            std::format(
-                "Maximum learning rate must be greater than 0.0 in input file "
-                "at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "initial-learning-rate",
+            .title = "Initial Learning Rate",
+            .description =
+                "Specifies the initial learning rate for the optimization "
+                "process."
+        };
+
+        const auto setValue = [this](double value)
+        { _optimizerSettings->setInitialLearningRate(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    OptimizerSettings::setMaxLearningRate(maxLearningRate);
-}
-
-/**
- * @brief Parses the learning rate decay
- *
- * @param lineElements The elements of the line
- * @param lineNumber The line number
- *
- * @throws InputFileException if the learning rate decay is
- * less than or equal to 0.0
- */
-void OptInputParser::parseLearningRateDecay(
-    const std::vector<std::string> &lineElements,
-    const size_t                    lineNumber
-)
-{
-    checkCommandArray(lineElements, lineNumber);
-
-    const auto decay = stringToFiniteDouble(lineElements[2]);
-
-    if (decay <= 0.0)
+    /**
+     * @brief Adds the learning rate update frequency key to the input parser.
+     *
+     */
+    void OptInputParser::addLearningRateUpdateFreqKey()
     {
-        throw InputFileException(
-            std::format(
-                "Learning rate decay must be greater than 0.0 in input file "
-                "at line {}.",
-                lineNumber
-            )
+        const auto metaData = KeyMetadata{
+            .name  = "learning-rate-update-freq",
+            .title = "Learning Rate Update Frequency",
+            .description =
+                "Specifies how frequently the learning rate should be "
+                "updated during the optimization process."
+        };
+
+        const auto setValue = [this](size_t value)
+        { _optimizerSettings->setLRUpdateFrequency(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(SizeTValidatorExcludingZero)}
+            }
         );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
-    OptimizerSettings::setLearningRateDecay(decay);
-}
+    /**
+     * @brief Adds the minimum learning rate key to the input parser.
+     *
+     */
+    void OptInputParser::addMinLearningRateKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "min-learning-rate",
+            .title = "Minimum Learning Rate",
+            .description =
+                "Specifies the minimum learning rate for the optimization "
+                "process."
+        };
+
+        const auto setValue = [this](double value)
+        { _optimizerSettings->setMinLearningRate(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief Adds the maximum learning rate key to the input parser.
+     *
+     */
+    void OptInputParser::addMaxLearningRateKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "max-learning-rate",
+            .title = "Maximum Learning Rate",
+            .description =
+                "Specifies the maximum learning rate for the optimization "
+                "process."
+        };
+
+        const auto setValue = [this](double value)
+        { _optimizerSettings->setMaxLearningRate(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief Adds the learning rate decay key to the input parser.
+     *
+     */
+    void OptInputParser::addLearningRateDecayKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "learning-rate-decay",
+            .title = "Learning Rate Decay",
+            .description =
+                "Specifies the learning rate decay for the optimization "
+                "process."
+        };
+
+        const auto setValue = [this](double value)
+        { _optimizerSettings->setLearningRateDecay(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+}   // namespace input

@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NOSE_HOOVER_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__NOSE_HOOVER_THERMOSTAT_HPP
+#define THERMOSTAT__NOSE_HOOVER_THERMOSTAT_HPP
 
-#define _NOSE_HOOVER_THERMOSTAT_HPP_
-
-#include <vector>   // for std::vector
+#include <vector>
 
 #include "thermostat.hpp"
 
@@ -47,18 +46,20 @@ namespace thermostat
        public:
         NoseHooverThermostat() = default;
         explicit NoseHooverThermostat(
-            const double               targetTemp,
+            double                     targetTemp,
             const std::vector<double> &chi,
             const std::vector<double> &zeta,
-            const double               couplingFrequency
+            double                     couplingFrequency
         );
 
         void applyThermostat(
-            molsys::SimulationBox      &simBox,
-            physicalData::PhysicalData &physData
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) override;
 
-        void applyThermostatOnForces(molsys::SimulationBox &simBox) override;
+        void applyThermostatOnForces(
+            molsys::SimulationBox &simulationBox
+        ) override;
 
         /***************************
          * standard getter methods *
@@ -69,18 +70,21 @@ namespace thermostat
         [[nodiscard]] double              getCouplingFrequency() const;
 
         [[nodiscard]]
-        settings::ThermostatType getThermostatType() const override;
+        ThermostatType getThermostatType() const override;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setChi(const unsigned int index, const double chi);
+        void setChi(size_t index, double chi);
         void setChi(const std::vector<double> &chi);
-        void setZeta(const unsigned int index, const double zeta);
+        void setZeta(size_t index, double zeta);
         void setZeta(const std::vector<double> &zeta);
-        void setCouplingFrequency(const double couplingFrequency);
+        void setCouplingFrequency(double couplingFrequency);
+
+       private:
+        void _requireCoupling(const molsys::SimulationBox &simulationBox) const;
     };
 }   // namespace thermostat
 
-#endif   // _NOSE_HOOVER_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__NOSE_HOOVER_THERMOSTAT_HPP

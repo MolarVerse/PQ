@@ -20,59 +20,53 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_MOLECULE_HPP_
+#ifndef TESTS__INCLUDE__MOLSYS__TEST_MOLECULE_HPP
+#define TESTS__INCLUDE__MOLSYS__TEST_MOLECULE_HPP
 
-#define _TEST_MOLECULE_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
-
-#include "atom.hpp"       // for Atom
-#include "molecule.hpp"   // for Molecule
+#include "atom.hpp"
+#include "molecule.hpp"
 
 class TestMolecule : public ::testing::Test
 {
    protected:
+    std::unique_ptr<molsys::Molecule> _molecule;
+
     void SetUp() override
     {
-        _molecule = new molsys::Molecule();
-        _molecule->setNumberOfAtoms(3);
+        _molecule = std::make_unique<molsys::Molecule>();
 
         auto _atom1 = std::make_shared<molsys::Atom>();
         auto _atom2 = std::make_shared<molsys::Atom>();
         auto _atom3 = std::make_shared<molsys::Atom>();
 
-        _atom1->setExternalAtomType(1);
-        _atom2->setExternalAtomType(2);
-        _atom3->setExternalAtomType(2);
+        _atom1->setExternalAtomType(ExtAtomType{1});
+        _atom2->setExternalAtomType(ExtAtomType{2});
+        _atom3->setExternalAtomType(ExtAtomType{2});
 
-        _atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _atom2->setPosition(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        _atom3->setPosition(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        _atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        _atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0));
+        _atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0));
 
-        _atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _atom2->setVelocity(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        _atom3->setVelocity(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        _atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        _atom2->setVelocity(linalg::Vec3D(1.0, 0.0, 0.0));
+        _atom3->setVelocity(linalg::Vec3D(0.0, 1.0, 0.0));
 
-        _atom1->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        _atom2->setForce(linearAlgebra::Vec3D(1.0, 0.0, 0.0));
-        _atom3->setForce(linearAlgebra::Vec3D(0.0, 1.0, 0.0));
+        _atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+        _atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0));
+        _atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0));
 
         _atom1->setMass(1.0);
         _atom2->setMass(2.0);
         _atom3->setMass(3.0);
 
-        _molecule->setMolMass(6.0);
-
         _molecule->addAtom(_atom1);
         _molecule->addAtom(_atom2);
         _molecule->addAtom(_atom3);
     }
-
-    void TearDown() override { delete _molecule; }
-
-    molsys::Molecule *_molecule;
 };
 
-#endif   // _TEST_MOLECULE_HPP_
+#endif   // TESTS__INCLUDE__MOLSYS__TEST_MOLECULE_HPP

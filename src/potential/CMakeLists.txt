@@ -1,6 +1,5 @@
 set(potential_source_files
     potential.cpp
-    potential.tpp.cpp
     potentialBruteForce.cpp
     potentialCellList.cpp
 )

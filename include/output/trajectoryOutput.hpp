@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TRAJECTORY_OUTPUT_HPP_
+#ifndef OUTPUT__TRAJECTORY_OUTPUT_HPP
+#define OUTPUT__TRAJECTORY_OUTPUT_HPP
 
-#define _TRAJECTORY_OUTPUT_HPP_
-
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 #include "hybridConfigurator.hpp"
-#include "output.hpp"   // for Output
+#include "output.hpp"
 
 namespace molsys
 {
@@ -39,12 +38,12 @@ namespace configurator
     class HybridConfigurator;   // forward declaration
 }   // namespace configurator
 
-namespace output
+namespace out
 {
     /**
-     * @class TrajectoryOutput inherits from Output
+     * @brief TrajectoryOutput inherits from Output
      *
-     * @brief Output for xyz, vel, force, charges files
+     * @details Output for xyz, vel, force, charges files
      *
      */
     class TrajectoryOutput : public Output
@@ -52,17 +51,34 @@ namespace output
        public:
         using Output::Output;
 
-        void writeHeader(const molsys::SimulationBox &);
-        void writeXyz(molsys::SimulationBox &, const size_t);
+        void writeHeader(const molsys::SimulationBox &simulationBox);
+        void writeXyz(
+            const molsys::SimulationBox &simulationBox,
+            size_t                       step,
+            bool                         includeMetadata
+        );
         void writeHybridCenterXyz(
             const configurator::HybridConfigurator &configurator,
-            const size_t                            step
+            size_t                                  step,
+            bool                                    includeMetadata
         );
-        void writeVelocities(molsys::SimulationBox &, const size_t);
-        void writeForces(molsys::SimulationBox &, const size_t);
-        void writeCharges(molsys::SimulationBox &, const size_t);
+        void writeVelocities(
+            const molsys::SimulationBox &simulationBox,
+            size_t                       step,
+            bool                         includeMetadata
+        );
+        void writeForces(
+            const molsys::SimulationBox &simulationBox,
+            size_t                       step,
+            bool                         includeMetadata
+        );
+        void writeCharges(
+            const molsys::SimulationBox &simulationBox,
+            size_t                       step,
+            bool                         includeMetadata
+        );
     };
 
-}   // namespace output
+}   // namespace out
 
-#endif   // _TRAJECTORY_OUTPUT_HPP_
+#endif   // OUTPUT__TRAJECTORY_OUTPUT_HPP

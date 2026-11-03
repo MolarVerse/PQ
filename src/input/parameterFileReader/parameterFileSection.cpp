@@ -22,98 +22,83 @@
 
 #include "parameterFileSection.hpp"
 
-#include <fstream>   // for getline
+#include <fstream>
 
-#include "exceptions.hpp"        // for ParameterFileException
-#include "stringUtilities.hpp"   // for removeComments, splitString, toLowerCopy
+#include "exceptions.hpp"
+#include "stringUtilities.hpp"
 
-using namespace input::parameterFile;
-using namespace utilities;
-using namespace customException;
-using namespace engine;
-
-/**
- * @brief reads a general parameter file section
- *
- * @details Calls processHeader at the beginning of each section and
- * processSection for each line in the section. If the "end" keyword is found,
- * the section is ended normally.
- *
- * @param line
- * @param engine
- */
-void ParameterFileSection::process(
-    std::vector<std::string> &lineElements,
-    Engine                   &engine
-)
+namespace input::parameterFile
 {
-    processHeader(lineElements, engine);
 
-    std::string line;
-    auto        endedNormal = false;
-
-    while (getline(*_fp, line))
+    /**
+     * @brief reads a general parameter file section
+     *
+     * @details Calls processHeader at the beginning of each section and
+     * processSection for each line in the section. If the "end" keyword is
+     * found, the section is ended normally.
+     *
+     * @param lineElements
+     * @param engine
+     * @param lineNumber the line number in the parameter file being processed
+     */
+    void ParameterFileSection::process(
+        std::vector<std::string> &lineElements,
+        engine::Engine           &engine,
+        size_t                   &lineNumber
+    )
     {
-        line         = removeComments(line, "#");
-        lineElements = splitString(line);
+        processHeader(lineElements, engine, lineNumber);
 
-        if (lineElements.empty())
+        std::string line;
+        auto        endedNormal = false;
+
+        while (getline(*_fp, line))
         {
-            ++_lineNumber;
-            continue;
+            line         = utilities::removeComments(line, "#");
+            lineElements = utilities::splitString(line);
+
+            if (lineElements.empty())
+            {
+                ++lineNumber;
+                continue;
+            }
+
+            if (utilities::toLowerCopy(lineElements[0]) == "end")
+            {
+                ++lineNumber;
+                endedNormal = true;
+                break;
+            }
+
+            processSection(lineElements, engine, lineNumber);
+
+            ++lineNumber;
         }
 
-        if (toLowerCopy(lineElements[0]) == "end")
-        {
-            ++_lineNumber;
-            endedNormal = true;
-            break;
-        }
-
-        processSection(lineElements, engine);
-
-        ++_lineNumber;
+        endedNormally(endedNormal);
     }
 
-    endedNormally(endedNormal);
-}
+    /**
+     * @brief check if section ended normally
+     *
+     * @param endedNormally
+     *
+     * @throw ParameterFileException if section did not end
+     * normally
+     */
+    void ParameterFileSection::endedNormally(bool endedNormally)
+    {
+        if (!endedNormally)
+            throw exc::ParameterFileException(
+                "Parameter file " + keyword() + " section ended abnormally!"
+            );
+    }
 
-/**
- * @brief check if section ended normally
- *
- * @param endedNormally
- *
- * @throw ParameterFileException if section did not end
- * normally
- */
-void ParameterFileSection::endedNormally(const bool endedNormally)
-{
-    if (!endedNormally)
-        throw ParameterFileException(
-            "Parameter file " + keyword() + " section ended abnormally!"
-        );
-}
+    /**
+     * @brief set file pointer
+     *
+     * @param file
+     */
+    void ParameterFileSection::setFp(std::ifstream *file) { _fp = file; }
 
-/**
- * @brief set line number of section
- *
- * @param lineNumber
- */
-void ParameterFileSection::setLineNumber(const int lineNumber)
-{
-    _lineNumber = lineNumber;
-}
-
-/**
- * @brief set file pointer
- *
- * @param fp
- */
-void ParameterFileSection::setFp(std::ifstream *fp) { _fp = fp; }
-
-/**
- * @brief get line number of section
- *
- * @return int
- */
-int ParameterFileSection::getLineNumber() const { return _lineNumber; }
+}   // namespace input::parameterFile

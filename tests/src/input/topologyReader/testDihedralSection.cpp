@@ -20,17 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for EXPECT_EQ, EXPECT_THROW, TestInfo...
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "dihedralSection.hpp"   // for DihedralSection
-#include "engine.hpp"            // for Engine
-#include "exceptions.hpp"        // for TopologyException
-#include "gtest/gtest.h"         // for Message, TestPartResult
+#include "dihedralSection.hpp"
+#include "engine.hpp"
+#include "exceptions.hpp"
 #include "strongTypes.hpp"
-#include "testTopologySection.hpp"   // for TestTopologySection
+#include "testTopologySection.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief test dihedral section processing one line
@@ -40,43 +40,49 @@ TEST_F(TestTopologySection, processSectionDihedral)
 {
     std::vector<std::string>         lineElements = {"1", "2", "3", "4", "7"};
     input::topology::DihedralSection dihedralSection;
-    dihedralSection.processSection(lineElements, *_engine);
+    dihedralSection.processSection(lineElements, *_engine, 0);
 
     const auto &dihedrals = _engine->getForceField()->getDihedrals();
     const auto &molecules = _engine->getSimulationBox().getMolecules();
 
     EXPECT_EQ(dihedrals.size(), 1);
-    EXPECT_EQ(dihedrals[0].getMolecules()[0], &(molecules[0]));
-    EXPECT_EQ(dihedrals[0].getMolecules()[1], &(molecules[1]));
-    EXPECT_EQ(dihedrals[0].getMolecules()[2], &(molecules[1]));
-    EXPECT_EQ(dihedrals[0].getMolecules()[3], &(molecules[1]));
-    EXPECT_EQ(dihedrals[0].getAtomIndices()[0], 0);
-    EXPECT_EQ(dihedrals[0].getAtomIndices()[1], 0);
-    EXPECT_EQ(dihedrals[0].getAtomIndices()[2], 1);
-    EXPECT_EQ(dihedrals[0].getAtomIndices()[3], 2);
+    EXPECT_EQ(dihedrals[0].get_molecules()[0], molecules.data());
+    EXPECT_EQ(dihedrals[0].get_molecules()[1], &(molecules[1]));
+    EXPECT_EQ(dihedrals[0].get_molecules()[2], &(molecules[1]));
+    EXPECT_EQ(dihedrals[0].get_molecules()[3], &(molecules[1]));
+    EXPECT_EQ(dihedrals[0].get_atomIndices()[0], AtomIndex{0});
+    EXPECT_EQ(dihedrals[0].get_atomIndices()[1], AtomIndex{0});
+    EXPECT_EQ(dihedrals[0].get_atomIndices()[2], AtomIndex{1});
+    EXPECT_EQ(dihedrals[0].get_atomIndices()[3], AtomIndex{2});
     EXPECT_EQ(dihedrals[0].getType(), DihedralId{7});
     EXPECT_EQ(dihedrals[0].isLinker(), false);
 
     lineElements = {"1", "2", "3", "4", "7", "*"};
-    dihedralSection.processSection(lineElements, *_engine);
+    dihedralSection.processSection(lineElements, *_engine, 0);
     EXPECT_EQ(dihedrals[1].isLinker(), true);
 
     lineElements = {"1", "1", "2", "3", "4"};
-    EXPECT_THROW(
-        dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        dihedralSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Topology file dihedral section at line 0 - atoms cannot be the "
+        "same!"
     );
 
     lineElements = {"1", "2", "7"};
-    EXPECT_THROW(
-        dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        dihedralSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Wrong number of arguments in topology file dihedral section at "
+        "line 0 - number of elements has to be 5 or 6!"
     );
 
     lineElements = {"1", "2", "3", "4", "7", "#"};
-    EXPECT_THROW(
-        dihedralSection.processSection(lineElements, *_engine),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        dihedralSection.processSection(lineElements, *_engine, 0),
+        exc::TopologyException,
+        "Sixth entry in topology file in dihedral section has to be a '*' or "
+        "empty at line 0!"
     );
 }
 
@@ -87,9 +93,10 @@ TEST_F(TestTopologySection, processSectionDihedral)
 TEST_F(TestTopologySection, endedNormallyDihedral)
 {
     input::topology::DihedralSection dihedralSection;
-    EXPECT_THROW(
-        dihedralSection.endedNormally(false),
-        customException::TopologyException
+    EXPECT_THROW_MSG(
+        dihedralSection.endedNormally(false, 0),
+        exc::TopologyException,
+        "Topology file dihedral section at line 0 - no end of section found!"
     );
-    EXPECT_NO_THROW(dihedralSection.endedNormally(true));
+    EXPECT_NO_THROW(dihedralSection.endedNormally(true, 0));
 }

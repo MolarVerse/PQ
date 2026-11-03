@@ -20,79 +20,55 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP
 
-#define _QM_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
+#include "inputFileParser.hpp"
 
-#include "inputFileParser.hpp"   // for InputFileParser
-#include "logOutput.hpp"
-#include "stdoutOutput.hpp"
+class ReferenceSettings;
 
 namespace input
 {
     /**
-     * @class QMInputParser inherits from InputFileParser
+     * @brief QMInputParser inherits from InputFileParser
      *
-     * @brief Parses the general commands in the input file
+     * @details Parses the general commands in the input file
      *
      */
     class QMInputParser : public InputFileParser
     {
        private:
-        output::LogOutput    *_logOutput;
-        output::StdoutOutput *_stdoutOutput;
-
-        bool _resolveBuiltInSlakosPath;
+        bool                         _resolveBuiltInSlakosPath;
+        mstd::Ref<ReferenceSettings> _referenceSettings;
 
        public:
         explicit QMInputParser(
-            output::LogOutput &,
-            output::StdoutOutput &,
-            bool resolveBuiltInSlakosPath
+            bool                         resolveBuiltInSlakosPath,
+            mstd::Ref<ReferenceSettings> referenceSettings
         );
-        explicit QMInputParser(output::LogOutput &, output::StdoutOutput &);
+        explicit QMInputParser(mstd::Ref<ReferenceSettings> referenceSettings);
 
-        void parseQMMethod(const std::vector<std::string> &, const size_t);
-        void parseQMScript(const std::vector<std::string> &, const size_t);
-        void parseQMScriptFullPath(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseQMLoopTimeLimit(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseDispersion(const std::vector<std::string> &, const size_t);
-        void parseRemoveNetForce(
-            const std::vector<std::string> &,
-            const size_t
-        );
-
-        void parseMaceModel(const std::vector<std::string> &, const size_t);
-        void parseMaceMode(const std::vector<std::string> &, const size_t);
-        void parseMaceModelPath(const std::vector<std::string> &, const size_t);
-        void parseMaceQMMethod(const std::string_view &);
-
-        void parseSlakosType(const std::vector<std::string> &, const size_t);
-        void parseSlakosPath(const std::vector<std::string> &, const size_t);
-        void parseThirdOrder(const std::vector<std::string> &, const size_t);
-        void parseHubbardDerivs(const std::vector<std::string> &, const size_t);
-
-        void parseXtbMethod(const std::vector<std::string> &, const size_t);
-
-        void parseFennolModelPath(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseGPUPreprocessing(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void parseMaceQMMethod(const std::string &);
+        void addQMMethodKey();
+        void addQMScriptKey();
+        void addQMScriptFullPathKey();
+        void addQMLoopTimeLimitKey();
+        void addDispersionKey();
+        void addRemoveNetForceKey();
+        void addMaceModelKey();
+        void addMaceModeKey();
+        void addMaceModelPathKey();
+        void addSlakosTypeKey();
+        void addSlakosPathKey();
+        void addThirdOrderKey();
+        void addHubbardDerivsKey();
+        void addXtbMethodKey();
+        void addFennolModelPathKey();
+        void addGPUPreprocessingKey();
     };
 
 }   // namespace input
 
-#endif   // _QM_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP

@@ -20,22 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTRAINTS_HPP_
+#ifndef CONSTRAINTS__CONSTRAINTS_HPP
+#define CONSTRAINTS__CONSTRAINTS_HPP
 
-#define _CONSTRAINTS_HPP_
+#include <cstddef>
+#include <mstd/types.hpp>
+#include <vector>
 
-#include <cstddef>   // for size_t
-#include <vector>    // for vector
-
-#include "bondConstraint.hpp"       // for BondConstraint
-#include "defaults.hpp"             // for defaults
-#include "distanceConstraint.hpp"   // for DistanceConstraint
-#include "mShakeReference.hpp"      // for MShakeReference
+#include "bondConstraint.hpp"
+#include "distanceConstraint.hpp"
+#include "mShakeReference.hpp"
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
+
+class ConstraintSettings;   // forward declaration
 
 namespace molsys
 {
@@ -60,24 +61,17 @@ namespace constraints
     class Constraints
     {
        private:
+        mstd::ConstRef<ConstraintSettings> _constraintSettings;
+
         std::unique_ptr<MShake> _mShake;
 
-        bool _shakeActivated         = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
-        bool _mShakeActivated        = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
-        bool _distanceConstActivated = defaults::CONSTRAINTS_ACTIVE_DEFAULT;
-
-        size_t _shakeMaxIter  = defaults::SHAKE_MAX_ITER_DEFAULT;
-        size_t _rattleMaxIter = defaults::RATTLE_MAX_ITER_DEFAULT;
-
-        double _shakeTolerance  = defaults::SHAKE_TOLERANCE_DEFAULT;
-        double _rattleTolerance = defaults::RATTLE_TOLERANCE_DEFAULT;
-        double _startTime       = 0.0;
+        double _startTime = 0.0;
 
         std::vector<BondConstraint>     _bondConstraints;
         std::vector<DistanceConstraint> _distanceConstraints;
 
        public:
-        Constraints();
+        explicit Constraints(const ConstraintSettings &constraintSettings);
         ~Constraints();
 
         void calculateConstraintBondRefs(
@@ -87,35 +81,12 @@ namespace constraints
         void initMShake();
 
         void applyShake(molsys::SimulationBox &simulationBox);
-        void _applyShake(molsys::SimulationBox &simulationBox);
-        void _applyMShake(molsys::SimulationBox &simulationBox);
-
         void applyRattle(molsys::SimulationBox &simulationBox);
-        void _applyRattle();
-        void _applyMRattle(molsys::SimulationBox &simulationBox);
-
         void applyDistanceConstraints(
             const molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const double
+            double
         );
-
-        /*****************************
-         * standard activate methods *
-         *****************************/
-
-        void activateShake() { _shakeActivated = true; }
-        void deactivateShake() { _shakeActivated = false; }
-        void activateMShake() { _mShakeActivated = true; }
-        void deactivateMShake() { _mShakeActivated = false; }
-        void activateDistanceConstraints();
-        void deactivateDistanceConstraints();
-
-        [[nodiscard]] bool isShakeActive() const;
-        [[nodiscard]] bool isMShakeActive() const;
-        [[nodiscard]] bool isShakeLikeActive() const;
-        [[nodiscard]] bool isDistanceConstraintsActive() const;
-        [[nodiscard]] bool isActive() const;
 
         /************************
          * standard add methods *
@@ -142,23 +113,20 @@ namespace constraints
         ) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 
-        [[nodiscard]] size_t getShakeMaxIter() const;
-        [[nodiscard]] size_t getRattleMaxIter() const;
-        [[nodiscard]] double getShakeTolerance() const;
-        [[nodiscard]] double getRattleTolerance() const;
-
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setShakeMaxIter(const size_t shakeMaxIter);
-        void setRattleMaxIter(const size_t rattleMaxIter);
-        void setShakeTolerance(const double shakeTolerance);
-        void setRattleTolerance(const double rattleTolerance);
-
         void setStartTime(const double startTime) { _startTime = startTime; }
+
+       private:
+        void _applyShake(molsys::SimulationBox &simulationBox);
+        void _applyMShake(molsys::SimulationBox &simulationBox);
+
+        void _applyRattle();
+        void _applyMRattle(molsys::SimulationBox &simulationBox);
     };
 
 }   // namespace constraints
 
-#endif   // _CONSTRAINTS_HPP_
+#endif   // CONSTRAINTS__CONSTRAINTS_HPP

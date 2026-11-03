@@ -20,10 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_FORCE_FIELD_NON_COULOMB_HPP_
-#define _TEST_FORCE_FIELD_NON_COULOMB_HPP_
+#ifndef TESTS__INCLUDE__POTENTIAL__NON_COULOMB__TEST_FORCE_FIELD_NON_COULOMB_HPP
+#define TESTS__INCLUDE__POTENTIAL__NON_COULOMB__TEST_FORCE_FIELD_NON_COULOMB_HPP
 
 #include <gtest/gtest.h>
+
+#include <memory>
 
 #include "forceFieldNonCoulomb.hpp"
 #include "forceFieldNonCoulombImpl.hpp"
@@ -33,65 +35,63 @@
 class TestNonCoulombPotentialFF : public ::testing::Test
 {
    protected:
+    std::unique_ptr<pot::ForceFieldNonCoulomb> _nonCoulombPotential;
+
     void SetUp() override
     {
-        _nonCoulombPotential = new potential::ForceFieldNonCoulomb();
+        _nonCoulombPotential = std::make_unique<pot::ForceFieldNonCoulomb>();
     }
 
     [[nodiscard]]
-    linearAlgebra::Matrix<std::shared_ptr<
-        potential::NonCoulombPair>> getNonCoulombPairsMatrix() const
+    linalg::Matrix<
+        std::shared_ptr<pot::NonCoulombPair>> _getNonCoulombPairsMatrix() const
     {
-        return getNonCoulombPairsMatrix(*_nonCoulombPotential);
+        return _getNonCoulombPairsMatrix(*_nonCoulombPotential);
     }
 
-    [[nodiscard]] static linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>> getNonCoulombPairsMatrix(
-        const potential::ForceFieldNonCoulomb &potential
-    )
+    [[nodiscard]]
+    static linalg::
+        Matrix<std::shared_ptr<pot::NonCoulombPair>> _getNonCoulombPairsMatrix(
+            const pot::ForceFieldNonCoulomb &potential
+        )
     {
         return potential._nonCoulPairsMatPtr->matrix;
     }
 
-    void setNonCoulombPairsMatrix(
-        const linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>
-            &matrix
+    void _setNonCoulombPairsMatrix(
+        const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>> &matrix
     )
     {
-        setNonCoulombPairsMatrix(*_nonCoulombPotential, matrix);
+        _setNonCoulombPairsMatrix(*_nonCoulombPotential, matrix);
     }
 
-    static void setNonCoulombPairsMatrix(
-        potential::ForceFieldNonCoulomb &potential,
-        const linearAlgebra::Matrix<std::shared_ptr<potential::NonCoulombPair>>
-            &matrix
+    static void _setNonCoulombPairsMatrix(
+        pot::ForceFieldNonCoulomb                                  &potential,
+        const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>> &matrix
     )
     {
         potential._nonCoulPairsMatPtr->matrix = matrix;
     }
 
-    void setNonCoulombPairsMatrix(
-        size_t                             row,
-        size_t                             col,
-        const potential::LennardJonesPair &pair
+    void _setNonCoulombPairsMatrix(
+        size_t                       row,
+        size_t                       col,
+        const pot::LennardJonesPair &pair
     )
     {
-        setNonCoulombPairsMatrix(*_nonCoulombPotential, row, col, pair);
+        _setNonCoulombPairsMatrix(*_nonCoulombPotential, row, col, pair);
     }
 
-    static void setNonCoulombPairsMatrix(
-        potential::ForceFieldNonCoulomb   &potential,
-        const size_t                       row,
-        const size_t                       col,
-        const potential::LennardJonesPair &pair
+    static void _setNonCoulombPairsMatrix(
+        pot::ForceFieldNonCoulomb   &potential,
+        const size_t                 row,
+        const size_t                 col,
+        const pot::LennardJonesPair &pair
     )
     {
         potential._nonCoulPairsMatPtr->matrix(row, col) =
-            std::make_shared<potential::LennardJonesPair>(pair);
+            std::make_shared<pot::LennardJonesPair>(pair);
     }
-
-    void TearDown() override { delete _nonCoulombPotential; }
-
-    potential::ForceFieldNonCoulomb *_nonCoulombPotential;
 };
 
-#endif   // _TEST_FORCE_FIELD_NON_COULOMB_HPP_
+#endif   // TESTS__INCLUDE__POTENTIAL__NON_COULOMB__TEST_FORCE_FIELD_NON_COULOMB_HPP

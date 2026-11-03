@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARAMETER_FILE_READER_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_READER_HPP
+#define INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_READER_HPP
 
-#define _PARAMETER_FILE_READER_HPP_
-
-#include <fstream>   // for ifstream
-#include <memory>    // for unique_ptr
+#include <fstream>
+#include <memory>
 #include <string>
-#include <string_view>   // for string_view
+#include <string_view>
 #include <vector>
 
 #include "parameterFileSection.hpp"
@@ -39,8 +38,7 @@ namespace engine
 
 namespace input::parameterFile
 {
-    void               readParameterFile(engine::Engine &);
-    [[nodiscard]] bool isNeeded();
+    void readParameterFile(engine::Engine &);
 
     /**
      * @class ParameterReader
@@ -85,4 +83,4 @@ namespace input::parameterFile
 
 }   // namespace input::parameterFile
 
-#endif   // _PARAMETER_FILE_READER_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_READER_HPP

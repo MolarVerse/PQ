@@ -6,7 +6,6 @@ add_library(PQ_input
     intraNonBondedReader.cpp
     moldescriptorReader.cpp
     mShakeReader.cpp
-    commandLineArgs.cpp
 )
 
 target_include_directories(PQ_input

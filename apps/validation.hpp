@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CLI_VALIDATION_HPP_
-
-#define _CLI_VALIDATION_HPP_
+#ifndef APPS__VALIDATION_HPP
+#define APPS__VALIDATION_HPP
 
 #include <cstddef>
+#include <cstdint>
 #include <iosfwd>
 #include <optional>
 #include <string>
@@ -35,7 +35,7 @@
 
 namespace cli
 {
-    enum class ValidationSeverity
+    enum class ValidationSeverity : std::uint8_t
     {
         WARNING,
         ERROR
@@ -76,4 +76,4 @@ namespace cli
     );
 }   // namespace cli
 
-#endif   // _CLI_VALIDATION_HPP_
+#endif   // APPS__VALIDATION_HPP

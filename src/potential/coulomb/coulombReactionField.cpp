@@ -24,35 +24,54 @@
 
 #include "constants/internalConversionFactors.hpp"
 
-using namespace potential;
-using namespace constants;
-
-/**
- * @brief calculate the energy and force of the reaction field Coulomb potential
- *
- * @param distance
- * @return std::pair<double, double>
- */
-std::pair<double, double> CoulombReactionField::calculate(
-    const double dist,
-    const double chargeProduct
-) const
+namespace pot
 {
-    const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
-    const auto dInv             = 1.0 / dist;
-    const auto deltaCutOff      = _coulombRadiusCutOff - dist;
-    const auto rCutEnergy       = _coulombEnergyCutOff;
-    const auto rCutForce        = _coulombForceCutOff;
-    const auto rfCutOffCubed    = _rfPrefactor * _coulombCutOffCubedInverse;
 
-    auto energy  = dInv - 2.0 * rCutEnergy + dist * rCutForce;
-    energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;
+    /**
+     * @brief Construct a new Coulomb Reaction Field object
+     *
+     * @param coulombRadiusCutOff
+     * @param epsilon
+     */
+    CoulombReactionField::CoulombReactionField(
+        double coulombRadiusCutOff,
+        double epsilon
+    )
+        : CoulombPotential{coulombRadiusCutOff},
+          _rfPrefactor{(epsilon - 1) / (2.0 * epsilon + 1)}
+    {
+    }
 
-    auto force  = dInv * dInv - rCutForce;
-    force      += 2.0 * rfCutOffCubed * deltaCutOff;
+    /**
+     * @brief calculate the energy and force of the reaction field Coulomb
+     * potential
+     *
+     * @param dist
+     * @param chargeProduct
+     * @return std::pair<double, double>
+     */
+    std::pair<double, double> CoulombReactionField::calculate(
+        double dist,
+        double chargeProduct
+    ) const
+    {
+        const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
+        const auto dInv             = 1.0 / dist;
+        const auto deltaCutOff      = _coulombRadiusCutOff - dist;
+        const auto rCutEnergy       = _coulombEnergyCutOff;
+        const auto rCutForce        = _coulombForceCutOff;
+        const auto rfCutOffCubed    = _rfPrefactor * _coulombCutOffCubedInverse;
 
-    energy *= coulombPrefactor;
-    force  *= coulombPrefactor;
+        auto energy  = dInv - (2.0 * rCutEnergy) + (dist * rCutForce);
+        energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;
 
-    return {energy, force};
-}
+        auto force  = (dInv * dInv) - rCutForce;
+        force      += 2.0 * rfCutOffCubed * deltaCutOff;
+
+        energy *= coulombPrefactor;
+        force  *= coulombPrefactor;
+
+        return {energy, force};
+    }
+
+}   // namespace pot

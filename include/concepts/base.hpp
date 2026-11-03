@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BASE_CONCEPTS_HPP_
-
-#define _BASE_CONCEPTS_HPP_
+#ifndef CONCEPTS__BASE_HPP
+#define CONCEPTS__BASE_HPP
 
 #include <concepts>
 
@@ -33,7 +32,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept Integral = std::integral<T>;
 
     /**
@@ -41,7 +40,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept FloatingPoint = std::floating_point<T>;
 
     /**
@@ -49,7 +48,7 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     concept Arithmetic = Integral<T> || FloatingPoint<T>;
 
     /**
@@ -57,9 +56,9 @@ namespace pq
      *
      * @tparam T
      */
-    template <class T>
+    template <typename T>
     constexpr bool is_arithmetic_v = Arithmetic<T>;
 
 }   // namespace pq
 
-#endif   // _BASE_CONCEPTS_HPP_
+#endif   // CONCEPTS__BASE_HPP

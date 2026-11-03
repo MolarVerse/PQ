@@ -22,154 +22,162 @@
 
 #include <gtest/gtest.h>
 
-#include <limits>   // for numeric_limits
-#include <memory>   // for make_unique, unique_ptr
-#include <string>   // for string
+#include <limits>
+#include <memory>
+#include <string>
 
-#include "defaults.hpp"                // for default settings
-#include "exceptions.hpp"              // for InputFileException
-#include "hessianSettings.hpp"         // for HessianSettings
-#include "inputFileReader.hpp"         // for InputFileReader
-#include "manostatSettings.hpp"        // for ManostatSettings
-#include "optEngine.hpp"               // for OptEngine
-#include "optimizerSettings.hpp"       // for OptimizerSettings
-#include "potentialSettings.hpp"       // for PotentialSettings
-#include "qmSettings.hpp"              // for QMSettings
-#include "settings.hpp"                // for Settings
-#include "simulationBoxSettings.hpp"   // for SimulationBoxSettings
-#include "thermostatSettings.hpp"      // for ThermostatSettings
-#include "throwWithMessage.hpp"        // for ASSERT_THROW_MSG
-#include "timingsSettings.hpp"         // for TimingsSettings
-
-using namespace customException;
-using namespace input;
-using namespace settings;
+#include "defaults.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "hessianSettings.hpp"
+#include "inputFileReader.hpp"
+#include "manostatSettings.hpp"
+#include "optEngine.hpp"
+#include "optimizerSettings.hpp"
+#include "potentialSettings.hpp"
+#include "qmSettings.hpp"
+#include "simulationBoxSettings.hpp"
+#include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
+#include "timingsSettings.hpp"
+#include "units.hpp"
 
 class TestInputValidation : public ::testing::Test
 {
    protected:
+    Settings                                _settings;
+    std::unique_ptr<engine::OptEngine>      _engine;
+    std::unique_ptr<input::InputFileReader> _reader;
+
     void SetUp() override
     {
-        Settings::setJobtype(JobType::NONE);
-        HessianSettings::setOptimizeBeforeHessian(false);
+        settings::GeneralSettings::setJobtype(JobType::NONE);
+        _settings.hessianSettings.setOptimizeBeforeHessian(false);
 
-        OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT);
-        OptimizerSettings::setMinLearningRate(1.0e-15);
-        OptimizerSettings::setMaxLearningRate(1.0);
+        _settings.optimizerSettings.setLearningRateStrategy(
+            LearningRate::CONSTANT
+        );
+        _settings.optimizerSettings.setMinLearningRate(1.0e-15);
+        _settings.optimizerSettings.setMaxLearningRate(1.0);
 
-        ManostatSettings::setManostatType(ManostatType::NONE);
-        ManostatSettings::setTauManostat(
+        _settings.manostatSettings.setManostatType(ManostatType::NONE);
+        _settings.manostatSettings.setTau(
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
-        ThermostatSettings::setThermostatType(ThermostatType::NONE);
-        ThermostatSettings::setTargetTemperature(0.0);
-        ThermostatSettings::setStartTemperature(0.0);
-        ThermostatSettings::setEndTemperature(0.0);
-        ThermostatSettings::setTemperatureSet(false);
-        ThermostatSettings::setStartTemperatureSet(false);
-        ThermostatSettings::setEndTemperatureSet(false);
-        ThermostatSettings::setTemperatureRampSteps(0);
-        ThermostatSettings::setTemperatureRampFrequency(1);
-        ThermostatSettings::setRelaxationTime(
+        settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
+        settings::ThermostatSettings::setTargetTemperature(0.0);
+        settings::ThermostatSettings::setStartTemperature(0.0);
+        settings::ThermostatSettings::setEndTemperature(0.0);
+        settings::ThermostatSettings::setTemperatureSet(false);
+        settings::ThermostatSettings::setStartTemperatureSet(false);
+        settings::ThermostatSettings::setEndTemperatureSet(false);
+        settings::ThermostatSettings::setTemperatureRampSteps(0);
+        settings::ThermostatSettings::setTemperatureRampFrequency(1);
+        settings::ThermostatSettings::setRelaxationTime(
             defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
         );
-        ThermostatSettings::setFriction(defaults::LANGEVIN_THERMOSTAT_FRICTION);
-        SimulationBoxSettings::setInitializeVelocities(InitVelocities::FALSE);
+        settings::ThermostatSettings::setFriction(
+            defaults::LANGEVIN_THERMOSTAT_FRICTION
+        );
+        _settings.simulationBoxSettings.setInitializeVelocities(
+            InitVelocities::FALSE
+        );
 
-        PotentialSettings::setCoulombLongRangeType(
+        settings::PotentialSettings::setCoulombLongRangeType(
             CoulombLongRangeType::SHIFTED
         );
-        PotentialSettings::setCoulombRadiusCutOff(
+        settings::PotentialSettings::setCoulombRadiusCutOff(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
-        TimingsSettings::setTimeStep(0.5);
+        settings::TimingsSettings::setTimeStep(0.5);
 
-        QMSettings::setQMMethod(QMMethod::NONE);
-        QMSettings::setMaceModel(MaceModel::MEDIUM);
-        QMSettings::setMaceModelType(MaceModelType::MACE_MP);
-        QMSettings::setMaceModelPath("");
-        QMSettings::setSlakosType(SlakosType::NONE);
-        QMSettings::setUseThirdOrderDftb(false);
-        QMSettings::setIsThirdOrderDftbSet(false);
-        QMSettings::setIsHubbardDerivsSet(false);
-        QMSettings::setFennolModelPath("");
+        settings::QMSettings::setQMMethod(QMMethod::NONE);
+        settings::QMSettings::setMaceModel(MaceModel::MEDIUM);
+        settings::QMSettings::setMaceModelType(MaceModelType::MACE_MP);
+        settings::QMSettings::setMaceModelPath("");
+        settings::QMSettings::setSlakosType(SlakosType::NONE);
+        settings::QMSettings::setUseThirdOrderDftb(false);
+        settings::QMSettings::setIsThirdOrderDftbSet(false);
+        settings::QMSettings::setIsHubbardDerivsSet(false);
+        settings::QMSettings::setFennolModelPath("");
 
-        _engine = std::make_unique<engine::OptEngine>();
-        _reader = std::make_unique<InputFileReader>("input.in", *_engine);
+        _engine = std::make_unique<engine::OptEngine>(_settings);
+        _reader =
+            std::make_unique<input::InputFileReader>("input.in", _settings);
     }
 
-    void setKeyword(const std::string &keyword)
+    void _setKeyword(const std::string &keyword)
     {
         _reader->setKeywordCount(keyword, 1);
     }
 
-    void configureMDJob(const JobType jobType)
+    void _configureMDJob(const JobType jobType)
     {
-        Settings::setJobtype(jobType);
-        TimingsSettings::setNumberOfSteps(100);
-        setKeyword("nstep");
-        setKeyword("timestep");
+        settings::GeneralSettings::setJobtype(jobType);
+        settings::TimingsSettings::setNumberOfSteps(100);
+        _setKeyword("nstep");
+        _setKeyword("timestep");
         if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
-            setKeyword("qm_prog");
+            _setKeyword("qm_prog");
     }
 
-    void TearDown() override { settings::Settings::deactivateCellList(); }
-
-    std::unique_ptr<engine::OptEngine> _engine;
-    std::unique_ptr<InputFileReader>   _reader;
+    void TearDown() override
+    {
+        settings::GeneralSettings::deactivateCellList();
+    }
 };
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 {
-    Settings::setJobtype(JobType::MM_MD);
-    setKeyword("timestep");
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _setKeyword("timestep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
+        _reader->validateInputConfiguration(_settings),
+        exc::UserInputException,
         "Job type MM_MD selected. Please set nstep in the input file."
     );
 }
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 {
-    Settings::setJobtype(JobType::MM_OPT);
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
+        _reader->validateInputConfiguration(_settings),
+        exc::UserInputException,
         "Job type MM_OPT selected. Please set nstep in the input file."
     );
 }
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 {
-    Settings::setJobtype(JobType::MM_HESSIAN);
-    HessianSettings::setOptimizeBeforeHessian(true);
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.hessianSettings.setOptimizeBeforeHessian(true);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
+        _reader->validateInputConfiguration(_settings),
+        exc::UserInputException,
         "Job type MM_HESSIAN selected. Please set nstep in the input file."
     );
 }
 
 TEST_F(TestInputValidation, hessianWithoutOptimizationNeedsNoTimings)
 {
-    Settings::setJobtype(JobType::MM_HESSIAN);
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresTimeStepForMD)
 {
-    Settings::setJobtype(JobType::MM_MD);
-    setKeyword("nstep");
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
+        _reader->validateInputConfiguration(_settings),
+        exc::UserInputException,
         "Molecular Dynamics job type MM_MD selected. Please set the time step "
         "in the input file."
     );
@@ -177,117 +185,126 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
 
 TEST_F(TestInputValidation, requiresPressureForManostat)
 {
-    ManostatSettings::setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
-        "Pressure not set for berendsen manostat"
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
+        "Pressure not set for BERENDSEN manostat"
     );
 }
 
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
-    configureMDJob(JobType::MM_MD);
-    ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    ManostatSettings::setTauManostat(0.0001);
-    setKeyword("pressure");
+    _configureMDJob(JobType::MM_MD);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setTau(0.0001 * ps);
+    _setKeyword("pressure");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "The timestep must not exceed the manostat relaxation time"
     );
 }
 
 TEST_F(TestInputValidation, requiresQMProgramForQMJob)
 {
-    Settings::setJobtype(JobType::QM_MD);
-    setKeyword("nstep");
-    setKeyword("timestep");
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    _setKeyword("nstep");
+    _setKeyword("timestep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "QM job selected but the \"qm_prog\" keyword has not been set"
     );
 }
 
 TEST_F(TestInputValidation, requiresTemperatureForThermostat)
 {
-    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
-        "Target or end temperature not set for berendsen thermostat"
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
+        "Target or end temperature not set for BERENDSEN thermostat"
     );
 }
 
 TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
 {
-    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    setKeyword("temp");
-    setKeyword("end_temp");
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    _setKeyword("temp");
+    _setKeyword("end_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
-        "Both target and end temperature set for berendsen thermostat. They "
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
+        "Both target and end temperature set for BERENDSEN thermostat. They "
         "are mutually exclusive as they are treated as synonyms"
     );
 }
 
 TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
 {
-    configureMDJob(JobType::MM_MD);
-    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    ThermostatSettings::setEndTemperature(300.0);
-    setKeyword("end_temp");
+    _configureMDJob(JobType::MM_MD);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    settings::ThermostatSettings::setEndTemperature(300.0);
+    _setKeyword("end_temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
-    EXPECT_DOUBLE_EQ(ThermostatSettings::getTargetTemperature(), 0.0);
-    EXPECT_DOUBLE_EQ(ThermostatSettings::getActualTargetTemperature(), 0.0);
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
+    EXPECT_DOUBLE_EQ(settings::ThermostatSettings::getTargetTemperature(), 0.0);
+    EXPECT_DOUBLE_EQ(
+        settings::ThermostatSettings::getActualTargetTemperature(),
+        0.0
+    );
 }
 
 TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
 {
-    configureMDJob(JobType::MM_MD);
-    SimulationBoxSettings::setInitializeVelocities(InitVelocities::FORCE);
+    _configureMDJob(JobType::MM_MD);
+    _settings.simulationBoxSettings.setInitializeVelocities(
+        InitVelocities::FORCE
+    );
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Initializing velocities requires temp, start_temp, or end_temp"
     );
 }
 
 TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
 {
-    configureMDJob(JobType::MM_MD);
-    ThermostatSettings::setThermostatType(ThermostatType::VELOCITY_RESCALING);
-    ThermostatSettings::setTargetTemperature(300.0);
-    ThermostatSettings::setRelaxationTime(0.0001);
-    setKeyword("temp");
+    _configureMDJob(JobType::MM_MD);
+    settings::ThermostatSettings::setThermostatType(
+        ThermostatType::VELOCITY_RESCALING
+    );
+    settings::ThermostatSettings::setTargetTemperature(300.0);
+    settings::ThermostatSettings::setRelaxationTime(0.0001);
+    _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "The timestep must not exceed the thermostat relaxation time"
     );
 }
 
 TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 {
-    configureMDJob(JobType::MM_MD);
-    ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
-    ThermostatSettings::setTargetTemperature(300.0);
-    ThermostatSettings::setFriction(std::numeric_limits<double>::max());
-    setKeyword("temp");
+    _configureMDJob(JobType::MM_MD);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
+    settings::ThermostatSettings::setTargetTemperature(300.0);
+    settings::ThermostatSettings::setFriction(
+        std::numeric_limits<double>::max()
+    );
+    _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Langevin thermostat parameters produce a non-finite random-force "
         "scale"
     );
@@ -295,16 +312,18 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 
 TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 {
-    configureMDJob(JobType::MM_MD);
-    ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
-    ThermostatSettings::setTargetTemperature(300.0);
-    ThermostatSettings::setStartTemperature(std::numeric_limits<double>::max());
-    setKeyword("temp");
-    setKeyword("start_temp");
+    _configureMDJob(JobType::MM_MD);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
+    settings::ThermostatSettings::setTargetTemperature(300.0);
+    settings::ThermostatSettings::setStartTemperature(
+        std::numeric_limits<double>::max()
+    );
+    _setKeyword("temp");
+    _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Langevin thermostat parameters produce a non-finite random-force "
         "scale"
     );
@@ -312,63 +331,65 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 
 TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
-    configureMDJob(JobType::MM_MD);
-    settings::Settings::activateCellList();
-    PotentialSettings::setCoulombRadiusCutOff(0.0);
+    _configureMDJob(JobType::MM_MD);
+    settings::GeneralSettings::activateCellList();
+    settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "An active cell list requires rcoulomb to be greater than zero"
     );
 }
 
 TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    settings::Settings::activateCellList();
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+    settings::GeneralSettings::activateCellList();
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Cell lists are not available for pure QM simulations"
     );
 }
 
 TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
 {
-    ThermostatSettings::setThermostatType(ThermostatType::NOSE_HOOVER);
-    ThermostatSettings::setTargetTemperature(0.0);
-    setKeyword("temp");
+    settings::ThermostatSettings::setThermostatType(
+        ThermostatType::NOSE_HOOVER
+    );
+    settings::ThermostatSettings::setTargetTemperature(0.0);
+    _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Nose-Hoover target temperature must be greater than zero"
     );
 }
 
 TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
 {
-    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    ThermostatSettings::setTargetTemperature(0.0);
-    setKeyword("temp");
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    settings::ThermostatSettings::setTargetTemperature(0.0);
+    _setKeyword("temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 {
-    configureMDJob(JobType::MM_MD);
-    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    ThermostatSettings::setTemperatureRampSteps(200);
-    setKeyword("temp");
-    setKeyword("start_temp");
+    _configureMDJob(JobType::MM_MD);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    settings::ThermostatSettings::setTemperatureRampSteps(200);
+    _setKeyword("temp");
+    _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Number of total simulation steps 100 is smaller than the number of "
         "temperature ramping steps 200"
     );
@@ -376,16 +397,16 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 
 TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
 {
-    configureMDJob(JobType::MM_MD);
-    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    ThermostatSettings::setTemperatureRampSteps(2);
-    ThermostatSettings::setTemperatureRampFrequency(4);
-    setKeyword("temp");
-    setKeyword("start_temp");
+    _configureMDJob(JobType::MM_MD);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    settings::ThermostatSettings::setTemperatureRampSteps(2);
+    settings::ThermostatSettings::setTemperatureRampFrequency(4);
+    _setKeyword("temp");
+    _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Temperature ramp frequency 4 is larger than the number of ramping "
         "steps 2"
     );
@@ -393,73 +414,73 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
 
 TEST_F(TestInputValidation, acceptsDefaultTemperatureRampLength)
 {
-    configureMDJob(JobType::MM_MD);
-    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    ThermostatSettings::setTemperatureRampFrequency(100);
-    setKeyword("temp");
-    setKeyword("start_temp");
+    _configureMDJob(JobType::MM_MD);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    settings::ThermostatSettings::setTemperatureRampFrequency(100);
+    _setKeyword("temp");
+    _setKeyword("start_temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresReplicaCountForRingPolymer)
 {
-    configureMDJob(JobType::RING_POLYMER_QM_MD);
+    _configureMDJob(JobType::RING_POLYMER_QM_MD);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Number of beads not set for ring polymer simulation"
     );
 }
 
 TEST_F(TestInputValidation, acceptsReplicaCountForRingPolymer)
 {
-    configureMDJob(JobType::RING_POLYMER_QM_MD);
-    setKeyword("rpmd_n_replica");
+    _configureMDJob(JobType::RING_POLYMER_QM_MD);
+    _setKeyword("rpmd_n_replica");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::NONE);
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::NONE);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
     );
 }
 
 TEST_F(TestInputValidation, requiresPathForCustomSlaterKosterParameters)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "Custom Slater-Koster parameters require the \"slakos_path\" keyword"
     );
 }
 
 TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setUseThirdOrderDftb(false);
-    setKeyword("slakos_path");
-    setKeyword("third_order");
-    setKeyword("hubbard_derivs");
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
+    settings::QMSettings::setUseThirdOrderDftb(false);
+    _setKeyword("slakos_path");
+    _setKeyword("third_order");
+    _setKeyword("hubbard_derivs");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
         "This setup is invalid."
     );
@@ -467,30 +488,30 @@ TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
 
 TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setUseThirdOrderDftb(true);
-    setKeyword("slakos_path");
-    setKeyword("third_order");
-    setKeyword("hubbard_derivs");
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
+    settings::QMSettings::setUseThirdOrderDftb(true);
+    _setKeyword("slakos_path");
+    _setKeyword("third_order");
+    _setKeyword("hubbard_derivs");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 #ifdef WITH_ASE
 TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(false);
-    setKeyword("third_order");
-    setKeyword("hubbard_derivs");
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
+    settings::QMSettings::setUseThirdOrderDftb(false);
+    _setKeyword("third_order");
+    _setKeyword("hubbard_derivs");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "You have set custom Hubbard derivatives but disabled 3rd order DFTB. "
         "This setup is invalid."
     );
@@ -498,24 +519,24 @@ TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
 
 TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::ASEDFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(false);
-    setKeyword("hubbard_derivs");
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
+    settings::QMSettings::setUseThirdOrderDftb(false);
+    _setKeyword("hubbard_derivs");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 #endif
 
 TEST_F(TestInputValidation, requiresFennolModelPath)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::FENNOL);
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::FENNOL);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "The FeNNol QM runner has been selected but the "
         "\"fennol_model_path\" keyword has not been set. This setup is invalid."
     );
@@ -523,47 +544,47 @@ TEST_F(TestInputValidation, requiresFennolModelPath)
 
 TEST_F(TestInputValidation, acceptsFennolModelPath)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::FENNOL);
-    setKeyword("fennol_model_path");
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::FENNOL);
+    _setKeyword("fennol_model_path");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    QMSettings::setMaceModel(MaceModel::MEDIUMOMAT0);
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::MACE);
+    settings::QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
+    settings::QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
-        "The 'medium-omat-0' model size is only compatible with the 'mace_mp' "
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
+        "The 'MEDIUM_OMAT_0' model size is only compatible with the 'MACE_MP' "
         "model type."
     );
 }
 
 TEST_F(TestInputValidation, acceptsStandardMaceModelForNonMpType)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    QMSettings::setMaceModel(MaceModel::SMALL);
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::MACE);
+    settings::QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
+    settings::QMSettings::setMaceModel(MaceModel::SMALL);
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceModel(MaceModel::CUSTOM);
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::MACE);
+    settings::QMSettings::setMaceModel(MaceModel::CUSTOM);
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "You have requested a custom MACE model but haven't provided a MACE "
         "model path.This setup is invalid."
     );
@@ -571,14 +592,14 @@ TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
 
 TEST_F(TestInputValidation, rejectsPathForBundledMaceModel)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceModel(MaceModel::MEDIUMOMAT0);
-    setKeyword("mace_model_path");
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::MACE);
+    settings::QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
+    _setKeyword("mace_model_path");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        InputFileException,
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
         "You have set a custom MACE model path without requesting a custom "
         "mace model size.This setup is invalid."
     );
@@ -586,28 +607,30 @@ TEST_F(TestInputValidation, rejectsPathForBundledMaceModel)
 
 TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
 {
-    configureMDJob(JobType::QM_MD);
-    QMSettings::setQMMethod(QMMethod::MACE);
-    QMSettings::setMaceModel(MaceModel::CUSTOM);
-    ManostatSettings::setManostatType(ManostatType::BERENDSEN);
-    ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    setKeyword("mace_model_path");
-    setKeyword("pressure");
-    setKeyword("temp");
+    _configureMDJob(JobType::QM_MD);
+    settings::QMSettings::setQMMethod(QMMethod::MACE);
+    settings::QMSettings::setMaceModel(MaceModel::CUSTOM);
+    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    _setKeyword("mace_model_path");
+    _setKeyword("pressure");
+    _setKeyword("temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
-    Settings::setJobtype(JobType::MM_OPT);
-    TimingsSettings::setNumberOfSteps(100);
-    OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT_DECAY);
-    setKeyword("nstep");
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.optimizerSettings.setLearningRateStrategy(
+        LearningRate::CONSTANT_DECAY
+    );
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
+        _reader->validateInputConfiguration(_settings),
+        exc::UserInputException,
         "The constant-decay learning rate strategy requires "
         "learning-rate-decay."
     );
@@ -615,14 +638,16 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 
 TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 {
-    Settings::setJobtype(JobType::MM_OPT);
-    TimingsSettings::setNumberOfSteps(100);
-    OptimizerSettings::setLearningRateStrategy(LREnum::EXPONENTIAL_DECAY);
-    setKeyword("nstep");
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.optimizerSettings.setLearningRateStrategy(
+        LearningRate::EXPONENTIAL_DECAY
+    );
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
+        _reader->validateInputConfiguration(_settings),
+        exc::UserInputException,
         "The exponential-decay learning rate strategy requires "
         "learning-rate-decay."
     );
@@ -630,55 +655,42 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 
 TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
-    Settings::setJobtype(JobType::MM_OPT);
-    TimingsSettings::setNumberOfSteps(100);
-    OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT);
-    setKeyword("nstep");
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.optimizerSettings.setLearningRateStrategy(LearningRate::CONSTANT);
+    _setKeyword("nstep");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration());
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
 TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
-    Settings::setJobtype(JobType::MM_OPT);
-    TimingsSettings::setNumberOfSteps(100);
-    OptimizerSettings::setLearningRateStrategy(LREnum::LINESEARCH_WOLFE);
-    setKeyword("nstep");
-
-    ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
-        "The Wolfe line search learning rate strategy is not yet implemented"
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.optimizerSettings.setLearningRateStrategy(
+        LearningRate::LINESEARCH_WOLFE
     );
-}
-
-TEST_F(TestInputValidation, rejectsMissingLearningRateStrategy)
-{
-    Settings::setJobtype(JobType::MM_OPT);
-    TimingsSettings::setNumberOfSteps(100);
-    OptimizerSettings::setLearningRateStrategy(LREnum::NONE);
-    setKeyword("nstep");
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
-        "In order to run the optimizer, you need to specify a learning rate "
-        "strategy."
+        _reader->validateInputConfiguration(_settings),
+        exc::UserInputException,
+        "The Wolfe line search learning rate strategy is not yet implemented"
     );
 }
 
 TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
-    Settings::setJobtype(JobType::MM_OPT);
-    TimingsSettings::setNumberOfSteps(100);
-    OptimizerSettings::setLearningRateStrategy(LREnum::CONSTANT);
-    OptimizerSettings::setMinLearningRate(0.5);
-    OptimizerSettings::setMaxLearningRate(0.5);
-    setKeyword("nstep");
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.optimizerSettings.setLearningRateStrategy(LearningRate::CONSTANT);
+    _settings.optimizerSettings.setMinLearningRate(0.5);
+    _settings.optimizerSettings.setMaxLearningRate(0.5);
+    _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(),
-        UserInputException,
+        _reader->validateInputConfiguration(_settings),
+        exc::UserInputException,
         "The minimum learning rate 0.5 is greater or equal to the maximum "
         "learning rate 0.5, which is not allowed."
     );

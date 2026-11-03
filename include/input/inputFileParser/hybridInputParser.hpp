@@ -20,20 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP
 
-#define _HYBRID_INPUT_PARSER_HPP_
-
-#include <cstddef>   // for size_t
-
-#include "inputFileParser.hpp"   // for InputFileParser
+#include "inputFileParser.hpp"
 
 namespace input
 {
     /**
-     * @class HybridInputParser inherits from InputFileParser
+     * @brief HybridInputParser inherits from InputFileParser
      *
-     * @brief Parses the general commands in the input file
+     * @details Parses the general commands in the input file
      *
      */
     class HybridInputParser : public InputFileParser
@@ -41,47 +38,23 @@ namespace input
        public:
         HybridInputParser();
 
-        void parseInnerRegionCenter(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseForcedCoreList(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseForcedLayerList(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseForcedOuterList(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseUseQMCharges(const std::vector<std::string> &, const size_t);
-        void parseCoreRadius(const std::vector<std::string> &, const size_t);
-        void parseLayerRadius(const std::vector<std::string> &, const size_t);
-        void parseSmoothingRegionThickness(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parsePointChargeThickness(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseSmoothingMethod(
-            const std::vector<std::string> &,
-            const size_t
-        );
-        void parseQMForceDistribution(
-            const std::vector<std::string> &,
-            const size_t
-        );
+        void addInnerRegionCenterKey();
+        void addForcedCoreListKey();
+        void addForcedLayerListKey();
+        void addForcedOuterListKey();
+        void addUseQMChargesKey();
+        void addCoreRadiusKey();
+        void addLayerRadiusKey();
+        void addSmoothingRegionThicknessKey();
+        void addPointChargeThicknessKey();
+        void addSmoothingMethodKey();
+        void addQMForceDistributionKey();
 
-        std::vector<int> parseSelection(
+        static std::vector<int> parseSelection(
             const std::string &,
             const std::string &
         );
-        std::vector<int> parseSelectionNoPython(
+        static std::vector<int> parseSelectionNoPython(
             const std::string &,
             const std::string &
         );
@@ -89,4 +62,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _HYBRID_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP

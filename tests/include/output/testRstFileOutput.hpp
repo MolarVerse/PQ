@@ -20,18 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_RSTFILEOUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_RST_FILE_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_RST_FILE_OUTPUT_HPP
 
-#define _TEST_RSTFILEOUTPUT_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for allocator
-
-#include "atom.hpp"            // for Atom
-#include "molecule.hpp"        // for Molecule
-#include "rstFileOutput.hpp"   // for RstFileOutput
-#include "simulationBox.hpp"   // for SimulationBox
+#include "atom.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "rstFileOutput.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class TestRstFileOutput
@@ -42,31 +42,33 @@
 class TestRstFileOutput : public ::testing::Test
 {
    protected:
+    std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
+    std::unique_ptr<molsys::SimulationBox> _simulationBox;
+
     void SetUp() override
     {
-        _rstFileOutput = new output::RstFileOutput("default.rst");
-        _simulationBox = new molsys::SimulationBox();
+        _rstFileOutput = std::make_unique<out::RstFileOutput>("default.rst");
+        _simulationBox = std::make_unique<molsys::SimulationBox>();
 
-        _simulationBox->setBoxDimensions({10.0, 10.0, 10.0});
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _simulationBox->setBox(orthoBox, false);
 
         auto molecule1 = molsys::Molecule();
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        molecule1.setNumberOfAtoms(2);
-
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom1->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linearAlgebra::Vec3D(2.0, 3.0, 4.0));
-        atom1->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(3.0, 4.0, 5.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
+        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
         atom1->setName("H");
         atom2->setName("O");
         atom1->setPartialCharge(1.0);
         atom2->setPartialCharge(-1.0);
-        molecule1.setMoltype(1);
+        molecule1.setMoltype(MolType{1});
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
@@ -74,14 +76,12 @@ class TestRstFileOutput : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        molecule2.setNumberOfAtoms(1);
-
-        atom3->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setForce(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         atom3->setName("Ar");
         atom3->setPartialCharge(0.0);
-        molecule2.setMoltype(2);
+        molecule2.setMoltype(MolType{2});
         molecule2.addAtom(atom3);
 
         _simulationBox->addMolecule(molecule1);
@@ -90,14 +90,9 @@ class TestRstFileOutput : public ::testing::Test
 
     void TearDown() override
     {
-        delete _rstFileOutput;
-        delete _simulationBox;
         const auto errorCode = std::remove("default.rst");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rst";
     }
-
-    output::RstFileOutput *_rstFileOutput;
-    molsys::SimulationBox *_simulationBox;
 };
 
-#endif   // _TEST_RSTFILEOUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_RST_FILE_OUTPUT_HPP

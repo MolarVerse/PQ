@@ -20,19 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "exceptions.hpp"   // for InputFileException, customException
-#include "gtest/gtest.h"    // for Message, TestPartResult
+#include "enums/integrator.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "integratorInputParser.hpp"
-#include "mdEngine.hpp"              // for Engine
-#include "testInputFileReader.hpp"   // for TestInputFileReader
-#include "throwWithMessage.hpp"      // for ASSERT_THROW_MSG
-
-using namespace input;
+#include "referenceSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "integrator" command
@@ -42,15 +41,31 @@ using namespace input;
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    IntegratorInputParser    parser;
+    ReferenceSettings            referenceSettings;
+    input::IntegratorInputParser parser(referenceSettings);
+    const auto                   funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("integrator"));
+    const auto &parseFunc = funcMap.at("integrator");
+
+    settings::GeneralSettings::setIntegratorType(IntegratorType::NONE);
+
     std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
-    parser.parseIntegrator(lineElements, 0);
-    EXPECT_EQ(_mdEngine->getIntegrator().getIntegratorType(), "VelocityVerlet");
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(
+        settings::GeneralSettings::getIntegratorType(),
+        IntegratorType::VELOCITY_VERLET
+    );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::VELOCITY_VERLET_FILE
+    ));
+
+    _clearParser(parser);
 
     lineElements = {"integrator", "=", "notValid"};
     ASSERT_THROW_MSG(
-        parser.parseIntegrator(lineElements, 0),
-        customException::InputFileException,
-        "Invalid integrator \"notValid\" at line 0 in input file"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"integrator\" at line 0 in input "
+        "file. Allowed values: none, velocity_verlet, v_verlet"
     );
 }

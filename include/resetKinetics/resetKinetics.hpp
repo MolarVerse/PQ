@@ -20,12 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_HPP_
+#ifndef RESET_KINETICS__RESET_KINETICS_HPP
+#define RESET_KINETICS__RESET_KINETICS_HPP
 
-#define _RESET_KINETICS_HPP_
+#include <cstddef>
+#include <mstd/types.hpp>
 
-#include <cstddef>   // for size_t
-
+#include "resetKineticsSettings.hpp"
 #include "vector3d.hpp"
 
 namespace physicalData
@@ -49,60 +50,33 @@ namespace resetKinetics
      */
     class ResetKinetics
     {
-       protected:
-        size_t _nStepsTemperatureReset;
-        size_t _frequencyTemperatureReset;
-        size_t _nStepsMomentumReset;
-        size_t _frequencyMomentumReset;
-        size_t _nStepsAngularReset;
-        size_t _frequencyAngularReset;
-        size_t _nStepsForcesReset;
-
-        double               _temperature = 0.0;
-        linearAlgebra::Vec3D _momentum;
-        linearAlgebra::Vec3D _angularMomentum;
+       private:
+        mstd::ConstRef<ResetKineticsSettings> _settings;
 
        public:
-        ResetKinetics() = default;
-        ResetKinetics(
-            const size_t nStepsTemperatureReset,
-            const size_t frequencyTemperatureReset,
-            const size_t nStepsMomentumReset,
-            const size_t frequencyMomentumReset,
-            const size_t nStepsAngularReset,
-            const size_t frequencyAngularReset,
-            const size_t nStepsForcesReset
-        );
+        explicit ResetKinetics(const ResetKineticsSettings &settings);
 
         void reset(
-            const size_t step,
+            size_t step,
             physicalData::PhysicalData &,
             molsys::SimulationBox &
+        ) const;
+        void resetForces(size_t step, molsys::SimulationBox &) const;
+
+        static void resetTemperature(
+            molsys::SimulationBox &,
+            double temperature
         );
-        void resetTemperature(molsys::SimulationBox &);
-        void resetMomentum(molsys::SimulationBox &);
-        void resetAngularMomentum(molsys::SimulationBox &);
-        void resetForces(const size_t step, molsys::SimulationBox &);
-
-        /********************
-         * standard setters *
-         *******************/
-
-        void setTemperature(const double temperature);
-        void setMomentum(const linearAlgebra::Vec3D &momentum);
-        void setAngularMomentum(const linearAlgebra::Vec3D &angularMomentum);
-
-        /********************
-         * standard getters *
-         *******************/
-
-        [[nodiscard]] size_t getNStepsTemperatureReset() const;
-        [[nodiscard]] size_t getFrequencyTemperatureReset() const;
-        [[nodiscard]] size_t getNStepsMomentumReset() const;
-        [[nodiscard]] size_t getFrequencyMomentumReset() const;
-        [[nodiscard]] size_t getNStepsForcesReset() const;
+        static void resetMomentum(
+            molsys::SimulationBox &,
+            const linalg::Vec3D &momentum
+        );
+        static void resetAngularMomentum(
+            molsys::SimulationBox &,
+            const linalg::Vec3D &angularMomentum
+        );
     };
 
 }   // namespace resetKinetics
 
-#endif   // _RESET_KINETICS_HPP_
+#endif   // RESET_KINETICS__RESET_KINETICS_HPP

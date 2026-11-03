@@ -27,80 +27,86 @@
 #include "atom.hpp"
 #include "celllist.hpp"
 #include "constraints.hpp"
+#include "enums/virial.hpp"
 #include "forceFieldClass.hpp"
+#include "generalSettings.hpp"
 #include "intraNonBonded.hpp"
 #include "mmEvaluator.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
-
-using namespace opt;
-using molsys::Atom;
-using molsys::CellList;
-using molsys::Molecule;
-using molsys::SimulationBox;
-using physicalData::PhysicalData;
 
 namespace
 {
-    // Wire an MMEvaluator with the minimum set of dependencies needed for
+    // Wire an opt::MMEvaluator with the minimum set of dependencies needed for
     // evaluate() to walk through all of its calls without throwing.
-    void wireUp(MMEvaluator &eval)
+    void wireUp(opt::MMEvaluator& eval, molsys::CellList& cellList)
     {
-        auto box = std::make_shared<SimulationBox>();
-        box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        auto box = std::make_shared<molsys::SimulationBox>();
+
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        box->setBox(orthoBox, false);
 
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
-        auto mol = Molecule();
-        mol.setNumberOfAtoms(2);
+        auto mol = molsys::Molecule();
 
-        auto a1 = std::make_shared<Atom>();
-        auto a2 = std::make_shared<Atom>();
-        a1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        a2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        a1->setForce(linearAlgebra::Vec3D(0.5, 0.0, 0.0));
-        a2->setForce(linearAlgebra::Vec3D(0.0, 0.5, 0.0));
-        a1->setMass(1.0);
-        a2->setMass(1.0);
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom1->setForce(linalg::Vec3D(0.5, 0.0, 0.0));
+        atom2->setForce(linalg::Vec3D(0.0, 0.5, 0.0));
+        atom1->setMass(1.0);
+        atom2->setMass(1.0);
 
-        mol.addAtom(a1);
-        mol.addAtom(a2);
+        mol.addAtom(atom1);
+        mol.addAtom(atom2);
 
         box->addMolecule(mol);
-        box->addAtom(a1);
-        box->addAtom(a2);
+        box->addAtom(atom1);
+        box->addAtom(atom2);
 
         eval.setSimulationBox(box);
-        eval.setCellList(std::make_shared<CellList>());
-        eval.setPotential(std::make_shared<potential::PotentialBruteForce>());
-        eval.setPhysicalData(std::make_shared<PhysicalData>());
-        eval.setPhysicalDataOld(std::make_shared<PhysicalData>());
-        eval.setForceField(std::make_shared<forceField::ForceField>());
+        eval.setCellList(cellList);
+        eval.setPotential(std::make_shared<pot::PotentialBruteForce>());
+        eval.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
+        eval.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
+        eval.setForceField(std::make_shared<ff::ForceField>());
         eval.setIntraNonBonded(
 
             std::make_shared<intraNonBonded::IntraNonBonded>()
 
         );
-        eval.setConstraints(std::make_shared<constraints::Constraints>());
+        Settings settings;
+        eval.setConstraints(
+            std::make_shared<constraints::Constraints>(
+                settings.constraintSettings
+            )
+        );
 
-        settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
+        settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
     }
 }   // namespace
 
 TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 {
-    const MMEvaluator src;
-    const auto        cloned = src.clone();
+    Settings               settings;
+    const opt::MMEvaluator src{settings};
+    const auto             cloned = src.clone();
     ASSERT_NE(cloned, nullptr);
-    EXPECT_NE(std::dynamic_pointer_cast<MMEvaluator>(cloned), nullptr);
+    EXPECT_NE(std::dynamic_pointer_cast<opt::MMEvaluator>(cloned), nullptr);
 }
 
 TEST(TestMMEvaluator, evaluateRunsWithMinimalDependencies)
 {
-    MMEvaluator eval;
-    wireUp(eval);
+    Settings         settings;
+    opt::MMEvaluator eval{settings};
+    molsys::CellList cellList;
+    wireUp(eval, cellList);
     EXPECT_NO_THROW(eval.evaluate());
 }
 
@@ -109,47 +115,52 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     // After evaluate(), the brute-force loop on a single molecule produces no
     // inter-molecular force contribution, and the cleared force buffer should
     // be (0, 0, 0) per atom.
-    MMEvaluator eval;
-    wireUp(eval);
+    Settings         settings;
+    opt::MMEvaluator eval{settings};
+    molsys::CellList cellList;
+    wireUp(eval, cellList);
 
     // Borrow the wired-up simulation box back from a fresh setup by re-wiring
     // a second evaluator on the same shared structures isn't trivial, so test
     // the post-condition via the evaluator's own evaluate() exit state.
     eval.evaluate();
 
-    // We can't reach the box pointer through MMEvaluator's public API, so
+    // We can't reach the box pointer through opt::MMEvaluator's public API, so
     // re-wire a fresh evaluator with a known shared box and check the box.
-    auto box = std::make_shared<SimulationBox>();
-    box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+    auto box = std::make_shared<molsys::SimulationBox>();
 
-    auto mol = Molecule();
-    mol.setNumberOfAtoms(1);
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    box->setBox(orthoBox, false);
 
-    auto a = std::make_shared<Atom>();
-    a->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-    a->setForce(linearAlgebra::Vec3D(7.0, 7.0, 7.0));
-    a->setMass(1.0);
-    mol.addAtom(a);
+    auto mol = molsys::Molecule();
+
+    auto atom = std::make_shared<molsys::Atom>();
+    atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom->setForce(linalg::Vec3D(7.0, 7.0, 7.0));
+    atom->setMass(1.0);
+    mol.addAtom(atom);
 
     box->addMolecule(mol);
-    box->addAtom(a);
+    box->addAtom(atom);
 
-    MMEvaluator eval2;
+    Settings         settings2;
+    opt::MMEvaluator eval2{settings2};
+    molsys::CellList cellList2;
     eval2.setSimulationBox(box);
-    eval2.setCellList(std::make_shared<CellList>());
-    eval2.setPotential(std::make_shared<potential::PotentialBruteForce>());
-    eval2.setPhysicalData(std::make_shared<PhysicalData>());
-    eval2.setPhysicalDataOld(std::make_shared<PhysicalData>());
-    eval2.setForceField(std::make_shared<forceField::ForceField>());
+    eval2.setCellList(cellList2);
+    eval2.setPotential(std::make_shared<pot::PotentialBruteForce>());
+    eval2.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
+    eval2.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
+    eval2.setForceField(std::make_shared<ff::ForceField>());
     eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
-    eval2.setConstraints(std::make_shared<constraints::Constraints>());
+    ConstraintSettings constraintSettings;
+    eval2.setConstraints(
+        std::make_shared<constraints::Constraints>(constraintSettings)
+    );
 
-    settings::Settings::setVirialType(settings::VirialType::MOLECULAR);
+    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
 
     eval2.evaluate();
 
-    EXPECT_EQ(
-        box->getAtoms()[0]->getForce(),
-        linearAlgebra::Vec3D(0.0, 0.0, 0.0)
-    );
+    EXPECT_EQ(box->getAtoms()[0]->getForce(), linalg::Vec3D(0.0, 0.0, 0.0));
 }

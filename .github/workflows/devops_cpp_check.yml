@@ -1,0 +1,133 @@
+name: DevOps C++ Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+      - NEXT
+  workflow_dispatch:
+
+# Only superseded pull_request runs are cancelled; manual runs each get their
+# own group (see ci_build.yml for the rationale).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - '**/*.cpp'
+              - '**/*.hpp'
+              - '**/*.c'
+              - '**/*.h'
+              - 'devops.toml'
+              - '.github/workflows/devops_cpp_check.yml'
+              - '.github/actions/setup-gcc/**'
+
+  cpp-check:
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
+    runs-on: ubuntu-24.04
+    name: Run DevOps C++ Checks
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          # full history so the merge-base with the PR base commit resolves
+          fetch-depth: 0
+
+      # Clang, not GCC: devops' AST checks parse this project's files with
+      # libclang, which can't handle GCC-specific SIMD-intrinsic builtins
+      # (e.g. the __builtin_ia32_* used by <xmmintrin.h>, pulled in
+      # transitively by Eigen) found via a GCC-generated compile_commands.json
+      # — that surfaced as spurious "too many errors emitted" / "file not
+      # found" AST-check failures unrelated to the actual change being
+      # checked. Clang generates commands libclang (itself a Clang frontend)
+      # parses natively. g++-14 is still installed for its libstdc++ (clang
+      # auto-detects the newest one on PATH for C++23 <format>/<ranges>), as
+      # in clang_build.yml.
+      - name: Install clang
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: clang-20 libclang-rt-20-dev g++-14
+          version: 1.0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+          cache-dependency-path: 'external/devops/pyproject.toml'
+
+      - name: Install devops package with AST support
+        run: |
+          pip install --upgrade pip
+          pip install -e "external/devops[ast]"
+          pip install ase
+        shell: bash
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      - name: Configure CMake (generate compile_commands.json)
+        run: |
+          cmake -S . -B .build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=ON \
+            -DBUILD_WITH_DOCS=OFF \
+            -DBUILD_WITH_PERF_BENCH=ON \
+            -DBUILD_WITH_BENCHMARKING=ON \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+        env:
+          CC: clang-20
+          CXX: clang++-20
+        shell: bash
+
+      - name: Run cpp_checks
+        run: |
+          if [[ -n "${BASE_SHA}" ]]; then
+            cpp_checks --base-ref "${BASE_SHA}"
+          else
+            cpp_checks
+          fi
+        env:
+          # empty on workflow_dispatch -> check all files
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+
+  cpp-check-gate:
+    if: always()
+    needs: [changes, cpp-check]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check cpp-check result
+        run: |
+          if [[ "${{ needs.cpp-check.result }}" == "failure" ]]; then
+            exit 1
+          fi
+          echo "OK — devops cpp_checks passed or was skipped (no relevant paths changed)"

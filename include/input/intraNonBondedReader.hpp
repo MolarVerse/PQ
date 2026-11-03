@@ -20,14 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTRA_NON_BONDED_READER_HPP_
+#ifndef INPUT__INTRA_NON_BONDED_READER_HPP
+#define INPUT__INTRA_NON_BONDED_READER_HPP
 
-#define _INTRA_NON_BONDED_READER_HPP_
+#include <cstddef>
+#include <fstream>
+#include <iosfwd>
+#include <string>
 
-#include <cstddef>   // for size_t
-#include <fstream>   // for ifstream
-#include <iosfwd>    // for ifstream
-#include <string>    // for string
+#include "strongTypes.hpp"
 
 namespace engine
 {
@@ -37,7 +38,7 @@ namespace engine
 namespace input::intraNonBondedReader
 {
     void               readIntraNonBondedFile(engine::Engine &);
-    [[nodiscard]] bool isNeeded(const engine::Engine &engine);
+    [[nodiscard]] bool isNeeded();
 
     /**
      * @class IntraNonBondedReader
@@ -61,10 +62,11 @@ namespace input::intraNonBondedReader
             engine::Engine    &engine
         );
 
-        void                 read();
-        void                 processMolecule(const size_t moleculeType);
-        void                 checkDuplicates() const;
-        [[nodiscard]] size_t findMoleculeType(const std::string &) const;
+        void read();
+        void processMolecule(MolType moleculeType);
+        void checkDuplicates() const;
+        [[nodiscard]]
+        MolType findMoleculeType(const std::string &) const;
 
         void setFileName(const std::string_view &fileName);
         void reInitializeFp();
@@ -72,4 +74,4 @@ namespace input::intraNonBondedReader
 
 }   // namespace input::intraNonBondedReader
 
-#endif   // _INTRA_NON_BONDED_READER_HPP_
+#endif   // INPUT__INTRA_NON_BONDED_READER_HPP

@@ -22,86 +22,121 @@
 
 #include "triclinicBox.hpp"
 
-#include "box.hpp"
-#include "constants.hpp"          // for constants
-#include "manostatSettings.hpp"   // for ManostatSettings
+#include <memory>
+#include <mstd/debugging.hpp>
+#include <mstd/math.hpp>
 
-using namespace linearAlgebra;
-using namespace settings;
-using namespace constants;
+#include "box.hpp"
+#include "defaults.hpp"
+#include "staticMatrix.hpp"
+#include "units.hpp"
+#include "vector3d.hpp"
 
 namespace molsys
 {
+
+    /**
+     * @brief Construct a new Triclinic Box object
+     *
+     * @param boxDimensions
+     * @param boxAngles
+     * @param allowChangeOfAngles Whether the box is allowed to change its
+     * angles during simulation.
+     */
+    TriclinicBox::TriclinicBox(
+        const linalg::Vec3D &boxDimensions,
+        const linalg::Vec3D &boxAngles,
+        bool                 allowChangeOfAngles
+    )
+        : Box(boxDimensions, boxAngles),
+          _allowChangeOfAngles(allowChangeOfAngles)
+    {
+    }
+
+    /** @brief Copy the cell geometry into an independent box. */
+    std::unique_ptr<Box> TriclinicBox::clone() const
+    {
+        return std::make_unique<TriclinicBox>(*this);
+    }
 
     /**
      * @brief Calculate the volume of the box
      *
      * @return volume
      */
-    double TriclinicBox::calculateVolume() { return det(_boxMatrix); }
-
-    /**
-     * @brief set box angles and recalculate the box matrix
-     *
-     * @details convert the angles from degrees to radians, calculate the
-     * transformation matrix and the box matrix
-     *
-     * @param boxAngles
-     */
-    void TriclinicBox::setBoxAngles(const Vec3D &boxAngles)
+    double TriclinicBox::_calculateVolume(const linalg::tensor3D &boxMatrix)
     {
-        _boxAngles = boxAngles * DEG_TO_RAD;
-
-        calculateTransformationMatrix();
-        calculateBoxMatrix();
+        return det(boxMatrix);
     }
 
     /**
-     * @brief set box dimensions and recalculate the box matrix
+     * @brief Get the volume of the box (cached)
      *
-     * @param boxDimensions
+     * @return volume
      */
-    void TriclinicBox::setBoxDimensions(const Vec3D &boxDimensions)
-    {
-        _boxDimensions = boxDimensions;
-
-        calculateBoxMatrix();
-    }
+    double TriclinicBox::getVolume() const { return _volume.get(*this); }
 
     /**
      * @brief Calculate the box matrix from the box dimensions and angles
      *
      */
-    void TriclinicBox::calculateBoxMatrix()
+    linalg::tensor3D TriclinicBox::_calculateBoxMatrix(
+        const linalg::Vec3D    &boxDimensions,
+        const linalg::tensor3D &transformationMatrix
+    )
     {
-        _boxMatrix[0][0] = _boxDimensions[0];
-        _boxMatrix[0][1] = _boxDimensions[1] * _transformationMatrix[0][1];
-        _boxMatrix[0][2] = _boxDimensions[2] * _transformationMatrix[0][2];
+        linalg::tensor3D boxMatrix{0.0};
 
-        _boxMatrix[1][1] = _boxDimensions[1] * _transformationMatrix[1][1];
-        _boxMatrix[1][2] = _boxDimensions[2] * _transformationMatrix[1][2];
+        boxMatrix[0] = boxDimensions * transformationMatrix[0];
+        boxMatrix[1] = boxDimensions * transformationMatrix[1];
+        boxMatrix[2] = boxDimensions * transformationMatrix[2];
 
-        _boxMatrix[2][2] = _boxDimensions[2] * _transformationMatrix[2][2];
+        return boxMatrix;
     }
 
     /**
      * @brief Calculate the rotation matrix
      *
+     * @param boxAngles
+     * @return linalg::tensor3D
      */
-    void TriclinicBox::calculateTransformationMatrix()
+    linalg::tensor3D TriclinicBox::_calculateTransformationMatrix(
+        const Angles3D &boxAngles
+    )
     {
-        _transformationMatrix[0][0] = 1.0;
-        _transformationMatrix[0][1] = cosGamma();
-        _transformationMatrix[0][2] = cosBeta();
+        const auto cosGamma = _cosGamma(boxAngles);
+        const auto sinGamma = _sinGamma(boxAngles);
+        const auto cosBeta  = _cosBeta(boxAngles);
 
-        _transformationMatrix[1][1]  = sinGamma();
-        _transformationMatrix[1][2]  = cosAlpha() - cosBeta() * cosGamma();
-        _transformationMatrix[1][2] /= sinGamma();
+        linalg::tensor3D transformationMatrix{0.0};
 
-        const auto sumcos_2          = sum(cos(_boxAngles) * cos(_boxAngles));
-        const auto prodcos           = prod(cos(_boxAngles));
-        _transformationMatrix[2][2]  = ::sqrt(1.0 - sumcos_2 + 2 * prodcos);
-        _transformationMatrix[2][2] /= sinGamma();
+        transformationMatrix[0][0] = 1;
+        transformationMatrix[0][1] = cosGamma;
+        transformationMatrix[0][2] = cosBeta;
+
+        transformationMatrix[1][1]  = sinGamma;
+        transformationMatrix[1][2]  = _cosAlpha(boxAngles) - cosBeta * cosGamma;
+        transformationMatrix[1][2] /= sinGamma;
+
+        const auto cosAngles = linalg::cos(boxAngles);
+        const auto sumcos_2  = sum(cosAngles * cosAngles);
+        const auto prodcos   = prod(cosAngles);
+
+        transformationMatrix[2][2]  = ::sqrt(1 - sumcos_2 + (2 * prodcos));
+        transformationMatrix[2][2] /= sinGamma;
+
+        return transformationMatrix;
+    }
+
+    /**
+     * @brief Calculate the inverse of the box matrix
+     *
+     */
+    linalg::tensor3D TriclinicBox::_calculateInverse(
+        const linalg::tensor3D &boxMatrix
+    )
+    {
+        return inverse(boxMatrix);
     }
 
     /**
@@ -109,20 +144,21 @@ namespace molsys
      *
      * @param position
      */
-    void TriclinicBox::applyPBC(Vec3D &position) const
+    void TriclinicBox::applyPBC(linalg::Vec3D &position) const
     {
         const auto originalPosition = position;
 
-        auto fractionalPosition = inverse(_boxMatrix) * position;
+        auto fractionalPosition = _inverse.get(*this) * position;
 
         fractionalPosition -= round(fractionalPosition);
 
-        position = _boxMatrix * fractionalPosition;
+        const auto boxMatrix = _boxMatrix.get(*this);
+        position             = boxMatrix * fractionalPosition;
 
         const auto distance = norm(position);
 
-        Vec3D  analyticPosition   = position;
-        double analyticalDistance = distance;
+        linalg::Vec3D analyticPosition   = position;
+        double        analyticalDistance = distance;
 
         const auto minimalBoxDimensionHalf = getMinimalBoxDimension() / 2.0;
 
@@ -135,11 +171,11 @@ namespace molsys
                     for (int k = -1; k <= 1; ++k)
                     {
                         const auto shift =
-                            _boxMatrix * Vec3D{
-                                             static_cast<double>(i),
-                                             static_cast<double>(j),
-                                             static_cast<double>(k),
-                                         };
+                            boxMatrix * linalg::Vec3D{
+                                            static_cast<double>(i),
+                                            static_cast<double>(j),
+                                            static_cast<double>(k),
+                                        };
 
                         const auto newPosition = originalPosition + shift;
 
@@ -161,79 +197,84 @@ namespace molsys
     /**
      * @brief wraps atoms into the primary triclinic box unit cell
      *
+     * @param pos position to be wrapped
+     *
      * @details This function images atoms back into the triclinic box with
      * fractional coordinates in the range [-0.5, 0.5). This centers the box
      * at the origin and is useful for output visualization where you want all
      * atoms within the primary unit cell rather than the nearest image to the
      * origin.
      *
-     * @param position position to be wrapped
-     * @return Vec3D wrapped position with box centered at origin
+     * @return linalg::Vec3D wrapped position with box centered at origin
      */
-    Vec3D TriclinicBox::wrapPositionIntoBox(const Vec3D &position) const
+    linalg::Vec3D TriclinicBox::wrapPositionIntoBox(
+        const linalg::Vec3D &pos
+    ) const
     {
-        auto fractionalPosition = inverse(_boxMatrix) * position;
+        auto fractionalPosition = _inverse.get(*this) * pos;
 
         constexpr auto shiftFraction = 0.5;
 
         fractionalPosition -= floor(fractionalPosition + shiftFraction);
 
-        return _boxMatrix * fractionalPosition;
+        return _boxMatrix.get(*this) * fractionalPosition;
     }
 
     /**
      * @brief Calculate the shift vector
      *
-     * @param shiftVector
-     * @return Vec3D
+     * @param vec
+     * @return linalg::Vec3D
      */
-    Vec3D TriclinicBox::calcShiftVector(const Vec3D &shiftVector) const
+    linalg::Vec3D TriclinicBox::calcShiftVector(const linalg::Vec3D &vec) const
     {
-        return _boxMatrix * round(inverse(_boxMatrix) * shiftVector);
+        return _boxMatrix.get(*this) * round(_inverse.get(*this) * vec);
     }
 
     /**
      * @brief transform a vector into the orthogonal space
      *
      * @param vec
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
-    Vec3D TriclinicBox::toOrthoSpace(const Vec3D &vec) const
+    linalg::Vec3D TriclinicBox::toOrthoSpace(const linalg::Vec3D &vec) const
     {
-        return inverse(_transformationMatrix) * vec;
+        return _invTrafoMatrix.get(*this) * vec;
     }
 
     /**
      * @brief transform a matrix into the orthogonal space
      *
      * @param mat
-     * @return tensor3D
+     * @return linalg::tensor3D
      */
-    tensor3D TriclinicBox::toOrthoSpace(const tensor3D &mat) const
+    linalg::tensor3D TriclinicBox::toOrthoSpace(
+        const linalg::tensor3D &mat
+    ) const
     {
-        return inverse(_transformationMatrix) * mat;
+        return _invTrafoMatrix.get(*this) * mat;
     }
 
     /**
      * @brief transform a vector into the simulation space
      *
      * @param vec
-     * @return Vec3D
+     * @return linalg::Vec3D
      */
-    Vec3D TriclinicBox::toSimSpace(const Vec3D &vec) const
+    linalg::Vec3D TriclinicBox::toSimSpace(const linalg::Vec3D &vec) const
     {
-        return _transformationMatrix * vec;
+        return _trafoMatrix.get(*this) * vec;
     }
 
     /**
      * @brief transform a matrix into the simulation space
      *
      * @param mat
-     * @return tensor3D
+     * @return linalg::tensor3D
      */
-    tensor3D TriclinicBox::toSimSpace(const tensor3D &mat) const
+    linalg::tensor3D TriclinicBox::toSimSpace(const linalg::tensor3D &mat) const
     {
-        return _transformationMatrix * mat;
+        return _trafoMatrix.get(*this) * mat;
     }
 
     /**
@@ -246,44 +287,44 @@ namespace molsys
      *
      * @param scalingTensor
      */
-    void TriclinicBox::scaleBox(const tensor3D &scalingTensor)
+    void TriclinicBox::scaleBox(const linalg::tensor3D &scalingTensor)
     {
-        if (ManostatSettings::getIsotropy() != Isotropy::FULL_ANISOTROPIC)
-            setBoxDimensions(diagonal(scalingTensor) * _boxDimensions);
-
+        if (!_allowChangeOfAngles)
+        {
+            _set_boxDimensions(diagonal(scalingTensor) * get_boxDimensions());
+        }
         else
         {
-            const auto boxMatrix = scalingTensor * _boxMatrix;
+            const auto boxMatrix = scalingTensor * _boxMatrix.get(*this);
 
             const auto &[boxDimensions, boxAngles] =
                 calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);
 
-            setBoxDimensions(boxDimensions);
-            setBoxAngles(boxAngles);
+            _set_boxDimensions(boxDimensions);
+            _set_angles(boxAngles);
         }
-
-        _volume = calculateVolume();
     }
 
     /**
-     * @brief determine box dimensions and angles from box matrix
+     * @brief determine box dimensions and angles from box matrix (angles are in
+     * RAD)
      *
      * @param boxMatrix
-     * @return std::pair<Vec3D, Vec3D>
+     * @return std::pair<linalg::Vec3D, linalg::Vec3D>
      */
-    std::pair<Vec3D, Vec3D> calcBoxDimAndAnglesFromBoxMatrix(
-        const tensor3D &boxMatrix
+    std::pair<linalg::Vec3D, Angles3D> calcBoxDimAndAnglesFromBoxMatrix(
+        const linalg::tensor3D &boxMatrix
     )
     {
         const auto box_x = boxMatrix[0][0];
         const auto box_y = ::sqrt(
-            boxMatrix[1][1] * boxMatrix[1][1] +
-            boxMatrix[0][1] * boxMatrix[0][1]
+            (boxMatrix[1][1] * boxMatrix[1][1]) +
+            (boxMatrix[0][1] * boxMatrix[0][1])
         );
         const auto box_z = ::sqrt(
-            boxMatrix[2][2] * boxMatrix[2][2] +
-            boxMatrix[1][2] * boxMatrix[1][2] +
-            boxMatrix[0][2] * boxMatrix[0][2]
+            (boxMatrix[2][2] * boxMatrix[2][2]) +
+            (boxMatrix[1][2] * boxMatrix[1][2]) +
+            (boxMatrix[0][2] * boxMatrix[0][2])
         );
 
         const auto cos_alpha = (boxMatrix[0][1] * boxMatrix[0][2] +
@@ -293,14 +334,11 @@ namespace molsys
         const auto cos_beta  = boxMatrix[0][2] / box_z;
         const auto cos_gamma = boxMatrix[0][1] / box_y;
 
-        const auto alpha = ::acos(cos_alpha);
-        const auto beta  = ::acos(cos_beta);
-        const auto gamma = ::acos(cos_gamma);
+        const auto alpha = ::acos(cos_alpha) * rad;
+        const auto beta  = ::acos(cos_beta) * rad;
+        const auto gamma = ::acos(cos_gamma) * rad;
 
-        return std::make_pair(
-            Vec3D{box_x, box_y, box_z},
-            Vec3D{alpha, beta, gamma} * constants::RAD_TO_DEG
-        );
+        return {{box_x, box_y, box_z}, {alpha, beta, gamma}};
     }
 
     /**
@@ -310,7 +348,7 @@ namespace molsys
      */
     double TriclinicBox::getMinimalBoxDimension() const
     {
-        return minimum(diagonal(_boxMatrix));
+        return minimum(diagonal(_boxMatrix.get(*this)));
     }
 
     /**
@@ -318,134 +356,145 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::cosAlpha() const { return ::cos(_boxAngles[0]); }
+    double TriclinicBox::_cosAlpha(const Angles3D &boxAngles)
+    {
+        return mstd::cos(boxAngles[0]);
+    }
 
     /**
      * @brief calculate cos of beta
      *
      * @return double
      */
-    double TriclinicBox::cosBeta() const { return ::cos(_boxAngles[1]); }
+    double TriclinicBox::_cosBeta(const Angles3D &boxAngles)
+    {
+        return mstd::cos(boxAngles[1]);
+    }
 
     /**
      * @brief calculate cos of gamma
      *
      * @return double
      */
-    double TriclinicBox::cosGamma() const { return ::cos(_boxAngles[2]); }
+    double TriclinicBox::_cosGamma(const Angles3D &boxAngles)
+    {
+        return mstd::cos(boxAngles[2]);
+    }
 
     /**
      * @brief calculate sin of alpha
      *
      * @return double
      */
-    double TriclinicBox::sinAlpha() const { return ::sin(_boxAngles[0]); }
+    double TriclinicBox::_sinAlpha(const Angles3D &boxAngles)
+    {
+        return mstd::sin(boxAngles[0]);
+    }
 
     /**
      * @brief calculate sin of beta
      *
      * @return double
      */
-    double TriclinicBox::sinBeta() const { return ::sin(_boxAngles[1]); }
+    double TriclinicBox::_sinBeta(const Angles3D &boxAngles)
+    {
+        return mstd::sin(boxAngles[1]);
+    }
 
     /**
      * @brief calculate sin of gamma
      *
      * @return double
      */
-    double TriclinicBox::sinGamma() const { return ::sin(_boxAngles[2]); }
-
-    /**
-     * @brief get the box angles
-     *
-     * @return Vec3D
-     */
-    Vec3D TriclinicBox::getBoxAngles() const
+    double TriclinicBox::_sinGamma(const Angles3D &boxAngles)
     {
-        return _boxAngles * constants::RAD_TO_DEG;
+        return mstd::sin(boxAngles[2]);
     }
 
     /**
      * @brief get the box matrix
      *
-     * @return tensor3D
+     * @return linalg::tensor3D
      */
-    tensor3D TriclinicBox::getBoxMatrix() const { return _boxMatrix; }
-
-    /**
-     * @brief get the box matrix
-     *
-     * @return tensor3D
-     */
-    tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
+    linalg::tensor3D TriclinicBox::getBoxMatrix(Periodicity per) const
     {
-        using namespace defaults;
-
-        auto boxMatrix = getBoxMatrix();
+        auto boxMatrix = _boxMatrix.get(*this);
 
         switch (per)
         {
             case Periodicity::NON_PERIODIC:
-                boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
-                boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
-                boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
-                boxMatrix[0][1] = 0.0;                    // Clear XY cross term
-                boxMatrix[0][2] = 0.0;                    // Clear XZ cross term
-                boxMatrix[1][0] = 0.0;                    // Clear YX cross term
-                boxMatrix[1][2] = 0.0;                    // Clear YZ cross term
-                boxMatrix[2][0] = 0.0;                    // Clear ZX cross term
-                boxMatrix[2][1] = 0.0;                    // Clear ZY cross term
+                boxMatrix[0][0] =
+                    defaults::VACUUM_BOX_DIMENSION;   // X dimension
+                boxMatrix[1][1] =
+                    defaults::VACUUM_BOX_DIMENSION;   // Y dimension
+                boxMatrix[2][2] =
+                    defaults::VACUUM_BOX_DIMENSION;   // Z dimension
+                boxMatrix[0][1] = 0.0;                // Clear XY cross term
+                boxMatrix[0][2] = 0.0;                // Clear XZ cross term
+                boxMatrix[1][0] = 0.0;                // Clear YX cross term
+                boxMatrix[1][2] = 0.0;                // Clear YZ cross term
+                boxMatrix[2][0] = 0.0;                // Clear ZX cross term
+                boxMatrix[2][1] = 0.0;                // Clear ZY cross term
                 break;
             case Periodicity::X:
-                boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
-                boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
-                boxMatrix[0][1] = 0.0;                    // Clear XY cross term
-                boxMatrix[0][2] = 0.0;                    // Clear XZ cross term
-                boxMatrix[1][0] = 0.0;                    // Clear YX cross term
-                boxMatrix[1][2] = 0.0;                    // Clear YZ cross term
-                boxMatrix[2][0] = 0.0;                    // Clear ZX cross term
-                boxMatrix[2][1] = 0.0;                    // Clear ZY cross term
+                boxMatrix[1][1] =
+                    defaults::VACUUM_BOX_DIMENSION;   // Y dimension
+                boxMatrix[2][2] =
+                    defaults::VACUUM_BOX_DIMENSION;   // Z dimension
+                boxMatrix[0][1] = 0.0;                // Clear XY cross term
+                boxMatrix[0][2] = 0.0;                // Clear XZ cross term
+                boxMatrix[1][0] = 0.0;                // Clear YX cross term
+                boxMatrix[1][2] = 0.0;                // Clear YZ cross term
+                boxMatrix[2][0] = 0.0;                // Clear ZX cross term
+                boxMatrix[2][1] = 0.0;                // Clear ZY cross term
                 break;
             case Periodicity::Y:
-                boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
-                boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
-                boxMatrix[0][1] = 0.0;                    // Clear XY cross term
-                boxMatrix[0][2] = 0.0;                    // Clear XZ cross term
-                boxMatrix[1][0] = 0.0;                    // Clear YX cross term
-                boxMatrix[1][2] = 0.0;                    // Clear YZ cross term
-                boxMatrix[2][0] = 0.0;                    // Clear ZX cross term
-                boxMatrix[2][1] = 0.0;                    // Clear ZY cross term
+                boxMatrix[0][0] =
+                    defaults::VACUUM_BOX_DIMENSION;   // X dimension
+                boxMatrix[2][2] =
+                    defaults::VACUUM_BOX_DIMENSION;   // Z dimension
+                boxMatrix[0][1] = 0.0;                // Clear XY cross term
+                boxMatrix[0][2] = 0.0;                // Clear XZ cross term
+                boxMatrix[1][0] = 0.0;                // Clear YX cross term
+                boxMatrix[1][2] = 0.0;                // Clear YZ cross term
+                boxMatrix[2][0] = 0.0;                // Clear ZX cross term
+                boxMatrix[2][1] = 0.0;                // Clear ZY cross term
                 break;
             case Periodicity::Z:
-                boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
-                boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
-                boxMatrix[0][1] = 0.0;                    // Clear XY cross term
-                boxMatrix[0][2] = 0.0;                    // Clear XZ cross term
-                boxMatrix[1][0] = 0.0;                    // Clear YX cross term
-                boxMatrix[1][2] = 0.0;                    // Clear YZ cross term
-                boxMatrix[2][0] = 0.0;                    // Clear ZX cross term
-                boxMatrix[2][1] = 0.0;                    // Clear ZY cross term
+                boxMatrix[0][0] =
+                    defaults::VACUUM_BOX_DIMENSION;   // X dimension
+                boxMatrix[1][1] =
+                    defaults::VACUUM_BOX_DIMENSION;   // Y dimension
+                boxMatrix[0][1] = 0.0;                // Clear XY cross term
+                boxMatrix[0][2] = 0.0;                // Clear XZ cross term
+                boxMatrix[1][0] = 0.0;                // Clear YX cross term
+                boxMatrix[1][2] = 0.0;                // Clear YZ cross term
+                boxMatrix[2][0] = 0.0;                // Clear ZX cross term
+                boxMatrix[2][1] = 0.0;                // Clear ZY cross term
                 break;
             case Periodicity::XY:
-                boxMatrix[2][2] = VACUUM_BOX_DIMENSION;   // Z dimension
-                boxMatrix[0][2] = 0.0;                    // Clear XZ cross term
-                boxMatrix[1][2] = 0.0;                    // Clear YZ cross term
-                boxMatrix[2][0] = 0.0;                    // Clear ZX cross term
-                boxMatrix[2][1] = 0.0;                    // Clear ZY cross term
+                boxMatrix[2][2] =
+                    defaults::VACUUM_BOX_DIMENSION;   // Z dimension
+                boxMatrix[0][2] = 0.0;                // Clear XZ cross term
+                boxMatrix[1][2] = 0.0;                // Clear YZ cross term
+                boxMatrix[2][0] = 0.0;                // Clear ZX cross term
+                boxMatrix[2][1] = 0.0;                // Clear ZY cross term
                 break;
             case Periodicity::XZ:
-                boxMatrix[1][1] = VACUUM_BOX_DIMENSION;   // Y dimension
-                boxMatrix[0][1] = 0.0;                    // Clear XY cross term
-                boxMatrix[1][0] = 0.0;                    // Clear YX cross term
-                boxMatrix[1][2] = 0.0;                    // Clear YZ cross term
-                boxMatrix[2][1] = 0.0;                    // Clear ZY cross term
+                boxMatrix[1][1] =
+                    defaults::VACUUM_BOX_DIMENSION;   // Y dimension
+                boxMatrix[0][1] = 0.0;                // Clear XY cross term
+                boxMatrix[1][0] = 0.0;                // Clear YX cross term
+                boxMatrix[1][2] = 0.0;                // Clear YZ cross term
+                boxMatrix[2][1] = 0.0;                // Clear ZY cross term
                 break;
             case Periodicity::YZ:
-                boxMatrix[0][0] = VACUUM_BOX_DIMENSION;   // X dimension
-                boxMatrix[0][1] = 0.0;                    // Clear XY cross term
-                boxMatrix[0][2] = 0.0;                    // Clear XZ cross term
-                boxMatrix[1][0] = 0.0;                    // Clear YX cross term
-                boxMatrix[2][0] = 0.0;                    // Clear ZX cross term
+                boxMatrix[0][0] =
+                    defaults::VACUUM_BOX_DIMENSION;   // X dimension
+                boxMatrix[0][1] = 0.0;                // Clear XY cross term
+                boxMatrix[0][2] = 0.0;                // Clear XZ cross term
+                boxMatrix[1][0] = 0.0;                // Clear YX cross term
+                boxMatrix[2][0] = 0.0;                // Clear ZX cross term
                 break;
             case Periodicity::XYZ: break;
         }
@@ -454,13 +503,12 @@ namespace molsys
     }
 
     /**
-     * @brief get the transformation matrix
+     * @brief indicate whether the box allows change of angles
      *
-     * @return tensor3D
+     * @return true if change of angles is allowed, false otherwise
      */
-    tensor3D TriclinicBox::getTransformationMatrix() const
+    bool TriclinicBox::allowChangeOfAngles() const
     {
-        return _transformationMatrix;
+        return _allowChangeOfAngles;
     }
-
 }   // namespace molsys

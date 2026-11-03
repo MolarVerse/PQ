@@ -20,29 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
 #include <format>
-#include <memory>   // for unique_ptr
-#include <string>   // for string, allocator, basic_string
-#include <vector>   // for vector
+#include <string>
+#include <vector>
 
-#include "engine.hpp"                  // for Engine
-#include "exceptions.hpp"              // for InputFileException
-#include "generalInputParser.hpp"      // for GeneralInputParser
-#include "gtest/gtest.h"               // for Message, TestPartResult
-#include "hessianEngine.hpp"           // for HessianEngine
-#include "mmmdEngine.hpp"              // for MMMDEngine
-#include "optEngine.hpp"               // for MMOptEngine
-#include "qmmdEngine.hpp"              // for QMMDEngine
-#include "ringPolymerqmmdEngine.hpp"   // for RingPolymerQMMDEngine
-#include "settings.hpp"                // for Settings
-#include "testInputFileReader.hpp"     // for TestInputFileReader
-#include "testUtils.hpp"
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
-
-using namespace input;
-using namespace settings;
+#include "exceptions.hpp"
+#include "generalInputParser.hpp"
+#include "generalSettings.hpp"
+#include "testInputFileReader.hpp"
+#include "throwWithMessage.hpp"
 
 /**
  * @brief tests parsing the "jobtype" command
@@ -53,44 +41,41 @@ using namespace settings;
  */
 TEST_F(TestInputFileReader, JobType)
 {
-    GeneralInputParser       parser;
-    std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
-    auto                     engine       = std::unique_ptr<engine::Engine>();
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(Settings::getJobtype(), JobType::MM_MD);
-    EXPECT_EQ(Settings::isMMActivated(), true);
-    test::checkType(engine, typeid(engine::MMMDEngine));
+    input::GeneralInputParser parser;
+    std::vector<std::string>  lineElements = {"jobtype", "=", "mm-md"};
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_MD);
+    EXPECT_EQ(settings::GeneralSettings::isMMActivated(), true);
 
     lineElements = {"jobtype", "=", "qm-md"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(Settings::getJobtype(), JobType::QM_MD);
-    EXPECT_EQ(Settings::isQMActivated(), true);
-    test::checkType(engine, typeid(engine::QMMDEngine));
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::QM_MD);
+    EXPECT_EQ(settings::GeneralSettings::isQMActivated(), true);
 
     lineElements = {"jobtype", "=", "qm-rpmd"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(Settings::getJobtype(), JobType::RING_POLYMER_QM_MD);
-    EXPECT_EQ(Settings::isQMActivated(), true);
-    EXPECT_EQ(Settings::isRingPolymerMDActivated(), true);
-    test::checkType(engine, typeid(engine::RingPolymerQMMDEngine));
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
+    EXPECT_EQ(
+        settings::GeneralSettings::getJobtype(),
+        JobType::RING_POLYMER_QM_MD
+    );
+    EXPECT_EQ(settings::GeneralSettings::isQMActivated(), true);
+    EXPECT_EQ(settings::GeneralSettings::isRingPolymerMDActivated(), true);
 
     lineElements = {"jobtype", "=", "mm-opt"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(Settings::getJobtype(), JobType::MM_OPT);
-    EXPECT_EQ(Settings::isOptJobType(), true);
-    EXPECT_EQ(Settings::isMMActivated(), true);
-    test::checkType(engine, typeid(engine::OptEngine));
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_OPT);
+    EXPECT_EQ(settings::GeneralSettings::isOptJobType(), true);
+    EXPECT_EQ(settings::GeneralSettings::isMMActivated(), true);
 
     lineElements = {"jobtype", "=", "mm-hessian"};
-    parser.parseJobTypeForEngine(lineElements, 0, engine);
-    EXPECT_EQ(Settings::getJobtype(), JobType::MM_HESSIAN);
-    EXPECT_EQ(Settings::isMMActivated(), true);
-    test::checkType(engine, typeid(engine::HessianEngine));
+    input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_HESSIAN);
+    EXPECT_EQ(settings::GeneralSettings::isMMActivated(), true);
 
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseJobTypeForEngine(lineElements, 0, engine),
-        customException::InputFileException,
+        input::GeneralInputParser::parseJobTypeForEngine(lineElements, 0),
+        exc::InputFileException,
         "Invalid jobtype \"notValid\" in input file - possible values are:\n"
         "- mm-opt\n"
         "- mm-hessian\n"
@@ -102,10 +87,10 @@ TEST_F(TestInputFileReader, JobType)
 
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
 
-    Settings::setIsRingPolymerMDActivated(true);
-    Settings::setJobtype(JobType::NONE);
-    EXPECT_FALSE(Settings::isRingPolymerMDActivated());
-    EXPECT_EQ(string(JobType::NONE), "NONE");
+    settings::GeneralSettings::setIsRingPolymerMDActivated(true);
+    settings::GeneralSettings::setJobtype(JobType::NONE);
+    EXPECT_FALSE(settings::GeneralSettings::isRingPolymerMDActivated());
+    EXPECT_EQ(JobTypeMeta::toString(JobType::NONE), "NONE");
 }
 
 /**
@@ -114,19 +99,19 @@ TEST_F(TestInputFileReader, JobType)
  */
 TEST_F(TestInputFileReader, parseDimensionality)
 {
-    GeneralInputParser       parser;
-    std::vector<std::string> lineElements = {"dim", "=", "3"};
-    parser.parseDimensionality(lineElements, 0);
-    EXPECT_EQ(Settings::getDimensionality(), 3);
+    input::GeneralInputParser parser;
+    std::vector<std::string>  lineElements = {"dim", "=", "3"};
+    input::GeneralInputParser::parseDimensionality(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getDimensionality(), 3);
 
     lineElements = {"dim", "=", "3D"};
-    parser.parseDimensionality(lineElements, 0);
-    EXPECT_EQ(Settings::getDimensionality(), 3);
+    input::GeneralInputParser::parseDimensionality(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getDimensionality(), 3);
 
     lineElements = {"dim", "=", "2"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid dimensionality \"2\" in input file\n"
         "Possible values are: 3, 3d"
     );
@@ -134,7 +119,7 @@ TEST_F(TestInputFileReader, parseDimensionality)
     lineElements = {"dim", "=", "1"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid dimensionality \"1\" in input file\n"
         "Possible values are: 3, 3d"
     );
@@ -142,7 +127,7 @@ TEST_F(TestInputFileReader, parseDimensionality)
     lineElements = {"dim", "=", "0"};
     EXPECT_THROW_MSG(
         parser.parseDimensionality(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         "Invalid dimensionality \"0\" in input file\n"
         "Possible values are: 3, 3d"
     );
@@ -154,21 +139,36 @@ TEST_F(TestInputFileReader, parseDimensionality)
  */
 TEST_F(TestInputFileReader, parseFloatingPointType)
 {
-    GeneralInputParser       parser;
-    std::vector<std::string> lineElements = {"floatingPointType", "=", "float"};
-    parser.parseFloatingPointType(lineElements, 0);
-    EXPECT_EQ(Settings::getFloatingPointType(), FPType::FLOAT);
+    input::GeneralInputParser parser;
+    const auto                funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("floating_point_type"));
+    const auto& parseFunc = funcMap.at("floating_point_type");
 
-    lineElements = {"floatingPointType", "=", "double"};
-    parser.parseFloatingPointType(lineElements, 0);
-    EXPECT_EQ(Settings::getFloatingPointType(), FPType::DOUBLE);
+    std::vector<std::string> lineElements = {
+        "floating_point_type",
+        "=",
+        "float"
+    };
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::getFloatingPointType(), FPType::FLOAT);
 
-    lineElements = {"floatingPointType", "=", "notValid"};
+    _clearParser(parser);
+
+    lineElements = {"floating_point_type", "=", "double"};
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(
+        settings::GeneralSettings::getFloatingPointType(),
+        FPType::DOUBLE
+    );
+
+    _clearParser(parser);
+
+    lineElements = {"floating_point_type", "=", "notValid"};
     EXPECT_THROW_MSG(
-        parser.parseFloatingPointType(lineElements, 0),
-        customException::InputFileException,
-        "Invalid floating point type \"notValid\" in input file\n"
-        "Possible values are: float, double"
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"notValid\" for key \"floating_point_type\" at line 0 "
+        "in input file. Allowed values: float, double"
     );
 }
 
@@ -178,25 +178,25 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
  */
 TEST_F(TestInputFileReader, parseRandomSeed)
 {
-    GeneralInputParser parser;
+    input::GeneralInputParser parser;
 
     std::vector<std::string> lineElements = {"random_seed", "=", "0"};
-    parser.parseRandomSeed(lineElements, 0);
-    EXPECT_EQ(Settings::isRandomSeedSet(), true);
-    EXPECT_EQ(Settings::getRandomSeed(), 0);
-    Settings::setIsRandomSeedSet(false);
+    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), true);
+    EXPECT_EQ(settings::GeneralSettings::getRandomSeed(), 0);
+    settings::GeneralSettings::setIsRandomSeedSet(false);
 
     lineElements = {"random_seed", "=", "+73"};
-    parser.parseRandomSeed(lineElements, 0);
-    EXPECT_EQ(Settings::isRandomSeedSet(), true);
-    EXPECT_EQ(Settings::getRandomSeed(), 73);
-    Settings::setIsRandomSeedSet(false);
+    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), true);
+    EXPECT_EQ(settings::GeneralSettings::getRandomSeed(), 73);
+    settings::GeneralSettings::setIsRandomSeedSet(false);
 
     lineElements = {"random_seed", "=", std::to_string(UINT32_MAX)};
-    parser.parseRandomSeed(lineElements, 0);
-    EXPECT_EQ(Settings::isRandomSeedSet(), true);
-    EXPECT_EQ(Settings::getRandomSeed(), UINT32_MAX);
-    Settings::setIsRandomSeedSet(false);
+    input::GeneralInputParser::parseRandomSeed(lineElements, 0);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), true);
+    EXPECT_EQ(settings::GeneralSettings::getRandomSeed(), UINT32_MAX);
+    settings::GeneralSettings::setIsRandomSeedSet(false);
 
     lineElements = {
         "random_seed",
@@ -205,7 +205,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
     };
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is out of range.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -213,12 +213,12 @@ TEST_F(TestInputFileReader, parseRandomSeed)
             UINT32_MAX
         )
     );
-    EXPECT_EQ(Settings::isRandomSeedSet(), false);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
 
     lineElements = {"random_seed", "=", "-1"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is out of range.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -226,12 +226,12 @@ TEST_F(TestInputFileReader, parseRandomSeed)
             UINT32_MAX
         )
     );
-    EXPECT_EQ(Settings::isRandomSeedSet(), false);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
 
     lineElements = {"random_seed", "=", "seed"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -239,12 +239,12 @@ TEST_F(TestInputFileReader, parseRandomSeed)
             UINT32_MAX
         )
     );
-    EXPECT_EQ(Settings::isRandomSeedSet(), false);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
 
     lineElements = {"random_seed", "=", "3.14159"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -252,12 +252,12 @@ TEST_F(TestInputFileReader, parseRandomSeed)
             UINT32_MAX
         )
     );
-    EXPECT_EQ(Settings::isRandomSeedSet(), false);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
 
     lineElements = {"random_seed", "=", "1e3"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -265,12 +265,12 @@ TEST_F(TestInputFileReader, parseRandomSeed)
             UINT32_MAX
         )
     );
-    EXPECT_EQ(Settings::isRandomSeedSet(), false);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
 
     lineElements = {"random_seed", "=", "+"};
     EXPECT_THROW_MSG(
         parser.parseRandomSeed(lineElements, 0),
-        customException::InputFileException,
+        exc::InputFileException,
         std::format(
             "Random seed value \"{}\" is invalid.\n"
             "Must be an integer between \"0\" and \"{}\" (inclusive)",
@@ -278,5 +278,5 @@ TEST_F(TestInputFileReader, parseRandomSeed)
             UINT32_MAX
         )
     );
-    EXPECT_EQ(Settings::isRandomSeedSet(), false);
+    EXPECT_EQ(settings::GeneralSettings::isRandomSeedSet(), false);
 }

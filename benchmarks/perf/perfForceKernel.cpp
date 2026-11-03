@@ -29,6 +29,8 @@
 #include <format>
 #include <iostream>
 
+#include "strongTypes.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -38,6 +40,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedMap.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
@@ -49,23 +52,27 @@ int main()
 {
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
-    auto coulombPotential    = potential::CoulombShiftedPotential(10.0);
+    auto coulombPotential    = pot::CoulombShiftedPotential(10.0);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.75);
 
     auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(0, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
     auto simulationBox = molsys::SimulationBox();
-    simulationBox.setBoxDimensions({10.0, 10.0, 10.0});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    simulationBox.setBox(orthoBox, false);
 
     auto physicalData = physicalData::PhysicalData();
 
-    const auto box     = simulationBox.getBoxDimensions();
-    const auto atomIdx = intraNonBondedType.getAtomIndices()[0][0];
+    const auto& box     = simulationBox.getBoxDimensions();
+    const auto  atomIdx = intraNonBondedType.getAtomIndices()[0][0];
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
@@ -74,7 +81,7 @@ int main()
     {
         const auto [coulombEnergy, nonCoulombEnergy] =
             intraNonBondedMap.calculateSingleInteraction(
-                0,
+                AtomIndex{0},
                 atomIdx,
                 box,
                 physicalData,

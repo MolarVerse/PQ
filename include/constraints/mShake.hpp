@@ -20,15 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _M_SHAKE_HPP_
+#ifndef CONSTRAINTS__M_SHAKE_HPP
+#define CONSTRAINTS__M_SHAKE_HPP
 
-#define _M_SHAKE_HPP_
-
-#include <memory>   // for unique_ptr
-#include <vector>   // for vector
+#include <memory>
+#include <vector>
 
 #include "mShakeReference.hpp"
-#include "vector3d.hpp"   // for Vec3D
 
 namespace molsys
 {
@@ -60,23 +58,22 @@ namespace constraints
 
         void initMShake();
         void initMShakeReferences();
-        void applyMShake(molsys::SimulationBox &simBox);
+        void applyMShake(
+            molsys::SimulationBox &simulationBox,
+            size_t                 maxIter,
+            double                 tolerance
+        );
         void applyMRattle(molsys::SimulationBox &);
 
         [[nodiscard]]
         size_t calcNumberOfMShakeMolecules(molsys::SimulationBox &) const;
         [[nodiscard]]
         size_t calcNumberOfBondConstraints(molsys::SimulationBox &) const;
-        [[nodiscard]]
-        double calcMatrixElement(
-            const std::tuple<size_t, size_t, size_t, size_t> &indices,
-            const std::pair<double, double>                  &masses,
-            const std::pair<linearAlgebra::Vec3D, linearAlgebra::Vec3D> &pos
-        ) const;
 
-        [[nodiscard]] bool   isMShakeType(const size_t moltype) const;
-        [[nodiscard]] size_t findMShakeReferenceIndex(const size_t) const;
-        [[nodiscard]] const MShakeReference &findMShakeRef(const size_t) const;
+        [[nodiscard]] bool   isMShakeType(MolType molType) const;
+        [[nodiscard]] size_t findMShakeReferenceIndex(MolType molType) const;
+        [[nodiscard]]
+        const MShakeReference &findMShakeRef(MolType molType) const;
         [[nodiscard]]
         const std::vector<MShakeReference> &getMShakeReferences() const;
 
@@ -84,4 +81,4 @@ namespace constraints
     };
 }   // namespace constraints
 
-#endif   // _M_SHAKE_HPP_
+#endif   // CONSTRAINTS__M_SHAKE_HPP

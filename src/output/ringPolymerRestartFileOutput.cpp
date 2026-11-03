@@ -22,69 +22,81 @@
 
 #include "ringPolymerRestartFileOutput.hpp"
 
-#include <format>    // for format
-#include <ostream>   // for basic_ostream, operator<<, flush, std
-#include <sstream>   // for ostringstream
-#include <vector>    // for vector
+#include <format>
+#include <ostream>
+#include <sstream>
+#include <vector>
 
-#include "molecule.hpp"              // for Molecule
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "simulationBox.hpp"         // for SimulationBox
+#include "molecule.hpp"
+#include "simulationBox.hpp"
 
-using output::RingPolymerRestartFileOutput;
-using namespace molsys;
-using namespace settings;
-
-/**
- * @brief Write the restart file for all beads
- *
- * @param simBox
- * @param step
- */
-void RingPolymerRestartFileOutput::write(std::vector<SimulationBox> &beads)
+namespace out
 {
-    std::ostringstream buffer;
-
-    _fp.close();
-    _fp.open(_fileName);
-
-    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
-
-    for (size_t i = 0; i < nBeads; ++i)
+    /**
+     * @brief Write the restart file for all beads
+     *
+     * @param beads
+     */
+    void RingPolymerRestartFileOutput::write(
+        const std::vector<molsys::SimulationBox> &beads
+    )
     {
-        for (const auto &molecule : beads[i].getMolecules())
+        std::ostringstream buffer;
+
+        _getFilePointer().close();
+        _openFile();
+
+        const auto nBeads = beads.size();
+
+        for (size_t i = 0; i < nBeads; ++i)
         {
-            const size_t nAtoms = molecule.getNumberOfAtoms();
-            for (size_t j = 0; j < nAtoms; ++j)
+            for (const auto &molecule : beads[i].getMolecules())
             {
-                const auto atomName = molecule.getAtomName(j);
-                const auto molType  = molecule.getMoltype();
-                const auto x        = molecule.getAtomPosition(j)[0];
-                const auto y        = molecule.getAtomPosition(j)[1];
-                const auto z        = molecule.getAtomPosition(j)[2];
-                const auto vx       = molecule.getAtomVelocity(j)[0];
-                const auto vy       = molecule.getAtomVelocity(j)[1];
-                const auto vz       = molecule.getAtomVelocity(j)[2];
-                const auto fx       = molecule.getAtomForce(j)[0];
-                const auto fy       = molecule.getAtomForce(j)[1];
-                const auto fz       = molecule.getAtomForce(j)[2];
+                const size_t nAtoms = molecule.getNumberOfAtoms();
+                for (AtomIndex j{0}; j.get() < nAtoms; ++j)
+                {
+                    const auto atomName = molecule.getAtomName(j);
+                    const auto molType  = molecule.getMoltype();
+                    const auto x        = molecule.getAtomPosition(j)[0];
+                    const auto y        = molecule.getAtomPosition(j)[1];
+                    const auto z        = molecule.getAtomPosition(j)[2];
+                    const auto velX     = molecule.getAtomVelocity(j)[0];
+                    const auto velY     = molecule.getAtomVelocity(j)[1];
+                    const auto velZ     = molecule.getAtomVelocity(j)[2];
+                    const auto forceX   = molecule.getAtomForce(j)[0];
+                    const auto forceY   = molecule.getAtomForce(j)[1];
+                    const auto forceZ   = molecule.getAtomForce(j)[2];
 
-                buffer << std::format("{:>5}{}\t", atomName, i + 1);
-                buffer << std::format("{:>5}\t", j + 1);
-                buffer << std::format("{:>5}\t", molType);
+                    buffer << std::format("{:>5}{}\t", atomName, i + 1);
+                    buffer << std::format("{:>5}\t", j.get() + 1);
+                    buffer << std::format("{:>5}\t", molType.get());
 
-                // clang-format off
-                buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);
-                buffer << std::format("{:19.8e}\t{:19.8e}\t{:19.8e}\t", vx, vy, vz);
-                buffer << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}", fx, fy, fz);
-                // clang-format on
+                    buffer << std::format(
+                        "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+                        x,
+                        y,
+                        z
+                    );
+                    buffer << std::format(
+                        "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
+                        velX,
+                        velY,
+                        velZ
+                    );
+                    buffer << std::format(
+                        "{:15.8f}\t{:15.8f}\t{:15.8f}",
+                        forceX,
+                        forceY,
+                        forceZ
+                    );
 
-                buffer << '\n';
+                    buffer << '\n';
+                }
             }
         }
-    }
 
-    // Write the buffer to the file
-    _fp << buffer.str();
-    _fp << std::flush;
-}
+        // Write the buffer to the file
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
+    }
+}   // namespace out

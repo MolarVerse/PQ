@@ -20,19 +20,21 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_CONSTRAINTS_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP
 
-#define _TEST_CONSTRAINTS_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for make_shared, __shared_ptr_access, shared_ptr
-
-#include "atom.hpp"             // for Atom
-#include "bondConstraint.hpp"   // for BondConstraint
-#include "constraints.hpp"      // for Constraints
-#include "molecule.hpp"         // for Molecule
-#include "simulationBox.hpp"    // for SimulationBox
+#include "atom.hpp"
+#include "bondConstraint.hpp"
+#include "constraintSettings.hpp"
+#include "constraints.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "settings.hpp"
+#include "simulationBox.hpp"
 
 /**
  * @class TestConstraints
@@ -43,21 +45,23 @@
 class TestConstraints : public ::testing::Test
 {
    protected:
+    std::unique_ptr<molsys::SimulationBox>    _box;
+    std::unique_ptr<constraints::Constraints> _constraints;
+
     void SetUp() override
     {
         auto molecule1 = molsys::Molecule();
-        molecule1.setNumberOfAtoms(3);
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom3->setPosition(linearAlgebra::Vec3D(2.0, 0.0, 0.0));
-        atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom3->setVelocity(linearAlgebra::Vec3D(2.0, 2.0, 2.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom3->setPosition(linalg::Vec3D(2.0, 0.0, 0.0));
+        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0));
         atom1->setMass(1.0);
         atom2->setMass(1.0);
         atom3->setMass(1.0);
@@ -67,57 +71,67 @@ class TestConstraints : public ::testing::Test
         molecule1.addAtom(atom3);
 
         auto molecule2 = molsys::Molecule();
-        molecule2.setNumberOfAtoms(2);
 
         auto atom4 = std::make_shared<molsys::Atom>();
         auto atom5 = std::make_shared<molsys::Atom>();
 
-        atom4->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
-        atom5->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-        atom4->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom5->setVelocity(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom4->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         atom4->setMass(1.0);
         atom5->setMass(1.0);
 
         molecule2.addAtom(atom4);
         molecule2.addAtom(atom5);
 
-        _box = new molsys::SimulationBox();
+        _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
         _box->addMolecule(molecule2);
-        _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
 
-        _constraints = new constraints::Constraints();
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _box->setBox(orthoBox, false);
 
+        Settings settings;
+        settings.constraintSettings.activateShake();
+        _constraints = std::make_unique<constraints::Constraints>(
+            settings.constraintSettings
+        );
+
+        _addDefaultBondConstraints(*_constraints);
+    }
+
+    /**
+     * @brief adds the two bond constraints used by the fixture's molecules
+     * to the given Constraints object
+     *
+     * @details Constraints owns its own bond constraint list, so a
+     * freshly-constructed Constraints (e.g. with a different
+     * ConstraintSettings instance) does not share the fixture's bond
+     * constraints and needs them added explicitly via this helper.
+     *
+     * @param constraints
+     */
+    void _addDefaultBondConstraints(constraints::Constraints &constraints) const
+    {
         auto bondConstraint1 = constraints::BondConstraint(
-            &(_box->getMolecules()[0]),
-            &(_box->getMolecules()[0]),
-            0,
-            1,
+            _box->getMolecules().data(),
+            _box->getMolecules().data(),
+            AtomIndex{0},
+            AtomIndex{1},
             1.2
         );
         auto bondConstraint2 = constraints::BondConstraint(
-            &(_box->getMolecules()[0]),
+            _box->getMolecules().data(),
             &(_box->getMolecules()[1]),
-            2,
-            1,
+            AtomIndex{2},
+            AtomIndex{1},
             1.3
         );
 
-        _constraints->addBondConstraint(bondConstraint1);
-        _constraints->addBondConstraint(bondConstraint2);
-
-        _constraints->activateShake();
+        constraints.addBondConstraint(bondConstraint1);
+        constraints.addBondConstraint(bondConstraint2);
     }
-
-    void TearDown() override
-    {
-        delete _box;
-        delete _constraints;
-    }
-
-    molsys::SimulationBox    *_box;
-    constraints::Constraints *_constraints;
 };
 
-#endif   // _TEST_CONSTRAINTS_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP

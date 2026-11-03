@@ -25,10 +25,6 @@
 #include <cmath>
 
 #include "convergence.hpp"
-#include "convergenceSettings.hpp"
-
-using namespace opt;
-using settings::ConvStrategy;
 
 namespace
 {
@@ -38,7 +34,7 @@ namespace
     constexpr double _maxThresh = 1.0e-3;
     constexpr double _rmsThresh = 1.0e-3;
 
-    Convergence makeConv(ConvStrategy strat)
+    opt::Convergence makeConv(ConvStrategy strat)
     {
         return {
             _enableAll,
@@ -52,7 +48,7 @@ namespace
         };
     }
 
-    Convergence makeConv() { return makeConv(ConvStrategy::RIGOROUS); }
+    opt::Convergence makeConv() { return makeConv(ConvStrategy::RIGOROUS); }
 }   // namespace
 
 /* ---------- constructor and getters ---------- */
@@ -107,7 +103,7 @@ TEST(TestConvergence, calcEnergyConvergenceFlagsAboveThreshold)
 
 TEST(TestConvergence, calcEnergyConvergenceSkippedWhenDisabled)
 {
-    Convergence conv(
+    opt::Convergence conv(
         false,   // energy disabled
         _enableAll,
         _enableAll,
@@ -153,7 +149,7 @@ TEST(TestConvergence, calcForceConvergenceUsesAbsoluteValue)
 
 TEST(TestConvergence, calcForceConvergenceSkippedWhenDisabled)
 {
-    Convergence conv(
+    opt::Convergence conv(
         _enableAll,
         false,   // max force disabled
         false,   // rms force disabled

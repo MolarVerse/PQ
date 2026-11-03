@@ -23,43 +23,27 @@
 #include <gtest/gtest.h>
 
 #include <cstdio>
-#include <fstream>
-#include <sstream>
 #include <string>
 
 #include "boxOutput.hpp"
 #include "orthorhombicBox.hpp"
-#include "vector3d.hpp"   // IWYU pragma: keep
-
-using namespace output;
-using molsys::OrthorhombicBox;
-
-namespace
-{
-    std::string slurp(const std::string &path)
-    {
-        std::ifstream     in(path);
-        std::stringstream ss;
-        ss << in.rdbuf();
-        return ss.str();
-    }
-}   // namespace
+#include "testOutputBase.hpp"
+#include "vector3d.hpp"
 
 TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
 {
     const std::string path = "default.box.test";
 
-    BoxFileOutput out(path);
-    out.setFilename(path);
+    out::BoxFileOutput out(path);
+    out.setFilename(path, false);
 
-    OrthorhombicBox box;
-    box.setBoxDimensions(linearAlgebra::Vec3D(10.0, 20.0, 30.0));
+    molsys::OrthorhombicBox box({10.0, 20.0, 30.0});
 
     out.write(7, box);
     out.close();
 
     const auto content = slurp(path);
-    EXPECT_NE(content.find("7"), std::string::npos);
+    EXPECT_NE(content.find('7'), std::string::npos);
     EXPECT_NE(content.find("10.00000000"), std::string::npos);
     EXPECT_NE(content.find("20.00000000"), std::string::npos);
     EXPECT_NE(content.find("30.00000000"), std::string::npos);
@@ -74,11 +58,10 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
 {
     const std::string path = "default.box.test";
 
-    BoxFileOutput out(path);
-    out.setFilename(path);
+    out::BoxFileOutput out(path);
+    out.setFilename(path, false);
 
-    OrthorhombicBox box;
-    box.setBoxDimensions(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+    molsys::OrthorhombicBox box(linalg::Vec3D(1.0, 2.0, 3.0));
 
     out.write(1, box);
     out.write(2, box);
@@ -87,8 +70,8 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
     const auto content = slurp(path);
     // Two newlines for two steps written.
     size_t newlines = 0;
-    for (auto c : content)
-        if (c == '\n')
+    for (auto character : content)
+        if (character == '\n')
             ++newlines;
     EXPECT_EQ(newlines, 2U);
 

@@ -20,20 +20,20 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_INTEGRATOR_HPP_
+#ifndef TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP
+#define TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP
 
-#define _TEST_INTEGRATOR_HPP_
+#include <gtest/gtest.h>
 
-#include <gtest/gtest.h>   // for Test
+#include <memory>
 
-#include <memory>   // for __shared_ptr_access, shared_ptr, make_shared
-
-#include "atom.hpp"   // for Atom
+#include "atom.hpp"
 #include "integrator.hpp"
-#include "molecule.hpp"          // for Molecule
-#include "simulationBox.hpp"     // for SimulationBox
-#include "timingsSettings.hpp"   // for TimingsSettings
-#include "velocityVerlet.hpp"    // for VelocityVerlet
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "simulationBox.hpp"
+#include "timingsSettings.hpp"
+#include "velocityVerlet.hpp"
 
 /**
  * class TestIntegrator
@@ -44,25 +44,28 @@
 class TestIntegrator : public ::testing::Test
 {
    protected:
+    std::unique_ptr<integrator::Integrator> _integrator;
+    std::unique_ptr<molsys::Molecule>       _molecule1;
+    std::unique_ptr<molsys::SimulationBox>  _box;
+
     void SetUp() override
     {
-        _integrator = new integrator::VelocityVerlet();
+        _integrator = std::make_unique<integrator::VelocityVerlet>();
         settings::TimingsSettings::setTimeStep(0.1);
 
-        _molecule1 = new molsys::Molecule();
-        _molecule1->setNumberOfAtoms(2);
+        _molecule1 = std::make_unique<molsys::Molecule>();
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linearAlgebra::Vec3D(1.0, 1.0, 1.0));
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
 
-        atom1->setVelocity(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
+        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
 
-        atom1->setForce(linearAlgebra::Vec3D(0.0, 0.0, 0.0));
-        atom2->setForce(linearAlgebra::Vec3D(1.0, 3.0, 5.0));
+        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0));
 
         atom1->setMass(1.0);
         atom2->setMass(2.0);
@@ -70,26 +73,15 @@ class TestIntegrator : public ::testing::Test
         _molecule1->addAtom(atom1);
         _molecule1->addAtom(atom2);
 
-        _molecule1->setMolMass(3.0);
+        _box = std::make_unique<molsys::SimulationBox>();
 
-        _box = new molsys::SimulationBox();
-        _box->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        _box->setBox(orthoBox, false);
 
         _box->addMolecule(*_molecule1);
         _box->addAtom(atom1);
         _box->addAtom(atom2);
     }
-
-    void TearDown() override
-    {
-        delete _integrator;
-        delete _molecule1;
-        delete _box;
-    }
-
-    integrator::Integrator *_integrator;
-    molsys::Molecule       *_molecule1;
-    molsys::SimulationBox  *_box;
 };
 
-#endif   // _TEST_INTEGRATOR_HPP_
+#endif   // TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP

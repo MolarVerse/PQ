@@ -1,6 +1,10 @@
 # Each performance-regression benchmark is a standalone fixed-work executable.
 # To add one: drop a perf<Name>.cpp here and add it to the list below. The CI
 # gate (.github/workflows/perf.yml) auto-discovers every perf_* target.
+# The gate compares each benchmark with the build of the base branch under the
+# same name. If a PR changes WHAT a benchmark measures, give it a new name (it
+# is then listed as new, the old one as removed); otherwise the change shows up
+# as a regression or an improvement.
 set(perf_benchmarks
     perfInterWater.cpp
     perfForceKernel.cpp
@@ -13,7 +17,36 @@ set(perf_benchmarks
     perfIntegrator.cpp
     perfKinetics.cpp
     perfVirial.cpp
-    perfConstraints.cpp
+    perfShakeRattle.cpp
+    perfMShake.cpp
+    perfHybridZones.cpp
+    perfDftbRunnerFiles.cpp
+    perfTurbomoleRunnerFiles.cpp
+    perfPyscfRunnerFiles.cpp
+    perfSteepestDescent.cpp
+    perfAdam.cpp
+    perfOptimizerHistory.cpp
+    perfLearningRate.cpp
+    perfInputReadersN100.cpp
+    perfInputReadersN400.cpp
+    perfInputReadersN1600.cpp
+    perfBerendsenThermostat.cpp
+    perfLangevinThermostat.cpp
+    perfNoseHooverThermostat.cpp
+    perfVelocityRescalingThermostat.cpp
+    perfBerendsenManostat.cpp
+    perfStochasticRescalingManostat.cpp
+    perfGuffPair.cpp
+    perfReactionField.cpp
+    perfMaxwellBoltzmann.cpp
+    perfResetKinetics.cpp
+    perfEndToEnd.cpp
+    perfInterWaterN216.cpp
+    perfInterWaterN512.cpp
+    perfInterWaterN1728.cpp
+    perfOutputWritersN100.cpp
+    perfOutputWritersN400.cpp
+    perfOutputWritersN1600.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -37,11 +70,18 @@ foreach(perf_source ${perf_benchmarks})
 
     target_link_libraries(perf_${perf_name}
         PRIVATE
+        ${CMAKE_DL_LIBS}
         intraNonBonded
         forceField
         integrator
+        thermostat
+        manostat
+        maxwellBoltzmann
+        resetKinetics
         virial
         constraints
+        output
+        hybridConfigurator
         molsys
         potential
         interWater
@@ -49,7 +89,20 @@ foreach(perf_source ${perf_benchmarks})
         physicalData
         box
         linearAlgebra
+        externalQM
+        optimization
+        engine
+        PQ_input
+        restartFileReader
+        topologyFileReader
     )
+
+    # the end-to-end benchmark runs the real driver on a small input set
+    if(perf_name STREQUAL "endToEnd")
+        target_link_libraries(perf_${perf_name} PRIVATE driver)
+        target_compile_definitions(perf_${perf_name} PRIVATE
+            PQ_PERF_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data/endToEnd")
+    endif()
 
     # enable the callgrind counter hook if valgrind's header is available
     if(HAVE_CALLGRIND_H)
@@ -58,6 +111,13 @@ foreach(perf_source ${perf_benchmarks})
 
     list(APPEND perf_targets perf_${perf_name})
 endforeach()
+
+# allocation counter: preloaded by scripts/perf_gate.sh in a plain run of every
+# benchmark (not linked into them). Linux/glibc only.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    add_library(perf_alloc_counter SHARED allocCounter/perfAllocCounter.cpp)
+    list(APPEND perf_targets perf_alloc_counter)
+endif()
 
 # aggregate target so CI can build every benchmark with one command
 add_custom_target(perf_benchmarks)

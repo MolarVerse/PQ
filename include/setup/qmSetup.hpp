@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_SETUP_HPP_
-
-#define _QM_SETUP_HPP_
+#ifndef SETUP__QM_SETUP_HPP
+#define SETUP__QM_SETUP_HPP
 
 #include "qmCapableEngine.hpp"
 namespace engine
@@ -31,9 +30,11 @@ namespace engine
     class QMMDEngine;   // forward declaration
 }   // namespace engine
 
+class ReferenceSettings;
+
 namespace setup
 {
-    void setupQM(engine::Engine &);
+    void setupQM(engine::Engine &, ReferenceSettings &references);
 
     /**
      * @class QMSetup
@@ -49,15 +50,15 @@ namespace setup
        public:
         explicit QMSetup(engine::QMCapableEngine &qmCapableEngine);
 
-        void setup();
-        void setupQMMethod();
-        void setupQMMethodAseDftbPlus();
-        void setupQMMethodAseXtb();
-        void setupQMScript() const;
-        void setupCoulombRadiusCutOff() const;
-        void setupWriteInfo() const;
+        void        setup(ReferenceSettings &references);
+        void        setupQMMethod();
+        static void setupQMMethodAseDftbPlus();
+        static void setupQMMethodAseXtb(ReferenceSettings &references);
+        void        setupQMScript() const;
+        static void setupCoulombRadiusCutOff();
+        void        setupWriteInfo() const;
     };
 
 }   // namespace setup
 
-#endif   // _QM_SETUP_HPP_
+#endif   // SETUP__QM_SETUP_HPP

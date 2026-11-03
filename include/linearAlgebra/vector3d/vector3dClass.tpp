@@ -1,0 +1,372 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_TPP
+#define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_TPP
+
+#include "concepts/vector3dConcepts.hpp"
+#include "vector3dClass.hpp"
+
+namespace linalg
+{
+    /********************
+     *                  *
+     * assign operators *
+     *                  *
+     ********************/
+
+    /***************
+     * = operators *
+     ***************/
+
+    /**
+     * @brief move assignment operator
+     *
+     * @tparam T
+     * @param vec
+     * @return Vector3D<T>&
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator=(Vector3D<T> &&vec) noexcept
+    {
+        if (this == &vec)
+            return *this;
+
+        x = vec.x;
+        y = vec.y;
+        z = vec.z;
+        return *this;
+    }
+
+    /**
+     * @brief copy assignment operator
+     *
+     * @tparam T
+     * @param vec
+     * @return Vector3D<T>&
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator=(const Vector3D<T> &vec)
+    {
+        if (this == &vec)
+            return *this;
+
+        x = vec.x;
+        y = vec.y;
+        z = vec.z;
+        return *this;
+    }
+
+    /****************
+     * += operators *
+     ****************/
+
+    /**
+     * @brief operator += inplace
+     *
+     * @param vec
+     */
+    template <typename T>
+    void Vector3D<T>::operator+=(const Vector3D<T> &vec)
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    {
+        x += vec.x;
+        y += vec.y;
+        z += vec.z;
+    }
+
+    /**
+     * @brief += operator for two Vector3d objects
+     *
+     * @param vec
+     * @return `Vector3D<T>&` (inplace addition)
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator+=(const T &vec)
+    requires pq::Arithmetic<T>
+    {
+        x += vec;
+        y += vec;
+        z += vec;
+        return *this;
+    }
+
+    /****************
+     * -= operators *
+     ****************/
+
+    /**
+     * @brief operator -=
+     *
+     * @param vec
+     * @return `Vector3D<T>&` (inplace subtraction)
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &vec)
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    {
+        x -= vec.x;
+        y -= vec.y;
+        z -= vec.z;
+        return *this;
+    }
+
+    /**
+     * @brief operator -=
+     *
+     * @param vec
+     * @return `Vector3D<T>&` (inplace subtraction)
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator-=(const T &vec)
+    requires pq::Arithmetic<T>
+    {
+        x -= vec;
+        y -= vec;
+        z -= vec;
+        return *this;
+    }
+
+    /****************
+     * *= operators *
+     ****************/
+
+    /**
+     * @brief operator *=
+     *
+     * @tparam T
+     * @param vec
+     * @return `Vector3D<T>&` (inplace multiplication)
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<T> &vec)
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    {
+        x *= vec.x;
+        y *= vec.y;
+        z *= vec.z;
+        return *this;
+    }
+
+    /**
+     * @brief operator *=
+     *
+     * @tparam T
+     * @param vec
+     * @return `Vector3D<T>&` (inplace multiplication)
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator*=(const T &vec)
+    requires pq::Arithmetic<T>
+    {
+        x *= vec;
+        y *= vec;
+        z *= vec;
+        return *this;
+    }
+
+    /****************
+     * /= operators *
+     ****************/
+
+    /**
+     * @brief operator /=
+     *
+     * @tparam T
+     * @param vec
+     * @return `Vector3D<T>&` (inplace division)
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator/=(const Vector3D<T> &vec)
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    {
+        x /= vec.x;
+        y /= vec.y;
+        z /= vec.z;
+        return *this;
+    }
+
+    /**
+     * @brief operator /=
+     *
+     * @tparam T
+     * @param vec
+     * @return `Vector3D<T>&` (inplace division)
+     */
+    template <typename T>
+    Vector3D<T> &Vector3D<T>::operator/=(const T &vec)
+    requires pq::Arithmetic<T>
+    {
+        x /= vec;
+        y /= vec;
+        z /= vec;
+        return *this;
+    }
+
+    /**********************
+     *                    *
+     * indexing operators *
+     *                    *
+     **********************/
+
+    /**
+     * @brief index operator
+     *
+     * @param index
+     * @return T&
+     */
+    template <typename T>
+    T &Vector3D<T>::operator[](size_t index)
+    {
+        return xyz[index];
+    }
+
+    /**
+     * @brief const index operator
+     *
+     * @param index
+     * @return const T&
+     */
+    template <typename T>
+    const T &Vector3D<T>::operator[](size_t index) const
+    {
+        return xyz[index];
+    }
+
+    /*******************
+     *                 *
+     * unary operators *
+     *                 *
+     *******************/
+
+    /**
+     * @brief unary - operator for Vector3d
+     *
+     * @return Vector3D<T>
+     */
+    template <typename T>
+    Vector3D<T> Vector3D<T>::operator-() const
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    {
+        return Vector3D<T>(-x, -y, -z);
+    }
+
+    /********************
+     *                  *
+     * iterator methods *
+     *                  *
+     ********************/
+
+    /**
+     * @brief begin iterator
+     *
+     * @return constexpr std::array<T, 3>::iterator
+     */
+    template <typename T>
+    constexpr std::array<T, 3>::const_iterator Vector3D<T>::begin(
+    ) const noexcept
+    {
+        return xyz.begin();
+    }
+
+    /**
+     * @brief end iterator
+     *
+     * @return constexpr std::array<T, 3>::iterator
+     */
+    template <typename T>
+    constexpr std::array<T, 3>::const_iterator Vector3D<T>::end() const noexcept
+    {
+        return xyz.end();
+    }
+
+    /*******************
+     * casting methods *
+     *******************/
+
+    /**
+     * @brief static cast of all vector members
+     *
+     * @tparam U
+     * @return `Vector3D<U>`
+     */
+    template <typename T>
+    template <typename U>
+    Vector3D<T>::operator Vector3D<U>() const
+    {
+        return Vector3D<U>(
+            static_cast<U>(x),
+            static_cast<U>(y),
+            static_cast<U>(z)
+        );
+    }
+
+    /**
+     * @brief cast to std::vector
+     *
+     * @return std::vector<T>
+     */
+    template <typename T>
+    std::vector<T> Vector3D<T>::toStdVector() const
+    {
+        return std::vector<T>(xyz.begin(), xyz.end());
+    }
+
+    /**
+     * @brief convert vector to specified unit
+     *
+     * @tparam U
+     * @param unit
+     * @return Vector3D<decltype(x * unit)>
+     */
+    template <typename T>
+    template <mstd::UnitLike U>
+    auto Vector3D<T>::in(const U &unit) const
+    {
+        return Vector3D<decltype(x.in(unit))>(
+            x.in(unit),
+            y.in(unit),
+            z.in(unit)
+        );
+    }
+
+    /**
+     * @brief convert vector to numerical value in specified unit
+     *
+     * @tparam U
+     * @param unit
+     * @return Vector3D<decltype(x.numerical_value_in(unit))>
+     */
+    template <typename T>
+    template <mstd::UnitLike U>
+    auto Vector3D<T>::numerical_value_in(const U &unit) const
+    {
+        return Vector3D<decltype(x.numerical_value_in(unit))>(
+            x.numerical_value_in(unit),
+            y.numerical_value_in(unit),
+            z.numerical_value_in(unit)
+        );
+    }
+
+}   // namespace linalg
+
+#endif   // LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_TPP

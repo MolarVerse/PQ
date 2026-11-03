@@ -22,25 +22,66 @@
 
 #include "testCelllist.hpp"
 
-#include <limits>   // for numeric_limits
-#include <memory>   // for make_shared, __shared_ptr_access
-#include <vector>   // for vector
+#include <limits>
+#include <memory>
+#include <vector>
 
-#include "atom.hpp"                // for Atom
-#include "cell.hpp"                // for Cell
-#include "exceptions.hpp"          // for CellListException
-#include "gtest/gtest.h"           // for Message, TestPartResult
-#include "molecule.hpp"            // for Molecule
-#include "potentialSettings.hpp"   // for PotentialSettings
-#include "settings.hpp"
-#include "simulationBox.hpp"      // for SimulationBox
-#include "throwWithMessage.hpp"   // for EXPECT_THROW_MSG
+#include "atom.hpp"
+#include "cell.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "potentialSettings.hpp"
+#include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 #include "vector3d.hpp"
 
 TEST_F(TestCellList, determineCellSize)
 {
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
-    EXPECT_EQ(_cellList->getCellSize(), linearAlgebra::Vec3D(5.0, 5.0, 5.0));
+    EXPECT_EQ(_cellList->getCellSize(), linalg::Vec3D(5.0, 5.0, 5.0));
+}
+
+/**
+ * @brief tests that determineCellSize rejects zero or negative box
+ * dimensions instead of silently producing a zero or negative cell size
+ */
+TEST_F(TestCellList, determineCellSizeRejectsNonPositiveBoxDimensions)
+{
+    constexpr auto message =
+        "Invalid simulation box dimensions during cell-list setup - box "
+        "dimensions must be finite and positive, the simulation has become "
+        "unstable";
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(0.0, 10.0, 10.0)),
+        exc::CellListException,
+        message
+    );
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(10.0, -1.0, 10.0)),
+        exc::CellListException,
+        message
+    );
+}
+
+/**
+ * @brief tests that determineCellSize rejects non-finite box dimensions
+ * instead of silently propagating NaN/Inf cell boundaries
+ */
+TEST_F(TestCellList, determineCellSizeRejectsNonFiniteBoxDimensions)
+{
+    const auto nan = std::numeric_limits<double>::quiet_NaN();
+
+    EXPECT_THROW_MSG(
+        _cellList->determineCellSize(linalg::Vec3D(10.0, nan, 10.0)),
+        exc::CellListException,
+        "Invalid simulation box dimensions during cell-list setup - box "
+        "dimensions must be finite and positive, the simulation has become "
+        "unstable"
+    );
 }
 
 TEST_F(TestCellList, determineCellBoundaries)
@@ -51,8 +92,8 @@ TEST_F(TestCellList, determineCellBoundaries)
 
     const auto &cells = _cellList->getCells();
 
-    const auto box = _simulationBox->getBoxDimensions();
-    auto index     = static_cast<linearAlgebra::Vec3D>(cells[0].getCellIndex());
+    const auto box   = _simulationBox->getBoxDimensions();
+    auto       index = static_cast<linalg::Vec3D>(cells[0].getCellIndex());
     EXPECT_EQ(
         cells[0].getLowerBoundary(),
         _cellList->getCellSize() * index - box / 2.0
@@ -62,7 +103,7 @@ TEST_F(TestCellList, determineCellBoundaries)
         _cellList->getCellSize() * (index + 1.0) - box / 2.0
     );
 
-    index = static_cast<linearAlgebra::Vec3D>(cells[1].getCellIndex());
+    index = static_cast<linalg::Vec3D>(cells[1].getCellIndex());
     EXPECT_EQ(
         cells[1].getLowerBoundary(),
         _cellList->getCellSize() * index - box / 2.0
@@ -75,64 +116,65 @@ TEST_F(TestCellList, determineCellBoundaries)
 
 TEST_F(TestCellList, getCellIndex)
 {
-    const auto                  cellIndices = linearAlgebra::Vec3Dul(1, 2, 3);
+    const auto                  cellIndices = linalg::Vec3Dul(1, 2, 3);
     [[maybe_unused]] const auto dummy = _cellList->getCellIndex(cellIndices);
 
-    EXPECT_EQ(_cellList->getCellIndex(cellIndices), 1 * 2 * 2 + 2 * 2 + 3);
+    EXPECT_EQ(_cellList->getCellIndex(cellIndices), (1 * 2 * 2) + (2 * 2) + 3);
 }
 
 TEST_F(TestCellList, getCellIndexOfAtom)
 {
-    const auto position1 = linearAlgebra::Vec3D(1.0, 2.0, 3.0);
-    const auto position2 = linearAlgebra::Vec3D(6.0, 7.0, 8.0);
+    const auto position1 = linalg::Vec3D(1.0, 2.0, 3.0);
+    const auto position2 = linalg::Vec3D(6.0, 7.0, 8.0);
 
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
 
     EXPECT_EQ(
         _cellList
             ->getCellIndexOfAtom(_simulationBox->getBoxDimensions(), position1),
-        linearAlgebra::Vec3Dul(1, 1, 1)
+        linalg::Vec3Dul(1, 1, 1)
     );
     EXPECT_EQ(
         _cellList
             ->getCellIndexOfAtom(_simulationBox->getBoxDimensions(), position2),
-        linearAlgebra::Vec3Dul(0, 0, 0)
+        linalg::Vec3Dul(0, 0, 0)
     );
 }
 
 TEST_F(TestCellList, getCellIndexOfAtomWrapsPeriodicBoundaryCoordinates)
 {
-    _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(10.0, 10.0, 10.0));
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _simulationBox->setBox(orthoBox, false);
     _cellList->setNumberOfCells(2);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
 
     EXPECT_EQ(
         _cellList->getCellIndexOfAtom(
             _simulationBox->getBoxDimensions(),
-            linearAlgebra::Vec3D(-5.0, -5.0, -5.0)
+            linalg::Vec3D(-5.0, -5.0, -5.0)
         ),
-        linearAlgebra::Vec3Dul(0, 0, 0)
+        linalg::Vec3Dul(0, 0, 0)
     );
     EXPECT_EQ(
         _cellList->getCellIndexOfAtom(
             _simulationBox->getBoxDimensions(),
-            linearAlgebra::Vec3D(0.0, 0.0, 0.0)
+            linalg::Vec3D(0.0, 0.0, 0.0)
         ),
-        linearAlgebra::Vec3Dul(1, 1, 1)
+        linalg::Vec3Dul(1, 1, 1)
     );
     EXPECT_EQ(
         _cellList->getCellIndexOfAtom(
             _simulationBox->getBoxDimensions(),
-            linearAlgebra::Vec3D(5.0, 5.0, 5.0)
+            linalg::Vec3D(5.0, 5.0, 5.0)
         ),
-        linearAlgebra::Vec3Dul(0, 0, 0)
+        linalg::Vec3Dul(0, 0, 0)
     );
 }
 
 TEST_F(TestCellList, addNeighbouringCellPointers)
 {
     auto cell = molsys::Cell();
-    cell.setCellIndex(linearAlgebra::Vec3Dul(0, 0, 0));
+    cell.setCellIndex(linalg::Vec3Dul(0, 0, 0));
 
     _cellList->setNumberOfCells(7);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
@@ -143,58 +185,19 @@ TEST_F(TestCellList, addNeighbouringCellPointers)
     const auto &neighbourCells = cell.getNeighbourCells();
 
     EXPECT_EQ(neighbourCells.size(), 13);
-    EXPECT_EQ(
-        neighbourCells[0]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 6, 6)
-    );
-    EXPECT_EQ(
-        neighbourCells[1]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 6, 0)
-    );
-    EXPECT_EQ(
-        neighbourCells[2]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 6, 1)
-    );
-    EXPECT_EQ(
-        neighbourCells[3]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 0, 6)
-    );
-    EXPECT_EQ(
-        neighbourCells[4]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 0, 0)
-    );
-    EXPECT_EQ(
-        neighbourCells[5]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 0, 1)
-    );
-    EXPECT_EQ(
-        neighbourCells[6]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 1, 6)
-    );
-    EXPECT_EQ(
-        neighbourCells[7]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 1, 0)
-    );
-    EXPECT_EQ(
-        neighbourCells[8]->getCellIndex(),
-        linearAlgebra::Vec3Dul(6, 1, 1)
-    );
-    EXPECT_EQ(
-        neighbourCells[9]->getCellIndex(),
-        linearAlgebra::Vec3Dul(0, 6, 6)
-    );
-    EXPECT_EQ(
-        neighbourCells[10]->getCellIndex(),
-        linearAlgebra::Vec3Dul(0, 6, 0)
-    );
-    EXPECT_EQ(
-        neighbourCells[11]->getCellIndex(),
-        linearAlgebra::Vec3Dul(0, 6, 1)
-    );
-    EXPECT_EQ(
-        neighbourCells[12]->getCellIndex(),
-        linearAlgebra::Vec3Dul(0, 0, 6)
-    );
+    EXPECT_EQ(neighbourCells[0]->getCellIndex(), linalg::Vec3Dul(6, 6, 6));
+    EXPECT_EQ(neighbourCells[1]->getCellIndex(), linalg::Vec3Dul(6, 6, 0));
+    EXPECT_EQ(neighbourCells[2]->getCellIndex(), linalg::Vec3Dul(6, 6, 1));
+    EXPECT_EQ(neighbourCells[3]->getCellIndex(), linalg::Vec3Dul(6, 0, 6));
+    EXPECT_EQ(neighbourCells[4]->getCellIndex(), linalg::Vec3Dul(6, 0, 0));
+    EXPECT_EQ(neighbourCells[5]->getCellIndex(), linalg::Vec3Dul(6, 0, 1));
+    EXPECT_EQ(neighbourCells[6]->getCellIndex(), linalg::Vec3Dul(6, 1, 6));
+    EXPECT_EQ(neighbourCells[7]->getCellIndex(), linalg::Vec3Dul(6, 1, 0));
+    EXPECT_EQ(neighbourCells[8]->getCellIndex(), linalg::Vec3Dul(6, 1, 1));
+    EXPECT_EQ(neighbourCells[9]->getCellIndex(), linalg::Vec3Dul(0, 6, 6));
+    EXPECT_EQ(neighbourCells[10]->getCellIndex(), linalg::Vec3Dul(0, 6, 0));
+    EXPECT_EQ(neighbourCells[11]->getCellIndex(), linalg::Vec3Dul(0, 6, 1));
+    EXPECT_EQ(neighbourCells[12]->getCellIndex(), linalg::Vec3Dul(0, 0, 6));
 }
 
 TEST_F(TestCellList, addNeighbouringCells)
@@ -213,10 +216,7 @@ TEST_F(TestCellList, addNeighbouringCells)
         EXPECT_EQ(neighbourCells.size(), 62);
     }
 
-    EXPECT_EQ(
-        _cellList->getNumberOfNeighbourCells(),
-        linearAlgebra::Vec3Dul(2, 2, 2)
-    );
+    EXPECT_EQ(_cellList->getNumberOfNeighbourCells(), linalg::Vec3Dul(2, 2, 2));
 }
 
 TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
@@ -228,7 +228,7 @@ TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
 
     EXPECT_THROW_MSG(
         _cellList->addNeighbouringCells(4.0),
-        customException::CellListException,
+        exc::CellListException,
         "Invalid cell-list layout for x dimension: cell-number must be at "
         "least 2 * neighbour cells + 1 (required 3, configured 2). Decrease "
         "coulomb radius cutoff or increase cell-number."
@@ -241,13 +241,14 @@ TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
  */
 TEST_F(TestCellList, checkCoulombCutoff)
 {
-    _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(50.0, 50.0, 50.0));
+    molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
+    _simulationBox->setBox(orthoBox, false);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
     EXPECT_NO_THROW(_cellList->checkCoulombCutoff(200.0));
 
     EXPECT_THROW_MSG(
         _cellList->checkCoulombCutoff(0.1),
-        customException::CellListException,
+        exc::CellListException,
         "Coulomb cutoff is smaller than half of the largest cell size."
     );
 }
@@ -258,7 +259,7 @@ TEST_F(TestCellList, resizeCellsRejectsOverflow)
 
     EXPECT_THROW_MSG(
         _cellList->resizeCells(),
-        customException::CellListException,
+        exc::CellListException,
         "Number of cells exceeds the supported size"
     );
 }
@@ -269,7 +270,7 @@ TEST_F(TestCellList, resizeCellsRejectsZeroDimensions)
 
     EXPECT_THROW_MSG(
         _cellList->resizeCells(),
-        customException::CellListException,
+        exc::CellListException,
         "Number of cells must be positive"
     );
 }
@@ -280,7 +281,7 @@ TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
 {
     _cellList->setNumberOfCells(4);
     _cellList->setNumberOfNeighbourCells(2);
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
 
     const auto cloned = _cellList->clone();
 
@@ -289,6 +290,61 @@ TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
     EXPECT_EQ(
         cloned->getNumberOfNeighbourCells(),
         _cellList->getNumberOfNeighbourCells()
+    );
+}
+
+TEST_F(TestCellList, addMoleculesToCellsRejectsNonFinitePositions)
+{
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+
+    auto molecule = molsys::Molecule();
+
+    const auto atom = std::make_shared<molsys::Atom>();
+    const auto nan  = std::numeric_limits<double>::quiet_NaN();
+    atom->setPosition(linalg::Vec3D(nan, nan, nan));
+
+    molecule.addAtom(atom);
+    _simulationBox->addMolecule(molecule);
+
+    EXPECT_THROW_MSG(
+        _cellList->addMoleculesToCells(*_simulationBox),
+        exc::CellListException,
+        "Invalid atom position during cell-list update - coordinates "
+        "are non-finite, the simulation has become unstable"
+    );
+}
+
+TEST_F(TestCellList, getCellIndexOfAtomWrapsEscapedPositions)
+{
+    _cellList->determineCellSize(_simulationBox->getBoxDimensions());
+
+    EXPECT_EQ(
+        _cellList->getCellIndexOfAtom(
+            _simulationBox->getBoxDimensions(),
+            linalg::Vec3D(-29.0, 0.0, 0.0)
+        ),
+        linalg::Vec3Dul(1, 1, 1)
+    );
+}
+
+TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
+{
+    auto cellList = molsys::CellList();
+    cellList.determineCellSize(_simulationBox->getBoxDimensions());
+
+    auto molecule = molsys::Molecule();
+
+    const auto atom = std::make_shared<molsys::Atom>();
+    atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+
+    molecule.addAtom(atom);
+    _simulationBox->addMolecule(molecule);
+
+    EXPECT_THROW_MSG(
+        cellList.addMoleculesToCells(*_simulationBox),
+        exc::CellListException,
+        "Invalid cell index during cell-list update - the cell "
+        "list is inconsistent, the simulation has become unstable"
     );
 }
 
@@ -305,16 +361,15 @@ TEST_F(TestCellList, updateCellList)
     _cellList->resizeCells();
 
     EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
-    settings::Settings::activateCellList();
+    settings::GeneralSettings::activateCellList();
 
     auto molecule = molsys::Molecule();
-    molecule.setNumberOfAtoms(2);
 
     const auto atom1 = std::make_shared<molsys::Atom>();
     const auto atom2 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition(linearAlgebra::Vec3D(1.0, 2.0, 3.0));
-    atom2->setPosition(linearAlgebra::Vec3D(6.0, 7.0, 8.0));
+    atom1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom2->setPosition(linalg::Vec3D(6.0, 7.0, 8.0));
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -324,14 +379,13 @@ TEST_F(TestCellList, updateCellList)
     _cellList->setup(*_simulationBox);
     auto cellSizeOld = _cellList->getCellSize();
 
-    _simulationBox->setBoxDimensions(linearAlgebra::Vec3D(50.0, 50.0, 50.0));
-    _simulationBox->setBoxSizeHasChanged(true);
+    molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
+    _simulationBox->setBox(orthoBox, false);
 
     _cellList->updateCellList(*_simulationBox);
 
     EXPECT_NE(_cellList->getCellSize(), cellSizeOld);
 
-    _simulationBox->setBoxSizeHasChanged(false);
     cellSizeOld = _cellList->getCellSize();
     _cellList->updateCellList(*_simulationBox);
 

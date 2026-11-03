@@ -22,31 +22,58 @@
 
 #include "forceFieldSettings.hpp"
 
-using namespace settings;
+#include <utility>
 
-/********************
- * standard getters *
- ********************/
+/**
+ * @brief Construct a new Force Field Settings object
+ *
+ */
+ForceFieldSettings::ForceFieldSettings() : _type(ForceFieldType::OFF) {}
+
+/**
+ * @brief Get the type of the force field
+ *
+ * @return ForceFieldType
+ */
+ForceFieldType ForceFieldSettings::getType() const { return _type.get(); }
+
+/**
+ * @brief Set the type of the force field
+ *
+ * @param value
+ */
+void ForceFieldSettings::setType(ForceFieldType value) { _type.set(value); }
 
 /**
  * @brief Get if the force field is active
  *
  * @return ForceFieldType
  */
-bool ForceFieldSettings::isActive() { return _active; }
+bool ForceFieldSettings::isActive() const
+{
+    switch (_type.get())
+    {
+        case ForceFieldType::OFF: return false;
+        case ForceFieldType::ON:
+        case ForceFieldType::BONDED: return true;
+    }
 
-/********************
- * standard setters *
- ********************/
+    std::unreachable();
+}
 
 /**
- * @brief set the force field active
+ * @brief Get if the non-Coulombic part of the force field is active
  *
+ * @return bool
  */
-void ForceFieldSettings::activate() { _active = true; }
+bool ForceFieldSettings::isNonCoulombicActive() const
+{
+    switch (_type.get())
+    {
+        case ForceFieldType::OFF:
+        case ForceFieldType::BONDED: return false;
+        case ForceFieldType::ON: return true;
+    }
 
-/**
- * @brief set the force field inactive
- *
- */
-void ForceFieldSettings::deactivate() { _active = false; }
+    std::unreachable();
+}

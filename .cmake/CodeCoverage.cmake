@@ -389,14 +389,14 @@ function(setup_target_for_coverage_lcov)
 
     # Show where to find the lcov info report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
-        COMMAND ;
+        COMMAND ${CMAKE_COMMAND} -E true
         COMMENT "Lcov code coverage info report saved in ${Coverage_NAME}.info."
         ${GCOVR_XML_CMD_COMMENT}
     )
 
     # Show info where to find the report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
-        COMMAND ;
+        COMMAND ${CMAKE_COMMAND} -E true
         COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the coverage report."
     )
 endfunction() # setup_target_for_coverage_lcov
@@ -493,7 +493,7 @@ function(setup_target_for_coverage_gcovr_xml)
 
     # Show info where to find the report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
-        COMMAND ;
+        COMMAND ${CMAKE_COMMAND} -E true
         COMMENT "Cobertura code coverage report saved in ${Coverage_NAME}.xml."
     )
 endfunction() # setup_target_for_coverage_gcovr_xml
@@ -594,7 +594,10 @@ function(setup_target_for_coverage_gcovr_html)
         COMMAND ${GCOVR_HTML_FOLDER_CMD}
         COMMAND ${GCOVR_HTML_CMD}
 
-        BYPRODUCTS ${PROJECT_BINARY_DIR}/${Coverage_OUTPUT_PATH}/index.html # report directory
+        # No BYPRODUCTS: every module has its own coverage target and they all
+        # write their report to the same directory, and the Ninja generator
+        # rejects several rules that generate the same file ("multiple rules
+        # generate coverage/index.html"). Nothing depends on the report file.
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
         DEPENDS ${Coverage_DEPENDENCIES}
         VERBATIM # Protect arguments to commands
@@ -603,7 +606,7 @@ function(setup_target_for_coverage_gcovr_html)
 
     # Show info where to find the report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
-        COMMAND ;
+        COMMAND ${CMAKE_COMMAND} -E true
         COMMENT "Open ./${Coverage_OUTPUT_PATH}/index.html in your browser to view the coverage report."
     )
 endfunction() # setup_target_for_coverage_gcovr_html

@@ -20,25 +20,23 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>   // for Test, TestInfo (ptr only), InitGoogleTest, RUN_ALL_TESTS
+#include <gtest/gtest.h>
 
-#include <string>   // for allocator, basic_string
+#include <string>
 
-#include "gtest/gtest.h"                    // for Message, TestPartResult
-#include "qmmdEngine.hpp"                   // for QMMDEngine
-#include "randomNumberGeneratorSetup.hpp"   // for randomNumberGeneratorSetup
-#include "settings.hpp"                     // for Settings
-
-using namespace settings;
+#include "generalSettings.hpp"
+#include "qmmdEngine.hpp"
+#include "randomNumberGeneratorSetup.hpp"
 
 TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine{settings};
     auto setupRandomNumberGenerator = setup::RandomNumberGeneratorSetup(engine);
-    engine.getEngineOutput().getLogOutput().setFilename("default.log");
+    engine.getEngineOutput().getLogOutput().setFilename("default.log", false);
 
-    Settings::setIsRandomSeedSet(false);
-    Settings::setRandomSeed(1);
+    settings::GeneralSettings::setIsRandomSeedSet(false);
+    settings::GeneralSettings::setRandomSeed(1);
 
     setupRandomNumberGenerator.setup();
 
@@ -53,12 +51,13 @@ TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
 
 TEST(TestRandomNumberGeneratorSetup, setupWithRandomSeed)
 {
-    engine::QMMDEngine engine;
+    Settings           settings;
+    engine::QMMDEngine engine{settings};
     auto setupRandomNumberGenerator = setup::RandomNumberGeneratorSetup(engine);
-    engine.getEngineOutput().getLogOutput().setFilename("default.log");
+    engine.getEngineOutput().getLogOutput().setFilename("default.log", false);
 
-    Settings::setIsRandomSeedSet(true);
-    Settings::setRandomSeed(73);
+    settings::GeneralSettings::setIsRandomSeedSet(true);
+    settings::GeneralSettings::setRandomSeed(73);
 
     setupRandomNumberGenerator.setup();
 

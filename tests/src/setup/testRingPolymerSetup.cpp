@@ -22,35 +22,34 @@
 
 #include <gtest/gtest.h>
 
-#include "ringPolymerqmmdEngine.hpp"
+#include "generalSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "ringPolymerSetup.hpp"
-#include "settings.hpp"
+#include "ringPolymerqmmdEngine.hpp"
 #include "testSetup.hpp"
-
-using namespace setup;
-using namespace settings;
 
 TEST_F(TestSetup, setupRingPolymerIsNoOpWhenNotActivated)
 {
-    Settings::setIsRingPolymerMDActivated(false);
-    EXPECT_NO_THROW(setupRingPolymer(*_engine));
+    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
+    EXPECT_NO_THROW(setup::setupRingPolymer(*_engine));
 }
 
 TEST_F(TestSetup, ringPolymerSetupPhysicalDataResizesBeads)
 {
-    RingPolymerSettings::setNumberOfBeads(4);
-    engine::RingPolymerQMMDEngine rpEngine;
+    Settings settings;
+    settings.ringPolymerSettings.setNumberOfBeads(4);
+    engine::RingPolymerQMMDEngine rpEngine{settings};
 
-    RingPolymerSetup s(rpEngine);
-    EXPECT_NO_THROW(s.setupPhysicalData());
+    setup::RingPolymerSetup setup(rpEngine);
+    EXPECT_NO_THROW(setup.setupPhysicalData());
 }
 
 TEST_F(TestSetup, ringPolymerSetupSimulationBoxAddsBeadsToEngine)
 {
-    RingPolymerSettings::setNumberOfBeads(3);
-    engine::RingPolymerQMMDEngine rpEngine;
+    Settings settings;
+    settings.ringPolymerSettings.setNumberOfBeads(3);
+    engine::RingPolymerQMMDEngine rpEngine{settings};
 
-    RingPolymerSetup s(rpEngine);
-    EXPECT_NO_THROW(s.setupSimulationBox());
+    setup::RingPolymerSetup setup(rpEngine);
+    EXPECT_NO_THROW(setup.setupSimulationBox());
 }

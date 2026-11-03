@@ -20,11 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_FORCE_FIELD_HPP_
-
-#define _BOND_FORCE_FIELD_HPP_
-
-#include <cstddef>
+#ifndef FORCE_FIELD__BOND_FORCE_FIELD_HPP
+#define FORCE_FIELD__BOND_FORCE_FIELD_HPP
 
 #include "bond.hpp"
 
@@ -39,18 +36,18 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace potential
+namespace pot
 {
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
-}   // namespace potential
+}   // namespace pot
 
-namespace forceField
+namespace ff
 {
     /**
-     * @class BondForceField inherits from Bond
+     * @brief BondForceField inherits from Bond
      *
-     * @brief force field object for single bond length
+     * @details force field object for single bond length
      *
      */
     class BondForceField : public connectivity::Bond
@@ -59,43 +56,40 @@ namespace forceField
         BondId _type;
         bool   _isLinker = false;
 
-        double _equilBondLength;
-        double _forceConstant;
+        BondParams _params;
 
        public:
         BondForceField(
             molsys::Molecule *molecule1,
             molsys::Molecule *molecule2,
-            const size_t      atomIndex1,
-            const size_t      atomIndex2,
-            const BondId      type
+            AtomIndex         atomIndex1,
+            AtomIndex         atomIndex2,
+            BondId            type
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox       &simBox,
-            physicalData::PhysicalData        &data,
-            const potential::CoulombPotential &coulombPot,
-            potential::NonCoulombPotential    &nonCoulombPot
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData,
+            const pot::CoulombPotential &coulombPot,
+            pot::NonCoulombPotential    &nonCoulombPot
         );
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setIsLinker(const bool isLinker);
-        void setEquilibriumBondLength(const double equilibriumBondLength);
-        void setForceConstant(const double forceConstant);
+        void setIsLinker(bool isLinker);
+        void setParams(const BondParams &params);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] BondId getType() const;
-        [[nodiscard]] bool   isLinker() const;
-        [[nodiscard]] double getEquilibriumBondLength() const;
-        [[nodiscard]] double getForceConstant() const;
+        [[nodiscard]] BondId            getType() const;
+        [[nodiscard]] bool              isLinker() const;
+        [[nodiscard]] const BondParams &getParams() const;
     };
 
-}   // namespace forceField
+}   // namespace ff
 
-#endif   // _BOND_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__BOND_FORCE_FIELD_HPP

@@ -22,241 +22,236 @@
 
 #include "berendsenManostat.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cmath>       // for cbrt
+#include <algorithm>
+#include <bit>
+#include <cmath>
 
-#include "exceptions.hpp"   // for ExceptionType
 #include "globalTimer.hpp"
-#include "manostatSettings.hpp"   // for ManostatType, Isotropy
-#include "physicalData.hpp"       // for PhysicalData
-#include "simulationBox.hpp"      // for SimulationBox
-#include "timingsSettings.hpp"    // for TimingsSettings
+#include "manostatSettings.hpp"
+#include "physicalData.hpp"
+#include "simulationBox.hpp"
+#include "timingsSettings.hpp"
+#include "units.hpp"
 
-using namespace linearAlgebra;
-using namespace settings;
-using namespace manostat;
-using namespace customException;
-using namespace molsys;
-using namespace physicalData;
-
-/**
- * @brief Construct a new Berendsen Manostat:: Berendsen Manostat object
- *
- * @param targetPressure
- * @param tau
- * @param compressibility
- */
-BerendsenManostat::BerendsenManostat(
-    const double targetPressure,
-    const double tau,
-    const double compressibility
-)
-    : Manostat(targetPressure),
-      _tau(tau),
-      _compressibility(compressibility),
-      _dt(TimingsSettings::getTimeStep())
+namespace manostat
 {
-}
 
-/**
- * @brief Construct a new Berendsen Manostat:: Berendsen Manostat object
- *
- * @param targetPressure
- * @param tau
- * @param compressibility
- */
-SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat(
-    const double               targetPressure,
-    const double               tau,
-    const double               compressibility,
-    const size_t               anisotropicAxis,
-    const std::vector<size_t> &isotropicAxes
-)
-    : BerendsenManostat(targetPressure, tau, compressibility),
-      _2DAnisotropicAxis(anisotropicAxis),
-      _2DIsotropicAxes(isotropicAxes)
-{
-}
+    /**
+     * @brief apply Berendsen manostat for NPT ensemble
+     *
+     * @param simulationBox
+     * @param physicalData
+     */
+    void BerendsenManostat::applyManostat(
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
+    )
+    {
+        auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
 
-/**
- * @brief apply Berendsen manostat for NPT ensemble
- *
- * @param simBox
- * @param physicalData
- */
-void BerendsenManostat::applyManostat(
-    SimulationBox &simBox,
-    PhysicalData  &physicalData
-)
-{
-    auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
+        calculatePressure(simulationBox, physicalData);
 
-    calculatePressure(simBox, physicalData);
+        const auto mu = calculateMu();
 
-    const auto mu = calculateMu();
+        _validateScaling(simulationBox, mu);
 
-    // Reconstruction temporarily unwraps atoms. Molecule::scale() below wraps
-    // every position into the resized box.
-    auto reconstructMolecule = [&simBox](auto &molecule)
-    { molecule.reconstructAtomsAroundCenterOfMass(simBox.getBox()); };
+        // Reconstruction temporarily unwraps atoms. Molecule::scale() below
+        // wraps every position into the resized box.
+        auto reconstructMolecule = [&simulationBox](auto &molecule)
+        {
+            molecule.reconstructAtomsAroundCenterOfMass(simulationBox.getBox());
+        };
 
-    std::ranges::for_each(simBox.getMolecules(), reconstructMolecule);
+        std::ranges::for_each(
+            simulationBox.getMolecules(),
+            reconstructMolecule
+        );
 
-    simBox.scaleBox(mu);
+        simulationBox.scaleBox(mu);
+        simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
-    physicalData.setVolume(simBox.getVolume());
-    physicalData.setDensity(simBox.getDensity());
+        physicalData.setVolume(simulationBox.getVolume());
+        physicalData.setDensity(simulationBox.getDensity());
 
-    simBox.checkCoulRadiusCutOff(ExceptionType::MANOSTATEXCEPTION);
+        auto scaleMolecule = [&mu, &simulationBox](auto &molecule)
+        { molecule.scale(mu, simulationBox.getBox()); };
 
-    auto scaleMolecule = [&mu, &simBox](auto &molecule)
-    { molecule.scale(mu, simBox.getBox()); };
+        std::ranges::for_each(simulationBox.getMolecules(), scaleMolecule);
+    }
 
-    std::ranges::for_each(simBox.getMolecules(), scaleMolecule);
-}
+    /**
+     * @brief calculate mu as scaling factor for Berendsen manostat (isotropic)
+     *
+     * @details If fixed axes are specified, those axes are not scaled (mu
+     * = 1.0) and the remaining axes are scaled isotropically
+     *
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D BerendsenManostat::calculateMu() const
+    {
+        const auto targetPressure = _getSettings().getTargetPressure();
+        const auto fixedAxis      = _getSettings().getFixedAxis();
+        if (fixedAxis == FixedAxis::ALL)
+            return linalg::diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
-/**
- * @brief calculate mu as scaling factor for Berendsen manostat (isotropic)
- *
- * @return tensor3D
- */
-tensor3D BerendsenManostat::calculateMu() const
-{
-    const auto p         = trace(_pressureTensor) / 3.0;
-    const auto preFactor = _compressibility * _dt / _tau;
+        const auto tau = _getSettings().getTau().numerical_value_in(fs);
+        const auto compressibility = _getSettings().getCompressibility();
+        const auto preFactor =
+            compressibility * settings::TimingsSettings::getTimeStep() / tau;
+        const auto p_xyz = diagonal(_getPressureTensor());
 
-    return diagonalMatrix(::cbrt(1.0 - preFactor * (_targetPressure - p)));
-}
+        size_t numFree = 0;
+        double p_avg   = 0.0;
 
-/**
- * @brief calculate mu as scaling factor for Berendsen manostat (semi-isotropic)
- *
- * @details _2DIsotropicAxes[0] and _2DIsotropicAxes[1] are the indices of the
- * isotropic coupled axes and _2DAnisotropicAxis is the index of the anisotropic
- * axis
- *
- * @return tensor3D
- */
-tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
-{
-    const auto p_xyz = diagonal(_pressureTensor);
-    const auto p_x   = p_xyz[_2DIsotropicAxes[0]];
-    const auto p_y   = p_xyz[_2DIsotropicAxes[1]];
-    const auto p_xy  = (p_x + p_y) / 2.0;
-    const auto p_z   = p_xyz[_2DAnisotropicAxis];
+        for (size_t axis = 0; axis < 3; ++axis)
+        {
+            if (!isAxisFixed(fixedAxis, axis))
+            {
+                p_avg += p_xyz[axis];
+                ++numFree;
+            }
+        }
 
-    const auto preFactor = _compressibility * _dt / _tau;
+        p_avg /= static_cast<double>(numFree);
 
-    const double mu_xy = ::sqrt(1.0 - preFactor * (_targetPressure - p_xy));
-    const double mu_z  = 1.0 - preFactor * (_targetPressure - p_z);
+        const auto deltaP = targetPressure - p_avg;
 
-    linearAlgebra::Vec3D mu;
+        double mu_scaled = 1.0;
+        if (numFree == 3)
+            mu_scaled = ::cbrt(1.0 - (preFactor * deltaP));
+        else if (numFree == 2)
+            mu_scaled = ::sqrt(1.0 - (preFactor * deltaP));
+        else if (numFree == 1)
+            mu_scaled = 1.0 - (preFactor * deltaP);
 
-    mu[_2DIsotropicAxes[0]] = mu_xy;
-    mu[_2DIsotropicAxes[1]] = mu_xy;
-    mu[_2DAnisotropicAxis]  = mu_z;
+        linalg::Vec3D mu = {1.0, 1.0, 1.0};
+        for (size_t i = 0; i < 3; ++i)
+        {
+            if (!isAxisFixed(fixedAxis, i))
+                mu[i] = mu_scaled;
+        }
 
-    return diagonalMatrix(mu);
-}
+        return linalg::diagonalMatrix(mu);
+    }
 
-/**
- * @brief calculate mu as scaling factor for Berendsen manostat (anisotropic)
- *
- * @return tensor3D
- */
-tensor3D AnisotropicBerendsenManostat::calculateMu() const
-{
-    const auto pxyz      = diagonal(_pressureTensor);
-    const auto preFactor = _compressibility * _dt / _tau;
+    /**
+     * @brief calculate mu as scaling factor for Berendsen manostat
+     * (semi-isotropic)
+     *
+     * @details _2DIsotropicAxes[0] and _2DIsotropicAxes[1] are the indices of
+     * the isotropic coupled axes and _2DAnisotropicAxis is the index of the
+     * anisotropic axis
+     *
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
+    {
+        const auto p_xyz           = diagonal(_getPressureTensor());
+        const auto isotropy        = _getSettings().getIsotropy();
+        const auto anisotropicAxis = get2DAnisotropicAxis(isotropy);
+        const auto isotropicAxes   = get2DIsotropicAxes(isotropy);
+        const auto p_x             = p_xyz[isotropicAxes[0]];
+        const auto p_y             = p_xyz[isotropicAxes[1]];
+        const auto p_xy            = (p_x + p_y) / 2.0;
+        const auto p_z             = p_xyz[anisotropicAxis];
 
-    return diagonalMatrix(1.0 - preFactor * (_targetPressure - pxyz));
-}
+        const auto tau = _getSettings().getTau().numerical_value_in(fs);
+        const auto dimension =
+            3.0 -
+            std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
+        const auto preFactor = _getSettings().getCompressibility() *
+                               settings::TimingsSettings::getTimeStep() /
+                               (tau * dimension);
 
-/**
- * @brief calculate mu as scaling factor for Berendsen manostat (full
- * anisotropic including angles)
- *
- * @return tensor3D
- */
-tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
-{
-    const auto pTarget   = diagonalMatrix(_targetPressure);
-    const auto preFactor = _compressibility * _dt / _tau;
-    const auto kronecker = kroneckerDeltaMatrix<double>();
+        const auto targetPressure = _getSettings().getTargetPressure();
 
-    auto mu = kronecker - preFactor * (pTarget - _pressureTensor);
+        const double mu_xy =
+            ::sqrt(1.0 - (2.0 * preFactor * (targetPressure - p_xy)));
+        const double mu_z =
+            isAxisFixed(_getSettings().getFixedAxis(), anisotropicAxis)
+                ? 1.0
+                : (1.0 - (preFactor * (targetPressure - p_z)));
 
-    rotateMu(mu);
+        linalg::Vec3D mu;
 
-    return mu;
-}
+        mu[isotropicAxes[0]] = mu_xy;
+        mu[isotropicAxes[1]] = mu_xy;
+        mu[anisotropicAxis]  = mu_z;
 
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
+        return linalg::diagonalMatrix(mu);
+    }
 
-/**
- * @brief get tau (relaxation time)
- *
- * @return double
- */
-double BerendsenManostat::getTau() const { return _tau; }
+    /**
+     * @brief calculate mu as scaling factor for Berendsen manostat
+     * (anisotropic)
+     *
+     * @details If fixed axes are specified, those axes are not scaled (mu
+     * = 1.0) and the other axes are scaled independently
+     *
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D AnisotropicBerendsenManostat::calculateMu() const
+    {
+        const auto tau  = _getSettings().getTau().numerical_value_in(fs);
+        const auto pxyz = diagonal(_getPressureTensor());
+        const auto dimension =
+            3.0 -
+            std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
+        const auto preFactor = _getSettings().getCompressibility() *
+                               settings::TimingsSettings::getTimeStep() /
+                               (tau * dimension);
 
-/**
- * @brief get compressibility
- *
- * @return double
- */
-double BerendsenManostat::getCompressibility() const
-{
-    return _compressibility;
-}
+        auto mu = 1.0 - preFactor * (_getSettings().getTargetPressure() - pxyz);
 
-/**
- * @brief get the manostat type
- *
- * @return ManostatType
- */
-ManostatType BerendsenManostat::getManostatType() const
-{
-    return ManostatType::BERENDSEN;
-}
+        for (size_t i = 0; i < 3; ++i)
+        {
+            if (isAxisFixed(_getSettings().getFixedAxis(), i))
+                mu[i] = 1.0;
+        }
 
-/**
- * @brief get the isotropy
- *
- * @return Isotropy
- */
-Isotropy BerendsenManostat::getIsotropy() const { return Isotropy::ISOTROPIC; }
+        return linalg::diagonalMatrix(mu);
+    }
 
-/**
- * @brief get the isotropy
- *
- * @return Isotropy
- */
-Isotropy SemiIsotropicBerendsenManostat::getIsotropy() const
-{
-    return Isotropy::SEMI_ISOTROPIC;
-}
+    /**
+     * @brief calculate mu as scaling factor for Berendsen manostat (full
+     * anisotropic including angles)
+     *
+     * @details If fixed axes are specified, the corresponding rows and columns
+     * are zeroed (no coupling with other axes) and the diagonals are set to 1.0
+     *
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
+    {
+        const auto tau = _getSettings().getTau().numerical_value_in(fs);
+        const auto pTarget =
+            linalg::diagonalMatrix(_getSettings().getTargetPressure());
+        const auto dimension =
+            3.0 -
+            std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
+        const auto preFactor = _getSettings().getCompressibility() *
+                               settings::TimingsSettings::getTimeStep() /
+                               (tau * dimension);
+        const auto kronecker = linalg::kroneckerDeltaMatrix<double>();
 
-/**
- * @brief get the isotropy
- *
- * @return Isotropy
- */
-Isotropy AnisotropicBerendsenManostat::getIsotropy() const
-{
-    return Isotropy::ANISOTROPIC;
-}
+        auto mu = kronecker - (preFactor * (pTarget - _getPressureTensor()));
 
-/**
- * @brief get the isotropy
- *
- * @return Isotropy
- */
-Isotropy FullAnisotropicBerendsenManostat::getIsotropy() const
-{
-    return Isotropy::FULL_ANISOTROPIC;
-}
+        for (size_t k = 0; k < 3; ++k)
+        {
+            if (isAxisFixed(_getSettings().getFixedAxis(), k))
+            {
+                for (size_t i = 0; i < 3; ++i)
+                {
+                    mu[k][i] = 0.0;
+                    mu[i][k] = 0.0;
+                }
+                mu[k][k] = 1.0;
+            }
+        }
+
+        rotateMu(mu);
+
+        return mu;
+    }
+
+}   // namespace manostat

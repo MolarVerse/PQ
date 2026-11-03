@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _NON_COULOMBICS_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__NON_COULOMBICS_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__NON_COULOMBICS_SECTION_HPP
 
-#define _NON_COULOMBICS_SECTION_HPP_
+#include <string>
+#include <vector>
 
-#include <string>   // for allocator, string
-#include <vector>   // for vector
-
-#include "parameterFileSection.hpp"   // for ParameterFileSection
+#include "parameterFileSection.hpp"
 
 namespace engine
 {
@@ -49,24 +48,35 @@ namespace input::parameterFile
 
         void processSection(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                    lineNumber
         ) override;
 
         void processHeader(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
+            engine::Engine           &engine,
+            size_t                    lineNumber
         ) override;
 
-        void processLJ(std::vector<std::string> &, engine::Engine &) const;
-
-        void processBuckingham(
+        static void processLJ(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine
-        ) const;
+            engine::Engine           &engine,
+            size_t                    lineNumber
+        );
 
-        void processMorse(std::vector<std::string> &, engine::Engine &) const;
+        static void processBuckingham(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine,
+            size_t                    lineNumber
+        );
+
+        static void processMorse(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine,
+            size_t                    lineNumber
+        );
     };
 
 }   // namespace input::parameterFile
 
-#endif   // _NON_COULOMBICS_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__NON_COULOMBICS_SECTION_HPP

@@ -20,34 +20,31 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__FORCE_FIELD_HPP
+#define FORCE_FIELD__FORCE_FIELD_HPP
 
-#define _FORCE_FIELD_HPP_
+#include "coulombPotential.hpp"
+#include "molecule.hpp"
+#include "nonCoulombPotential.hpp"
+#include "physicalData.hpp"
 
-#include <cstddef>   // for size_t
-
-#include "coulombPotential.hpp"      // for CoulombPotential
-#include "molecule.hpp"              // for Molecule
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
-#include "physicalData.hpp"          // for PhysicalData
-
-namespace forceField
+namespace ff
 {
     template <typename T>
     double correctLinker(
-        const potential::CoulombPotential &coulombPotential,
-        potential::NonCoulombPotential    &nonCoulombPotential,
-        physicalData::PhysicalData        &physicalData,
-        const molsys::Molecule            *molecule1,
-        const molsys::Molecule            *molecule2,
-        const size_t                       atomIndex1,
-        const size_t                       atomIndex2,
-        const double                       distance
+        const pot::CoulombPotential &coulombPotential,
+        pot::NonCoulombPotential    &nonCoulombPotential,
+        physicalData::PhysicalData  &physicalData,
+        const molsys::Molecule      *molecule_i,
+        const molsys::Molecule      *molecule_j,
+        AtomIndex                    atomIndex1,
+        AtomIndex                    atomIndex2,
+        double                       distance
     );
-}   // namespace forceField
+}   // namespace ff
 
-#ifndef _FORCE_FIELD_TPP_
-#include "forcefield.tpp.hpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
+#ifndef FORCE_FIELD__FORCEFIELD_TPP
+#include "forcefield.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__FORCE_FIELD_HPP

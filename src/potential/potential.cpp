@@ -22,85 +22,172 @@
 
 #include "potential.hpp"
 
-#include "coulombPotential.hpp"      // for CoulombPotential
-#include "nonCoulombPotential.hpp"   // for NonCoulombPotential
+#include "coulombPotential.hpp"
+#include "nonCoulombPotential.hpp"
+#include "potentialKernels.tpp"   // IWYU pragma: keep -- for template specialization
 
-using namespace potential;
-using namespace molsys;
-using namespace physicalData;
-
-void Potential::calculateQMMMForces(
-    SimulationBox &simBox,
-    PhysicalData  &physicalData,
-    CellList      &cellList
-)
+namespace pot
 {
-    calculateCoreToOuterForces(simBox, physicalData, cellList);
-    calculateLayerToOuterForces(simBox, physicalData, cellList);
-    calculateOuterToOuterForces(simBox, physicalData, cellList);
-}
+    Potential::~Potential() = default;
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
 
-/**
- * @brief set the coulomb potential as a shared pointer
- *
- * @param pot
- */
-void Potential::setNonCoulombPotential(
-    const std::shared_ptr<NonCoulombPotential> pot
-)
-{
-    _nonCoulombPot = pot;
-}
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::MMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
 
-/**
- * @brief get the coulomb potential
- *
- * @return CoulombPotential&
- */
-CoulombPotential &Potential::getCoulombPotential() const
-{
-    return *_coulombPotential;
-}
+    template double pot::Potential::
+        calculateSingleCoulombInteraction<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
 
-/**
- * @brief get the non-coulomb potential
- *
- * @return NonCoulombPotential&
- */
-NonCoulombPotential &Potential::getNonCoulombPotential() const
-{
-    return *_nonCoulombPot;
-}
+    template double pot::Potential::
+        calculateSingleCoulombInteraction<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
 
-/**
- * @brief get the coulomb potential as a shared pointer
- *
- * @return std::shared_ptr<potential::CoulombPotential>
- */
-std::shared_ptr<CoulombPotential> Potential::getCoulombPotSharedPtr() const
-{
-    return _coulombPotential;
-}
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteractionOneWay<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
 
-/**
- * @brief get the non-coulomb potential as a shared pointer
- *
- * @return SharedNonCoulombPot
- */
-std::shared_ptr<NonCoulombPotential> Potential::getNonCoulombPotSharedPtr(
-) const
-{
-    return _nonCoulombPot;
-}
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteractionOneWay<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    /**
+     * @brief calculates QMMM forces by invoking core-to-outer, layer-to-outer,
+     * and outer-to-outer force calculations
+     *
+     * @param simulationBox
+     * @param physicalData
+     * @param cellList
+     * @param waterModelSettings
+     */
+    void Potential::calculateQMMMForces(
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData,
+        const molsys::CellList     &cellList,
+        const WaterModelSettings   &waterModelSettings
+    )
+    {
+        calculateCoreToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
+        calculateLayerToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
+        calculateOuterToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
+    }
+
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief set the coulomb potential as a shared pointer
+     *
+     * @param pot
+     */
+    void Potential::setNonCoulombPotential(
+        const std::shared_ptr<NonCoulombPotential> &pot
+    )
+    {
+        _nonCoulombPot = pot;
+    }
+
+    /***************************
+     *                         *
+     * standard setter methods *
+     *                         *
+     ***************************/
+
+    /**
+     * @brief get the coulomb potential
+     *
+     * @return CoulombPotential&
+     */
+    CoulombPotential &Potential::getCoulombPotential() const
+    {
+        return *_coulombPotential;
+    }
+
+    /**
+     * @brief get the non-coulomb potential
+     *
+     * @return NonCoulombPotential&
+     */
+    NonCoulombPotential &Potential::getNonCoulombPotential() const
+    {
+        return *_nonCoulombPot;
+    }
+
+    /**
+     * @brief get the coulomb potential as a shared pointer
+     *
+     * @return std::shared_ptr<pot::CoulombPotential>
+     */
+    std::shared_ptr<CoulombPotential> Potential::getCoulombPotSharedPtr() const
+    {
+        return _coulombPotential;
+    }
+
+    /**
+     * @brief get the non-coulomb potential as a shared pointer
+     *
+     * @return SharedNonCoulombPot
+     */
+    std::shared_ptr<NonCoulombPotential> Potential::getNonCoulombPotSharedPtr(
+    ) const
+    {
+        return _nonCoulombPot;
+    }
+
+}   // namespace pot

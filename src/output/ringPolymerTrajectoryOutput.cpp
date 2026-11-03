@@ -22,208 +22,219 @@
 
 #include "ringPolymerTrajectoryOutput.hpp"
 
-#include <algorithm>   // for __for_each_fn, for_each
-#include <cstddef>     // for size_t
-#include <format>      // for format
-#include <ostream>     // for basic_ostream, ofstream, operator<<
-#include <sstream>     // for ostringstream
+#include <algorithm>
+#include <cstddef>
+#include <format>
+#include <ostream>
+#include <sstream>
 
-#include "molecule.hpp"              // for Molecule
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "simulationBox.hpp"         // for SimulationBox
+#include "molecule.hpp"
+#include "simulationBox.hpp"
 
-using output::RingPolymerTrajectoryOutput;
-using namespace settings;
-using namespace molsys;
-
-/**
- * @brief write the header of the beads trajectory file
- *
- * @details number of atoms is multiplied by the number of beads - box
- * dimensions and angles are the same for all beads
- *
- * @param beads
- */
-void RingPolymerTrajectoryOutput::writeHeader(const SimulationBox &simBox)
+namespace out
 {
-    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
 
-    _fp << simBox.getNumberOfAtoms() * nBeads << "  ";
-    _fp << simBox.getBoxDimensions() << "  " << simBox.getBoxAngles() << '\n';
-}
-
-/**
- * @brief write the xyz file for all beads
- *
- * @param beads
- * @param step
- */
-void RingPolymerTrajectoryOutput::writeXyz(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
-{
-    std::ostringstream buffer;
-
-    writeHeader(beads[0]);
-    writeComment(step);
-
-    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
-
-    for (size_t i = 0; i < nBeads; ++i)
+    /**
+     * @brief write the header of the beads trajectory file
+     *
+     * @details number of atoms is multiplied by the number of beads - box
+     * dimensions and angles are the same for all beads
+     *
+     * @param simulationBox the simulation box to write the header for
+     * @param nBeads number of ring polymer beads
+     */
+    void RingPolymerTrajectoryOutput::writeHeader(
+        const molsys::SimulationBox &simulationBox,
+        size_t                       nBeads
+    )
     {
-        for (const auto &molecule : beads[i].getMolecules())
-        {
-            const auto nAtoms = molecule.getNumberOfAtoms();
-            for (size_t j = 0; j < nAtoms; ++j)
-            {
-                const auto atomName = molecule.getAtomName(j);
-                const auto x        = molecule.getAtomPosition(j)[0];
-                const auto y        = molecule.getAtomPosition(j)[1];
-                const auto z        = molecule.getAtomPosition(j)[2];
-
-                buffer << std::format("{:>5}{}\t", atomName, i + 1);
-
-                buffer << std::format("{:15.8f}\t", x);
-                buffer << std::format("{:15.8f}\t", y);
-                buffer << std::format("{:15.8f}\n", z);
-            }
-        }
+        _getFilePointer() << simulationBox.getNumberOfAtoms() * nBeads << "  ";
+        _getFilePointer() << simulationBox.getBoxDimensions() << "  "
+                          << simulationBox.getBoxAngles() << '\n';
     }
 
-    // Write the buffer to the file
-    _fp << buffer.str();
-    _fp << std::flush;
-}
-
-/**
- * @brief write the velocity file for all beads
- *
- * @param beads
- * @param step
- */
-void RingPolymerTrajectoryOutput::writeVelocities(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
-{
-    std::ostringstream buffer;
-
-    writeHeader(beads[0]);
-    writeComment(step);
-
-    const auto nBeads = RingPolymerSettings::getNumberOfBeads();
-
-    for (size_t i = 0; i < nBeads; ++i)
+    /**
+     * @brief write the xyz file for all beads
+     *
+     * @param beads
+     * @param step
+     * @param includeMetadata whether to include metadata in the comment
+     */
+    void RingPolymerTrajectoryOutput::writeXyz(
+        const std::vector<molsys::SimulationBox> &beads,
+        size_t                                    step,
+        bool                                      includeMetadata
+    )
     {
-        for (const auto &molecule : beads[i].getMolecules())
+        std::ostringstream buffer;
+
+        const auto nBeads = beads.size();
+
+        writeHeader(beads[0], nBeads);
+        _writeComment(step, includeMetadata);
+
+        for (size_t i = 0; i < nBeads; ++i)
         {
-            const auto nAtoms = molecule.getNumberOfAtoms();
-
-            for (size_t j = 0; j < nAtoms; ++j)
+            for (const auto &molecule : beads[i].getMolecules())
             {
-                const auto atomName = molecule.getAtomName(j);
-                const auto vx       = molecule.getAtomVelocity(j)[0];
-                const auto vy       = molecule.getAtomVelocity(j)[1];
-                const auto vz       = molecule.getAtomVelocity(j)[2];
+                const auto nAtoms = molecule.getNumberOfAtoms();
+                for (AtomIndex j{0}; j.get() < nAtoms; ++j)
+                {
+                    const auto atomName = molecule.getAtomName(j);
+                    const auto x        = molecule.getAtomPosition(j)[0];
+                    const auto y        = molecule.getAtomPosition(j)[1];
+                    const auto z        = molecule.getAtomPosition(j)[2];
 
-                buffer << std::format("{:>5}{}\t", atomName, i + 1);
+                    buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
-                buffer << std::format("{:20.8e}\t", vx);
-                buffer << std::format("{:20.8e}\t", vy);
-                buffer << std::format("{:20.8e}\n", vz);
+                    buffer << std::format("{:15.8f}\t", x);
+                    buffer << std::format("{:15.8f}\t", y);
+                    buffer << std::format("{:15.8f}\n", z);
+                }
             }
         }
+
+        // Write the buffer to the file
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
-    // Write the buffer to the file
-    _fp << buffer.str();
-    _fp << std::flush;
-}
-
-/**
- * @brief write the force file for all beads
- *
- * @param beads
- * @param step
- */
-void RingPolymerTrajectoryOutput::writeForces(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
-{
-    std::ostringstream buffer;
-
-    writeHeader(beads[0]);
-
-    auto totalForce = 0.0;
-    std::ranges::for_each(
-        beads,
-        [&totalForce](auto &bead) { totalForce += bead.calculateTotalForce(); }
-    );
-
-    writeForceComment(step, totalForce);
-
-    for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
+    /**
+     * @brief write the velocity file for all beads
+     *
+     * @param beads
+     * @param step
+     * @param includeMetadata
+     */
+    void RingPolymerTrajectoryOutput::writeVelocities(
+        const std::vector<molsys::SimulationBox> &beads,
+        size_t                                    step,
+        bool                                      includeMetadata
+    )
     {
-        for (const auto &molecule : beads[i].getMolecules())
+        std::ostringstream buffer;
+
+        const auto nBeads = beads.size();
+
+        writeHeader(beads[0], nBeads);
+        _writeComment(step, includeMetadata);
+
+        for (size_t i = 0; i < nBeads; ++i)
         {
-            const auto nAtoms = molecule.getNumberOfAtoms();
-
-            for (size_t j = 0; j < nAtoms; ++j)
+            for (const auto &molecule : beads[i].getMolecules())
             {
-                const auto atomName = molecule.getAtomName(j);
-                const auto fx       = molecule.getAtomForce(j)[0];
-                const auto fy       = molecule.getAtomForce(j)[1];
-                const auto fz       = molecule.getAtomForce(j)[2];
+                const auto nAtoms = molecule.getNumberOfAtoms();
 
-                buffer << std::format("{:>5}{}\t", atomName, i + 1);
+                for (AtomIndex j{0}; j.get() < nAtoms; ++j)
+                {
+                    const auto atomName = molecule.getAtomName(j);
+                    const auto velX     = molecule.getAtomVelocity(j)[0];
+                    const auto velY     = molecule.getAtomVelocity(j)[1];
+                    const auto velZ     = molecule.getAtomVelocity(j)[2];
 
-                buffer << std::format("{:15.8f}\t", fx);
-                buffer << std::format("{:15.8f}\t", fy);
-                buffer << std::format("{:15.8f}\n", fz);
+                    buffer << std::format("{:>5}{}\t", atomName, i + 1);
+
+                    buffer << std::format("{:20.8e}\t", velX);
+                    buffer << std::format("{:20.8e}\t", velY);
+                    buffer << std::format("{:20.8e}\n", velZ);
+                }
             }
         }
+
+        // Write the buffer to the file
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
-    // Write the buffer to the file
-    _fp << buffer.str();
-    _fp << std::flush;
-}
-
-/**
- * @brief write the charge file for all beads
- *
- * @param beads
- * @param step
- */
-void RingPolymerTrajectoryOutput::writeCharges(
-    std::vector<SimulationBox> &beads,
-    const size_t                step
-)
-{
-    std::ostringstream buffer;
-
-    writeHeader(beads[0]);
-    writeComment(step);
-
-    for (size_t i = 0; i < RingPolymerSettings::getNumberOfBeads(); ++i)
+    /**
+     * @brief write the force file for all beads
+     *
+     * @param beads
+     * @param step
+     * @param includeMetadata whether to include metadata in the comment
+     */
+    void RingPolymerTrajectoryOutput::writeForces(
+        const std::vector<molsys::SimulationBox> &beads,
+        size_t                                    step,
+        bool                                      includeMetadata
+    )
     {
-        for (const auto &molecule : beads[i].getMolecules())
-        {
-            for (const auto &atom : molecule.getAtoms())
-            {
-                const auto charge =
-                    atom->getQMCharge().value_or(atom->getPartialCharge());
+        std::ostringstream buffer;
 
-                buffer << std::format("{:>5}{}\t", atom->getName(), i + 1);
-                buffer << std::format("{:15.8f}\n", charge);
-                buffer << std::flush;
+        writeHeader(beads[0], beads.size());
+
+        auto totalForce = 0.0;
+        std::ranges::for_each(
+            beads,
+            [&totalForce](auto &bead)
+            { totalForce += bead.calculateTotalForce(); }
+        );
+
+        _writeForceComment(step, totalForce, includeMetadata);
+
+        for (size_t i = 0; i < beads.size(); ++i)
+        {
+            for (const auto &molecule : beads[i].getMolecules())
+            {
+                const auto nAtoms = molecule.getNumberOfAtoms();
+
+                for (AtomIndex j{0}; j.get() < nAtoms; ++j)
+                {
+                    const auto atomName = molecule.getAtomName(j);
+                    const auto forceX   = molecule.getAtomForce(j)[0];
+                    const auto forceY   = molecule.getAtomForce(j)[1];
+                    const auto forceZ   = molecule.getAtomForce(j)[2];
+
+                    buffer << std::format("{:>5}{}\t", atomName, i + 1);
+
+                    buffer << std::format("{:15.8f}\t", forceX);
+                    buffer << std::format("{:15.8f}\t", forceY);
+                    buffer << std::format("{:15.8f}\n", forceZ);
+                }
             }
         }
+
+        // Write the buffer to the file
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
     }
 
-    // Write the buffer to the file
-    _fp << buffer.str();
-    _fp << std::flush;
-}
+    /**
+     * @brief write the charge file for all beads
+     *
+     * @param beads
+     * @param step
+     * @param includeMetadata whether to include metadata in the comment
+     */
+    void RingPolymerTrajectoryOutput::writeCharges(
+        const std::vector<molsys::SimulationBox> &beads,
+        size_t                                    step,
+        bool                                      includeMetadata
+    )
+    {
+        std::ostringstream buffer;
+
+        writeHeader(beads[0], beads.size());
+        _writeComment(step, includeMetadata);
+
+        for (size_t i = 0; i < beads.size(); ++i)
+        {
+            for (const auto &molecule : beads[i].getMolecules())
+            {
+                for (const auto &atom : molecule.getAtoms())
+                {
+                    const auto charge =
+                        atom->getQMCharge().value_or(atom->getPartialCharge());
+
+                    buffer << std::format("{:>5}{}\t", atom->getName(), i + 1);
+                    buffer << std::format("{:15.8f}\n", charge);
+                    buffer << std::flush;
+                }
+            }
+        }
+
+        // Write the buffer to the file
+        _getFilePointer() << buffer.str();
+        _getFilePointer() << std::flush;
+    }
+}   // namespace out

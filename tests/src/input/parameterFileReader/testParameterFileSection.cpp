@@ -22,11 +22,10 @@
 
 #include "testParameterFileSection.hpp"
 
-#include <ostream>   // for operator<<, ofstream, basic_ostream, endl
-#include <vector>    // for vector
+#include <ostream>
+#include <vector>
 
-#include "bondSection.hpp"   // for BondSection
-#include "gtest/gtest.h"     // for Message, TestPartResult
+#include "bondSection.hpp"
 
 /**
  * @brief tests full process function TODO: think of a clever way to test this
@@ -47,13 +46,13 @@ TEST_F(TestParameterFileSection, processParameterSection)
     outputStream.close();
 
     auto          lineElements = std::vector{std::string("")};
-    std::ifstream fp(_parameterFileName.c_str());
-    getline(fp, lineElements[0]);
+    std::ifstream file(_parameterFileName.c_str());
+    getline(file, lineElements[0]);
 
-    section.setFp(&fp);
-    section.setLineNumber(1);
+    section.setFp(&file);
+    size_t lineNumber = 1;
 
-    EXPECT_NO_THROW(section.process(lineElements, *_engine));
+    EXPECT_NO_THROW(section.process(lineElements, *_engine, lineNumber));
 
-    EXPECT_EQ(section.getLineNumber(), 5);
+    EXPECT_EQ(lineNumber, 5);
 }

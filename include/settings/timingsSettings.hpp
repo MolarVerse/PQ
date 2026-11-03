@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_SETTINGS_HPP_
+#ifndef SETTINGS__TIMINGS_SETTINGS_HPP
+#define SETTINGS__TIMINGS_SETTINGS_HPP
 
-#define _TIMINGS_SETTINGS_HPP_
-
-#include <cstddef>   // for size_t
+#include <cstddef>
 
 namespace settings
 {
@@ -49,9 +48,9 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setTimeStep(const double timeStep);
-        static void setStepCount(const size_t stepCount);
-        static void setNumberOfSteps(const size_t numberOfSteps);
+        static void setTimeStep(double timeStep);
+        static void setStepCount(size_t stepCount);
+        static void setNumberOfSteps(size_t numberOfSteps);
 
         /********************
          * standard setters *
@@ -63,4 +62,4 @@ namespace settings
     };
 }   // namespace settings
 
-#endif   // _TIMINGS_SETTINGS_HPP_
+#endif   // SETTINGS__TIMINGS_SETTINGS_HPP

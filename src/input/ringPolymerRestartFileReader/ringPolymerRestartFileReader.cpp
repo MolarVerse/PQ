@@ -22,114 +22,113 @@
 
 #include "ringPolymerRestartFileReader.hpp"
 
-#include <cstddef>       // for size_t
-#include <format>        // for format
-#include <string_view>   // for string_view
-#include <vector>        // for vector
+#include <cstddef>
+#include <format>
+#include <string_view>
+#include <vector>
 
-#include "exceptions.hpp"            // for RingPolymerRestartFileException
-#include "fileSettings.hpp"          // for FileSettings
-#include "ringPolymerEngine.hpp"     // for RingPolymerEngine
-#include "ringPolymerSettings.hpp"   // for RingPolymerSettings
-#include "stringUtilities.hpp"       // for removeComments, splitString
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+#include "ringPolymerEngine.hpp"
+#include "ringPolymerSettings.hpp"
+#include "stringUtilities.hpp"
 
-using input::ringPolymer::RingPolymerRestartFileReader;
-using namespace engine;
-using namespace settings;
-using namespace customException;
-using namespace utilities;
-
-/**
- * @brief Construct a new Ring Polymer Restart File Reader:: Ring Polymer
- * Restart File Reader object
- *
- * @param fileName
- * @param engine
- */
-RingPolymerRestartFileReader::RingPolymerRestartFileReader(
-    const std::string &fileName,
-    RingPolymerEngine &engine
-)
-    : _fileName(fileName), _fp(fileName), _engine(engine)
+namespace input::ringPolymer
 {
-}
 
-/**
- * @brief Reads a .rpmd.rst file sets the ring polymer beads in the engine
- *
- */
-void RingPolymerRestartFileReader::read()
-{
-    std::string              line;
-    std::vector<std::string> lineElements;
-    int                      lineNumber = 0;
-
-    const auto numberOfBeads = RingPolymerSettings::getNumberOfBeads();
-
-    for (size_t i = 0; i < numberOfBeads; ++i)
+    /**
+     * @brief Construct a new Ring Polymer Restart File Reader:: Ring Polymer
+     * Restart File Reader object
+     *
+     * @param fileName
+     * @param engine
+     */
+    RingPolymerRestartFileReader::RingPolymerRestartFileReader(
+        const std::string         &fileName,
+        engine::RingPolymerEngine &engine
+    )
+        : _fileName(fileName), _fp(fileName), _engine(engine)
     {
-        for (auto &atom : _engine.getRingPolymerBeads()[i].getAtoms())
+    }
+
+    /**
+     * @brief Reads a .rpmd.rst file sets the ring polymer beads in the engine
+     *
+     */
+    void RingPolymerRestartFileReader::read(size_t numberOfBeads)
+    {
+        std::string              line;
+        std::vector<std::string> lineElements;
+        int                      lineNumber = 0;
+
+        for (size_t i = 0; i < numberOfBeads; ++i)
         {
-            while (true)
+            for (auto &atom : _engine.getRingPolymerBeads()[i].getAtoms())
             {
-                if (!getline(_fp, line))
-                    throw RingPolymerRestartFileException(
-                        "Error reading ring polymer restart file"
+                while (true)
+                {
+                    if (!getline(_fp, line))
+                        throw exc::RingPolymerRestartFileException(
+                            "Error reading ring polymer restart file"
+                        );
+
+                    line         = utilities::removeComments(line, "#");
+                    lineElements = utilities::splitString(line);
+                    ++lineNumber;
+
+                    if (!lineElements.empty())
+                        break;
+                }
+
+                // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+                if ((lineElements.size() != 21) && (lineElements.size() != 12))
+                {
+                    throw exc::RingPolymerRestartFileException(
+                        std::format(
+                            "Error in line {}: Atom section must have 12 or 21 "
+                            "elements",
+                            lineNumber
+                        )
                     );
+                }
 
-                line         = removeComments(line, "#");
-                lineElements = splitString(line);
-                ++lineNumber;
-
-                if (!lineElements.empty())
-                    break;
-            }
-
-            // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
-            if ((lineElements.size() != 21) && (lineElements.size() != 12))
-            {
-                throw RstFileException(
-                    std::format(
-                        "Error in line {}: Atom section must have 12 or 21 "
-                        "elements",
-                        lineNumber
-                    )
+                atom->setPosition(
+                    {stod(lineElements[3]),
+                     stod(lineElements[4]),
+                     stod(lineElements[5])}
                 );
+
+                atom->setVelocity(
+                    {stod(lineElements[6]),
+                     stod(lineElements[7]),
+                     stod(lineElements[8])}
+                );
+
+                atom->setForce(
+                    {stod(lineElements[9]),
+                     stod(lineElements[10]),
+                     stod(lineElements[11])}
+                );
+                // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
             }
-
-            atom->setPosition(
-                {stod(lineElements[3]),
-                 stod(lineElements[4]),
-                 stod(lineElements[5])}
-            );
-
-            atom->setVelocity(
-                {stod(lineElements[6]),
-                 stod(lineElements[7]),
-                 stod(lineElements[8])}
-            );
-
-            atom->setForce(
-                {stod(lineElements[9]),
-                 stod(lineElements[10]),
-                 stod(lineElements[11])}
-            );
-            // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
         }
     }
-}
 
-/**
- * @brief wrapper function to construct a RingPolymerRestartFileReader object
- * and call the read function
- *
- * @param engine
- */
-void input::ringPolymer::readRingPolymerRestartFile(RingPolymerEngine &engine)
-{
-    const auto filename = FileSettings::getRingPolymerStartFileName();
+    /**
+     * @brief wrapper function to construct a RingPolymerRestartFileReader
+     * object and call the read function
+     *
+     * @param engine
+     */
+    void readRingPolymerRestartFile(engine::RingPolymerEngine &engine)
+    {
+        const auto filename =
+            settings::FileSettings::getRingPolymerStartFileName();
 
-    RingPolymerRestartFileReader reader(filename, engine);
+        RingPolymerRestartFileReader reader(filename, engine);
 
-    reader.read();
-}
+        reader.read(engine.getSettings().ringPolymerSettings.getNumberOfBeads()
+        );
+    }
+
+}   // namespace input::ringPolymer

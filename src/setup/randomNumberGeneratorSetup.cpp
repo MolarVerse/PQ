@@ -24,66 +24,69 @@
 
 #include <format>
 
-#include "engine.hpp"     // for Engine
-#include "settings.hpp"   // for Settings
+#include "engine.hpp"
+#include "generalSettings.hpp"
 
-using ::setup::RandomNumberGeneratorSetup;
-using namespace settings;
-using namespace engine;
-
-/**
- * @brief wrapper to build randomNumberGeneratorSetup object and call setup
- *
- * @param engine
- */
-void setup::setupRandomNumberGenerator(Engine &engine)
+namespace setup
 {
-    engine.getLogOutput().writeSetup("Random Number Generator");
 
-    RandomNumberGeneratorSetup randomNumberGeneratorSetup(engine);
-    randomNumberGeneratorSetup.setup();
-}
-
-/**
- * @brief constructor
- *
- * @param engine
- */
-RandomNumberGeneratorSetup::RandomNumberGeneratorSetup(Engine &engine)
-    : _engine(engine)
-{
-}
-
-/**
- * @brief setup the random number generator
- *
- */
-void RandomNumberGeneratorSetup::setup() { setupWriteInfo(); }
-
-/**
- * @brief write info about the random number generator setup
- *
- */
-void RandomNumberGeneratorSetup::setupWriteInfo() const
-{
-    auto &logOutput = _engine.getLogOutput();
-
-    if (Settings::isRandomSeedSet())
+    /**
+     * @brief wrapper to build randomNumberGeneratorSetup object and call setup
+     *
+     * @param engine
+     */
+    void setupRandomNumberGenerator(engine::Engine &engine)
     {
-        const auto randomSeed = Settings::getRandomSeed();
-        const auto randomNumberGeneratorMessage =
-            std::format("Random seed has been set to: {}", randomSeed);
+        engine.getLogOutput().writeSetup("Random Number Generator");
 
-        logOutput.writeSetupInfo(randomNumberGeneratorMessage);
+        RandomNumberGeneratorSetup randomNumberGeneratorSetup(engine);
+        randomNumberGeneratorSetup.setup();
     }
 
-    else
+    /**
+     * @brief constructor
+     *
+     * @param engine
+     */
+    RandomNumberGeneratorSetup::RandomNumberGeneratorSetup(
+        engine::Engine &engine
+    )
+        : _engine(engine)
     {
-        const auto randomNumberGeneratorMessage =
-            std::format("Using system-generated random seed");
-
-        logOutput.writeSetupInfo(randomNumberGeneratorMessage);
     }
 
-    logOutput.writeEmptyLine();
-}
+    /**
+     * @brief setup the random number generator
+     *
+     */
+    void RandomNumberGeneratorSetup::setup() const { setupWriteInfo(); }
+
+    /**
+     * @brief write info about the random number generator setup
+     *
+     */
+    void RandomNumberGeneratorSetup::setupWriteInfo() const
+    {
+        auto &logOutput = _engine.getLogOutput();
+
+        if (settings::GeneralSettings::isRandomSeedSet())
+        {
+            const auto randomSeed = settings::GeneralSettings::getRandomSeed();
+            const auto randomNumberGeneratorMessage =
+                std::format("Random seed has been set to: {}", randomSeed);
+
+            logOutput.writeSetupInfo(randomNumberGeneratorMessage);
+        }
+
+        else
+        {
+            const auto randomNumberGeneratorMessage =
+                std::format("Using system-generated random seed");
+
+            logOutput.writeSetupInfo(randomNumberGeneratorMessage);
+        }
+
+        logOutput.writeEmptyLine();
+    }
+
+}   // namespace setup

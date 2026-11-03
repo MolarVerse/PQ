@@ -20,11 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MAXWELL_BOLTZMANN_HPP_
+#ifndef MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP
+#define MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP
 
-#define _MAXWELL_BOLTZMANN_HPP_
-
-#include "randomNumberGenerator.hpp"   // for RandomNumberGenerator
+#include "randomNumberGenerator.hpp"
 
 namespace molsys
 {
@@ -39,18 +38,18 @@ namespace maxwellBoltzmann
      * @brief class to initialize velocities of particles with a random maxwell
      * boltzmann distribution
      *
-     * @link https://www.biodiversitylibrary.org/item/53795#page/33/mode/1up
-     * @link https://www.biodiversitylibrary.org/item/20012#page/37/mode/1up
+     * _(https://www.biodiversitylibrary.org/item/53795#page/33/mode/1up)
+     * _(https://www.biodiversitylibrary.org/item/20012#page/37/mode/1up)
      *
      */
     class MaxwellBoltzmann
     {
        private:
-        randomNumberGenerator::RandomNumberGenerator _randomNumberGenerator{};
+        rng::RandomNumberGenerator _randomNumberGenerator;
 
        public:
         void initializeVelocities(molsys::SimulationBox &);
     };
 }   // namespace maxwellBoltzmann
 
-#endif   // _MAXWELL_BOLTZMANN_HPP_
+#endif   // MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP

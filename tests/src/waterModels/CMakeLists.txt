@@ -10,6 +10,7 @@ target_include_directories(testWaterModels
 target_link_libraries(testWaterModels
     PRIVATE
     interWater
+    intraWater
     potential
     molsys
     virial
@@ -18,11 +19,7 @@ target_link_libraries(testWaterModels
     pq_test_main
 )
 
-add_test(
-    NAME testWaterModels
-    COMMAND testWaterModels
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/tests
-)
+add_test_with_gcda_cleanup(testWaterModels testWaterModels)
 
 target_precompile_headers(testWaterModels REUSE_FROM pq_test_pch)
 target_link_libraries(testWaterModels PRIVATE pq_test_pch)
