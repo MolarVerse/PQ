@@ -103,36 +103,6 @@ namespace setup
     }
 
     /**
-     * @brief setup the ASE DFTB+ method of the system
-     *
-     */
-    void QMSetup::setupQMMethodAseXtb(const QMSettings &qmSettings)
-    {
-        if (!(qmSettings.getQMMethod() == QMMethod::ASE_XTB))
-            return;
-
-        const auto xtbMethod = qmSettings.getXtbMethod();
-        if (xtbMethod == XtbMethod::GFN1)
-        {
-            references::ReferencesOutput::addReferenceFile(
-                references::GFN1_FILE
-            );
-        }
-        else if (xtbMethod == XtbMethod::GFN2)
-        {
-            references::ReferencesOutput::addReferenceFile(
-                references::GFN2_FILE
-            );
-        }
-        else if (xtbMethod == XtbMethod::IPEA1)
-        {
-            references::ReferencesOutput::addReferenceFile(
-                references::IPEA1_FILE
-            );
-        }
-    }
-
-    /**
      * @brief set coulomb radius cutoff to 0.0 for QM-MD, QM-RPMD
      *
      */

@@ -28,7 +28,6 @@
 
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
-#include "hubbardDerivMap.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
@@ -321,7 +320,6 @@ namespace input
                         SlakosType::THREEOB,
                         _resolveBuiltInSlakosPath
                     );
-                    _qmSettings->setHubbardDerivs(hubbardDerivMap3ob);
                     references::ReferencesOutput::addReferenceFile(
                         references::THREEOB_FILE
                     );

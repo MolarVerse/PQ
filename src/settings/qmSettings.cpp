@@ -29,6 +29,7 @@
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "executablePath.hpp"
+#include "hubbardDerivMap.hpp"
 #include "stringUtilities.hpp"
 
 namespace
@@ -68,7 +69,7 @@ namespace
  *
  * @details This function sets up the QM script based on the current settings.
  */
-void QMSettings::finalize()
+void QMSettings::finalize(ReferenceSettings &referenceSettings)
 {
     if (isExternalQMRunner())
         _setupQMScript();
@@ -225,6 +226,9 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
         using enum SlakosType;
 
         case THREEOB:
+            if (!_hubbardDerivs.isSet())
+                _hubbardDerivs.set(hubbardDerivMap3ob);
+            [[fallthrough]];
         case MATSCI:
             if (resolveBuiltInPath)
                 _slakosPath.set(builtinSlakosPath(slakos));
@@ -240,6 +244,27 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
     }
 
     _slakosType.set(slakos);
+}
+
+/**
+ * @brief setup the ASE DFTB+ method of the system
+ *
+ */
+void QMSettings::_setupQMMethodAseXtb()
+{
+    const auto xtbMethod = getXtbMethod();
+    if (xtbMethod == XtbMethod::GFN1)
+    {
+        references::ReferencesOutput::addReferenceFile(references::GFN1_FILE);
+    }
+    else if (xtbMethod == XtbMethod::GFN2)
+    {
+        references::ReferencesOutput::addReferenceFile(references::GFN2_FILE);
+    }
+    else if (xtbMethod == XtbMethod::IPEA1)
+    {
+        references::ReferencesOutput::addReferenceFile(references::IPEA1_FILE);
+    }
 }
 
 /**
