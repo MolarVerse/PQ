@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -12,6 +13,18 @@ from urllib.parse import parse_qs, urlsplit
 
 SCRIPT = Path(__file__).resolve().parents[1] / "check_release_ci.py"
 SHA = "a" * 40
+
+
+def _load_workflows():
+    spec = importlib.util.spec_from_file_location("check_release_ci", SCRIPT)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.WORKFLOWS
+
+
+WORKFLOWS = _load_workflows()
+TARGET_WORKFLOW = WORKFLOWS[-1]
+OTHER_WORKFLOWS = WORKFLOWS[:-1]
 
 
 class ReleaseCITests(unittest.TestCase):
@@ -81,12 +94,12 @@ class ReleaseCITests(unittest.TestCase):
             **changes,
         }
 
-    def test_requires_both_post_merge_workflows_for_the_exact_commit(self):
-        for workflow in ("ci_build.yml", "lint.yml"):
+    def test_requires_all_post_merge_workflows_for_the_exact_commit(self):
+        for workflow in WORKFLOWS:
             self.responses[workflow] = [self.workflow_run()]
         result = self.run_gate()
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(len(self.requests), 2)
+        self.assertEqual(len(self.requests), len(WORKFLOWS))
         for path, query in self.requests:
             self.assertTrue(path.startswith("/repos/MolarVerse/PQ/actions/workflows/"))
             self.assertEqual(
@@ -100,7 +113,8 @@ class ReleaseCITests(unittest.TestCase):
             )
 
     def test_failure_cancellation_and_skipped_ci_block_publication(self):
-        self.responses["lint.yml"] = [self.workflow_run()]
+        for workflow in OTHER_WORKFLOWS:
+            self.responses[workflow] = [self.workflow_run()]
         for conclusion in (
             "failure",
             "cancelled",
@@ -110,7 +124,7 @@ class ReleaseCITests(unittest.TestCase):
             "action_required",
         ):
             with self.subTest(conclusion=conclusion):
-                self.responses["ci_build.yml"] = [
+                self.responses[TARGET_WORKFLOW] = [
                     self.workflow_run(conclusion=conclusion)
                 ]
                 result = self.run_gate()
@@ -118,64 +132,73 @@ class ReleaseCITests(unittest.TestCase):
                 self.assertIn(conclusion, result.stderr)
 
     def test_other_commits_branches_and_pr_checks_cannot_satisfy_gate(self):
-        self.responses["lint.yml"] = [self.workflow_run()]
+        for workflow in OTHER_WORKFLOWS:
+            self.responses[workflow] = [self.workflow_run()]
         for changes in (
             {"head_sha": "b" * 40},
             {"head_branch": "dev"},
             {"event": "pull_request"},
         ):
             with self.subTest(changes=changes):
-                self.responses["ci_build.yml"] = [self.workflow_run(**changes)]
+                self.responses[TARGET_WORKFLOW] = [self.workflow_run(**changes)]
                 result = self.run_gate()
                 self.assertNotEqual(result.returncode, 0)
-                self.assertIn("still waiting for ci_build.yml", result.stderr)
+                self.assertIn(f"still waiting for {TARGET_WORKFLOW}", result.stderr)
 
     def test_missing_and_pending_runs_fail_closed_at_timeout(self):
+        for workflow in OTHER_WORKFLOWS:
+            self.responses[workflow] = [self.workflow_run()]
         for runs in ([], [self.workflow_run(status="in_progress", conclusion=None)]):
             with self.subTest(runs=runs):
-                self.responses["ci_build.yml"] = runs
+                self.responses[TARGET_WORKFLOW] = runs
                 self.assertNotEqual(self.run_gate().returncode, 0)
 
     def test_latest_run_wins_over_an_older_success(self):
-        self.responses["lint.yml"] = [self.workflow_run()]
+        for workflow in OTHER_WORKFLOWS:
+            self.responses[workflow] = [self.workflow_run()]
         for newer in (
             self.workflow_run(id=11, conclusion="failure"),
             self.workflow_run(id=11, status="queued", conclusion=None),
         ):
             with self.subTest(newer=newer):
-                self.responses["ci_build.yml"] = [newer, self.workflow_run()]
+                self.responses[TARGET_WORKFLOW] = [newer, self.workflow_run()]
                 self.assertNotEqual(self.run_gate().returncode, 0)
-        self.responses["ci_build.yml"] = [
+        self.responses[TARGET_WORKFLOW] = [
             self.workflow_run(id=9, conclusion="failure"),
             self.workflow_run(),
         ]
         self.assertEqual(self.run_gate().returncode, 0)
 
     def test_waits_for_post_merge_ci_to_finish(self):
-        self.responses["ci_build.yml"] = deque(
+        iterations = 3
+        self.responses[TARGET_WORKFLOW] = deque(
             [
                 [],
                 [self.workflow_run(status="in_progress", conclusion=None)],
                 [self.workflow_run()],
             ]
         )
-        self.responses["lint.yml"] = [self.workflow_run()]
+        for workflow in OTHER_WORKFLOWS:
+            self.responses[workflow] = [self.workflow_run()]
         result = self.run_gate(timeout="3")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("Waiting for", result.stdout)
-        self.assertEqual(len(self.requests), 6)
+        self.assertEqual(len(self.requests), iterations * len(WORKFLOWS))
 
     def test_api_permission_errors_block_publication(self):
-        self.responses["ci_build.yml"] = "forbidden"
+        for workflow in OTHER_WORKFLOWS:
+            self.responses[workflow] = [self.workflow_run()]
+        self.responses[TARGET_WORKFLOW] = "forbidden"
         result = self.run_gate()
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("HTTP 403", result.stderr)
 
     def test_malformed_api_data_blocks_publication(self):
-        self.responses["lint.yml"] = [self.workflow_run()]
+        for workflow in OTHER_WORKFLOWS:
+            self.responses[workflow] = [self.workflow_run()]
         for body in (b"{broken", b"null", b"[]", b"{}", b'{"workflow_runs":[{}]}'):
             with self.subTest(body=body):
-                self.responses["ci_build.yml"] = body
+                self.responses[TARGET_WORKFLOW] = body
                 result = self.run_gate()
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("Cannot verify release CI", result.stderr)
