@@ -2044,32 +2044,6 @@ The default value is 0.0 Å, which means that no point charges are included.
 
 .. centered:: *default value* = 0.0 Å
 
-.. _qmForceDistributionKey:
-
-QM Force Distribution
-=====================
-
-.. admonition:: Key
-    :class: tip
-
-    qm_force_distribution = {string} -> "none"
-
-With the ``qm_force_distribution`` keyword the user can specify how the missing QM forces from smoothing molecules are distributed among non-smoothing QM molecules.
-Each recipient QM molecule then distributes its received share to its atoms proportional to atom masses.
-
-.. Note::
-    This keyword is only relevant if the :ref:`smoothing_method <smoothingMethodKey>` keyword is set to ``hotspot``.
-
-Possible options are:
-
-   1. **none** (default) - No distribution of deficient smoothing molecules forces.
-
-   2. **equal** - Deficient smoothing molecule forces are distributed equally among all non-smoothing QM molecules.
-
-   3. **random** - Deficient smoothing molecule forces are distributed randomly among all non-smoothing QM molecules.
-
-   4. **distance-weighted** - Deficient smoothing molecule forces are distributed distance-weighted among all non-smoothing QM molecules.
-
 
 .. image:: hybrid_zones.png
     :width: 600

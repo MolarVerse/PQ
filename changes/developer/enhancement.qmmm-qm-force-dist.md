@@ -1,0 +1,1 @@
+- Add qm_force_distribution to handle distribution of the deficit QM forces of smoothing molecules in an upcoming smoothing method in hybrid type calculations (options: equal, random, distance_weighted)
