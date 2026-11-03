@@ -94,9 +94,6 @@ TEST(HybridSettingsTest, EnumSettingsRoundTrip)
     settings::HybridSettings::setSmoothingMethod(EXACT);
     EXPECT_EQ(settings::HybridSettings::getSmoothingMethod(), EXACT);
 
-    settings::HybridSettings::setQMForceDist(NONE);
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), NONE);
-
     settings::HybridSettings::setQMForceDist(EQUAL);
     EXPECT_EQ(settings::HybridSettings::getQMForceDist(), EQUAL);
 

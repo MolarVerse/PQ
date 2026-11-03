@@ -159,4 +159,3 @@ layer_radius                 false      2.0
 smoothing_region_thickness   false      0.5
 point_charge_thickness       false      0.5
 smoothing_method             false      hotspot
-qm_force_distribution        false      equal

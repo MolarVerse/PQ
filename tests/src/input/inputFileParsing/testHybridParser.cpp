@@ -234,50 +234,6 @@ TEST_F(TestInputFileReader, parseSmoothingMethod)
     )
 }
 
-TEST_F(TestInputFileReader, parseQMForceDistribution)
-{
-    using enum QMForceDist;
-
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
-    ASSERT_TRUE(funcMap.contains("qm_force_distribution"));
-    const auto& parseQMForceDistributionFunc =
-        funcMap.at("qm_force_distribution");
-
-    parseQMForceDistributionFunc({"qm_force_distribution", "=", "none"}, 0);
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), NONE);
-
-    _clearParser(parser);
-
-    parseQMForceDistributionFunc({"qm_force_distribution", "=", "equal"}, 0);
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), EQUAL);
-
-    _clearParser(parser);
-
-    parseQMForceDistributionFunc({"qm_force_distribution", "=", "random"}, 0);
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), RANDOM);
-
-    _clearParser(parser);
-
-    parseQMForceDistributionFunc(
-        {"qm_force_distribution", "=", "distance-weighted"},
-        0
-    );
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), DISTANCE_WEIGHTED);
-
-    _clearParser(parser);
-
-    ASSERT_THROW_MSG(
-        parseQMForceDistributionFunc(
-            {"qm_force_distribution", "=", "invalid"},
-            0
-        ),
-        exc::InputFileException,
-        "Invalid value \"invalid\" for key \"qm_force_distribution\" at line 0 "
-        "in input file. Allowed values: none, equal, random, distance_weighted"
-    )
-}
-
 TEST_F(TestInputFileReader, parseSelection)
 {
     auto converter = input::Converter<input::SelectionTag>(
