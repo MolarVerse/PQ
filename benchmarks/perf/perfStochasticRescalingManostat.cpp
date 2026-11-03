@@ -30,6 +30,7 @@
 #include <iostream>
 
 #include "manostatSettings.hpp"
+#include "referenceSettings.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -39,6 +40,7 @@
 #endif
 
 #include "generalSettings.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
@@ -61,8 +63,11 @@ int main()
     manostatSettings.setTargetPressure(1.0);
     manostatSettings.setTau(100.0 * ps);
     manostatSettings.setCompressibility(4.6e-5);
-    manostatSettings.finalize();
+    ReferenceSettings referenceSettings;
+    manostatSettings.finalize(referenceSettings);
     auto manostat = manostat::StochasticRescalingManostat(manostatSettings);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

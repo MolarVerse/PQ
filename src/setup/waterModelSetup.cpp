@@ -40,8 +40,6 @@
 #include "interWaterParamters.hpp"
 #include "mTRIntraWater.hpp"
 #include "mdEngine.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
 #include "waterModelSettings.hpp"
 
 namespace setup
@@ -153,8 +151,6 @@ namespace setup
         );
 
         _engine.getLogOutput().writeEmptyLine();
-
-        _addReferences();
     }
 
     /**
@@ -483,132 +479,6 @@ namespace setup
         );
 
         _engine.setInterWater(std::move(interWater));
-    }
-
-    /**
-     * @brief Add reference file entries for the configured water models.
-     *
-     * @details Adds bibliography references for both intramolecular and
-     * intermolecular water models to the references output.
-     */
-    void WaterModelSetup::_addReferences()
-    {
-        const auto &waterModelSettings =
-            _engine.getSettings().waterModelSettings;
-        const auto intraModel = waterModelSettings.getWaterIntraModel();
-        const auto interModel = waterModelSettings.getWaterInterModel();
-
-        switch (intraModel)
-        {
-            using enum WaterIntraModel;
-            case SPC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_FILE
-                );
-                break;
-            case SPC_E:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_E_FILE
-                );
-                break;
-            case SPC_FW:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_FW_FILE
-                );
-                break;
-            case QSPC_FW:
-                references::ReferencesOutput::addReferenceFile(
-                    references::QSPC_FW_FILE
-                );
-                break;
-            case SPC_DC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_DC_FILE
-                );
-                break;
-            case H2O_DC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::H2O_DC_FILE
-                );
-                break;
-            case TIP3P:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TIP3P_FILE
-                );
-                break;
-            case OPC3:
-                references::ReferencesOutput::addReferenceFile(
-                    references::OPC3_FILE
-                );
-                break;
-            case SPC_MTR:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_MTR_FILE
-                );
-                break;
-            case TIP3P_MTR:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TIP3P_MTR_FILE
-                );
-                break;
-            case NONE: break;
-        }
-
-        switch (interModel)
-        {
-            using enum WaterInterModel;
-            case SPC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_FILE
-                );
-                break;
-            case SPC_E:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_E_FILE
-                );
-                break;
-            case SPC_FW:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_FW_FILE
-                );
-                break;
-            case QSPC_FW:
-                references::ReferencesOutput::addReferenceFile(
-                    references::QSPC_FW_FILE
-                );
-                break;
-            case SPC_DC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_DC_FILE
-                );
-                break;
-            case H2O_DC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::H2O_DC_FILE
-                );
-                break;
-            case TIP3P:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TIP3P_FILE
-                );
-                break;
-            case OPC3:
-                references::ReferencesOutput::addReferenceFile(
-                    references::OPC3_FILE
-                );
-                break;
-            case SPC_MTR:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_MTR_FILE
-                );
-                break;
-            case TIP3P_MTR:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TIP3P_MTR_FILE
-                );
-                break;
-            case NONE: break;
-        }
     }
 
 }   // namespace setup

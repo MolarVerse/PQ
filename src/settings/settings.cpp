@@ -31,14 +31,11 @@
 void Settings::finalize()
 {
     resetKinetics.finalize();
-    manostatSettings.finalize();
+    manostatSettings.finalize(referenceSettings);
     outputFiles.finalize();
-
-    const auto rigidWaterGeometry = waterModelSettings.getRigidWaterGeometry();
-
-    if (rigidWaterGeometry.has_value())
-        constraintSettings.activateShakeForWaterModel();
+    waterModelSettings.finalize(referenceSettings);
+    constraintSettings.finalize(referenceSettings, waterModelSettings);
 
     if (settings::GeneralSettings::isQMActivated())
-        qmSettings.finalize();
+        qmSettings.finalize(referenceSettings);
 }

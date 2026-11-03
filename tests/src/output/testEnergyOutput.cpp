@@ -23,7 +23,9 @@
 #include "testEnergyOutput.hpp"
 
 #include <iosfwd>
+#include <sstream>
 #include <string>
+#include <vector>
 
 #include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
@@ -301,4 +303,53 @@ TEST_F(TestEnergyOutput, noseHooverActive)
         "11.000000000000\t     12.000000000000\t         "
         "1.03923e+01\t     0.10000"
     );
+}
+
+/**
+ * @brief tests writing energy output file
+ *
+ * @details qmmm is active: E(QM) is corrected by the QM reference energy,
+ * which is printed after N(SM-MOL)
+ *
+ */
+TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
+{
+    _physicalData->reset();
+
+    _physicalData->setTemperature(1.0);
+    _physicalData->setPressure(2.0);
+    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setCoulombEnergy(4.0);
+    _physicalData->setNonCoulombEnergy(5.0);
+    _physicalData->setMomentum(linalg::Vec3D(6.0));
+    _physicalData->setQMEnergy(7.0);
+    _physicalData->setQMReferenceEnergy(2.0);
+    _physicalData->setNumberOfSmoothingMolecules(1.0);
+    _physicalData->setLoopTime(0.1);
+
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+    _settings->manostatSettings.setManostatType(ManostatType::NONE);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
+
+    _energyOutput->setFilename("default.en", false);
+    _energyOutput->write(100.0, *_physicalData, *_settings);
+    _energyOutput->close();
+
+    std::ifstream file("default.en");
+    std::string   line;
+    std::getline(file, line);
+
+    std::vector<double> fields;
+    std::stringstream   stream(line);
+    for (std::string field; std::getline(stream, field, '\t');)
+        fields.push_back(std::stod(field));
+
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+
+    ASSERT_EQ(fields.size(), 14);
+    EXPECT_DOUBLE_EQ(fields[3], 17.0);   // E(TOT)
+    EXPECT_DOUBLE_EQ(fields[4], 5.0);    // E(QM)
+    EXPECT_DOUBLE_EQ(fields[10], 1.0);   // N(SM-MOL)
+    EXPECT_DOUBLE_EQ(fields[11], 2.0);   // E(QM-REF)
 }

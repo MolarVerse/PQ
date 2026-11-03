@@ -18,6 +18,18 @@ set(perf_benchmarks
     perfKinetics.cpp
     perfVirial.cpp
     perfShakeRattle.cpp
+    perfMShake.cpp
+    perfHybridZones.cpp
+    perfDftbRunnerFiles.cpp
+    perfTurbomoleRunnerFiles.cpp
+    perfPyscfRunnerFiles.cpp
+    perfSteepestDescent.cpp
+    perfAdam.cpp
+    perfOptimizerHistory.cpp
+    perfLearningRate.cpp
+    perfInputReadersN100.cpp
+    perfInputReadersN400.cpp
+    perfInputReadersN1600.cpp
     perfBerendsenThermostat.cpp
     perfLangevinThermostat.cpp
     perfNoseHooverThermostat.cpp
@@ -32,6 +44,9 @@ set(perf_benchmarks
     perfInterWaterN216.cpp
     perfInterWaterN512.cpp
     perfInterWaterN1728.cpp
+    perfOutputWritersN100.cpp
+    perfOutputWritersN400.cpp
+    perfOutputWritersN1600.cpp
 )
 
 include(CheckIncludeFileCXX)
@@ -55,6 +70,7 @@ foreach(perf_source ${perf_benchmarks})
 
     target_link_libraries(perf_${perf_name}
         PRIVATE
+        ${CMAKE_DL_LIBS}
         intraNonBonded
         forceField
         integrator
@@ -64,6 +80,8 @@ foreach(perf_source ${perf_benchmarks})
         resetKinetics
         virial
         constraints
+        output
+        hybridConfigurator
         molsys
         potential
         interWater
@@ -71,6 +89,12 @@ foreach(perf_source ${perf_benchmarks})
         physicalData
         box
         linearAlgebra
+        optimization
+        QM
+        engine
+        PQ_input
+        restartFileReader
+        topologyFileReader
     )
 
     # the end-to-end benchmark runs the real driver on a small input set
@@ -87,6 +111,13 @@ foreach(perf_source ${perf_benchmarks})
 
     list(APPEND perf_targets perf_${perf_name})
 endforeach()
+
+# allocation counter: preloaded by scripts/perf_gate.sh in a plain run of every
+# benchmark (not linked into them). Linux/glibc only.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    add_library(perf_alloc_counter SHARED allocCounter/perfAllocCounter.cpp)
+    list(APPEND perf_targets perf_alloc_counter)
+endif()
 
 # aggregate target so CI can build every benchmark with one command
 add_custom_target(perf_benchmarks)

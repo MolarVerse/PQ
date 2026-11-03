@@ -1,0 +1,1 @@
+- Perf gate: count the heap allocations of the measured loop of every benchmark (exact, independent of the CPU) with a preloaded library and fail when they rise; the PR comment shows base and PR counts.

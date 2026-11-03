@@ -1,0 +1,1 @@
+- Perf gate: add a fixed-work benchmark for the M-SHAKE / M-RATTLE solver on 100 rigid water molecules.

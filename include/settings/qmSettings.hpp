@@ -28,6 +28,7 @@
 
 #include "defaults.hpp"
 #include "enums/qm.hpp"
+#include "referenceSettings.hpp"
 #include "setting.hpp"
 
 struct TestQMSettings;   // forward declaration
@@ -81,7 +82,7 @@ class QMSettings
     };
 
    public:
-    void finalize();
+    void finalize(ReferenceSettings &referenceSettings);
 
     [[nodiscard]] bool isExternalQMRunner() const;
 
@@ -156,6 +157,10 @@ class QMSettings
    private:
     void _setupQMScript();
     void _setupQMMethodAseDftbPlus();
+    void _setupQMMethodAseXtb(ReferenceSettings &references) const;
+    void _setupQMMethodReferences(ReferenceSettings &references) const;
+    void _setupSlakosReferences(ReferenceSettings &references) const;
+    void _setupMaceReferences(ReferenceSettings &references) const;
 
     friend struct ::TestQMSettings;
 };

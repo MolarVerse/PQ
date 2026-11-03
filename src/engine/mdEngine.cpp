@@ -30,9 +30,12 @@
 #include "manostatFactory.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
-#include "referencesOutput.hpp"
 #include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
+
+#ifdef WITH_MPI
+#include "mpi.hpp"
+#endif
 
 namespace engine
 {
@@ -85,11 +88,14 @@ namespace engine
         const auto elapsedTime =
             timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
-        references::ReferencesOutput::writeReferencesFile(
-            outputFileSettings.getRefFileName()
-        );
+#ifdef WITH_MPI
+        if (mpi::MPI::isRoot())
+#endif
+        {
+            getEngineOutput().writeReferencesFile();
 
-        getEngineOutput().writeTimingsFile();
+            getEngineOutput().writeTimingsFile();
+        }
 
         getEngineOutput().getLogOutput().writeEndedNormally(elapsedTime);
         out::StdoutOutput::writeEndedNormally(elapsedTime);

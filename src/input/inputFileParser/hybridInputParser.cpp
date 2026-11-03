@@ -99,7 +99,6 @@ namespace input
         addSmoothingRegionThicknessKey();
         addPointChargeThicknessKey();
         addSmoothingMethodKey();
-        addQMForceDistributionKey();
     }
 
     void HybridInputParser::addInnerRegionCenterKey()
@@ -365,6 +364,11 @@ namespace input
         addKeyword(metaData.name, adapt(key), false);
     }
 
+    /**
+     * @brief not yet read from the input file as this requires a new smoothing
+     * method, see issue #1012 https://github.com/MolarVerse/PQ/issues/1012
+     *
+     */
     void HybridInputParser::addQMForceDistributionKey()
     {
         const auto metaData = input::KeyMetadata{

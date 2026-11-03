@@ -30,6 +30,7 @@
 #include "exceptions.hpp"
 #include "executablePath.hpp"
 #include "hubbardDerivMap.hpp"
+#include "referenceSettings.hpp"
 #include "stringUtilities.hpp"
 
 namespace
@@ -71,11 +72,22 @@ namespace
  */
 void QMSettings::finalize(ReferenceSettings &referenceSettings)
 {
+    _setupQMMethodReferences(referenceSettings);
+
     if (isExternalQMRunner())
         _setupQMScript();
 
     if (getQMMethod() == QMMethod::ASE_DFTBPLUS)
         _setupQMMethodAseDftbPlus();
+
+    if (_qmMethod.get() == QMMethod::ASE_XTB)
+        _setupQMMethodAseXtb(referenceSettings);
+
+    if (_qmMethod.get() == QMMethod::DFTBPLUS)
+        _setupSlakosReferences(referenceSettings);
+
+    if (_qmMethod.get() == QMMethod::MACE)
+        _setupMaceReferences(referenceSettings);
 }
 
 /**
@@ -250,20 +262,20 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
  * @brief setup the ASE DFTB+ method of the system
  *
  */
-void QMSettings::_setupQMMethodAseXtb()
+void QMSettings::_setupQMMethodAseXtb(ReferenceSettings &references) const
 {
     const auto xtbMethod = getXtbMethod();
     if (xtbMethod == XtbMethod::GFN1)
     {
-        references::ReferencesOutput::addReferenceFile(references::GFN1_FILE);
+        references.addReferenceFile(ReferenceFiles::GFN1_FILE);
     }
     else if (xtbMethod == XtbMethod::GFN2)
     {
-        references::ReferencesOutput::addReferenceFile(references::GFN2_FILE);
+        references.addReferenceFile(ReferenceFiles::GFN2_FILE);
     }
     else if (xtbMethod == XtbMethod::IPEA1)
     {
-        references::ReferencesOutput::addReferenceFile(references::IPEA1_FILE);
+        references.addReferenceFile(ReferenceFiles::IPEA1_FILE);
     }
 }
 
@@ -661,4 +673,79 @@ void QMSettings::_setupQMMethodAseDftbPlus()
 {
     if (getSlakosType() == SlakosType::THREEOB && !isThirdOrderDftbSet())
         setUseThirdOrderDftb(true);
+}
+
+void QMSettings::_setupQMMethodReferences(ReferenceSettings &references) const
+{
+    switch (getQMMethod())
+    {
+        case QMMethod::ASE_DFTBPLUS:
+        case QMMethod::DFTBPLUS:
+            references.addReferenceFile(ReferenceFiles::DFTBPLUS_FILE);
+            break;
+        case QMMethod::TURBOMOLE:
+            references.addReferenceFile(ReferenceFiles::TURBOMOLE_FILE);
+            break;
+        case QMMethod::FENNOL:
+            references.addReferenceFile(ReferenceFiles::FENNOL_FILE);
+            break;
+        case QMMethod::PYSCF:
+            references.addReferenceFile(ReferenceFiles::PYSCF_FILE);
+            break;
+        case QMMethod::ASE_XTB:
+        case QMMethod::MACE: break;
+    }
+}
+
+/**
+ * @brief Sets up the reference files for the selected Slakos type.
+ *
+ * This function checks the current Slakos type and adds the corresponding
+ * reference files to the provided `ReferenceSettings` object. It ensures
+ * that the necessary reference files are available for the chosen Slakos
+ * type.
+ *
+ * @param references The ReferenceSettings object to which the reference
+ * files will be added.
+ */
+void QMSettings::_setupSlakosReferences(ReferenceSettings &references) const
+{
+    switch (_slakosType.get())
+    {
+        case SlakosType::THREEOB:
+            references.addReferenceFile(ReferenceFiles::THREEOB_FILE);
+            break;
+        case SlakosType::MATSCI:
+            references.addReferenceFile(ReferenceFiles::MATSCI_FILE);
+            break;
+        case SlakosType::CUSTOM:
+        case SlakosType::NONE: break;
+    }
+}
+
+/**
+ * @brief Sets up the reference files for the MACE model.
+ *
+ * This function checks the current MACE model and adds the corresponding
+ * reference files to the provided `ReferenceSettings` object. It ensures
+ * that the necessary reference files are available for the chosen MACE
+ * model.
+ *
+ * @param references The ReferenceSettings object to which the reference
+ * files will be added.
+ */
+void QMSettings::_setupMaceReferences(ReferenceSettings &references) const
+{
+    switch (_maceModelType.get())
+    {
+        case MaceModelType::MACE_MP:
+            references.addReferenceFile(ReferenceFiles::MACEMP_FILE);
+            break;
+        case MaceModelType::MACE_OFF:
+            references.addReferenceFile(ReferenceFiles::MACEOFF_FILE);
+            break;
+        case MaceModelType::MACE_ANICC:
+            // NOT IMPLEMENTED YET
+            break;
+    }
 }

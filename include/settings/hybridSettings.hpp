@@ -53,7 +53,7 @@ namespace settings
         static inline double _pointChargeThickness     = 0.0;
 
         static inline SmoothingMethod _smoothing   = SmoothingMethod::HOTSPOT;
-        static inline QMForceDist     _qmForceDist = QMForceDist::NONE;
+        static inline QMForceDist     _qmForceDist = QMForceDist::EQUAL;
 
        public:
         /********************

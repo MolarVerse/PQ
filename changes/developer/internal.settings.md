@@ -12,4 +12,5 @@
 - Replace static `ForceFieldSettings`
 - Add the possibility to add names for `Setting` as an `mstd::Tag`
 - Replace static `OutputFileSettings`
+- Introduce non-static `ReferenceSettings`
 - Replace static `QMSettings`

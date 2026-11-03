@@ -32,8 +32,6 @@
 #include "potentialSettings.hpp"
 #include "qmCapableEngine.hpp"
 #include "qmSettings.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
 #include "stdoutOutput.hpp"
 
 namespace setup
@@ -53,6 +51,8 @@ namespace setup
      * @brief wrapper to build QMSetup object and call setup
      *
      * @param engine
+     * @param references Reference settings object used to manage and add
+     * necessary reference files for the specified QM method.
      */
     void setupQM(engine::Engine &engine)
     {
@@ -85,8 +85,6 @@ namespace setup
     void QMSetup::setup(const QMSettings &qmSettings)
     {
         setupQMMethod(qmSettings);
-
-        setupQMMethodAseXtb(qmSettings);
 
         setupCoulombRadiusCutOff();
 

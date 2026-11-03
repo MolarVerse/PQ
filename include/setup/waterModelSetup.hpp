@@ -55,8 +55,6 @@ namespace setup
             const waterModel::InterWaterState &
         );
         void _shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
-
-        void _addReferences();
     };
 
 }   // namespace setup

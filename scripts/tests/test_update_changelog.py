@@ -14,6 +14,50 @@ SPEC.loader.exec_module(CHANGELOG)
 
 
 class ChangelogTests(unittest.TestCase):
+    def test_retry_after_interrupted_writes_or_fragment_cleanup_keeps_each_note_once(self):
+        for failure in ("write", "unlink"):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                paths = {audience: root / f"{audience}.md" for audience in ("user", "developer")}
+                fragments = {}
+                for audience, path in paths.items():
+                    path.write_text("# Changelog\n\n## Next Release\n\n")
+                    folder = root / "changes" / audience
+                    folder.mkdir(parents=True)
+                    fragments[audience] = folder / "bugfix.correction.md"
+                    fragments[audience].write_text(f"- Correct the {audience} output.\n")
+
+                write_text = Path.write_text
+                unlink = Path.unlink
+
+                def interrupt_write(path, *args, **kwargs):
+                    if path == paths["developer"]:
+                        raise OSError("simulated interrupted write")
+                    return write_text(path, *args, **kwargs)
+
+                def interrupt_unlink(path, *args, **kwargs):
+                    if path == fragments["user"]:
+                        raise OSError("simulated interrupted cleanup")
+                    return unlink(path, *args, **kwargs)
+
+                with (
+                    mock.patch.object(CHANGELOG, "USER_CHANGELOG", paths["user"]),
+                    mock.patch.object(CHANGELOG, "DEV_CHANGELOG", paths["developer"]),
+                    mock.patch.object(CHANGELOG, "CHANGES_DIR", root / "changes"),
+                ):
+                    with (
+                        mock.patch.object(Path, "write_text", interrupt_write if failure == "write" else write_text),
+                        mock.patch.object(Path, "unlink", interrupt_unlink if failure == "unlink" else unlink),
+                        self.assertRaisesRegex(OSError, "simulated interrupted"),
+                    ):
+                        CHANGELOG.update_changelogs("v1.1.0")
+                    CHANGELOG.update_changelogs("v1.1.0")
+                    for audience, path in paths.items():
+                        text = path.read_text()
+                        self.assertEqual(text.count(f"- Correct the {audience} output."), 1)
+                        self.assertEqual(text.count("## [v1.1.0]"), 1)
+                        self.assertFalse(fragments[audience].exists())
+
     def test_release_notes_require_a_bullet(self):
         self.assertFalse(
             CHANGELOG.has_release_notes(
@@ -142,6 +186,26 @@ class ChangelogTests(unittest.TestCase):
             self.assertNotIn("effective step metadata", dev_text)
             self.assertFalse(user_fragment.exists())
             self.assertFalse(developer_fragment.exists())
+
+            developer_fragment.write_text(
+                "- Include a later release correction.\n", encoding="utf-8"
+            )
+            with (
+                mock.patch.object(CHANGELOG, "USER_CHANGELOG", user_changelog),
+                mock.patch.object(CHANGELOG, "DEV_CHANGELOG", dev_changelog),
+                mock.patch.object(CHANGELOG, "CHANGES_DIR", changes_dir),
+            ):
+                CHANGELOG.update_changelogs("v1.1.0")
+                updated = dev_changelog.read_text(encoding="utf-8")
+                self.assertEqual(updated.count("## [v1.1.0]"), 1)
+                self.assertEqual(updated.count("- Existing developer note."), 1)
+                self.assertEqual(updated.count("- Cover changelog fragment parsing."), 1)
+                self.assertIn("- Include a later release correction.", updated)
+                self.assertIn("## [v1.0.0](release-url) - 2025-01-01", updated)
+                self.assertEqual(user_changelog.read_text(encoding="utf-8"), user_text)
+                self.assertFalse(developer_fragment.exists())
+                CHANGELOG.update_changelogs("v1.1.0")
+                self.assertEqual(dev_changelog.read_text(encoding="utf-8"), updated)
 
     def test_release_keeps_the_placeholder_files_of_the_fragment_folders(self):
         with tempfile.TemporaryDirectory() as temporary_directory:

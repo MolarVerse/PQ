@@ -28,6 +28,8 @@
 #include "enums/waterModels.hpp"
 #include "setting.hpp"
 
+class ReferenceSettings;
+
 /**
  * @struct RigidWaterGeometry
  *
@@ -49,10 +51,12 @@ struct RigidWaterGeometry
 class WaterModelSettings
 {
    private:
-    Setting<WaterIntraModel> _waterIntraModel;
-    Setting<WaterInterModel> _waterInterModel;
+    Setting<WaterIntraModel, "Water Intra Model"> _waterIntraModel;
+    Setting<WaterInterModel, "Water Inter Model"> _waterInterModel;
 
    public:
+    void finalize(ReferenceSettings &references);
+
     [[nodiscard]]
     std::optional<RigidWaterGeometry> getRigidWaterGeometry() const;
 
@@ -71,6 +75,9 @@ class WaterModelSettings
 
     void setWaterIntraModel(WaterIntraModel model);
     void setWaterInterModel(WaterInterModel model);
+
+   private:
+    void _addReferences(ReferenceSettings &references) const;
 };
 
 #endif   // SETTINGS__WATER_MODEL_SETTINGS_HPP

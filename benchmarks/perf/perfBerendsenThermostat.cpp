@@ -35,6 +35,7 @@
 #endif
 
 #include "berendsenThermostat.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "timingsSettings.hpp"
@@ -51,6 +52,8 @@ int main()
     constexpr double targetTemperature = 300.0;
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     auto thermostat = thermostat::BerendsenThermostat(targetTemperature, 100.0);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

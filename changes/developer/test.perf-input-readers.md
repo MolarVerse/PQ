@@ -1,0 +1,1 @@
+- Add input reader benchmarks (moldescriptor, restart file, topology bonds and angles) in three sizes to the performance gate, with a scaling exponent.

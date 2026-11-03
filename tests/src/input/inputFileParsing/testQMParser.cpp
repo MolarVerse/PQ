@@ -268,20 +268,20 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
         parser.parseMaceQMMethod("mace_ani"),
         exc::InputFileException,
         "The mace ani model is not supported in this version of PQ.\n"
-    )
+    );
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("mace_anicc"),
         exc::InputFileException,
         "The mace ani model is not supported in this version of PQ.\n"
-    )
+    );
 
     ASSERT_THROW_MSG(
         parser.parseMaceQMMethod("notAMaceModel"),
         exc::InputFileException,
         "Invalid mace type qm_method \"notAMaceModel\" in input file.\n"
         "Possible values are: mace_mp, mace_off, mace_anicc, mace, mace_ani"
-    )
+    );
 }
 
 TEST_F(TestInputFileReader, parseMaceModel)
@@ -361,7 +361,7 @@ TEST_F(TestInputFileReader, parseMaceModel)
         "file. Allowed values: small, medium, large, small_0b, medium_0b, "
         "small_0b2, medium_0b2, large_0b2, medium_0b3, medium_mpa_0, "
         "medium_omat_0, custom"
-    )
+    );
 }
 
 TEST_F(TestInputFileReader, parseMaceMode)

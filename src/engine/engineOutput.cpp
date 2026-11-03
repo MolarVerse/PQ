@@ -61,7 +61,10 @@ namespace engine
     /**
      * @brief constructor
      */
-    EngineOutput::EngineOutput(const OutputFileSettings &outputFileSettings)
+    EngineOutput::EngineOutput(
+        const OutputFileSettings &outputFileSettings,
+        const ReferenceSettings  &referenceSettings
+    )
         : _outputFileSettings(outputFileSettings),
           _energyOutput(
               std::make_unique<out::EnergyOutput>(DefaultFiles::energyFile)
@@ -141,7 +144,8 @@ namespace engine
           ),
           _timingsOutput(
               std::make_unique<out::TimingsOutput>(DefaultFiles::timingsFile)
-          )
+          ),
+          _referencesOutput(referenceSettings)
 
     {
     }
@@ -515,6 +519,18 @@ namespace engine
         // here is no timer applied, since the timings file is written at the
         // end of the simulation
         _timingsOutput->write();
+    }
+
+    /**
+     * @brief wrapper for references file output function
+     *
+     */
+    void EngineOutput::writeReferencesFile()
+    {
+        auto _ = scopedTimer(TimerId::Output, "ReferencesOutput");
+        _referencesOutput.writeReferencesFile(
+            _outputFileSettings->getRefFileName()
+        );
     }
 
     /***************************

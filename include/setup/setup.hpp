@@ -28,6 +28,7 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+class ReferenceSettings;
 namespace timings
 {
     class Timer;   // forward declaration

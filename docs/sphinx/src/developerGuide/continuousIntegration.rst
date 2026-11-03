@@ -70,10 +70,17 @@ Workflows
         pull request has an issue linked in GitHub). A phrase such as "Part of #N" is *not* recognised.
     * - Performance Gate
       - ``perf.yml``
-      - pull requests to ``main``, ``dev`` and ``NEXT`` that touch C++ or build files
+      - pull requests to ``main``, ``dev`` and ``NEXT`` that touch C++ or build files; nightly
       - Builds ``benchmarks/perf`` for the pull request and its base, runs both under ``callgrind`` and fails if an
         instruction count grew beyond the threshold. Instruction counts are deterministic, so this check is not
-        flaky.
+        flaky. The comment also lists the heap allocations of the measured loop (exact; a rise fails the check as
+        well), the peak heap in use (exact, report only; bytes per molecule for the size series) and the cache
+        misses and branch mispredictions of a simulated 32 KiB L1 cache, 8 MiB last level cache
+        and branch predictor (report only). The simulated numbers depend only on the binary, not on the machine, but
+        on the program path and the environment, so the gate runs every binary through a path of the same length
+        with an empty environment. The simulation makes the runs about three times slower, so pull requests skip it
+        (``PERF_CACHE_SIM=0``); a nightly run (03:00 UTC, ``dev`` against ``dev`` of a day earlier, also available as
+        a manual run) keeps it on and writes the table to the job summary.
     * - Clang Build
       - ``clang_build.yml``
       - pull requests that touch C++ or build files

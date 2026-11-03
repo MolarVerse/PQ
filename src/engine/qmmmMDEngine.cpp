@@ -338,11 +338,7 @@ namespace engine
         getQMRunner().run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
         _calculateQMReferenceEnergy();
 
-        if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
-            _scaleSmoothingMoleculeForcesInner();
-        else
-            _distributeSmoothingMolQMForces();
-
+        _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateQMVirial(getSimulationBox());
         virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToInnerAndReset(atoms);
@@ -609,10 +605,11 @@ namespace engine
 
     /**
      * @brief Dispatch QM-force redistribution for smoothing-zone molecules.
+     * Not used in the code yet, as this requires a new smoothing method, see
+     * issue #1012 https://github.com/MolarVerse/PQ/issues/1012
      *
      * @details Selects the redistribution strategy configured via
      * HybridSettings::getQMForceDist().
-     * - NONE: scale smoothing-zone forces by smF only.
      * - EQUAL: redistribute each smoothing-molecule deficit equally to
      *   CORE/LAYER molecules, then split by atomic mass within each
      * molecule.
@@ -672,7 +669,6 @@ namespace engine
             {
                 using enum QMForceDist;
 
-                case NONE: continue;
                 case EQUAL:
                     weights = std::vector<double>(recipientMolecules.size(), 1);
                     break;

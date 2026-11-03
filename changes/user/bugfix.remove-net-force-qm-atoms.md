@@ -1,0 +1,1 @@
+- `remove_net_force` now removes the net QM force over the QM atoms only. In QM/MM runs it no longer spreads part of it onto MM atoms.

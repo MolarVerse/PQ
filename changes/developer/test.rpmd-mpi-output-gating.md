@@ -1,0 +1,1 @@
+- Add a unit test verifying RingPolymerEngine::writeOutput only writes the ring-polymer restart file on the MPI root rank.

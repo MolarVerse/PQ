@@ -1662,7 +1662,8 @@ Remove Net Force
     remove_net_force = {bool} -> false
 
 With the ``remove_net_force`` keyword the user can request the removal of the net force after reading in forces from the QM program.
-Removal is achieved by distributing the total net force evenly across all atoms in the system.
+Removal is achieved by distributing the net force of the QM atoms evenly across the QM atoms. In QM/MM runs these are the atoms of the
+active QM region; MM atoms are not touched.
 This can increase momentum conservation when using a QM program with limited numerical precision.
 
 .. centered:: *default value* = false
@@ -2042,32 +2043,6 @@ With the ``point_charge_thickness`` keyword the user can specify the distance fr
 The default value is 0.0 Å, which means that no point charges are included.
 
 .. centered:: *default value* = 0.0 Å
-
-.. _qmForceDistributionKey:
-
-QM Force Distribution
-=====================
-
-.. admonition:: Key
-    :class: tip
-
-    qm_force_distribution = {string} -> "none"
-
-With the ``qm_force_distribution`` keyword the user can specify how the missing QM forces from smoothing molecules are distributed among non-smoothing QM molecules.
-Each recipient QM molecule then distributes its received share to its atoms proportional to atom masses.
-
-.. Note::
-    This keyword is only relevant if the :ref:`smoothing_method <smoothingMethodKey>` keyword is set to ``hotspot``.
-
-Possible options are:
-
-   1. **none** (default) - No distribution of deficient smoothing molecules forces.
-
-   2. **equal** - Deficient smoothing molecule forces are distributed equally among all non-smoothing QM molecules.
-
-   3. **random** - Deficient smoothing molecule forces are distributed randomly among all non-smoothing QM molecules.
-
-   4. **distance-weighted** - Deficient smoothing molecule forces are distributed distance-weighted among all non-smoothing QM molecules.
 
 
 .. image:: hybrid_zones.png

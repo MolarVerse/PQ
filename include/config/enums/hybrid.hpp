@@ -52,7 +52,6 @@ MSTD_ENUM(SmoothingMethod, std::uint8_t, SMOOTHING_METHOD_LIST)
 enum class QMForceDist : std::uint8_t;
 
 #define QM_FORCE_DIST_LIST(X) \
-    X(NONE)                   \
     X(EQUAL)                  \
     X(RANDOM)                 \
     X(DISTANCE_WEIGHTED)

@@ -23,7 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__THERMOSTAT_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__THERMOSTAT_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class ReferenceSettings;
 
 namespace input
 {
@@ -35,8 +39,11 @@ namespace input
      */
     class ThermostatInputParser : public InputFileParser
     {
+       private:
+        mstd::Ref<ReferenceSettings> _referenceSettings;
+
        public:
-        ThermostatInputParser();
+        explicit ThermostatInputParser(ReferenceSettings& referenceSettings);
 
         void addThermostatKey();
         void addTemperatureKey();

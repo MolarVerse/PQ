@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include <iosfwd>
+#include <iterator>
 #include <string>
 
 #include "enums/potential.hpp"
@@ -595,5 +596,53 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
         line,
         "----------------------------------------------------------------------"
         "-------------------"
+    );
+}
+
+/**
+ * @brief tests writing info file
+ *
+ * @details qmmm is active: E(QM) is corrected by the QM reference energy,
+ * which is printed next to N(SM-MOL)
+ *
+ */
+TEST_F(TestEnergyOutput, writeInfoQmmmSubtractsQMReferenceEnergy)
+{
+    _physicalData->reset();
+
+    _physicalData->setQMEnergy(7.0);
+    _physicalData->setQMReferenceEnergy(2.0);
+    _physicalData->setNumberOfSmoothingMolecules(1.0);
+
+    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+    _settings->manostatSettings.setManostatType(ManostatType::NONE);
+    settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
+
+    _infoOutput->setFilename("default.info", false);
+    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->close();
+
+    std::ifstream file("default.info");
+    std::string   content(
+        (std::istreambuf_iterator<char>(file)),
+        std::istreambuf_iterator<char>()
+    );
+
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+
+    EXPECT_NE(
+        content.find(
+            "|   E(QM)                   5.00000 kcal/mol N(QM-ATOMS)       "
+            "      0.00000 -          |"
+        ),
+        std::string::npos
+    );
+    EXPECT_NE(
+        content.find(
+            "|   N(SM-MOL)               1.00000 -        E(QM-REF)         "
+            "      2.00000 kcal/mol   |"
+        ),
+        std::string::npos
     );
 }

@@ -29,7 +29,7 @@
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
-#include "references.hpp"
+#include "referenceSettings.hpp"
 #include "referencesOutput.hpp"
 
 namespace input
@@ -42,7 +42,13 @@ namespace input
      * @details following keywords are added to the _keywordFuncMap,
      * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
      */
-    IntegratorInputParser::IntegratorInputParser() { addIntegratorKey(); }
+    IntegratorInputParser::IntegratorInputParser(
+        ReferenceSettings& referenceSettings
+    )
+        : _referenceSettings(referenceSettings)
+    {
+        addIntegratorKey();
+    }
 
     /**
      * @brief Add the integrator key to the input file parser
@@ -59,7 +65,7 @@ namespace input
                 "Specifies the integrator type to be used in the simulation",
         };
 
-        const auto setValue = [](IntegratorType integratorType)
+        const auto setValue = [this](IntegratorType integratorType)
         {
             // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/908
             if (!settings::GeneralSettings::isMDJobType())
@@ -72,8 +78,8 @@ namespace input
             }
 
             settings::GeneralSettings::setIntegratorType(integratorType);
-            references::ReferencesOutput::addReferenceFile(
-                references::VELOCITY_VERLET_FILE
+            _referenceSettings->addReferenceFile(
+                ReferenceFiles::VELOCITY_VERLET_FILE
             );
         };
 

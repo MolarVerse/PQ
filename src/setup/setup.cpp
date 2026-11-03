@@ -59,6 +59,8 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine The engine to set up.
+     * @param references Reference settings object used to manage and add
+     * necessary reference files for the specified QM method.
      */
     void setupRequestedJob(engine::Engine& engine)
     {

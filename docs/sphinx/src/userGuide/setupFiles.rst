@@ -39,6 +39,8 @@ identical elements exposed to a similar chemical environment from different molt
     atom type name. In case of a pure QM calculation the charge of the moltype, the atom_type_index as well as the point_charge can be 
     set to 0 and the global_vdW_type can be omitted. For MM calculations that utilize just the :ref:`guffdatFile`, the 
     point_charge can be set to 0 and the global_vdW_type can be omitted.
+    QM atoms with moltype 0 in the :ref:`restartFile` have no moldescriptor entry and always count as neutral in the
+    total QM charge. Give charged QM atoms their own moltype in the moldescriptor file.
 
 .. Attention::
 
@@ -58,9 +60,9 @@ identical elements exposed to a similar chemical environment from different molt
     | qm_reference_energy energy
 
     where *energy* is the QM energy of the isolated, geometry-optimized moltype in kcal/mol, computed with the same QM method. After every
-    QM calculation, this energy is summed once for each moltype molecule in the QM region and subtracted from the total energy; the
-    reported QM energy is unchanged. Without it, the total energy jumps by the QM energy of a molecule whenever the molecule enters or
-    leaves the QM region. With exact smoothing, the sum is formed for every configuration and weighted with its global smoothing factor.
+    QM calculation, this energy is summed once for each moltype molecule in the QM region and subtracted from the total energy and the
+    reported QM energy; the subtracted sum is printed as E(QM-REF) in the ``.info`` and ``.en`` files. Without it, the total energy
+    jumps by the QM energy of a molecule whenever the molecule enters or leaves the QM region. With exact smoothing, the sum is formed for every configuration and weighted with its global smoothing factor.
     Once one moltype has this line, every moltype needs it, and QM-only molecules with moltype 0 are not allowed.
 
 .. _guffdatFile:

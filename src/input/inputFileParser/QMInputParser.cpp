@@ -32,8 +32,6 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "qmSettings.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
 #include "stringUtilities.hpp"
 
 namespace input
@@ -87,36 +85,7 @@ namespace input
         };
 
         const auto setValue = [this](QMMethod value)
-        {
-            _qmSettings->setQMMethod(value);
-
-            switch (value)
-            {
-                case QMMethod::ASE_DFTBPLUS:
-                case QMMethod::DFTBPLUS:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::DFTBPLUS_FILE
-                    );
-                    break;
-                case QMMethod::TURBOMOLE:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::TURBOMOLE_FILE
-                    );
-                    break;
-                case QMMethod::FENNOL:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::FENNOL_FILE
-                    );
-                    break;
-                case QMMethod::PYSCF:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::PYSCF_FILE
-                    );
-                    break;
-                case QMMethod::MACE:
-                case QMMethod::ASE_XTB: break;
-            }
-        };
+        { _qmSettings->setQMMethod(value); };
 
         const auto finalize = [this](const std::string &value, QMMethod method)
         {
@@ -320,17 +289,11 @@ namespace input
                         SlakosType::THREEOB,
                         _resolveBuiltInSlakosPath
                     );
-                    references::ReferencesOutput::addReferenceFile(
-                        references::THREEOB_FILE
-                    );
                     break;
                 case SlakosType::MATSCI:
                     _qmSettings->setSlakosType(
                         SlakosType::MATSCI,
                         _resolveBuiltInSlakosPath
-                    );
-                    references::ReferencesOutput::addReferenceFile(
-                        references::MATSCI_FILE
                     );
                     break;
                 case SlakosType::CUSTOM:
@@ -514,16 +477,6 @@ namespace input
 
         switch (modelTypeOpt.value())
         {
-            case MaceModelType::MACE_MP:
-                references::ReferencesOutput::addReferenceFile(
-                    references::MACEMP_FILE
-                );
-                break;
-            case MaceModelType::MACE_OFF:
-                references::ReferencesOutput::addReferenceFile(
-                    references::MACEOFF_FILE
-                );
-                break;
             case MaceModelType::MACE_ANICC:
                 throw exc::InputFileException(
                     std::format(
@@ -532,6 +485,8 @@ namespace input
                     )
                 );
                 break;
+            case MaceModelType::MACE_MP:
+            case MaceModelType::MACE_OFF: break;
         }
 
         _qmSettings->setMaceModelType(modelTypeOpt.value());

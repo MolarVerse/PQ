@@ -42,6 +42,7 @@
 #include "bondConstraint.hpp"
 #include "constraintSettings.hpp"
 #include "constraints.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
@@ -78,6 +79,8 @@ int main()
     }
 
     constr.calculateConstraintBondRefs(box);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

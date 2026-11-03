@@ -23,6 +23,8 @@
 #include <gtest/gtest.h>
 
 #include "constraintSettings.hpp"
+#include "referenceSettings.hpp"
+#include "waterModelSettings.hpp"
 
 TEST(ConstraintSettingsTest, ShakeMaxIterRoundTrip)
 {
@@ -76,4 +78,67 @@ TEST(ConstraintSettingsTest, MShakeToleranceRoundTrip)
 
     settings.setMShakeTolerance(1.1e-10);
     EXPECT_DOUBLE_EQ(settings.getMShakeTolerance(), 1.1e-10);
+}
+
+/**
+ * @brief finalize() must activate shake when the configured water model
+ * has a rigid geometry (e.g. SPC), even if shake was never explicitly
+ * requested.
+ */
+TEST(ConstraintSettingsTest, FinalizeActivatesShakeForRigidWaterModel)
+{
+    ConstraintSettings settings;
+    ASSERT_FALSE(settings.isShakeActivated());
+
+    WaterModelSettings waterModelSettings;
+    waterModelSettings.setWaterIntraModel(WaterIntraModel::SPC);
+    ASSERT_TRUE(waterModelSettings.getRigidWaterGeometry().has_value());
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings, waterModelSettings);
+
+    EXPECT_TRUE(settings.isShakeActivated());
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::RATTLE_FILE
+    ));
+}
+
+/**
+ * @brief finalize() must not activate shake for a water model without a
+ * rigid geometry (e.g. SPC_FW), nor add the rattle reference.
+ */
+TEST(ConstraintSettingsTest, FinalizeDoesNotActivateShakeForFlexibleWaterModel)
+{
+    ConstraintSettings settings;
+
+    WaterModelSettings waterModelSettings;
+    waterModelSettings.setWaterIntraModel(WaterIntraModel::SPC_FW);
+    ASSERT_FALSE(waterModelSettings.getRigidWaterGeometry().has_value());
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings, waterModelSettings);
+
+    EXPECT_FALSE(settings.isShakeActivated());
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().empty());
+}
+
+/**
+ * @brief finalize() must add the rattle reference whenever shake ends up
+ * active, regardless of whether that came from an explicit
+ * activateShake() call or from a rigid water model.
+ */
+TEST(ConstraintSettingsTest, FinalizeAddsRattleReferenceForExplicitShake)
+{
+    ConstraintSettings settings;
+    settings.activateShake();
+
+    WaterModelSettings waterModelSettings;
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings, waterModelSettings);
+
+    EXPECT_TRUE(settings.isShakeActivated());
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::RATTLE_FILE
+    ));
 }

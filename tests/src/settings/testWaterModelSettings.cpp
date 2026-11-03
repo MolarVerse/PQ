@@ -25,6 +25,7 @@
 #include <array>
 #include <string_view>
 
+#include "referenceSettings.hpp"
 #include "waterModelSettings.hpp"
 
 TEST(TestWaterModelSettings, FlagsAndEnumSettersRoundTrip)
@@ -188,4 +189,76 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
     }
 
     EXPECT_EQ(WaterInterModelMeta::toString(WaterInterModel::NONE), "NONE");
+}
+
+/**
+ * @brief finalize() must add a reference file for the intramolecular water
+ * model even when no intermolecular model has been set - regression test
+ * for a bug where the intra-model switch was gated on
+ * isInterWaterModelSet() instead of isWaterModelSet(), silently dropping
+ * the intra-model reference whenever only the intra model was configured.
+ */
+TEST(TestWaterModelSettings, FinalizeAddsIntraModelReferenceWithoutInterModel)
+{
+    WaterModelSettings settings;
+    settings.setWaterIntraModel(WaterIntraModel::SPC_FW);
+    ASSERT_TRUE(settings.isWaterModelSet());
+    ASSERT_FALSE(settings.isInterWaterModelSet());
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings);
+
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::SPC_FW_FILE
+    ));
+}
+
+/**
+ * @brief finalize() must add a reference file for the intermolecular water
+ * model even when no intramolecular model has been set.
+ */
+TEST(TestWaterModelSettings, FinalizeAddsInterModelReferenceWithoutIntraModel)
+{
+    WaterModelSettings settings;
+    settings.setWaterInterModel(WaterInterModel::TIP3P);
+    ASSERT_TRUE(settings.isInterWaterModelSet());
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings);
+
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::TIP3P_FILE
+    ));
+}
+
+/**
+ * @brief finalize() must add both references when both an intra- and an
+ * inter-molecular model are set, even when they differ.
+ */
+TEST(TestWaterModelSettings, FinalizeAddsBothReferencesWhenBothModelsSet)
+{
+    WaterModelSettings settings;
+    settings.setWaterIntraModel(WaterIntraModel::SPC_MTR);
+    settings.setWaterInterModel(WaterInterModel::TIP3P_MTR);
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings);
+
+    const auto &referenceFiles = referenceSettings.getReferenceFileNames();
+    EXPECT_TRUE(referenceFiles.contains(ReferenceFiles::SPC_MTR_FILE));
+    EXPECT_TRUE(referenceFiles.contains(ReferenceFiles::TIP3P_MTR_FILE));
+}
+
+/**
+ * @brief finalize() must not add any reference file when neither water
+ * model has been set.
+ */
+TEST(TestWaterModelSettings, FinalizeAddsNoReferenceWhenNeitherModelSet)
+{
+    WaterModelSettings settings;
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings);
+
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().empty());
 }
