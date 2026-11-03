@@ -38,7 +38,7 @@ A typical change:
 
 Open the pull request against ``dev``. It needs ``Closes #N``, ``Fixes #N``, ``Resolves #N`` or ``Related to #N`` in the
 description, and a changelog fragment (see :ref:`changelogFragments`). If ``dev`` moves while the pull request is open,
-update the branch: the ``pr_request`` check fails otherwise.
+update the branch before relying on checks for an older revision.
 
 .. code:: bash
 
@@ -61,26 +61,9 @@ the branch.
 Releases
 ********
 
-A release is a pull request from ``release/vX.Y.Z`` to ``main`` with ``Release-X.Y.Z`` in the title or body, created
-with the **Create Release PR** workflow (``create-release-pr.yml``, started by hand with the version as ``vX.Y.Z``). It
-creates the branch from ``dev``, opens the pull request and requests the reviews.
+Normal releases use ``release/vX.Y.Z`` branches prepared from ``dev``. Hotfixes
+use ``hotfix/<name>`` branches prepared from ``main``. Both target ``main`` and
+require successful checks on the exact publication commit before publishing.
 
-The **Release Lifecycle** workflow (``release.yml``) then takes over:
-
-    #. ``prepare-changelogs``: runs ``scripts/update_changelog.py`` on the release branch. It renders every changelog
-       fragment of ``changes/user`` into ``CHANGELOG.md`` and of ``changes/developer`` into ``DEV-CHANGELOG.md``,
-       stamps the release header, deletes the fragments and commits the result. Nobody edits the changelogs by hand.
-    #. ``check-release``: runs the tests of the scripts and verifies that the changelogs are prepared and that no
-       fragment is left.
-    #. ``publish-release``: when the pull request is merged, creates the tag ``vX.Y.Z`` on the merge commit and the
-       GitHub release with generated notes.
-
-A **hotfix** uses a branch ``hotfix/<name>`` instead; its version is the latest tag with the patch number incremented.
-After every push to ``main`` the sync workflow brings the change back to ``dev``.
-
-If a release has to be undone, the ``restore`` input of **Create Release PR** rebuilds the release from ``dev`` after a
-rollback.
-
-.. note::
-
-    A regular pull request never edits ``CHANGELOG.md`` or ``DEV-CHANGELOG.md``. It only adds a fragment.
+See :doc:`releasesAndHotfixes` for the creation commands, version pinning,
+changelog preparation, publication verification and recovery procedures.
