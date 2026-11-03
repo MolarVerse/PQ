@@ -80,8 +80,10 @@ namespace out
 
         if (settings::GeneralSettings::isQMActivated())
         {
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getQMEnergy());
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getQMEnergy() - physicalData.getQMReferenceEnergy()
+            );
             _getFilePointer(
             ) << std::format("{:20.12f}\t", physicalData.getNumberOfQMAtoms());
         }
@@ -116,6 +118,10 @@ namespace out
             _getFilePointer() << std::format(
                 "{:20.12f}\t",
                 physicalData.getNumberOfSmoothingMolecules()
+            );
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getQMReferenceEnergy()
             );
         }
 
