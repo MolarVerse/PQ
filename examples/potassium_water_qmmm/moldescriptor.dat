@@ -1,0 +1,13 @@
+Water_Type 1
+H2O_SPC/Fw     3   0
+qm_reference_energy  -2555.25290017
+O              0  -0.82
+H              1   0.41
+H              1   0.41
+
+Potassium(I)   1   1
+qm_reference_energy  -53.46883868
+K              0   1.0
+
+# NOTE: QM reference energies have been obtained at DFTB3/3OB level of theory and are given in kcal/mol
+
