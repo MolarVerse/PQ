@@ -1,1 +1,0 @@
-- Add output writer benchmarks (xyz, velocities, forces, charges, restart file, energy) in three sizes to the performance gate, with a scaling exponent.

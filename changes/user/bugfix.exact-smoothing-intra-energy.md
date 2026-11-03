@@ -1,1 +1,0 @@
-- Fix exact QM/MM smoothing counting intramolecular non-bonded energy twice in Coulomb, non-Coulomb and total energy.

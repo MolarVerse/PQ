@@ -1,1 +1,0 @@
-- Add benchmarks of the steepest descent and Adam update steps, the optimizer history and convergence check and the learning rate strategies to the performance gate.

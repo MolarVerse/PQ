@@ -1,1 +1,0 @@
-- Add an integration test that runs the oh_mm_hessian example (MM geometry optimization plus Hessian, no QM program needed) with and without max-learning-rate and checks the error for a minimum above the maximum.

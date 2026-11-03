@@ -1,1 +1,0 @@
-- Add unit tests for ReferenceSettings, WaterModelSettings::finalize, and ConstraintSettings::finalize, and extend ManostatSettings, QM/thermostat/integrator input parser tests to assert on the actual reference files added rather than only on compilation.

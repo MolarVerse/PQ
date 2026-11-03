@@ -1,1 +1,0 @@
-- Fix exact smoothing with 32 or more smoothing molecules silently using a wrong set of configurations; too many smoothing molecules now raise an error.

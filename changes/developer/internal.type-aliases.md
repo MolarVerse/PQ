@@ -1,7 +1,0 @@
-- delete `typeAliases.hpp` file completely
-- shorten `simulationBox` namespace to `molsys`
-- short `potential` namespace to `pot`
-- shorten `output` namespace to `out`
-- shorten `forceField` namespace to `ff`
-- shorten `linearAlgebra` namespace to `linalg`
-- remove `constants` namespace

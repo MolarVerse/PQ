@@ -1,1 +1,0 @@
-- Fix ring-polymer MD under MPI: non-root ranks no longer write the trajectory, restart, energy, and reference output files, removing a filesystem race that could abort the run with "Could not open file".

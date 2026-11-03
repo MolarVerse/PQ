@@ -1,1 +1,0 @@
-- Make the CI metrics collector ingest the build-timings artifacts into `build-analysis` records (validated field by field, joined to the job records by `job_id`) and add their schema.

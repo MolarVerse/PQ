@@ -1,1 +1,0 @@
-- Fix compilation with libc++ by including <charconv> in inputConverter.tpp.

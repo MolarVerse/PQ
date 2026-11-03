@@ -1,1 +1,0 @@
-- output of timings detail sections in `.timings` was not sorted

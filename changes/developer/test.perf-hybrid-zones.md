@@ -1,1 +1,0 @@
-- Add a QM/MM zone bookkeeping benchmark (inner region center, zone assignment, smoothing factors) to the performance gate.

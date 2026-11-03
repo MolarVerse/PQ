@@ -1,2 +1,0 @@
-- Add unit tests for previously-untested degenerate-geometry edge cases in BondConstraint::applyShake, DistanceConstraint::applyDistanceConstraint, and CellList::determineCellSize.
-- Add the first dedicated DistanceConstraint unit test file.

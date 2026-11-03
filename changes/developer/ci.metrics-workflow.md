@@ -1,1 +1,0 @@
-- Add the CI Metrics workflow (daily schedule + manual dispatch) that runs the collector and commits new timing data to dev via publish.sh; it stays inert until it reaches main.

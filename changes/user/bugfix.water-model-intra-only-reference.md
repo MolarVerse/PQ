@@ -1,1 +1,0 @@
-- Fix missing citation entry when only an intramolecular water model is configured without an intermolecular one: the reference file is now added based on whether the intramolecular model itself is set, not on whether the intermolecular model is set.

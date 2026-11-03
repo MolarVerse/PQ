@@ -1,1 +1,0 @@
-- QM/MM: the reported QM energy now has the QM reference energies subtracted; the subtracted sum is printed as E(QM-REF) next to N(SM-MOL) in the `.info` and `.en` files.

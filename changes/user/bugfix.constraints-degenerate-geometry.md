@@ -1,1 +1,0 @@
-- Fix SHAKE/distance constraints and cell-list setup silently producing NaN/Inf forces or an unstable layout on degenerate geometry (e.g. colliding atoms, or the box collapsing); these now throw a descriptive exception instead.

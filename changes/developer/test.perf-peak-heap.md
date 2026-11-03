@@ -1,1 +1,0 @@
-- Report the peak heap in use of every performance benchmark (exact, from the allocation counter; bytes per molecule for the size series) in the performance gate comment. Report only.

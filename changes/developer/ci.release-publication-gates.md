@@ -1,2 +1,0 @@
-- Require successful BUILD and LINT runs for the release commit before publication.
-- Keep hotfix versions fixed and allow preparation and publication to be retried after failures.

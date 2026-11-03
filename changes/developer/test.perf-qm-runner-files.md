@@ -1,1 +1,0 @@
-- Add benchmarks of the DFTB+, Turbomole and PySCF runner file handling (coordinates, point charges, forces, charges, stress tensor; no QM program is started) to the performance gate.

@@ -1,1 +1,0 @@
-- Add bounded PQ Bot reviews and test-driven draft coworker PRs with isolated model edits and scoped write credentials.

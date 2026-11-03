@@ -1,1 +1,0 @@
-- Add potassium in water example QM/MM input to the examples directory
