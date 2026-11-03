@@ -2,8 +2,7 @@ name: Release Lifecycle
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
     types: [opened, edited, reopened, synchronize, closed]
   workflow_dispatch:
     inputs:
@@ -20,13 +19,15 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  prepare-changelogs:
+  check-release:
     if: >-
       github.event_name == 'pull_request' &&
-      (github.event.action == 'opened' ||
-      github.event.action == 'reopened' ||
-      github.event.action == 'synchronize') &&
+      github.event.action != 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       (startsWith(github.event.pull_request.head.ref, 'release/') ||
       startsWith(github.event.pull_request.head.ref, 'hotfix/'))
@@ -36,32 +37,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Read release version
-        id: release
-        env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          if [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
-          elif [[ "$HEAD_REF" =~ ^hotfix/ ]]; then
-            latest="$(git ls-remote --tags --refs \
-              "https://github.com/$REPOSITORY.git" 'v[0-9]*.[0-9]*.[0-9]*' |
-              awk '{ sub("refs/tags/", "", $2); if ($2 ~ /^v[0-9]+\.[0-9]+\.[0-9]+$/) print $2 }' |
-              sort -V |
-              tail -n 1)"
-            if [[ ! "$latest" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-              echo "Could not infer latest release tag from $REPOSITORY."
-              exit 1
-            fi
-            version="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))"
-            echo "version=$version" >> "$GITHUB_OUTPUT"
-          else
-            echo "Regular releases use release/vX.Y.Z."
-            echo "Hotfixes must use hotfix/*; their patch version is auto-bumped."
-            exit 1
-          fi
-
       - name: Mint release bot token
         id: app-token
         uses: actions/create-github-app-token@v1
@@ -78,17 +53,33 @@ jobs:
           submodules: recursive
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: Read release version
+        id: release
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          version="$(python3 scripts/release_version.py --prepare \
+            --head-ref "$HEAD_REF" --title "$PR_TITLE")"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
       - name: Prepare changelogs
         env:
           VERSION: ${{ steps.release.outputs.version }}
-        run: |
-          if grep -Fq "## [$VERSION](" CHANGELOG.md || \
-             grep -Fq "## [$VERSION](" DEV-CHANGELOG.md; then
-            echo "Changelogs are already prepared for $VERSION."
-          else
-            python3 scripts/update_changelog.py "$VERSION"
-          fi
+        run: python3 scripts/update_changelog.py "$VERSION"
 
+      - name: Test release tooling
+        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+
+      - name: Verify prepared changelogs
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if ! grep -Fq "## [$VERSION](" CHANGELOG.md && \
+             ! grep -Fq "## [$VERSION](" DEV-CHANGELOG.md; then
+            echo "Changelogs are not prepared for $VERSION."
+            exit 1
+          fi
           remaining="$(find changes -type f -name '*.md' \
             ! -name 'README.md' -print)"
           if [[ -n "$remaining" ]]; then
@@ -114,65 +105,75 @@ jobs:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
-          if git diff --quiet; then
-            echo "No changelog changes to commit."
+          git add CHANGELOG.md DEV-CHANGELOG.md changes/ .github/release.json
+          if git diff --cached --quiet; then
+            echo "No release preparation changes to commit."
             exit 0
           fi
-
           git config user.name "$APP_USER_NAME"
           git config user.email \
             "$APP_USER_ID+$APP_USER_NAME@users.noreply.github.com"
-          git add CHANGELOG.md DEV-CHANGELOG.md changes/
           git commit -m "docs: prepare changelogs for $VERSION"
           git push origin "HEAD:$HEAD_REF"
 
-  check-release:
+  publish-release:
     if: >-
-      github.event_name == 'pull_request' &&
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
       (startsWith(github.event.pull_request.head.ref, 'release/') ||
-      startsWith(github.event.pull_request.head.ref, 'hotfix/')) &&
-      (github.event.action == 'edited' ||
-      github.event.action == 'synchronize')
+      startsWith(github.event.pull_request.head.ref, 'hotfix/')))
+    concurrency:
+      group: release-publication
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      actions: read
     runs-on: ubuntu-latest
+    timeout-minutes: 40
 
     steps:
-      - name: Read release version
-        id: release
+      - name: Resolve release commit
+        id: commit
         env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          REPOSITORY: ${{ github.repository }}
+          DISPATCH_COMMIT: ${{ inputs.commit }}
+          EVENT_NAME: ${{ github.event_name }}
+          MERGE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
         run: |
-          if [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-            version="${BASH_REMATCH[1]}"
-            if [[ "$PR_TITLE" != "Release-${version#v}" ]]; then
-              echo "Release PR title must be Release-${version#v}."
-              exit 1
-            fi
-          elif [[ "$HEAD_REF" =~ ^hotfix/ ]]; then
-            latest="$(git ls-remote --tags --refs \
-              "https://github.com/$REPOSITORY.git" 'v[0-9]*.[0-9]*.[0-9]*' |
-              awk '{ sub("refs/tags/", "", $2); if ($2 ~ /^v[0-9]+\.[0-9]+\.[0-9]+$/) print $2 }' |
-              sort -V |
-              tail -n 1)"
-            if [[ ! "$latest" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-              echo "Could not infer latest release tag from $REPOSITORY."
-              exit 1
-            fi
-            version="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))"
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "ref=$DISPATCH_COMMIT" >> "$GITHUB_OUTPUT"
           else
-            echo "Regular releases use release/vX.Y.Z."
-            echo "Hotfixes must use hotfix/*; their patch version is auto-bumped."
-            exit 1
+            echo "ref=$MERGE_COMMIT" >> "$GITHUB_OUTPUT"
           fi
 
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout pull request
+      - name: Checkout release commit
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ steps.commit.outputs.ref }}
+          submodules: recursive
+          persist-credentials: false
 
-      - name: Test changelog tooling
-        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+      - name: Resolve release version
+        id: release
+        env:
+          DISPATCH_VERSION: ${{ inputs.version }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            version="$DISPATCH_VERSION"
+          else
+            version="$(python3 scripts/release_version.py --head-ref "$HEAD_REF" --title "$PR_TITLE")"
+          fi
+          if [[ ! "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Version must use vX.Y.Z format."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Verify prepared changelogs
         env:
@@ -183,7 +184,6 @@ jobs:
             echo "Changelogs are not prepared for $VERSION."
             exit 1
           fi
-
           remaining="$(find changes -type f -name '*.md' \
             ! -name 'README.md' -print)"
           if [[ -n "$remaining" ]]; then
@@ -192,61 +192,15 @@ jobs:
             exit 1
           fi
 
-  publish-release:
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'pull_request' &&
-      github.event.action == 'closed' &&
-      github.event.pull_request.merged == true &&
-      (startsWith(github.event.pull_request.head.ref, 'release/') ||
-      startsWith(github.event.pull_request.head.ref, 'hotfix/')))
-    runs-on: ubuntu-latest
+      - name: Test release tooling
+        run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
 
-    steps:
-      - name: Resolve release inputs
-        id: release
+      - name: Require successful CI on release commit
         env:
-          DISPATCH_COMMIT: ${{ inputs.commit }}
-          DISPATCH_VERSION: ${{ inputs.version }}
-          EVENT_NAME: ${{ github.event_name }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          MERGE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            version="$DISPATCH_VERSION"
-            commit="$DISPATCH_COMMIT"
-          elif [[ "$HEAD_REF" =~ ^release/(v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
-            version="${BASH_REMATCH[1]}"
-            commit="$MERGE_COMMIT"
-            source="PR #$PR_NUMBER"
-          elif [[ "$HEAD_REF" =~ ^hotfix/ ]]; then
-            latest="$(git ls-remote --tags --refs \
-              "https://github.com/$REPOSITORY.git" 'v[0-9]*.[0-9]*.[0-9]*' |
-              awk '{ sub("refs/tags/", "", $2); if ($2 ~ /^v[0-9]+\.[0-9]+\.[0-9]+$/) print $2 }' |
-              sort -V |
-              tail -n 1)"
-            if [[ ! "$latest" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-              echo "Could not infer latest release tag from $REPOSITORY."
-              exit 1
-            fi
-            version="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))"
-            commit="$MERGE_COMMIT"
-            source="hotfix PR #$PR_NUMBER"
-          else
-            echo "Regular releases use release/vX.Y.Z."
-            echo "Hotfixes must use hotfix/*; their patch version is auto-bumped."
-            exit 1
-          fi
-
-          if [[ ! "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Version must use vX.Y.Z format."
-            exit 1
-          fi
-
-          echo "commit=$commit" >> "$GITHUB_OUTPUT"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          git merge-base --is-ancestor HEAD origin/main
+          python3 scripts/check_release_ci.py "$GITHUB_REPOSITORY" "$(git rev-parse HEAD)"
 
       - name: Mint release bot token
         id: app-token
@@ -257,61 +211,10 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
 
-      - name: Checkout release commit
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ steps.release.outputs.commit }}
-          submodules: recursive
-          token: ${{ steps.app-token.outputs.token }}
-
-      - name: Verify prepared changelogs
-        env:
-          VERSION: ${{ steps.release.outputs.version }}
-        run: |
-          if ! grep -Fq "## [$VERSION](" CHANGELOG.md && \
-             ! grep -Fq "## [$VERSION](" DEV-CHANGELOG.md; then
-            echo "Changelogs are not prepared for $VERSION."
-            exit 1
-          fi
-
-          remaining="$(find changes -type f -name '*.md' \
-            ! -name 'README.md' -print)"
-          if [[ -n "$remaining" ]]; then
-            echo "Unprocessed changelog fragments:"
-            echo "$remaining"
-            exit 1
-          fi
-
-      - name: Create release tag
-        env:
-          VERSION: ${{ steps.release.outputs.version }}
-        run: |
-          target="$(git rev-parse HEAD)"
-          remote_target="$(git ls-remote --tags origin \
-            "refs/tags/$VERSION" | awk '{print $1}')"
-
-          if [[ -n "$remote_target" && "$remote_target" != "$target" ]]; then
-            echo "$VERSION already points to another commit."
-            exit 1
-          fi
-
-          if [[ -z "$remote_target" ]]; then
-            git tag "$VERSION" "$target"
-            git push origin "$VERSION"
-          fi
-
-      - name: Create GitHub release
+      - name: Publish and verify release
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
-          if gh release view "$VERSION" >/dev/null 2>&1; then
-            echo "Release $VERSION already exists."
-            exit 0
-          fi
-
-          gh release create "$VERSION" \
-            --verify-tag \
-            --title "$VERSION" \
-            --generate-notes
+          gh auth setup-git
+          python3 scripts/publish_release.py "$GITHUB_REPOSITORY" "$VERSION"

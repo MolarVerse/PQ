@@ -1,0 +1,1 @@
+- Document normal releases, hotfix version pinning, publication verification, recovery commands and local testing in the developer guide.

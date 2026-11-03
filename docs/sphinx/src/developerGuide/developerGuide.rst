@@ -18,6 +18,7 @@ The pages below go into detail on the tooling around the code:
     localBuildTimes
     codeStatistics
     branchesAndReleases
+    releasesAndHotfixes
 
 *****************
 Project Structure
