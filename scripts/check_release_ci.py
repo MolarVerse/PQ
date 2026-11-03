@@ -12,7 +12,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
-WORKFLOWS = ("ci_build.yml")
+WORKFLOWS = ["ci_build.yml"]
 
 
 def latest_run(api_url, repository, workflow, sha):
