@@ -76,7 +76,12 @@ namespace out
 
         if (settings::GeneralSettings::isQMActivated())
         {
-            _writeLeft(physicalData.getQMEnergy(), "E(QM)", "kcal/mol");
+            _writeLeft(
+                physicalData.getQMEnergy() -
+                    physicalData.getQMReferenceEnergy(),
+                "E(QM)",
+                "kcal/mol"
+            );
             _writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
         }
 
@@ -116,7 +121,11 @@ namespace out
                 "N(SM-MOL)",
                 "-"
             );
-            _writeRight();
+            _writeRight(
+                physicalData.getQMReferenceEnergy(),
+                "E(QM-REF)",
+                "kcal/mol"
+            );
         }
 
         if (settings.manostatSettings.getManostatType() != ManostatType::NONE)

@@ -80,8 +80,9 @@ namespace out
 
         if (settings::GeneralSettings::isQMActivated())
         {
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getQMEnergy());
+            const auto qmRef    = physicalData.getQMReferenceEnergy();
+            const auto qmEnergy = physicalData.getQMEnergy() - qmRef;
+            _getFilePointer() << std::format("{:20.12f}\t", qmEnergy);
             _getFilePointer(
             ) << std::format("{:20.12f}\t", physicalData.getNumberOfQMAtoms());
         }
@@ -117,6 +118,8 @@ namespace out
                 "{:20.12f}\t",
                 physicalData.getNumberOfSmoothingMolecules()
             );
+            const auto qmRef = physicalData.getQMReferenceEnergy();
+            _getFilePointer() << std::format("{:20.12f}\t", qmRef);
         }
 
         if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
