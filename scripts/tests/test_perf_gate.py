@@ -41,9 +41,9 @@ class PerfGateTest(unittest.TestCase):
         valgrind.write_text(FAKE_VALGRIND)
         valgrind.chmod(valgrind.stat().st_mode | stat.S_IEXEC)
 
-    def bench(self, directory, name, ir=None, fail=False, allocs=None, sim=None):
+    def bench(self, directory, name, ir=None, fail=False, allocs=None, sim=None, peak=None):
         path = directory / f"perf_{name}"
-        path.write_text('#!/bin/bash\n[ -e "$0.allocs" ] && echo "PQ_PERF_ALLOCS $(cat "$0.allocs") 0" >&2\nexit 0\n')
+        path.write_text('#!/bin/bash\n[ -e "$0.allocs" ] && echo "PQ_PERF_ALLOCS $(cat "$0.allocs") 0 $(cat "$0.peak" 2>/dev/null)" >&2\nexit 0\n')
         path.chmod(path.stat().st_mode | stat.S_IEXEC)
         if ir is not None:
             Path(f"{path}.ir").write_text(str(ir))
@@ -53,6 +53,8 @@ class PerfGateTest(unittest.TestCase):
             Path(f"{path}.allocs").write_text(str(allocs))
         if sim is not None:
             Path(f"{path}.sim").write_text(sim)
+        if peak is not None:
+            Path(f"{path}.peak").write_text(str(peak))
 
     def with_alloc_library(self):
         (self.pr / "libperf_alloc_counter.so").write_text("")
@@ -257,7 +259,7 @@ class PerfGateTest(unittest.TestCase):
         )
         self.assertEqual(1, result.returncode)
         self.assertIn("| `a` | 10 | 30 | +200.00% | ❌ |", report)
-        self.assertEqual("a\t1000000\t10\t-\t-\t-\n", cache.read_text())
+        self.assertEqual("a\t1000000\t10\t-\t-\t-\t-\n", cache.read_text())
 
     def test_a_cache_from_before_the_allocation_column_still_works(self):
         self.with_alloc_library()
@@ -348,7 +350,48 @@ class PerfGateTest(unittest.TestCase):
             base_dir=self.root / "no-such-dir", env_extra={"PERF_BASE_IR_FILE": str(cache)}
         )
         self.assertIn("| `a` | 110000 (+10.0%) |", report)
-        self.assertEqual("a\t1000000\t-\t100000\t20000\t5000\n", cache.read_text())
+        self.assertEqual("a\t1000000\t-\t100000\t20000\t5000\t-\n", cache.read_text())
+
+    def peak_case(self, base_peak, pr_peak, name="a"):
+        self.with_alloc_library()
+        self.bench(self.pr, name, 1_000_000, allocs=5, peak=pr_peak)
+        self.bench(self.base, name, 1_000_000, allocs=5, peak=base_peak)
+        return self.run_gate()
+
+    def test_the_peak_heap_is_reported_with_the_change(self):
+        result, report = self.peak_case(1000, 1100)
+        self.assertEqual(0, result.returncode)
+        self.assertIn("Peak heap in use", report)
+        self.assertIn("| `a` | 1000 | 1100 | +10.00% | – |", report)
+
+    def test_a_peak_heap_increase_never_fails_the_check(self):
+        result, _ = self.peak_case(1000, 900000)
+        self.assertEqual(0, result.returncode)
+
+    def test_a_size_series_shows_the_bytes_per_molecule(self):
+        _, report = self.peak_case(2000, 2160, name="seriesN216")
+        self.assertIn("| `seriesN216` | 2000 | 2160 | +8.00% | 10 |", report)
+
+    def test_no_peak_table_when_the_library_reports_no_peak(self):
+        _, report = self.peak_case(None, None)
+        self.assertNotIn("Peak heap", report)
+
+    def test_a_new_benchmark_shows_its_peak_heap(self):
+        self.with_alloc_library()
+        self.bench(self.pr, "a", 1_000_000, allocs=5, peak=4096)
+        _, report = self.run_gate()
+        self.assertIn("| `a` | – | 4096 | – | – |", report)
+
+    def test_the_cached_base_peak_is_used_and_written_back(self):
+        self.with_alloc_library()
+        self.bench(self.pr, "a", 1_000_000, allocs=10, peak=1500)
+        cache = self.root / "base_ir.tsv"
+        cache.write_text("a\t1000000\t10\t-\t-\t-\t1000\n")
+        _, report = self.run_gate(
+            base_dir=self.root / "no-such-dir", env_extra={"PERF_BASE_IR_FILE": str(cache)}
+        )
+        self.assertIn("| `a` | 1000 | 1500 | +50.00% | – |", report)
+        self.assertEqual("a\t1000000\t10\t-\t-\t-\t1000\n", cache.read_text())
 
 
 if __name__ == "__main__":

@@ -14,6 +14,8 @@
 # end. Allocation counts are exact; a rise beyond PERF_ALLOC_THRESHOLD_PERCENT
 # (default 2, and any rise from 0) fails like an instruction count regression.
 # Without the library, or for a binary that has no marker, nothing is compared.
+# The library also reports the peak heap in use (bytes, exact); it is shown in
+# the report, with the bytes per molecule for the size series, and never fails.
 #
 # The callgrind run also simulates the caches and the branch predictor (L1 and
 # last level geometry fixed below, so the numbers do not depend on the machine).
@@ -64,15 +66,18 @@ BASE_IR_FILE="${PERF_BASE_IR_FILE:-}"
 # that doesn't match is ignored.
 declare -A base_ir_cache
 declare -A base_alloc_cache
+declare -A base_peak_cache
 declare -A base_sim_cache
 if [ -n "$BASE_IR_FILE" ] && [ -s "$BASE_IR_FILE" ]; then
-    # columns: name, Ir, allocations, D1 misses, LL misses, mispredicts
-    # ("-" for an unknown value)
-    while IFS=$'\t' read -r cached_name cached_ir cached_alloc cached_d1 cached_ll cached_br; do
+    # columns: name, Ir, allocations, D1 misses, LL misses, mispredicts,
+    # peak heap bytes ("-" for an unknown value)
+    while IFS=$'\t' read -r cached_name cached_ir cached_alloc cached_d1 cached_ll cached_br cached_peak; do
         [[ "$cached_ir" =~ ^[0-9]+$ ]] || continue
         base_ir_cache["$cached_name"]="$cached_ir"
         [[ "${cached_alloc:-}" =~ ^[0-9]+$ ]] &&
             base_alloc_cache["$cached_name"]="$cached_alloc"
+        [[ "${cached_peak:-}" =~ ^[0-9]+$ ]] &&
+            base_peak_cache["$cached_name"]="$cached_peak"
         if [[ "${cached_d1:-}" =~ ^[0-9]+$ && "${cached_ll:-}" =~ ^[0-9]+$ &&
             "${cached_br:-}" =~ ^[0-9]+$ ]]; then
             base_sim_cache["$cached_name"]="$cached_d1 $cached_ll $cached_br"
@@ -82,6 +87,7 @@ fi
 # Collect freshly-known base counts (cached + measured) for write-back.
 declare -A base_ir_fresh
 declare -A base_alloc_fresh
+declare -A base_peak_fresh
 declare -A base_sim_fresh
 
 # Runs a binary under callgrind with cache and branch simulation and echoes
@@ -116,8 +122,9 @@ fmt() {   # raw instruction count -> "x.xxM"
     awk -v n="$1" 'BEGIN{ printf "%.2fM", n/1e6 }'
 }
 
-# Heap allocations of the measured loop of a benchmark (empty if the library is
-# missing, the benchmark has no marker or exits non-zero).
+# "<heap allocations of the measured loop> <peak heap bytes>" of a benchmark
+# (empty if the library is missing, the benchmark has no marker or exits
+# non-zero; the peak is missing if the library does not report it).
 measure_allocs() {
     local log rc
     [ -f "$ALLOC_LIB" ] || return 0
@@ -125,7 +132,7 @@ measure_allocs() {
     LD_PRELOAD="$ALLOC_LIB" "$1" >/dev/null 2>"$log"
     rc=$?
     if [ "$rc" -eq 0 ]; then
-        awk '$1 == "PQ_PERF_ALLOCS" && $2 ~ /^[0-9]+$/ { n = $2 } END { if (n != "") print n }' "$log"
+        awk '$1 == "PQ_PERF_ALLOCS" && $2 ~ /^[0-9]+$/ { n = $2; p = ($4 ~ /^[0-9]+$/) ? $4 : "" } END { if (n != "") print n, p }' "$log"
     fi
     rm -f "$log"
 }
@@ -154,6 +161,26 @@ add_alloc_row() {
         *)       emoji="✅" ;;
     esac
     alloc_rows+="| \`$name\` | $base | $pr | $delta | $emoji |"$'\n'
+}
+
+peak_rows=""
+
+# <name> <base peak heap bytes or empty> <PR peak heap bytes or empty>; report
+# only. A benchmark of a size series (name ending in N<molecules>) also shows
+# the bytes per molecule.
+add_peak_row() {
+    local name="$1" base="${2:-}" pr="${3:-}" delta per="" shown_base="–"
+    [[ "$pr" =~ ^[0-9]+$ ]] || return 0
+    delta="–"
+    if [[ "$base" =~ ^[0-9]+$ ]]; then
+        shown_base="$base"
+        delta="$(awk -v p="$pr" -v b="$base" \
+            'BEGIN{ if (b==0) printf "%+d", p-b; else printf "%+.2f%%", (p-b)/b*100 }')"
+    fi
+    if [[ "$name" =~ N([0-9]+)$ ]]; then
+        per="$(awk -v p="$pr" -v n="${BASH_REMATCH[1]}" 'BEGIN{ printf "%.0f", p/n }')"
+    fi
+    peak_rows+="| \`$name\` | $shown_base | $pr | $delta | ${per:-–} |"$'\n'
 }
 
 sim_rows=""
@@ -208,13 +235,15 @@ for pr_bin in "$PR_DIR"/perf_*; do
         continue
     fi
     pr_ir_all["$name"]="$pr_ir"
-    pr_alloc="$(measure_allocs "$pr_bin")"
+    read -r pr_alloc pr_peak <<< "$(measure_allocs "$pr_bin")"
     base_alloc=""
+    base_peak=""
     base_sim=""
 
     if [ -n "${base_ir_cache[$name]:-}" ]; then
         base_ir="${base_ir_cache[$name]}"
         base_alloc="${base_alloc_cache[$name]:-}"
+        base_peak="${base_peak_cache[$name]:-}"
         base_sim="${base_sim_cache[$name]:-}"
     elif [ -x "$base_bin" ]; then
         base_ir="" b_d1="" b_ll="" b_br=""
@@ -223,22 +252,26 @@ for pr_bin in "$PR_DIR"/perf_*; do
             echo "::warning::$name: the base binary gave no instruction count - not compared"
             rows+="| \`$name\` | – | $(fmt "$pr_ir") | base: no count | ⚠️ |"$'\n'
             add_alloc_row "$name" "" "$pr_alloc"
+            add_peak_row "$name" "" "$pr_peak"
             add_sim_row "$name" "" "$pr_sim"
             continue
         fi
         [ -n "$b_br" ] && base_sim="$b_d1 $b_ll $b_br"
-        base_alloc="$(measure_allocs "$base_bin")"
+        read -r base_alloc base_peak <<< "$(measure_allocs "$base_bin")"
     else
         echo "$name: new benchmark (no baseline) - pr Ir=$pr_ir"
         rows+="| \`$name\` | – | $(fmt "$pr_ir") | new | ➕ |"$'\n'
         add_alloc_row "$name" "" "$pr_alloc"
+        add_peak_row "$name" "" "$pr_peak"
         add_sim_row "$name" "" "$pr_sim"
         continue
     fi
     base_ir_fresh["$name"]="$base_ir"
     base_alloc_fresh["$name"]="$base_alloc"
+    base_peak_fresh["$name"]="$base_peak"
     base_sim_fresh["$name"]="$base_sim"
     add_alloc_row "$name" "$base_alloc" "$pr_alloc"
+    add_peak_row "$name" "$base_peak" "$pr_peak"
     add_sim_row "$name" "$base_sim" "$pr_sim"
     pct="$(awk -v p="$pr_ir" -v b="$base_ir" \
         'BEGIN{ if (b==0) print "0.00"; else printf "%+.2f", (p-b)/b*100 }')"
@@ -352,6 +385,14 @@ fi
         echo "|---|---|---|---|---|"
         printf '%s' "$alloc_rows"
     fi
+    if [ -n "$peak_rows" ]; then
+        echo ""
+        echo "Peak heap in use in bytes (exact, independent of the CPU; report only; per molecule for the size series):"
+        echo ""
+        echo "| benchmark | base | PR | Δ | per molecule |"
+        echo "|---|---|---|---|---|"
+        printf '%s' "$peak_rows"
+    fi
     if [ -n "$sim_rows" ]; then
         echo ""
         echo "Simulated cache and branch behaviour (callgrind with a 32 KiB 8-way L1 data cache, an 8 MiB 16-way last level cache and its branch predictor; value of the PR and change against the base; report only, ⚠️ = at least +${SIM_WARN_PERCENT}% and +${SIM_WARN_MIN_EVENTS} events):"
@@ -378,8 +419,9 @@ if [ -n "$BASE_IR_FILE" ] && [ "${#base_ir_fresh[@]}" -gt 0 ]; then
         sim_cols="- - -"
         [ -n "${base_sim_fresh[$name]:-}" ] && sim_cols="${base_sim_fresh[$name]}"
         read -r d1 ll br <<< "$sim_cols"
-        printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$name" "${base_ir_fresh[$name]}" \
-            "${base_alloc_fresh[$name]:--}" "$d1" "$ll" "$br" >> "$BASE_IR_FILE"
+        printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$name" "${base_ir_fresh[$name]}" \
+            "${base_alloc_fresh[$name]:--}" "$d1" "$ll" "$br" \
+            "${base_peak_fresh[$name]:--}" >> "$BASE_IR_FILE"
     done
 fi
 
